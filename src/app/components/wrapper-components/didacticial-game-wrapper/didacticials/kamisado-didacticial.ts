@@ -26,10 +26,11 @@ const Br: number = KamisadoPiece.ONE.BROWN.getValue();
 
 export const kamisadoTutorial: DidacticialStep[] = [
     DidacticialStep.informational(
-        $localize`But du jeu`,
-        $localize`Au Kamisado, il y a deux façons de gagner : soit en plaçant une de vos pièces sur la ligne de départ de
-        l'adversaire, soit en forçant l'adversaire à faire un coup qui bloque la partie.
-        Ici, le joueur foncé gagne car il a sa pièce brune sur la ligne de départ du joueur clair, en haut à gauche.`,
+        $localize`Goal of the game`,
+        $localize`At Kamisado, there are two ways to win the game:
+        either by moving one of your pieces on the opponent's starting line,
+        or by forcing the opponent to make a move that blocks the entire game.
+        Here, Dark wins because its brown piece is on Light's starting line, on the top left.`,
         new KamisadoPartSlice(5, KamisadoColor.ORANGE, MGPOptional.empty(), false, [
             [br, Bl, Pu, Pi, Ye, Re, Gr, Br],
             [__, __, __, __, __, __, __, __],
@@ -42,23 +43,23 @@ export const kamisadoTutorial: DidacticialStep[] = [
         ]),
     ),
     DidacticialStep.anyMove(
-        $localize`Plateau de départ et déplacement initial`,
-        $localize`Voici le plateau de départ.
-        Au Kamisado, les pièces ne peuvent se déplacer que vers l'avant, verticalement ou diagonalement.
-        Vous jouez en premier, donc avec les pièces foncées, vous pouvez faire votre premier déplacement.<br/><br/>
-        Cliquez sur la pièce de votre choix, et cliquez sur sa case d'arrivée.`,
+        $localize`Initial board and initial move`,
+        $localize`Here is the initial board.
+        At Kamisado, pieces can only move forward, vertically or diagonally.
+        You're playing first, with dark pieces, you can make your first move.<br/><br/>
+        Click on the piece of your choice and click on the landing square.`,
         KamisadoPartSlice.getInitialSlice(),
         KamisadoMove.of(new Coord(7, 7), new Coord(3, 3)),
-        $localize`Parfait! Notez bien que chacune de vos pièces a une couleur différente.`,
+        $localize`Perfect! Note that each of your piece has a different color.`,
     ),
     DidacticialStep.fromMove(
-        $localize`Déplacement`,
-        $localize`Considérons maintenant le coup du joueur clair, après le déplacement de la pièce bleue.
-        Tous les déplacements après le déplacement initial se font obligatoirement à partir de la pièce correspondant
-        à la couleur sur laquelle le dernier déplacement s'est terminé.
-        Ici, le déplacement précédent s'étant terminé sur une case rose, c'est donc au pion rose de se déplacer.
-        Il est d'ailleurs déjà sélectionné, vous ne devez donc plus cliquer dessus.<br/><br/>
-        Déplacez-le jusqu'à la case bleue.`,
+        $localize`Moving`,
+        $localize`Let us now consider the move of Light, after the blue piece has been moved by Dark.
+        All moves after the initial move must be made from the piece that corresponds to the color
+        of the square upon which the last move ended.
+        Here, the last move ended on the pink square, hence the pink piece must move.
+        It is already selected, you do not have to click on it.<br/><br/>
+        Move it on a blue square.`,
         new KamisadoPartSlice(1, KamisadoColor.PINK, MGPOptional.of(new Coord(3, 0)), false, [
             [Or, Bl, Pu, Pi, Ye, Re, Gr, Br],
             [__, __, __, __, __, __, __, __],
@@ -73,14 +74,14 @@ export const kamisadoTutorial: DidacticialStep[] = [
             KamisadoMove.of(new Coord(3, 0), new Coord(3, 6)),
             KamisadoMove.of(new Coord(3, 0), new Coord(4, 1)),
         ],
-        $localize`Parfait!`,
-        $localize`Vous n'avez pas avancé votre pièce rose sur une case bleue !`,
+        $localize`Congratulations!`,
+        $localize`You have not moved your pink piece on a blue square!`,
     ),
     DidacticialStep.informational(
         $localize`Blocage`,
-        $localize`Foncé s'est déplacé sur une autre case rose, et vous oblige donc à déplacer votre pièce rose.
-        Cependant, votre pièce rose est bloquée ! Dans ce cas ci, vous êtes obligé de passer votre tour.
-        Foncé devra jouer son prochain tour en déplaçant lui-même sa pièce rose.`,
+        $localize`Dark moved to another pink square, hence you have to move your pink piece again.
+        However, your pink piece is stuck! In this case, you must pass your turn.
+        Dark will now have to play by moving its pink piece.`,
         new KamisadoPartSlice(1, KamisadoColor.PINK, MGPOptional.of(new Coord(3, 6)), false, [
             [Or, Bl, Pu, __, Ye, Re, Gr, Br],
             [__, __, __, __, __, __, __, __],
@@ -93,13 +94,12 @@ export const kamisadoTutorial: DidacticialStep[] = [
         ]),
     ),
     DidacticialStep.fromMove(
-        $localize`Victoire par blocage`,
-        $localize`À tout moment, si un joueur provoque un blocage total du jeu, il perd.
-        C'est-à-dire que si un joueur oblige son adversaire à déplacer une pièce que l'adversaire ne peut bouger,
-        et que lui-même ne peut pas déplacer sa pièce de la même couleur, il perd.
-        Ici, en jouant avec les pions foncés,
-        vous pouvez obliger votre adversaire à provoquer cette situation et donc l'obliger à perdre!<br/><br/>
-        Essayez de faire ce mouvement.`,
+        $localize`Victory by blocking`,
+        $localize`At any time, if a player blocks the entire game, that player loses.
+        In other words, if a player forces its opponent to move a piece that that opponent cannot move,
+        and the player cannot move its own piece of the same color, that player loses.
+        Here, you're playing Dark and you can force your opponent to create such a situation, hence you can force your opponent to lose!<br/><br/>
+        Try to make this move.`,
         new KamisadoPartSlice(2, KamisadoColor.RED, MGPOptional.of(new Coord(2, 4)), false, [
             [__, Bl, Pu, __, Ye, Re, __, __],
             [__, __, __, __, __, __, __, __],
@@ -111,13 +111,12 @@ export const kamisadoTutorial: DidacticialStep[] = [
             [br, gr, __, __, __, __, bl, or],
         ]),
         [KamisadoMove.of(new Coord(2, 4), new Coord(0, 2))],
-        $localize`Parfait!
-         Clair est obligé d'avancer son pion vert sur la case orange, vous obligeant à joueur avec votre pion orange.
-         Dès lors, votre pion orange sera bloqué et vous devrez donc passer votre tour.
-         Clair devra ensuite aussi passer son tour car son pion orange est aussi bloqué :
-         la partie est totalement bloquée.
-         Dans ce cas, le dernier joueur à avoir déplacé une pièce perd la partie.
-         Ici, Clair aura déplacé sa pièce verte en dernier, vous êtes donc vainqueur !`,
-        $localize`Raté !`,
+        $localize`Perfect!
+         Light must move its green piece on the orange square, forcing you to play with your orange piece.
+         Your orange piece will be stuck and you will have to pass your turn.
+         Light will have to pass its turn too because its orange piece is also stuck: the game is completely stuck.
+         In this case, the last player to have moved a piece loses.
+         Here, Light will have moved its green piece last, you therefore win!`,
+        $localize`Failed!`,
     ),
 ];
