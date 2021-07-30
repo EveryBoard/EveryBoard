@@ -27,7 +27,7 @@ export const quartoTutorial: DidacticialStep[] = [
         $localize`Every placement occurs in two steps: placing the piece you have in hand on a square of the board,
         and picking a piece that the opponent will have to place, by clicking one one of the pieces on the side of the board.
         If you prefer, the order of these two steps can be reversed.
-        Keep in mind that the second click confirms the move.<br/>
+        Keep in mind that the second click confirms the move.<br/><br/>
         Make a move.`,
         new QuartoPartSlice([
             [14, 3, 6, 16],
@@ -40,7 +40,7 @@ export const quartoTutorial: DidacticialStep[] = [
     ),
     DidacticialStep.fromMove(
         $localize`Situation`,
-        $localize`We have here a tricky situation.
+        $localize`We have here a tricky situation.<br/><br/>
         Analyse the board and play your move, carefully paying attention not to let the opponent win on the next move.`,
         new QuartoPartSlice([
             [15, 14, 13, 16],

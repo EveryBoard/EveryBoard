@@ -77,6 +77,7 @@ import { QuixoPartSlice } from 'src/app/games/quixo/QuixoPartSlice';
 import { PylosPartSlice } from 'src/app/games/pylos/PylosPartSlice';
 import { P4PartSlice } from 'src/app/games/p4/P4PartSlice';
 import { LinesOfActionState } from 'src/app/games/lines-of-action/LinesOfActionState';
+import { SaharaMove } from 'src/app/games/sahara/SaharaMove';
 
 describe('DidacticialGameWrapperComponent', () => {
     let componentTestUtils: ComponentTestUtils<QuartoComponent>;
@@ -984,10 +985,30 @@ describe('DidacticialGameWrapperComponent', () => {
                     new EpaminondasMove(0, 10, 1, 1, Direction.UP),
                     MGPValidation.failure($localize`Raté ! Vous n'avez bougé qu'une pièce.`),
                 ], [
+                    new SaharaRules(SaharaPartSlice),
+                    saharaDidacticial[2],
+                    new SaharaMove(new Coord(7, 0), new Coord(5, 0)),
+                    MGPValidation.failure($localize`Vous avez fait un double pas, c'est très bien, mais c'est l'exercice suivant!`),
+                ], [
+                    new SaharaRules(SaharaPartSlice),
+                    saharaDidacticial[3],
+                    new SaharaMove(new Coord(2, 0), new Coord(2, 1)),
+                    MGPValidation.failure($localize`Raté ! Vous avez fait un simple pas!`),
+                ], [
                     new SixRules(SixGameState),
                     sixDidacticial[4],
                     SixMove.fromDeplacement(new Coord(6, 1), new Coord(7, 1)),
                     MGPValidation.failure(SixDidacticialMessages.MOVEMENT_NOT_DISCONNECTING),
+                ], [
+                    new SixRules(SixGameState),
+                    sixDidacticial[5],
+                    SixMove.fromDeplacement(new Coord(3, 2), new Coord(2, 2)),
+                    MGPValidation.failure($localize`Ce mouvement ne déconnecte pas du jeu de pièces adverses ! Réessayez avec une autre pièce !`),
+                ], [
+                    new SixRules(SixGameState),
+                    sixDidacticial[6],
+                    SixMove.fromDeplacement(new Coord(2, 3), new Coord(3, 3)),
+                    MGPValidation.failure($localize`Ce mouvement n'as pas coupé le plateau en deux parties égales`),
                 ],
             ];
             for (const stepExpectation of stepExpectations) {
