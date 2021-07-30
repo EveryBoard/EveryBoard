@@ -8,7 +8,7 @@ const _: number = Player.NONE.value;
 const X: number = Player.ONE.value;
 const O: number = Player.ZERO.value;
 
-export const pentagoDidacticial: DidacticialStep[] = [
+export const pentagoTutorial: DidacticialStep[] = [
     DidacticialStep.informational(
         $localize`Initial board`,
         $localize`The initial Pentago board is made of 6x6 spaces, subdivided in 4 blocks, which can each rotate.`,

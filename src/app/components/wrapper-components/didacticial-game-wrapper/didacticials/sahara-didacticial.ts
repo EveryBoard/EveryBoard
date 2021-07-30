@@ -9,7 +9,7 @@ const N: number = FourStatePiece.NONE.value;
 const O: number = FourStatePiece.ZERO.value;
 const X: number = FourStatePiece.ONE.value;
 const _: number = FourStatePiece.EMPTY.value;
-export const saharaDidacticial: DidacticialStep[] = [
+export const saharaTutorial: DidacticialStep[] = [
 
     DidacticialStep.informational(
         $localize`Initial board`,

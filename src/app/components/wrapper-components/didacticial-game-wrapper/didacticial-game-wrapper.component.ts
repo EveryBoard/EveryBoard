@@ -20,17 +20,17 @@ import { encapsuleTutorial } from './didacticials/encapsule-tutorial';
 import { gipfTutorial } from './didacticials/gipf-didacticial';
 import { goTutorial } from './didacticials/go-didacticial';
 import { kamisadoTutorial } from './didacticials/kamisado-didacticial';
-import { linesOfActionDidacticial } from 'src/app/games/lines-of-action/LinesOfActionDidacticial';
+import { linesOfActionTutorial } from 'src/app/games/lines-of-action/LinesOfActionDidacticial';
 import { p4Tutorial } from './didacticials/p4-didacticial';
-import { pentagoDidacticial } from 'src/app/games/pentago/pentago.didacticial';
+import { pentagoTutorial } from 'src/app/games/pentago/pentago.didacticial';
 import { pylosTutorial } from './didacticials/pylos-didacticial';
 import { quartoTutorial } from './didacticials/quarto-didacticial';
 import { quixoTutorial } from './didacticials/quixo-didacticial';
 import { reversiTutorial } from './didacticials/reversi-didacticial';
-import { saharaDidacticial } from './didacticials/sahara-didacticial';
-import { siamDidacticial } from './didacticials/siam-didacticial';
-import { sixDidacticial } from './didacticials/six-didacticial';
-import { tablutDidacticial } from './didacticials/tablut-didacticial';
+import { saharaTutorial } from './didacticials/sahara-didacticial';
+import { siamTutorial } from './didacticials/siam-didacticial';
+import { sixTutorial } from './didacticials/six-didacticial';
+import { tablutTutorial } from './didacticials/tablut-didacticial';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { DidacticialFailure } from './DidacticialFailure';
 import { GameService } from 'src/app/services/GameService';
@@ -104,17 +104,17 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
             Gipf: gipfTutorial,
             Go: goTutorial,
             Kamisado: kamisadoTutorial,
-            LinesOfAction: linesOfActionDidacticial,
+            LinesOfAction: linesOfActionTutorial,
             P4: p4Tutorial,
-            Pentago: pentagoDidacticial,
+            Pentago: pentagoTutorial,
             Pylos: pylosTutorial,
             Quarto: quartoTutorial,
             Quixo: quixoTutorial,
             Reversi: reversiTutorial,
-            Sahara: saharaDidacticial,
-            Siam: siamDidacticial,
-            Six: sixDidacticial,
-            Tablut: tablutDidacticial,
+            Sahara: saharaTutorial,
+            Siam: siamTutorial,
+            Six: sixTutorial,
+            Tablut: tablutTutorial,
         };
         if (didacticials[game] == null) {
             throw new Error('Unknown Game ' + game + '.');

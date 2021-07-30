@@ -8,7 +8,7 @@ const X: number = Player.ZERO.value;
 const O: number = Player.ONE.value;
 const _: number = Player.NONE.value;
 
-export const linesOfActionDidacticial: DidacticialStep[] = [
+export const linesOfActionTutorial: DidacticialStep[] = [
     DidacticialStep.informational(
         $localize`Goal of the game`,
         $localize`At Lines of Actions, the goal is to group your pieces contiguously, orthogonally and/or diagonally.
@@ -26,15 +26,15 @@ export const linesOfActionDidacticial: DidacticialStep[] = [
         ], 0),
     ),
     DidacticialStep.anyMove(
-        'Initial board and moves',
-        `Here is the initial board.
+        $localize'Initial board and moves',
+        $localize`Here is the initial board.
          Moves can be made orthogonally or diagonally.
          The length of a move is equal to the number of pieces that are on the line of the move.
          Note that there is a helping indicator to let you know where a piece can land when you select it.<br/><br/>
          You're playing Dark, make the first move!`,
         LinesOfActionState.getInitialSlice(),
         new LinesOfActionMove(new Coord(1, 7), new Coord(1, 5)),
-        `Congratulations!`,
+        $localize`Congratulations!`,
     ),
     DidacticialStep.fromMove(
         $localize`Jumping`,

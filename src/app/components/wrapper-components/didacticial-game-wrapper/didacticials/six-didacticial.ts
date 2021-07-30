@@ -14,19 +14,19 @@ export class SixDidacticialMessages {
     public static readonly MOVEMENT_NOT_DISCONNECTING: string = $localize`Ce mouvement ne déconnecte pas de pièce adverse ! Réessayez avec une autre pièce !`;
 }
 
-export const sixDidacticial: DidacticialStep[] = [
+export const sixTutorial: DidacticialStep[] = [
 
     DidacticialStep.informational(
         $localize`Six`,
         $localize`Le six est une jeu sans plateau, où les pièces sont placées les unes à côtés des autres, en un bloc continu.
-         Chaque joueur a 21 pièces à lui, 2 étant déjà placée sur le plateau.
-         Le but principal du jeu est de former l'une des trois formes gagnantes avec vos pièces.`,
+        Chaque joueur a 21 pièces à lui, 2 étant déjà placée sur le plateau.
+        Le but principal du jeu est de former l'une des trois formes gagnantes avec vos pièces.`,
         SixGameState.getInitialSlice(),
     ),
     DidacticialStep.fromMove(
         $localize`Victoires (ligne)`,
-        $localize`Sur ce plateau, en plaçant votre pièce au bon endroit, vous alignez six de vos pièces, et gagnez la partie.
-         Vous jouez Foncé.`,
+        $localize`Sur ce plateau, en plaçant votre pièce au bon endroit, vous alignez six de vos pièces, et gagnez la partie.<br/><br/>
+        Trouvez la victoire, Vous jouez Foncé.`,
         SixGameState.fromRepresentation([
             [O, X, X, X, X, O],
             [_, O, X, _, O, _],
@@ -41,7 +41,8 @@ export const sixDidacticial: DidacticialStep[] = [
     ),
     DidacticialStep.fromMove(
         $localize`Victoires (rond)`,
-        $localize`Sur ce plateau, en plaçant votre pièce au bon endroit, vous dessinez un cercle avec 6 de vos pièces, et gagnez la partie.`,
+        $localize`Sur ce plateau, en plaçant votre pièce au bon endroit, vous dessinez un cercle avec 6 de vos pièces, et gagnez la partie.<br/><br/>
+        Trouvez la victoire, Vous jouez Foncé.`,
         SixGameState.fromRepresentation([
             [_, _, _, X, _, _],
             [_, _, X, X, O, O],
@@ -54,7 +55,8 @@ export const sixDidacticial: DidacticialStep[] = [
     ),
     DidacticialStep.fromMove(
         $localize`Victoires (triangle)`,
-        $localize`Sur ce plateau, en plaçant votre pièce au bon endroit, vous dessinez un triangle avec 6 de vos pièces, et gagnez la partie.`,
+        $localize`Sur ce plateau, en plaçant votre pièce au bon endroit, vous dessinez un triangle avec 6 de vos pièces, et gagnez la partie.<br/><br/>
+        Trouvez la victoire, Vous jouez Foncé.`,
         SixGameState.fromRepresentation([
             [_, _, _, X, _, _],
             [_, O, X, O, O, O],
@@ -68,9 +70,9 @@ export const sixDidacticial: DidacticialStep[] = [
     DidacticialStep.fromPredicate(
         $localize`Deuxième phase`,
         $localize`Quand après 40 tours, toutes vos pièces sont placées, on passe en deuxième phase.
-         Il faut maintenant déplacer ses pièces, en prenant garde à ne pas enlever une pièce qui empêchait l'adversaire de gagner.
-         Dorénavant, si après un déplacement un ou plusieurs groupe de pièce est déconnecté du plus grand groupe de pièce, ces petits groupes de pièces sont enlevés définitivement du jeu.
-         Vous jouez Foncé, effectuez un déplacement qui déconnecte une pièce de votre adversaire.`,
+        Il faut maintenant déplacer ses pièces, en prenant garde à ne pas enlever une pièce qui empêchait l'adversaire de gagner.
+        Dorénavant, si après un déplacement un ou plusieurs groupe de pièce est déconnecté du plus grand groupe de pièce, ces petits groupes de pièces sont enlevés définitivement du jeu.<br/><br/>
+        Vous jouez Foncé, effectuez un déplacement qui déconnecte une pièce de votre adversaire.`,
         SixGameState.fromRepresentation([
             [_, _, _, _, _, _, _, X, _],
             [_, _, _, _, _, _, O, _, _],
@@ -98,9 +100,9 @@ export const sixDidacticial: DidacticialStep[] = [
     DidacticialStep.fromPredicate(
         $localize`Victoire par déconnection`,
         $localize`Lors de la seconde phase de jeu, en plus des victoires normales (ligne, rond, triangle), on peux gagner par déconnection.
-         Si à un moment du jeu, l'un des deux joueurs n'a plus assez de pièce pour gagner (il en a donc moins de 6), la partie s'arrête.
-         Celui qui a le plus de pièces a gagné, et en cas d'égalité, c'est match nul.
-         Ici, le joueur foncé peut gagner. Faites-le.`,
+        Si à un moment du jeu, l'un des deux joueurs n'a plus assez de pièce pour gagner (il en a donc moins de 6), la partie s'arrête.
+        Celui qui a le plus de pièces a gagné, et en cas d'égalité, c'est match nul.<br/><br/>
+        Ici, vous pouvez gagné (vous jouez Foncé). Faites le!`,
         SixGameState.fromRepresentation([
             [_, _, _, _, _, X],
             [_, _, _, _, O, X],
@@ -122,7 +124,9 @@ export const sixDidacticial: DidacticialStep[] = [
     ),
     DidacticialStep.fromPredicate(
         $localize`Déconnection spéciale`,
-        $localize`Lors d'une déconnection, de deux à plusieurs groupes peuvent faire la même taille, auquel cas, un clic en plus sera nécessaire pour indiquer lequel vous souhaitez garder. Vous jouez Foncé, créer un mouvement de la sorte !`,
+        $localize`Lors d'une déconnection, de deux à plusieurs groupes peuvent faire la même taille,
+        auquel cas, un clic en plus sera nécessaire pour indiquer lequel vous souhaitez garder.<br/><br/>
+        Vous jouez Foncé, créer un mouvement de la sorte !`,
         SixGameState.fromRepresentation([
             [_, _, _, _, _, X],
             [_, _, _, _, O, X],
