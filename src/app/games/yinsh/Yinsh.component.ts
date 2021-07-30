@@ -4,6 +4,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
+import { Player } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -40,7 +41,6 @@ interface ViewInfo {
 })
 export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameState, YinshLegalityStatus> {
     private static PIECE_SIZE: number = 40;
-    public readonly PIECE_SIZE: number = YinshComponent.PIECE_SIZE;
 
     public rules: YinshRules = new YinshRules(YinshGameState);
 
@@ -52,7 +52,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
 
     public scores: number[] = [0, 0];
 
-    private constructedState: YinshGameState = null;
+    private constructedState: YinshGameState;
 
     private movePhase: 'INITIAL_CAPTURE' | 'FINAL_CAPTURE' | 'INITIAL_CAPTURE_SELECT_RING' | 'FINAL_CAPTURE_SELECT_RING' | 'MOVE_START' | 'MOVE_END'
         = 'MOVE_START';
@@ -111,10 +111,10 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
             this.viewInfo.caseInfo[coord.y][coord.x].isPiece =
                 this.constructedState.hexaBoard.getAt(coord) !== YinshPiece.EMPTY;
         });
-        for (let player: number = 0; player < 2; player++) {
-            this.viewInfo.sideRings[player] = [];
-            for (let i: number = this.constructedState.sideRings[player]; i > 0; i--) {
-                this.viewInfo.sideRings[player].push(i);
+        for (const player of [Player.ZERO, Player.ONE]) {
+            this.viewInfo.sideRings[player.value] = [];
+            for (let i: number = this.constructedState.sideRings[player.value]; i > 0; i--) {
+                this.viewInfo.sideRings[player.value].push(i);
             }
         }
         if (this.movePhase === 'INITIAL_CAPTURE' || this.movePhase === 'FINAL_CAPTURE') {
