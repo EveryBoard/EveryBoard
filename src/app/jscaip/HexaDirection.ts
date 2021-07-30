@@ -50,6 +50,16 @@ export class HexaDirection extends BaseDirection {
         };
     public static readonly encoder: NumberEncoder<HexaDirection> = new HexaDirectionEncoder();
 
+    public static getAngle(direction: HexaDirection): number {
+        switch (direction) {
+            case (HexaDirection.UP): return 0;
+            case (HexaDirection.UP_RIGHT): return 60;
+            case (HexaDirection.RIGHT): return 120;
+            case (HexaDirection.DOWN): return 180;
+            case (HexaDirection.DOWN_LEFT): return 240;
+            case (HexaDirection.LEFT): return 300;
+        }
+    }
     private constructor(public readonly x: 0|1|-1, public readonly y: 0|1|-1) {
         super();
     }

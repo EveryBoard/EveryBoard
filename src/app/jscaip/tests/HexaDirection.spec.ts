@@ -1,4 +1,5 @@
 import { HexaDirection } from '../HexaDirection';
+import { NumberEncoderTestUtils } from './Encoder.spec';
 
 describe('HexaDirection', () => {
     describe('all', () => {
@@ -26,10 +27,14 @@ describe('HexaDirection', () => {
         for (let i: number; i < 6; i++) {
             const dir: HexaDirection = HexaDirection.factory.all[i];
             const encoded: number = HexaDirection.encoder.encodeNumber(dir);
-            const decoded: HexaDirection = HexaDirection.encoder.decodeNumber(encoded);
             expect(encoded).toBe(i);
-            expect(decoded.equals(dir));
+            NumberEncoderTestUtils.expectToBeCorrect(HexaDirection.encoder, dir);
         }
-        expect(HexaDirection.encoder.maxValue()).toBe(5);
+    });
+    it('Should map to angle correctly', () => {
+        for (let i: number; i < 6; i++) {
+            const dir: HexaDirection = HexaDirection.factory.all[i];
+            expect(HexaDirection.getAngle(dir)).toBe(i * 60);
+        }
     });
 });
