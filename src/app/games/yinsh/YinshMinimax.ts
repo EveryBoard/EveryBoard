@@ -29,11 +29,11 @@ export class YinshMinimax extends Minimax<YinshMove, YinshGameState, YinshLegali
         const state: YinshGameState = node.gamePartSlice;
 
         if (state.isInitialPlacementPhase()) {
-            state.hexaBoard.forEachCoord((coord: Coord, content: YinshPiece): void => {
+            for (const [coord, content] of state.hexaBoard.getCoordsAndContents()) {
                 if (content === YinshPiece.EMPTY) {
                     moves.push(new YinshMove([], coord, MGPOptional.empty(), []));
                 }
-            });
+            }
         } else {
             const rules: YinshRules = this.ruler as YinshRules; // TODO: ugly cast, this.rules should be a YinshRules!
             this.getPossibleCaptureCombinations(state)

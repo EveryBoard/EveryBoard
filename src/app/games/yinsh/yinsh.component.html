@@ -43,9 +43,9 @@
                   stroke-linecap="round" />
     </g>
     <g *ngFor="let player of [0, 1]">
-        <circle *ngFor="let ring of viewInfo.sideRings[player]"
-                id="player_{{ player }}_sideRing_{{ ring }}"
-                [attr.cx]="(player === 0 ? 0 : 770) + 1.2*viewInfo.pieceSize*ring"
+        <circle *ngFor="let _ of [].constructor(viewInfo.sideRings[player]); index as ring"
+                id="player_{{ player }}_sideRing_{{ ring+1 }}"
+                [attr.cx]="(player === 0 ? 0 : 770) + 1.2*viewInfo.pieceSize*(ring+1)"
                 [attr.cy]="(player === 0 ? 300 : 1260)"
                 [attr.r]="viewInfo.pieceSize"
                 [ngClass]="viewInfo.sideRingClass[player]"

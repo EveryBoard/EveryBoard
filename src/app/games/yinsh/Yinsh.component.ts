@@ -30,7 +30,7 @@ interface ViewInfo {
     possibleCaptures: YinshCapture[],
     selectableRings: Coord[],
     pieceSize: number,
-    sideRings: [number[], number[]], // for each player: array of [1, 2, 3] means 3 rings to show
+    sideRings: [number, number],
     sideRingClass: [string, string],
 }
 
@@ -72,7 +72,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
         possibleCaptures: [],
         selectableRings: [],
         pieceSize: YinshComponent.PIECE_SIZE,
-        sideRings: [[1, 2, 3, 4, 5], [1, 2, 3, 4, 5]],
+        sideRings: [5, 5],
         sideRingClass: ['player0-stroke', 'player1-stroke'],
     };
 
@@ -112,10 +112,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
                 this.constructedState.hexaBoard.getAt(coord) !== YinshPiece.EMPTY;
         });
         for (const player of [Player.ZERO, Player.ONE]) {
-            this.viewInfo.sideRings[player.value] = [];
-            for (let i: number = this.constructedState.sideRings[player.value]; i > 0; i--) {
-                this.viewInfo.sideRings[player.value].push(i);
-            }
+            this.viewInfo.sideRings[player.value] = this.constructedState.sideRings[player.value];
         }
         if (this.movePhase === 'INITIAL_CAPTURE' || this.movePhase === 'FINAL_CAPTURE') {
             this.viewInfo.possibleCaptures = this.rules.getPossibleCaptures(this.constructedState);
@@ -143,7 +140,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
         if (piece.isRing) {
             const playerClass: string = this.getPlayerClass(piece.player);
             const classes: string[] = [playerClass + '-stroke'];
-            if (this.moveStart.isPresent() && this.moveStart.get().equals(coord)) {
+            if (coord.equals(this.moveStart.getOrNull())) {
                 classes.push(playerClass);
             } else {
                 classes.push('no-fill');

@@ -101,7 +101,7 @@ export class HexaBoard<T> {
         }
         return true;
     }
-    private getAtUnsafe(coord: Coord): T {
+    protected getAtUnsafe(coord: Coord): T {
         return this.contents[coord.y][coord.x];
     }
     public getAt(coord: Coord): T {
@@ -124,14 +124,21 @@ export class HexaBoard<T> {
         }
     }
     public forEachCoord(callback: (coord: Coord, content: T) => void): void {
+        for (const [coord, content] of this.getCoordsAndContents()) {
+            callback(coord, content);
+        }
+    }
+    public getCoordsAndContents(): [Coord, T][] {
+        const coordsAndContents: [Coord, T][] = [];
         for (let y: number = 0; y < this.height; y++) {
             for (let x: number = 0; x < this.width; x++) {
                 const coord: Coord = new Coord(x, y);
                 if (this.isOnBoard(coord)) {
-                    callback(coord, this.getAtUnsafe(coord));
+                    coordsAndContents.push([coord, this.getAtUnsafe(coord)]);
                 }
             }
         }
+        return coordsAndContents;
     }
     public allCoords(): Coord[] {
         const coords: Coord[] = [];

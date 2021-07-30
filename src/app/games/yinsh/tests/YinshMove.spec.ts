@@ -7,11 +7,11 @@ describe('YinshCapture', () => {
     it('should not allow construction of captures other than with 5 coordinates', () => {
         const coords1: Coord[] = [new Coord(2, 3), new Coord(3, 3), new Coord(4, 3), new Coord(5, 3)];
         const ringTaken: Coord = new Coord(4, 4);
-        expect(() => new YinshCapture(coords1, ringTaken)).toThrow();
+        expect(() => new YinshCapture(coords1, ringTaken)).toThrowError('YinshCapture must capture exactly 5 pieces');
         const coords2: Coord[] = [
             new Coord(2, 3), new Coord(3, 3), new Coord(4, 3), new Coord(5, 3),
             new Coord(6, 3), new Coord(7, 3)];
-        expect(() => new YinshCapture(coords2, ringTaken)).toThrow();
+        expect(() => new YinshCapture(coords2, ringTaken)).toThrowError('YinshCapture must capture exactly 5 pieces');
     });
     describe('of', () => {
         it('should return the capture with all coords from start to end', () => {
