@@ -8,7 +8,7 @@ const _: number = Player.NONE.value;
 const X: number = Player.ONE.value;
 const O: number = Player.ZERO.value;
 
-export const pentagoDidacticial: DidacticialStep[] = [
+export const pentagoTutorial: DidacticialStep[] = [
     DidacticialStep.informational(
         $localize`Plateau de départ`,
         $localize`Le plateau du pentago fait 6 cases de haut et de large, et est composé de quatre blocs, ceux-ci pouvant effectuer des rotations`,

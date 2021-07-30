@@ -8,7 +8,7 @@ const X: number = Player.ZERO.value;
 const O: number = Player.ONE.value;
 const _: number = Player.NONE.value;
 
-export const linesOfActionDidacticial: DidacticialStep[] = [
+export const linesOfActionTutorial: DidacticialStep[] = [
     DidacticialStep.informational(
         $localize`But du jeu`,
         $localize`À Lines of Actions, le but est de regrouper toutes vos pièces de façon contigues, orthogonalement et/ou diagonalement.
@@ -26,15 +26,15 @@ export const linesOfActionDidacticial: DidacticialStep[] = [
         ], 0),
     ),
     DidacticialStep.anyMove(
-        'Plateau de départ et déplacement',
-        `Voici le plateau de départ.
-         Les déplacements s'effectuent orthogonalement ou diagonalement.
-         La longueur d'un déplacement est égale au nombre de pièces présentes dans la ligne du déplacement.
-         Notez la présence d'un indicateur d'aide qui indique où une pièce peut atterrir quand vous la sélectionnez.
-         Vous jouez Foncé, faites le premier déplacement !`,
+        $localize`Plateau de départ et déplacement`,
+        $localize`Voici le plateau de départ.
+        Les déplacements s'effectuent orthogonalement ou diagonalement.
+        La longueur d'un déplacement est égale au nombre de pièces présentes dans la ligne du déplacement.
+        Notez la présence d'un indicateur d'aide qui indique où une pièce peut atterrir quand vous la sélectionnez.<br/><br/>
+        Vous jouez Foncé, faites le premier déplacement !`,
         LinesOfActionState.getInitialSlice(),
         new LinesOfActionMove(new Coord(1, 7), new Coord(1, 5)),
-        `Super !`,
+        $localize`Bravo !`,
     ),
     DidacticialStep.fromMove(
         $localize`Sauts`,
@@ -52,7 +52,7 @@ export const linesOfActionDidacticial: DidacticialStep[] = [
             [_, _, _, _, _, _, _, X],
         ], 0),
         [new LinesOfActionMove(new Coord(3, 1), new Coord(6, 1))],
-        $localize`Parfait !`,
+        $localize`Bravo !`,
         $localize`Ce n'était pas le déplacement attendu.`,
     ),
     DidacticialStep.fromMove(

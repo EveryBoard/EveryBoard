@@ -12,7 +12,7 @@ import { DidacticialFailure } from './DidacticialFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Move } from 'src/app/jscaip/Move';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
-import { sixDidacticial, SixDidacticialMessages } from './didacticials/six-didacticial';
+import { sixTutorial, SixDidacticialMessages } from './didacticials/six-didacticial';
 import { SixMove } from 'src/app/games/six/SixMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Rules } from 'src/app/jscaip/Rules';
@@ -21,7 +21,7 @@ import { SixGameState } from 'src/app/games/six/SixGameState';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { PentagoRules } from 'src/app/games/pentago/PentagoRules';
 import { PentagoGameState } from 'src/app/games/pentago/PentagoGameState';
-import { pentagoDidacticial } from 'src/app/games/pentago/pentago.didacticial';
+import { pentagoTutorial } from 'src/app/games/pentago/pentago.didacticial';
 import { EpaminondasRules } from 'src/app/games/epaminondas/EpaminondasRules';
 import { EpaminondasPartSlice } from 'src/app/games/epaminondas/EpaminondasPartSlice';
 import { epaminondasTutorial } from './didacticials/epaminondas-didacticial';
@@ -35,15 +35,15 @@ import { encapsuleTutorial } from './didacticials/encapsule-tutorial';
 import { gipfTutorial } from './didacticials/gipf-didacticial';
 import { goTutorial } from './didacticials/go-didacticial';
 import { kamisadoTutorial } from './didacticials/kamisado-didacticial';
-import { linesOfActionDidacticial } from 'src/app/games/lines-of-action/LinesOfActionDidacticial';
+import { linesOfActionTutorial } from 'src/app/games/lines-of-action/LinesOfActionDidacticial';
 import { p4Tutorial } from './didacticials/p4-didacticial';
 import { pylosTutorial } from './didacticials/pylos-didacticial';
 import { quartoTutorial } from './didacticials/quarto-didacticial';
 import { quixoTutorial } from './didacticials/quixo-didacticial';
 import { reversiTutorial } from './didacticials/reversi-didacticial';
-import { saharaDidacticial } from './didacticials/sahara-didacticial';
-import { siamDidacticial } from './didacticials/siam-didacticial';
-import { tablutDidacticial } from './didacticials/tablut-didacticial';
+import { saharaTutorial } from './didacticials/sahara-didacticial';
+import { siamTutorial } from './didacticials/siam-didacticial';
+import { tablutTutorial } from './didacticials/tablut-didacticial';
 import { AbaloneRules } from 'src/app/games/abalone/AbaloneRules';
 import { AwaleRules } from 'src/app/games/awale/AwaleRules';
 import { CoerceoRules } from 'src/app/games/coerceo/CoerceoRules';
@@ -986,27 +986,27 @@ describe('DidacticialGameWrapperComponent', () => {
                     MGPValidation.failure($localize`Raté ! Vous n'avez bougé qu'une pièce.`),
                 ], [
                     new SaharaRules(SaharaPartSlice),
-                    saharaDidacticial[2],
+                    saharaTutorial[2],
                     new SaharaMove(new Coord(7, 0), new Coord(5, 0)),
                     MGPValidation.failure($localize`Vous avez fait un double pas, c'est très bien, mais c'est l'exercice suivant!`),
                 ], [
                     new SaharaRules(SaharaPartSlice),
-                    saharaDidacticial[3],
+                    saharaTutorial[3],
                     new SaharaMove(new Coord(2, 0), new Coord(2, 1)),
                     MGPValidation.failure($localize`Raté ! Vous avez fait un simple pas!`),
                 ], [
                     new SixRules(SixGameState),
-                    sixDidacticial[4],
+                    sixTutorial[4],
                     SixMove.fromDeplacement(new Coord(6, 1), new Coord(7, 1)),
                     MGPValidation.failure(SixDidacticialMessages.MOVEMENT_NOT_DISCONNECTING),
                 ], [
                     new SixRules(SixGameState),
-                    sixDidacticial[5],
+                    sixTutorial[5],
                     SixMove.fromDeplacement(new Coord(3, 2), new Coord(2, 2)),
                     MGPValidation.failure($localize`Ce mouvement ne déconnecte pas du jeu de pièces adverses ! Réessayez avec une autre pièce !`),
                 ], [
                     new SixRules(SixGameState),
-                    sixDidacticial[6],
+                    sixTutorial[6],
                     SixMove.fromDeplacement(new Coord(2, 3), new Coord(3, 3)),
                     MGPValidation.failure($localize`Ce mouvement n'as pas coupé le plateau en deux parties égales`),
                 ],
@@ -1032,17 +1032,17 @@ describe('DidacticialGameWrapperComponent', () => {
                 [new GipfRules(GipfPartSlice), gipfTutorial],
                 [new GoRules(GoPartSlice), goTutorial],
                 [new KamisadoRules(KamisadoPartSlice), kamisadoTutorial],
-                [new LinesOfActionRules(LinesOfActionState), linesOfActionDidacticial],
+                [new LinesOfActionRules(LinesOfActionState), linesOfActionTutorial],
                 [new P4Rules(P4PartSlice), p4Tutorial],
-                [new PentagoRules(PentagoGameState), pentagoDidacticial],
+                [new PentagoRules(PentagoGameState), pentagoTutorial],
                 [new PylosRules(PylosPartSlice), pylosTutorial],
                 [new QuartoRules(QuartoPartSlice), quartoTutorial],
                 [new QuixoRules(QuixoPartSlice), quixoTutorial],
                 [new ReversiRules(ReversiPartSlice), reversiTutorial],
-                [new SaharaRules(SaharaPartSlice), saharaDidacticial],
-                [new SiamRules(SiamPartSlice), siamDidacticial],
-                [new SixRules(SixGameState), sixDidacticial],
-                [new TablutRules(TablutPartSlice), tablutDidacticial],
+                [new SaharaRules(SaharaPartSlice), saharaTutorial],
+                [new SiamRules(SiamPartSlice), siamTutorial],
+                [new SixRules(SixGameState), sixTutorial],
+                [new TablutRules(TablutPartSlice), tablutTutorial],
             ];
             for (const tutorial of tutorials) {
                 const rules: Rules<Move, GamePartSlice> = tutorial[0];
