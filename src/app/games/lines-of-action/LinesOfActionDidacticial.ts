@@ -26,7 +26,7 @@ export const linesOfActionTutorial: DidacticialStep[] = [
         ], 0),
     ),
     DidacticialStep.anyMove(
-        $localize'Initial board and moves',
+        $localize`Initial board and moves`,
         $localize`Here is the initial board.
          Moves can be made orthogonally or diagonally.
          The length of a move is equal to the number of pieces that are on the line of the move.

@@ -139,7 +139,7 @@ export const sixTutorial: DidacticialStep[] = [
         SixMove.fromCut(new Coord(2, 3), new Coord(2, 5), new Coord(2, 5)),
         (move: SixMove, resultingState: SixGameState) => {
             if (move.keep.isAbsent()) {
-                return MGPValidation.failure($localize`This move has not cut the board it two equal halves.`);
+                return MGPValidation.failure($localize`This move has not cut the board in two equal halves.`);
             }
             if (new Coord(2, 3).equals(move.start.getOrNull())) {
                 if (resultingState.getPieceAt(move.landing.getNext(resultingState.offset)) === Player.NONE) {

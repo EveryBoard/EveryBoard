@@ -4,7 +4,7 @@ import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
 import { QuartoPartSlice } from 'src/app/games/quarto/QuartoPartSlice';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { fakeAsync, tick } from '@angular/core/testing';
+import { fakeAsync, flush, tick } from '@angular/core/testing';
 import { QuartoComponent } from '../../../games/quarto/quarto.component';
 import { DebugElement } from '@angular/core';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -516,6 +516,8 @@ describe('DidacticialGameWrapperComponent', () => {
 
             // expect navigator to have been called
             expect(compo.gameService.createGameAndRedirectOrShowError).toHaveBeenCalledWith('Quarto');
+
+            flush();
         }));
     });
     describe('DidacticialStep awaiting specific moves', () => {
@@ -978,22 +980,22 @@ describe('DidacticialGameWrapperComponent', () => {
                     new EpaminondasRules(EpaminondasPartSlice),
                     epaminondasTutorial[3],
                     new EpaminondasMove(0, 11, 2, 1, Direction.UP),
-                    MGPValidation.failure($localize`Félicitation, vous avez un pas d'avance, ce n'est malheureusement pas l'exercice.`),
+                    MGPValidation.failure(`Congratulations, you are in advance. But this is not the exercise here, try again.`),
                 ], [
                     new EpaminondasRules(EpaminondasPartSlice),
                     epaminondasTutorial[4],
                     new EpaminondasMove(0, 10, 1, 1, Direction.UP),
-                    MGPValidation.failure($localize`Raté ! Vous n'avez bougé qu'une pièce.`),
+                    MGPValidation.failure(`Failed! You moved only one piece.`),
                 ], [
                     new SaharaRules(SaharaPartSlice),
                     saharaTutorial[2],
                     new SaharaMove(new Coord(7, 0), new Coord(5, 0)),
-                    MGPValidation.failure($localize`Vous avez fait un double pas, c'est très bien, mais c'est l'exercice suivant!`),
+                    MGPValidation.failure(`You have made a double step, which is good but it is the next exercise!`),
                 ], [
                     new SaharaRules(SaharaPartSlice),
                     saharaTutorial[3],
                     new SaharaMove(new Coord(2, 0), new Coord(2, 1)),
-                    MGPValidation.failure($localize`Raté ! Vous avez fait un simple pas!`),
+                    MGPValidation.failure(`Failed! You have made a single step`),
                 ], [
                     new SixRules(SixGameState),
                     sixTutorial[4],
@@ -1003,12 +1005,12 @@ describe('DidacticialGameWrapperComponent', () => {
                     new SixRules(SixGameState),
                     sixTutorial[5],
                     SixMove.fromDeplacement(new Coord(3, 2), new Coord(2, 2)),
-                    MGPValidation.failure($localize`Ce mouvement ne déconnecte pas du jeu de pièces adverses ! Réessayez avec une autre pièce !`),
+                    MGPValidation.failure(`This move does not disconnect your opponent's pieces. Try again with another piece.`),
                 ], [
                     new SixRules(SixGameState),
                     sixTutorial[6],
                     SixMove.fromDeplacement(new Coord(2, 3), new Coord(3, 3)),
-                    MGPValidation.failure($localize`Ce mouvement n'as pas coupé le plateau en deux parties égales`),
+                    MGPValidation.failure(`This move has not cut the board in two equal halves.`),
                 ],
             ];
             for (const stepExpectation of stepExpectations) {

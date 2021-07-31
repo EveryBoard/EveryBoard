@@ -13,7 +13,7 @@ export const quartoTutorial: DidacticialStep[] = [
           <li>their size (big or small)</li>
           <li>their pattern (empty or dotted)</li>
           <li>their shape (round or square)</li>
-        <ul>
+        </ul>
         Here, we have a board with a victory by an alignment of round pieces.`,
         new QuartoPartSlice([
             [14, 12, 4, 2],

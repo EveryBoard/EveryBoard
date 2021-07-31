@@ -115,6 +115,8 @@ describe('GameService', () => {
             // it should toast, and navigate
             expect(service.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(GameServiceMessages.ALREADY_INGAME);
             expect(service.router.navigate).toHaveBeenCalledOnceWith(['/login']);
+
+            flush();
         }));
         it('should show toast and navigate when creator cannot create game', fakeAsync(async() => {
             spyOn(service.router, 'navigate').and.callThrough();
