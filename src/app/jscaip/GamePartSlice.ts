@@ -48,7 +48,6 @@ export abstract class GamePartSlice implements ComparableObject {
     public equals(other: GamePartSlice): boolean {
         throw new Error('Method uneeded yet' + other.toString());
     }
-
     public toString(): string {
         return '(t:'+this.turn+') = ' + JSON.stringify(this.board);
     }

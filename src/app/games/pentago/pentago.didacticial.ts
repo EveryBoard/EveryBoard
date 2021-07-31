@@ -51,8 +51,6 @@ export const pentagoTutorial: DidacticialStep[] = [
         (move: PentagoMove, resultingState: PentagoGameState) => {
             if (move.blockTurned.isPresent()) {
                 return MGPValidation.failure($localize`Vous avez effectué un mouvement avec rotation, cette étape du didacticiel concerne les tours sans rotations!`);
-            } else if (resultingState.neutralBlocks.length === 4) {
-                return MGPValidation.failure($localize`Vous avez placé votre pièce au centre d'un bloc, de la sorte, tout les blocs étaient neutres et le tour c'est terminé tout seul. Réessayez sans jouer au centre!`);
             } else {
                 return MGPValidation.SUCCESS;
             }

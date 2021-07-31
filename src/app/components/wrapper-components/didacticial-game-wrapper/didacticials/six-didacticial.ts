@@ -141,14 +141,10 @@ export const sixTutorial: DidacticialStep[] = [
             if (move.keep.isAbsent()) {
                 return MGPValidation.failure($localize`Ce mouvement n'as pas coupé le plateau en deux parties égales`);
             }
-            if (new Coord(2, 3).equals(move.start.getOrNull())) {
-                if (resultingState.getPieceAt(move.landing.getNext(resultingState.offset)) === Player.NONE) {
-                    return MGPValidation.failure(`Raté ! Vous avez bien coupé le plateau en deux mais vous avez choisi de conserver la moitié ou vous êtes en minorité, vous avez donc perdu. Réessayez !`);
-                } else {
-                    return MGPValidation.SUCCESS;
-                }
+            if (resultingState.getPieceAt(move.landing.getNext(resultingState.offset)) === Player.NONE) {
+                return MGPValidation.failure(`Raté ! Vous avez bien coupé le plateau en deux mais vous avez choisi de conserver la moitié ou vous êtes en minorité, vous avez donc perdu. Réessayez !`);
             } else {
-                return MGPValidation.failure($localize`Ce mouvement ne déconnecte pas du jeu de pièces adverses ! Réessayez avec une autre pièce !`);
+                return MGPValidation.SUCCESS;
             }
         },
         $localize`Bravo, vous avez gagné !`,

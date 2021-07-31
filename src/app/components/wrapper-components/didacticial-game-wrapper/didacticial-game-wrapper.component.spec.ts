@@ -78,6 +78,7 @@ import { PylosPartSlice } from 'src/app/games/pylos/PylosPartSlice';
 import { P4PartSlice } from 'src/app/games/p4/P4PartSlice';
 import { LinesOfActionState } from 'src/app/games/lines-of-action/LinesOfActionState';
 import { SaharaMove } from 'src/app/games/sahara/SaharaMove';
+import { PentagoMove } from 'src/app/games/pentago/PentagoMove';
 
 describe('DidacticialGameWrapperComponent', () => {
     let componentTestUtils: ComponentTestUtils<QuartoComponent>;
@@ -985,6 +986,16 @@ describe('DidacticialGameWrapperComponent', () => {
                     new EpaminondasMove(0, 10, 1, 1, Direction.UP),
                     MGPValidation.failure($localize`Raté ! Vous n'avez bougé qu'une pièce.`),
                 ], [
+                    new PentagoRules(PentagoGameState),
+                    pentagoTutorial[2],
+                    PentagoMove.withRotation(0, 0, 0, true),
+                    MGPValidation.failure($localize`Vous avez effectué un mouvement avec rotation, cette étape du didacticiel concerne les tours sans rotations!`),
+                ], [
+                    new PentagoRules(PentagoGameState),
+                    pentagoTutorial[3],
+                    PentagoMove.rotationless(0, 0),
+                    MGPValidation.failure($localize`Vous avez effectué un mouvement sans rotation, recommencez!`),
+                ], [
                     new SaharaRules(SaharaPartSlice),
                     saharaTutorial[2],
                     new SaharaMove(new Coord(7, 0), new Coord(5, 0)),
@@ -1009,6 +1020,11 @@ describe('DidacticialGameWrapperComponent', () => {
                     sixTutorial[6],
                     SixMove.fromDeplacement(new Coord(2, 3), new Coord(3, 3)),
                     MGPValidation.failure($localize`Ce mouvement n'as pas coupé le plateau en deux parties égales`),
+                ], [
+                    new SixRules(SixGameState),
+                    sixTutorial[6],
+                    SixMove.fromCut(new Coord(2, 3), new Coord(1, 3), new Coord(3, 2)),
+                    MGPValidation.failure(`Raté ! Vous avez bien coupé le plateau en deux mais vous avez choisi de conserver la moitié ou vous êtes en minorité, vous avez donc perdu. Réessayez !`),
                 ],
             ];
             for (const stepExpectation of stepExpectations) {
