@@ -155,6 +155,17 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
         this.captured = [];
         this.moved = [];
 
+        this.showLastMove();
+
+        this.initialCaptures = [];
+        this.finalCaptures = [];
+        this.currentCapture = MGPOptional.empty();
+        this.moveStart = MGPOptional.empty();
+        this.moveEnd = MGPOptional.empty();
+        this.updateViewInfo();
+        this.moveToInitialCaptureOrMovePhase();
+    }
+    private showLastMove(): void {
         const move: YinshMove = this.rules.node.move;
         if (move !== null) {
             if (move.isInitialPlacement()) {
@@ -165,14 +176,6 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
                 move.finalCaptures.forEach((c: YinshCapture) => this.markCapture(c));
             }
         }
-
-        this.initialCaptures = [];
-        this.finalCaptures = [];
-        this.currentCapture = MGPOptional.empty();
-        this.moveStart = MGPOptional.empty();
-        this.moveEnd = MGPOptional.empty();
-        this.updateViewInfo();
-        this.moveToInitialCaptureOrMovePhase();
     }
     private markCapture(capture: YinshCapture): void {
         capture.forEach((c: Coord) => {
