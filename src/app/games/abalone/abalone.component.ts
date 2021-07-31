@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { HexagonalGameComponent } from 'src/app/components/game-components/abstract-game-component/HexagonalGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Direction } from 'src/app/jscaip/Direction';
+import { BaseDirection, Direction } from 'src/app/jscaip/Direction';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
@@ -175,7 +175,8 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
                 const pointedCenter: Coord = this.getCenterAt(pointed);
                 const middle: Coord = this.getMiddleOfArrow(dir, pointed, pointedCenter);
                 const centerCoord: string = pointedCenter.x + ' ' + pointedCenter.y;
-                const rotation: string = 'rotate(' + (60 * dir.toInt() + 150) + ' ' + centerCoord + ')';
+                const angle: number = HexaDirection.getAngle(dir) + 150;
+                const rotation: string = 'rotate(' + angle + ' ' + centerCoord + ')';
                 const translation: string = 'translate(' + centerCoord + ')';
                 const transformation: string = rotation + ' ' + translation;
                 const arrow: HexaDirArrow = new HexaDirArrow(firstPieceCenter,
@@ -216,7 +217,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
         if (distance > 2) {
             return this.cancelMove(AbaloneFailure.CANNOT_MOVE_MORE_THAN_THREE_PIECES);
         }
-        const alignement: HexaDirection = firstPiece.getDirectionToward(coord);
+        const alignement: BaseDirection = firstPiece.getDirectionToward(coord);
         this.selecteds = [firstPiece];
         for (let i: number = 0; i < distance; i++) {
             this.selecteds.push(firstPiece.getNext(alignement, i + 1));

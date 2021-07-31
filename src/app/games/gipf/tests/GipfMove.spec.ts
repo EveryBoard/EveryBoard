@@ -134,7 +134,7 @@ describe('GipfPlacement', () => {
             const placement1: GipfPlacement = new GipfPlacement(new Coord(-3, 0), MGPOptional.of(HexaDirection.DOWN));
             const placement2: GipfPlacement = new GipfPlacement(new Coord(1, -3), MGPOptional.of(HexaDirection.DOWN));
             const placement3: GipfPlacement = new GipfPlacement(new Coord(-3, 0),
-                                                                MGPOptional.of(HexaDirection.DOWN_RIGHT));
+                                                                MGPOptional.of(HexaDirection.RIGHT));
             expect(placement1.equals(placement2)).toBeFalse();
             expect(placement1.equals(placement3)).toBeFalse();
         });

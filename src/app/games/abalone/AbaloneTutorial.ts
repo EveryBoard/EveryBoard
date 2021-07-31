@@ -45,7 +45,7 @@ export const abaloneTutorial: DidacticialStep[] = [
             [_, _, _, O, _, _, N, N, N],
             [_, _, O, _, _, N, N, N, N],
         ], 0),
-        [AbaloneMove.fromSingleCoord(new Coord(4, 4), HexaDirection.DOWN_RIGHT)],
+        [AbaloneMove.fromSingleCoord(new Coord(4, 4), HexaDirection.RIGHT)],
         $localize`Bravo ! Vous savez tout ce qu'il faut pour commencer une partie!`,
         $localize`Raté !`,
     ),
