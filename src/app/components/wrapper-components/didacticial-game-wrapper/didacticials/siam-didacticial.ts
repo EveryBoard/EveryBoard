@@ -20,44 +20,44 @@ const d: number = SiamPiece.BLACK_DOWN.value;
 
 export const siamTutorial: DidacticialStep[] = [
     DidacticialStep.informational(
-        $localize`But du jeu`,
-        $localize`Le but du Siam est d'être le premier à pousser une montagne hors du plateau.
-        Le plateau de départ en contient trois, au centre, et aucun pion n'est initialement sur le plateau.
-        Durant son tour de jeu un joueur peut effectuer l'une des trois actions suivantes:
-        <ul>
-            <li> 1. Faire entrer une pièce sur le plateau.</li>
-            <li> 2. Changer l'orientation d'une de ses pièces et optionnellement la déplacer.</li>
-            <li> 3. Sortir un de ses pions du plateau.</li>
-        </ul>`,
+        $localize`Goal of the game`,
+        $localize`The goal at Siam is to be the first to push a mountain out of the board.
+        The initial board contains three mountains, and no pieces are initially on the board.
+        During its turn, a player can do one of the following three actions:
+        <ol>
+            <li>Put a new piece on the board.</li>
+            <li>Change the orientation of one of its piece, and optionally move it.</li>
+            <li>Take one of its pieces out of the board.</li>
+        </ol>`,
         SiamPartSlice.getInitialSlice(),
     ),
     DidacticialStep.anyMove(
-        $localize`Insérer une pièce`,
-        $localize`Chaque joueur a en tout 5 pièces.
-        Tant qu'il n'en a pas 5 sur le plateau, il peut en insérer une. Pour ce faire:
-        <ul>
-            <li> 1. Appuyez sur une des grosses flèches autour du plateau.</li>
-            <li> 2. Cliquez sur une des 4 petites flèches apparues sur la case d'arrivée de la pièce insérée.
-                Cela indiquera la direction dans laquelle sera orientée votre pièce.</li>
-        </ul><br/>
-        Insérez une pièce sur le plateau.`,
+        $localize`Inserting a piece`,
+        $localize`Every player has 5 pieces in total.
+        As long as you do not have 5 pieces on the board, you can insert new pieces. To do so:
+        <ol>
+            <li>Click on one of the big arrows along the board.</li>
+            <li>Click on one of the small arrows that appeared on the landing case of your piece.
+                This is the direction in which your piece will be oriented.</li>
+        </ol><br/>
+        Insert a piece on the board.`,
         SiamPartSlice.getInitialSlice(),
         new SiamMove(2, -1, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN),
-        $localize`Bravo !`,
+        $localize`Congratulations !`,
     ),
     DidacticialStep.fromMove(
-        $localize`Déplacer une pièce`,
-        $localize`Nous distinguerons ici "déplacer" et "pousser".
-        Un déplacement de pièce se fait de sa case de départ à une case vide voisine horizontalement ou verticalement.
-        Lors de ce déplacement on peut aussi faire sortir la pièce du plateau.
-        Pour déplacer la pièce:
-        <ul>
-            <li> 1. Cliquez dessus.</li>
-            <li> 2. Cliquez sur l'une des 5 flèches pour choisir la direction dans laquelle elle va se déplacer.
-                En cliquant sur celle au milieu, vous décidez de juste changer l'orientation de la pièce, sans la déplacer.</li>
-            <li> 3. Cliquez sur l'une des 4 flèches sur la case d'arrivée de votre pièce pour choisir son orientation.</li>
-        </ul><br/>
-        Essayer de déplacer la pièce sur le plateau d'une case vers le haut et de l'orienter vers le bas.`,
+        $localize`Moving a piece`,
+        $localize`We will distinguish here "moving" and "pushing".
+        A move is made from a piece's square to an empty neighbouring square, horizontally or vertically.
+        During that move, you can also move the piece out of the board.
+        To move a piece:
+        <ol>
+            <li>Click on it.</li>
+            <li>Click on one of the 4 arrows to pick the direction in which it will move.
+                You can also click on the middle dot to change the piece's orientation without moving it.</li>
+            <li>Click on one of the 4 arrows on the landing square to pick its orientation.</li>
+        </ol><br/>
+        Try to move the piece that is on the board one square upwards and to orient it downwards.`,
         new SiamPartSlice([
             [_, _, _, _, _],
             [_, _, _, _, _],
@@ -66,13 +66,13 @@ export const siamTutorial: DidacticialStep[] = [
             [_, _, U, _, _],
         ], 0),
         [new SiamMove(2, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.DOWN)],
-        $localize`Bravo, vous avez fait un dérapage!`,
-        $localize`Raté !`,
+        $localize`Congratulations, you made a sideslip!`,
+        $localize`Failed!`,
     ),
     DidacticialStep.fromMove(
-        $localize`Sortir une pièce`,
-        $localize`Sortir une pièce du plateau est plus simple, préciser son orientation d'arrivée n'est pas nécessaire.<br/><br/>
-        Sortez cette pièce du plateau!`,
+        $localize`Moving a piece out of the board`,
+        $localize`To move a piece out of the board, you do no thave to pick an orientation after the move.<br/><br/>
+        Get that piece out of the board!`,
         new SiamPartSlice([
             [_, _, _, _, _],
             [_, _, _, _, _],
@@ -81,22 +81,22 @@ export const siamTutorial: DidacticialStep[] = [
             [_, _, U, _, _],
         ], 0),
         [new SiamMove(2, 4, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN)],
-        $localize`Bravo, même si dans le contexte c'était plutôt un mouvement inutile.`,
-        $localize`Raté, elle est encore sur le plateau.`,
+        $localize`Congratulations, even if in this context it was not a useful move.`,
+        $localize`Failed, the piece is still on the board`,
     ),
     DidacticialStep.fromMove(
-        $localize`Pousser`,
-        $localize`Quand la case d'arrivée de votre déplacement est occupée, on parle de "pousser".
-        Pour pousser il faut plusieurs critères:
-        <ul>
-            <li> 1. Être déjà orienté dans le sens de la poussée.</li>
-            <li> 2. Que le nombre de pièces (ennemies ou non) qui font face à la votre (les résistants)
-                soit plus petit que le nombre de pièces qui vont dans la même direction, votre y compris (les pousseurs).</li>
-            <li> 3. Le nombre de montagne doit être inférieur ou égal à la différence entre pousseurs et résistant.</li>
-        </ul>
-        Votre pièce tout en haut à droite ne peut pas pousser car il y a une montagne de trop.
-        Votre pièce tout en bas à droite, elle, peut pousser.<br/><br/>
-        Faites-le.`,
+        $localize`Pushing`,
+        $localize`When the landing case of your move is occupied, we use the term "push".
+        In order to push, multiple conditions must hold:
+        <ol>
+            <li>Your piece must be oriented in the direction of the push.</li>
+            <li>The number of the pieces (opponent's or not) that are facing yours (called the resistants)
+                is smaller than the number of pieces that are oriented in the same direction as the push, yourself included (the pushers)</li>
+            <li>The number of mountains on that line must be smaller or equal to the difference between the pushers and the resistants.</li>
+        </ol>
+        Your piece on the top right cannot push because there is one mountain too much.
+        Your piece on the bottom right can push..<br/><br/>
+        Do it.`,
         new SiamPartSlice([
             [R, M, M, l, L],
             [_, _, _, _, _],
@@ -105,16 +105,16 @@ export const siamTutorial: DidacticialStep[] = [
             [_, _, r, l, L],
         ], 0),
         [new SiamMove(4, 4, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT)],
-        $localize`Bravo !`,
-        $localize`Raté !`,
+        $localize`Congratulations !`,
+        $localize`Failed !`,
     ),
     DidacticialStep.fromMove(
-        $localize`Victoire`,
-        $localize`Pour rappel, la partie se termine quand une montagne est poussée hors du plateau.
-        Si vous l'avez poussé et que personne ne vous barre la route, vous êtes le vainqueur.
-        Cependant, si vous poussez un adversaire orienté dans la même direction que vous, il sera considéré vainqueur.
-        En revanche, si un adversaire est plus proche de la montagne, mais mal orienté, la victoire sera vôtre.<br/><br/>
-        Vous avez deux moyen de finir la partie, un gagnant, un perdant, choisissez!`,
+        $localize`Victory`,
+        $localize`The game ends when a mountain is pushed out of the board.
+        If you pushed it and nobody is in front of you, you're the winner.
+        However, if you were pushing an opponent oriented in the same direction as you, your opponent will win because that piece is closer to the mountain.
+        However, if that opponent is closer to the mountain but not oriented towards it, victory will be yours.<br/><br/>
+        You have two ways of ending the game here: you can either win, or lose. Choose correctly!`,
         new SiamPartSlice([
             [_, _, _, _, _],
             [_, _, _, _, _],
@@ -123,7 +123,7 @@ export const siamTutorial: DidacticialStep[] = [
             [_, _, _, _, M],
         ], 0),
         [new SiamMove(2, 2, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT)],
-        $localize`Bravo, vous avez gagné!`,
-        $localize`Raté, vous avez perdu.`,
+        $localize`Congratulations, you won!`,
+        $localize`Failed, you lost.`,
     ),
 ];
