@@ -15,12 +15,12 @@ const B: YinshPiece = YinshPiece.RING_ONE;
 
 export const yinshTutorial: DidacticialStep[] = [
     DidacticialStep.informational(
-        $localize`But du jeu`,
-        $localize`Le but du jeu à Yinsh est de capturer trois anneaux en tout.
-         Le nombre d'anneaux capturés est indiqué en haut à gauche pour le joueur foncé,
-         et en bas à droite pour le joueur clair. Ici, Foncé a gagné la partie.
-         Notez que sur le plateau vous avez deux types des pièces pour chaque joueur:
-         des anneaux (pièces creuses) et des marqueurs (pièces entières).`,
+        $localize`Goal of the game`,
+        $localize`The goal at Yinsh is to capture three rings in total.
+        The rings taken are shown on the top left for the dark player,
+        and on the bottom right for the light player. Here, Dark won the game.
+        Note that on the board you have two types of pieces for each player:
+        rings (empty circles) and markers (full circles).`,
         new YinshGameState(YinshBoard.of([
             [N, N, N, N, N, N, _, _, _, _, N],
             [N, N, N, N, _, _, _, _, _, _, _],
@@ -36,23 +36,23 @@ export const yinshTutorial: DidacticialStep[] = [
         ]), [3, 1], 20),
     ),
     DidacticialStep.anyMove(
-        $localize`Plateau initial et phase de placement`,
-        $localize`Le plateau initial est vide.
-        Au début de la partie, chaque joueur place à son tour un de ses anneaux.
-        Cette phase s'arrête lorsque que tous les anneaux ont été placés.
-        Placez un de vos anneaux en cliquant sur la case du plateau où vous désirez le placer.`,
+        $localize`Initial board and placement phase`,
+        $localize`The initial board is empty.
+        At the beginning of the game, each player puts one of its ring on the board at their turn.
+        This phase stops when all rings have been placed on the board.
+        Put one of your ring on the board by clicking the space where you want to place it.`,
         new YinshGameState(YinshBoard.EMPTY, [5, 5], 0),
         new YinshMove([], new Coord(5, 5), MGPOptional.empty(), []),
-        $localize`Bravo !`),
+        $localize`Congratulations!`),
     DidacticialStep.anyMove(
-        $localize`Placer un marqueur`,
-        $localize`Une fois la phase initiale terminée et tous vos anneaux présents sur le plateau, il vous faut placer des marqueurs sur le plateau.
-        Pour ce faire, placez un marqueur dans un de vos anneaux en cliquant sur cet anneau.
-        Ensuite, l'anneau doit se déplacer en ligne droite dans n'importe quelle direction.
-        Un anneau ne peut pas lors de son mouvement passer à travers d'autres anneaux.
-        Si vous passez au dessus d'un groupe de marqueurs, votre mouvement doit s'arrêter au premier espace vide qui suit ce groupe.
-        Tous les marqueurs du groupe sont alors retournés et changent de couleur.
-        Vous jouez foncé, effectuez un mouvement.`,
+        $localize`Putting a marker`,
+        $localize`Once the initial phase is done and all rings are on the board, you need to place markers on the board..
+        To do so, put a marker in a ring by clicking on that ring
+        Then, the ring must be moved in a straight line, in any direction.
+        A ring cannot pass through other rings during its move.
+        If it goes over a group of markers, your move must stop at the first empty space after that group.
+        All markers in the group are then flipped and their colour change.<br/><br/>
+        You're playing dark, do a move.`,
         new YinshGameState(YinshBoard.of([
             [N, N, N, N, N, N, _, _, _, _, N],
             [N, N, N, N, _, _, _, _, _, _, _],
@@ -67,15 +67,15 @@ export const yinshTutorial: DidacticialStep[] = [
             [N, _, _, _, _, N, N, N, N, N, N],
         ]), [0, 0], 20),
         new YinshMove([], new Coord(2, 4), MGPOptional.of(new Coord(4, 4)), []),
-        $localize`Bravo !`),
+        $localize`Congratulations!`),
     DidacticialStep.fromMove(
-        $localize`Récupérer un anneau en alignant 5 marqueurs`,
-        $localize`Finalement, la seule mécanique qu'il vous manque est de pouvoir récupérer des anneaux afin de marquer des points.
-        Pour cela, il faut que vous alignez 5 marqueurs à votre couleur.
-        Vous pouvez alors récupérer ces marqueurs en cliquant dessus, et ensuite récupérer un de vos anneaux en cliquant dessus.
-        Vous avez alors un point de plus.
-        Vous êtes obligés d'effectuer une capture quand elle se présente.
-        Vous jouez foncé, effectuez une capture !`,
+        $localize`Getting a ring by aligning 5 markers`,
+        $localize`Finally, the last mechanic you need is to be able to get a ring from the board in order to gain points.
+        To do so, you need to align 5 markers of your colour.
+        You can then get these markers by clicking on them, and then get one of your ring by clicking on it.
+        You will then have one more point.
+        You must capture when you can.<br/><br/>
+        You're playing dark, perform a capture!`,
         new YinshGameState(YinshBoard.of([
             [N, N, N, N, N, N, _, _, _, _, N],
             [N, N, N, N, _, _, _, _, _, _, _],
@@ -92,6 +92,6 @@ export const yinshTutorial: DidacticialStep[] = [
         [new Coord(7, 4), new Coord(4, 6), new Coord(5, 7), new Coord(3, 8), new Coord(7, 8)].map((ringTaken: Coord) =>
             new YinshMove([], new Coord(4, 4), MGPOptional.of(new Coord(7, 4)),
                           [YinshCapture.of(new Coord(2, 4), new Coord(6, 4), ringTaken)])),
-        $localize`Bravo !`,
-        $localize`Raté ! Vous devez aligner 5 marqueurs pour pouvoir les récupérer et prendre un anneau par la même occasion.`),
+        $localize`Congratulations! You need two more captures to win.`,
+        $localize`Failed! You need to align 5 markers of your colour in order to get them, and to get a ring at the same time.`),
 ];
