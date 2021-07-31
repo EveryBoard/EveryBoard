@@ -48,7 +48,6 @@ export class HexaBoard<T> {
                 return true;
             }
         } else {
-            // coord.y = halfHeight
             if (excludedCases[coord.y] != null) {
                 return coord.x > excludedCases[coord.y]-1 && (width-1-coord.x) > excludedCases[height-1 - coord.y]-1;
             } else {

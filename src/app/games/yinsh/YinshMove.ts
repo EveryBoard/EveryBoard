@@ -3,7 +3,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Encoder, MoveEncoder } from 'src/app/jscaip/Encoder';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { Move } from 'src/app/jscaip/Move';
-import { arrayEquals } from 'src/app/utils/Comparable';
+import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert, JSONObject, JSONValue, JSONValueWithoutArray } from 'src/app/utils/utils';
 
@@ -102,8 +102,8 @@ export class YinshMove extends Move {
         if (this === other) return true;
         if (this.start.equals(other.start) === false) return false;
         if (this.end.equals(other.end) === false) return false;
-        if (arrayEquals(this.initialCaptures, other.initialCaptures) === false) return false;
-        if (arrayEquals(this.finalCaptures, other.finalCaptures) === false) return false;
+        if (ArrayUtils.equals(this.initialCaptures, other.initialCaptures) === false) return false;
+        if (ArrayUtils.equals(this.finalCaptures, other.finalCaptures) === false) return false;
         return true;
     }
     public toString(): string {

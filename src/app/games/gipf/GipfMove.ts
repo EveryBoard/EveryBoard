@@ -6,7 +6,6 @@ import { Move } from 'src/app/jscaip/Move';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { assert, JSONObject, JSONValue, JSONValueWithoutArray } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { arrayEquals } from 'src/app/utils/Comparable';
 
 export class GipfCapture {
     public static encoder: Encoder<GipfCapture> = new class extends Encoder<GipfCapture> {
@@ -184,8 +183,8 @@ export class GipfMove extends Move {
     public equals(other: GipfMove): boolean {
         if (this === other) return true;
         if (this.placement.equals(other.placement) === false) return false;
-        if (arrayEquals(this.initialCaptures, other.initialCaptures) === false) return false;
-        if (arrayEquals(this.finalCaptures, other.finalCaptures) === false) return false;
+        if (ArrayUtils.equals(this.initialCaptures, other.initialCaptures) === false) return false;
+        if (ArrayUtils.equals(this.finalCaptures, other.finalCaptures) === false) return false;
         return true;
     }
     public encode(): JSONValue {

@@ -13,6 +13,7 @@ import { YinshPiece } from '../YinshPiece';
 describe('YinshComponent', () => {
     let testUtils: ComponentTestUtils<YinshComponent>;
     const _: YinshPiece = YinshPiece.EMPTY;
+    const N: YinshPiece = YinshPiece.EMPTY;
     const a: YinshPiece = YinshPiece.MARKER_ZERO;
     const b: YinshPiece = YinshPiece.MARKER_ONE;
     const A: YinshPiece = YinshPiece.RING_ZERO;
@@ -32,17 +33,17 @@ describe('YinshComponent', () => {
         }));
         it('should forbid placing a ring on an occupied space', fakeAsync(async() => {
             const board: YinshBoard = YinshBoard.of([
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, A, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
+                [N, N, N, N, N, N, _, _, _, _, N],
+                [N, N, N, N, _, _, _, _, _, _, _],
+                [N, N, N, A, _, _, _, _, _, _, _],
+                [N, N, _, _, _, _, _, _, _, _, _],
+                [N, _, _, _, _, _, _, _, _, _, _],
+                [N, _, _, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, _, _, N, N],
+                [_, _, _, _, _, _, _, _, N, N, N],
+                [_, _, _, _, _, _, _, N, N, N, N],
+                [N, _, _, _, _, N, N, N, N, N, N],
             ]);
             const state: YinshGameState = new YinshGameState(board, [4, 5], 1);
             testUtils.setupSlice(state);
@@ -58,17 +59,17 @@ describe('YinshComponent', () => {
     describe('Main phase', () => {
         it('should allow a simple move without capture', fakeAsync(async() => {
             const board: YinshBoard = YinshBoard.of([
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, A, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
+                [N, N, N, N, N, N, _, _, _, _, N],
+                [N, N, N, N, _, _, _, _, _, _, _],
+                [N, N, N, A, _, _, _, _, _, _, _],
+                [N, N, _, _, _, _, _, _, _, _, _],
+                [N, _, _, _, _, _, _, _, _, _, _],
+                [N, _, _, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, _, _, N, N],
+                [_, _, _, _, _, _, _, _, N, N, N],
+                [_, _, _, _, _, _, _, N, N, N, N],
+                [N, _, _, _, _, N, N, N, N, N, N],
             ]);
             const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
             testUtils.setupSlice(state);
@@ -80,17 +81,17 @@ describe('YinshComponent', () => {
         }));
         it('should fill the ring selected at the beginning of a move', fakeAsync(async() => {
             const board: YinshBoard = YinshBoard.of([
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, A, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
+                [N, N, N, N, N, N, _, _, _, _, N],
+                [N, N, N, N, _, _, _, _, _, _, _],
+                [N, N, N, A, _, _, _, _, _, _, _],
+                [N, N, _, _, _, _, _, _, _, _, _],
+                [N, _, _, _, _, _, _, _, _, _, _],
+                [N, _, _, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, _, _, N, N],
+                [_, _, _, _, _, _, _, _, N, N, N],
+                [_, _, _, _, _, _, _, N, N, N, N],
+                [N, _, _, _, _, N, N, N, N, N, N],
             ]);
             const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
             testUtils.setupSlice(state);
@@ -101,17 +102,17 @@ describe('YinshComponent', () => {
         }));
         it('should enable selecting capture by first clicking the capture group, then the ring taken', fakeAsync(async() => {
             const board: YinshBoard = YinshBoard.of([
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, A, A, _, _, _, _, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
+                [N, N, N, N, N, N, _, _, _, _, N],
+                [N, N, N, N, _, _, _, _, _, _, _],
+                [N, N, N, A, A, _, _, _, _, _, _],
+                [N, N, _, a, _, _, _, _, _, _, _],
+                [N, _, _, a, _, _, _, _, _, _, _],
+                [N, _, _, a, _, _, _, _, _, _, N],
+                [_, _, _, a, _, _, _, _, _, _, N],
+                [_, _, _, a, _, _, _, _, _, N, N],
+                [_, _, _, _, _, _, _, _, N, N, N],
+                [_, _, _, _, _, _, _, N, N, N, N],
+                [N, _, _, _, _, N, N, N, N, N, N],
             ]);
             const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
             testUtils.setupSlice(state);
@@ -128,17 +129,17 @@ describe('YinshComponent', () => {
         it('should highlight possible captures', fakeAsync(async() => {
             testUtils.expectElementNotToExist('#capture_0');
             const board: YinshBoard = YinshBoard.of([
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, A, A, _, _, _, _, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
+                [N, N, N, N, N, N, _, _, _, _, N],
+                [N, N, N, N, _, _, _, _, _, _, _],
+                [N, N, N, A, A, _, _, _, _, _, _],
+                [N, N, _, a, _, _, _, _, _, _, _],
+                [N, _, _, a, _, _, _, _, _, _, _],
+                [N, _, _, a, _, _, _, _, _, _, N],
+                [_, _, _, a, _, _, _, _, _, _, N],
+                [_, _, _, a, _, _, _, _, _, N, N],
+                [_, _, _, _, _, _, _, _, N, N, N],
+                [_, _, _, _, _, _, _, N, N, N, N],
+                [N, _, _, _, _, N, N, N, N, N, N],
             ]);
             const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
             testUtils.setupSlice(state);
@@ -149,17 +150,17 @@ describe('YinshComponent', () => {
         }));
         it('should make captured pieces disappear and show their background in red, and remove highlight upon cancellation', fakeAsync(async() => {
             const board: YinshBoard = YinshBoard.of([
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, A, A, _, _, _, _, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
+                [N, N, N, N, N, N, _, _, _, _, N],
+                [N, N, N, N, _, _, _, _, _, _, _],
+                [N, N, N, A, A, _, _, _, _, _, _],
+                [N, N, _, a, _, _, _, _, _, _, _],
+                [N, _, _, a, _, _, _, _, _, _, _],
+                [N, _, _, a, _, _, _, _, _, _, N],
+                [_, _, _, a, _, _, _, _, _, _, N],
+                [_, _, _, a, _, _, _, _, _, N, N],
+                [_, _, _, _, _, _, _, _, N, N, N],
+                [_, _, _, _, _, _, _, N, N, N, N],
+                [N, _, _, _, _, N, N, N, N, N, N],
             ]);
             const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
             testUtils.setupSlice(state);
@@ -187,17 +188,17 @@ describe('YinshComponent', () => {
         }));
         it('should support multiple captures', fakeAsync(async() => {
             const board: YinshBoard = YinshBoard.of([
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, A, A, A, _, _, _, _, _],
-                [_, _, _, a, a, _, _, _, _, _, _],
-                [_, _, _, a, a, _, _, _, _, _, _],
-                [_, _, _, a, a, _, _, _, _, _, _],
-                [_, _, _, a, a, _, _, _, _, _, _],
-                [_, _, _, a, a, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
+                [N, N, N, N, N, N, _, _, _, _, N],
+                [N, N, N, N, _, _, _, _, _, _, _],
+                [N, N, N, A, A, A, _, _, _, _, _],
+                [N, N, _, a, a, _, _, _, _, _, _],
+                [N, _, _, a, a, _, _, _, _, _, _],
+                [N, _, _, a, a, _, _, _, _, _, N],
+                [_, _, _, a, a, _, _, _, _, _, N],
+                [_, _, _, a, a, _, _, _, _, N, N],
+                [_, _, _, _, _, _, _, _, N, N, N],
+                [_, _, _, _, _, _, _, N, N, N, N],
+                [N, _, _, _, _, N, N, N, N, N, N],
             ]);
             const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
             testUtils.setupSlice(state);
@@ -217,17 +218,17 @@ describe('YinshComponent', () => {
         }));
         it('should fail when trying to move while there are still captures', fakeAsync(async() => {
             const board: YinshBoard = YinshBoard.of([
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, A, A, _, _, _, _, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
+                [N, N, N, N, N, N, _, _, _, _, N],
+                [N, N, N, N, _, _, _, _, _, _, _],
+                [N, N, N, A, A, _, _, _, _, _, _],
+                [N, N, _, a, _, _, _, _, _, _, _],
+                [N, _, _, a, _, _, _, _, _, _, _],
+                [N, _, _, a, _, _, _, _, _, _, N],
+                [_, _, _, a, _, _, _, _, _, _, N],
+                [_, _, _, a, _, _, _, _, _, N, N],
+                [_, _, _, _, _, _, _, _, N, N, N],
+                [_, _, _, _, _, _, _, N, N, N, N],
+                [N, _, _, _, _, N, N, N, N, N, N],
             ]);
             const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
             testUtils.setupSlice(state);
@@ -251,17 +252,17 @@ describe('YinshComponent', () => {
         }));
         it('should increase the number of rings shown when a player makes a capture', fakeAsync(async() => {
             const board: YinshBoard = YinshBoard.of([
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, A, A, _, _, _, _, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
+                [N, N, N, N, N, N, _, _, _, _, N],
+                [N, N, N, N, _, _, _, _, _, _, _],
+                [N, N, N, A, A, _, _, _, _, _, _],
+                [N, N, _, a, _, _, _, _, _, _, _],
+                [N, _, _, a, _, _, _, _, _, _, _],
+                [N, _, _, a, _, _, _, _, _, _, N],
+                [_, _, _, a, _, _, _, _, _, _, N],
+                [_, _, _, a, _, _, _, _, _, N, N],
+                [_, _, _, _, _, _, _, _, N, N, N],
+                [_, _, _, _, _, _, _, N, N, N, N],
+                [N, _, _, _, _, N, N, N, N, N, N],
             ]);
             const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
             testUtils.setupSlice(state);
@@ -280,17 +281,17 @@ describe('YinshComponent', () => {
         }));
         it('should recompute captures upon intersecting captures', fakeAsync(async() => {
             const board: YinshBoard = YinshBoard.of([
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, A, A, _, _, _, _, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, a, a, a, a, a, a, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
+                [N, N, N, N, N, N, _, _, _, _, N],
+                [N, N, N, N, _, _, _, _, _, _, _],
+                [N, N, N, A, A, _, _, _, _, _, _],
+                [N, N, _, a, _, _, _, _, _, _, _],
+                [N, _, _, a, _, _, _, _, _, _, _],
+                [N, _, _, a, a, a, a, a, a, _, N],
+                [_, _, _, a, _, _, _, _, _, _, N],
+                [_, _, _, a, _, _, _, _, _, N, N],
+                [_, _, _, _, _, _, _, _, N, N, N],
+                [_, _, _, _, _, _, _, N, N, N, N],
+                [N, _, _, _, _, N, N, N, N, N, N],
             ]);
             const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
             testUtils.setupSlice(state);
@@ -309,17 +310,17 @@ describe('YinshComponent', () => {
         }));
         it('should highlight the rings instead of the captures after selecting a capture', fakeAsync(async() => {
             const board: YinshBoard = YinshBoard.of([
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, A, A, _, _, _, _, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, a, a, a, a, a, a, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
+                [N, N, N, N, N, N, _, _, _, _, N],
+                [N, N, N, N, _, _, _, _, _, _, _],
+                [N, N, N, A, A, _, _, _, _, _, _],
+                [N, N, _, a, _, _, _, _, _, _, _],
+                [N, _, _, a, _, _, _, _, _, _, _],
+                [N, _, _, a, a, a, a, a, a, _, N],
+                [_, _, _, a, _, _, _, _, _, _, N],
+                [_, _, _, a, _, _, _, _, _, N, N],
+                [_, _, _, _, _, _, _, _, N, N, N],
+                [_, _, _, _, _, _, _, N, N, N, N],
+                [N, _, _, _, _, N, N, N, N, N, N],
             ]);
             const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
             testUtils.setupSlice(state);
@@ -336,17 +337,17 @@ describe('YinshComponent', () => {
         }));
         it('should not allow clicking on an ambiguous capture coordinate', fakeAsync(async() => {
             const board: YinshBoard = YinshBoard.of([
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, A, A, _, _, _, _, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, a, a, a, a, a, a, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
+                [N, N, N, N, N, N, _, _, _, _, N],
+                [N, N, N, N, _, _, _, _, _, _, _],
+                [N, N, N, A, A, _, _, _, _, _, _],
+                [N, N, _, a, _, _, _, _, _, _, _],
+                [N, _, _, a, _, _, _, _, _, _, _],
+                [N, _, _, a, a, a, a, a, a, _, N],
+                [_, _, _, a, _, _, _, _, _, _, N],
+                [_, _, _, a, _, _, _, _, _, N, N],
+                [_, _, _, _, _, _, _, _, N, N, N],
+                [_, _, _, _, _, _, _, N, N, N, N],
+                [N, _, _, _, _, N, N, N, N, N, N],
             ]);
             const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
             testUtils.setupSlice(state);
@@ -355,18 +356,19 @@ describe('YinshComponent', () => {
         }));
         it('should cancel the move when clicking on something else than a ring after a capture', fakeAsync(async() => {
             const board: YinshBoard = YinshBoard.of([
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, A, A, _, _, _, _, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
+                [N, N, N, N, N, N, _, _, _, _, N],
+                [N, N, N, N, _, _, _, _, _, _, _],
+                [N, N, N, A, A, _, _, _, _, _, _],
+                [N, N, _, a, _, _, _, _, _, _, _],
+                [N, _, _, a, _, _, _, _, _, _, _],
+                [N, _, _, a, _, _, _, _, _, _, N],
+                [_, _, _, a, _, _, _, _, _, _, N],
+                [_, _, _, a, _, _, _, _, _, N, N],
+                [_, _, _, _, _, _, _, _, N, N, N],
+                [_, _, _, _, _, _, _, N, N, N, N],
+                [N, _, _, _, _, N, N, N, N, N, N],
             ]);
+
             const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
             testUtils.setupSlice(state);
 
@@ -375,17 +377,17 @@ describe('YinshComponent', () => {
         }));
         it('should cancel the move when clicking on an invalid move destination', fakeAsync(async() => {
             const board: YinshBoard = YinshBoard.of([
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, A, _, _, _, _, _, _, _],
-                [_, _, _, a, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
+                [N, N, N, N, N, N, _, _, _, _, N],
+                [N, N, N, N, _, _, _, _, _, _, _],
+                [N, N, N, A, A, _, _, _, _, _, _],
+                [N, N, _, a, _, _, _, _, _, _, _],
+                [N, _, _, _, _, _, _, _, _, _, _],
+                [N, _, _, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, _, _, N, N],
+                [_, _, _, _, _, _, _, _, N, N, N],
+                [_, _, _, _, _, _, _, N, N, N, N],
+                [N, _, _, _, _, N, N, N, N, N, N],
             ]);
             const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
             testUtils.setupSlice(state);
@@ -395,17 +397,17 @@ describe('YinshComponent', () => {
         }));
         it('should allow moves with one final capture', fakeAsync(async() => {
             const board: YinshBoard = YinshBoard.of([
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, a, A, _, _, _, _, _, _],
-                [_, _, _, A, _, _, _, _, _, _, _],
-                [_, _, _, b, _, _, _, _, _, _, _],
-                [_, _, _, b, _, _, _, _, _, _, _],
-                [_, _, _, b, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
+                [N, N, N, N, N, N, _, _, _, _, N],
+                [N, N, N, N, _, _, _, _, _, _, _],
+                [N, N, N, a, A, _, _, _, _, _, _],
+                [N, N, _, A, _, _, _, _, _, _, _],
+                [N, _, _, b, _, _, _, _, _, _, _],
+                [N, _, _, b, _, _, _, _, _, _, N],
+                [_, _, _, b, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, _, _, N, N],
+                [_, _, _, _, _, _, _, _, N, N, N],
+                [_, _, _, _, _, _, _, N, N, N, N],
+                [N, _, _, _, _, N, N, N, N, N, N],
             ]);
             const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
             testUtils.setupSlice(state);
@@ -421,17 +423,17 @@ describe('YinshComponent', () => {
         }));
         it('should allow moves with two final captures', fakeAsync(async() => {
             const board: YinshBoard = YinshBoard.of([
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, a, A, A, _, _, _, _, _],
-                [_, _, _, A, _, _, _, _, _, _, _],
-                [_, _, _, b, _, _, _, _, _, _, _],
-                [_, _, _, b, _, _, _, _, _, _, _],
-                [_, _, _, b, _, _, _, _, _, _, _],
-                [_, _, _, b, a, a, a, a, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _],
+                [N, N, N, N, N, N, _, _, _, _, N],
+                [N, N, N, N, _, _, _, _, _, _, _],
+                [N, N, N, a, A, A, _, _, _, _, _],
+                [N, N, _, A, _, _, _, _, _, _, _],
+                [N, _, _, b, _, _, _, _, _, _, _],
+                [N, _, _, b, _, _, _, _, _, _, N],
+                [_, _, _, b, _, _, _, _, _, _, N],
+                [_, _, _, b, a, a, a, a, _, N, N],
+                [_, _, _, _, _, _, _, _, N, N, N],
+                [_, _, _, _, _, _, _, N, N, N, N],
+                [N, _, _, _, _, N, N, N, N, N, N],
             ]);
             const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
             testUtils.setupSlice(state);
