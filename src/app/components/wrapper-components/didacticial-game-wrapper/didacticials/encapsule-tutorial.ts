@@ -36,7 +36,7 @@ export const encapsuleTutorial: DidacticialStep[] = [
         Pick one of your piece on the side of the board and put it on the board.`,
         EncapsulePartSlice.getInitialSlice(),
         EncapsuleMove.fromDrop(EncapsulePiece.SMALL_BLACK, new Coord(1, 1)),
-        $localize`Congratulations !`),
+        $localize`Congratulations!`),
     DidacticialStep.fromMove(
         $localize`Moving`,
         $localize`Another type of move is to move one of your pieces that is already on the board.<br/><br/>
@@ -55,12 +55,12 @@ export const encapsuleTutorial: DidacticialStep[] = [
             EncapsuleMove.fromMove(new Coord(0, 0), new Coord(1, 2)),
             EncapsuleMove.fromMove(new Coord(0, 0), new Coord(2, 2)),
         ],
-        $localize`Congratulations !`,
-        $localize`Failed. Try again..`),
+        $localize`Congratulations!`,
+        $localize`Failed. Try again.`),
     DidacticialStep.fromMove(
         $localize`Particularity`,
         $localize`At Encapsule, pieces encapsulate each other.
-        It is therefore possiblle to have up to three pieces per case !
+        It is therefore possiblle to have up to three pieces per case!
         However, only the biggest piece of each case counts:
         you cannot win with a piece that is "hidden" by a bigger piece.
         Similarly, you cannot move a piece if it is encapsulated by a bigger piece.
@@ -80,6 +80,6 @@ export const encapsuleTutorial: DidacticialStep[] = [
             EncapsuleMove.fromMove(new Coord(0, 1), new Coord(0, 2)),
             EncapsuleMove.fromMove(new Coord(1, 1), new Coord(0, 2)),
         ],
-        $localize`Congratulations !`,
+        $localize`Congratulations!`,
         $localize`Failed. Try again.`),
 ];

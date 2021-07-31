@@ -55,14 +55,14 @@ export const pylosTutorial: DidacticialStep[] = [
             ],
         ], 0),
         [PylosMove.fromClimb(new PylosCoord(3, 3, 0), new PylosCoord(0, 0, 1), [])],
-        $localize`Congratulations !<br/>
+        $localize`Congratulations!<br/>
         Some important notes:
         <ol>
             <li> You cannot move a piece that is directly below another one.</li>
             <li> Of course, you cannot move the opponent's pieces.</li>
             <li> You can only climb when the landing square is higher than the starting square.</li>
         </ul>`,
-        $localize`Raté !`,
+        $localize`Failed!`,
     ),
     DidacticialStep.fromMove(
         $localize`Square (1/3)`,
@@ -97,7 +97,7 @@ export const pylosTutorial: DidacticialStep[] = [
             PylosMove.fromDrop(new PylosCoord(0, 1, 0), [new PylosCoord(1, 1, 0)]),
         ],
         $localize`Congratulations, you have saved up one piece.`,
-        $localize`Failed !`,
+        $localize`Failed!`,
     ),
     DidacticialStep.fromMove(
         $localize`Square (2/3)`,
@@ -122,7 +122,7 @@ export const pylosTutorial: DidacticialStep[] = [
         ], 0),
         [PylosMove.fromDrop(new PylosCoord(0, 1, 0), [new PylosCoord(0, 0, 0), new PylosCoord(1, 0, 0)])],
         $localize`Congratulations, you have saved up two pieces.`,
-        $localize`Failed !`,
+        $localize`Failed!`,
     ),
     DidacticialStep.fromMove(
         $localize`Square (3/3)`,
@@ -150,6 +150,6 @@ export const pylosTutorial: DidacticialStep[] = [
         ], 0),
         [PylosMove.fromDrop(new PylosCoord(0, 0, 1), [new PylosCoord(0, 0, 1), new PylosCoord(0, 0, 0)])],
         $localize`Congratulations, you have saved up two pieces. You are now ready to play..`,
-        $localize`Failed !`,
+        $localize`Failed!`,
     ),
 ];

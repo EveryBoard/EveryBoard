@@ -40,7 +40,7 @@ export const quixoTutorial: DidacticialStep[] = [
         [new QuixoMove(4, 4, Orthogonal.LEFT)],
         $localize`See how the four dark pieces have been moved one space to the right.
         The neutral piece has been move 4 pieces to the left and has become light.`,
-        $localize`Failed !`,
+        $localize`Failed!`,
     ),
     DidacticialStep.fromMove(
         $localize`Victory`,
@@ -59,6 +59,6 @@ export const quixoTutorial: DidacticialStep[] = [
         ], 31),
         [new QuixoMove(3, 0, Orthogonal.DOWN)],
         $localize`Congratulations, you won!`,
-        $localize`Failed !`,
+        $localize`Failed!`,
     ),
 ];

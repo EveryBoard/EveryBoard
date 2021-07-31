@@ -35,7 +35,7 @@ export const tablutTutorial: DidacticialStep[] = [
         This is the initial board, do the first move`,
         TablutPartSlice.getInitialSlice(),
         new TablutMove(new Coord(4, 1), new Coord(1, 1)),
-        $localize`Congratulations !`,
+        $localize`Congratulations!`,
     ),
     DidacticialStep.fromMove(
         $localize`Capturing a soldier (1/2)`,
@@ -120,6 +120,6 @@ export const tablutTutorial: DidacticialStep[] = [
         ], 72),
         [new TablutMove(new Coord(3, 3), new Coord(3, 1))],
         $localize`The King is dead, long live the King. Congratulations, you won.`,
-        $localize`Failed !`,
+        $localize`Failed!`,
     ),
 ];

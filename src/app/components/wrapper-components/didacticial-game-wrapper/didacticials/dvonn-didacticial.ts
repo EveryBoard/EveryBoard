@@ -29,7 +29,7 @@ export const dvonnTutorial: DidacticialStep[] = [
         You're playing Dark, click on a stack and move it by one case.`,
         DvonnGameState.getInitialSlice(),
         DvonnMove.of(new Coord(2, 0), new Coord(3, 0)),
-        $localize`Congratulations !`,
+        $localize`Congratulations!`,
     ),
     DidacticialStep.fromMove(
         $localize`Disconnection`,

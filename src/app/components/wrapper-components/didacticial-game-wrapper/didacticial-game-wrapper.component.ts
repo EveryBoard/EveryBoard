@@ -45,7 +45,7 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
 
     public static VERBOSE: boolean = false;
 
-    public COMPLETED_TUTORIAL_MESSAGE: string = $localize`Félicitation, vous avez fini le tutoriel.`;
+    public COMPLETED_TUTORIAL_MESSAGE: string = $localize`Congratulations, you completed the tutorial.`;
 
     public steps: DidacticialStep[];
     public successfulSteps: number = 0;

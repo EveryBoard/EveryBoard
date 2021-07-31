@@ -31,7 +31,7 @@ export const gipfTutorial: DidacticialStep[] = [
         You're playing Dark, insert a piece.`,
         GipfPartSlice.getInitialSlice(),
         new GipfMove(new GipfPlacement(new Coord(3, 0), MGPOptional.of(HexaDirection.DOWN)), [], []),
-        $localize`Bravo !`,
+        $localize`Congratulations!`,
     ),
     DidacticialStep.fromMove(
         $localize`Capturing (1/3)`,
@@ -73,7 +73,7 @@ export const gipfTutorial: DidacticialStep[] = [
         )],
         $localize`Congratulations, you have gotten 4 of your pieces back. This is not the most useful capture.
         Let's now see how captures can really be useful.`,
-        $localize`Failed !`,
+        $localize`Failed!`,
     ),
     DidacticialStep.fromMove(
         $localize`Capturing (2/3)`,

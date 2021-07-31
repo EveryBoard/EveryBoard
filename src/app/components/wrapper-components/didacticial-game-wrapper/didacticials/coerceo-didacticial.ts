@@ -25,14 +25,14 @@ export const coerceoTutorial: DidacticialStep[] = [
         $localize`To move a piece, you need to:
         <ul>
           <li>1. Click on one of your pieces.</li>
-          <li>2. Cliquer sur l'une des cases triangulaires encadrées en jaune.</li>
+          <li>2. Click on of the triangular space highlighted in yellow.</li>
         </ul>
         You can pass through the opponent's pieces.
         You're playing first, hence you're playing Dark. Perform any move.
-        Note: peut importe ce que vous faites, aucunes de vos pièces ne peuvent être capturée pendant votre tour.`,
+        Note: no matter what you do, no piece can be captured during your first turn.`,
         CoerceoPartSlice.getInitialSlice(),
         CoerceoMove.fromCoordToCoord(new Coord(3, 5), new Coord(5, 5)),
-        $localize`Congratulations ! Let's see captures now.`,
+        $localize`Congratulations! Let's see captures now.`,
     ),
     DidacticialStep.fromMove(
         $localize`Capture`,
@@ -56,7 +56,7 @@ export const coerceoTutorial: DidacticialStep[] = [
             CoerceoMove.fromCoordToCoord(new Coord(5, 2), new Coord(4, 1)),
             CoerceoMove.fromCoordToCoord(new Coord(3, 4), new Coord(4, 3)),
         ],
-        $localize`Congratulations !`,
+        $localize`Congratulations!`,
         $localize`Failed, you have not capturd any piece.`,
     ),
     DidacticialStep.fromMove(
@@ -84,7 +84,7 @@ export const coerceoTutorial: DidacticialStep[] = [
             CoerceoMove.fromCoordToCoord(new Coord(2, 6), new Coord(3, 5)),
             CoerceoMove.fromCoordToCoord(new Coord(2, 6), new Coord(3, 7)),
         ],
-        $localize`Congratulations !`,
+        $localize`Congratulations!`,
         $localize`Failed, you have not gained the two tiles that you could!`,
     ),
     DidacticialStep.fromMove(
@@ -109,7 +109,7 @@ export const coerceoTutorial: DidacticialStep[] = [
         [
             CoerceoMove.fromTilesExchange(new Coord(5, 5)),
         ],
-        $localize`Congratlations !`,
+        $localize`Congratlations!`,
         $localize`It's nice to move a piece, but you could have had the opponent's piece immediately by clicking on it!`,
     ),
     DidacticialStep.fromMove(
@@ -133,8 +133,8 @@ export const coerceoTutorial: DidacticialStep[] = [
             CoerceoMove.fromCoordToCoord(new Coord(7, 6), new Coord(6, 5)),
             CoerceoMove.fromCoordToCoord(new Coord(7, 6), new Coord(8, 5)),
         ],
-        $localize`Congratulations ! See, your piece has lost its last freedom when you have gained the tile, but it stayed on the board as it was your turn.
+        $localize`Congratulations! See, your piece has lost its last freedom when you have gained the tile, but it stayed on the board as it was your turn.
         The opponent's piece has disappeared because the tile's capture has removed its last freedom.`,
-        $localize`Failed !`,
+        $localize`Failed!`,
     ),
 ];

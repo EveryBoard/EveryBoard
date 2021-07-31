@@ -52,7 +52,7 @@ export const linesOfActionTutorial: DidacticialStep[] = [
             [_, _, _, _, _, _, _, X],
         ], 0),
         [new LinesOfActionMove(new Coord(3, 1), new Coord(6, 1))],
-        $localize`Congratulations !`,
+        $localize`Congratulations!`,
         $localize`Failed. You did not jump over one of your pieces.`,
     ),
     DidacticialStep.fromMove(
@@ -103,8 +103,8 @@ export const linesOfActionTutorial: DidacticialStep[] = [
             [_, X, X, X, X, X, X, _],
         ], 0),
         [new LinesOfActionMove(new Coord(2, 2), new Coord(4, 2))],
-        $localize`Congratulations !`,
-        $localize`Failed !`,
+        $localize`Congratulations!`,
+        $localize`Failed!`,
     ),
     DidacticialStep.fromMove(
         $localize`Tie`,
@@ -122,7 +122,7 @@ export const linesOfActionTutorial: DidacticialStep[] = [
             [_, _, _, _, _, _, _, _],
         ], 0),
         [new LinesOfActionMove(new Coord(0, 2), new Coord(4, 2))],
-        $localize`Congratulations !`,
-        $localize`Failed !`,
+        $localize`Congratulations!`,
+        $localize`Failed!`,
     ),
 ];

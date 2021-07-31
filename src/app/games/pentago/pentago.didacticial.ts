@@ -55,7 +55,7 @@ export const pentagoTutorial: DidacticialStep[] = [
                 return MGPValidation.SUCCESS;
             }
         },
-        $localize`Congratulations !`,
+        $localize`Congratulations!`,
     ),
     DidacticialStep.fromPredicate(
         $localize`Move with rotation`,

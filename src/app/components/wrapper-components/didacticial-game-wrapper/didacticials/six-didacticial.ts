@@ -36,8 +36,8 @@ export const sixTutorial: DidacticialStep[] = [
             [O, _, _, _, _, _],
         ], 0),
         [SixMove.fromDrop(new Coord(3, 2))],
-        $localize`Congratulations !`,
-        $localize`Failed !`,
+        $localize`Congratulations!`,
+        $localize`Failed!`,
     ),
     DidacticialStep.fromMove(
         $localize`Victory (circle)`,
@@ -50,8 +50,8 @@ export const sixTutorial: DidacticialStep[] = [
             [X, O, O, O, O, X],
         ], 0),
         [SixMove.fromDrop(new Coord(5, 2))],
-        $localize`Congratulations ! Note that if a piece is inside the circle, it does not change anything.`,
-        $localize`Failed !`,
+        $localize`Congratulations! Note that if a piece is inside the circle, it does not change anything.`,
+        $localize`Failed!`,
     ),
     DidacticialStep.fromMove(
         $localize`Victory (triangle)`,
@@ -64,8 +64,8 @@ export const sixTutorial: DidacticialStep[] = [
             [X, X, X, _, X, _],
         ], 0),
         [SixMove.fromDrop(new Coord(3, 3))],
-        $localize`Congratulations !`,
-        $localize`Failed !`,
+        $localize`Congratulations!`,
+        $localize`Failed!`,
     ),
     DidacticialStep.fromPredicate(
         $localize`Second phase`,
@@ -120,7 +120,7 @@ export const sixTutorial: DidacticialStep[] = [
                 return MGPValidation.failure($localize`This move does not disconnect your opponent's pieces. Try again with another piece.`);
             }
         },
-        $localize`Bravo, vous avez gagné !`,
+        $localize`Congratulations, you won!`,
     ),
     DidacticialStep.fromPredicate(
         $localize`Special disconnection`,
@@ -151,6 +151,6 @@ export const sixTutorial: DidacticialStep[] = [
                 return MGPValidation.failure($localize`This move does not disconnect your opponent's pieces! Try with another piece.`);
             }
         },
-        $localize`Congratulations, you win!`,
+        $localize`Congratulations, you won!`,
     ),
 ];

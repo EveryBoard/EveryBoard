@@ -84,14 +84,14 @@ export const epaminondasTutorial: DidacticialStep[] = [
         </ul>`,
         EpaminondasPartSlice.getInitialSlice(),
         new EpaminondasMove(0, 11, 2, 1, Direction.UP),
-        (move: EpaminondasMove, state: EpaminondasPartSlice) => {
+        (move: EpaminondasMove, _: EpaminondasPartSlice) => {
             if (move.movedPieces > 1) {
                 return MGPValidation.SUCCESS;
             } else {
                 return MGPValidation.failure($localize`Failed! You moved only one piece.`);
             }
         },
-        $localize`Congratulations !
+        $localize`Congratulations!
         The moved pieces can be horizontally, vertically, or diagonally aligned.
         The move is made along this axis, forward or backwards.
         There can be no opponent nor holes in the phalanx.`,

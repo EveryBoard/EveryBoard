@@ -43,7 +43,7 @@ export const siamTutorial: DidacticialStep[] = [
         Insert a piece on the board.`,
         SiamPartSlice.getInitialSlice(),
         new SiamMove(2, -1, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN),
-        $localize`Congratulations !`,
+        $localize`Congratulations!`,
     ),
     DidacticialStep.fromMove(
         $localize`Moving a piece`,
@@ -105,8 +105,8 @@ export const siamTutorial: DidacticialStep[] = [
             [_, _, r, l, L],
         ], 0),
         [new SiamMove(4, 4, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT)],
-        $localize`Congratulations !`,
-        $localize`Failed !`,
+        $localize`Congratulations!`,
+        $localize`Failed!`,
     ),
     DidacticialStep.fromMove(
         $localize`Victory`,

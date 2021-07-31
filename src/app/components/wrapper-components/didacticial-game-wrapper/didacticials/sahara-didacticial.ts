@@ -50,7 +50,7 @@ export const saharaTutorial: DidacticialStep[] = [
                 return MGPValidation.failure($localize`You have made a double step, which is good but it is the next exercise!`);
             }
         },
-        $localize`Congratulations !`,
+        $localize`Congratulations!`,
     ),
     DidacticialStep.fromPredicate(
         $localize`Double move`,

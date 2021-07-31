@@ -32,7 +32,7 @@ export const reversiTutorial: DidacticialStep[] = [
         Dark plays first.`,
         ReversiPartSlice.getInitialSlice(),
         new ReversiMove(2, 4),
-        $localize`Congratulations !`,
+        $localize`Congratulations!`,
     ),
     DidacticialStep.fromMove(
         $localize`Capturing (2/2)`,
@@ -50,7 +50,7 @@ export const reversiTutorial: DidacticialStep[] = [
             [_, O, X, O, X, O, _, _],
         ], 1),
         [new ReversiMove(0, 7)],
-        $localize`Congratulations !`,
+        $localize`Congratulations!`,
         $localize`Lower and more to the left, please.`,
     ),
     DidacticialStep.informational(

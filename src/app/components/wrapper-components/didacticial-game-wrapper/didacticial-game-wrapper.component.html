@@ -43,13 +43,13 @@
                         *ngIf="tutorialOver"
                         (click)="playLocally()"
                         i18n
-                >Jouer localement</button>
+                >Play locally</button>
                 <button id="playOnlineButton"
                         class="button"
                         *ngIf="tutorialOver"
                         (click)="createGame()"
                         i18n
-                >Créer une partie en ligne</button>
+                >Create an online game</button>
                 <button id="showSolutionButton"
                         class="button"
                         *ngIf="moveAttemptMade && stepFinished[stepIndex] === false"

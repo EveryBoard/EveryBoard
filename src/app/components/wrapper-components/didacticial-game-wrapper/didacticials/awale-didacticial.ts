@@ -7,13 +7,13 @@ export const awaleTutorial: DidacticialStep[] = [
         $localize`Sowing`,
         $localize`Awalé is a game of distribution (sowing) and capture. Its goal is to capture the most seeds.
          Let's see how seeds are sown.
-         As you're playing fisrt, the 6 houses on the top are yours.<br/><br>
+         As you're playing first, the 6 houses on the top are yours.<br/><br>
          Click on any of them to sow the seeds it contains: they will be sown clockwise, one seed per house.`,
         AwalePartSlice.getInitialSlice(),
         AwaleMove.ZERO,
         $localize`Look at the 4 houses that follow clockwise the one you picked, they now contain 5 seeds.
         This is how seeds are sown:
-        one by one from the house next to the one they come from, clockwise,  Voilà, regardez les 4 maisons suivant la maison choisie dans l’ordre horlogé, elle comptent maintenant 5 graines.`,
+        one by one from the house next to the one they come from, clockwise.`,
     ),
     DidacticialStep.anyMove(
         $localize`Big sowing`,
@@ -39,7 +39,7 @@ export const awaleTutorial: DidacticialStep[] = [
             [1, 0, 0, 0, 1, 0],
         ], 1, [0, 0]),
         [AwaleMove.ZERO],
-        $localize`Well done ! This was a simple capture, now let us see how to make multiple captures.`,
+        $localize`Well done! This was a simple capture, now let us see how to make multiple captures.`,
         $localize`Failed. Try again and sow from the leftmost house.`,
     ),
     DidacticialStep.fromMove(
@@ -52,7 +52,7 @@ export const awaleTutorial: DidacticialStep[] = [
             [2, 0, 0, 0, 1, 0],
         ], 1, [0, 0]),
         [AwaleMove.ZERO],
-        $localize`Nice, you win 3 points from the first house, and 2 from the second !`,
+        $localize`Nice, you win 3 points from the first house, and 2 from the second!`,
         $localize`Failed. Try again.`,
     ),
     DidacticialStep.fromMove(
