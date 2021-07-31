@@ -141,14 +141,10 @@ export const sixTutorial: DidacticialStep[] = [
             if (move.keep.isAbsent()) {
                 return MGPValidation.failure($localize`This move has not cut the board in two equal halves.`);
             }
-            if (new Coord(2, 3).equals(move.start.getOrNull())) {
-                if (resultingState.getPieceAt(move.landing.getNext(resultingState.offset)) === Player.NONE) {
-                    return MGPValidation.failure($localize`Failed. You did cut the board in two but you kept the half where you're in minority. Therefore, you lost! Try again.`);
-                } else {
-                    return MGPValidation.SUCCESS;
-                }
+            if (resultingState.getPieceAt(move.landing.getNext(resultingState.offset)) === Player.NONE) {
+                return MGPValidation.failure(`Failed. You did cut the board in two but you kept the half where you're in minority. Therefore, you lost! Try again.`);
             } else {
-                return MGPValidation.failure($localize`This move does not disconnect your opponent's pieces! Try with another piece.`);
+                return MGPValidation.SUCCESS;
             }
         },
         $localize`Congratulations, you won!`,
