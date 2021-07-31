@@ -191,11 +191,9 @@ export class HexaBoard<T> {
     }
     private findEntranceFrom(line: HexaLine, start: Coord): Coord {
         const dir: HexaDirection = line.getDirection();
-        console.log('finding from ' + start.toString())
         for (let cur: Coord = start, i: number = 0;
             i < Math.max(this.width, this.height);
             cur = cur.getNext(dir), i++) {
-            console.log(cur)
             if (this.isOnBoard(cur)) {
                 return cur;
             }

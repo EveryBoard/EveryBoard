@@ -118,4 +118,28 @@ describe('HexaBoard', () => {
             }
         });
     });
+    describe('getEntrance', () => {
+        const board: HexaBoard<number> = HexaBoard.empty(7, 7, [3, 2, 1], 0);
+        it('should return the correct entrance for lines with a constant q', () => {
+            const line1: HexaLine = HexaLine.constantQ(0);
+            expect(board.getEntranceOnLine(line1).equals(new Coord(0, 3))).toBeTrue();
+
+            const line2: HexaLine = HexaLine.constantQ(4);
+            expect(board.getEntranceOnLine(line2).equals(new Coord(4, 0))).toBeTrue();
+        });
+        it('should return the correct entrance for lines with a constant r', () => {
+            const line1: HexaLine = HexaLine.constantR(2);
+            expect(board.getEntranceOnLine(line1).equals(new Coord(1, 2))).toBeTrue();
+
+            const line2: HexaLine = HexaLine.constantR(4);
+            expect(board.getEntranceOnLine(line2).equals(new Coord(0, 4))).toBeTrue();
+        });
+        it('should return the correct entrance for lines with a constant s', () => {
+            const line1: HexaLine = HexaLine.constantS(4);
+            expect(board.getEntranceOnLine(line1).equals(new Coord(4, 0))).toBeTrue();
+
+            const line2: HexaLine = HexaLine.constantS(8);
+            expect(board.getEntranceOnLine(line2).equals(new Coord(6, 2))).toBeTrue();
+        });
+    });
 });

@@ -89,7 +89,7 @@ describe('YinshMinimax', () => {
             rules.node = new YinshNode(null, null, state);
             expect(minimax.getListMoves(rules.node).length).toBe(11);
         });
-        it('cannot list moves that try to flip a ring', () => {
+        it('should list moves that try to flip a ring', () => {
             const board: YinshBoard = YinshBoard.of([
                 [_, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _],

@@ -54,7 +54,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
 
     private constructedState: YinshGameState;
 
-    private movePhase: 'INITIAL_CAPTURE' | 'FINAL_CAPTURE' | 'INITIAL_CAPTURE_SELECT_RING' | 'FINAL_CAPTURE_SELECT_RING' | 'MOVE_START' | 'MOVE_END'
+    private movePhase: 'INITIAL_CAPTURE' | 'INITIAL_CAPTURE_SELECT_RING' | 'MOVE_START' | 'MOVE_END' | 'FINAL_CAPTURE' | 'FINAL_CAPTURE_SELECT_RING'
         = 'MOVE_START';
 
     private moveStart: MGPOptional<Coord> = MGPOptional.empty();
@@ -137,8 +137,8 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
     }
     public getPieceClasses(coord: Coord): string[] {
         const piece: YinshPiece = this.constructedState.hexaBoard.getAt(coord);
+        const playerClass: string = this.getPlayerClass(piece.player);
         if (piece.isRing) {
-            const playerClass: string = this.getPlayerClass(piece.player);
             const classes: string[] = [playerClass + '-stroke'];
             if (coord.equals(this.moveStart.getOrNull())) {
                 classes.push(playerClass);
@@ -147,7 +147,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
             }
             return classes;
         } else {
-            return [this.getPlayerClass(piece.player)];
+            return [playerClass];
         }
     }
     public cancelMoveAttempt(): void {

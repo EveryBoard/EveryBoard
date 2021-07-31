@@ -3,8 +3,7 @@ import { JSONPrimitive } from './utils';
 export interface ComparableObject {
     equals(o: ComparableObject): boolean;
 
-    // Removed because: why would a comparable need a toString, this seems totally unrelated?
-    // toString(): string;
+    toString(): string;
 }
 export type ComparableValue = JSONPrimitive | ComparableObject | ComparableJSON;
 
