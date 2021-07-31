@@ -62,7 +62,7 @@ export const gipfTutorial: DidacticialStep[] = [
             [_, _, _, X, _, _, _],
         ]), 42, [8, 8], [0, 0]),
         [new GipfMove(
-            new GipfPlacement(new Coord(0, 3), MGPOptional.of(HexaDirection.DOWN_RIGHT)),
+            new GipfPlacement(new Coord(0, 3), MGPOptional.of(HexaDirection.RIGHT)),
             [],
             [new GipfCapture([
                 new Coord(0, 3),
@@ -91,7 +91,7 @@ export const gipfTutorial: DidacticialStep[] = [
             [_, _, _, X, _, _, _],
         ]), 42, [8, 4], [2, 3]),
         [new GipfMove(
-            new GipfPlacement(new Coord(0, 3), MGPOptional.of(HexaDirection.DOWN_RIGHT)),
+            new GipfPlacement(new Coord(0, 3), MGPOptional.of(HexaDirection.RIGHT)),
             [],
             [new GipfCapture([
                 new Coord(3, 1),

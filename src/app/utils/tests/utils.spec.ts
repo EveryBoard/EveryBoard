@@ -1,4 +1,4 @@
-import { assert, display } from '../utils';
+import { assert, display, Utils } from '../utils';
 
 describe('utils', () => {
     describe('display', () => {
@@ -15,7 +15,12 @@ describe('utils', () => {
     });
     describe('assert', () => {
         it('Should throw when condition is false', () => {
-            expect(() => assert(false, 'erreur')).toThrowError('Assertion failure: erreur');
+            expect(() => assert(false, 'error')).toThrowError('Assertion failure: error');
+        });
+    });
+    describe('handleError', () => {
+        it('should throw an error when called', () => {
+            expect(() => Utils.handleError('error')).toThrowError('Encountered error: error');
         });
     });
 });

@@ -35,11 +35,6 @@ export class DvonnBoard extends HexaBoard<DvonnPieceStack> {
     public constructor(public readonly contents: Table<DvonnPieceStack>) {
         super(contents, DvonnBoard.WIDTH, DvonnBoard.HEIGHT, DvonnBoard.EXCLUDED_CASES, DvonnPieceStack.EMPTY);
     }
-    protected setAtUnsafe(coord: Coord, v: DvonnPieceStack): this {
-        const contents: DvonnPieceStack[][] = ArrayUtils.copyBiArray(this.contents);
-        contents[coord.y][coord.x] = v;
-        return new DvonnBoard(contents) as this;
-    }
     public numberOfNeighbors(coord: Coord): number {
         return HexaBoard.neighbors(coord, 1)
             .filter((c: Coord): boolean => this.isOnBoard(c) && this.getAt(c).isEmpty() === false)

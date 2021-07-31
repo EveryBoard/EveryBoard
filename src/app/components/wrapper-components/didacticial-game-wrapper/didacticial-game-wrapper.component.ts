@@ -10,6 +10,8 @@ import { UserService } from 'src/app/services/UserService';
 import { assert, display } from 'src/app/utils/utils';
 import { DidacticialStep } from './DidacticialStep';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
+import { DidacticialFailure } from './DidacticialFailure';
 
 import { abaloneTutorial } from 'src/app/games/abalone/AbaloneTutorial';
 import { awaleTutorial } from './didacticials/awale-didacticial';
@@ -31,9 +33,8 @@ import { saharaTutorial } from './didacticials/sahara-didacticial';
 import { siamTutorial } from './didacticials/siam-didacticial';
 import { sixTutorial } from './didacticials/six-didacticial';
 import { tablutTutorial } from './didacticials/tablut-didacticial';
-import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
-import { DidacticialFailure } from './DidacticialFailure';
 import { GameService } from 'src/app/services/GameService';
+import { yinshTutorial } from 'src/app/games/yinsh/YinshTutorial';
 
 @Component({
     selector: 'app-didacticial-game-wrapper',
@@ -115,6 +116,7 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
             Siam: siamTutorial,
             Six: sixTutorial,
             Tablut: tablutTutorial,
+            Yinsh: yinshTutorial,
         };
         if (didacticials[game] == null) {
             throw new Error('Unknown Game ' + game + '.');

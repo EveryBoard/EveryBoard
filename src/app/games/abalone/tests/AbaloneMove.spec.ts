@@ -39,8 +39,8 @@ describe('AbaloneMove', () => {
     it('should spot identical translations and map them', () => {
         const up: Coord = new Coord(0, 0);
         const down: Coord = new Coord(0, 2);
-        const normalMove: AbaloneMove = AbaloneMove.fromDoubleCoord(up, down, HexaDirection.UP_LEFT);
-        const distoredMove: AbaloneMove = AbaloneMove.fromDoubleCoord(down, up, HexaDirection.UP_LEFT);
+        const normalMove: AbaloneMove = AbaloneMove.fromDoubleCoord(up, down, HexaDirection.LEFT);
+        const distoredMove: AbaloneMove = AbaloneMove.fromDoubleCoord(down, up, HexaDirection.LEFT);
         expect(distoredMove.equals(normalMove)).toBeTrue();
     });
     it('should stringify nicely', () => {

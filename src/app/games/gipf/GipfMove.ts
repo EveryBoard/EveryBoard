@@ -8,7 +8,6 @@ import { assert, JSONObject, JSONValue, JSONValueWithoutArray } from 'src/app/ut
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class GipfCapture {
-    // Encodes a capture as: initial case, direction, length
     public static encoder: Encoder<GipfCapture> = new class extends Encoder<GipfCapture> {
         public encode(capture: GipfCapture): JSONValue {
             return capture.capturedCases.map((coord: Coord): JSONValueWithoutArray => {
@@ -40,6 +39,16 @@ export class GipfCapture {
                 return coord1.x > coord2.x ? 1 : -1;
             }
         });
+        let prev: Coord = null;
+        // Captured cases must be consecutive
+        for (const coord of this.capturedCases) {
+            if (prev !== null) {
+                if (prev.getDistance(coord) !== 1) {
+                    throw new Error('Cannot create a GipfCapture with non-consecutive cases');
+                }
+            }
+            prev = coord;
+        }
     }
     public toString(): string {
         let str: string = '';
@@ -174,15 +183,8 @@ export class GipfMove extends Move {
     public equals(other: GipfMove): boolean {
         if (this === other) return true;
         if (this.placement.equals(other.placement) === false) return false;
-        if (this.captureEquals(this.initialCaptures, other.initialCaptures) === false) return false;
-        if (this.captureEquals(this.finalCaptures, other.finalCaptures) === false) return false;
-        return true;
-    }
-    private captureEquals(c1: ReadonlyArray<GipfCapture>, c2: ReadonlyArray<GipfCapture>): boolean {
-        if (c1.length !== c2.length) return false;
-        for (let i: number = 0; i < c1.length; i++) {
-            if (c1[i].equals(c2[i]) === false) return false;
-        }
+        if (ArrayUtils.equals(this.initialCaptures, other.initialCaptures) === false) return false;
+        if (ArrayUtils.equals(this.finalCaptures, other.finalCaptures) === false) return false;
         return true;
     }
     public encode(): JSONValue {

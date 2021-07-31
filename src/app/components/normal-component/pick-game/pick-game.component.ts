@@ -20,6 +20,7 @@ import { SaharaComponent } from 'src/app/games/sahara/sahara.component';
 import { SiamComponent } from 'src/app/games/siam/siam.component';
 import { SixComponent } from 'src/app/games/six/six.component';
 import { TablutComponent } from 'src/app/games/tablut/tablut.component';
+import { YinshComponent } from 'src/app/games/yinsh/Yinsh.component';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { Move } from 'src/app/jscaip/Move';
 import { AbstractGameComponent } from '../../game-components/abstract-game-component/AbstractGameComponent';
@@ -76,6 +77,7 @@ export class GameInfo {
         new GameInfo($localize`Lines of Action`, 'LinesOfAction', LinesOfActionComponent, new Date('2020-04-28')), // 65 days after Gipf *Quentin
         new GameInfo($localize`Pentago`, 'Pentago', PentagoComponent, new Date('2021-05-23'), GameDescription.PENTAGO), // 25 days after Six
         new GameInfo($localize`Abalone`, 'Abalone', AbaloneComponent, new Date('2021-07-13'), GameDescription.ABALONE),
+        new GameInfo($localize`Yinsh`, 'Yinsh', YinshComponent, new Date('2021-07-04')), // 67 days after LinesOfAtion *Quentin
     ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
     // After Gipf: median = 26d; average = 34d
     // 9d 10d 12d 13d 18d - 18d 20d 22d (25d 26d) 26d 49d 65d - 76d 93d 4m 7m 11m

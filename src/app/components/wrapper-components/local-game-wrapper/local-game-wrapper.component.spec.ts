@@ -9,6 +9,7 @@ import { LocalGameWrapperComponent } from './local-game-wrapper.component';
 import { DebugElement } from '@angular/core';
 import { P4Minimax } from 'src/app/games/p4/P4Minimax';
 import { P4Rules } from 'src/app/games/p4/P4Rules';
+import { GameStatus } from 'src/app/jscaip/Rules';
 
 describe('LocalGameWrapperComponent', () => {
     let componentTestUtils: ComponentTestUtils<P4Component>;
@@ -213,6 +214,28 @@ describe('LocalGameWrapperComponent', () => {
             const errorMessage: string = 'AI choosed illegal move (P4Move(0))';
             expect(() => localGameWrapper.doAIMove(minimax)).toThrowError(errorMessage);
             flush();
+        }));
+        it('should not do an AI move when the game is finished', fakeAsync(async() => {
+            const localGameWrapper: LocalGameWrapperComponent = componentTestUtils.wrapper as LocalGameWrapperComponent;
+            spyOn(localGameWrapper, 'doAIMove');
+
+            // given a game which is finished
+            spyOn(componentTestUtils.getComponent().rules, 'getGameStatus').and.returnValue(GameStatus.ZERO_WON);
+
+            // when selecting an AI for the current player
+            const selectAI: HTMLSelectElement = componentTestUtils.findElement('#playerZeroSelect').nativeElement;
+            selectAI.value = selectAI.options[1].value;
+            selectAI.dispatchEvent(new Event('change'));
+            componentTestUtils.fixture.detectChanges();
+            await componentTestUtils.fixture.whenStable();
+            const selectDepth: HTMLSelectElement = componentTestUtils.findElement('#aiZeroDepthSelect').nativeElement;
+            selectDepth.value = selectDepth.options[1].value;
+            selectDepth.dispatchEvent(new Event('change'));
+            componentTestUtils.detectChanges();
+            await componentTestUtils.fixture.whenStable();
+
+            // then it should not try to play
+            expect(localGameWrapper.doAIMove).not.toHaveBeenCalled();
         }));
     });
 });
