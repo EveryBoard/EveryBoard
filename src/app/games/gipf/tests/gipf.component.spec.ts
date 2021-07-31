@@ -24,8 +24,8 @@ describe('GipfComponent', () => {
         componentTestUtils = await ComponentTestUtils.forGame<GipfComponent>('Gipf');
     }));
     it('should create', () => {
-        expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');
-        expect(componentTestUtils.getComponent()).toBeTruthy('GipfComponent should be created');
+        expect(componentTestUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
+        expect(componentTestUtils.getComponent()).withContext('GipfComponent should be created').toBeTruthy();
     });
     it('should fail on selecting an invalid direction', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_3_6');

@@ -48,6 +48,8 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
 
     public scores: [number, number] = [0, 0];
 
+    public PIECE_SIZE: number = 30;
+
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.rules = new AbaloneRules(AbaloneGameState);

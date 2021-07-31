@@ -13,8 +13,6 @@ export abstract class HexagonalGameComponent<M extends Move,
     extends AbstractGameComponent<M, S, L>
 {
 
-    public PIECE_SIZE: number = 30;
-
     public abstract hexaLayout: HexaLayout;
 
     public getHexaCoordsBy(x: number, y: number): string {

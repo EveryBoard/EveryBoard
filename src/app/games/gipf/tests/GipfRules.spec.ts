@@ -32,7 +32,7 @@ describe('GipfRules:', () => {
     });
     it('should be created', () => {
         expect(rules).toBeTruthy();
-        expect(rules.node.gamePartSlice.turn).toBe(0, 'Game should start at turn 0');
+        expect(rules.node.gamePartSlice.turn).withContext('Game should start at turn 0').toBe(0);
     });
     it('should start with the expected board for the basic variant', () => {
         const slice: GipfPartSlice = rules.node.gamePartSlice;
@@ -52,7 +52,7 @@ describe('GipfRules:', () => {
     });
     describe('isLegal and applyLegalMove', () => {
 
-        it('should forbit placements on non-border cases', () => {
+        it('should forbid placements on non-border cases', () => {
             const slice: GipfPartSlice = rules.node.gamePartSlice;
             const placement: GipfPlacement = new GipfPlacement(new Coord(3, 3), MGPOptional.empty());
             const move: GipfMove = new GipfMove(placement, [], []);

@@ -6,8 +6,8 @@ export interface ObjectDifference {
 
     added: { [key: string]: unknown };
 }
-export const getDiff: (before: { [key: string]: any }, after: { [key: string]: any }) => ObjectDifference =
-(before: { [key: string]: any }, after: { [key: string]: any }) => {
+
+export function getDiff(before: { [key: string]: any }, after: { [key: string]: any }): ObjectDifference {
     const changes: ObjectDifference = {
         removed: {},
         modified: {},
@@ -63,7 +63,7 @@ export const getDiff: (before: { [key: string]: any }, after: { [key: string]: a
                         const nbDiff: number = getDiffChangesNumber(elementDiff);
                         if (nbDiff > 0) {
                             equal = false;
-                            changes.modified[commonKey] = after ? after[commonKey] : after;
+                            changes.modified[commonKey] = after[commonKey];
                         }
                     }
                 } else {
@@ -84,7 +84,7 @@ export const getDiff: (before: { [key: string]: any }, after: { [key: string]: a
         changes.removed[removedKey] = before[removedKey];
     }
     return changes;
-};
+}
 export const getDiffChangesNumber: (newDiff: ObjectDifference) => number =
 (newDiff: ObjectDifference) => {
     const diffRemoval: number = Object.keys(newDiff.removed).length;
