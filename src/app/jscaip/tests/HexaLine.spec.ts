@@ -82,7 +82,7 @@ describe('HexaLine', () => {
             expect(HexaLine.constantQ(0).getDirection()).toEqual(HexaDirection.DOWN);
         });
         it('should consider lines with constant r going down right', () => {
-            expect(HexaLine.constantR(0).getDirection()).toEqual(HexaDirection.DOWN_RIGHT);
+            expect(HexaLine.constantR(0).getDirection()).toEqual(HexaDirection.RIGHT);
         });
         it('should consider lines with constant s going down left', () => {
             expect(HexaLine.constantS(0).getDirection()).toEqual(HexaDirection.DOWN_LEFT);

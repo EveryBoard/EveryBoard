@@ -35,10 +35,8 @@ export class ServerPageComponent implements OnInit, OnDestroy {
     }
     public ngOnDestroy(): void {
         display(ServerPageComponent.VERBOSE, 'serverPageComponent.ngOnDestroy');
-        if (this.activesUsersSub) {
-            this.activesUsersSub.unsubscribe();
-            this.userService.unSubFromActivesUsersObs();
-        }
+        this.activesUsersSub.unsubscribe();
+        this.userService.unSubFromActivesUsersObs();
     }
     public pickGame(pickedGame: string): void {
         this.selectedGame = pickedGame;
@@ -48,9 +46,6 @@ export class ServerPageComponent implements OnInit, OnDestroy {
     }
     public playLocally(): void {
         this.router.navigate(['local/' + this.selectedGame]);
-    }
-    public startTutorial(): void {
-        this.router.navigate(['didacticial/' + this.selectedGame]);
     }
     public async createGame(): Promise<boolean> {
         return this.gameService.createGameAndRedirectOrShowError(this.selectedGame);

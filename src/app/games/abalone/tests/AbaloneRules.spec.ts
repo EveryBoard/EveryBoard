@@ -121,7 +121,7 @@ describe('AbaloneRules', () => {
         const state: AbaloneGameState = new AbaloneGameState(board, 0);
 
         // When moving four piece
-        const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(1, 4), HexaDirection.DOWN_RIGHT);
+        const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(1, 4), HexaDirection.RIGHT);
         const status: AbaloneLegalityStatus = rules.isLegal(move, state);
 
         // Then the move should be forbidden
@@ -143,7 +143,7 @@ describe('AbaloneRules', () => {
         const state: AbaloneGameState = new AbaloneGameState(board, 0);
 
         // When moving one piece against two
-        const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(1, 4), HexaDirection.DOWN_RIGHT);
+        const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(1, 4), HexaDirection.RIGHT);
         const status: AbaloneLegalityStatus = rules.isLegal(move, state);
 
         // Then the move should be forbidden
@@ -165,7 +165,7 @@ describe('AbaloneRules', () => {
         const state: AbaloneGameState = new AbaloneGameState(board, 0);
 
         // When moving two pieces against two
-        const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(1, 4), HexaDirection.DOWN_RIGHT);
+        const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(1, 4), HexaDirection.RIGHT);
         const status: AbaloneLegalityStatus = rules.isLegal(move, state);
 
         // Then the move should be forbidden
@@ -187,7 +187,7 @@ describe('AbaloneRules', () => {
         const state: AbaloneGameState = new AbaloneGameState(board, 0);
 
         // When moving 3 pieces against 1 but then you're own piece block
-        const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(1, 4), HexaDirection.DOWN_RIGHT);
+        const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(1, 4), HexaDirection.RIGHT);
         const status: AbaloneLegalityStatus = rules.isLegal(move, state);
 
         // Then the move should be forbidden
@@ -209,7 +209,7 @@ describe('AbaloneRules', () => {
         const state: AbaloneGameState = new AbaloneGameState(board, 0);
 
         // When pushing
-        const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(4, 4), HexaDirection.UP_LEFT);
+        const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(4, 4), HexaDirection.LEFT);
         const status: AbaloneLegalityStatus = rules.isLegal(move, state);
         const resultingState: AbaloneGameState = rules.applyLegalMove(move, state, status);
 
@@ -339,7 +339,7 @@ describe('AbaloneRules', () => {
         const state: AbaloneGameState = AbaloneGameState.getInitialSlice();
 
         // when moving a piece in one of the coord in the array but out of the board
-        const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(4, 8), HexaDirection.DOWN_RIGHT);
+        const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(4, 8), HexaDirection.RIGHT);
         const status: AbaloneLegalityStatus = rules.isLegal(move, state);
         const resultingState: AbaloneGameState = rules.applyLegalMove(move, state, status);
 
@@ -415,7 +415,7 @@ describe('AbaloneRules', () => {
         // when moving a piece in one of the coord in the array but out of the board
         const move: AbaloneMove = AbaloneMove.fromDoubleCoord(new Coord(2, 6),
                                                               new Coord(0, 8),
-                                                              HexaDirection.UP_LEFT);
+                                                              HexaDirection.LEFT);
         const status: AbaloneLegalityStatus = rules.isLegal(move, state);
         const resultingState: AbaloneGameState = rules.applyLegalMove(move, state, status);
 

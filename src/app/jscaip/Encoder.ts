@@ -2,16 +2,6 @@ import { assert, JSONValue, JSONValueWithoutArray } from 'src/app/utils/utils';
 
 export abstract class Encoder<T> {
 
-    public static of<T>(encode: (t: T) => JSONValue, decode: (n: JSONValue) => T): Encoder<T> {
-        return new class extends Encoder<T> {
-            public encode(t: T): JSONValue {
-                return encode(t);
-            }
-            public decode(n: JSONValue): T {
-                return decode(n);
-            }
-        };
-    }
     public abstract encode(t: T): JSONValue;
 
     public abstract decode(encoded: JSONValue): T;

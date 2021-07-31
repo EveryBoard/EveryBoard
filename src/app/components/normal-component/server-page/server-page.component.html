@@ -12,7 +12,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let part of getActiveParts()" (click)="joinGame(part.id, part.doc.typeGame)">
+                        <tr *ngFor="let part of getActiveParts(); index as i"
+                            id="part_{{ i }}"
+                            (click)="joinGame(part.id, part.doc.typeGame)">
                             <td class="td">{{ part.doc.typeGame }}</td>
                             <td class="td">{{ part.doc.playerZero }}</td>
                             <td class="td">

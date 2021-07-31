@@ -136,27 +136,27 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
     }
     public static getAllDirectionsForEntrance(slice: GipfPartSlice, entrance: Coord): HexaDirection[] {
         if (FlatHexaOrientation.INSTANCE.isTopLeftCorner(slice.hexaBoard, entrance)) {
-            return [HexaDirection.DOWN_RIGHT, HexaDirection.DOWN, HexaDirection.UP_RIGHT];
+            return [HexaDirection.RIGHT, HexaDirection.DOWN, HexaDirection.UP_RIGHT];
         } else if (FlatHexaOrientation.INSTANCE.isTopCorner(slice.hexaBoard, entrance)) {
-            return [HexaDirection.DOWN, HexaDirection.DOWN_LEFT, HexaDirection.DOWN_RIGHT];
+            return [HexaDirection.DOWN, HexaDirection.DOWN_LEFT, HexaDirection.RIGHT];
         } else if (FlatHexaOrientation.INSTANCE.isTopRightCorner(slice.hexaBoard, entrance)) {
-            return [HexaDirection.DOWN_LEFT, HexaDirection.DOWN, HexaDirection.UP_LEFT];
+            return [HexaDirection.DOWN_LEFT, HexaDirection.DOWN, HexaDirection.LEFT];
         } else if (FlatHexaOrientation.INSTANCE.isBottomLeftCorner(slice.hexaBoard, entrance)) {
-            return [HexaDirection.UP_RIGHT, HexaDirection.UP, HexaDirection.DOWN_RIGHT];
+            return [HexaDirection.UP_RIGHT, HexaDirection.UP, HexaDirection.RIGHT];
         } else if (FlatHexaOrientation.INSTANCE.isBottomCorner(slice.hexaBoard, entrance)) {
-            return [HexaDirection.UP, HexaDirection.UP_LEFT, HexaDirection.UP_RIGHT];
+            return [HexaDirection.UP, HexaDirection.LEFT, HexaDirection.UP_RIGHT];
         } else if (FlatHexaOrientation.INSTANCE.isBottomRightCorner(slice.hexaBoard, entrance)) {
-            return [HexaDirection.UP_LEFT, HexaDirection.UP, HexaDirection.DOWN_LEFT];
+            return [HexaDirection.LEFT, HexaDirection.UP, HexaDirection.DOWN_LEFT];
         } else if (FlatHexaOrientation.INSTANCE.isOnTopLeftBorder(slice.hexaBoard, entrance)) {
-            return [HexaDirection.DOWN_RIGHT, HexaDirection.DOWN];
+            return [HexaDirection.RIGHT, HexaDirection.DOWN];
         } else if (FlatHexaOrientation.INSTANCE.isOnLeftBorder(slice.hexaBoard, entrance)) {
-            return [HexaDirection.UP_RIGHT, HexaDirection.DOWN_RIGHT];
+            return [HexaDirection.UP_RIGHT, HexaDirection.RIGHT];
         } else if (FlatHexaOrientation.INSTANCE.isOnBottomLeftBorder(slice.hexaBoard, entrance)) {
             return [HexaDirection.UP, HexaDirection.UP_RIGHT];
         } else if (FlatHexaOrientation.INSTANCE.isOnBottomRightBorder(slice.hexaBoard, entrance)) {
-            return [HexaDirection.UP_LEFT, HexaDirection.UP];
+            return [HexaDirection.LEFT, HexaDirection.UP];
         } else if (FlatHexaOrientation.INSTANCE.isOnRightBorder(slice.hexaBoard, entrance)) {
-            return [HexaDirection.UP_LEFT, HexaDirection.DOWN_LEFT];
+            return [HexaDirection.LEFT, HexaDirection.DOWN_LEFT];
         } else if (FlatHexaOrientation.INSTANCE.isOnTopRightBorder(slice.hexaBoard, entrance)) {
             return [HexaDirection.DOWN_LEFT, HexaDirection.DOWN];
         } else {
