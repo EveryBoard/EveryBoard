@@ -991,12 +991,12 @@ describe('DidacticialGameWrapperComponent', () => {
                     new PentagoRules(PentagoGameState),
                     pentagoTutorial[2],
                     PentagoMove.withRotation(0, 0, 0, true),
-                    MGPValidation.failure($localize`Vous avez effectué un mouvement avec rotation, cette étape du didacticiel concerne les tours sans rotations!`),
+                    MGPValidation.failure($localize`You have made a move with a rotation. This tutorial step is about moves without rotations!`),
                 ], [
                     new PentagoRules(PentagoGameState),
                     pentagoTutorial[3],
                     PentagoMove.rotationless(0, 0),
-                    MGPValidation.failure($localize`Vous avez effectué un mouvement sans rotation, recommencez!`),
+                    MGPValidation.failure($localize`You made a move without rotation, try again!`),
                 ], [
                     new SaharaRules(SaharaPartSlice),
                     saharaTutorial[2],
