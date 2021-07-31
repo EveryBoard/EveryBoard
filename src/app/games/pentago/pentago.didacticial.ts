@@ -37,7 +37,7 @@ export const pentagoTutorial: DidacticialStep[] = [
         $localize`Simple move`,
         $localize`At their turn, players put a piece on the board and possibly rotate one block.
         As long as there are neutral blocks, i.e., blocks that would not change after being rotated, a player may skip rotating a block.
-        To do this, you have to click on the crossed circle that appears at the center of the board when it is possible.<br/><br/>
+        To do this, you have to click on the crossed circle that appears at the centre of the board when it is possible.<br/><br/>
         Do it.`,
         new PentagoGameState([
             [_, _, _, _, _, _],

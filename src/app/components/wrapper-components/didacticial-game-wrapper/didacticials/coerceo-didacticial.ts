@@ -15,7 +15,7 @@ export const coerceoTutorial: DidacticialStep[] = [
         $localize`Coerceo is played on a board like this, composed of hexagonal tiles, each comprising 6 triangles.
          The triangles are the cases along which pieces move during the game.
          The tiles can be removed from the board (you will see how later).
-         The dark pieces blong to the first player and can only move on the dark cases,
+         The dark pieces belong to the first player and can only move on the dark cases,
          while the light pieces belong to the second player and can only move on the light cases.
          The goal of the game is to capture all of the opponent's pieces.`,
         CoerceoPartSlice.getInitialSlice(),
@@ -57,14 +57,14 @@ export const coerceoTutorial: DidacticialStep[] = [
             CoerceoMove.fromCoordToCoord(new Coord(3, 4), new Coord(4, 3)),
         ],
         $localize`Congratulations!`,
-        $localize`Failed, you have not capturd any piece.`,
+        $localize`Failed, you have not captured any piece.`,
     ),
     DidacticialStep.fromMove(
         $localize`Gain a tile`,
         $localize`When a tile is empty, she can become removable from the board.
         For it to be removable, three of its sides must be free, and these should be consecutive sides.
         Note that if one empty tile, neighbouring a tile that was just removed, also becomes removable, it will be removed too.
-        For example, here, the topmost dark piece will not disconnect its tile whn leaving it.
+        For example, here, the topmost dark piece will not disconnect its tile when leaving it.
         But, by leaving the bottom left tile, two tiles will be removed.<br/><br/>
         Perform a move that lets you gain two tiles.`,
         new CoerceoPartSlice([
@@ -90,7 +90,7 @@ export const coerceoTutorial: DidacticialStep[] = [
     DidacticialStep.fromMove(
         $localize`Exchanging a tile`,
         $localize`When you have a tile, you can see it on the left of the board.
-        As soon as you hav two, you can click on an opponent's piece to capture it immediately.
+        As soon as you have two, you can click on an opponent's piece to capture it immediately.
         This will cost you two tiles.
         If any tiles are removed during that turn, nobody will get them.<br/><br/>
         Gain some time and capture the last piece!`,
@@ -109,12 +109,12 @@ export const coerceoTutorial: DidacticialStep[] = [
         [
             CoerceoMove.fromTilesExchange(new Coord(5, 5)),
         ],
-        $localize`Congratlations!`,
+        $localize`Congratulations!`,
         $localize`It's nice to move a piece, but you could have had the opponent's piece immediately by clicking on it!`,
     ),
     DidacticialStep.fromMove(
         $localize`Special capture`,
-        $localize`When a tile is removed from the board during your turn, some of the opponent's pieces may have have lost their last free neighbouring cases, they will therefore be captured!
+        $localize`When a tile is removed from the board during your turn, some of the opponent's pieces may have lost their last free neighbouring cases, they will therefore be captured!
         If this happens to one of your piece during your turn, it would however stay on the board.<br/><br/>
         A move that demonstrate both of these things can be done on this board by Light. Try it!<br/><br/>`,
         new CoerceoPartSlice([

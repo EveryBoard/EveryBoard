@@ -38,8 +38,8 @@ export const goTutorial: DidacticialStep[] = [
     DidacticialStep.fromMove(
         $localize`Simple capture`,
         $localize`An isolated stone, like the one in the middle here, has 4 neighbouring intersections (not 8, because we do not count diagonals).
-        If a neighbouring intersection is unoccupied, it is called a freedome.
-        If Dark plays on the last freedom of the light stone, this stone is removed from the Gobal (captured) and Dark earns one point<br/><br/>
+        If a neighbouring intersection is unoccupied, it is called a freedom.
+        If Dark plays on the last freedom of the light stone, this stone is removed from the Goban (captured) and Dark earns one point<br/><br/>
         There's only one freedom left to the light piece, capture it.`,
         new GoPartSlice([
             [_, _, _, _, _],
@@ -166,9 +166,9 @@ export const goTutorial: DidacticialStep[] = [
             [b, b, O, O, O, X, X, w, w],
         ], [0, 0], 0, MGPOptional.empty(), Phase.COUNTING),
         [new GoMove(0, 3)],
-        $localize`Congratulations, Dark has 15 territories and 3 light stones still present, called prisonners at the end of the game.
-        The intersections where the prisonners are count as Dark's territory
-        Light has 8 territories and 1 prisonner.
+        $localize`Congratulations, Dark has 15 territories and 3 light stones still present, called prisoners at the end of the game.
+        The intersections where the prisoners are count as Dark's territory
+        Light has 8 territories and 1 prisoner.
         The end result is therefore 18 - 9 for Dark.`,
         $localize`Failed, try again.`,
     ),

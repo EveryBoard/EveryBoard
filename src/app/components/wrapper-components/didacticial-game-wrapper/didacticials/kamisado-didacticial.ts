@@ -50,12 +50,12 @@ export const kamisadoTutorial: DidacticialStep[] = [
         Click on the piece of your choice and click on the landing square.`,
         KamisadoPartSlice.getInitialSlice(),
         KamisadoMove.of(new Coord(7, 7), new Coord(3, 3)),
-        $localize`Perfect! Note that each of your piece has a different color.`,
+        $localize`Perfect! Note that each of your piece has a different colour.`,
     ),
     DidacticialStep.fromMove(
         $localize`Moving`,
         $localize`Let us now consider the move of Light, after the blue piece has been moved by Dark.
-        All moves after the initial move must be made from the piece that corresponds to the color
+        All moves after the initial move must be made from the piece that corresponds to the colour
         of the square upon which the last move ended.
         Here, the last move ended on the pink square, hence the pink piece must move.
         It is already selected, you do not have to click on it.<br/><br/>
@@ -78,7 +78,7 @@ export const kamisadoTutorial: DidacticialStep[] = [
         $localize`You have not moved your pink piece on a blue square!`,
     ),
     DidacticialStep.informational(
-        $localize`Blocage`,
+        $localize`Stuck situation`,
         $localize`Dark moved to another pink square, hence you have to move your pink piece again.
         However, your pink piece is stuck! In this case, you must pass your turn.
         Dark will now have to play by moving its pink piece.`,
@@ -97,7 +97,7 @@ export const kamisadoTutorial: DidacticialStep[] = [
         $localize`Victory by blocking`,
         $localize`At any time, if a player blocks the entire game, that player loses.
         In other words, if a player forces its opponent to move a piece that that opponent cannot move,
-        and the player cannot move its own piece of the same color, that player loses.
+        and the player cannot move its own piece of the same colour, that player loses.
         Here, you're playing Dark and you can force your opponent to create such a situation, hence you can force your opponent to lose!<br/><br/>
         Try to make this move.`,
         new KamisadoPartSlice(2, KamisadoColor.RED, MGPOptional.of(new Coord(2, 4)), false, [

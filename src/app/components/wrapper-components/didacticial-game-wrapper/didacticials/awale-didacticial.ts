@@ -30,7 +30,7 @@ export const awaleTutorial: DidacticialStep[] = [
     DidacticialStep.fromMove(
         $localize`Simple capture`,
         $localize`After sowing, if the last seed falls in an opponent's house and if there is now two or three seeds in this house, the player captures these two or three seeds.
-         Then, te player looks at the preceding house:
+         Then, the player looks at the preceding house:
          if it is still in the opponent's side and contains two or three seeds, they are also captured.
          This continues until the player's side is reached or there is a different number of seeds from two or three.<br/><br/>
          You are the second player, try to capture some pieces!`,
@@ -64,7 +64,7 @@ export const awaleTutorial: DidacticialStep[] = [
             [3, 0, 0, 0, 1, 0],
         ], 1, [0, 0]),
         [AwaleMove.ZERO],
-        $localize`Notice that because the 2nd house was not capturable, the captured was interrupted and you have not captured the first house.`,
+        $localize`Notice that because the second house was not capturable, the captured was interrupted and you have not captured the first house.`,
         $localize`Failed. Try again.`,
     ),
     DidacticialStep.fromMove(
@@ -100,7 +100,7 @@ export const awaleTutorial: DidacticialStep[] = [
             [0, 1, 2, 4, 4, 5],
         ], 1, [0, 0]),
         AwaleMove.THREE,
-        $localize`Congratulations! Note that you can choose to give your opponent the least number of seeds if it is better for you. 
+        $localize`Congratulations! Note that you can choose to give your opponent the least number of seeds if it is better for you.
         It is often a good way to have easy captures!`,
     ),
     DidacticialStep.anyMove(
@@ -116,3 +116,4 @@ export const awaleTutorial: DidacticialStep[] = [
          Here, it was the first player's turn, and the second player has taken all the remaining seeds.`,
     ),
 ];
+ 

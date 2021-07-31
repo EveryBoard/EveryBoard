@@ -60,7 +60,7 @@ export const encapsuleTutorial: DidacticialStep[] = [
     DidacticialStep.fromMove(
         $localize`Particularity`,
         $localize`At Encapsule, pieces encapsulate each other.
-        It is therefore possiblle to have up to three pieces per case!
+        It is therefore possible to have up to three pieces per case!
         However, only the biggest piece of each case counts:
         you cannot win with a piece that is "hidden" by a bigger piece.
         Similarly, you cannot move a piece if it is encapsulated by a bigger piece.

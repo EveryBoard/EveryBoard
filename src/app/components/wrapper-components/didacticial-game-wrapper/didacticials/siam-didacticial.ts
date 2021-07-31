@@ -71,7 +71,7 @@ export const siamTutorial: DidacticialStep[] = [
     ),
     DidacticialStep.fromMove(
         $localize`Moving a piece out of the board`,
-        $localize`To move a piece out of the board, you do no thave to pick an orientation after the move.<br/><br/>
+        $localize`To move a piece out of the board, you do not have to pick an orientation after the move.<br/><br/>
         Get that piece out of the board!`,
         new SiamPartSlice([
             [_, _, _, _, _],

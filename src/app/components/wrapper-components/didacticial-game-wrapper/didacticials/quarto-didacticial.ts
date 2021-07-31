@@ -9,7 +9,7 @@ export const quartoTutorial: DidacticialStep[] = [
         $localize`Quarto is an alignment game.
         The goal is to align four pieces that have at least one common aspect:
         <ul>
-          <li>their color (light or dark)</li>
+          <li>their colour (light or dark)</li>
           <li>their size (big or small)</li>
           <li>their pattern (empty or dotted)</li>
           <li>their shape (round or square)</li>
@@ -25,7 +25,7 @@ export const quartoTutorial: DidacticialStep[] = [
     DidacticialStep.anyMove(
         $localize`Placement`,
         $localize`Every placement occurs in two steps: placing the piece you have in hand on a square of the board,
-        and picking a piece that the opponent will have to place, by clicking one one of the pieces on the side of the board.
+        and picking a piece that the opponent will have to place, by clicking on one of the pieces on the side of the board.
         If you prefer, the order of these two steps can be reversed.
         Keep in mind that the second click confirms the move.<br/><br/>
         Make a move.`,

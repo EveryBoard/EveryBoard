@@ -13,7 +13,7 @@ export const linesOfActionTutorial: DidacticialStep[] = [
         $localize`Goal of the game`,
         $localize`At Lines of Actions, the goal is to group your pieces contiguously, orthogonally and/or diagonally.
         Here, Dark wins the game:
-        Darks's pieces are forming a single group, while Light's pieces form three groups.`,
+        Dark's pieces are forming a single group, while Light's pieces form three groups.`,
         new LinesOfActionState([
             [_, _, _, _, _, _, _, _],
             [O, _, _, _, X, _, _, O],

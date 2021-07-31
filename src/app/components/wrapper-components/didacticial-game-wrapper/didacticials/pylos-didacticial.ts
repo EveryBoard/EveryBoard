@@ -21,7 +21,7 @@ export const pylosTutorial: DidacticialStep[] = [
     DidacticialStep.anyMove(
         $localize`Dropping a piece`,
         $localize`When it is your turn, you can always drop one of your piece on an empty square.
-        The gray squares are where you can drop your pieces.<br/><br/>
+        The grey squares are where you can drop your pieces.<br/><br/>
         Click on one of the squares to drop a piece there.`,
         PylosPartSlice.getInitialSlice(),
         PylosMove.fromDrop(new PylosCoord(1, 1, 0), []),
@@ -61,12 +61,12 @@ export const pylosTutorial: DidacticialStep[] = [
             <li> You cannot move a piece that is directly below another one.</li>
             <li> Of course, you cannot move the opponent's pieces.</li>
             <li> You can only climb when the landing square is higher than the starting square.</li>
-        </ul>`,
+        </ol>`,
         $localize`Failed!`,
     ),
     DidacticialStep.fromMove(
         $localize`Square (1/3)`,
-        $localize`When the piece you're moving is the fourth one of a square of your color,
+        $localize`When the piece you're moving is the fourth one of a square of your colour,
         you can choose anywhere on the board one or two of your pieces.
         These pieces will be removed from the board, allowing you to save up one or two pieces.
         A chosen piece must not be directly below another piece.
