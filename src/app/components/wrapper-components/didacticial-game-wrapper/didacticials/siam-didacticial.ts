@@ -37,7 +37,7 @@ export const siamTutorial: DidacticialStep[] = [
         As long as you do not have 5 pieces on the board, you can insert new pieces. To do so:
         <ol>
             <li>Click on one of the big arrows along the board.</li>
-            <li>Click on one of the small arrows that appeared on the landing case of your piece.
+            <li>Click on one of the small arrows that appeared on the landing square of your piece.
                 This is the direction in which your piece will be oriented.</li>
         </ol><br/>
         Insert a piece on the board.`,
@@ -86,7 +86,7 @@ export const siamTutorial: DidacticialStep[] = [
     ),
     DidacticialStep.fromMove(
         $localize`Pushing`,
-        $localize`When the landing case of your move is occupied, we use the term "push".
+        $localize`When the landing square of your move is occupied, we use the term "push".
         In order to push, multiple conditions must hold:
         <ol>
             <li>Your piece must be oriented in the direction of the push.</li>

@@ -32,10 +32,10 @@ export const pylosTutorial: DidacticialStep[] = [
         $localize`When 4 pieces form a square, it is possible to put a fifth piece on top.
         However, when that happens, you can save a piece by climbing instead of dropping a piece.
         To climb:
-        <ul>
-            <li> 1. Click on one of your free pieces, which should be lower than the landing square.</li>
-            <li> 2. Click on an empty landing square, higher than your selected piece.</li>
-        </ul><br/>
+        <ol>
+            <li>Click on one of your free pieces, which should be lower than the landing square.</li>
+            <li>Click on an empty landing square, higher than your selected piece.</li>
+        </ol><br/>
         Go ahead, climb!`,
         new PylosPartSlice([
             [

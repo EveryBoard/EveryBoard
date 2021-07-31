@@ -27,7 +27,7 @@ export const quixoTutorial: DidacticialStep[] = [
             <li> Pick a direction in which you want to send the piece (by clicking on the arrow).</li>
         </ol>
         You have to imagine that the piece you picked has been moved to the other side of the board, in the chosen direction.
-        Once on the other side, all pieces will move by one case in the opposing direction.
+        Once on the other side, all pieces will move by one space in the opposing direction.
         Afterwards, if the piece was neutral, it will become yours and takes your color.<br/><br/>
         For example, take the bottom right neutral piece, and move it to the left (you're playing Light).`,
         new QuixoPartSlice([

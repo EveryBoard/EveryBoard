@@ -16,17 +16,17 @@ const X4: DvonnPieceStack = new DvonnPieceStack(Player.ONE, 4, false);
 export const dvonnTutorial: DidacticialStep[] = [
     DidacticialStep.anyMove(
         $localize`Moving`,
-        $localize`At Dvonn, each hexagonal case contains a stack of pieces.
+        $localize`At Dvonn, each hexagonal space contains a stack of pieces.
         If no number is indicated on a stack, it means that it only contains one piece.
         The number written on a stack indicates the number of pieces within that stack, hence the number of points its owner gets.
         The owner of a stack is the one that has a piece at the top of the stack.
         Only the owner of a stack can move it.
         A stack cannot be moved if it is surrounded by 6 other stacks.
-        A stack is moved by as many cases as there are pieces within, in a straight line, and it should land on an occupied case.
-        This line cannot move along the vertex of two neighbouring cases, as would a vertical move.
+        A stack is moved by as many spaces as there are pieces within, in a straight line, and it should land on an occupied space.
+        This line cannot move along the vertex of two neighbouring spaces, as would a vertical move.
         Therefore, there are six possible directions.
         The player with dark pieces starts.<br/><br/>
-        You're playing Dark, click on a stack and move it by one case.`,
+        You're playing Dark, click on a stack and move it by one space.`,
         DvonnGameState.getInitialSlice(),
         DvonnMove.of(new Coord(2, 0), new Coord(3, 0)),
         $localize`Congratulations!`,

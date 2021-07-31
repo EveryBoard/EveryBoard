@@ -40,7 +40,7 @@ export const encapsuleTutorial: DidacticialStep[] = [
     DidacticialStep.fromMove(
         $localize`Moving`,
         $localize`Another type of move is to move one of your pieces that is already on the board.<br/><br/>
-        Click on your dark piece and then on any empty case of the board.`,
+        Click on your dark piece and then on any empty square of the board.`,
         new EncapsulePartSlice([
             [s, B, _],
             [_, _, _],
@@ -60,8 +60,8 @@ export const encapsuleTutorial: DidacticialStep[] = [
     DidacticialStep.fromMove(
         $localize`Particularity`,
         $localize`At Encapsule, pieces encapsulate each other.
-        It is therefore possible to have up to three pieces per case!
-        However, only the biggest piece of each case counts:
+        It is therefore possible to have up to three pieces per square!
+        However, only the biggest piece of each square counts:
         you cannot win with a piece that is "hidden" by a bigger piece.
         Similarly, you cannot move a piece if it is encapsulated by a bigger piece.
         Finally, you cannot encapsulate a piece with a smaller piece.

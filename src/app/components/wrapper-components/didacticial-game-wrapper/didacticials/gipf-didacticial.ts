@@ -39,7 +39,7 @@ export const gipfTutorial: DidacticialStep[] = [
         There are multiple important aspects of a capture:
         <ol>
             <li> When 4 pieces are captured, all pieces that are directly aligned with these 4 pieces are also captured.</li>
-            <li> As soon as there is an empty case on the line, the capture stops.</li>
+            <li> As soon as there is an empty space on the line, the capture stops.</li>
             <li> Your own pieces that are captured go back to your stock.
                     Your opponent's pieces however are really captured and do not go back to your opponent's stock.</li>
             <li> If you create a line of 4 of your opponent's pieces, it will be at the beginning of your opponent's turn that (s)he can capture them.

@@ -59,10 +59,10 @@ export const epaminondasTutorial: DidacticialStep[] = [
         $localize`Moving a piece`,
         $localize`Here is the starting board. Dark plays first.
         Let's start with moving a single piece:
-        <ul>
-            <li> 1. Click on a piece.</li>
-            <li> 2. Click on a empty neighbouring case.</li>
-        </ul>`,
+        <ol>
+            <li>Click on a piece.</li>
+            <li>Click on a empty neighbouring square.</li>
+        </ol>`,
         EpaminondasPartSlice.getInitialSlice(),
         new EpaminondasMove(0, 10, 1, 1, Direction.UP),
         (move: EpaminondasMove, state: EpaminondasPartSlice) => {
@@ -77,11 +77,11 @@ export const epaminondasTutorial: DidacticialStep[] = [
     DidacticialStep.fromPredicate(
         $localize`Moving a phalanx`,
         $localize`Let us now see how to move multiple pieces along a line, which is called a phalanx :
-        <ul>
-            <li> 1. Click on the first piece of the phalanx (here, the bottom left one).</li>
-            <li> 2. Click on the last piece of the phalanx (in this example, the one just above).</li>
-            <li> 3. Click two cases above in order to move the phalanx by two cases (the maximal legal distance, which equals the number of pieces moved).</li>
-        </ul>`,
+        <ol>
+            <li>Click on the first piece of the phalanx (here, the bottom left one).</li>
+            <li>Click on the last piece of the phalanx (in this example, the one just above).</li>
+            <li>Click two squares above in order to move the phalanx by two squares (the maximal legal distance, which equals the number of pieces moved).</li>
+        </ol>`,
         EpaminondasPartSlice.getInitialSlice(),
         new EpaminondasMove(0, 11, 2, 1, Direction.UP),
         (move: EpaminondasMove, _: EpaminondasPartSlice) => {
@@ -99,11 +99,11 @@ export const epaminondasTutorial: DidacticialStep[] = [
     DidacticialStep.fromMove(
         $localize`Capture`,
         $localize`In order to capture a phalanx of the opponent:
-        <ul>
-            <li> 1. It must be aligned with the phalanx you are moving.</li>
-            <li> 2. It must be strictly shorter than your phalanx.</li>
-            <li> 3. The first piece of your phalanx should land on the first piece of the opponent's phalanx that you want to capture.</li>
-        </ul><br/>
+        <ol>
+            <li>It must be aligned with the phalanx you are moving.</li>
+            <li>It must be strictly shorter than your phalanx.</li>
+            <li>The first piece of your phalanx should land on the first piece of the opponent's phalanx that you want to capture.</li>
+        </ol><br/>
         Capture a phalanx.`,
         new EpaminondasPartSlice([
             [_, _, _, _, _, _, _, _, X, X, X, X, X, X],

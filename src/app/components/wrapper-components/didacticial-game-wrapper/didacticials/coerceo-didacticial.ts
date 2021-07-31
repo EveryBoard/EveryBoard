@@ -13,20 +13,20 @@ export const coerceoTutorial: DidacticialStep[] = [
     DidacticialStep.informational(
         $localize`Board and goal of the game`,
         $localize`Coerceo is played on a board like this, composed of hexagonal tiles, each comprising 6 triangles.
-         The triangles are the cases along which pieces move during the game.
+         The triangles are the spaces along which pieces move during the game.
          The tiles can be removed from the board (you will see how later).
-         The dark pieces belong to the first player and can only move on the dark cases,
-         while the light pieces belong to the second player and can only move on the light cases.
+         The dark pieces belong to the first player and can only move on the dark spaces,
+         while the light pieces belong to the second player and can only move on the light spaces.
          The goal of the game is to capture all of the opponent's pieces.`,
         CoerceoPartSlice.getInitialSlice(),
     ),
     DidacticialStep.anyMove(
         $localize`Move`,
         $localize`To move a piece, you need to:
-        <ul>
-          <li>1. Click on one of your pieces.</li>
-          <li>2. Click on of the triangular space highlighted in yellow.</li>
-        </ul>
+        <ol>
+          <li>Click on one of your pieces.</li>
+          <li>Click on of the triangular space highlighted in yellow.</li>
+        </ol>
         You can pass through the opponent's pieces.
         You're playing first, hence you're playing Dark. Perform any move.
         Note: no matter what you do, no piece can be captured during your first turn.`,
@@ -36,8 +36,8 @@ export const coerceoTutorial: DidacticialStep[] = [
     ),
     DidacticialStep.fromMove(
         $localize`Capture`,
-        $localize`Every piece has three neighbouring triangular cases (2 on the sides).
-        When all neighbouring cases except one are occupied, and one opponent moves to that last free case, your piece is captured!
+        $localize`Every piece has three neighbouring triangular spaces (2 on the sides).
+        When all neighbouring spaces except one are occupied, and one opponent moves to that last free space, your piece is captured!
         However, it is possible to place a piece between 3 of the opponent's pieces (or 2 on the side) without being captured.<br/><br/>
         You're playing Light, make a capture.`,
         new CoerceoPartSlice([
@@ -114,7 +114,7 @@ export const coerceoTutorial: DidacticialStep[] = [
     ),
     DidacticialStep.fromMove(
         $localize`Special capture`,
-        $localize`When a tile is removed from the board during your turn, some of the opponent's pieces may have lost their last free neighbouring cases, they will therefore be captured!
+        $localize`When a tile is removed from the board during your turn, some of the opponent's pieces may have lost their last free neighbouring space, they will therefore be captured!
         If this happens to one of your piece during your turn, it would however stay on the board.<br/><br/>
         A move that demonstrate both of these things can be done on this board by Light. Try it!<br/><br/>`,
         new CoerceoPartSlice([

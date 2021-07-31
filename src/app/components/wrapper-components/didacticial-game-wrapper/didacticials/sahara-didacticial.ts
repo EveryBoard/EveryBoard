@@ -20,7 +20,7 @@ export const saharaTutorial: DidacticialStep[] = [
     DidacticialStep.informational(
         $localize`Goal of the game`,
         $localize`At Sâhârâ, the goal of the game is to immobilise one of the opponent's pyramid.
-        To do so, you have to occupy all neighbouring case of that pyramid.
+        To do so, you have to occupy all neighbouring space of that pyramid.
         Here, Light has lost because its leftmost pyramid is immobilised.`,
         new SaharaPartSlice([
             [N, N, _, _, X, _, _, O, X, N, N],
@@ -34,11 +34,11 @@ export const saharaTutorial: DidacticialStep[] = [
     DidacticialStep.fromPredicate(
         $localize`Simple move`,
         $localize`To immobilise your opponent, you have to move your pyramids.
-        When a pyramid shares its vertices with light spaces, it can move on these cases (we call this a simple step)
+        When a pyramid shares its vertices with light spaces, it can move on these spaces (we call this a simple step)
         You're the first player, playing with the dark pyramids
         <ol>
             <li> Click on one of your pyramids.</li>
-            <li> Click then on one of the two or three neighbouring cases in order to move your pyramid there.</li>
+            <li> Click then on one of the two or three neighbouring spaces in order to move your pyramid there.</li>
         </ol><br/>
         Do any move.`,
         SaharaPartSlice.getInitialSlice(),
@@ -59,7 +59,7 @@ export const saharaTutorial: DidacticialStep[] = [
         <ol>
             <li> Click on the pyramid to move (the one in the center).</li>
             <li> Click on one of the 6 destinations that you can reach in two steps:
-                the 6 neighbouring light cases of the 3 dark cases that are neighbours of your pyramid.
+                the 6 neighbouring light spaces of the 3 dark spaces that are neighbours of your pyramid.
         </ol>`,
         SaharaPartSlice.getInitialSlice(),
         new SaharaMove(new Coord(7, 0), new Coord(5, 0)),
