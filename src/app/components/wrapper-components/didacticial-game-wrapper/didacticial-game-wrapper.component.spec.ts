@@ -1006,7 +1006,7 @@ describe('DidacticialGameWrapperComponent', () => {
                     new SaharaRules(SaharaPartSlice),
                     saharaTutorial[3],
                     new SaharaMove(new Coord(2, 0), new Coord(2, 1)),
-                    MGPValidation.failure(`Failed! You have made a single step`),
+                    MGPValidation.failure(`Failed! You have made a single step.`),
                 ], [
                     new SixRules(SixGameState),
                     sixTutorial[4],

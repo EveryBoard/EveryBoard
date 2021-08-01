@@ -65,7 +65,7 @@ export const saharaTutorial: DidacticialStep[] = [
         new SaharaMove(new Coord(7, 0), new Coord(5, 0)),
         (move: SaharaMove, state: SaharaPartSlice) => {
             if (move.isSimpleStep()) {
-                return MGPValidation.failure($localize`Failed! You have made a single step`);
+                return MGPValidation.failure($localize`Failed! You have made a single step.`);
             } else {
                 return MGPValidation.SUCCESS;
             }
