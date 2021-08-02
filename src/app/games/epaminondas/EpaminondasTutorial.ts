@@ -3,7 +3,7 @@ import { EpaminondasPartSlice } from 'src/app/games/epaminondas/EpaminondasPartS
 import { Direction } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { DidacticialStep } from '../DidacticialStep';
+import { DidacticialStep } from '../../components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
 
 const _: number = Player.NONE.value;
 const O: number = Player.ZERO.value;

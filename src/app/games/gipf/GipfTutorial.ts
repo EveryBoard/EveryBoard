@@ -5,7 +5,7 @@ import { GipfPiece } from 'src/app/games/gipf/GipfPiece';
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { DidacticialStep } from '../DidacticialStep';
+import { DidacticialStep } from '../../components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
 
 const _: GipfPiece = GipfPiece.EMPTY;
 const O: GipfPiece = GipfPiece.PLAYER_ZERO;

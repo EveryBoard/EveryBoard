@@ -56,8 +56,14 @@ export class PentagoComponent extends AbstractGameComponent<PentagoMove,
     public updateBoard(): void {
         this.board = this.rules.node.gamePartSlice.getCopiedBoard();
         this.victoryCoords = this.rules.getVictoryCoords(this.rules.node.gamePartSlice);
+        this.showLastMove();
+    }
+    public showLastMove(): void {
         const lastMove: PentagoMove = this.rules.node.move;
-        if (lastMove) {
+        this.cancelMoveAttempt();
+        if (lastMove == null) {
+            this.hidePreviousMove();
+        } else {
             this.movedBlock = lastMove.blockTurned.getOrNull();
             const localCoord: Coord = new Coord(lastMove.coord.x % 3 - 1, lastMove.coord.y % 3 - 1);
             if (lastMove.blockTurned.isPresent() &&
@@ -82,8 +88,6 @@ export class PentagoComponent extends AbstractGameComponent<PentagoMove,
             } else {
                 this.lastDrop = lastMove.coord;
             }
-        } else {
-            this.hidePreviousMove();
         }
     }
     private coordBelongToBlock(lastMove: PentagoMove): boolean {
@@ -95,6 +99,7 @@ export class PentagoComponent extends AbstractGameComponent<PentagoMove,
     public hidePreviousMove(): void {
         this.lastDrop = null;
         this.movedBlock = null;
+        this.victoryCoords = null;
     }
     private generateArrowsCoord(): [string, number, boolean][] {
         const B: number = 2 * this.BLOCK_SEPARATION;
@@ -114,9 +119,7 @@ export class PentagoComponent extends AbstractGameComponent<PentagoMove,
     public cancelMoveAttempt(): void {
         this.arrows = [];
         this.currentDrop = null;
-        this.victoryCoords = null;
         this.canSkipRotation = false;
-        this.lastDrop = null;
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);

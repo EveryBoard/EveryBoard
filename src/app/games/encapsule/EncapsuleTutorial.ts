@@ -3,7 +3,7 @@ import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { EncapsuleCase, EncapsulePartSlice } from 'src/app/games/encapsule/EncapsulePartSlice';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
-import { DidacticialStep } from '../DidacticialStep';
+import { DidacticialStep } from '../../components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
 
 const _: number = new EncapsuleCase(Player.NONE, Player.NONE, Player.NONE).encode();
 const s: number = new EncapsuleCase(Player.ZERO, Player.NONE, Player.NONE).encode();

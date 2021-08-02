@@ -1,7 +1,7 @@
 import { ReversiMove } from 'src/app/games/reversi/ReversiMove';
 import { ReversiPartSlice } from 'src/app/games/reversi/ReversiPartSlice';
 import { Player } from 'src/app/jscaip/Player';
-import { DidacticialStep } from '../DidacticialStep';
+import { DidacticialStep } from '../../components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
 
 const _: number = Player.NONE.value;
 const O: number = Player.ZERO.value;

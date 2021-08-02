@@ -1,7 +1,7 @@
 import { GoMove } from 'src/app/games/go/GoMove';
 import { GoPartSlice, GoPiece, Phase } from 'src/app/games/go/GoPartSlice';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { DidacticialStep } from '../DidacticialStep';
+import { DidacticialStep } from '../../components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
 
 const X: GoPiece = GoPiece.WHITE;
 const O: GoPiece = GoPiece.BLACK;

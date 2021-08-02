@@ -3,7 +3,7 @@ import { SixMove } from 'src/app/games/six/SixMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { DidacticialStep } from '../DidacticialStep';
+import { DidacticialStep } from '../../components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
 
 const _: number = Player.NONE.value;
 const O: number = Player.ZERO.value;
@@ -106,13 +106,13 @@ export const sixTutorial: DidacticialStep[] = [
         SixGameState.fromRepresentation([
             [_, _, _, _, _, X],
             [_, _, _, _, O, X],
-            [_, _, _, O, O, O],
-            [_, _, O, _, X, _],
-            [X, X, _, _, _, _],
+            [_, _, _, X, O, O],
+            [_, _, O, _, X, O],
+            [X, X, _, _, _, O],
             [O, X, _, _, _, _],
             [O, _, _, _, _, _],
         ], 40),
-        SixMove.fromDeplacement(new Coord(2, 3), new Coord(6, 2)),
+        SixMove.fromDeplacement(new Coord(2, 3), new Coord(3, 3)),
         (move: SixMove, _resultingState: SixGameState) => {
             if (new Coord(2, 3).equals(move.start.getOrNull())) {
                 return MGPValidation.SUCCESS;

@@ -72,12 +72,16 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfPartSlic
         const slice: GipfPartSlice = this.rules.node.gamePartSlice;
         this.board = slice.getCopiedBoard();
 
+        this.showLastMove();
+        this.cancelMoveAttempt();
+        this.moveToInitialCaptureOrPlacementPhase();
+    }
+    public showLastMove(): void {
+        this.inserted = null;
         const lastMove: GipfMove = this.rules.node.move;
         if (lastMove != null && lastMove.placement.direction.isPresent()) {
             this.inserted = this.arrowTowards(lastMove.placement.coord, lastMove.placement.direction.get());
         }
-        this.cancelMoveAttempt();
-        this.moveToInitialCaptureOrPlacementPhase();
     }
     private arrowTowards(placement: Coord, direction: HexaDirection): Arrow {
         const previous: Coord = placement.getNext(direction.getOpposite());
