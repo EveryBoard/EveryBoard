@@ -117,7 +117,7 @@ export const coerceoTutorial: DidacticialStep[] = [
         $localize`Special capture`,
         $localize`When a tile is removed from the board during your turn, some of the opponent's pieces may have lost their last free neighbouring space, they will therefore be captured!
         If this happens to one of your piece during your turn, it would however stay on the board.<br/><br/>
-        A move that demonstrate both of these things can be done on this board by Light. Try it!<br/><br/>`,
+        A move that demonstrate both of these things can be done on this board by Light. Try it!`,
         new CoerceoPartSlice([
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],

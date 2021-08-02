@@ -80,7 +80,7 @@ export const epaminondasTutorial: DidacticialStep[] = [
         <ol>
             <li>Click on the first piece of the phalanx.</li>
             <li>Click on the last piece of the phalanx.</li>
-            <li>Click on one of the squares highlighted in yellow; you can move your phalax up to a distance equal to its length.</li>
+            <li>Click on one of the squares highlighted in yellow; you can move your phalanx up to a distance equal to its length.</li>
         </ol><br/>
         Move a phalanx!`,
         EpaminondasPartSlice.getInitialSlice(),

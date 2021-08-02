@@ -93,7 +93,7 @@ export const awaleTutorial: DidacticialStep[] = [
     ),
     DidacticialStep.anyMove(
         $localize`Feeding is mandatory`,
-        $localize`You cannot let another player starve, meaning that if your opponent has no seeds anymore and if you can give them at least one, you have to do it.
+        $localize`You cannot let another player starve, meaning that if your opponent has no seeds anymore and if you can give them at least one, you have to do it.<br/><br/>
         Go ahead!`,
         new AwalePartSlice([
             [0, 0, 0, 0, 0, 0],
