@@ -61,7 +61,7 @@ export const epaminondasTutorial: DidacticialStep[] = [
         Let's start with moving a single piece:
         <ol>
             <li>Click on a piece.</li>
-            <li>Click on a empty neighbouring square.</li>
+            <li>Click on a empty neighboring square.</li>
         </ol>`,
         EpaminondasPartSlice.getInitialSlice(),
         new EpaminondasMove(0, 10, 1, 1, Direction.UP),

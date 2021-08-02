@@ -48,7 +48,7 @@ export const siamTutorial: DidacticialStep[] = [
     DidacticialStep.fromMove(
         $localize`Moving a piece`,
         $localize`We will distinguish here "moving" and "pushing".
-        A move is made from a piece's square to an empty neighbouring square, horizontally or vertically.
+        A move is made from a piece's square to an empty neighboring square, horizontally or vertically.
         During that move, you can also move the piece out of the board.
         To move a piece:
         <ol>

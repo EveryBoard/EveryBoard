@@ -9,7 +9,7 @@ export const quartoTutorial: DidacticialStep[] = [
         $localize`Quarto is an alignment game.
         The goal is to align four pieces that have at least one common aspect:
         <ul>
-          <li>their colour (light or dark)</li>
+          <li>their color (light or dark)</li>
           <li>their size (big or small)</li>
           <li>their pattern (empty or dotted)</li>
           <li>their shape (round or square)</li>

@@ -37,8 +37,8 @@ export const goTutorial: DidacticialStep[] = [
     ),
     DidacticialStep.fromMove(
         $localize`Simple capture`,
-        $localize`An isolated stone, like the one in the middle here, has 4 neighbouring intersections (not 8, because we do not count diagonals).
-        If a neighbouring intersection is unoccupied, it is called a freedom.
+        $localize`An isolated stone, like the one in the middle here, has 4 neighboring intersections (not 8, because we do not count diagonals).
+        If a neighboring intersection is unoccupied, it is called a freedom.
         If Dark plays on the last freedom of the light stone, this stone is removed from the Goban (captured) and Dark earns one point<br/><br/>
         There's only one freedom left to the light piece, capture it.`,
         new GoPartSlice([

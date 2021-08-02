@@ -37,8 +37,8 @@ export const coerceoTutorial: DidacticialStep[] = [
     ),
     DidacticialStep.fromMove(
         $localize`Capture`,
-        $localize`Every piece has three neighbouring triangular spaces (2 on the sides).
-        When all neighbouring spaces except one are occupied, and one opponent moves to that last free space, your piece is captured!
+        $localize`Every piece has three neighboring triangular spaces (2 on the sides).
+        When all neighboring spaces except one are occupied, and one opponent moves to that last free space, your piece is captured!
         However, it is possible to place a piece between 3 of the opponent's pieces (or 2 on the side) without being captured.<br/><br/>
         You're playing Light, make a capture.`,
         new CoerceoPartSlice([
@@ -64,7 +64,7 @@ export const coerceoTutorial: DidacticialStep[] = [
         $localize`Gain a tile`,
         $localize`When a tile is empty, she can become removable from the board.
         For it to be removable, three of its sides must be free, and these should be consecutive sides.
-        Note that if one empty tile, neighbouring a tile that was just removed, also becomes removable, it will be removed too.
+        Note that if one empty tile, neighboring a tile that was just removed, also becomes removable, it will be removed too.
         For example, here, the topmost dark piece will not disconnect its tile when leaving it.
         But, by leaving the bottom left tile, two tiles will be removed.<br/><br/>
         Perform a move that lets you gain two tiles.`,
@@ -115,7 +115,7 @@ export const coerceoTutorial: DidacticialStep[] = [
     ),
     DidacticialStep.fromMove(
         $localize`Special capture`,
-        $localize`When a tile is removed from the board during your turn, some of the opponent's pieces may have lost their last free neighbouring space, they will therefore be captured!
+        $localize`When a tile is removed from the board during your turn, some of the opponent's pieces may have lost their last free neighboring space, they will therefore be captured!
         If this happens to one of your piece during your turn, it would however stay on the board.<br/><br/>
         A move that demonstrate both of these things can be done on this board by Light. Try it!`,
         new CoerceoPartSlice([

@@ -51,7 +51,7 @@ export const yinshTutorial: DidacticialStep[] = [
         Then, the ring must be moved in a straight line, in any direction.
         A ring cannot pass through other rings during its move.
         If it goes over a group of markers, your move must stop at the first empty space after that group.
-        All markers in the group are then flipped and their colour change.<br/><br/>
+        All markers in the group are then flipped and their color change.<br/><br/>
         You're playing dark, do a move.`,
         new YinshGameState(YinshBoard.of([
             [N, N, N, N, N, N, _, _, _, _, N],
@@ -71,7 +71,7 @@ export const yinshTutorial: DidacticialStep[] = [
     DidacticialStep.fromMove(
         $localize`Getting a ring by aligning 5 markers`,
         $localize`Finally, the last mechanic you need is to be able to get a ring from the board in order to gain points.
-        To do so, you need to align 5 markers of your colour.
+        To do so, you need to align 5 markers of your color.
         You can then get these markers by clicking on them, and then get one of your ring by clicking on it.
         You will then have one more point.
         You must capture when you can.<br/><br/>
@@ -93,5 +93,5 @@ export const yinshTutorial: DidacticialStep[] = [
             new YinshMove([], new Coord(4, 4), MGPOptional.of(new Coord(7, 4)),
                           [YinshCapture.of(new Coord(2, 4), new Coord(6, 4), ringTaken)])),
         $localize`Congratulations! You need two more captures to win.`,
-        $localize`Failed! You need to align 5 markers of your colour in order to get them, and to get a ring at the same time.`),
+        $localize`Failed! You need to align 5 markers of your color in order to get them, and to get a ring at the same time.`),
 ];

@@ -49,7 +49,7 @@ class GameDescription {
 
     public static readonly PYLOS: string = $localize`Overlay your pieces and use two game mechanics to conserve your pieces. First player to run out of pieces loose!`;
 
-    public static readonly SAHARA: string = $localize`Immobilise one of your opponent's pyramids before your opponent does!`;
+    public static readonly SAHARA: string = $localize`Immobilize one of your opponent's pyramids before your opponent does!`;
 
     public static readonly SIAM: string = $localize`Be the first to push a mountain out of the board!`;
 

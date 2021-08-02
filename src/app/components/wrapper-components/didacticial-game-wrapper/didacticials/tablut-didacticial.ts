@@ -15,10 +15,10 @@ export const tablutTutorial: DidacticialStep[] = [
         $localize`Tablut is a strategy game that was played by the Vikings.
         The goal of the game is different for each player.
         The attacker plays first. Its pieces (dark) are close to the edges.
-        Its goal is to capture the king, which is in the centre of the board.
+        Its goal is to capture the king, which is in the center of the board.
         The defender plays second. Its pieces (light) are in the middle.
         Its goal is to put the king of one of the 4 thrones in the corners.
-        Note that the square in which the king starts, in the centre of the board, is also a throne.`,
+        Note that the square in which the king starts, in the center of the board, is also a throne.`,
         TablutPartSlice.getInitialSlice(),
     ),
     DidacticialStep.anyMove(
@@ -84,7 +84,7 @@ export const tablutTutorial: DidacticialStep[] = [
     DidacticialStep.fromMove(
         $localize`Capturing the king (1/2)`,
         $localize`To capture the king, two soldiers are not enough.
-        For the first solution, the four squares neighbour to the king (horizontally and vertically) must be occupied by your soldiers.
+        For the first solution, the four squares neighbor to the king (horizontally and vertically) must be occupied by your soldiers.
         This also works if the king is on the throne.<br/><br/>
         Capture the king.`,
         new TablutPartSlice([
@@ -104,7 +104,7 @@ export const tablutTutorial: DidacticialStep[] = [
     ),
     DidacticialStep.fromMove(
         $localize`Capturing the king (2/2)`,
-        $localize`Another way to capture the king is to immobilise it against an edge of the board.
+        $localize`Another way to capture the king is to immobilize it against an edge of the board.
         Note that the king cannot be captured next to a throne.<br/><br/>
         Capture the king.`,
         new TablutPartSlice([

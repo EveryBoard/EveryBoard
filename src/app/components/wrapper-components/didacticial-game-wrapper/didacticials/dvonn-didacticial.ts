@@ -23,7 +23,7 @@ export const dvonnTutorial: DidacticialStep[] = [
         Only the owner of a stack can move it.
         A stack cannot be moved if it is surrounded by 6 other stacks.
         A stack is moved by as many spaces as there are pieces within, in a straight line, and it should land on an occupied space.
-        This line cannot move along the vertex of two neighbouring spaces, as would a vertical move.
+        This line cannot move along the vertex of two neighboring spaces, as would a vertical move.
         Therefore, there are six possible directions.
         The player with dark pieces starts.<br/><br/>
         You're playing Dark, click on a stack and move it by one space.`,
