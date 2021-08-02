@@ -29,13 +29,19 @@ class GameDescription {
 
     public static readonly ABALONE: string = $localize`Use simple mechanics to push 6 of the opponent's pieces out of the board!`;
 
-    public static readonly AWALE: string = $localize`The international version of the more famous african strategy game!`;
+    public static readonly AWALE: string = $localize`The international version of the more famous African strategy game!`;
+
+    public static readonly DVONN: string = $localize`Stack your pieces and control as many stacks as you can to win!`
 
     public static readonly ENCAPSULE: string = $localize`An enhanced tic-tac-toe where piece can encapsule other and prevent them to win.`;
 
     public static readonly EPAMINONDAS: string = $localize`An antiquity-war inspired game. Be the first to pierce your opponent's lines!`;
 
+    public static readonly GIPF: string = $localize`A hexagonal game of alignment. Don't be the first one to be out of pieces to place on the board!`;
+
     public static readonly GO: string = $localize`The oldest strategy game still practiced widely. A territory control game.`;
+
+    public static readonly LINES_OF_ACTION: string = $localize`Regroup your pieces to win. But your possible moves will often change!`
 
     public static readonly P4: string = $localize`The classical 4 in a row game!`;
 
@@ -43,13 +49,15 @@ class GameDescription {
 
     public static readonly PYLOS: string = $localize`Overlay your pieces and use two game mechanics to conserve your pieces. First player to run out of pieces loose!`;
 
-    public static readonly SAHARA: string = $localize`Immobilize one of your opponent's pyramids before he immobilize one of yours!`;
+    public static readonly SAHARA: string = $localize`Immobilise one of your opponent's pyramids before your opponent does!`;
 
     public static readonly SIAM: string = $localize`Be the first to push a mountain out of the board!`;
 
-    public static readonly SIX: string = $localize`Put your hexagonals pieces next to another one, and create one of the 3 victorious shapes to win!`;
+    public static readonly SIX: string = $localize`Put your hexagonal pieces next to another one, and create one of the 3 victorious shapes to win!`;
 
     public static readonly TABLUT: string = $localize`The vikings checkers! Invaders must capture the King, defender must make him escape!`;
+
+    public static readonly YINSH: string = $localize`Align your pieces to score points, but beware of pieces that flip!`
 }
 
 export class GameInfo {
@@ -69,15 +77,15 @@ export class GameInfo {
         new GameInfo($localize`Pylos`, 'Pylos', PylosComponent, new Date('2020-10-02'), GameDescription.PYLOS), // 7 months after Sahara
         new GameInfo($localize`Kamisado`, 'Kamisado', KamisadoComponent, new Date('2020-10-03')), // 26 days after joining *Quentin
         new GameInfo($localize`Quixo`, 'Quixo', QuixoComponent, new Date('2020-10-15')), // 13 days after Pylos
-        new GameInfo($localize`Dvonn`, 'Dvonn', DvonnComponent, new Date('2020-10-21')), // 18 days after Kamisado *Quentin
+        new GameInfo($localize`Dvonn`, 'Dvonn', DvonnComponent, new Date('2020-10-21'), GameDescription.DVONN), // 18 days after Kamisado *Quentin
         new GameInfo($localize`Epaminondas`, 'Epaminondas', EpaminondasComponent, new Date('2021-01-16'), GameDescription.EPAMINONDAS), // 22 days after Quixo
-        new GameInfo($localize`Gipf`, 'Gipf', GipfComponent, new Date('2021-02-22')), // 4 months after Dvonn *Quentin
+        new GameInfo($localize`Gipf`, 'Gipf', GipfComponent, new Date('2021-02-22'), GameDescription.GIPF), // 4 months after Dvonn *Quentin
         new GameInfo($localize`Coerceo`, 'Coerceo', CoerceoComponent, new Date('2021-03-21')), // 76 days after Epaminondas
         new GameInfo($localize`Six`, 'Six', SixComponent, new Date('2021-04-08'), GameDescription.SIX), // 18 days after Coerceo
-        new GameInfo($localize`Lines of Action`, 'LinesOfAction', LinesOfActionComponent, new Date('2020-04-28')), // 65 days after Gipf *Quentin
+        new GameInfo($localize`Lines of Action`, 'LinesOfAction', LinesOfActionComponent, new Date('2020-04-28'), GameDescription.LINES_OF_ACTION), // 65 days after Gipf *Quentin
         new GameInfo($localize`Pentago`, 'Pentago', PentagoComponent, new Date('2021-05-23'), GameDescription.PENTAGO), // 25 days after Six
         new GameInfo($localize`Abalone`, 'Abalone', AbaloneComponent, new Date('2021-07-13'), GameDescription.ABALONE),
-        new GameInfo($localize`Yinsh`, 'Yinsh', YinshComponent, new Date('2021-07-04')), // 67 days after LinesOfAtion *Quentin
+        new GameInfo($localize`Yinsh`, 'Yinsh', YinshComponent, new Date('2021-07-31'), GameDescription.YINSH),
     ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
     // After Gipf: median = 26d; average = 34d
     // 9d 10d 12d 13d 18d - 18d 20d 22d (25d 26d) 26d 49d 65d - 76d 93d 4m 7m 11m

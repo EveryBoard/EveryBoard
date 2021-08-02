@@ -98,7 +98,7 @@ export const epaminondasTutorial: DidacticialStep[] = [
     ),
     DidacticialStep.fromMove(
         $localize`Capture`,
-        $localize`In order to capture a phalanx of the opponent:
+        $localize`In order to capture pieces of the opponent:
         <ol>
             <li>It must be aligned with the phalanx you are moving.</li>
             <li>It must be strictly shorter than your phalanx.</li>

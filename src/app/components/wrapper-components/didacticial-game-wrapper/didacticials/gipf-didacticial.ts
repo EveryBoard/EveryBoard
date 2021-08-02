@@ -13,7 +13,7 @@ const X: GipfPiece = GipfPiece.PLAYER_ONE;
 export const gipfTutorial: DidacticialStep[] = [
     DidacticialStep.informational(
         $localize`Goal of the game`,
-        $localize`The goal Gipf is to capture the opponent's piece so that the opponent can no longer play.
+        $localize`The goal of Gipf is to capture the opponent's piece so that the opponent can no longer play.
         This is the initial board.
         Each player has 12 pieces on the side and 3 pieces on the board.
         When, at its turn, a player has no more pieces on the side, that player cannot play anymore and loses the game.
