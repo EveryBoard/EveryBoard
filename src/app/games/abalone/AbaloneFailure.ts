@@ -8,7 +8,7 @@ export class AbaloneFailure {
 
     public static readonly MUST_ONLY_TRANSLATE_YOUR_PIECES: string = $localize`This line contains pieces of your opponent or empty spaces, which is forbidden.`;
 
-    public static readonly TRANSLATION_IMPOSSIBLE: string = $localize`This move is impossible, some landing cases are occupied.`;
+    public static readonly TRANSLATION_IMPOSSIBLE: string = $localize`This move is impossible, some landing spaces are occupied.`;
 
-    public static readonly LINE_AND_COORD_NOT_ALIGNED: string = $localize`This case is not aligned with the current line.`;
+    public static readonly LINE_AND_COORD_NOT_ALIGNED: string = $localize`This space is not aligned with the current line.`;
 }

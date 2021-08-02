@@ -8,7 +8,7 @@ export class CoerceoFailure {
 
     public static CANNOT_CAPTURE_FROM_REMOVED: string = $localize`You cannot capture on a removed tile.`
 
-    public static CANNOT_CAPTURE_FROM_EMPTY: string = $localize`You cannot capture from an empty case.`
+    public static CANNOT_CAPTURE_FROM_EMPTY: string = $localize`You cannot capture from an empty space.`
 
     public static CANNOT_CAPTURE_OWN_PIECES: string = $localize`You cannot capture your own pieces.`
 }

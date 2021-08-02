@@ -1,8 +1,8 @@
 export class SaharaFailure {
 
-    public static readonly CAN_ONLY_REBOUNCE_ON_BLACK: string = $localize`You can only rebounce on dark cases.`;
+    public static readonly CAN_ONLY_REBOUNCE_ON_BLACK: string = $localize`You can only rebounce on dark spaces.`;
 
-    public static readonly CAN_ONLY_REBOUNCE_ON_EMPTY_CASE: string = $localize`You can only rebound on empty cases.`;
+    public static readonly CAN_ONLY_REBOUNCE_ON_EMPTY_CASE: string = $localize`You can only rebound on empty spaces.`;
 
     public static readonly MUST_CHOOSE_PYRAMID_FIRST: string = $localize`You must pick one of your pyramids first.`;
 

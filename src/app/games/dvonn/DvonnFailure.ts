@@ -12,5 +12,5 @@ export class DvonnFailure {
 
     public static readonly INVALID_MOVE_LENGTH: string = $localize`The length of the move must be equal to the size of the stack.`;
 
-    public static readonly EMPTY_TARGET_STACK: string = $localize`The move must end on an occupied case.`;
+    public static readonly EMPTY_TARGET_STACK: string = $localize`The move must end on an occupied space.`;
 }
