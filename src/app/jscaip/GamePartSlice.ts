@@ -1,9 +1,8 @@
 import { Coord } from './Coord';
 import { Player } from './Player';
 import { ArrayUtils, NumberTable } from '../utils/ArrayUtils';
-import { ComparableObject } from '../utils/Comparable';
 
-export abstract class GamePartSlice implements ComparableObject {
+export abstract class GamePartSlice {
 
     public constructor(public readonly board: NumberTable,
                        public readonly turn: number)

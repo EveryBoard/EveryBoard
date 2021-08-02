@@ -49,4 +49,16 @@ describe('MGPSet', () => {
         const set: MGPSet<Coord> = new MGPSet([new Coord(0, 0), new Coord(1, 1)]);
         expect(set.get(0)).toEqual(new Coord(0, 0));
     });
+    describe('removeAndCopy', () => {
+        it('should remove the element from the set', () => {
+            const set: MGPSet<number> = new MGPSet([1, 2]);
+            const withoutElement: MGPSet<number> = set.removeAndCopy(2);
+            expect(withoutElement.contains(2)).toBeFalse();
+        });
+        it('should not modify the initial set', () => {
+            const set: MGPSet<number> = new MGPSet([1, 2]);
+            set.removeAndCopy(2);
+            expect(set.contains(2)).toBeTrue();
+        });
+    });
 });

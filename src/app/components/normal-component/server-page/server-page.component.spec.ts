@@ -5,6 +5,8 @@ import { AuthenticationServiceMock } from 'src/app/services/tests/Authentication
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { Router } from '@angular/router';
 import { GameService } from 'src/app/services/GameService';
+import { ICurrentPartId } from 'src/app/domain/icurrentpart';
+import { PartMocks } from 'src/app/domain/PartMocks.spec';
 
 describe('ServerPageComponent', () => {
     let testUtils: SimpleComponentTestUtils<ServerPageComponent>;
@@ -40,5 +42,23 @@ describe('ServerPageComponent', () => {
         testUtils.detectChanges();
 
         expect(router.navigate).toHaveBeenCalledWith(['local/undefined']);
+    }));
+    it('Should redirect to /play when clicking a game', fakeAsync(async() => {
+        // given a server page with one part
+        const activePart: ICurrentPartId = {
+            id: 'oui oui le faisan',
+            doc: PartMocks.INITIAL.doc,
+        };
+        const compo: ServerPageComponent = testUtils.getComponent();
+        spyOn(compo.router, 'navigate').and.callThrough();
+        spyOn(compo, 'getActiveParts').and.returnValue([activePart]);
+
+        // when clicking on the first part
+        testUtils.detectChanges();
+        testUtils.clickElement('#part_0');
+
+        // then router should have navigate
+        expect(compo.getActiveParts).toHaveBeenCalled();
+        expect(compo.router.navigate).toHaveBeenCalledOnceWith(['/play/Quarto', 'oui oui le faisan']);
     }));
 });

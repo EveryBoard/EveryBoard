@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { HexagonalGameComponent } from 'src/app/components/game-components/abstract-game-component/HexagonalGameComponent';
 import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Direction } from 'src/app/jscaip/Direction';
+import { BaseDirection, Direction } from 'src/app/jscaip/Direction';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
@@ -24,9 +24,11 @@ import { abaloneTutorial } from './AbaloneTutorial';
 
 export class HexaDirArrow {
     public constructor(public startCenter: Coord,
+                       public middle: Coord,
                        public landingCenter: Coord,
                        public landing: Coord,
-                       public dir: HexaDirection) {}
+                       public dir: HexaDirection,
+                       public transformation: string) {}
 }
 
 @Component({
@@ -49,6 +51,8 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
     public selecteds: Coord[] = [];
 
     public scores: [number, number] = [0, 0];
+
+    public PIECE_SIZE: number = 30;
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -175,13 +179,28 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
             if (isLegal.legal.isSuccess()) {
                 const firstPieceCenter: Coord = this.getCenterAt(firstPiece);
                 const pointedCenter: Coord = this.getCenterAt(pointed);
+                const middle: Coord = this.getMiddleOfArrow(dir, pointed, pointedCenter);
+                const centerCoord: string = pointedCenter.x + ' ' + pointedCenter.y;
+                const angle: number = HexaDirection.getAngle(dir) + 150;
+                const rotation: string = 'rotate(' + angle + ' ' + centerCoord + ')';
+                const translation: string = 'translate(' + centerCoord + ')';
+                const transformation: string = rotation + ' ' + translation;
                 const arrow: HexaDirArrow = new HexaDirArrow(firstPieceCenter,
+                                                             middle,
                                                              pointedCenter,
                                                              pointed,
-                                                             dir);
+                                                             dir,
+                                                             transformation);
                 this.directions.push(arrow);
             }
         }
+    }
+    private getMiddleOfArrow(dir: HexaDirection, last: Coord, lastCenter: Coord): Coord {
+        const first: Coord = last.getPrevious(dir);
+        const firstCenter: Coord = this.getCenterAt(first);
+        const halfDx: number = (lastCenter.x - firstCenter.x) / 2;
+        const halfDy: number = (lastCenter.y - firstCenter.y) / 2;
+        return new Coord(firstCenter.x + halfDx, firstCenter.y + halfDy);
     }
     public isBoard(c: number): boolean {
         return c !== FourStatePiece.NONE.value;
@@ -204,7 +223,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
         if (distance > 2) {
             return this.cancelMove(AbaloneFailure.CANNOT_MOVE_MORE_THAN_THREE_PIECES);
         }
-        const alignement: HexaDirection = firstPiece.getDirectionToward(coord);
+        const alignement: BaseDirection = firstPiece.getDirectionToward(coord);
         this.selecteds = [firstPiece];
         for (let i: number = 0; i < distance; i++) {
             this.selecteds.push(firstPiece.getNext(alignement, i + 1));

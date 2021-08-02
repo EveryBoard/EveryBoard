@@ -17,5 +17,6 @@ export class RulesFailure {
 
     public static readonly CAN_ONLY_PASS: string = $localize`Vous êtes obligés de passer votre tour.`
 
-    public static readonly MUST_CHOOSE_OWN_PIECE_NOT_EMPTY: string = $localize`vous avez sélectionné une case vide, vous devez sélectionner l'une de vos pièces.`;
+    public static readonly MUST_CHOOSE_OWN_PIECE_NOT_EMPTY: string = $localize`Vous avez sélectionné une case vide, vous devez sélectionner l'une de vos pièces.`;
+
 }

@@ -22,29 +22,25 @@ export class EpaminondasPartSlice extends GamePartSlice {
             [O, O, O, O, O, O, O, O, O, O, O, O, O, O],
             [O, O, O, O, O, O, O, O, O, O, O, O, O, O],
         ];
-        // const board: NumberTable = [
-        //     [_, _, _, _, _, _, _, _, _, _, _, _, _, X],
-        //     [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        //     [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        //     [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        //     [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        //     [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        //     [_, _, _, _, _, _, O, _, _, _, _, _, _, _],
-        //     [_, _, _, _, _, _, O, _, _, _, _, _, _, _],
-        //     [_, _, _, _, _, _, O, _, _, _, _, _, _, _],
-        //     [_, _, _, _, _, _, O, _, _, _, _, _, _, _],
-        //     [O, _, O, _, O, _, O, _, O, _, O, _, O, _],
-        //     [_, _, _, _, _, _, O, _, _, _, _, _, _, _],
-        // ];
         return new EpaminondasPartSlice(board, 0);
     }
     public count(piece: Player, row: number): number {
         let result: number = 0;
         for (let x: number = 0; x < 14; x++) {
-            if (this.getBoardByXY(x, row) === piece.value) {
+            if (this.board[row][x] === piece.value) {
                 result++;
             }
         }
         return result;
+    }
+    public doesOwnPiece(player: Player): boolean {
+        for (let y: number = 0; y < 12; y++) {
+            for (let x: number = 0; x < 14; x++) {
+                if (this.board[y][x] === player.value) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

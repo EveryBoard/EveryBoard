@@ -27,6 +27,9 @@ export class GipfPiece {
             return GipfPiece.EMPTY;
         }
     }
+    public equals(other: GipfPiece): boolean {
+        return this === other;
+    }
     private constructor(public player: Player) {
     }
 }
