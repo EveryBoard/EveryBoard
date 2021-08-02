@@ -75,7 +75,7 @@ export const awaleTutorial: DidacticialStep[] = [
             [1, 3, 0, 0, 1, 0],
         ], 1, [0, 0]),
         [AwaleMove.ONE],
-        $localize`Congratulations! Notice that the capture was interrupted when entering your territory: you cannot capture in your own houses!`,
+        $localize`Congratulations! Notice that the capture was interrupted when entering your territory: you cannot capture your own houses!`,
         $localize`You have only captured one house, try again!`,
     ),
     DidacticialStep.fromMove(

@@ -4,7 +4,7 @@ export abstract class SiamFailure {
 
     public static readonly NOT_ENOUGH_FORCE_TO_PUSH: string = $localize`You do not have enough strength to push.`;
 
-    public static readonly ILLEGAL_ROTATION: string = $localize`You cannot turn and move forward at the same time.`;
+    public static readonly ILLEGAL_ROTATION: string = $localize`You cannot push and turn at the same time.`;
 
     public static readonly ILLEGAL_PUSH: string = $localize`Your push is invalid: it is either not straight, is not pushing anything, or is leaving the board.`;
 }

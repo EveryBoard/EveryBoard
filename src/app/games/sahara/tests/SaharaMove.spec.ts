@@ -33,7 +33,7 @@ describe('SaharaMoves', () => {
     it('Should throw error when start and end are too far away', () => {
         const start: Coord = new Coord(0, 0);
         const end: Coord = new Coord(0, 3);
-        const expectedError: string = 'You can move of up to two cases, not 3.';
+        const expectedError: string = 'You can move of up to two spaces, not 3.';
         expect(() => new SaharaMove(start, end)).toThrowError(expectedError);
     });
     it('Should throw error when distance is 1 but start and end arent neighboors', () => {

@@ -40,7 +40,7 @@ export const tablutTutorial: DidacticialStep[] = [
     DidacticialStep.fromMove(
         $localize`Capturing a soldier (1/2)`,
         $localize`All pieces except the king, attackers and defenders, are soldiers.
-        To capture them, they have to be sandwiched between two of your soldiers.
+        To capture them, they have to be sandwiched between two of your pieces.
         By getting too close, an attacker's soldier is in danger.<br/><br/>
         Capture it.`,
         new TablutPartSlice([

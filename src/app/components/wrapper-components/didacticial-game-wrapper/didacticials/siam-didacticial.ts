@@ -89,7 +89,7 @@ export const siamTutorial: DidacticialStep[] = [
         $localize`When the landing square of your move is occupied, we use the term "push".
         In order to push, multiple conditions must hold:
         <ol>
-            <li>Your piece must be oriented in the direction of the push.</li>
+            <li>Your piece must already be oriented in the direction of the push.</li>
             <li>The number of the pieces (opponent's or not) that are facing yours (called the resistants)
                 is smaller than the number of pieces that are oriented in the same direction as the push, yourself included (the pushers)</li>
             <li>The number of mountains on that line must be smaller or equal to the difference between the pushers and the resistants.</li>

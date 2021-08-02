@@ -29,7 +29,7 @@ class GameDescription {
 
     public static readonly ABALONE: string = $localize`Use simple mechanics to push 6 of the opponent's pieces out of the board!`;
 
-    public static readonly AWALE: string = $localize`The international version of the more famous African strategy game!`;
+    public static readonly AWALE: string = $localize`The international version of the most famous African strategy game!`;
 
     public static readonly DVONN: string = $localize`Stack your pieces and control as many stacks as you can to win!`
 

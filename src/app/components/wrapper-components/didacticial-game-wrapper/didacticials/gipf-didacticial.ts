@@ -17,7 +17,7 @@ export const gipfTutorial: DidacticialStep[] = [
         This is the initial board.
         Each player has 12 pieces on the side and 3 pieces on the board.
         When, at its turn, a player has no more pieces on the side, that player cannot play anymore and loses the game.
-        The first player plays dark, the second player plays light.`,
+        The first player plays with the dark pieces, the second player plays with the light pieces.`,
         GipfPartSlice.getInitialSlice(),
     ),
     DidacticialStep.anyMove(

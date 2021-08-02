@@ -78,10 +78,11 @@ export const epaminondasTutorial: DidacticialStep[] = [
         $localize`Moving a phalanx`,
         $localize`Let us now see how to move multiple pieces along a line, which is called a phalanx :
         <ol>
-            <li>Click on the first piece of the phalanx (here, the bottom left one).</li>
-            <li>Click on the last piece of the phalanx (in this example, the one just above).</li>
-            <li>Click two squares above in order to move the phalanx by two squares (the maximal legal distance, which equals the number of pieces moved).</li>
-        </ol>`,
+            <li>Click on the first piece of the phalanx.</li>
+            <li>Click on the last piece of the phalanx.</li>
+            <li>Click on one of the squares highlighted in yellow; you can move your phalax up to a distance equal to its length.</li>
+        </ol><br/>
+        Move a phalanx!`,
         EpaminondasPartSlice.getInitialSlice(),
         new EpaminondasMove(0, 11, 2, 1, Direction.UP),
         (move: EpaminondasMove, _: EpaminondasPartSlice) => {
@@ -93,7 +94,7 @@ export const epaminondasTutorial: DidacticialStep[] = [
         },
         $localize`Congratulations!
         The moved pieces can be horizontally, vertically, or diagonally aligned.
-        The move is made along this axis, forward or backwards.
+        The move should be made along this axis, forward or backwards.
         There can be no opponent nor holes in the phalanx.`,
     ),
     DidacticialStep.fromMove(

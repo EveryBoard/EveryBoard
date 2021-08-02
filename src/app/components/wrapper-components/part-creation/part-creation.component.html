@@ -170,12 +170,8 @@
                 </div>
                 <ng-template #configProposal>
                     <div class="content">
-                        <p>
-                            <ng-container i18n>{{ viewInfo.creator }} proposes to play a </ng-container>
-                            <ng-container *ngIf="viewInfo.partType === 'STANDARD'" i18n>standard</ng-container>
-                            <ng-container *ngIf="viewInfo.partType === 'BLITZ'" i18n>blitz</ng-container>
-                            <ng-container *ngIf="viewInfo.partType === 'CUSTOM'" i18n>custom</ng-container>
-                            <ng-container i18n>game, where:</ng-container>
+                        <p i18n>
+                            {{ viewInfo.creator }} proposes to play a {{ viewInfo.partTypeName }} game, where:
                         </p>
                         <ul>
                             <li>

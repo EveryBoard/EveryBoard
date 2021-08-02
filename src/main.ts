@@ -21,11 +21,10 @@ function bootstrapApp(): void {
 if (locale !== 'en' && validLocales.some((validLocale: string): boolean => validLocale === locale) ) {
     fetch(environment.root + 'assets/' + locale + '.json')
         .then((response: Response) => {
-            if (!response.ok) {
-                return { 'locale': 'en', 'translations': {} };
-            } else {
-                console.log('found translations');
+            if (response.ok) {
                 return response.json();
+            } else {
+                return { 'locale': 'en', 'translations': {} };
             }
         })
         .then((json: any) => {

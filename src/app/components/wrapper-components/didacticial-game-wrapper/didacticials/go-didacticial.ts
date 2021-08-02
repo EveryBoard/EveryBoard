@@ -69,7 +69,7 @@ export const goTutorial: DidacticialStep[] = [
     ),
     DidacticialStep.informational(
         $localize`Suicide`,
-        $localize`A suicide is forbidden.
+        $localize`In Go, A suicide is forbidden.
         If putting a piece on an intersection removes the last freedom of your group and does not capture any stone, playing on that intersection would be a suicide and is therefore forbidden.
         Here, the top left intersection is a suicide for Light.
         On the bottom right, it would be a suicide for Dark, and on the bottom left it is not a suicide for any player.`,

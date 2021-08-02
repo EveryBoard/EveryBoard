@@ -19,7 +19,7 @@ export const abaloneTutorial: DidacticialStep[] = [
     DidacticialStep.anyMove(
         $localize`Moving a piece`,
         $localize`At each turn, move one, two, or three pieces either along their line, or on their side.
-        For your moves you can therefore choose between 6 directions.
+        For your moves you can therefore choose between up to 6 directions.
         The pieces you move must be aligned and consecutive, and the move should land on an empty space (except to push, we will see that later).
         To make a move, click on one of your pieces, then click on an arrow to choose the move direction.<br/><br/>
         You're playing Dark, make any move!`,

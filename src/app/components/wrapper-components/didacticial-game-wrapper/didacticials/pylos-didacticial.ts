@@ -96,7 +96,7 @@ export const pylosTutorial: DidacticialStep[] = [
             PylosMove.fromDrop(new PylosCoord(0, 1, 0), [new PylosCoord(1, 0, 0)]),
             PylosMove.fromDrop(new PylosCoord(0, 1, 0), [new PylosCoord(1, 1, 0)]),
         ],
-        $localize`Congratulations, you have saved up one piece.`,
+        $localize`Congratulations, you have saved one piece.`,
         $localize`Failed!`,
     ),
     DidacticialStep.fromMove(
@@ -121,7 +121,7 @@ export const pylosTutorial: DidacticialStep[] = [
             ],
         ], 0),
         [PylosMove.fromDrop(new PylosCoord(0, 1, 0), [new PylosCoord(0, 0, 0), new PylosCoord(1, 0, 0)])],
-        $localize`Congratulations, you have saved up two pieces.`,
+        $localize`Congratulations, you have saved two pieces.`,
         $localize`Failed!`,
     ),
     DidacticialStep.fromMove(
@@ -149,7 +149,7 @@ export const pylosTutorial: DidacticialStep[] = [
             ],
         ], 0),
         [PylosMove.fromDrop(new PylosCoord(0, 0, 1), [new PylosCoord(0, 0, 1), new PylosCoord(0, 0, 0)])],
-        $localize`Congratulations, you have saved up two pieces. You are now ready to play..`,
+        $localize`Congratulations, you have saved two pieces. You are now ready to play.`,
         $localize`Failed!`,
     ),
 ];

@@ -26,9 +26,10 @@ export const coerceoTutorial: DidacticialStep[] = [
         <ol>
           <li>Click on one of your pieces.</li>
           <li>Click on of the triangular space highlighted in yellow.</li>
-        </ol><br/>
+        </ol>
         You can pass through the opponent's pieces.
-        You're playing first, hence you're playing Dark. Perform any move.
+        You're playing first, hence you're playing Dark.<br/>
+        Perform any move.
         Note: no matter what you do, no piece can be captured during your first turn.`,
         CoerceoPartSlice.getInitialSlice(),
         CoerceoMove.fromCoordToCoord(new Coord(3, 5), new Coord(5, 5)),

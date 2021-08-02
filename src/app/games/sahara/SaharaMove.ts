@@ -49,7 +49,7 @@ export class SaharaMove extends MoveCoordToCoord {
                 throw new Error(start.toString() + ' and ' + end.toString() + ' have no intermediary neighboors.');
             }
         } else {
-            throw new Error($localize`You can move of up to two cases, not ${distance}.`);
+            throw new Error($localize`You can move of up to two spaces, not ${distance}.`);
         }
     }
     constructor(start: Coord, end: Coord) {

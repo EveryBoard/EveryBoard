@@ -67,7 +67,7 @@ describe('SaharaComponent', () => {
     it('should not allow invalid moves', fakeAsync(async() => {
         // given initial board
         await componentTestUtils.expectClickSuccess('#click_0_3');
-        const reason: string = 'You can move of up to two cases, not 3.';
+        const reason: string = 'You can move of up to two spaces, not 3.';
         await componentTestUtils.expectClickFailure('#click_2_2', reason);
     }));
     it('should change selected piece when clicking twice in a row on current player pieces', fakeAsync(async() => {

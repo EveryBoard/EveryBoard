@@ -29,6 +29,7 @@ interface PartCreationViewInfo {
 
     firstPlayer?: IFirstPlayer;
     partType?: IPartType;
+    partTypeName?: string,
     maximalMoveDuration?: number;
     totalPartDuration?: number;
     candidates?: string[];
@@ -114,6 +115,17 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 this.viewInfo.creatorIsModifyingConfig = joiner.partStatus !== PartStatus.CONFIG_PROPOSED.value;
 
                 this.viewInfo.partType = joiner.partType;
+                switch (joiner.partType) {
+                    case 'CUSTOM':
+                        this.viewInfo.partTypeName = $localize`custom`;
+                        break;
+                    case 'BLITZ':
+                        this.viewInfo.partTypeName = $localize`blitz`;
+                        break;
+                    case 'STANDARD':
+                        this.viewInfo.partTypeName = $localize`standard`;
+                        break;
+                }
                 this.viewInfo.showCustomTime = joiner.partType === 'CUSTOM';
                 this.viewInfo.maximalMoveDuration = joiner.maximalMoveDuration;
                 this.viewInfo.totalPartDuration = joiner.totalPartDuration;
@@ -235,7 +247,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     }
     private onGameCancelled() {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.onGameCancelled');
-        this.messageDisplayer.infoMessage($localize`The game has been cancelled`);
+        this.messageDisplayer.infoMessage($localize`The game has been cancelled!`);
         this.router.navigate(['server']);
     }
     private isGameStarted(joiner: IJoiner): boolean {

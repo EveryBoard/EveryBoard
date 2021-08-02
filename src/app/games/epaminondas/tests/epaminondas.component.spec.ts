@@ -398,7 +398,7 @@ describe('EpaminondasComponent:', () => {
         expect(epaminondasComponent.firstPiece).toEqual(new Coord(0, 10));
         expect(epaminondasComponent.lastPiece).toEqual(new Coord(2, 10));
     }));
-    it('End: Should show last move when no move is ongoing (captures, left case, moved phalange)', fakeAsync(async() => {
+    it('End: Should show last move when no move is ongoing (captures, left case, moved phalanx)', fakeAsync(async() => {
         const initialBoard: NumberTable = [
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
