@@ -17,6 +17,8 @@ import { HexagonalGameComponent }
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { sixTutorial } from './SixTutorial';
 
 interface Scale {
     minX: number;
@@ -57,6 +59,10 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
 
     public hexaLayout: HexaLayout;
 
+    public encoder: MoveEncoder<SixMove> = SixMove.encoder;
+
+    public tutorial: DidacticialStep[] = sixTutorial;
+
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.availableMinimaxes = [
@@ -68,8 +74,6 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
         this.setPieceSize(25);
         this.updateBoard();
     }
-    public encoder: MoveEncoder<SixMove> = SixMove.encoder;
-
     private setPieceSize(rayon: number): void {
         this.PIECE_SIZE = 2 * rayon;
         this.hexaLayout = new HexaLayout(rayon,

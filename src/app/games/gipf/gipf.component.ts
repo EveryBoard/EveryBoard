@@ -18,6 +18,8 @@ import { GipfPiece } from 'src/app/games/gipf/GipfPiece';
 import { Arrow } from 'src/app/jscaip/Arrow';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { gipfTutorial } from './GipfTutorial';
 
 @Component({
     selector: 'app-gipf',
@@ -59,6 +61,8 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfPartSlic
     private finalCaptures: GipfCapture[] = [];
 
     public encoder: MoveEncoder<GipfMove> = GipfMove.encoder;
+
+    public tutorial: DidacticialStep[] = gipfTutorial;
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);

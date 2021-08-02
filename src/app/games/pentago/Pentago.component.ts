@@ -13,6 +13,8 @@ import { PentagoMove } from './PentagoMove';
 import { PentagoRules } from './PentagoRules';
 import { PentagoGameState } from './PentagoGameState';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { pentagoTutorial } from './PentagoTutorial';
 
 @Component({
     selector: 'app-pentago',
@@ -27,6 +29,8 @@ export class PentagoComponent extends AbstractGameComponent<PentagoMove,
     public rules: PentagoRules = new PentagoRules(PentagoGameState);
 
     public encoder: MoveEncoder<PentagoMove> = PentagoMove.encoder;
+
+    public tutorial: DidacticialStep[] = pentagoTutorial;
 
     public readonly BLOCK_WIDTH: number;
     public readonly BLOCK_SEPARATION: number;

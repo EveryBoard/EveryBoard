@@ -14,6 +14,8 @@ import { LinesOfActionFailure } from './LinesOfActionFailure';
 import { LinesOfActionState } from './LinesOfActionState';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { linesOfActionTutorial } from './LinesOfActionTutorial';
 
 @Component({
     selector: 'app-linesofaction',
@@ -33,6 +35,8 @@ export class LinesOfActionComponent extends AbstractGameComponent<LinesOfActionM
     private captured: MGPOptional<Coord> = MGPOptional.empty();
 
     public encoder: MoveEncoder<LinesOfActionMove> = LinesOfActionMove.encoder;
+
+    public tutorial: DidacticialStep[] = linesOfActionTutorial;
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);

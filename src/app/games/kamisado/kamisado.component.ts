@@ -13,6 +13,8 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { kamisadoTutorial } from './KamisadoTutorial';
 
 @Component({
     selector: 'app-kamisado',
@@ -30,6 +32,8 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
     public canPass: boolean = false;
 
     public encoder: MoveEncoder<KamisadoMove> = KamisadoMove.encoder;
+
+    public tutorial: DidacticialStep[] = kamisadoTutorial;
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);

@@ -10,27 +10,6 @@ import { UserService } from 'src/app/services/UserService';
 import { assert, display } from 'src/app/utils/utils';
 import { DidacticialStep } from './DidacticialStep';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-
-import { abaloneTutorial } from 'src/app/games/abalone/AbaloneTutorial';
-import { awaleTutorial } from '../../../games/awale/AwaleTutorial';
-import { coerceoTutorial } from '../../../games/coerceo/CoerceoTutorial';
-import { dvonnTutorial } from '../../../games/dvonn/DvonnTutorial';
-import { epaminondasTutorial } from '../../../games/epaminondas/EpaminondasTutorial';
-import { encapsuleTutorial } from '../../../games/encapsule/EncapsuleTutorial';
-import { gipfTutorial } from '../../../games/gipf/GipfTutorial';
-import { goTutorial } from '../../../games/go/GoTutorial';
-import { kamisadoTutorial } from '../../../games/kamisado/KamisadoTutorial';
-import { linesOfActionTutorial } from 'src/app/games/lines-of-action/LinesOfActionTutorial';
-import { p4Tutorial } from '../../../games/p4/P4Tutorial';
-import { pentagoTutorial } from 'src/app/games/pentago/PentagoTutorial';
-import { pylosTutorial } from '../../../games/pylos/PylosTutorial';
-import { quartoTutorial } from '../../../games/quarto/QuartoTutorial';
-import { quixoTutorial } from '../../../games/quixo/QuixoTutorial';
-import { reversiTutorial } from '../../../games/reversi/ReversiTutorial';
-import { saharaTutorial } from '../../../games/sahara/SaharaTutorial';
-import { siamTutorial } from '../../../games/siam/SiamTutorial';
-import { sixTutorial } from '../../../games/six/SixTutorial';
-import { tablutTutorial } from '../../../games/tablut/TablutTutorial';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { DidacticialFailure } from './DidacticialFailure';
 import { GameService } from 'src/app/services/GameService';
@@ -89,42 +68,12 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
         this.start();
     }
     private start(): void {
-        const didacticial: DidacticialStep[] = this.getDidacticial();
+        const didacticial: DidacticialStep[] = this.gameComponent.tutorial;
         this.startDidacticial(didacticial);
     }
-    public getDidacticial(): DidacticialStep[] {
-        const game: string = this.actRoute.snapshot.paramMap.get('compo');
-        const didacticials: { [key: string]: DidacticialStep[] } = {
-            Abalone: abaloneTutorial,
-            Awale: awaleTutorial,
-            Coerceo: coerceoTutorial,
-            Dvonn: dvonnTutorial,
-            Encapsule: encapsuleTutorial,
-            Epaminondas: epaminondasTutorial,
-            Gipf: gipfTutorial,
-            Go: goTutorial,
-            Kamisado: kamisadoTutorial,
-            LinesOfAction: linesOfActionTutorial,
-            P4: p4Tutorial,
-            Pentago: pentagoTutorial,
-            Pylos: pylosTutorial,
-            Quarto: quartoTutorial,
-            Quixo: quixoTutorial,
-            Reversi: reversiTutorial,
-            Sahara: saharaTutorial,
-            Siam: siamTutorial,
-            Six: sixTutorial,
-            Tablut: tablutTutorial,
-        };
-        if (didacticials[game] == null) {
-            throw new Error('Unknown Game ' + game + '.');
-        }
-        return didacticials[game];
-    }
     public startDidacticial(didacticial: DidacticialStep[]): void {
-        display(
-            DidacticialGameWrapperComponent.VERBOSE,
-            { didacticialGameWrapperComponent_startDidacticial: { didacticial } });
+        display(DidacticialGameWrapperComponent.VERBOSE,
+                { didacticialGameWrapperComponent_startDidacticial: { didacticial } });
         this.steps = didacticial;
         this.tutorialOver = false;
         this.stepFinished = this.getCompletionArray();

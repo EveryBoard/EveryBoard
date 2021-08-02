@@ -180,10 +180,6 @@ describe('DidacticialGameWrapperComponent', () => {
             currentTitle = componentTestUtils.findElement('#step_1').nativeElement.innerHTML;
             expect(currentTitle).toBe(expectedTitle);
         }));
-        it('It should throw when trying to reach unexisting game', fakeAsync(async() => {
-            componentTestUtils.setRoute('compo', 'IDontExist');
-            expect(() => wrapper.getDidacticial()).toThrowError('Unknown Game IDontExist.');
-        }));
         // ///////////////////////// ATTEMPTING ///////////////////////////////////
         it('Should go to specific step when clicking on it', fakeAsync(async() => {
             // Given a DidacticialStep with 3 steps
@@ -1039,7 +1035,7 @@ describe('DidacticialGameWrapperComponent', () => {
                 ], [
                     new SixRules(SixGameState),
                     sixTutorial[5],
-                    SixMove.fromDeplacement(new Coord(3, 2), new Coord(2, 2)),
+                    SixMove.fromDeplacement(new Coord(0, 6), new Coord(1, 6)),
                     MGPValidation.failure($localize`Ce mouvement ne déconnecte pas du jeu de pièces adverses ! Réessayez avec une autre pièce !`),
                 ], [
                     new SixRules(SixGameState),
@@ -1059,6 +1055,7 @@ describe('DidacticialGameWrapperComponent', () => {
                 const move: Move = stepExpectation[2];
                 const validation: MGPValidation = stepExpectation[3];
                 const status: LegalityStatus = rules.isLegal(move, step.state);
+                expect(status.legal.reason).toBeNull();
                 const state: GamePartSlice = rules.applyLegalMove(move, step.state, status);
                 expect(step.predicate(move, state)).toEqual(validation);
             }

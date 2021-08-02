@@ -102,7 +102,7 @@ export const sixTutorial: DidacticialStep[] = [
         $localize`Lors de la seconde phase de jeu, en plus des victoires normales (ligne, rond, triangle), on peux gagner par déconnection.
         Si à un moment du jeu, l'un des deux joueurs n'a plus assez de pièce pour gagner (il en a donc moins de 6), la partie s'arrête.
         Celui qui a le plus de pièces a gagné, et en cas d'égalité, c'est match nul.<br/><br/>
-        Ici, vous pouvez gagné (vous jouez Foncé). Faites le!`,
+        Ici, vous pouvez gagner (vous jouez Foncé). Faites-le!`,
         SixGameState.fromRepresentation([
             [_, _, _, _, _, X],
             [_, _, _, _, O, X],
