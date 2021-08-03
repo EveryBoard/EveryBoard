@@ -14,7 +14,7 @@ export class GipfFailure {
 
     public static readonly PLACEMENT_ON_COMPLETE_LINE: string = $localize`You cannot place a piece on a complete line.`;
 
-    public static readonly AMBIGUOUS_CAPTURE_COORD: string = $localize`This space belongs to two captures. Please select another space in the capture you'd like to take.`;
+    public static readonly AMBIGUOUS_CAPTURE_COORD: string = $localize`This piece belongs to two captures. Please select another piece in the capture you'd like to take.`;
 
     public static readonly NOT_PART_OF_CAPTURE: string = $localize`You must pick a capture.`;
 

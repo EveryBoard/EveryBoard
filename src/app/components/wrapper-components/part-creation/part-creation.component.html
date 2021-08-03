@@ -171,7 +171,7 @@
                 <ng-template #configProposal>
                     <div class="content">
                         <p i18n>
-                            {{ viewInfo.creator }} proposes to play a {{ viewInfo.partTypeName }} game, where:
+                            {{ viewInfo.creator }} proposes to play a {{ viewInfo.partTypeName }} game
                         </p>
                         <ul>
                             <li>
@@ -182,7 +182,7 @@
                                     you play first
                                 </span>
                                 <span *ngIf="viewInfo.firstPlayer === 'RANDOM'" i18n>
-                                    the first player is random
+                                    the first player is selected randomly
                                 </span>
                             </li>
                             <li><ng-container i18n>a turn lasts at most </ng-container><strong>{{ viewInfo.maximalMoveDuration | humanDuration }} </strong></li>

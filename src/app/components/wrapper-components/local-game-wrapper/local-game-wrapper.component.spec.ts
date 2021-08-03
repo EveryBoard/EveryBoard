@@ -105,7 +105,7 @@ describe('LocalGameWrapperComponent', () => {
 
             expect(componentTestUtils.getComponent().rules.node.gamePartSlice.turn).toBe(0);
             expect(componentTestUtils.findElement('#draw')).withContext('Draw indicator should be removed').toBeFalsy();
-            flush();
+            tick(1000);
         }));
     });
     describe('Using AI', () => {
@@ -147,7 +147,7 @@ describe('LocalGameWrapperComponent', () => {
             await componentTestUtils.fixture.whenStable();
 
             expect(proposeAIToPlay).toHaveBeenCalledTimes(1);
-            flush();
+            tick(1000);
         }));
         it('should propose AI 2 to play when selecting her just before her turn', async() => {
             // given wrapper on which a first move have been done
@@ -199,7 +199,7 @@ describe('LocalGameWrapperComponent', () => {
             // // expect to be back two turn, not one
             expect(componentTestUtils.getComponent().rules.node.gamePartSlice.turn).toBe(0);
 
-            flush();
+            tick(1000);
         }));
         it('Minimax proposing illegal move should throw', fakeAsync(async() => {
             // given a board on which some illegal move are possible from the IA
@@ -213,7 +213,7 @@ describe('LocalGameWrapperComponent', () => {
             const minimax: P4Minimax = new P4Minimax(new P4Rules(P4PartSlice), 'P4');
             const errorMessage: string = 'AI choosed illegal move (P4Move(0))';
             expect(() => localGameWrapper.doAIMove(minimax)).toThrowError(errorMessage);
-            flush();
+            tick(1000);
         }));
         it('should not do an AI move when the game is finished', fakeAsync(async() => {
             const localGameWrapper: LocalGameWrapperComponent = componentTestUtils.wrapper as LocalGameWrapperComponent;

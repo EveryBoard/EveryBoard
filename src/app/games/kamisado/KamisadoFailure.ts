@@ -8,7 +8,5 @@ export class KamisadoFailure {
 
     public static readonly MOVE_BLOCKED: string = $localize`This move is blocked by another piece.`;
 
-    public static readonly GAME_ENDED: string = $localize`The game has ended.`
-
     public static readonly PLAY_WITH_SELECTED_PIECE: string = $localize`You must play with the selected piece.`;
 }

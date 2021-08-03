@@ -18,7 +18,7 @@ export const epaminondasTutorial: DidacticialStep[] = [
     ),
     DidacticialStep.informational(
         $localize`Goal of the game (1/2)`,
-        $localize`After multiple moves, if at the end of its turn, a player has more piece on the opponent's starting line
+        $localize`After multiple moves, if at the beginning of its turn, a player has more piece on the opponent's starting line
         than the number of pieces the opponent has on the player's starting line, the player wins.
         Here, it's Dark turn to play: Dark has therefore won.`,
         new EpaminondasPartSlice([
@@ -108,19 +108,19 @@ export const epaminondasTutorial: DidacticialStep[] = [
         Capture a phalanx.`,
         new EpaminondasPartSlice([
             [_, _, _, _, _, _, _, _, X, X, X, X, X, X],
-            [_, _, _, X, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, X, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, X, _, _, _, _, _, _, _],
+            [_, _, _, _, _, X, _, _, _, _, _, _, _, _],
+            [_, _, X, _, X, _, _, _, _, _, _, _, _, _],
+            [_, _, X, X, _, _, _, _, _, _, _, _, _, _],
+            [_, _, X, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, O, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, O, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, O, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, X, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, O, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, O, _, _, _, _, X, _, _, _, _, _, _],
+            [_, _, O, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, O, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, O, O, O, O, O, O, O],
         ], 0),
-        [new EpaminondasMove(3, 7, 3, 3, Direction.UP)],
+        [new EpaminondasMove(2, 10, 4, 2, Direction.UP)],
         $localize`Congratulations, you made it!.`,
         $localize`Failed, you have not captured the phalanx.`,
     ),

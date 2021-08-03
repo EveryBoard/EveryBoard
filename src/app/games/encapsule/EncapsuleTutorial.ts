@@ -39,7 +39,7 @@ export const encapsuleTutorial: DidacticialStep[] = [
         $localize`Congratulations!`),
     DidacticialStep.fromMove(
         $localize`Moving`,
-        $localize`Another type of move is to move one of your pieces that is already on the board.<br/><br/>
+        $localize`Another possible action is to move one of your pieces that is already on the board.<br/><br/>
         Click on your dark piece and then on any empty square of the board.`,
         new EncapsulePartSlice([
             [s, B, _],

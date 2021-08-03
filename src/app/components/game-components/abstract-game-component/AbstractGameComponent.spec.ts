@@ -113,6 +113,6 @@ describe('AbstractGameComponent', () => {
                 expect(clickResult).toEqual(refusal);
             }
         }
-        flush();
+        tick(1000);
     }));
 });

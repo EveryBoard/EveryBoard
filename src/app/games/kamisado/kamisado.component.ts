@@ -106,7 +106,7 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
     }
     public choosePiece(x: number, y: number): MGPValidation {
         if (this.rules.getGameStatus(this.rules.node).isEndGame) { // TODO: what the hell !!!! should be done upper!
-            return this.cancelMove(KamisadoFailure.GAME_ENDED);
+            return this.cancelMove('You should never see this message');
         }
         const piece: KamisadoPiece = KamisadoBoard.getPieceAt(this.rules.node.gamePartSlice.board, new Coord(x, y));
         const ennemy: Player = this.rules.node.gamePartSlice.getCurrentEnnemy();

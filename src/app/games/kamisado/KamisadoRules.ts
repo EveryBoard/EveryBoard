@@ -186,7 +186,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice> {
         }
 
         if (KamisadoRules.isVictory(slice)) {
-            return { legal: MGPValidation.failure(KamisadoFailure.GAME_ENDED) };
+            return { legal: MGPValidation.failure('You should never see this message') };
         }
 
         // A move is legal if:

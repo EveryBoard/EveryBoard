@@ -25,7 +25,7 @@ export const gipfTutorial: DidacticialStep[] = [
         $localize`Pieces can only enter the board through the edges. To insert a new piece:
         <ol>
             <li> Click on a space on the edge of the board.</li>
-            <li> If that space was already taken, click on the arrow that represents the direction in which you want to push the piece(s) already on the corresponding line.</li>
+            <li> If that space was already occupied, click on the arrow that indicates the direction in which you want to push the piece(s) already on the corresponding line.</li>
         </ol>
         You cannot push when a line is full.<br/><br/>
         You're playing Dark, insert a piece.`,
@@ -42,10 +42,10 @@ export const gipfTutorial: DidacticialStep[] = [
             <li> As soon as there is an empty space on the line, the capture stops.</li>
             <li> Your own pieces that are captured go back to your stock.
                     Your opponent's pieces however are really captured and do not go back to your opponent's stock.</li>
-            <li> If you create a line of 4 of your opponent's pieces, it will be at the beginning of your opponent's turn that (s)he can capture them.
+            <li> If you create a line of 4 of your opponent's pieces, it will be at the beginning of your opponent's turn that your opponent can capture them.
                 This means that a turn happens in three phases:
                 <ol type="A">
-                    <li> Pick the capture(s) resulting the last move of your opponent (by clicking on it).</li>
+                    <li> Pick the capture(s) resulting from the last move of your opponent (by clicking on it).</li>
                     <li> Make your insertion.</li>
                     <li> Pick the capture(s) resulting from your move (by clicking on it).</li>
                 </ol>
@@ -109,7 +109,7 @@ export const gipfTutorial: DidacticialStep[] = [
     DidacticialStep.fromMove(
         $localize`Capturing (3/3)`,
         $localize`Here, you must capture at the beginning of your turn.
-        This is due to a move of your opponent at the previous turn.
+        This is due to a move of your opponent at the previous turn
         (even though this is a fictional game for pedagogical purpose).
         After your capture, by performing the right move you can even capture two more of your opponent's pieces!
         Keep it mind that the most useful in a capture is to take your opponent's pieces.`,

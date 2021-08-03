@@ -37,8 +37,5 @@ if (locale !== 'en' && validLocales.some((validLocale: string): boolean => valid
             console.log({err});
         });
 } else {
-    // Bootstrap app
-    platformBrowserDynamic()
-        .bootstrapModule(AppModule)
-        .catch((err: unknown) => console.error(err));
+    bootstrapApp();
 }

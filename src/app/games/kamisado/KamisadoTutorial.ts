@@ -97,7 +97,7 @@ export const kamisadoTutorial: DidacticialStep[] = [
         $localize`Victory by blocking`,
         $localize`At any time, if a player blocks the entire game, that player loses.
         In other words, if a player forces its opponent to move a piece that that opponent cannot move,
-        and the player cannot move its own piece of the same color, that player loses.
+        and the player cannot move its own piece of the same color, then that player loses.
         Here, you're playing Dark and you can force your opponent to create such a situation, hence you can force your opponent to lose!<br/><br/>
         Try to make this move.`,
         new KamisadoPartSlice(2, KamisadoColor.RED, MGPOptional.of(new Coord(2, 4)), false, [

@@ -540,7 +540,7 @@ describe('DidacticialGameWrapperComponent', () => {
             // expect navigator to have been called
             expect(compo.gameService.createGameAndRedirectOrShowError).toHaveBeenCalledWith('Quarto');
 
-            flush();
+            tick(1000);
         }));
     });
     describe('DidacticialStep awaiting specific moves', () => {

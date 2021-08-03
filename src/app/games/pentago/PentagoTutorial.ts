@@ -12,14 +12,7 @@ export const pentagoTutorial: DidacticialStep[] = [
     DidacticialStep.informational(
         $localize`Initial board`,
         $localize`The initial Pentago board is made of 6x6 spaces, subdivided in 4 blocks, which can each rotate.`,
-        new PentagoGameState([
-            [_, _, _, _, _, _],
-            [_, O, _, _, X, _],
-            [_, _, _, _, _, _],
-            [_, _, _, _, _, _],
-            [_, X, _, _, O, _],
-            [_, _, _, _, _, _],
-        ], 10),
+        PentagoGameState.getInitialSlice(),
     ),
     DidacticialStep.informational(
         $localize`Goal of the game`,

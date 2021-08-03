@@ -25,7 +25,7 @@ export const coerceoTutorial: DidacticialStep[] = [
         $localize`To move a piece, you need to:
         <ol>
           <li>Click on one of your pieces.</li>
-          <li>Click on of the triangular space highlighted in yellow.</li>
+          <li>Click on one of the triangular space highlighted in yellow.</li>
         </ol>
         You can pass through the opponent's pieces.
         You're playing first, hence you're playing Dark.<br/>

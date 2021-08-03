@@ -46,7 +46,7 @@ export const dvonnTutorial: DidacticialStep[] = [
             [__, __, __, __, __, __, __, __, __, __, __],
         ]), 0, false),
         [DvonnMove.of(new Coord(2, 1), new Coord(2, 0))],
-        $localize`Nice, you have disconnected 4 pieces from your opponent!
+        $localize`Nice, you have disconnected 4 pieces of your opponent!
         He has lost 4 points.
         Disconnected stacks will not be visible at the next turn.`,
         $localize`Bad choice! By moving on the source you would have disconnected the opponent's pieces and they would have lost 4 points.

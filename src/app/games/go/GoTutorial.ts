@@ -39,7 +39,7 @@ export const goTutorial: DidacticialStep[] = [
         $localize`Simple capture`,
         $localize`An isolated stone, like the one in the middle here, has 4 neighboring intersections (not 8, because we do not count diagonals).
         If a neighboring intersection is unoccupied, it is called a freedom.
-        If Dark plays on the last freedom of the light stone, this stone is removed from the Goban (captured) and Dark earns one point<br/><br/>
+        If Dark plays on the last freedom of the light stone, this stone is removed from the Goban (captured) and Dark earns one point.<br/><br/>
         There's only one freedom left to the light piece, capture it.`,
         new GoPartSlice([
             [_, _, _, _, _],
@@ -69,7 +69,7 @@ export const goTutorial: DidacticialStep[] = [
     ),
     DidacticialStep.informational(
         $localize`Suicide`,
-        $localize`In Go, A suicide is forbidden.
+        $localize`In Go, suicide is forbidden.
         If putting a piece on an intersection removes the last freedom of your group and does not capture any stone, playing on that intersection would be a suicide and is therefore forbidden.
         Here, the top left intersection is a suicide for Light.
         On the bottom right, it would be a suicide for Dark, and on the bottom left it is not a suicide for any player.`,

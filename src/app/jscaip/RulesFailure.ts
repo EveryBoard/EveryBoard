@@ -1,6 +1,6 @@
 export class RulesFailure {
 
-    public static readonly CANNOT_CHOOSE_ENEMY_PIECE: string = $localize`You cannot pick a piece from the opponent.`;
+    public static readonly CANNOT_CHOOSE_ENEMY_PIECE: string = $localize`You cannot pick a piece of the opponent.`;
 
     public static readonly MUST_CLICK_ON_EMPTY_CASE: string= $localize`You must click on an empty space.`;
 
