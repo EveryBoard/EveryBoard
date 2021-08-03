@@ -3,7 +3,7 @@ import { SiamPiece } from 'src/app/games/siam/SiamPiece';
 import { SiamPartSlice } from 'src/app/games/siam/SiamPartSlice';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { DidacticialStep } from '../DidacticialStep';
+import { DidacticialStep } from '../../components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
 
 const _: number = SiamPiece.EMPTY.value;
 const M: number = SiamPiece.MOUNTAIN.value;

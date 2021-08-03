@@ -12,29 +12,7 @@ import { DidacticialStep } from './DidacticialStep';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { DidacticialFailure } from './DidacticialFailure';
-
-import { abaloneTutorial } from 'src/app/games/abalone/AbaloneTutorial';
-import { awaleTutorial } from './didacticials/awale-didacticial';
-import { coerceoTutorial } from './didacticials/coerceo-didacticial';
-import { dvonnTutorial } from './didacticials/dvonn-didacticial';
-import { epaminondasTutorial } from './didacticials/epaminondas-didacticial';
-import { encapsuleTutorial } from './didacticials/encapsule-tutorial';
-import { gipfTutorial } from './didacticials/gipf-didacticial';
-import { goTutorial } from './didacticials/go-didacticial';
-import { kamisadoTutorial } from './didacticials/kamisado-didacticial';
-import { linesOfActionTutorial } from 'src/app/games/lines-of-action/LinesOfActionDidacticial';
-import { p4Tutorial } from './didacticials/p4-didacticial';
-import { pentagoTutorial } from 'src/app/games/pentago/pentago.didacticial';
-import { pylosTutorial } from './didacticials/pylos-didacticial';
-import { quartoTutorial } from './didacticials/quarto-didacticial';
-import { quixoTutorial } from './didacticials/quixo-didacticial';
-import { reversiTutorial } from './didacticials/reversi-didacticial';
-import { saharaTutorial } from './didacticials/sahara-didacticial';
-import { siamTutorial } from './didacticials/siam-didacticial';
-import { sixTutorial } from './didacticials/six-didacticial';
-import { tablutTutorial } from './didacticials/tablut-didacticial';
 import { GameService } from 'src/app/services/GameService';
-import { yinshTutorial } from 'src/app/games/yinsh/YinshTutorial';
 
 @Component({
     selector: 'app-didacticial-game-wrapper',
@@ -90,43 +68,12 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
         this.start();
     }
     private start(): void {
-        const didacticial: DidacticialStep[] = this.getDidacticial();
+        const didacticial: DidacticialStep[] = this.gameComponent.tutorial;
         this.startDidacticial(didacticial);
     }
-    public getDidacticial(): DidacticialStep[] {
-        const game: string = this.actRoute.snapshot.paramMap.get('compo');
-        const didacticials: { [key: string]: DidacticialStep[] } = {
-            Abalone: abaloneTutorial,
-            Awale: awaleTutorial,
-            Coerceo: coerceoTutorial,
-            Dvonn: dvonnTutorial,
-            Encapsule: encapsuleTutorial,
-            Epaminondas: epaminondasTutorial,
-            Gipf: gipfTutorial,
-            Go: goTutorial,
-            Kamisado: kamisadoTutorial,
-            LinesOfAction: linesOfActionTutorial,
-            P4: p4Tutorial,
-            Pentago: pentagoTutorial,
-            Pylos: pylosTutorial,
-            Quarto: quartoTutorial,
-            Quixo: quixoTutorial,
-            Reversi: reversiTutorial,
-            Sahara: saharaTutorial,
-            Siam: siamTutorial,
-            Six: sixTutorial,
-            Tablut: tablutTutorial,
-            Yinsh: yinshTutorial,
-        };
-        if (didacticials[game] == null) {
-            throw new Error('Unknown Game ' + game + '.');
-        }
-        return didacticials[game];
-    }
     public startDidacticial(didacticial: DidacticialStep[]): void {
-        display(
-            DidacticialGameWrapperComponent.VERBOSE,
-            { didacticialGameWrapperComponent_startDidacticial: { didacticial } });
+        display(DidacticialGameWrapperComponent.VERBOSE,
+                { didacticialGameWrapperComponent_startDidacticial: { didacticial } });
         this.steps = didacticial;
         this.tutorialOver = false;
         this.stepFinished = this.getCompletionArray();
@@ -145,7 +92,7 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
         const currentStep: DidacticialStep = this.steps[this.stepIndex];
         this.currentMessage = currentStep.instruction;
         this.currentReason = null;
-        this.gameComponent.rules.node = new MGPNode(null, null, currentStep.state);
+        this.gameComponent.rules.node = new MGPNode(null, currentStep.previousMove, currentStep.state);
         this.gameComponent.updateBoard();
         this.cdr.detectChanges();
     }

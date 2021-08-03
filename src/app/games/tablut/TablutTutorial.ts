@@ -2,7 +2,7 @@ import { TablutMove } from 'src/app/games/tablut/TablutMove';
 import { TablutCase } from 'src/app/games/tablut/TablutCase';
 import { TablutPartSlice } from 'src/app/games/tablut/TablutPartSlice';
 import { Coord } from 'src/app/jscaip/Coord';
-import { DidacticialStep } from '../DidacticialStep';
+import { DidacticialStep } from '../../components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
 
 const _: number = TablutCase.UNOCCUPIED.value;
 const x: number = TablutCase.INVADERS.value;

@@ -33,12 +33,11 @@
     <g *ngFor="let capture of possibleCaptures; index as i"
        pointer-events="fill"
        class="capturable">
-        <g *ngFor="let case of capture.capturedCases">
-            <polyline [attr.points]="getHexaCoordsAt(case)"
-                      (click)="onClick(case)"
-                      class="no-fill"
-                      stroke-linecap="round" />
-        </g>
+        <polyline *ngFor="let case of capture.capturedCases"
+                  [attr.points]="getHexaCoordsAt(case)"
+                  (click)="onClick(case)"
+                  class="no-fill"
+                  stroke-linecap="round" />
     </g>
 
     <g *ngFor="let arrow of arrows">

@@ -2,7 +2,7 @@ import { QuixoPartSlice } from 'src/app/games/quixo/QuixoPartSlice';
 import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
-import { DidacticialStep } from '../DidacticialStep';
+import { DidacticialStep } from '../../components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
 
 const _: number = Player.NONE.value;
 const O: number = Player.ZERO.value;

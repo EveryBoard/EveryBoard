@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { HexagonalGameComponent } from 'src/app/components/game-components/abstract-game-component/HexagonalGameComponent';
+import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
@@ -15,6 +16,7 @@ import { YinshMinimax } from './YinshMinimax';
 import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';
 import { YinshRules } from './YinshRules';
+import { yinshTutorial } from './YinshTutorial';
 
 interface CaseInfo {
     coord: Coord,
@@ -40,6 +42,7 @@ interface ViewInfo {
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
 export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameState, YinshLegalityStatus> {
+
     private static PIECE_SIZE: number = 40;
 
     public rules: YinshRules = new YinshRules(YinshGameState);
@@ -50,11 +53,18 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
 
     public encoder: MoveEncoder<YinshMove> = YinshMove.encoder;
 
+    public tutorial: DidacticialStep[] = yinshTutorial;
+
     public scores: number[] = [0, 0];
 
     private constructedState: YinshGameState;
 
-    private movePhase: 'INITIAL_CAPTURE' | 'INITIAL_CAPTURE_SELECT_RING' | 'MOVE_START' | 'MOVE_END' | 'FINAL_CAPTURE' | 'FINAL_CAPTURE_SELECT_RING'
+    private movePhase: 'INITIAL_CAPTURE' |
+                       'INITIAL_CAPTURE_SELECT_RING' |
+                       'MOVE_START' |
+                       'MOVE_END' |
+                       'FINAL_CAPTURE' |
+                       'FINAL_CAPTURE_SELECT_RING'
         = 'MOVE_START';
 
     private moveStart: MGPOptional<Coord> = MGPOptional.empty();

@@ -3,7 +3,7 @@ import { SaharaPartSlice } from 'src/app/games/sahara/SaharaPartSlice';
 import { Coord } from 'src/app/jscaip/Coord';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { DidacticialStep } from '../DidacticialStep';
+import { DidacticialStep } from '../../components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
 
 const N: number = FourStatePiece.NONE.value;
 const O: number = FourStatePiece.ZERO.value;

@@ -8,6 +8,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MinimaxTestingMinimax } from './MinimaxTestingMinimax';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
 
 @Component({
     selector: 'app-minimax-testing',
@@ -18,6 +19,8 @@ export class MinimaxTestingComponent extends AbstractGameComponent<MinimaxTestin
     public coord: Coord = new Coord(-1, -1);
 
     public encoder: MoveEncoder<MinimaxTestingMove> = MinimaxTestingMove.encoder;
+
+    public tutorial: DidacticialStep[];
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);

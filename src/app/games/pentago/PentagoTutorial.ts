@@ -32,7 +32,7 @@ export const pentagoTutorial: DidacticialStep[] = [
             [O, _, _, _, X, _],
             [_, _, _, _, _, _],
         ], 10),
-    ),
+    ).withPreviousMove(PentagoMove.withRotation(0, 0, 0, false)),
     DidacticialStep.fromPredicate(
         $localize`Simple move`,
         $localize`At their turn, players put a piece on the board and possibly rotate one block.

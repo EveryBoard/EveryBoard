@@ -95,6 +95,7 @@ export class DidacticialStep {
                        public readonly predicate: (move: Move, resultingState: GamePartSlice) => MGPValidation,
                        public readonly successMessage: string,
                        public readonly failureMessage: string,
+                       public readonly previousMove?: Move,
     ) { }
     public isMove(): boolean {
         return this.acceptedMoves != null;
@@ -112,5 +113,17 @@ export class DidacticialStep {
         return this.acceptedClicks == null &&
                this.acceptedMoves == null &&
                this.predicate == null;
+    }
+    public withPreviousMove(previousMove: Move): DidacticialStep {
+        return new DidacticialStep(this.title,
+                                   this.instruction,
+                                   this.state,
+                                   this.acceptedMoves,
+                                   this.solutionMove,
+                                   this.acceptedClicks,
+                                   this.predicate,
+                                   this.successMessage,
+                                   this.failureMessage,
+                                   previousMove);
     }
 }

@@ -12,7 +12,7 @@ import { DidacticialFailure } from './DidacticialFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Move } from 'src/app/jscaip/Move';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
-import { sixTutorial, SixDidacticialMessages } from './didacticials/six-didacticial';
+import { sixTutorial, SixDidacticialMessages } from '../../../games/six/SixTutorial';
 import { SixMove } from 'src/app/games/six/SixMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Rules } from 'src/app/jscaip/Rules';
@@ -21,29 +21,29 @@ import { SixGameState } from 'src/app/games/six/SixGameState';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { PentagoRules } from 'src/app/games/pentago/PentagoRules';
 import { PentagoGameState } from 'src/app/games/pentago/PentagoGameState';
-import { pentagoTutorial } from 'src/app/games/pentago/pentago.didacticial';
+import { pentagoTutorial } from 'src/app/games/pentago/PentagoTutorial';
 import { EpaminondasRules } from 'src/app/games/epaminondas/EpaminondasRules';
 import { EpaminondasPartSlice } from 'src/app/games/epaminondas/EpaminondasPartSlice';
-import { epaminondasTutorial } from './didacticials/epaminondas-didacticial';
+import { epaminondasTutorial } from '../../../games/epaminondas/EpaminondasTutorial';
 import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
 import { Direction } from 'src/app/jscaip/Direction';
 import { abaloneTutorial } from 'src/app/games/abalone/AbaloneTutorial';
-import { awaleTutorial } from './didacticials/awale-didacticial';
-import { coerceoTutorial } from './didacticials/coerceo-didacticial';
-import { dvonnTutorial } from './didacticials/dvonn-didacticial';
-import { encapsuleTutorial } from './didacticials/encapsule-tutorial';
-import { gipfTutorial } from './didacticials/gipf-didacticial';
-import { goTutorial } from './didacticials/go-didacticial';
-import { kamisadoTutorial } from './didacticials/kamisado-didacticial';
-import { linesOfActionTutorial } from 'src/app/games/lines-of-action/LinesOfActionDidacticial';
-import { p4Tutorial } from './didacticials/p4-didacticial';
-import { pylosTutorial } from './didacticials/pylos-didacticial';
-import { quartoTutorial } from './didacticials/quarto-didacticial';
-import { quixoTutorial } from './didacticials/quixo-didacticial';
-import { reversiTutorial } from './didacticials/reversi-didacticial';
-import { saharaTutorial } from './didacticials/sahara-didacticial';
-import { siamTutorial } from './didacticials/siam-didacticial';
-import { tablutTutorial } from './didacticials/tablut-didacticial';
+import { awaleTutorial } from '../../../games/awale/AwaleTutorial';
+import { coerceoTutorial } from '../../../games/coerceo/CoerceoTutorial';
+import { dvonnTutorial } from '../../../games/dvonn/DvonnTutorial';
+import { encapsuleTutorial } from '../../../games/encapsule/EncapsuleTutorial';
+import { gipfTutorial } from '../../../games/gipf/GipfTutorial';
+import { goTutorial } from '../../../games/go/GoTutorial';
+import { kamisadoTutorial } from '../../../games/kamisado/KamisadoTutorial';
+import { linesOfActionTutorial } from 'src/app/games/lines-of-action/LinesOfActionTutorial';
+import { p4Tutorial } from '../../../games/p4/P4Tutorial';
+import { pylosTutorial } from '../../../games/pylos/PylosTutorial';
+import { quartoTutorial } from '../../../games/quarto/QuartoTutorial';
+import { quixoTutorial } from '../../../games/quixo/QuixoTutorial';
+import { reversiTutorial } from '../../../games/reversi/ReversiTutorial';
+import { saharaTutorial } from '../../../games/sahara/SaharaTutorial';
+import { siamTutorial } from '../../../games/siam/SiamTutorial';
+import { tablutTutorial } from '../../../games/tablut/TablutTutorial';
 import { AbaloneRules } from 'src/app/games/abalone/AbaloneRules';
 import { AwaleRules } from 'src/app/games/awale/AwaleRules';
 import { CoerceoRules } from 'src/app/games/coerceo/CoerceoRules';
@@ -124,6 +124,32 @@ describe('DidacticialGameWrapperComponent', () => {
                 componentTestUtils.getComponent().rules.node.gamePartSlice as QuartoPartSlice;
             expect(actualSlice).toEqual(slice);
         }));
+        it('Should show previousMove when set', fakeAsync(async() => {
+            // Given a certain DidacticialStep
+            const slice: QuartoPartSlice = new QuartoPartSlice([
+                [0, 0, 0, 0],
+                [0, 1, 2, 3],
+                [0, 1, 2, 3],
+                [0, 1, 2, 3],
+            ], 0, QuartoPiece.BBAA);
+            const expectedPreviousMove: QuartoMove = new QuartoMove(1, 1, QuartoPiece.AAAB);
+            const didacticial: DidacticialStep[] = [
+                DidacticialStep.forClick(
+                    'title',
+                    'instruction',
+                    slice,
+                    ['#click_0_0'],
+                    'Bravo !',
+                    'Perdu.',
+                ).withPreviousMove(expectedPreviousMove),
+            ];
+            // when starting didacticial
+            wrapper.startDidacticial(didacticial);
+
+            // expect to see setted previous move
+            const actualMove: QuartoMove = wrapper.gameComponent.rules.node.move as QuartoMove;
+            expect(expectedPreviousMove).toEqual(actualMove);
+        }));
         it('Should show title of the steps, the selected one in bold', fakeAsync(async() => {
             // Given a DidacticialStep with 3 steps
             const didacticial: DidacticialStep[] = [
@@ -153,10 +179,6 @@ describe('DidacticialGameWrapperComponent', () => {
             expectedTitle = 'title 1';
             currentTitle = componentTestUtils.findElement('#step_1').nativeElement.innerHTML;
             expect(currentTitle).toBe(expectedTitle);
-        }));
-        it('It should throw when trying to reach unexisting game', fakeAsync(async() => {
-            componentTestUtils.setRoute('compo', 'IDontExist');
-            expect(() => wrapper.getDidacticial()).toThrowError('Unknown Game IDontExist.');
         }));
         // ///////////////////////// ATTEMPTING ///////////////////////////////////
         it('Should go to specific step when clicking on it', fakeAsync(async() => {
@@ -1015,7 +1037,7 @@ describe('DidacticialGameWrapperComponent', () => {
                 ], [
                     new SixRules(SixGameState),
                     sixTutorial[5],
-                    SixMove.fromDeplacement(new Coord(3, 2), new Coord(2, 2)),
+                    SixMove.fromDeplacement(new Coord(0, 6), new Coord(1, 6)),
                     MGPValidation.failure(`This move does not disconnect your opponent's pieces. Try again with another piece.`),
                 ], [
                     new SixRules(SixGameState),
@@ -1035,6 +1057,7 @@ describe('DidacticialGameWrapperComponent', () => {
                 const move: Move = stepExpectation[2];
                 const validation: MGPValidation = stepExpectation[3];
                 const status: LegalityStatus = rules.isLegal(move, step.state);
+                expect(status.legal.reason).toBeNull();
                 const state: GamePartSlice = rules.applyLegalMove(move, step.state, status);
                 expect(step.predicate(move, state)).toEqual(validation);
             }

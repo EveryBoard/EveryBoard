@@ -12,6 +12,8 @@ import { PylosOrderedMinimax } from './PylosOrderedMinimax';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PylosFailure } from './PylosFailure';
+import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { pylosTutorial } from './PylosTutorial';
 
 @Component({
     selector: 'app-pylos',
@@ -39,6 +41,8 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
     private remainingPieces: { [owner: number]: number } = { 0: 15, 1: 15 };
 
     public encoder: MoveEncoder<PylosMove> = PylosMove.encoder;
+
+    public tutorial: DidacticialStep[] = pylosTutorial;
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);

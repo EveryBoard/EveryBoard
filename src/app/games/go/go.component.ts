@@ -13,6 +13,8 @@ import { GroupDatas } from 'src/app/jscaip/BoardDatas';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { goTutorial } from './GoTutorial';
 
 @Component({
     selector: 'app-go',
@@ -35,6 +37,8 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
     public captures: Coord[]= [];
 
     public encoder: MoveEncoder<GoMove> = GoMove.encoder;
+
+    public tutorial: DidacticialStep[] = goTutorial;
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
