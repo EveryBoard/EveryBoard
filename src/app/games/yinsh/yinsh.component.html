@@ -12,13 +12,28 @@
                           [ngClass]="caseInfo.caseClasses"
                           class="base"
                           stroke-linecap="round"/>
-                <circle *ngIf="caseInfo.isPiece"
-                        id="piece_{{ x }}_{{ y }}"
-                        [attr.cx]="caseInfo.center.x"
-                        [attr.cy]="caseInfo.center.y"
-                        [attr.r]="viewInfo.pieceSize"
-                        [ngClass]="caseInfo.pieceClasses"
-                        class="base"/>
+                <g [ngClass]="caseInfo.removedClass">
+                    <circle *ngIf="caseInfo.isRing"
+                            id="ring_{{ x }}_{{ y }}"
+                            [attr.cx]="caseInfo.center.x"
+                            [attr.cy]="caseInfo.center.y"
+                            [attr.r]="viewInfo.ringOuterSize"
+                            [ngClass]="caseInfo.ringClasses"
+                            class="base mid-stroke"/>
+                    <circle *ngIf="caseInfo.isRing"
+                            [attr.cx]="caseInfo.center.x"
+                            [attr.cy]="caseInfo.center.y"
+                            [attr.r]="viewInfo.ringInnerSize"
+                            [ngClass]="caseInfo.caseClasses"
+                            class="base mid-stroke" />
+                    <circle *ngIf="caseInfo.isMarker"
+                            id="marker_{{ x }}_{{ y }}"
+                            [attr.cx]="caseInfo.center.x"
+                            [attr.cy]="caseInfo.center.y"
+                            [attr.r]="viewInfo.markerSize"
+                            [ngClass]="caseInfo.markerClasses"
+                            class="base mid-stroke"/>
+                </g>
             </g>
         </g>
     </g>
@@ -43,12 +58,17 @@
                   stroke-linecap="round" />
     </g>
     <g *ngFor="let player of [0, 1]">
-        <circle *ngFor="let _ of [].constructor(viewInfo.sideRings[player]); index as ring"
-                id="player_{{ player }}_sideRing_{{ ring+1 }}"
-                [attr.cx]="(player === 0 ? 0 : 770) + 1.2*viewInfo.pieceSize*(ring+1)"
-                [attr.cy]="(player === 0 ? 300 : 1260)"
-                [attr.r]="viewInfo.pieceSize"
-                [ngClass]="viewInfo.sideRingClass[player]"
-                class="base no-fill"/>
+        <g *ngFor="let _ of [].constructor(viewInfo.sideRings[player]); index as ring">
+            <circle id="player_{{ player }}_sideRing_{{ ring+1 }}"
+                    [attr.cx]="(player === 0 ? 0 : 1050) + (player === 0 ? 1 : -1) * 1.2*viewInfo.ringOuterSize*(ring+1)"
+                    [attr.cy]="(player === 0 ? 300 : 1260)"
+                    [attr.r]="viewInfo.ringOuterSize"
+                    [ngClass]="viewInfo.sideRingClass[player]"
+                    class="base mid-stroke"/>
+            <circle [attr.cx]="(player === 0 ? 0 : 1050) + (player === 0 ? 1 : -1) * 1.2*viewInfo.ringOuterSize*(ring+1)"
+                    [attr.cy]="(player === 0 ? 300 : 1260)"
+                    [attr.r]="viewInfo.ringInnerSize"
+                    class="base mid-stroke white-background"/>
+        </g>
     </g>
 </svg>

@@ -11,6 +11,9 @@
     stroke: black;
     stroke-width: 3;
 }
+.white-background {
+    fill: white;
+}
 .background {
     fill: lightgray;
 }

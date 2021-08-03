@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { HexagonalGameComponent } from 'src/app/components/game-components/abstract-game-component/HexagonalGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
+import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { Player } from 'src/app/jscaip/Player';
@@ -20,16 +21,21 @@ interface CaseInfo {
     coord: Coord,
     coordinates: string,
     caseClasses: string[],
-    pieceClasses: string[],
-    isPiece: boolean,
+    markerClasses: string[],
+    ringClasses: string[],
+    isMarker: boolean,
+    isRing: boolean,
     center: Coord,
+    removedClass: string,
 }
 
 interface ViewInfo {
     caseInfo: CaseInfo[][],
     possibleCaptures: YinshCapture[],
     selectableRings: Coord[],
-    pieceSize: number,
+    markerSize: number,
+    ringOuterSize: number,
+    ringInnerSize: number,
     sideRings: [number, number],
     sideRingClass: [string, string],
 }
@@ -40,12 +46,14 @@ interface ViewInfo {
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
 export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameState, YinshLegalityStatus> {
-    private static PIECE_SIZE: number = 40;
+    private static MARKER_SIZE: number = 30;
+    private static RING_OUTER_SIZE: number = 40;
+    private static RING_INNER_SIZE: number = 30;
 
     public rules: YinshRules = new YinshRules(YinshGameState);
 
-    public hexaLayout: HexaLayout = new HexaLayout(YinshComponent.PIECE_SIZE * 1.50,
-                                                   new Coord(YinshComponent.PIECE_SIZE * 2, 0),
+    public hexaLayout: HexaLayout = new HexaLayout(YinshComponent.RING_OUTER_SIZE * 1.50,
+                                                   new Coord(YinshComponent.RING_OUTER_SIZE * 2, 0),
                                                    FlatHexaOrientation.INSTANCE);
 
     public encoder: MoveEncoder<YinshMove> = YinshMove.encoder;
@@ -71,9 +79,11 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
         caseInfo: [],
         possibleCaptures: [],
         selectableRings: [],
-        pieceSize: YinshComponent.PIECE_SIZE,
+        markerSize: YinshComponent.MARKER_SIZE,
+        ringOuterSize: YinshComponent.RING_OUTER_SIZE,
+        ringInnerSize: YinshComponent.RING_INNER_SIZE,
         sideRings: [5, 5],
-        sideRingClass: ['player0-stroke', 'player1-stroke'],
+        sideRingClass: ['player0', 'player1'],
     };
 
     constructor(messageDisplayer: MessageDisplayer) {
@@ -92,8 +102,11 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
                 coordinates: this.getHexaCoordsAt(coord),
                 center: this.getCenterAt(coord),
                 caseClasses: [],
-                pieceClasses: [],
-                isPiece: false,
+                markerClasses: [],
+                ringClasses: [],
+                isMarker: false,
+                isRing: false,
+                removedClass: '',
             };
         });
     }
@@ -107,9 +120,20 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
     public updateViewInfo(): void {
         this.constructedState.hexaBoard.allCoords().forEach((coord: Coord): void => {
             this.viewInfo.caseInfo[coord.y][coord.x].caseClasses = this.getCaseClasses(coord);
-            this.viewInfo.caseInfo[coord.y][coord.x].pieceClasses = this.getPieceClasses(coord);
-            this.viewInfo.caseInfo[coord.y][coord.x].isPiece =
-                this.constructedState.hexaBoard.getAt(coord) !== YinshPiece.EMPTY;
+            const piece: YinshPiece = this.constructedState.hexaBoard.getAt(coord);
+            let pieceToShow: YinshPiece = piece;
+            const previousPiece: YinshPiece = this.rules.node.gamePartSlice.hexaBoard.getAt(coord);
+            const pieceRemoved: boolean = !coord.equals(this.moveStart.getOrNull()) &&
+                previousPiece !== YinshPiece.EMPTY &&
+                piece === YinshPiece.EMPTY;
+            if (pieceRemoved) {
+                this.viewInfo.caseInfo[coord.y][coord.x].removedClass = 'transparent';
+                pieceToShow = previousPiece;
+            } else {
+                this.viewInfo.caseInfo[coord.y][coord.x].removedClass = '';
+            }
+            this.setRingInfo(coord, pieceToShow);
+            this.setMarkerInfo(coord, pieceToShow);
         });
         for (const player of [Player.ZERO, Player.ONE]) {
             this.viewInfo.sideRings[player.value] = this.constructedState.sideRings[player.value];
@@ -126,7 +150,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
             this.viewInfo.selectableRings = [];
         }
     }
-    public getCaseClasses(coord: Coord): string[] {
+    private getCaseClasses(coord: Coord): string[] {
         if (this.captured.some((c: Coord) => c.equals(coord))) {
             return ['captured'];
         } else if (this.moved.some((c: Coord) => c.equals(coord))) {
@@ -135,19 +159,27 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
             return [];
         }
     }
-    public getPieceClasses(coord: Coord): string[] {
-        const piece: YinshPiece = this.constructedState.hexaBoard.getAt(coord);
-        const playerClass: string = this.getPlayerClass(piece.player);
+    private setRingInfo(coord: Coord, piece: YinshPiece): void {
         if (piece.isRing) {
-            const classes: string[] = [playerClass + '-stroke'];
-            if (coord.equals(this.moveStart.getOrNull())) {
-                classes.push(playerClass);
-            } else {
-                classes.push('no-fill');
-            }
-            return classes;
+            const playerClass: string = this.getPlayerClass(piece.player);
+            this.viewInfo.caseInfo[coord.y][coord.x].isRing = true;
+            this.viewInfo.caseInfo[coord.y][coord.x].ringClasses = [playerClass];
         } else {
-            return [playerClass];
+            this.viewInfo.caseInfo[coord.y][coord.x].isRing = false;
+            this.viewInfo.caseInfo[coord.y][coord.x].ringClasses = [];
+        }
+    }
+    private setMarkerInfo(coord: Coord, piece: YinshPiece): void {
+        this.viewInfo.caseInfo[coord.y][coord.x].isMarker = false;
+        this.viewInfo.caseInfo[coord.y][coord.x].markerClasses = [];
+        if (piece !== YinshPiece.EMPTY) {
+            const containsMarker: boolean = !piece.isRing ||
+                (piece.isRing && coord.equals(this.moveStart.getOrNull()));
+            if (containsMarker) {
+                const playerClass: string = this.getPlayerClass(piece.player);
+                this.viewInfo.caseInfo[coord.y][coord.x].isMarker = true;
+                this.viewInfo.caseInfo[coord.y][coord.x].markerClasses = [playerClass];
+            }
         }
     }
     public cancelMoveAttempt(): void {
@@ -171,16 +203,24 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
             if (move.isInitialPlacement()) {
                 this.moved = [move.start];
             } else {
-                this.moved = [move.start, move.end.get()];
+                this.moved = [];
+                const dir: HexaDirection = HexaDirection.factory.fromMove(move.start, move.end.get());
+                for (let cur: Coord = move.start; !cur.equals(move.end.get()); cur = cur.getNext(dir)) {
+                    if (this.constructedState.hexaBoard.getAt(cur) !== YinshPiece.EMPTY) {
+                        this.moved.push(cur);
+                    }
+                    this.moved.push(move.end.get());
+                }
                 move.initialCaptures.forEach((c: YinshCapture) => this.markCapture(c));
                 move.finalCaptures.forEach((c: YinshCapture) => this.markCapture(c));
             }
         }
     }
     private markCapture(capture: YinshCapture): void {
-        capture.forEach((c: Coord) => {
-            this.captured.push(c);
+        capture.forEach((coord: Coord) => {
+            this.captured.push(coord);
         });
+        this.captured.push(capture.ringTaken);
     }
     private moveToInitialCaptureOrMovePhase(): MGPValidation {
         this.viewInfo.possibleCaptures = this.rules.getPossibleCaptures(this.constructedState);
