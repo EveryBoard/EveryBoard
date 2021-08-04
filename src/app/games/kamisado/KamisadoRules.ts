@@ -203,7 +203,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice> {
         //  - end case should be empty
         const endPiece: KamisadoPiece = KamisadoBoard.getPieceAt(slice.board, end);
         if (!endPiece.isEmpty()) {
-            return { legal: MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_CASE) };
+            return { legal: MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE) };
         }
         //  - all steps between start and end should be empty
         try {

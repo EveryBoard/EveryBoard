@@ -55,13 +55,13 @@ describe('SaharaComponent', () => {
         // given initial board
         await componentTestUtils.expectClickSuccess('#click_2_0');
         const move: SaharaMove = new SaharaMove(new Coord(2, 0), new Coord(3, 0));
-        await componentTestUtils.expectMoveFailure('#click_3_0', RulesFailure.MUST_LAND_ON_EMPTY_CASE, move);
+        await componentTestUtils.expectMoveFailure('#click_3_0', RulesFailure.MUST_LAND_ON_EMPTY_SPACE, move);
     }));
     it('should not allow to bounce on occupied brown case', fakeAsync(async() => {
         // given initial board
         await componentTestUtils.expectClickSuccess('#click_7_0');
         const move: SaharaMove = new SaharaMove(new Coord(7, 0), new Coord(8, 1));
-        const reason: string = SaharaFailure.CAN_ONLY_REBOUNCE_ON_EMPTY_CASE;
+        const reason: string = SaharaFailure.CAN_ONLY_REBOUNCE_ON_EMPTY_SPACE;
         await componentTestUtils.expectMoveFailure('#click_8_1', reason, move);
     }));
     it('should not allow invalid moves', fakeAsync(async() => {

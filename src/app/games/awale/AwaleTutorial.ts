@@ -32,7 +32,7 @@ export const awaleTutorial: DidacticialStep[] = [
         $localize`After sowing, if the last seed falls in an opponent's house and if there is now two or three seeds in this house, the player captures these two or three seeds.
          Then, the player looks at the preceding house:
          if it is still in the opponent's side and contains two or three seeds, they are also captured.
-         This continues until we reach either the player's side is or a house containing neither two nor three seeds.<br/><br/>
+         This continues until we reach either the player's side or a house containing neither two nor three seeds.<br/><br/>
          You are the second player, try to capture some pieces!`,
         new AwalePartSlice([
             [1, 0, 0, 0, 1, 0],

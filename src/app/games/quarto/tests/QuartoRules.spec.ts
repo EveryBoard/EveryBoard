@@ -80,7 +80,7 @@ describe('QuartoRules', () => {
         const slice: QuartoPartSlice = new QuartoPartSlice(board, 1, QuartoPiece.AABA);
         const move: QuartoMove = new QuartoMove(0, 3, QuartoPiece.BBAA);
         const status: LegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.reason).toEqual(RulesFailure.MUST_LAND_ON_EMPTY_CASE);
+        expect(status.legal.reason).toEqual(RulesFailure.MUST_LAND_ON_EMPTY_SPACE);
     });
     it('Should allow simple move', () => {
         const move: QuartoMove = new QuartoMove(2, 2, QuartoPiece.AAAB);

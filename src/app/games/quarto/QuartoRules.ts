@@ -222,7 +222,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
         const pieceInHand: QuartoPiece = slice.pieceInHand;
         if (QuartoRules.isOccupied(board[y][x])) {
             // on ne joue pas sur une case occupée
-            return MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_CASE);
+            return MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE);
         }
         if (pieceToGive === QuartoPiece.NONE) {
             if (slice.turn === 15) {

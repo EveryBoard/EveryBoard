@@ -136,7 +136,7 @@ export class YinshRules extends Rules<YinshMove, YinshGameState, YinshLegalitySt
             return MGPValidation.failure(YinshFailure.PLACEMENT_AFTER_INITIAL_PHASE);
         }
         if (state.hexaBoard.getAt(coord) !== YinshPiece.EMPTY) {
-            return MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_CASE);
+            return MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE);
         }
         return MGPValidation.SUCCESS;
     }
@@ -155,7 +155,7 @@ export class YinshRules extends Rules<YinshMove, YinshGameState, YinshLegalitySt
         }
         // End coord has to be empty
         if (state.hexaBoard.getAt(end) !== YinshPiece.EMPTY) {
-            return MGPValidation.failure(YinshFailure.SHOULD_END_MOVE_ON_EMPTY_CASE);
+            return MGPValidation.failure(YinshFailure.SHOULD_END_MOVE_ON_EMPTY_SPACE);
         }
         // There should only be markers or empty cases between start and end
         // As soon as a marker group is passed, the move should stop on the first empty case

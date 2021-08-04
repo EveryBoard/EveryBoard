@@ -681,7 +681,7 @@ describe('DidacticialGameWrapperComponent', () => {
                 ),
             ];
             wrapper.startDidacticial(didacticial);
-            await componentTestUtils.expectClickFailure('#chooseCoord_0_0', RulesFailure.MUST_CLICK_ON_EMPTY_CASE);
+            await componentTestUtils.expectClickFailure('#chooseCoord_0_0', RulesFailure.MUST_CLICK_ON_EMPTY_SPACE);
             tick(10);
 
             // expect to see cancelMove reason as message
@@ -691,7 +691,7 @@ describe('DidacticialGameWrapperComponent', () => {
             expect(currentMessage).toBe(expectedMessage);
             const currentReason: string =
                 componentTestUtils.findElement('#currentReason').nativeElement.innerHTML;
-            expect(currentReason).toBe(RulesFailure.MUST_CLICK_ON_EMPTY_CASE);
+            expect(currentReason).toBe(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE);
             // expect click to be still possible
             expect(componentTestUtils.getComponent().canUserPlay('#chooseCoord_0_0').isSuccess()).toBeTrue();
             tick(10);
@@ -835,7 +835,7 @@ describe('DidacticialGameWrapperComponent', () => {
             wrapper.startDidacticial(didacticial);
 
             // When doing invalid click
-            await componentTestUtils.expectClickFailure('#chooseCoord_0_0', RulesFailure.MUST_CLICK_ON_EMPTY_CASE);
+            await componentTestUtils.expectClickFailure('#chooseCoord_0_0', RulesFailure.MUST_CLICK_ON_EMPTY_SPACE);
 
             // expect to see cancelMove reason as message
             const expectedMessage: string = 'Perdu.';
@@ -844,7 +844,7 @@ describe('DidacticialGameWrapperComponent', () => {
             expect(currentMessage).toBe(expectedMessage);
             const currentReason: string =
                 componentTestUtils.findElement('#currentReason').nativeElement.innerHTML;
-            expect(currentReason).toBe(RulesFailure.MUST_CLICK_ON_EMPTY_CASE);
+            expect(currentReason).toBe(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE);
             // expect click to be still possible
             expect(componentTestUtils.getComponent().canUserPlay('#chooseCoord_0_0').isSuccess()).toBeTrue();
         }));

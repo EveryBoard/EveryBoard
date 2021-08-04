@@ -52,7 +52,7 @@ export const yinshTutorial: DidacticialStep[] = [
         A ring cannot pass through other rings during its move.
         If it goes over a group of markers, your move must stop at the first empty space after that group.
         All markers in the group are then flipped and their color change.<br/><br/>
-        You're playing dark, do a move.`,
+        You're playing Dark, do a move.`,
         new YinshGameState(YinshBoard.of([
             [N, N, N, N, N, N, _, _, _, _, N],
             [N, N, N, N, _, _, _, _, _, _, _],
@@ -75,7 +75,7 @@ export const yinshTutorial: DidacticialStep[] = [
         You can then get these markers by clicking on them, and then get one of your ring by clicking on it.
         You will then have one more point.
         You must capture when you can.<br/><br/>
-        You're playing dark, perform a capture!`,
+        You're playing Dark, perform a capture!`,
         new YinshGameState(YinshBoard.of([
             [N, N, N, N, N, N, _, _, _, _, N],
             [N, N, N, N, _, _, _, _, _, _, _],

@@ -69,7 +69,7 @@ export const sixTutorial: DidacticialStep[] = [
     ),
     DidacticialStep.fromPredicate(
         $localize`Second phase`,
-        $localize`After 40 tours, your pieces have all been placed and we move on to the second phase of the game.
+        $localize`After 40 turns, your pieces have all been placed and we move on to the second phase of the game.
         You now have to move your pieces, paying attention not to remove a piece that was blocking the opponent's victory.
         From now on, if after move, on or more pieces are disconnected from the largest group of piece, these will be taken out of the game.<br/><br/>
         You're playing Dark. Make a move that disconnects one of your opponent's pieces.`,

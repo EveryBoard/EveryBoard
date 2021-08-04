@@ -2,7 +2,7 @@ export class GipfFailure {
 
     public static readonly CAPTURE_MUST_BE_ALIGNED: string = $localize`You can only capture when 4 or more of your pieces are aligned, and it is not the case.`;
 
-    public static readonly INVALID_CAPTURED_PIECES: string = $localize`You must select a valid capture that contains 4 pieces of more.`;
+    public static readonly INVALID_CAPTURED_PIECES: string = $localize`You must select a valid capture that contains 4 pieces or more.`;
 
     public static readonly MISSING_CAPTURES: string = $localize`There are captures remaining.`;
 

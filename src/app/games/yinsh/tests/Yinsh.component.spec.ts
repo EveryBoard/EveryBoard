@@ -47,7 +47,7 @@ describe('YinshComponent', () => {
             ]);
             const state: YinshGameState = new YinshGameState(board, [4, 5], 1);
             testUtils.setupSlice(state);
-            await testUtils.expectClickFailure('#click_3_2', RulesFailure.MUST_CLICK_ON_EMPTY_CASE);
+            await testUtils.expectClickFailure('#click_3_2', RulesFailure.MUST_CLICK_ON_EMPTY_SPACE);
         }));
         it('should decrease the number of rings shown on the side when a ring is placed', fakeAsync(async() => {
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.empty(), []);
@@ -393,7 +393,7 @@ describe('YinshComponent', () => {
             testUtils.setupSlice(state);
 
             await testUtils.expectClickSuccess('#click_3_2');
-            await testUtils.expectClickFailure('#click_3_3', YinshFailure.SHOULD_END_MOVE_ON_EMPTY_CASE);
+            await testUtils.expectClickFailure('#click_3_3', YinshFailure.SHOULD_END_MOVE_ON_EMPTY_SPACE);
         }));
         it('should allow moves with one final capture', fakeAsync(async() => {
             const board: YinshBoard = YinshBoard.of([

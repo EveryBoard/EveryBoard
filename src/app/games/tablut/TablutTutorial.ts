@@ -17,7 +17,7 @@ export const tablutTutorial: DidacticialStep[] = [
         The attacker plays first. Its pieces (dark) are close to the edges.
         Its goal is to capture the king, which is in the center of the board.
         The defender plays second. Its pieces (light) are in the middle.
-        Its goal is to put the king of one of the 4 thrones in the corners.
+        Its goal is to put the king on one of the 4 thrones in the corners.
         Note that the square in which the king starts, in the center of the board, is also a throne.`,
         TablutPartSlice.getInitialSlice(),
     ),

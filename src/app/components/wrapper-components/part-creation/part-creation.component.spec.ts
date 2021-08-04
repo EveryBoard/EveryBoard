@@ -424,7 +424,7 @@ describe('PartCreationComponent:', () => {
 
         testUtils.detectChanges();
         await testUtils.whenStable();
-        tick(150)
+        tick(150);
         expect(router.navigate).toHaveBeenCalledWith(['server']);
     }));
     it('should see candidate disappear and reappear if candidates disconnects and reconnects');

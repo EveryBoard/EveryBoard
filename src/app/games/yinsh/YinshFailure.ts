@@ -17,7 +17,7 @@ export class YinshFailure {
 
     public static readonly SHOULD_SELECT_PLAYER_RING: string = $localize`You must pick one of your own rings to move.`;
 
-    public static readonly SHOULD_END_MOVE_ON_EMPTY_CASE: string = $localize`Your ring must land on an empty space.`;
+    public static readonly SHOULD_END_MOVE_ON_EMPTY_SPACE: string = $localize`Your ring must land on an empty space.`;
 
     public static readonly MOVE_SHOULD_NOT_PASS_ABOVE_RING: string = $localize`A ring can only jump over markers or empty spaces, not over another ring.`;
 
