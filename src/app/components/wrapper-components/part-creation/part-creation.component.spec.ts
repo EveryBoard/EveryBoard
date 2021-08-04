@@ -166,8 +166,7 @@ describe('PartCreationComponent:', () => {
                 testUtils.expectElementToExist('#selected_firstCandidate');
                 joueursDAOMock.update('opponent', { state: 'offline' });
                 testUtils.detectChanges();
-                tick();
-                tick(1000);
+                tick(150);
 
                 testUtils.expectElementNotToExist('#selected_firstCandidate');
                 expect(component.currentJoiner).toEqual(JoinerMocks.INITIAL.doc);

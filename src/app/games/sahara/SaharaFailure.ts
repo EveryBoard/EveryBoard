@@ -1,6 +1,6 @@
 export class SaharaFailure {
 
-    public static readonly CAN_ONLY_REBOUNCE_ON_BLACK: string = $localize`You can only rebounce on dark spaces.`;
+    public static readonly CAN_ONLY_REBOUNCE_ON_BLACK: string = $localize`You can only rebound on dark spaces.`;
 
     public static readonly CAN_ONLY_REBOUNCE_ON_EMPTY_CASE: string = $localize`You can only rebound on empty spaces.`;
 

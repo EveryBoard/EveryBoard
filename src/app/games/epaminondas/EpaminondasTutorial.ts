@@ -121,7 +121,8 @@ export const epaminondasTutorial: DidacticialStep[] = [
             [_, _, _, _, _, _, _, O, O, O, O, O, O, O],
         ], 0),
         [new EpaminondasMove(2, 10, 4, 2, Direction.UP)],
-        $localize`Congratulations, you made it!.`,
+        $localize`Congratulations, you made it!
+        Note that the diagonal phalanx was not aligned with your phalanx, hence even if it is longer, this does not prevent you from capturing some of its pieces on another alignment.`,
         $localize`Failed, you have not captured the phalanx.`,
     ),
 ];
