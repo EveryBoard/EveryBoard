@@ -13,7 +13,7 @@ export class SixTutorialMessages {
 
     public static readonly MOVEMENT_NOT_DISCONNECTING: string = $localize`Ce mouvement ne déconnecte pas de pièce adverse ! Réessayez !`;
 
-    public static readonly MOVEMENT_SELF_DISCONNECTING: string = $localize`Vous avez perdu une de vos pièce pendant ce mouvement, il y a un moyen de déconnecter une pièce adversaire sans ça, recommencez!`;
+    public static readonly MOVEMENT_SELF_DISCONNECTING: string = $localize`Vous avez perdu une de vos pièce pendant ce mouvement, il y a un moyen de déconnecter une pièce adversaire sans perde aucunes pièces, recommencez!`;
 }
 
 export const sixTutorial: TutorialStep[] = [
