@@ -4,7 +4,7 @@ import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
 import { QuartoPartSlice } from 'src/app/games/quarto/QuartoPartSlice';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { fakeAsync, flush, tick } from '@angular/core/testing';
+import { fakeAsync, tick } from '@angular/core/testing';
 import { QuartoComponent } from '../../../games/quarto/quarto.component';
 import { DebugElement } from '@angular/core';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -12,7 +12,7 @@ import { DidacticialFailure } from './DidacticialFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Move } from 'src/app/jscaip/Move';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
-import { sixTutorial, SixDidacticialMessages } from '../../../games/six/SixTutorial';
+import { sixTutorial, SixTutorialMessages } from '../../../games/six/SixTutorial';
 import { SixMove } from 'src/app/games/six/SixMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Rules } from 'src/app/jscaip/Rules';
@@ -1033,7 +1033,7 @@ describe('DidacticialGameWrapperComponent', () => {
                     new SixRules(SixGameState),
                     sixTutorial[4],
                     SixMove.fromDeplacement(new Coord(6, 1), new Coord(7, 1)),
-                    MGPValidation.failure(SixDidacticialMessages.MOVEMENT_NOT_DISCONNECTING),
+                    MGPValidation.failure(SixTutorialMessages.MOVEMENT_NOT_DISCONNECTING),
                 ], [
                     new SixRules(SixGameState),
                     sixTutorial[5],
