@@ -9,9 +9,11 @@ const _: number = Player.NONE.value;
 const O: number = Player.ZERO.value;
 const X: number = Player.ONE.value;
 
-export class SixDidacticialMessages {
+export class SixTutorialMessages {
 
     public static readonly MOVEMENT_NOT_DISCONNECTING: string = $localize`This move is not disconnecting a piece of your opponent. Try again with another piece.`;
+
+    public static readonly MOVEMENT_SELF_DISCONNECTING: string = $localize`You lost one of your pieces during this move. There is a way to disconnect an opponent's piece without losing it, try again!`;
 }
 
 export const sixTutorial: DidacticialStep[] = [
@@ -79,20 +81,23 @@ export const sixTutorial: DidacticialStep[] = [
             [_, _, _, _, O, O, O, _, _],
             [_, _, _, _, X, X, _, X, O],
             [_, O, X, X, O, O, X, _, _],
-            [O, O, O, O, X, X, X, _, _],
-            [X, X, O, _, X, X, O, O, _],
+            [O, O, O, O, X, X, X, O, _],
+            [X, X, O, _, X, X, O, _, _],
             [_, O, _, O, O, _, _, _, _],
             [X, X, X, X, _, _, _, _, _],
-            [_, O, _, _, _, _, _, _, _],
+            [_, O, _, X, _, _, _, _, _],
         ], 40),
         SixMove.fromDeplacement(new Coord(6, 1), new Coord(5, 1)),
         (move: SixMove, resultingState: SixGameState) => {
-            if (new Coord(6, 1).equals(move.start.getOrNull()) &&
-                resultingState.getPieceAt(new Coord(7, 0).getNext(resultingState.offset)) === Player.NONE)
-            {
-                return MGPValidation.SUCCESS;
+            const pieces: [number, number] = resultingState.countPieces();
+            if (pieces[0] === 19) {
+                if (pieces[1] === 18) {
+                    return MGPValidation.SUCCESS;
+                } else {
+                    return MGPValidation.failure(SixTutorialMessages.MOVEMENT_NOT_DISCONNECTING);
+                }
             } else {
-                return MGPValidation.failure(SixDidacticialMessages.MOVEMENT_NOT_DISCONNECTING);
+                return MGPValidation.failure(SixTutorialMessages.MOVEMENT_SELF_DISCONNECTING);
             }
         },
         $localize`Congratulations, your opponent now has one piece less and you're closer to victory!`,

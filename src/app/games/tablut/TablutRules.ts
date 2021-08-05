@@ -70,7 +70,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
     private static getMoveValidity(player: Player, move: TablutMove, board: number[][]): MGPValidation {
         const cOwner: RelativePlayer = this.getRelativeOwner(player, move.coord, board);
         if (cOwner === RelativePlayer.NONE) {
-            return MGPValidation.failure(TablutFailure.CHOOSE_OWN_PIECE);
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE);
         }
         if (cOwner === RelativePlayer.ENNEMY) {
             return MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
@@ -463,7 +463,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
             return Player.ZERO;
         }
     }
-    public static isPlayerImmobilised(player: Player, board: number[][]): boolean {
+    public static isPlayerImmobilized(player: Player, board: number[][]): boolean {
         return this.getPlayerListMoves(player, board).length === 0;
     }
     public static getPlayerListPawns(player: Player, board: number[][]): Coord[] {
@@ -522,11 +522,11 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
             // king reached one corner !
             return MGPOptional.of(TablutRules.getDefender());
         }
-        if (TablutRules.isPlayerImmobilised(Player.ZERO, board)) {
+        if (TablutRules.isPlayerImmobilized(Player.ZERO, board)) {
             display(LOCAL_VERBOSE, 'Zero has no move, victory to one');
             return MGPOptional.of(Player.ONE);
         }
-        if (TablutRules.isPlayerImmobilised(Player.ONE, board)) {
+        if (TablutRules.isPlayerImmobilized(Player.ONE, board)) {
             display(LOCAL_VERBOSE, 'One has no move, victory to zero');
             return MGPOptional.of(Player.ZERO);
         }

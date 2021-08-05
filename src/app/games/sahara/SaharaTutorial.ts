@@ -54,16 +54,16 @@ export const saharaTutorial: DidacticialStep[] = [
     ),
     DidacticialStep.fromPredicate(
         $localize`Double move`,
-        $localize`When a pyramid shares its vertices with dark spaces, it can move of up to two steps.
+        $localize`When a pyramid shares its vertices with dark spaces, it can move of one or two steps.
         To do so:
         <ol>
-            <li> Click on the pyramid to move (the one in the center).</li>
+            <li> Click on the pyramid to move.</li>
             <li> Click on one of the 6 destinations that you can reach in two steps:
                 the 6 neighboring light spaces of the 3 dark spaces that are neighbors of your pyramid.
         </ol>`,
         SaharaPartSlice.getInitialSlice(),
         new SaharaMove(new Coord(7, 0), new Coord(5, 0)),
-        (move: SaharaMove, state: SaharaPartSlice) => {
+        (move: SaharaMove, _: SaharaPartSlice) => {
             if (move.isSimpleStep()) {
                 return MGPValidation.failure($localize`Failed! You have made a single step.`);
             } else {

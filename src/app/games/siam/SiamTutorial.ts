@@ -36,7 +36,7 @@ export const siamTutorial: DidacticialStep[] = [
         $localize`Every player has 5 pieces in total.
         As long as you do not have 5 pieces on the board, you can insert new pieces. To do so:
         <ol>
-            <li>Click on one of the big arrows surrounding the board.</li>
+            <li>Click on one of the big arrows alongside the board.</li>
             <li>Click on one of the small arrows that appeared on the landing square of your piece.
                 This is the direction in which your piece will be oriented.</li>
         </ol><br/>

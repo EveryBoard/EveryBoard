@@ -280,7 +280,6 @@ describe('PartCreationComponent:', () => {
             testUtils.detectChanges();
             await testUtils.whenStable();
             testUtils.detectChanges();
-            tick(1);
             tick(150);
 
             expect(router.navigate).toHaveBeenCalledWith(['server']);

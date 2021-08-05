@@ -70,7 +70,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice> {
             if (slice.getBoardAt(commonNeighboor.get()) === FourStatePiece.EMPTY.value) {
                 return { legal: MGPValidation.SUCCESS };
             } else {
-                return { legal: MGPValidation.failure(SaharaFailure.CAN_ONLY_REBOUNCE_ON_EMPTY_SPACE) };
+                return { legal: MGPValidation.failure(SaharaFailure.CAN_ONLY_REBOUND_ON_EMPTY_SPACE) };
             }
         } else {
             return { legal: MGPValidation.SUCCESS };

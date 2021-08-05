@@ -27,7 +27,7 @@ describe('TablutComponent', () => {
         await componentTestUtils.expectClickFailure('#click_4_4', RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
     }));
     it('Should cancel move when first click on empty case', fakeAsync( async() => {
-        await componentTestUtils.expectClickFailure('#click_0_0', TablutFailure.CHOOSE_OWN_PIECE);
+        await componentTestUtils.expectClickFailure('#click_0_0', RulesFailure.MUST_CHOOSE_PLAYER_PIECE);
     }));
     it('Should allow simple move', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_4_1');

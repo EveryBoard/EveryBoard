@@ -61,13 +61,13 @@ describe('SaharaComponent', () => {
         // given initial board
         await componentTestUtils.expectClickSuccess('#click_7_0');
         const move: SaharaMove = new SaharaMove(new Coord(7, 0), new Coord(8, 1));
-        const reason: string = SaharaFailure.CAN_ONLY_REBOUNCE_ON_EMPTY_SPACE;
+        const reason: string = SaharaFailure.CAN_ONLY_REBOUND_ON_EMPTY_SPACE;
         await componentTestUtils.expectMoveFailure('#click_8_1', reason, move);
     }));
     it('should not allow invalid moves', fakeAsync(async() => {
         // given initial board
         await componentTestUtils.expectClickSuccess('#click_0_3');
-        const reason: string = 'You can move of up to two spaces, not 3.';
+        const reason: string = 'You can move of one or two spaces, not 3.';
         await componentTestUtils.expectClickFailure('#click_2_2', reason);
     }));
     it('should change selected piece when clicking twice in a row on current player pieces', fakeAsync(async() => {

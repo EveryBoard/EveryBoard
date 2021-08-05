@@ -7,7 +7,7 @@ export class YinshFailure {
 
     public static readonly MISSING_CAPTURES: string = GipfFailure.MISSING_CAPTURES;
 
-    public static readonly CAPTURE_MUST_BE_ALIGNED: string = $localize`You can only capture when 5 or more of your pieces are aligned, and it is not the case.`
+    public static readonly CAPTURE_MUST_BE_ALIGNED: string = $localize`You can only capture when 5 or more of your markers are aligned, and it is not the case.`
 
     public static readonly INVALID_CAPTURED_PIECES: string = $localize`Please pick a valid capture that contains exactly 5 markers.`;
 

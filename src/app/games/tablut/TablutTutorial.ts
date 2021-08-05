@@ -23,7 +23,7 @@ export const tablutTutorial: DidacticialStep[] = [
     ),
     DidacticialStep.anyMove(
         $localize`Moving`,
-        $localize`All pieces move in the same way.
+        $localize`All pieces move the same way.
         Similarly to a rook in chess, a piece can move:
         <ol>
             <li>By as many squares as you want.</li>

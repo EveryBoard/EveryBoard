@@ -33,7 +33,7 @@ describe('SaharaMoves', () => {
     it('Should throw error when start and end are too far away', () => {
         const start: Coord = new Coord(0, 0);
         const end: Coord = new Coord(0, 3);
-        const expectedError: string = 'You can move of up to two spaces, not 3.';
+        const expectedError: string = 'You can move of one or two spaces, not 3.';
         expect(() => new SaharaMove(start, end)).toThrowError(expectedError);
     });
     it('Should throw error when distance is 1 but start and end arent neighboors', () => {
@@ -45,7 +45,7 @@ describe('SaharaMoves', () => {
     it('Should throw error when trying to bounce on white triangle', () => {
         const start: Coord = new Coord(0, 0);
         const end: Coord = new Coord(2, 0);
-        const expectedError: string = SaharaFailure.CAN_ONLY_REBOUNCE_ON_BLACK;
+        const expectedError: string = SaharaFailure.CAN_ONLY_REBOUND_ON_BLACK;
         expect(() => new SaharaMove(start, end)).toThrowError(expectedError);
     });
     it('Should throw error when distance is 2 but common neighboors is the fake neighboors', () => {

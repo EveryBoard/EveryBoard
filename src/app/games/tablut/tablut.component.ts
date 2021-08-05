@@ -120,7 +120,7 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
         display(TablutComponent.VERBOSE, 'TablutComponent.choosePiece');
 
         if (this.board[y][x] === TablutCase.UNOCCUPIED.value) {
-            return this.cancelMove(TablutFailure.CHOOSE_OWN_PIECE);
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE);
         }
         if (!this.pieceBelongToCurrentPlayer(x, y)) {
             return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);

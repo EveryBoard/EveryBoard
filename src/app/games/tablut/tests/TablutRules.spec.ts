@@ -342,7 +342,7 @@ describe('TablutRules', () => {
         const status: TablutLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.getReason()).toBe(TablutFailure.SOLDIERS_CANNOT_SIT_ON_THRONE);
     });
-    it('Should consider invader winner when all defender are immobilised', () => {
+    it('Should consider invader winner when all defender are immobilized', () => {
         const board: number[][] = [
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],

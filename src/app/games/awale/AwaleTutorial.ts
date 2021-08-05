@@ -25,7 +25,7 @@ export const awaleTutorial: DidacticialStep[] = [
             [0, 12, 0, 0, 0, 0],
         ], 1, [0, 0]),
         AwaleMove.ONE,
-        $localize`See, the house that you sowed has not been refilled, and the sowing immediately continued from the next house (which therefore contains two seeds).`,
+        $localize`See, the house that you sowed has not been refilled, and the sowing immediately continued to the next house (which therefore contains two seeds).`,
     ),
     DidacticialStep.fromMove(
         $localize`Simple capture`,
