@@ -1,5 +1,5 @@
 import { CoerceoMove } from 'src/app/games/coerceo/CoerceoMove';
-import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { CoerceoPartSlice } from 'src/app/games/coerceo/CoerceoPartSlice';
 import { Coord } from 'src/app/jscaip/Coord';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
@@ -9,8 +9,8 @@ const N: number = FourStatePiece.NONE.value;
 const O: number = FourStatePiece.ZERO.value;
 const X: number = FourStatePiece.ONE.value;
 
-export const coerceoTutorial: DidacticialStep[] = [
-    DidacticialStep.informational(
+export const coerceoTutorial: TutorialStep[] = [
+    TutorialStep.informational(
         $localize`Plateau et but du jeu`,
         $localize`Le Coerceo se joue sur un plateau comme ceci, composé de tuiles hexagonales, comportant chacune 6 triangles.
          Les triangles sont les cases où les pièces se déplacent tout le long de la partie.
@@ -20,7 +20,7 @@ export const coerceoTutorial: DidacticialStep[] = [
          Le but du jeu au Coerceo est de capturer toutes les pièces de l'adversaire.`,
         CoerceoPartSlice.getInitialSlice(),
     ),
-    DidacticialStep.anyMove(
+    TutorialStep.anyMove(
         $localize`Deplacement`,
         $localize`Pour effectuer un déplacement, il faut:
         <ul>
@@ -34,7 +34,7 @@ export const coerceoTutorial: DidacticialStep[] = [
         CoerceoMove.fromCoordToCoord(new Coord(3, 5), new Coord(5, 5)),
         $localize`Bravo, voyons ensuite les captures.`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Capture`,
         $localize`Chaque pièce a trois cases triangulaires voisines (2 sur les bords).
         Quand toutes les cases voisines sauf une sont occupées, et qu'un ennemi vient se déplacer sur cette dernière case libre, votre pièce est capturée !
@@ -59,7 +59,7 @@ export const coerceoTutorial: DidacticialStep[] = [
         $localize`Bravo !`,
         $localize`Raté, vous n'avez pas capturé de pièce !`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Gagner une tuile`,
         $localize`Quand une tuile est quittée, elle devient potentiellement enlevable du plateau.
         Pour qu'elle soit enlevée, il faut que trois de ses bords soient libres, et qu'ils soient l'un à côté de l'autre.
@@ -87,7 +87,7 @@ export const coerceoTutorial: DidacticialStep[] = [
         $localize`Bravo !`,
         $localize`Raté, vous n'avez pas récupéré les deux tuiles récupérable !`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Échanger une tuile`,
         $localize`Dès que vous avez au moins une tuile, vous pourrez le voir sur la gauche du plateau.
         Dès que vous en avez deux, vous pouvez, en cliquant sur une pièce ennemie, la capturer immédiatement.
@@ -112,7 +112,7 @@ export const coerceoTutorial: DidacticialStep[] = [
         $localize`Bravo !`,
         $localize`C'est bien gentil de se déplacer mais en cliquant sur la pièce vous l'aurez immédiatement !`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Capture spéciale`,
         $localize`Dès qu'une tuile est enlevée du plateau pendant votre tour, certaines pièces de l'adversaires peuvent n'avoir plus aucunes cases voisines libre, elle seront alors capturées !
         Si cela arrivait à l'une de vos pièces, celle-ci resterait cependant sur le plateau.<br/><br/>

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { HexagonalGameComponent } from 'src/app/components/game-components/abstract-game-component/HexagonalGameComponent';
-import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { Coord } from 'src/app/jscaip/Coord';
 import { BaseDirection, Direction } from 'src/app/jscaip/Direction';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
@@ -42,7 +42,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
 
     public encoder: MoveEncoder<AbaloneMove> = AbaloneMove.encoder;
 
-    public tutorial: DidacticialStep[] = abaloneTutorial;
+    public tutorial: TutorialStep[] = abaloneTutorial;
 
     public moveds: Coord[] = [];
 

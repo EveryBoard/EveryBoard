@@ -2,10 +2,10 @@ import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { Move } from 'src/app/jscaip/Move';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 
-export class DidacticialStep {
+export class TutorialStep {
 
-    public static informational(title: string, instruction: string, state: GamePartSlice): DidacticialStep {
-        return new DidacticialStep(title,
+    public static informational(title: string, instruction: string, state: GamePartSlice): TutorialStep {
+        return new TutorialStep(title,
                                    instruction,
                                    state,
                                    null,
@@ -21,9 +21,9 @@ export class DidacticialStep {
                            acceptedMoves: ReadonlyArray<Move>,
                            successMessage: string,
                            failureMessage: string,
-    ): DidacticialStep
+    ): TutorialStep
     {
-        return new DidacticialStep(title,
+        return new TutorialStep(title,
                                    instruction,
                                    state,
                                    acceptedMoves,
@@ -39,9 +39,9 @@ export class DidacticialStep {
                            acceptedClicks: ReadonlyArray<string>,
                            successMessage: string,
                            failureMessage: string,
-    ): DidacticialStep
+    ): TutorialStep
     {
-        return new DidacticialStep(title,
+        return new TutorialStep(title,
                                    instruction,
                                    state,
                                    null,
@@ -56,9 +56,9 @@ export class DidacticialStep {
                           state: GamePartSlice,
                           solutionMove: Move,
                           successMessage: string,
-    ): DidacticialStep
+    ): TutorialStep
     {
-        return new DidacticialStep(title,
+        return new TutorialStep(title,
                                    instruction,
                                    state,
                                    [],
@@ -74,9 +74,9 @@ export class DidacticialStep {
                                 solutionMove: Move,
                                 predicate: (move: Move, resultingState: GamePartSlice) => MGPValidation,
                                 successMessage: string,
-    ): DidacticialStep
+    ): TutorialStep
     {
-        return new DidacticialStep(title,
+        return new TutorialStep(title,
                                    instruction,
                                    state,
                                    null,
@@ -114,8 +114,8 @@ export class DidacticialStep {
                this.acceptedMoves == null &&
                this.predicate == null;
     }
-    public withPreviousMove(previousMove: Move): DidacticialStep {
-        return new DidacticialStep(this.title,
+    public withPreviousMove(previousMove: Move): TutorialStep {
+        return new TutorialStep(this.title,
                                    this.instruction,
                                    this.state,
                                    this.acceptedMoves,

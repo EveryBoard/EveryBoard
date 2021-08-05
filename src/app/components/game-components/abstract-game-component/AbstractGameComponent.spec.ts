@@ -5,15 +5,19 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { AppModule } from 'src/app/app.module';
 import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { Direction } from 'src/app/jscaip/Direction';
+import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
+import { Move } from 'src/app/jscaip/Move';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ActivatedRouteStub } from 'src/app/utils/tests/TestUtils.spec';
-import { PickGameComponent } from '../../normal-component/pick-game/pick-game.component';
+import { GameInfo, PickGameComponent } from '../../normal-component/pick-game/pick-game.component';
 import { GameWrapperMessages } from '../../wrapper-components/GameWrapper';
 import { LocalGameWrapperComponent } from '../../wrapper-components/local-game-wrapper/local-game-wrapper.component';
+import { AbstractGameComponent } from './AbstractGameComponent';
 
 describe('AbstractGameComponent', () => {
+
     const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub();
 
     let fixture: ComponentFixture<LocalGameWrapperComponent>;
@@ -21,7 +25,6 @@ describe('AbstractGameComponent', () => {
     let component: LocalGameWrapperComponent;
 
     const gameList: ReadonlyArray<string> = new PickGameComponent().gameNameList;
-
 
     beforeEach(fakeAsync(async() => {
         await TestBed.configureTestingModule({
@@ -114,5 +117,19 @@ describe('AbstractGameComponent', () => {
             }
         }
         flush();
+    }));
+    it('Component should have a encoder and a static tutorial', fakeAsync(async() =>{
+        for (const gameInfo of GameInfo.ALL_GAMES) {
+            if (gameInfo.display === false) {
+                continue;
+            }
+            const gameComponent: AbstractGameComponent<Move, GamePartSlice> =
+                TestBed.createComponent(gameInfo.component).debugElement.componentInstance;
+            expect(gameComponent.encoder).withContext('Encoder missing for ' + gameInfo.urlName).toBeTruthy();
+            expect(gameComponent.tutorial).withContext('tutorial missing for ' + gameInfo.urlName).toBeTruthy();
+            if (gameComponent.tutorial) {
+                expect(gameComponent.tutorial.length).withContext('tutorial empty for ' + gameInfo.urlName).toBeGreaterThan(0);
+            }
+        }
     }));
 });

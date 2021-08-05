@@ -2,13 +2,13 @@ import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
 import { PylosMove } from 'src/app/games/pylos/PylosMove';
 import { PylosPartSlice } from 'src/app/games/pylos/PylosPartSlice';
 import { Player } from 'src/app/jscaip/Player';
-import { DidacticialStep } from '../../components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 const _: number = Player.NONE.value;
 const O: number = Player.ZERO.value;
 const X: number = Player.ONE.value;
-export const pylosTutorial: DidacticialStep[] = [
-    DidacticialStep.informational(
+export const pylosTutorial: TutorialStep[] = [
+    TutorialStep.informational(
         $localize`But du jeu`,
         $localize`Au Pylos, le but est d'être le dernier à jouer.
         Pour cela, il faut économiser ses pièces.
@@ -18,7 +18,7 @@ export const pylosTutorial: DidacticialStep[] = [
         Ce plateau sera rempli par les pièces dans votre réserve, au nombre de 15 chacun.`,
         PylosPartSlice.getInitialSlice(),
     ),
-    DidacticialStep.anyMove(
+    TutorialStep.anyMove(
         $localize`Déposer une pièce`,
         $localize`Quand c'est votre tour, vous avez toujours l'option de déposer une de vos pièces sur une case vide.
         Les rectangles gris sont les cases sur lesquelles vous pouvez déposez vos pièces.<br/><br/>
@@ -27,7 +27,7 @@ export const pylosTutorial: DidacticialStep[] = [
         PylosMove.fromDrop(new PylosCoord(1, 1, 0), []),
         $localize`Voilà, aussi simplement que ça.`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Grimper`,
         $localize`Quand 4 pièces forment un carré, il est possible de placer une cinquième pièce dessus.
         Cependant, à ce moment là, se crée une opportunité d'économiser une pièce en "grimpant" au lieu de déposer.
@@ -64,7 +64,7 @@ export const pylosTutorial: DidacticialStep[] = [
         </ul>`,
         $localize`Raté !`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Carré (1/3)`,
         $localize`Quand la pièce que vous posez est la quatrième d'un carré de pièces de votre couleur,
         vous pouvez choisir alors n'importe où sur le plateau, une à deux de vos pièces.
@@ -99,7 +99,7 @@ export const pylosTutorial: DidacticialStep[] = [
         $localize`Bravo, vous avez économisé une pièce.`,
         $localize`Raté !`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Carré (2/3)`,
         $localize`Vous jouez Foncé.<br/<br/>
         Faites comme à l'étape précédente, mais cliquez cette fois sur les deux pièces du haut.`,
@@ -124,7 +124,7 @@ export const pylosTutorial: DidacticialStep[] = [
         $localize`Bravo, vous avez économisé deux pièces.`,
         $localize`Raté !`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Carré (3/3)`,
         $localize`Vous jouez Foncé.
         Faites comme à l'étape précédente, mais cette fois:

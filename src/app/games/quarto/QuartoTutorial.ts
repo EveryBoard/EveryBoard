@@ -1,10 +1,10 @@
 import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
 import { QuartoPartSlice } from 'src/app/games/quarto/QuartoPartSlice';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
-import { DidacticialStep } from '../../components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
-export const quartoTutorial: DidacticialStep[] = [
-    DidacticialStep.informational(
+export const quartoTutorial: TutorialStep[] = [
+    TutorialStep.informational(
         $localize`But du jeu`,
         $localize`Quarto est un jeu d'alignement.
         Le but d'aligner quatre pièces qui possèdent au moins un point commun:
@@ -20,7 +20,7 @@ export const quartoTutorial: DidacticialStep[] = [
             [16, 16, 16, 16],
         ], 7, QuartoPiece.ABAB),
     ),
-    DidacticialStep.anyMove(
+    TutorialStep.anyMove(
         $localize`Placement`,
         $localize`Chaque placement se fait en deux étapes: placer la pièce qu'on a en main en cliquant sur une case du plateau,
         et choisir une pièce que l'adversaire devra placer, en cliquant sur une des pièces affichées à droite.
@@ -36,7 +36,7 @@ export const quartoTutorial: DidacticialStep[] = [
         new QuartoMove(2, 2, QuartoPiece.BAAB),
         $localize`Parfait!`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Situation`,
         $localize`Nous avons ici une situation délicate.<br/><br/>
         Analysez bien le plateau et jouez votre coup, en faisant particulièrement attention de ne pas permettre à l'adversaire de l'emporter au prochain coup.`,

@@ -2,15 +2,15 @@ import { TablutMove } from 'src/app/games/tablut/TablutMove';
 import { TablutCase } from 'src/app/games/tablut/TablutCase';
 import { TablutPartSlice } from 'src/app/games/tablut/TablutPartSlice';
 import { Coord } from 'src/app/jscaip/Coord';
-import { DidacticialStep } from '../../components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 const _: number = TablutCase.UNOCCUPIED.value;
 const x: number = TablutCase.INVADERS.value;
 const i: number = TablutCase.DEFENDERS.value;
 const A: number = TablutCase.PLAYER_ONE_KING.value;
 
-export const tablutTutorial: DidacticialStep[] = [
-    DidacticialStep.informational(
+export const tablutTutorial: TutorialStep[] = [
+    TutorialStep.informational(
         $localize`But du jeu`,
         $localize`Le Tablut est un jeu de stratégie auquel jouaient les Vikings.
         Le but du jeu pour les deux joueurs n'est pas le même.
@@ -21,7 +21,7 @@ export const tablutTutorial: DidacticialStep[] = [
         Notez que la case où est le roi au début du jeu, au centre du plateau, est également un trône.`,
         TablutPartSlice.getInitialSlice(),
     ),
-    DidacticialStep.anyMove(
+    TutorialStep.anyMove(
         $localize`Déplacement`,
         $localize`Au Tablut, toutes les pièces se déplacent de la même façon.
         De façon équivalente aux tours aux échecs, une pièce se déplace:
@@ -37,7 +37,7 @@ export const tablutTutorial: DidacticialStep[] = [
         new TablutMove(new Coord(4, 1), new Coord(1, 1)),
         $localize`Bravo !`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Comment capturer un simple soldat (1/2)`,
         $localize`Toutes les pièces, attaquantes comme défenseuses, sont des soldats, à l'exception du roi.
         Pour les capturer, il faut en prendre une en sandwich entre deux de vos soldats.
@@ -61,7 +61,7 @@ export const tablutTutorial: DidacticialStep[] = [
         $localize`Bravo, ça lui apprendra!`,
         $localize`Raté, vous avez raté l'occasion de capturer un adversaire`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Comment capturer un simple soldat (2/2)`,
         $localize`Un deuxième moyen de capturer un soldat, est contre un trône vide.
         Le Roi a quitté son poste, et mis en danger un de ses soldats.<br/><br/>
@@ -81,7 +81,7 @@ export const tablutTutorial: DidacticialStep[] = [
         $localize`Bravo, un défenseur en moins, mais gardez quand même un oeil sur le roi, c'est le plus important.`,
         $localize`Raté, vous n'avez pas fait le mouvement demandé.`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Comment capturer le roi (1/2)`,
         $localize`Pour capturer le roi, deux soldats ne sont pas suffisant, il en faut plus.
         Pour la première solution, il faut simplement que les 4 cases voisines (horizontalement et verticalement) soient occupées par vos soldats.
@@ -102,7 +102,7 @@ export const tablutTutorial: DidacticialStep[] = [
         $localize`Bravo, vous avez gagné la partie.`,
         $localize`Raté, vous avez laissé fuir le roi.`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Comment capturer le roi (2/2)`,
         $localize`Un autre moyen de capturer le roi est de l'immobiliser à 3 contre un bord.
         Notez qu'un roi n'est pas capturable sur une case voisine à un trône.<br/><br/>

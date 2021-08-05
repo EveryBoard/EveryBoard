@@ -1,9 +1,9 @@
 import { AwaleMove } from 'src/app/games/awale/AwaleMove';
 import { AwalePartSlice } from 'src/app/games/awale/AwalePartSlice';
-import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
-export const awaleTutorial: DidacticialStep[] = [
-    DidacticialStep.anyMove(
+export const awaleTutorial: TutorialStep[] = [
+    TutorialStep.anyMove(
         $localize`Distribuer`,
         $localize`L’Awalé est un jeu de distribution et de capture, le but est de capturer le plus de graines possible.
         Nous allons voir comment se distribuent les graines.
@@ -14,7 +14,7 @@ export const awaleTutorial: DidacticialStep[] = [
         $localize`Voilà, regardez les 4 maisons suivant la maison choisie dans l’ordre horlogé, elle comptent maintenant 5 graines.
          C’est comme cela que les graines se distribuent, une à une à partir de la maison suivante dans l’ordre horlogé de la maison d’où elles viennent!`,
     ),
-    DidacticialStep.anyMove(
+    TutorialStep.anyMove(
         $localize`Grosse distribution`,
         $localize`Vous êtes maintenant le joueur 2 (en bas).
         Quand il y a assez de graines pour faire un tour complet, quelque chose d’autre se passe.<br/><br/>
@@ -26,7 +26,7 @@ export const awaleTutorial: DidacticialStep[] = [
         AwaleMove.ONE,
         $localize`Voyez, la maison distribuée n’a pas été reremplie et la distribution a continué immédiatement à la maison suivante (qui contient donc deux graines) !`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Capture simple`,
         $localize`Après une distribution, si la dernière graine tombe dans une maison du camp adverse et qu'il y a maintenant deux ou trois graines dans cette maison, le joueur capture ces deux ou trois graines.
         Ensuite il regarde la case précédente:
@@ -40,7 +40,7 @@ export const awaleTutorial: DidacticialStep[] = [
         $localize`Bravo ! Il s'agissait ici d'une capture simple, voyons maintenant une capture composée.`,
         $localize`Perdu. Recommencez et distribuez la maison la plus à gauche.`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Capture composée`,
         $localize`En distribuant votre maison la plus à gauche, vous ferez passer une première maison de 2 à 3 graines, et la deuxième de 1 à 2.
         Ces deux maisons, étant consécutives, seront donc toutes les deux capturées.<br/><br/>
@@ -53,7 +53,7 @@ export const awaleTutorial: DidacticialStep[] = [
         $localize`Bravo, vous gagnez 3 points dans la première maison plus 2 dans la seconde!`,
         $localize`Perdu. Recommencez.`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Capture interrompue`,
         $localize`En cliquant sur votre maison la plus à gauche, vous atterrissez sur la 3ème maison, qui est capturable.<br/><br/>
         Faites-le.`,
@@ -65,7 +65,7 @@ export const awaleTutorial: DidacticialStep[] = [
         $localize`Constatez que la 2ème maison n’étant pas capturable, la capture a été interrompue et vous n’avez pas pu capturer la 1ère maison.`,
         $localize`Perdu. Recommencez.`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Capture chez l'adversaire uniquement`,
         $localize`Essayez de capturer les deux maisons les plus à gauche de l’adversaire.`,
         new AwalePartSlice([
@@ -76,7 +76,7 @@ export const awaleTutorial: DidacticialStep[] = [
         $localize`Bravo ! Constatez que la capture s'est interrompue en arrivant dans votre territoire, on ne peut pas capturer ses propres maisons!`,
         $localize`Vous n'avez capturé qu'une seule maison, recommencez!`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Ne pas affamer`,
         $localize`Vous avez une très belle capture qui semble possible, il semble que vous pouviez capturer tous les pions de l’adversaire !<br/><br/>
         Lancez-vous !`,
@@ -89,7 +89,7 @@ export const awaleTutorial: DidacticialStep[] = [
         À ces moments là, le mouvement est autorisé mais la capture n’est pas effectuée!`,
         $localize`Perdu. Recommencez.`,
     ),
-    DidacticialStep.anyMove(
+    TutorialStep.anyMove(
         $localize`Nourir est obligatoire`,
         $localize`"Affamer" est interdit, c'est-à-dire que si votre adversaire n'a plus de graines et que vous savez lui en donner au moins une, vous êtes obligé de le faire.
         Allez-y !`,
@@ -101,7 +101,7 @@ export const awaleTutorial: DidacticialStep[] = [
         $localize`Bravo ! Notez que vous pouvez choisir de lui en donner le moins possible si cela vous arrange mieux !
         C’est souvent un bon moyen d’avoir des captures faciles !`,
     ),
-    DidacticialStep.anyMove(
+    TutorialStep.anyMove(
         $localize`Fin de partie`,
         $localize`Une partie est gagnée dès qu’un des deux joueurs a capturé 25 graines, car il a plus de la moitié de leur total.<br/><br/>
         Distribuez la maison en haut à droite.`,

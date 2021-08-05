@@ -21,7 +21,7 @@ import { TablutEscapeThenPieceAndControlMinimax } from './TablutEscapeThenPieceT
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { TablutFailure } from './TablutFailure';
-import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { tablutTutorial } from './TablutTutorial';
 
 @Component({
@@ -52,7 +52,7 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
 
     public encoder: MoveEncoder<TablutMove> = TablutMove.encoder;
 
-    public tutorial: DidacticialStep[] = tablutTutorial;
+    public tutorial: TutorialStep[] = tablutTutorial;
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);

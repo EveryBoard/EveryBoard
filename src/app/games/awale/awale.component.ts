@@ -10,7 +10,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { AwaleFailure } from './AwaleFailure';
-import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { awaleTutorial } from './AwaleTutorial';
 
 @Component({
@@ -22,7 +22,7 @@ export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSl
 
     public encoder: MoveEncoder<AwaleMove> = AwaleMove.encoder;
 
-    public tutorial: DidacticialStep[] = awaleTutorial;
+    public tutorial: TutorialStep[] = awaleTutorial;
 
     public scores: number[] = [0, 0];
 

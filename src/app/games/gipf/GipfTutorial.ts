@@ -5,13 +5,13 @@ import { GipfPiece } from 'src/app/games/gipf/GipfPiece';
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { DidacticialStep } from '../../components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 const _: GipfPiece = GipfPiece.EMPTY;
 const O: GipfPiece = GipfPiece.PLAYER_ZERO;
 const X: GipfPiece = GipfPiece.PLAYER_ONE;
-export const gipfTutorial: DidacticialStep[] = [
-    DidacticialStep.informational(
+export const gipfTutorial: TutorialStep[] = [
+    TutorialStep.informational(
         $localize`But du jeu`,
         $localize`Le but du jeu est de capturer les pièces de l'adversaire afin qu'il ne puisse plus jouer.
         Voici la configuration initiale du plateau.
@@ -20,7 +20,7 @@ export const gipfTutorial: DidacticialStep[] = [
         Le premier joueur possède les pièces foncées, le deuxième les pièces claires.`,
         GipfPartSlice.getInitialSlice(),
     ),
-    DidacticialStep.anyMove(
+    TutorialStep.anyMove(
         $localize`Pousser`,
         $localize`Les pièces ne peuvent entrer sur le plateau que par l'extérieur.
         <ul>
@@ -33,7 +33,7 @@ export const gipfTutorial: DidacticialStep[] = [
         new GipfMove(new GipfPlacement(new Coord(3, 0), MGPOptional.of(HexaDirection.DOWN)), [], []),
         $localize`Bravo !`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Capture (1/3)`,
         $localize`Pour faire une capture, il faut aligner 4 de ses propres pièces, qui seront les 4 premières capturées.
         Il y a plusieurs choses à savoir sur une capture :
@@ -75,7 +75,7 @@ export const gipfTutorial: DidacticialStep[] = [
         Voyons maintenant la vraie utilité d'une capture.`,
         $localize`Raté !`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Capture (2/3)`,
         $localize`Ici, il est possible de capturer de trois façons différentes.
         L'une ne permet aucune capture de pièce adverse.
@@ -106,7 +106,7 @@ export const gipfTutorial: DidacticialStep[] = [
         Le maximum possible étant 3 par captures.`,
         $localize`Raté, la capture optimale capture 2 pièces adverses.`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Capture (3/3)`,
         $localize`Ici, vous aurez une capture à faire au début de votre tour.
         Elle a été provoquée par un mouvement de votre adversaire lors de son tour de jeu

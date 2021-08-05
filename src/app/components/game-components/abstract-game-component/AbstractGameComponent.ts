@@ -9,7 +9,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
-import { DidacticialStep } from '../../wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 /* All method are to be implemented by the Concretes Game Component
  * Except chooseMove which must be set by the GameWrapper
@@ -44,7 +44,7 @@ export abstract class AbstractGameComponent<M extends Move,
 
     public imagesLocation: string = 'assets/images/';
 
-    public abstract tutorial: DidacticialStep[];
+    public abstract tutorial: TutorialStep[];
 
     public isPlayerTurn: () => boolean;
 

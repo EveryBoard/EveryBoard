@@ -15,7 +15,7 @@ import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MaxStacksDvonnMinimax } from './MaxStacksDvonnMinimax';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { dvonnTutorial } from './DvonnTutorial';
 
 @Component({
@@ -42,7 +42,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnGameS
                        PointyHexaOrientation.INSTANCE);
     public encoder: MoveEncoder<DvonnMove> = DvonnMove.encoder;
 
-    public tutorial: DidacticialStep[] = dvonnTutorial;
+    public tutorial: TutorialStep[] = dvonnTutorial;
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);

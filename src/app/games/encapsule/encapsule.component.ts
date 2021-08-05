@@ -13,7 +13,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { EncapsuleFailure } from './EncapsuleFailure';
-import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { encapsuleTutorial } from './EncapsuleTutorial';
 
 @Component({
@@ -35,7 +35,7 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove,
 
     public encoder: MoveEncoder<EncapsuleMove> = EncapsuleMove.encoder;
 
-    public tutorial: DidacticialStep[] = encapsuleTutorial;
+    public tutorial: TutorialStep[] = encapsuleTutorial;
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);

@@ -3,7 +3,7 @@ import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { EncapsuleCase, EncapsulePartSlice } from 'src/app/games/encapsule/EncapsulePartSlice';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
-import { DidacticialStep } from '../../components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 const _: number = new EncapsuleCase(Player.NONE, Player.NONE, Player.NONE).encode();
 const s: number = new EncapsuleCase(Player.ZERO, Player.NONE, Player.NONE).encode();
@@ -16,8 +16,8 @@ const Sm: number = new EncapsuleCase(Player.ONE, Player.ZERO, Player.NONE).encod
 const sm: number = new EncapsuleCase(Player.ZERO, Player.ZERO, Player.NONE).encode();
 const Mb: number = new EncapsuleCase(Player.NONE, Player.ONE, Player.ZERO).encode();
 
-export const encapsuleTutorial: DidacticialStep[] = [
-    DidacticialStep.informational(
+export const encapsuleTutorial: TutorialStep[] = [
+    TutorialStep.informational(
         $localize`But du jeu`,
         $localize`Le but du jeu à Encapsule est d'aligner trois de vos pièces.
         Ici nous avons une victoire du joueur foncé.`,
@@ -30,14 +30,14 @@ export const encapsuleTutorial: DidacticialStep[] = [
             EncapsulePiece.SMALL_WHITE, EncapsulePiece.MEDIUM_WHITE, EncapsulePiece.MEDIUM_WHITE,
             EncapsulePiece.BIG_WHITE,
         ])),
-    DidacticialStep.anyMove(
+    TutorialStep.anyMove(
         $localize`Placement`,
         $localize`Ceci est le plateau de départ. Vous jouez Foncé.<br/><br/>
         Choisissez une des pièces sur le côté du plateau est placez là sur le plateau.`,
         EncapsulePartSlice.getInitialSlice(),
         EncapsuleMove.fromDrop(EncapsulePiece.SMALL_BLACK, new Coord(1, 1)),
         $localize`Bravo !`),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Déplacement`,
         $localize`Un autre type de coup à Encapsule est de déplacer une de ses pièces déjà sur le plateau.<br/><br/>
         Cliquez sur votre pièce foncée et puis sur n'importe quel emplacement vide du plateau.`,
@@ -57,7 +57,7 @@ export const encapsuleTutorial: DidacticialStep[] = [
         ],
         $localize`Bravo !`,
         $localize`Raté, réessayez.`),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Spécificité`,
         $localize`À Encapsule, les pièces s'encapsulent les unes sur les autres.
         Il est donc possible d'avoir jusqu'à trois pièces par case !

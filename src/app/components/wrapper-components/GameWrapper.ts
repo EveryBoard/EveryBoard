@@ -82,7 +82,7 @@ export abstract class GameWrapper {
         this.gameComponent.canUserPlay = this.onUserClick; // So that when the game component click
         // the game wrapper can act accordly
         this.gameComponent.isPlayerTurn = this.isPlayerTurn;
-        this.gameComponent.cancelMoveOnWrapper = this.onCancelMove; // Mostly for interception by DidacticialGameWrapper
+        this.gameComponent.cancelMoveOnWrapper = this.onCancelMove; // Mostly for interception by TutorialGameWrapper
 
         this.gameComponent.observerRole = this.observerRole;
         this.canPass = this.gameComponent.canPass;

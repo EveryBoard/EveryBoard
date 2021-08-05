@@ -3,20 +3,20 @@ import { EpaminondasPartSlice } from 'src/app/games/epaminondas/EpaminondasPartS
 import { Direction } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { DidacticialStep } from '../../components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 const _: number = Player.NONE.value;
 const O: number = Player.ZERO.value;
 const X: number = Player.ONE.value;
-export const epaminondasTutorial: DidacticialStep[] = [
-    DidacticialStep.informational(
+export const epaminondasTutorial: TutorialStep[] = [
+    TutorialStep.informational(
         $localize`Plateau initial`,
         $localize`Ceci est le plateau de départ.
         La ligne tout en haut est la ligne de départ de Clair.
         La ligne tout en bas est la ligne de départ de Foncé.`,
         EpaminondasPartSlice.getInitialSlice(),
     ),
-    DidacticialStep.informational(
+    TutorialStep.informational(
         $localize`But du jeu (1/2)`,
         $localize`Après plusieurs déplacements, si au début de son tour de jeu, un joueur a plus de pièces sur la ligne de départ de l'adversaire que l'adversaire n'en a sur la ligne de départ du joueur, ce joueur gagne.
         Ici, c'est au tour du joueur foncé de jouer, il a donc gagné.`,
@@ -35,7 +35,7 @@ export const epaminondasTutorial: DidacticialStep[] = [
             [_, _, _, _, _, _, _, O, O, O, O, _, _, _],
         ], 0),
     ),
-    DidacticialStep.informational(
+    TutorialStep.informational(
         $localize`But du jeu (2/2)`,
         $localize`Dans ce cas ci, c'est au tour de Clair, et celui-ci gagne, car il a deux pièces sur la ligne de départ de Foncé, et Foncé n'en a qu'une sur la ligne de départ de Clair.`,
         new EpaminondasPartSlice([
@@ -53,7 +53,7 @@ export const epaminondasTutorial: DidacticialStep[] = [
             [_, _, X, X, _, _, _, O, O, _, O, O, O, O],
         ], 1),
     ),
-    DidacticialStep.fromPredicate(
+    TutorialStep.fromPredicate(
         $localize`Déplacement de pièce`,
         $localize`Voici le plateau de départ, c'est à Foncé de commencer.
         Commençons simplement par un déplacement d'une seule pièce :
@@ -72,7 +72,7 @@ export const epaminondasTutorial: DidacticialStep[] = [
         },
         $localize`Voilà, c'est comme ça qu'on déplace une seule pièce.`,
     ),
-    DidacticialStep.fromPredicate(
+    TutorialStep.fromPredicate(
         $localize`Déplacement de phalange`,
         $localize`Maintenant, comment déplacer plusieurs pièces sur une seule ligne (une phalange) :
         <ul>
@@ -95,7 +95,7 @@ export const epaminondasTutorial: DidacticialStep[] = [
         Le déplacement doit se faire le long de cette ligne, en avant ou en arrière.
         Il ne peut y avoir ni ennemis ni trous dans la phalange.`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Capture`,
         $localize`Pour capturer une phalange ennemie:
         <ul>

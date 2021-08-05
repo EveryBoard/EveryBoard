@@ -1,13 +1,13 @@
 import { ReversiMove } from 'src/app/games/reversi/ReversiMove';
 import { ReversiPartSlice } from 'src/app/games/reversi/ReversiPartSlice';
 import { Player } from 'src/app/jscaip/Player';
-import { DidacticialStep } from '../../components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 const _: number = Player.NONE.value;
 const O: number = Player.ZERO.value;
 const X: number = Player.ONE.value;
-export const reversiTutorial: DidacticialStep[] = [
-    DidacticialStep.informational(
+export const reversiTutorial: TutorialStep[] = [
+    TutorialStep.informational(
         $localize`But du jeu`,
         $localize`Les pièces du Reversi sont double face, une face foncée pour le premier joueur, une face claire pour le deuxième.
         Quand une pièce est retournée, elle change de propriétaire.
@@ -24,7 +24,7 @@ export const reversiTutorial: DidacticialStep[] = [
             [O, O, O, O, O, O, O, O],
         ], 60),
     ),
-    DidacticialStep.anyMove(
+    TutorialStep.anyMove(
         $localize`Capture (1/2)`,
         $localize`Au début de la partie, les pièces sont placées comme ceci.
         Pour qu'un coup soit légal il faut qu'il prenne en sandwich minimum une pièce adverse entre la pièce que vous posez et une de vos pièces.<br/><br/>
@@ -35,7 +35,7 @@ export const reversiTutorial: DidacticialStep[] = [
         new ReversiMove(2, 4),
         $localize`Bravo !`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Capture (2/2)`,
         $localize`Un mouvement peut également capturer une plus grande ligne, et plusieurs lignes à la fois.
         Vous êtes le joueur clair ici.<br/><br/>
@@ -54,7 +54,7 @@ export const reversiTutorial: DidacticialStep[] = [
         $localize`Bravo !`,
         $localize`Un peu plus en bas et un peu plus à gauche, s'il vous plaît.`,
     ),
-    DidacticialStep.informational(
+    TutorialStep.informational(
         $localize`Passer son tour`,
         $localize`Si, à son tour de jeu, un joueur n'a aucun mouvement lui permettant de capturer une pièce, il est obligé de passer son tour.
         Si d'aventure le joueur suivant ne savait pas jouer non plus, la partie terminerait avant que le plateau ne soit rempli, et les points seraient décomptés de la façon habituelle.`,

@@ -4,7 +4,7 @@ import { KamisadoPartSlice } from 'src/app/games/kamisado/KamisadoPartSlice';
 import { KamisadoPiece } from 'src/app/games/kamisado/KamisadoPiece';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { DidacticialStep } from '../../components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 const __: number = KamisadoPiece.NONE.getValue();
 const or: number = KamisadoPiece.ZERO.ORANGE.getValue();
@@ -24,8 +24,8 @@ const Gr: number = KamisadoPiece.ONE.GREEN.getValue();
 const br: number = KamisadoPiece.ZERO.BROWN.getValue();
 const Br: number = KamisadoPiece.ONE.BROWN.getValue();
 
-export const kamisadoTutorial: DidacticialStep[] = [
-    DidacticialStep.informational(
+export const kamisadoTutorial: TutorialStep[] = [
+    TutorialStep.informational(
         $localize`But du jeu`,
         $localize`Au Kamisado, il y a deux façons de gagner : soit en plaçant une de vos pièces sur la ligne de départ de
         l'adversaire, soit en forçant l'adversaire à faire un coup qui bloque la partie.
@@ -41,7 +41,7 @@ export const kamisadoTutorial: DidacticialStep[] = [
             [__, gr, re, ye, pi, pu, bl, or],
         ]),
     ),
-    DidacticialStep.anyMove(
+    TutorialStep.anyMove(
         $localize`Plateau de départ et déplacement initial`,
         $localize`Voici le plateau de départ.
         Au Kamisado, les pièces ne peuvent se déplacer que vers l'avant, verticalement ou diagonalement.
@@ -51,7 +51,7 @@ export const kamisadoTutorial: DidacticialStep[] = [
         KamisadoMove.of(new Coord(7, 7), new Coord(3, 3)),
         $localize`Parfait! Notez bien que chacune de vos pièces a une couleur différente.`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Déplacement`,
         $localize`Considérons maintenant le coup du joueur clair, après le déplacement de la pièce bleue.
         Tous les déplacements après le déplacement initial se font obligatoirement à partir de la pièce correspondant
@@ -76,7 +76,7 @@ export const kamisadoTutorial: DidacticialStep[] = [
         $localize`Parfait!`,
         $localize`Vous n'avez pas avancé votre pièce rose sur une case bleue !`,
     ),
-    DidacticialStep.informational(
+    TutorialStep.informational(
         $localize`Blocage`,
         $localize`Foncé s'est déplacé sur une autre case rose, et vous oblige donc à déplacer votre pièce rose.
         Cependant, votre pièce rose est bloquée ! Dans ce cas ci, vous êtes obligé de passer votre tour.
@@ -92,7 +92,7 @@ export const kamisadoTutorial: DidacticialStep[] = [
             [br, gr, re, ye, pi, pu, __, or],
         ]),
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Victoire par blocage`,
         $localize`À tout moment, si un joueur provoque un blocage total du jeu, il perd.
         C'est-à-dire que si un joueur oblige son adversaire à déplacer une pièce que l'adversaire ne peut bouger,

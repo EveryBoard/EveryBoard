@@ -2,15 +2,15 @@ import { QuixoPartSlice } from 'src/app/games/quixo/QuixoPartSlice';
 import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
-import { DidacticialStep } from '../../components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 const _: number = Player.NONE.value;
 const O: number = Player.ZERO.value;
 const X: number = Player.ONE.value;
 
-export const quixoTutorial: DidacticialStep[] = [
+export const quixoTutorial: TutorialStep[] = [
 
-    DidacticialStep.informational(
+    TutorialStep.informational(
         $localize`But du jeu`,
         $localize`Au Quixo, le but du jeu est d'aligner 5 de vos pièces.
         Le premier joueur contrôle les pièces foncées, le deuxième les claires.
@@ -18,7 +18,7 @@ export const quixoTutorial: DidacticialStep[] = [
         Chaque pièce a un face neutre, une face claire et une face foncée.`,
         QuixoPartSlice.getInitialSlice(),
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`A quoi ressemble un mouvement (sans animation)`,
         $localize`Quand c'est à votre tour de jouer :
         <ul>
@@ -42,7 +42,7 @@ export const quixoTutorial: DidacticialStep[] = [
         La pièce neutre, elle, s'est déplacé de 4 cases à gauche et est devenue claire.`,
         $localize`Raté !`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Victoire`,
         $localize`Vous savez déjà tout ce qu'il faut pour jouer, il ne manque qu'une spécificité.
         Si vous créez une ligne de 5 pièces vous appartenant, vous gagnez.

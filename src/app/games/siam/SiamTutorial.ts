@@ -3,7 +3,7 @@ import { SiamPiece } from 'src/app/games/siam/SiamPiece';
 import { SiamPartSlice } from 'src/app/games/siam/SiamPartSlice';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { DidacticialStep } from '../../components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 const _: number = SiamPiece.EMPTY.value;
 const M: number = SiamPiece.MOUNTAIN.value;
@@ -18,8 +18,8 @@ const l: number = SiamPiece.BLACK_LEFT.value;
 const r: number = SiamPiece.BLACK_RIGHT.value;
 const d: number = SiamPiece.BLACK_DOWN.value;
 
-export const siamTutorial: DidacticialStep[] = [
-    DidacticialStep.informational(
+export const siamTutorial: TutorialStep[] = [
+    TutorialStep.informational(
         $localize`But du jeu`,
         $localize`Le but du Siam est d'être le premier à pousser une montagne hors du plateau.
         Le plateau de départ en contient trois, au centre, et aucun pion n'est initialement sur le plateau.
@@ -31,7 +31,7 @@ export const siamTutorial: DidacticialStep[] = [
         </ul>`,
         SiamPartSlice.getInitialSlice(),
     ),
-    DidacticialStep.anyMove(
+    TutorialStep.anyMove(
         $localize`Insérer une pièce`,
         $localize`Chaque joueur a en tout 5 pièces.
         Tant qu'il n'en a pas 5 sur le plateau, il peut en insérer une. Pour ce faire:
@@ -45,7 +45,7 @@ export const siamTutorial: DidacticialStep[] = [
         new SiamMove(2, -1, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN),
         $localize`Bravo !`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Déplacer une pièce`,
         $localize`Nous distinguerons ici "déplacer" et "pousser".
         Un déplacement de pièce se fait de sa case de départ à une case vide voisine horizontalement ou verticalement.
@@ -69,7 +69,7 @@ export const siamTutorial: DidacticialStep[] = [
         $localize`Bravo, vous avez fait un dérapage!`,
         $localize`Raté !`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Sortir une pièce`,
         $localize`Sortir une pièce du plateau est plus simple, préciser son orientation d'arrivée n'est pas nécessaire.<br/><br/>
         Sortez cette pièce du plateau!`,
@@ -84,7 +84,7 @@ export const siamTutorial: DidacticialStep[] = [
         $localize`Bravo, même si dans le contexte c'était plutôt un mouvement inutile.`,
         $localize`Raté, elle est encore sur le plateau.`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Pousser`,
         $localize`Quand la case d'arrivée de votre déplacement est occupée, on parle de "pousser".
         Pour pousser il faut plusieurs critères:
@@ -108,7 +108,7 @@ export const siamTutorial: DidacticialStep[] = [
         $localize`Bravo !`,
         $localize`Raté !`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Victoire`,
         $localize`Pour rappel, la partie se termine quand une montagne est poussée hors du plateau.
         Si vous l'avez poussé et que personne ne vous barre la route, vous êtes le vainqueur.

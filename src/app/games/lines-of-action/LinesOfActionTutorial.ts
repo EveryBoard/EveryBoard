@@ -1,4 +1,4 @@
-import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { LinesOfActionMove } from './LinesOfActionMove';
@@ -8,8 +8,8 @@ const X: number = Player.ZERO.value;
 const O: number = Player.ONE.value;
 const _: number = Player.NONE.value;
 
-export const linesOfActionTutorial: DidacticialStep[] = [
-    DidacticialStep.informational(
+export const linesOfActionTutorial: TutorialStep[] = [
+    TutorialStep.informational(
         $localize`But du jeu`,
         $localize`À Lines of Actions, le but est de regrouper toutes vos pièces de façon contigues, orthogonalement et/ou diagonalement.
         Ici, Foncé gagne la partie :
@@ -25,7 +25,7 @@ export const linesOfActionTutorial: DidacticialStep[] = [
             [_, _, _, _, _, _, _, _],
         ], 0),
     ),
-    DidacticialStep.anyMove(
+    TutorialStep.anyMove(
         $localize`Plateau de départ et déplacement`,
         $localize`Voici le plateau de départ.
         Les déplacements s'effectuent orthogonalement ou diagonalement.
@@ -36,7 +36,7 @@ export const linesOfActionTutorial: DidacticialStep[] = [
         new LinesOfActionMove(new Coord(1, 7), new Coord(1, 5)),
         $localize`Bravo !`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Sauts`,
         $localize`Lors d'un déplacement, il est possible de sauter au dessus de ses propres pièces.
         Mais il est interdit de sauter au dessus des pièces de l'adversaire.<br/><br/>
@@ -55,7 +55,7 @@ export const linesOfActionTutorial: DidacticialStep[] = [
         $localize`Bravo !`,
         $localize`Ce n'était pas le déplacement attendu.`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Déplacement`,
         $localize`Voici une configuration différente. Sélectionnez la pièce foncée au milieu (ligne 4, colonne 4)
         et observez bien les déplacements possibles.
@@ -86,7 +86,7 @@ export const linesOfActionTutorial: DidacticialStep[] = [
         $localize`Bravo !`,
         $localize`Ce n'était pas un des déplacements attendus`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Captures`,
         $localize`Si un déplacement se termine sur une pièce adverse, celle-ci est capturée et disparait du plateau.
         Un déplacement par contre ne peut pas se terminer sur une pièce du joueur lui-même.
@@ -108,7 +108,7 @@ export const linesOfActionTutorial: DidacticialStep[] = [
         $localize`Bravo !`,
         $localize`Raté !`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Égalité`,
         $localize`Dans le cas spécial où un mouvement résulte en une connexion complète des pièces des deux joueurs,
         simultanément, alors la partie se termine par une égalité.<br/><br/>

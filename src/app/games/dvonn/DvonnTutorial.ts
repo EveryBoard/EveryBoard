@@ -1,7 +1,7 @@
 import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
 import { DvonnGameState } from 'src/app/games/dvonn/DvonnGameState';
 import { Coord } from 'src/app/jscaip/Coord';
-import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { DvonnPieceStack } from 'src/app/games/dvonn/DvonnPieceStack';
 import { Player } from 'src/app/jscaip/Player';
 import { DvonnBoard } from 'src/app/games/dvonn/DvonnBoard';
@@ -13,8 +13,8 @@ const X1: DvonnPieceStack = DvonnPieceStack.PLAYER_ONE;
 const O4: DvonnPieceStack = new DvonnPieceStack(Player.ZERO, 4, false);
 const X4: DvonnPieceStack = new DvonnPieceStack(Player.ONE, 4, false);
 
-export const dvonnTutorial: DidacticialStep[] = [
-    DidacticialStep.anyMove(
+export const dvonnTutorial: TutorialStep[] = [
+    TutorialStep.anyMove(
         $localize`Déplacement`,
         $localize`Au Dvonn, chaque case hexagonale comporte une pile de pièce.
         Si aucun nombre n'est indiqué sur une pile, c'est qu'elle ne comporte qu'une pièce.
@@ -31,7 +31,7 @@ export const dvonnTutorial: DidacticialStep[] = [
         DvonnMove.of(new Coord(2, 0), new Coord(3, 0)),
         $localize`Bravo !`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Déconnection`,
         $localize`Les pièces rouges sont appelées “sources”.
         Quand une pile n’est plus directement ou indirectement connectée à une source, elle est enlevée du plateau.<br/><br/>
@@ -50,7 +50,7 @@ export const dvonnTutorial: DidacticialStep[] = [
         $localize`Mauvais choix! En le déplaçant sur la source vous déconnectiez l'adversaire et lui faisiez perdre ces 4 points.
         Ici, il gagne 2 à 0.`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Fin de partie`,
         $localize`Quand plus aucun mouvement n’est possible, la partie est finie et le joueur avec le plus de points gagne.<br/><br/>
         Faites votre dernier mouvement!`,

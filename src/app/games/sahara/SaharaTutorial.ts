@@ -3,21 +3,21 @@ import { SaharaPartSlice } from 'src/app/games/sahara/SaharaPartSlice';
 import { Coord } from 'src/app/jscaip/Coord';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { DidacticialStep } from '../../components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 const N: number = FourStatePiece.NONE.value;
 const O: number = FourStatePiece.ZERO.value;
 const X: number = FourStatePiece.ONE.value;
 const _: number = FourStatePiece.EMPTY.value;
-export const saharaTutorial: DidacticialStep[] = [
+export const saharaTutorial: TutorialStep[] = [
 
-    DidacticialStep.informational(
+    TutorialStep.informational(
         $localize`Plateau initial`,
         $localize`Le Sâhârâ se joue sur un plateau dont chaque case est triangulaire.
         Chaque joueur contrôle six pyramides.`,
         SaharaPartSlice.getInitialSlice(),
     ),
-    DidacticialStep.informational(
+    TutorialStep.informational(
         $localize`But du jeu`,
         $localize`Au Sâhârâ, le but du jeu est d'immobiliser une des pyramides de l'adversaire.
         Pour ce faire il faut occuper toutes les cases voisines de celle-ci.
@@ -31,7 +31,7 @@ export const saharaTutorial: DidacticialStep[] = [
             [N, N, X, O, _, _, _, X, O, N, N],
         ], 3),
     ),
-    DidacticialStep.fromPredicate(
+    TutorialStep.fromPredicate(
         $localize`Déplacement simple`,
         $localize`Pour parvenir à immobiliser l'adversaire, il faut déplacer ses pyramides.
         Quand une pyramide partage ses arêtes avec des cases claires, elle peut se déplacer dessus (appelons ceci, faire un pas simple).
@@ -52,7 +52,7 @@ export const saharaTutorial: DidacticialStep[] = [
         },
         $localize`Bravo !`,
     ),
-    DidacticialStep.fromPredicate(
+    TutorialStep.fromPredicate(
         $localize`Déplacement double`,
         $localize`Quand une pyramide partage ses arêtes avec des cases foncées, vous pouvez la déplacer de deux pas.
         Pour ce faire:
