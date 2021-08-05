@@ -72,7 +72,7 @@ export const awaleTutorial: DidacticialStep[] = [
         $localize`Try to capture the two leftmost houses of the opponent.`,
         new AwalePartSlice([
             [2, 2, 0, 0, 1, 0],
-            [1, 3, 0, 0, 1, 0],
+            [1, 3, 0, 0, 0, 0],
         ], 1, [0, 0]),
         [AwaleMove.ONE],
         $localize`Congratulations! Notice that the capture was interrupted when entering your territory: you cannot capture your own houses!`,

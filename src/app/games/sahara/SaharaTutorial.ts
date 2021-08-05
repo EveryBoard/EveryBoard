@@ -54,7 +54,7 @@ export const saharaTutorial: DidacticialStep[] = [
     ),
     DidacticialStep.fromPredicate(
         $localize`Double move`,
-        $localize`When a pyramid shares its vertices with dark spaces, it can move of one or two steps.
+        $localize`When a pyramid shares its vertices with dark spaces, it can move one or two steps.
         To do so:
         <ol>
             <li> Click on the pyramid to move.</li>

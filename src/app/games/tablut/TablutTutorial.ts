@@ -30,7 +30,7 @@ export const tablutTutorial: DidacticialStep[] = [
             <li>Without going over another piece or stopping on another piece.</li>
             <li>Horizontally or vertically.</li>
             <li>Only the king can land on a throne.</li>
-        </ul>
+        </ol>
         To move a piece, click on it and then on its landing square.<br/><br/>
         This is the initial board, do the first move`,
         TablutPartSlice.getInitialSlice(),

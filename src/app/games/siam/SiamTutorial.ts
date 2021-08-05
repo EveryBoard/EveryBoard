@@ -95,7 +95,7 @@ export const siamTutorial: DidacticialStep[] = [
             <li>The number of mountains on that line must be smaller or equal to the difference between the pushers and the resistants.</li>
         </ol>
         Your piece on the top right cannot push because there is one mountain too much.
-        Your piece on the bottom right can push..<br/><br/>
+        Your piece on the bottom right can push.<br/><br/>
         Do it.`,
         new SiamPartSlice([
             [R, M, M, l, L],

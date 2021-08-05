@@ -13,7 +13,7 @@ export class SixTutorialMessages {
 
     public static readonly MOVEMENT_NOT_DISCONNECTING: string = $localize`This move is not disconnecting a piece of your opponent. Try again with another piece.`;
 
-    public static readonly MOVEMENT_SELF_DISCONNECTING: string = $localize`You lost one of your pieces during this move. There is a way to disconnect an opponent's piece without losing it, try again!`;
+    public static readonly MOVEMENT_SELF_DISCONNECTING: string = $localize`You lost one of your pieces during this move. There is a way to disconnect an opponent's piece without losing any of yours, try again!`;
 }
 
 export const sixTutorial: DidacticialStep[] = [
