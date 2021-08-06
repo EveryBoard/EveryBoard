@@ -85,6 +85,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfPartSlic
         if (lastMove != null && lastMove.placement.direction.isPresent()) {
             this.inserted = this.arrowTowards(lastMove.placement.coord, lastMove.placement.direction.get());
         }
+        this.cancelMoveAttempt();
     }
     private arrowTowards(placement: Coord, direction: HexaDirection): Arrow {
         const previous: Coord = placement.getNext(direction.getOpposite());
