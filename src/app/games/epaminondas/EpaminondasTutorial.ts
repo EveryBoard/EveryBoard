@@ -3,20 +3,20 @@ import { EpaminondasPartSlice } from 'src/app/games/epaminondas/EpaminondasPartS
 import { Direction } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { DidacticialStep } from '../../components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 const _: number = Player.NONE.value;
 const O: number = Player.ZERO.value;
 const X: number = Player.ONE.value;
-export const epaminondasTutorial: DidacticialStep[] = [
-    DidacticialStep.informational(
+export const epaminondasTutorial: TutorialStep[] = [
+    TutorialStep.informational(
         $localize`Initial board`,
         $localize`This is the initial board.
         The top line is the starting line of Light.
         The bottom line is the starting line of Dark.`,
         EpaminondasPartSlice.getInitialSlice(),
     ),
-    DidacticialStep.informational(
+    TutorialStep.informational(
         $localize`Goal of the game (1/2)`,
         $localize`After multiple moves, if at the beginning of its turn, a player has more piece on the opponent's starting line
         than the number of pieces the opponent has on the player's starting line, the player wins.
@@ -36,7 +36,7 @@ export const epaminondasTutorial: DidacticialStep[] = [
             [_, _, _, _, _, _, _, O, O, O, O, _, _, _],
         ], 0),
     ),
-    DidacticialStep.informational(
+    TutorialStep.informational(
         $localize`Goal of the game (2/2)`,
         $localize`Here, it is Light's turn.
         Light wins because they have two pieces on Dark's starting line, and Dark only has one on Light's starting line.`,
@@ -55,7 +55,7 @@ export const epaminondasTutorial: DidacticialStep[] = [
             [_, _, X, X, _, _, _, O, O, _, O, O, O, O],
         ], 1),
     ),
-    DidacticialStep.fromPredicate(
+    TutorialStep.fromPredicate(
         $localize`Moving a piece`,
         $localize`Here is the starting board. Dark plays first.
         Let's start with moving a single piece:
@@ -74,7 +74,7 @@ export const epaminondasTutorial: DidacticialStep[] = [
         },
         $localize`This is how you move a single piece.`,
     ),
-    DidacticialStep.fromPredicate(
+    TutorialStep.fromPredicate(
         $localize`Moving a phalanx`,
         $localize`Let us now see how to move multiple pieces along a line, which is called a phalanx :
         <ol>
@@ -97,7 +97,7 @@ export const epaminondasTutorial: DidacticialStep[] = [
         The move should be made along this axis, forward or backwards.
         There can be no opponent nor holes in the phalanx.`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Capture`,
         $localize`In order to capture pieces of the opponent:
         <ol>

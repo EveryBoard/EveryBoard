@@ -1,5 +1,5 @@
 import { CoerceoMove } from 'src/app/games/coerceo/CoerceoMove';
-import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { CoerceoPartSlice } from 'src/app/games/coerceo/CoerceoPartSlice';
 import { Coord } from 'src/app/jscaip/Coord';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
@@ -9,8 +9,8 @@ const N: number = FourStatePiece.NONE.value;
 const O: number = FourStatePiece.ZERO.value;
 const X: number = FourStatePiece.ONE.value;
 
-export const coerceoTutorial: DidacticialStep[] = [
-    DidacticialStep.informational(
+export const coerceoTutorial: TutorialStep[] = [
+    TutorialStep.informational(
         $localize`Board and goal of the game`,
         $localize`Coerceo is played on a board like this, composed of hexagonal tiles, each comprising 6 triangles.
          The triangles are the spaces along which pieces move during the game.
@@ -20,7 +20,7 @@ export const coerceoTutorial: DidacticialStep[] = [
          The goal of the game is to capture all of the opponent's pieces.`,
         CoerceoPartSlice.getInitialSlice(),
     ),
-    DidacticialStep.anyMove(
+    TutorialStep.anyMove(
         $localize`Move`,
         $localize`To move a piece, you need to:
         <ol>
@@ -34,7 +34,7 @@ export const coerceoTutorial: DidacticialStep[] = [
         CoerceoMove.fromCoordToCoord(new Coord(3, 5), new Coord(5, 5)),
         $localize`Congratulations! Let's see captures now.`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Capture`,
         $localize`Every piece has three neighboring triangular spaces (2 on the sides).
         When all neighboring spaces except one are occupied, and one opponent moves to that last free space, your piece is captured!
@@ -59,7 +59,7 @@ export const coerceoTutorial: DidacticialStep[] = [
         $localize`Congratulations!`,
         $localize`Failed, you have not captured any piece.`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Gain a tile`,
         $localize`When a tile is empty, she can become removable from the board.
         For it to be removable, at least three of its sides must be free, and these should be consecutive sides.
@@ -87,7 +87,7 @@ export const coerceoTutorial: DidacticialStep[] = [
         $localize`Congratulations!`,
         $localize`Failed, you have not gained the two tiles that you could!`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Exchanging a tile`,
         $localize`When you have a tile, you can see it on the left of the board.
         As soon as you have two, you can click on an opponent's piece to capture it immediately.
@@ -112,7 +112,7 @@ export const coerceoTutorial: DidacticialStep[] = [
         $localize`Congratulations!`,
         $localize`It's nice to move a piece, but you could have had the opponent's piece immediately by clicking on it!`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Special capture`,
         $localize`When a tile is removed from the board during your turn, some of the opponent's pieces may have lost their last free neighboring space, they will therefore be captured!
         If this happens to one of your piece during your turn, it would however stay on the board.<br/><br/>

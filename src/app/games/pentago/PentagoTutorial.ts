@@ -1,4 +1,4 @@
-import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { PentagoMove } from './PentagoMove';
@@ -8,13 +8,13 @@ const _: number = Player.NONE.value;
 const X: number = Player.ONE.value;
 const O: number = Player.ZERO.value;
 
-export const pentagoTutorial: DidacticialStep[] = [
-    DidacticialStep.informational(
+export const pentagoTutorial: TutorialStep[] = [
+    TutorialStep.informational(
         $localize`Initial board`,
         $localize`The initial Pentago board is made of 6x6 spaces, subdivided in 4 blocks, which can each rotate.`,
         PentagoGameState.getInitialSlice(),
     ),
-    DidacticialStep.informational(
+    TutorialStep.informational(
         $localize`Goal of the game`,
         $localize`The goal at Pentago is to align 5 of your pieces. In the following board, Dark wins.`,
         new PentagoGameState([
@@ -26,7 +26,7 @@ export const pentagoTutorial: DidacticialStep[] = [
             [_, _, _, _, _, _],
         ], 10),
     ).withPreviousMove(PentagoMove.withRotation(0, 0, 0, false)),
-    DidacticialStep.fromPredicate(
+    TutorialStep.fromPredicate(
         $localize`Simple move`,
         $localize`At their turn, players put a piece on the board and possibly rotate one block.
         As long as there are neutral blocks, i.e., blocks that would not change after being rotated, a player may skip rotating a block.
@@ -43,14 +43,14 @@ export const pentagoTutorial: DidacticialStep[] = [
         PentagoMove.rotationless(2, 2),
         (move: PentagoMove, _: PentagoGameState) => {
             if (move.blockTurned.isPresent()) {
-                return MGPValidation.failure($localize`You have made a move with a rotation. This tutorial step is about moves without rotations!`);
+                return MGPValidation.failure($localize`You have made a move with a rotation. This tutorial step is about moves without rotations!`);
             } else {
                 return MGPValidation.SUCCESS;
             }
         },
         $localize`Congratulations!`,
     ),
-    DidacticialStep.fromPredicate(
+    TutorialStep.fromPredicate(
         $localize`Move with rotation`,
         $localize`After putting a piece, arrows will appear on non-neutral blocks.<br/><br/>
         Click on one of them and see the rotation!`,

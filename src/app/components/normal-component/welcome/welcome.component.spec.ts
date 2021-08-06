@@ -34,9 +34,9 @@ describe('WelcomeComponent', () => {
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate');
 
-        await testUtils.clickElement('#startDidacticial_Awale');
+        await testUtils.clickElement('#startTutorial_Awale');
 
-        expect(router.navigate).toHaveBeenCalledWith(['/didacticial/Awale']);
+        expect(router.navigate).toHaveBeenCalledWith(['/tutorial/Awale']);
     }));
 
 });

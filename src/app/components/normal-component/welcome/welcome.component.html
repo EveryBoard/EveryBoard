@@ -31,7 +31,7 @@
                 <div class="card-content">
                     <div class="content">
                         <button class="button is-medium is-fullwidth is-primary mb-1" routerLink="/local" i18n>Play</button>
-                        <button class="button is-medium is-fullwidth is-primary" routerLink="/didacticial" i18n>Learn</button>
+                        <button class="button is-medium is-fullwidth is-primary" routerLink="/tutorial" i18n>Learn</button>
                     </div>
                 </div>
             </div>
@@ -56,7 +56,7 @@
             <div class="card-footer">
                 <a id="playOnline_{{game.urlName}}" (click)="createGame(game.urlName)" class="card-footer-item" i18n>Play online</a>
                 <a id="playLocally_{{game.urlName}}" (click)="createLocalGame(game.urlName)" class="card-footer-item" i18n>Play offline</a>
-                <a id="startDidacticial_{{game.urlName}}" (click)="createDidacticial(game.urlName)" class="card-footer-item" i18n>Learn</a>
+                <a id="startTutorial_{{game.urlName}}" (click)="createTutorial(game.urlName)" class="card-footer-item" i18n>Learn</a>
             </div>
         </div>
     </div>

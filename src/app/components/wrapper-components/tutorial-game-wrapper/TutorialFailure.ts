@@ -1,5 +1,5 @@
 
-export class DidacticialFailure {
+export class TutorialFailure {
 
     public static readonly STEP_FINISHED: string = $localize`Step finished!`;
 

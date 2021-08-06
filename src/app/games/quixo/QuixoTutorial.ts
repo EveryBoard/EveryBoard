@@ -2,15 +2,14 @@ import { QuixoPartSlice } from 'src/app/games/quixo/QuixoPartSlice';
 import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
-import { DidacticialStep } from '../../components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 const _: number = Player.NONE.value;
 const O: number = Player.ZERO.value;
 const X: number = Player.ONE.value;
 
-export const quixoTutorial: DidacticialStep[] = [
-
-    DidacticialStep.informational(
+export const quixoTutorial: TutorialStep[] = [
+    TutorialStep.informational(
         $localize`Goal of the game.`,
         $localize`At Quixo, the goal is to align 5 of your pieces.
         The first player plays with dark pieces, the second with light pieces.
@@ -18,7 +17,7 @@ export const quixoTutorial: DidacticialStep[] = [
         Every piece has a neutral side, a light side, and a dark side.`,
         QuixoPartSlice.getInitialSlice(),
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`What a move looks like (without animation)`,
         $localize`When it is your turn:
         <ol>
@@ -42,7 +41,7 @@ export const quixoTutorial: DidacticialStep[] = [
         The neutral piece has been move 4 pieces to the left and has become light.`,
         $localize`Failed!`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Victory`,
         $localize`You already know everything in order to play, but there is one last particularity.
         If you create a line of 5 of your pieces, you win.

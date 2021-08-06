@@ -2,13 +2,14 @@ import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
 import { PylosMove } from 'src/app/games/pylos/PylosMove';
 import { PylosPartSlice } from 'src/app/games/pylos/PylosPartSlice';
 import { Player } from 'src/app/jscaip/Player';
-import { DidacticialStep } from '../../components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 const _: number = Player.NONE.value;
 const O: number = Player.ZERO.value;
 const X: number = Player.ONE.value;
-export const pylosTutorial: DidacticialStep[] = [
-    DidacticialStep.informational(
+
+export const pylosTutorial: TutorialStep[] = [
+    TutorialStep.informational(
         $localize`Goal of the game`,
         $localize`At Pylos, the goal is to be the last to play.
         To do this, you have to save up your pieces.
@@ -18,7 +19,7 @@ export const pylosTutorial: DidacticialStep[] = [
         It will be filled by the pieces of your stock, of which each player has 15.`,
         PylosPartSlice.getInitialSlice(),
     ),
-    DidacticialStep.anyMove(
+    TutorialStep.anyMove(
         $localize`Dropping a piece`,
         $localize`When it is your turn, you can always drop one of your piece on an empty square.
         The grey squares are where you can drop your pieces.<br/><br/>
@@ -27,7 +28,7 @@ export const pylosTutorial: DidacticialStep[] = [
         PylosMove.fromDrop(new PylosCoord(1, 1, 0), []),
         $localize`There you go, as simple as that.`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Climbing`,
         $localize`When 4 pieces form a square, it is possible to put a fifth piece on top.
         However, when that happens, you can save a piece by climbing instead of dropping a piece.
@@ -64,7 +65,7 @@ export const pylosTutorial: DidacticialStep[] = [
         </ol>`,
         $localize`Failed!`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Square (1/3)`,
         $localize`When the piece you're moving is the fourth one of a square of your color,
         you can choose anywhere on the board one or two of your pieces.
@@ -99,7 +100,7 @@ export const pylosTutorial: DidacticialStep[] = [
         $localize`Congratulations, you have saved one piece.`,
         $localize`Failed!`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Square (2/3)`,
         $localize`You're playing Dark.<br/<br/>
         Do like in the previous step, but this time click on both pieces on the top row.`,
@@ -124,7 +125,7 @@ export const pylosTutorial: DidacticialStep[] = [
         $localize`Congratulations, you have saved two pieces.`,
         $localize`Failed!`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Square (3/3)`,
         $localize`You're playing Dark.
         Do as in the last step, but this time

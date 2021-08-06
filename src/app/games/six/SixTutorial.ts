@@ -3,7 +3,7 @@ import { SixMove } from 'src/app/games/six/SixMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { DidacticialStep } from '../../components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 const _: number = Player.NONE.value;
 const O: number = Player.ZERO.value;
@@ -16,16 +16,16 @@ export class SixTutorialMessages {
     public static readonly MOVEMENT_SELF_DISCONNECTING: string = $localize`You lost one of your pieces during this move. There is a way to disconnect an opponent's piece without losing any of yours, try again!`;
 }
 
-export const sixTutorial: DidacticialStep[] = [
+export const sixTutorial: TutorialStep[] = [
 
-    DidacticialStep.informational(
+    TutorialStep.informational(
         $localize`Six`,
         $localize`Six is a game without board, where pieces are placed on the side of each other, in a contiguous block.
         Every player has 21 pieces, 2 being already on the table.
         The goal of the game is to form one of the three winning shapes with your pieces.`,
         SixGameState.getInitialSlice(),
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Victory (line)`,
         $localize`On this board, by putting your piece at the right place, you can align six of your pieces and win the game<br/><br/>
         Find the victory. You're playing Dark.`,
@@ -41,7 +41,7 @@ export const sixTutorial: DidacticialStep[] = [
         $localize`Congratulations!`,
         $localize`Failed!`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Victory (circle)`,
         $localize`On this board, by putting your piece at the right place, you can form a circle with six of your pieces and win the game.<br/><br/>
         Find the victory. You're playing Dark.`,
@@ -55,7 +55,7 @@ export const sixTutorial: DidacticialStep[] = [
         $localize`Congratulations! Note that if a piece is inside the circle, it does not change anything.`,
         $localize`Failed!`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Victory (triangle)`,
         $localize`On this board, by putting your piece at the right place, you can form a triangle with six of your pieces and win the game.<br/><br/>
         Find the victory. You're playing Dark.`,
@@ -69,7 +69,7 @@ export const sixTutorial: DidacticialStep[] = [
         $localize`Congratulations!`,
         $localize`Failed!`,
     ),
-    DidacticialStep.fromPredicate(
+    TutorialStep.fromPredicate(
         $localize`Second phase`,
         $localize`After 40 turns, your pieces have all been placed and we move on to the second phase of the game.
         You now have to move your pieces, paying attention not to remove a piece that was blocking the opponent's victory.
@@ -102,7 +102,7 @@ export const sixTutorial: DidacticialStep[] = [
         },
         $localize`Congratulations, your opponent now has one piece less and you're closer to victory!`,
     ),
-    DidacticialStep.fromPredicate(
+    TutorialStep.fromPredicate(
         $localize`Victory by disconnection`,
         $localize`During the second phase of the game, on top of normal victories (line, circle, triangle), you can win by disconnection.
         If at any time, one player does not have enough pieces to win (less than 6), the game ends.
@@ -127,7 +127,7 @@ export const sixTutorial: DidacticialStep[] = [
         },
         $localize`Congratulations, you won!`,
     ),
-    DidacticialStep.fromPredicate(
+    TutorialStep.fromPredicate(
         $localize`Special disconnection`,
         $localize`During a disconnection, two or more groups could have the same size,
         in which case you will have to click on the group you wish to keep.<br/><br/>

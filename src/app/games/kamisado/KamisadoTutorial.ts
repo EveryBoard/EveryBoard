@@ -4,7 +4,7 @@ import { KamisadoPartSlice } from 'src/app/games/kamisado/KamisadoPartSlice';
 import { KamisadoPiece } from 'src/app/games/kamisado/KamisadoPiece';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { DidacticialStep } from '../../components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 const __: number = KamisadoPiece.NONE.getValue();
 const or: number = KamisadoPiece.ZERO.ORANGE.getValue();
@@ -24,8 +24,8 @@ const Gr: number = KamisadoPiece.ONE.GREEN.getValue();
 const br: number = KamisadoPiece.ZERO.BROWN.getValue();
 const Br: number = KamisadoPiece.ONE.BROWN.getValue();
 
-export const kamisadoTutorial: DidacticialStep[] = [
-    DidacticialStep.informational(
+export const kamisadoTutorial: TutorialStep[] = [
+    TutorialStep.informational(
         $localize`Goal of the game`,
         $localize`At Kamisado, there are two ways to win the game:
         either by moving one of your pieces on the opponent's starting line,
@@ -42,7 +42,7 @@ export const kamisadoTutorial: DidacticialStep[] = [
             [__, gr, re, ye, pi, pu, bl, or],
         ]),
     ),
-    DidacticialStep.anyMove(
+    TutorialStep.anyMove(
         $localize`Initial board and initial move`,
         $localize`Here is the initial board.
         At Kamisado, pieces can only move forward, vertically or diagonally.
@@ -52,7 +52,7 @@ export const kamisadoTutorial: DidacticialStep[] = [
         KamisadoMove.of(new Coord(7, 7), new Coord(3, 3)),
         $localize`Perfect! Note that each of your piece has a different color.`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Moving`,
         $localize`Let us now consider the move of Light, after the blue piece has been moved by Dark.
         All moves after the initial move must be made from the piece that corresponds to the color
@@ -77,7 +77,7 @@ export const kamisadoTutorial: DidacticialStep[] = [
         $localize`Congratulations!`,
         $localize`You have not moved your pink piece on a blue square!`,
     ),
-    DidacticialStep.informational(
+    TutorialStep.informational(
         $localize`Stuck situation`,
         $localize`Dark moved to another pink square, hence you have to move your pink piece again.
         However, your pink piece is stuck! In this case, you must pass your turn.
@@ -93,7 +93,7 @@ export const kamisadoTutorial: DidacticialStep[] = [
             [br, gr, re, ye, pi, pu, __, or],
         ]),
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Victory by blocking`,
         $localize`At any time, if a player blocks the entire game, that player loses.
         In other words, if a player forces its opponent to move a piece that that opponent cannot move,

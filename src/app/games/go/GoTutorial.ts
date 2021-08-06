@@ -1,7 +1,7 @@
 import { GoMove } from 'src/app/games/go/GoMove';
 import { GoPartSlice, GoPiece, Phase } from 'src/app/games/go/GoPartSlice';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { DidacticialStep } from '../../components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 const X: GoPiece = GoPiece.WHITE;
 const O: GoPiece = GoPiece.BLACK;
@@ -10,8 +10,8 @@ const w: GoPiece = GoPiece.WHITE_TERRITORY;
 const b: GoPiece = GoPiece.BLACK_TERRITORY;
 const _: GoPiece = GoPiece.EMPTY;
 
-export const goTutorial: DidacticialStep[] = [
-    DidacticialStep.informational(
+export const goTutorial: TutorialStep[] = [
+    TutorialStep.informational(
         $localize`Preliminary information`,
         $localize`The game of Go is played on a board called a Goban, and the stones are placed on the intersections.
         The traditional board is made of 19x19 intersections, but on this website we have the 13x13 board.
@@ -19,7 +19,7 @@ export const goTutorial: DidacticialStep[] = [
         For this tutorial, we will use a small 5x5 for pedagogical purposes.`,
         GoPartSlice.getInitialSlice(),
     ),
-    DidacticialStep.informational(
+    TutorialStep.informational(
         $localize`Goal of the game`,
         $localize`The goal of the game is to have the most points at the end of the game.
         We call "territories" the intersections that are empty and isolated from the rest of the Goban by the stones of a single player.
@@ -35,7 +35,7 @@ export const goTutorial: DidacticialStep[] = [
             [_, _, O, X, _, _],
         ], [0, 0], 0, MGPOptional.empty(), Phase.PLAYING),
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Simple capture`,
         $localize`An isolated stone, like the one in the middle here, has 4 neighboring intersections (not 8, because we do not count diagonals).
         If a neighboring intersection is unoccupied, it is called a freedom.
@@ -52,7 +52,7 @@ export const goTutorial: DidacticialStep[] = [
         $localize`Congratulations, you have earned one point.`,
         $localize`Failed, try again by playing on one of the intersection directly next to the light stone.`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Capturing multiple stones`,
         $localize`Stones that are connected horizontally or vertically must be captured at the same time, and are not capturable in isolation.<br/><br/>
         The light group here only has one freedom left, capture it.`,
@@ -67,7 +67,7 @@ export const goTutorial: DidacticialStep[] = [
         $localize`Congratulations, you have earned three points and formed a territory.`,
         $localize`Failed, you have not captured the group. Play on the last freedom of that group.`,
     ),
-    DidacticialStep.informational(
+    TutorialStep.informational(
         $localize`Suicide`,
         $localize`In Go, suicide is forbidden.
         If putting a piece on an intersection removes the last freedom of your group and does not capture any stone, playing on that intersection would be a suicide and is therefore forbidden.
@@ -81,7 +81,7 @@ export const goTutorial: DidacticialStep[] = [
             [_, X, _, X, O],
         ], [0, 0], 0, MGPOptional.empty(), Phase.PLAYING),
     ),
-    DidacticialStep.informational(
+    TutorialStep.informational(
         $localize`Life and death (death)`,
         $localize`From the capture rule follows the life and death notion:
         dead stones are stones that are definitely capturable (without losing anything else).
@@ -97,7 +97,7 @@ export const goTutorial: DidacticialStep[] = [
             [X, X, O, _, _],
         ], [0, 0], 0, MGPOptional.empty(), Phase.PLAYING),
     ),
-    DidacticialStep.informational(
+    TutorialStep.informational(
         $localize`Life and death (eyes)`,
         $localize`Here, Light cannot play on the top left, nor on the bottom left.
         Light will never be able to capture Dark.
@@ -110,7 +110,7 @@ export const goTutorial: DidacticialStep[] = [
             [_, O, X, _, _],
         ], [0, 0], 0, MGPOptional.empty(), Phase.PLAYING),
     ),
-    DidacticialStep.informational(
+    TutorialStep.informational(
         $localize`Seki`,
         $localize`If Dark plays on the middle line, Light will play on the opposite intersection and capture Dark.
         Similarly, if Light plays on the middle line, Dark will capture Light.
@@ -126,7 +126,7 @@ export const goTutorial: DidacticialStep[] = [
             [_, X, O, _, X, O, _],
         ], [0, 0], 0, MGPOptional.empty(), Phase.PLAYING),
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Ko`,
         $localize`A player, by putting a stone, cannot go back to an identical state of the Goban as before, in order to avoid an endless game.<br/><br/>
         Capture the light stone.`,
@@ -146,7 +146,7 @@ export const goTutorial: DidacticialStep[] = [
         The trick for Light is to try to create a big enough threat so that Dark must answer immediately, and does not have the time to protect its last stone, so that Light can capture it.`,
         $localize`Failed!`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`End of the game`,
         $localize`When a player feels that there is no advantage to putting a new stone, that player can pass a turn.
         The game phase stops when both players pass consecutively, and we move on to the counting phase.

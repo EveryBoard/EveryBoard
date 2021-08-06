@@ -3,7 +3,7 @@ import { SiamPiece } from 'src/app/games/siam/SiamPiece';
 import { SiamPartSlice } from 'src/app/games/siam/SiamPartSlice';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { DidacticialStep } from '../../components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 const _: number = SiamPiece.EMPTY.value;
 const M: number = SiamPiece.MOUNTAIN.value;
@@ -18,8 +18,8 @@ const l: number = SiamPiece.BLACK_LEFT.value;
 const r: number = SiamPiece.BLACK_RIGHT.value;
 const d: number = SiamPiece.BLACK_DOWN.value;
 
-export const siamTutorial: DidacticialStep[] = [
-    DidacticialStep.informational(
+export const siamTutorial: TutorialStep[] = [
+    TutorialStep.informational(
         $localize`Goal of the game`,
         $localize`The goal at Siam is to be the first to push a mountain out of the board.
         The initial board contains three mountains, and no pieces are initially on the board.
@@ -31,7 +31,7 @@ export const siamTutorial: DidacticialStep[] = [
         </ol>`,
         SiamPartSlice.getInitialSlice(),
     ),
-    DidacticialStep.anyMove(
+    TutorialStep.anyMove(
         $localize`Inserting a piece`,
         $localize`Every player has 5 pieces in total.
         As long as you do not have 5 pieces on the board, you can insert new pieces. To do so:
@@ -45,7 +45,7 @@ export const siamTutorial: DidacticialStep[] = [
         new SiamMove(2, -1, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN),
         $localize`Congratulations!`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Moving a piece`,
         $localize`We will distinguish here "moving" and "pushing".
         A move is made from a piece's square to an empty neighboring square, horizontally or vertically.
@@ -69,7 +69,7 @@ export const siamTutorial: DidacticialStep[] = [
         $localize`Congratulations, you made a sideslip!`,
         $localize`Failed!`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Moving a piece out of the board`,
         $localize`To move a piece out of the board, you do not have to pick an orientation after the move.<br/><br/>
         Get that piece out of the board!`,
@@ -84,7 +84,7 @@ export const siamTutorial: DidacticialStep[] = [
         $localize`Congratulations, even if in this context it was not a useful move.`,
         $localize`Failed, the piece is still on the board`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Pushing`,
         $localize`When the landing square of your move is occupied, we use the term "push".
         In order to push, multiple conditions must hold:
@@ -108,7 +108,7 @@ export const siamTutorial: DidacticialStep[] = [
         $localize`Congratulations!`,
         $localize`Failed!`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Victory`,
         $localize`The game ends when a mountain is pushed out of the board.
         If you pushed it and nobody is in front of you, you're the winner.

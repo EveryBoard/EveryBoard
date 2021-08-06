@@ -2,15 +2,15 @@ import { TablutMove } from 'src/app/games/tablut/TablutMove';
 import { TablutCase } from 'src/app/games/tablut/TablutCase';
 import { TablutPartSlice } from 'src/app/games/tablut/TablutPartSlice';
 import { Coord } from 'src/app/jscaip/Coord';
-import { DidacticialStep } from '../../components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 const _: number = TablutCase.UNOCCUPIED.value;
 const x: number = TablutCase.INVADERS.value;
 const i: number = TablutCase.DEFENDERS.value;
 const A: number = TablutCase.PLAYER_ONE_KING.value;
 
-export const tablutTutorial: DidacticialStep[] = [
-    DidacticialStep.informational(
+export const tablutTutorial: TutorialStep[] = [
+    TutorialStep.informational(
         $localize`Goal of the game`,
         $localize`Tablut is a strategy game that was played by the Vikings.
         The goal of the game is different for each player.
@@ -21,7 +21,7 @@ export const tablutTutorial: DidacticialStep[] = [
         Note that the square in which the king starts, in the center of the board, is also a throne.`,
         TablutPartSlice.getInitialSlice(),
     ),
-    DidacticialStep.anyMove(
+    TutorialStep.anyMove(
         $localize`Moving`,
         $localize`All pieces move the same way.
         Similarly to a rook in chess, a piece can move:
@@ -37,7 +37,7 @@ export const tablutTutorial: DidacticialStep[] = [
         new TablutMove(new Coord(4, 1), new Coord(1, 1)),
         $localize`Congratulations!`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Capturing a soldier (1/2)`,
         $localize`All pieces except the king, attackers and defenders, are soldiers.
         To capture them, they have to be sandwiched between two of your pieces.
@@ -61,7 +61,7 @@ export const tablutTutorial: DidacticialStep[] = [
         $localize`Congratulations, that will teach him a lesson!`,
         $localize`Failed, you missed the opportunity to capture an opponent.`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Capturing a soldier (2/2)`,
         $localize`A second way to capture a soldier is against an empty throne.
         The King has moved and endangered one of its soldiers..<br/><br/>
@@ -81,7 +81,7 @@ export const tablutTutorial: DidacticialStep[] = [
         $localize`Congratulations, one less defender. But keep an eye on the king, it is the most important.`,
         $localize`Failed, you did not do the expected move.`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Capturing the king (1/2)`,
         $localize`To capture the king, two soldiers are not enough.
         For the first solution, the four squares neighbor to the king (horizontally and vertically) must be occupied by your soldiers.
@@ -102,7 +102,7 @@ export const tablutTutorial: DidacticialStep[] = [
         $localize`Congratulations, you won..`,
         $localize`Failed, you let the king run away.`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Capturing the king (2/2)`,
         $localize`Another way to capture the king is to immobilize it against an edge of the board.
         Note that the king cannot be captured next to a throne.<br/><br/>

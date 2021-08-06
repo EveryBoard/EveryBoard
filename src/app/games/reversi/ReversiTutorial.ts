@@ -1,13 +1,13 @@
 import { ReversiMove } from 'src/app/games/reversi/ReversiMove';
 import { ReversiPartSlice } from 'src/app/games/reversi/ReversiPartSlice';
 import { Player } from 'src/app/jscaip/Player';
-import { DidacticialStep } from '../../components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 const _: number = Player.NONE.value;
 const O: number = Player.ZERO.value;
 const X: number = Player.ONE.value;
-export const reversiTutorial: DidacticialStep[] = [
-    DidacticialStep.informational(
+export const reversiTutorial: TutorialStep[] = [
+    TutorialStep.informational(
         $localize`Goal of the game`,
         $localize`At Reversi, the pieces are double sided: one dark side for the first player, one light side for the second player.
         When one piece is flipped, its owner changes.
@@ -24,7 +24,7 @@ export const reversiTutorial: DidacticialStep[] = [
             [O, O, O, O, O, O, O, O],
         ], 60),
     ),
-    DidacticialStep.anyMove(
+    TutorialStep.anyMove(
         $localize`Capturing (1/2)`,
         $localize`At the beginning of the game, pieces are placed like here.
         For a move to be legal, it must sandwich at least one piece of the opponent between the piece you're putting and another of your pieces.<br/><br/>
@@ -34,7 +34,7 @@ export const reversiTutorial: DidacticialStep[] = [
         new ReversiMove(2, 4),
         $localize`Congratulations!`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Capturing (2/2)`,
         $localize`A move can also capture a bigger line, and more than one lines at a time
         You're playing light here.<br/><br/>
@@ -53,7 +53,7 @@ export const reversiTutorial: DidacticialStep[] = [
         $localize`Congratulations!`,
         $localize`Lower and more to the left, please.`,
     ),
-    DidacticialStep.informational(
+    TutorialStep.informational(
         $localize`Passing a turn`,
         $localize`If, during its turn, a player has no move that would allow that player to flip a piece, that player must pass
         Moreover, if the next player could not play neither, the game ends before the board is full, and points are counted in the usual way.`,

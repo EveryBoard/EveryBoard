@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { HexagonalGameComponent } from 'src/app/components/game-components/abstract-game-component/HexagonalGameComponent';
-import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
@@ -53,7 +53,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
 
     public encoder: MoveEncoder<YinshMove> = YinshMove.encoder;
 
-    public tutorial: DidacticialStep[] = yinshTutorial;
+    public tutorial: TutorialStep[] = yinshTutorial;
 
     public scores: number[] = [0, 0];
 

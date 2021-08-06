@@ -1,4 +1,4 @@
-import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { YinshBoard } from './YinshBoard';
@@ -13,8 +13,8 @@ const A: YinshPiece = YinshPiece.RING_ZERO;
 const b: YinshPiece = YinshPiece.MARKER_ONE;
 const B: YinshPiece = YinshPiece.RING_ONE;
 
-export const yinshTutorial: DidacticialStep[] = [
-    DidacticialStep.informational(
+export const yinshTutorial: TutorialStep[] = [
+    TutorialStep.informational(
         $localize`Goal of the game`,
         $localize`The goal at Yinsh is to capture three rings in total.
         The rings taken are shown on the top left for the dark player,
@@ -35,7 +35,7 @@ export const yinshTutorial: DidacticialStep[] = [
             [N, _, _, _, _, N, N, N, N, N, N],
         ]), [3, 1], 20),
     ),
-    DidacticialStep.anyMove(
+    TutorialStep.anyMove(
         $localize`Initial board and placement phase`,
         $localize`The initial board is empty.
         At the beginning of the game, each player puts one of its ring on the board at their turn.
@@ -44,7 +44,7 @@ export const yinshTutorial: DidacticialStep[] = [
         new YinshGameState(YinshBoard.EMPTY, [5, 5], 0),
         new YinshMove([], new Coord(5, 5), MGPOptional.empty(), []),
         $localize`Congratulations!`),
-    DidacticialStep.anyMove(
+    TutorialStep.anyMove(
         $localize`Putting a marker`,
         $localize`Once the initial phase is done and all rings are on the board, you need to place markers on the board..
         To do so, put a marker in a ring by clicking on that ring
@@ -68,7 +68,7 @@ export const yinshTutorial: DidacticialStep[] = [
         ]), [0, 0], 20),
         new YinshMove([], new Coord(2, 4), MGPOptional.of(new Coord(4, 4)), []),
         $localize`Congratulations!`),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Getting a ring by aligning 5 markers`,
         $localize`Finally, the last mechanic you need is to be able to get a ring from the board in order to gain points.
         To do so, you need to align 5 markers of your color.

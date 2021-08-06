@@ -117,7 +117,7 @@ export class GameService implements OnDestroy {
     public async createPartJoinerAndChat(creatorName: string, typeGame: string, chosenPlayer: string): Promise<string> {
         display(GameService.VERBOSE, 'GameService.createGame(' + creatorName + ', ' + typeGame + ')');
 
-        const gameId: string = await this.createUnstartedPart(creatorName, typeGame, chosenPlayer) as string;
+        const gameId: string = await this.createUnstartedPart(creatorName, typeGame, chosenPlayer);
         await this.joinerService.createInitialJoiner(creatorName, gameId);
         await this.createChat(gameId);
         return gameId;

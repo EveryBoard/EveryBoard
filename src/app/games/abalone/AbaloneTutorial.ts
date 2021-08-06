@@ -1,4 +1,4 @@
-import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { Coord } from 'src/app/jscaip/Coord';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
@@ -10,13 +10,13 @@ const N: number = FourStatePiece.NONE.value;
 const O: number = FourStatePiece.ZERO.value;
 const X: number = FourStatePiece.ONE.value;
 
-export const abaloneTutorial: DidacticialStep[] = [
-    DidacticialStep.informational(
+export const abaloneTutorial: TutorialStep[] = [
+    TutorialStep.informational(
         $localize`Initial board and goal of the game`,
         $localize`At Abalone, the goal of the game is to be the first player to push 6 opponent's pieces out of the board. Let us see how!`,
         AbaloneGameState.getInitialSlice(),
     ),
-    DidacticialStep.anyMove(
+    TutorialStep.anyMove(
         $localize`Moving a piece`,
         $localize`At each turn, move one, two, or three pieces either along their line, or on their side.
         For your moves you can therefore choose between up to 6 directions.
@@ -27,7 +27,7 @@ export const abaloneTutorial: DidacticialStep[] = [
         AbaloneMove.fromSingleCoord(new Coord(2, 6), HexaDirection.UP),
         $localize`Congratulations!`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Pushing`,
         $localize`To push one opponent piece, you must move at least two of your pieces.
         To push two oponnent pieces, you must move three of your pieces.

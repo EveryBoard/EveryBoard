@@ -1,4 +1,4 @@
-import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { LinesOfActionMove } from './LinesOfActionMove';
@@ -8,8 +8,8 @@ const X: number = Player.ZERO.value;
 const O: number = Player.ONE.value;
 const _: number = Player.NONE.value;
 
-export const linesOfActionTutorial: DidacticialStep[] = [
-    DidacticialStep.informational(
+export const linesOfActionTutorial: TutorialStep[] = [
+    TutorialStep.informational(
         $localize`Goal of the game`,
         $localize`At Lines of Actions, the goal is to group your pieces contiguously, orthogonally and/or diagonally.
         Here, Dark wins the game:
@@ -25,7 +25,7 @@ export const linesOfActionTutorial: DidacticialStep[] = [
             [_, _, _, _, _, _, _, _],
         ], 0),
     ),
-    DidacticialStep.anyMove(
+    TutorialStep.anyMove(
         $localize`Initial board and moves`,
         $localize`Here is the initial board.
          Moves can be made orthogonally or diagonally.
@@ -36,7 +36,7 @@ export const linesOfActionTutorial: DidacticialStep[] = [
         new LinesOfActionMove(new Coord(1, 7), new Coord(1, 5)),
         $localize`Congratulations!`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Jumping`,
         $localize`During a move, it is possible to jump above your own pieces.
         But it is forbidden to jump over the opponent's pieces.<br/><br/>
@@ -55,7 +55,7 @@ export const linesOfActionTutorial: DidacticialStep[] = [
         $localize`Congratulations!`,
         $localize`Failed. You did not jump over one of your pieces.`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Moving`,
         $localize`Here is a different board. Pick the dark piece in the middle (line 4, column 4)
         and observe its possible moves.
@@ -85,7 +85,7 @@ export const linesOfActionTutorial: DidacticialStep[] = [
         $localize`Congratulations!`,
         $localize`Failed. This was not one of the expected moves.`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Capturing`,
         $localize`If a move ends on an opponent's pieces, this one is captured and removed from the board.
         However, a move cannot end on one of the player's pieces.
@@ -106,7 +106,7 @@ export const linesOfActionTutorial: DidacticialStep[] = [
         $localize`Congratulations!`,
         $localize`Failed!`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Tie`,
         $localize`In the special case where a move ends up connecting all pieces of both player, simultaneously,
         then the game ends up with a tie.<br/><br/>

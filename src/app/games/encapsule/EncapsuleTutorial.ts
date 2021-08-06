@@ -3,7 +3,7 @@ import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { EncapsuleCase, EncapsulePartSlice } from 'src/app/games/encapsule/EncapsulePartSlice';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
-import { DidacticialStep } from '../../components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 const _: number = new EncapsuleCase(Player.NONE, Player.NONE, Player.NONE).encode();
 const s: number = new EncapsuleCase(Player.ZERO, Player.NONE, Player.NONE).encode();
@@ -16,8 +16,8 @@ const Sm: number = new EncapsuleCase(Player.ONE, Player.ZERO, Player.NONE).encod
 const sm: number = new EncapsuleCase(Player.ZERO, Player.ZERO, Player.NONE).encode();
 const Mb: number = new EncapsuleCase(Player.NONE, Player.ONE, Player.ZERO).encode();
 
-export const encapsuleTutorial: DidacticialStep[] = [
-    DidacticialStep.informational(
+export const encapsuleTutorial: TutorialStep[] = [
+    TutorialStep.informational(
         $localize`Goal of the game`,
         $localize`The goal of Encapsule is to align three of your pieces.
         Here, we have a victory of the dark player.`,
@@ -30,14 +30,14 @@ export const encapsuleTutorial: DidacticialStep[] = [
             EncapsulePiece.SMALL_WHITE, EncapsulePiece.MEDIUM_WHITE, EncapsulePiece.MEDIUM_WHITE,
             EncapsulePiece.BIG_WHITE,
         ])),
-    DidacticialStep.anyMove(
+    TutorialStep.anyMove(
         $localize`Putting a piece`,
         $localize`This is the initial board. You're playing Dark.<br/><br/>
         Pick one of your piece on the side of the board and put it on the board.`,
         EncapsulePartSlice.getInitialSlice(),
         EncapsuleMove.fromDrop(EncapsulePiece.SMALL_BLACK, new Coord(1, 1)),
         $localize`Congratulations!`),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Moving`,
         $localize`Another possible action is to move one of your pieces that is already on the board.<br/><br/>
         Click on your dark piece and then on any empty square of the board.`,
@@ -57,7 +57,7 @@ export const encapsuleTutorial: DidacticialStep[] = [
         ],
         $localize`Congratulations!`,
         $localize`Failed. Try again.`),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Particularity`,
         $localize`At Encapsule, pieces encapsulate each other.
         It is therefore possible to have up to three pieces per square!

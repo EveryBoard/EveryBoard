@@ -3,21 +3,21 @@ import { SaharaPartSlice } from 'src/app/games/sahara/SaharaPartSlice';
 import { Coord } from 'src/app/jscaip/Coord';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { DidacticialStep } from '../../components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 const N: number = FourStatePiece.NONE.value;
 const O: number = FourStatePiece.ZERO.value;
 const X: number = FourStatePiece.ONE.value;
 const _: number = FourStatePiece.EMPTY.value;
-export const saharaTutorial: DidacticialStep[] = [
+export const saharaTutorial: TutorialStep[] = [
 
-    DidacticialStep.informational(
+    TutorialStep.informational(
         $localize`Initial board`,
         $localize`Sâhârâ is played on a board where each space is a triangle.
         Each player has six pyramids.`,
         SaharaPartSlice.getInitialSlice(),
     ),
-    DidacticialStep.informational(
+    TutorialStep.informational(
         $localize`Goal of the game`,
         $localize`At Sâhârâ, the goal of the game is to immobilize one of the opponent's pyramid.
         To do so, you have to occupy all neighboring space of that pyramid.
@@ -31,7 +31,7 @@ export const saharaTutorial: DidacticialStep[] = [
             [N, N, X, O, _, _, _, X, O, N, N],
         ], 3),
     ),
-    DidacticialStep.fromPredicate(
+    TutorialStep.fromPredicate(
         $localize`Simple move`,
         $localize`To immobilize your opponent, you have to move your pyramids.
         When a pyramid shares its vertices with light spaces, it can move on these spaces (we call this a simple step)
@@ -52,7 +52,7 @@ export const saharaTutorial: DidacticialStep[] = [
         },
         $localize`Congratulations!`,
     ),
-    DidacticialStep.fromPredicate(
+    TutorialStep.fromPredicate(
         $localize`Double move`,
         $localize`When a pyramid shares its vertices with dark spaces, it can move one or two steps.
         To do so:

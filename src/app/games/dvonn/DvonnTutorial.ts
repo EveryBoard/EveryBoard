@@ -1,7 +1,7 @@
 import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
 import { DvonnGameState } from 'src/app/games/dvonn/DvonnGameState';
 import { Coord } from 'src/app/jscaip/Coord';
-import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { DvonnPieceStack } from 'src/app/games/dvonn/DvonnPieceStack';
 import { Player } from 'src/app/jscaip/Player';
 import { DvonnBoard } from 'src/app/games/dvonn/DvonnBoard';
@@ -13,8 +13,8 @@ const X1: DvonnPieceStack = DvonnPieceStack.PLAYER_ONE;
 const O4: DvonnPieceStack = new DvonnPieceStack(Player.ZERO, 4, false);
 const X4: DvonnPieceStack = new DvonnPieceStack(Player.ONE, 4, false);
 
-export const dvonnTutorial: DidacticialStep[] = [
-    DidacticialStep.anyMove(
+export const dvonnTutorial: TutorialStep[] = [
+    TutorialStep.anyMove(
         $localize`Moving`,
         $localize`At Dvonn, each hexagonal space contains a stack of pieces.
         If no number is indicated on a stack, it means that it only contains one piece.
@@ -31,7 +31,7 @@ export const dvonnTutorial: DidacticialStep[] = [
         DvonnMove.of(new Coord(2, 0), new Coord(3, 0)),
         $localize`Congratulations!`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Disconnection`,
         $localize`Red pieces are called "sources".
         When a stack is not directly nor indirectly connected to a source, it is removed from the board.
@@ -52,7 +52,7 @@ export const dvonnTutorial: DidacticialStep[] = [
         $localize`Bad choice! By moving on the source you would have disconnected the opponent's pieces and they would have lost 4 points.
         Here, the opponent wins 2 to 0`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`End of the game`,
         $localize`When no more move is possible, the game ends and the player with the most points wins.<br/><br/>
         Make your last move.`,

@@ -5,13 +5,13 @@ import { GipfPiece } from 'src/app/games/gipf/GipfPiece';
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { DidacticialStep } from '../../components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 const _: GipfPiece = GipfPiece.EMPTY;
 const O: GipfPiece = GipfPiece.PLAYER_ZERO;
 const X: GipfPiece = GipfPiece.PLAYER_ONE;
-export const gipfTutorial: DidacticialStep[] = [
-    DidacticialStep.informational(
+export const gipfTutorial: TutorialStep[] = [
+    TutorialStep.informational(
         $localize`Goal of the game`,
         $localize`The goal of Gipf is to capture the opponent's piece so that the opponent can no longer play.
         This is the initial board.
@@ -20,7 +20,7 @@ export const gipfTutorial: DidacticialStep[] = [
         The first player plays with the dark pieces, the second player plays with the light pieces.`,
         GipfPartSlice.getInitialSlice(),
     ),
-    DidacticialStep.anyMove(
+    TutorialStep.anyMove(
         $localize`Pushing`,
         $localize`Pieces can only enter the board through the edges. To insert a new piece:
         <ol>
@@ -33,7 +33,7 @@ export const gipfTutorial: DidacticialStep[] = [
         new GipfMove(new GipfPlacement(new Coord(3, 0), MGPOptional.of(HexaDirection.DOWN)), [], []),
         $localize`Congratulations!`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Capturing (1/3)`,
         $localize`To capture, you must align 4 of your own pieces, which will be the first 4 captured pieces.
         There are multiple important aspects of a capture:
@@ -75,7 +75,7 @@ export const gipfTutorial: DidacticialStep[] = [
         Let's now see how captures can really be useful.`,
         $localize`Failed!`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Capturing (2/3)`,
         $localize`Here, there are three different ways of capturing.
         One way does not capture any of your opponent's pieces.
@@ -106,7 +106,7 @@ export const gipfTutorial: DidacticialStep[] = [
         The most you can get is 3 per capture.`,
         $localize`Failed, the best capture was taking 2 of your opponent's pieces`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Capturing (3/3)`,
         $localize`Here, you must capture at the beginning of your turn.
         This is due to a move of your opponent at the previous turn

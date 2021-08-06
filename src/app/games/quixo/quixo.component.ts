@@ -12,7 +12,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Player } from 'src/app/jscaip/Player';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
-import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { quixoTutorial } from './QuixoTutorial';
 
 @Component({
@@ -37,7 +37,7 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
 
     public encoder: MoveEncoder<QuixoMove> = QuixoMove.encoder;
 
-    public tutorial: DidacticialStep[] = quixoTutorial;
+    public tutorial: TutorialStep[] = quixoTutorial;
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);

@@ -1,9 +1,9 @@
 import { AwaleMove } from 'src/app/games/awale/AwaleMove';
 import { AwalePartSlice } from 'src/app/games/awale/AwalePartSlice';
-import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
-export const awaleTutorial: DidacticialStep[] = [
-    DidacticialStep.anyMove(
+export const awaleTutorial: TutorialStep[] = [
+    TutorialStep.anyMove(
         $localize`Sowing`,
         $localize`Awalé is a game of distribution (sowing) and capture. Its goal is to capture the most seeds.
          Let's see how seeds are sown.
@@ -15,7 +15,7 @@ export const awaleTutorial: DidacticialStep[] = [
         This is how seeds are sown:
         one by one from the house next to the one they come from, clockwise.`,
     ),
-    DidacticialStep.anyMove(
+    TutorialStep.anyMove(
         $localize`Big sowing`,
         $localize`You are now the second player (on the bottom).
         When there are enough seeds to make a full turn, something else happens.<br/><br/>
@@ -27,7 +27,7 @@ export const awaleTutorial: DidacticialStep[] = [
         AwaleMove.ONE,
         $localize`See, the house that you sowed has not been refilled, and the sowing immediately continued to the next house (which therefore contains two seeds).`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Simple capture`,
         $localize`After sowing, if the last seed falls in an opponent's house and if there is now two or three seeds in this house, the player captures these two or three seeds.
          Then, the player looks at the preceding house:
@@ -42,7 +42,7 @@ export const awaleTutorial: DidacticialStep[] = [
         $localize`Well done! This was a simple capture, now let us see how to make multiple captures.`,
         $localize`Failed. Try again and sow from the leftmost house.`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Multiple captures`,
         $localize`By sowing from your leftmost house, you will change the number of seeds in a house from 2 to 3, and from the preceding house from 1 to 2.
         As these are consecutive houses, all seeds in them will be captured.<br/><br/>
@@ -55,7 +55,7 @@ export const awaleTutorial: DidacticialStep[] = [
         $localize`Nice, you win 3 points from the first house, and 2 from the second!`,
         $localize`Failed. Try again.`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Interrupted capture`,
         $localize`By clicking on your leftmost house, you end up on the 3rd house, which is capturable.<br/><br/>
         Do it.`,
@@ -67,7 +67,7 @@ export const awaleTutorial: DidacticialStep[] = [
         $localize`Notice that because the second house was not capturable, the captured was interrupted and you have not captured the first house.`,
         $localize`Failed. Try again.`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Capture on the other side only`,
         $localize`Try to capture the two leftmost houses of the opponent.`,
         new AwalePartSlice([
@@ -78,7 +78,7 @@ export const awaleTutorial: DidacticialStep[] = [
         $localize`Congratulations! Notice that the capture was interrupted when entering your territory: you cannot capture your own houses!`,
         $localize`You have only captured one house, try again!`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Do not starve`,
         $localize`You have a very nice capture that seems possible: it seems that you can capture all the opponent's seeds!<br/><br/>
         Try it.`,
@@ -91,7 +91,7 @@ export const awaleTutorial: DidacticialStep[] = [
         When this happens, the move can be made, but no capture takes place!`,
         $localize`Failed. Try again.`,
     ),
-    DidacticialStep.anyMove(
+    TutorialStep.anyMove(
         $localize`Feeding is mandatory`,
         $localize`You cannot let another player starve, meaning that if your opponent has no seeds anymore and if you can give them at least one, you have to do it.<br/><br/>
         Go ahead!`,
@@ -103,7 +103,7 @@ export const awaleTutorial: DidacticialStep[] = [
         $localize`Congratulations! Note that you can choose to give your opponent the least number of seeds if it is better for you.
         It is often a good way to have easy captures!`,
     ),
-    DidacticialStep.anyMove(
+    TutorialStep.anyMove(
         $localize`End of the game`,
         $localize`A game is won as soon as one player has captured 25 seeds, as that player has more than half of all the seeds.<br/><br/>
          Sow the house on the top right.`,
@@ -116,4 +116,4 @@ export const awaleTutorial: DidacticialStep[] = [
          Here, it was the first player's turn, and the second player has taken all the remaining seeds.`,
     ),
 ];
- 
+

@@ -12,7 +12,7 @@ import { PylosOrderedMinimax } from './PylosOrderedMinimax';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PylosFailure } from './PylosFailure';
-import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { pylosTutorial } from './PylosTutorial';
 
 @Component({
@@ -42,7 +42,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
 
     public encoder: MoveEncoder<PylosMove> = PylosMove.encoder;
 
-    public tutorial: DidacticialStep[] = pylosTutorial;
+    public tutorial: TutorialStep[] = pylosTutorial;
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
