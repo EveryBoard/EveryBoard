@@ -328,7 +328,7 @@ describe('EpaminondasComponent:', () => {
 
         await componentTestUtils.expectClickFailure('#click_1_7', EpaminondasFailure.CASE_NOT_ALIGNED_WITH_PHALANX);
     }));
-    it('Should cancelMove when third click is not aligned with phalange direction', fakeAsync(async() => {
+    it('Should cancelMove when third click is not aligned with phalanx direction', fakeAsync(async() => {
         const initialBoard: NumberTable = [
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -398,7 +398,7 @@ describe('EpaminondasComponent:', () => {
         expect(epaminondasComponent.firstPiece).toEqual(new Coord(0, 10));
         expect(epaminondasComponent.lastPiece).toEqual(new Coord(2, 10));
     }));
-    it('End: Should show last move when no move is ongoing (captures, left case, moved phalange)', fakeAsync(async() => {
+    it('End: Should show last move when no move is ongoing (captures, left case, moved phalanx)', fakeAsync(async() => {
         const initialBoard: NumberTable = [
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
