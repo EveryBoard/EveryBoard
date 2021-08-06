@@ -36,7 +36,7 @@ export const dvonnTutorial: TutorialStep[] = [
         $localize`Red pieces are called "sources".
         When a stack is not directly nor indirectly connected to a source, it is removed from the board.
         You can move on a source: this forms a stack that contains the source, and which will never be disconnected.
-        Besides this, a stack containing a source acts like any other stack: you can move it, and your opponent can move on that stack to take posession of it.<br/><br/>
+        Besides this, a stack containing a source acts like any other stack: you can move it, and your opponent can move on that stack to take possession of it.<br/><br/>
         You're playing Dark, move your piece on the source.`,
         new DvonnGameState(new DvonnBoard([
             [__, __, SO, __, __, __, __, __, __, __, __],

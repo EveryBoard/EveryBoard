@@ -26,9 +26,6 @@
       <trans-unit id="5266968336610741593" datatype="html">
         <source>An email will be sent to you: click on the link and reconnect yourself. This email could arrive in your spam folder.</source>
       </trans-unit>
-      <trans-unit id="179005581298290550" datatype="html">
-        <source> Learn the rules</source>
-      </trans-unit>
       <trans-unit id="2821179408673282599" datatype="html">
         <source>Home</source>
       </trans-unit>
@@ -101,8 +98,8 @@
       <trans-unit id="5561648955936795459" datatype="html">
         <source>Use simple mechanics to push 6 of the opponent&apos;s pieces out of the board!</source>
       </trans-unit>
-      <trans-unit id="1256991973722912189" datatype="html">
-        <source>The international version of the more famous African strategy game!</source>
+      <trans-unit id="1626489690215042302" datatype="html">
+        <source>The international version of the most famous African strategy game!</source>
       </trans-unit>
       <trans-unit id="1207528295664437538" datatype="html">
         <source>Stack your pieces and control as many stacks as you can to win!</source>
@@ -131,8 +128,8 @@
       <trans-unit id="3798499751517521657" datatype="html">
         <source>Overlay your pieces and use two game mechanics to conserve your pieces. First player to run out of pieces loose!</source>
       </trans-unit>
-      <trans-unit id="2325035939265975844" datatype="html">
-        <source>Immobilise one of your opponent&apos;s pyramids before your opponent does!</source>
+      <trans-unit id="1827371853303540301" datatype="html">
+        <source>Immobilize one of your opponent&apos;s pyramids before your opponent does!</source>
       </trans-unit>
       <trans-unit id="1409973335731836872" datatype="html">
         <source>Be the first to push a mountain out of the board!</source>
@@ -233,6 +230,9 @@
       <trans-unit id="689957366051097321" datatype="html">
         <source>Waiting for opponent</source>
       </trans-unit>
+      <trans-unit id="179005581298290550" datatype="html">
+        <source> Learn the rules</source>
+      </trans-unit>
       <trans-unit id="7079545056368231407" datatype="html">
         <source>See the game list</source>
       </trans-unit>
@@ -256,1095 +256,6 @@
       </trans-unit>
       <trans-unit id="6976459996912108024" datatype="html">
         <source>Game is finished.</source>
-      </trans-unit>
-      <trans-unit id="6594123400599013490" datatype="html">
-        <source>Step finished!</source>
-      </trans-unit>
-      <trans-unit id="5395533573244657143" datatype="html">
-        <source>This step is not expecting any move from your part.</source>
-      </trans-unit>
-      <trans-unit id="7583363829279229518" datatype="html">
-        <source>Congratulations, you completed the tutorial.</source>
-      </trans-unit>
-      <trans-unit id="6439401135646542284" datatype="html">
-        <source>Failure</source>
-      </trans-unit>
-      <trans-unit id="5717355661357017349" datatype="html">
-        <source> Try again </source>
-      </trans-unit>
-      <trans-unit id="8720977247725652816" datatype="html">
-        <source>Ok</source>
-      </trans-unit>
-      <trans-unit id="6962699013778688473" datatype="html">
-        <source>Continue</source>
-      </trans-unit>
-      <trans-unit id="4552397654536129176" datatype="html">
-        <source>Pass</source>
-      </trans-unit>
-      <trans-unit id="7757774343229747209" datatype="html">
-        <source>Play locally</source>
-      </trans-unit>
-      <trans-unit id="562381694553808783" datatype="html">
-        <source> See solution </source>
-      </trans-unit>
-      <trans-unit id="2949583224863920715" datatype="html">
-        <source>Sowing</source>
-      </trans-unit>
-      <trans-unit id="6972413011819423487" datatype="html">
-        <source>Awalé is a game of distribution (sowing) and capture. Its goal is to capture the most seeds.
-         Let&apos;s see how seeds are sown.
-         As you&apos;re playing first, the 6 houses on the top are yours.&lt;br/&gt;&lt;br&gt;
-         Click on any of them to sow the seeds it contains: they will be sown clockwise, one seed per house.</source>
-      </trans-unit>
-      <trans-unit id="8638152355669938683" datatype="html">
-        <source>Look at the 4 houses that follow clockwise the one you picked, they now contain 5 seeds.
-        This is how seeds are sown:
-        one by one from the house next to the one they come from, clockwise.</source>
-      </trans-unit>
-      <trans-unit id="8109801868756013772" datatype="html">
-        <source>Big sowing</source>
-      </trans-unit>
-      <trans-unit id="278639697286568585" datatype="html">
-        <source>You are now the second player (on the bottom).
-        When there are enough seeds to make a full turn, something else happens.&lt;br/&gt;&lt;br/&gt;
-        Sow the house that contains 12 seeds.</source>
-      </trans-unit>
-      <trans-unit id="2319853693849214886" datatype="html">
-        <source>See, the house that you sowed has not been refilled, and the sowing immediately continued from the next house (which therefore contains two seeds).</source>
-      </trans-unit>
-      <trans-unit id="6009621890963077533" datatype="html">
-        <source>Simple capture</source>
-      </trans-unit>
-      <trans-unit id="8512161693109303190" datatype="html">
-        <source>After sowing, if the last seed falls in an opponent&apos;s house and if there is now two or three seeds in this house, the player captures these two or three seeds.
-         Then, the player looks at the preceding house:
-         if it is still in the opponent&apos;s side and contains two or three seeds, they are also captured.
-         This continues until the player&apos;s side is reached or there is a different number of seeds from two or three.&lt;br/&gt;&lt;br/&gt;
-         You are the second player, try to capture some pieces!</source>
-      </trans-unit>
-      <trans-unit id="1449179615423109818" datatype="html">
-        <source>Well done! This was a simple capture, now let us see how to make multiple captures.</source>
-      </trans-unit>
-      <trans-unit id="8065050610159894114" datatype="html">
-        <source>Failed. Try again and sow from the leftmost house.</source>
-      </trans-unit>
-      <trans-unit id="3104604410220998192" datatype="html">
-        <source>Multiple captures</source>
-      </trans-unit>
-      <trans-unit id="1710205648645078210" datatype="html">
-        <source>By sowing from your leftmost house, you will change the number of seeds in a house from 2 to 3, and from the preceding house from 1 to 2.
-        As these are consecutive houses, all seeds in them will be captured.&lt;br/&gt;&lt;br/&gt;
-        Capture them.</source>
-      </trans-unit>
-      <trans-unit id="830087202472977218" datatype="html">
-        <source>Nice, you win 3 points from the first house, and 2 from the second!</source>
-      </trans-unit>
-      <trans-unit id="8017917529851412468" datatype="html">
-        <source>Failed. Try again.</source>
-      </trans-unit>
-      <trans-unit id="437214181691581058" datatype="html">
-        <source>Interrupted capture</source>
-      </trans-unit>
-      <trans-unit id="2140233800611707867" datatype="html">
-        <source>By clicking on your leftmost house, you end up on the 3rd house, which is capturable.&lt;br/&gt;&lt;br/&gt;
-        Do it.</source>
-      </trans-unit>
-      <trans-unit id="3933505566350744698" datatype="html">
-        <source>Notice that because the second house was not capturable, the captured was interrupted and you have not captured the first house.</source>
-      </trans-unit>
-      <trans-unit id="5352377142224231024" datatype="html">
-        <source>Capture on the other side only</source>
-      </trans-unit>
-      <trans-unit id="6181593302991158317" datatype="html">
-        <source>Try to capture the two leftmost houses of the opponent.</source>
-      </trans-unit>
-      <trans-unit id="2175831586382544478" datatype="html">
-        <source>Congratulations! Notice that the capture was interrupted when entering your territory: you cannot capture in your own houses!</source>
-      </trans-unit>
-      <trans-unit id="7890197140479173967" datatype="html">
-        <source>You have only captured one house, try again!</source>
-      </trans-unit>
-      <trans-unit id="2796272222228002710" datatype="html">
-        <source>Do not starve</source>
-      </trans-unit>
-      <trans-unit id="1389121325319402395" datatype="html">
-        <source>You have a very nice capture that seems possible: it seems that you can capture all the opponent&apos;s seeds!&lt;br/&gt;&lt;br/&gt;
-        Try it.</source>
-      </trans-unit>
-      <trans-unit id="5327525705025836061" datatype="html">
-        <source>Sadly, you cannot capture here, otherwise the opponent could not play after you.
-        When this happens, the move can be made, but no capture takes place!</source>
-      </trans-unit>
-      <trans-unit id="6033788914683606777" datatype="html">
-        <source>Feeding is mandatory</source>
-      </trans-unit>
-      <trans-unit id="29901868129142700" datatype="html">
-        <source>You cannot let another player starve, meaning that if your opponent has no seeds anymore and if you can give them at least one, you have to do it.
-        Go ahead!</source>
-      </trans-unit>
-      <trans-unit id="3908210272037108493" datatype="html">
-        <source>Congratulations! Note that you can choose to give your opponent the least number of seeds if it is better for you.
-        It is often a good way to have easy captures!</source>
-      </trans-unit>
-      <trans-unit id="2281492801612237310" datatype="html">
-        <source>End of the game</source>
-      </trans-unit>
-      <trans-unit id="2996486651978672921" datatype="html">
-        <source>A game is won as soon as one player has captured 25 seeds, as that player has more than half of all the seeds.&lt;br/&gt;&lt;br/&gt;
-         Sow the house on the top right.</source>
-      </trans-unit>
-      <trans-unit id="51867831368251774" datatype="html">
-        <source>Also, as soon as on player cannot play, the other player captures all the seeds in its own side.
-         Here, it was the first player&apos;s turn, and the second player has taken all the remaining seeds.</source>
-      </trans-unit>
-      <trans-unit id="7117895259187122182" datatype="html">
-        <source>Board and goal of the game</source>
-      </trans-unit>
-      <trans-unit id="8758869946846631030" datatype="html">
-        <source>Coerceo is played on a board like this, composed of hexagonal tiles, each comprising 6 triangles.
-         The triangles are the spaces along which pieces move during the game.
-         The tiles can be removed from the board (you will see how later).
-         The dark pieces belong to the first player and can only move on the dark spaces,
-         while the light pieces belong to the second player and can only move on the light spaces.
-         The goal of the game is to capture all of the opponent&apos;s pieces.</source>
-      </trans-unit>
-      <trans-unit id="2354817630223808522" datatype="html">
-        <source>Move</source>
-      </trans-unit>
-      <trans-unit id="3613587647914484220" datatype="html">
-        <source>To move a piece, you need to:
-        &lt;ol&gt;
-          &lt;li&gt;Click on one of your pieces.&lt;/li&gt;
-          &lt;li&gt;Click on of the triangular space highlighted in yellow.&lt;/li&gt;
-        &lt;/ol&gt;&lt;br/&gt;
-        You can pass through the opponent&apos;s pieces.
-        You&apos;re playing first, hence you&apos;re playing Dark. Perform any move.
-        Note: no matter what you do, no piece can be captured during your first turn.</source>
-      </trans-unit>
-      <trans-unit id="3313068005460528101" datatype="html">
-        <source>Congratulations! Let&apos;s see captures now.</source>
-      </trans-unit>
-      <trans-unit id="7869356423919656180" datatype="html">
-        <source>Capture</source>
-      </trans-unit>
-      <trans-unit id="5983456781977597419" datatype="html">
-        <source>Every piece has three neighbouring triangular spaces (2 on the sides).
-        When all neighbouring spaces except one are occupied, and one opponent moves to that last free space, your piece is captured!
-        However, it is possible to place a piece between 3 of the opponent&apos;s pieces (or 2 on the side) without being captured.&lt;br/&gt;&lt;br/&gt;
-        You&apos;re playing Light, make a capture.</source>
-      </trans-unit>
-      <trans-unit id="3762527362373672599" datatype="html">
-        <source>Congratulations!</source>
-      </trans-unit>
-      <trans-unit id="1766583918856668821" datatype="html">
-        <source>Failed, you have not captured any piece.</source>
-      </trans-unit>
-      <trans-unit id="8225905705628695723" datatype="html">
-        <source>Gain a tile</source>
-      </trans-unit>
-      <trans-unit id="6657337991196167458" datatype="html">
-        <source>When a tile is empty, she can become removable from the board.
-        For it to be removable, three of its sides must be free, and these should be consecutive sides.
-        Note that if one empty tile, neighbouring a tile that was just removed, also becomes removable, it will be removed too.
-        For example, here, the topmost dark piece will not disconnect its tile when leaving it.
-        But, by leaving the bottom left tile, two tiles will be removed.&lt;br/&gt;&lt;br/&gt;
-        Perform a move that lets you gain two tiles.</source>
-      </trans-unit>
-      <trans-unit id="4051956669507633461" datatype="html">
-        <source>Failed, you have not gained the two tiles that you could!</source>
-      </trans-unit>
-      <trans-unit id="1625619525907045191" datatype="html">
-        <source>Exchanging a tile</source>
-      </trans-unit>
-      <trans-unit id="2710648987338283557" datatype="html">
-        <source>When you have a tile, you can see it on the left of the board.
-        As soon as you have two, you can click on an opponent&apos;s piece to capture it immediately.
-        This will cost you two tiles.
-        If any tiles are removed during that turn, nobody will get them.&lt;br/&gt;&lt;br/&gt;
-        Gain some time and capture the last piece!</source>
-      </trans-unit>
-      <trans-unit id="6149833006202189547" datatype="html">
-        <source>It&apos;s nice to move a piece, but you could have had the opponent&apos;s piece immediately by clicking on it!</source>
-      </trans-unit>
-      <trans-unit id="4449916170244566677" datatype="html">
-        <source>Special capture</source>
-      </trans-unit>
-      <trans-unit id="1011322561122056907" datatype="html">
-        <source>When a tile is removed from the board during your turn, some of the opponent&apos;s pieces may have lost their last free neighbouring space, they will therefore be captured!
-        If this happens to one of your piece during your turn, it would however stay on the board.&lt;br/&gt;&lt;br/&gt;
-        A move that demonstrate both of these things can be done on this board by Light. Try it!&lt;br/&gt;&lt;br/&gt;</source>
-      </trans-unit>
-      <trans-unit id="4878998278020754722" datatype="html">
-        <source>Congratulations! See, your piece has lost its last freedom when you have gained the tile, but it stayed on the board as it was your turn.
-        The opponent&apos;s piece has disappeared because the tile&apos;s capture has removed its last freedom.</source>
-      </trans-unit>
-      <trans-unit id="8139485336036692612" datatype="html">
-        <source>Failed!</source>
-      </trans-unit>
-      <trans-unit id="5010267418211867946" datatype="html">
-        <source>Moving</source>
-      </trans-unit>
-      <trans-unit id="481039901186065197" datatype="html">
-        <source>At Dvonn, each hexagonal space contains a stack of pieces.
-        If no number is indicated on a stack, it means that it only contains one piece.
-        The number written on a stack indicates the number of pieces within that stack, hence the number of points its owner gets.
-        The owner of a stack is the one that has a piece at the top of the stack.
-        Only the owner of a stack can move it.
-        A stack cannot be moved if it is surrounded by 6 other stacks.
-        A stack is moved by as many spaces as there are pieces within, in a straight line, and it should land on an occupied space.
-        This line cannot move along the vertex of two neighbouring spaces, as would a vertical move.
-        Therefore, there are six possible directions.
-        The player with dark pieces starts.&lt;br/&gt;&lt;br/&gt;
-        You&apos;re playing Dark, click on a stack and move it by one space.</source>
-      </trans-unit>
-      <trans-unit id="8769382369391878948" datatype="html">
-        <source>Disconnection</source>
-      </trans-unit>
-      <trans-unit id="2858804221530310090" datatype="html">
-        <source>Red pieces are called &quot;sources&quot;.
-        When a stack is not directly nor indirectly connected to a source, it is removed from the board.
-        You can move on a source: this forms a stack that contains the source, and which will never be disconnected.
-        Besides this, a stack containing a source acts like any other stack: you can move it, and your opponent can move on that stack to take posession of it.&lt;br/&gt;&lt;br/&gt;
-        You&apos;re playing Dark, move your piece on the source.</source>
-      </trans-unit>
-      <trans-unit id="3750539510347418093" datatype="html">
-        <source>Nice, you have disconnected 4 pieces from your opponent!
-        He has lost 4 points.
-        Disconnected stacks will not be visible at the next turn.</source>
-      </trans-unit>
-      <trans-unit id="9072861571041891023" datatype="html">
-        <source>Bad choice! By moving on the source you would have disconnected the opponent&apos;s pieces and they would have lost 4 points.
-        Here, the opponent wins 2 to 0</source>
-      </trans-unit>
-      <trans-unit id="3483594998155999756" datatype="html">
-        <source>When no more move is possible, the game ends and the player with the most points wins.&lt;br/&gt;&lt;br/&gt;
-        Make your last move.</source>
-      </trans-unit>
-      <trans-unit id="2963709509031109432" datatype="html">
-        <source>Congratulations, you won 6 - 0!</source>
-      </trans-unit>
-      <trans-unit id="8876232297721386956" datatype="html">
-        <source>Bad idea, by moving on the source you would have won a point.</source>
-      </trans-unit>
-      <trans-unit id="5626639193339311369" datatype="html">
-        <source>Goal of the game</source>
-      </trans-unit>
-      <trans-unit id="5197172538685178535" datatype="html">
-        <source>The goal of Encapsule is to align three of your pieces.
-        Here, we have a victory of the dark player.</source>
-      </trans-unit>
-      <trans-unit id="9069271074421658276" datatype="html">
-        <source>Putting a piece</source>
-      </trans-unit>
-      <trans-unit id="5080810072548080541" datatype="html">
-        <source>This is the initial board. You&apos;re playing Dark.&lt;br/&gt;&lt;br/&gt;
-        Pick one of your piece on the side of the board and put it on the board.</source>
-      </trans-unit>
-      <trans-unit id="7371227687444224727" datatype="html">
-        <source>Another type of move is to move one of your pieces that is already on the board.&lt;br/&gt;&lt;br/&gt;
-        Click on your dark piece and then on any empty square of the board.</source>
-      </trans-unit>
-      <trans-unit id="7502910762990406647" datatype="html">
-        <source>Particularity</source>
-      </trans-unit>
-      <trans-unit id="84167177778071000" datatype="html">
-        <source>At Encapsule, pieces encapsulate each other.
-        It is therefore possible to have up to three pieces per square!
-        However, only the biggest piece of each square counts:
-        you cannot win with a piece that is &quot;hidden&quot; by a bigger piece.
-        Similarly, you cannot move a piece if it is encapsulated by a bigger piece.
-        Finally, you cannot encapsulate a piece with a smaller piece.
-        You&apos;re playing Dark and you can win now in various ways.&lt;br/&gt;&lt;br/&gt;
-        Try to win by making a move, and not by putting a new piece on the board.</source>
-      </trans-unit>
-      <trans-unit id="8733936607898144583" datatype="html">
-        <source>Initial board</source>
-      </trans-unit>
-      <trans-unit id="6855901703200229431" datatype="html">
-        <source>This is the initial board.
-        The top line is the starting line of Light.
-        The bottom line is the starting line of Dark.</source>
-      </trans-unit>
-      <trans-unit id="6886026531074912078" datatype="html">
-        <source>Goal of the game (1/2)</source>
-      </trans-unit>
-      <trans-unit id="356829737318160367" datatype="html">
-        <source>After multiple moves, if at the end of its turn, a player has more piece on the opponent&apos;s starting line
-        than the number of pieces the opponent has on the player&apos;s starting line, the player wins.
-        Here, it&apos;s Dark turn to play: Dark has therefore won.</source>
-      </trans-unit>
-      <trans-unit id="5351770434517588207" datatype="html">
-        <source>Goal of the game (2/2)</source>
-      </trans-unit>
-      <trans-unit id="914946805822108421" datatype="html">
-        <source>Here, it is Light&apos;s turn.
-        Light wins because they have two pieces on Dark&apos;s starting line, and Dark only has one on Light&apos;s starting line.</source>
-      </trans-unit>
-      <trans-unit id="4612562967450553112" datatype="html">
-        <source>Moving a piece</source>
-      </trans-unit>
-      <trans-unit id="4389534090551543396" datatype="html">
-        <source>Here is the starting board. Dark plays first.
-        Let&apos;s start with moving a single piece:
-        &lt;ol&gt;
-            &lt;li&gt;Click on a piece.&lt;/li&gt;
-            &lt;li&gt;Click on a empty neighbouring square.&lt;/li&gt;
-        &lt;/ol&gt;</source>
-      </trans-unit>
-      <trans-unit id="3304007702447669410" datatype="html">
-        <source>Congratulations, you are in advance. But this is not the exercise here, try again.</source>
-      </trans-unit>
-      <trans-unit id="5177233781165886499" datatype="html">
-        <source>This is how you move a single piece.</source>
-      </trans-unit>
-      <trans-unit id="3060866055407923547" datatype="html">
-        <source>Moving a phalanx</source>
-      </trans-unit>
-      <trans-unit id="4779732710143321350" datatype="html">
-        <source>Let us now see how to move multiple pieces along a line, which is called a phalanx :
-        &lt;ol&gt;
-            &lt;li&gt;Click on the first piece of the phalanx (here, the bottom left one).&lt;/li&gt;
-            &lt;li&gt;Click on the last piece of the phalanx (in this example, the one just above).&lt;/li&gt;
-            &lt;li&gt;Click two squares above in order to move the phalanx by two squares (the maximal legal distance, which equals the number of pieces moved).&lt;/li&gt;
-        &lt;/ol&gt;</source>
-      </trans-unit>
-      <trans-unit id="108222118450000526" datatype="html">
-        <source>Failed! You moved only one piece.</source>
-      </trans-unit>
-      <trans-unit id="831997732678638599" datatype="html">
-        <source>Congratulations!
-        The moved pieces can be horizontally, vertically, or diagonally aligned.
-        The move is made along this axis, forward or backwards.
-        There can be no opponent nor holes in the phalanx.</source>
-      </trans-unit>
-      <trans-unit id="1735581478820014059" datatype="html">
-        <source>In order to capture pieces of the opponent:
-        &lt;ol&gt;
-            &lt;li&gt;It must be aligned with the phalanx you are moving.&lt;/li&gt;
-            &lt;li&gt;It must be strictly shorter than your phalanx.&lt;/li&gt;
-            &lt;li&gt;The first piece of your phalanx should land on the first piece of the opponent&apos;s phalanx that you want to capture.&lt;/li&gt;
-        &lt;/ol&gt;&lt;br/&gt;
-        Capture a phalanx.</source>
-      </trans-unit>
-      <trans-unit id="9172885202154459481" datatype="html">
-        <source>Congratulations, you made it!.</source>
-      </trans-unit>
-      <trans-unit id="4418812710815829575" datatype="html">
-        <source>Failed, you have not captured the phalanx.</source>
-      </trans-unit>
-      <trans-unit id="5462100320287673827" datatype="html">
-        <source>The goal of Gipf is to capture the opponent&apos;s piece so that the opponent can no longer play.
-        This is the initial board.
-        Each player has 12 pieces on the side and 3 pieces on the board.
-        When, at its turn, a player has no more pieces on the side, that player cannot play anymore and loses the game.
-        The first player plays dark, the second player plays light.</source>
-      </trans-unit>
-      <trans-unit id="272253201636921624" datatype="html">
-        <source>Pushing</source>
-      </trans-unit>
-      <trans-unit id="3779284324485364091" datatype="html">
-        <source>Pieces can only enter the board through the edges. To insert a new piece:
-        &lt;ol&gt;
-            &lt;li&gt; Click on a space on the edge of the board.&lt;/li&gt;
-            &lt;li&gt; If that space was already taken, click on the arrow that represents the direction in which you want to push the piece(s) already on the corresponding line.&lt;/li&gt;
-        &lt;/ol&gt;
-        You cannot push when a line is full.&lt;br/&gt;&lt;br/&gt;
-        You&apos;re playing Dark, insert a piece.</source>
-      </trans-unit>
-      <trans-unit id="1535764723561428490" datatype="html">
-        <source>Capturing (1/3)</source>
-      </trans-unit>
-      <trans-unit id="2521203710254985218" datatype="html">
-        <source>To capture, you must align 4 of your own pieces, which will be the first 4 captured pieces.
-        There are multiple important aspects of a capture:
-        &lt;ol&gt;
-            &lt;li&gt; When 4 pieces are captured, all pieces that are directly aligned with these 4 pieces are also captured.&lt;/li&gt;
-            &lt;li&gt; As soon as there is an empty space on the line, the capture stops.&lt;/li&gt;
-            &lt;li&gt; Your own pieces that are captured go back to your stock.
-                    Your opponent&apos;s pieces however are really captured and do not go back to your opponent&apos;s stock.&lt;/li&gt;
-            &lt;li&gt; If you create a line of 4 of your opponent&apos;s pieces, it will be at the beginning of your opponent&apos;s turn that (s)he can capture them.
-                This means that a turn happens in three phases:
-                &lt;ol type=&quot;A&quot;&gt;
-                    &lt;li&gt; Pick the capture(s) resulting the last move of your opponent (by clicking on it).&lt;/li&gt;
-                    &lt;li&gt; Make your insertion.&lt;/li&gt;
-                    &lt;li&gt; Pick the capture(s) resulting from your move (by clicking on it).&lt;/li&gt;
-                &lt;/ol&gt;
-            &lt;/li&gt;
-        &lt;/ol&gt;&lt;br/&gt;
-        You&apos;re playing Dark, you can make a capture, do it.</source>
-      </trans-unit>
-      <trans-unit id="8768850104658663274" datatype="html">
-        <source>Congratulations, you have gotten 4 of your pieces back. This is not the most useful capture.
-        Let&apos;s now see how captures can really be useful.</source>
-      </trans-unit>
-      <trans-unit id="5296311699765609481" datatype="html">
-        <source>Capturing (2/3)</source>
-      </trans-unit>
-      <trans-unit id="6012182624396746560" datatype="html">
-        <source>Here, there are three different ways of capturing.
-        One way does not capture any of your opponent&apos;s pieces.
-        Another way captures one of your opponent&apos;s pieces.&lt;br/&gt;&lt;br/&gt;
-        The last way captures two of your opponent&apos;s pieces, pick that one.</source>
-      </trans-unit>
-      <trans-unit id="5909970360139332678" datatype="html">
-        <source>Congratulations, you have gotten back 4 of your pieces and captured 2 of the opponent&apos;s ones.
-        The most you can get is 3 per capture.</source>
-      </trans-unit>
-      <trans-unit id="3200525134996933550" datatype="html">
-        <source>Failed, the best capture was taking 2 of your opponent&apos;s pieces</source>
-      </trans-unit>
-      <trans-unit id="6859741057618390920" datatype="html">
-        <source>Capturing (3/3)</source>
-      </trans-unit>
-      <trans-unit id="1407355224915582556" datatype="html">
-        <source>Here, you must capture at the beginning of your turn.
-        This is due to a move of your opponent at the previous turn.
-        (even though this is a fictional game for pedagogical purpose).
-        After your capture, by performing the right move you can even capture two more of your opponent&apos;s pieces!
-        Keep it mind that the most useful in a capture is to take your opponent&apos;s pieces.</source>
-      </trans-unit>
-      <trans-unit id="1212338036122995731" datatype="html">
-        <source>Congratulations, you have gotten 12 of your pieces back and captured 2 of your opponent&apos;s pieces.
-        The maximum being 3 per capture.</source>
-      </trans-unit>
-      <trans-unit id="4244295242962463153" datatype="html">
-        <source>Failed, the best capture takes 2 of your opponent&apos;s pieces.</source>
-      </trans-unit>
-      <trans-unit id="1472088308118018916" datatype="html">
-        <source>Preliminary information</source>
-      </trans-unit>
-      <trans-unit id="352355973280326398" datatype="html">
-        <source>The game of Go is played on a board called a Goban, and the stones are placed on the intersections.
-        The traditional board is made of 19x19 intersections, but on this website we have the 13x13 board.
-        (For shorter parts, 9x9 and 5x5 boards exist, but are not yet available here).
-        For this tutorial, we will use a small 5x5 for pedagogical purposes.</source>
-      </trans-unit>
-      <trans-unit id="5188967317336954433" datatype="html">
-        <source>The goal of the game is to have the most points at the end of the game.
-        We call &quot;territories&quot; the intersections that are empty and isolated from the rest of the Goban by the stones of a single player.
-        Here, Dark has 9 territories on the left, and Light has 8 on the right.
-        The top part belongs to no one.
-        The score at the end of the game is the sum of the territories and the captures.</source>
-      </trans-unit>
-      <trans-unit id="4959464606758137740" datatype="html">
-        <source>An isolated stone, like the one in the middle here, has 4 neighbouring intersections (not 8, because we do not count diagonals).
-        If a neighbouring intersection is unoccupied, it is called a freedom.
-        If Dark plays on the last freedom of the light stone, this stone is removed from the Goban (captured) and Dark earns one point&lt;br/&gt;&lt;br/&gt;
-        There&apos;s only one freedom left to the light piece, capture it.</source>
-      </trans-unit>
-      <trans-unit id="4986672646268662936" datatype="html">
-        <source>Congratulations, you have earned one point.</source>
-      </trans-unit>
-      <trans-unit id="4290161289688830140" datatype="html">
-        <source>Failed, try again by playing on one of the intersection directly next to the light stone.</source>
-      </trans-unit>
-      <trans-unit id="8946006948417629723" datatype="html">
-        <source>Capturing multiple stones</source>
-      </trans-unit>
-      <trans-unit id="1725582712854549564" datatype="html">
-        <source>Stones that are connected horizontally or vertically must be captured at the same time, and are not capturable in isolation.&lt;br/&gt;&lt;br/&gt;
-        The light group here only has one freedom left, capture it.</source>
-      </trans-unit>
-      <trans-unit id="2022880801532921915" datatype="html">
-        <source>Congratulations, you have earned three points and formed a territory.</source>
-      </trans-unit>
-      <trans-unit id="682384900189815989" datatype="html">
-        <source>Failed, you have not captured the group. Play on the last freedom of that group.</source>
-      </trans-unit>
-      <trans-unit id="6220902431017372113" datatype="html">
-        <source>Suicide</source>
-      </trans-unit>
-      <trans-unit id="6822497721946724149" datatype="html">
-        <source>A suicide is forbidden.
-        If putting a piece on an intersection removes the last freedom of your group and does not capture any stone, playing on that intersection would be a suicide and is therefore forbidden.
-        Here, the top left intersection is a suicide for Light.
-        On the bottom right, it would be a suicide for Dark, and on the bottom left it is not a suicide for any player.</source>
-      </trans-unit>
-      <trans-unit id="2066383177849177665" datatype="html">
-        <source>Life and death (death)</source>
-      </trans-unit>
-      <trans-unit id="5995146621586456333" datatype="html">
-        <source>From the capture rule follows the life and death notion:
-        dead stones are stones that are definitely capturable (without losing anything else).
-        Alive stones are stones that can never be captured.
-        From the capture rule, Dark can play inside Light&apos;s territory and make a capture.
-        In this case, we say that Light has only one eye (its last freedom) and that Light is dead (even if not yet captured).
-        At the end of the game, the dead stone will count as a capture, and the intersection it occupies as a territory.</source>
-      </trans-unit>
-      <trans-unit id="6721138878022657917" datatype="html">
-        <source>Life and death (eyes)</source>
-      </trans-unit>
-      <trans-unit id="1084604724991997052" datatype="html">
-        <source>Here, Light cannot play on the top left, nor on the bottom left.
-        Light will never be able to capture Dark.
-        We say that Dark has two eyes (the eye on the top left, and the one on the bottom left) and that Dark is alive.</source>
-      </trans-unit>
-      <trans-unit id="8745919880228059784" datatype="html">
-        <source>Seki</source>
-      </trans-unit>
-      <trans-unit id="5496499515779223328" datatype="html">
-        <source>If Dark plays on the middle line, Light will play on the opposite intersection and capture Dark.
-        Similarly, if Light plays on the middle line, Dark will capture Light.
-        In other words, there is no point in playing on the middle line.
-        In that case, we say that stones in the middle are alive by Seki, and that both intersections in the middle are neutral.</source>
-      </trans-unit>
-      <trans-unit id="7812956328094242544" datatype="html">
-        <source>Ko</source>
-      </trans-unit>
-      <trans-unit id="5425125770484596220" datatype="html">
-        <source>A player, by putting a stone, cannot go back to an identical state of the Goban as before, in order to avoid an endless game.&lt;br/&gt;&lt;br/&gt;
-        Capture the light stone.</source>
-      </trans-unit>
-      <trans-unit id="8268334913018353590" datatype="html">
-        <source>Now, if Light tries to recapture the stone that Dark has put on the board, the Goban would go back to its previous state, opening the door for an endless game.
-        This intersection is therefore marked with a red triangle, to remind the players that this intersection is forbidden.
-        This rule is called the Ko.
-        The trick for Light is to try to create a big enough threat so that Dark must answer immediately, and does not have the time to protect its last stone, so that Light can capture it.</source>
-      </trans-unit>
-      <trans-unit id="1867501821252119171" datatype="html">
-        <source>When a player feels that there is no advantage to putting a new stone, that player can pass a turn.
-        The game phase stops when both players pass consecutively, and we move on to the counting phase.
-        The dead groups are then marked by clicking on them.
-        Every intersection in a player&apos;s territory earns that player a point.
-        The winner is the one with most points.&lt;br/&gt;&lt;br/&gt;
-        A last stone is dead, mark it.</source>
-      </trans-unit>
-      <trans-unit id="4959862943655130220" datatype="html">
-        <source>Congratulations, Dark has 15 territories and 3 light stones still present, called prisoners at the end of the game.
-        The intersections where the prisoners are count as Dark&apos;s territory
-        Light has 8 territories and 1 prisoner.
-        The end result is therefore 18 - 9 for Dark.</source>
-      </trans-unit>
-      <trans-unit id="6217706486990855046" datatype="html">
-        <source>Failed, try again.</source>
-      </trans-unit>
-      <trans-unit id="5017168027824461530" datatype="html">
-        <source>At Kamisado, there are two ways to win the game:
-        either by moving one of your pieces on the opponent&apos;s starting line,
-        or by forcing the opponent to make a move that blocks the entire game.
-        Here, Dark wins because its brown piece is on Light&apos;s starting line, on the top left.</source>
-      </trans-unit>
-      <trans-unit id="5394640330288068198" datatype="html">
-        <source>Initial board and initial move</source>
-      </trans-unit>
-      <trans-unit id="4612740589877593757" datatype="html">
-        <source>Here is the initial board.
-        At Kamisado, pieces can only move forward, vertically or diagonally.
-        You&apos;re playing first, with dark pieces, you can make your first move.&lt;br/&gt;&lt;br/&gt;
-        Click on the piece of your choice and click on the landing square.</source>
-      </trans-unit>
-      <trans-unit id="7757664042018880953" datatype="html">
-        <source>Perfect! Note that each of your piece has a different colour.</source>
-      </trans-unit>
-      <trans-unit id="2387365446507215753" datatype="html">
-        <source>Let us now consider the move of Light, after the blue piece has been moved by Dark.
-        All moves after the initial move must be made from the piece that corresponds to the colour
-        of the square upon which the last move ended.
-        Here, the last move ended on the pink square, hence the pink piece must move.
-        It is already selected, you do not have to click on it.&lt;br/&gt;&lt;br/&gt;
-        Move it on a blue square.</source>
-      </trans-unit>
-      <trans-unit id="8902613702570774815" datatype="html">
-        <source>You have not moved your pink piece on a blue square!</source>
-      </trans-unit>
-      <trans-unit id="6535171484072867925" datatype="html">
-        <source>Stuck situation</source>
-      </trans-unit>
-      <trans-unit id="2649088566668591407" datatype="html">
-        <source>Dark moved to another pink square, hence you have to move your pink piece again.
-        However, your pink piece is stuck! In this case, you must pass your turn.
-        Dark will now have to play by moving its pink piece.</source>
-      </trans-unit>
-      <trans-unit id="8029874053731693714" datatype="html">
-        <source>Victory by blocking</source>
-      </trans-unit>
-      <trans-unit id="7033161488352015923" datatype="html">
-        <source>At any time, if a player blocks the entire game, that player loses.
-        In other words, if a player forces its opponent to move a piece that that opponent cannot move,
-        and the player cannot move its own piece of the same colour, that player loses.
-        Here, you&apos;re playing Dark and you can force your opponent to create such a situation, hence you can force your opponent to lose!&lt;br/&gt;&lt;br/&gt;
-        Try to make this move.</source>
-      </trans-unit>
-      <trans-unit id="1985891572391293358" datatype="html">
-        <source>Perfect!
-         Light must move its green piece on the orange square, forcing you to play with your orange piece.
-         Your orange piece will be stuck and you will have to pass your turn.
-         Light will have to pass its turn too because its orange piece is also stuck: the game is completely stuck.
-         In this case, the last player to have moved a piece loses.
-         Here, Light will have moved its green piece last, you therefore win!</source>
-      </trans-unit>
-      <trans-unit id="4036586801649294358" datatype="html">
-        <source>The board at Four in a Row is made of 7 columns and 6 rows, and it is initially empty.
-        The first player plays Dark, the second plays Light.
-        The goal is to be the first to align 4 of its pieces (horizontally, vertically, or diagonally).</source>
-      </trans-unit>
-      <trans-unit id="8975478230679810486" datatype="html">
-        <source>Dropping a piece</source>
-      </trans-unit>
-      <trans-unit id="8376425958935569592" datatype="html">
-        <source>Click on any space in any column.</source>
-      </trans-unit>
-      <trans-unit id="5836753691261182816" datatype="html">
-        <source>As you can see, the piece falls at the bottom of the column.</source>
-      </trans-unit>
-      <trans-unit id="1116173898665219180" datatype="html">
-        <source>Victory</source>
-      </trans-unit>
-      <trans-unit id="5880375817695791500" datatype="html">
-        <source>You&apos;re playing Dark.
-        Place your piece so that you create a horizontal alignment of 4 of your pieces.</source>
-      </trans-unit>
-      <trans-unit id="2383238937544977536" datatype="html">
-        <source>You won!</source>
-      </trans-unit>
-      <trans-unit id="8360761958716876836" datatype="html">
-        <source>Failed, you have not aligned 4 pieces and missed an opportunity to win.</source>
-      </trans-unit>
-      <trans-unit id="7608929788238552566" datatype="html">
-        <source>Other victory</source>
-      </trans-unit>
-      <trans-unit id="5935897420698942151" datatype="html">
-        <source>You can also align 4 pieces diagonally or vertically.</source>
-      </trans-unit>
-      <trans-unit id="6119747591536950491" datatype="html">
-        <source>At Pylos, the goal is to be the last to play.
-        To do this, you have to save up your pieces.
-        As soon as a player puts its last piece, that player loses the game immediately.
-        Here is what the initial board looks like, it is a board of 4 x 4 squares.
-        This board will become a pyramid, little by little.
-        It will be filled by the pieces of your stock, of which each player has 15.</source>
-      </trans-unit>
-      <trans-unit id="5521539166247507576" datatype="html">
-        <source>When it is your turn, you can always drop one of your piece on an empty square.
-        The grey squares are where you can drop your pieces.&lt;br/&gt;&lt;br/&gt;
-        Click on one of the squares to drop a piece there.</source>
-      </trans-unit>
-      <trans-unit id="460049283627942483" datatype="html">
-        <source>There you go, as simple as that.</source>
-      </trans-unit>
-      <trans-unit id="9085516039614786121" datatype="html">
-        <source>Climbing</source>
-      </trans-unit>
-      <trans-unit id="6934393717447664003" datatype="html">
-        <source>When 4 pieces form a square, it is possible to put a fifth piece on top.
-        However, when that happens, you can save a piece by climbing instead of dropping a piece.
-        To climb:
-        &lt;ol&gt;
-            &lt;li&gt;Click on one of your free pieces, which should be lower than the landing square.&lt;/li&gt;
-            &lt;li&gt;Click on an empty landing square, higher than your selected piece.&lt;/li&gt;
-        &lt;/ol&gt;&lt;br/&gt;
-        Go ahead, climb!</source>
-      </trans-unit>
-      <trans-unit id="697264300548703520" datatype="html">
-        <source>Congratulations!&lt;br/&gt;
-        Some important notes:
-        &lt;ol&gt;
-            &lt;li&gt; You cannot move a piece that is directly below another one.&lt;/li&gt;
-            &lt;li&gt; Of course, you cannot move the opponent&apos;s pieces.&lt;/li&gt;
-            &lt;li&gt; You can only climb when the landing square is higher than the starting square.&lt;/li&gt;
-        &lt;/ol&gt;</source>
-      </trans-unit>
-      <trans-unit id="7244821610544753622" datatype="html">
-        <source>Square (1/3)</source>
-      </trans-unit>
-      <trans-unit id="287120045817333334" datatype="html">
-        <source>When the piece you&apos;re moving is the fourth one of a square of your colour,
-        you can choose anywhere on the board one or two of your pieces.
-        These pieces will be removed from the board, allowing you to save up one or two pieces.
-        A chosen piece must not be directly below another piece.
-        A chosen piece can be the piece you just placed.
-        You&apos;re playing Dark.&lt;br/&gt;&lt;br/&gt;
-        Form a square, then click twice on one of the four pieces to remove only that one.</source>
-      </trans-unit>
-      <trans-unit id="5456823255724159144" datatype="html">
-        <source>Congratulations, you have saved up one piece.</source>
-      </trans-unit>
-      <trans-unit id="1514360345752656911" datatype="html">
-        <source>Square (2/3)</source>
-      </trans-unit>
-      <trans-unit id="7482163381933878807" datatype="html">
-        <source>You&apos;re playing Dark.&lt;br/&lt;br/&gt;
-        Do like in the previous step, but this time click on both pieces on the top row.</source>
-      </trans-unit>
-      <trans-unit id="3455768301736755830" datatype="html">
-        <source>Congratulations, you have saved up two pieces.</source>
-      </trans-unit>
-      <trans-unit id="521772581425892664" datatype="html">
-        <source>Square (3/3)</source>
-      </trans-unit>
-      <trans-unit id="5406967993715013416" datatype="html">
-        <source>You&apos;re playing Dark.
-        Do as in the last step, but this time
-        you will have to take, as expected, the highest piece,
-        and then take the piece below it, which can now be taken.&lt;br/&gt;&lt;br/&gt;
-        Go ahead.</source>
-      </trans-unit>
-      <trans-unit id="8626668122007910027" datatype="html">
-        <source>Congratulations, you have saved up two pieces. You are now ready to play..</source>
-      </trans-unit>
-      <trans-unit id="8942542502399611014" datatype="html">
-        <source>Quarto is an alignment game.
-        The goal is to align four pieces that have at least one common aspect:
-        &lt;ul&gt;
-          &lt;li&gt;their colour (light or dark)&lt;/li&gt;
-          &lt;li&gt;their size (big or small)&lt;/li&gt;
-          &lt;li&gt;their pattern (empty or dotted)&lt;/li&gt;
-          &lt;li&gt;their shape (round or square)&lt;/li&gt;
-        &lt;/ul&gt;
-        Here, we have a board with a victory by an alignment of round pieces.</source>
-      </trans-unit>
-      <trans-unit id="5869780110608474933" datatype="html">
-        <source>Placement</source>
-      </trans-unit>
-      <trans-unit id="1449786172410747726" datatype="html">
-        <source>Every placement occurs in two steps: placing the piece you have in hand on a square of the board,
-        and picking a piece that the opponent will have to place, by clicking on one of the pieces on the side of the board.
-        If you prefer, the order of these two steps can be reversed.
-        Keep in mind that the second click confirms the move.&lt;br/&gt;&lt;br/&gt;
-        Make a move.</source>
-      </trans-unit>
-      <trans-unit id="2296943727359810458" datatype="html">
-        <source>Perfect!</source>
-      </trans-unit>
-      <trans-unit id="7849803408372436927" datatype="html">
-        <source>Situation</source>
-      </trans-unit>
-      <trans-unit id="2630866018354605019" datatype="html">
-        <source>We have here a tricky situation.&lt;br/&gt;&lt;br/&gt;
-        Analyse the board and play your move, carefully paying attention not to let the opponent win on the next move.</source>
-      </trans-unit>
-      <trans-unit id="4715207105849605918" datatype="html">
-        <source>Well done!</source>
-      </trans-unit>
-      <trans-unit id="8880269756041921906" datatype="html">
-        <source>Goal of the game.</source>
-      </trans-unit>
-      <trans-unit id="1849305746346487286" datatype="html">
-        <source>At Quixo, the goal is to align 5 of your pieces.
-        The first player plays with dark pieces, the second with light pieces.
-        The board is made of 25 spaces spread over a 5x5 square.
-        Every piece has a neutral side, a light side, and a dark side.</source>
-      </trans-unit>
-      <trans-unit id="7664600147441568899" datatype="html">
-        <source>What a move looks like (without animation)</source>
-      </trans-unit>
-      <trans-unit id="470293200268604229" datatype="html">
-        <source>When it is your turn:
-        &lt;ol&gt;
-            &lt;li&gt; Click on one of your pieces or on a neutral piece. You cannot choose the piece of the opponent.
-                 You can only choose a piece from the edge of the board.&lt;/li&gt;
-            &lt;li&gt; Pick a direction in which you want to send the piece (by clicking on the arrow).&lt;/li&gt;
-        &lt;/ol&gt;
-        You have to imagine that the piece you picked has been moved to the other side of the board, in the chosen direction.
-        Once on the other side, all pieces will move by one space in the opposing direction.
-        Afterwards, if the piece was neutral, it will become yours and takes your color.&lt;br/&gt;&lt;br/&gt;
-        For example, take the bottom right neutral piece, and move it to the left (you&apos;re playing Light).</source>
-      </trans-unit>
-      <trans-unit id="2349397111027092779" datatype="html">
-        <source>See how the four dark pieces have been moved one space to the right.
-        The neutral piece has been move 4 pieces to the left and has become light.</source>
-      </trans-unit>
-      <trans-unit id="5336209236331231317" datatype="html">
-        <source>You already know everything in order to play, but there is one last particularity.
-        If you create a line of 5 of your pieces, you win.
-        If you create a line of 5 of your opponent&apos;s pieces, you lose.
-        If you create both, you lose too!&lt;br/&gt;&lt;br/&gt;
-        You can win with this board, try it.
-        You&apos;re playing Light.</source>
-      </trans-unit>
-      <trans-unit id="5489405522962962283" datatype="html">
-        <source>Congratulations, you won!</source>
-      </trans-unit>
-      <trans-unit id="8006607638702407149" datatype="html">
-        <source>At Reversi, the pieces are double sided: one dark side for the first player, one light side for the second player.
-        When one piece is flipped, its owner changes.
-        The player owning the most pieces at the end of the game wins.
-        Here, Dark has 28 points and Light has 36, hence Light wins.</source>
-      </trans-unit>
-      <trans-unit id="5374319580594970060" datatype="html">
-        <source>Capturing (1/2)</source>
-      </trans-unit>
-      <trans-unit id="6525142591266192640" datatype="html">
-        <source>At the beginning of the game, pieces are placed like here.
-        For a move to be legal, it must sandwich at least one piece of the opponent between the piece you&apos;re putting and another of your pieces.&lt;br/&gt;&lt;br/&gt;
-        Do any move by clicking to put your piece
-        Dark plays first.</source>
-      </trans-unit>
-      <trans-unit id="2992889611246141410" datatype="html">
-        <source>Capturing (2/2)</source>
-      </trans-unit>
-      <trans-unit id="5763897640314321260" datatype="html">
-        <source>A move can also capture a bigger line, and more than one lines at a time
-        You&apos;re playing light here.&lt;br/&gt;&lt;br/&gt;
-        Play on the bottom left to see an example.</source>
-      </trans-unit>
-      <trans-unit id="863291659187903950" datatype="html">
-        <source>Lower and more to the left, please.</source>
-      </trans-unit>
-      <trans-unit id="1243885947284298199" datatype="html">
-        <source>Passing a turn</source>
-      </trans-unit>
-      <trans-unit id="3839030392804080169" datatype="html">
-        <source>If, during its turn, a player has no move that would allow that player to flip a piece, that player must pass
-        Moreover, if the next player could not play neither, the game ends before the board is full, and points are counted in the usual way.</source>
-      </trans-unit>
-      <trans-unit id="7379617497808564008" datatype="html">
-        <source>Sâhârâ is played on a board where each space is a triangle.
-        Each player has six pyramids.</source>
-      </trans-unit>
-      <trans-unit id="6444786302896374966" datatype="html">
-        <source>At Sâhârâ, the goal of the game is to immobilise one of the opponent&apos;s pyramid.
-        To do so, you have to occupy all neighbouring space of that pyramid.
-        Here, Light has lost because its leftmost pyramid is immobilised.</source>
-      </trans-unit>
-      <trans-unit id="6144661124534225012" datatype="html">
-        <source>Simple move</source>
-      </trans-unit>
-      <trans-unit id="123617795360330206" datatype="html">
-        <source>To immobilise your opponent, you have to move your pyramids.
-        When a pyramid shares its vertices with light spaces, it can move on these spaces (we call this a simple step)
-        You&apos;re the first player, playing with the dark pyramids
-        &lt;ol&gt;
-            &lt;li&gt; Click on one of your pyramids.&lt;/li&gt;
-            &lt;li&gt; Click then on one of the two or three neighbouring spaces in order to move your pyramid there.&lt;/li&gt;
-        &lt;/ol&gt;&lt;br/&gt;
-        Do any move.</source>
-      </trans-unit>
-      <trans-unit id="6109976694950516137" datatype="html">
-        <source>You have made a double step, which is good but it is the next exercise!</source>
-      </trans-unit>
-      <trans-unit id="7534417450669487466" datatype="html">
-        <source>Double move</source>
-      </trans-unit>
-      <trans-unit id="4664574219773836582" datatype="html">
-        <source>When a pyramid shares its vertices with dark spaces, it can move of up to two steps.
-        To do so:
-        &lt;ol&gt;
-            &lt;li&gt; Click on the pyramid to move (the one in the center).&lt;/li&gt;
-            &lt;li&gt; Click on one of the 6 destinations that you can reach in two steps:
-                the 6 neighbouring light spaces of the 3 dark spaces that are neighbours of your pyramid.
-        &lt;/ol&gt;</source>
-      </trans-unit>
-      <trans-unit id="5302904876941698020" datatype="html">
-        <source>Failed! You have made a single step.</source>
-      </trans-unit>
-      <trans-unit id="4223815631577991732" datatype="html">
-        <source>The goal at Siam is to be the first to push a mountain out of the board.
-        The initial board contains three mountains, and no pieces are initially on the board.
-        During its turn, a player can do one of the following three actions:
-        &lt;ol&gt;
-            &lt;li&gt;Put a new piece on the board.&lt;/li&gt;
-            &lt;li&gt;Change the orientation of one of its piece, and optionally move it.&lt;/li&gt;
-            &lt;li&gt;Take one of its pieces out of the board.&lt;/li&gt;
-        &lt;/ol&gt;</source>
-      </trans-unit>
-      <trans-unit id="4040000701091542987" datatype="html">
-        <source>Inserting a piece</source>
-      </trans-unit>
-      <trans-unit id="262400150620825777" datatype="html">
-        <source>Every player has 5 pieces in total.
-        As long as you do not have 5 pieces on the board, you can insert new pieces. To do so:
-        &lt;ol&gt;
-            &lt;li&gt;Click on one of the big arrows along the board.&lt;/li&gt;
-            &lt;li&gt;Click on one of the small arrows that appeared on the landing square of your piece.
-                This is the direction in which your piece will be oriented.&lt;/li&gt;
-        &lt;/ol&gt;&lt;br/&gt;
-        Insert a piece on the board.</source>
-      </trans-unit>
-      <trans-unit id="8550508722873781997" datatype="html">
-        <source>We will distinguish here &quot;moving&quot; and &quot;pushing&quot;.
-        A move is made from a piece&apos;s square to an empty neighbouring square, horizontally or vertically.
-        During that move, you can also move the piece out of the board.
-        To move a piece:
-        &lt;ol&gt;
-            &lt;li&gt;Click on it.&lt;/li&gt;
-            &lt;li&gt;Click on one of the 4 arrows to pick the direction in which it will move.
-                You can also click on the middle dot to change the piece&apos;s orientation without moving it.&lt;/li&gt;
-            &lt;li&gt;Click on one of the 4 arrows on the landing square to pick its orientation.&lt;/li&gt;
-        &lt;/ol&gt;&lt;br/&gt;
-        Try to move the piece that is on the board one square upwards and to orient it downwards.</source>
-      </trans-unit>
-      <trans-unit id="8667721530573613689" datatype="html">
-        <source>Congratulations, you made a sideslip!</source>
-      </trans-unit>
-      <trans-unit id="6800736002193770248" datatype="html">
-        <source>Moving a piece out of the board</source>
-      </trans-unit>
-      <trans-unit id="4080355461737897031" datatype="html">
-        <source>To move a piece out of the board, you do not have to pick an orientation after the move.&lt;br/&gt;&lt;br/&gt;
-        Get that piece out of the board!</source>
-      </trans-unit>
-      <trans-unit id="423861981305705638" datatype="html">
-        <source>Congratulations, even if in this context it was not a useful move.</source>
-      </trans-unit>
-      <trans-unit id="4722706540028615833" datatype="html">
-        <source>Failed, the piece is still on the board</source>
-      </trans-unit>
-      <trans-unit id="7027285279101390248" datatype="html">
-        <source>When the landing square of your move is occupied, we use the term &quot;push&quot;.
-        In order to push, multiple conditions must hold:
-        &lt;ol&gt;
-            &lt;li&gt;Your piece must be oriented in the direction of the push.&lt;/li&gt;
-            &lt;li&gt;The number of the pieces (opponent&apos;s or not) that are facing yours (called the resistants)
-                is smaller than the number of pieces that are oriented in the same direction as the push, yourself included (the pushers)&lt;/li&gt;
-            &lt;li&gt;The number of mountains on that line must be smaller or equal to the difference between the pushers and the resistants.&lt;/li&gt;
-        &lt;/ol&gt;
-        Your piece on the top right cannot push because there is one mountain too much.
-        Your piece on the bottom right can push..&lt;br/&gt;&lt;br/&gt;
-        Do it.</source>
-      </trans-unit>
-      <trans-unit id="4320644310018984490" datatype="html">
-        <source>The game ends when a mountain is pushed out of the board.
-        If you pushed it and nobody is in front of you, you&apos;re the winner.
-        However, if you were pushing an opponent oriented in the same direction as you, your opponent will win because that piece is closer to the mountain.
-        However, if that opponent is closer to the mountain but not oriented towards it, victory will be yours.&lt;br/&gt;&lt;br/&gt;
-        You have two ways of ending the game here: you can either win, or lose. Choose correctly!</source>
-      </trans-unit>
-      <trans-unit id="8309748811457759789" datatype="html">
-        <source>Failed, you lost.</source>
-      </trans-unit>
-      <trans-unit id="4811847660786431276" datatype="html">
-        <source>This move is not disconnecting a piece of your opponent. Try again with another piece.</source>
-      </trans-unit>
-      <trans-unit id="5488934244958987687" datatype="html">
-        <source>Six is a game without board, where pieces are placed on the side of each other, in a contiguous block.
-        Every player has 21 pieces, 2 being already on the table.
-        The goal of the game is to form one of the three winning shapes with your pieces.</source>
-      </trans-unit>
-      <trans-unit id="1323662052932112829" datatype="html">
-        <source>Victory (line)</source>
-      </trans-unit>
-      <trans-unit id="4554770606444065239" datatype="html">
-        <source>On this board, by putting your piece at the right place, you can align six of your pieces and win the game&lt;br/&gt;&lt;br/&gt;
-        Find the victory. You&apos;re playing Dark.</source>
-      </trans-unit>
-      <trans-unit id="2466439893530767761" datatype="html">
-        <source>Victory (circle)</source>
-      </trans-unit>
-      <trans-unit id="4365332414018101911" datatype="html">
-        <source>On this board, by putting your piece at the right place, you can form a circle with six of your pieces and win the game.&lt;br/&gt;&lt;br/&gt;
-        Find the victory. You&apos;re playing Dark.</source>
-      </trans-unit>
-      <trans-unit id="3255477892845543355" datatype="html">
-        <source>Congratulations! Note that if a piece is inside the circle, it does not change anything.</source>
-      </trans-unit>
-      <trans-unit id="4644119482430965077" datatype="html">
-        <source>Victory (triangle)</source>
-      </trans-unit>
-      <trans-unit id="5836697956170776107" datatype="html">
-        <source>On this board, by putting your piece at the right place, you can form a triangle with six of your pieces and win the game.&lt;br/&gt;&lt;br/&gt;
-        Find the victory. You&apos;re playing Dark.</source>
-      </trans-unit>
-      <trans-unit id="8968454720078127329" datatype="html">
-        <source>Second phase</source>
-      </trans-unit>
-      <trans-unit id="286490647880147114" datatype="html">
-        <source>After 40 tours, your pieces have all been placed and we move on to the second phase of the game.
-        You now have to move your pieces, paying attention not to remove a piece that was blocking the opponent&apos;s victory.
-        From now on, if after move, on or more pieces are disconnected from the largest group of piece, these will be taken out of the game.&lt;br/&gt;&lt;br/&gt;
-        You&apos;re playing Dark. Make a move that disconnects one of your opponent&apos;s pieces.</source>
-      </trans-unit>
-      <trans-unit id="6404013542075961070" datatype="html">
-        <source>Congratulations, your opponent now has one piece less and you&apos;re closer to victory!</source>
-      </trans-unit>
-      <trans-unit id="4819564470925108710" datatype="html">
-        <source>Victory by disconnection</source>
-      </trans-unit>
-      <trans-unit id="5614996129263361767" datatype="html">
-        <source>During the second phase of the game, on top of normal victories (line, circle, triangle), you can win by disconnection.
-        If at any time, one player does not have enough pieces to win (less than 6), the game ends.
-        The one with the most pieces wins. In case of tie, it&apos;s a draw.&lt;br/&gt;&lt;br/&gt;
-        Here, you&apos;re playing Dark and you can win. Do it!</source>
-      </trans-unit>
-      <trans-unit id="7208567678509553256" datatype="html">
-        <source>This move does not disconnect your opponent&apos;s pieces. Try again with another piece.</source>
-      </trans-unit>
-      <trans-unit id="631151175449209373" datatype="html">
-        <source>Special disconnection</source>
-      </trans-unit>
-      <trans-unit id="6890637892579669718" datatype="html">
-        <source>During a disconnection, two or more groups could have the same size,
-        in which case you will have to click on the group you wish to keep.&lt;br/&gt;&lt;br/&gt;
-        You&apos;re playing Dark, play such a move!</source>
-      </trans-unit>
-      <trans-unit id="4762560256027932544" datatype="html">
-        <source>This move has not cut the board in two equal halves.</source>
-      </trans-unit>
-      <trans-unit id="6486947038444424983" datatype="html">
-        <source>Tablut is a strategy game that was played by the Vikings.
-        The goal of the game is different for each player.
-        The attacker plays first. Its pieces (dark) are close to the edges.
-        Its goal is to capture the king, which is in the centre of the board.
-        The defender plays second. Its pieces (light) are in the middle.
-        Its goal is to put the king of one of the 4 thrones in the corners.
-        Note that the square in which the king starts, in the centre of the board, is also a throne.</source>
-      </trans-unit>
-      <trans-unit id="8660054125292772190" datatype="html">
-        <source>All pieces move in the same way.
-        Similarly to a rook in chess, a piece can move:
-        &lt;ol&gt;
-            &lt;li&gt;By as many squares as you want.&lt;/li&gt;
-            &lt;li&gt;Without going over another piece or stopping on another piece.&lt;/li&gt;
-            &lt;li&gt;Horizontally or vertically.&lt;/li&gt;
-            &lt;li&gt;Only the king can land on a throne.&lt;/li&gt;
-        &lt;/ul&gt;
-        To move a piece, click on it and then on its landing square.&lt;br/&gt;&lt;br/&gt;
-        This is the initial board, do the first move</source>
-      </trans-unit>
-      <trans-unit id="6012770625680782650" datatype="html">
-        <source>Capturing a soldier (1/2)</source>
-      </trans-unit>
-      <trans-unit id="3705847504054663953" datatype="html">
-        <source>All pieces except the king, attackers and defenders, are soldiers.
-        To capture them, they have to be sandwiched between two of your soldiers.
-        By getting too close, an attacker&apos;s soldier is in danger.&lt;br/&gt;&lt;br/&gt;
-        Capture it.</source>
-      </trans-unit>
-      <trans-unit id="1504890408061490574" datatype="html">
-        <source>Congratulations, that will teach him a lesson!</source>
-      </trans-unit>
-      <trans-unit id="3980320770441466216" datatype="html">
-        <source>Failed, you missed the opportunity to capture an opponent.</source>
-      </trans-unit>
-      <trans-unit id="4346619065189143436" datatype="html">
-        <source>Capturing a soldier (2/2)</source>
-      </trans-unit>
-      <trans-unit id="7441310005881510130" datatype="html">
-        <source>A second way to capture a soldier is against an empty throne.
-        The King has moved and endangered one of its soldiers..&lt;br/&gt;&lt;br/&gt;
-        Capture it.</source>
-      </trans-unit>
-      <trans-unit id="6149168030196118189" datatype="html">
-        <source>Congratulations, one less defender. But keep an eye on the king, it is the most important.</source>
-      </trans-unit>
-      <trans-unit id="2625274275364629010" datatype="html">
-        <source>Failed, you did not do the expected move.</source>
-      </trans-unit>
-      <trans-unit id="2222427678565473040" datatype="html">
-        <source>Capturing the king (1/2)</source>
-      </trans-unit>
-      <trans-unit id="3335639485588087944" datatype="html">
-        <source>To capture the king, two soldiers are not enough.
-        For the first solution, the four squares neighbour to the king (horizontally and vertically) must be occupied by your soldiers.
-        This also works if the king is on the throne.&lt;br/&gt;&lt;br/&gt;
-        Capture the king.</source>
-      </trans-unit>
-      <trans-unit id="6041867123312663432" datatype="html">
-        <source>Congratulations, you won..</source>
-      </trans-unit>
-      <trans-unit id="2543567724882527416" datatype="html">
-        <source>Failed, you let the king run away.</source>
-      </trans-unit>
-      <trans-unit id="2262651303124763617" datatype="html">
-        <source>Capturing the king (2/2)</source>
-      </trans-unit>
-      <trans-unit id="7462268956373416694" datatype="html">
-        <source>Another way to capture the king is to immobilise it against an edge of the board.
-        Note that the king cannot be captured next to a throne.&lt;br/&gt;&lt;br/&gt;
-        Capture the king.</source>
-      </trans-unit>
-      <trans-unit id="6715271150391313638" datatype="html">
-        <source>The King is dead, long live the King. Congratulations, you won.</source>
       </trans-unit>
       <trans-unit id="7800061171704298797" datatype="html">
         <source>Human</source>
@@ -1463,8 +374,8 @@
       <trans-unit id="4046928906081232002" datatype="html">
         <source>Configuration proposal</source>
       </trans-unit>
-      <trans-unit id="4922878155379285633" datatype="html">
-        <source> <x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> proposes to play a <x id="INTERPOLATION_1" equiv-text="{{ viewInfo.partTypeName }}"/> game, where: </source>
+      <trans-unit id="5261715006592223294" datatype="html">
+        <source> <x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> proposes to play a <x id="INTERPOLATION_1" equiv-text="{{ viewInfo.partTypeName }}"/> game </source>
       </trans-unit>
       <trans-unit id="3962623157898068441" datatype="html">
         <source> You have been selected as the opponent.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> <x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> is modifying the configuration. </source>
@@ -1478,8 +389,8 @@
       <trans-unit id="4100836436246650741" datatype="html">
         <source>the game lasts at most </source>
       </trans-unit>
-      <trans-unit id="6328752226411869823" datatype="html">
-        <source> the first player is random </source>
+      <trans-unit id="8167093974081050219" datatype="html">
+        <source> the first player is selected randomly </source>
       </trans-unit>
       <trans-unit id="5176672264547312712" datatype="html">
         <source>per player</source>
@@ -1550,14 +461,44 @@
       <trans-unit id="919799632623109347" datatype="html">
         <source>Maximal game duration:</source>
       </trans-unit>
-      <trans-unit id="3946046215836154878" datatype="html">
-        <source>The game has been cancelled</source>
+      <trans-unit id="3852843717175527075" datatype="html">
+        <source>The game has been canceled!</source>
       </trans-unit>
       <trans-unit id="3474603094089099622" datatype="html">
         <source> Potential opponents that join the game will appear here.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Wait for an opponent to join, so that you can pick one. </source>
       </trans-unit>
       <trans-unit id="7137133530752645682" datatype="html">
         <source><x id="PH" equiv-text="userPseudo"/> left the game, please pick another opponent.</source>
+      </trans-unit>
+      <trans-unit id="6594123400599013490" datatype="html">
+        <source>Step finished!</source>
+      </trans-unit>
+      <trans-unit id="5395533573244657143" datatype="html">
+        <source>This step is not expecting any move from your part.</source>
+      </trans-unit>
+      <trans-unit id="7583363829279229518" datatype="html">
+        <source>Congratulations, you completed the tutorial.</source>
+      </trans-unit>
+      <trans-unit id="6439401135646542284" datatype="html">
+        <source>Failure</source>
+      </trans-unit>
+      <trans-unit id="5717355661357017349" datatype="html">
+        <source> Try again </source>
+      </trans-unit>
+      <trans-unit id="8720977247725652816" datatype="html">
+        <source>Ok</source>
+      </trans-unit>
+      <trans-unit id="6962699013778688473" datatype="html">
+        <source>Continue</source>
+      </trans-unit>
+      <trans-unit id="4552397654536129176" datatype="html">
+        <source>Pass</source>
+      </trans-unit>
+      <trans-unit id="7757774343229747209" datatype="html">
+        <source>Play locally</source>
+      </trans-unit>
+      <trans-unit id="562381694553808783" datatype="html">
+        <source> See solution </source>
       </trans-unit>
       <trans-unit id="6050846802280051862" datatype="html">
         <source>You cannot move more than 3 of your pieces!</source>
@@ -1571,11 +512,11 @@
       <trans-unit id="7864006988432394989" datatype="html">
         <source>This line contains pieces of your opponent or empty spaces, which is forbidden.</source>
       </trans-unit>
-      <trans-unit id="5627818260418336058" datatype="html">
-        <source>This move is impossible, some landing cases are occupied.</source>
+      <trans-unit id="507376328570453826" datatype="html">
+        <source>This move is impossible, some landing spaces are occupied.</source>
       </trans-unit>
-      <trans-unit id="6737432448605254199" datatype="html">
-        <source>This case is not aligned with the current line.</source>
+      <trans-unit id="6088417909306773667" datatype="html">
+        <source>This space is not aligned with the current line.</source>
       </trans-unit>
       <trans-unit id="6178824149031907459" datatype="html">
         <source>Initial board and goal of the game</source>
@@ -1583,22 +524,34 @@
       <trans-unit id="2613028380797438509" datatype="html">
         <source>At Abalone, the goal of the game is to be the first player to push 6 opponent&apos;s pieces out of the board. Let us see how!</source>
       </trans-unit>
-      <trans-unit id="4523337247864078954" datatype="html">
+      <trans-unit id="4612562967450553112" datatype="html">
+        <source>Moving a piece</source>
+      </trans-unit>
+      <trans-unit id="980251877705717270" datatype="html">
         <source>At each turn, move one, two, or three pieces either along their line, or on their side.
-        For your moves you can therefore choose between 6 directions.
+        For your moves you can therefore choose between up to 6 directions.
         The pieces you move must be aligned and consecutive, and the move should land on an empty space (except to push, we will see that later).
         To make a move, click on one of your pieces, then click on an arrow to choose the move direction.&lt;br/&gt;&lt;br/&gt;
         You&apos;re playing Dark, make any move!</source>
       </trans-unit>
-      <trans-unit id="7707356125048890499" datatype="html">
-        <source>To push one piece, you must move at least two of your pieces.
-        To push two pieces, you must move three of your pieces.
+      <trans-unit id="3762527362373672599" datatype="html">
+        <source>Congratulations!</source>
+      </trans-unit>
+      <trans-unit id="272253201636921624" datatype="html">
+        <source>Pushing</source>
+      </trans-unit>
+      <trans-unit id="5317537747857630671" datatype="html">
+        <source>To push one opponent piece, you must move at least two of your pieces.
+        To push two opponent pieces, you must move three of your pieces.
         If one of your pieces blocks the push, it will be impossible to push.
-        You cannot move four pieces or more.
+        You cannot move four pieces or more.&lt;br/&gt;&lt;br/&gt;
         Only one push towards the right is possible here, find it. (You&apos;re playing Dark).</source>
       </trans-unit>
       <trans-unit id="6875339943465710233" datatype="html">
         <source>Congratulations! You know everything to start a game!</source>
+      </trans-unit>
+      <trans-unit id="8139485336036692612" datatype="html">
+        <source>Failed!</source>
       </trans-unit>
       <trans-unit id="1299772099949111249" datatype="html">
         <source>You cannot distribute from the enemy&apos;s home.</source>
@@ -1608,6 +561,116 @@
       </trans-unit>
       <trans-unit id="271201472468525420" datatype="html">
         <source>You should distribute but you do not.</source>
+      </trans-unit>
+      <trans-unit id="2949583224863920715" datatype="html">
+        <source>Sowing</source>
+      </trans-unit>
+      <trans-unit id="6972413011819423487" datatype="html">
+        <source>Awalé is a game of distribution (sowing) and capture. Its goal is to capture the most seeds.
+         Let&apos;s see how seeds are sown.
+         As you&apos;re playing first, the 6 houses on the top are yours.&lt;br/&gt;&lt;br&gt;
+         Click on any of them to sow the seeds it contains: they will be sown clockwise, one seed per house.</source>
+      </trans-unit>
+      <trans-unit id="8638152355669938683" datatype="html">
+        <source>Look at the 4 houses that follow clockwise the one you picked, they now contain 5 seeds.
+        This is how seeds are sown:
+        one by one from the house next to the one they come from, clockwise.</source>
+      </trans-unit>
+      <trans-unit id="8109801868756013772" datatype="html">
+        <source>Big sowing</source>
+      </trans-unit>
+      <trans-unit id="278639697286568585" datatype="html">
+        <source>You are now the second player (on the bottom).
+        When there are enough seeds to make a full turn, something else happens.&lt;br/&gt;&lt;br/&gt;
+        Sow the house that contains 12 seeds.</source>
+      </trans-unit>
+      <trans-unit id="498712253814253582" datatype="html">
+        <source>See, the house that you sowed has not been refilled, and the sowing immediately continued to the next house (which therefore contains two seeds).</source>
+      </trans-unit>
+      <trans-unit id="6009621890963077533" datatype="html">
+        <source>Simple capture</source>
+      </trans-unit>
+      <trans-unit id="1376466164144182842" datatype="html">
+        <source>After sowing, if the last seed falls in an opponent&apos;s house and if there is now two or three seeds in this house, the player captures these two or three seeds.
+         Then, the player looks at the preceding house:
+         if it is still in the opponent&apos;s side and contains two or three seeds, they are also captured.
+         This continues until we reach either the player&apos;s side or a house containing neither two nor three seeds.&lt;br/&gt;&lt;br/&gt;
+         You are the second player, try to capture some pieces!</source>
+      </trans-unit>
+      <trans-unit id="1449179615423109818" datatype="html">
+        <source>Well done! This was a simple capture, now let us see how to make multiple captures.</source>
+      </trans-unit>
+      <trans-unit id="8065050610159894114" datatype="html">
+        <source>Failed. Try again and sow from the leftmost house.</source>
+      </trans-unit>
+      <trans-unit id="3104604410220998192" datatype="html">
+        <source>Multiple captures</source>
+      </trans-unit>
+      <trans-unit id="1710205648645078210" datatype="html">
+        <source>By sowing from your leftmost house, you will change the number of seeds in a house from 2 to 3, and from the preceding house from 1 to 2.
+        As these are consecutive houses, all seeds in them will be captured.&lt;br/&gt;&lt;br/&gt;
+        Capture them.</source>
+      </trans-unit>
+      <trans-unit id="830087202472977218" datatype="html">
+        <source>Nice, you win 3 points from the first house, and 2 from the second!</source>
+      </trans-unit>
+      <trans-unit id="8017917529851412468" datatype="html">
+        <source>Failed. Try again.</source>
+      </trans-unit>
+      <trans-unit id="437214181691581058" datatype="html">
+        <source>Interrupted capture</source>
+      </trans-unit>
+      <trans-unit id="2140233800611707867" datatype="html">
+        <source>By clicking on your leftmost house, you end up on the 3rd house, which is capturable.&lt;br/&gt;&lt;br/&gt;
+        Do it.</source>
+      </trans-unit>
+      <trans-unit id="3933505566350744698" datatype="html">
+        <source>Notice that because the second house was not capturable, the captured was interrupted and you have not captured the first house.</source>
+      </trans-unit>
+      <trans-unit id="5352377142224231024" datatype="html">
+        <source>Capture on the other side only</source>
+      </trans-unit>
+      <trans-unit id="6181593302991158317" datatype="html">
+        <source>Try to capture the two leftmost houses of the opponent.</source>
+      </trans-unit>
+      <trans-unit id="1347673606182808434" datatype="html">
+        <source>Congratulations! Notice that the capture was interrupted when entering your territory: you cannot capture your own houses!</source>
+      </trans-unit>
+      <trans-unit id="7890197140479173967" datatype="html">
+        <source>You have only captured one house, try again!</source>
+      </trans-unit>
+      <trans-unit id="2796272222228002710" datatype="html">
+        <source>Do not starve</source>
+      </trans-unit>
+      <trans-unit id="1389121325319402395" datatype="html">
+        <source>You have a very nice capture that seems possible: it seems that you can capture all the opponent&apos;s seeds!&lt;br/&gt;&lt;br/&gt;
+        Try it.</source>
+      </trans-unit>
+      <trans-unit id="5327525705025836061" datatype="html">
+        <source>Sadly, you cannot capture here, otherwise the opponent could not play after you.
+        When this happens, the move can be made, but no capture takes place!</source>
+      </trans-unit>
+      <trans-unit id="6033788914683606777" datatype="html">
+        <source>Feeding is mandatory</source>
+      </trans-unit>
+      <trans-unit id="6914881509682724797" datatype="html">
+        <source>You cannot let another player starve, meaning that if your opponent has no seeds anymore and if you can give them at least one, you have to do it.&lt;br/&gt;&lt;br/&gt;
+        Go ahead!</source>
+      </trans-unit>
+      <trans-unit id="3908210272037108493" datatype="html">
+        <source>Congratulations! Note that you can choose to give your opponent the least number of seeds if it is better for you.
+        It is often a good way to have easy captures!</source>
+      </trans-unit>
+      <trans-unit id="2281492801612237310" datatype="html">
+        <source>End of the game</source>
+      </trans-unit>
+      <trans-unit id="2996486651978672921" datatype="html">
+        <source>A game is won as soon as one player has captured 25 seeds, as that player has more than half of all the seeds.&lt;br/&gt;&lt;br/&gt;
+         Sow the house on the top right.</source>
+      </trans-unit>
+      <trans-unit id="51867831368251774" datatype="html">
+        <source>Also, as soon as on player cannot play, the other player captures all the seeds in its own side.
+         Here, it was the first player&apos;s turn, and the second player has taken all the remaining seeds.</source>
       </trans-unit>
       <trans-unit id="8041478089077572634" datatype="html">
         <source>Invalid move distance: your piece must land on one of the closest six triangles with the same color.</source>
@@ -1621,11 +684,89 @@
       <trans-unit id="6829098107854171134" datatype="html">
         <source>You cannot capture on a removed tile.</source>
       </trans-unit>
-      <trans-unit id="7912425794839124402" datatype="html">
-        <source>You cannot capture from an empty case.</source>
+      <trans-unit id="7341385722923686160" datatype="html">
+        <source>You cannot capture from an empty space.</source>
       </trans-unit>
       <trans-unit id="1137390440747939689" datatype="html">
         <source>You cannot capture your own pieces.</source>
+      </trans-unit>
+      <trans-unit id="7117895259187122182" datatype="html">
+        <source>Board and goal of the game</source>
+      </trans-unit>
+      <trans-unit id="8758869946846631030" datatype="html">
+        <source>Coerceo is played on a board like this, composed of hexagonal tiles, each comprising 6 triangles.
+         The triangles are the spaces along which pieces move during the game.
+         The tiles can be removed from the board (you will see how later).
+         The dark pieces belong to the first player and can only move on the dark spaces,
+         while the light pieces belong to the second player and can only move on the light spaces.
+         The goal of the game is to capture all of the opponent&apos;s pieces.</source>
+      </trans-unit>
+      <trans-unit id="2354817630223808522" datatype="html">
+        <source>Move</source>
+      </trans-unit>
+      <trans-unit id="5025791529917646902" datatype="html">
+        <source>To move a piece, you need to:
+        &lt;ol&gt;
+          &lt;li&gt;Click on one of your pieces.&lt;/li&gt;
+          &lt;li&gt;Click on one of the triangular space highlighted in yellow.&lt;/li&gt;
+        &lt;/ol&gt;
+        You can pass through the opponent&apos;s pieces.
+        You&apos;re playing first, hence you&apos;re playing Dark.&lt;br/&gt;&lt;br/&gt;
+        Perform any move.</source>
+      </trans-unit>
+      <trans-unit id="3313068005460528101" datatype="html">
+        <source>Congratulations! Let&apos;s see captures now.</source>
+      </trans-unit>
+      <trans-unit id="7869356423919656180" datatype="html">
+        <source>Capture</source>
+      </trans-unit>
+      <trans-unit id="4864789526486078372" datatype="html">
+        <source>Every piece has three neighboring triangular spaces (2 on the sides).
+        When all neighboring spaces except one are occupied, and one opponent moves to that last free space, your piece is captured!
+        However, it is possible to place a piece between 3 of the opponent&apos;s pieces (or 2 on the side) without being captured.&lt;br/&gt;&lt;br/&gt;
+        You&apos;re playing Light, make a capture.</source>
+      </trans-unit>
+      <trans-unit id="1766583918856668821" datatype="html">
+        <source>Failed, you have not captured any piece.</source>
+      </trans-unit>
+      <trans-unit id="8225905705628695723" datatype="html">
+        <source>Gain a tile</source>
+      </trans-unit>
+      <trans-unit id="4646030392258334853" datatype="html">
+        <source>When a tile is empty, she can become removable from the board.
+        For it to be removable, at least three of its sides must be free, and these should be consecutive sides.
+        Note that if one empty tile, neighboring a tile that was just removed, also becomes removable, it will be removed too.
+        For example, here, the topmost dark piece will not disconnect its tile when leaving it.
+        But, by leaving the bottom left tile, two tiles will be removed.&lt;br/&gt;&lt;br/&gt;
+        Perform a move that lets you gain two tiles.</source>
+      </trans-unit>
+      <trans-unit id="4051956669507633461" datatype="html">
+        <source>Failed, you have not gained the two tiles that you could!</source>
+      </trans-unit>
+      <trans-unit id="1625619525907045191" datatype="html">
+        <source>Exchanging a tile</source>
+      </trans-unit>
+      <trans-unit id="2710648987338283557" datatype="html">
+        <source>When you have a tile, you can see it on the left of the board.
+        As soon as you have two, you can click on an opponent&apos;s piece to capture it immediately.
+        This will cost you two tiles.
+        If any tiles are removed during that turn, nobody will get them.&lt;br/&gt;&lt;br/&gt;
+        Gain some time and capture the last piece!</source>
+      </trans-unit>
+      <trans-unit id="6149833006202189547" datatype="html">
+        <source>It&apos;s nice to move a piece, but you could have had the opponent&apos;s piece immediately by clicking on it!</source>
+      </trans-unit>
+      <trans-unit id="4449916170244566677" datatype="html">
+        <source>Special capture</source>
+      </trans-unit>
+      <trans-unit id="794572598630804015" datatype="html">
+        <source>When a tile is removed from the board during your turn, some of the opponent&apos;s pieces may have lost their last free neighboring space, they will therefore be captured!
+        If this happens to one of your piece during your turn, it would however stay on the board.&lt;br/&gt;&lt;br/&gt;
+        A move that demonstrate both of these things can be done on this board by Light. Try it!</source>
+      </trans-unit>
+      <trans-unit id="4878998278020754722" datatype="html">
+        <source>Congratulations! See, your piece has lost its last freedom when you have gained the tile, but it stayed on the board as it was your turn.
+        The opponent&apos;s piece has disappeared because the tile&apos;s capture has removed its last freedom.</source>
       </trans-unit>
       <trans-unit id="2559409853005498554" datatype="html">
         <source>Invalid coordinate, please select a piece on the board.</source>
@@ -1633,41 +774,117 @@
       <trans-unit id="5012524143343727947" datatype="html">
         <source>You must select a piece or a stack of your color.</source>
       </trans-unit>
-      <trans-unit id="2246582083078468892" datatype="html">
-        <source>You must select a non-empty stack.</source>
+      <trans-unit id="5275339386917095598" datatype="html">
+        <source>You must select a stack.</source>
       </trans-unit>
-      <trans-unit id="6722757334881312495" datatype="html">
-        <source>This stack cannot be moved because all 6 of its neighbors are not empty. You must select a stack with strictly less than 6 neighbors.</source>
+      <trans-unit id="5544760040431913662" datatype="html">
+        <source>This stack cannot be moved because all 6 of its neighbors are occupied. You must select a stack with strictly less than 6 neighbors.</source>
       </trans-unit>
-      <trans-unit id="5168553898318691665" datatype="html">
-        <source>This piece cannot move because its move would never end on another piece.</source>
+      <trans-unit id="5029201799654426347" datatype="html">
+        <source>This stack cannot move because it could never land on another piece.</source>
       </trans-unit>
-      <trans-unit id="936435613496447162" datatype="html">
-        <source>The length of the move must be equal to the size of the stack.</source>
+      <trans-unit id="75731290119916717" datatype="html">
+        <source>A stack must always be moved by as many spaces as there are pieces in the stack.</source>
       </trans-unit>
-      <trans-unit id="1541194927190009464" datatype="html">
-        <source>The move must end on an occupied case.</source>
+      <trans-unit id="8101145555087657570" datatype="html">
+        <source>The stack must land on an occupied space.</source>
+      </trans-unit>
+      <trans-unit id="5010267418211867946" datatype="html">
+        <source>Moving</source>
+      </trans-unit>
+      <trans-unit id="364149588471541692" datatype="html">
+        <source>At Dvonn, each hexagonal space contains a stack of pieces.
+        If no number is indicated on a stack, it means that it only contains one piece.
+        The number written on a stack indicates the number of pieces within that stack, hence the number of points its owner gets.
+        The owner of a stack is the one that has a piece at the top of the stack.
+        Only the owner of a stack can move it.
+        A stack cannot be moved if it is surrounded by 6 other stacks.
+        A stack is moved by as many spaces as there are pieces within, in a straight line, and it should land on an occupied space.
+        This line cannot move along the vertex of two neighboring spaces, as would a vertical move.
+        Therefore, there are six possible directions.
+        The player with dark pieces starts.&lt;br/&gt;&lt;br/&gt;
+        You&apos;re playing Dark, click on a stack and move it by one space.</source>
+      </trans-unit>
+      <trans-unit id="8769382369391878948" datatype="html">
+        <source>Disconnection</source>
+      </trans-unit>
+      <trans-unit id="90245733925298447" datatype="html">
+        <source>Red pieces are called &quot;sources&quot;.
+        When a stack is not directly nor indirectly connected to a source, it is removed from the board.
+        You can move on a source: this forms a stack that contains the source, and which will never be disconnected.
+        Besides this, a stack containing a source acts like any other stack: you can move it, and your opponent can move on that stack to take possession of it.&lt;br/&gt;&lt;br/&gt;
+        You&apos;re playing Dark, move your piece on the source.</source>
+      </trans-unit>
+      <trans-unit id="1204343429877937229" datatype="html">
+        <source>Nice, you have disconnected 4 pieces of your opponent!
+        He has lost 4 points.
+        Disconnected stacks will not be visible at the next turn.</source>
+      </trans-unit>
+      <trans-unit id="9072861571041891023" datatype="html">
+        <source>Bad choice! By moving on the source you would have disconnected the opponent&apos;s pieces and they would have lost 4 points.
+        Here, the opponent wins 2 to 0</source>
+      </trans-unit>
+      <trans-unit id="3483594998155999756" datatype="html">
+        <source>When no more move is possible, the game ends and the player with the most points wins.&lt;br/&gt;&lt;br/&gt;
+        Make your last move.</source>
+      </trans-unit>
+      <trans-unit id="2963709509031109432" datatype="html">
+        <source>Congratulations, you won 6 - 0!</source>
+      </trans-unit>
+      <trans-unit id="8876232297721386956" datatype="html">
+        <source>Bad idea, by moving on the source you would have won a point.</source>
       </trans-unit>
       <trans-unit id="6986218395331151516" datatype="html">
         <source>You must pick one of your pieces.</source>
       </trans-unit>
-      <trans-unit id="4396631704021778029" datatype="html">
-        <source>You do not have pieces of this type anymore..</source>
+      <trans-unit id="6059738106874378452" datatype="html">
+        <source>You do not have pieces of this type anymore.</source>
       </trans-unit>
-      <trans-unit id="1115304670559099393" datatype="html">
-        <source>You must put your piece on an empty case or on a smaller piece.</source>
+      <trans-unit id="2129733726620651846" datatype="html">
+        <source>You must put your piece on an empty square or on a smaller piece.</source>
       </trans-unit>
       <trans-unit id="5649666705061470825" datatype="html">
         <source>You must pick your piece among the remaining ones.</source>
       </trans-unit>
-      <trans-unit id="5765710314681730614" datatype="html">
-        <source>You must pick one of your piece or one case where you have the largest piece.</source>
+      <trans-unit id="7757464288692634777" datatype="html">
+        <source>You must pick one of your piece or one square where you have the largest piece.</source>
       </trans-unit>
-      <trans-unit id="8687283741772762439" datatype="html">
-        <source>You must select a different landing case than the case where the move originates from.</source>
+      <trans-unit id="7341165560842722107" datatype="html">
+        <source>You must select a different landing square than the square where the move originates from.</source>
       </trans-unit>
-      <trans-unit id="6641393138492176155" datatype="html">
-        <source>You are performing a move, you must select a landing case.</source>
+      <trans-unit id="2209428336874697936" datatype="html">
+        <source>You are performing a move, you must select a landing square.</source>
+      </trans-unit>
+      <trans-unit id="5626639193339311369" datatype="html">
+        <source>Goal of the game</source>
+      </trans-unit>
+      <trans-unit id="5197172538685178535" datatype="html">
+        <source>The goal of Encapsule is to align three of your pieces.
+        Here, we have a victory of the dark player.</source>
+      </trans-unit>
+      <trans-unit id="9069271074421658276" datatype="html">
+        <source>Putting a piece</source>
+      </trans-unit>
+      <trans-unit id="5080810072548080541" datatype="html">
+        <source>This is the initial board. You&apos;re playing Dark.&lt;br/&gt;&lt;br/&gt;
+        Pick one of your piece on the side of the board and put it on the board.</source>
+      </trans-unit>
+      <trans-unit id="7284208001705901171" datatype="html">
+        <source>Another possible action is to move one of your pieces that is already on the board.&lt;br/&gt;&lt;br/&gt;
+        Click on your dark piece and then on any empty square of the board.</source>
+      </trans-unit>
+      <trans-unit id="7502910762990406647" datatype="html">
+        <source>Particularity</source>
+      </trans-unit>
+      <trans-unit id="84167177778071000" datatype="html">
+        <source>At Encapsule, pieces encapsulate each other.
+        It is therefore possible to have up to three pieces per square!
+        However, only the biggest piece of each square counts:
+        you cannot win with a piece that is &quot;hidden&quot; by a bigger piece.
+        Similarly, you cannot move a piece if it is encapsulated by a bigger piece.
+        Finally, you cannot encapsulate a piece with a smaller piece.
+        You&apos;re playing Dark and you can win now in various ways.&lt;br/&gt;&lt;br/&gt;
+        Try to win by making a move, and not by putting a new piece on the board.</source>
       </trans-unit>
       <trans-unit id="5530182224164938313" datatype="html">
         <source>The move distance of your phalanx puts it out of the board.</source>
@@ -1678,80 +895,337 @@
       <trans-unit id="5389576774289628382" datatype="html">
         <source>Your phalanx must be bigger than the one you are capturing.</source>
       </trans-unit>
-      <trans-unit id="1701716594504823738" datatype="html">
-        <source>This case is not aligned with the selected piece.</source>
+      <trans-unit id="2291068586508886218" datatype="html">
+        <source>This square is not aligned with the selected piece.</source>
       </trans-unit>
-      <trans-unit id="6295939632068558083" datatype="html">
-        <source>A single piece can only move by one case.</source>
+      <trans-unit id="8716552567618018184" datatype="html">
+        <source>A single piece can only move by one square.</source>
       </trans-unit>
       <trans-unit id="3099022711875888574" datatype="html">
         <source>A single piece cannot make a capture.</source>
       </trans-unit>
-      <trans-unit id="5544439737860351447" datatype="html">
-        <source>This case is not aligned with the direction of the phalanx.</source>
+      <trans-unit id="5151115756771676188" datatype="html">
+        <source>This square is not aligned with the direction of the phalanx.</source>
       </trans-unit>
       <trans-unit id="5279717712059022209" datatype="html">
         <source>A phalanx can&apos;t contain pieces outside of the board.</source>
       </trans-unit>
-      <trans-unit id="5277656779558415819" datatype="html">
-        <source>A phalanx can&apos;t contain an empty case.</source>
+      <trans-unit id="3733956045714659124" datatype="html">
+        <source>A phalanx cannot contain an empty square.</source>
       </trans-unit>
-      <trans-unit id="3236442670175894362" datatype="html">
-        <source>A phalanx can&apos;t contain an piece of the opponent.</source>
+      <trans-unit id="8175810329145642315" datatype="html">
+        <source>A phalanx cannot contain an piece of the opponent.</source>
       </trans-unit>
-      <trans-unit id="2282084492361398122" datatype="html">
-        <source>You can only capture when 4 of your pieces are aligned, and it is not the case.</source>
+      <trans-unit id="8733936607898144583" datatype="html">
+        <source>Initial board</source>
       </trans-unit>
-      <trans-unit id="4693277220364120328" datatype="html">
-        <source>You must select a valid capture that contains 4 pieces of more.</source>
+      <trans-unit id="6855901703200229431" datatype="html">
+        <source>This is the initial board.
+        The top line is the starting line of Light.
+        The bottom line is the starting line of Dark.</source>
+      </trans-unit>
+      <trans-unit id="6886026531074912078" datatype="html">
+        <source>Goal of the game (1/2)</source>
+      </trans-unit>
+      <trans-unit id="3201616758404916501" datatype="html">
+        <source>After multiple moves, if at the beginning of its turn, a player has more piece on the opponent&apos;s starting line
+        than the number of pieces the opponent has on the player&apos;s starting line, the player wins.
+        Here, it&apos;s Dark turn to play: Dark has therefore won.</source>
+      </trans-unit>
+      <trans-unit id="5351770434517588207" datatype="html">
+        <source>Goal of the game (2/2)</source>
+      </trans-unit>
+      <trans-unit id="914946805822108421" datatype="html">
+        <source>Here, it is Light&apos;s turn.
+        Light wins because they have two pieces on Dark&apos;s starting line, and Dark only has one on Light&apos;s starting line.</source>
+      </trans-unit>
+      <trans-unit id="8121866892801377016" datatype="html">
+        <source>Here is the starting board. Dark plays first.
+        Let&apos;s start with moving a single piece:
+        &lt;ol&gt;
+            &lt;li&gt;Click on a piece.&lt;/li&gt;
+            &lt;li&gt;Click on a empty neighboring square.&lt;/li&gt;
+        &lt;/ol&gt;</source>
+      </trans-unit>
+      <trans-unit id="3304007702447669410" datatype="html">
+        <source>Congratulations, you are in advance. But this is not the exercise here, try again.</source>
+      </trans-unit>
+      <trans-unit id="5177233781165886499" datatype="html">
+        <source>This is how you move a single piece.</source>
+      </trans-unit>
+      <trans-unit id="3060866055407923547" datatype="html">
+        <source>Moving a phalanx</source>
+      </trans-unit>
+      <trans-unit id="7817897468030617928" datatype="html">
+        <source>Let us now see how to move multiple pieces along a line, which is called a phalanx :
+        &lt;ol&gt;
+            &lt;li&gt;Click on the first piece of the phalanx.&lt;/li&gt;
+            &lt;li&gt;Click on the last piece of the phalanx.&lt;/li&gt;
+            &lt;li&gt;Click on one of the squares highlighted in yellow; you can move your phalanx up to a distance equal to its length.&lt;/li&gt;
+        &lt;/ol&gt;&lt;br/&gt;
+        Move a phalanx!</source>
+      </trans-unit>
+      <trans-unit id="108222118450000526" datatype="html">
+        <source>Failed! You moved only one piece.</source>
+      </trans-unit>
+      <trans-unit id="2414303972754655852" datatype="html">
+        <source>Congratulations!
+        The moved pieces can be horizontally, vertically, or diagonally aligned.
+        The move should be made along this axis, forward or backwards.
+        There can be no opponent nor holes in the phalanx.</source>
+      </trans-unit>
+      <trans-unit id="1735581478820014059" datatype="html">
+        <source>In order to capture pieces of the opponent:
+        &lt;ol&gt;
+            &lt;li&gt;It must be aligned with the phalanx you are moving.&lt;/li&gt;
+            &lt;li&gt;It must be strictly shorter than your phalanx.&lt;/li&gt;
+            &lt;li&gt;The first piece of your phalanx should land on the first piece of the opponent&apos;s phalanx that you want to capture.&lt;/li&gt;
+        &lt;/ol&gt;&lt;br/&gt;
+        Capture a phalanx.</source>
+      </trans-unit>
+      <trans-unit id="8213276201685541009" datatype="html">
+        <source>Congratulations, you made it!
+        Note that the diagonal phalanx was not aligned with your phalanx, hence even if it is longer, this does not prevent you from capturing some of its pieces on another alignment.</source>
+      </trans-unit>
+      <trans-unit id="4418812710815829575" datatype="html">
+        <source>Failed, you have not captured the phalanx.</source>
+      </trans-unit>
+      <trans-unit id="7226802484619632640" datatype="html">
+        <source>You can only capture when 4 or more of your pieces are aligned, and it is not the case.</source>
+      </trans-unit>
+      <trans-unit id="6918785733984182442" datatype="html">
+        <source>You must select a valid capture that contains 4 pieces or more.</source>
       </trans-unit>
       <trans-unit id="8805744649589430247" datatype="html">
         <source>There are captures remaining.</source>
       </trans-unit>
-      <trans-unit id="4066335336000889411" datatype="html">
-        <source>Pieces must be inserted in cases on the border of the board.</source>
+      <trans-unit id="2434818181880718873" datatype="html">
+        <source>Pieces must be inserted in spaces on the edge of the board.</source>
       </trans-unit>
       <trans-unit id="7875793227562861246" datatype="html">
         <source>You must select a valid placement direction.</source>
       </trans-unit>
-      <trans-unit id="7499755057028129050" datatype="html">
-        <source>You must select a placement alongside the insertion case.</source>
+      <trans-unit id="3111415789460197695" datatype="html">
+        <source>You must select a placement alongside the insertion space.</source>
       </trans-unit>
       <trans-unit id="1848361274892061756" datatype="html">
         <source>You cannot place a piece on a complete line.</source>
       </trans-unit>
-      <trans-unit id="8465153363902778945" datatype="html">
-        <source>This case belongs to two captures. Please select another case in the capture you&apos;d like to take.</source>
+      <trans-unit id="2854410959652074326" datatype="html">
+        <source>This piece belongs to two captures. Please select another piece in the capture you&apos;d like to take.</source>
       </trans-unit>
       <trans-unit id="8407980394441393807" datatype="html">
         <source>You must pick a capture.</source>
       </trans-unit>
-      <trans-unit id="2286360594537932764" datatype="html">
-        <source>You must select a destination case at a distance of 1 from the entrance.</source>
+      <trans-unit id="3098052306255011996" datatype="html">
+        <source>You must select a destination space at a distance of 1 from the entrance.</source>
       </trans-unit>
-      <trans-unit id="8273473311441149953" datatype="html">
-        <source>You cannot insert a piece here, as all lines are full. Select another case.</source>
+      <trans-unit id="8708684300793667483" datatype="html">
+        <source>You cannot insert a piece here, as all lines are full. Select another space.</source>
       </trans-unit>
-      <trans-unit id="6450646892207699463" datatype="html">
-        <source>This move is a ko, you must play somewhere else before you can play in this case again.</source>
+      <trans-unit id="5510421842359017901" datatype="html">
+        <source>The goal of Gipf is to capture the opponent&apos;s piece so that the opponent can no longer play.
+        This is the initial board.
+        Each player has 12 pieces on the side and 3 pieces on the board.
+        When, at its turn, a player has no more pieces on the side, that player cannot play anymore and loses the game.
+        The first player plays with the dark pieces, the second player plays with the light pieces.</source>
+      </trans-unit>
+      <trans-unit id="6746842757530413418" datatype="html">
+        <source>Pieces can only enter the board through the edges. To insert a new piece:
+        &lt;ol&gt;
+            &lt;li&gt; Click on a space on the edge of the board.&lt;/li&gt;
+            &lt;li&gt; If that space was already occupied, click on the arrow that indicates the direction in which you want to push the piece(s) already on the corresponding line.&lt;/li&gt;
+        &lt;/ol&gt;
+        You cannot push when a line is full.&lt;br/&gt;&lt;br/&gt;
+        You&apos;re playing Dark, insert a piece.</source>
+      </trans-unit>
+      <trans-unit id="1535764723561428490" datatype="html">
+        <source>Capturing (1/3)</source>
+      </trans-unit>
+      <trans-unit id="6468592179736740297" datatype="html">
+        <source>To capture, you must align 4 of your own pieces, which will be the first 4 captured pieces.
+        There are multiple important aspects of a capture:
+        &lt;ol&gt;
+            &lt;li&gt; When 4 pieces are captured, all pieces that are directly aligned with these 4 pieces are also captured.&lt;/li&gt;
+            &lt;li&gt; As soon as there is an empty space on the line, the capture stops.&lt;/li&gt;
+            &lt;li&gt; Your own pieces that are captured go back to your stock.
+                    Your opponent&apos;s pieces however are really captured and do not go back to your opponent&apos;s stock.&lt;/li&gt;
+            &lt;li&gt; If you create a line of 4 of your opponent&apos;s pieces, it will be at the beginning of your opponent&apos;s turn that your opponent can capture them.
+                This means that a turn happens in three phases:
+                &lt;ol type=&quot;A&quot;&gt;
+                    &lt;li&gt; Pick the capture(s) resulting from the last move of your opponent (by clicking on it).&lt;/li&gt;
+                    &lt;li&gt; Make your insertion.&lt;/li&gt;
+                    &lt;li&gt; Pick the capture(s) resulting from your move (by clicking on it).&lt;/li&gt;
+                &lt;/ol&gt;
+            &lt;/li&gt;
+        &lt;/ol&gt;&lt;br/&gt;
+        You&apos;re playing Dark, you can make a capture, do it.</source>
+      </trans-unit>
+      <trans-unit id="8768850104658663274" datatype="html">
+        <source>Congratulations, you have gotten 4 of your pieces back. This is not the most useful capture.
+        Let&apos;s now see how captures can really be useful.</source>
+      </trans-unit>
+      <trans-unit id="5296311699765609481" datatype="html">
+        <source>Capturing (2/3)</source>
+      </trans-unit>
+      <trans-unit id="6012182624396746560" datatype="html">
+        <source>Here, there are three different ways of capturing.
+        One way does not capture any of your opponent&apos;s pieces.
+        Another way captures one of your opponent&apos;s pieces.&lt;br/&gt;&lt;br/&gt;
+        The last way captures two of your opponent&apos;s pieces, pick that one.</source>
+      </trans-unit>
+      <trans-unit id="5909970360139332678" datatype="html">
+        <source>Congratulations, you have gotten back 4 of your pieces and captured 2 of the opponent&apos;s ones.
+        The most you can get is 3 per capture.</source>
+      </trans-unit>
+      <trans-unit id="3200525134996933550" datatype="html">
+        <source>Failed, the best capture was taking 2 of your opponent&apos;s pieces</source>
+      </trans-unit>
+      <trans-unit id="6859741057618390920" datatype="html">
+        <source>Capturing (3/3)</source>
+      </trans-unit>
+      <trans-unit id="1697647848066799342" datatype="html">
+        <source>Here, you must capture at the beginning of your turn.
+        This is due to a move of your opponent at the previous turn
+        (even though this is a fictional game for pedagogical purpose).
+        After your capture, by performing the right move you can even capture two more of your opponent&apos;s pieces!
+        Keep it mind that the most useful in a capture is to take your opponent&apos;s pieces.</source>
+      </trans-unit>
+      <trans-unit id="1212338036122995731" datatype="html">
+        <source>Congratulations, you have gotten 12 of your pieces back and captured 2 of your opponent&apos;s pieces.
+        The maximum being 3 per capture.</source>
+      </trans-unit>
+      <trans-unit id="4244295242962463153" datatype="html">
+        <source>Failed, the best capture takes 2 of your opponent&apos;s pieces.</source>
+      </trans-unit>
+      <trans-unit id="4172293183843503071" datatype="html">
+        <source>This move is a ko, you must play somewhere else before you can play in this intersection again.</source>
       </trans-unit>
       <trans-unit id="9197288705784594537" datatype="html">
         <source>We are not in playing nor in passed phase, you must mark stone as dead or alive or accept current board.</source>
       </trans-unit>
-      <trans-unit id="8693884034133977854" datatype="html">
-        <source>Not countig or not accept.</source>
+      <trans-unit id="4683884757780403263" datatype="html">
+        <source>You cannot accept before the counting phase.</source>
       </trans-unit>
-      <trans-unit id="6337651314494845485" datatype="html">
-        <source>This case is already occupied.</source>
+      <trans-unit id="7258684846942631624" datatype="html">
+        <source>This intersection is already occupied.</source>
       </trans-unit>
       <trans-unit id="3878972107071324960" datatype="html">
         <source>You cannot commit suicide.</source>
       </trans-unit>
+      <trans-unit id="1472088308118018916" datatype="html">
+        <source>Preliminary information</source>
+      </trans-unit>
+      <trans-unit id="352355973280326398" datatype="html">
+        <source>The game of Go is played on a board called a Goban, and the stones are placed on the intersections.
+        The traditional board is made of 19x19 intersections, but on this website we have the 13x13 board.
+        (For shorter parts, 9x9 and 5x5 boards exist, but are not yet available here).
+        For this tutorial, we will use a small 5x5 for pedagogical purposes.</source>
+      </trans-unit>
+      <trans-unit id="5188967317336954433" datatype="html">
+        <source>The goal of the game is to have the most points at the end of the game.
+        We call &quot;territories&quot; the intersections that are empty and isolated from the rest of the Goban by the stones of a single player.
+        Here, Dark has 9 territories on the left, and Light has 8 on the right.
+        The top part belongs to no one.
+        The score at the end of the game is the sum of the territories and the captures.</source>
+      </trans-unit>
+      <trans-unit id="5239727864845885036" datatype="html">
+        <source>An isolated stone, like the one in the middle here, has 4 neighboring intersections (not 8, because we do not count diagonals).
+        If a neighboring intersection is unoccupied, it is called a freedom.
+        If Dark plays on the last freedom of the light stone, this stone is removed from the Goban (captured) and Dark earns one point.&lt;br/&gt;&lt;br/&gt;
+        There&apos;s only one freedom left to the light piece, capture it.</source>
+      </trans-unit>
+      <trans-unit id="4986672646268662936" datatype="html">
+        <source>Congratulations, you have earned one point.</source>
+      </trans-unit>
+      <trans-unit id="4290161289688830140" datatype="html">
+        <source>Failed, try again by playing on one of the intersection directly next to the light stone.</source>
+      </trans-unit>
+      <trans-unit id="8946006948417629723" datatype="html">
+        <source>Capturing multiple stones</source>
+      </trans-unit>
+      <trans-unit id="1725582712854549564" datatype="html">
+        <source>Stones that are connected horizontally or vertically must be captured at the same time, and are not capturable in isolation.&lt;br/&gt;&lt;br/&gt;
+        The light group here only has one freedom left, capture it.</source>
+      </trans-unit>
+      <trans-unit id="2022880801532921915" datatype="html">
+        <source>Congratulations, you have earned three points and formed a territory.</source>
+      </trans-unit>
+      <trans-unit id="682384900189815989" datatype="html">
+        <source>Failed, you have not captured the group. Play on the last freedom of that group.</source>
+      </trans-unit>
+      <trans-unit id="6220902431017372113" datatype="html">
+        <source>Suicide</source>
+      </trans-unit>
+      <trans-unit id="1598565563312868670" datatype="html">
+        <source>In Go, suicide is forbidden.
+        If putting a piece on an intersection removes the last freedom of your group and does not capture any stone, playing on that intersection would be a suicide and is therefore forbidden.
+        Here, the top left intersection is a suicide for Light.
+        On the bottom right, it would be a suicide for Dark, and on the bottom left it is not a suicide for any player.</source>
+      </trans-unit>
+      <trans-unit id="2066383177849177665" datatype="html">
+        <source>Life and death (death)</source>
+      </trans-unit>
+      <trans-unit id="5995146621586456333" datatype="html">
+        <source>From the capture rule follows the life and death notion:
+        dead stones are stones that are definitely capturable (without losing anything else).
+        Alive stones are stones that can never be captured.
+        From the capture rule, Dark can play inside Light&apos;s territory and make a capture.
+        In this case, we say that Light has only one eye (its last freedom) and that Light is dead (even if not yet captured).
+        At the end of the game, the dead stone will count as a capture, and the intersection it occupies as a territory.</source>
+      </trans-unit>
+      <trans-unit id="6721138878022657917" datatype="html">
+        <source>Life and death (eyes)</source>
+      </trans-unit>
+      <trans-unit id="1084604724991997052" datatype="html">
+        <source>Here, Light cannot play on the top left, nor on the bottom left.
+        Light will never be able to capture Dark.
+        We say that Dark has two eyes (the eye on the top left, and the one on the bottom left) and that Dark is alive.</source>
+      </trans-unit>
+      <trans-unit id="8745919880228059784" datatype="html">
+        <source>Seki</source>
+      </trans-unit>
+      <trans-unit id="5496499515779223328" datatype="html">
+        <source>If Dark plays on the middle line, Light will play on the opposite intersection and capture Dark.
+        Similarly, if Light plays on the middle line, Dark will capture Light.
+        In other words, there is no point in playing on the middle line.
+        In that case, we say that stones in the middle are alive by Seki, and that both intersections in the middle are neutral.</source>
+      </trans-unit>
+      <trans-unit id="7812956328094242544" datatype="html">
+        <source>Ko</source>
+      </trans-unit>
+      <trans-unit id="5425125770484596220" datatype="html">
+        <source>A player, by putting a stone, cannot go back to an identical state of the Goban as before, in order to avoid an endless game.&lt;br/&gt;&lt;br/&gt;
+        Capture the light stone.</source>
+      </trans-unit>
+      <trans-unit id="8268334913018353590" datatype="html">
+        <source>Now, if Light tries to recapture the stone that Dark has put on the board, the Goban would go back to its previous state, opening the door for an endless game.
+        This intersection is therefore marked with a red triangle, to remind the players that this intersection is forbidden.
+        This rule is called the Ko.
+        The trick for Light is to try to create a big enough threat so that Dark must answer immediately, and does not have the time to protect its last stone, so that Light can capture it.</source>
+      </trans-unit>
+      <trans-unit id="1867501821252119171" datatype="html">
+        <source>When a player feels that there is no advantage to putting a new stone, that player can pass a turn.
+        The game phase stops when both players pass consecutively, and we move on to the counting phase.
+        The dead groups are then marked by clicking on them.
+        Every intersection in a player&apos;s territory earns that player a point.
+        The winner is the one with most points.&lt;br/&gt;&lt;br/&gt;
+        A last stone is dead, mark it.</source>
+      </trans-unit>
+      <trans-unit id="4959862943655130220" datatype="html">
+        <source>Congratulations, Dark has 15 territories and 3 light stones still present, called prisoners at the end of the game.
+        The intersections where the prisoners are count as Dark&apos;s territory
+        Light has 8 territories and 1 prisoner.
+        The end result is therefore 18 - 9 for Dark.</source>
+      </trans-unit>
+      <trans-unit id="6217706486990855046" datatype="html">
+        <source>Failed, try again.</source>
+      </trans-unit>
       <trans-unit id="3643526530572280396" datatype="html">
         <source>This piece is not of the color you have to play.</source>
       </trans-unit>
-      <trans-unit id="5092181672584194050" datatype="html">
-        <source>You must move to an empty case.</source>
+      <trans-unit id="5767893885549492996" datatype="html">
+        <source>You must move to an empty square.</source>
       </trans-unit>
       <trans-unit id="945155491646703687" datatype="html">
         <source>You can only move forward, orthogonally or diagonally.</source>
@@ -1759,11 +1233,78 @@
       <trans-unit id="551820034442685617" datatype="html">
         <source>This move is blocked by another piece.</source>
       </trans-unit>
-      <trans-unit id="3568920234618711065" datatype="html">
-        <source>The game has ended.</source>
-      </trans-unit>
       <trans-unit id="1699965787783859469" datatype="html">
         <source>You must play with the selected piece.</source>
+      </trans-unit>
+      <trans-unit id="5017168027824461530" datatype="html">
+        <source>At Kamisado, there are two ways to win the game:
+        either by moving one of your pieces on the opponent&apos;s starting line,
+        or by forcing the opponent to make a move that blocks the entire game.
+        Here, Dark wins because its brown piece is on Light&apos;s starting line, on the top left.</source>
+      </trans-unit>
+      <trans-unit id="5394640330288068198" datatype="html">
+        <source>Initial board and initial move</source>
+      </trans-unit>
+      <trans-unit id="4612740589877593757" datatype="html">
+        <source>Here is the initial board.
+        At Kamisado, pieces can only move forward, vertically or diagonally.
+        You&apos;re playing first, with dark pieces, you can make your first move.&lt;br/&gt;&lt;br/&gt;
+        Click on the piece of your choice and click on the landing square.</source>
+      </trans-unit>
+      <trans-unit id="3923056974694699821" datatype="html">
+        <source>Perfect! Note that each of your piece has a different color.</source>
+      </trans-unit>
+      <trans-unit id="3441963406679900625" datatype="html">
+        <source>Let us now consider the move of Light, after the blue piece has been moved by Dark.
+        All moves after the initial move must be made from the piece that corresponds to the color
+        of the square upon which the last move ended.
+        Here, the last move ended on the pink square, hence the pink piece must move.
+        It is already selected, you do not have to click on it.&lt;br/&gt;&lt;br/&gt;
+        Move it on a blue square.</source>
+      </trans-unit>
+      <trans-unit id="8902613702570774815" datatype="html">
+        <source>You have not moved your pink piece on a blue square!</source>
+      </trans-unit>
+      <trans-unit id="6535171484072867925" datatype="html">
+        <source>Stuck situation</source>
+      </trans-unit>
+      <trans-unit id="2649088566668591407" datatype="html">
+        <source>Dark moved to another pink square, hence you have to move your pink piece again.
+        However, your pink piece is stuck! In this case, you must pass your turn.
+        Dark will now have to play by moving its pink piece.</source>
+      </trans-unit>
+      <trans-unit id="8029874053731693714" datatype="html">
+        <source>Victory by blocking</source>
+      </trans-unit>
+      <trans-unit id="3704072447684559239" datatype="html">
+        <source>At any time, if a player blocks the entire game, that player loses.
+        In other words, if a player forces its opponent to move a piece that that opponent cannot move,
+        and the player cannot move its own piece of the same color, then that player loses.
+        Here, you&apos;re playing Dark and you can force your opponent to create such a situation, hence you can force your opponent to lose!&lt;br/&gt;&lt;br/&gt;
+        Try to make this move.</source>
+      </trans-unit>
+      <trans-unit id="1985891572391293358" datatype="html">
+        <source>Perfect!
+         Light must move its green piece on the orange square, forcing you to play with your orange piece.
+         Your orange piece will be stuck and you will have to pass your turn.
+         Light will have to pass its turn too because its orange piece is also stuck: the game is completely stuck.
+         In this case, the last player to have moved a piece loses.
+         Here, Light will have moved its green piece last, you therefore win!</source>
+      </trans-unit>
+      <trans-unit id="6387863170048380356" datatype="html">
+        <source>Your move should have a length equal to the number of pieces that exist on the same line.</source>
+      </trans-unit>
+      <trans-unit id="3931959709762726685" datatype="html">
+        <source>You cannot jump over the opponent&apos;s pieces.</source>
+      </trans-unit>
+      <trans-unit id="1549682374526776641" datatype="html">
+        <source>You must select one of your pieces.</source>
+      </trans-unit>
+      <trans-unit id="1376498600372177047" datatype="html">
+        <source>This piece has no possible move, select another one.</source>
+      </trans-unit>
+      <trans-unit id="1586272441819129629" datatype="html">
+        <source>A move must be orthogonal or diagonal</source>
       </trans-unit>
       <trans-unit id="6241913890536717263" datatype="html">
         <source>At Lines of Actions, the goal is to group your pieces contiguously, orthogonally and/or diagonally.
@@ -1823,26 +1364,44 @@
         then the game ends up with a tie.&lt;br/&gt;&lt;br/&gt;
         You&apos;re playing Dark, force the tie in one move.</source>
       </trans-unit>
-      <trans-unit id="6387863170048380356" datatype="html">
-        <source>Your move should have a length equal to the number of pieces that exist on the same line.</source>
-      </trans-unit>
-      <trans-unit id="3931959709762726685" datatype="html">
-        <source>You cannot jump over the opponent&apos;s pieces.</source>
-      </trans-unit>
-      <trans-unit id="1549682374526776641" datatype="html">
-        <source>You must select one of your pieces.</source>
-      </trans-unit>
-      <trans-unit id="1376498600372177047" datatype="html">
-        <source>This piece has no possible move, select another one.</source>
-      </trans-unit>
-      <trans-unit id="1586272441819129629" datatype="html">
-        <source>A move must be orthogonal or diagonal</source>
-      </trans-unit>
       <trans-unit id="8220333311843814635" datatype="html">
         <source>This column is full. Put your piece in a non-full column.</source>
       </trans-unit>
-      <trans-unit id="7427526746704736834" datatype="html">
-        <source>If the block to turn is neutral, please just use rotationless move.</source>
+      <trans-unit id="4036586801649294358" datatype="html">
+        <source>The board at Four in a Row is made of 7 columns and 6 rows, and it is initially empty.
+        The first player plays Dark, the second plays Light.
+        The goal is to be the first to align 4 of its pieces (horizontally, vertically, or diagonally).</source>
+      </trans-unit>
+      <trans-unit id="8975478230679810486" datatype="html">
+        <source>Dropping a piece</source>
+      </trans-unit>
+      <trans-unit id="8376425958935569592" datatype="html">
+        <source>Click on any space in any column.</source>
+      </trans-unit>
+      <trans-unit id="5836753691261182816" datatype="html">
+        <source>As you can see, the piece falls at the bottom of the column.</source>
+      </trans-unit>
+      <trans-unit id="1116173898665219180" datatype="html">
+        <source>Victory</source>
+      </trans-unit>
+      <trans-unit id="5880375817695791500" datatype="html">
+        <source>You&apos;re playing Dark.
+        Place your piece so that you create a horizontal alignment of 4 of your pieces.</source>
+      </trans-unit>
+      <trans-unit id="2383238937544977536" datatype="html">
+        <source>You won!</source>
+      </trans-unit>
+      <trans-unit id="8360761958716876836" datatype="html">
+        <source>Failed, you have not aligned 4 pieces and missed an opportunity to win.</source>
+      </trans-unit>
+      <trans-unit id="7608929788238552566" datatype="html">
+        <source>Other victory</source>
+      </trans-unit>
+      <trans-unit id="5935897420698942151" datatype="html">
+        <source>You can also align 4 pieces diagonally or vertically.</source>
+      </trans-unit>
+      <trans-unit id="4481504026353283589" datatype="html">
+        <source>If the block to turn is neutral, please just use move without rotation.</source>
       </trans-unit>
       <trans-unit id="8527080130603276604" datatype="html">
         <source>No block is neutral, you must pick a block to rotate.</source>
@@ -1853,14 +1412,17 @@
       <trans-unit id="821589059503120913" datatype="html">
         <source>The goal at Pentago is to align 5 of your pieces. In the following board, Dark wins.</source>
       </trans-unit>
-      <trans-unit id="7390477692888739959" datatype="html">
+      <trans-unit id="6144661124534225012" datatype="html">
+        <source>Simple move</source>
+      </trans-unit>
+      <trans-unit id="7716841163299746976" datatype="html">
         <source>At their turn, players put a piece on the board and possibly rotate one block.
         As long as there are neutral blocks, i.e., blocks that would not change after being rotated, a player may skip rotating a block.
-        To do this, you have to click on the crossed circle that appears at the centre of the board when it is possible.&lt;br/&gt;&lt;br/&gt;
+        To do this, you have to click on the crossed circle that appears at the center of the board when it is possible.&lt;br/&gt;&lt;br/&gt;
         Do it.</source>
       </trans-unit>
-      <trans-unit id="7085061112646270650" datatype="html">
-        <source>You have made a move with a rotation. This tutorial step is about moves without rotations!</source>
+      <trans-unit id="1640662905904405955" datatype="html">
+        <source>You have made a move with a rotation. This tutorial step is about moves without rotations!</source>
       </trans-unit>
       <trans-unit id="8330321104835134748" datatype="html">
         <source>Move with rotation</source>
@@ -1878,14 +1440,14 @@
       <trans-unit id="682762602217958961" datatype="html">
         <source>You must move your pieces upward.</source>
       </trans-unit>
-      <trans-unit id="6176283295432118415" datatype="html">
-        <source>You must start your move from one of your pieces.</source>
+      <trans-unit id="1573455518890855659" datatype="html">
+        <source>You must start your move with one of your pieces.</source>
       </trans-unit>
       <trans-unit id="155508093542570099" datatype="html">
         <source>Your move must have supporting pieces.</source>
       </trans-unit>
-      <trans-unit id="6776045351242696053" datatype="html">
-        <source>You cannot land of this case.</source>
+      <trans-unit id="1024410441498731703" datatype="html">
+        <source>You cannot land on this space.</source>
       </trans-unit>
       <trans-unit id="70110199629015603" datatype="html">
         <source>You cannot capture.</source>
@@ -1896,6 +1458,82 @@
       <trans-unit id="8839913211108039860" datatype="html">
         <source>Your second capture is invalid.</source>
       </trans-unit>
+      <trans-unit id="6119747591536950491" datatype="html">
+        <source>At Pylos, the goal is to be the last to play.
+        To do this, you have to save up your pieces.
+        As soon as a player puts its last piece, that player loses the game immediately.
+        Here is what the initial board looks like, it is a board of 4 x 4 squares.
+        This board will become a pyramid, little by little.
+        It will be filled by the pieces of your stock, of which each player has 15.</source>
+      </trans-unit>
+      <trans-unit id="5521539166247507576" datatype="html">
+        <source>When it is your turn, you can always drop one of your piece on an empty square.
+        The grey squares are where you can drop your pieces.&lt;br/&gt;&lt;br/&gt;
+        Click on one of the squares to drop a piece there.</source>
+      </trans-unit>
+      <trans-unit id="460049283627942483" datatype="html">
+        <source>There you go, as simple as that.</source>
+      </trans-unit>
+      <trans-unit id="9085516039614786121" datatype="html">
+        <source>Climbing</source>
+      </trans-unit>
+      <trans-unit id="6934393717447664003" datatype="html">
+        <source>When 4 pieces form a square, it is possible to put a fifth piece on top.
+        However, when that happens, you can save a piece by climbing instead of dropping a piece.
+        To climb:
+        &lt;ol&gt;
+            &lt;li&gt;Click on one of your free pieces, which should be lower than the landing square.&lt;/li&gt;
+            &lt;li&gt;Click on an empty landing square, higher than your selected piece.&lt;/li&gt;
+        &lt;/ol&gt;&lt;br/&gt;
+        Go ahead, climb!</source>
+      </trans-unit>
+      <trans-unit id="697264300548703520" datatype="html">
+        <source>Congratulations!&lt;br/&gt;
+        Some important notes:
+        &lt;ol&gt;
+            &lt;li&gt; You cannot move a piece that is directly below another one.&lt;/li&gt;
+            &lt;li&gt; Of course, you cannot move the opponent&apos;s pieces.&lt;/li&gt;
+            &lt;li&gt; You can only climb when the landing square is higher than the starting square.&lt;/li&gt;
+        &lt;/ol&gt;</source>
+      </trans-unit>
+      <trans-unit id="7244821610544753622" datatype="html">
+        <source>Square (1/3)</source>
+      </trans-unit>
+      <trans-unit id="7499997319299935391" datatype="html">
+        <source>When the piece you&apos;re moving is the fourth one of a square of your color,
+        you can choose anywhere on the board one or two of your pieces.
+        These pieces will be removed from the board, allowing you to save up one or two pieces.
+        A chosen piece must not be directly below another piece.
+        A chosen piece can be the piece you just placed.
+        You&apos;re playing Dark.&lt;br/&gt;&lt;br/&gt;
+        Form a square, then click twice on one of the four pieces to remove only that one.</source>
+      </trans-unit>
+      <trans-unit id="2591075612121932907" datatype="html">
+        <source>Congratulations, you have saved one piece.</source>
+      </trans-unit>
+      <trans-unit id="1514360345752656911" datatype="html">
+        <source>Square (2/3)</source>
+      </trans-unit>
+      <trans-unit id="7482163381933878807" datatype="html">
+        <source>You&apos;re playing Dark.&lt;br/&lt;br/&gt;
+        Do like in the previous step, but this time click on both pieces on the top row.</source>
+      </trans-unit>
+      <trans-unit id="1786899883514784892" datatype="html">
+        <source>Congratulations, you have saved two pieces.</source>
+      </trans-unit>
+      <trans-unit id="521772581425892664" datatype="html">
+        <source>Square (3/3)</source>
+      </trans-unit>
+      <trans-unit id="5406967993715013416" datatype="html">
+        <source>You&apos;re playing Dark.
+        Do as in the last step, but this time
+        you will have to take, as expected, the highest piece,
+        and then take the piece below it, which can now be taken.&lt;br/&gt;&lt;br/&gt;
+        Go ahead.</source>
+      </trans-unit>
+      <trans-unit id="7672164638957896639" datatype="html">
+        <source>Congratulations, you have saved two pieces. You are now ready to play.</source>
+      </trans-unit>
       <trans-unit id="5796940069053691279" datatype="html">
         <source>You must give a piece.</source>
       </trans-unit>
@@ -1905,20 +1543,126 @@
       <trans-unit id="6246016939611902421" datatype="html">
         <source>You cannot give the piece that was in your hands.</source>
       </trans-unit>
+      <trans-unit id="8669293665052580542" datatype="html">
+        <source>Quarto is an alignment game.
+        The goal is to align four pieces that have at least one common aspect:
+        &lt;ul&gt;
+          &lt;li&gt;their color (light or dark)&lt;/li&gt;
+          &lt;li&gt;their size (big or small)&lt;/li&gt;
+          &lt;li&gt;their pattern (empty or dotted)&lt;/li&gt;
+          &lt;li&gt;their shape (round or square)&lt;/li&gt;
+        &lt;/ul&gt;
+        Here, we have a board with a victory by an alignment of dark pieces.</source>
+      </trans-unit>
+      <trans-unit id="5869780110608474933" datatype="html">
+        <source>Placement</source>
+      </trans-unit>
+      <trans-unit id="1449786172410747726" datatype="html">
+        <source>Every placement occurs in two steps: placing the piece you have in hand on a square of the board,
+        and picking a piece that the opponent will have to place, by clicking on one of the pieces on the side of the board.
+        If you prefer, the order of these two steps can be reversed.
+        Keep in mind that the second click confirms the move.&lt;br/&gt;&lt;br/&gt;
+        Make a move.</source>
+      </trans-unit>
+      <trans-unit id="2296943727359810458" datatype="html">
+        <source>Perfect!</source>
+      </trans-unit>
+      <trans-unit id="7849803408372436927" datatype="html">
+        <source>Situation</source>
+      </trans-unit>
+      <trans-unit id="8833867623403187066" datatype="html">
+        <source>We have here a tricky situation.&lt;br/&gt;&lt;br/&gt;
+        Analyze the board and play your move, carefully paying attention not to let the opponent win on the next move.</source>
+      </trans-unit>
+      <trans-unit id="4715207105849605918" datatype="html">
+        <source>Well done!</source>
+      </trans-unit>
       <trans-unit id="3309166761338954119" datatype="html">
         <source>Piece in hand:</source>
       </trans-unit>
-      <trans-unit id="6593892495366722763" datatype="html">
-        <source>You must pick a case from the edge of the board.</source>
+      <trans-unit id="8819839276456625538" datatype="html">
+        <source>You must pick a space from the edge of the board.</source>
+      </trans-unit>
+      <trans-unit id="8880269756041921906" datatype="html">
+        <source>Goal of the game.</source>
+      </trans-unit>
+      <trans-unit id="1849305746346487286" datatype="html">
+        <source>At Quixo, the goal is to align 5 of your pieces.
+        The first player plays with dark pieces, the second with light pieces.
+        The board is made of 25 spaces spread over a 5x5 square.
+        Every piece has a neutral side, a light side, and a dark side.</source>
+      </trans-unit>
+      <trans-unit id="7664600147441568899" datatype="html">
+        <source>What a move looks like (without animation)</source>
+      </trans-unit>
+      <trans-unit id="470293200268604229" datatype="html">
+        <source>When it is your turn:
+        &lt;ol&gt;
+            &lt;li&gt; Click on one of your pieces or on a neutral piece. You cannot choose the piece of the opponent.
+                 You can only choose a piece from the edge of the board.&lt;/li&gt;
+            &lt;li&gt; Pick a direction in which you want to send the piece (by clicking on the arrow).&lt;/li&gt;
+        &lt;/ol&gt;
+        You have to imagine that the piece you picked has been moved to the other side of the board, in the chosen direction.
+        Once on the other side, all pieces will move by one space in the opposing direction.
+        Afterwards, if the piece was neutral, it will become yours and takes your color.&lt;br/&gt;&lt;br/&gt;
+        For example, take the bottom right neutral piece, and move it to the left (you&apos;re playing Light).</source>
+      </trans-unit>
+      <trans-unit id="2349397111027092779" datatype="html">
+        <source>See how the four dark pieces have been moved one space to the right.
+        The neutral piece has been move 4 pieces to the left and has become light.</source>
+      </trans-unit>
+      <trans-unit id="5336209236331231317" datatype="html">
+        <source>You already know everything in order to play, but there is one last particularity.
+        If you create a line of 5 of your pieces, you win.
+        If you create a line of 5 of your opponent&apos;s pieces, you lose.
+        If you create both, you lose too!&lt;br/&gt;&lt;br/&gt;
+        You can win with this board, try it.
+        You&apos;re playing Light.</source>
+      </trans-unit>
+      <trans-unit id="5489405522962962283" datatype="html">
+        <source>Congratulations, you won!</source>
       </trans-unit>
       <trans-unit id="2829152398724302132" datatype="html">
         <source>Your move should switch at least one piece.</source>
       </trans-unit>
-      <trans-unit id="1803127538576890588" datatype="html">
-        <source>You can only rebounce on dark cases.</source>
+      <trans-unit id="8006607638702407149" datatype="html">
+        <source>At Reversi, the pieces are double sided: one dark side for the first player, one light side for the second player.
+        When one piece is flipped, its owner changes.
+        The player owning the most pieces at the end of the game wins.
+        Here, Dark has 28 points and Light has 36, hence Light wins.</source>
       </trans-unit>
-      <trans-unit id="1687206469582777898" datatype="html">
-        <source>You can only rebound on empty cases.</source>
+      <trans-unit id="5374319580594970060" datatype="html">
+        <source>Capturing (1/2)</source>
+      </trans-unit>
+      <trans-unit id="6525142591266192640" datatype="html">
+        <source>At the beginning of the game, pieces are placed like here.
+        For a move to be legal, it must sandwich at least one piece of the opponent between the piece you&apos;re putting and another of your pieces.&lt;br/&gt;&lt;br/&gt;
+        Do any move by clicking to put your piece
+        Dark plays first.</source>
+      </trans-unit>
+      <trans-unit id="2992889611246141410" datatype="html">
+        <source>Capturing (2/2)</source>
+      </trans-unit>
+      <trans-unit id="5763897640314321260" datatype="html">
+        <source>A move can also capture a bigger line, and more than one lines at a time
+        You&apos;re playing light here.&lt;br/&gt;&lt;br/&gt;
+        Play on the bottom left to see an example.</source>
+      </trans-unit>
+      <trans-unit id="863291659187903950" datatype="html">
+        <source>Lower and more to the left, please.</source>
+      </trans-unit>
+      <trans-unit id="1243885947284298199" datatype="html">
+        <source>Passing a turn</source>
+      </trans-unit>
+      <trans-unit id="3839030392804080169" datatype="html">
+        <source>If, during its turn, a player has no move that would allow that player to flip a piece, that player must pass
+        Moreover, if the next player could not play neither, the game ends before the board is full, and points are counted in the usual way.</source>
+      </trans-unit>
+      <trans-unit id="1982783281923413187" datatype="html">
+        <source>You can only rebound on dark spaces.</source>
+      </trans-unit>
+      <trans-unit id="1906861201256399546" datatype="html">
+        <source>You can only rebound on empty spaces.</source>
       </trans-unit>
       <trans-unit id="366304395805128715" datatype="html">
         <source>You must pick one of your pyramids first.</source>
@@ -1926,8 +1670,45 @@
       <trans-unit id="6312339673351478538" datatype="html">
         <source>You must pick one of your pyramids.</source>
       </trans-unit>
-      <trans-unit id="2276095813109543233" datatype="html">
-        <source>You can move of up to two cases, not <x id="PH" equiv-text="distance"/>.</source>
+      <trans-unit id="7194810718741841575" datatype="html">
+        <source>You can move one or two spaces, not <x id="PH" equiv-text="distance"/>.</source>
+      </trans-unit>
+      <trans-unit id="7379617497808564008" datatype="html">
+        <source>Sâhârâ is played on a board where each space is a triangle.
+        Each player has six pyramids.</source>
+      </trans-unit>
+      <trans-unit id="4702455252845146546" datatype="html">
+        <source>At Sâhârâ, the goal of the game is to immobilize one of the opponent&apos;s pyramid.
+        To do so, you have to occupy all neighboring space of that pyramid.
+        Here, Light has lost because its leftmost pyramid is immobilized.</source>
+      </trans-unit>
+      <trans-unit id="6248955353391435185" datatype="html">
+        <source>To immobilize your opponent, you have to move your pyramids.
+        When a pyramid shares its vertices with light spaces, it can move on these spaces (we call this a simple step)
+        You&apos;re the first player, playing with the dark pyramids
+        &lt;ol&gt;
+            &lt;li&gt; Click on one of your pyramids.&lt;/li&gt;
+            &lt;li&gt; Click then on one of the two or three neighboring spaces in order to move your pyramid there.&lt;/li&gt;
+        &lt;/ol&gt;&lt;br/&gt;
+        Do any move.</source>
+      </trans-unit>
+      <trans-unit id="6109976694950516137" datatype="html">
+        <source>You have made a double step, which is good but it is the next exercise!</source>
+      </trans-unit>
+      <trans-unit id="7534417450669487466" datatype="html">
+        <source>Double move</source>
+      </trans-unit>
+      <trans-unit id="8816785185857430622" datatype="html">
+        <source>When a pyramid shares its vertices with dark spaces, it can move one or two steps.
+        To do so:
+        &lt;ol&gt;
+            &lt;li&gt; Click on the pyramid to move.&lt;/li&gt;
+            &lt;li&gt; Click on one of the 6 destinations that you can reach in two steps:
+                the 6 neighboring light spaces of the 3 dark spaces that are neighbors of your pyramid.
+        &lt;/ol&gt;</source>
+      </trans-unit>
+      <trans-unit id="5302904876941698020" datatype="html">
+        <source>Failed! You have made a single step.</source>
       </trans-unit>
       <trans-unit id="5162969671337604607" datatype="html">
         <source>You cannot insert a piece, all your pieces are already on the board.</source>
@@ -1935,14 +1716,89 @@
       <trans-unit id="2237663589140902242" datatype="html">
         <source>You do not have enough strength to push.</source>
       </trans-unit>
-      <trans-unit id="2764100637673917767" datatype="html">
-        <source>You cannot turn and move forward at the same time.</source>
+      <trans-unit id="3634874399235422132" datatype="html">
+        <source>You cannot push and turn at the same time.</source>
       </trans-unit>
       <trans-unit id="2533760570032755409" datatype="html">
         <source>Your push is invalid: it is either not straight, is not pushing anything, or is leaving the board.</source>
       </trans-unit>
-      <trans-unit id="7107364486507912038" datatype="html">
-        <source>You cannot move yet. Pick a case where you will put a new piece.</source>
+      <trans-unit id="4223815631577991732" datatype="html">
+        <source>The goal at Siam is to be the first to push a mountain out of the board.
+        The initial board contains three mountains, and no pieces are initially on the board.
+        During its turn, a player can do one of the following three actions:
+        &lt;ol&gt;
+            &lt;li&gt;Put a new piece on the board.&lt;/li&gt;
+            &lt;li&gt;Change the orientation of one of its piece, and optionally move it.&lt;/li&gt;
+            &lt;li&gt;Take one of its pieces out of the board.&lt;/li&gt;
+        &lt;/ol&gt;</source>
+      </trans-unit>
+      <trans-unit id="4040000701091542987" datatype="html">
+        <source>Inserting a piece</source>
+      </trans-unit>
+      <trans-unit id="1873012772528782889" datatype="html">
+        <source>Every player has 5 pieces in total.
+        As long as you do not have 5 pieces on the board, you can insert new pieces. To do so:
+        &lt;ol&gt;
+            &lt;li&gt;Click on one of the big arrows alongside the board.&lt;/li&gt;
+            &lt;li&gt;Click on one of the small arrows that appeared on the landing square of your piece.
+                This is the direction in which your piece will be oriented.&lt;/li&gt;
+        &lt;/ol&gt;&lt;br/&gt;
+        Insert a piece on the board.</source>
+      </trans-unit>
+      <trans-unit id="5200908153537449128" datatype="html">
+        <source>We will distinguish here &quot;moving&quot; and &quot;pushing&quot;.
+        A move is made from a piece&apos;s square to an empty neighboring square, horizontally or vertically.
+        During that move, you can also move the piece out of the board.
+        To move a piece:
+        &lt;ol&gt;
+            &lt;li&gt;Click on it.&lt;/li&gt;
+            &lt;li&gt;Click on one of the 4 arrows to pick the direction in which it will move.
+                You can also click on the middle dot to change the piece&apos;s orientation without moving it.&lt;/li&gt;
+            &lt;li&gt;Click on one of the 4 arrows on the landing square to pick its orientation.&lt;/li&gt;
+        &lt;/ol&gt;&lt;br/&gt;
+        Try to move the piece that is on the board one square upwards and to orient it downwards.</source>
+      </trans-unit>
+      <trans-unit id="1302903286060317619" datatype="html">
+        <source>Congratulations, you made a side-slip!</source>
+      </trans-unit>
+      <trans-unit id="6800736002193770248" datatype="html">
+        <source>Moving a piece out of the board</source>
+      </trans-unit>
+      <trans-unit id="4080355461737897031" datatype="html">
+        <source>To move a piece out of the board, you do not have to pick an orientation after the move.&lt;br/&gt;&lt;br/&gt;
+        Get that piece out of the board!</source>
+      </trans-unit>
+      <trans-unit id="423861981305705638" datatype="html">
+        <source>Congratulations, even if in this context it was not a useful move.</source>
+      </trans-unit>
+      <trans-unit id="4722706540028615833" datatype="html">
+        <source>Failed, the piece is still on the board</source>
+      </trans-unit>
+      <trans-unit id="5163808862381044782" datatype="html">
+        <source>When the landing square of your move is occupied, we use the term &quot;push&quot;.
+        In order to push, multiple conditions must hold:
+        &lt;ol&gt;
+            &lt;li&gt;Your piece must already be oriented in the direction of the push.&lt;/li&gt;
+            &lt;li&gt;The number of the pieces (opponent&apos;s or not) that are facing yours (called the resistants)
+                is smaller than the number of pieces that are oriented in the same direction as the push, yourself included (the pushers)&lt;/li&gt;
+            &lt;li&gt;The number of mountains on that line must be smaller or equal to the difference between the pushers and the resistants.&lt;/li&gt;
+        &lt;/ol&gt;
+        Your piece on the top right cannot push because there is one mountain too much.
+        Your piece on the bottom right can push.&lt;br/&gt;&lt;br/&gt;
+        Do it.</source>
+      </trans-unit>
+      <trans-unit id="4320644310018984490" datatype="html">
+        <source>The game ends when a mountain is pushed out of the board.
+        If you pushed it and nobody is in front of you, you&apos;re the winner.
+        However, if you were pushing an opponent oriented in the same direction as you, your opponent will win because that piece is closer to the mountain.
+        However, if that opponent is closer to the mountain but not oriented towards it, victory will be yours.&lt;br/&gt;&lt;br/&gt;
+        You have two ways of ending the game here: you can either win, or lose. Choose correctly!</source>
+      </trans-unit>
+      <trans-unit id="8309748811457759789" datatype="html">
+        <source>Failed, you lost.</source>
+      </trans-unit>
+      <trans-unit id="2035984245529775458" datatype="html">
+        <source>You cannot move yet. Pick a space where you will put a new piece.</source>
       </trans-unit>
       <trans-unit id="4851986227613573606" datatype="html">
         <source>Several groups are of same size, you must pick the one to keep.</source>
@@ -1956,17 +1812,84 @@
       <trans-unit id="1582776814244416485" datatype="html">
         <source>You must choose one of the biggest groups to keep it.</source>
       </trans-unit>
-      <trans-unit id="2393396397477731629" datatype="html">
-        <source>You cannot pick an empty case. Pick one of the biggest groups.</source>
+      <trans-unit id="3079321797470229596" datatype="html">
+        <source>You cannot pick an empty space. Pick one of the biggest groups.</source>
       </trans-unit>
       <trans-unit id="4110234759792602964" datatype="html">
         <source>You must put this piece next to another piece.</source>
       </trans-unit>
-      <trans-unit id="1960981802689860827" datatype="html">
-        <source>For your first click, pick one of your pieces.</source>
+      <trans-unit id="4811847660786431276" datatype="html">
+        <source>This move is not disconnecting a piece of your opponent. Try again with another piece.</source>
       </trans-unit>
-      <trans-unit id="7993748371708187543" datatype="html">
-        <source>You cannot land on an occupied case.</source>
+      <trans-unit id="6058377963019501239" datatype="html">
+        <source>You lost one of your pieces during this move. There is a way to disconnect an opponent&apos;s piece without losing any of yours, try again!</source>
+      </trans-unit>
+      <trans-unit id="5488934244958987687" datatype="html">
+        <source>Six is a game without board, where pieces are placed on the side of each other, in a contiguous block.
+        Every player has 21 pieces, 2 being already on the table.
+        The goal of the game is to form one of the three winning shapes with your pieces.</source>
+      </trans-unit>
+      <trans-unit id="1323662052932112829" datatype="html">
+        <source>Victory (line)</source>
+      </trans-unit>
+      <trans-unit id="4554770606444065239" datatype="html">
+        <source>On this board, by putting your piece at the right place, you can align six of your pieces and win the game&lt;br/&gt;&lt;br/&gt;
+        Find the victory. You&apos;re playing Dark.</source>
+      </trans-unit>
+      <trans-unit id="2466439893530767761" datatype="html">
+        <source>Victory (circle)</source>
+      </trans-unit>
+      <trans-unit id="4365332414018101911" datatype="html">
+        <source>On this board, by putting your piece at the right place, you can form a circle with six of your pieces and win the game.&lt;br/&gt;&lt;br/&gt;
+        Find the victory. You&apos;re playing Dark.</source>
+      </trans-unit>
+      <trans-unit id="3255477892845543355" datatype="html">
+        <source>Congratulations! Note that if a piece is inside the circle, it does not change anything.</source>
+      </trans-unit>
+      <trans-unit id="4644119482430965077" datatype="html">
+        <source>Victory (triangle)</source>
+      </trans-unit>
+      <trans-unit id="5836697956170776107" datatype="html">
+        <source>On this board, by putting your piece at the right place, you can form a triangle with six of your pieces and win the game.&lt;br/&gt;&lt;br/&gt;
+        Find the victory. You&apos;re playing Dark.</source>
+      </trans-unit>
+      <trans-unit id="8968454720078127329" datatype="html">
+        <source>Second phase</source>
+      </trans-unit>
+      <trans-unit id="4177736080893203208" datatype="html">
+        <source>After 40 turns, your pieces have all been placed and we move on to the second phase of the game.
+        You now have to move your pieces, paying attention not to remove a piece that was blocking the opponent&apos;s victory.
+        From now on, if after move, on or more pieces are disconnected from the largest group of piece, these will be taken out of the game.&lt;br/&gt;&lt;br/&gt;
+        You&apos;re playing Dark. Make a move that disconnects one of your opponent&apos;s pieces.</source>
+      </trans-unit>
+      <trans-unit id="6404013542075961070" datatype="html">
+        <source>Congratulations, your opponent now has one piece less and you&apos;re closer to victory!</source>
+      </trans-unit>
+      <trans-unit id="4819564470925108710" datatype="html">
+        <source>Victory by disconnection</source>
+      </trans-unit>
+      <trans-unit id="5614996129263361767" datatype="html">
+        <source>During the second phase of the game, on top of normal victories (line, circle, triangle), you can win by disconnection.
+        If at any time, one player does not have enough pieces to win (less than 6), the game ends.
+        The one with the most pieces wins. In case of tie, it&apos;s a draw.&lt;br/&gt;&lt;br/&gt;
+        Here, you&apos;re playing Dark and you can win. Do it!</source>
+      </trans-unit>
+      <trans-unit id="7208567678509553256" datatype="html">
+        <source>This move does not disconnect your opponent&apos;s pieces. Try again with another piece.</source>
+      </trans-unit>
+      <trans-unit id="631151175449209373" datatype="html">
+        <source>Special disconnection</source>
+      </trans-unit>
+      <trans-unit id="6890637892579669718" datatype="html">
+        <source>During a disconnection, two or more groups could have the same size,
+        in which case you will have to click on the group you wish to keep.&lt;br/&gt;&lt;br/&gt;
+        You&apos;re playing Dark, play such a move!</source>
+      </trans-unit>
+      <trans-unit id="4762560256027932544" datatype="html">
+        <source>This move has not cut the board in two equal halves.</source>
+      </trans-unit>
+      <trans-unit id="4456476499852991526" datatype="html">
+        <source>You cannot land on an occupied square.</source>
       </trans-unit>
       <trans-unit id="299718976758118618" datatype="html">
         <source>Once you left the central throne, you cannot return to it.</source>
@@ -1977,11 +1900,90 @@
       <trans-unit id="5525790446318724698" datatype="html">
         <source>Something is in the way.</source>
       </trans-unit>
+      <trans-unit id="9184509533119533012" datatype="html">
+        <source>Tablut is a strategy game that was played by the Vikings.
+        The goal of the game is different for each player.
+        The attacker plays first. Its pieces (dark) are close to the edges.
+        Its goal is to capture the king, which is in the center of the board.
+        The defender plays second. Its pieces (light) are in the middle.
+        Its goal is to put the king on one of the 4 thrones in the corners.
+        Note that the square in which the king starts, in the center of the board, is also a throne.</source>
+      </trans-unit>
+      <trans-unit id="7807295992128286354" datatype="html">
+        <source>All pieces move the same way.
+        Similarly to a rook in chess, a piece can move:
+        &lt;ol&gt;
+            &lt;li&gt;By as many squares as you want.&lt;/li&gt;
+            &lt;li&gt;Without going over another piece or stopping on another piece.&lt;/li&gt;
+            &lt;li&gt;Horizontally or vertically.&lt;/li&gt;
+            &lt;li&gt;Only the king can land on a throne.&lt;/li&gt;
+        &lt;/ol&gt;
+        To move a piece, click on it and then on its landing square.&lt;br/&gt;&lt;br/&gt;
+        This is the initial board, do the first move</source>
+      </trans-unit>
+      <trans-unit id="6012770625680782650" datatype="html">
+        <source>Capturing a soldier (1/2)</source>
+      </trans-unit>
+      <trans-unit id="677441772205421573" datatype="html">
+        <source>All pieces except the king, attackers and defenders, are soldiers.
+        To capture them, they have to be sandwiched between two of your pieces.
+        By getting too close, an attacker&apos;s soldier is in danger.&lt;br/&gt;&lt;br/&gt;
+        Capture it.</source>
+      </trans-unit>
+      <trans-unit id="1504890408061490574" datatype="html">
+        <source>Congratulations, that will teach him a lesson!</source>
+      </trans-unit>
+      <trans-unit id="3980320770441466216" datatype="html">
+        <source>Failed, you missed the opportunity to capture an opponent.</source>
+      </trans-unit>
+      <trans-unit id="4346619065189143436" datatype="html">
+        <source>Capturing a soldier (2/2)</source>
+      </trans-unit>
+      <trans-unit id="7441310005881510130" datatype="html">
+        <source>A second way to capture a soldier is against an empty throne.
+        The King has moved and endangered one of its soldiers..&lt;br/&gt;&lt;br/&gt;
+        Capture it.</source>
+      </trans-unit>
+      <trans-unit id="6149168030196118189" datatype="html">
+        <source>Congratulations, one less defender. But keep an eye on the king, it is the most important.</source>
+      </trans-unit>
+      <trans-unit id="2625274275364629010" datatype="html">
+        <source>Failed, you did not do the expected move.</source>
+      </trans-unit>
+      <trans-unit id="2222427678565473040" datatype="html">
+        <source>Capturing the king (1/2)</source>
+      </trans-unit>
+      <trans-unit id="4467961188268409561" datatype="html">
+        <source>To capture the king, two soldiers are not enough.
+        For the first solution, the four squares neighbor to the king (horizontally and vertically) must be occupied by your soldiers.
+        This also works if the king is on the throne.&lt;br/&gt;&lt;br/&gt;
+        Capture the king.</source>
+      </trans-unit>
+      <trans-unit id="6041867123312663432" datatype="html">
+        <source>Congratulations, you won..</source>
+      </trans-unit>
+      <trans-unit id="2543567724882527416" datatype="html">
+        <source>Failed, you let the king run away.</source>
+      </trans-unit>
+      <trans-unit id="2262651303124763617" datatype="html">
+        <source>Capturing the king (2/2)</source>
+      </trans-unit>
+      <trans-unit id="3153592495756621475" datatype="html">
+        <source>Another way to capture the king is to immobilize it against an edge of the board.
+        Note that the king cannot be captured next to a throne.&lt;br/&gt;&lt;br/&gt;
+        Capture the king.</source>
+      </trans-unit>
+      <trans-unit id="6715271150391313638" datatype="html">
+        <source>The King is dead, long live the King. Congratulations, you won.</source>
+      </trans-unit>
       <trans-unit id="9155303779171419902" datatype="html">
         <source>You cannot put a new ring after the tenth turn.</source>
       </trans-unit>
       <trans-unit id="1259286853143283501" datatype="html">
         <source>You cannot put a marker in a ring before placing all of your rings.</source>
+      </trans-unit>
+      <trans-unit id="7464993832700646540" datatype="html">
+        <source>You can only capture when exactly 5 of your markers are aligned, and it is not the case.</source>
       </trans-unit>
       <trans-unit id="1240800364123845501" datatype="html">
         <source>Please pick a valid capture that contains exactly 5 markers.</source>
@@ -2029,43 +2031,43 @@
       <trans-unit id="6117091506461787133" datatype="html">
         <source>Putting a marker</source>
       </trans-unit>
-      <trans-unit id="7443185874850394471" datatype="html">
+      <trans-unit id="1690773122949082144" datatype="html">
         <source>Once the initial phase is done and all rings are on the board, you need to place markers on the board..
         To do so, put a marker in a ring by clicking on that ring
         Then, the ring must be moved in a straight line, in any direction.
         A ring cannot pass through other rings during its move.
         If it goes over a group of markers, your move must stop at the first empty space after that group.
-        All markers in the group are then flipped and their colour change.&lt;br/&gt;&lt;br/&gt;
-        You&apos;re playing dark, do a move.</source>
+        All markers in the group are then flipped and their color change.&lt;br/&gt;&lt;br/&gt;
+        You&apos;re playing Dark, do a move.</source>
       </trans-unit>
       <trans-unit id="4761648797342068775" datatype="html">
         <source>Getting a ring by aligning 5 markers</source>
       </trans-unit>
-      <trans-unit id="3938497683812871584" datatype="html">
+      <trans-unit id="8100703918510255362" datatype="html">
         <source>Finally, the last mechanic you need is to be able to get a ring from the board in order to gain points.
-        To do so, you need to align 5 markers of your colour.
+        To do so, you need to align 5 markers of your color.
         You can then get these markers by clicking on them, and then get one of your ring by clicking on it.
         You will then have one more point.
         You must capture when you can.&lt;br/&gt;&lt;br/&gt;
-        You&apos;re playing dark, perform a capture!</source>
+        You&apos;re playing Dark, perform a capture!</source>
       </trans-unit>
       <trans-unit id="7732729017555001326" datatype="html">
         <source>Congratulations! You need two more captures to win.</source>
       </trans-unit>
-      <trans-unit id="5220862048705581833" datatype="html">
-        <source>Failed! You need to align 5 markers of your colour in order to get them, and to get a ring at the same time.</source>
+      <trans-unit id="7525019515401716113" datatype="html">
+        <source>Failed! You need to align 5 markers of your color in order to get them, and to get a ring at the same time.</source>
       </trans-unit>
-      <trans-unit id="3294765785219703641" datatype="html">
-        <source>You cannot pick a piece from the opponent.</source>
+      <trans-unit id="6079681718244869210" datatype="html">
+        <source>You cannot pick a piece of the opponent.</source>
       </trans-unit>
-      <trans-unit id="4487014416852462120" datatype="html">
-        <source>You must click on an empty case.</source>
+      <trans-unit id="7236012742212037533" datatype="html">
+        <source>You must click on an empty space.</source>
       </trans-unit>
-      <trans-unit id="7620420835402511255" datatype="html">
-        <source>Your landing case should be empty or contain a piece of the opponent.</source>
+      <trans-unit id="8905154297816550312" datatype="html">
+        <source>Your landing space should be empty or contain a piece of the opponent.</source>
       </trans-unit>
-      <trans-unit id="8217216836943122905" datatype="html">
-        <source>You must drop your piece on an empty case.</source>
+      <trans-unit id="2698327260846195509" datatype="html">
+        <source>You must drop your piece on an empty space.</source>
       </trans-unit>
       <trans-unit id="2056314675813734949" datatype="html">
         <source>You cannot pass your turn.</source>
@@ -2073,11 +2075,14 @@
       <trans-unit id="5019447873100403310" datatype="html">
         <source>You must pass your turn.</source>
       </trans-unit>
-      <trans-unit id="2052764182353187708" datatype="html">
-        <source>You have selected an empty case, you must select one of your own pieces.</source>
+      <trans-unit id="5966391152315784819" datatype="html">
+        <source>You have selected an empty space, you must select one of your own pieces.</source>
       </trans-unit>
       <trans-unit id="7463436103435995523" datatype="html">
         <source>You are already in a game. Finish it or cancel it first.</source>
+      </trans-unit>
+      <trans-unit id="1046324921628688006" datatype="html">
+        <source>You are offline. Log in again to join a game.</source>
       </trans-unit>
     </body>
   </file>

@@ -30,7 +30,7 @@ export const abaloneTutorial: TutorialStep[] = [
     TutorialStep.fromMove(
         $localize`Pushing`,
         $localize`To push one opponent piece, you must move at least two of your pieces.
-        To push two oponnent pieces, you must move three of your pieces.
+        To push two opponent pieces, you must move three of your pieces.
         If one of your pieces blocks the push, it will be impossible to push.
         You cannot move four pieces or more.<br/><br/>
         Only one push towards the right is possible here, find it. (You're playing Dark).`,

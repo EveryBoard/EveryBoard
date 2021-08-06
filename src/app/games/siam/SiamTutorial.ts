@@ -66,7 +66,7 @@ export const siamTutorial: TutorialStep[] = [
             [_, _, U, _, _],
         ], 0),
         [new SiamMove(2, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.DOWN)],
-        $localize`Congratulations, you made a sideslip!`,
+        $localize`Congratulations, you made a side-slip!`,
         $localize`Failed!`,
     ),
     TutorialStep.fromMove(

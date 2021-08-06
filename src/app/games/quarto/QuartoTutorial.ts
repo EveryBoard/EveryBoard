@@ -41,7 +41,7 @@ export const quartoTutorial: TutorialStep[] = [
     TutorialStep.fromMove(
         $localize`Situation`,
         $localize`We have here a tricky situation.<br/><br/>
-        Analyse the board and play your move, carefully paying attention not to let the opponent win on the next move.`,
+        Analyze the board and play your move, carefully paying attention not to let the opponent win on the next move.`,
         new QuartoPartSlice([
             [15, 14, 13, 16],
             [4, 11, 12, 16],
