@@ -37,7 +37,7 @@ export async function setupFirestoreTestModule(): Promise<unknown> {
         schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
     // Clear the firestore data before each test
-    const http: HttpClient = TestBed.get(HttpClient);
+    const http: HttpClient = TestBed.inject(HttpClient);
     return http.delete('http://localhost:8080/emulator/v1/projects/my-project/databases/(default)/documents').toPromise();
 }
 
