@@ -589,25 +589,70 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(0);
             expect(wrapper.chronoZeroLocal.stop).toHaveBeenCalled();
         }));
-        it('should stop ennemy\'s global chrono when local reach end', fakeAsync(async() => {
+        it(`should stop offline opponent's global chrono when local reach end`, fakeAsync(async() => {
+            // given an online game where it's the opponent's turn
             await prepareStartedGameFor({ pseudo: 'creator', verified: true });
             tick(1);
             await doMove(FIRST_MOVE, true);
             spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
             spyOn(wrapper.chronoOneGlobal, 'stop').and.callThrough();
+
+            // when he reach time out
             tick(wrapper.maximalMoveDuration);
+
+            // then it shoud be considered as a timeout
             expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(1);
             expect(wrapper.chronoOneGlobal.stop).toHaveBeenCalled();
         }));
-        it('should stop ennemy\'s local chrono when global chrono reach end', fakeAsync(async() => {
+        it(`should stop offline opponent's local chrono when global chrono reach end`, fakeAsync(async() => {
+            // given an online game where it's the opponent's turn
             await prepareStartedGameFor({ pseudo: 'creator', verified: true }, true);
             tick(1);
             await doMove(FIRST_MOVE, true);
             spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
             spyOn(wrapper.chronoOneLocal, 'stop').and.callThrough();
-            tick(wrapper.maximalMoveDuration);
+
+            // when he reach time out
+            tick(wrapper.maximalMoveDuration); // TODO: maximalPartDuration, for this one!!
+
+            // then it shoud be considered as a timeout
             expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(1);
             expect(wrapper.chronoOneLocal.stop).toHaveBeenCalled();
+        }));
+        it(`should not notifyTimeout for online opponent`, fakeAsync(async() => {
+            // given an online game where it's the opponent's; opponent is online
+            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            tick(1);
+            await doMove(FIRST_MOVE, true);
+            spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
+            spyOn(wrapper.chronoOneGlobal, 'stop').and.callThrough();
+            spyOn(wrapper, 'notifyTimeoutVictory').and.callThrough();
+
+            // when he reach time out
+            tick(wrapper.maximalMoveDuration);
+
+            // then it shoud be considered as a timeout
+            expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(1);
+            expect(wrapper.chronoOneGlobal.stop).toHaveBeenCalled();
+            expect(wrapper.notifyTimeoutVictory).not.toHaveBeenCalled();
+        }));
+        it(`should notifyTimeout for offline opponent`, fakeAsync(async() => {
+            // given an online game where it's the opponent's; opponent is online
+            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            tick(1);
+            await doMove(FIRST_MOVE, true);
+            spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
+            spyOn(wrapper.chronoOneGlobal, 'stop').and.callThrough();
+            spyOn(wrapper, 'notifyTimeoutVictory').and.callThrough();
+            spyOn(wrapper, 'opponentIsOffline').and.returnValue(true);
+
+            // when he reach time out
+            tick(wrapper.maximalMoveDuration);
+
+            // then it shoud be considered as a timeout
+            expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(1);
+            expect(wrapper.chronoOneGlobal.stop).toHaveBeenCalled();
+            expect(wrapper.notifyTimeoutVictory).toHaveBeenCalled();
         }));
     });
     describe('User "handshake"', () => {

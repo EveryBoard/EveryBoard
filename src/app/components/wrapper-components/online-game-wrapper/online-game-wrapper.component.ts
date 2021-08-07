@@ -42,7 +42,7 @@ export class UpdateType {
     selector: 'app-online-game-wrapper',
     templateUrl: './online-game-wrapper.component.html',
 })
-export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, AfterViewInit, OnDestroy {
+export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, OnDestroy {
 
     public static VERBOSE: boolean = false;
 
@@ -138,11 +138,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         this.userSub = this.authenticationService.getJoueurObs()
             .subscribe((user: { pseudo: string, verified: boolean}) => this.userName = user.pseudo);
     }
-    public ngAfterViewInit(): void {
-        /* this.chat.changes.subscribe((comps: QueryList<ElementRef>) => {
-            this.chatVisibility = comps.first.nativeElement.firstChild.visible;
-        });*/
-    }
     public startGame(iJoiner: IJoiner): void {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.startGame');
 
@@ -193,12 +188,11 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
                 return this.doNewMoves(part);
             case UpdateType.PRE_START_DOC:
                 return;
-            case UpdateType.STARTING_DOC:
+            default:
+                assert(updateType === UpdateType.STARTING_DOC, 'Unexpected update type ' + updateType);
                 this.setChronos();
                 this.setPlayersDatas(part);
                 return this.startCountDownFor(Player.ZERO);
-            default:
-                throw new Error('Unexpected update type ' + updateType);
         }
     }
     public getUpdateType(update: Part): UpdateType {
@@ -330,16 +324,19 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.rules.node);
         if (gameStatus === GameStatus.ONE_WON) {
             this.currentPart = this.currentPart.setWinnerAndLoser(this.players[1], this.players[0]);
-        } else if (gameStatus === GameStatus.ZERO_WON) {
-            this.currentPart = this.currentPart.setWinnerAndLoser(this.players[0], this.players[1]);
         } else {
-            throw new Error('How the fuck did you notice victory?');
+            assert(gameStatus === GameStatus.ZERO_WON, 'impossible to get a victory without winner!');
+            this.currentPart = this.currentPart.setWinnerAndLoser(this.players[0], this.players[1]);
         }
         this.endGame = true;
 
-        this.gameService.updateDBBoard(this.currentPartId, encodedMove,
-                                       scorePlayerZero, scorePlayerOne,
-                                       false, this.currentPart.getWinner(), this.currentPart.getLoser());
+        this.gameService.updateDBBoard(this.currentPartId,
+                                       encodedMove,
+                                       scorePlayerZero,
+                                       scorePlayerOne,
+                                       false,
+                                       this.currentPart.getWinner(),
+                                       this.currentPart.getLoser());
     }
     public canAskTakeBack(): boolean {
         if (this.isPlaying() === false) {
@@ -438,11 +435,10 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
                 break;
             case 'DrawRefused':
                 break;
-            case 'DrawAccepted':
+            default:
+                assert(request.code === 'DrawAccepted', 'there was an error : ' + JSON.stringify(request) + ' had ' + request.code + ' value');
                 this.acceptDraw();
                 break;
-            default:
-                throw new Error('there was an error : ' + JSON.stringify(request) + ' had ' + request.code + ' value');
         }
     }
     private takeBackFor(player: Player) {
@@ -531,8 +527,10 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
                 display(true, 'time might be better handled in the future');
             } else {
                 // the other player has timed out
-                this.notifyTimeoutVictory(this.userName, this.opponent.doc.pseudo);
-                this.endGame = true;
+                if (this.opponentIsOffline()) {
+                    this.notifyTimeoutVictory(this.userName, this.opponent.doc.pseudo);
+                    this.endGame = true;
+                }
             }
         }
     }
@@ -640,11 +638,14 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
     public getPlayerNameFontColor(player: number): { [key: string]: string} {
         if (this.observerRole === player || this.observerRole > 1) {
             return { color: 'black' };
-        } else if (this.opponent && this.opponent.doc && this.opponent.doc.state === 'offline') {
+        } else if (this.opponentIsOffline()) {
             return this.OFFLINE_FONT_COLOR;
         } else {
             return { color: 'black' };
         }
+    }
+    public opponentIsOffline(): boolean {
+        return this.opponent && this.opponent.doc && this.opponent.doc.state === 'offline';
     }
     public canResign(): boolean {
         if (this.isPlaying() === false) {
