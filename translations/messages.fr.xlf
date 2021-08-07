@@ -728,7 +728,7 @@
         If one of your pieces blocks the push, it will be impossible to push.
         You cannot move four pieces or more.&lt;br/&gt;&lt;br/&gt;
         Only one push towards the right is possible here, find it. (You&apos;re playing Dark).</source>
-        <target>Pour pousser une pièce, vous devez déplacer au moins deux de vos pièces.
+        <target>Pour pousser une pièce de l'adversaire, vous devez déplacer au moins deux de vos pièces.
         Pour pousser deux pièces, vous devez déplacer trois de vos pièces.
         Si une de vos pièces est placée juste après une pièce adverse que vous poussez, pousser sera alors interdit.
         Vous ne pouvez pas déplacer quatre pièces.
@@ -968,10 +968,10 @@
         You&apos;re playing first, hence you&apos;re playing Dark.&lt;br/&gt;&lt;br/&gt;
         Perform any move.</source>
         <target>Pour effectuer un déplacement, il faut:
-        &lt;ul&gt;
+        &lt;ol&gt;;
             &lt;li&gt;1. Cliquer sur l&apos;une de vos pièces.&lt;/li&gt;
             &lt;li&gt;2. Cliquer sur l&apos;une des cases triangulaires encadrées en jaune.&lt;/li&gt;
-        &lt;/ul&gt;
+        &lt;/ol&gt;
         Vous pouvez passer à travers les pièces adverses.&lt;br/&gt;&lt;br/&gt;
         Vous jouez en premier, vous jouez donc Foncé, faites n&apos;importe quel déplacement.&lt;br/&gt;
         Note: peut importe ce que vous faites, aucunes de vos pièces ne peuvent être capturée pendant votre tour.</target>
@@ -1010,7 +1010,7 @@
         But, by leaving the bottom left tile, two tiles will be removed.&lt;br/&gt;&lt;br/&gt;
         Perform a move that lets you gain two tiles.</source>
         <target>Quand une tuile est quittée, elle devient potentiellement enlevable du plateau.
-        Pour qu&apos;elle soit enlevée, il faut que trois de ses bords soient libres, et qu&apos;ils soient l&apos;un à côté de l&apos;autre.
+        Pour qu&apos;elle soit enlevée, il faut qu'au moins trois de ses bords soient libres, et qu&apos;ils soient l&apos;un à côté de l&apos;autre.
         Notez que si une tuile vide, voisine d&apos;une tuile qu&apos;on vient de retirer, devient retirable, elle sera retirée.
         Par exemple, ci-dessous, en quittant sa tuile le pion foncé le plus haut ne déconnectera pas celle-ci !
         Mais en quittant la tuile en bas à gauche, deux tuiles seront enlevées.&lt;br/&gt;&lt;br/&gt;
@@ -1313,10 +1313,10 @@
         &lt;/ol&gt;</source>
         <target>Voici le plateau de départ, c&apos;est à Foncé de commencer.
         Commençons simplement par un déplacement d&apos;une seule pièce :
-        &lt;ul&gt;
+        &lt;ol&gt;;
             &lt;li&gt; 1. Cliquez sur une pièce.&lt;/li&gt;
             &lt;li&gt; 2. Cliquez sur une case voisine libre.&lt;/li&gt;
-        &lt;/ul&gt;</target>
+        &lt;/ol&gt;</target>
       </trans-unit>
       <trans-unit id="3304007702447669410" datatype="html">
         <source>Congratulations, you are in advance. But this is not the exercise here, try again.</source>
@@ -1339,11 +1339,11 @@
         &lt;/ol&gt;&lt;br/&gt;
         Move a phalanx!</source>
         <target>Maintenant, comment déplacer plusieurs pièces sur une seule ligne (une phalange) :
-        &lt;ul&gt;
+        &lt;ol&gt;;
             &lt;li&gt; 1. Cliquez sur la première pièce.&lt;/li&gt;
             &lt;li&gt; 2. Cliquez sur la dernière pièce de la phalange.&lt;/li&gt;
             &lt;li&gt; 3. Cliquez une des cases encadrées en jaune, elles vous permettent de déplacer au maximum votre phalange d&apos;une distance égale à sa taille.&lt;/li&gt;
-        &lt;/ul&gt;&lt;br/&gt;
+        &lt;/ol&gt;&lt;br/&gt;
         Faites un déplacement de phalange !</target>
       </trans-unit>
       <trans-unit id="108222118450000526" datatype="html">
@@ -1369,18 +1369,19 @@
         &lt;/ol&gt;&lt;br/&gt;
         Capture a phalanx.</source>
         <target>Pour capturer une phalange ennemie:
-        &lt;ul&gt;
+        &lt;ol&gt;;
             &lt;li&gt; 1. Il faut que celle-ci soit alignée avec la phalange en déplacement.&lt;/li&gt;
             &lt;li&gt; 2. Qu&apos;elle soit strictement plus courte.&lt;/li&gt;
             &lt;li&gt; 3. Que la première pièce de votre phalange atterrisse sur la première pièce rencontrée de la phalange à capturer.&lt;/li&gt;
-        &lt;/ul&gt;&lt;br/&gt;
+        &lt;/ol&gt;&lt;br/&gt;
         Capturez la phalange.</target>
       </trans-unit>
       <trans-unit id="8213276201685541009" datatype="html">
         <source>Congratulations, you made it!
         Note that the diagonal phalanx was not aligned with your phalanx, hence even if it is longer, this does not prevent you from capturing some of its pieces on another alignment.</source>
         <target>Bravo, vous avez réussi.
-        Notez que la phalange en diagonale n'était pas alignée avec la votre. Donc, même si elle était plus longue, cela ne vous empêche pas de capturer certaines de ses pièces sur un alignement différent.</target>
+        Constatez que la phalange diagonale n'étant pas alignée avec la notre, sa longueur supérieur n'empêche pas de capturer ses pièces dans un autre alignement.
+        </target>
       </trans-unit>
       <trans-unit id="4418812710815829575" datatype="html">
         <source>Failed, you have not captured the phalanx.</source>
@@ -1451,7 +1452,7 @@
         You cannot push when a line is full.&lt;br/&gt;&lt;br/&gt;
         You&apos;re playing Dark, insert a piece.</source>
         <target>Les pièces ne peuvent entrer sur le plateau que par l&apos;extérieur.
-        &lt;ul&gt;
+        &lt;ol&gt;;
             &lt;li&gt; 1. Cliquez sur une case sur le bord du plateau.&lt;/li&gt;
             &lt;li&gt; 2. Si cette case était occupée, cliquez ensuite sur la flèche représentant la direction dans laquelle pousser la/les pièces déjà présentes dans la rangée.&lt;/li&gt;
         &lt;li&gt;
@@ -1482,20 +1483,20 @@
         You&apos;re playing Dark, you can make a capture, do it.</source>
         <target>Pour faire une capture, il faut aligner 4 de ses propres pièces, qui seront les 4 premières capturées.
         Il y a plusieurs choses à savoir sur une capture :
-        &lt;ul&gt;
+        &lt;ol&gt;;
             &lt;li&gt; 1. Quand 4 pièces sont capturées, toutes les pièces directement alignées avec ces 4 pièces le sont également.&lt;/li&gt;
             &lt;li&gt; 2. Dès qu&apos;il y a une case vide dans la ligne, la capture s&apos;arrête.&lt;/li&gt;
             &lt;li&gt; 3. Vos pièces capturées rejoignent votre réserve.
                 Celles de l&apos;adversaire par contre sont réellement capturées et ne rejoignent pas sa réserve.&lt;/li&gt;
             &lt;li&gt; 4. Si vous créez une ligne de 4 pièces de l&apos;adversaire, c&apos;est au début de son tour qu&apos;il pourra les capturer.
                 Ceci implique que votre tour se passe en trois phases :
-                &lt;ul&gt;
+                &lt;ol&gt;;
                     &lt;li&gt; A. Choisir la/les capture(s) crée(s) par le dernier mouvement de votre adversaire.&lt;/li&gt;
                     &lt;li&gt; B. Faire votre poussée.&lt;/li&gt;
                     &lt;li&gt; C. Choisir la/les ligne(s) à capturer que vous venez de créer (en cliquant dessus).&lt;/li&gt;
-                &lt;/ul&gt;
+                &lt;/ol&gt;
             &lt;/li&gt;
-        &lt;/ul&gt;&lt;br/&gt;
+        &lt;/ol&gt;&lt;br/&gt;
         Vous jouez Foncé, une capture est faisable, faites la.</target>
       </trans-unit>
       <trans-unit id="8768850104658663274" datatype="html">
@@ -1626,7 +1627,7 @@
         <source>Stones that are connected horizontally or vertically must be captured at the same time, and are not capturable in isolation.&lt;br/&gt;&lt;br/&gt;
         The light group here only has one freedom left, capture it.</source>
         <target>Des pierres connectées horizontalement ou verticalement doivent être capturées ensemble, et ne sont pas capturables séparement.&lt;br/&gt;&lt;br/&gt;
-        Le groupe clair ci-dessus n&apos;a plus qu&apos;une liberté, capturez ce groupe.</target>
+        Ici, le groupe clair n&apos;a plus qu&apos;une liberté, capturez ce groupe.</target>
       </trans-unit>
       <trans-unit id="2022880801532921915" datatype="html">
         <source>Congratulations, you have earned three points and formed a territory.</source>
@@ -2138,10 +2139,10 @@
         <target>Quand 4 pièces forment un carré, il est possible de placer une cinquième pièce dessus.
         Cependant, à ce moment là, se crée une opportunité d&apos;économiser une pièce en &quot;grimpant&quot; au lieu de déposer.
         Pour grimper :
-        &lt;ul&gt;
+        &lt;ol&gt;;
             &lt;li&gt; 1. Cliquez sur une de vos pièces libres et plus basse que la case d&apos;atterrissage.&lt;/li&gt;
             &lt;li&gt; 2. Cliquez sur une case vide plus haute.&lt;/li&gt;
-        &lt;/ul&gt;&lt;br/&gt;
+        &lt;/ol&gt;&lt;br/&gt;
         Allez-y, grimpez!</target>
       </trans-unit>
       <trans-unit id="697264300548703520" datatype="html">
@@ -2154,11 +2155,11 @@
         &lt;/ol&gt;</source>
         <target>Bravo !&lt;br/&gt;
         Notes importantes:
-        &lt;ul&gt;
+        &lt;ol&gt;;
             &lt;li&gt; 1. On ne peut déplacer une pièce qui est en dessous d&apos;une autre.&lt;/li&gt;
             &lt;li&gt; 2. Naturellement, on ne peut pas déplacer les pièces adverses.&lt;/li&gt;
             &lt;li&gt; 3. Un déplacement ne peut se faire que quand la case d&apos;arrivée est plus haute que la case de départ.&lt;/li&gt;
-        &lt;/ul&gt;</target>
+        &lt;/ol&gt;</target>
       </trans-unit>
       <trans-unit id="7244821610544753622" datatype="html">
         <source>Square (1/3)</source>
@@ -2242,10 +2243,12 @@
         Here, we have a board with a victory by an alignment of dark pieces.</source>
         <target>Quarto est un jeu d&apos;alignement.
         Le but d&apos;aligner quatre pièces qui possèdent au moins un point commun:
-        leur couleur (claire ou foncée),
-        leur taille (grande ou petite),
-        leur motif (vide ou à point),
-        leur forme (ronde ou carrée).
+        &lt;ul&gt;
+          &lt;li&gt;leur couleur (claire ou foncée)&lt;/li&gt;
+          &lt;li&gt;leur taille (grande ou petite)&lt;/li&gt;
+          &lt;li&gt;leur motif (vide ou à point)&lt;/li&gt;
+          &lt;li&gt;leur forme (ronde ou carrée)&lt;/li&gt;
+        &lt;/ul&gt;
         Ici, nous avons un plateau avec une victoire par alignement de pièce rondes.</target>
       </trans-unit>
       <trans-unit id="5869780110608474933" datatype="html">
@@ -2320,11 +2323,11 @@
         Afterwards, if the piece was neutral, it will become yours and takes your color.&lt;br/&gt;&lt;br/&gt;
         For example, take the bottom right neutral piece, and move it to the left (you&apos;re playing Light).</source>
         <target>Quand c&apos;est à votre tour de jouer :
-        &lt;ul&gt;
+        &lt;ol&gt;;
             &lt;li&gt; 1. Cliquez sur une de vos pièces ou une pièce neutre, il est interdit de choisir une pièce de l&apos;adversaire.
                 Notez que vous ne pouvez choisir qu&apos;une pièce sur le bord du plateau.&lt;/li&gt;
             &lt;li&gt; 2. Choisissez une direction dans laquelle l&apos;envoyer (en cliquant sur la flèche).&lt;/li&gt;
-        &lt;/ul&gt;
+        &lt;/ol&gt;
         Il faudra imaginer que la pièce que vous avez choisie a été déplacée jusqu&apos;au bout du plateau dans la direction choisie.
         Une fois arrivée au bout, toutes les pièces vont se glisser d&apos;une case dans la direction inverse à celle qu&apos;a pris votre pièce.
         Après cela, si elle était neutre, la pièce devient la votre et prend votre couleur.&lt;br/&gt;&lt;br/&gt;
@@ -2455,10 +2458,10 @@
         <target>Pour parvenir à immobiliser l&apos;adversaire, il faut déplacer ses pyramides.
         Quand une pyramide partage ses arêtes avec des cases claires, elle peut se déplacer dessus (appelons ceci, faire un pas simple).
         Vous jouez le premier joueur, qui contrôle les pyramides foncées.
-        &lt;ul&gt;
+        &lt;ol&gt;;
             &lt;li&gt; 1. Cliquez sur une de vos pyramides.&lt;/li&gt;
             &lt;li&gt; 2. Cliquez ensuite sur une des deux ou trois cases voisines, pour y déplacer votre pyramide.&lt;/li&gt;
-        &lt;/ul&gt;&lt;br/&gt;
+        &lt;/ol&gt;&lt;br/&gt;
         Faite n&apos;importe quel mouvement.</target>
       </trans-unit>
       <trans-unit id="6109976694950516137" datatype="html">
@@ -2479,7 +2482,7 @@
         &lt;/ol&gt;</source>
         <target>Quand une pyramide partage ses arêtes avec des cases foncées, vous pouvez la déplacer de deux pas.
         Pour ce faire:
-        &lt;ul&gt;
+        &lt;ol&gt;;
             &lt;li&gt; 1. Cliquez sur la pyramide à déplacer (celle tout au centre).&lt;/li&gt;
             &lt;li&gt; 2. Cliquez directement sur l&apos;une des 6 destinations possibles en deux pas:
                 les 6 cases claires voisines des 3 cases foncées voisines de votre pyramide.
@@ -2517,11 +2520,11 @@
         <target>Le but du Siam est d&apos;être le premier à pousser une montagne hors du plateau.
         Le plateau de départ en contient trois, au centre, et aucun pion n&apos;est initialement sur le plateau.
         Durant son tour de jeu un joueur peut effectuer l&apos;une des trois actions suivantes:
-        &lt;ul&gt;
+        &lt;ol&gt;;
             &lt;li&gt; 1. Faire entrer une pièce sur le plateau.&lt;/li&gt;
             &lt;li&gt; 2. Changer l&apos;orientation d&apos;une de ses pièces et optionnellement la déplacer.&lt;/li&gt;
             &lt;li&gt; 3. Sortir un de ses pions du plateau.&lt;/li&gt;
-        &lt;/ul&gt;</target>
+        &lt;/ol&gt;</target>
       </trans-unit>
       <trans-unit id="4040000701091542987" datatype="html">
         <source>Inserting a piece</source>
@@ -2538,11 +2541,11 @@
         Insert a piece on the board.</source>
         <target>Chaque joueur a en tout 5 pièces.
         Tant qu&apos;il n&apos;en a pas 5 sur le plateau, il peut en insérer une. Pour ce faire:
-        &lt;ul&gt;
+        &lt;ol&gt;;
             &lt;li&gt; 1. Appuyez sur une des grosses flèches autour du plateau.&lt;/li&gt;
             &lt;li&gt; 2. Cliquez sur une des 4 petites flèches apparues sur la case d&apos;arrivée de la pièce insérée.
                 Cela indiquera la direction dans laquelle sera orientée votre pièce.&lt;/li&gt;
-        &lt;/ul&gt;&lt;br/&gt;
+        &lt;/ol&gt;&lt;br/&gt;
         Insérez une pièce sur le plateau.</target>
       </trans-unit>
       <trans-unit id="5200908153537449128" datatype="html">
@@ -2561,12 +2564,12 @@
         Un déplacement de pièce se fait de sa case de départ à une case vide voisine horizontalement ou verticalement.
         Lors de ce déplacement on peut aussi faire sortir la pièce du plateau.
         Pour déplacer la pièce:
-        &lt;ul&gt;
+        &lt;ol&gt;;
             &lt;li&gt; 1. Cliquez dessus.&lt;/li&gt;
             &lt;li&gt; 2. Cliquez sur l&apos;une des 5 flèches pour choisir la direction dans laquelle elle va se déplacer.
                 En cliquant sur celle au milieu, vous décidez de juste changer l&apos;orientation de la pièce, sans la déplacer.&lt;/li&gt;
             &lt;li&gt; 3. Cliquez sur l&apos;une des 4 flèches sur la case d&apos;arrivée de votre pièce pour choisir son orientation.&lt;/li&gt;
-        &lt;/ul&gt;&lt;br/&gt;
+        &lt;/ol&gt;&lt;br/&gt;
         Essayer de déplacer la pièce sur le plateau d&apos;une case vers le haut et de l&apos;orienter vers le bas.</target>
       </trans-unit>
       <trans-unit id="1302903286060317619" datatype="html">
@@ -2605,12 +2608,12 @@
         Do it.</source>
         <target>Quand la case d&apos;arrivée de votre déplacement est occupée, on parle de &quot;pousser&quot;.
         Pour pousser il faut plusieurs critères:
-        &lt;ul&gt;
+        &lt;ol&gt;;
             &lt;li&gt; 1. Être déjà orienté dans le sens de la poussée.&lt;/li&gt;
             &lt;li&gt; 2. Que le nombre de pièces (ennemies ou non) qui font face à la votre (les résistants)
                 soit plus petit que le nombre de pièces qui vont dans la même direction, votre y compris (les pousseurs).&lt;/li&gt;
             &lt;li&gt; 3. Le nombre de montagne doit être inférieur ou égal à la différence entre pousseurs et résistant.&lt;/li&gt;
-        &lt;/ul&gt;
+        &lt;/ol&gt;
         Votre pièce tout en haut à droite ne peut pas pousser car il y a une montagne de trop.
         Votre pièce tout en bas à droite, elle, peut pousser.&lt;br/&gt;&lt;br/&gt;
         Faites-le.</target>
@@ -2806,12 +2809,12 @@
         This is the initial board, do the first move</source>
         <target>Au Tablut, toutes les pièces se déplacent de la même façon.
         De façon équivalente aux tours aux échecs, une pièce se déplace:
-        &lt;ul&gt;
+        &lt;ol&gt;;
             &lt;li&gt; 1. D&apos;autant de case qu&apos;elle veut.&lt;/li&gt;
             &lt;li&gt; 2. Sans passer à travers ou s&apos;arrêter sur une autre pièce.&lt;/li&gt;
             &lt;li&gt; 3. Horizontalement ou verticalement.&lt;/li&gt;
             &lt;li&gt; 4. Seul le roi peut s&apos;arrêter sur un trône.&lt;/li&gt;
-        &lt;/ul&gt;
+        &lt;/ol&gt;
         Pour déplacer une pièce, cliquez dessus, puis sur sa destination.&lt;br/&gt;&lt;br/&gt;
         Ceci est le plateau initial, faites le premier mouvement.</target>
       </trans-unit>
