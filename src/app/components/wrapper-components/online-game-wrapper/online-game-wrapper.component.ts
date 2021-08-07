@@ -20,6 +20,7 @@ import { assert, display, JSONValue, JSONValueWithoutArray } from 'src/app/utils
 import { getDiff, getDiffChangesNumber, ObjectDifference } from 'src/app/utils/ObjectUtils';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { Time } from 'src/app/domain/Time';
 
 export class UpdateType {
 
@@ -70,7 +71,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
     public maximalMoveDuration: number; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPartId
     public totalPartDuration: number; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPartId
 
-    public gameBeginningTime: number; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPartId
+    public gameBeginningTime: Time; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPartId
 
     private hasUserPlayed: [boolean, boolean] = [false, false];
 
@@ -176,6 +177,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
             nbPlayedMoves: part.doc.listMoves.length,
         } });
         const updateType: UpdateType = this.getUpdateType(part);
+        console.log(updateType.value)
         this.currentPart = part;
         display(OnlineGameWrapperComponent.VERBOSE,
                 'OnlineGameWrapperComponent.onCurrentPartUpdate: UpdateType.' + updateType.value);
@@ -210,25 +212,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         if (update.doc.request) {
             return UpdateType.REQUEST;
         }
-        if (diff.modified['listMoves'] && diff.modified['turn']) {
-            if (nbDiffs === 2) {
-                return UpdateType.MOVE;
-            }
-            if (nbDiffs === 3) {
-                if (diff.removed['request'] ||
-                    diff.modified['scorePlayerOne'] ||
-                    diff.modified['scorePlayerZero'])
-                {
-                    return UpdateType.MOVE;
-                }
-            }
-            if (nbDiffs === 4) {
-                if ((diff.added['scorePlayerOne'] != null && diff.added['scorePlayerZero'] != null) ||
-                    (diff.modified['scorePlayerOne'] != null && diff.modified['scorePlayerZero'] != null))
-                {
-                    return UpdateType.MOVE;
-                }
-            }
+        if (this.diffIsAMove(diff, nbDiffs)) {
+            return UpdateType.MOVE;
         }
         if (update.doc.beginning == null) {
             return UpdateType.PRE_START_DOC;
@@ -240,6 +225,32 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
             return UpdateType.STARTING_DOC;
         }
         throw new Error('Unexpected update: ' + JSON.stringify(diff));
+    }
+    private diffIsAMove(diff: ObjectDifference, nbDiffs: number): boolean {
+        console.log(diff)
+        const lastMoveAddedOrModified: boolean =
+            diff.added['lastMove'] != null || diff.modified['lastMove'] != null;
+        if (diff.modified['listMoves'] && diff.modified['turn'] && lastMoveAddedOrModified) {
+            if (nbDiffs === 3) {
+                return true;
+            }
+            if (nbDiffs === 4) {
+                if (diff.removed['request'] ||
+                    diff.modified['scorePlayerOne'] ||
+                    diff.modified['scorePlayerZero'])
+                {
+                    return true;
+                }
+            }
+            if (nbDiffs === 5) {
+                if ((diff.added['scorePlayerOne'] != null && diff.added['scorePlayerZero'] != null) ||
+                    (diff.modified['scorePlayerOne'] != null && diff.modified['scorePlayerZero'] != null))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
     public setChronos(): void {
         display(OnlineGameWrapperComponent.VERBOSE, 'onlineGameWrapperComponent.setChronos()');

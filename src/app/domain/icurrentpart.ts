@@ -1,6 +1,7 @@
 import { JSONObject, JSONValueWithoutArray } from 'src/app/utils/utils';
 import { Request } from './request';
 import { DomainWrapper } from './DomainWrapper';
+import { Time } from './Time';
 
 export interface IPart extends JSONObject {
     readonly typeGame: NonNullable<string>, // the type of game
@@ -11,8 +12,9 @@ export interface IPart extends JSONObject {
     readonly listMoves: NonNullable<Array<NonNullable<JSONValueWithoutArray>>>,
 
     readonly playerOne?: string, // the id of the second player
-    readonly beginning?: number, // timestamp TODO: use Date instead?
-    readonly lastMove?: number, // timestamp TODO: use Date instead?
+    readonly beginning?: Time, // timestamp TODO: use Date instead?
+    readonly lastMove?: Time, // timestamp TODO: use Date instead?
+    // TODO: make JSONObject accept FirebaseTimestamp thing
     readonly winner?: string,
     readonly loser?: string,
     // TODO: scorePlayerOne and scorePlayerZero

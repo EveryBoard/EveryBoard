@@ -43,8 +43,26 @@ export abstract class FirebaseFirestoreDAOMock<T extends JSONObject> implements 
     }
     public async create(newElement: T): Promise<string> {
         const elemName: string = this.collectionName + this.getStaticDB().size();
-        await this.set(elemName, newElement);
+        const mappedNewElement: T = this.getServerTimestampedObject(newElement);
+        await this.set(elemName, mappedNewElement);
         return elemName;
+    }
+    public getServerTimestampedObject<N extends JSONObject>(element: N): N {
+        if (element == null) {
+            return null;
+        }
+        const mappedNewElement: JSONObject = {};
+        for (const key of Object.keys(element)) {
+            if (element[key] === firebase.database.ServerValue.TIMESTAMP ||
+                (element[key] != null && element[key]['seconds'] != null))
+            {
+                const random: number = Math.random();
+                mappedNewElement[key] = { seconds: Date.now() + random };
+            } else {
+                mappedNewElement[key] = element[key];
+            }
+        }
+        return mappedNewElement as N;
     }
     public async read(id: string): Promise<T> {
         display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE, this.collectionName + '.read(' + id + ')');
@@ -60,8 +78,9 @@ export abstract class FirebaseFirestoreDAOMock<T extends JSONObject> implements 
         display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE,
                 this.collectionName + '.set(' + id + ', ' + JSON.stringify(doc) + ')');
 
+        const mappedDoc: T = this.getServerTimestampedObject(doc);
         const optionalOS: MGPOptional<ObservableSubject<{id: string, doc: T}>> = this.getStaticDB().get(id);
-        const tid: {id: string, doc: T} = { id, doc };
+        const tid: {id: string, doc: T} = { id, doc: mappedDoc };
         if (optionalOS.isPresent()) {
             optionalOS.get().subject.next(tid);
         } else {
@@ -75,11 +94,12 @@ export abstract class FirebaseFirestoreDAOMock<T extends JSONObject> implements 
         display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE,
                 this.collectionName + '.update(' + id + ', ' + JSON.stringify(update) + ')');
 
+        const mappedUpdate: Partial<T> = this.getServerTimestampedObject(update);
         const optionalOS: MGPOptional<ObservableSubject<{id: string, doc: T}>> = this.getStaticDB().get(id);
         if (optionalOS.isPresent()) {
             const observableSubject: ObservableSubject<{id: string, doc: T}> = optionalOS.get();
             const oldDoc: T = observableSubject.subject.getValue().doc;
-            const newDoc: T = { ...oldDoc, ...update };
+            const newDoc: T = { ...oldDoc, ...mappedUpdate };
             observableSubject.subject.next({ id, doc: newDoc });
             return Promise.resolve();
         } else {

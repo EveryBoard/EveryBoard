@@ -1,5 +1,9 @@
 import { Injectable, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
+
+import firebase from 'firebase/app';
+
 import { PartDAO } from '../dao/PartDAO';
 import { MGPResult, ICurrentPartId, IPart, Part } from '../domain/icurrentpart';
 import { FirstPlayer, IJoiner, PartStatus } from '../domain/ijoiner';
@@ -12,16 +16,16 @@ import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { assert, display, JSONValueWithoutArray } from 'src/app/utils/utils';
-import { Router } from '@angular/router';
 import { AuthenticationService, AuthUser } from './AuthenticationService';
 import { MessageDisplayer } from './message-displayer/MessageDisplayer';
 import { GameServiceMessages } from './GameServiceMessages';
+import { Time } from '../domain/Time';
 
 export interface StartingPartConfig extends Partial<IPart> {
     playerZero: string,
     playerOne: string,
     turn: number,
-    beginning: number,
+    beginning: Time,
 }
 
 @Injectable({
@@ -160,7 +164,7 @@ export class GameService implements OnDestroy {
             playerZero,
             playerOne,
             turn: 0,
-            beginning: Date.now(),
+            beginning: firebase.database.ServerValue?.TIMESTAMP as Time,
         };
     }
     public async deletePart(partId: string): Promise<void> {
@@ -312,6 +316,7 @@ export class GameService implements OnDestroy {
             scorePlayerZero,
             scorePlayerOne,
             request: null,
+            lastMove: firebase.database.ServerValue.TIMESTAMP as Time,
         };
         if (winner != null) {
             update = {

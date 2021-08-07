@@ -1,8 +1,5 @@
 import { JSONObject } from '../utils/utils';
-
-export interface Time extends JSONObject {
-    seconds: number;
-}
+import { Time } from './Time';
 
 export interface IJoueur extends JSONObject {
     pseudo: string;
