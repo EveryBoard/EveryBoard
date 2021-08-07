@@ -115,8 +115,8 @@
         <target> Le partie de revanche se charge. Veuillez attendre, cela ne devrait pas prendre longtemps.</target>
       </trans-unit>
       <trans-unit id="5120671221766405888" datatype="html">
-        <target>Partie inexistante</target>
         <source>Game does not exist</source>
+        <target>Partie inexistante</target>
       </trans-unit>
       <trans-unit id="5769704000858519890" datatype="html">
         <source>The game you tried to join does not exist anymore.</source>
@@ -207,8 +207,8 @@
         <target>Tablut</target>
       </trans-unit>
       <trans-unit id="3244681266393689381" datatype="html">
-        <target>Reversi</target>
         <source>Reversi</source>
+        <target>Reversi</target>
       </trans-unit>
       <trans-unit id="7297944290589265560" datatype="html">
         <source>Go</source>
@@ -540,6 +540,7 @@
       </trans-unit>
       <trans-unit id="5068486659312004369" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> is configuring the game.</source>
+        <target><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> est en train de configurer la partie.</target>
       </trans-unit>
       <trans-unit id="6855081011526391729" datatype="html">
         <source> <x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> plays first </source>
@@ -579,10 +580,11 @@
       </trans-unit>
       <trans-unit id="4301395065979241317" datatype="html">
         <source>standard</source>
+        <target>standard</target>
       </trans-unit>
       <trans-unit id="1825754272138575872" datatype="html">
-        <target>Durée maximale de la partie : </target>
         <source>Maximal game duration: </source>
+        <target>Durée maximale de la partie : </target>
       </trans-unit>
       <trans-unit id="4073116770334354573" datatype="html">
         <source>Blitz</source>
@@ -1812,6 +1814,9 @@
         <source>Dark moved to another pink square, hence you have to move your pink piece again.
         However, your pink piece is stuck! In this case, you must pass your turn.
         Dark will now have to play by moving its pink piece.</source>
+        <target>Foncé s'est déplacé sur une autre case rose, et vous oblige donc à déplacer votre pièce rose.
+        Cependant, votre pièce rose est bloquée ! Dans ce cas ci, vous êtes obligé de passer votre tour.
+        Foncé devra jouer son prochain tour en déplaçant lui-même sa pièce rose.</target>
       </trans-unit>
       <trans-unit id="8029874053731693714" datatype="html">
         <source>Victory by blocking</source>
@@ -2279,6 +2284,7 @@
       </trans-unit>
       <trans-unit id="3309166761338954119" datatype="html">
         <source>Piece in hand:</source>
+        <target>Pièce en main :</target>
       </trans-unit>
       <trans-unit id="8819839276456625538" datatype="html">
         <source>You must pick a space from the edge of the board.</source>
@@ -2337,8 +2343,6 @@
         If you create both, you lose too!&lt;br/&gt;&lt;br/&gt;
         You can win with this board, try it.
         You&apos;re playing Light.</source>
-        <target>Voyez comme les quatre pièces foncées ont été déplacées d&apos;une case à droite.
-        La pièce neutre, elle, s&apos;est déplacé de 4 cases à gauche et est devenue claire.</target>
         <target>Vous savez déjà tout ce qu&apos;il faut pour jouer, il ne manque qu&apos;une spécificité.
         Si vous créez une ligne de 5 pièces vous appartenant, vous gagnez.
         Si vous créez une ligne de 5 pièces ennemies, vous perdez.
@@ -2950,10 +2954,10 @@
          et en bas à droite pour le joueur clair. Ici, Foncé a gagné la partie.
          Notez que sur le plateau vous avez deux types des pièces pour chaque joueur:
          des anneaux (pièces creuses) et des marqueurs (pièces entières).</target>
-        <target>Plateau initial et phase de placement</target>
       </trans-unit>
       <trans-unit id="6047690275464996632" datatype="html">
         <source>Initial board and placement phase</source>
+        <target>Plateau initial et phase de placement</target>
       </trans-unit>
       <trans-unit id="7928933913009298966" datatype="html">
         <source>The initial board is empty.
