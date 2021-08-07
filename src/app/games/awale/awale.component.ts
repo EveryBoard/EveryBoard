@@ -10,6 +10,8 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { AwaleFailure } from './AwaleFailure';
+import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { awaleTutorial } from './AwaleTutorial';
 
 @Component({
     selector: 'app-awale-component',
@@ -17,6 +19,10 @@ import { AwaleFailure } from './AwaleFailure';
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
 export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSlice, AwaleLegalityStatus> {
+
+    public encoder: MoveEncoder<AwaleMove> = AwaleMove.encoder;
+
+    public tutorial: TutorialStep[] = awaleTutorial;
 
     public scores: number[] = [0, 0];
 
@@ -35,8 +41,6 @@ export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSl
         this.showScore = true;
         this.updateBoard();
     }
-    public encoder: MoveEncoder<AwaleMove> = AwaleMove.encoder;
-
     public updateBoard(): void {
         const slice: AwalePartSlice = this.rules.node.gamePartSlice;
         this.scores = slice.getCapturedCopy();

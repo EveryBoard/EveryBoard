@@ -2,10 +2,10 @@ import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { Move } from 'src/app/jscaip/Move';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 
-export class DidacticialStep {
+export class TutorialStep {
 
-    public static informational(title: string, instruction: string, state: GamePartSlice): DidacticialStep {
-        return new DidacticialStep(title,
+    public static informational(title: string, instruction: string, state: GamePartSlice): TutorialStep {
+        return new TutorialStep(title,
                                    instruction,
                                    state,
                                    null,
@@ -21,9 +21,9 @@ export class DidacticialStep {
                            acceptedMoves: ReadonlyArray<Move>,
                            successMessage: string,
                            failureMessage: string,
-    ): DidacticialStep
+    ): TutorialStep
     {
-        return new DidacticialStep(title,
+        return new TutorialStep(title,
                                    instruction,
                                    state,
                                    acceptedMoves,
@@ -39,9 +39,9 @@ export class DidacticialStep {
                            acceptedClicks: ReadonlyArray<string>,
                            successMessage: string,
                            failureMessage: string,
-    ): DidacticialStep
+    ): TutorialStep
     {
-        return new DidacticialStep(title,
+        return new TutorialStep(title,
                                    instruction,
                                    state,
                                    null,
@@ -56,9 +56,9 @@ export class DidacticialStep {
                           state: GamePartSlice,
                           solutionMove: Move,
                           successMessage: string,
-    ): DidacticialStep
+    ): TutorialStep
     {
-        return new DidacticialStep(title,
+        return new TutorialStep(title,
                                    instruction,
                                    state,
                                    [],
@@ -74,9 +74,9 @@ export class DidacticialStep {
                                 solutionMove: Move,
                                 predicate: (move: Move, resultingState: GamePartSlice) => MGPValidation,
                                 successMessage: string,
-    ): DidacticialStep
+    ): TutorialStep
     {
-        return new DidacticialStep(title,
+        return new TutorialStep(title,
                                    instruction,
                                    state,
                                    null,
@@ -95,15 +95,16 @@ export class DidacticialStep {
                        public readonly predicate: (move: Move, resultingState: GamePartSlice) => MGPValidation,
                        public readonly successMessage: string,
                        public readonly failureMessage: string,
+                       public readonly previousMove?: Move,
     ) { }
     public isMove(): boolean {
         return this.acceptedMoves != null;
     }
     public isAnyMove(): boolean {
-        return this.acceptedMoves && this.acceptedMoves.length === 0;
+        return this.acceptedMoves != null && this.acceptedMoves.length === 0;
     }
     public isClick(): boolean {
-        return this.acceptedClicks && this.acceptedClicks.length > 0;
+        return this.acceptedClicks != null && this.acceptedClicks.length > 0;
     }
     public isPredicate(): boolean {
         return this.predicate != null;
@@ -112,5 +113,17 @@ export class DidacticialStep {
         return this.acceptedClicks == null &&
                this.acceptedMoves == null &&
                this.predicate == null;
+    }
+    public withPreviousMove(previousMove: Move): TutorialStep {
+        return new TutorialStep(this.title,
+                                   this.instruction,
+                                   this.state,
+                                   this.acceptedMoves,
+                                   this.solutionMove,
+                                   this.acceptedClicks,
+                                   this.predicate,
+                                   this.successMessage,
+                                   this.failureMessage,
+                                   previousMove);
     }
 }

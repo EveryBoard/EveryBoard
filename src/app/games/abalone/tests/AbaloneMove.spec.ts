@@ -4,7 +4,7 @@ import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 import { AbaloneDummyMinimax } from '../AbaloneDummyMinimax';
 import { AbaloneGameState } from '../AbaloneGameState';
 import { AbaloneMove } from '../AbaloneMove';
-import { AbaloneNode, AbaloneRules } from '../AbaloneRules';
+import { AbaloneRules } from '../AbaloneRules';
 
 describe('AbaloneMove', () => {
 

@@ -1,7 +1,7 @@
 import { GoMove } from 'src/app/games/go/GoMove';
 import { GoPartSlice, GoPiece, Phase } from 'src/app/games/go/GoPartSlice';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { DidacticialStep } from '../DidacticialStep';
+import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 const X: GoPiece = GoPiece.WHITE;
 const O: GoPiece = GoPiece.BLACK;
@@ -10,22 +10,22 @@ const w: GoPiece = GoPiece.WHITE_TERRITORY;
 const b: GoPiece = GoPiece.BLACK_TERRITORY;
 const _: GoPiece = GoPiece.EMPTY;
 
-export const goDidacticial: DidacticialStep[] = [
-    DidacticialStep.informational(
+export const goTutorial: TutorialStep[] = [
+    TutorialStep.informational(
         $localize`Info préalables`,
         $localize`Le jeu de Go se joue sur un plateau appelé Goban, et les pierres sont placées sur les intersections.
-         Le plateau traditionnel fait 19x19 intersections, mais le 13x13 est implémenté sur ce site.
-         (Pour des parties plus courtes, le 9x9 et 5x5 existent, mais ne sont pas encore disponibles).
-         Pour ce tutoriel, ne faites pas attention à la taille des plateaux.`,
+        Le plateau traditionnel fait 19x19 intersections, mais le 13x13 est implémenté sur ce site.
+        (Pour des parties plus courtes, le 9x9 et 5x5 existent, mais ne sont pas encore disponibles).
+        Pour ce tutoriel, nous utiliserons un petit 5x5 à fin pédagogique.`,
         GoPartSlice.getInitialSlice(),
     ),
-    DidacticialStep.informational(
+    TutorialStep.informational(
         $localize`But du jeu`,
         $localize`Le but du jeu est d'avoir le plus de points en fin de partie.
-         On appelle territoires les intersections inoccupées et isolées du reste du Goban par les pierres d'un seul joueur.
-         Ici, le joueur Foncé a 9 territoires à gauche, le joueur Clair en a 8 à droite.
-         La zone en haut au milieu n'appartient à personne.
-         Le score en fin de partie correspondra à l'addition des territoires et des captures.`,
+        On appelle territoires les intersections inoccupées et isolées du reste du Goban par les pierres d'un seul joueur.
+        Ici, le joueur foncé a 9 territoires à gauche, le joueur clair en a 8 à droite.
+        La zone en haut au milieu n'appartient à personne.
+        Le score en fin de partie correspondra à l'addition des territoires et des captures.`,
         new GoPartSlice([
             [_, O, _, _, X, X],
             [_, O, _, _, X, _],
@@ -35,12 +35,12 @@ export const goDidacticial: DidacticialStep[] = [
             [_, _, O, X, _, _],
         ], [0, 0], 0, MGPOptional.empty(), Phase.PLAYING),
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Capture simple`,
         $localize`Une pierre isolée, comme la pierre claire au milieu, a 4 intersections voisines (et non 8, car on ne compte pas les diagonales).
-         Si une intersection voisine est inoccupée, elle est appelée liberté.
-         Si Foncé joue sur la dernière liberté de la pierre claire, cette pierre est enlevée du goban (capturée) et rapporte un point à Foncé.
-         Il ne reste plus qu'une liberté à la pierre claire, capturez-la.`,
+        Si une intersection voisine est inoccupée, elle est appelée liberté.
+        Si Foncé joue sur la dernière liberté de la pierre claire, cette pierre est enlevée du goban (capturée) et rapporte un point à Foncé.<br/><br/>
+        Il ne reste plus qu'une liberté à la pierre claire, capturez-la.`,
         new GoPartSlice([
             [_, _, _, _, _],
             [_, _, O, _, _],
@@ -52,10 +52,10 @@ export const goDidacticial: DidacticialStep[] = [
         $localize`Bravo, vous avez gagné un point`,
         $localize`Raté, réessayez en jouant sur l'une des intersections immédiatement voisines de la pierre claire.`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Capture de plusieurs pierres`,
-        $localize`Des pierres connectées horizontalement ou verticalement doivent être capturées ensemble, et ne sont pas capturables séparement.
-         Le groupe clair ci-dessus n'a plus qu'une liberté, capturez ce groupe.`,
+        $localize`Des pierres connectées horizontalement ou verticalement doivent être capturées ensemble, et ne sont pas capturables séparement.<br/><br/>
+        Le groupe clair ci-dessus n'a plus qu'une liberté, capturez ce groupe.`,
         new GoPartSlice([
             [_, O, _, _, _],
             [O, X, _, _, _],
@@ -67,12 +67,12 @@ export const goDidacticial: DidacticialStep[] = [
         $localize`Bravo, vous avez gagné trois points, et formé un territoire.`,
         $localize`Raté, vous n'avez pas capturé le groupe, jouez sur la dernière liberté de ce groupe.`,
     ),
-    DidacticialStep.informational(
+    TutorialStep.informational(
         $localize`Suicide`,
         $localize`Au Go le suicide est interdit.
-         Quand mettre une pierre sur une intersection ferait que le groupe de votre dernière pierre n'a aucune liberté et ne capture aucunes pierres, jouer cette intersection serait un suicide, et est donc interdit.
-         Ici, l'intersection en haut à gauche est un suicide pour Clair.
-         En bas à droite, un suicide pour Foncé, et en bas à gauche n'est un suicide pour aucun joueur.`,
+        Quand mettre une pierre sur une intersection ferait que le groupe de votre dernière pierre n'a aucune liberté et ne capture aucunes pierres, jouer cette intersection serait un suicide, et est donc interdit.
+        Ici, l'intersection en haut à gauche est un suicide pour Clair.
+        En bas à droite, un suicide pour Foncé, et en bas à gauche n'est un suicide pour aucun joueur.`,
         new GoPartSlice([
             [_, O, _, _, _],
             [O, _, _, _, _],
@@ -81,14 +81,14 @@ export const goDidacticial: DidacticialStep[] = [
             [_, X, _, X, O],
         ], [0, 0], 0, MGPOptional.empty(), Phase.PLAYING),
     ),
-    DidacticialStep.informational(
+    TutorialStep.informational(
         $localize`Vie et mort (mort)`,
         $localize`De la règle de capture découle la notion de vie et de mort:
-         des pierres mortes sont des pierres que l'on est sûr de pouvoir capturer (sans rien y perdre ailleurs).
-         Tandis que des pierres vivantes sont des pierres que l'on ne peut plus espérer capturer.
-         D'après la règle de capture, Foncé peut jouer à l'intérieur du territoire de Clair et le capturer.
-         On dit dans ce cas que Clair n'a qu'un œil (sa dernière liberté) et qu'il est mort (même si pas encore capturé).
-         En fin de partie, la pierre morte est comptée comme une capture, et la case qu'elle occupe comme un territoire.`,
+        des pierres mortes sont des pierres que l'on est sûr de pouvoir capturer (sans rien y perdre ailleurs).
+        Tandis que des pierres vivantes sont des pierres que l'on ne peut plus espérer capturer.
+        D'après la règle de capture, Foncé peut jouer à l'intérieur du territoire de Clair et le capturer.
+        On dit dans ce cas que Clair n'a qu'un œil (sa dernière liberté) et qu'il est mort (même si pas encore capturé).
+        En fin de partie, la pierre morte est comptée comme une capture, et la case qu'elle occupe comme un territoire.`,
         new GoPartSlice([
             [_, _, _, _, _],
             [O, O, O, _, _],
@@ -97,10 +97,10 @@ export const goDidacticial: DidacticialStep[] = [
             [X, X, O, _, _],
         ], [0, 0], 0, MGPOptional.empty(), Phase.PLAYING),
     ),
-    DidacticialStep.informational(
+    TutorialStep.informational(
         $localize`Vie et mort (yeux)`,
         $localize`Ici, Clair ne pouvant jouer ni en haut à gauche, ni en bas à gauche, il ne pourra jamais capturer Foncé.
-         On dit alors que Foncé a deux yeux (l'oeil en haut à gauche et celui en bas à gauche) et qu'il est vivant.`,
+        On dit alors que Foncé a deux yeux (l'oeil en haut à gauche et celui en bas à gauche) et qu'il est vivant.`,
         new GoPartSlice([
             [_, O, X, _, _],
             [X, O, X, _, _],
@@ -109,12 +109,12 @@ export const goDidacticial: DidacticialStep[] = [
             [_, O, X, _, _],
         ], [0, 0], 0, MGPOptional.empty(), Phase.PLAYING),
     ),
-    DidacticialStep.informational(
+    TutorialStep.informational(
         $localize`Seki`,
         $localize`Si Foncé joue au milieu en haut (ou en bas), Clair jouera au milieu en bas (ou en haut) et le capturera.
-         De même, si Clair joue au milieu haut (ou en bas), Foncé le capturera.
-         Autrement dit, personne n'a intérêt à jouer au milieu.
-         Dans ce cas, on dit que les pierres du milieu sont vivantes par Seki, et que les deux intersections du milieu sont des intersections neutres.`,
+        De même, si Clair joue au milieu haut (ou en bas), Foncé le capturera.
+        Autrement dit, personne n'a intérêt à jouer au milieu.
+        Dans ce cas, on dit que les pierres du milieu sont vivantes par Seki, et que les deux intersections du milieu sont des intersections neutres.`,
         new GoPartSlice([
             [_, X, O, _, X, O, _],
             [_, X, O, O, X, O, _],
@@ -125,10 +125,10 @@ export const goDidacticial: DidacticialStep[] = [
             [_, X, O, _, X, O, _],
         ], [0, 0], 0, MGPOptional.empty(), Phase.PLAYING),
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Ko`,
-        $localize`Un joueur, en posant une pierre, ne doit pas redonner au goban un état identique à l'un de ceux qu'il lui avait déjà donné, ce afin d'empêcher qu'une partie soit sans fin.
-         Capturez la pierre claire.`,
+        $localize`Un joueur, en posant une pierre, ne doit pas redonner au goban un état identique à l'un de ceux qu'il lui avait déjà donné, ce afin d'empêcher qu'une partie soit sans fin.<br/><br/>
+        Capturez la pierre claire.`,
         new GoPartSlice([
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
@@ -145,14 +145,14 @@ export const goDidacticial: DidacticialStep[] = [
          Toute l'astuce pour Clair consiste, à essayer de créer une menace suffisamment grave pour que Foncé ait intérêt à y répondre immédiatement, et n'ait pas le temps de protéger sa dernière pierre, afin que Clair puisse la recapturer.`,
         $localize`Raté !`,
     ),
-    DidacticialStep.fromMove(
+    TutorialStep.fromMove(
         $localize`Fin de partie`,
         $localize`Quand un joueur estime qu'il n'a plus intérêt à placer une pierre, il l'indique en passant son tour.
-         La phase de jeu s'arrête lorsque les deux joueurs passent consécutivement, on passe alors en phase de comptage.
-         On marque alors les groupes morts en cliquant dessus.
-         Chaque intersection du territoire d'un joueur lui rapporte un point.
-         Le gagnant est celui qui a le plus de points.
-         Une dernière pierre est morte, marquez-la.`,
+        La phase de jeu s'arrête lorsque les deux joueurs passent consécutivement, on passe alors en phase de comptage.
+        On marque alors les groupes morts en cliquant dessus.
+        Chaque intersection du territoire d'un joueur lui rapporte un point.
+        Le gagnant est celui qui a le plus de points.<br/><br/>
+        Une dernière pierre est morte, marquez-la.`,
         new GoPartSlice([
             [X, O, O, O, O, O, b, b, b],
             [X, X, X, X, O, O, O, b, b],

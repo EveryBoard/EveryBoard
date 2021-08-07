@@ -55,12 +55,17 @@ export class SaharaMove extends MoveCoordToCoord {
     constructor(start: Coord, end: Coord) {
         super(start, end);
         if (!start.isInRange(SaharaPartSlice.WIDTH, SaharaPartSlice.HEIGHT)) {
-            throw new Error('Move must start inside the board not at '+start.toString() + '.');
+            throw new Error('Move must start inside the board not at ' + start.toString() + '.');
         }
         if (!end.isInRange(SaharaPartSlice.WIDTH, SaharaPartSlice.HEIGHT)) {
-            throw new Error('Move must end inside the board not at '+end.toString() + '.');
+            throw new Error('Move must end inside the board not at ' + end.toString() + '.');
         }
         SaharaMove.checkDistanceAndLocation(start, end);
+    }
+    public isSimpleStep(): boolean {
+        const dx: number = Math.abs(this.coord.x - this.end.x);
+        const dy: number = Math.abs(this.coord.y - this.end.y);
+        return dx + dy === 1;
     }
     public equals(o: SaharaMove): boolean {
         if (o === this) return true;
