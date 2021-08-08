@@ -18,14 +18,18 @@
                             [attr.cx]="caseInfo.center.x"
                             [attr.cy]="caseInfo.center.y"
                             [attr.r]="viewInfo.ringOuterSize"
+                            class="base no-fill mid-stroke"/>
+                    <circle *ngIf="caseInfo.isRing"
+                            [attr.cx]="caseInfo.center.x"
+                            [attr.cy]="caseInfo.center.y"
+                            [attr.r]="viewInfo.ringMidSize"
                             [ngClass]="caseInfo.ringClasses"
-                            class="base mid-stroke"/>
+                            class="base no-fill" />
                     <circle *ngIf="caseInfo.isRing"
                             [attr.cx]="caseInfo.center.x"
                             [attr.cy]="caseInfo.center.y"
                             [attr.r]="viewInfo.ringInnerSize"
-                            [ngClass]="caseInfo.caseClasses"
-                            class="base mid-stroke" />
+                            class="base no-fill mid-stroke" />
                     <circle *ngIf="caseInfo.isMarker"
                             id="marker_{{ x }}_{{ y }}"
                             [attr.cx]="caseInfo.center.x"
@@ -63,12 +67,16 @@
                     [attr.cx]="(player === 0 ? 0 : 1050) + (player === 0 ? 1 : -1) * 1.2*viewInfo.ringOuterSize*(ring+1)"
                     [attr.cy]="(player === 0 ? 300 : 1260)"
                     [attr.r]="viewInfo.ringOuterSize"
-                    [ngClass]="viewInfo.sideRingClass[player]"
-                    class="base mid-stroke"/>
+                    class="base no-fill mid-stroke"/>
             <circle [attr.cx]="(player === 0 ? 0 : 1050) + (player === 0 ? 1 : -1) * 1.2*viewInfo.ringOuterSize*(ring+1)"
                     [attr.cy]="(player === 0 ? 300 : 1260)"
                     [attr.r]="viewInfo.ringInnerSize"
-                    class="base mid-stroke white-background"/>
+                    class="base no-fill mid-stroke"/>
+            <circle [attr.cx]="(player === 0 ? 0 : 1050) + (player === 0 ? 1 : -1) * 1.2*viewInfo.ringOuterSize*(ring+1)"
+                    [attr.cy]="(player === 0 ? 300 : 1260)"
+                    [attr.r]="viewInfo.ringMidSize"
+                    [ngClass]="viewInfo.sideRingClass[player]"
+                    class="base no-fill"/>
         </g>
     </g>
 </svg>

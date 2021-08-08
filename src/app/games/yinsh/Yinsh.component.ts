@@ -35,6 +35,7 @@ interface ViewInfo {
     selectableRings: Coord[],
     markerSize: number,
     ringOuterSize: number,
+    ringMidSize: number,
     ringInnerSize: number,
     sideRings: [number, number],
     sideRingClass: [string, string],
@@ -46,9 +47,10 @@ interface ViewInfo {
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
 export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameState, YinshLegalityStatus> {
-    private static MARKER_SIZE: number = 30;
     private static RING_OUTER_SIZE: number = 40;
-    private static RING_INNER_SIZE: number = 30;
+    private static RING_MID_SIZE: number = 34;
+    private static RING_INNER_SIZE: number = 28;
+    private static MARKER_SIZE: number = YinshComponent.RING_INNER_SIZE;
 
     public rules: YinshRules = new YinshRules(YinshGameState);
 
@@ -81,9 +83,10 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
         selectableRings: [],
         markerSize: YinshComponent.MARKER_SIZE,
         ringOuterSize: YinshComponent.RING_OUTER_SIZE,
+        ringMidSize: YinshComponent.RING_MID_SIZE,
         ringInnerSize: YinshComponent.RING_INNER_SIZE,
         sideRings: [5, 5],
-        sideRingClass: ['player0', 'player1'],
+        sideRingClass: ['player0-stroke', 'player1-stroke'],
     };
 
     constructor(messageDisplayer: MessageDisplayer) {
@@ -128,7 +131,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
                 piece === YinshPiece.EMPTY;
             if (pieceRemoved) {
                 this.viewInfo.caseInfo[coord.y][coord.x].removedClass = 'transparent';
-                pieceToShow = previousPiece;
+                // pieceToShow = previousPiece;
             } else {
                 this.viewInfo.caseInfo[coord.y][coord.x].removedClass = '';
             }
@@ -163,7 +166,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
         if (piece.isRing) {
             const playerClass: string = this.getPlayerClass(piece.player);
             this.viewInfo.caseInfo[coord.y][coord.x].isRing = true;
-            this.viewInfo.caseInfo[coord.y][coord.x].ringClasses = [playerClass];
+            this.viewInfo.caseInfo[coord.y][coord.x].ringClasses = [playerClass + '-stroke'];
         } else {
             this.viewInfo.caseInfo[coord.y][coord.x].isRing = false;
             this.viewInfo.caseInfo[coord.y][coord.x].ringClasses = [];
@@ -194,8 +197,8 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
         this.currentCapture = MGPOptional.empty();
         this.moveStart = MGPOptional.empty();
         this.moveEnd = MGPOptional.empty();
-        this.updateViewInfo();
         this.moveToInitialCaptureOrMovePhase();
+        this.updateViewInfo();
     }
     private showLastMove(): void {
         const move: YinshMove = this.rules.node.move;
