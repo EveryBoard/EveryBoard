@@ -1,6 +1,5 @@
 import firebase from 'firebase';
 import { MGPResult, Part } from './icurrentpart';
-import { Time } from './Time';
 
 export class PartMocks {
     public static readonly INITIAL: Part = new Part({
@@ -18,6 +17,6 @@ export class PartMocks {
         listMoves: [],
         result: MGPResult.UNACHIEVED.value,
         playerOne: 'firstCandidate',
-        beginning: firebase.database.ServerValue?.TIMESTAMP as Time,
+        beginning: firebase.firestore.FieldValue.serverTimestamp(), // shouldn't it be Time and not FieldValue
     });
 }

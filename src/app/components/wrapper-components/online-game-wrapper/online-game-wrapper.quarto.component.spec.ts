@@ -28,7 +28,6 @@ import { QuartoComponent } from 'src/app/games/quarto/quarto.component';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { GameService } from 'src/app/services/GameService';
 import { AuthUser } from 'src/app/services/AuthenticationService';
-import { Time } from 'src/app/domain/Time';
 
 describe('OnlineGameWrapperComponent of Quarto:', () => {
     /* Life cycle summary
@@ -129,7 +128,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await partDAO.update('joinerId', {
             playerOne: 'firstCandidate',
             turn: 0,
-            beginning: firebase.database.ServerValue?.TIMESTAMP as Time,
+            beginning: { seconds: 123 },
         });
         componentTestUtils.detectChanges();
         return Promise.resolve();
@@ -167,7 +166,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             request: null,
             scorePlayerOne: null,
             scorePlayerZero: null,
-            lastMove: firebase.database.ServerValue.TIMESTAMP as Time,
+            lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
         });
         componentTestUtils.detectChanges();
         tick();
@@ -271,7 +270,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(partDAO.update).toHaveBeenCalledOnceWith('joinerId', {
             listMoves: [QuartoMove.encoder.encodeNumber(move1)], turn: 1,
             scorePlayerZero: null, scorePlayerOne: null, request: null,
-            lastMove: firebase.database.ServerValue.TIMESTAMP as Time,
+            lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
         });
         tick(wrapper.maximalMoveDuration);
     }));
@@ -303,7 +302,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         const expectedUpdate: Partial<IPart> = {
             listMoves: [QuartoMove.encoder.encodeNumber(FIRST_MOVE)], turn: 1,
             scorePlayerZero: null, scorePlayerOne: null, request: null,
-            lastMove: firebase.database.ServerValue.TIMESTAMP as Time,
+            lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
         };
         // TODO: should receive somewhere some kind of Timestamp written by DB
         expect(partDAO.update).toHaveBeenCalledTimes(1);
@@ -327,7 +326,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(partDAO.update).toHaveBeenCalledWith('joinerId', {
             listMoves: [move0, move1, move2, move3, winningMove].map(QuartoMove.encoder.encodeNumber),
             turn: 5, scorePlayerZero: null, scorePlayerOne: null, request: null,
-            lastMove: firebase.database.ServerValue.TIMESTAMP as Time,
+            lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
             winner: 'creator', loser: 'firstCandidate', result: MGPResult.VICTORY.value,
         });
         expect(componentTestUtils.findElement('#youWonIndicator'))
@@ -716,7 +715,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 listMoves: [1, 2, 3],
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: 'Sir Meryn Trant',
-                beginning: firebase.database.ServerValue?.TIMESTAMP as Time,
+                beginning: { seconds: 123 },
+                lastMoveTime: { seconds: 333 },
                 request: Request.takeBackAccepted(Player.ZERO),
             });
             const update: Part = new Part({
@@ -724,10 +724,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 playerZero: 'who is it from who cares',
                 turn: 4,
                 listMoves: [1, 2, 3, 4],
-                lastMove: firebase.database.ServerValue.TIMESTAMP as Time,
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: 'Sir Meryn Trant',
-                beginning: firebase.database.ServerValue?.TIMESTAMP as Time,
+                beginning: { seconds: 123 },
+                lastMoveTime: { seconds: 444 },
                 // And obviously, no longer the previous request code
             });
             expect(wrapper.getUpdateType(update)).toBe(UpdateType.MOVE);
@@ -742,7 +742,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 listMoves: [],
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: 'Sir Meryn Trant',
-                beginning: firebase.database.ServerValue?.TIMESTAMP as Time,
+                beginning: { seconds: 123 },
             });
             const update: Part = new Part({
                 typeGame: 'P4',
@@ -751,8 +751,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 listMoves: [1],
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: 'Sir Meryn Trant',
-                beginning: firebase.database.ServerValue?.TIMESTAMP as Time,
-                lastMove: firebase.database.ServerValue.TIMESTAMP as Time,
+                beginning: { seconds: 123 },
+                lastMoveTime: { seconds: 1111 },
                 // And obviously, the added score
                 scorePlayerZero: 0,
                 scorePlayerOne: 0,
@@ -769,7 +769,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 listMoves: [],
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: 'Sir Meryn Trant',
-                beginning: firebase.database.ServerValue?.TIMESTAMP as Time,
+                beginning: { seconds: 123 },
                 scorePlayerZero: 1,
                 scorePlayerOne: 1,
             });
@@ -780,8 +780,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 listMoves: [1],
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: 'Sir Meryn Trant',
-                beginning: firebase.database.ServerValue?.TIMESTAMP as Time,
-                lastMove: firebase.database.ServerValue.TIMESTAMP as Time,
+                beginning: { seconds: 123 },
+                lastMoveTime: { seconds: 1111 },
                 // And obviously, the score update
                 scorePlayerZero: 4,
                 scorePlayerOne: 1,

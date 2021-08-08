@@ -1,4 +1,4 @@
-import { Component, ComponentFactoryResolver, OnDestroy, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ComponentFactoryResolver, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, Event } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
@@ -196,6 +196,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
     }
     public getUpdateType(update: Part): UpdateType {
+        console.log({ update })
         const currentPartDoc: IPart = this.currentPart ? this.currentPart.doc : null;
         const diff: ObjectDifference = getDiff(currentPartDoc, update.doc);
         display(OnlineGameWrapperComponent.VERBOSE, { diff });
@@ -223,7 +224,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     private diffIsAMove(diff: ObjectDifference, nbDiffs: number): boolean {
         console.log(diff)
         const lastMoveAddedOrModified: boolean =
-            diff.added['lastMove'] != null || diff.modified['lastMove'] != null;
+            diff.added['lastMoveTime'] != null || diff.modified['lastMoveTime'] != null;
         if (diff.modified['listMoves'] && diff.modified['turn'] && lastMoveAddedOrModified) {
             if (nbDiffs === 3) {
                 return true;
@@ -458,7 +459,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             updatedICurrentPart.doc.playerOne];
         assert(updatedICurrentPart.doc.playerOne != null, 'should not setPlayersDatas when players data is not received');
         this.currentPlayer = this.players[updatedICurrentPart.doc.turn % 2];
-        this.gameBeginningTime = updatedICurrentPart.doc.beginning;
+        console.log({ setPlayersDatas: updatedICurrentPart });
+        this.gameBeginningTime = updatedICurrentPart.doc.beginning as Time;
         let opponentName: string = '';
         if (this.players[0] === this.userName) {
             this.observerRole = Player.ZERO.value;

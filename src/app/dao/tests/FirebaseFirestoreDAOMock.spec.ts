@@ -11,15 +11,14 @@ import { MGPMap } from 'src/app/utils/MGPMap';
 import { ObservableSubject } from 'src/app/utils/ObservableSubject';
 
 export abstract class FirebaseFirestoreDAOMock<T extends JSONObject> implements IFirebaseFirestoreDAO<T> {
+
     public static VERBOSE: boolean = false;
 
-    constructor(
-        private readonly collectionName: string,
-        public VERBOSE: boolean,
+    constructor(private readonly collectionName: string,
+                public VERBOSE: boolean,
     ) {
         this.reset();
     }
-
     public abstract getStaticDB(): MGPMap<string, ObservableSubject<{id: string, doc: T}>>;
 
     public abstract resetStaticDB(): void;
@@ -53,9 +52,7 @@ export abstract class FirebaseFirestoreDAOMock<T extends JSONObject> implements 
         }
         const mappedNewElement: JSONObject = {};
         for (const key of Object.keys(element)) {
-            if (element[key] === firebase.database.ServerValue.TIMESTAMP ||
-                (element[key] != null && element[key]['seconds'] != null))
-            {
+            if (key === 'lastMoveTime' || key === 'beginning') {
                 const random: number = Math.random();
                 mappedNewElement[key] = { seconds: Date.now() + random };
             } else {

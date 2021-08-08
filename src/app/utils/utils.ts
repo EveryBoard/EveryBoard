@@ -1,7 +1,9 @@
+import firebase from 'firebase';
+
 // These are the datatypes supported by firestore. Arrays of arrays are not
 // supported, but arrays containing objects containing arrays are, which is what
 // is encoded in these types.
-export type JSONPrimitive = string | number | boolean | null;
+export type JSONPrimitive = firebase.firestore.FieldValue | string | number | boolean | null;
 export type JSONValue = JSONPrimitive | JSONObject | Array<JSONValueWithoutArray>;
 export type JSONValueWithoutArray = JSONPrimitive | JSONObject
 export type JSONObject = { [member: string]: JSONValue };

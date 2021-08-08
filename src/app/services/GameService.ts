@@ -25,7 +25,7 @@ export interface StartingPartConfig extends Partial<IPart> {
     playerZero: string,
     playerOne: string,
     turn: number,
-    beginning: Time,
+    beginning: firebase.firestore.FieldValue | Time,
 }
 
 @Injectable({
@@ -164,7 +164,7 @@ export class GameService implements OnDestroy {
             playerZero,
             playerOne,
             turn: 0,
-            beginning: firebase.database.ServerValue?.TIMESTAMP as Time,
+            beginning: firebase.firestore.FieldValue.serverTimestamp(),
         };
     }
     public async deletePart(partId: string): Promise<void> {
@@ -316,7 +316,7 @@ export class GameService implements OnDestroy {
             scorePlayerZero,
             scorePlayerOne,
             request: null,
-            lastMove: firebase.database.ServerValue.TIMESTAMP as Time,
+            lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
         };
         if (winner != null) {
             update = {
