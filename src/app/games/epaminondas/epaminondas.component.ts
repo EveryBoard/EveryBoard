@@ -132,7 +132,8 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         return extensions;
     }
     private getPhalanxValidExtensions(PLAYER: number): Coord[] {
-        let direction: Direction = Direction.factory.fromMove(this.firstPiece, this.lastPiece);
+        // TODO FOR REVIEW: is the .get() always safe? If not, maybe cancelMove?
+        let direction: Direction = Direction.factory.fromMove(this.firstPiece, this.lastPiece).get();
         const forward: Coord = this.lastPiece.getNext(direction, 1);
         const extensionForward: Coord[] = this.getExtensionsToward(forward, direction, PLAYER);
 
@@ -158,7 +159,8 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
             const dy: number = Math.abs(this.firstPiece.y - this.lastPiece.y);
             const phalanxSize: number = Math.max(dx, dy) + 1;
 
-            let direction: Direction = Direction.factory.fromMove(this.firstPiece, this.lastPiece);
+            // TODO FOR REVIEW: is the .get() always safe?
+            let direction: Direction = Direction.factory.fromMove(this.firstPiece, this.lastPiece).get();
             const landingForward: Coord = this.lastPiece.getNext(direction, 1);
             const landingsForward: Coord[] = this.getLandingsToward(landingForward, direction, phalanxSize);
 
@@ -270,8 +272,10 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         if (!clicked.isAlignedWith(this.firstPiece)) {
             return this.cancelMove(EpaminondasFailure.CASE_NOT_ALIGNED_WITH_PHALANX);
         }
-        let phalanxDirection: Direction = Direction.factory.fromMove(this.firstPiece, this.lastPiece);
-        const phalanxLanding: Direction = Direction.factory.fromMove(this.firstPiece, clicked);
+        // The directions are valid because they are is aligned
+        // TODO FOR REVIEW: double check this!
+        let phalanxDirection: Direction = Direction.factory.fromMove(this.firstPiece, this.lastPiece).get();
+        const phalanxLanding: Direction = Direction.factory.fromMove(this.firstPiece, clicked).get();
         if (phalanxDirection === phalanxLanding.getOpposite()) {
             const firstPiece: Coord = this.firstPiece;
             this.firstPiece = this.lastPiece;

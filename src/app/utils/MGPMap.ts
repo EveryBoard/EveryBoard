@@ -15,7 +15,7 @@ export class MGPMap<K extends Comparable, V extends Comparable> {
         if (key == null) throw new Error('Key cannot be null!');
         for (const keymap of this.map) {
             if (comparableEquals(keymap.key, key)) {
-                return MGPOptional.of(keymap.value);
+                return MGPOptional.ofNullable(keymap.value);
             }
         }
         return MGPOptional.empty();
@@ -43,7 +43,7 @@ export class MGPMap<K extends Comparable, V extends Comparable> {
             if (comparableEquals(entry.key, key)) {
                 const oldValue: V = this.map[i].value;
                 this.map[i].value = value;
-                return MGPOptional.of(oldValue);
+                return MGPOptional.ofNullable(oldValue);
             }
         }
         this.map.push({ key, value });

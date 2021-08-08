@@ -3,7 +3,7 @@ import { MGPOptional } from '../MGPOptional';
 describe('MGPOptional', () => {
     it('MGPOptional should not be create with empty value', () => {
         expect(() => MGPOptional.of(null))
-            .toThrowError('Optional cannot be create with empty value, use MGPOptional.empty instead');
+            .toThrowError('Optional cannot be created with empty value, use MGPOptional.empty instead');
     });
     it('MGPOptional.get should throw if empty', () => {
         const optional: MGPOptional<string> = MGPOptional.empty();

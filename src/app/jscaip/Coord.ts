@@ -1,7 +1,6 @@
 import { Direction, Vector } from 'src/app/jscaip/Direction';
 import { assert, JSONObject, JSONValue, JSONValueWithoutArray } from 'src/app/utils/utils';
 import { ComparableObject } from '../utils/Comparable';
-import { MGPOptional } from '../utils/MGPOptional';
 import { Encoder } from './Encoder';
 
 export class Coord implements ComparableObject {
@@ -103,9 +102,10 @@ export class Coord implements ComparableObject {
         return false;
     }
     public getDirectionToward(c: Coord): Direction {
+        // TODO: method might have to be deleted in favor of Direction.fromMove
         const dx: number = Coord.getBinarised(c.x - this.x);
         const dy: number = Coord.getBinarised(c.y - this.y);
-        return Direction.factory.of(dx, dy); // TODO: method might have to be deleted in favor of Direction.fromMove
+        return Direction.factory.of(dx, dy).get();
     }
     public getOrthogonalDistance(c: Coord): number {
         return Math.abs(this.x - c.x) + Math.abs(this.y - c.y);
@@ -132,13 +132,6 @@ export class Coord implements ComparableObject {
         if (dx === dy) return true;
         if (dx*dy === 0) return true;
         return false;
-    }
-    public tryGetDirection(coord: Coord): MGPOptional<Direction> {
-        if (this.isAlignedWith(coord)) {
-            return MGPOptional.of(this.getDirectionToward(coord));
-        } else {
-            return MGPOptional.empty();
-        }
     }
     public getVectorToward(c: Coord): Coord {
         const dx: number = c.x - this.x;

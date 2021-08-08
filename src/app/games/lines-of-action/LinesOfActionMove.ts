@@ -2,6 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { NumberEncoder } from 'src/app/jscaip/Encoder';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
+import { MGPCanFail } from 'src/app/utils/MGPCanFail';
 import { JSONValue } from 'src/app/utils/utils';
 import { LinesOfActionState } from './LinesOfActionState';
 
@@ -9,19 +10,25 @@ export class LinesOfActionMove extends MoveCoordToCoord {
     public static encoder: NumberEncoder<LinesOfActionMove> =
         MoveCoordToCoord.getEncoder<LinesOfActionMove>(LinesOfActionState.SIZE, LinesOfActionState.SIZE,
                                                        (start: Coord, end: Coord): LinesOfActionMove => {
-                                                           return new LinesOfActionMove(start, end);
+                                                           return LinesOfActionMove.of(start, end).get();
                                                        });
 
-    public readonly direction: Direction;
-    public constructor(start: Coord, end: Coord) {
-        super(start, end);
+    public static of(start: Coord, end: Coord): MGPCanFail<LinesOfActionMove> {
+        const directionOptional: MGPCanFail<Direction> = Direction.factory.fromMove(start, end);
+        if (directionOptional.isFailure()) {
+            return MGPCanFail.failure(directionOptional.getReason());
+        }
         if (!start.isInRange(LinesOfActionState.SIZE, LinesOfActionState.SIZE)) {
-            throw new Error('Starting coord of LinesOfActionMove must be on the board');
+            return MGPCanFail.failure('start coord is not in range');
         }
         if (!end.isInRange(LinesOfActionState.SIZE, LinesOfActionState.SIZE)) {
-            throw new Error('End coord of LinesOfActionMove must be on the board');
+            return MGPCanFail.failure('end coord is not in range');
         }
-        this.direction = Direction.factory.fromMove(start, end);
+        return MGPCanFail.success(new LinesOfActionMove(start, end, directionOptional.get()));
+    }
+    private constructor(start: Coord, end: Coord, public readonly direction: Direction) {
+        super(start, end);
+        this.direction = Direction.factory.fromMove(start, end).get();
     }
     public equals(o: LinesOfActionMove): boolean {
         if (o === this) return true;

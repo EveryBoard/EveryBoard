@@ -18,6 +18,7 @@ import { GipfPiece } from 'src/app/games/gipf/GipfPiece';
 import { Arrow } from 'src/app/jscaip/Arrow';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { MGPCanFail } from 'src/app/utils/MGPCanFail';
 
 @Component({
     selector: 'app-gipf',
@@ -120,15 +121,14 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfPartSlic
                 return this.selectPlacementCoord(coord);
             case GipfComponent.PHASE_PLACEMENT_DIRECTION:
                 const entrance: Coord = this.placementEntrance.get();
-                try {
-                    if (entrance.getDistance(coord) !== 1) {
-                        return this.cancelMove(GipfFailure.CLICK_FURTHER_THAN_ONE_COORD);
-                    }
-                    const direction: HexaDirection = HexaDirection.factory.fromMove(entrance, coord);
-                    return this.selectPlacementDirection(MGPOptional.of(direction));
-                } catch (error) {
+                if (entrance.isAlignedWith(coord) === false) {
                     return this.cancelMove(GipfFailure.INVALID_PLACEMENT_DIRECTION);
                 }
+                if (entrance.getDistance(coord) !== 1) {
+                    return this.cancelMove(GipfFailure.CLICK_FURTHER_THAN_ONE_COORD);
+                }
+                const direction: MGPCanFail<HexaDirection> = HexaDirection.factory.fromMove(entrance, coord);
+                return this.selectPlacementDirection(direction.toOptional());
         }
     }
     private async selectCapture(coord: Coord): Promise<MGPValidation> {

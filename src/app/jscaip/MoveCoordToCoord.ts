@@ -1,8 +1,8 @@
 import { MoveCoord } from './MoveCoord';
 import { Coord } from './Coord';
 import { NumberEncoder } from './Encoder';
-import { MGPOptional } from '../utils/MGPOptional';
-import { Direction, DirectionError } from './Direction';
+import { Direction } from './Direction';
+import { MGPCanFail } from '../utils/MGPCanFail';
 
 export abstract class MoveCoordToCoord extends MoveCoord {
     public static getEncoder<T extends MoveCoordToCoord>(width: number, height: number,
@@ -51,15 +51,7 @@ export abstract class MoveCoordToCoord extends MoveCoord {
     public length(): number {
         return this.coord.getDistance(this.end);
     }
-    public getDirection(): MGPOptional<Direction> {
-        try {
-            return MGPOptional.of(Direction.factory.fromMove(this.coord, this.end));
-        } catch (e) {
-            if (e instanceof DirectionError) {
-                return MGPOptional.empty();
-            } else {
-                throw e;
-            }
-        }
+    public getDirection(): MGPCanFail<Direction> {
+        return Direction.factory.fromMove(this.coord, this.end);
     }
 }

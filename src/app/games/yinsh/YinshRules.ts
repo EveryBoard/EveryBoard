@@ -5,6 +5,7 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { MGPCanFail } from 'src/app/utils/MGPCanFail';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { assert } from 'src/app/utils/utils';
@@ -85,7 +86,8 @@ export class YinshRules extends Rules<YinshMove, YinshGameState, YinshLegalitySt
         // end (only the ring can be there, as it must land on an empty space)
         board = board.setAt(start, YinshPiece.MARKERS[player]).setAt(end, YinshPiece.RINGS[player]);
         // Flip all pieces between start and end (both not included)
-        const dir: HexaDirection = HexaDirection.factory.fromMove(start, end);
+        // Direction is valid because this function is called with a valid move
+        const dir: HexaDirection = HexaDirection.factory.fromMove(start, end).get();
         for (let coord: Coord = start.getNext(dir);
             coord.equals(end) === false;
             coord = coord.getNext(dir)) {
@@ -160,11 +162,15 @@ export class YinshRules extends Rules<YinshMove, YinshGameState, YinshLegalitySt
         // There should only be markers or empty cases between start and end
         // As soon as a marker group is passed, the move should stop on the first empty case
         // There cannot be rings between start and end
-        const dir: HexaDirection = HexaDirection.factory.fromMove(start, end);
+        const directionOptional: MGPCanFail<HexaDirection> = HexaDirection.factory.fromMove(start, end);
+        if (directionOptional.isFailure()) {
+            return MGPValidation.failure(YinshFailure.MOVE_DIRECTION_INVALID);
+        }
+        const direction: HexaDirection = directionOptional.get();
         let markersPassed: boolean = false;
-        for (let cur: Coord = start.getNext(dir);
+        for (let cur: Coord = start.getNext(direction);
             cur.equals(end) === false;
-            cur = cur.getNext(dir)) {
+            cur = cur.getNext(direction)) {
             const piece: YinshPiece = state.hexaBoard.getAt(cur);
             if (piece === YinshPiece.EMPTY) {
                 if (markersPassed) {

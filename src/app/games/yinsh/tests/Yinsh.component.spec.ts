@@ -499,19 +499,26 @@ describe('YinshComponent', () => {
 
             const move: YinshMove =
                 new YinshMove([
-                    YinshCapture.of(new Coord(5, 9), new Coord(5, 5), new Coord(3, 3)),
                     YinshCapture.of(new Coord(5, 4), new Coord(1, 8), new Coord(3, 2)),
+                    YinshCapture.of(new Coord(5, 9), new Coord(5, 5), new Coord(3, 3)),
                 ],
                               new Coord(4, 1), MGPOptional.of(new Coord(4, 2)),
                               []);
 
+            await testUtils.expectClickSuccess('#click_1_8'); // select the second capture
+            await testUtils.expectClickSuccess('#click_3_2'); // select the second ring taken
             await testUtils.expectClickSuccess('#click_5_9'); // select the first capture
             await testUtils.expectClickSuccess('#click_3_3'); // select the first ring taken
-            await testUtils.expectClickSuccess('#click_5_4'); // select the second capture
-            await testUtils.expectClickSuccess('#click_3_2'); // select the second ring taken
             await testUtils.expectClickSuccess('#click_4_1'); // select ring to move
             await testUtils.expectMoveSuccess('#click_4_2', move); // move the ring
 
+            // This works:
+            // await testUtils.expectClickSuccess('#click_5_9'); // select the first capture
+            // await testUtils.expectClickSuccess('#click_3_3'); // select the first ring taken
+            // await testUtils.expectClickSuccess('#click_5_4'); // select the second capture
+            // await testUtils.expectClickSuccess('#click_3_2'); // select the second ring taken
+            // await testUtils.expectClickSuccess('#click_4_1'); // select ring to move
+            // await testUtils.expectMoveSuccess('#click_4_2', move); // move the ring
         }));
     });
 });

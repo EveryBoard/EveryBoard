@@ -95,7 +95,7 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        this.chosenDirection = Orthogonal.factory.fromString(direction);
+        this.chosenDirection = Orthogonal.factory.fromString(direction).get();
         return await this.tryMove();
     }
     public async tryMove(): Promise<MGPValidation> {
@@ -106,6 +106,8 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
         return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
     }
     public getArrowTransform(coord: Coord, orientation: string): string {
-        return GameComponentUtils.getArrowTransform(this.CASE_SIZE, coord, Orthogonal.factory.fromString(orientation));
+        return GameComponentUtils.getArrowTransform(this.CASE_SIZE,
+                                                    coord,
+                                                    Orthogonal.factory.fromString(orientation).get());
     }
 }

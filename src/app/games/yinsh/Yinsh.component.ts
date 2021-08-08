@@ -204,7 +204,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
                 this.moved = [move.start];
             } else {
                 this.moved = [];
-                const dir: HexaDirection = HexaDirection.factory.fromMove(move.start, move.end.get());
+                const dir: HexaDirection = HexaDirection.factory.fromMove(move.start, move.end.get()).get();
                 for (let cur: Coord = move.start; !cur.equals(move.end.get()); cur = cur.getNext(dir)) {
                     if (this.constructedState.hexaBoard.getAt(cur) !== YinshPiece.EMPTY) {
                         this.moved.push(cur);

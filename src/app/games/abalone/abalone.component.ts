@@ -12,6 +12,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { MGPCanFail } from 'src/app/utils/MGPCanFail';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { AbaloneDummyMinimax } from './AbaloneDummyMinimax';
@@ -167,9 +168,9 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
             }
             let theoritical: AbaloneMove;
             if (single) {
-                theoritical = AbaloneMove.fromSingleCoord(firstPiece, dir);
+                theoritical = AbaloneMove.fromSingleCoord(firstPiece, dir).get();
             } else {
-                theoritical = AbaloneMove.fromDoubleCoord(firstPiece, lastPiece, dir);
+                theoritical = AbaloneMove.fromDoubleCoord(firstPiece, lastPiece, dir).get();
             }
             const isLegal: LegalityStatus = this.rules.isLegal(theoritical, state);
             if (isLegal.legal.isSuccess()) {
@@ -254,9 +255,9 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
         return this.tryExtension(clicked, firstPiece, lastPiece);
     }
     private async tryExtension(clicked: Coord, firstPiece: Coord, lastPiece: Coord): Promise<MGPValidation> {
-        const alignement: MGPOptional<Direction> = firstPiece.tryGetDirection(clicked);
-        if (alignement.isPresent()) {
-            const secondAlignement: MGPOptional<Direction> = lastPiece.tryGetDirection(clicked);
+        const alignement: MGPCanFail<Direction> = Direction.factory.fromMove(firstPiece, clicked);
+        if (alignement.isSuccess()) {
+            const secondAlignement: MGPCanFail<Direction> = Direction.factory.fromMove(lastPiece, clicked);
             if (alignement.equals(secondAlignement)) {
                 // then it's an extension of the line
                 const firstDistance: number = firstPiece.getDistance(clicked);
@@ -294,10 +295,10 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
         let move: AbaloneMove;
         const firstPiece: Coord = this.selecteds[0];
         if (this.selecteds.length === 1) {
-            move = AbaloneMove.fromSingleCoord(firstPiece, dir);
+            move = AbaloneMove.fromSingleCoord(firstPiece, dir).get();
         } else {
             const lastPiece: Coord = this.selecteds[this.selecteds.length - 1];
-            move = AbaloneMove.fromDoubleCoord(firstPiece, lastPiece, dir);
+            move = AbaloneMove.fromDoubleCoord(firstPiece, lastPiece, dir).get();
         }
         return this.chooseMove(move, state, this.scores[0], this.scores[1]);
     }

@@ -26,10 +26,10 @@ export class SiamMove extends MoveCoord {
             const moveDirectionInt: number = encodedMove % 5;
             const moveDirection: MGPOptional<Orthogonal> = moveDirectionInt === 4 ?
                 MGPOptional.empty() :
-                MGPOptional.of(Orthogonal.factory.fromInt(moveDirectionInt));
+                Orthogonal.factory.fromInt(moveDirectionInt).toOptional();
             encodedMove -= moveDirectionInt;
             encodedMove /= 5;
-            const landingOrientation: Orthogonal = Orthogonal.factory.fromInt(encodedMove);
+            const landingOrientation: Orthogonal = Orthogonal.factory.fromInt(encodedMove).get();
             return new SiamMove(x - 1, y - 1, moveDirection, landingOrientation);
         }
     }
