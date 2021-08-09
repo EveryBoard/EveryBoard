@@ -125,7 +125,7 @@ describe('YinshComponent', () => {
             testUtils.expectElementNotToExist('#marker_3_2');
             await testUtils.expectClickSuccess('#click_3_2');
             testUtils.expectElementToHaveClass('#marker_3_2', 'player0');
-            testUtils.expectElementToHaveClass('#ring_3_2', 'player0');
+            testUtils.expectElementToHaveClass('#ring_3_2', 'player0-stroke');
         }));
         it('should enable selecting capture by first clicking the capture group, then the ring taken', fakeAsync(async() => {
             const board: YinshBoard = YinshBoard.of([
@@ -154,7 +154,6 @@ describe('YinshComponent', () => {
             await testUtils.expectMoveSuccess('#click_4_3', move); // move it
         }));
         it('should highlight possible captures', fakeAsync(async() => {
-            testUtils.expectElementNotToExist('#capture_0');
             const board: YinshBoard = YinshBoard.of([
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, _, _, _, _, _, _, _],
@@ -171,11 +170,13 @@ describe('YinshComponent', () => {
             const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
             testUtils.setupSlice(state);
 
-            testUtils.expectElementToExist('#capture_0');
-            testUtils.expectElementToHaveClass('#capture_0', 'capturable');
-            testUtils.expectElementNotToExist('#capture_1');
+            testUtils.expectElementToExist('#selectable_3_3');
+            testUtils.expectElementToHaveClass('#selectable_3_3', 'capturable');
+            testUtils.expectElementToHaveClass('#selectable_3_4', 'capturable');
+            testUtils.expectElementToHaveClass('#selectable_3_5', 'capturable');
+            testUtils.expectElementToHaveClass('#selectable_3_6', 'capturable');
         }));
-        it('should make captured pieces disappear and show their background in red, and remove highlight upon cancellation', fakeAsync(async() => {
+        it('should show selected captures, and remove highlight upon cancellation', fakeAsync(async() => {
             const board: YinshBoard = YinshBoard.of([
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, _, _, _, _, _, _, _],
@@ -192,25 +193,26 @@ describe('YinshComponent', () => {
             const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
             testUtils.setupSlice(state);
 
-            testUtils.expectElementNotToHaveClass('#case_3_3', 'captured');
-            testUtils.expectElementNotToHaveClass('#case_3_4', 'captured');
-            testUtils.expectElementNotToHaveClass('#case_3_5', 'captured');
-            testUtils.expectElementNotToHaveClass('#case_3_6', 'captured');
+            testUtils.expectElementNotToExist('#selected_3_3');
+            testUtils.expectElementNotToExist('#selected_3_4');
+            testUtils.expectElementNotToExist('#selected_3_5');
+            testUtils.expectElementNotToExist('#selected_3_6');
 
             await testUtils.expectClickSuccess('#click_3_3'); // click the first captured group
             await testUtils.expectClickSuccess('#click_3_2'); // click the first ring
 
-            testUtils.expectElementToHaveClass('#case_3_3', 'captured');
-            testUtils.expectElementToHaveClass('#case_3_4', 'captured');
-            testUtils.expectElementToHaveClass('#case_3_5', 'captured');
-            testUtils.expectElementToHaveClass('#case_3_6', 'captured');
+            testUtils.expectElementToHaveClass('#selected_3_3', 'selected');
+            testUtils.expectElementToHaveClass('#selected_3_4', 'selected');
+            testUtils.expectElementToHaveClass('#selected_3_5', 'selected');
+            testUtils.expectElementToHaveClass('#selected_3_6', 'selected');
 
+            // Click on something else than a ring to cancel move
             await testUtils.expectClickFailure('#click_5_5', YinshFailure.SHOULD_SELECT_PLAYER_RING);
 
-            testUtils.expectElementNotToHaveClass('#case_3_3', 'captured');
-            testUtils.expectElementNotToHaveClass('#case_3_4', 'captured');
-            testUtils.expectElementNotToHaveClass('#case_3_5', 'captured');
-            testUtils.expectElementNotToHaveClass('#case_3_6', 'captured');
+            testUtils.expectElementNotToExist('#selected_3_3');
+            testUtils.expectElementNotToExist('#selected_3_4');
+            testUtils.expectElementNotToExist('#selected_3_5');
+            testUtils.expectElementNotToExist('#selected_3_6');
 
         }));
         it('should support multiple captures', fakeAsync(async() => {
@@ -323,17 +325,20 @@ describe('YinshComponent', () => {
             const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
             testUtils.setupSlice(state);
 
-            testUtils.expectElementToExist('#capture_0');
-            testUtils.expectElementToExist('#capture_1');
-            testUtils.expectElementToExist('#capture_2');
-            testUtils.expectElementNotToExist('#capture_3');
+            for (const coord of [[3, 3], [3, 4], [3, 5], [3, 6], [3, 7], [4, 5], [5, 5], [6, 5], [7, 5], [8, 5]]) {
+                testUtils.expectElementToExist('#selectable_' + coord[0] + '_' + coord[1]);
+            }
 
             await testUtils.expectClickSuccess('#click_3_3'); // capture
             await testUtils.expectClickSuccess('#click_3_2'); // select the ring
 
-            testUtils.expectElementToExist('#capture_0');
-            testUtils.expectElementNotToExist('#capture_1');
-            testUtils.expectElementNotToExist('#capture_2');
+            // There now should only remain 5 selectable coords
+            for (const coord of [[3, 3], [3, 4], [3, 5], [3, 6], [3, 7]]) {
+                testUtils.expectElementNotToExist('#selectable_' + coord[0] + '_' + coord[1]);
+            }
+            for (const coord of [[4, 5], [5, 5], [6, 5], [7, 5], [8, 5]]) {
+                testUtils.expectElementToExist('#selectable_' + coord[0] + '_' + coord[1]);
+            }
         }));
         it('should highlight the rings instead of the captures after selecting a capture', fakeAsync(async() => {
             const board: YinshBoard = YinshBoard.of([
@@ -353,16 +358,15 @@ describe('YinshComponent', () => {
             testUtils.setupSlice(state);
 
             testUtils.expectElementNotToExist('#ring_0');
-            testUtils.expectElementToExist('#capture_0');
+            testUtils.expectElementToExist('#selectable_3_3');
 
             await testUtils.expectClickSuccess('#click_3_3'); // capture
 
-            testUtils.expectElementNotToExist('#capture_0');
-            testUtils.expectElementToExist('#ring_0');
-            testUtils.expectElementToExist('#ring_1');
-            testUtils.expectElementNotToExist('#ring_2');
+            testUtils.expectElementNotToExist('#selectable_3_3');
+            testUtils.expectElementToExist('#selectable_3_2'); // ring
+            testUtils.expectElementToExist('#selectable_4_2'); // other ring
         }));
-        it('should not allow clicking on an ambiguous capture coordinate', fakeAsync(async() => {
+        it('should forbid clicking on two ambiguous capture coordinates', fakeAsync(async() => {
             const board: YinshBoard = YinshBoard.of([
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, _, _, _, _, _, _, _],
@@ -379,7 +383,8 @@ describe('YinshComponent', () => {
             const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
             testUtils.setupSlice(state);
 
-            await testUtils.expectClickFailure('#click_3_5', YinshFailure.AMBIGUOUS_CAPTURE_COORD);
+            await testUtils.expectClickSuccess('#click_4_5');
+            await testUtils.expectClickFailure('#click_5_5', YinshFailure.AMBIGUOUS_CAPTURE_COORD);
         }));
         it('should cancel the move when clicking on something else than a ring after a capture', fakeAsync(async() => {
             const board: YinshBoard = YinshBoard.of([
@@ -497,6 +502,13 @@ describe('YinshComponent', () => {
             const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
             testUtils.setupSlice(state);
 
+            const move: YinshMove =
+                new YinshMove([
+                    YinshCapture.of(new Coord(5, 4), new Coord(1, 8), new Coord(3, 2)),
+                    YinshCapture.of(new Coord(5, 9), new Coord(5, 5), new Coord(3, 3)),
+                ],
+                              new Coord(4, 1), MGPOptional.of(new Coord(4, 2)),
+                              []);
 
             await testUtils.expectClickSuccess('#click_1_8'); // select the second capture
             await testUtils.expectClickSuccess('#click_3_2'); // select the second ring taken

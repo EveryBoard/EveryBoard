@@ -14,12 +14,12 @@
                           stroke-linecap="round"/>
                 <g [ngClass]="caseInfo.removedClass">
                     <circle *ngIf="caseInfo.isRing"
-                            id="ring_{{ x }}_{{ y }}"
                             [attr.cx]="caseInfo.center.x"
                             [attr.cy]="caseInfo.center.y"
                             [attr.r]="viewInfo.ringOuterSize"
                             class="base no-fill mid-stroke"/>
                     <circle *ngIf="caseInfo.isRing"
+                            id="ring_{{ x }}_{{ y }}"
                             [attr.cx]="caseInfo.center.x"
                             [attr.cy]="caseInfo.center.y"
                             [attr.r]="viewInfo.ringMidSize"
@@ -43,7 +43,7 @@
     </g>
     <g *ngFor="let coord of viewInfo.selectedCoords; index as i">
         <polyline [attr.points]="viewInfo.caseInfo[coord.y][coord.x].coordinates"
-                  id="selected_{{ i }}"
+                  id="selected_{{ coord.x }}_{{ coord.y }}"
                   (click)="onClick(coord)"
                   pointer-events="fill"
                   class="base no-fill selected"
@@ -51,7 +51,7 @@
     </g>
     <g *ngFor="let coord of viewInfo.selectableCoords; index as i">
         <polyline [attr.points]="viewInfo.caseInfo[coord.y][coord.x].coordinates"
-                  id="selectable_{{ i }}"
+                  id="selectable_{{ coord.x }}_{{ coord.y }}"
                   (click)="onClick(coord)"
                   pointer-events="fill"
                   class="base no-fill capturable"

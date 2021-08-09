@@ -165,7 +165,6 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
             case 'MOVE_END':
                 this.viewInfo.targets =
                     this.rules.getRingTargets(this.constructedState, this.moveStart.get());
-                console.log('targets: ' + this.viewInfo.targets.length);
                 break;
         }
     }
