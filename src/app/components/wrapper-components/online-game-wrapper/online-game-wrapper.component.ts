@@ -30,6 +30,10 @@ export class UpdateType {
 
     public static readonly DOUBLON: UpdateType = new UpdateType('DOUBLON');
 
+    public static readonly MOVE_WITHOUT_TIME: UpdateType = new UpdateType('MOVE_WITHOUT_TIME');
+
+    public static readonly TIME_ALONE: UpdateType = new UpdateType('TIME_ALONE');
+
     public static readonly MOVE: UpdateType = new UpdateType('MOVE');
 
     public static readonly REQUEST: UpdateType = new UpdateType('REQUEST');
@@ -173,6 +177,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         } });
         const updateType: UpdateType = this.getUpdateType(part);
         console.log(updateType.value)
+        const oldPart: Part = this.currentPart;
         this.currentPart = part;
         display(OnlineGameWrapperComponent.VERBOSE,
                 'OnlineGameWrapperComponent.onCurrentPartUpdate: UpdateType.' + updateType.value);
@@ -184,9 +189,20 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             case UpdateType.END_GAME:
                 return this.checkEndGames();
                 // TODO: might no longer be checkEndGame but "do"EndGame
+            case UpdateType.MOVE_WITHOUT_TIME:
+                console.log('Move updaté mais sans le temps')
+                return this.doNewMoves(part);
+            case UpdateType.TIME_ALONE:
+                console.log('Time updaté mais sans le mouve')
+                this.currentPart = oldPart;
+                return;
             case UpdateType.MOVE:
                 return this.doNewMoves(part);
             case UpdateType.PRE_START_DOC:
+                if (oldPart != null && oldPart.doc.beginning != null &&
+                    this.currentPart != null && this.currentPart.doc.beginning == null) {
+                    console.log('ils nous chient dans la colle patron!!!');
+                }
                 return;
             default:
                 assert(updateType === UpdateType.STARTING_DOC, 'Unexpected update type ' + updateType);
@@ -204,11 +220,18 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         if (diff == null || nbDiffs === 0) {
             return UpdateType.DOUBLON;
         }
+        if (this.isTimeAlone(diff, nbDiffs)) {
+            return UpdateType.TIME_ALONE;
+        }
         if (update.doc.request) {
             return UpdateType.REQUEST;
         }
-        if (this.diffIsAMove(diff, nbDiffs)) {
-            return UpdateType.MOVE;
+        if (this.isMove(diff, nbDiffs)) {
+            if (diff.modified['lastMoveTime'] == null) {
+                return UpdateType.MOVE_WITHOUT_TIME;
+            } else {
+                return UpdateType.MOVE;
+            }
         }
         if (update.doc.beginning == null) {
             return UpdateType.PRE_START_DOC;
@@ -221,31 +244,44 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
         throw new Error('Unexpected update: ' + JSON.stringify(diff));
     }
-    private diffIsAMove(diff: ObjectDifference, nbDiffs: number): boolean {
-        console.log(diff)
-        const lastMoveAddedOrModified: boolean =
-            diff.added['lastMoveTime'] != null || diff.modified['lastMoveTime'] != null;
-        if (diff.modified['listMoves'] && diff.modified['turn'] && lastMoveAddedOrModified) {
-            if (nbDiffs === 3) {
-                return true;
-            }
-            if (nbDiffs === 4) {
-                if (diff.removed['request'] ||
-                    diff.modified['scorePlayerOne'] ||
-                    diff.modified['scorePlayerZero'])
-                {
-                    return true;
-                }
-            }
-            if (nbDiffs === 5) {
-                if ((diff.added['scorePlayerOne'] != null && diff.added['scorePlayerZero'] != null) ||
-                    (diff.modified['scorePlayerOne'] != null && diff.modified['scorePlayerZero'] != null))
-                {
-                    return true;
-                }
-            }
+    public isTimeAlone(diff: ObjectDifference, nbDiffs: number): boolean {
+        return nbDiffs === 1 && diff.added['lastMoveTime'] !== undefined;
+    }
+    public isMove(diff: ObjectDifference, nbDiffs: number): boolean {
+        if (diff.modified['listMoves'] && diff.modified['turn']) {
+            const lastMoveTimeModified: number = this.isLastMoveUpdated(diff) ? 1 : 0;
+            const scoreZeroUpdated: number = this.isUpdated(diff, 'scorePlayerZero') ? 1 : 0;
+            const scoreOneUpdated: number = this.isUpdated(diff, 'scorePlayerOne') ? 1 : 0;
+            const requestRemoved: number = diff.removed['request'] == null ? 0 : 1;
+            const nbValidMoveDiffs: number = lastMoveTimeModified +
+                                             scoreZeroUpdated +
+                                             scoreOneUpdated +
+                                             requestRemoved +
+                                             2;
+            return nbDiffs === nbValidMoveDiffs;
+        } else {
+            return false;
+        }
+    }
+    public isLastMoveUpdated(diff: ObjectDifference): boolean {
+        if (diff.added['lastMoveTime']) {
+            console.log('lastMoveTime added', this.currentPart.doc.lastMoveTime)
+            return true;
+        }
+        if (diff.modified['lastMoveTime']) {
+            console.log('lastMoveTime modified', this.currentPart.doc.lastMoveTime)
+            return true;
+        }
+        if (diff.removed['lastMoveTime']) {
+            console.log('lastMoveTime removed', this.currentPart.doc.lastMoveTime)
+            return true;
         }
         return false;
+    }
+    public isUpdated(diff: ObjectDifference, key: string): boolean {
+        return diff.added[key] != null ||
+               diff.modified[key] != null ||
+               diff.removed[key] != null;
     }
     public setChronos(): void {
         display(OnlineGameWrapperComponent.VERBOSE, 'onlineGameWrapperComponent.setChronos()');

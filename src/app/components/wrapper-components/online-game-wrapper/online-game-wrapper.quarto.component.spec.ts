@@ -570,7 +570,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
     });
     describe('Timeouts', () => {
-        it('should stop player\'s global chrono when local reach end', fakeAsync(async() => {
+        it(`should stop player's global chrono when local reach end`, fakeAsync(async() => {
             await prepareStartedGameFor({ pseudo: 'creator', verified: true });
             tick(1);
             spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
@@ -579,7 +579,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(0);
             expect(wrapper.chronoZeroGlobal.stop).toHaveBeenCalled();
         }));
-        it('should stop player\'s local chrono when global chrono reach end', fakeAsync(async() => {
+        it(`should stop player's local chrono when global chrono reach end`, fakeAsync(async() => {
             await prepareStartedGameFor({ pseudo: 'creator', verified: true }, true);
             tick(1);
             spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
@@ -706,7 +706,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         tick(wrapper.maximalMoveDuration);
     }));
     describe('getUpdateType', () => {
-        it('Should recognize move as move, even when after a request removal', fakeAsync(async() => {
+        it('Move + Time_updated + Request_removed = UpdateType.MOVE', fakeAsync(async() => {
             await prepareStartedGameFor({ pseudo: 'creator', verified: true });
             wrapper.currentPart = new Part({
                 typeGame: 'P4',
@@ -733,7 +733,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(wrapper.getUpdateType(update)).toBe(UpdateType.MOVE);
             tick(wrapper.maximalMoveDuration + 1);
         }));
-        it('Should recognize update as move, even if score just added itself', fakeAsync(async() => {
+        it('Move + Time_added + Score_added = UpdateType.MOVE', fakeAsync(async() => {
             await prepareStartedGameFor({ pseudo: 'creator', verified: true });
             wrapper.currentPart = new Part({
                 typeGame: 'P4',
@@ -752,15 +752,15 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: 'Sir Meryn Trant',
                 beginning: { seconds: 123 },
-                lastMoveTime: { seconds: 1111 },
-                // And obviously, the added score
+                // And obviously, the added score and time
                 scorePlayerZero: 0,
                 scorePlayerOne: 0,
+                lastMoveTime: { seconds: 1111 },
             });
-            expect(wrapper.getUpdateType(update)).toBe(UpdateType.MOVE);
+            expect(wrapper.getUpdateType(update)).toBe(UpdateType.MOVE_WITHOUT_TIME);
             tick(wrapper.maximalMoveDuration + 1);
         }));
-        it('Should recognize update as move, even if score was updated', fakeAsync(async() => {
+        it('Move + Time_added + Score_modified = UpdateType.MOVE', fakeAsync(async() => {
             await prepareStartedGameFor({ pseudo: 'creator', verified: true });
             wrapper.currentPart = new Part({
                 typeGame: 'P4',
@@ -781,12 +781,95 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: 'Sir Meryn Trant',
                 beginning: { seconds: 123 },
+                scorePlayerZero: 1,
+                // And obviously, the score update and time added
+                scorePlayerOne: 4,
                 lastMoveTime: { seconds: 1111 },
-                // And obviously, the score update
-                scorePlayerZero: 4,
+            });
+            expect(wrapper.getUpdateType(update)).toBe(UpdateType.MOVE_WITHOUT_TIME);
+            tick(wrapper.maximalMoveDuration + 1);
+        }));
+        it('Move + Time_removed + Score_added = UpdateType.MOVE_WITHOUT_TIME', fakeAsync(async() => {
+            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            wrapper.currentPart = new Part({
+                typeGame: 'P4',
+                playerZero: 'who is it from who cares',
+                turn: 1,
+                listMoves: [1],
+                result: MGPResult.UNACHIEVED.value,
+                playerOne: 'Sir Meryn Trant',
+                beginning: { seconds: 123 },
+                lastMoveTime: { seconds: 1111 },
+            });
+            const update: Part = new Part({
+                typeGame: 'P4',
+                playerZero: 'who is it from who cares',
+                turn: 2,
+                listMoves: [1, 2],
+                result: MGPResult.UNACHIEVED.value,
+                playerOne: 'Sir Meryn Trant',
+                beginning: { seconds: 123 },
+                // And obviously, the added score
+                scorePlayerZero: 0,
+                scorePlayerOne: 0,
+                // of course, no more lastMoveTime
+            });
+            expect(wrapper.getUpdateType(update)).toBe(UpdateType.MOVE_WITHOUT_TIME);
+            tick(wrapper.maximalMoveDuration + 1);
+        }));
+        it('Move + Time_removed + Score_modified = UpdateType.MOVE_WITHOUT_TIME', fakeAsync(async() => {
+            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            wrapper.currentPart = new Part({
+                typeGame: 'P4',
+                playerZero: 'who is it from who cares',
+                turn: 1,
+                listMoves: [1],
+                result: MGPResult.UNACHIEVED.value,
+                playerOne: 'Sir Meryn Trant',
+                beginning: { seconds: 123 },
+                lastMoveTime: { seconds: 1111 },
+                scorePlayerZero: 1,
                 scorePlayerOne: 1,
             });
-            expect(wrapper.getUpdateType(update)).toBe(UpdateType.MOVE);
+            const update: Part = new Part({
+                typeGame: 'P4',
+                playerZero: 'who is it from who cares',
+                turn: 2,
+                listMoves: [1, 2],
+                result: MGPResult.UNACHIEVED.value,
+                playerOne: 'Sir Meryn Trant',
+                beginning: { seconds: 123 },
+                scorePlayerZero: 1,
+                // lastMoveTime is removed
+                scorePlayerOne: 4, // modified
+            });
+            expect(wrapper.getUpdateType(update)).toBe(UpdateType.MOVE_WITHOUT_TIME);
+            tick(wrapper.maximalMoveDuration + 1);
+        }));
+        it('should recognize lastMoveTime update', fakeAsync(async() => {
+            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            wrapper.currentPart = new Part({
+                typeGame: 'P4',
+                playerZero: 'who is it from who cares',
+                turn: 1,
+                listMoves: [1],
+                result: MGPResult.UNACHIEVED.value,
+                playerOne: 'Sir Meryn Trant',
+                beginning: { seconds: 123 },
+                lastMoveTime: null,
+            });
+            const update: Part = new Part({
+                typeGame: 'P4',
+                playerZero: 'who is it from who cares',
+                turn: 1,
+                listMoves: [1],
+                result: MGPResult.UNACHIEVED.value,
+                playerOne: 'Sir Meryn Trant',
+                beginning: { seconds: 123 },
+                // the only modif
+                lastMoveTime: { seconds: 1111 },
+            });
+            expect(wrapper.getUpdateType(update)).toBe(UpdateType.TIME_ALONE);
             tick(wrapper.maximalMoveDuration + 1);
         }));
     });
