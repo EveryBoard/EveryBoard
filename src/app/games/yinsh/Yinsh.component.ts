@@ -123,27 +123,26 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
         this.updateViewInfo();
     }
     public updateViewInfo(): void {
-        console.log('updateViewInfo')
         this.constructedState.hexaBoard.allCoords().forEach((coord: Coord): void => {
             this.viewInfo.caseInfo[coord.y][coord.x].caseClasses = this.getCaseClasses(coord);
             const piece: YinshPiece = this.constructedState.hexaBoard.getAt(coord);
-            let pieceToShow: YinshPiece = piece;
-            const previousPiece: YinshPiece = this.rules.node.gamePartSlice.hexaBoard.getAt(coord);
-            const pieceRemoved: boolean = !coord.equals(this.moveStart.getOrNull()) &&
-                previousPiece !== YinshPiece.EMPTY &&
-                piece === YinshPiece.EMPTY;
-            if (pieceRemoved) {
-                this.viewInfo.caseInfo[coord.y][coord.x].removedClass = 'transparent';
-                pieceToShow = previousPiece;
-            } else {
-                this.viewInfo.caseInfo[coord.y][coord.x].removedClass = '';
-            }
-            this.setRingInfo(coord, pieceToShow);
-            this.setMarkerInfo(coord, pieceToShow);
+            this.viewInfo.caseInfo[coord.y][coord.x].removedClass = '';
+            this.setRingInfo(coord, piece);
+            this.setMarkerInfo(coord, piece);
         });
         for (const player of [Player.ZERO, Player.ONE]) {
             this.viewInfo.sideRings[player.value] = this.constructedState.sideRings[player.value];
         }
+        if (this.currentCapture.isPresent()) {
+            this.markCurrentCapture(this.currentCapture.get());
+        }
+        for (const capture of this.initialCaptures) {
+            this.markCurrentCapture(capture);
+        }
+        for (const capture of this.finalCaptures) {
+            this.markCurrentCapture(capture);
+        }
+
         switch (this.movePhase) {
             case 'INITIAL_CAPTURE_SELECT_FIRST':
             case 'INITIAL_CAPTURE_SELECT_LAST':
@@ -332,7 +331,6 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
             this.rules.applyCaptureWithoutTakingRing(this.constructedState, capture),
             this.constructedState.sideRings,
             this.constructedState.turn);
-        this.markCurrentCapture(capture);
 
         switch (this.movePhase) {
             case 'INITIAL_CAPTURE_SELECT_FIRST':
@@ -350,6 +348,13 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
     private markCurrentCapture(capture: YinshCapture): void {
         for (const coord of capture.capturedCases) {
             this.viewInfo.selectedCoords.push(coord);
+            this.viewInfo.caseInfo[coord.y][coord.x].removedClass = 'transparent';
+            this.setMarkerInfo(coord, YinshPiece.MARKERS[this.rules.node.gamePartSlice.getCurrentPlayer().value]);
+        }
+        if (!capture.ringTaken.equals(new Coord(-1, -1))) {
+            this.viewInfo.selectedCoords.push(capture.ringTaken);
+            this.setRingInfo(capture.ringTaken,
+                             YinshPiece.RINGS[this.rules.node.gamePartSlice.getCurrentPlayer().value]);
         }
     }
 
@@ -429,7 +434,6 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
     }
     private async moveToFinalCapturePhaseOrTryMove(): Promise<MGPValidation> {
         this.possibleCaptures = this.rules.getPossibleCaptures(this.constructedState);
-        console.log('possible captures' + this.possibleCaptures.length);
         if (this.possibleCaptures.length === 0) {
             return this.tryMove();
         } else {
