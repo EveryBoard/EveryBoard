@@ -34,7 +34,9 @@ interface ViewInfo {
     caseInfo: CaseInfo[][],
     selectableCoords: Coord[],
     selectedCoords: Coord[],
+    targets: Coord[],
     markerSize: number,
+    indicatorSize: number,
     ringOuterSize: number,
     ringMidSize: number,
     ringInnerSize: number,
@@ -52,6 +54,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
     private static RING_MID_SIZE: number = 34;
     private static RING_INNER_SIZE: number = 28;
     private static MARKER_SIZE: number = YinshComponent.RING_INNER_SIZE;
+    private static INDICATOR_SIZE: number = 10;
 
     public rules: YinshRules = new YinshRules(YinshGameState);
 
@@ -81,10 +84,12 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
         caseInfo: [],
         selectableCoords: [],
         selectedCoords: [],
+        targets: [],
         markerSize: YinshComponent.MARKER_SIZE,
         ringOuterSize: YinshComponent.RING_OUTER_SIZE,
         ringMidSize: YinshComponent.RING_MID_SIZE,
         ringInnerSize: YinshComponent.RING_INNER_SIZE,
+        indicatorSize: YinshComponent.INDICATOR_SIZE,
         sideRings: [5, 5],
         sideRingClass: ['player0-stroke', 'player1-stroke'],
     };
@@ -133,6 +138,8 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
         this.showCurrentMoveCaptures();
         this.showLastMove();
 
+        this.viewInfo.targets = [];
+        this.viewInfo.selectableCoords = [];
         switch (this.movePhase) {
             case 'INITIAL_CAPTURE_SELECT_FIRST':
             case 'INITIAL_CAPTURE_SELECT_LAST':
@@ -156,8 +163,11 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
                         this.constructedState.hexaBoard.getRingCoords(this.constructedState.getCurrentPlayer());
                 }
                 break;
-            default:
-                this.viewInfo.selectableCoords = [];
+            case 'MOVE_END':
+                this.viewInfo.targets =
+                    this.rules.getRingTargets(this.constructedState, this.moveStart.get());
+                console.log('targets: ' + this.viewInfo.targets.length);
+                break;
         }
     }
     private showCurrentMoveCaptures(): void {

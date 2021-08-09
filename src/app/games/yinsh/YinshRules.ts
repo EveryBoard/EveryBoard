@@ -275,6 +275,31 @@ export class YinshRules extends Rules<YinshMove, YinshGameState, YinshLegalitySt
             });
         return captures;
     }
+    public getRingTargets(state: YinshGameState, start: Coord): Coord[] {
+        const targets: Coord[] = [];
+        for (const dir of HexaDirection.factory.all) {
+            let pieceSeen: boolean = false;
+            for (let cur: Coord = start.getNext(dir);
+                state.hexaBoard.isOnBoard(cur);
+                cur = cur.getNext(dir)) {
+                const piece: YinshPiece = state.hexaBoard.getAt(cur);
+                if (piece === YinshPiece.EMPTY) {
+                    targets.push(cur);
+                    if (pieceSeen) {
+                        // can only land directly after the piece group
+                        break;
+                    }
+                } else if (piece.isRing) {
+                    // cannot land on rings nor after them
+                    break;
+                } else {
+                    // track whether we have seen pieces, as we can only jump above one group
+                    pieceSeen = true;
+                }
+            }
+        }
+        return targets;
+    }
     public getGameStatus(node: YinshNode): GameStatus {
         if (node.gamePartSlice.isInitialPlacementPhase()) {
             return GameStatus.ONGOING;
