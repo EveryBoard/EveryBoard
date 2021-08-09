@@ -70,6 +70,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
 
     private moveStart: MGPOptional<Coord> = MGPOptional.empty();
     private moveEnd: MGPOptional<Coord> = MGPOptional.empty();
+    private currentlyMoved: Coord[] = [];
     private currentCapture: MGPOptional<YinshCapture> = MGPOptional.empty();
     private initialCaptures: YinshCapture[] = [];
     private finalCaptures: YinshCapture[] = [];
@@ -142,6 +143,8 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
         for (const capture of this.finalCaptures) {
             this.markCurrentCapture(capture);
         }
+        // TODO: if nothing has been selected yet, show previous captured pieces in transparent
+        // TODO: 'moved' and 'captured'
 
         switch (this.movePhase) {
             case 'INITIAL_CAPTURE_SELECT_FIRST':
@@ -173,14 +176,8 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
             return ['captured'];
         } else if (this.lastMoveMoved.some((c: Coord) => c.equals(coord))) {
             return ['moved'];
-        } else if (coord.equals(this.moveStart.getOrNull())) {
+        } else if (this.currentlyMoved.some((c: Coord) => c.equals(coord))) {
             return ['moved'];
-        } else if (coord.equals(this.moveEnd.getOrNull())) {
-            return ['moved'];
-        } else if (this.initialCaptures.some((c: YinshCapture) => c.contains(coord) || c.ringTaken.equals(coord))) {
-            return ['selected'];
-        } else if (this.finalCaptures.some((c: YinshCapture) => c.contains(coord) || c.ringTaken.equals(coord))) {
-            return ['selected'];
         } else {
             return [];
         }
@@ -210,8 +207,6 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
     }
     public cancelMoveAttempt(): void {
         this.constructedState = this.rules.node.gamePartSlice;
-        this.showLastMove();
-
         this.possibleCaptures = [];
         this.initialCaptures = [];
         this.finalCaptures = [];
@@ -221,26 +216,33 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
         this.currentCapture = MGPOptional.empty();
         this.moveStart = MGPOptional.empty();
         this.moveEnd = MGPOptional.empty();
+        this.currentlyMoved = [];
+        this.showLastMove();
         this.moveToInitialCaptureOrMovePhase();
     }
     private showLastMove(): void {
         const move: YinshMove = this.rules.node.move;
         if (move !== null) {
             if (move.isInitialPlacement()) {
+                console.log('showLastMove')
                 this.lastMoveMoved = [move.start];
             } else {
-                this.lastMoveMoved = [];
-                const dir: HexaDirection = HexaDirection.factory.fromMove(move.start, move.end.get()).get();
-                for (let cur: Coord = move.start; !cur.equals(move.end.get()); cur = cur.getNext(dir)) {
-                    if (this.constructedState.hexaBoard.getAt(cur) !== YinshPiece.EMPTY) {
-                        this.lastMoveMoved.push(cur);
-                    }
-                    this.lastMoveMoved.push(move.end.get());
-                }
+                this.lastMoveMoved = this.coordsBetween(move.start, move.end.get());
                 move.initialCaptures.forEach((c: YinshCapture) => this.markCapture(c));
                 move.finalCaptures.forEach((c: YinshCapture) => this.markCapture(c));
             }
         }
+    }
+    private coordsBetween(start: Coord, end: Coord): Coord[] {
+        const coords: Coord[] = [];
+        const dir: HexaDirection = HexaDirection.factory.fromMove(start, end).get();
+        for (let cur: Coord = start; !cur.equals(end); cur = cur.getNext(dir)) {
+            if (this.constructedState.hexaBoard.getAt(cur) !== YinshPiece.EMPTY) {
+                coords.push(cur);
+            }
+            coords.push(end);
+        }
+        return coords;
     }
     private markCapture(capture: YinshCapture): void {
         capture.forEach((coord: Coord) => {
@@ -298,6 +300,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
     }
     private moveToCaptureSelectLast(possibleCaptures: YinshCapture[]): void {
         this.viewInfo.selectableCoords = [];
+        this.possibleCaptures = possibleCaptures;
         for (const capture of possibleCaptures) {
             for (const coord of capture.capturedCases) {
                 this.viewInfo.selectableCoords.push(coord);
@@ -428,6 +431,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
             return this.cancelMove(validity.getReason());
         }
         this.moveEnd = MGPOptional.of(coord);
+        this.currentlyMoved = this.coordsBetween(this.moveStart.get(), coord);
         this.constructedState = this.rules.applyRingMoveAndFlip(this.constructedState, this.moveStart.get(), coord);
         this.updateViewInfo();
         return this.moveToFinalCapturePhaseOrTryMove();
