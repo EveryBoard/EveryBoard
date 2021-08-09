@@ -9,6 +9,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { assert } from 'src/app/utils/utils';
 import { YinshFailure } from './YinshFailure';
 import { YinshGameState } from './YinshGameState';
 import { YinshLegalityStatus } from './YinshLegalityStatus';
@@ -31,8 +32,8 @@ interface CaseInfo {
 
 interface ViewInfo {
     caseInfo: CaseInfo[][],
-    possibleCaptures: YinshCapture[],
-    selectableRings: Coord[],
+    selectableCoords: Coord[],
+    selectedCoords: Coord[],
     markerSize: number,
     ringOuterSize: number,
     ringMidSize: number,
@@ -64,7 +65,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
 
     private constructedState: YinshGameState;
 
-    private movePhase: 'INITIAL_CAPTURE' | 'INITIAL_CAPTURE_SELECT_RING' | 'MOVE_START' | 'MOVE_END' | 'FINAL_CAPTURE' | 'FINAL_CAPTURE_SELECT_RING'
+    private movePhase: 'INITIAL_CAPTURE_SELECT_FIRST' | 'INITIAL_CAPTURE_SELECT_LAST' | 'INITIAL_CAPTURE_SELECT_RING' | 'MOVE_START' | 'MOVE_END' | 'FINAL_CAPTURE_SELECT_FIRST' | 'FINAL_CAPTURE_SELECT_LAST' | 'FINAL_CAPTURE_SELECT_RING'
         = 'MOVE_START';
 
     private moveStart: MGPOptional<Coord> = MGPOptional.empty();
@@ -73,14 +74,15 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
     private initialCaptures: YinshCapture[] = [];
     private finalCaptures: YinshCapture[] = [];
 
-    private captured: Coord[] = [];
+    private possibleCaptures: YinshCapture[] = [];
 
-    private moved: Coord[] = [];
+    private lastMoveCaptured: Coord[] = [];
+    private lastMoveMoved: Coord[] = [];
 
     public viewInfo: ViewInfo = {
         caseInfo: [],
-        possibleCaptures: [],
-        selectableRings: [],
+        selectableCoords: [],
+        selectedCoords: [],
         markerSize: YinshComponent.MARKER_SIZE,
         ringOuterSize: YinshComponent.RING_OUTER_SIZE,
         ringMidSize: YinshComponent.RING_MID_SIZE,
@@ -121,6 +123,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
         this.updateViewInfo();
     }
     public updateViewInfo(): void {
+        console.log('updateViewInfo')
         this.constructedState.hexaBoard.allCoords().forEach((coord: Coord): void => {
             this.viewInfo.caseInfo[coord.y][coord.x].caseClasses = this.getCaseClasses(coord);
             const piece: YinshPiece = this.constructedState.hexaBoard.getAt(coord);
@@ -131,7 +134,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
                 piece === YinshPiece.EMPTY;
             if (pieceRemoved) {
                 this.viewInfo.caseInfo[coord.y][coord.x].removedClass = 'transparent';
-                // pieceToShow = previousPiece;
+                pieceToShow = previousPiece;
             } else {
                 this.viewInfo.caseInfo[coord.y][coord.x].removedClass = '';
             }
@@ -141,23 +144,44 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
         for (const player of [Player.ZERO, Player.ONE]) {
             this.viewInfo.sideRings[player.value] = this.constructedState.sideRings[player.value];
         }
-        if (this.movePhase === 'INITIAL_CAPTURE' || this.movePhase === 'FINAL_CAPTURE') {
-            this.viewInfo.possibleCaptures = this.rules.getPossibleCaptures(this.constructedState);
-            this.viewInfo.selectableRings = [];
-        } else if (this.movePhase === 'INITIAL_CAPTURE_SELECT_RING' || this.movePhase === 'FINAL_CAPTURE_SELECT_RING') {
-            this.viewInfo.possibleCaptures = [];
-            this.viewInfo.selectableRings =
-                this.constructedState.hexaBoard.getRingCoords(this.constructedState.getCurrentPlayer());
-        } else {
-            this.viewInfo.possibleCaptures = [];
-            this.viewInfo.selectableRings = [];
+        switch (this.movePhase) {
+            case 'INITIAL_CAPTURE_SELECT_FIRST':
+            case 'INITIAL_CAPTURE_SELECT_LAST':
+            case 'FINAL_CAPTURE_SELECT_FIRST':
+            case 'FINAL_CAPTURE_SELECT_LAST':
+                this.viewInfo.selectableCoords = [];
+                for (const capture of this.possibleCaptures) {
+                    for (const coord of capture.capturedCases) {
+                        this.viewInfo.selectableCoords.push(coord);
+                    }
+                }
+                break;
+            case 'INITIAL_CAPTURE_SELECT_RING':
+            case 'FINAL_CAPTURE_SELECT_RING':
+                this.viewInfo.selectableCoords =
+                    this.constructedState.hexaBoard.getRingCoords(this.constructedState.getCurrentPlayer());
+                break;
+            case 'MOVE_START':
+                this.viewInfo.selectableCoords =
+                    this.constructedState.hexaBoard.getRingCoords(this.constructedState.getCurrentPlayer());
+                break;
+            default:
+                this.viewInfo.selectableCoords = [];
         }
     }
     private getCaseClasses(coord: Coord): string[] {
-        if (this.captured.some((c: Coord) => c.equals(coord))) {
+        if (this.lastMoveCaptured.some((c: Coord) => c.equals(coord))) {
             return ['captured'];
-        } else if (this.moved.some((c: Coord) => c.equals(coord))) {
+        } else if (this.lastMoveMoved.some((c: Coord) => c.equals(coord))) {
             return ['moved'];
+        } else if (coord.equals(this.moveStart.getOrNull())) {
+            return ['moved'];
+        } else if (coord.equals(this.moveEnd.getOrNull())) {
+            return ['moved'];
+        } else if (this.initialCaptures.some((c: YinshCapture) => c.contains(coord) || c.ringTaken.equals(coord))) {
+            return ['selected'];
+        } else if (this.finalCaptures.some((c: YinshCapture) => c.contains(coord) || c.ringTaken.equals(coord))) {
+            return ['selected'];
         } else {
             return [];
         }
@@ -187,32 +211,32 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
     }
     public cancelMoveAttempt(): void {
         this.constructedState = this.rules.node.gamePartSlice;
-        this.captured = [];
-        this.moved = [];
-
         this.showLastMove();
 
+        this.possibleCaptures = [];
         this.initialCaptures = [];
         this.finalCaptures = [];
+        this.viewInfo.selectedCoords = [];
+        this.lastMoveCaptured = [];
+        this.lastMoveMoved = [];
         this.currentCapture = MGPOptional.empty();
         this.moveStart = MGPOptional.empty();
         this.moveEnd = MGPOptional.empty();
         this.moveToInitialCaptureOrMovePhase();
-        this.updateViewInfo();
     }
     private showLastMove(): void {
         const move: YinshMove = this.rules.node.move;
         if (move !== null) {
             if (move.isInitialPlacement()) {
-                this.moved = [move.start];
+                this.lastMoveMoved = [move.start];
             } else {
-                this.moved = [];
+                this.lastMoveMoved = [];
                 const dir: HexaDirection = HexaDirection.factory.fromMove(move.start, move.end.get()).get();
                 for (let cur: Coord = move.start; !cur.equals(move.end.get()); cur = cur.getNext(dir)) {
                     if (this.constructedState.hexaBoard.getAt(cur) !== YinshPiece.EMPTY) {
-                        this.moved.push(cur);
+                        this.lastMoveMoved.push(cur);
                     }
-                    this.moved.push(move.end.get());
+                    this.lastMoveMoved.push(move.end.get());
                 }
                 move.initialCaptures.forEach((c: YinshCapture) => this.markCapture(c));
                 move.finalCaptures.forEach((c: YinshCapture) => this.markCapture(c));
@@ -221,17 +245,18 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
     }
     private markCapture(capture: YinshCapture): void {
         capture.forEach((coord: Coord) => {
-            this.captured.push(coord);
+            this.lastMoveCaptured.push(coord);
         });
-        this.captured.push(capture.ringTaken);
+        this.lastMoveCaptured.push(capture.ringTaken);
     }
     private moveToInitialCaptureOrMovePhase(): MGPValidation {
-        this.viewInfo.possibleCaptures = this.rules.getPossibleCaptures(this.constructedState);
-        if (this.viewInfo.possibleCaptures.length === 0) {
+        this.possibleCaptures = this.rules.getPossibleCaptures(this.constructedState);
+        if (this.possibleCaptures.length === 0) {
             this.movePhase = 'MOVE_START';
         } else {
-            this.movePhase = 'INITIAL_CAPTURE';
+            this.movePhase = 'INITIAL_CAPTURE_SELECT_FIRST';
         }
+        this.updateViewInfo();
         return MGPValidation.SUCCESS;
     }
     public async onClick(coord: Coord): Promise<MGPValidation> {
@@ -240,9 +265,12 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
             return this.cancelMove(clickValidity.getReason());
         }
         switch (this.movePhase) {
-            case 'INITIAL_CAPTURE':
-            case 'FINAL_CAPTURE':
-                return this.selectCapture(coord);
+            case 'INITIAL_CAPTURE_SELECT_FIRST':
+            case 'FINAL_CAPTURE_SELECT_FIRST':
+                return this.selectCaptureFirstCoord(coord);
+            case 'INITIAL_CAPTURE_SELECT_LAST':
+            case 'FINAL_CAPTURE_SELECT_LAST':
+                return this.selectCaptureLastCoord(coord);
             case 'INITIAL_CAPTURE_SELECT_RING':
             case 'FINAL_CAPTURE_SELECT_RING':
                 return this.selectRing(coord);
@@ -252,37 +280,79 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
                 return this.selectMoveEnd(coord);
         }
     }
-    private async selectCapture(coord: Coord): Promise<MGPValidation> {
+    private async selectCaptureFirstCoord(coord: Coord): Promise<MGPValidation> {
         const captures: YinshCapture[] = [];
-        this.viewInfo.possibleCaptures.forEach((candidate: YinshCapture) => {
+        this.possibleCaptures.forEach((candidate: YinshCapture) => {
             if (candidate.contains(coord)) {
                 captures.push(candidate);
             }
         });
         if (captures.length > 1) {
-            return this.cancelMove(YinshFailure.AMBIGUOUS_CAPTURE_COORD);
+            this.viewInfo.selectedCoords.push(coord);
+            this.moveToCaptureSelectLast(captures);
         } else if (captures.length === 0) {
             return this.cancelMove(YinshFailure.NOT_PART_OF_CAPTURE);
+        } else {
+            this.selectCapture(captures[0]);
         }
-        const capture: YinshCapture = captures[0];
+        return MGPValidation.SUCCESS;
+    }
+    private moveToCaptureSelectLast(possibleCaptures: YinshCapture[]): void {
+        this.viewInfo.selectableCoords = [];
+        for (const capture of possibleCaptures) {
+            for (const coord of capture.capturedCases) {
+                this.viewInfo.selectableCoords.push(coord);
+            }
+        }
+        switch (this.movePhase) {
+            case 'INITIAL_CAPTURE_SELECT_FIRST':
+                this.movePhase = 'INITIAL_CAPTURE_SELECT_LAST';
+                break;
+            case 'FINAL_CAPTURE_SELECT_FIRST':
+                this.movePhase = 'FINAL_CAPTURE_SELECT_LAST';
+                break;
+        }
+    }
+    private async selectCaptureLastCoord(coord: Coord): Promise<MGPValidation> {
+        const captures: YinshCapture[] = [];
+        this.possibleCaptures.forEach((candidate: YinshCapture) => {
+            if (candidate.contains(coord)) {
+                captures.push(candidate);
+            }
+        });
+        if (captures.length === 0) {
+            return this.cancelMove(YinshFailure.NOT_PART_OF_CAPTURE);
+        }
+        assert(captures.length === 1, 'only one capture should remain, otherwise there would be two identical captures');
+        this.selectCapture(captures[0]);
+    }
+    private selectCapture(capture: YinshCapture) {
         this.currentCapture = MGPOptional.of(capture);
         this.constructedState = new YinshGameState(
             this.rules.applyCaptureWithoutTakingRing(this.constructedState, capture),
             this.constructedState.sideRings,
             this.constructedState.turn);
-        this.markCapture(capture);
+        this.markCurrentCapture(capture);
 
         switch (this.movePhase) {
-            case 'INITIAL_CAPTURE':
+            case 'INITIAL_CAPTURE_SELECT_FIRST':
+            case 'INITIAL_CAPTURE_SELECT_LAST':
                 this.movePhase = 'INITIAL_CAPTURE_SELECT_RING';
                 break;
-            case 'FINAL_CAPTURE':
+            case 'FINAL_CAPTURE_SELECT_FIRST':
+            case 'FINAL_CAPTURE_SELECT_LAST':
                 this.movePhase = 'FINAL_CAPTURE_SELECT_RING';
                 break;
         }
         this.updateViewInfo();
         return MGPValidation.SUCCESS;
     }
+    private markCurrentCapture(capture: YinshCapture): void {
+        for (const coord of capture.capturedCases) {
+            this.viewInfo.selectedCoords.push(coord);
+        }
+    }
+
     private async selectRing(coord: Coord): Promise<MGPValidation> {
         const validity: MGPValidation = this.rules.ringSelectionValidity(this.constructedState, coord);
         if (validity.isFailure()) {
@@ -292,24 +362,24 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
         const capture: YinshCapture = this.currentCapture.get().setRingTaken(coord);
         this.currentCapture = MGPOptional.empty();
 
-        this.viewInfo.possibleCaptures = this.rules.getPossibleCaptures(this.constructedState);
+        this.possibleCaptures = this.rules.getPossibleCaptures(this.constructedState);
 
         switch (this.movePhase) {
             case 'INITIAL_CAPTURE_SELECT_RING':
                 this.initialCaptures.push(capture);
-                if (this.viewInfo.possibleCaptures.length === 0) {
+                if (this.possibleCaptures.length === 0) {
                     return this.moveToMovePhase();
                 } else {
-                    this.movePhase = 'INITIAL_CAPTURE';
+                    this.movePhase = 'INITIAL_CAPTURE_SELECT_FIRST';
                     this.updateViewInfo();
                     return MGPValidation.SUCCESS;
                 }
             case 'FINAL_CAPTURE_SELECT_RING':
                 this.finalCaptures.push(capture);
-                if (this.viewInfo.possibleCaptures.length === 0) {
+                if (this.possibleCaptures.length === 0) {
                     return this.tryMove();
                 } else {
-                    this.movePhase = 'FINAL_CAPTURE';
+                    this.movePhase = 'FINAL_CAPTURE_SELECT_FIRST';
                     this.updateViewInfo();
                     return MGPValidation.SUCCESS;
                 }
@@ -342,8 +412,8 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
                 return this.cancelMove(validity.getReason());
             }
             this.moveStart = MGPOptional.of(coord);
-            this.updateViewInfo();
             this.movePhase = 'MOVE_END';
+            this.updateViewInfo();
         }
         return MGPValidation.SUCCESS;
     }
@@ -358,11 +428,13 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
         return this.moveToFinalCapturePhaseOrTryMove();
     }
     private async moveToFinalCapturePhaseOrTryMove(): Promise<MGPValidation> {
-        this.viewInfo.possibleCaptures = this.rules.getPossibleCaptures(this.constructedState);
-        if (this.viewInfo.possibleCaptures.length === 0) {
+        this.possibleCaptures = this.rules.getPossibleCaptures(this.constructedState);
+        console.log('possible captures' + this.possibleCaptures.length);
+        if (this.possibleCaptures.length === 0) {
             return this.tryMove();
         } else {
-            this.movePhase = 'FINAL_CAPTURE';
+            this.movePhase = 'FINAL_CAPTURE_SELECT_FIRST';
+            this.updateViewInfo();
         }
     }
 }

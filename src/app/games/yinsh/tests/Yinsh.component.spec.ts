@@ -497,13 +497,6 @@ describe('YinshComponent', () => {
             const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
             testUtils.setupSlice(state);
 
-            const move: YinshMove =
-                new YinshMove([
-                    YinshCapture.of(new Coord(5, 4), new Coord(1, 8), new Coord(3, 2)),
-                    YinshCapture.of(new Coord(5, 9), new Coord(5, 5), new Coord(3, 3)),
-                ],
-                              new Coord(4, 1), MGPOptional.of(new Coord(4, 2)),
-                              []);
 
             await testUtils.expectClickSuccess('#click_1_8'); // select the second capture
             await testUtils.expectClickSuccess('#click_3_2'); // select the second ring taken

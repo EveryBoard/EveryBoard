@@ -41,24 +41,20 @@
             </g>
         </g>
     </g>
-    <g *ngFor="let capture of viewInfo.possibleCaptures; index as i"
-       id="capture_{{ i }}"
-       pointer-events="fill"
-       class="capturable">
-        <g *ngFor="let case of capture.capturedCases">
-            <polyline [attr.points]="viewInfo.caseInfo[case.y][case.x].coordinates"
-                      (click)="onClick(case)"
-                      class="no-fill"
-                      stroke-linecap="round" />
-        </g>
+    <g *ngFor="let coord of viewInfo.selectableCoords; index as i">
+        <polyline [attr.points]="viewInfo.caseInfo[coord.y][coord.x].coordinates"
+                  id="selectable_{{ i }}"
+                  (click)="onClick(coord)"
+                  pointer-events="fill"
+                  class="base no-fill capturable"
+                  stroke-linecap="round" />
     </g>
-    <g *ngFor="let ring of viewInfo.selectableRings; index as i"
-       pointer-events="fill"
-       class="capturable">
-        <polyline [attr.points]="viewInfo.caseInfo[ring.y][ring.x].coordinates"
-                  id="ring_{{ i }}"
-                  (click)="onClick(ring)"
-                  class="no-fill"
+    <g *ngFor="let coord of viewInfo.selectedCoords; index as i">
+        <polyline [attr.points]="viewInfo.caseInfo[coord.y][coord.x].coordinates"
+                  id="selected_{{ i }}"
+                  (click)="onClick(coord)"
+                  pointer-events="fill"
+                  class="base no-fill selected"
                   stroke-linecap="round" />
     </g>
     <g *ngFor="let player of [0, 1]">
