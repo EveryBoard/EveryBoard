@@ -9,7 +9,6 @@ import { Player } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { assert } from 'src/app/utils/utils';
 import { YinshFailure } from './YinshFailure';
 import { YinshGameState } from './YinshGameState';
 import { YinshLegalityStatus } from './YinshLegalityStatus';
@@ -336,11 +335,13 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
                 captures.push(candidate);
             }
         });
-        if (captures.length === 0) {
+        if (captures.length > 1) {
+            return this.cancelMove(YinshFailure.AMBIGUOUS_CAPTURE_COORD);
+        } else if (captures.length === 0) {
             return this.cancelMove(YinshFailure.NOT_PART_OF_CAPTURE);
+        } else {
+            this.selectCapture(captures[0]);
         }
-        assert(captures.length === 1, 'only one capture should remain, otherwise there would be two identical captures');
-        this.selectCapture(captures[0]);
     }
     private selectCapture(capture: YinshCapture) {
         this.currentCapture = MGPOptional.of(capture);
