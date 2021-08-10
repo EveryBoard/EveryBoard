@@ -3038,6 +3038,38 @@
         <source>You are offline. Log in again to join a game.</source>
         <target>Vous êtes hors ligne. Connectez-vous pour rejoindre une partie.</target>
       </trans-unit>
+      <trans-unit id="682801679843744749" datatype="html">
+        <source><x id="PH" equiv-text="hours"/> hours</source>
+        <target><x id="PH" equiv-text="hours"/> heures</target>
+      </trans-unit>
+      <trans-unit id="5250062810079582285" datatype="html">
+        <source>1 hour</source>
+        <target>1 heure</target>
+      </trans-unit>
+      <trans-unit id="5664431632313592621" datatype="html">
+        <source><x id="PH" equiv-text="minutes"/> minutes</source>
+        <target><x id="PH" equiv-text="minutes"/> minutes</target>
+      </trans-unit>
+      <trans-unit id="5764931367607989415" datatype="html">
+        <source>1 minute</source>
+        <target>1 minute</target>
+      </trans-unit>
+      <trans-unit id="580867446647473930" datatype="html">
+        <source><x id="PH" equiv-text="seconds"/> seconds</source>
+        <target><x id="PH" equiv-text="seconds"/> secondes</target>
+      </trans-unit>
+      <trans-unit id="4999829279268672917" datatype="html">
+        <source>1 second</source>
+        <target>1 second</target>
+      </trans-unit>
+      <trans-unit id="621011316051372308" datatype="html">
+        <source>0 seconds</source>
+        <target>0 seconds</target>
+      </trans-unit>
+      <trans-unit id="5033601776243148314" datatype="html">
+        <source><x id="PH" equiv-text="first"/> and <x id="PH_1" equiv-text="second"/></source>
+        <target><x id="PH" equiv-text="first"/> et <x id="PH_1" equiv-text="second"/></target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

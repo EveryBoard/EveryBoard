@@ -53,7 +53,7 @@
                         *ngIf="moveAttemptMade && stepFinished[stepIndex] === false"
                         (click)="showSolution()"
                         i18n
-                >See solutiong</button>
+                >See solution</button>
                 <div class="select">
                     <select id="steps" (change)="changeStep($event.target.value)">
                         <ng-container *ngFor="let step of steps; index as i">
