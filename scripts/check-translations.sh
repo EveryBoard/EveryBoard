@@ -1,7 +1,16 @@
 #!/bin/sh
-grep "trans-unit id=" translations/messages.xlf > orig.txt
-grep "trans-unit id=" translations/messages.fr.xlf > new.txt
-diff orig.txt new.txt
+grep "trans-unit id=" translations/messages.xlf | sort > orig.txt
+grep "trans-unit id=" translations/messages.fr.xlf | sort > new.txt
+echo 'Only in messages.xlf (new translations to add)'
+for id in $(diff orig.txt new.txt | grep '^<' | sed 's/.*id="\(.*\)" .*/\1/'); do
+    grep "$id" translations/messages.xlf -A1
+done
+echo '--------------------'
+echo 'Only in messages.fr.xlf (old translations to remove)'
+for id in $(diff orig.txt new.txt | grep '^>' | sed 's/.*id="\(.*\)" .*/\1/'); do
+    grep "$id" translations/messages.fr.xlf -A1
+done
+echo '--------------------'
 rm -f orig.txt new.txt
 
 SOURCES=$(grep "<source>" translations/messages.fr.xlf | wc -l)
