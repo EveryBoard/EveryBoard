@@ -17,6 +17,7 @@ describe('YinshComponent', () => {
     const a: YinshPiece = YinshPiece.MARKER_ZERO;
     const b: YinshPiece = YinshPiece.MARKER_ONE;
     const A: YinshPiece = YinshPiece.RING_ZERO;
+    const B: YinshPiece = YinshPiece.RING_ONE;
 
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<YinshComponent>('Yinsh');
@@ -485,7 +486,37 @@ describe('YinshComponent', () => {
             await testUtils.expectClickSuccess('#click_3_7'); // Select second capture
             await testUtils.expectMoveSuccess('#click_5_2', move); // Take another ring
         }));
-        it('should support specific two captures scenario', fakeAsync(async() => {
+        it('should allow moves with two final captures, when selecting ambiguous coord first', fakeAsync(async() => {
+            const board: YinshBoard = YinshBoard.of([
+                [N, N, N, N, N, N, _, _, _, _, N],
+                [N, N, N, N, _, _, _, _, _, _, _],
+                [N, N, N, a, A, A, _, _, _, _, _],
+                [N, N, _, A, _, _, _, _, _, _, _],
+                [N, _, _, b, _, _, _, _, _, _, _],
+                [N, _, _, b, _, _, _, _, _, _, N],
+                [_, _, _, b, _, _, _, _, _, _, N],
+                [_, _, _, b, a, a, a, a, _, N, N],
+                [_, _, _, _, _, _, _, _, N, N, N],
+                [_, _, _, _, _, _, _, N, N, N, N],
+                [N, _, _, _, _, N, N, N, N, N, N],
+            ]);
+            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            testUtils.setupSlice(state);
+
+            const move: YinshMove =
+                new YinshMove([],
+                              new Coord(3, 3), MGPOptional.of(new Coord(3, 8)),
+                              [
+                                  YinshCapture.of(new Coord(3, 3), new Coord(3, 7), new Coord(4, 2)),
+                              ]);
+
+            await testUtils.expectClickSuccess('#click_3_3'); // Select the ring
+            await testUtils.expectClickSuccess('#click_3_8'); // Move it
+            await testUtils.expectClickSuccess('#click_3_7'); // Select first capture, first coord
+            await testUtils.expectClickSuccess('#click_3_3'); // select first capture, second coord
+            await testUtils.expectMoveSuccess('#click_4_2', move); // Take a ring
+        }));
+        it('should allow selecting ambiguous captures with two clicks', fakeAsync(async() => {
             const board: YinshBoard = YinshBoard.of([
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, A, _, _, _, _, _, _],
@@ -504,26 +535,76 @@ describe('YinshComponent', () => {
 
             const move: YinshMove =
                 new YinshMove([
-                    YinshCapture.of(new Coord(5, 4), new Coord(1, 8), new Coord(3, 2)),
-                    YinshCapture.of(new Coord(5, 9), new Coord(5, 5), new Coord(3, 3)),
+                    YinshCapture.of(new Coord(5, 4), new Coord(5, 8), new Coord(3, 2)),
                 ],
                               new Coord(4, 1), MGPOptional.of(new Coord(4, 2)),
                               []);
 
-            await testUtils.expectClickSuccess('#click_1_8'); // select the second capture
-            await testUtils.expectClickSuccess('#click_3_2'); // select the second ring taken
-            await testUtils.expectClickSuccess('#click_5_9'); // select the first capture
-            await testUtils.expectClickSuccess('#click_3_3'); // select the first ring taken
+            await testUtils.expectClickSuccess('#click_5_4'); // select first capture coord
+            await testUtils.expectClickSuccess('#click_5_5'); // select second capture coord
+            await testUtils.expectClickSuccess('#click_3_2'); // select the first ring taken
             await testUtils.expectClickSuccess('#click_4_1'); // select ring to move
             await testUtils.expectMoveSuccess('#click_4_2', move); // move the ring
+        }));
+        it('should cancel move when second ambiguous capture click is invalid', fakeAsync(async() => {
+            const board: YinshBoard = YinshBoard.of([
+                [N, N, N, N, N, N, _, _, _, _, N],
+                [N, N, N, N, A, _, _, _, _, _, _],
+                [N, N, N, A, _, _, _, _, _, _, _],
+                [N, N, _, A, _, _, _, _, _, _, _],
+                [N, _, _, _, _, a, _, _, _, _, _],
+                [N, _, _, _, a, a, _, _, _, _, N],
+                [_, _, _, a, _, a, _, _, _, _, N],
+                [_, _, a, _, _, a, _, _, _, N, N],
+                [_, a, _, _, _, a, _, _, N, N, N],
+                [_, _, _, _, _, a, _, N, N, N, N],
+                [N, _, _, _, _, N, N, N, N, N, N],
+            ]);
+            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            testUtils.setupSlice(state);
 
-            // This works:
-            // await testUtils.expectClickSuccess('#click_5_9'); // select the first capture
-            // await testUtils.expectClickSuccess('#click_3_3'); // select the first ring taken
-            // await testUtils.expectClickSuccess('#click_5_4'); // select the second capture
-            // await testUtils.expectClickSuccess('#click_3_2'); // select the second ring taken
-            // await testUtils.expectClickSuccess('#click_4_1'); // select ring to move
-            // await testUtils.expectMoveSuccess('#click_4_2', move); // move the ring
+            await testUtils.expectClickSuccess('#click_5_4'); // select first capture coord
+            await testUtils.expectClickFailure('#click_6_8', YinshFailure.NOT_PART_OF_CAPTURE); // select second capture coord
+        }));
+        it('should make pieces captured at the last turn disappear upon first player action', fakeAsync(async() => {
+            const board: YinshBoard = YinshBoard.of([
+                [N, N, N, N, N, N, _, _, _, _, N],
+                [N, N, N, N, _, _, _, _, _, _, _],
+                [N, N, N, A, A, B, _, _, _, _, _],
+                [N, N, _, a, _, _, _, _, _, _, _],
+                [N, _, _, a, _, _, _, _, _, _, _],
+                [N, _, _, a, _, _, _, _, _, _, N],
+                [_, _, _, a, _, _, _, _, _, _, N],
+                [_, _, _, a, _, _, _, _, _, N, N],
+                [_, _, _, _, _, _, _, _, N, N, N],
+                [_, _, _, _, _, _, _, N, N, N, N],
+                [N, _, _, _, _, N, N, N, N, N, N],
+            ]);
+            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            testUtils.setupSlice(state);
+
+            const move: YinshMove =
+                new YinshMove([YinshCapture.of(new Coord(3, 3), new Coord(3, 7), new Coord(3, 2))],
+                              new Coord(4, 2), MGPOptional.of(new Coord(4, 3)),
+                              []);
+
+            await testUtils.expectClickSuccess('#click_3_3'); // capture
+            await testUtils.expectClickSuccess('#click_3_2'); // take ring
+            await testUtils.expectClickSuccess('#click_4_2'); // move start
+            await testUtils.expectMoveSuccess('#click_4_3', move); // move end
+
+            testUtils.expectElementToExist('#marker_3_3');
+            testUtils.expectElementToHaveClass('#pieceGroup_3_3', 'transparent');
+            testUtils.expectElementToExist('#ring_3_2');
+            testUtils.expectElementToHaveClass('#pieceGroup_3_2', 'transparent');
+
+            await testUtils.expectClickSuccess('#click_5_2'); // move start, other player
+
+            testUtils.expectElementNotToExist('#marker_3_3');
+            testUtils.expectElementNotToHaveClass('#pieceGroup_3_3', 'transparent');
+            testUtils.expectElementNotToExist('#ring_3_2');
+            testUtils.expectElementNotToHaveClass('#pieceGroup_3_2', 'transparent');
+
         }));
     });
 });

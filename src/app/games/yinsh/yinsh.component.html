@@ -12,7 +12,8 @@
                           [ngClass]="caseInfo.caseClasses"
                           class="base"
                           stroke-linecap="round"/>
-                <g [ngClass]="caseInfo.removedClass">
+                <g id="pieceGroup_{{ x }}_{{ y }}"
+                    [ngClass]="caseInfo.removedClass" >
                     <circle *ngIf="caseInfo.isRing"
                             [attr.cx]="caseInfo.center.x"
                             [attr.cy]="caseInfo.center.y"

@@ -15,6 +15,12 @@ const A: YinshPiece = YinshPiece.RING_ZERO;
 const b: YinshPiece = YinshPiece.MARKER_ONE;
 const B: YinshPiece = YinshPiece.RING_ONE;
 
+export class YinshTutorialMessages {
+    public static readonly MUST_ALIGN_FIVE: string = $localize`Raté ! Vous devez aligner 5 marqueurs pour pouvoir les récupérer et prendre un anneau par la même occasion.`;
+
+    public static readonly MUST_CAPTURE_TWO: string = $localize`Raté ! Vous pouvez capturer deux anneaux en tout, en procédant à deux captures de 5 de vos marqueurs. Réessayez.`;
+}
+
 export const yinshTutorial: DidacticialStep[] = [
     DidacticialStep.informational(
         $localize`But du jeu`,
@@ -97,7 +103,7 @@ export const yinshTutorial: DidacticialStep[] = [
             if (resultingState.sideRings[Player.ZERO.value] === 1) {
                 return MGPValidation.SUCCESS;
             } else {
-                return MGPValidation.failure($localize`Raté ! Vous devez aligner 5 marqueurs pour pouvoir les récupérer et prendre un anneau par la même occasion.`);
+                return MGPValidation.failure(YinshTutorialMessages.MUST_ALIGN_FIVE);
             }
         },
         $localize`Bravo !`),
@@ -130,7 +136,7 @@ export const yinshTutorial: DidacticialStep[] = [
             if (resultingState.sideRings[Player.ZERO.value] === 2) {
                 return MGPValidation.SUCCESS;
             } else {
-                return MGPValidation.failure($localize`Raté ! Vous pouvez capturer deux anneaux en tout, en procédant à deux captures de 5 de vos marqueurs. Réessayez.`);
+                return MGPValidation.failure(YinshTutorialMessages.MUST_CAPTURE_TWO);
             }
         },
         $localize`Bravo !`),
