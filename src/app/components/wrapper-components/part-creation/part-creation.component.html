@@ -100,9 +100,9 @@
                 <div class="field">
                     <label class="label">Adversaire</label>
                     <div class="control">
-                        <div *ngIf="viewInfo.candidates.length === 0 else chooseCandidate" i18n>
-                            Potential opponents that join the game will appear here.<br/>
-                            Wait for an opponent to join, so that you can pick one.
+                        <div *ngIf="viewInfo.candidates.length === 0 else chooseCandidate" i18n
+                        >Potential opponents that join the game will appear here.<br/>
+                         Wait for an opponent to join, so that you can pick one.
                         </div>
                         <ng-template #chooseCandidate>
                             <ng-container i18n>Click on the opponent against which you would like to play.</ng-container>
@@ -163,36 +163,28 @@
             <div class="message-body">
                 <div *ngIf="viewInfo.creatorIsModifyingConfig else configProposal"
                      class="content">
-                    <p i18n>
-                        You have been selected as the opponent.<br/>
-                        {{ viewInfo.creator }} is modifying the configuration.
-                    </p>
+                    <p i18n>You have been selected as the opponent.<br/>
+                        {{ viewInfo.creator }} is modifying the configuration.</p>
                 </div>
                 <ng-template #configProposal>
                     <div class="content">
-                        <p i18n>
-                            {{ viewInfo.creator }} proposes to play a {{ viewInfo.partTypeName }} game
-                        </p>
+                        <p i18n>{{ viewInfo.creator }} proposes to play a {{ viewInfo.partTypeName }} game</p>
                         <ul>
                             <li>
-                                <span *ngIf="viewInfo.firstPlayer === 'CREATOR'" i18n>
-                                    {{ viewInfo.creator }} plays first
-                                </span>
-                                <span *ngIf="viewInfo.firstPlayer === 'CHOSEN_PLAYER'" i18n>
-                                    you play first
-                                </span>
-                                <span *ngIf="viewInfo.firstPlayer === 'RANDOM'" i18n>
-                                    the first player is selected randomly
-                                </span>
+                                <span *ngIf="viewInfo.firstPlayer === 'CREATOR'" i18n
+                                >{{ viewInfo.creator }} plays first</span>
+                                <span *ngIf="viewInfo.firstPlayer === 'CHOSEN_PLAYER'" i18n
+                                >you play first</span>
+                                <span *ngIf="viewInfo.firstPlayer === 'RANDOM'" i18n
+                                >the first player is selected randomly</span>
                             </li>
                             <li><ng-container i18n>a turn lasts at most </ng-container><strong>{{ viewInfo.maximalMoveDuration | humanDuration }} </strong></li>
                             <li><ng-container i18n>the game lasts at most </ng-container><strong>{{ viewInfo.totalPartDuration | humanDuration }} <ng-container i18n>per player</ng-container></strong></li>
                         </ul>
                         <button class="button is-primary"
                                 (click)="acceptConfig()"
-                                id="acceptConfig" i18n>
-                            Accept and start
-                        </button>
+                                id="acceptConfig" i18n
+                        >Accept and start</button>
                     </div>
                 </ng-template>
             </div>

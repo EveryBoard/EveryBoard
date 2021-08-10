@@ -78,22 +78,19 @@
                     *ngIf="endGame === false && compo.canPass"
                     class="button is-primary is-fullwidth mb-1"
                     (click)="compo.pass()"
-                    i18n>
-                Pass a turn
-            </button>
+                    i18n
+            >Pass a turn</button>
             <button id="takeBack"
                     *ngIf="canTakeBack()"
                     class="button is-fullwidth mb-1"
                     (click)="takeBack()"
-                    i18n>
-                Take back move
-            </button>
+                    i18n
+            >Take back move</button>
             <button id="restartButton"
                     class="button is-fullwidth"
                     (click)="restartGame()"
-                    i18n>
-                Restart game
-            </button>
+                    i18n
+            >Restart game</button>
         </div>
 
     </div>

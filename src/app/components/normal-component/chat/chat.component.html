@@ -3,8 +3,8 @@
     <button id="switchChatVisibilityButton"
             class="button"
             (click)="switchChatVisibility()">
-        <ng-container *ngIf="visible else showChat" i18n>Hide the chat</ng-container>
-        <ng-template #showChat i18n>Show the chat</ng-template> ({{ this.unreadMessages }}<ng-container i18n> new message(s)</ng-container>)
+        <ng-container *ngIf="visible else showChat" i18n>Hide the chat ({{ this.unreadMessages }} new message(s))</ng-container>
+        <ng-template #showChat i18n>Show the chat ({{ this.unreadMessages }} new message(s))</ng-template>
     </button>
 
     <form id="chatForm" *ngIf="visible" class="example-form" >

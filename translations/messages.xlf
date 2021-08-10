@@ -2,23 +2,20 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en-US" datatype="plaintext" original="ng2.template">
     <body>
-      <trans-unit id="3155002290360228820" datatype="html">
-        <source> new message(s)</source>
-      </trans-unit>
-      <trans-unit id="1751150729580195894" datatype="html">
-        <source>Hide the chat</source>
-      </trans-unit>
-      <trans-unit id="6533429457965416136" datatype="html">
-        <source>Show the chat</source>
+      <trans-unit id="2576375399155055140" datatype="html">
+        <source>Show the chat (<x id="INTERPOLATION" equiv-text="{{ this.unreadMessages }}"/> new message(s))</source>
       </trans-unit>
       <trans-unit id="3360522039608797847" datatype="html">
         <source>Enter your message here</source>
       </trans-unit>
-      <trans-unit id="8357348345728938526" datatype="html">
-        <source>You must be logged in to see the chat.</source>
-      </trans-unit>
       <trans-unit id="5287653220942723084" datatype="html">
         <source>Be polite.</source>
+      </trans-unit>
+      <trans-unit id="8426135601531729112" datatype="html">
+        <source>Hide the chat (<x id="INTERPOLATION" equiv-text="{{ this.unreadMessages }}"/> new message(s))</source>
+      </trans-unit>
+      <trans-unit id="8357348345728938526" datatype="html">
+        <source>You must be logged in to see the chat.</source>
       </trans-unit>
       <trans-unit id="2449879448191193445" datatype="html">
         <source>Successfully signed up</source>
@@ -50,8 +47,8 @@
       <trans-unit id="7028204981963450021" datatype="html">
         <source>Sign up</source>
       </trans-unit>
-      <trans-unit id="2715185765061607307" datatype="html">
-        <source> Log in </source>
+      <trans-unit id="2336550011721758066" datatype="html">
+        <source>Log in</source>
       </trans-unit>
       <trans-unit id="4768749765465246664" datatype="html">
         <source>Email</source>
@@ -64,9 +61,6 @@
       </trans-unit>
       <trans-unit id="77522255637065336" datatype="html">
         <source>Connection error</source>
-      </trans-unit>
-      <trans-unit id="2336550011721758066" datatype="html">
-        <source>Log in</source>
       </trans-unit>
       <trans-unit id="3119050750831891643" datatype="html">
         <source>This password is incorrect.</source>
@@ -83,8 +77,8 @@
       <trans-unit id="8999284073934392732" datatype="html">
         <source>Login with Google</source>
       </trans-unit>
-      <trans-unit id="7762039054063004692" datatype="html">
-        <source> The replay game is loading, please wait, it should not take long.</source>
+      <trans-unit id="9174277760900546944" datatype="html">
+        <source>ycThe replay game is loading, please wait, it should not take long.</source>
       </trans-unit>
       <trans-unit id="5120671221766405888" datatype="html">
         <source>Game does not exist</source>
@@ -92,8 +86,8 @@
       <trans-unit id="5769704000858519890" datatype="html">
         <source>The game you tried to join does not exist anymore.</source>
       </trans-unit>
-      <trans-unit id="2282880173884549212" datatype="html">
-        <source> Create an online game</source>
+      <trans-unit id="2009811124619716606" datatype="html">
+        <source>Create an online game</source>
       </trans-unit>
       <trans-unit id="5561648955936795459" datatype="html">
         <source>Use simple mechanics to push 6 of the opponent&apos;s pieces out of the board!</source>
@@ -221,17 +215,11 @@
       <trans-unit id="5674286808255988565" datatype="html">
         <source>Create</source>
       </trans-unit>
-      <trans-unit id="2009811124619716606" datatype="html">
-        <source>Create an online game</source>
-      </trans-unit>
       <trans-unit id="325889877575115737" datatype="html">
         <source>Connected users :</source>
       </trans-unit>
       <trans-unit id="689957366051097321" datatype="html">
         <source>Waiting for opponent</source>
-      </trans-unit>
-      <trans-unit id="179005581298290550" datatype="html">
-        <source> Learn the rules</source>
       </trans-unit>
       <trans-unit id="7079545056368231407" datatype="html">
         <source>See the game list</source>
@@ -242,11 +230,11 @@
       <trans-unit id="6899134966533859260" datatype="html">
         <source>Learn</source>
       </trans-unit>
-      <trans-unit id="4626939509035677878" datatype="html">
-        <source> AwesomBoard </source>
+      <trans-unit id="3318133641595899163" datatype="html">
+        <source>AwesomBoard</source>
       </trans-unit>
-      <trans-unit id="8728202368025201849" datatype="html">
-        <source> AwesomBoard is a website to play and learn the rules of various abstract strategy games with perfect information.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Such games are games that do not include any randomness, agility, or hidden information. These games are played by two players, turn by turn. </source>
+      <trans-unit id="3620319853901130962" datatype="html">
+        <source>AwesomBoard is a website to play and learn the rules of various abstract strategy games with perfect information.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Such games are games that do not include any randomness, agility, or hidden information. These games are played by two players, turn by turn.</source>
       </trans-unit>
       <trans-unit id="4005579048990110948" datatype="html">
         <source>It is not your turn.</source>
@@ -254,8 +242,8 @@
       <trans-unit id="4691729121764741641" datatype="html">
         <source>You cannot clone a game. This feature might be implemented later.</source>
       </trans-unit>
-      <trans-unit id="6976459996912108024" datatype="html">
-        <source>Game is finished.</source>
+      <trans-unit id="3568920234618711065" datatype="html">
+        <source>The game has ended.</source>
       </trans-unit>
       <trans-unit id="7800061171704298797" datatype="html">
         <source>Human</source>
@@ -275,14 +263,14 @@
       <trans-unit id="8647687729200262691" datatype="html">
         <source>Draw</source>
       </trans-unit>
-      <trans-unit id="208845294817677439" datatype="html">
-        <source> Restart game </source>
+      <trans-unit id="7454523699659209073" datatype="html">
+        <source>Restart game</source>
       </trans-unit>
-      <trans-unit id="6980197840325276209" datatype="html">
-        <source> Pass a turn </source>
+      <trans-unit id="6267418979719843573" datatype="html">
+        <source>Pass a turn</source>
       </trans-unit>
-      <trans-unit id="1541946220573817384" datatype="html">
-        <source> Take back move </source>
+      <trans-unit id="6128115494237258310" datatype="html">
+        <source>Take back move</source>
       </trans-unit>
       <trans-unit id="1944212987695444934" datatype="html">
         <source>Turn n°<x id="INTERPOLATION" equiv-text="{{ compo.rules.node.gamePartSlice.turn + 1 }}"/></source>
@@ -290,29 +278,29 @@
       <trans-unit id="5675185658977082941" datatype="html">
         <source>Player <x id="PH" equiv-text="gameStatus.winner.value + 1"/></source>
       </trans-unit>
-      <trans-unit id="515727987845404926" datatype="html">
-        <source> It is your turn. </source>
+      <trans-unit id="5468318552081538104" datatype="html">
+        <source>It is your turn.</source>
       </trans-unit>
-      <trans-unit id="1992339978981826120" datatype="html">
-        <source> It is <x id="INTERPOLATION" equiv-text="{{ currentPlayer }}"/>&apos;s turn. </source>
+      <trans-unit id="3724541577412345595" datatype="html">
+        <source>It is <x id="INTERPOLATION" equiv-text="{{ currentPlayer }}"/>&apos;s turn.</source>
       </trans-unit>
-      <trans-unit id="5217544685559946950" datatype="html">
-        <source> Resign </source>
+      <trans-unit id="3492340771384313804" datatype="html">
+        <source>Resign</source>
       </trans-unit>
-      <trans-unit id="4084373978972803762" datatype="html">
-        <source> Propose a draw </source>
+      <trans-unit id="5705819340084039896" datatype="html">
+        <source>Propose a draw</source>
       </trans-unit>
-      <trans-unit id="772509734777361990" datatype="html">
-        <source> Accept draw </source>
+      <trans-unit id="1567596634391812351" datatype="html">
+        <source>Accept draw</source>
       </trans-unit>
-      <trans-unit id="2984356495884926241" datatype="html">
-        <source> Reject draw </source>
+      <trans-unit id="2010898711320853661" datatype="html">
+        <source>Reject draw</source>
       </trans-unit>
-      <trans-unit id="101333213054798052" datatype="html">
-        <source> Accept take back </source>
+      <trans-unit id="789643613466585719" datatype="html">
+        <source>Accept take back</source>
       </trans-unit>
-      <trans-unit id="719941689314037005" datatype="html">
-        <source> Reject take back </source>
+      <trans-unit id="762521529756212572" datatype="html">
+        <source>Reject take back</source>
       </trans-unit>
       <trans-unit id="1601597703777069856" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser() }}"/> has reached their time limit. You won.</source>
@@ -320,32 +308,32 @@
       <trans-unit id="7814033294193818165" datatype="html">
         <source>You reached your time limit.</source>
       </trans-unit>
-      <trans-unit id="2658606681190400847" datatype="html">
-        <source> Ask to take back one move </source>
-      </trans-unit>
       <trans-unit id="2826140657122926749" datatype="html">
         <source>You resigned.</source>
+      </trans-unit>
+      <trans-unit id="7003355968351203755" datatype="html">
+        <source>Ask to take back one move</source>
       </trans-unit>
       <trans-unit id="2324913504104154958" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser() }}"/> has reached their time limit.</source>
       </trans-unit>
-      <trans-unit id="1913653344423124733" datatype="html">
-        <source> Go back to server </source>
+      <trans-unit id="5706398654268785342" datatype="html">
+        <source>Go back to server </source>
       </trans-unit>
       <trans-unit id="7250880851290385128" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser() }}"/> has resigned.</source>
       </trans-unit>
-      <trans-unit id="1327264446321721454" datatype="html">
-        <source> Propose to replay the game </source>
+      <trans-unit id="7006304707738759406" datatype="html">
+        <source>Propose to replay the game </source>
       </trans-unit>
       <trans-unit id="7815479892408473764" datatype="html">
         <source>You won.</source>
       </trans-unit>
+      <trans-unit id="1089315770473394667" datatype="html">
+        <source>Accept to replay the game </source>
+      </trans-unit>
       <trans-unit id="860662988722297223" datatype="html">
         <source>You lost.</source>
-      </trans-unit>
-      <trans-unit id="4077326990043792033" datatype="html">
-        <source> Accept to replay the game </source>
       </trans-unit>
       <trans-unit id="6165538570244502951" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ currentPart.getWinner() }}"/> won.</source>
@@ -374,23 +362,23 @@
       <trans-unit id="4046928906081232002" datatype="html">
         <source>Configuration proposal</source>
       </trans-unit>
-      <trans-unit id="5261715006592223294" datatype="html">
-        <source> <x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> proposes to play a <x id="INTERPOLATION_1" equiv-text="{{ viewInfo.partTypeName }}"/> game </source>
+      <trans-unit id="6747612030990351046" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> proposes to play a <x id="INTERPOLATION_1" equiv-text="{{ viewInfo.partTypeName }}"/> game</source>
       </trans-unit>
-      <trans-unit id="3962623157898068441" datatype="html">
-        <source> You have been selected as the opponent.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> <x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> is modifying the configuration. </source>
+      <trans-unit id="7416818230860591701" datatype="html">
+        <source>You have been selected as the opponent.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> <x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> is modifying the configuration.</source>
       </trans-unit>
       <trans-unit id="8910936652326773097" datatype="html">
         <source>a turn lasts at most </source>
       </trans-unit>
-      <trans-unit id="8575796229050083313" datatype="html">
-        <source> you play first </source>
+      <trans-unit id="8496859383343230204" datatype="html">
+        <source>you play first</source>
       </trans-unit>
       <trans-unit id="4100836436246650741" datatype="html">
         <source>the game lasts at most </source>
       </trans-unit>
-      <trans-unit id="8167093974081050219" datatype="html">
-        <source> the first player is selected randomly </source>
+      <trans-unit id="8194858011161710862" datatype="html">
+        <source>the first player is selected randomly</source>
       </trans-unit>
       <trans-unit id="5176672264547312712" datatype="html">
         <source>per player</source>
@@ -398,8 +386,8 @@
       <trans-unit id="7265061399015519876" datatype="html">
         <source>One moment...</source>
       </trans-unit>
-      <trans-unit id="54097432341676457" datatype="html">
-        <source> Accept and start </source>
+      <trans-unit id="1012784993066568401" datatype="html">
+        <source>Accept and start</source>
       </trans-unit>
       <trans-unit id="4218388977213486334" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> has proposed a configuration to <x id="INTERPOLATION_1" equiv-text="{{ viewInfo.chosenOpponent }}"/>.</source>
@@ -407,8 +395,8 @@
       <trans-unit id="5068486659312004369" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> is configuring the game.</source>
       </trans-unit>
-      <trans-unit id="6855081011526391729" datatype="html">
-        <source> <x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> plays first </source>
+      <trans-unit id="7215535622740824911" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> plays first</source>
       </trans-unit>
       <trans-unit id="353130366888208691" datatype="html">
         <source>Game creation</source>
@@ -464,8 +452,8 @@
       <trans-unit id="3852843717175527075" datatype="html">
         <source>The game has been canceled!</source>
       </trans-unit>
-      <trans-unit id="3474603094089099622" datatype="html">
-        <source> Potential opponents that join the game will appear here.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Wait for an opponent to join, so that you can pick one. </source>
+      <trans-unit id="3550072303786290583" datatype="html">
+        <source>Potential opponents that join the game will appear here.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Wait for an opponent to join, so that you can pick one. </source>
       </trans-unit>
       <trans-unit id="7137133530752645682" datatype="html">
         <source><x id="PH" equiv-text="userPseudo"/> left the game, please pick another opponent.</source>
@@ -482,8 +470,8 @@
       <trans-unit id="6439401135646542284" datatype="html">
         <source>Failure</source>
       </trans-unit>
-      <trans-unit id="5717355661357017349" datatype="html">
-        <source> Try again </source>
+      <trans-unit id="6650633628037596693" datatype="html">
+        <source>Try again</source>
       </trans-unit>
       <trans-unit id="8720977247725652816" datatype="html">
         <source>Ok</source>
@@ -497,8 +485,8 @@
       <trans-unit id="7757774343229747209" datatype="html">
         <source>Play locally</source>
       </trans-unit>
-      <trans-unit id="562381694553808783" datatype="html">
-        <source> See solution </source>
+      <trans-unit id="6620520011512200697" datatype="html">
+        <source>See solution</source>
       </trans-unit>
       <trans-unit id="6050846802280051862" datatype="html">
         <source>You cannot move more than 3 of your pieces!</source>

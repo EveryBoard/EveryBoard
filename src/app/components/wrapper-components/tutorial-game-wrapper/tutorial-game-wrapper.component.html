@@ -15,9 +15,8 @@
                         class="button mr-3"
                         *ngIf="tutorialOver === false && ((stepFinished && stepFinished[stepIndex] === true) || moveAttemptMade)"
                         (click)="retry()"
-                        i18n>
-                    Try again
-                </button>
+                        i18n
+                >Try again</button>
                 <button id="nextButton"
                         class="button is-primary mr-3 mb-1"
                         *ngIf="tutorialOver === false"
@@ -35,9 +34,8 @@
                         class="button"
                         *ngIf="tutorialOver"
                         (click)="start()"
-                        i18n>
-                    Try again
-                </button>
+                        i18n
+                >Try again</button>
                 <button id="playLocallyButton"
                         class="button"
                         *ngIf="tutorialOver"
@@ -54,9 +52,8 @@
                         class="button"
                         *ngIf="moveAttemptMade && stepFinished[stepIndex] === false"
                         (click)="showSolution()"
-                        i18n>
-                    See solution
-                </button>
+                        i18n
+                >See solutiong</button>
                 <div class="select">
                     <select id="steps" (change)="changeStep($event.target.value)">
                         <ng-container *ngFor="let step of steps; index as i">

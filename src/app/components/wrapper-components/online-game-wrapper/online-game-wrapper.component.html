@@ -13,12 +13,10 @@
             <div class="block" id="turnIndicator" *ngIf="currentPart">
                 <p class="subtitle" i18n>Turn n° {{ currentPart.getTurn() + 1 }}</p>
                 <p class="subtitle" id="currentPlayerIndicator" *ngIf="endGame === false">
-                    <ng-container *ngIf="currentPlayer === userName else opponentsTurn" i18n>
-                        It is your turn.
-                    </ng-container>
-                    <ng-template #opponentsTurn i18n>
-                        It is {{ currentPlayer }}'s turn.
-                    </ng-template>
+                    <ng-container *ngIf="currentPlayer === userName else opponentsTurn" i18n
+                    >It is your turn.</ng-container>
+                    <ng-template #opponentsTurn i18n
+                    >It is {{ currentPlayer }}'s turn.</ng-template>
                 </p>
             </div>
             <div class="block" *ngIf="players">
@@ -55,59 +53,51 @@
                     id="resignButton"
                     *ngIf="canResign()"
                     (click)="resign()"
-                    i18n>
-                Resign
-            </button>
+                    i18n
+            >Resign</button>
             <button class="button is-fullwidth mb-1"
                     id="proposeDrawButton"
                     *ngIf="canProposeDraw()"
                     (click)="proposeDraw()"
-                    i18n>
-                Propose a draw
-            </button>
+                    i18n
+            >Propose a draw</button>
             <button class="button is-warning is-fullwidht mb-1"
                     *ngIf="endGame === false && isOpponentWaitingForDrawResponse()"
                     id="acceptDrawButton"
                     (click)="acceptDraw()"
-                    i18n>
-                Accept draw
-            </button>
+                    i18n
+            >Accept draw</button>
             <button class="button is-warning is-fullwidht mb-1"
                     *ngIf="endGame === false && isOpponentWaitingForDrawResponse()"
                     id="refuseDrawButton"
                     (click)="refuseDraw()"
-                    i18n>
-                Reject draw
-            </button>
+                    i18n
+            >Reject draw</button>
             <button class="button is-fullwidth mb-1"
                     *ngIf="endGame === false && isPlaying() && compo.canPass && (currentPlayer===userName)"
                     id="passButton"
                     (click)="compo.pass()"
-                    i18n>
-                Pass a turn
-            </button>
+                    i18n
+            >Pass a turn</button>
             <button class="button is-warning is-fullwidth mb-1"
                     *ngIf="endGame === false && isOpponentWaitingForTakeBackResponse()"
                     id="acceptTakeBackButton"
                     (click)="acceptTakeBack()"
-                    i18n>
-                Accept take back
-            </button>
+                    i18n
+            >Accept take back</button>
             <button class="button is-warning is-fullwidth mb-1"
                     *ngIf="endGame === false && isOpponentWaitingForTakeBackResponse()"
                     color="warn"
                     id="refuseTakeBackButton"
                     (click)="refuseTakeBack()"
-                    i18n>
-                Reject take back
-            </button>
+                    i18n
+            >Reject take back</button>
             <button class="button is-fullwidth"
                     *ngIf="endGame === false && isOpponentWaitingForTakeBackResponse() === false && canAskTakeBack()"
                     id="askTakeBackButton"
                     (click)="askTakeBack()"
-                    i18n>
-                Ask to take back one move
-            </button>
+                    i18n
+            >Ask to take back one move</button>
             <div class="block" id="winnerIndicator" *ngIf="endGame">
                 <hr/>
                 <div *ngIf="currentPart.isDraw()">
@@ -135,22 +125,22 @@
                     *ngIf="endGame"
                     id="backToServerButton"
                     routerLink="server"
-                    i18n>
-                Go back to server
+                    i18n
+            >Go back to server
             </button>
             <button id="proposeRematchButton"
                     class="button is-fullwidth mb-1"
                     *ngIf="endGame && isPlaying() && rematchProposed === false"
                     (click)="proposeRematch()"
-                    i18n>
-                Propose to replay the game
+                    i18n
+            >Propose to replay the game
             </button>
             <button class="button is-fullwidth is-warning"
                     id="acceptRematchButton"
                     *ngIf="endGame && isPlaying() && rematchProposed && opponentProposedRematch"
                     (click)="acceptRematch()"
-                    i18n>
-                Accept to replay the game
+                    i18n
+             >Accept to replay the game
             </button>
         </div>
     </div>

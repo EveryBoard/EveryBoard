@@ -106,7 +106,7 @@ export abstract class GameWrapper {
             return MGPValidation.failure(GameWrapperMessages.NOT_YOUR_TURN);
         }
         if (this.endGame) {
-            return MGPValidation.failure($localize`Game is finished.`);
+            return MGPValidation.failure($localize`The game has ended.`);
         }
         const legality: LegalityStatus = this.gameComponent.rules.isLegal(move, slice);
         if (legality.legal.isFailure()) {
