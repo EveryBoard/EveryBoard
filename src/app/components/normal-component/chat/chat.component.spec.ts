@@ -81,8 +81,6 @@ describe('ChatComponent', () => {
         chat = fixture.debugElement.query(By.css('#chatForm'));
         expect(switchButton.nativeElement.innerText).toEqual('Afficher le chat (0 nouveau(x) message(s))');
         expect(chat).withContext('Chat should be invisible after calling hideChat').toBeFalsy();
-        component.ngOnDestroy();
-        await fixture.whenStable();
     }));
     it('should propose to show chat when chat is hidden, and work', fakeAsync(async() => {
         AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
@@ -102,8 +100,6 @@ describe('ChatComponent', () => {
         chat = fixture.debugElement.query(By.css('#chatForm'));
         expect(switchButton.nativeElement.innerText).toEqual('Réduire le chat (0 nouveau(x) message(s))');
         expect(chat).withContext('Chat should be visible after calling show').toBeTruthy();
-        component.ngOnDestroy();
-        await fixture.whenStable();
     }));
     it('should show how many messages where sent since you hide the chat', fakeAsync(async() => {
         AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
@@ -116,7 +112,7 @@ describe('ChatComponent', () => {
         await chatDAO.update('fauxChat', { messages: [{
             sender: 'roger',
             content: 'Saluuuut',
-            lastTurnThen: 0,
+            currentTurn: 0,
             postedTime: 5,
         }] });
         fixture.detectChanges();
@@ -129,7 +125,7 @@ describe('ChatComponent', () => {
         fixture.detectChanges();
         component.switchChatVisibility();
         fixture.detectChanges();
-        const chat: Partial<IChat> = { messages: [{ sender: 'roger', content: 'Saluuuut', lastTurnThen: 0, postedTime: 5 }] };
+        const chat: Partial<IChat> = { messages: [{ sender: 'roger', content: 'Saluuuut', currentTurn: 0, postedTime: 5 }] };
         await chatDAO.update('fauxChat', chat);
         fixture.detectChanges();
         let switchButton: DebugElement = fixture.debugElement.query(By.css('#switchChatVisibilityButton'));

@@ -3,8 +3,14 @@ import { Observable, Subscription } from 'rxjs';
 import { IChat, IChatId } from '../domain/ichat';
 import { ChatDAO } from '../dao/ChatDAO';
 import { IMessage } from '../domain/imessage';
-import { display } from 'src/app/utils/utils';
+import { assert, display } from 'src/app/utils/utils';
+import { MGPValidation } from '../utils/MGPValidation';
 
+export class ChatMessages {
+    public static readonly CANNOT_SEND_MESSAGE: string = $localize`You're not allowed to send e massege here.`;
+
+    public static readonly FORBIDDEN_MESSAGE: string = $localize`This message is forbidden.`;
+}
 @Injectable({
     providedIn: 'root',
 })
@@ -17,38 +23,8 @@ export class ChatService implements OnDestroy {
 
     private followedChatSub: Subscription;
 
-    public static isForbiddenMessage(message: string): boolean {
-        return (message === ''); // TODO: améliorer ?
-    }
     constructor(private chatDao: ChatDAO) {
         display(ChatService.VERBOSE, 'ChatService.constructor');
-    }
-    public async sendMessage(userName: string, lastTurnThen: number, content: string): Promise<void> {
-        if (this.userForbid(this.followedChatId, userName)) {
-            display(ChatService.VERBOSE, 'you\'re not allow to sent message here');
-            return;
-        }
-        if (ChatService.isForbiddenMessage(content)) {
-            display(ChatService.VERBOSE, 'HOW DARE YOU SAY THAT !');
-            return;
-        }
-        const iChat: IChat = await this.chatDao.read(this.followedChatId);
-        const messages: IMessage[] = iChat.messages;
-        const newMessage: IMessage = {
-            content,
-            sender: userName,
-            postedTime: Date.now(), // timeStamp of the publication time
-            lastTurnThen, // number of the turn when this was write
-        };
-        messages.push(newMessage);
-        await this.chatDao.update(this.followedChatId, { messages });
-        display(ChatService.VERBOSE, 'message envoyé');
-    }
-    public userForbid(chatId: string, userName: string): boolean {
-        return userName == null ||
-               userName === '' ||
-               userName === 'null' ||
-               userName === 'undefined'; // TODO: implémenter le blocage de chat
     }
     public startObserving(chatId: string, callback: (iChat: IChatId) => void): void {
         display(ChatService.VERBOSE, 'ChatService.startObserving ' + chatId);
@@ -63,7 +39,7 @@ export class ChatService implements OnDestroy {
         } else if (chatId === this.followedChatId) {
             throw new Error('WTF :: Already observing chat \'' + chatId + '\'');
         } else {
-            throw new Error('Cannot ask to watch \'' + this.followedChatId + '\' while watching \'' + chatId + '\'');
+            throw new Error('Cannot ask to watch \'' + chatId + '\' while watching \'' + this.followedChatId + '\'');
         }
     }
     public stopObserving(): void {
@@ -72,26 +48,58 @@ export class ChatService implements OnDestroy {
         }
         display(ChatService.VERBOSE, 'stopped watching chat ' + this.followedChatId + ']');
         this.followedChatId = null;
-        if (this.followedChatSub) {
-            this.followedChatSub.unsubscribe();
-        }
+        this.followedChatSub.unsubscribe();
         this.followedChatObs = null;
     }
     public isObserving(): boolean {
         return this.followedChatId != null;
     }
-    public async deleteChat(chatId: string): Promise<void> {
+    public async deleteChat(chatId: NonNullable<string>): Promise<void> {
         display(ChatService.VERBOSE, 'ChatService.deleteChat ' + chatId);
 
-        if (chatId == null) {
-            throw new Error('Cannot delete chat of null id');
-        }
+        assert(chatId != null, 'cannot delete chat of null id');
         return this.chatDao.delete(chatId);
     }
-    // delegate
-
-    public async set(id: string, chat: IChat): Promise<void> {
-        return this.chatDao.set(id, chat);
+    public async createNewChat(id: string): Promise<void> {
+        return this.chatDao.set(id, {
+            messages: [],
+        });
+    }
+    public async sendMessage(userName: string, currentTurn: number, content: string): Promise<MGPValidation> {
+        if (this.userCanSendMessage(userName, this.followedChatId) === false) {
+            return MGPValidation.failure(ChatMessages.CANNOT_SEND_MESSAGE);
+        }
+        if (this.isForbiddenMessage(content)) {
+            return MGPValidation.failure(ChatMessages.FORBIDDEN_MESSAGE);
+        }
+        const chat: IChat = await this.chatDao.read(this.followedChatId);
+        const messages: IMessage[] = chat.messages;
+        const newMessage: IMessage = {
+            content,
+            sender: userName,
+            postedTime: Date.now(),
+            currentTurn,
+        };
+        messages.push(newMessage);
+        await this.chatDao.update(this.followedChatId, { messages });
+        return MGPValidation.SUCCESS;
+    }
+    private userCanSendMessage(userName: string, chatId: string): boolean {
+        // TODO FOR REVIEW: should check that user is part of the game or is an observer
+        // Quentin: it seems that this should be encoded in the security rules, not in the application logic.
+        // If it is not encoded in the security rules, it is possible to craft firebase queries to send messages where we're not supposed to.
+        // And if it is encoded, there is duplication between the app logic and the security rules.
+        // Also, checking it in the app is useless in the sense that userCanSendMessage *should* never be false: if we reach sendMessage, this is by doing actions that the user can.
+        // The best IMHO is: encode it in the security rules, catch "write" failures to firebase in DAO, and propagate that back
+        // If we agree, we can remove this check and the corresponding TODO.
+        return userName != null;
+    }
+    private isForbiddenMessage(message: string): boolean {
+        // TODO FOR REVIEW: improve? what should be forbidden in a message?
+        // Quentin: I think here the only check should be indeed for '', but nothing else.
+        // I don't see a reason to forbid anything else.
+        // If we agree, we can remove the TODO.
+        return (message === '');
     }
     public ngOnDestroy(): void {
         if (this.isObserving()) {

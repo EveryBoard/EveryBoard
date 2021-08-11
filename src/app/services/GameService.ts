@@ -108,11 +108,7 @@ export class GameService implements OnDestroy {
     protected createChat(chatId: string): Promise<void> {
         display(GameService.VERBOSE, 'GameService.createChat(' + chatId + ')');
 
-        const newChat: IChat = {
-            status: 'not implemented',
-            messages: [],
-        };
-        return this.chatService.set(chatId, newChat);
+        return this.chatService.createNewChat(chatId);
     }
     public async createPartJoinerAndChat(creatorName: string, typeGame: string, chosenPlayer: string): Promise<string> {
         display(GameService.VERBOSE, 'GameService.createGame(' + creatorName + ', ' + typeGame + ')');

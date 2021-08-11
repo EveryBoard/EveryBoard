@@ -70,7 +70,7 @@ export class ChatComponent implements OnInit, OnDestroy {
             sender: 'fake',
             content: $localize`vous devez être connecté pour voir le chat...`,
             postedTime: Date.now(),
-            lastTurnThen: null,
+            currentTurn: null,
         };
         this.chat = [msg, msg, msg, msg, msg];
     }
