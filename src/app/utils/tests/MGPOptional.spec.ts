@@ -1,7 +1,7 @@
 import { MGPOptional } from '../MGPOptional';
 
 describe('MGPOptional', () => {
-    it('MGPOptional should not be create with empty value', () => {
+    it('MGPOptional should not be created with empty value', () => {
         expect(() => MGPOptional.of(null))
             .toThrowError('Optional cannot be created with empty value, use MGPOptional.empty instead');
     });

@@ -3,7 +3,7 @@ import { MGPOptional } from './MGPOptional';
 
 export abstract class MGPCanFail<T extends Comparable> {
     public static success<T extends Comparable>(value: NonNullable<T>): MGPCanFail<T> {
-        if (value == null) throw new Error('CanFail cannot be created with empty value, use MGPOptional.empty instead');
+        if (value == null) throw new Error('CanFail cannot be created with empty value, use MGPCanFail.failure instead');
         return new MGPCanFailSuccess(value);
     }
     public static failure<T extends Comparable>(reason: string): MGPCanFail<T> {
@@ -44,7 +44,7 @@ class MGPCanFailSuccess<T extends Comparable> extends MGPCanFail<T> {
         return this.value;
     }
     public getReason(): string {
-        throw new Error('Cannot get failure reason from a success!');
+        throw new Error('Cannot get failure reason from a success');
     }
     public toOptional(): MGPOptional<T> {
         return MGPOptional.of(this.value);
