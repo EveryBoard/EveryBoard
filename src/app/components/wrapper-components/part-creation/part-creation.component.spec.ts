@@ -154,7 +154,7 @@ describe('PartCreationComponent:', () => {
                 testUtils.expectElementNotToExist('#selected_firstCandidate');
                 expect(component.currentJoiner).toEqual(JoinerMocks.INITIAL.doc);
             }));
-            xit('when chosenPlayer disconnect, part creation should go back from start', fakeAsync(async() => {
+            it('when chosenPlayer disconnect, part creation should go back from start', fakeAsync(async() => {
                 await joinerDAOMock.update('joinerId', { candidates: ['firstCandidate'] });
                 testUtils.detectChanges();
                 tick();
@@ -270,7 +270,7 @@ describe('PartCreationComponent:', () => {
             expect(chatService.deleteChat).toHaveBeenCalledWith('joinerId');
 
         }));
-        xit('should reroute to server when game is cancelled', fakeAsync(async() => {
+        it('should reroute to server when game is cancelled', fakeAsync(async() => {
             const router: Router = TestBed.inject(Router);
             spyOn(router, 'navigate');
 
@@ -409,7 +409,7 @@ describe('PartCreationComponent:', () => {
 
         expect(joinerService.startObserving).not.toHaveBeenCalled();
     }));
-    xit('should not fail if joiner update is null, and redirect to server', fakeAsync(async() => {
+    it('should not fail if joiner update is null, and redirect to server', fakeAsync(async() => {
         component.userName = 'creator';
         await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL.doc);
         testUtils.detectChanges();

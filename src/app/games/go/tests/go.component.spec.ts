@@ -26,7 +26,7 @@ describe('GoComponent', () => {
         expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');
         expect(componentTestUtils.getComponent()).toBeTruthy('Component should be created');
     });
-    xit('Should allow to pass twice, then use "pass" as the method to "accept"', fakeAsync(async() => {
+    it('Should allow to pass twice, then use "pass" as the method to "accept"', fakeAsync(async() => {
         expect((await componentTestUtils.getComponent().pass()).isSuccess()).toBeTrue(); // Passed
         expect((await componentTestUtils.getComponent().pass()).isSuccess()).toBeTrue(); // Counting
         expect((await componentTestUtils.getComponent().pass()).isSuccess()).toBeTrue(); // Accept
