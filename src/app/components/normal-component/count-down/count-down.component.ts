@@ -6,6 +6,7 @@ import { display } from 'src/app/utils/utils';
     templateUrl: './count-down.component.html',
 })
 export class CountDownComponent implements OnInit, OnDestroy {
+
     public static VERBOSE: boolean = false;
 
     @Input() debugName: string;
@@ -142,5 +143,10 @@ export class CountDownComponent implements OnInit, OnDestroy {
     }
     public ngOnDestroy(): void {
         this.clearTimeouts();
+    }
+    public addTime(ms: number): void {
+        this.pause();
+        this.remainingTime += ms;
+        this.resume();
     }
 }

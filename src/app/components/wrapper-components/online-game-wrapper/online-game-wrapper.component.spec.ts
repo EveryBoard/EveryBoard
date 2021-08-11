@@ -69,9 +69,12 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             tick(); // Finish calling async code from PartCreationComponent initialisation
 
             expect(wrapper.startGame).toHaveBeenCalledTimes(1);
-            componentTestUtils.detectChanges(); // Needed so PartCreation is destroyed and GameIncluder Component created
+
+            componentTestUtils.detectChanges();
+            // Needed so PartCreation is destroyed and GameIncluder Component created
+
             tick(1);
-            tick(wrapper.maximalMoveDuration);
+            tick(wrapper.joiner.maximalMoveDuration * 1000);
         }));
         it('Some tags are needed before initialisation', fakeAsync(async() => {
             await prepareComponent(JoinerMocks.INITIAL.doc, PartMocks.INITIAL.doc);
@@ -161,11 +164,11 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             const p4Tag: DebugElement = componentTestUtils.querySelector('app-p4');
 
             expect(wrapper.gameStarted).toBeTrue();
-            expect(partCreationId).toBeFalsy('partCreation id should be absent after startGame call');
-            expect(gameId).toBeTruthy('game id should be present after startGame call');
-            expect(p4Tag).toBeNull('p4Tag id should still be absent after startGame call');
+            expect(partCreationId).withContext('partCreation id should be absent after startGame call').toBeFalsy();
+            expect(gameId).withContext('game id should be present after startGame call').toBeTruthy();
+            expect(p4Tag).withContext('p4Tag id should still be absent after startGame call').toBeNull();
             tick(1);
-            tick(wrapper.maximalMoveDuration);
+            tick(wrapper.joiner.maximalMoveDuration * 1000);
             flush();
         }));
     });

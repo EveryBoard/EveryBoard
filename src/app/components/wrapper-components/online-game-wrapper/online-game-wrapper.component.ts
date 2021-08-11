@@ -72,10 +72,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     public rematchProposed: boolean = false;
     public opponentProposedRematch: boolean = false;
 
-    public maximalMoveDuration: number; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPartId
-    public totalPartDuration: number; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPartId
-
-    public gameBeginningTime: Time; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPartId
+    public joiner: IJoiner;
 
     private hasUserPlayed: [boolean, boolean] = [false, false];
 
@@ -147,8 +144,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 
         assert(iJoiner != null, 'Cannot start Game of empty joiner doc');
         assert(this.gameStarted === false, 'Should not start already started game');
-        this.maximalMoveDuration = iJoiner.maximalMoveDuration * 1000;
-        this.totalPartDuration = iJoiner.totalPartDuration * 1000;
+        this.joiner = iJoiner;
 
         this.gameStarted = true;
         setTimeout(() => {
@@ -190,13 +186,14 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 return this.checkEndGames();
                 // TODO: might no longer be checkEndGame but "do"EndGame
             case UpdateType.MOVE_WITHOUT_TIME:
-                console.log('Move updaté mais sans le temps')
+                console.log('MOVE_WITHOUT_TIME received at ', Date.now());
                 return this.doNewMoves(part);
             case UpdateType.TIME_ALONE:
-                console.log('Time updaté mais sans le mouve')
-                this.currentPart = oldPart;
+                const lastMoveTime: number = this.getLastMoveTime(oldPart, part);
+                // this.currentPart = oldPart;
                 return;
             case UpdateType.MOVE:
+                console.log('MOVE at ', Date.now());
                 return this.doNewMoves(part);
             case UpdateType.PRE_START_DOC:
                 if (oldPart != null && oldPart.doc.beginning != null &&
@@ -283,13 +280,56 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                diff.modified[key] != null ||
                diff.removed[key] != null;
     }
+    public getLastMoveTime(oldPart: Part, update: Part): number {
+        if (oldPart == null) {
+            if (update == null) {
+                console.log('getLastMoveTime nullinull');
+            } else {
+                const updateTime: number = (update.doc.lastMoveTime as Time).seconds;
+                console.log('getLastMoveTime lastTime adding:', updateTime);
+            }
+        } else {
+            const oldTime: number = (oldPart.doc.lastMoveTime as Time).seconds;
+            if (update == null) {
+                console.log('getLastMoveTime lastTime removal:', oldTime);
+            } else {
+                const updateMs: number = this.getMs(update.doc.lastMoveTime as Time);
+                const beginningMs: number = this.getMs(update.doc.beginning as Time);
+                const totalPartDuration: number = this.joiner.totalPartDuration;
+                let passiveRemainingTime: number;
+                let activeChrono: CountDownComponent;
+                if (oldPart.doc.turn % 2 === 0) {
+                    passiveRemainingTime = this.chronoOneGlobal.remainingTime / 1000;
+                    activeChrono = this.chronoZeroGlobal;
+                } else {
+                    passiveRemainingTime = this.chronoZeroGlobal.remainingTime / 1000;
+                    activeChrono = this.chronoOneGlobal;
+                }
+                const concreteTimeUsedByActive: number = activeChrono.remainingTime / 1000;
+                // updateTime - beginningTime = timeUsedByPassive + timeUsedByActive
+                // updateTime - beginningTime = (totalPartDuration - passiveGlobalChrono.remaining) + timeUsedByActive
+                const timeUsedByActive: number = updateMs - beginningMs - totalPartDuration + passiveRemainingTime;
+                const msToAdd: number = timeUsedByActive - concreteTimeUsedByActive;
+                console.log('getLastMoveTime lastTime update from', oldTime, 'to', updateMs, 'and used time:', timeUsedByActive, 'different then by', msToAdd);
+                if (msToAdd < 0) {
+                    console.log('enfant de cul c négatif!!')
+                } else {
+                    activeChrono.addTime(msToAdd);
+                }
+            }
+        }
+        return;
+    }
+    private getMs(time: Time): number {
+        return time.seconds * 1000;
+    }
     public setChronos(): void {
         display(OnlineGameWrapperComponent.VERBOSE, 'onlineGameWrapperComponent.setChronos()');
-        this.chronoZeroGlobal.setDuration(this.totalPartDuration);
-        this.chronoOneGlobal.setDuration(this.totalPartDuration);
+        this.chronoZeroGlobal.setDuration(this.joiner.totalPartDuration * 1000);
+        this.chronoOneGlobal.setDuration(this.joiner.totalPartDuration * 1000);
 
-        this.chronoZeroLocal.setDuration(this.maximalMoveDuration);
-        this.chronoOneLocal.setDuration(this.maximalMoveDuration);
+        this.chronoZeroLocal.setDuration(this.joiner.maximalMoveDuration * 1000);
+        this.chronoOneLocal.setDuration(this.joiner.maximalMoveDuration * 1000);
     }
     private didUserPlay(player: Player): boolean {
         return this.hasUserPlayed[player.value];
@@ -337,7 +377,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             const endGameResults: MGPResult[] = [MGPResult.DRAW, MGPResult.RESIGN, MGPResult.TIMEOUT];
             const resultIsIncluded: boolean =
                 endGameResults.some((result: MGPResult) => result.value === currentPart.doc.result);
-            assert(resultIsIncluded === true, 'Unknown type of end game');
+            assert(resultIsIncluded === true, 'Unknown type of end game (' + currentPart.doc.result + ')');
             display(OnlineGameWrapperComponent.VERBOSE, 'endGame est true et winner est ' + currentPart.getWinner());
             this.stopCountdownsFor(player);
         }
@@ -496,7 +536,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         assert(updatedICurrentPart.doc.playerOne != null, 'should not setPlayersDatas when players data is not received');
         this.currentPlayer = this.players[updatedICurrentPart.doc.turn % 2];
         console.log({ setPlayersDatas: updatedICurrentPart });
-        this.gameBeginningTime = updatedICurrentPart.doc.beginning as Time;
         let opponentName: string = '';
         if (this.players[0] === this.userName) {
             this.observerRole = Player.ZERO.value;
@@ -632,11 +671,11 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 
         if (player === Player.ZERO) {
             this.chronoZeroGlobal.resume();
-            this.chronoZeroLocal.setDuration(this.maximalMoveDuration);
+            this.chronoZeroLocal.setDuration(this.joiner.maximalMoveDuration * 1000);
             this.chronoZeroLocal.start();
         } else {
             this.chronoOneGlobal.resume();
-            this.chronoOneLocal.setDuration(this.maximalMoveDuration);
+            this.chronoOneLocal.setDuration(this.joiner.maximalMoveDuration * 1000);
             this.chronoOneLocal.start();
         }
     }
