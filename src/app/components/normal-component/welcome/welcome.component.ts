@@ -19,7 +19,7 @@ export class WelcomeComponent {
     public createLocalGame(game: string): void {
         this.router.navigate(['/local/' + game]);
     }
-    public createDidacticial(game: string): void {
-        this.router.navigate(['/didacticial/' + game]);
+    public createTutorial(game: string): void {
+        this.router.navigate(['/tutorial/' + game]);
     }
 }

@@ -13,6 +13,8 @@ import { LinesOfActionState } from './LinesOfActionState';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { MGPCanFail } from 'src/app/utils/MGPCanFail';
+import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { linesOfActionTutorial } from './LinesOfActionTutorial';
 
 @Component({
     selector: 'app-linesofaction',
@@ -32,6 +34,8 @@ export class LinesOfActionComponent extends AbstractGameComponent<LinesOfActionM
     private captured: MGPOptional<Coord> = MGPOptional.empty();
 
     public encoder: MoveEncoder<LinesOfActionMove> = LinesOfActionMove.encoder;
+
+    public tutorial: TutorialStep[] = linesOfActionTutorial;
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);

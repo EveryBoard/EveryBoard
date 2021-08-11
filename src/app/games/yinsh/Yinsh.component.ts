@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { HexagonalGameComponent } from 'src/app/components/game-components/abstract-game-component/HexagonalGameComponent';
+import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
@@ -16,6 +17,7 @@ import { YinshMinimax } from './YinshMinimax';
 import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';
 import { YinshRules } from './YinshRules';
+import { yinshTutorial } from './YinshTutorial';
 
 interface CaseInfo {
     coord: Coord,
@@ -63,11 +65,20 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
 
     public encoder: MoveEncoder<YinshMove> = YinshMove.encoder;
 
+    public tutorial: TutorialStep[] = yinshTutorial;
+
     public scores: number[] = [0, 0];
 
     private constructedState: YinshGameState;
 
-    private movePhase: 'INITIAL_CAPTURE_SELECT_FIRST' | 'INITIAL_CAPTURE_SELECT_LAST' | 'INITIAL_CAPTURE_SELECT_RING' | 'MOVE_START' | 'MOVE_END' | 'FINAL_CAPTURE_SELECT_FIRST' | 'FINAL_CAPTURE_SELECT_LAST' | 'FINAL_CAPTURE_SELECT_RING'
+    private movePhase: 'INITIAL_CAPTURE_SELECT_FIRST' |
+        'INITIAL_CAPTURE_SELECT_LAST' |
+        'INITIAL_CAPTURE_SELECT_RING' |
+        'MOVE_START' |
+        'MOVE_END' |
+        'FINAL_CAPTURE_SELECT_FIRST' |
+        'FINAL_CAPTURE_SELECT_LAST' |
+        'FINAL_CAPTURE_SELECT_RING'
         = 'MOVE_START';
 
     private moveStart: MGPOptional<Coord> = MGPOptional.empty();

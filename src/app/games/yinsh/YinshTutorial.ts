@@ -1,4 +1,4 @@
-import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -21,8 +21,8 @@ export class YinshTutorialMessages {
     public static readonly MUST_CAPTURE_TWO: string = $localize`Raté ! Vous pouvez capturer deux anneaux en tout, en procédant à deux captures de 5 de vos marqueurs. Réessayez.`;
 }
 
-export const yinshTutorial: DidacticialStep[] = [
-    DidacticialStep.informational(
+export const yinshTutorial: TutorialStep[] = [
+    TutorialStep.informational(
         $localize`But du jeu`,
         $localize`Le but du jeu à Yinsh est de capturer trois anneaux en tout.
          Le nombre d'anneaux capturés est indiqué en haut à gauche pour le joueur foncé,
@@ -43,7 +43,7 @@ export const yinshTutorial: DidacticialStep[] = [
             [N, _, _, _, _, N, N, N, N, N, N],
         ]), [3, 1], 20),
     ),
-    DidacticialStep.anyMove(
+    TutorialStep.anyMove(
         $localize`Plateau initial et phase de placement`,
         $localize`Le plateau initial est vide.
         Au début de la partie, chaque joueur place à son tour un de ses anneaux.
@@ -52,7 +52,7 @@ export const yinshTutorial: DidacticialStep[] = [
         new YinshGameState(YinshBoard.EMPTY, [5, 5], 0),
         new YinshMove([], new Coord(5, 5), MGPOptional.empty(), []),
         $localize`Bravo !`),
-    DidacticialStep.anyMove(
+    TutorialStep.anyMove(
         $localize`Placer un marqueur`,
         $localize`Une fois la phase initiale terminée et tous vos anneaux présents sur le plateau, il vous faut placer des marqueurs sur le plateau.
         Pour ce faire, placez un marqueur dans un de vos anneaux en cliquant sur cet anneau.
@@ -76,7 +76,7 @@ export const yinshTutorial: DidacticialStep[] = [
         ]), [0, 0], 20),
         new YinshMove([], new Coord(2, 4), MGPOptional.of(new Coord(4, 4)), []),
         $localize`Bravo !`),
-    DidacticialStep.fromPredicate(
+    TutorialStep.fromPredicate(
         $localize`Récupérer un anneau en alignant 5 marqueurs`,
         $localize`Finalement, la seule mécanique qu'il vous manque est de pouvoir récupérer des anneaux afin de marquer des points.
         Pour cela, il faut que vous alignez 5 marqueurs à votre couleur.
@@ -107,7 +107,7 @@ export const yinshTutorial: DidacticialStep[] = [
             }
         },
         $localize`Bravo !`),
-    DidacticialStep.fromPredicate(
+    TutorialStep.fromPredicate(
         $localize`Captures composées`,
         $localize`Il est possible que lors d'un tour, vous ayez la possibilité de choisir entre plusieurs captures,
         ou même d'effectuer plus d'une capture au total !

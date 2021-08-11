@@ -15,6 +15,8 @@ import { AttackEpaminondasMinimax } from './AttackEpaminondasMinimax';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { EpaminondasFailure } from './EpaminondasFailure';
+import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { epaminondasTutorial } from './EpaminondasTutorial';
 
 @Component({
     selector: 'app-epaminondas',
@@ -45,6 +47,8 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
     private captureds: Coord[] = [];
 
     public encoder: MoveEncoder<EpaminondasMove> = EpaminondasMove.encoder;
+
+    public tutorial: TutorialStep[] = epaminondasTutorial;
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);

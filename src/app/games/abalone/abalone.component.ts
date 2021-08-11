@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { HexagonalGameComponent } from 'src/app/components/game-components/abstract-game-component/HexagonalGameComponent';
+import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { Coord } from 'src/app/jscaip/Coord';
 import { BaseDirection, Direction } from 'src/app/jscaip/Direction';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
@@ -20,6 +21,7 @@ import { AbaloneFailure } from './AbaloneFailure';
 import { AbaloneGameState } from './AbaloneGameState';
 import { AbaloneMove } from './AbaloneMove';
 import { AbaloneLegalityStatus, AbaloneRules } from './AbaloneRules';
+import { abaloneTutorial } from './AbaloneTutorial';
 
 export class HexaDirArrow {
     public constructor(public startCenter: Coord,
@@ -40,6 +42,8 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
     public hexaLayout: HexaLayout;
 
     public encoder: MoveEncoder<AbaloneMove> = AbaloneMove.encoder;
+
+    public tutorial: TutorialStep[] = abaloneTutorial;
 
     public moveds: Coord[] = [];
 

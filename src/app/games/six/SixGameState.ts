@@ -71,10 +71,9 @@ export class SixGameState extends GamePartSlice {
         }
         return coordsGroup;
     }
-    public constructor(
-        public readonly pieces: MGPMap<Coord, Player>,
-        turn: number,
-        offset?: Vector)
+    public constructor(public readonly pieces: MGPMap<Coord, Player>,
+                       turn: number,
+                       offset?: Vector)
     {
         super([], turn);
         const scale: { width: number,
@@ -180,8 +179,8 @@ export class SixGameState extends GamePartSlice {
         const zeroPieces: MGPSet<Coord> = pieces.get(Player.ZERO).getOrNull();
         const onePieces: MGPSet<Coord> = pieces.get(Player.ONE).getOrNull();
         return [
-            zeroPieces ? zeroPieces.size() : 0,
-            onePieces ? onePieces.size() : 0,
+            zeroPieces == null ? 0 : zeroPieces.size(),
+            onePieces == null ? 0 : onePieces.size(),
         ];
     }
     public switchPiece(coord: Coord): SixGameState {

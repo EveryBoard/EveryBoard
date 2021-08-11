@@ -4,7 +4,7 @@
             <progress class="progress is-primary" [attr.value]="successfulSteps" [attr.max]="getNumberOfSteps()"></progress>
             <div class="content is-medium">
                 <p class="title">{{ getCurrentStepTitle() }} [{{stepIndex + 1}}/{{ getNumberOfSteps() }}]</p>
-                <p id='currentMessage'>{{ currentMessage }}</p>
+                <p id='currentMessage' [innerHTML]="currentMessage"></p>
             </div>
             <div *ngIf="currentReason" class="message is-danger" role="alert">
                 <div class="message-header" i18n>Échec</div>
@@ -38,6 +38,18 @@
                         i18n>
                     Recommencer
                 </button>
+                <button id="playLocallyButton"
+                        class="button"
+                        *ngIf="tutorialOver"
+                        (click)="playLocally()"
+                        i18n
+                >Jouer localement</button>
+                <button id="playOnlineButton"
+                        class="button"
+                        *ngIf="tutorialOver"
+                        (click)="createGame()"
+                        i18n
+                >Créer une partie en ligne</button>
                 <button id="showSolutionButton"
                         class="button"
                         *ngIf="moveAttemptMade && stepFinished[stepIndex] === false"
