@@ -1,39 +1,41 @@
-<div style="height: 100%; overflow: hidden">
-
+<div style="width: 800px;">
     <button id="switchChatVisibilityButton"
-            class="button"
+            class="button is-primary is-light is-fullwidth block"
             (click)="switchChatVisibility()">
         <ng-container *ngIf="visible else showChat" i18n>Réduire le chat</ng-container>
         <ng-template #showChat i18n>Afficher le chat</ng-template> ({{ this.unreadMessages }}<ng-container i18n> nouveau(x) message(s)</ng-container>)
     </button>
 
-    <form id="chatForm" *ngIf="visible" class="example-form" >
-        <!-- Messages -->
-        <div style="max-height: 90%; overflow: auto">
-            <mat-list *ngIf="chat">
-                <p *ngFor="let msg of chat">
-                    [{{ msg.postedTime | date:'HH:mm:ss':'+0100' }}] <b>{{ msg.sender }} :</b> {{ msg.content }}
-                </p>
-            </mat-list>
+    <form id="chatForm" *ngIf="visible"
+          (onSubmit)="sendMessage()">
+        <div class="content is-fullwidth">
+            [00:00:00] <b>foo:</b>: bar<br/>
+            [00:00:00] <b>foo:</b>: bar<br/>
+            <ng-container *ngFor="let msg of chat">
+                [{{ msg.postedTime | date:'HH:mm:ss':'+0100' }}] <b>&lt;{{ msg.sender }}&gt;:</b> {{ msg.content }}<br/>
+            </ng-container>
         </div>
 
-        <!-- Text Input -->
-        <mat-form-field class="full-width"
-                        align="start"
-                        *ngIf="userName!=''">
-            <input matInput
-                   #message
-                   maxlength="128"
-                   placeholder="Envoyez un message!"
-                   [(ngModel)]="userMessage"
-                   [ngModelOptions]="{standalone: true}">
-            <mat-icon matSuffix (click)="sendMessage()">send</mat-icon>
-            <mat-hint align="start">
-                <strong i18n>Soyez courtois lol</strong>
-            </mat-hint>
-            <mat-hint align="end">
-                {{message.value.length}} / 128
-            </mat-hint>
-        </mat-form-field>
+        <div class="field has-addons is-fullwidth">
+            <div class="control is-expanded">
+                <input class="input"
+                       #message
+                       type="text"
+                       placeholder="Entrez votre message ici"
+                       maxlength="128"
+                       value=""
+                       [(ngModel)]="userMessage"
+                       [ngModelOptions]="{standalone: true}">
+                <p class="help">{{ message.value.length }}/128</p>
+            </div>
+            <div class="control">
+                <button class="button is-primary"
+                        (click)="sendMessage()"
+                >Send</button>
+            </div>
+        </div>
+        <div class="content is-small">
+            <p><strong>Be polite</strong></p>
+        </div>
     </form>
 </div>

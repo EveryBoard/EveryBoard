@@ -6,7 +6,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { IChat, IChatId } from 'src/app/domain/ichat';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 
-fdescribe('ChatService', () => {
+describe('ChatService', () => {
     let service: ChatService;
     let chatDAO: ChatDAO;
 
@@ -93,7 +93,7 @@ fdescribe('ChatService', () => {
             expect(service.isObserving()).toBe(false);
 
             // when the chat is updated
-            chatDAO.set('id', NON_EMPTY_CHAT);
+            await chatDAO.set('id', NON_EMPTY_CHAT);
 
             // then the update is not observed by the callback
             await expectAsync(promise).toBePending();
@@ -131,7 +131,7 @@ fdescribe('ChatService', () => {
         it('should create the chat through the DAO', fakeAsync(async() => {
             spyOn(chatDAO, 'set');
             // when calling createNewChat
-            service.createNewChat('id');
+            await service.createNewChat('id');
             // then the chat has been created and is empty
             expect(chatDAO.set).toHaveBeenCalledWith('id', EMPTY_CHAT);
         }));

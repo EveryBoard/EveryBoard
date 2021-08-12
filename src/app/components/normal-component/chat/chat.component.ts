@@ -30,7 +30,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     public ngOnInit(): void {
         display(ChatComponent.VERBOSE, 'ChatComponent.ngOnInit');
 
-        if (this.chatId == null || this.chatId === '') throw new Error('No chat to join mentionned');
+        assert(this.chatId != null && this.chatId !== '', 'No chat to join mentionned');
 
         this.authenticationService.getJoueurObs()
             .subscribe((joueur: AuthUser) => {
