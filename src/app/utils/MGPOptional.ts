@@ -40,9 +40,9 @@ export class MGPOptional<T extends Comparable> {
     public isAbsent(): boolean {
         return this.value == null;
     }
-    public get(): T {
+    public get(): NonNullable<T> {
         if (this.isPresent()) {
-            return this.value;
+            return this.value as NonNullable<T>;
         } else {
             throw new Error('Value is absent');
         }

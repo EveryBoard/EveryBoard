@@ -6,7 +6,8 @@ export abstract class MGPCanFail<T extends Comparable> {
         if (value == null) throw new Error('CanFail cannot be created with empty value, use MGPCanFail.failure instead');
         return new MGPCanFailSuccess(value);
     }
-    public static failure<T extends Comparable>(reason: string): MGPCanFail<T> {
+    public static failure<T extends Comparable>(reason: NonNullable<string>): MGPCanFail<T> {
+        assert(reason != null, 'reason cannot be null');
         return new MGPCanFailFailure(reason);
     }
     public abstract isSuccess(): boolean

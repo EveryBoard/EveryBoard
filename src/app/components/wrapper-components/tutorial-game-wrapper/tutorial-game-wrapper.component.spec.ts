@@ -1016,18 +1016,8 @@ describe('TutorialGameWrapperComponent', () => {
                 ], [
                     new YinshRules(YinshGameState),
                     yinshTutorial[3],
-                    yinshTutorial[3].solutionMove,
-                    MGPValidation.SUCCESS,
-                ], [
-                    new YinshRules(YinshGameState),
-                    yinshTutorial[3],
                     new YinshMove([], new Coord(4, 4), MGPOptional.of(new Coord(1, 4)), []),
                     MGPValidation.failure(YinshTutorialMessages.MUST_ALIGN_FIVE),
-                ], [
-                    new YinshRules(YinshGameState),
-                    yinshTutorial[4],
-                    yinshTutorial[4].solutionMove,
-                    MGPValidation.SUCCESS,
                 ], [
                     new YinshRules(YinshGameState),
                     yinshTutorial[4],
