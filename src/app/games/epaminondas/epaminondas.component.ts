@@ -136,7 +136,6 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         return extensions;
     }
     private getPhalanxValidExtensions(PLAYER: number): Coord[] {
-        // TODO FOR REVIEW: is the .get() always safe? If not, maybe cancelMove?
         let direction: Direction = Direction.factory.fromMove(this.firstPiece, this.lastPiece).get();
         const forward: Coord = this.lastPiece.getNext(direction, 1);
         const extensionForward: Coord[] = this.getExtensionsToward(forward, direction, PLAYER);

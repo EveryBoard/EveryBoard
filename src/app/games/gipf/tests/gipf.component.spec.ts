@@ -3,7 +3,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GipfFailure } from 'src/app/games/gipf/GipfFailure';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { fakeAsync, tick } from '@angular/core/testing';
+import { fakeAsync } from '@angular/core/testing';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GipfPiece } from 'src/app/games/gipf/GipfPiece';
 import { GipfCapture, GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMove';

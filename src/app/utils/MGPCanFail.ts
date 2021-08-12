@@ -1,5 +1,6 @@
 import { Comparable, comparableEquals } from './Comparable';
 import { MGPOptional } from './MGPOptional';
+import { assert } from './utils';
 
 export abstract class MGPCanFail<T extends Comparable> {
     public static success<T extends Comparable>(value: NonNullable<T>): MGPCanFail<T> {
@@ -63,7 +64,7 @@ class MGPCanFailFailure<T extends Comparable> extends MGPCanFail<T> {
         return true;
     }
     public get(): NonNullable<T> {
-        throw new Error('Value is absent from failure');
+        throw new Error('Value is absent from failure, with reason' + this.reason);
     }
     public getOrNull(): T {
         return null;

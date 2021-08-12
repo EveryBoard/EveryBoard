@@ -7,7 +7,7 @@ export class YinshFailure {
 
     public static readonly MISSING_CAPTURES: string = GipfFailure.MISSING_CAPTURES;
 
-    public static readonly MOVE_DIRECTION_INVALID: string = $localize`La direction de votre mouvement est invalide: un mouvement se fait selon une ligne droite.`
+    public static readonly MOVE_DIRECTION_INVALID: string = $localize`La direction de votre mouvement est invalide: un mouvement se fait sur une ligne droite.`
 
     public static readonly CAPTURE_MUST_BE_ALIGNED: string = GipfFailure.CAPTURE_MUST_BE_ALIGNED;
 

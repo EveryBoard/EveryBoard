@@ -27,8 +27,8 @@ export class EpaminondasMove extends MoveCoord {
             // encoded as such : cx; cy; movedPiece; stepSize; direction
             if (encodedMove % 1 !== 0) throw new Error('EncodedMove must be an integer.');
 
-            const directionNumber: number = encodedMove % 8;
-            encodedMove -= directionNumber;
+            const encodedDirection: number = encodedMove % 8;
+            encodedMove -= encodedDirection;
             encodedMove /= 8;
 
             const stepSize: number = encodedMove % 7;
@@ -45,7 +45,7 @@ export class EpaminondasMove extends MoveCoord {
 
             const cx: number = encodedMove;
 
-            const direction: MGPCanFail<Direction> = Direction.factory.fromInt(directionNumber);
+            const direction: MGPCanFail<Direction> = Direction.factory.fromInt(encodedDirection);
             assert(direction.isSuccess(), 'Invalid encoded direction');
             return new EpaminondasMove(cx, cy, movedPieces + 1, stepSize + 1, direction.get());
         }

@@ -62,7 +62,7 @@ export class AbaloneMove extends MoveCoord {
         try {
             return MGPCanFail.success(new AbaloneMove(coord, dir, MGPOptional.empty()));
         } catch (e) {
-            return MGPCanFail.failure('Invalid move from single coord');
+            return MGPCanFail.failure(e.getMessage());
         }
     }
     public static fromDoubleCoord(first: Coord, second: Coord, dir: HexaDirection): MGPCanFail<AbaloneMove> {

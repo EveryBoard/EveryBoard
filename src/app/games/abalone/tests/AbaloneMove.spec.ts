@@ -10,7 +10,7 @@ import { AbaloneRules } from '../AbaloneRules';
 describe('AbaloneMove', () => {
 
     it('should not construct when not provided a direction or optional last piece', () => {
-        expect(AbaloneMove.fromSingleCoord(new Coord(0, 0), null)).toEqual(MGPCanFail.failure('Invalid move from single coord'));
+        expect(AbaloneMove.fromSingleCoord(new Coord(0, 0), null)).toEqual(MGPCanFail.failure('Direction cannot be null'));
         expect(AbaloneMove.fromDoubleCoord(new Coord(0, 0), null, HexaDirection.DOWN)).toEqual(MGPCanFail.failure('second coord cannot be null'));
     });
     it('should not construct a move with more than three piece', () => {
