@@ -5,6 +5,7 @@ import { ChatDAO } from '../dao/ChatDAO';
 import { IMessage } from '../domain/imessage';
 import { assert, display } from 'src/app/utils/utils';
 import { MGPValidation } from '../utils/MGPValidation';
+import { ArrayUtils } from '../utils/ArrayUtils';
 
 export class ChatMessages {
     public static readonly CANNOT_SEND_MESSAGE: string = $localize`You're not allowed to send e massege here.`;
@@ -73,7 +74,7 @@ export class ChatService implements OnDestroy {
             return MGPValidation.failure(ChatMessages.FORBIDDEN_MESSAGE);
         }
         const chat: IChat = await this.chatDao.read(this.followedChatId);
-        const messages: IMessage[] = chat.messages;
+        const messages: IMessage[] = ArrayUtils.copyImmutableArray(chat.messages);
         const newMessage: IMessage = {
             content,
             sender: userName,

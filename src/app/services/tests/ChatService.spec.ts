@@ -55,7 +55,7 @@ describe('ChatService', () => {
             expect(service.isObserving()).toBe(true);
 
             // when the chat is updated
-            chatDAO.set('id', NON_EMPTY_CHAT);
+            await chatDAO.set('id', NON_EMPTY_CHAT);
 
             // then the update has been observed by the callback
             await expectAsync(promise).toBeResolvedTo({ id: 'id', doc: NON_EMPTY_CHAT });
