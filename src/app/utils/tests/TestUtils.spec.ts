@@ -24,13 +24,16 @@ import { JoinerDAO } from '../../dao/JoinerDAO';
 import { JoueursDAOMock } from '../../dao/tests/JoueursDAOMock.spec';
 import { ChatDAOMock } from '../../dao/tests/ChatDAOMock.spec';
 import { PartDAOMock } from '../../dao/tests/PartDAOMock.spec';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { LocalGameWrapperComponent }
     from '../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { HumanDuration } from '../TimeUtils';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MatListModule } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({})
 export class BlankComponent {}
@@ -75,8 +78,10 @@ export class SimpleComponentTestUtils<T> {
                 RouterTestingModule.withRoutes([
                     { path: '**', component: BlankComponent },
                 ]),
+                FormsModule,
                 ReactiveFormsModule,
                 BrowserAnimationsModule,
+                MatListModule, MatIconModule, MatInputModule, NoopAnimationsModule,
             ],
             declarations: [
                 componentType,
@@ -91,6 +96,7 @@ export class SimpleComponentTestUtils<T> {
                 { provide: JoinerDAO, useClass: JoinerDAOMock },
                 { provide: ChatDAO, useClass: ChatDAOMock },
                 { provide: JoueursDAO, useClass: JoueursDAOMock },
+                { provide: ChatDAO, useClass: ChatDAOMock },
             ],
         }).compileComponents();
         AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
