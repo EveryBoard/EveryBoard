@@ -1,16 +1,29 @@
-<div style="width: 800px;">
-    <ng-container *ngIf="connected">
+<div>
+    <div *ngIf="connected"
+         class="block">
         <button id="switchChatVisibilityButton"
-                class="button is-primary is-light is-fullwidth block"
+                class="button is-primary is-light is-fullwidth"
                 (click)="switchChatVisibility()">
             <ng-container *ngIf="visible else showChat" i18n>Réduire le chat</ng-container>
-            <ng-template #showChat i18n>Afficher le chat ({{ this.unreadMessages }} nouveau(x) message(s))</ng-template>
+            <ng-template #showChat i18n>Afficher le chat ({{ this.unreadMessagesText }})</ng-template>
         </button>
 
-        <div class="content is-fullwidth">
-            <ng-container *ngFor="let msg of chat">
-                [{{ msg.postedTime | date:'HH:mm:ss':'+0100' }}] <b>&lt;{{ msg.sender }}&gt;:</b> {{ msg.content }}<br/>
-            </ng-container>
+        <div *ngIf="visible">
+            <button *ngIf="this.showUnreadMessagesButton"
+                id="scrollToBottomIndicator"
+                class="notification button is-info is-light is-fullwidth"
+                (click)="scrollToBottom()"
+                >{{ this.unreadMessagesText }} &darr;</button>
+
+            <div #chatDiv
+                 id="chatDiv"
+                 class="is-fullwidth block"
+                 style="overflow-y:scroll; height: 5rem;"
+                 (scroll)="updateCurrentScrollPosition()">
+                <p *ngFor="let msg of chat">
+                    [{{ msg.postedTime | date:'HH:mm:ss':'+0100' }}] <b>{{ msg.sender }} :</b> {{ msg.content }}
+                </p>
+            </div>
         </div>
 
         <form id="chatForm" *ngIf="visible"
@@ -30,6 +43,7 @@
                 </div>
                 <div class="control">
                     <button class="button is-primary"
+                            type="submit"
                             id="send"
                             (click)="sendMessage(message.value)"
                             >Send</button>
@@ -39,7 +53,7 @@
                 <p><strong>Be polite</strong></p>
             </div>
         </form>
-    </ng-container>
+    </div>
     <div *ngIf="connected === false"
          id="disconnected-chat"
          class="message is-primary is-light">

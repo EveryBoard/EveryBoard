@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy, ElementRef, ViewChild, OnInit, AfterViewChecked } from '@angular/core';
 import { ChatService } from '../../../services/ChatService';
 import { IMessage } from '../../../domain/imessage';
 import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
@@ -10,8 +10,8 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
     selector: 'app-chat',
     templateUrl: './chat.component.html',
 })
-export class ChatComponent implements OnInit, OnDestroy {
-    public static VERBOSE: boolean = false;
+export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
+    public static VERBOSE: boolean = true;
 
     @Input() public chatId: string;
     @Input() public turn: number;
@@ -19,11 +19,13 @@ export class ChatComponent implements OnInit, OnDestroy {
     public userName: MGPOptional<string> = MGPOptional.empty();
 
     public connected: boolean = false;
-    public chat: IMessage[];
+    public chat: IMessage[] = [];
     public readMessages: number = 0;
-    public unreadMessages: number = 0;
+    public unreadMessagesText: string = '';
 
     public visible: boolean = true;
+
+    @ViewChild('chatDiv') chatDiv: ElementRef<HTMLElement>;
 
     constructor(private chatService: ChatService,
                 private authenticationService: AuthenticationService) {
@@ -48,28 +50,80 @@ export class ChatComponent implements OnInit, OnDestroy {
                 }
             });
     }
+    public ngAfterViewChecked(): void {
+        console.log('ngAfterViewChecked');
+        this.scrollToBottomIfNeeded();
+    }
     public isConnectedUser(joueur: { pseudo: string; verified: boolean;}): boolean {
         return joueur && joueur.pseudo && joueur.pseudo !== '';
     }
     public loadChatContent(): void {
         display(ChatComponent.VERBOSE, 'User \'' + this.userName + '\' logged, loading chat content');
 
-        this.chatService.startObserving(this.chatId, (id: IChatId) => this.updateMessages(id));
+        this.chatService.startObserving(this.chatId, (id: IChatId) => {
+            this.updateMessages(id);
+        });
     }
     public updateMessages(iChatId: IChatId): void {
         this.chat = iChatId.doc.messages;
         const nbMessages: number = this.chat.length;
-        if (this.visible === false) {
-            this.unreadMessages = nbMessages - this.readMessages;
+        console.log('updating messages')
+        console.log({visible: this.visible, nearBottom: this.isNearBottom});
+        if (this.visible === false || this.isNearBottom === false) {
+            this.updateUnreadMessagesText(nbMessages - this.readMessages);
         } else {
             this.readMessages = nbMessages;
-            this.unreadMessages = 0;
+            this.updateUnreadMessagesText(0);
         }
     }
-    public async sendMessage(content: string): Promise<void> {
+    public showUnreadMessagesButton: boolean = false;
+    private updateUnreadMessagesText(unreadMessages: number): void {
+        if (this.visible && this.isNearBottom === false) {
+            this.showUnreadMessagesButton = true;
+        } else {
+            this.showUnreadMessagesButton = false;
+        }
+
+        if (unreadMessages === 0) {
+            this.unreadMessagesText = $localize`pas de nouveau message`;
+        } else if (unreadMessages === 1) {
+            this.unreadMessagesText = $localize`1 nouveau message`;
+        } else {
+            this.unreadMessagesText = $localize`${unreadMessages} nouveaux messages`;
+        }
+    }
+    private isNearBottom: boolean = true;
+    private scrollToBottomIfNeeded(): void {
+        if (this.connected && this.visible) {
+            this.updateCurrentScrollPosition();
+            if (this.isNearBottom) {
+                this.scrollToBottom();
+            }
+        }
+    }
+    private scrollPosition: number = 0;
+    public updateCurrentScrollPosition(): void {
+        const threshold: number = 20;
+        const position: number = this.chatDiv.nativeElement.scrollTop + this.chatDiv.nativeElement.offsetHeight;
+        const height: number = this.chatDiv.nativeElement.scrollHeight;
+        this.isNearBottom = position > height - threshold;
+        this.scrollPosition = this.chatDiv.nativeElement.scrollTop;
+        console.log({position, height, nearBottom: this.isNearBottom})
+    }
+    public scrollToBottom(): void {
+        console.log('[scrollToBottom] setting scroll top to ' + this.chatDiv.nativeElement.scrollHeight);
+        this.updateUnreadMessagesText(0);
+        this.chatDiv.nativeElement.scroll({
+            top: this.chatDiv.nativeElement.scrollHeight,
+            left: 0,
+            behavior: 'smooth',
+        });
+    }
+    public async sendMessage(): Promise<void> {
         assert(this.userName.isPresent(), 'disconnected user cannot send a message');
+        const content: string = this.userMessage;
+        this.userMessage = ''; // clears it first to seem more responsive
         await this.chatService.sendMessage(this.userName.get(), this.turn, content);
-        this.userMessage = '';
     }
     public ngOnDestroy(): void {
         if (this.chatService.isObserving()) {
@@ -81,7 +135,8 @@ export class ChatComponent implements OnInit, OnDestroy {
             this.visible = false;
         } else {
             this.visible = true;
-            this.unreadMessages = 0;
+            this.updateUnreadMessagesText(0);
+            this.chatDiv.nativeElement.scroll({ top: this.scrollPosition, left: 0 });
             this.readMessages = this.chat.length;
         }
     }
