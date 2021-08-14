@@ -46,15 +46,28 @@ export abstract class FirebaseFirestoreDAOMock<T extends JSONObject> implements 
         await this.set(elemName, mappedNewElement);
         return elemName;
     }
-    public getServerTimestampedObject<N extends JSONObject>(element: N): N {
+    public getServerTimestampedObject<N extends JSONObject>(element: N, oldDoc?: N): N {
         if (element == null) {
             return null;
         }
         const mappedNewElement: JSONObject = {};
         for (const key of Object.keys(element)) {
             if (key === 'lastMoveTime' || key === 'beginning') {
-                const random: number = Math.random();
-                mappedNewElement[key] = { seconds: Date.now() + random };
+                // if (oldDoc && oldDoc[key] != null) {
+                //     mappedNewElement[key] = {
+                //         seconds: oldDoc[key]['seconds'] + 111,
+                //         nanoseconds: oldDoc[key]['nanoseconds'] + 111,
+                //     };
+                // } else {
+                const dateNow: number = Date.now();
+                const ms: number = dateNow % 1000;
+                const seconds: number = (dateNow - ms) / 1000;
+                const nanoseconds: number = ms * 1000 * 1000;
+                mappedNewElement[key] = {
+                    seconds,
+                    nanoseconds,
+                };
+                // }
             } else {
                 mappedNewElement[key] = element[key];
             }
@@ -91,11 +104,11 @@ export abstract class FirebaseFirestoreDAOMock<T extends JSONObject> implements 
         display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE,
                 this.collectionName + '.update(' + id + ', ' + JSON.stringify(update) + ')');
 
-        const mappedUpdate: Partial<T> = this.getServerTimestampedObject(update);
         const optionalOS: MGPOptional<ObservableSubject<{id: string, doc: T}>> = this.getStaticDB().get(id);
         if (optionalOS.isPresent()) {
             const observableSubject: ObservableSubject<{id: string, doc: T}> = optionalOS.get();
             const oldDoc: T = observableSubject.subject.getValue().doc;
+            const mappedUpdate: Partial<T> = this.getServerTimestampedObject(update, oldDoc);
             const newDoc: T = { ...oldDoc, ...mappedUpdate };
             observableSubject.subject.next({ id, doc: newDoc });
             return Promise.resolve();

@@ -172,7 +172,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             nbPlayedMoves: part.doc.listMoves.length,
         } });
         const updateType: UpdateType = this.getUpdateType(part);
-        console.log(updateType.value)
+        console.log('UpdateType: ' + updateType.value + '(' + (update == null ? 'null' : update.doc.turn) + ')');
         const oldPart: Part = this.currentPart;
         this.currentPart = part;
         display(OnlineGameWrapperComponent.VERBOSE,
@@ -186,13 +186,18 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 return this.checkEndGames();
                 // TODO: might no longer be checkEndGame but "do"EndGame
             case UpdateType.MOVE_WITHOUT_TIME:
-                console.log('MOVE_WITHOUT_TIME received at ', Date.now());
-                return this.doNewMoves(part);
+                this.currentPart = oldPart;
+                console.log('denied update')
+                this.getLastMoveTime(oldPart, part, updateType);
+                // return this.doNewMoves(part);
+                return;
             case UpdateType.TIME_ALONE:
-                const lastMoveTime: number = this.getLastMoveTime(oldPart, part);
-                // this.currentPart = oldPart;
+                this.currentPart = oldPart;
+                console.log('denied update')
+                this.getLastMoveTime(oldPart, part, updateType);
                 return;
             case UpdateType.MOVE:
+                this.getLastMoveTime(oldPart, part, updateType);
                 console.log('MOVE at ', Date.now());
                 return this.doNewMoves(part);
             case UpdateType.PRE_START_DOC:
@@ -212,7 +217,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         console.log({ update })
         const currentPartDoc: IPart = this.currentPart ? this.currentPart.doc : null;
         const diff: ObjectDifference = getDiff(currentPartDoc, update.doc);
-        display(OnlineGameWrapperComponent.VERBOSE, { diff });
+        display(OnlineGameWrapperComponent.VERBOSE || true, { diff });
         const nbDiffs: number = getDiffChangesNumber(diff);
         if (diff == null || nbDiffs === 0) {
             return UpdateType.DOUBLON;
@@ -224,10 +229,18 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             return UpdateType.REQUEST;
         }
         if (this.isMove(diff, nbDiffs)) {
-            if (diff.modified['lastMoveTime'] == null) {
-                return UpdateType.MOVE_WITHOUT_TIME;
+            if (update.doc.turn === 1) {
+                if (update.doc.lastMoveTime == null) {
+                    return UpdateType.MOVE_WITHOUT_TIME;
+                } else {
+                    return UpdateType.MOVE;
+                }
             } else {
-                return UpdateType.MOVE;
+                if (diff.modified['lastMoveTime'] == null) {
+                    return UpdateType.MOVE_WITHOUT_TIME;
+                } else {
+                    return UpdateType.MOVE;
+                }
             }
         }
         if (update.doc.beginning == null) {
@@ -280,48 +293,80 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                diff.modified[key] != null ||
                diff.removed[key] != null;
     }
-    public getLastMoveTime(oldPart: Part, update: Part): number {
-        if (oldPart == null) {
-            if (update == null) {
-                console.log('getLastMoveTime nullinull');
+    public getLastMoveTime(oldPart: Part, update: Part, type: UpdateType): void {
+        const oldTime: Time = this.getMoreRecentTime(oldPart);
+        const updateTime: Time = this.getMoreRecentTime(update);
+        if (oldTime == null) {
+            if (updateTime == null) {
+                return console.log('getLastMoveTime(' + type.value + ') has no times');
             } else {
-                const updateTime: number = (update.doc.lastMoveTime as Time).seconds;
-                console.log('getLastMoveTime lastTime adding:', updateTime);
+                return console.log('getLastMoveTime(' + type.value + ') has ' + this.getMs(updateTime));
             }
         } else {
-            const oldTime: number = (oldPart.doc.lastMoveTime as Time).seconds;
-            if (update == null) {
-                console.log('getLastMoveTime lastTime removal:', oldTime);
+            if (updateTime == null) {
+                return console.log('getLastMoveTime(' + type.value + ') had ' + this.getMs(oldTime) + ' then nothing');
             } else {
-                const updateMs: number = this.getMs(update.doc.lastMoveTime as Time);
-                const beginningMs: number = this.getMs(update.doc.beginning as Time);
-                const totalPartDuration: number = this.joiner.totalPartDuration;
-                let passiveRemainingTime: number;
-                let activeChrono: CountDownComponent;
-                if (oldPart.doc.turn % 2 === 0) {
-                    passiveRemainingTime = this.chronoOneGlobal.remainingTime / 1000;
-                    activeChrono = this.chronoZeroGlobal;
-                } else {
-                    passiveRemainingTime = this.chronoZeroGlobal.remainingTime / 1000;
-                    activeChrono = this.chronoOneGlobal;
-                }
-                const concreteTimeUsedByActive: number = activeChrono.remainingTime / 1000;
-                // updateTime - beginningTime = timeUsedByPassive + timeUsedByActive
-                // updateTime - beginningTime = (totalPartDuration - passiveGlobalChrono.remaining) + timeUsedByActive
-                const timeUsedByActive: number = updateMs - beginningMs - totalPartDuration + passiveRemainingTime;
-                const msToAdd: number = timeUsedByActive - concreteTimeUsedByActive;
-                console.log('getLastMoveTime lastTime update from', oldTime, 'to', updateMs, 'and used time:', timeUsedByActive, 'different then by', msToAdd);
-                if (msToAdd < 0) {
-                    console.log('enfant de cul c négatif!!')
-                } else {
-                    activeChrono.addTime(msToAdd);
-                }
+                return this.showTimeDifferenceThingy(oldTime, updateTime, oldPart, update, type);
             }
         }
-        return;
+    }
+    private getMoreRecentTime(part: Part): Time {
+        if (part == null) {
+            return null;
+        }
+        if (part.doc.lastMoveTime == null) {
+            return part.doc.beginning as Time;
+        } else {
+            return part.doc.lastMoveTime as Time;
+        }
     }
     private getMs(time: Time): number {
-        return time.seconds * 1000;
+        return time.seconds * 1000 + (time.nanoseconds / (1000 * 1000));
+    }
+    private showTimeDifferenceThingy(oldTime: NonNullable<Time>,
+                                     updateTime: NonNullable<Time>,
+                                     oldPart: Part,
+                                     update: Part,
+                                     type: UpdateType)
+    : void
+    {
+        const updateMs: number = this.getMs(updateTime);
+        const oldTimeMs: number = this.getMs(oldTime);
+        const beginningMs: number = this.getMs(update.doc.beginning as Time);
+        const totalPartDurationMs: number = this.joiner.totalPartDuration * 1000;
+        let passiveRemainingTimeMs: number;
+        let activeChrono: CountDownComponent;
+        if (oldPart.doc.turn % 2 === 0) {
+            passiveRemainingTimeMs = this.chronoOneGlobal.remainingTime;
+            activeChrono = this.chronoZeroGlobal;
+        } else {
+            passiveRemainingTimeMs = this.chronoZeroGlobal.remainingTime;
+            activeChrono = this.chronoOneGlobal;
+        }
+        const concreteMsUsedByActive: number = totalPartDurationMs - activeChrono.remainingTime;
+        // updateMs - beginningMs = timeUsedByPassive + timeUsedByActive
+        // updateMs - beginningMs = (totalPartDurationMs - passiveGlobalChrono.remaining) + timeUsedByActive
+        // timeUsedByActive = concreteMsUsedByActive + msSpentInTransition
+        // msSpentInTransition = timeUsedByActive - concreteMsUsedByActive
+        const totalTimeUsedDBWise: number = updateMs - beginningMs;
+        const timeUsedByActive: number = totalTimeUsedDBWise - totalPartDurationMs + passiveRemainingTimeMs;
+        const msSpentInTransition: number = timeUsedByActive - concreteMsUsedByActive;
+        console.log({
+            turn: update == null ? null : update.doc.turn,
+            concreteMsUsedByActive,
+            msSpentInTransition,
+            moveDurationDBWise: updateMs - oldTimeMs,
+            totalTimeUsedDBWise,
+        })
+        console.log('getLastMoveTime(' + type.value + ') lastTime update; start =', oldTimeMs, '+', totalTimeUsedDBWise, 'and used time:', timeUsedByActive, 'different then by', msSpentInTransition);
+        if (type === UpdateType.TIME_ALONE) {
+            if (msSpentInTransition < 0) {
+                console.log('enfant de cul c négatif!!')
+            } else {
+                console.log('getLastMoveTime ADDING THE TIIIIIME')
+                activeChrono.addTime(msSpentInTransition);
+            }
+        }
     }
     public setChronos(): void {
         display(OnlineGameWrapperComponent.VERBOSE, 'onlineGameWrapperComponent.setChronos()');
@@ -352,11 +397,11 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     private switchPlayer(): void {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.switchPlayer');
         const part: Part = this.currentPart;
-        const currentEnnemy: Player = part.doc.turn % 2 === 0 ? Player.ONE : Player.ZERO;
-        if (this.didUserPlay(currentEnnemy)) {
-            this.pauseCountDownsFor(currentEnnemy);
-        }
         const currentPlayer: Player = Player.fromTurn(part.doc.turn);
+        const currentOpponent: Player = currentPlayer.getOpponent();
+        if (this.didUserPlay(currentOpponent)) {
+            this.pauseCountDownsFor(currentOpponent);
+        }
         if (this.didUserPlay(currentPlayer)) {
             display(OnlineGameWrapperComponent.VERBOSE,
                     'OnlineGameWrapperComponent.onCurrentPartUpdate: changing current player');

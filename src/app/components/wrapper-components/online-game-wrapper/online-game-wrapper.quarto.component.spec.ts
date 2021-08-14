@@ -61,6 +61,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         emailVerified: true,
         last_changed: {
             seconds: Date.now() / 1000,
+            nanoseconds: Date.now() % 1000,
         },
         state: 'online',
     };
@@ -71,6 +72,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         emailVerified: true,
         last_changed: {
             seconds: Date.now() / 1000,
+            nanoseconds: Date.now() % 1000,
         },
         state: 'online',
     };
@@ -128,7 +130,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await partDAO.update('joinerId', {
             playerOne: 'firstCandidate',
             turn: 0,
-            beginning: { seconds: 123 },
+            beginning: { seconds: 123, nanoseconds: 456000000 },
         });
         componentTestUtils.detectChanges();
         return Promise.resolve();
@@ -169,7 +171,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
         });
         componentTestUtils.detectChanges();
-        tick();
+        tick(1);
         return;
     };
     const prepareBoard: (moves: QuartoMove[]) => Promise<void> = async(moves: QuartoMove[]) => {
@@ -718,8 +720,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 listMoves: [1, 2, 3],
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: 'Sir Meryn Trant',
-                beginning: { seconds: 123 },
-                lastMoveTime: { seconds: 333 },
+                beginning: { seconds: 123, nanoseconds: 456000000 },
+                lastMoveTime: { seconds: 333, nanoseconds: 333000000 },
                 request: Request.takeBackAccepted(Player.ZERO),
             });
             const update: Part = new Part({
@@ -729,14 +731,14 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 listMoves: [1, 2, 3, 4],
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: 'Sir Meryn Trant',
-                beginning: { seconds: 123 },
-                lastMoveTime: { seconds: 444 },
+                beginning: { seconds: 123, nanoseconds: 456000000 },
+                lastMoveTime: { seconds: 444, nanoseconds: 444000000 },
                 // And obviously, no longer the previous request code
             });
             expect(wrapper.getUpdateType(update)).toBe(UpdateType.MOVE);
             tick(wrapper.joiner.maximalMoveDuration * 1000 + 1);
         }));
-        it('Move + Time_added + Score_added = UpdateType.MOVE', fakeAsync(async() => {
+        it('First Move + Time_added + Score_added = UpdateType.MOVE', fakeAsync(async() => {
             await prepareStartedGameFor({ pseudo: 'creator', verified: true });
             wrapper.currentPart = new Part({
                 typeGame: 'P4',
@@ -745,7 +747,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 listMoves: [],
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: 'Sir Meryn Trant',
-                beginning: { seconds: 123 },
+                beginning: { seconds: 123, nanoseconds: 456000000 },
             });
             const update: Part = new Part({
                 typeGame: 'P4',
@@ -754,16 +756,16 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 listMoves: [1],
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: 'Sir Meryn Trant',
-                beginning: { seconds: 123 },
+                beginning: { seconds: 123, nanoseconds: 456000000 },
                 // And obviously, the added score and time
                 scorePlayerZero: 0,
                 scorePlayerOne: 0,
-                lastMoveTime: { seconds: 1111 },
+                lastMoveTime: { seconds: 1111, nanoseconds: 111000000 },
             });
-            expect(wrapper.getUpdateType(update)).toBe(UpdateType.MOVE_WITHOUT_TIME);
+            expect(wrapper.getUpdateType(update)).toBe(UpdateType.MOVE);
             tick(wrapper.joiner.maximalMoveDuration * 1000 + 1);
         }));
-        it('Move + Time_added + Score_modified = UpdateType.MOVE', fakeAsync(async() => {
+        it('First Move After Tack Back + Time_modified = UpdateType.MOVE', fakeAsync(async() => {
             await prepareStartedGameFor({ pseudo: 'creator', verified: true });
             wrapper.currentPart = new Part({
                 typeGame: 'P4',
@@ -772,24 +774,51 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 listMoves: [],
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: 'Sir Meryn Trant',
-                beginning: { seconds: 123 },
+                beginning: { seconds: 123, nanoseconds: 456000000 },
+                lastMoveTime: { seconds: 1111, nanoseconds: 111000000 },
+            });
+            const update: Part = new Part({
+                typeGame: 'P4',
+                playerZero: 'who is it from who cares',
+                turn: 1,
+                listMoves: [1],
+                result: MGPResult.UNACHIEVED.value,
+                playerOne: 'Sir Meryn Trant',
+                beginning: { seconds: 123, nanoseconds: 456000000 },
+                // And obviously, the modified time
+                lastMoveTime: { seconds: 2222, nanoseconds: 222000000 },
+            });
+            expect(wrapper.getUpdateType(update)).toBe(UpdateType.MOVE);
+            tick(wrapper.joiner.maximalMoveDuration * 1000 + 1);
+        }));
+        it('Move + Time_modified + Score_modified = UpdateType.MOVE', fakeAsync(async() => {
+            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            wrapper.currentPart = new Part({
+                typeGame: 'P4',
+                playerZero: 'who is it from who cares',
+                turn: 1,
+                listMoves: [1],
+                result: MGPResult.UNACHIEVED.value,
+                playerOne: 'Sir Meryn Trant',
+                beginning: { seconds: 123, nanoseconds: 456000000 },
+                lastMoveTime: { seconds: 1111, nanoseconds: 111000000 },
                 scorePlayerZero: 1,
                 scorePlayerOne: 1,
             });
             const update: Part = new Part({
                 typeGame: 'P4',
                 playerZero: 'who is it from who cares',
-                turn: 1,
-                listMoves: [1],
+                turn: 2,
+                listMoves: [1, 2],
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: 'Sir Meryn Trant',
-                beginning: { seconds: 123 },
+                beginning: { seconds: 123, nanoseconds: 456000000 },
+                lastMoveTime: { seconds: 2222, nanoseconds: 222000000 },
                 scorePlayerZero: 1,
                 // And obviously, the score update and time added
                 scorePlayerOne: 4,
-                lastMoveTime: { seconds: 1111 },
             });
-            expect(wrapper.getUpdateType(update)).toBe(UpdateType.MOVE_WITHOUT_TIME);
+            expect(wrapper.getUpdateType(update)).toBe(UpdateType.MOVE);
             tick(wrapper.joiner.maximalMoveDuration * 1000 + 1);
         }));
         it('Move + Time_removed + Score_added = UpdateType.MOVE_WITHOUT_TIME', fakeAsync(async() => {
@@ -801,8 +830,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 listMoves: [1],
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: 'Sir Meryn Trant',
-                beginning: { seconds: 123 },
-                lastMoveTime: { seconds: 1111 },
+                beginning: { seconds: 123, nanoseconds: 456000000 },
+                lastMoveTime: { seconds: 1111, nanoseconds: 111000000 },
             });
             const update: Part = new Part({
                 typeGame: 'P4',
@@ -811,7 +840,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 listMoves: [1, 2],
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: 'Sir Meryn Trant',
-                beginning: { seconds: 123 },
+                beginning: { seconds: 123, nanoseconds: 456000000 },
                 // And obviously, the added score
                 scorePlayerZero: 0,
                 scorePlayerOne: 0,
@@ -829,8 +858,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 listMoves: [1],
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: 'Sir Meryn Trant',
-                beginning: { seconds: 123 },
-                lastMoveTime: { seconds: 1111 },
+                beginning: { seconds: 123, nanoseconds: 456000000 },
+                lastMoveTime: { seconds: 1111, nanoseconds: 111000000 },
                 scorePlayerZero: 1,
                 scorePlayerOne: 1,
             });
@@ -841,7 +870,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 listMoves: [1, 2],
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: 'Sir Meryn Trant',
-                beginning: { seconds: 123 },
+                beginning: { seconds: 123, nanoseconds: 456000000 },
                 scorePlayerZero: 1,
                 // lastMoveTime is removed
                 scorePlayerOne: 4, // modified
@@ -849,7 +878,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(wrapper.getUpdateType(update)).toBe(UpdateType.MOVE_WITHOUT_TIME);
             tick(wrapper.joiner.maximalMoveDuration * 1000 + 1);
         }));
-        it('Nothing + Time_added = UpdateType.TIME_ALONE', fakeAsync(async() => {
+        it('NoMove + Time_added = UpdateType.TIME_ALONE', fakeAsync(async() => {
             await prepareStartedGameFor({ pseudo: 'creator', verified: true });
             wrapper.currentPart = new Part({
                 typeGame: 'P4',
@@ -858,7 +887,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 listMoves: [1],
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: 'Sir Meryn Trant',
-                beginning: { seconds: 123 },
+                beginning: { seconds: 123, nanoseconds: 456000000 },
                 lastMoveTime: null,
             });
             const update: Part = new Part({
@@ -868,9 +897,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 listMoves: [1],
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: 'Sir Meryn Trant',
-                beginning: { seconds: 123 },
+                beginning: { seconds: 123, nanoseconds: 456000000 },
                 // the only modif
-                lastMoveTime: { seconds: 1111 },
+                lastMoveTime: { seconds: 1111, nanoseconds: 111000000 },
             });
             expect(wrapper.getUpdateType(update)).toBe(UpdateType.TIME_ALONE);
             tick(wrapper.joiner.maximalMoveDuration * 1000 + 1);
