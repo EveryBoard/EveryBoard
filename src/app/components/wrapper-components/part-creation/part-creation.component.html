@@ -42,8 +42,8 @@
                                 <div class="dropdown-content">
                                     <div class="dropdown-item">
                                         <p>
-                                            <ng-container i18n>Maximal turn duration: </ng-container><strong>{{ partType.NORMAL_MOVE_DURATION | humanDuration }}</strong><br/>
-                                            <ng-container i18n>Maximal game duration: </ng-container> <strong>{{ partType.NORMAL_PART_DURATION | humanDuration }} <ng-container i18n>per player</ng-container></strong>
+                                            <ng-container i18n>Maximal turn duration: <strong>{{ partType.NORMAL_MOVE_DURATION | humanDuration }}</strong></ng-container><br/>
+                                            <ng-container i18n>Maximal game duration: <strong>{{ partType.NORMAL_PART_DURATION | humanDuration }} per player</strong></ng-container>
                                         </p>
                                     </div>
                                 </div>
@@ -60,8 +60,8 @@
                                 <div class="dropdown-content">
                                     <div class="dropdown-item">
                                         <p>
-                                            <ng-container i18n>Maximal turn duration: </ng-container> <strong>{{ partType.BLITZ_MOVE_DURATION | humanDuration }}</strong><br/>
-                                            <ng-container i18n>Maximal game duration: </ng-container> <strong>{{ partType.BLITZ_PART_DURATION | humanDuration }} <ng-container i18n>per player</ng-container></strong>
+                                            <ng-container i18n>Maximal turn duration: <strong>{{ partType.BLITZ_MOVE_DURATION | humanDuration }}</strong></ng-container><br/>
+                                            <ng-container i18n>Maximal game duration: <strong>{{ partType.BLITZ_PART_DURATION | humanDuration }} per player</strong></ng-container>
                                         </p>
                                     </div>
                                 </div>
@@ -76,7 +76,7 @@
                 </div>
                 <div id="customTime" *ngIf="viewInfo.showCustomTime">
                     <div class="field">
-                        <label class="label" for="maximalMoveDuration"><ng-container i18n>Maximal turn duration:</ng-container> <output>{{ viewInfo.maximalMoveDuration | humanDuration }}</output></label>
+                        <label class="label" for="maximalMoveDuration"><ng-container i18n>Maximal turn duration: <output>{{ viewInfo.maximalMoveDuration | humanDuration }}</output></ng-container></label>
                         <div class="control">
                             <input class="slider is-circle is-primary"
                                    step="10"
@@ -86,7 +86,7 @@
                         </div>
                     </div>
                     <div class="field">
-                        <label class="label" for="totalPartDuration"><ng-container i18n>Maximal game duration:</ng-container> <output>{{ viewInfo.totalPartDuration | humanDuration }} <ng-container i18n>per player</ng-container></output></label>
+                        <label class="label" for="totalPartDuration"><ng-container i18n>Maximal game duration: <output>{{ viewInfo.totalPartDuration | humanDuration }} per player</output></ng-container></label>
                         <div class="control">
                             <input class="slider is-circle is-primary"
                                    step="10"
@@ -178,8 +178,8 @@
                                 <span *ngIf="viewInfo.firstPlayer === 'RANDOM'" i18n
                                 >the first player is selected randomly</span>
                             </li>
-                            <li><ng-container i18n>a turn lasts at most </ng-container><strong>{{ viewInfo.maximalMoveDuration | humanDuration }} </strong></li>
-                            <li><ng-container i18n>the game lasts at most </ng-container><strong>{{ viewInfo.totalPartDuration | humanDuration }} <ng-container i18n>per player</ng-container></strong></li>
+                            <li i18n>a turn lasts at most <strong>{{ viewInfo.maximalMoveDuration | humanDuration }} </strong></li>
+                            <li i18n>the game lasts at most <strong>{{ viewInfo.totalPartDuration | humanDuration }} per player</strong></li>
                         </ul>
                         <button class="button is-primary"
                                 (click)="acceptConfig()"
