@@ -22,7 +22,7 @@
                                 [ngClass]="(viewInfo.firstPlayer === 'CHOSEN_PLAYER') && ['is-primary', 'is-selected']"
                                 (click)="selectFirstPlayer('CHOSEN_PLAYER')"
                                 >
-                            <ng-container *ngIf="viewInfo.chosenOpponent else opponentWithoutName"> {{ viewInfo.chosenOpponent }}</ng-container>
+                            <ng-container *ngIf="viewInfo.chosenOpponent else opponentWithoutName">{{ viewInfo.chosenOpponent }}</ng-container>
                             <ng-template #opponentWithoutName i18n>The opponent</ng-template>
                         </button>
                     </div>
@@ -76,7 +76,7 @@
                 </div>
                 <div id="customTime" *ngIf="viewInfo.showCustomTime">
                     <div class="field">
-                        <label class="label" for="maximalMoveDuration"><ng-container i18n>Maximal turn duration: <output>{{ viewInfo.maximalMoveDuration | humanDuration }}</output></ng-container></label>
+                        <label class="label" for="maximalMoveDuration" i18n>Maximal turn duration: <output>{{ viewInfo.maximalMoveDuration | humanDuration }}</output></label>
                         <div class="control">
                             <input class="slider is-circle is-primary"
                                    step="10"
@@ -86,7 +86,7 @@
                         </div>
                     </div>
                     <div class="field">
-                        <label class="label" for="totalPartDuration"><ng-container i18n>Maximal game duration: <output>{{ viewInfo.totalPartDuration | humanDuration }} per player</output></ng-container></label>
+                        <label class="label" for="totalPartDuration" i18n>Maximal game duration: <output>{{ viewInfo.totalPartDuration | humanDuration }} per player</output></label>
                         <div class="control">
                             <input class="slider is-circle is-primary"
                                    step="10"

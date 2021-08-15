@@ -74,9 +74,9 @@
         <source>Password</source>
         <target>Mot de passe</target>
       </trans-unit>
-      <trans-unit id="5939693457139759683" datatype="html">
-        <source>A confirmation email will be sent to validate your account</source>
-        <target>Un email de confirmation vous sera envoyé pour valider votre compte</target>
+      <trans-unit id="9018459935889527317" datatype="html">
+        <source>A confirmation email will be sent to validate your account.</source>
+        <target>Un email de confirmation vous sera envoyé pour valider votre compte.</target>
       </trans-unit>
       <trans-unit id="77522255637065336" datatype="html">
         <source>Connection error</source>
@@ -84,7 +84,7 @@
       </trans-unit>
       <trans-unit id="3119050750831891643" datatype="html">
         <source>This password is incorrect.</source>
-        <target>Ce mot de passe est incorrect</target>
+        <target>Ce mot de passe est incorrect.</target>
       </trans-unit>
       <trans-unit id="5113647226865218037" datatype="html">
         <source>This email address has no account on this website.</source>
@@ -120,7 +120,7 @@
       </trans-unit>
       <trans-unit id="5561648955936795459" datatype="html">
         <source>Use simple mechanics to push 6 of the opponent&apos;s pieces out of the board!</source>
-        <target>Utilisez des mécaniques simples pour pousser 6 pièces adverses hors du plateau!</target>
+        <target>Utilisez des mécaniques simples pour pousser 6 pièces adverses hors du plateau !</target>
       </trans-unit>
       <trans-unit id="1626489690215042302" datatype="html">
         <source>The international version of the most famous African strategy game!</source>
@@ -136,7 +136,7 @@
       </trans-unit>
       <trans-unit id="8971165322320863634" datatype="html">
         <source>An antiquity-war inspired game. Be the first to pierce your opponent&apos;s lines!</source>
-        <target>Un jeu inspiré de l'antiquité. Soyez le premier à percer les lignes ennemies !</target>
+        <target>Un jeu inspiré de l'antiquité. Soyez le premier à percer les lignes adverses !</target>
       </trans-unit>
       <trans-unit id="6403042813790072176" datatype="html">
         <source>A hexagonal game of alignment. Don&apos;t be the first one to be out of pieces to place on the board!</source>
@@ -164,7 +164,7 @@
       </trans-unit>
       <trans-unit id="1827371853303540301" datatype="html">
         <source>Immobilize one of your opponent&apos;s pyramids before your opponent does!</source>
-        <target>Immobilisez une des pièces de votre adversaire avant qu'il ne le fasse !</target>
+        <target>Soyez le premier à immobiliser une pièce de l'adversaire !</target>
       </trans-unit>
       <trans-unit id="1409973335731836872" datatype="html">
         <source>Be the first to push a mountain out of the board!</source>
@@ -178,8 +178,8 @@
         <source>The vikings checkers! Invaders must capture the King, defender must make him escape!</source>
         <target>Le jeu de dames viking ! Les envahisseurs doivent capturer le roi, tandis que les défenseurs doivent le faire s'échapper !</target>
       </trans-unit>
-      <trans-unit id="5505923430827237190" datatype="html">
-        <source>Align your pieces to score points, but beware of pieces that flip!</source>
+      <trans-unit id="7926456268600574942" datatype="html">
+        <source>Align your pieces to score points, but beware, pieces can flip!</source>
         <target>Alignez vos pièces pour marquer des points, mais attention aux retournements de pièces !</target>
       </trans-unit>
       <trans-unit id="718535138834335364" datatype="html">
@@ -312,7 +312,7 @@
       </trans-unit>
       <trans-unit id="3620319853901130962" datatype="html">
         <source>AwesomBoard is a website to play and learn the rules of various abstract strategy games with perfect information.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Such games are games that do not include any randomness, agility, or hidden information. These games are played by two players, turn by turn. </source>
-        <target>AwesomBoard est un site qui permet de jouer et d&apos;apprendre les règles de nombreux jeux de stratégie combinatoire à information parfaite.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> On comprends donc là dedans les jeux ne faisant intervenir ni hasard, ni agilité, ni informations cachées, et uniquement des jeux deux joueurs et tours par tours! </target>
+        <target>AwesomBoard est un site qui permet de jouer et d&apos;apprendre les règles de nombreux jeux de stratégie combinatoire à information parfaite.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> On comprends donc là dedans les jeux ne faisant intervenir ni hasard, ni agilité, ni informations cachées, et uniquement des jeux deux joueurs et tours par tours. </target>
       </trans-unit>
       <trans-unit id="4005579048990110948" datatype="html">
         <source>It is not your turn.</source>
@@ -320,7 +320,7 @@
       </trans-unit>
       <trans-unit id="4691729121764741641" datatype="html">
         <source>You cannot clone a game. This feature might be implemented later.</source>
-        <target>Clôner une partie n&apos;est pas encore possible. Cette fonctionnalité pour être implémentée dans un futur incertain.</target>
+        <target>Clôner une partie n&apos;est pas encore possible. Cette fonctionnalité pourrait être implémentée dans un futur incertain.</target>
       </trans-unit>
       <trans-unit id="3568920234618711065" datatype="html">
         <source>The game has ended.</source>
@@ -350,9 +350,9 @@
         <source>Draw</source>
         <target>Match nul</target>
       </trans-unit>
-      <trans-unit id="7454523699659209073" datatype="html">
-        <source>Restart game</source>
-        <target>Recommencer une partie</target>
+      <trans-unit id="2981217201452500939" datatype="html">
+        <source>Start a new game</source>
+        <target>Commencer une nouvelle partie</target>
       </trans-unit>
       <trans-unit id="6267418979719843573" datatype="html">
         <source>Pass a turn</source>
@@ -392,7 +392,7 @@
       </trans-unit>
       <trans-unit id="2010898711320853661" datatype="html">
         <source>Reject draw</source>
-        <target>Refuser un match nul</target>
+        <target>Refuser le match nul</target>
       </trans-unit>
       <trans-unit id="789643613466585719" datatype="html">
         <source>Accept take back</source>
@@ -422,7 +422,7 @@
         <source><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser() }}"/> has reached their time limit.</source>
         <target><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser() }}"/> a épuisé son temps.</target>
       </trans-unit>
-      <trans-unit id="5706398654268785342" datatype="html">
+      <trans-unit id="6095994516289681666" datatype="html">
         <source>Go back to server</source>
         <target>Retour au serveur</target>
       </trans-unit>
@@ -430,8 +430,8 @@
         <source><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser() }}"/> has resigned.</source>
         <target><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser() }}"/> a abandonné.</target>
       </trans-unit>
-      <trans-unit id="7006304707738759406" datatype="html">
-        <source>Propose to replay the game</source>
+      <trans-unit id="5206964189980535511" datatype="html">
+        <source>Propose to play again</source>
         <target>Proposer une revanche</target>
       </trans-unit>
       <trans-unit id="7815479892408473764" datatype="html">
@@ -442,9 +442,9 @@
         <source>You lost.</source>
         <target>Vous avez perdu.</target>
       </trans-unit>
-      <trans-unit id="1089315770473394667" datatype="html">
-        <source>Accept to replay the game</source>
-        <target>Accepter le rematch</target>
+      <trans-unit id="4237132455292972929" datatype="html">
+        <source>Accept to play again</source>
+        <target>Accepter la revanche</target>
       </trans-unit>
       <trans-unit id="6165538570244502951" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ currentPart.getWinner() }}"/> won.</source>
@@ -453,10 +453,6 @@
       <trans-unit id="715032829765584790" datatype="html">
         <source>vs.</source>
         <target>vs.</target>
-      </trans-unit>
-      <trans-unit id="5716137659647839531" datatype="html">
-        <source>Turn n° <x id="INTERPOLATION" equiv-text="{{ currentPart.getTurn() + 1 }}"/></source>
-        <target>Tour n° <x id="INTERPOLATION" equiv-text="{{ currentPart.getTurn() + 1 }}"/></target>
       </trans-unit>
       <trans-unit id="5056292777668083757" datatype="html">
         <source>Click on the opponent against which you would like to play.</source>
@@ -522,8 +518,8 @@
         <target><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> est en train de configurer la partie.</target>
       </trans-unit>
       <trans-unit id="7215535622740824911" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> plays first </source>
-        <target><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> joue en premier </target>
+        <source><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> plays first</source>
+        <target><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> joue en premier</target>
       </trans-unit>
       <trans-unit id="353130366888208691" datatype="html">
         <source>Game creation</source>
@@ -603,11 +599,11 @@
       </trans-unit>
       <trans-unit id="7137133530752645682" datatype="html">
         <source><x id="PH" equiv-text="userPseudo"/> left the game, please pick another opponent.</source>
-        <target><x id="PH" equiv-text="userPseudo"/> a quitté la partie, veuillez choisir un autre adversaire</target>
+        <target><x id="PH" equiv-text="userPseudo"/> a quitté la partie, veuillez choisir un autre adversaire.</target>
       </trans-unit>
       <trans-unit id="6594123400599013490" datatype="html">
         <source>Step finished!</source>
-        <target>Étape finie!</target>
+        <target>Étape finie !</target>
       </trans-unit>
       <trans-unit id="5395533573244657143" datatype="html">
         <source>This step is not expecting any move from your part.</source>
@@ -633,8 +629,8 @@
         <source>Continue</source>
         <target>Continuer</target>
       </trans-unit>
-      <trans-unit id="4552397654536129176" datatype="html">
-        <source>Pass</source>
+      <trans-unit id="4563965495368336177" datatype="html">
+        <source>Skip</source>
         <target>Passer</target>
       </trans-unit>
       <trans-unit id="7757774343229747209" datatype="html">
@@ -659,7 +655,7 @@
       </trans-unit>
       <trans-unit id="7864006988432394989" datatype="html">
         <source>This line contains pieces of your opponent or empty spaces, which is forbidden.</source>
-        <target>Cette ligne contient des pièces ennemies ou des cases vides, ceci est interdit.</target>
+        <target>Cette ligne contient des pièces de l'adversaire ou des cases vides, ceci est interdit.</target>
       </trans-unit>
       <trans-unit id="507376328570453826" datatype="html">
         <source>This move is impossible, some landing spaces are occupied.</source>
@@ -675,7 +671,7 @@
       </trans-unit>
       <trans-unit id="2613028380797438509" datatype="html">
         <source>At Abalone, the goal of the game is to be the first player to push 6 opponent&apos;s pieces out of the board. Let us see how!</source>
-        <target>À l&apos;Abalone, le but du jeu est d&apos;être le premier joueur à pousser 6 pièces adverses en dehors du plateau. Voyons voir comment!</target>
+        <target>À l&apos;Abalone, le but du jeu est d&apos;être le premier joueur à pousser 6 pièces adverses en dehors du plateau. Voyons voir comment !</target>
       </trans-unit>
       <trans-unit id="4612562967450553112" datatype="html">
         <source>Moving a piece</source>
@@ -689,13 +685,13 @@
         You&apos;re playing Dark, make any move!</source>
         <target>Chaque tour, déplacez une, deux ou trois pièces, soit le long de leur alignement, soit par un pas de côté.
         Pour vos déplacement vous avez donc au maximum à choisir parmis 6 directions.
-        Les trois pièces à déplacer doivent être alignées et immédiatement voisines et atterrir sur des cases vides (sauf pour pousser, ce que nous verrons plus tard).
+        Les troàis pièces à déplacer doivent être alignées et immédiatement voisines et atterrir sur des cases vides (sauf pour pousser, ce que nous verrons plus tard).
         Pour effectuer un déplacement, cliquez sur une de vos pièces, puis cliquez sur une flèche pour choisir sa direction.
-        Vous jouez Foncé, faites n&apos;importe quel mouvement!</target>
+        Vous jouez Foncé, faites n&apos;importe quel mouvement !</target>
       </trans-unit>
       <trans-unit id="3762527362373672599" datatype="html">
         <source>Congratulations!</source>
-        <target>Bravo!</target>
+        <target>Bravo !</target>
       </trans-unit>
       <trans-unit id="272253201636921624" datatype="html">
         <source>Pushing</source>
@@ -901,7 +897,7 @@
       </trans-unit>
       <trans-unit id="6928762188180587282" datatype="html">
         <source>Your first click must be on the piece that you want to move, or on a piece of your opponent that you want to exchange against two tiles.</source>
-        <target>Votre premier clic doit être sur une de vos pièce pour la déplacer, ou sur une pièce ennemie pour l&apos;échanger contre deux tuiles.</target>
+        <target>Votre premier clic doit être sur une de vos pièce pour la déplacer, ou sur une pièce de l'adversaire pour l&apos;échanger contre deux tuiles.</target>
       </trans-unit>
       <trans-unit id="6829098107854171134" datatype="html">
         <source>You cannot capture on a removed tile.</source>
@@ -969,7 +965,7 @@
         However, it is possible to place a piece between 3 of the opponent&apos;s pieces (or 2 on the side) without being captured.&lt;br/&gt;&lt;br/&gt;
         You&apos;re playing Light, make a capture.</source>
         <target>Chaque pièce a trois cases triangulaires voisines (2 sur les bords).
-        Quand toutes les cases voisines sauf une sont occupées, et qu&apos;un ennemi vient se déplacer sur cette dernière case libre, votre pièce est capturée !
+        Quand toutes les cases voisines sauf une sont occupées, et qu&apos;une pièce de l'adversaire vient se déplacer sur cette dernière case libre, votre pièce est capturée !
         Cependant, il est possible pour un joueur de se placer entre 3 pièces adverses (ou 2 contre un bord) sans être capturé.&lt;br/&gt;&lt;br/&gt;
         Vous jouez Clair, effectuez une capture</target>
       </trans-unit>
@@ -1010,10 +1006,10 @@
         If any tiles are removed during that turn, nobody will get them.&lt;br/&gt;&lt;br/&gt;
         Gain some time and capture the last piece!</source>
         <target>Dès que vous avez au moins une tuile, vous pourrez le voir sur la gauche du plateau.
-        Dès que vous en avez deux, vous pouvez, en cliquant sur une pièce ennemie, la capturer immédiatement.
+        Dès que vous en avez deux, vous pouvez, en cliquant sur une pièce adverse, la capturer immédiatement.
         Cet action vous coûtera deux tuiles.
         Si une ou plusieurs tuile sont retirées pendant ce tour, personne ne les récupérera.&lt;br/&gt;&lt;br/&gt;
-        Gagnez du temps, et capturez la dernière pièce ennemie !</target>
+        Gagnez du temps, et capturez la dernière pièce adverse !</target>
       </trans-unit>
       <trans-unit id="6149833006202189547" datatype="html">
         <source>It&apos;s nice to move a piece, but you could have had the opponent&apos;s piece immediately by clicking on it!</source>
@@ -1249,7 +1245,7 @@
       </trans-unit>
       <trans-unit id="8175810329145642315" datatype="html">
         <source>A phalanx cannot contain an piece of the opponent.</source>
-        <target>Une phalange ne peut pas contenir de pièce ennemie.</target>
+        <target>Une phalange ne peut pas contenir de pièce de l'adversaire.</target>
       </trans-unit>
       <trans-unit id="8733936607898144583" datatype="html">
         <source>Initial board</source>
@@ -1337,7 +1333,7 @@
         <target>Bravo !
         Les pièces déplacées doivent être horizontalement, verticalement, ou diagonalement alignées.
         Le déplacement doit se faire le long de cette ligne, en avant ou en arrière.
-        Il ne peut y avoir ni ennemis ni trous dans la phalange.</target>
+        Il ne peut y avoir ni pièces adverses ni trous dans la phalange.</target>
       </trans-unit>
       <trans-unit id="1735581478820014059" datatype="html">
         <source>In order to capture pieces of the opponent:
@@ -1347,7 +1343,7 @@
             &lt;li&gt;The first piece of your phalanx should land on the first piece of the opponent&apos;s phalanx that you want to capture.&lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
         Capture a phalanx.</source>
-        <target>Pour capturer une phalange ennemie:
+        <target>Pour capturer une phalange de l'adversaire:
         &lt;ol&gt;;
             &lt;li&gt; 1. Il faut que celle-ci soit alignée avec la phalange en déplacement.&lt;/li&gt;
             &lt;li&gt; 2. Qu&apos;elle soit strictement plus courte.&lt;/li&gt;
@@ -1522,7 +1518,7 @@
         Elle a été provoquée par un mouvement de votre adversaire lors de son tour de jeu
         (bien que ce plateau soit fictif à des fins pédagogiques).
         En effectuant ensuite le bon mouvement, vous pourrez faire deux captures supplémentaires !
-        Gardez à l&apos;esprit que le plus utile d&apos;une capture, est de capturer les pièces ennemies !</target>
+        Gardez à l&apos;esprit que le plus utile d&apos;une capture, est de capturer les pièces adverses !</target>
       </trans-unit>
       <trans-unit id="1212338036122995731" datatype="html">
         <source>Congratulations, you have gotten 12 of your pieces back and captured 2 of your opponent&apos;s pieces.
@@ -1838,7 +1834,7 @@
       </trans-unit>
       <trans-unit id="3931959709762726685" datatype="html">
         <source>You cannot jump over the opponent&apos;s pieces.</source>
-        <target>Vous ne pouvez pas passer au dessus d&apos;une pièce ennemie.</target>
+        <target>Vous ne pouvez pas passer au dessus d&apos;une pièce de l'adversaire.</target>
       </trans-unit>
       <trans-unit id="1549682374526776641" datatype="html">
         <source>You must select one of your pieces.</source>
@@ -2327,7 +2323,7 @@
         You&apos;re playing Light.</source>
         <target>Vous savez déjà tout ce qu&apos;il faut pour jouer, il ne manque qu&apos;une spécificité.
         Si vous créez une ligne de 5 pièces vous appartenant, vous gagnez.
-        Si vous créez une ligne de 5 pièces ennemies, vous perdez.
+        Si vous créez une ligne de 5 pièces de l'adversaire, vous perdez.
         Si vous créez les deux, vous perdez aussi!&lt;br/&gt;&lt;br/&gt;
         Ce plateau permet de gagner, essayez.
         Vous jouez Clair.</target>
@@ -2589,7 +2585,7 @@
         Pour pousser il faut plusieurs critères:
         &lt;ol&gt;;
             &lt;li&gt; 1. Être déjà orienté dans le sens de la poussée.&lt;/li&gt;
-            &lt;li&gt; 2. Que le nombre de pièces (ennemies ou non) qui font face à la votre (les résistants)
+            &lt;li&gt; 2. Que le nombre de pièces (adverses ou non) qui font face à la votre (les résistants)
                 soit plus petit que le nombre de pièces qui vont dans la même direction, votre y compris (les pousseurs).&lt;/li&gt;
             &lt;li&gt; 3. Le nombre de montagne doit être inférieur ou égal à la différence entre pousseurs et résistant.&lt;/li&gt;
         &lt;/ol&gt;
@@ -2999,7 +2995,7 @@
       </trans-unit>
       <trans-unit id="6079681718244869210" datatype="html">
         <source>You cannot pick a piece of the opponent.</source>
-        <target>Vous ne pouvez pas choisir une pièce de l&apos;ennemi.</target>
+        <target>Vous ne pouvez pas choisir une pièce de l&apos;adversaire.</target>
       </trans-unit>
       <trans-unit id="7236012742212037533" datatype="html">
         <source>You must click on an empty space.</source>
@@ -3007,7 +3003,7 @@
       </trans-unit>
       <trans-unit id="8905154297816550312" datatype="html">
         <source>Your landing space should be empty or contain a piece of the opponent.</source>
-        <target>Votre case d&apos;arrivée doit être vide ou contenir une pièce ennemie.</target>
+        <target>Votre case d&apos;arrivée doit être vide ou contenir une pièce de l'adversaire.</target>
       </trans-unit>
       <trans-unit id="2698327260846195509" datatype="html">
         <source>You must drop your piece on an empty space.</source>

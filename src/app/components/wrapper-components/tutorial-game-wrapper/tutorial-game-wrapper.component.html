@@ -27,7 +27,7 @@
                         <ng-container *ngIf="stepFinished && stepFinished[stepIndex] else notFinished" i18n>Continue</ng-container>
                     </ng-template>
                     <ng-template #notFinished>
-                        <ng-container i18n>Pass</ng-container>
+                        <ng-container i18n>Skip</ng-container>
                     </ng-template>
                 </button>
                 <button id="restartButton"

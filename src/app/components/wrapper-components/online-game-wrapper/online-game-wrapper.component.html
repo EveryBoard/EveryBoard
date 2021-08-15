@@ -11,7 +11,7 @@
     <div class="tile is-3 is-parent">
         <div class="tile is-child box has-text-centered">
             <div class="block" id="turnIndicator" *ngIf="currentPart">
-                <p class="subtitle" i18n>Turn n° {{ currentPart.getTurn() + 1 }}</p>
+                <p class="subtitle" i18n>Turn n°{{ currentPart.getTurn() + 1 }}</p>
                 <p class="subtitle" id="currentPlayerIndicator" *ngIf="endGame === false">
                     <ng-container *ngIf="currentPlayer === userName else opponentsTurn" i18n
                     >It is your turn.</ng-container>
@@ -126,22 +126,19 @@
                     id="backToServerButton"
                     routerLink="server"
                     i18n
-            >Go back to server
-            </button>
+            >Go back to server</button>
             <button id="proposeRematchButton"
                     class="button is-fullwidth mb-1"
                     *ngIf="endGame && isPlaying() && rematchProposed === false"
                     (click)="proposeRematch()"
                     i18n
-            >Propose to replay the game
-            </button>
+            >Propose to play again</button>
             <button class="button is-fullwidth is-warning"
                     id="acceptRematchButton"
                     *ngIf="endGame && isPlaying() && rematchProposed && opponentProposedRematch"
                     (click)="acceptRematch()"
                     i18n
-             >Accept to replay the game
-            </button>
+             >Accept to play again</button>
         </div>
     </div>
     <div class="tile is-9 is-parent">

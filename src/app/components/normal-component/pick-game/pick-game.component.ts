@@ -57,7 +57,7 @@ class GameDescription {
 
     public static readonly TABLUT: string = $localize`The vikings checkers! Invaders must capture the King, defender must make him escape!`;
 
-    public static readonly YINSH: string = $localize`Align your pieces to score points, but beware of pieces that flip!`
+    public static readonly YINSH: string = $localize`Align your pieces to score points, but beware, pieces can flip!`
 }
 
 export class GameInfo {

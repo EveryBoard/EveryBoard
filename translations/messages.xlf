@@ -56,8 +56,8 @@
       <trans-unit id="1431416938026210429" datatype="html">
         <source>Password</source>
       </trans-unit>
-      <trans-unit id="5939693457139759683" datatype="html">
-        <source>A confirmation email will be sent to validate your account</source>
+      <trans-unit id="9018459935889527317" datatype="html">
+        <source>A confirmation email will be sent to validate your account.</source>
       </trans-unit>
       <trans-unit id="77522255637065336" datatype="html">
         <source>Connection error</source>
@@ -134,8 +134,8 @@
       <trans-unit id="4713908844197056478" datatype="html">
         <source>The vikings checkers! Invaders must capture the King, defender must make him escape!</source>
       </trans-unit>
-      <trans-unit id="5505923430827237190" datatype="html">
-        <source>Align your pieces to score points, but beware of pieces that flip!</source>
+      <trans-unit id="7926456268600574942" datatype="html">
+        <source>Align your pieces to score points, but beware, pieces can flip!</source>
       </trans-unit>
       <trans-unit id="718535138834335364" datatype="html">
         <source>Four in a Row</source>
@@ -263,8 +263,8 @@
       <trans-unit id="8647687729200262691" datatype="html">
         <source>Draw</source>
       </trans-unit>
-      <trans-unit id="7454523699659209073" datatype="html">
-        <source>Restart game</source>
+      <trans-unit id="2981217201452500939" datatype="html">
+        <source>Start a new game</source>
       </trans-unit>
       <trans-unit id="6267418979719843573" datatype="html">
         <source>Pass a turn</source>
@@ -317,20 +317,20 @@
       <trans-unit id="2324913504104154958" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser() }}"/> has reached their time limit.</source>
       </trans-unit>
-      <trans-unit id="5706398654268785342" datatype="html">
-        <source>Go back to server </source>
+      <trans-unit id="6095994516289681666" datatype="html">
+        <source>Go back to server</source>
       </trans-unit>
       <trans-unit id="7250880851290385128" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser() }}"/> has resigned.</source>
       </trans-unit>
-      <trans-unit id="7006304707738759406" datatype="html">
-        <source>Propose to replay the game </source>
+      <trans-unit id="5206964189980535511" datatype="html">
+        <source>Propose to play again</source>
       </trans-unit>
       <trans-unit id="7815479892408473764" datatype="html">
         <source>You won.</source>
       </trans-unit>
-      <trans-unit id="1089315770473394667" datatype="html">
-        <source>Accept to replay the game </source>
+      <trans-unit id="4237132455292972929" datatype="html">
+        <source>Accept to play again</source>
       </trans-unit>
       <trans-unit id="860662988722297223" datatype="html">
         <source>You lost.</source>
@@ -340,9 +340,6 @@
       </trans-unit>
       <trans-unit id="715032829765584790" datatype="html">
         <source>vs.</source>
-      </trans-unit>
-      <trans-unit id="5716137659647839531" datatype="html">
-        <source>Turn n° <x id="INTERPOLATION" equiv-text="{{ currentPart.getTurn() + 1 }}"/></source>
       </trans-unit>
       <trans-unit id="4073116770334354573" datatype="html">
         <source>Blitz</source>
@@ -365,17 +362,17 @@
       <trans-unit id="6482290849972032593" datatype="html">
         <source>Cancel game</source>
       </trans-unit>
-      <trans-unit id="6102520113052735150" datatype="html">
-        <source>The opponent</source>
-      </trans-unit>
       <trans-unit id="3550072303786290583" datatype="html">
         <source>Potential opponents that join the game will appear here.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Wait for an opponent to join, so that you can pick one. </source>
       </trans-unit>
-      <trans-unit id="5397323926664032734" datatype="html">
-        <source>Maximal turn duration: <x id="START_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;output&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.maximalMoveDuration | humanDuration }}"/><x id="CLOSE_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;/output&gt;"/></source>
+      <trans-unit id="6102520113052735150" datatype="html">
+        <source>The opponent</source>
       </trans-unit>
       <trans-unit id="5056292777668083757" datatype="html">
         <source>Click on the opponent against which you would like to play.</source>
+      </trans-unit>
+      <trans-unit id="5397323926664032734" datatype="html">
+        <source>Maximal turn duration: <x id="START_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;output&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.maximalMoveDuration | humanDuration }}"/><x id="CLOSE_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;/output&gt;"/></source>
       </trans-unit>
       <trans-unit id="8953033926734869941" datatype="html">
         <source>Name</source>
@@ -476,8 +473,8 @@
       <trans-unit id="6962699013778688473" datatype="html">
         <source>Continue</source>
       </trans-unit>
-      <trans-unit id="4552397654536129176" datatype="html">
-        <source>Pass</source>
+      <trans-unit id="4563965495368336177" datatype="html">
+        <source>Skip</source>
       </trans-unit>
       <trans-unit id="7757774343229747209" datatype="html">
         <source>Play locally</source>
