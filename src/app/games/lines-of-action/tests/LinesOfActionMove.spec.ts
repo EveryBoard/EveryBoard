@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
-import { MGPCanFail } from 'src/app/utils/MGPCanFail';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { JSONValue } from 'src/app/utils/utils';
 import { LinesOfActionMove } from '../LinesOfActionMove';
 
@@ -13,11 +13,11 @@ describe('LinesOfActionMove', () => {
         });
     });
     it('should not create a move outside of the board', () => {
-        expect(LinesOfActionMove.of(new Coord(-1, 5), new Coord(3, 5))).toEqual(MGPCanFail.failure('start coord is not in range'));
-        expect(LinesOfActionMove.of(new Coord(7, 7), new Coord(9, 9))).toEqual(MGPCanFail.failure('end coord is not in range'));
+        expect(LinesOfActionMove.of(new Coord(-1, 5), new Coord(3, 5))).toEqual(MGPFallible.failure('start coord is not in range'));
+        expect(LinesOfActionMove.of(new Coord(7, 7), new Coord(9, 9))).toEqual(MGPFallible.failure('end coord is not in range'));
     });
     it('should not create a move with an invalid direction', () => {
-        expect(LinesOfActionMove.of(new Coord(3, 3), new Coord(4, 5))).toEqual(MGPCanFail.failure('Invalid delta for direction'));
+        expect(LinesOfActionMove.of(new Coord(3, 3), new Coord(4, 5))).toEqual(MGPFallible.failure('Invalid delta for direction'));
     });
     describe('toString', () => {
         it('should be defined', () => {

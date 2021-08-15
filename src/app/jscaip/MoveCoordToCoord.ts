@@ -2,7 +2,7 @@ import { MoveCoord } from './MoveCoord';
 import { Coord } from './Coord';
 import { NumberEncoder } from './Encoder';
 import { Direction } from './Direction';
-import { MGPCanFail } from '../utils/MGPCanFail';
+import { MGPFallible } from '../utils/MGPFallible';
 
 export abstract class MoveCoordToCoord extends MoveCoord {
     public static getEncoder<T extends MoveCoordToCoord>(width: number, height: number,
@@ -51,7 +51,7 @@ export abstract class MoveCoordToCoord extends MoveCoord {
     public length(): number {
         return this.coord.getDistance(this.end);
     }
-    public getDirection(): MGPCanFail<Direction> {
+    public getDirection(): MGPFallible<Direction> {
         return Direction.factory.fromMove(this.coord, this.end);
     }
 }

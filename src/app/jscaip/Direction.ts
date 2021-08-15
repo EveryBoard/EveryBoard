@@ -1,6 +1,6 @@
 import { assert, JSONValue } from 'src/app/utils/utils';
 import { ComparableObject } from '../utils/Comparable';
-import { MGPCanFail } from '../utils/MGPCanFail';
+import { MGPFallible } from '../utils/MGPFallible';
 import { Coord } from './Coord';
 import { Encoder } from './Encoder';
 
@@ -22,27 +22,27 @@ export abstract class DirectionFactory<T extends AbstractDirection> {
 
     public abstract all: ReadonlyArray<NonNullable<T>>;
 
-    public of(x: number, y: number): MGPCanFail<T> {
+    public of(x: number, y: number): MGPFallible<T> {
         for (const dir of this.all) {
-            if (dir.x === x && dir.y === y) return MGPCanFail.success(dir);
+            if (dir.x === x && dir.y === y) return MGPFallible.success(dir);
         }
-        return MGPCanFail.failure('Invalid x and y in direction construction');
+        return MGPFallible.failure('Invalid x and y in direction construction');
     }
-    public fromDelta(dx: number, dy: number): MGPCanFail<T> {
+    public fromDelta(dx: number, dy: number): MGPFallible<T> {
         if (dx === 0 && dy === 0) {
-            return MGPCanFail.failure('Empty delta for direction');
+            return MGPFallible.failure('Empty delta for direction');
         } else if (Math.abs(dx) === Math.abs(dy) ||
                    dx === 0 ||
                    dy === 0)
         {
             return this.of(Math.sign(dx), Math.sign(dy));
         }
-        return MGPCanFail.failure('Invalid delta for direction');
+        return MGPFallible.failure('Invalid delta for direction');
     }
-    public fromMove(start: Coord, end: Coord): MGPCanFail<T> {
+    public fromMove(start: Coord, end: Coord): MGPFallible<T> {
         return this.fromDelta(end.x - start.x, end.y - start.y);
     }
-    public fromString(str: string): MGPCanFail<T> {
+    public fromString(str: string): MGPFallible<T> {
         switch (str) {
             case 'UP': return this.of(0, -1);
             case 'RIGHT': return this.of(1, 0);
@@ -52,10 +52,10 @@ export abstract class DirectionFactory<T extends AbstractDirection> {
             case 'UP_RIGHT': return this.of(1, -1);
             case 'DOWN_LEFT': return this.of(-1, 1);
             case 'DOWN_RIGHT': return this.of(1, 1);
-            default: return MGPCanFail.failure('Invalid string ' + str);
+            default: return MGPFallible.failure('Invalid string ' + str);
         }
     }
-    public fromInt(int: number): MGPCanFail<T> {
+    public fromInt(int: number): MGPFallible<T> {
         switch (int) {
             case 0: return this.of(0, -1);
             case 1: return this.of(1, 0);
@@ -65,7 +65,7 @@ export abstract class DirectionFactory<T extends AbstractDirection> {
             case 5: return this.of(1, -1);
             case 6: return this.of(-1, 1);
             case 7: return this.of(1, 1);
-            default: return MGPCanFail.failure('Invalid int direction');
+            default: return MGPFallible.failure('Invalid int direction');
         }
     }
 }
@@ -114,7 +114,7 @@ export class DirectionEncoder extends Encoder<Direction> {
     }
     public decode(encoded: JSONValue): Direction {
         assert(typeof encoded === 'string', 'Invalid encoded direction');
-        const fromString: MGPCanFail<Direction> = Direction.factory.fromString(encoded as string);
+        const fromString: MGPFallible<Direction> = Direction.factory.fromString(encoded as string);
         assert(fromString.isSuccess(), 'Invalid encoded direction');
         return fromString.get();
     }
@@ -153,7 +153,7 @@ export class Direction extends BaseDirection {
         return (this.x !== 0) && (this.y !== 0);
     }
     public getOpposite(): Direction {
-        const opposite: MGPCanFail<Direction> = Direction.factory.of(-this.x, -this.y);
+        const opposite: MGPFallible<Direction> = Direction.factory.of(-this.x, -this.y);
         assert(opposite.isSuccess(), 'Direction has no opposite, it should not happen');
         return opposite.get();
     }
@@ -165,7 +165,7 @@ export class OrthogonalEncoder extends Encoder<Orthogonal> {
     }
     public decode(encoded: JSONValue): Orthogonal {
         assert(typeof encoded === 'string', 'Invalid encoded orthogonal');
-        const fromString: MGPCanFail<Orthogonal> = Orthogonal.factory.fromString(encoded as string);
+        const fromString: MGPFallible<Orthogonal> = Orthogonal.factory.fromString(encoded as string);
         assert(fromString.isSuccess(), 'Invalid encoded orthogonal');
         return fromString.get();
     }
@@ -184,12 +184,12 @@ export class Orthogonal extends BaseDirection {
                 Orthogonal.LEFT,
             ];
 
-            public of(x: number, y: number): MGPCanFail<Orthogonal> {
-                if (x === 0 && y === -1) return MGPCanFail.success(Orthogonal.UP);
-                if (x === 1 && y === 0) return MGPCanFail.success(Orthogonal.RIGHT);
-                if (x === 0 && y === 1) return MGPCanFail.success(Orthogonal.DOWN);
-                if (x === -1 && y === 0) return MGPCanFail.success(Orthogonal.LEFT);
-                return MGPCanFail.failure('Invalid orthogonal from x and y');
+            public of(x: number, y: number): MGPFallible<Orthogonal> {
+                if (x === 0 && y === -1) return MGPFallible.success(Orthogonal.UP);
+                if (x === 1 && y === 0) return MGPFallible.success(Orthogonal.RIGHT);
+                if (x === 0 && y === 1) return MGPFallible.success(Orthogonal.DOWN);
+                if (x === -1 && y === 0) return MGPFallible.success(Orthogonal.LEFT);
+                return MGPFallible.failure('Invalid orthogonal from x and y');
             }
         };
     public static readonly ORTHOGONALS: ReadonlyArray<Orthogonal> = Orthogonal.factory.all;
@@ -200,7 +200,7 @@ export class Orthogonal extends BaseDirection {
         super(x, y);
     }
     public getOpposite(): Orthogonal {
-        const opposite: MGPCanFail<Orthogonal> = Orthogonal.factory.of(-this.x, -this.y);
+        const opposite: MGPFallible<Orthogonal> = Orthogonal.factory.of(-this.x, -this.y);
         assert(opposite.isSuccess(), 'Orthogonal has no opposite, it should not happen');
         return opposite.get();
     }

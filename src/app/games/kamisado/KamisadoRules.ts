@@ -13,7 +13,7 @@ import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { KamisadoFailure } from './KamisadoFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPCanFail } from 'src/app/utils/MGPCanFail';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 export class KamisadoNode extends MGPNode<KamisadoRules, KamisadoMove, KamisadoPartSlice> { }
 
@@ -207,7 +207,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice> {
             return { legal: MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_CASE) };
         }
         //  - all steps between start and end should be empty
-        const directionOptional: MGPCanFail<Direction> = Direction.factory.fromMove(start, end);
+        const directionOptional: MGPFallible<Direction> = Direction.factory.fromMove(start, end);
         if (directionOptional.isFailure()) {
             return { legal: MGPValidation.failure(KamisadoFailure.DIRECTION_NOT_ALLOWED) };
         }

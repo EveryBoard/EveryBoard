@@ -12,7 +12,7 @@ import { LinesOfActionFailure } from './LinesOfActionFailure';
 import { LinesOfActionState } from './LinesOfActionState';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
-import { MGPCanFail } from 'src/app/utils/MGPCanFail';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { linesOfActionTutorial } from './LinesOfActionTutorial';
 
@@ -55,7 +55,7 @@ export class LinesOfActionComponent extends AbstractGameComponent<LinesOfActionM
             if (this.getState().getAt(coord) === this.getState().getCurrentPlayer().value) {
                 return this.select(coord);
             } else {
-                const move: MGPCanFail<LinesOfActionMove> =
+                const move: MGPFallible<LinesOfActionMove> =
                     LinesOfActionMove.of(this.selected.get(), new Coord(x, y));
                 if (move.isSuccess()) {
                     return this.chooseMove(move.get(), this.rules.node.gamePartSlice, null, null);

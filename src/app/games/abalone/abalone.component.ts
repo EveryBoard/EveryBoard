@@ -13,7 +13,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { MGPCanFail } from 'src/app/utils/MGPCanFail';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { AbaloneDummyMinimax } from './AbaloneDummyMinimax';
@@ -259,9 +259,9 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
         return this.tryExtension(clicked, firstPiece, lastPiece);
     }
     private async tryExtension(clicked: Coord, firstPiece: Coord, lastPiece: Coord): Promise<MGPValidation> {
-        const alignement: MGPCanFail<Direction> = Direction.factory.fromMove(firstPiece, clicked);
+        const alignement: MGPFallible<Direction> = Direction.factory.fromMove(firstPiece, clicked);
         if (alignement.isSuccess()) {
-            const secondAlignement: MGPCanFail<Direction> = Direction.factory.fromMove(lastPiece, clicked);
+            const secondAlignement: MGPFallible<Direction> = Direction.factory.fromMove(lastPiece, clicked);
             if (alignement.equals(secondAlignement)) {
                 // then it's an extension of the line
                 const firstDistance: number = firstPiece.getDistance(clicked);

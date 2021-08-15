@@ -1,5 +1,5 @@
 import { assert } from 'src/app/utils/utils';
-import { MGPCanFail } from '../utils/MGPCanFail';
+import { MGPFallible } from '../utils/MGPFallible';
 import { BaseDirection, DirectionFactory } from './Direction';
 import { NumberEncoder } from './Encoder';
 
@@ -65,7 +65,7 @@ export class HexaDirection extends BaseDirection {
         super(x, y);
     }
     public getOpposite(): HexaDirection {
-        const opposite: MGPCanFail<HexaDirection> = HexaDirection.factory.of(-this.x, -this.y);
+        const opposite: MGPFallible<HexaDirection> = HexaDirection.factory.of(-this.x, -this.y);
         assert(opposite.isSuccess(), 'HexaDirection has no opposite, it should not happen');
         return opposite.get();
     }

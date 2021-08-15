@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { NumberEncoder } from 'src/app/jscaip/Encoder';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
-import { MGPCanFail } from 'src/app/utils/MGPCanFail';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { JSONValue } from 'src/app/utils/utils';
 import { LinesOfActionState } from './LinesOfActionState';
 
@@ -13,18 +13,18 @@ export class LinesOfActionMove extends MoveCoordToCoord {
                                                            return LinesOfActionMove.of(start, end).get();
                                                        });
 
-    public static of(start: Coord, end: Coord): MGPCanFail<LinesOfActionMove> {
-        const directionOptional: MGPCanFail<Direction> = Direction.factory.fromMove(start, end);
+    public static of(start: Coord, end: Coord): MGPFallible<LinesOfActionMove> {
+        const directionOptional: MGPFallible<Direction> = Direction.factory.fromMove(start, end);
         if (directionOptional.isFailure()) {
-            return MGPCanFail.failure(directionOptional.getReason());
+            return MGPFallible.failure(directionOptional.getReason());
         }
         if (!start.isInRange(LinesOfActionState.SIZE, LinesOfActionState.SIZE)) {
-            return MGPCanFail.failure('start coord is not in range');
+            return MGPFallible.failure('start coord is not in range');
         }
         if (!end.isInRange(LinesOfActionState.SIZE, LinesOfActionState.SIZE)) {
-            return MGPCanFail.failure('end coord is not in range');
+            return MGPFallible.failure('end coord is not in range');
         }
-        return MGPCanFail.success(new LinesOfActionMove(start, end, directionOptional.get()));
+        return MGPFallible.success(new LinesOfActionMove(start, end, directionOptional.get()));
     }
     private constructor(start: Coord, end: Coord, public readonly direction: Direction) {
         super(start, end);

@@ -4,7 +4,7 @@ import { NumberEncoder } from 'src/app/jscaip/Encoder';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { MGPCanFail } from 'src/app/utils/MGPCanFail';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/utils';
 
@@ -26,7 +26,7 @@ export class AbaloneMove extends MoveCoord {
         public decodeNumber(encodedMove: number): AbaloneMove {
             const dir: number = encodedMove % 8;
             encodedMove = (encodedMove - dir) / 8;
-            const directionOptional: MGPCanFail<HexaDirection> = HexaDirection.factory.fromInt(dir);
+            const directionOptional: MGPFallible<HexaDirection> = HexaDirection.factory.fromInt(dir);
             assert(directionOptional.isSuccess(), 'Invalid encoded direction');
             const direction: HexaDirection = directionOptional.get();
 
@@ -38,7 +38,7 @@ export class AbaloneMove extends MoveCoord {
 
             const first: Coord = new Coord(x, y);
             if (encodedMove === 0) {
-                const moveOptional: MGPCanFail<AbaloneMove> = AbaloneMove.fromSingleCoord(first, direction);
+                const moveOptional: MGPFallible<AbaloneMove> = AbaloneMove.fromSingleCoord(first, direction);
                 assert(moveOptional.isSuccess(), 'Invalid encoded AbaloneMove');
                 return moveOptional.get();
             } else {
@@ -52,42 +52,42 @@ export class AbaloneMove extends MoveCoord {
 
                 const last: Coord = new Coord(lx, ly);
 
-                const moveOptional: MGPCanFail<AbaloneMove> = AbaloneMove.fromDoubleCoord(first, last, direction);
+                const moveOptional: MGPFallible<AbaloneMove> = AbaloneMove.fromDoubleCoord(first, last, direction);
                 assert(moveOptional.isSuccess(), 'Invalid encoded AbaloneMove');
                 return moveOptional.get();
             }
         }
     }
-    public static fromSingleCoord(coord: Coord, dir: HexaDirection): MGPCanFail<AbaloneMove> {
+    public static fromSingleCoord(coord: Coord, dir: HexaDirection): MGPFallible<AbaloneMove> {
         try {
-            return MGPCanFail.success(new AbaloneMove(coord, dir, MGPOptional.empty()));
+            return MGPFallible.success(new AbaloneMove(coord, dir, MGPOptional.empty()));
         } catch (e) {
-            return MGPCanFail.failure(e.getMessage());
+            return MGPFallible.failure(e.getMessage());
         }
     }
-    public static fromDoubleCoord(first: Coord, second: Coord, dir: HexaDirection): MGPCanFail<AbaloneMove> {
+    public static fromDoubleCoord(first: Coord, second: Coord, dir: HexaDirection): MGPFallible<AbaloneMove> {
         if (second == null) {
-            return MGPCanFail.failure('second coord cannot be null');
+            return MGPFallible.failure('second coord cannot be null');
         }
         const coords: Coord[] = [first, second];
         ArrayUtils.sortByDescending(coords, AbaloneMove.sortCoord);
         const direction: Direction = coords[1].getDirectionToward(coords[0]);
-        const hexaDirectionOptional: MGPCanFail<HexaDirection> =
+        const hexaDirectionOptional: MGPFallible<HexaDirection> =
             HexaDirection.factory.fromDelta(direction.x, direction.y);
         if (hexaDirectionOptional.isFailure()) {
-            return MGPCanFail.failure('Invalid direction');
+            return MGPFallible.failure('Invalid direction');
         }
         const hexaDirection: HexaDirection = hexaDirectionOptional.get();
         const distance: number = coords[1].getDistance(coords[0]);
         if (distance > 2) {
-            return MGPCanFail.failure('Distance between first coord and last coord is too great');
+            return MGPFallible.failure('Distance between first coord and last coord is too great');
         }
         if (hexaDirection.equals(dir)) {
             return AbaloneMove.fromSingleCoord(coords[1], dir);
         } else if (hexaDirection.getOpposite().equals(dir)) {
             return AbaloneMove.fromSingleCoord(coords[0], dir);
         }
-        return MGPCanFail.success(new AbaloneMove(coords[1], dir, MGPOptional.of(coords[0])));
+        return MGPFallible.success(new AbaloneMove(coords[1], dir, MGPOptional.of(coords[0])));
     }
     public static sortCoord(coord: Coord): number {
         return coord.y * 9 + coord.x;

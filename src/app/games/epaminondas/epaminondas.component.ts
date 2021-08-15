@@ -162,7 +162,6 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
             const dy: number = Math.abs(this.firstPiece.y - this.lastPiece.y);
             const phalanxSize: number = Math.max(dx, dy) + 1;
 
-            // TODO FOR REVIEW: is the .get() always safe?
             let direction: Direction = Direction.factory.fromMove(this.firstPiece, this.lastPiece).get();
             const landingForward: Coord = this.lastPiece.getNext(direction, 1);
             const landingsForward: Coord[] = this.getLandingsToward(landingForward, direction, phalanxSize);
@@ -276,7 +275,6 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
             return this.cancelMove(EpaminondasFailure.CASE_NOT_ALIGNED_WITH_PHALANX);
         }
         // The directions are valid because they are is aligned
-        // TODO FOR REVIEW: double check this!
         let phalanxDirection: Direction = Direction.factory.fromMove(this.firstPiece, this.lastPiece).get();
         const phalanxLanding: Direction = Direction.factory.fromMove(this.firstPiece, clicked).get();
         if (phalanxDirection === phalanxLanding.getOpposite()) {

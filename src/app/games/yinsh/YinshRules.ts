@@ -5,7 +5,7 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPCanFail } from 'src/app/utils/MGPCanFail';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { assert } from 'src/app/utils/utils';
@@ -162,7 +162,7 @@ export class YinshRules extends Rules<YinshMove, YinshGameState, YinshLegalitySt
         // There should only be markers or empty cases between start and end
         // As soon as a marker group is passed, the move should stop on the first empty case
         // There cannot be rings between start and end
-        const directionOptional: MGPCanFail<HexaDirection> = HexaDirection.factory.fromMove(start, end);
+        const directionOptional: MGPFallible<HexaDirection> = HexaDirection.factory.fromMove(start, end);
         if (directionOptional.isFailure()) {
             return MGPValidation.failure(YinshFailure.MOVE_DIRECTION_INVALID);
         }

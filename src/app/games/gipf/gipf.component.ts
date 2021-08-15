@@ -18,7 +18,7 @@ import { GipfPiece } from 'src/app/games/gipf/GipfPiece';
 import { Arrow } from 'src/app/jscaip/Arrow';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
-import { MGPCanFail } from 'src/app/utils/MGPCanFail';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { gipfTutorial } from './GipfTutorial';
 
@@ -137,7 +137,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfPartSlic
                 if (entrance.getDistance(coord) !== 1) {
                     return this.cancelMove(GipfFailure.CLICK_FURTHER_THAN_ONE_COORD);
                 }
-                const direction: MGPCanFail<HexaDirection> = HexaDirection.factory.fromMove(entrance, coord);
+                const direction: MGPFallible<HexaDirection> = HexaDirection.factory.fromMove(entrance, coord);
                 return this.selectPlacementDirection(direction.toOptional());
         }
     }

@@ -1,4 +1,4 @@
-import { MGPCanFail } from 'src/app/utils/MGPCanFail';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { Coord } from '../Coord';
 import { Direction, Orthogonal } from '../Direction';
 
@@ -10,7 +10,7 @@ describe('Direction', () => {
         describe('of', () => {
             it('should construct a direction', () => {
                 // TODO FOR REVIEW: Which one should we choose? .toEqual(success) or .get?
-                expect(Direction.factory.of(1, 0)).toEqual(MGPCanFail.success(Direction.RIGHT));
+                expect(Direction.factory.of(1, 0)).toEqual(MGPFallible.success(Direction.RIGHT));
                 expect(Direction.factory.of(-1, 0).get()).toBe(Direction.LEFT);
                 expect(Direction.factory.of(0, 1).get()).toBe(Direction.DOWN);
                 expect(Direction.factory.of(0, -1).get()).toBe(Direction.UP);
@@ -21,7 +21,7 @@ describe('Direction', () => {
             });
             it('should not construct an invalid direction', () => {
                 expect(Direction.factory.of(2, 1))
-                    .toEqual(MGPCanFail.failure('Invalid x and y in direction construction'));
+                    .toEqual(MGPFallible.failure('Invalid x and y in direction construction'));
             });
         });
         describe('fromDelta', () => {
@@ -31,7 +31,7 @@ describe('Direction', () => {
                 expect(Direction.factory.fromDelta(1, 1).get()).toBe(Direction.DOWN_RIGHT);
             });
             it('should not construct from static move', () => {
-                expect(Direction.factory.fromDelta(0, 0)).toEqual(MGPCanFail.failure('Empty delta for direction'));
+                expect(Direction.factory.fromDelta(0, 0)).toEqual(MGPFallible.failure('Empty delta for direction'));
             });
         });
         describe('fromMove', () => {
@@ -39,7 +39,7 @@ describe('Direction', () => {
                 expect(Direction.factory.fromMove(new Coord(0, 0), new Coord(5, 0)).get()).toBe(Direction.RIGHT);
             });
             it('should not construct when the move does not correspond to a valid direction', () => {
-                expect(Direction.factory.fromMove(new Coord(0, 0), new Coord(5, 3))).toEqual(MGPCanFail.failure('Invalid delta for direction'));
+                expect(Direction.factory.fromMove(new Coord(0, 0), new Coord(5, 3))).toEqual(MGPFallible.failure('Invalid delta for direction'));
             });
         });
         describe('fromString', () => {
@@ -54,7 +54,7 @@ describe('Direction', () => {
                 expect(Direction.factory.fromString('DOWN_RIGHT').get()).toBe(Direction.DOWN_RIGHT);
             });
             it('should not construct from a string that does not correspond to a direction', () => {
-                expect(Direction.factory.fromString('foo')).toEqual(MGPCanFail.failure('Invalid string direction'));
+                expect(Direction.factory.fromString('foo')).toEqual(MGPFallible.failure('Invalid string direction'));
             });
         });
         describe('fromInt', () => {
@@ -69,7 +69,7 @@ describe('Direction', () => {
                 expect(Direction.factory.fromInt(Direction.DOWN_RIGHT.toInt()).get()).toBe(Direction.DOWN_RIGHT);
             });
             it('should not construct when called with a string that does not correspond to a direction', () => {
-                expect(Direction.factory.fromInt(42)).toEqual(MGPCanFail.failure('Invalid int direction'));
+                expect(Direction.factory.fromInt(42)).toEqual(MGPFallible.failure('Invalid int direction'));
             });
         });
     });
@@ -154,8 +154,8 @@ describe('Orthogonal', () => {
                 expect(Orthogonal.factory.of(0, -1).get()).toBe(Orthogonal.UP);
             });
             it('should fail when constructing an invalid orthogonal', () => {
-                expect(Orthogonal.factory.of(2, 1)).toEqual(MGPCanFail.failure('Invalid orthogonal from x and y'));
-                expect(Orthogonal.factory.of(1, 1)).toEqual(MGPCanFail.failure('Invalid orthogonal from x and y'));
+                expect(Orthogonal.factory.of(2, 1)).toEqual(MGPFallible.failure('Invalid orthogonal from x and y'));
+                expect(Orthogonal.factory.of(1, 1)).toEqual(MGPFallible.failure('Invalid orthogonal from x and y'));
             });
         });
     });

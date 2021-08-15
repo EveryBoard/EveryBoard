@@ -1,12 +1,12 @@
-import { MGPCanFail } from '../MGPCanFail';
+import { MGPFallible } from '../MGPFallible';
 import { MGPOptional } from '../MGPOptional';
 
-describe('MGPCanFail', () => {
+describe('MGPFallible', () => {
     describe('success', () => {
-        const value: MGPCanFail<number> = MGPCanFail.success(42);
+        const value: MGPFallible<number> = MGPFallible.success(42);
         it('should not accept null values', () => {
-            expect(() => MGPCanFail.success(null))
-                .toThrowError('CanFail cannot be created with empty value, use MGPCanFail.failure instead');
+            expect(() => MGPFallible.success(null))
+                .toThrowError('Fallible cannot be created with empty value, use MGPFallible.failure instead');
         });
         it('should create a success value', () => {
             expect(value.isSuccess()).toBeTrue();
@@ -25,12 +25,12 @@ describe('MGPCanFail', () => {
         });
         it('should have a well-defined equality', () => {
             expect(value.equals(value)).toBeTrue();
-            expect(value.equals(MGPCanFail.success(41))).toBeFalse();
-            expect(value.equals(MGPCanFail.failure('foo'))).toBeFalse();
+            expect(value.equals(MGPFallible.success(41))).toBeFalse();
+            expect(value.equals(MGPFallible.failure('foo'))).toBeFalse();
         });
     });
     describe('failure', () => {
-        const value: MGPCanFail<number> = MGPCanFail.failure('reason');
+        const value: MGPFallible<number> = MGPFallible.failure('reason');
         it('should create a failure value', () => {
             expect(value.isSuccess()).toBeFalse();
             expect(value.isFailure()).toBeTrue();
@@ -47,8 +47,8 @@ describe('MGPCanFail', () => {
         });
         it('should have a well-defined equality', () => {
             expect(value.equals(value)).toBeTrue();
-            expect(value.equals(MGPCanFail.success(41))).toBeFalse();
-            expect(value.equals(MGPCanFail.failure('other reason'))).toBeFalse();
+            expect(value.equals(MGPFallible.success(41))).toBeFalse();
+            expect(value.equals(MGPFallible.failure('other reason'))).toBeFalse();
         })
     });;
 });

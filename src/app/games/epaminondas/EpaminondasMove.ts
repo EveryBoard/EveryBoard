@@ -1,7 +1,7 @@
 import { Direction } from 'src/app/jscaip/Direction';
 import { NumberEncoder } from 'src/app/jscaip/Encoder';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
-import { MGPCanFail } from 'src/app/utils/MGPCanFail';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { assert } from 'src/app/utils/utils';
 
 export class EpaminondasMove extends MoveCoord {
@@ -45,7 +45,7 @@ export class EpaminondasMove extends MoveCoord {
 
             const cx: number = encodedMove;
 
-            const direction: MGPCanFail<Direction> = Direction.factory.fromInt(encodedDirection);
+            const direction: MGPFallible<Direction> = Direction.factory.fromInt(encodedDirection);
             assert(direction.isSuccess(), 'Invalid encoded direction');
             return new EpaminondasMove(cx, cy, movedPieces + 1, stepSize + 1, direction.get());
         }
