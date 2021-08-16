@@ -215,8 +215,8 @@
       <trans-unit id="5674286808255988565" datatype="html">
         <source>Create</source>
       </trans-unit>
-      <trans-unit id="325889877575115737" datatype="html">
-        <source>Connected users :</source>
+      <trans-unit id="1670632975695309948" datatype="html">
+        <source>Connected users:</source>
       </trans-unit>
       <trans-unit id="689957366051097321" datatype="html">
         <source>Waiting for opponent</source>
@@ -938,8 +938,8 @@
       <trans-unit id="3060866055407923547" datatype="html">
         <source>Moving a phalanx</source>
       </trans-unit>
-      <trans-unit id="7817897468030617928" datatype="html">
-        <source>Let us now see how to move multiple pieces along a line, which is called a phalanx :
+      <trans-unit id="204971444516771500" datatype="html">
+        <source>Let us now see how to move multiple pieces along a line, which is called a phalanx :
         &lt;ol&gt;
             &lt;li&gt;Click on the first piece of the phalanx.&lt;/li&gt;
             &lt;li&gt;Click on the last piece of the phalanx.&lt;/li&gt;

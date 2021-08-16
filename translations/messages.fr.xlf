@@ -286,9 +286,9 @@
         <source>Create</source>
         <target>Créer</target>
       </trans-unit>
-      <trans-unit id="325889877575115737" datatype="html">
-        <source>Connected users :</source>
-        <target>Utilisateurs connectés :</target>
+      <trans-unit id="1670632975695309948" datatype="html">
+        <source>Connected users:</source>
+        <target>Utilisateurs connectés :</target>
       </trans-unit>
       <trans-unit id="689957366051097321" datatype="html">
         <source>Waiting for opponent</source>
@@ -316,7 +316,7 @@
       </trans-unit>
       <trans-unit id="2129768251160483742" datatype="html">
         <source>It is not your turn!</source>
-        <target>Ce n&apos;est pas votre tour !</target>
+        <target>Ce n&apos;est pas votre tour !</target>
       </trans-unit>
       <trans-unit id="4691729121764741641" datatype="html">
         <source>You cannot clone a game. This feature might be implemented later.</source>
@@ -644,15 +644,15 @@
       </trans-unit>
       <trans-unit id="6050846802280051862" datatype="html">
         <source>You cannot move more than 3 of your pieces!</source>
-        <target>Vous ne pouvez pas déplacer plus de 3 de vos pièces !</target>
+        <target>Vous ne pouvez pas déplacer plus de 3 de vos pièces !</target>
       </trans-unit>
       <trans-unit id="4278049889323552316" datatype="html">
         <source>You don&apos;t have enough pieces to push that group!</source>
-        <target>Vous n&apos;avez pas assez de pièce pour pousser ce groupe !</target>
+        <target>Vous n&apos;avez pas assez de pièce pour pousser ce groupe !</target>
       </trans-unit>
       <trans-unit id="5787963634235927059" datatype="html">
         <source>You cannot push this piece because it is stuck by one of yours!</source>
-        <target>Vous ne pouvez pas pousser cette/ces pièce(s) car elle est bloquée par l&apos;une des vôtres !</target>
+        <target>Vous ne pouvez pas pousser cette/ces pièce(s) car elle est bloquée par l&apos;une des vôtres !</target>
       </trans-unit>
       <trans-unit id="7864006988432394989" datatype="html">
         <source>This line contains pieces of your opponent or empty spaces, which is forbidden.</source>
@@ -712,11 +712,11 @@
       </trans-unit>
       <trans-unit id="6875339943465710233" datatype="html">
         <source>Congratulations! You know everything to start a game!</source>
-        <target>Bravo ! Vous savez tout ce qu&apos;il faut pour commencer une partie!</target>
+        <target>Bravo ! Vous savez tout ce qu&apos;il faut pour commencer une partie!</target>
       </trans-unit>
       <trans-unit id="8139485336036692612" datatype="html">
         <source>Failed!</source>
-        <target>Raté !</target>
+        <target>Raté !</target>
       </trans-unit>
       <trans-unit id="1299772099949111249" datatype="html">
         <source>You cannot distribute from the enemy&apos;s home.</source>
@@ -765,7 +765,7 @@
       </trans-unit>
       <trans-unit id="498712253814253582" datatype="html">
         <source>See, the house that you sowed has not been refilled, and the sowing immediately continued to the next house (which therefore contains two seeds).</source>
-        <target>Voyez, la maison distribuée n’a pas été reremplie et la distribution a continué immédiatement à la maison suivante (qui contient donc deux graines) !</target>
+        <target>Voyez, la maison distribuée n’a pas été reremplie et la distribution a continué immédiatement à la maison suivante (qui contient donc deux graines) !</target>
       </trans-unit>
       <trans-unit id="6009621890963077533" datatype="html">
         <source>Simple capture</source>
@@ -784,7 +784,7 @@
       </trans-unit>
       <trans-unit id="1449179615423109818" datatype="html">
         <source>Well done! This was a simple capture, now let us see how to make multiple captures.</source>
-        <target>Bravo ! Il s&apos;agissait ici d&apos;une capture simple, voyons maintenant une capture composée.</target>
+        <target>Bravo ! Il s&apos;agissait ici d&apos;une capture simple, voyons maintenant une capture composée.</target>
       </trans-unit>
       <trans-unit id="8065050610159894114" datatype="html">
         <source>Failed. Try again and sow from the leftmost house.</source>
@@ -834,7 +834,7 @@
       </trans-unit>
       <trans-unit id="1347673606182808434" datatype="html">
         <source>Congratulations! Notice that the capture was interrupted when entering your territory: you cannot capture your own houses!</source>
-        <target>Bravo ! Constatez que la capture s&apos;est interrompue en arrivant dans votre territoire, on ne peut pas capturer ses propres maisons!</target>
+        <target>Bravo ! Constatez que la capture s&apos;est interrompue en arrivant dans votre territoire, on ne peut pas capturer ses propres maisons!</target>
       </trans-unit>
       <trans-unit id="7890197140479173967" datatype="html">
         <source>You have only captured one house, try again!</source>
@@ -847,8 +847,8 @@
       <trans-unit id="1389121325319402395" datatype="html">
         <source>You have a very nice capture that seems possible: it seems that you can capture all the opponent&apos;s seeds!&lt;br/&gt;&lt;br/&gt;
         Try it.</source>
-        <target>Vous avez une très belle capture qui semble possible, il semble que vous pouviez capturer tous les pions de l’adversaire !&lt;br/&gt;&lt;br/&gt;
-        Lancez-vous !</target>
+        <target>Vous avez une très belle capture qui semble possible, il semble que vous pouviez capturer tous les pions de l’adversaire !&lt;br/&gt;&lt;br/&gt;
+        Lancez-vous !</target>
       </trans-unit>
       <trans-unit id="5327525705025836061" datatype="html">
         <source>Sadly, you cannot capture here, otherwise the opponent could not play after you.
@@ -864,13 +864,13 @@
         <source>You cannot let another player starve, meaning that if your opponent has no seeds anymore and if you can give them at least one, you have to do it.&lt;br/&gt;&lt;br/&gt;
         Go ahead!</source>
         <target>&quot;Affamer&quot; est interdit, c&apos;est-à-dire que si votre adversaire n&apos;a plus de graines et que vous savez lui en donner au moins une, vous êtes obligé de le faire.
-        Allez-y !</target>
+        Allez-y !</target>
       </trans-unit>
       <trans-unit id="3908210272037108493" datatype="html">
         <source>Congratulations! Note that you can choose to give your opponent the least number of seeds if it is better for you.
         It is often a good way to have easy captures!</source>
-        <target>Bravo ! Notez que vous pouvez choisir de lui en donner le moins possible si cela vous arrange mieux !
-        C’est souvent un bon moyen d’avoir des captures faciles !</target>
+        <target>Bravo ! Notez que vous pouvez choisir de lui en donner le moins possible si cela vous arrange mieux.
+        C’est souvent un bon moyen d’avoir des captures faciles !</target>
       </trans-unit>
       <trans-unit id="2281492801612237310" datatype="html">
         <source>End of the game</source>
@@ -966,13 +966,13 @@
         However, it is possible to place a piece between 3 of the opponent&apos;s pieces (or 2 on the side) without being captured.&lt;br/&gt;&lt;br/&gt;
         You&apos;re playing Light, make a capture.</source>
         <target>Chaque pièce a trois cases triangulaires voisines (2 sur les bords).
-        Quand toutes les cases voisines sauf une sont occupées, et qu&apos;une pièce de l'adversaire vient se déplacer sur cette dernière case libre, votre pièce est capturée !
+        Quand toutes les cases voisines sauf une sont occupées, et qu&apos;une pièce de l'adversaire vient se déplacer sur cette dernière case libre, votre pièce est capturée !
         Cependant, il est possible pour un joueur de se placer entre 3 pièces adverses (ou 2 contre un bord) sans être capturé.&lt;br/&gt;&lt;br/&gt;
         Vous jouez Clair, effectuez une capture</target>
       </trans-unit>
       <trans-unit id="1766583918856668821" datatype="html">
         <source>Failed, you have not captured any piece.</source>
-        <target>Raté, vous n&apos;avez pas capturé de pièce !</target>
+        <target>Raté, vous n&apos;avez pas capturé de pièce !</target>
       </trans-unit>
       <trans-unit id="8225905705628695723" datatype="html">
         <source>Gain a tile</source>
@@ -988,7 +988,7 @@
         <target>Quand une tuile est quittée, elle devient potentiellement enlevable du plateau.
         Pour qu&apos;elle soit enlevée, il faut qu'au moins trois de ses bords soient libres, et qu&apos;ils soient l&apos;un à côté de l&apos;autre.
         Notez que si une tuile vide, voisine d&apos;une tuile qu&apos;on vient de retirer, devient retirable, elle sera retirée.
-        Par exemple, ci-dessous, en quittant sa tuile le pion foncé le plus haut ne déconnectera pas celle-ci !
+        Par exemple, ci-dessous, en quittant sa tuile le pion foncé le plus haut ne déconnectera pas celle-ci !
         Mais en quittant la tuile en bas à gauche, deux tuiles seront enlevées.&lt;br/&gt;&lt;br/&gt;
         Effectuez un mouvement pour récupérer deux tuiles.</target>
       </trans-unit>
@@ -1010,11 +1010,11 @@
         Dès que vous en avez deux, vous pouvez, en cliquant sur une pièce adverse, la capturer immédiatement.
         Cet action vous coûtera deux tuiles.
         Si une ou plusieurs tuile sont retirées pendant ce tour, personne ne les récupérera.&lt;br/&gt;&lt;br/&gt;
-        Gagnez du temps, et capturez la dernière pièce adverse !</target>
+        Gagnez du temps, et capturez la dernière pièce adverse !</target>
       </trans-unit>
       <trans-unit id="6149833006202189547" datatype="html">
         <source>It&apos;s nice to move a piece, but you could have had the opponent&apos;s piece immediately by clicking on it!</source>
-        <target>C&apos;est bien gentil de se déplacer mais en cliquant sur la pièce vous l&apos;aurez immédiatement !</target>
+        <target>C&apos;est bien gentil de se déplacer mais en cliquant sur la pièce vous l&apos;aurez immédiatement !</target>
       </trans-unit>
       <trans-unit id="4449916170244566677" datatype="html">
         <source>Special capture</source>
@@ -1024,15 +1024,15 @@
         <source>When a tile is removed from the board during your turn, some of the opponent&apos;s pieces may have lost their last free neighboring space, they will therefore be captured!
         If this happens to one of your piece during your turn, it would however stay on the board.&lt;br/&gt;&lt;br/&gt;
         A move that demonstrate both of these things can be done on this board by Light. Try it!</source>
-        <target>Dès qu&apos;une tuile est enlevée du plateau pendant votre tour, certaines pièces de l&apos;adversaires peuvent n&apos;avoir plus aucunes cases voisines libre, elle seront alors capturées !
+        <target>Dès qu&apos;une tuile est enlevée du plateau pendant votre tour, certaines pièces de l&apos;adversaires peuvent n&apos;avoir plus aucunes cases voisines libre, elle seront alors capturées !
         Si cela arrivait à l&apos;une de vos pièces, celle-ci resterait cependant sur le plateau.&lt;br/&gt;&lt;br/&gt;
-        Un coup démontrant ces deux choses est faisable pour le joueur clair, faites-le !</target>
+        Un coup démontrant ces deux choses est faisable pour le joueur clair, faites-le !</target>
       </trans-unit>
       <trans-unit id="4878998278020754722" datatype="html">
         <source>Congratulations! See, your piece has lost its last freedom when you have gained the tile, but it stayed on the board as it was your turn.
         The opponent&apos;s piece has disappeared because the tile&apos;s capture has removed its last freedom.</source>
-        <target>Bravo ! Voyez, votre pièce a perdu sa dernière liberté quand vous avez récupéré la tuile, mais est restée car c&apos;était votre tour.
-        Celle de l&apos;adversaire a disparu car la capture de la tuile lui a enlevé une liberté il ne lui en restait plu !</target>
+        <target>Bravo ! Voyez, votre pièce a perdu sa dernière liberté quand vous avez récupéré la tuile, mais est restée car c&apos;était votre tour.
+        Celle de l&apos;adversaire a disparu car la capture de la tuile lui a enlevé une liberté il ne lui en restait plu !</target>
       </trans-unit>
       <trans-unit id="2559409853005498554" datatype="html">
         <source>Invalid coordinate, please select a piece on the board.</source>
@@ -1126,7 +1126,7 @@
       </trans-unit>
       <trans-unit id="2963709509031109432" datatype="html">
         <source>Congratulations, you won 6 - 0!</source>
-        <target>Bravo, vous avez même gagné 6 - 0 !</target>
+        <target>Bravo, vous avez même gagné 6 - 0 !</target>
       </trans-unit>
       <trans-unit id="8876232297721386956" datatype="html">
         <source>Bad idea, by moving on the source you would have won a point.</source>
@@ -1200,8 +1200,8 @@
         You&apos;re playing Dark and you can win now in various ways.&lt;br/&gt;&lt;br/&gt;
         Try to win by making a move, and not by putting a new piece on the board.</source>
         <target>À Encapsule, les pièces s&apos;encapsulent les unes sur les autres.
-        Il est donc possible d&apos;avoir jusqu&apos;à trois pièces par case !
-        Cependant, seulement la plus grosse pièce de chaque case compte :
+        Il est donc possible d&apos;avoir jusqu&apos;à trois pièces par case !
+        Cependant, seulement la plus grosse pièce de chaque case compte :
         il n&apos;est pas possible de gagner avec une pièce « cachée » par une pièce plus grande.
         De même, il n&apos;est pas possible de déplacer une pièce qui est recouverte par une autre pièce plus grande.
         Finalement, il est interdit de recouvrir une pièce avec une autre pièce plus petite.
@@ -1288,7 +1288,7 @@
             &lt;li&gt;Click on a empty neighboring square.&lt;/li&gt;
         &lt;/ol&gt;</source>
         <target>Voici le plateau de départ, c&apos;est à Foncé de commencer.
-        Commençons simplement par un déplacement d&apos;une seule pièce :
+        Commençons simplement par un déplacement d&apos;une seule pièce :
         &lt;ol&gt;;
             &lt;li&gt; 1. Cliquez sur une pièce.&lt;/li&gt;
             &lt;li&gt; 2. Cliquez sur une case voisine libre.&lt;/li&gt;
@@ -1306,15 +1306,15 @@
         <source>Moving a phalanx</source>
         <target>Déplacement de phalange</target>
       </trans-unit>
-      <trans-unit id="7817897468030617928" datatype="html">
-        <source>Let us now see how to move multiple pieces along a line, which is called a phalanx :
+      <trans-unit id="204971444516771500" datatype="html">
+        <source>Let us now see how to move multiple pieces along a line, which is called a phalanx :
         &lt;ol&gt;
             &lt;li&gt;Click on the first piece of the phalanx.&lt;/li&gt;
             &lt;li&gt;Click on the last piece of the phalanx.&lt;/li&gt;
             &lt;li&gt;Click on one of the squares highlighted in yellow; you can move your phalanx up to a distance equal to its length.&lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
         Move a phalanx!</source>
-        <target>Maintenant, comment déplacer plusieurs pièces sur une seule ligne (une phalange) :
+        <target>Maintenant, comment déplacer plusieurs pièces sur une seule ligne (une phalange) :
         &lt;ol&gt;;
             &lt;li&gt; 1. Cliquez sur la première pièce.&lt;/li&gt;
             &lt;li&gt; 2. Cliquez sur la dernière pièce de la phalange.&lt;/li&gt;
@@ -1324,14 +1324,14 @@
       </trans-unit>
       <trans-unit id="108222118450000526" datatype="html">
         <source>Failed! You moved only one piece.</source>
-        <target>Raté ! Vous n&apos;avez bougé qu&apos;une pièce.</target>
+        <target>Raté ! Vous n&apos;avez bougé qu&apos;une pièce.</target>
       </trans-unit>
       <trans-unit id="2414303972754655852" datatype="html">
         <source>Congratulations!
         The moved pieces can be horizontally, vertically, or diagonally aligned.
         The move should be made along this axis, forward or backwards.
         There can be no opponent nor holes in the phalanx.</source>
-        <target>Bravo !
+        <target>Bravo !
         Les pièces déplacées doivent être horizontalement, verticalement, ou diagonalement alignées.
         Le déplacement doit se faire le long de cette ligne, en avant ou en arrière.
         Il ne peut y avoir ni pièces adverses ni trous dans la phalange.</target>
@@ -1458,14 +1458,14 @@
         &lt;/ol&gt;&lt;br/&gt;
         You&apos;re playing Dark, you can make a capture, do it.</source>
         <target>Pour faire une capture, il faut aligner 4 de ses propres pièces, qui seront les 4 premières capturées.
-        Il y a plusieurs choses à savoir sur une capture :
+        Il y a plusieurs choses à savoir sur une capture :
         &lt;ol&gt;;
             &lt;li&gt; 1. Quand 4 pièces sont capturées, toutes les pièces directement alignées avec ces 4 pièces le sont également.&lt;/li&gt;
             &lt;li&gt; 2. Dès qu&apos;il y a une case vide dans la ligne, la capture s&apos;arrête.&lt;/li&gt;
             &lt;li&gt; 3. Vos pièces capturées rejoignent votre réserve.
                 Celles de l&apos;adversaire par contre sont réellement capturées et ne rejoignent pas sa réserve.&lt;/li&gt;
             &lt;li&gt; 4. Si vous créez une ligne de 4 pièces de l&apos;adversaire, c&apos;est au début de son tour qu&apos;il pourra les capturer.
-                Ceci implique que votre tour se passe en trois phases :
+                Ceci implique que votre tour se passe en trois phases :
                 &lt;ol&gt;;
                     &lt;li&gt; A. Choisir la/les capture(s) crée(s) par le dernier mouvement de votre adversaire.&lt;/li&gt;
                     &lt;li&gt; B. Faire votre poussée.&lt;/li&gt;
@@ -1518,8 +1518,8 @@
         <target>Ici, vous aurez une capture à faire au début de votre tour.
         Elle a été provoquée par un mouvement de votre adversaire lors de son tour de jeu
         (bien que ce plateau soit fictif à des fins pédagogiques).
-        En effectuant ensuite le bon mouvement, vous pourrez faire deux captures supplémentaires !
-        Gardez à l&apos;esprit que le plus utile d&apos;une capture, est de capturer les pièces adverses !</target>
+        En effectuant ensuite le bon mouvement, vous pourrez faire deux captures supplémentaires !
+        Gardez à l&apos;esprit que le plus utile d&apos;une capture, est de capturer les pièces adverses !</target>
       </trans-unit>
       <trans-unit id="1212338036122995731" datatype="html">
         <source>Congratulations, you have gotten 12 of your pieces back and captured 2 of your opponent&apos;s pieces.
@@ -1743,7 +1743,7 @@
         either by moving one of your pieces on the opponent&apos;s starting line,
         or by forcing the opponent to make a move that blocks the entire game.
         Here, Dark wins because its brown piece is on Light&apos;s starting line, on the top left.</source>
-        <target>Au Kamisado, il y a deux façons de gagner : soit en plaçant une de vos pièces sur la ligne de départ de
+        <target>Au Kamisado, il y a deux façons de gagner : soit en plaçant une de vos pièces sur la ligne de départ de
         l&apos;adversaire, soit en forçant l&apos;adversaire à faire un coup qui bloque la partie.
         Ici, le joueur foncé gagne car il a sa pièce brune sur la ligne de départ du joueur clair, en haut à gauche.</target>
       </trans-unit>
@@ -1781,7 +1781,7 @@
       </trans-unit>
       <trans-unit id="8902613702570774815" datatype="html">
         <source>You have not moved your pink piece on a blue square!</source>
-        <target>Vous n&apos;avez pas avancé votre pièce rose sur une case bleue !</target>
+        <target>Vous n&apos;avez pas avancé votre pièce rose sur une case bleue !</target>
       </trans-unit>
       <trans-unit id="6535171484072867925" datatype="html">
         <source>Stuck situation</source>
@@ -1792,13 +1792,13 @@
         However, your pink piece is stuck! In this case, you must pass your turn.
         Dark will now have to play by moving its pink piece.</source>
         <target>Foncé s'est déplacé sur une autre case rose, et vous oblige donc à déplacer votre pièce rose.
-        Cependant, votre pièce rose est bloquée ! Dans ce cas ci, vous êtes obligé de passer votre tour.
+        Cependant, votre pièce rose est bloquée ! Dans ce cas ci, vous êtes obligé de passer votre tour.
         Foncé devra jouer son prochain tour en déplaçant lui-même sa pièce rose.</target>
       </trans-unit>
       <trans-unit id="8029874053731693714" datatype="html">
         <source>Victory by blocking</source>
         <target>Foncé s&apos;est déplacé sur une autre case rose, et vous oblige donc à déplacer votre pièce rose.
-        Cependant, votre pièce rose est bloquée ! Dans ce cas ci, vous êtes obligé de passer votre tour.
+        Cependant, votre pièce rose est bloquée ! Dans ce cas ci, vous êtes obligé de passer votre tour.
         Foncé devra jouer son prochain tour en déplaçant lui-même sa pièce rose.</target>
       </trans-unit>
       <trans-unit id="3704072447684559239" datatype="html">
@@ -1824,10 +1824,10 @@
         <target>Parfait !
          Clair est obligé d&apos;avancer son pion vert sur la case orange, vous obligeant à joueur avec votre pion orange.
          Dès lors, votre pion orange sera bloqué et vous devrez donc passer votre tour.
-         Clair devra ensuite aussi passer son tour car son pion orange est aussi bloqué :
+         Clair devra ensuite aussi passer son tour car son pion orange est aussi bloqué :
          la partie est totalement bloquée.
          Dans ce cas, le dernier joueur à avoir déplacé une pièce perd la partie.
-         Ici, Clair aura déplacé sa pièce verte en dernier, vous êtes donc vainqueur !</target>
+         Ici, Clair aura déplacé sa pièce verte en dernier, vous êtes donc vainqueur !</target>
       </trans-unit>
       <trans-unit id="6387863170048380356" datatype="html">
         <source>Your move should have a length equal to the number of pieces that exist on the same line.</source>
@@ -1854,7 +1854,7 @@
         Here, Dark wins the game:
         Dark&apos;s pieces are forming a single group, while Light&apos;s pieces form three groups.</source>
         <target>À Lines of Actions, le but est de regrouper toutes vos pièces de façon contigues, orthogonalement et/ou diagonalement.
-        Ici, Foncé gagne la partie :
+        Ici, Foncé gagne la partie :
         ses pièces ne forment qu&apos;un seul groupe, alors que les pièces de Clair forment trois groupes.</target>
       </trans-unit>
       <trans-unit id="2502571338785795406" datatype="html">
@@ -1871,7 +1871,7 @@
         Les déplacements s&apos;effectuent orthogonalement ou diagonalement.
         La longueur d&apos;un déplacement est égale au nombre de pièces présentes dans la ligne du déplacement.
         Notez la présence d&apos;un indicateur d&apos;aide qui indique où une pièce peut atterrir quand vous la sélectionnez.&lt;br/&gt;&lt;br/&gt;
-        Vous jouez Foncé, faites le premier déplacement !</target>
+        Vous jouez Foncé, faites le premier déplacement !</target>
       </trans-unit>
       <trans-unit id="4640173099284920351" datatype="html">
         <source>Jumping</source>
@@ -1905,7 +1905,7 @@
         Verticalement, elle se déplace de trois cases car il y a en tout trois pièces sur cette ligne verticale.
         Mais elle ne peut qu&apos;aller vers le haut, car vers le bas la case d&apos;atterrissage est occupée par une autre
         de vos pièces.
-        Diagonalement, un seul mouvement est possible : sur la diagonale qui contient trois pièces, dans la seule
+        Diagonalement, un seul mouvement est possible : sur la diagonale qui contient trois pièces, dans la seule
         direction où on ne doit pas sauter au dessus d&apos;une pièce adverse.
         Sur l&apos;autre diagonale, il y a trop de pièces pour que le déplacement se termine sur le plateau.&lt;br/&gt;&lt;br/&gt;
         Effectuez un de ces déplacements.</target>
@@ -1927,7 +1927,7 @@
         <target>Si un déplacement se termine sur une pièce adverse, celle-ci est capturée et disparait du plateau.
         Un déplacement par contre ne peut pas se terminer sur une pièce du joueur lui-même.
         Attention, avoir moins de pièces à Lines of Action rend plus atteignable la condition de victoire,
-        car il est plus facile de regrouper moins de pièces !
+        car il est plus facile de regrouper moins de pièces !
         D&apos;ailleurs, s&apos;il reste une seule pièce à un joueur, il gagne la partie.&lt;br/&gt;&lt;br/&gt;
         Dans la configuration suivante, avec Foncé, essayez de capturer une pièce.</target>
       </trans-unit>
@@ -2043,7 +2043,7 @@
       </trans-unit>
       <trans-unit id="4197928800633217955" datatype="html">
         <source>Congratulations! Note that if all blocks are neutral after you have put your piece, there will be no rotation.</source>
-        <target>Bravo ! Note: si tout les quadrants sont neutres après que vous ayez déposé votre pièce, il n&apos;y aura pas de rotation!</target>
+        <target>Bravo ! Note: si tout les quadrants sont neutres après que vous ayez déposé votre pièce, il n&apos;y aura pas de rotation!</target>
       </trans-unit>
       <trans-unit id="682762602217958961" datatype="html">
         <source>You must move your pieces upward.</source>
@@ -2059,7 +2059,7 @@
       </trans-unit>
       <trans-unit id="1024410441498731703" datatype="html">
         <source>You cannot land on this space.</source>
-        <target>Vous ne pouvez pas atterrir sur cette case !</target>
+        <target>Vous ne pouvez pas atterrir sur cette case !</target>
       </trans-unit>
       <trans-unit id="70110199629015603" datatype="html">
         <source>You cannot capture.</source>
@@ -2114,7 +2114,7 @@
         Go ahead, climb!</source>
         <target>Quand 4 pièces forment un carré, il est possible de placer une cinquième pièce dessus.
         Cependant, à ce moment là, se crée une opportunité d&apos;économiser une pièce en &quot;grimpant&quot; au lieu de déposer.
-        Pour grimper :
+        Pour grimper :
         &lt;ol&gt;;
             &lt;li&gt; 1. Cliquez sur une de vos pièces libres et plus basse que la case d&apos;atterrissage.&lt;/li&gt;
             &lt;li&gt; 2. Cliquez sur une case vide plus haute.&lt;/li&gt;
@@ -2129,7 +2129,7 @@
             &lt;li&gt; Of course, you cannot move the opponent&apos;s pieces.&lt;/li&gt;
             &lt;li&gt; You can only climb when the landing square is higher than the starting square.&lt;/li&gt;
         &lt;/ol&gt;</source>
-        <target>Bravo !&lt;br/&gt;
+        <target>Bravo !&lt;br/&gt;
         Notes importantes:
         &lt;ol&gt;;
             &lt;li&gt; 1. On ne peut déplacer une pièce qui est en dessous d&apos;une autre.&lt;/li&gt;
@@ -2298,7 +2298,7 @@
         Once on the other side, all pieces will move by one space in the opposing direction.
         Afterwards, if the piece was neutral, it will become yours and takes your color.&lt;br/&gt;&lt;br/&gt;
         For example, take the bottom right neutral piece, and move it to the left (you&apos;re playing Light).</source>
-        <target>Quand c&apos;est à votre tour de jouer :
+        <target>Quand c&apos;est à votre tour de jouer :
         &lt;ol&gt;;
             &lt;li&gt; 1. Cliquez sur une de vos pièces ou une pièce neutre, il est interdit de choisir une pièce de l&apos;adversaire.
                 Notez que vous ne pouvez choisir qu&apos;une pièce sur le bord du plateau.&lt;/li&gt;
@@ -2466,7 +2466,7 @@
       </trans-unit>
       <trans-unit id="5302904876941698020" datatype="html">
         <source>Failed! You have made a single step.</source>
-        <target>Raté ! Vous avez fait un simple pas !</target>
+        <target>Raté ! Vous avez fait un simple pas !</target>
       </trans-unit>
       <trans-unit id="5162969671337604607" datatype="html">
         <source>You cannot insert a piece, all your pieces are already on the board.</source>
@@ -2640,7 +2640,7 @@
       </trans-unit>
       <trans-unit id="4811847660786431276" datatype="html">
         <source>This move is not disconnecting a piece of your opponent. Try again with another piece.</source>
-        <target>Ce mouvement ne déconnecte pas de pièce adverse ! Réessayez !</target>
+        <target>Ce mouvement ne déconnecte pas de pièce adverse ! Réessayez !</target>
       </trans-unit>
       <trans-unit id="6058377963019501239" datatype="html">
         <source>You lost one of your pieces during this move. There is a way to disconnect an opponent&apos;s piece without losing any of yours, try again!</source>
@@ -2676,7 +2676,7 @@
       </trans-unit>
       <trans-unit id="3255477892845543355" datatype="html">
         <source>Congratulations! Note that if a piece is inside the circle, it does not change anything.</source>
-        <target>Bravo ! Notez que la présence ou non d&apos;une pièce à l&apos;intérieur du rond ne change rien.</target>
+        <target>Bravo ! Notez que la présence ou non d&apos;une pièce à l&apos;intérieur du rond ne change rien.</target>
       </trans-unit>
       <trans-unit id="4644119482430965077" datatype="html">
         <source>Victory (triangle)</source>
@@ -2704,7 +2704,7 @@
       </trans-unit>
       <trans-unit id="6404013542075961070" datatype="html">
         <source>Congratulations, your opponent now has one piece less and you&apos;re closer to victory!</source>
-        <target>Bravo, vous avez fait perdre une pièce à votre adversaire et vous êtes rapproché potentiellement de la victoire !</target>
+        <target>Bravo, vous avez fait perdre une pièce à votre adversaire et vous êtes rapproché potentiellement de la victoire !</target>
       </trans-unit>
       <trans-unit id="4819564470925108710" datatype="html">
         <source>Victory by disconnection</source>
@@ -2722,7 +2722,7 @@
       </trans-unit>
       <trans-unit id="7208567678509553256" datatype="html">
         <source>This move does not disconnect your opponent&apos;s pieces. Try again with another piece.</source>
-        <target>Ce mouvement ne déconnecte pas du jeu de pièces adverses ! Réessayez avec une autre pièce !</target>
+        <target>Ce mouvement ne déconnecte pas du jeu de pièces adverses ! Réessayez avec une autre pièce !</target>
       </trans-unit>
       <trans-unit id="631151175449209373" datatype="html">
         <source>Special disconnection</source>
@@ -2734,7 +2734,7 @@
         You&apos;re playing Dark, play such a move!</source>
         <target>Lors d&apos;une déconnection, de deux à plusieurs groupes peuvent faire la même taille,
         auquel cas, un clic en plus sera nécessaire pour indiquer lequel vous souhaitez garder.&lt;br/&gt;&lt;br/&gt;
-        Vous jouez Foncé, créer un mouvement de la sorte !</target>
+        Vous jouez Foncé, créer un mouvement de la sorte !</target>
       </trans-unit>
       <trans-unit id="4762560256027932544" datatype="html">
         <source>This move has not cut the board in two equal halves.</source>
@@ -2984,7 +2984,7 @@
         Vous pouvez alors récupérer ces marqueurs en cliquant dessus, et ensuite récupérer un de vos anneaux en cliquant dessus.
         Vous avez alors un point de plus.
         Vous êtes obligés d&apos;effectuer une capture quand elle se présente.
-        Vous jouez foncé, effectuez une capture !</target>
+        Vous jouez foncé, effectuez une capture !</target>
       </trans-unit>
       <trans-unit id="7732729017555001326" datatype="html">
         <source>Congratulations! You need two more captures to win.</source>
@@ -2992,7 +2992,7 @@
       </trans-unit>
       <trans-unit id="7525019515401716113" datatype="html">
         <source>Failed! You need to align 5 markers of your color in order to get them, and to get a ring at the same time.</source>
-        <target>Raté ! Vous devez aligner 5 marqueurs pour pouvoir les récupérer et prendre un anneau par la même occasion.</target>
+        <target>Raté ! Vous devez aligner 5 marqueurs pour pouvoir les récupérer et prendre un anneau par la même occasion.</target>
       </trans-unit>
       <trans-unit id="6079681718244869210" datatype="html">
         <source>You cannot pick a piece of the opponent.</source>
@@ -3024,7 +3024,7 @@
       </trans-unit>
       <trans-unit id="7463436103435995523" datatype="html">
         <source>You are already in a game. Finish it or cancel it first.</source>
-        <target>Vous avez déjà une partie en cours. Terminez la ou annulez la d&apos;abord !</target>
+        <target>Vous avez déjà une partie en cours. Terminez la ou annulez la d&apos;abord !</target>
       </trans-unit>
       <trans-unit id="1046324921628688006" datatype="html">
         <source>You are offline. Log in again to join a game.</source>
