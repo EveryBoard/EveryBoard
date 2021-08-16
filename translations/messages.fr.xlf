@@ -489,6 +489,7 @@
       <trans-unit id="3649232689954543597" datatype="html">
         <source>a turn lasts at most <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.maximalMoveDuration | humanDuration }}"/> <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
         <target>un tour dure maximum <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.maximalMoveDuration | humanDuration }}"/> <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></target>
+      </trans-unit>
       <trans-unit id="8496859383343230204" datatype="html">
         <source>you play first</source>
         <target>vous jouez en premier</target>
