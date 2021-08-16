@@ -76,7 +76,7 @@ export const epaminondasTutorial: TutorialStep[] = [
     ),
     TutorialStep.fromPredicate(
         $localize`Moving a phalanx`,
-        $localize`Let us now see how to move multiple pieces along a line, which is called a phalanx :
+        $localize`Let us now see how to move multiple pieces along a line, which is called a phalanx:
         <ol>
             <li>Click on the first piece of the phalanx.</li>
             <li>Click on the last piece of the phalanx.</li>

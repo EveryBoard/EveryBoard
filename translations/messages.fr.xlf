@@ -1306,8 +1306,8 @@
         <source>Moving a phalanx</source>
         <target>Déplacement de phalange</target>
       </trans-unit>
-      <trans-unit id="204971444516771500" datatype="html">
-        <source>Let us now see how to move multiple pieces along a line, which is called a phalanx :
+      <trans-unit id="2998213093973304032" datatype="html">
+        <source>Let us now see how to move multiple pieces along a line, which is called a phalanx:
         &lt;ol&gt;
             &lt;li&gt;Click on the first piece of the phalanx.&lt;/li&gt;
             &lt;li&gt;Click on the last piece of the phalanx.&lt;/li&gt;
