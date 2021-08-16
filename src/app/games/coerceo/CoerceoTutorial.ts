@@ -61,7 +61,7 @@ export const coerceoTutorial: TutorialStep[] = [
     ),
     TutorialStep.fromMove(
         $localize`Gain a tile`,
-        $localize`When a tile is empty, she can become removable from the board.
+        $localize`When a tile is empty, it can become removable from the board.
         For it to be removable, at least three of its sides must be free, and these should be consecutive sides.
         Note that if one empty tile, neighboring a tile that was just removed, also becomes removable, it will be removed too.
         For example, here, the topmost dark piece will not disconnect its tile when leaving it.

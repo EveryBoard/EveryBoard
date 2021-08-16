@@ -15,7 +15,7 @@ import { Player } from 'src/app/jscaip/Player';
 
 export class GameWrapperMessages {
 
-    public static readonly NOT_YOUR_TURN: string = $localize`It is not your turn.`;
+    public static readonly NOT_YOUR_TURN: string = $localize`It is not your turn!`;
 
     public static readonly NO_CLONING_FEATURE: string = $localize`You cannot clone a game. This feature might be implemented later.`;
 }

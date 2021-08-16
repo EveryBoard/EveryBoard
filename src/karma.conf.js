@@ -36,7 +36,7 @@ module.exports = function(config) {
                 flags: ['--no-sandbox', '--disable-gpu'],
             },
         },
-        reporters: ['progress', 'coverage', 'kjhtml'],
+        reporters: ['progress', 'coverage'],
         port: 9876,
         colors: true,
         logLevel: config.LOG_INFO,

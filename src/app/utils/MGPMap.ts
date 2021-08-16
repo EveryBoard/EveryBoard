@@ -98,7 +98,7 @@ export class MGPMap<K extends Comparable, V extends Comparable> {
                 return oldValue;
             }
         }
-        throw new Error('No Value to delete for key "'+ key.toString() +'" !');
+        throw new Error('No Value to delete for key "'+ key.toString() +'"!');
     }
     public getCopy(): MGPMap<K, V> {
         const newMap: MGPMap<K, V> = new MGPMap<K, V>();

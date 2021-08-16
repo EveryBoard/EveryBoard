@@ -519,7 +519,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
         const kingCoord: Coord = optionalKingCoord.get();
         if (TablutRules.isExternalThrone(kingCoord)) {
             display(LOCAL_VERBOSE, 'The king escape, victory to defender');
-            // king reached one corner !
+            // king reached one corner!
             return MGPOptional.of(TablutRules.getDefender());
         }
         if (TablutRules.isPlayerImmobilized(Player.ZERO, board)) {

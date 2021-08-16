@@ -162,7 +162,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
         const board: number[][] = slice.getCopiedBoard();
         if (move.equals(ReversiMove.PASS)) { // if the player pass
             // let's check that pass is a legal move right now
-            // if he had no choice but to pass, then passing is legal !
+            // if he had no choice but to pass, then passing is legal!
             // else, passing was illegal
             return {
                 legal: ReversiRules.playerCanOnlyPass(slice) ?

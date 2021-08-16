@@ -92,8 +92,8 @@
       <trans-unit id="5561648955936795459" datatype="html">
         <source>Use simple mechanics to push 6 of the opponent&apos;s pieces out of the board!</source>
       </trans-unit>
-      <trans-unit id="1626489690215042302" datatype="html">
-        <source>The international version of the most famous African strategy game!</source>
+      <trans-unit id="6262000022886850348" datatype="html">
+        <source>The international version of the famous African strategy game!</source>
       </trans-unit>
       <trans-unit id="1207528295664437538" datatype="html">
         <source>Stack your pieces and control as many stacks as you can to win!</source>
@@ -236,8 +236,8 @@
       <trans-unit id="3620319853901130962" datatype="html">
         <source>AwesomBoard is a website to play and learn the rules of various abstract strategy games with perfect information.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Such games are games that do not include any randomness, agility, or hidden information. These games are played by two players, turn by turn.</source>
       </trans-unit>
-      <trans-unit id="4005579048990110948" datatype="html">
-        <source>It is not your turn.</source>
+      <trans-unit id="2129768251160483742" datatype="html">
+        <source>It is not your turn!</source>
       </trans-unit>
       <trans-unit id="4691729121764741641" datatype="html">
         <source>You cannot clone a game. This feature might be implemented later.</source>
@@ -714,8 +714,8 @@
       <trans-unit id="8225905705628695723" datatype="html">
         <source>Gain a tile</source>
       </trans-unit>
-      <trans-unit id="4646030392258334853" datatype="html">
-        <source>When a tile is empty, she can become removable from the board.
+      <trans-unit id="362405963474133663" datatype="html">
+        <source>When a tile is empty, it can become removable from the board.
         For it to be removable, at least three of its sides must be free, and these should be consecutive sides.
         Note that if one empty tile, neighboring a tile that was just removed, also becomes removable, it will be removed too.
         For example, here, the topmost dark piece will not disconnect its tile when leaving it.
