@@ -707,7 +707,7 @@
         <target>Pour pousser une pièce de l'adversaire, vous devez déplacer au moins deux de vos pièces.
         Pour pousser deux pièces, vous devez déplacer trois de vos pièces.
         Si une de vos pièces est placée juste après une pièce adverse que vous poussez, pousser sera alors interdit.
-        Vous ne pouvez pas déplacer quatre pièces.
+        Vous ne pouvez pas déplacer quatre pièces.&lt;br/&gt;&lt;br/&gt;
         Une seule &quot;poussée&quot; vers là droite est possible ici, trouvez là (vous jouez Foncé).</target>
       </trans-unit>
       <trans-unit id="6875339943465710233" datatype="html">
@@ -863,7 +863,7 @@
       <trans-unit id="6914881509682724797" datatype="html">
         <source>You cannot let another player starve, meaning that if your opponent has no seeds anymore and if you can give them at least one, you have to do it.&lt;br/&gt;&lt;br/&gt;
         Go ahead!</source>
-        <target>&quot;Affamer&quot; est interdit, c&apos;est-à-dire que si votre adversaire n&apos;a plus de graines et que vous savez lui en donner au moins une, vous êtes obligé de le faire.
+        <target>&quot;Affamer&quot; est interdit, c&apos;est-à-dire que si votre adversaire n&apos;a plus de graines et que vous savez lui en donner au moins une, vous êtes obligé de le faire.&lt;br/&gt;&lt;br/&gt;
         Allez-y !</target>
       </trans-unit>
       <trans-unit id="3908210272037108493" datatype="html">
@@ -2359,7 +2359,7 @@
         <target>Au début de la partie, les pièces sont placées comme ceci.
         Pour qu&apos;un coup soit légal il faut qu&apos;il prenne en sandwich minimum une pièce adverse entre la pièce que vous posez et une de vos pièces.&lt;br/&gt;&lt;br/&gt;
         Faites n&apos;importe quel mouvement en cliquant pour déposer votre pièce.
-        Le joueur foncé commence.&lt;br/&gt;&lt;br/&gt;
+        Le joueur foncé commence.
         Faites un mouvement !</target>
       </trans-unit>
       <trans-unit id="2992889611246141410" datatype="html">
@@ -2965,7 +2965,7 @@
         Ensuite, l&apos;anneau doit se déplacer en ligne droite dans n&apos;importe quelle direction.
         Un anneau ne peut pas lors de son mouvement passer à travers d&apos;autres anneaux.
         Si vous passez au dessus d&apos;un groupe de marqueurs, votre mouvement doit s&apos;arrêter au premier espace vide qui suit ce groupe.
-        Tous les marqueurs du groupe sont alors retournés et changent de couleur.
+        Tous les marqueurs du groupe sont alors retournés et changent de couleur.&lt;br/&gt;&lt;br/&gt;
         Vous jouez foncé, effectuez un mouvement.</target>
       </trans-unit>
       <trans-unit id="4761648797342068775" datatype="html">
@@ -2983,7 +2983,7 @@
         Pour cela, il faut que vous alignez 5 marqueurs à votre couleur.
         Vous pouvez alors récupérer ces marqueurs en cliquant dessus, et ensuite récupérer un de vos anneaux en cliquant dessus.
         Vous avez alors un point de plus.
-        Vous êtes obligés d&apos;effectuer une capture quand elle se présente.
+        Vous êtes obligés d&apos;effectuer une capture quand elle se présente.&lt;br/&gt;&lt;br/&gt;
         Vous jouez foncé, effectuez une capture !</target>
       </trans-unit>
       <trans-unit id="7732729017555001326" datatype="html">
@@ -3024,7 +3024,7 @@
       </trans-unit>
       <trans-unit id="7463436103435995523" datatype="html">
         <source>You are already in a game. Finish it or cancel it first.</source>
-        <target>Vous avez déjà une partie en cours. Terminez la ou annulez la d&apos;abord !</target>
+        <target>Vous avez déjà une partie en cours. Terminez-la ou annulez-la d&apos;abord !</target>
       </trans-unit>
       <trans-unit id="1046324921628688006" datatype="html">
         <source>You are offline. Log in again to join a game.</source>
