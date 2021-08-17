@@ -21,6 +21,7 @@ import { getDiff, getDiffChangesNumber, ObjectDifference } from 'src/app/utils/O
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Time } from 'src/app/domain/Time';
+import { getMs, getMsDifference } from 'src/app/utils/TimeUtils';
 
 export class UpdateType {
 
@@ -75,6 +76,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     public joiner: IJoiner;
 
     private hasUserPlayed: [boolean, boolean] = [false, false];
+    private msToSubstract: [number, number] = [0, 0];
 
     protected routerEventsSub: Subscription;
     protected userSub: Subscription;
@@ -88,7 +90,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 router: Router,
                 userService: UserService,
                 authenticationService: AuthenticationService,
-                public gameService: GameService) {
+                public gameService: GameService)
+    {
         super(componentFactoryResolver, actRoute, router, userService, authenticationService);
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent constructed');
     }
@@ -187,18 +190,16 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 // TODO: might no longer be checkEndGame but "do"EndGame
             case UpdateType.MOVE_WITHOUT_TIME:
                 this.currentPart = oldPart;
-                console.log('denied update')
-                this.getLastMoveTime(oldPart, part, updateType);
-                // return this.doNewMoves(part);
+                console.log('move_without_time: update postponed')
+                // this.getLastMoveTime(oldPart, part, updateType);
                 return;
             case UpdateType.TIME_ALONE:
                 this.currentPart = oldPart;
-                console.log('denied update')
-                this.getLastMoveTime(oldPart, part, updateType);
+                console.log('time_alone: update postponed')
+                // this.getLastMoveTime(oldPart, part, updateType);
                 return;
             case UpdateType.MOVE:
-                this.getLastMoveTime(oldPart, part, updateType);
-                console.log('MOVE at ', Date.now());
+                this.msToSubstract = this.getLastMoveTime(oldPart, part, updateType);
                 return this.doNewMoves(part);
             case UpdateType.PRE_START_DOC:
                 if (oldPart != null && oldPart.doc.beginning != null &&
@@ -262,10 +263,14 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             const lastMoveTimeModified: number = this.isLastMoveUpdated(diff) ? 1 : 0;
             const scoreZeroUpdated: number = this.isUpdated(diff, 'scorePlayerZero') ? 1 : 0;
             const scoreOneUpdated: number = this.isUpdated(diff, 'scorePlayerOne') ? 1 : 0;
+            const remainingMsForZeroUpdated: number = this.isUpdated(diff, 'remainingMsForZero') ? 1 : 0;
+            const remainingMsForOneUpdated: number = this.isUpdated(diff, 'remainingMsForOne') ? 1 : 0;
             const requestRemoved: number = diff.removed['request'] == null ? 0 : 1;
             const nbValidMoveDiffs: number = lastMoveTimeModified +
                                              scoreZeroUpdated +
                                              scoreOneUpdated +
+                                             remainingMsForZeroUpdated +
+                                             remainingMsForOneUpdated +
                                              requestRemoved +
                                              2;
             return nbDiffs === nbValidMoveDiffs;
@@ -293,20 +298,24 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                diff.modified[key] != null ||
                diff.removed[key] != null;
     }
-    public getLastMoveTime(oldPart: Part, update: Part, type: UpdateType): void {
+    public getLastMoveTime(oldPart: Part, update: Part, type: UpdateType): [number, number] {
         const oldTime: Time = this.getMoreRecentTime(oldPart);
         const updateTime: Time = this.getMoreRecentTime(update);
         if (oldTime == null) {
             if (updateTime == null) {
-                return console.log('getLastMoveTime(' + type.value + ') has no times');
+                console.log('getLastMoveTime(' + type.value + ') has no times');
+                return [0, 0];
             } else {
-                return console.log('getLastMoveTime(' + type.value + ') has ' + this.getMs(updateTime));
+                console.log('getLastMoveTime(' + type.value + ') has ' + getMs(updateTime));
+                return [0, 0];
             }
         } else {
             if (updateTime == null) {
-                return console.log('getLastMoveTime(' + type.value + ') had ' + this.getMs(oldTime) + ' then nothing');
+                console.log('getLastMoveTime(' + type.value + ') had ' + getMs(oldTime) + ' then nothing');
+                return [0, 0];
             } else {
-                return this.showTimeDifferenceThingy(oldTime, updateTime, oldPart, update, type);
+                const last: Player = Player.fromTurn(oldPart.doc.turn);
+                return this.showTimeDifferenceThingy(oldTime, updateTime, type, last);
             }
         }
     }
@@ -320,53 +329,19 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             return part.doc.lastMoveTime as Time;
         }
     }
-    private getMs(time: Time): number {
-        return time.seconds * 1000 + (time.nanoseconds / (1000 * 1000));
-    }
     private showTimeDifferenceThingy(oldTime: NonNullable<Time>,
                                      updateTime: NonNullable<Time>,
-                                     oldPart: Part,
-                                     update: Part,
-                                     type: UpdateType)
-    : void
+                                     type: UpdateType,
+                                     last: Player)
+    : [number, number]
     {
-        const updateMs: number = this.getMs(updateTime);
-        const oldTimeMs: number = this.getMs(oldTime);
-        const beginningMs: number = this.getMs(update.doc.beginning as Time);
-        const totalPartDurationMs: number = this.joiner.totalPartDuration * 1000;
-        let passiveRemainingTimeMs: number;
-        let activeChrono: CountDownComponent;
-        if (oldPart.doc.turn % 2 === 0) {
-            passiveRemainingTimeMs = this.chronoOneGlobal.remainingTime;
-            activeChrono = this.chronoZeroGlobal;
-        } else {
-            passiveRemainingTimeMs = this.chronoZeroGlobal.remainingTime;
-            activeChrono = this.chronoOneGlobal;
-        }
-        const concreteMsUsedByActive: number = totalPartDurationMs - activeChrono.remainingTime;
-        // updateMs - beginningMs = timeUsedByPassive + timeUsedByActive
-        // updateMs - beginningMs = (totalPartDurationMs - passiveGlobalChrono.remaining) + timeUsedByActive
-        // timeUsedByActive = concreteMsUsedByActive + msSpentInTransition
-        // msSpentInTransition = timeUsedByActive - concreteMsUsedByActive
-        const totalTimeUsedDBWise: number = updateMs - beginningMs;
-        const timeUsedByActive: number = totalTimeUsedDBWise - totalPartDurationMs + passiveRemainingTimeMs;
-        const msSpentInTransition: number = timeUsedByActive - concreteMsUsedByActive;
-        console.log({
-            turn: update == null ? null : update.doc.turn,
-            concreteMsUsedByActive,
-            msSpentInTransition,
-            moveDurationDBWise: updateMs - oldTimeMs,
-            totalTimeUsedDBWise,
-        })
-        console.log('getLastMoveTime(' + type.value + ') lastTime update; start =', oldTimeMs, '+', totalTimeUsedDBWise, 'and used time:', timeUsedByActive, 'different then by', msSpentInTransition);
-        if (type === UpdateType.TIME_ALONE) {
-            if (msSpentInTransition < 0) {
-                console.log('enfant de cul c négatif!!')
-            } else {
-                console.log('getLastMoveTime ADDING THE TIIIIIME')
-                activeChrono.addTime(msSpentInTransition);
-            }
-        }
+        // const updateMs: number = getMs(updateTime);
+        // const oldTimeMs: number = getMs(oldTime);
+        const moveDurationDBWise: number = getMsDifference(oldTime, updateTime);
+        const msToSubstract: [number, number] = [0, 0];
+        msToSubstract[last.value] = moveDurationDBWise;
+        console.log('getLastMoveTime(' + type.value + ') moveDurationDBWise: ' + moveDurationDBWise +' ms to substract: [' + msToSubstract[0] + ', ' + msToSubstract[1] + ']');
+        return msToSubstract;
     }
     public setChronos(): void {
         display(OnlineGameWrapperComponent.VERBOSE, 'onlineGameWrapperComponent.setChronos()');
@@ -429,7 +404,12 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     }
     public notifyDraw(encodedMove: JSONValueWithoutArray, scorePlayerZero: number, scorePlayerOne: number): void {
         this.endGame = true;
-        this.gameService.updateDBBoard(this.currentPartId, encodedMove, scorePlayerZero, scorePlayerOne, true);
+        this.gameService.updateDBBoard(this.currentPartId,
+                                       encodedMove,
+                                       scorePlayerZero,
+                                       scorePlayerOne,
+                                       [0, 0],
+                                       true);
     }
     public notifyTimeoutVictory(victoriousPlayer: string, loser: string): void {
         this.endGame = true;
@@ -456,6 +436,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                                        encodedMove,
                                        scorePlayerZero,
                                        scorePlayerOne,
+                                       [0, 0],
                                        false,
                                        this.currentPart.getWinner(),
                                        this.currentPart.getLoser());
@@ -631,7 +612,11 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 this.notifyVictory(encodedMove, scorePlayerZero, scorePlayerOne);
             }
         } else {
-            return this.gameService.updateDBBoard(this.currentPartId, encodedMove, scorePlayerZero, scorePlayerOne);
+            return this.gameService.updateDBBoard(this.currentPartId,
+                                                  encodedMove,
+                                                  scorePlayerZero,
+                                                  scorePlayerOne,
+                                                  this.msToSubstract);
         }
     }
     public resign(): void {

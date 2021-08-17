@@ -144,9 +144,4 @@ export class CountDownComponent implements OnInit, OnDestroy {
     public ngOnDestroy(): void {
         this.clearTimeouts();
     }
-    public addTime(ms: number): void {
-        this.pause();
-        this.remainingTime += ms;
-        this.resume();
-    }
 }

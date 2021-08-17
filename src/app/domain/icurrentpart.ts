@@ -15,9 +15,12 @@ export interface IPart extends JSONObject {
     readonly playerOne?: string, // the id of the second player
     readonly beginning?: firebase.firestore.FieldValue | Time,
     readonly lastMoveTime?: firebase.firestore.FieldValue | Time,
+    readonly remainingMsForZero?: number;
+    readonly remainingMsForOne?: number;
     readonly winner?: string,
     readonly loser?: string,
-    // TODO: scorePlayerOne and scorePlayerZero
+    readonly scorePlayerZero?: number,
+    readonly scorePlayerOne?: number,
     readonly request?: Request
 }
 

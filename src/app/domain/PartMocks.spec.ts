@@ -17,6 +17,8 @@ export class PartMocks {
         listMoves: [],
         result: MGPResult.UNACHIEVED.value,
         playerOne: 'firstCandidate',
-        beginning: firebase.firestore.FieldValue.serverTimestamp(), // shouldn't it be Time and not FieldValue
+        remainingMsForOne: 1800 * 1000,
+        remainingMsForZero: 1800 * 1000,
+        beginning: firebase.firestore.FieldValue.serverTimestamp(),
     });
 }

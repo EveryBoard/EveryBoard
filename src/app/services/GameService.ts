@@ -165,6 +165,8 @@ export class GameService implements OnDestroy {
             playerOne,
             turn: 0,
             beginning: firebase.firestore.FieldValue.serverTimestamp(),
+            remainingMsForZero: joiner.totalPartDuration * 1000,
+            remainingMsForOne: joiner.totalPartDuration * 1000,
         };
     }
     public async deletePart(partId: string): Promise<void> {
@@ -298,6 +300,7 @@ export class GameService implements OnDestroy {
                                encodedMove: JSONValueWithoutArray,
                                scorePlayerZero: number,
                                scorePlayerOne: number,
+                               msToSubstract: [number, number],
                                notifyDraw?: boolean,
                                winner?: string,
                                loser?: string)
@@ -307,6 +310,7 @@ export class GameService implements OnDestroy {
             partId, encodedMove, scorePlayerZero, scorePlayerOne, notifyDraw, winner } });
 
         const part: IPart = await this.partDao.read(partId); // TODO: optimise this
+        console.log( { part })
         const turn: number = part.turn + 1;
         const listMoves: JSONValueWithoutArray[] = ArrayUtils.copyImmutableArray(part.listMoves);
         listMoves[listMoves.length] = encodedMove;
@@ -315,6 +319,8 @@ export class GameService implements OnDestroy {
             turn,
             scorePlayerZero,
             scorePlayerOne,
+            remainingMsForZero: part.remainingMsForZero - msToSubstract[0],
+            remainingMsForOne: part.remainingMsForOne - msToSubstract[1],
             request: null,
             lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
         };

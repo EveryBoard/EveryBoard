@@ -28,6 +28,8 @@ import { QuartoComponent } from 'src/app/games/quarto/quarto.component';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { GameService } from 'src/app/services/GameService';
 import { AuthUser } from 'src/app/services/AuthenticationService';
+import { Time } from 'src/app/domain/Time';
+import { getMsDifference } from 'src/app/utils/TimeUtils';
 
 describe('OnlineGameWrapperComponent of Quarto:', () => {
     /* Life cycle summary
@@ -130,7 +132,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await partDAO.update('joinerId', {
             playerOne: 'firstCandidate',
             turn: 0,
-            beginning: { seconds: 123, nanoseconds: 456000000 },
+            remainingMsForZero: 1800 * 1000,
+            remainingMsForOne: 1800 * 1000,
+            beginning: firebase.firestore.FieldValue.serverTimestamp(),
         });
         componentTestUtils.detectChanges();
         return Promise.resolve();
@@ -168,6 +172,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             request: null,
             scorePlayerOne: null,
             scorePlayerZero: null,
+            remainingMsForOne: 1800 * 1000,
+            remainingMsForZero: 1800 * 1000,
             lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
         });
         componentTestUtils.detectChanges();
@@ -249,6 +255,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await doMove(FIRST_MOVE, true);
 
         expect(wrapper.gameComponent.rules.node.gamePartSlice.turn).toBe(1);
+        const beginningTime: Time = wrapper.currentPart.doc.beginning as Time;
+        const firstMovesEndTime: Time = wrapper.currentPart.doc.lastMoveTime as Time;
+        const timeUsedByFirstMove: number = getMsDifference(beginningTime, firstMovesEndTime);
 
         // Asking take back
         expect(await askTakeBack()).toBeTrue();
@@ -270,8 +279,13 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await doMove(move1, true);
 
         expect(partDAO.update).toHaveBeenCalledOnceWith('joinerId', {
-            listMoves: [QuartoMove.encoder.encodeNumber(move1)], turn: 1,
-            scorePlayerZero: null, scorePlayerOne: null, request: null,
+            listMoves: [QuartoMove.encoder.encodeNumber(move1)],
+            turn: 1,
+            scorePlayerZero: null,
+            scorePlayerOne: null,
+            remainingMsForZero: (1800 * 1000) - timeUsedByFirstMove,
+            remainingMsForOne: 1800 * 1000,
+            request: null,
             lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
         });
         tick(wrapper.joiner.maximalMoveDuration * 1000);
@@ -302,8 +316,13 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await doMove(FIRST_MOVE, true);
         expect(wrapper.currentPart.doc.listMoves).toEqual([QuartoMove.encoder.encodeNumber(FIRST_MOVE)]);
         const expectedUpdate: Partial<IPart> = {
-            listMoves: [QuartoMove.encoder.encodeNumber(FIRST_MOVE)], turn: 1,
-            scorePlayerZero: null, scorePlayerOne: null, request: null,
+            listMoves: [QuartoMove.encoder.encodeNumber(FIRST_MOVE)],
+            turn: 1,
+            scorePlayerZero: null,
+            scorePlayerOne: null,
+            remainingMsForZero: 1800 * 1000,
+            remainingMsForOne: 1800 * 1000,
+            request: null,
             lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
         };
         // TODO: should receive somewhere some kind of Timestamp written by DB
@@ -327,9 +346,16 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(partDAO.update).toHaveBeenCalledTimes(1);
         expect(partDAO.update).toHaveBeenCalledWith('joinerId', {
             listMoves: [move0, move1, move2, move3, winningMove].map(QuartoMove.encoder.encodeNumber),
-            turn: 5, scorePlayerZero: null, scorePlayerOne: null, request: null,
+            turn: 5,
+            scorePlayerZero: null,
+            scorePlayerOne: null,
+            remainingMsForOne: 1800 * 1000,
+            remainingMsForZero: 1800 * 1000,
+            request: null,
             lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
-            winner: 'creator', loser: 'firstCandidate', result: MGPResult.VICTORY.value,
+            winner: 'creator',
+            loser: 'firstCandidate',
+            result: MGPResult.VICTORY.value,
         });
         expect(componentTestUtils.findElement('#youWonIndicator'))
             .withContext('Component should show who is the winner.')
@@ -720,6 +746,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 listMoves: [1, 2, 3],
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: 'Sir Meryn Trant',
+                remainingMsForZero: 1800 * 1000,
+                remainingMsForOne: 1800 * 1000,
                 beginning: { seconds: 123, nanoseconds: 456000000 },
                 lastMoveTime: { seconds: 333, nanoseconds: 333000000 },
                 request: Request.takeBackAccepted(Player.ZERO),
@@ -731,6 +759,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 listMoves: [1, 2, 3, 4],
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: 'Sir Meryn Trant',
+                remainingMsForZero: 1800 * 1000,
+                remainingMsForOne: 1800 * 1000,
                 beginning: { seconds: 123, nanoseconds: 456000000 },
                 lastMoveTime: { seconds: 444, nanoseconds: 444000000 },
                 // And obviously, no longer the previous request code
@@ -747,6 +777,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 listMoves: [],
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: 'Sir Meryn Trant',
+                remainingMsForZero: 1800 * 1000,
+                remainingMsForOne: 1800 * 1000,
                 beginning: { seconds: 123, nanoseconds: 456000000 },
             });
             const update: Part = new Part({
@@ -756,6 +788,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 listMoves: [1],
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: 'Sir Meryn Trant',
+                remainingMsForZero: 1800 * 1000,
+                remainingMsForOne: 1800 * 1000,
                 beginning: { seconds: 123, nanoseconds: 456000000 },
                 // And obviously, the added score and time
                 scorePlayerZero: 0,
@@ -774,6 +808,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 listMoves: [],
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: 'Sir Meryn Trant',
+                remainingMsForZero: 1800 * 1000,
+                remainingMsForOne: 1800 * 1000,
                 beginning: { seconds: 123, nanoseconds: 456000000 },
                 lastMoveTime: { seconds: 1111, nanoseconds: 111000000 },
             });
@@ -784,6 +820,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 listMoves: [1],
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: 'Sir Meryn Trant',
+                remainingMsForZero: 1800 * 1000,
+                remainingMsForOne: 1800 * 1000,
                 beginning: { seconds: 123, nanoseconds: 456000000 },
                 // And obviously, the modified time
                 lastMoveTime: { seconds: 2222, nanoseconds: 222000000 },
@@ -800,6 +838,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 listMoves: [1],
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: 'Sir Meryn Trant',
+                remainingMsForZero: 1800 * 1000,
+                remainingMsForOne: 1800 * 1000,
                 beginning: { seconds: 123, nanoseconds: 456000000 },
                 lastMoveTime: { seconds: 1111, nanoseconds: 111000000 },
                 scorePlayerZero: 1,
@@ -812,6 +852,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 listMoves: [1, 2],
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: 'Sir Meryn Trant',
+                remainingMsForZero: 1800 * 1000,
+                remainingMsForOne: 1800 * 1000,
                 beginning: { seconds: 123, nanoseconds: 456000000 },
                 lastMoveTime: { seconds: 2222, nanoseconds: 222000000 },
                 scorePlayerZero: 1,
@@ -830,6 +872,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 listMoves: [1],
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: 'Sir Meryn Trant',
+                remainingMsForZero: 1800 * 1000,
+                remainingMsForOne: 1800 * 1000,
                 beginning: { seconds: 123, nanoseconds: 456000000 },
                 lastMoveTime: { seconds: 1111, nanoseconds: 111000000 },
             });
@@ -840,6 +884,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 listMoves: [1, 2],
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: 'Sir Meryn Trant',
+                remainingMsForZero: 1800 * 1000,
+                remainingMsForOne: 1800 * 1000,
                 beginning: { seconds: 123, nanoseconds: 456000000 },
                 // And obviously, the added score
                 scorePlayerZero: 0,
@@ -858,6 +904,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 listMoves: [1],
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: 'Sir Meryn Trant',
+                remainingMsForZero: 1800 * 1000,
+                remainingMsForOne: 1800 * 1000,
                 beginning: { seconds: 123, nanoseconds: 456000000 },
                 lastMoveTime: { seconds: 1111, nanoseconds: 111000000 },
                 scorePlayerZero: 1,
@@ -870,6 +918,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 listMoves: [1, 2],
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: 'Sir Meryn Trant',
+                remainingMsForZero: 1800 * 1000,
+                remainingMsForOne: 1800 * 1000,
                 beginning: { seconds: 123, nanoseconds: 456000000 },
                 scorePlayerZero: 1,
                 // lastMoveTime is removed
@@ -887,6 +937,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 listMoves: [1],
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: 'Sir Meryn Trant',
+                remainingMsForZero: 1800 * 1000,
+                remainingMsForOne: 1800 * 1000,
                 beginning: { seconds: 123, nanoseconds: 456000000 },
                 lastMoveTime: null,
             });
@@ -897,6 +949,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 listMoves: [1],
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: 'Sir Meryn Trant',
+                remainingMsForZero: 1800 * 1000,
+                remainingMsForOne: 1800 * 1000,
                 beginning: { seconds: 123, nanoseconds: 456000000 },
                 // the only modif
                 lastMoveTime: { seconds: 1111, nanoseconds: 111000000 },

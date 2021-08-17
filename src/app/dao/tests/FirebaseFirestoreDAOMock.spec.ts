@@ -52,13 +52,7 @@ export abstract class FirebaseFirestoreDAOMock<T extends JSONObject> implements 
         }
         const mappedNewElement: JSONObject = {};
         for (const key of Object.keys(element)) {
-            if (key === 'lastMoveTime' || key === 'beginning') {
-                // if (oldDoc && oldDoc[key] != null) {
-                //     mappedNewElement[key] = {
-                //         seconds: oldDoc[key]['seconds'] + 111,
-                //         nanoseconds: oldDoc[key]['nanoseconds'] + 111,
-                //     };
-                // } else {
+            if (element[key] instanceof firebase.firestore.FieldValue) {
                 const dateNow: number = Date.now();
                 const ms: number = dateNow % 1000;
                 const seconds: number = (dateNow - ms) / 1000;
@@ -67,7 +61,6 @@ export abstract class FirebaseFirestoreDAOMock<T extends JSONObject> implements 
                     seconds,
                     nanoseconds,
                 };
-                // }
             } else {
                 mappedNewElement[key] = element[key];
             }
