@@ -62,7 +62,7 @@ export class AbaloneMove extends MoveCoord {
         try {
             return MGPFallible.success(new AbaloneMove(coord, dir, MGPOptional.empty()));
         } catch (e) {
-            return MGPFallible.failure(e.getMessage());
+            return MGPFallible.failure(e.message);
         }
     }
     public static fromDoubleCoord(first: Coord, second: Coord, dir: HexaDirection): MGPFallible<AbaloneMove> {

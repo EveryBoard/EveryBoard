@@ -10,7 +10,7 @@ import { AbaloneRules } from '../AbaloneRules';
 describe('AbaloneMove', () => {
 
     it('should not construct when not provided a direction or optional last piece', () => {
-        expect(AbaloneMove.fromSingleCoord(new Coord(0, 0), null)).toEqual(MGPFallible.failure('Direction cannot be null'));
+        expect(AbaloneMove.fromSingleCoord(new Coord(0, 0), null)).toEqual(MGPFallible.failure('Direction cannot be null.'));
         expect(AbaloneMove.fromDoubleCoord(new Coord(0, 0), null, HexaDirection.DOWN)).toEqual(MGPFallible.failure('second coord cannot be null'));
     });
     it('should not construct a move with more than three piece', () => {
@@ -21,7 +21,7 @@ describe('AbaloneMove', () => {
     });
     it('should not construct when created with an out of range coord', () => {
         const coord: Coord = new Coord(9, 9);
-        expect(AbaloneMove.fromSingleCoord(coord, HexaDirection.DOWN)).toEqual(MGPFallible.failure('Invalid move from single coord'));
+        expect(AbaloneMove.fromSingleCoord(coord, HexaDirection.DOWN)).toEqual(MGPFallible.failure('Coord (9, 9) out of range, invalid move!'));
     });
     it('should map false double coord to single coord', () => {
         const up: Coord = new Coord(0, 0);

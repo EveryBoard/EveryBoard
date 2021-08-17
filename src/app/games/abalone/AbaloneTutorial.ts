@@ -24,7 +24,7 @@ export const abaloneTutorial: TutorialStep[] = [
         Pour effectuer un déplacement, cliquez sur une de vos pièces, puis cliquez sur une flèche pour choisir sa direction.
         Vous jouez Foncé, faites n'importe quel mouvement!`,
         AbaloneGameState.getInitialSlice(),
-        AbaloneMove.fromSingleCoord(new Coord(2, 6), HexaDirection.UP),
+        AbaloneMove.fromSingleCoord(new Coord(2, 6), HexaDirection.UP).get(),
         $localize`Bravo!`,
     ),
     TutorialStep.fromMove(
@@ -45,7 +45,7 @@ export const abaloneTutorial: TutorialStep[] = [
             [_, _, _, O, _, _, N, N, N],
             [_, _, O, _, _, N, N, N, N],
         ], 0),
-        [AbaloneMove.fromSingleCoord(new Coord(4, 4), HexaDirection.RIGHT)],
+        [AbaloneMove.fromSingleCoord(new Coord(4, 4), HexaDirection.RIGHT).get()],
         $localize`Bravo ! Vous savez tout ce qu'il faut pour commencer une partie!`,
         $localize`Raté !`,
     ),

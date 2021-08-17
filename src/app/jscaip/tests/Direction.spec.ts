@@ -54,7 +54,7 @@ describe('Direction', () => {
                 expect(Direction.factory.fromString('DOWN_RIGHT').get()).toBe(Direction.DOWN_RIGHT);
             });
             it('should not construct from a string that does not correspond to a direction', () => {
-                expect(Direction.factory.fromString('foo')).toEqual(MGPFallible.failure('Invalid string direction'));
+                expect(Direction.factory.fromString('foo')).toEqual(MGPFallible.failure('Invalid direction string foo'));
             });
         });
         describe('fromInt', () => {

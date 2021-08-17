@@ -18,7 +18,7 @@ describe('MGPFallible', () => {
         });
         it('should throw when accessing the failure reason', () => {
             expect(() => value.getReason())
-                .toThrowError('Cannot getfailure reason from success');
+                .toThrowError('Cannot get failure reason from a success');
         });
         it('should convert to an optional with the same value', () => {
             expect(value.toOptional()).toEqual(MGPOptional.of(42));
@@ -36,7 +36,7 @@ describe('MGPFallible', () => {
             expect(value.isFailure()).toBeTrue();
         });
         it('should throw when accessing value with get, and return null with getOrNull', () => {
-            expect(() => value.get()).toThrowError('Value is absent from failure');
+            expect(() => value.get()).toThrowError('Value is absent from failure, with the following reason: reason');
             expect(value.getOrNull()).toBe(null);
         });
         it('should contain the failure reason', () => {
@@ -49,6 +49,6 @@ describe('MGPFallible', () => {
             expect(value.equals(value)).toBeTrue();
             expect(value.equals(MGPFallible.success(41))).toBeFalse();
             expect(value.equals(MGPFallible.failure('other reason'))).toBeFalse();
-        })
-    });;
+        });
+    });
 });

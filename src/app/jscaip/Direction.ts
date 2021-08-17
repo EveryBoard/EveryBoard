@@ -52,7 +52,7 @@ export abstract class DirectionFactory<T extends AbstractDirection> {
             case 'UP_RIGHT': return this.of(1, -1);
             case 'DOWN_LEFT': return this.of(-1, 1);
             case 'DOWN_RIGHT': return this.of(1, 1);
-            default: return MGPFallible.failure('Invalid string ' + str);
+            default: return MGPFallible.failure('Invalid direction string ' + str);
         }
     }
     public fromInt(int: number): MGPFallible<T> {
