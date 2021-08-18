@@ -13,64 +13,7 @@ export class Vector implements ComparableObject {
                        public readonly y: number) {}
 }
 
-abstract class AbstractDirection extends Vector {
-    public readonly x: -1|0|1;
-    public readonly y: -1|0|1;
-}
-
-export abstract class DirectionFactory<T extends AbstractDirection> {
-
-    public abstract all: ReadonlyArray<NonNullable<T>>;
-
-    public of(x: number, y: number): MGPFallible<T> {
-        for (const dir of this.all) {
-            if (dir.x === x && dir.y === y) return MGPFallible.success(dir);
-        }
-        return MGPFallible.failure('Invalid x and y in direction construction');
-    }
-    public fromDelta(dx: number, dy: number): MGPFallible<T> {
-        if (dx === 0 && dy === 0) {
-            return MGPFallible.failure('Empty delta for direction');
-        } else if (Math.abs(dx) === Math.abs(dy) ||
-                   dx === 0 ||
-                   dy === 0)
-        {
-            return this.of(Math.sign(dx), Math.sign(dy));
-        }
-        return MGPFallible.failure('Invalid delta for direction');
-    }
-    public fromMove(start: Coord, end: Coord): MGPFallible<T> {
-        return this.fromDelta(end.x - start.x, end.y - start.y);
-    }
-    public fromString(str: string): MGPFallible<T> {
-        switch (str) {
-            case 'UP': return this.of(0, -1);
-            case 'RIGHT': return this.of(1, 0);
-            case 'DOWN': return this.of(0, 1);
-            case 'LEFT': return this.of(-1, 0);
-            case 'UP_LEFT': return this.of(-1, -1);
-            case 'UP_RIGHT': return this.of(1, -1);
-            case 'DOWN_LEFT': return this.of(-1, 1);
-            case 'DOWN_RIGHT': return this.of(1, 1);
-            default: return MGPFallible.failure('Invalid direction string ' + str);
-        }
-    }
-    public fromInt(int: number): MGPFallible<T> {
-        switch (int) {
-            case 0: return this.of(0, -1);
-            case 1: return this.of(1, 0);
-            case 2: return this.of(0, 1);
-            case 3: return this.of(-1, 0);
-            case 4: return this.of(-1, -1);
-            case 5: return this.of(1, -1);
-            case 6: return this.of(-1, 1);
-            case 7: return this.of(1, 1);
-            default: return MGPFallible.failure('Invalid int direction');
-        }
-    }
-}
-
-export abstract class BaseDirection extends AbstractDirection {
+export abstract class BaseDirection extends Vector {
     public readonly x: 0|1|-1;
     public readonly y: 0|1|-1;
     public isDown(): boolean {
@@ -104,6 +47,58 @@ export abstract class BaseDirection extends AbstractDirection {
         if (this.x === 1 && this.y === -1) return 'UP_RIGHT';
         if (this.x === -1 && this.y === 1) return 'DOWN_LEFT';
         else return 'DOWN_RIGHT';
+    }
+}
+
+export abstract class DirectionFactory<T extends BaseDirection> {
+
+    public abstract all: ReadonlyArray<NonNullable<T>>;
+
+    public of(x: number, y: number): MGPFallible<T> {
+        for (const dir of this.all) {
+            if (dir.x === x && dir.y === y) return MGPFallible.success(dir);
+        }
+        return MGPFallible.failure('Invalid x and y in direction construction');
+    }
+    public fromDelta(dx: number, dy: number): MGPFallible<T> {
+        if (dx === 0 && dy === 0) {
+            return MGPFallible.failure('Empty delta for direction');
+        } else if (Math.abs(dx) === Math.abs(dy) ||
+                   dx === 0 ||
+                   dy === 0)
+        {
+            return this.of(Math.sign(dx), Math.sign(dy));
+        }
+        return MGPFallible.failure(`Invalid delta for direction: ${dx}, ${dy}`);
+    }
+    public fromMove(start: Coord, end: Coord): MGPFallible<T> {
+        return this.fromDelta(end.x - start.x, end.y - start.y);
+    }
+    public fromString(str: string): MGPFallible<T> {
+        switch (str) {
+            case 'UP': return this.of(0, -1);
+            case 'RIGHT': return this.of(1, 0);
+            case 'DOWN': return this.of(0, 1);
+            case 'LEFT': return this.of(-1, 0);
+            case 'UP_LEFT': return this.of(-1, -1);
+            case 'UP_RIGHT': return this.of(1, -1);
+            case 'DOWN_LEFT': return this.of(-1, 1);
+            case 'DOWN_RIGHT': return this.of(1, 1);
+            default: return MGPFallible.failure(`Invalid direction string ${str}`);
+        }
+    }
+    public fromInt(int: number): MGPFallible<T> {
+        switch (int) {
+            case 0: return this.of(0, -1);
+            case 1: return this.of(1, 0);
+            case 2: return this.of(0, 1);
+            case 3: return this.of(-1, 0);
+            case 4: return this.of(-1, -1);
+            case 5: return this.of(1, -1);
+            case 6: return this.of(-1, 1);
+            case 7: return this.of(1, 1);
+            default: return MGPFallible.failure(`Invalid int direction: ${int}`);
+        }
     }
 }
 

@@ -280,8 +280,9 @@ export class YinshRules extends Rules<YinshMove, YinshGameState, YinshLegalitySt
         for (const dir of HexaDirection.factory.all) {
             let pieceSeen: boolean = false;
             for (let cur: Coord = start.getNext(dir);
-                state.hexaBoard.isOnBoard(cur);
-                cur = cur.getNext(dir)) {
+                 state.hexaBoard.isOnBoard(cur);
+                 cur = cur.getNext(dir))
+            {
                 const piece: YinshPiece = state.hexaBoard.getAt(cur);
                 if (piece === YinshPiece.EMPTY) {
                     targets.push(cur);
