@@ -132,7 +132,7 @@
       </trans-unit>
       <trans-unit id="7930050431770016664" datatype="html">
         <source>An enhanced tic-tac-toe where piece can encapsule other and prevent them to win.</source>
-        <target>Un moripion amélioré où les pièces peuvent en encapsuler d'autres pour éviter la défaite.</target>
+        <target>Un morpion amélioré où les pièces peuvent en encapsuler d'autres pour éviter la défaite.</target>
       </trans-unit>
       <trans-unit id="8971165322320863634" datatype="html">
         <source>An antiquity-war inspired game. Be the first to pierce your opponent&apos;s lines!</source>
@@ -685,7 +685,7 @@
         To make a move, click on one of your pieces, then click on an arrow to choose the move direction.&lt;br/&gt;&lt;br/&gt;
         You&apos;re playing Dark, make any move!</source>
         <target>Chaque tour, déplacez une, deux ou trois pièces, soit le long de leur alignement, soit par un pas de côté.
-        Pour vos déplacement vous avez donc au maximum à choisir parmis 6 directions.
+        Pour vos déplacement vous avez donc au maximum à choisir parmi 6 directions.
         Les trois pièces à déplacer doivent être alignées et immédiatement voisines et atterrir sur des cases vides (sauf pour pousser, ce que nous verrons plus tard).
         Pour effectuer un déplacement, cliquez sur une de vos pièces, puis cliquez sur une flèche pour choisir sa direction.&lt;br/&gt;&lt;br/&gt;
         Vous jouez Foncé, faites n&apos;importe quel mouvement !</target>
@@ -858,7 +858,7 @@
       </trans-unit>
       <trans-unit id="6033788914683606777" datatype="html">
         <source>Feeding is mandatory</source>
-        <target>Nourir est obligatoire</target>
+        <target>Nourrir est obligatoire</target>
       </trans-unit>
       <trans-unit id="6914881509682724797" datatype="html">
         <source>You cannot let another player starve, meaning that if your opponent has no seeds anymore and if you can give them at least one, you have to do it.&lt;br/&gt;&lt;br/&gt;
@@ -925,7 +925,7 @@
          The goal of the game is to capture all of the opponent&apos;s pieces.</source>
         <target>Le Coerceo se joue sur un plateau comme ceci, composé de tuiles hexagonales, comportant chacune 6 triangles.
          Les triangles sont les cases où les pièces se déplacent tout le long de la partie.
-         Les tuiles sont séparable du reste du plateau (vous verez comment plus tard).
+         Les tuiles sont séparable du reste du plateau (vous verrez comment plus tard).
          Les pièces foncées appartiennent au premier joueur et ne se déplaceront toute la partie que sur les cases foncées,
          les pièces claire appartiennent au second joueur et ne se déplaceront également que sur les cases claires.
          Le but du jeu au Coerceo est de capturer toutes les pièces de l&apos;adversaire.</target>
@@ -1024,7 +1024,7 @@
         <source>When a tile is removed from the board during your turn, some of the opponent&apos;s pieces may have lost their last free neighboring space, they will therefore be captured!
         If this happens to one of your piece during your turn, it would however stay on the board.&lt;br/&gt;&lt;br/&gt;
         A move that demonstrate both of these things can be done on this board by Light. Try it!</source>
-        <target>Dès qu&apos;une tuile est enlevée du plateau pendant votre tour, certaines pièces de l&apos;adversaires peuvent n&apos;avoir plus aucunes cases voisines libre, elle seront alors capturées !
+        <target>Dès qu&apos;une tuile est enlevée du plateau pendant votre tour, certaines pièces de l&apos;adversaire peuvent n&apos;avoir plus aucunes cases voisines libre, elle seront alors capturées !
         Si cela arrivait à l&apos;une de vos pièces, celle-ci resterait cependant sur le plateau.&lt;br/&gt;&lt;br/&gt;
         Un coup démontrant ces deux choses est faisable pour le joueur clair, faites-le !</target>
       </trans-unit>
@@ -1537,7 +1537,7 @@
       </trans-unit>
       <trans-unit id="9197288705784594537" datatype="html">
         <source>We are not in playing nor in passed phase, you must mark stone as dead or alive or accept current board.</source>
-        <target>Ce n'est pas une phase de jeu ou une phase où il faut passer, vous devez marquer les pierres commes mortes ou vivantes, ou bien accepter l'état actuel du plateau..</target>
+        <target>Ce n'est pas une phase de jeu ou une phase où il faut passer, vous devez marquer les pierres comme mortes ou vivantes, ou bien accepter l'état actuel du plateau..</target>
       </trans-unit>
       <trans-unit id="4683884757780403263" datatype="html">
         <source>You cannot accept before the counting phase.</source>
@@ -1686,7 +1686,7 @@
         This rule is called the Ko.
         The trick for Light is to try to create a big enough threat so that Dark must answer immediately, and does not have the time to protect its last stone, so that Light can capture it.</source>
         <target>Maintenant, si Clair essaye de recapturer la pierre que Foncé vient de poser, il rendrait au goban son état précédent, ouvrant la porte à une partie sans fin.
-         L&apos;emplacement de cette pièce est donc marqué d&apos;un rectangle rouge, pour rapeller que c&apos;est une intersection interdite.
+         L&apos;emplacement de cette pièce est donc marqué d&apos;un rectangle rouge, pour rappeler que c&apos;est une intersection interdite.
          Cette règle s&apos;appelle le Ko.
          Toute l&apos;astuce pour Clair consiste, à essayer de créer une menace suffisamment grave pour que Foncé ait intérêt à y répondre immédiatement, et n&apos;ait pas le temps de protéger sa dernière pierre, afin que Clair puisse la recapturer.</target>
       </trans-unit>
@@ -1709,7 +1709,7 @@
         The intersections where the prisoners are count as Dark&apos;s territory
         Light has 8 territories and 1 prisoner.
         The end result is therefore 18 - 9 for Dark.</source>
-        <target>Bravo, Foncé a 15 territoires et 3 pierres claire mortes mais encore présentes, appellées prisonnier en fin de partie.
+        <target>Bravo, Foncé a 15 territoires et 3 pierres claire mortes mais encore présentes, appelées prisonnier en fin de partie.
          Les emplacements où les prisonniers sont comptent comme territoire pour Foncé.
          Clair a 8 territoires et 1 prisonnier.
          Le résultat est donc 18 - 9 en faveur de Foncé.</target>
@@ -1736,7 +1736,7 @@
       </trans-unit>
       <trans-unit id="1699965787783859469" datatype="html">
         <source>You must play with the selected piece.</source>
-        <target>Vous devez jouer avec la pièce déjà séléctionnée.</target>
+        <target>Vous devez jouer avec la pièce déjà sélectionnée.</target>
       </trans-unit>
       <trans-unit id="5017168027824461530" datatype="html">
         <source>At Kamisado, there are two ways to win the game:
@@ -2055,7 +2055,7 @@
       </trans-unit>
       <trans-unit id="155508093542570099" datatype="html">
         <source>Your move must have supporting pieces.</source>
-        <target>move does not have supported pieces</target>
+        <target>Votre déplacement doit avoir des pièces qui le supportent.</target>
       </trans-unit>
       <trans-unit id="1024410441498731703" datatype="html">
         <source>You cannot land on this space.</source>
@@ -2325,7 +2325,7 @@
         <target>Vous savez déjà tout ce qu&apos;il faut pour jouer, il ne manque qu&apos;une spécificité.
         Si vous créez une ligne de 5 pièces vous appartenant, vous gagnez.
         Si vous créez une ligne de 5 pièces de l'adversaire, vous perdez.
-        Si vous créez les deux, vous perdez auss i!&lt;br/&gt;&lt;br/&gt;
+        Si vous créez les deux, vous perdez aussi !&lt;br/&gt;&lt;br/&gt;
         Ce plateau permet de gagner, essayez.
         Vous jouez Clair.</target>
       </trans-unit>
@@ -2358,9 +2358,7 @@
         Dark plays first.</source>
         <target>Au début de la partie, les pièces sont placées comme ceci.
         Pour qu&apos;un coup soit légal il faut qu&apos;il prenne en sandwich minimum une pièce adverse entre la pièce que vous posez et une de vos pièces.&lt;br/&gt;&lt;br/&gt;
-        Faites n&apos;importe quel mouvement en cliquant pour déposer votre pièce.
-        Le joueur foncé commence.
-        Faites un mouvement !</target>
+        Foncé joue en premier, faites n&apos;importe quel mouvement en cliquant pour déposer votre pièce.</target>
       </trans-unit>
       <trans-unit id="2992889611246141410" datatype="html">
         <source>Capturing (2/2)</source>
@@ -2632,7 +2630,7 @@
       </trans-unit>
       <trans-unit id="3079321797470229596" datatype="html">
         <source>You cannot pick an empty space. Pick one of the biggest groups.</source>
-        <target>Vous ne pouver choisir une pièce vide, choisissez un des plus grands groupes.</target>
+        <target>Vous ne pouvez choisir une pièce vide, choisissez un des plus grands groupes.</target>
       </trans-unit>
       <trans-unit id="4110234759792602964" datatype="html">
         <source>You must put this piece next to another piece.</source>
@@ -2644,7 +2642,7 @@
       </trans-unit>
       <trans-unit id="6058377963019501239" datatype="html">
         <source>You lost one of your pieces during this move. There is a way to disconnect an opponent&apos;s piece without losing any of yours, try again!</source>
-        <target>Vous avez perdu une de vos pièce pendant ce mouvement, il y a un moyen de déconnecter une pièce adversaire sans perde aucunes pièces, recommencez !</target>
+        <target>Vous avez perdu une de vos pièce pendant ce mouvement, il y a un moyen de déconnecter une pièce adversaire sans perdre aucunes pièces, recommencez !</target>
       </trans-unit>
       <trans-unit id="5488934244958987687" datatype="html">
         <source>Six is a game without board, where pieces are placed on the side of each other, in a contiguous block.
@@ -2742,7 +2740,7 @@
       </trans-unit>
       <trans-unit id="4456476499852991526" datatype="html">
         <source>You cannot land on an occupied square.</source>
-        <target>Vous ne pouvez pas aterrir sur une case occupée.</target>
+        <target>Vous ne pouvez pas atterrir sur une case occupée.</target>
       </trans-unit>
       <trans-unit id="299718976758118618" datatype="html">
         <source>Once you left the central throne, you cannot return to it.</source>
