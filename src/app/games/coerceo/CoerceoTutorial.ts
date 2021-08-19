@@ -13,7 +13,7 @@ export const coerceoTutorial: TutorialStep[] = [
     TutorialStep.informational(
         $localize`Board and goal of the game`,
         $localize`Coerceo is played on a board like this, composed of hexagonal tiles, each comprising 6 triangles.
-         The triangles are the spaces along which pieces move during the game.
+         The triangles are the spaces on which pieces move during the game.
          The tiles can be removed from the board (you will see how later).
          The dark pieces belong to the first player and can only move on the dark spaces,
          while the light pieces belong to the second player and can only move on the light spaces.

@@ -43,7 +43,7 @@ export const quixoTutorial: TutorialStep[] = [
     ),
     TutorialStep.fromMove(
         $localize`Victory`,
-        $localize`You already know everything in order to play, but there is one last particularity.
+        $localize`You already know everything you need in order to play, but there is one last particularity.
         If you create a line of 5 of your pieces, you win.
         If you create a line of 5 of your opponent's pieces, you lose.
         If you create both, you lose too!<br/><br/>

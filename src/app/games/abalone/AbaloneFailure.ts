@@ -4,7 +4,7 @@ export class AbaloneFailure {
 
     public static readonly NOT_ENOUGH_PIECE_TO_PUSH: string = $localize`You don't have enough pieces to push that group!`;
 
-    public static readonly CANNOT_PUSH_YOUR_OWN_PIECES: string = $localize`You cannot push this piece because it is stuck by one of yours!`;
+    public static readonly CANNOT_PUSH_YOUR_OWN_PIECES: string = $localize`You cannot push this piece because it is blocked by one of yours!`;
 
     public static readonly MUST_ONLY_TRANSLATE_YOUR_PIECES: string = $localize`This line contains pieces of your opponent or empty spaces, which is forbidden.`;
 

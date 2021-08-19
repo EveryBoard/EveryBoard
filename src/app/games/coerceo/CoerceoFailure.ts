@@ -1,6 +1,6 @@
 export class CoerceoFailure {
 
-    public static INVALID_DISTANCE: string = $localize`Invalid move distance: your piece must land on one of the closest six triangles with the same color.`;
+    public static INVALID_DISTANCE: string = $localize`Invalid move distance: your piece must land on one of the closest six triangles with the same color as the triangle on which the piece is.`;
 
     public static NOT_ENOUGH_TILES_TO_EXCHANGE: string = $localize`You do not have enough tiles to exchange in order to capture this piece. Pick one of your piece and move it.`
 
