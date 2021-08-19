@@ -110,7 +110,6 @@ export class DirectionEncoder extends Encoder<Direction> {
     public decode(encoded: JSONValue): Direction {
         assert(typeof encoded === 'string', 'Invalid encoded direction');
         const fromString: MGPFallible<Direction> = Direction.factory.fromString(encoded as string);
-        assert(fromString.isSuccess(), 'Invalid encoded direction');
         return fromString.get();
     }
 }
@@ -149,7 +148,6 @@ export class Direction extends BaseDirection {
     }
     public getOpposite(): Direction {
         const opposite: MGPFallible<Direction> = Direction.factory.of(-this.x, -this.y);
-        assert(opposite.isSuccess(), 'Direction has no opposite, it should not happen');
         return opposite.get();
     }
 }
@@ -161,7 +159,6 @@ export class OrthogonalEncoder extends Encoder<Orthogonal> {
     public decode(encoded: JSONValue): Orthogonal {
         assert(typeof encoded === 'string', 'Invalid encoded orthogonal');
         const fromString: MGPFallible<Orthogonal> = Orthogonal.factory.fromString(encoded as string);
-        assert(fromString.isSuccess(), 'Invalid encoded orthogonal');
         return fromString.get();
     }
 }
@@ -196,7 +193,6 @@ export class Orthogonal extends BaseDirection {
     }
     public getOpposite(): Orthogonal {
         const opposite: MGPFallible<Orthogonal> = Orthogonal.factory.of(-this.x, -this.y);
-        assert(opposite.isSuccess(), 'Orthogonal has no opposite, it should not happen');
         return opposite.get();
     }
 }

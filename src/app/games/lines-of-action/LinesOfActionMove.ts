@@ -18,10 +18,10 @@ export class LinesOfActionMove extends MoveCoordToCoord {
         if (directionOptional.isFailure()) {
             return MGPFallible.failure(directionOptional.getReason());
         }
-        if (!start.isInRange(LinesOfActionState.SIZE, LinesOfActionState.SIZE)) {
+        if (start.isNotInRange(LinesOfActionState.SIZE, LinesOfActionState.SIZE)) {
             return MGPFallible.failure('start coord is not in range');
         }
-        if (!end.isInRange(LinesOfActionState.SIZE, LinesOfActionState.SIZE)) {
+        if (end.isNotInRange(LinesOfActionState.SIZE, LinesOfActionState.SIZE)) {
             return MGPFallible.failure('end coord is not in range');
         }
         return MGPFallible.success(new LinesOfActionMove(start, end, directionOptional.get()));

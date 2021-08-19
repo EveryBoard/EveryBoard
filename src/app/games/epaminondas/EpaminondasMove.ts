@@ -46,7 +46,6 @@ export class EpaminondasMove extends MoveCoord {
             const cx: number = encodedMove;
 
             const direction: MGPFallible<Direction> = Direction.factory.fromInt(encodedDirection);
-            assert(direction.isSuccess(), 'Invalid encoded direction');
             return new EpaminondasMove(cx, cy, movedPieces + 1, stepSize + 1, direction.get());
         }
     }

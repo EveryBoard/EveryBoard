@@ -9,8 +9,7 @@ describe('Direction', () => {
     describe('factory', () => {
         describe('of', () => {
             it('should construct a direction', () => {
-                // TODO FOR REVIEW: Which one should we choose? .toEqual(success) or .get?
-                expect(Direction.factory.of(1, 0)).toEqual(MGPFallible.success(Direction.RIGHT));
+                expect(Direction.factory.of(1, 0).get()).toEqual(Direction.RIGHT);
                 expect(Direction.factory.of(-1, 0).get()).toBe(Direction.LEFT);
                 expect(Direction.factory.of(0, 1).get()).toBe(Direction.DOWN);
                 expect(Direction.factory.of(0, -1).get()).toBe(Direction.UP);
@@ -39,7 +38,7 @@ describe('Direction', () => {
                 expect(Direction.factory.fromMove(new Coord(0, 0), new Coord(5, 0)).get()).toBe(Direction.RIGHT);
             });
             it('should not construct when the move does not correspond to a valid direction', () => {
-                expect(Direction.factory.fromMove(new Coord(0, 0), new Coord(5, 3))).toEqual(MGPFallible.failure('Invalid delta for direction'));
+                expect(Direction.factory.fromMove(new Coord(0, 0), new Coord(5, 3))).toEqual(MGPFallible.failure('Invalid delta for direction: 5, 3'));
             });
         });
         describe('fromString', () => {
@@ -69,7 +68,7 @@ describe('Direction', () => {
                 expect(Direction.factory.fromInt(Direction.DOWN_RIGHT.toInt()).get()).toBe(Direction.DOWN_RIGHT);
             });
             it('should not construct when called with a string that does not correspond to a direction', () => {
-                expect(Direction.factory.fromInt(42)).toEqual(MGPFallible.failure('Invalid int direction'));
+                expect(Direction.factory.fromInt(42)).toEqual(MGPFallible.failure('Invalid int direction: 42'));
             });
         });
     });

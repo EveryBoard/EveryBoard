@@ -27,7 +27,6 @@ export class AbaloneMove extends MoveCoord {
             const dir: number = encodedMove % 8;
             encodedMove = (encodedMove - dir) / 8;
             const directionOptional: MGPFallible<HexaDirection> = HexaDirection.factory.fromInt(dir);
-            assert(directionOptional.isSuccess(), `Invalid encoded direction: ${directionOptional.getReason()}`);
             const direction: HexaDirection = directionOptional.get();
 
             const y: number = encodedMove % 9;
@@ -39,7 +38,6 @@ export class AbaloneMove extends MoveCoord {
             const first: Coord = new Coord(x, y);
             if (encodedMove === 0) {
                 const moveOptional: MGPFallible<AbaloneMove> = AbaloneMove.fromSingleCoord(first, direction);
-                assert(moveOptional.isSuccess(), `Invalid encoded AbaloneMove: ${moveOptional.getReason()}`);
                 return moveOptional.get();
             } else {
                 encodedMove = (encodedMove - 1) / 2;
@@ -53,7 +51,6 @@ export class AbaloneMove extends MoveCoord {
                 const last: Coord = new Coord(lx, ly);
 
                 const moveOptional: MGPFallible<AbaloneMove> = AbaloneMove.fromDoubleCoord(first, last, direction);
-                assert(moveOptional.isSuccess(), `Invalid encoded AbaloneMove: ${moveOptional.getReason()}`);
                 return moveOptional.get();
             }
         }

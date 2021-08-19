@@ -21,7 +21,7 @@ describe('AbaloneMove', () => {
     });
     it('should not construct when created with an out of range coord', () => {
         const coord: Coord = new Coord(9, 9);
-        expect(AbaloneMove.fromSingleCoord(coord, HexaDirection.DOWN)).toEqual(MGPFallible.failure('Coord (9, 9) out of range, invalid move!'));
+        expect(AbaloneMove.fromSingleCoord(coord, HexaDirection.DOWN)).toEqual(MGPFallible.failure('Coord ' + coord.toString() + ' out of range, invalid move!'));
     });
     it('should map false double coord to single coord', () => {
         const up: Coord = new Coord(0, 0);
