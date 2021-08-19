@@ -36,6 +36,7 @@ fi
 
 if [ "$DIFF_FOUND" -eq 0 ]; then
     echo 'Translations are OK!'
+    npx xlf-merge translations/messages.fr.xlf --convert json -o src/assets/fr.json
     exit 0 # Success
 else
     echo 'Translations are not finalized'

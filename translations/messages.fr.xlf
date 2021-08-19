@@ -650,8 +650,8 @@
         <source>You don&apos;t have enough pieces to push that group!</source>
         <target>Vous n&apos;avez pas assez de pièce pour pousser ce groupe !</target>
       </trans-unit>
-      <trans-unit id="5787963634235927059" datatype="html">
-        <source>You cannot push this piece because it is stuck by one of yours!</source>
+      <trans-unit id="8378144418238149992" datatype="html">
+        <source>You cannot push this piece because it is blocked by one of yours!</source>
         <target>Vous ne pouvez pas pousser cette/ces pièce(s) car elle est bloquée par l&apos;une des vôtres !</target>
       </trans-unit>
       <trans-unit id="7864006988432394989" datatype="html">
@@ -698,11 +698,11 @@
         <source>Pushing</source>
         <target>Pousser</target>
       </trans-unit>
-      <trans-unit id="5317537747857630671" datatype="html">
+      <trans-unit id="3793007300702475909" datatype="html">
         <source>To push one opponent piece, you must move at least two of your pieces.
         To push two opponent pieces, you must move three of your pieces.
-        If one of your pieces blocks the push, it will be impossible to push.
-        You cannot move four pieces or more.&lt;br/&gt;&lt;br/&gt;
+        If one of your pieces is on the way, it will be impossible to push.
+        You cannot move more than three pieces.&lt;br/&gt;&lt;br/&gt;
         Only one push towards the right is possible here, find it. (You&apos;re playing Dark).</source>
         <target>Pour pousser une pièce de l'adversaire, vous devez déplacer au moins deux de vos pièces.
         Pour pousser deux pièces, vous devez déplacer trois de vos pièces.
@@ -710,16 +710,16 @@
         Vous ne pouvez pas déplacer plus de trois pièces.&lt;br/&gt;&lt;br/&gt;
         Une seule &quot;poussée&quot; vers là droite est possible ici, trouvez la (vous jouez Foncé).</target>
       </trans-unit>
-      <trans-unit id="6875339943465710233" datatype="html">
-        <source>Congratulations! You know everything to start a game!</source>
+      <trans-unit id="4948237861189298097" datatype="html">
+        <source>Congratulations! You know everything you need to start a game!</source>
         <target>Bravo ! Vous savez tout ce qu&apos;il faut pour commencer une partie !</target>
       </trans-unit>
       <trans-unit id="8139485336036692612" datatype="html">
         <source>Failed!</source>
         <target>Raté !</target>
       </trans-unit>
-      <trans-unit id="1299772099949111249" datatype="html">
-        <source>You cannot distribute from the enemy&apos;s home.</source>
+      <trans-unit id="8572141978310888290" datatype="html">
+        <source>You cannot distribute from the opponent&apos;s home.</source>
         <target>Vous ne pouvez pas égréner depuis le côté de l'adversaire.</target>
       </trans-unit>
       <trans-unit id="4189334243342030215" datatype="html">
@@ -888,7 +888,7 @@
         <target>Aussi, dès qu&apos;un joueur ne peut plus jouer, l’autre joueur capture toutes les graines dans son propre camp.
         Ici, c&apos;était à vous de jouer et au joueur suivant de récolter toutes les graines restantes, en mettant ainsi fin à la partie.</target>
       </trans-unit>
-      <trans-unit id="8041478089077572634" datatype="html">
+      <trans-unit id="2954415609985904324" datatype="html">
         <source>Invalid move distance: your piece must land on one of the closest six triangles with the same color as the triangle on which the piece is.</source>
         <target>Distance de déplacement illégal, votre pion doit atterir sur l&apos;un des six triangles les plus proches de même couleur que la case sur laquelle il est.</target>
       </trans-unit>
@@ -916,9 +916,9 @@
         <source>Board and goal of the game</source>
         <target>Plateau et but du jeu</target>
       </trans-unit>
-      <trans-unit id="8758869946846631030" datatype="html">
+      <trans-unit id="8138522124708860735" datatype="html">
         <source>Coerceo is played on a board like this, composed of hexagonal tiles, each comprising 6 triangles.
-         The triangles are the spaces along which pieces move during the game.
+         The triangles are the spaces on which pieces move during the game.
          The tiles can be removed from the board (you will see how later).
          The dark pieces belong to the first player and can only move on the dark spaces,
          while the light pieces belong to the second player and can only move on the light spaces.
@@ -2315,8 +2315,8 @@
         <target>Voyez comment les quatre pièces foncées ont été déplacées d'une case vers la droite.
         La pièce neutre a été déplacé de 4 pièces vers la gauche est est devenue claire.</target>
       </trans-unit>
-      <trans-unit id="5336209236331231317" datatype="html">
-        <source>You already know everything in order to play, but there is one last particularity.
+      <trans-unit id="767359644489302732" datatype="html">
+        <source>You already know everything you need in order to play, but there is one last particularity
         If you create a line of 5 of your pieces, you win.
         If you create a line of 5 of your opponent&apos;s pieces, you lose.
         If you create both, you lose too!&lt;br/&gt;&lt;br/&gt;
