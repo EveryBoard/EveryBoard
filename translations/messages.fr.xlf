@@ -1839,10 +1839,6 @@
         <source>You cannot jump over the opponent&apos;s pieces.</source>
         <target>Vous ne pouvez pas passer au dessus d&apos;une pièce de l'adversaire.</target>
       </trans-unit>
-      <trans-unit id="1549682374526776641" datatype="html">
-        <source>You must select one of your pieces.</source>
-        <target>Veuillez sélectionner une de vos propres pièces.</target>
-      </trans-unit>
       <trans-unit id="1376498600372177047" datatype="html">
         <source>This piece has no possible move, select another one.</source>
         <target>Cette pièce n&apos;a aucun mouvement possible, choisissez-en une autre.</target>
@@ -2055,9 +2051,9 @@
         <source>You must start your move with one of your pieces.</source>
         <target>Votre mouvement devrait commencer avec une de vos pièces !</target>
       </trans-unit>
-      <trans-unit id="155508093542570099" datatype="html">
-        <source>Your move must have supporting pieces.</source>
-        <target>Votre déplacement doit avoir des pièces qui le supportent.</target>
+      <trans-unit id="2162535855239454361" datatype="html">
+        <source>Your piece must land on the board or on 4 other pieces.</source>
+        <target>Votre pièce doit atterrir sur le plateau ou sur 4 autres pièces.</target>
       </trans-unit>
       <trans-unit id="1024410441498731703" datatype="html">
         <source>You cannot land on this space.</source>

@@ -16,6 +16,7 @@ import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { linesOfActionTutorial } from './LinesOfActionTutorial';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 @Component({
     selector: 'app-linesofaction',
@@ -70,7 +71,7 @@ export class LinesOfActionComponent extends AbstractGameComponent<LinesOfActionM
     }
     private async select(coord: Coord): Promise<MGPValidation> {
         if (this.getState().getAt(coord) !== this.getState().getCurrentPlayer().value) {
-            return this.cancelMove(LinesOfActionFailure.NOT_YOUR_PIECE);
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE);
         }
         this.selected = MGPOptional.of(coord);
         this.targets = LinesOfActionRules.possibleTargets(this.rules.node.gamePartSlice, this.selected.get());

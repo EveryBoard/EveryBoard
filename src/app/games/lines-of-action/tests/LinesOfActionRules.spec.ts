@@ -30,7 +30,7 @@ describe('LinesOfActionRules', () => {
         const state: LinesOfActionState = LinesOfActionState.getInitialSlice();
         const move: LinesOfActionMove = new LinesOfActionMove(new Coord(0, 2), new Coord(2, 2));
         const status: LegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.reason).toBe(LinesOfActionFailure.NOT_YOUR_PIECE);
+        expect(status.legal.reason).toBe(RulesFailure.MUST_CHOOSE_PLAYER_PIECE);
     });
     it('should move a piece by exactly as many spaces as there are pieces on the same line, going down', () => {
         const expectedBoard: number[][] = [

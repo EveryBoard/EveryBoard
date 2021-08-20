@@ -1,7 +1,5 @@
 export class EncapsuleFailure {
 
-    public static readonly WRONG_COLOR: string = $localize`You must pick one of your pieces.`;
-
     public static readonly PIECE_OUT_OF_STOCK: string = $localize`You do not have pieces of this type anymore.`;
 
     public static readonly INVALID_PLACEMENT: string = $localize`You must put your piece on an empty square or on a smaller piece.`;

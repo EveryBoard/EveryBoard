@@ -816,9 +816,6 @@
       <trans-unit id="8876232297721386956" datatype="html">
         <source>Bad idea, by moving on the source you would have won a point.</source>
       </trans-unit>
-      <trans-unit id="6986218395331151516" datatype="html">
-        <source>You must pick one of your pieces.</source>
-      </trans-unit>
       <trans-unit id="6059738106874378452" datatype="html">
         <source>You do not have pieces of this type anymore.</source>
       </trans-unit>
@@ -1279,9 +1276,6 @@
       <trans-unit id="3931959709762726685" datatype="html">
         <source>You cannot jump over the opponent&apos;s pieces.</source>
       </trans-unit>
-      <trans-unit id="1549682374526776641" datatype="html">
-        <source>You must select one of your pieces.</source>
-      </trans-unit>
       <trans-unit id="1376498600372177047" datatype="html">
         <source>This piece has no possible move, select another one.</source>
       </trans-unit>
@@ -1425,8 +1419,8 @@
       <trans-unit id="1573455518890855659" datatype="html">
         <source>You must start your move with one of your pieces.</source>
       </trans-unit>
-      <trans-unit id="155508093542570099" datatype="html">
-        <source>Your move must have supporting pieces.</source>
+      <trans-unit id="2162535855239454361" datatype="html">
+        <source>Your piece must land on the board or on 4 other pieces.</source>
       </trans-unit>
       <trans-unit id="1024410441498731703" datatype="html">
         <source>You cannot land on this space.</source>
@@ -2047,6 +2041,9 @@
       </trans-unit>
       <trans-unit id="8905154297816550312" datatype="html">
         <source>Your landing space should be empty or contain a piece of the opponent.</source>
+      </trans-unit>
+      <trans-unit id="6986218395331151516" datatype="html">
+        <source>You must pick one of your pieces.</source>
       </trans-unit>
       <trans-unit id="2698327260846195509" datatype="html">
         <source>You must drop your piece on an empty space.</source>

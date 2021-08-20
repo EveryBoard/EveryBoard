@@ -4,7 +4,7 @@ export class PylosFailure {
 
     public static readonly SHOULD_START_FROM_PLAYER_PIECE: string = $localize`You must start your move with one of your pieces.`;
 
-    public static readonly SHOULD_HAVE_SUPPORTING_PIECES: string = $localize`Your move must have supporting pieces.`;
+    public static readonly SHOULD_HAVE_SUPPORTING_PIECES: string = $localize`Your piece must land on the board or on 4 other pieces.`;
 
     public static readonly CANNOT_LAND: string = $localize`You cannot land on this space.`;
 
