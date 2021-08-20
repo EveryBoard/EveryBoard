@@ -1,13 +1,13 @@
-name: CI On Master PR
+name: CI On PR
 
 on:
   pull_request:
-    branches: [ master ]
+    branches: [ master, develop ]
 
   workflow_dispatch:
 
 jobs:
-  build:
+  pr:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -32,11 +32,6 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Setup Firebase
-        run: |
-          gpg --quiet --batch --yes --decrypt --passphrase="$ENC_SECRET" --output src/app/firebaseConfig.ts .github/firebaseConfig.ts.gpg
-        env:
-          ENC_SECRET: ${{ secrets.ENC_SECRET }}
       - name: Install dependencies
         run: npm install
       - name: Run linter

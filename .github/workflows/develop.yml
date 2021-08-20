@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  develop:
     runs-on: ubuntu-latest
     strategy:
       matrix:
