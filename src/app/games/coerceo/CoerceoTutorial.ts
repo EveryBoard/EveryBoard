@@ -85,7 +85,7 @@ export const coerceoTutorial: TutorialStep[] = [
             CoerceoMove.fromCoordToCoord(new Coord(2, 6), new Coord(3, 7)),
         ],
         $localize`Congratulations!`,
-        $localize`Failed, you have not gained the two tiles that you could!`,
+        $localize`Failed, you have not gained the two tiles that you could, try again!`,
     ),
     TutorialStep.fromMove(
         $localize`Exchanging a tile`,
