@@ -714,9 +714,9 @@
       <trans-unit id="8225905705628695723" datatype="html">
         <source>Gain a tile</source>
       </trans-unit>
-      <trans-unit id="362405963474133663" datatype="html">
+      <trans-unit id="7052807946706006375" datatype="html">
         <source>When a tile is empty, it can become removable from the board.
-        For it to be removable, at least three of its sides must be free, and these should be consecutive sides.
+        For it to be removable, at least three of its sides must be free, and these should be neighboring sides.
         Note that if one empty tile, neighboring a tile that was just removed, also becomes removable, it will be removed too.
         For example, here, the topmost dark piece will not disconnect its tile when leaving it.
         But, by leaving the bottom left tile, two tiles will be removed.&lt;br/&gt;&lt;br/&gt;
@@ -741,14 +741,14 @@
       <trans-unit id="4449916170244566677" datatype="html">
         <source>Special capture</source>
       </trans-unit>
-      <trans-unit id="794572598630804015" datatype="html">
+      <trans-unit id="3077646110828157145" datatype="html">
         <source>When a tile is removed from the board during your turn, some of the opponent&apos;s pieces may have lost their last free neighboring space, they will therefore be captured!
-        If this happens to one of your piece during your turn, it would however stay on the board.&lt;br/&gt;&lt;br/&gt;
+        If this happens to one of your piece during your turn, it will however stay on the board.&lt;br/&gt;&lt;br/&gt;
         A move that demonstrate both of these things can be done on this board by Light. Try it!</source>
       </trans-unit>
-      <trans-unit id="4878998278020754722" datatype="html">
-        <source>Congratulations! See, your piece has lost its last freedom when you have gained the tile, but it stayed on the board as it was your turn.
-        The opponent&apos;s piece has disappeared because the tile&apos;s capture has removed its last freedom.</source>
+      <trans-unit id="334873075452727011" datatype="html">
+        <source>Congratulations! See, your piece no longer had any empty neighboring space after you have gained the tile, but it stayed on the board as it was your turn.
+        However, the opponent&apos;s piece has disappeared because the tile&apos;s capture has removed its empty neighboring space.</source>
       </trans-unit>
       <trans-unit id="2559409853005498554" datatype="html">
         <source>Invalid coordinate, please select a piece on the board.</source>
@@ -790,16 +790,16 @@
       <trans-unit id="8769382369391878948" datatype="html">
         <source>Disconnection</source>
       </trans-unit>
-      <trans-unit id="90245733925298447" datatype="html">
+      <trans-unit id="7296336707589349573" datatype="html">
         <source>Red pieces are called &quot;sources&quot;.
         When a stack is not directly nor indirectly connected to a source, it is removed from the board.
-        You can move on a source: this forms a stack that contains the source, and which will never be disconnected.
+        You can move on a source: this forms a stack that contains the source, which therefore can never be disconnected.
         Besides this, a stack containing a source acts like any other stack: you can move it, and your opponent can move on that stack to take possession of it.&lt;br/&gt;&lt;br/&gt;
         You&apos;re playing Dark, move your piece on the source.</source>
       </trans-unit>
-      <trans-unit id="1204343429877937229" datatype="html">
+      <trans-unit id="600732969670597367" datatype="html">
         <source>Nice, you have disconnected 4 pieces of your opponent!
-        He has lost 4 points.
+        Your opponent therefore lost 4 points.
         Disconnected stacks will not be visible at the next turn.</source>
       </trans-unit>
       <trans-unit id="9072861571041891023" datatype="html">

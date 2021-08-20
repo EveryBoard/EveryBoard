@@ -35,7 +35,7 @@ export const dvonnTutorial: TutorialStep[] = [
         $localize`Disconnection`,
         $localize`Red pieces are called "sources".
         When a stack is not directly nor indirectly connected to a source, it is removed from the board.
-        You can move on a source: this forms a stack that contains the source, and which will never be disconnected.
+        You can move on a source: this forms a stack that contains the source, which therefore can never be disconnected.
         Besides this, a stack containing a source acts like any other stack: you can move it, and your opponent can move on that stack to take possession of it.<br/><br/>
         You're playing Dark, move your piece on the source.`,
         new DvonnGameState(new DvonnBoard([
@@ -47,7 +47,7 @@ export const dvonnTutorial: TutorialStep[] = [
         ]), 0, false),
         [DvonnMove.of(new Coord(2, 1), new Coord(2, 0))],
         $localize`Nice, you have disconnected 4 pieces of your opponent!
-        He has lost 4 points.
+        Your opponent therefore lost 4 points.
         Disconnected stacks will not be visible at the next turn.`,
         $localize`Bad choice! By moving on the source you would have disconnected the opponent's pieces and they would have lost 4 points.
         Here, the opponent wins 2 to 0`,

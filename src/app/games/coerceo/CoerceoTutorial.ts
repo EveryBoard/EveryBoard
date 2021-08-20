@@ -62,7 +62,7 @@ export const coerceoTutorial: TutorialStep[] = [
     TutorialStep.fromMove(
         $localize`Gain a tile`,
         $localize`When a tile is empty, it can become removable from the board.
-        For it to be removable, at least three of its sides must be free, and these should be consecutive sides.
+        For it to be removable, at least three of its sides must be free, and these should be neighboring sides.
         Note that if one empty tile, neighboring a tile that was just removed, also becomes removable, it will be removed too.
         For example, here, the topmost dark piece will not disconnect its tile when leaving it.
         But, by leaving the bottom left tile, two tiles will be removed.<br/><br/>
@@ -115,7 +115,7 @@ export const coerceoTutorial: TutorialStep[] = [
     TutorialStep.fromMove(
         $localize`Special capture`,
         $localize`When a tile is removed from the board during your turn, some of the opponent's pieces may have lost their last free neighboring space, they will therefore be captured!
-        If this happens to one of your piece during your turn, it would however stay on the board.<br/><br/>
+        If this happens to one of your piece during your turn, it will however stay on the board.<br/><br/>
         A move that demonstrate both of these things can be done on this board by Light. Try it!`,
         new CoerceoPartSlice([
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -133,8 +133,8 @@ export const coerceoTutorial: TutorialStep[] = [
             CoerceoMove.fromCoordToCoord(new Coord(7, 6), new Coord(6, 5)),
             CoerceoMove.fromCoordToCoord(new Coord(7, 6), new Coord(8, 5)),
         ],
-        $localize`Congratulations! See, your piece has lost its last freedom when you have gained the tile, but it stayed on the board as it was your turn.
-        The opponent's piece has disappeared because the tile's capture has removed its last freedom.`,
+        $localize`Congratulations! See, your piece no longer had any empty neighboring space after you have gained the tile, but it stayed on the board as it was your turn.
+        However, the opponent's piece has disappeared because the tile's capture has removed its empty neighboring space.`,
         $localize`Failed!`,
     ),
 ];
