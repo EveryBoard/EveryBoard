@@ -41,9 +41,9 @@ export class MGPMap<K extends Comparable, V extends Comparable> {
         for (let i: number = 0; i < this.map.length; i++) {
             const entry: {key: K, value: V} = this.map[i];
             if (comparableEquals(entry.key, key)) {
-                const oldValue: V = this.map[i].value;
+                const oldValue: NonNullable<V> = this.map[i].value;
                 this.map[i].value = value;
-                return MGPOptional.ofNullable(oldValue);
+                return MGPOptional.of(oldValue);
             }
         }
         this.map.push({ key, value });

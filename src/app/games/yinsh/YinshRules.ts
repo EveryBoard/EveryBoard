@@ -168,9 +168,7 @@ export class YinshRules extends Rules<YinshMove, YinshGameState, YinshLegalitySt
         }
         const direction: HexaDirection = directionOptional.get();
         let markersPassed: boolean = false;
-        for (let cur: Coord = start.getNext(direction);
-            cur.equals(end) === false;
-            cur = cur.getNext(direction)) {
+        for (let cur: Coord = start.getNext(direction); cur.equals(end) === false; cur = cur.getNext(direction)) {
             const piece: YinshPiece = state.hexaBoard.getAt(cur);
             if (piece === YinshPiece.EMPTY) {
                 if (markersPassed) {
