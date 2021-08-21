@@ -59,7 +59,7 @@ describe('SixGameState', () => {
                 [X, O, X],
             ];
             expect(state.toRepresentation()).toEqual(expectedRepresentation);
-            expect(Vector.equals(state.offset, new Vector(-1, 0)));
+            expect(state.offset.equals(new Vector(-1, 0)));
         });
         it('Should make 0 the left and upper indexes (vertical bug)', () => {
             const pieces: MGPMap<Coord, Player> = new MGPMap<Coord, Player>();
@@ -73,7 +73,7 @@ describe('SixGameState', () => {
                 [X],
             ];
             expect(state.toRepresentation()).toEqual(expectedRepresentation);
-            expect(Vector.equals(state.offset, new Vector(0, -1))).toBeTrue();
+            expect(state.offset.equals(new Vector(0, -1))).toBeTrue();
         });
         it('should set offset when board only upper-piece went down', () => {
             const beforePieces: MGPMap<Coord, Player> = new MGPMap<Coord, Player>();

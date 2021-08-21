@@ -6,7 +6,6 @@ import { expectToBeDraw, expectToBeVictoryFor } from 'src/app/jscaip/tests/Rules
 import { Player } from 'src/app/jscaip/Player';
 import { AwaleMinimax } from '../AwaleMinimax';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
-import { AbaloneFailure } from '../../abalone/AbaloneFailure';
 import { AwaleFailure } from '../AwaleFailure';
 
 describe('AwaleRules', () => {

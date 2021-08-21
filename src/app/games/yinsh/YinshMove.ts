@@ -31,7 +31,7 @@ export class YinshCapture extends GipfCapture {
     };
     public static of(start: Coord, end: Coord, ringTaken: Coord): YinshCapture {
         const coords: Coord[] = [];
-        const dir: HexaDirection = HexaDirection.factory.fromMove(start, end);
+        const dir: HexaDirection = HexaDirection.factory.fromMove(start, end).get();
         for (let cur: Coord = start; cur.equals(end) === false; cur = cur.getNext(dir)) {
             coords.push(cur);
         }

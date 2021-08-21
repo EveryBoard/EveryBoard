@@ -1,6 +1,7 @@
 import { Direction } from 'src/app/jscaip/Direction';
 import { NumberEncoder } from 'src/app/jscaip/Encoder';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 export class EpaminondasMove extends MoveCoord {
     public static encoder: NumberEncoder<EpaminondasMove> = new class extends NumberEncoder<EpaminondasMove> {
@@ -25,8 +26,8 @@ export class EpaminondasMove extends MoveCoord {
             // encoded as such : cx; cy; movedPiece; stepSize; direction
             if (encodedMove % 1 !== 0) throw new Error('EncodedMove must be an integer.');
 
-            const direction: number = encodedMove % 8;
-            encodedMove -= direction;
+            const encodedDirection: number = encodedMove % 8;
+            encodedMove -= encodedDirection;
             encodedMove /= 8;
 
             const stepSize: number = encodedMove % 7;
@@ -42,7 +43,9 @@ export class EpaminondasMove extends MoveCoord {
             encodedMove /= 12;
 
             const cx: number = encodedMove;
-            return new EpaminondasMove(cx, cy, movedPieces + 1, stepSize + 1, Direction.factory.fromInt(direction));
+
+            const direction: MGPFallible<Direction> = Direction.factory.fromInt(encodedDirection);
+            return new EpaminondasMove(cx, cy, movedPieces + 1, stepSize + 1, direction.get());
         }
     }
     public constructor(x: number,

@@ -225,7 +225,7 @@ describe('AbaloneComponent', () => {
 
             // when clicking third one then moving them
             await componentTestUtils.expectClickSuccess('#piece_4_6');
-            const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(4, 6), HexaDirection.LEFT);
+            const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(4, 6), HexaDirection.LEFT).get();
             const state: AbaloneGameState = AbaloneGameState.getInitialSlice();
             await componentTestUtils.expectMoveSuccess('#direction_LEFT', move, state, 0, 0);
 
@@ -253,7 +253,7 @@ describe('AbaloneComponent', () => {
 
             // when clicking on coord then direction
             // then the move should be done
-            const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(0, 7), HexaDirection.UP);
+            const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(0, 7), HexaDirection.UP).get();
             const state: AbaloneGameState = AbaloneGameState.getInitialSlice();
             await componentTestUtils.expectMoveSuccess('#direction_UP', move, state, 0, 0);
         }));
@@ -264,7 +264,7 @@ describe('AbaloneComponent', () => {
 
         // when clicking on the case marked by the direction instead of it's arrow
         // then the move should have been done
-        const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(2, 6), HexaDirection.LEFT);
+        const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(2, 6), HexaDirection.LEFT).get();
         const state: AbaloneGameState = AbaloneGameState.getInitialSlice();
         await componentTestUtils.expectMoveSuccess('#case_1_6', move, state, 0, 0);
     }));
@@ -288,7 +288,7 @@ describe('AbaloneComponent', () => {
 
         // when clicking on the case marked by the direction instead of it's arrow
         // then the move should have been done
-        const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(2, 7), HexaDirection.UP);
+        const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(2, 7), HexaDirection.UP).get();
         await componentTestUtils.expectMoveSuccess('#piece_2_5', move, state, 0, 0);
     }));
     it('should not do anything when clicking case that are not below a direction arrow', fakeAsync(async() => {
@@ -306,7 +306,8 @@ describe('AbaloneComponent', () => {
 
             // when clicking the direction
             // then the translation move should be done
-            const move: AbaloneMove = AbaloneMove.fromDoubleCoord(new Coord(2, 6), new Coord(3, 6), HexaDirection.UP);
+            const move: AbaloneMove =
+                AbaloneMove.fromDoubleCoord(new Coord(2, 6), new Coord(3, 6), HexaDirection.UP).get();
             const state: AbaloneGameState = AbaloneGameState.getInitialSlice();
             await componentTestUtils.expectMoveSuccess('#direction_UP', move, state, 0, 0);
         }));
@@ -314,7 +315,7 @@ describe('AbaloneComponent', () => {
             // given a board with a previous move
             await componentTestUtils.expectClickSuccess('#piece_0_7');
             await componentTestUtils.expectClickSuccess('#piece_0_8');
-            const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(0, 7), HexaDirection.DOWN);
+            const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(0, 7), HexaDirection.DOWN).get();
             const state: AbaloneGameState = AbaloneGameState.getInitialSlice();
             await componentTestUtils.expectMoveSuccess('#direction_DOWN', move, state, 0, 0);
 
