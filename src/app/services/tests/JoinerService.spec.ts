@@ -97,7 +97,7 @@ describe('JoinerService', () => {
     });
     describe('cancelJoining', () => {
         it('cancelJoining should throw when there was no observed joiner', fakeAsync(async() => {
-            const expectedError: Error = new Error('cannot cancel joining when not observing a joiner')
+            const expectedError: Error = new Error('cannot cancel joining when not observing a joiner');
             expectAsync(service.cancelJoining('whoever')).toBeRejectedWith(expectedError);
         }));
         it('should delegate update to DAO', fakeAsync(async() => {

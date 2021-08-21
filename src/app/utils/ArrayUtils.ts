@@ -1,3 +1,5 @@
+import { Comparable, comparableEquals } from './Comparable';
+
 export type Table<T> = ReadonlyArray<ReadonlyArray<T>>;
 
 export type NumberTable = Table<number>;
@@ -61,5 +63,12 @@ export class ArrayUtils {
                 return 0;
             }
         });
+    }
+    public static equals<T extends Comparable>(t1: ReadonlyArray<T>, t2: ReadonlyArray<T>): boolean {
+        if (t1.length !== t2.length) return false;
+        for (let i: number = 0; i < t1.length; i++) {
+            if (comparableEquals(t1[i], t2[i]) === false) return false;
+        }
+        return true;
     }
 }

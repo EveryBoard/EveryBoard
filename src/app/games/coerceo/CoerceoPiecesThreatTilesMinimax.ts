@@ -1,4 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
+import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { PieceThreat } from 'src/app/jscaip/PieceThreat';
 import { Player } from 'src/app/jscaip/Player';
@@ -8,7 +9,7 @@ import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { CoerceoMinimax } from './CoerceoMinimax';
 import { CoerceoStep } from './CoerceoMove';
-import { CoerceoPartSlice, CoerceoPiece } from './CoerceoPartSlice';
+import { CoerceoPartSlice } from './CoerceoPartSlice';
 import { CoerceoNode, CoerceoRules } from './CoerceoRules';
 
 export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
@@ -40,8 +41,8 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
         return new NodeUnheritance(score);
     }
     public getPiecesMap(state: CoerceoPartSlice): MGPMap<Player, MGPSet<Coord>> {
-        const EMPTY: number = CoerceoPiece.EMPTY.value;
-        const NONE: number = CoerceoPiece.NONE.value;
+        const EMPTY: number = FourStatePiece.EMPTY.value;
+        const NONE: number = FourStatePiece.NONE.value;
         const map: MGPMap<Player, MGPSet<Coord>> = new MGPMap();
         const zeroPieces: Coord[] = [];
         const onePieces: Coord[] = [];
@@ -90,7 +91,7 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
             const threat: number = state.getBoardAt(directThreat);
             if (threat === ENNEMY) {
                 directThreats.push(directThreat);
-            } else if (threat === CoerceoPiece.EMPTY.value) {
+            } else if (threat === FourStatePiece.EMPTY.value) {
                 freedoms++;
                 freedom = directThreat;
             }

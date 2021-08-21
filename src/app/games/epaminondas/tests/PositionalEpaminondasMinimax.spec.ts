@@ -20,10 +20,10 @@ describe('PositionalEpaminondasMinimax:', () => {
         rules = new EpaminondasRules(EpaminondasPartSlice);
         minimax = new PositionalEpaminondasMinimax(rules, 'EpaminondasMinimax');
     });
-    xit('Should propose 114 moves at first turn', () => {
-        expect(minimax.getListMoves(rules.node).length).toBe(114);
+    it('Should filter number of choices', () => {
+        expect(minimax.getListMoves(rules.node).length).toBeLessThan(114);
     });
-    xit('Should consider possible capture the best move', () => {
+    it('Should consider possible capture the best move', () => {
         const board: NumberTable = [
             [X, X, X, X, X, X, X, X, _, _, _, _, _, _],
             [_, O, O, _, _, _, X, X, X, X, _, _, _, _],
@@ -42,9 +42,10 @@ describe('PositionalEpaminondasMinimax:', () => {
         rules.node = new MGPNode(null, null, slice);
         const expectedMove: EpaminondasMove = new EpaminondasMove(9, 1, 4, 4, Direction.LEFT);
         const bestMove: EpaminondasMove = rules.node.findBestMove(1, minimax);
+
         expect(bestMove).toEqual(expectedMove);
     });
-    it('Should prefer to get near the ennemy line', () => {
+    it('Should prefer to get near the opponent line', () => {
         const greaterBoard: NumberTable = [
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],

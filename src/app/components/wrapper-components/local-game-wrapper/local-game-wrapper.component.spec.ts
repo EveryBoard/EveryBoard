@@ -1,4 +1,4 @@
-import { fakeAsync, flush } from '@angular/core/testing';
+import { fakeAsync, flush, tick } from '@angular/core/testing';
 import { P4PartSlice } from 'src/app/games/p4/P4PartSlice';
 import { Player } from 'src/app/jscaip/Player';
 import { P4Move } from 'src/app/games/p4/P4Move';
@@ -7,6 +7,9 @@ import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { P4Component } from 'src/app/games/p4/p4.component';
 import { LocalGameWrapperComponent } from './local-game-wrapper.component';
 import { DebugElement } from '@angular/core';
+import { P4Minimax } from 'src/app/games/p4/P4Minimax';
+import { P4Rules } from 'src/app/games/p4/P4Rules';
+import { GameStatus } from 'src/app/jscaip/Rules';
 
 describe('LocalGameWrapperComponent', () => {
     let componentTestUtils: ComponentTestUtils<P4Component>;
@@ -167,5 +170,72 @@ describe('LocalGameWrapperComponent', () => {
             // then it should have proposed AI to play
             expect(proposeAIToPlay).toHaveBeenCalledTimes(2);
         });
+        it('should take back to users turn when playing against AI', fakeAsync(async() => {
+            // Given a board, where each player played at least one move, where AI just played
+            const selectAI: HTMLSelectElement = componentTestUtils.findElement('#playerOneSelect').nativeElement;
+            selectAI.value = selectAI.options[1].value;
+            selectAI.dispatchEvent(new Event('change'));
+            componentTestUtils.fixture.detectChanges();
+            await componentTestUtils.fixture.whenStable();
+            const selectDepth: HTMLSelectElement = componentTestUtils.findElement('#aiOneDepthSelect').nativeElement;
+            selectDepth.value = selectDepth.options[1].value;
+            selectDepth.dispatchEvent(new Event('change'));
+            componentTestUtils.detectChanges();
+            await componentTestUtils.fixture.whenStable();
+
+            const slice: P4PartSlice = componentTestUtils.getComponent().rules.node.gamePartSlice;
+            expect(slice.turn).toBe(0);
+
+            await componentTestUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
+            expect(componentTestUtils.getComponent().rules.node.gamePartSlice.turn).toBe(1);
+
+            tick(componentTestUtils.wrapper['botTimeOut']);
+            expect(componentTestUtils.getComponent().rules.node.gamePartSlice.turn).toBe(2);
+
+            // // when taking back
+            spyOn(componentTestUtils.getComponent(), 'updateBoard').and.callThrough();
+            await componentTestUtils.expectInterfaceClickSuccess('#takeBack');
+
+            // // expect to be back two turn, not one
+            expect(componentTestUtils.getComponent().rules.node.gamePartSlice.turn).toBe(0);
+
+            flush();
+        }));
+        it('Minimax proposing illegal move should throw', fakeAsync(async() => {
+            // given a board on which some illegal move are possible from the IA
+
+            spyOn(componentTestUtils.getComponent().rules, 'choose').and.returnValue(false);
+            spyOn(componentTestUtils.getComponent().rules.node, 'findBestMove').and.returnValue(P4Move.ZERO);
+
+            // when it's bugged ai's turn to play (and do a illegal move)
+            // then we should get a error throwed
+            const localGameWrapper: LocalGameWrapperComponent = componentTestUtils.wrapper as LocalGameWrapperComponent;
+            const minimax: P4Minimax = new P4Minimax(new P4Rules(P4PartSlice), 'P4');
+            const errorMessage: string = 'AI choosed illegal move (P4Move(0))';
+            expect(() => localGameWrapper.doAIMove(minimax)).toThrowError(errorMessage);
+            flush();
+        }));
+        it('should not do an AI move when the game is finished', fakeAsync(async() => {
+            const localGameWrapper: LocalGameWrapperComponent = componentTestUtils.wrapper as LocalGameWrapperComponent;
+            spyOn(localGameWrapper, 'doAIMove');
+
+            // given a game which is finished
+            spyOn(componentTestUtils.getComponent().rules, 'getGameStatus').and.returnValue(GameStatus.ZERO_WON);
+
+            // when selecting an AI for the current player
+            const selectAI: HTMLSelectElement = componentTestUtils.findElement('#playerZeroSelect').nativeElement;
+            selectAI.value = selectAI.options[1].value;
+            selectAI.dispatchEvent(new Event('change'));
+            componentTestUtils.fixture.detectChanges();
+            await componentTestUtils.fixture.whenStable();
+            const selectDepth: HTMLSelectElement = componentTestUtils.findElement('#aiZeroDepthSelect').nativeElement;
+            selectDepth.value = selectDepth.options[1].value;
+            selectDepth.dispatchEvent(new Event('change'));
+            componentTestUtils.detectChanges();
+            await componentTestUtils.fixture.whenStable();
+
+            // then it should not try to play
+            expect(localGameWrapper.doAIMove).not.toHaveBeenCalled();
+        }));
     });
 });

@@ -1,82 +1,19 @@
 import { assert, JSONValue } from 'src/app/utils/utils';
+import { ComparableObject } from '../utils/Comparable';
+import { MGPFallible } from '../utils/MGPFallible';
 import { Coord } from './Coord';
 import { Encoder } from './Encoder';
 
-export class DirectionError extends Error {
-    constructor(message?: string) {
-        const trueProto: DirectionError = new.target.prototype;
-        super(message);
-        Object.setPrototypeOf(this, trueProto);
-    }
-}
 
-export class Vector {
-    // Since it's not a coord and not a direction, what should we do to name thing correctly and avoid code overlap ?
-
-    public static equals(a: Vector, b: Vector): boolean {
-        return a.x === b.x && a.y === b.y;
+export class Vector implements ComparableObject {
+    public equals(other: Vector): boolean {
+        return this.x === other.x && this.y === other.y;
     }
     public constructor(public readonly x: number,
                        public readonly y: number) {}
 }
 
-abstract class AbstractDirection extends Vector {
-    public readonly x: -1|0|1;
-    public readonly y: -1|0|1;
-}
-
-export abstract class DirectionFactory<T extends AbstractDirection> {
-    public abstract all: ReadonlyArray<T>;
-    public of(x: number, y: number): T {
-        for (const dir of this.all) {
-            if (dir.x === x && dir.y === y) return dir;
-        }
-        throw new DirectionError('Invalid direction');
-    }
-
-    public fromDelta(dx: number, dy: number): T {
-        if (dx === 0 && dy === 0) {
-            throw new DirectionError('Invalid direction from static move');
-        } else if (Math.abs(dx) === Math.abs(dy) ||
-                   dx === 0 ||
-                   dy === 0)
-        {
-            return this.of(Math.sign(dx), Math.sign(dy));
-        }
-        throw new DirectionError('Invalid direction from delta dx:' + dx + ', dy:' + dy);
-    }
-    public fromMove(start: Coord, end: Coord): T {
-        return this.fromDelta(end.x - start.x, end.y - start.y);
-    }
-    public fromString(str: string): T {
-        switch (str) {
-            case 'UP': return this.of(0, -1);
-            case 'RIGHT': return this.of(1, 0);
-            case 'DOWN': return this.of(0, 1);
-            case 'LEFT': return this.of(-1, 0);
-            case 'UP_LEFT': return this.of(-1, -1);
-            case 'UP_RIGHT': return this.of(1, -1);
-            case 'DOWN_LEFT': return this.of(-1, 1);
-            case 'DOWN_RIGHT': return this.of(1, 1);
-            default: throw new DirectionError('Unknown direction ' + str);
-        }
-    }
-    public fromInt(int: number): T {
-        switch (int) {
-            case 0: return this.of(0, -1);
-            case 1: return this.of(1, 0);
-            case 2: return this.of(0, 1);
-            case 3: return this.of(-1, 0);
-            case 4: return this.of(-1, -1);
-            case 5: return this.of(1, -1);
-            case 6: return this.of(-1, 1);
-            case 7: return this.of(1, 1);
-            default: throw new DirectionError('No Direction matching int ' + int);
-        }
-    }
-}
-
-export abstract class BaseDirection {
+export abstract class BaseDirection extends Vector {
     public readonly x: 0|1|-1;
     public readonly y: 0|1|-1;
     public isDown(): boolean {
@@ -90,9 +27,6 @@ export abstract class BaseDirection {
     }
     public isRight(): boolean {
         return this.x === 1;
-    }
-    public equals(o: this): boolean {
-        return this === o;
     }
     public toInt(): number {
         if (this.x === 0 && this.y === -1) return 0;
@@ -116,6 +50,58 @@ export abstract class BaseDirection {
     }
 }
 
+export abstract class DirectionFactory<T extends BaseDirection> {
+
+    public abstract all: ReadonlyArray<NonNullable<T>>;
+
+    public of(x: number, y: number): MGPFallible<T> {
+        for (const dir of this.all) {
+            if (dir.x === x && dir.y === y) return MGPFallible.success(dir);
+        }
+        return MGPFallible.failure('Invalid x and y in direction construction');
+    }
+    public fromDelta(dx: number, dy: number): MGPFallible<T> {
+        if (dx === 0 && dy === 0) {
+            return MGPFallible.failure('Empty delta for direction');
+        } else if (Math.abs(dx) === Math.abs(dy) ||
+                   dx === 0 ||
+                   dy === 0)
+        {
+            return this.of(Math.sign(dx), Math.sign(dy));
+        }
+        return MGPFallible.failure(`Invalid delta for direction: ${dx}, ${dy}`);
+    }
+    public fromMove(start: Coord, end: Coord): MGPFallible<T> {
+        return this.fromDelta(end.x - start.x, end.y - start.y);
+    }
+    public fromString(str: string): MGPFallible<T> {
+        switch (str) {
+            case 'UP': return this.of(0, -1);
+            case 'RIGHT': return this.of(1, 0);
+            case 'DOWN': return this.of(0, 1);
+            case 'LEFT': return this.of(-1, 0);
+            case 'UP_LEFT': return this.of(-1, -1);
+            case 'UP_RIGHT': return this.of(1, -1);
+            case 'DOWN_LEFT': return this.of(-1, 1);
+            case 'DOWN_RIGHT': return this.of(1, 1);
+            default: return MGPFallible.failure(`Invalid direction string ${str}`);
+        }
+    }
+    public fromInt(int: number): MGPFallible<T> {
+        switch (int) {
+            case 0: return this.of(0, -1);
+            case 1: return this.of(1, 0);
+            case 2: return this.of(0, 1);
+            case 3: return this.of(-1, 0);
+            case 4: return this.of(-1, -1);
+            case 5: return this.of(1, -1);
+            case 6: return this.of(-1, 1);
+            case 7: return this.of(1, 1);
+            default: return MGPFallible.failure(`Invalid int direction: ${int}`);
+        }
+    }
+}
+
 export class DirectionEncoder extends Encoder<Direction> {
 
     public encode(dir: Direction): string {
@@ -123,7 +109,8 @@ export class DirectionEncoder extends Encoder<Direction> {
     }
     public decode(encoded: JSONValue): Direction {
         assert(typeof encoded === 'string', 'Invalid encoded direction');
-        return Direction.factory.fromString(encoded as string);
+        const fromString: MGPFallible<Direction> = Direction.factory.fromString(encoded as string);
+        return fromString.get();
     }
 }
 
@@ -153,14 +140,15 @@ export class Direction extends BaseDirection {
 
     public static readonly encoder: Encoder<Direction> = new DirectionEncoder();
 
-    private constructor(public readonly x: 0|1|-1, public readonly y: 0|1|-1) {
-        super();
+    private constructor(x: 0|1|-1, y: 0|1|-1) {
+        super(x, y);
     }
     public isDiagonal(): boolean {
         return (this.x !== 0) && (this.y !== 0);
     }
     public getOpposite(): Direction {
-        return Direction.factory.of(-this.x, -this.y);
+        const opposite: MGPFallible<Direction> = Direction.factory.of(-this.x, -this.y);
+        return opposite.get();
     }
 }
 export class OrthogonalEncoder extends Encoder<Orthogonal> {
@@ -170,7 +158,8 @@ export class OrthogonalEncoder extends Encoder<Orthogonal> {
     }
     public decode(encoded: JSONValue): Orthogonal {
         assert(typeof encoded === 'string', 'Invalid encoded orthogonal');
-        return Orthogonal.factory.fromString(encoded as string);
+        const fromString: MGPFallible<Orthogonal> = Orthogonal.factory.fromString(encoded as string);
+        return fromString.get();
     }
 }
 export class Orthogonal extends BaseDirection {
@@ -187,22 +176,23 @@ export class Orthogonal extends BaseDirection {
                 Orthogonal.LEFT,
             ];
 
-            public of(x: number, y: number): Orthogonal {
-                if (x === 0 && y === -1) return Orthogonal.UP;
-                if (x === 1 && y === 0) return Orthogonal.RIGHT;
-                if (x === 0 && y === 1) return Orthogonal.DOWN;
-                if (x === -1 && y === 0) return Orthogonal.LEFT;
-                throw new DirectionError('Invalid direction');
+            public of(x: number, y: number): MGPFallible<Orthogonal> {
+                if (x === 0 && y === -1) return MGPFallible.success(Orthogonal.UP);
+                if (x === 1 && y === 0) return MGPFallible.success(Orthogonal.RIGHT);
+                if (x === 0 && y === 1) return MGPFallible.success(Orthogonal.DOWN);
+                if (x === -1 && y === 0) return MGPFallible.success(Orthogonal.LEFT);
+                return MGPFallible.failure('Invalid orthogonal from x and y');
             }
         };
     public static readonly ORTHOGONALS: ReadonlyArray<Orthogonal> = Orthogonal.factory.all;
 
     public static readonly encoder: Encoder<Orthogonal> = new OrthogonalEncoder();
 
-    private constructor(public readonly x: 0|1|-1, public readonly y: 0|1|-1) {
-        super();
+    private constructor(x: 0|1|-1, y: 0|1|-1) {
+        super(x, y);
     }
     public getOpposite(): Orthogonal {
-        return Orthogonal.factory.of(-this.x, -this.y);
+        const opposite: MGPFallible<Orthogonal> = Orthogonal.factory.of(-this.x, -this.y);
+        return opposite.get();
     }
 }

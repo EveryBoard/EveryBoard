@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="100%" height="auto"
+     viewBox="-165 0 470 500"
+     preserveAspectRatio="xMidYMid meet"
+>
+    <g *ngFor="let line of board; index as y">
+        <g *ngFor="let c of line; index as x">
+            <g *ngIf="isBoard(c)">
+                <polyline id="case_{{ x }}_{{ y }}"
+                          (click)="onCaseClick(x, y)"
+                          [ngClass]="getCaseClasses(x, y)"
+                          class="base"
+                          [attr.points]="getHexaCoordsBy(x, y)"
+                          stroke-linecap="round"
+                />
+                <circle *ngIf="isPiece(c)"
+                        id="piece_{{ x }}_{{ y }}"
+                        (click)="onPieceClick(x, y)"
+                        [attr.cx]="getCenterBy(x, y).x"
+                        [attr.cy]="getCenterBy(x, y).y"
+                        [attr.r]="PIECE_SIZE * 0.5"
+                        [ngClass]="getPieceClasses(x, y)"
+                        class="base"
+                />
+            </g>
+        </g>
+    </g>
+    <defs>
+        <marker *ngFor="let arrow of directions"
+                id="arrowhead_{{ arrow.dir.toString() }}"
+                markerWidth="10"
+                markerHeight="7"
+                refX="5" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" />
+        </marker>
+    </defs>
+    <g *ngFor="let arrow of directions">
+        <line id="line_start_{{ arrow.dir.toString() }}"
+              class="arrow"
+              (click)="onPieceClick(x, y)"
+              [attr.x1]="arrow.startCenter.x"
+              [attr.y1]="arrow.startCenter.y"
+              [attr.x2]="arrow.middle.x"
+              [attr.y2]="arrow.middle.y"
+        />
+        <line id="line_end_{{ arrow.dir.toString() }}"
+              class="arrow"
+              (click)="chooseDirection(arrow.dir)"
+              [attr.x1]="arrow.middle.x"
+              [attr.y1]="arrow.middle.y"
+              [attr.x2]="arrow.landingCenter.x"
+              [attr.y2]="arrow.landingCenter.y"
+        />
+        <polyline id="direction_{{ arrow.dir.toString() }}"
+                  points="-10 -5, 10 -5, 0 15, -10 -5"
+                  fill="black"
+                  [attr.transform]="arrow.transformation"
+                  (click)="chooseDirection(arrow.dir)"
+        />
+    </g>
+</svg>

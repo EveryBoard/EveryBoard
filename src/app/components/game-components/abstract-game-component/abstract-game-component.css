@@ -11,6 +11,9 @@
     stroke: black;
     stroke-width: 3;
 }
+.white-background {
+    fill: white;
+}
 .background {
     fill: lightgray;
 }
@@ -110,7 +113,8 @@
     stroke-width: 8;
 }
 .transparent {
-    fill-opacity: 0.75;
+    fill-opacity: 0.5;
+    stroke-opacity: 0.5;
 }
 .round {
     stroke-linecap: round;

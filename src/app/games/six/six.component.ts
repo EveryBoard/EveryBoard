@@ -17,6 +17,8 @@ import { HexagonalGameComponent }
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { sixTutorial } from './SixTutorial';
 
 interface Scale {
     minX: number;
@@ -57,6 +59,10 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
 
     public hexaLayout: HexaLayout;
 
+    public encoder: MoveEncoder<SixMove> = SixMove.encoder;
+
+    public tutorial: TutorialStep[] = sixTutorial;
+
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.availableMinimaxes = [
@@ -68,8 +74,6 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
         this.setPieceSize(25);
         this.updateBoard();
     }
-    public encoder: MoveEncoder<SixMove> = SixMove.encoder;
-
     private setPieceSize(rayon: number): void {
         this.PIECE_SIZE = 2 * rayon;
         this.hexaLayout = new HexaLayout(rayon,
@@ -89,7 +93,7 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
         if (lastMove) {
             this.showLastMove();
         } else {
-            // For didacticial
+            // For tutorial
             this.leftCoord = null;
             this.lastDrop = null;
             this.victoryCoords = [];
@@ -148,9 +152,9 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
         const commonSize: number = Math.min(verticalSize, horizontalSize);
 
         this.setPieceSize(commonSize);
-        const lefterPiece: Coord = this.hexaLayout.getCenter(abstractScale.lefterPiece);
+        const lefterPiece: Coord = this.hexaLayout.getCenterAt(abstractScale.lefterPiece);
         const left: number = lefterPiece.x - this.hexaLayout.size;
-        const upperPiece: Coord = this.hexaLayout.getCenter(abstractScale.upperPiece);
+        const upperPiece: Coord = this.hexaLayout.getCenterAt(abstractScale.upperPiece);
         const up: number = upperPiece.y - this.hexaLayout.getYOffset();
         return (left - 10) + ' ' + (up - 10) + ' ' +
                (this.CONCRETE_WIDTH + 20) + ' ' +

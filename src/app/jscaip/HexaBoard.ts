@@ -1,5 +1,7 @@
 import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
+import { assert } from '../utils/utils';
 import { Coord } from './Coord';
+import { HexaDirection } from './HexaDirection';
 import { HexaLine } from './HexaLine';
 
 /** An hexagonal board encoding,
@@ -33,15 +35,21 @@ export class HexaBoard<T> {
         if (coord.x < 0 || coord.x >= width || coord.y < 0 || coord.y >= height) {
             return false;
         }
-        if (coord.y <= halfHeight) {
+        if (coord.y < halfHeight) {
             if (excludedCases[coord.y] != null) {
                 return coord.x > excludedCases[coord.y]-1;
             } else {
                 return true;
             }
-        } else {
+        } else if (coord.y > halfHeight) {
             if (excludedCases[height-1 - coord.y] != null) {
                 return (width-1-coord.x) > excludedCases[height-1 - coord.y]-1;
+            } else {
+                return true;
+            }
+        } else {
+            if (excludedCases[coord.y] != null) {
+                return coord.x > excludedCases[coord.y]-1 && (width-1-coord.x) > excludedCases[height-1 - coord.y]-1;
             } else {
                 return true;
             }
@@ -60,7 +68,7 @@ export class HexaBoard<T> {
                        public readonly height: number,
                        public readonly excludedCases: ReadonlyArray<number>,
                        public readonly empty: T) {
-        if (this.excludedCases.length >= this.height/2) {
+        if (this.excludedCases.length >= (this.height/2)+1) {
             throw new Error('Invalid excluded cases specification for HexaBoard.');
         }
     }
@@ -77,7 +85,14 @@ export class HexaBoard<T> {
         if (equalT(this.empty, other.empty) === false) {
             return false;
         }
-        // TODO: check excludedCases
+        if (this.excludedCases.length !== other.excludedCases.length) {
+            return false;
+        }
+        for (let i: number = 0; i < this.excludedCases.length; i++) {
+            if (this.excludedCases[i] !== other.excludedCases[i]) {
+                return false;
+            }
+        }
         for (const coord of this.allCoords()) {
             if (equalT(this.getAtUnsafe(coord), other.getAtUnsafe(coord)) === false) {
                 return false;
@@ -85,7 +100,7 @@ export class HexaBoard<T> {
         }
         return true;
     }
-    private getAtUnsafe(coord: Coord): T {
+    protected getAtUnsafe(coord: Coord): T {
         return this.contents[coord.y][coord.x];
     }
     public getAt(coord: Coord): T {
@@ -98,7 +113,7 @@ export class HexaBoard<T> {
     protected setAtUnsafe(coord: Coord, v: T): this {
         const contents: T[][] = ArrayUtils.copyBiArray(this.contents);
         contents[coord.y][coord.x] = v;
-        return new HexaBoard(contents, this.width, this.height, this.excludedCases, this.empty) as this;
+        return new (<any> this.constructor)(contents, this.width, this.height, this.excludedCases, this.empty) as this;
     }
     public setAt(coord: Coord, v: T): this {
         if (this.isOnBoard(coord)) {
@@ -108,14 +123,21 @@ export class HexaBoard<T> {
         }
     }
     public forEachCoord(callback: (coord: Coord, content: T) => void): void {
+        for (const [coord, content] of this.getCoordsAndContents()) {
+            callback(coord, content);
+        }
+    }
+    public getCoordsAndContents(): [Coord, T][] {
+        const coordsAndContents: [Coord, T][] = [];
         for (let y: number = 0; y < this.height; y++) {
             for (let x: number = 0; x < this.width; x++) {
                 const coord: Coord = new Coord(x, y);
                 if (this.isOnBoard(coord)) {
-                    callback(coord, this.getAtUnsafe(coord));
+                    coordsAndContents.push([coord, this.getAtUnsafe(coord)]);
                 }
             }
         }
+        return coordsAndContents;
     }
     public allCoords(): Coord[] {
         const coords: Coord[] = [];
@@ -139,5 +161,42 @@ export class HexaBoard<T> {
             lines.push(HexaLine.constantS(i));
         }
         return lines;
+    }
+    public getEntranceOnLine(line: HexaLine): Coord {
+        let x: number;
+        let y: number;
+        switch (line.constant) {
+            case 'q':
+                if (this.excludedCases[line.offset] != null) {
+                    y = this.excludedCases[line.offset];
+                } else {
+                    y = 0;
+                }
+                return this.findEntranceFrom(line, new Coord(line.offset, y));
+            case 'r':
+                if (this.excludedCases[line.offset] != null) {
+                    x = this.excludedCases[line.offset];
+                } else {
+                    x = 0;
+                }
+                return this.findEntranceFrom(line, new Coord(x, line.offset));
+            case 's':
+                if (line.offset < this.width) {
+                    return this.findEntranceFrom(line, new Coord(line.offset, 0));
+                } else {
+                    return this.findEntranceFrom(line, new Coord(this.width-1, line.offset-this.width+1));
+                }
+        }
+    }
+    private findEntranceFrom(line: HexaLine, start: Coord): Coord {
+        const dir: HexaDirection = line.getDirection();
+        for (let cur: Coord = start, i: number = 0;
+            i < Math.max(this.width, this.height);
+            cur = cur.getNext(dir), i++) {
+            if (this.isOnBoard(cur)) {
+                return cur;
+            }
+        }
+        assert(false, 'could not find a board entrance, board must be invalid');
     }
 }

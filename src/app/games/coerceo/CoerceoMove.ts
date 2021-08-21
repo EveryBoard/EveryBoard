@@ -30,7 +30,7 @@ export class CoerceoStep implements ComparableObject {
     ];
     public static fromCoords(a: Coord, b: Coord): CoerceoStep {
         const vector: Vector = a.getVectorToward(b);
-        const stepIndex: number = CoerceoStep.STEPS.findIndex((s: CoerceoStep) => Vector.equals(s.direction, vector));
+        const stepIndex: number = CoerceoStep.STEPS.findIndex((s: CoerceoStep) => s.direction.equals(vector));
         if (stepIndex === -1) {
             throw new Error(CoerceoFailure.INVALID_DISTANCE);
         } else {
@@ -40,7 +40,7 @@ export class CoerceoStep implements ComparableObject {
     private constructor(public readonly direction: Vector, public readonly str: string) {}
 
     public toInt(): number {
-        return CoerceoStep.STEPS.findIndex((s: CoerceoStep) => Vector.equals(s.direction, this.direction));
+        return CoerceoStep.STEPS.findIndex((s: CoerceoStep) => s.direction.equals(this.direction));
     }
     public equals(other: CoerceoStep): boolean {
         return this === other;

@@ -1,6 +1,5 @@
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Coord } from './Coord';
-import { HexaBoard } from './HexaBoard';
 import { HexaDirection } from './HexaDirection';
 
 export class HexaLine {
@@ -46,8 +45,8 @@ export class HexaLine {
         return true;
     }
 
-    private constructor(private readonly offset: number,
-                       private readonly constant: 'q' | 'r' | 's') {
+    private constructor(public readonly offset: number,
+                        public readonly constant: 'q' | 'r' | 's') {
     }
     public equals(other: HexaLine): boolean {
         if (this === other) return true;
@@ -65,38 +64,12 @@ export class HexaLine {
                 return coord.x + coord.y === this.offset;
         }
     }
-    public getEntrance<T>(board: HexaBoard<T>): Coord {
-        let x: number;
-        let y: number;
-        switch (this.constant) {
-            case 'q':
-                if (board.excludedCases[this.offset] != null) {
-                    y = board.excludedCases[this.offset];
-                } else {
-                    y = 0;
-                }
-                return new Coord(this.offset, y);
-            case 'r':
-                if (board.excludedCases[this.offset] != null) {
-                    x = board.excludedCases[this.offset];
-                } else {
-                    x = 0;
-                }
-                return new Coord(x, this.offset);
-            case 's':
-                if (this.offset < board.width) {
-                    return new Coord(this.offset, 0);
-                } else {
-                    return new Coord(board.width-1, this.offset-board.width+1);
-                }
-        }
-    }
     public getDirection(): HexaDirection {
         switch (this.constant) {
             case 'q':
                 return HexaDirection.DOWN;
             case 'r':
-                return HexaDirection.DOWN_RIGHT;
+                return HexaDirection.RIGHT;
             case 's':
                 return HexaDirection.DOWN_LEFT;
         }

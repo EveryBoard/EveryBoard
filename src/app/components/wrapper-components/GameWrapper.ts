@@ -13,6 +13,12 @@ import { assert, display } from 'src/app/utils/utils';
 import { GameInfo } from '../normal-component/pick-game/pick-game.component';
 import { Player } from 'src/app/jscaip/Player';
 
+export class GameWrapperMessages {
+
+    public static readonly NOT_YOUR_TURN: string = $localize`Ce n'est pas votre tour !`;
+
+    public static readonly NO_CLONING_FEATURE: string = $localize`Clôner une partie n'est pas encore possible. Cette fonctionnalité pourrait être implémentée dans un futur incertain.`;
+}
 @Component({ template: '' })
 export abstract class GameWrapper {
     public static VERBOSE: boolean = false;
@@ -23,7 +29,7 @@ export abstract class GameWrapper {
 
     public gameComponent: AbstractGameComponent<Move, GamePartSlice>;
 
-    public userName: string = this.authenticationService.getAuthenticatedUser() &&
+    public userName: string = this.authenticationService.getAuthenticatedUser() != null &&
                               this.authenticationService.getAuthenticatedUser().pseudo // TODO, clean that;
 
     public players: string[] = [null, null];
@@ -76,7 +82,7 @@ export abstract class GameWrapper {
         this.gameComponent.canUserPlay = this.onUserClick; // So that when the game component click
         // the game wrapper can act accordly
         this.gameComponent.isPlayerTurn = this.isPlayerTurn;
-        this.gameComponent.cancelMoveOnWrapper = this.onCancelMove; // Mostly for interception by DidacticialGameWrapper
+        this.gameComponent.cancelMoveOnWrapper = this.onCancelMove; // Mostly for interception by TutorialGameWrapper
 
         this.gameComponent.observerRole = this.observerRole;
         this.canPass = this.gameComponent.canPass;
@@ -97,7 +103,7 @@ export abstract class GameWrapper {
             },
         });
         if (!this.isPlayerTurn()) {
-            return MGPValidation.failure($localize`It is not your turn.`);
+            return MGPValidation.failure(GameWrapperMessages.NOT_YOUR_TURN);
         }
         if (this.endGame) {
             return MGPValidation.failure($localize`Game is finished.`);
@@ -117,13 +123,13 @@ export abstract class GameWrapper {
     public onUserClick: (elementName: string) => MGPValidation = (_elementName: string) => {
         // TODO: Not the same logic to use in Online and Local, make abstract
         if (this.observerRole === Player.NONE.value) {
-            const message: string = $localize`cloning feature will be added soon. Meanwhile, you can\'t click on the board`;
+            const message: string = GameWrapperMessages.NO_CLONING_FEATURE;
             return MGPValidation.failure(message);
         }
         if (this.isPlayerTurn()) {
             return MGPValidation.SUCCESS;
         } else {
-            return MGPValidation.failure($localize`It is not your turn`);
+            return MGPValidation.failure(GameWrapperMessages.NOT_YOUR_TURN);
         }
     }
     public onCancelMove(): void {

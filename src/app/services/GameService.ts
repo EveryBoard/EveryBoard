@@ -57,7 +57,11 @@ export class GameService implements OnDestroy {
             });
     }
     public async createGameAndRedirectOrShowError(game: string): Promise<boolean> {
-        if (this.canCreateGame(this.userName) === true) {
+        if (this.isUserOffline()) {
+            this.messageDisplayer.infoMessage(GameServiceMessages.ALREADY_INGAME);
+            this.router.navigate(['/login']);
+            return false;
+        } else if (this.canCreateGame() === true) {
             const gameId: string = await this.createPartJoinerAndChat(this.userName, game, '');
             // create Part and Joiner
             this.router.navigate(['/play/' + game, gameId]);
@@ -68,8 +72,11 @@ export class GameService implements OnDestroy {
             return false;
         }
     }
+    public isUserOffline(): boolean {
+        return this.userName == null;
+    }
     public ngOnDestroy(): void {
-        if (this.userNameSub) {
+        if (this.userNameSub != null) {
             this.userNameSub.unsubscribe();
         }
     }
@@ -110,20 +117,13 @@ export class GameService implements OnDestroy {
     public async createPartJoinerAndChat(creatorName: string, typeGame: string, chosenPlayer: string): Promise<string> {
         display(GameService.VERBOSE, 'GameService.createGame(' + creatorName + ', ' + typeGame + ')');
 
-        const gameId: string = await this.createUnstartedPart(creatorName, typeGame, chosenPlayer) as string;
+        const gameId: string = await this.createUnstartedPart(creatorName, typeGame, chosenPlayer);
         await this.joinerService.createInitialJoiner(creatorName, gameId);
         await this.createChat(gameId);
         return gameId;
     }
-    public canCreateGame(creator: string): boolean {
-        return this.activesPartsService.hasActivePart(creator) === false;
-    }
-    public getActivesPartsObs(): Observable<ICurrentPartId[]> {
-        // TODO: désabonnements de sûreté aux autres abonnements activesParts
-        display(GameService.VERBOSE, 'GameService.getActivesPartsObs');
-
-        this.activesPartsService.startObserving();
-        return this.activesPartsService.activesPartsObs;
+    public canCreateGame(): boolean {
+        return this.userName != null && this.activesPartsService.hasActivePart(this.userName) === false;
     }
     public unSubFromActivesPartsObs(): void {
         display(GameService.VERBOSE, 'GameService.unSubFromActivesPartsObs()');

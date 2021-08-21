@@ -505,6 +505,14 @@ describe('PartCreationComponent:', () => {
         it('should remove candidate from lobby if it is deleted', fakeAsync(async() => {
         }));
     });
+    describe('PartType', () => {
+        it('Should map correctly with PartType.of', () => {
+            expect(PartType.of('STANDARD').value).toBe('STANDARD');
+            expect(PartType.of('BLITZ').value).toBe('BLITZ');
+            expect(PartType.of('CUSTOM').value).toBe('CUSTOM');
+            expect(() => PartType.of('caca')).toThrowError('Invalid part type: caca.');
+        });
+    });
     afterEach(fakeAsync(async() => {
         testUtils.destroy();
         await testUtils.whenStable();

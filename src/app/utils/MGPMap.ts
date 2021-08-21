@@ -1,9 +1,10 @@
 import { MGPOptional } from './MGPOptional';
 import { Comparable, comparableEquals } from './Comparable';
 import { MGPSet } from './MGPSet';
+import { assert } from './utils';
 
 export class MGPMap<K extends Comparable, V extends Comparable> {
-    private map: {key: K, value: V}[] = [];
+    private map: {key: K, value: NonNullable<V>}[] = [];
 
     private isImmutable: boolean = false;
 
@@ -25,7 +26,7 @@ export class MGPMap<K extends Comparable, V extends Comparable> {
     public putAll(m: MGPMap<K, V>): void {
         this.checkImmutability('putAll');
         for (const entry of m.map) {
-            this.put(entry.key, entry.value);
+            this.put(entry.key as NonNullable<K>, entry.value);
         }
     }
     public checkImmutability(methodCalled: string): void {
@@ -33,14 +34,14 @@ export class MGPMap<K extends Comparable, V extends Comparable> {
             throw new Error('Cannot call ' + methodCalled + ' on immutable map!');
         }
     }
-    public put(key: K, value: V): MGPOptional<V> {
+    public put(key: NonNullable<K>, value: NonNullable<V>): MGPOptional<V> {
         this.checkImmutability('put');
         if (key == null) throw new Error('Key cannot be null!');
         if (value == null) throw new Error('Value cannot be null!');
         for (let i: number = 0; i < this.map.length; i++) {
             const entry: {key: K, value: V} = this.map[i];
             if (comparableEquals(entry.key, key)) {
-                const oldValue: V = this.map[i].value;
+                const oldValue: NonNullable<V> = this.map[i].value;
                 this.map[i].value = value;
                 return MGPOptional.of(oldValue);
             }
@@ -60,7 +61,7 @@ export class MGPMap<K extends Comparable, V extends Comparable> {
     public getKeySet(): MGPSet<K> {
         return new MGPSet<K>(this.listKeys());
     }
-    public replace(key: K, newValue: V): V {
+    public replace(key: K, newValue: NonNullable<V>): V {
         this.checkImmutability('replace');
         if (key == null) throw new Error('Key cannot be null!');
         if (newValue == null) throw new Error('Value cannot be null, use delete instead!');
@@ -74,7 +75,7 @@ export class MGPMap<K extends Comparable, V extends Comparable> {
         }
         throw new Error('No Value to replace for key '+ key.toString() + '!');
     }
-    public set(key: K, firstValue: V): void {
+    public set(key: K, firstValue: NonNullable<V>): void {
         this.checkImmutability('set');
         if (key == null) throw new Error('Key cannot be null!');
         if (firstValue == null) throw new Error('Value cannot be null!');
@@ -91,8 +92,8 @@ export class MGPMap<K extends Comparable, V extends Comparable> {
             const entry: {key: K, value: V} = this.map[i];
             if (comparableEquals(entry.key, key)) {
                 const oldValue: V = this.map[i].value;
-                const beforeDeleted: {key: K, value: V}[] = this.map.slice(0, i);
-                const afterDeleted: {key: K, value: V}[] = this.map.slice(i + 1);
+                const beforeDeleted: {key: K, value: NonNullable<V>}[] = this.map.slice(0, i);
+                const afterDeleted: {key: K, value: NonNullable<V>}[] = this.map.slice(i + 1);
                 this.map = beforeDeleted.concat(afterDeleted);
                 return oldValue;
             }
@@ -116,9 +117,7 @@ export class MGPMap<K extends Comparable, V extends Comparable> {
             const key: K = thisKeySet.get(i);
             const thisValue: V = this.get(key).get();
             const otherValue: MGPOptional<V> = other.get(key);
-            if (otherValue.isAbsent()) {
-                return false;
-            }
+            assert(otherValue.isPresent(), 'value is absent in a map even though its key is present!');
             if (comparableEquals(thisValue, otherValue.get()) === false) {
                 return false;
             }

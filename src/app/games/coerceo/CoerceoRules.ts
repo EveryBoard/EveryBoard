@@ -6,8 +6,9 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { display } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { CoerceoMove } from './CoerceoMove';
-import { CoerceoPartSlice, CoerceoPiece } from './CoerceoPartSlice';
+import { CoerceoPartSlice } from './CoerceoPartSlice';
 import { CoerceoFailure } from './CoerceoFailure';
+import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 
 export abstract class CoerceoNode extends MGPNode<CoerceoRules, CoerceoMove, CoerceoPartSlice> {}
 
@@ -33,7 +34,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoPartSlice> {
     {
         const newBoard: number[][] = slice.getCopiedBoard();
         const captured: Coord = move.capture.get();
-        newBoard[captured.y][captured.x] = CoerceoPiece.EMPTY.value;
+        newBoard[captured.y][captured.x] = FourStatePiece.EMPTY.value;
         const newCaptures: [number, number] = [slice.captures[0], slice.captures[1]];
         newCaptures[slice.getCurrentPlayer().value] += 1;
         const newTiles: [number, number] = [slice.tiles[0], slice.tiles[1]];
@@ -87,10 +88,10 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoPartSlice> {
         if (slice.tiles[slice.getCurrentPlayer().value] < 2) {
             return { legal: MGPValidation.failure(CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE) };
         }
-        if (slice.getBoardAt(move.capture.get()) === CoerceoPiece.NONE.value) {
+        if (slice.getBoardAt(move.capture.get()) === FourStatePiece.NONE.value) {
             return { legal: MGPValidation.failure(CoerceoFailure.CANNOT_CAPTURE_FROM_REMOVED) };
         }
-        if (slice.getBoardAt(move.capture.get()) === CoerceoPiece.EMPTY.value) {
+        if (slice.getBoardAt(move.capture.get()) === FourStatePiece.EMPTY.value) {
             return { legal: MGPValidation.failure(CoerceoFailure.CANNOT_CAPTURE_FROM_EMPTY) };
         }
         if (slice.getBoardAt(move.capture.get()) === slice.getCurrentPlayer().value) {
@@ -99,16 +100,16 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoPartSlice> {
         return { legal: MGPValidation.SUCCESS };
     }
     public isLegalDeplacement(move: CoerceoMove, slice: CoerceoPartSlice): LegalityStatus {
-        if (slice.getBoardAt(move.start.get()) === CoerceoPiece.NONE.value) {
+        if (slice.getBoardAt(move.start.get()) === FourStatePiece.NONE.value) {
             const reason: string = 'Cannot start with a coord outside the board ' + move.start.get().toString() + '.';
             return { legal: MGPValidation.failure(reason) };
         }
-        if (slice.getBoardAt(move.landingCoord.get()) === CoerceoPiece.NONE.value) {
+        if (slice.getBoardAt(move.landingCoord.get()) === FourStatePiece.NONE.value) {
             const reason: string =
                 'Cannot end with a coord outside the board ' + move.landingCoord.get().toString() + '.';
             return { legal: MGPValidation.failure(reason) };
         }
-        if (slice.getBoardAt(move.start.get()) === CoerceoPiece.EMPTY.value) {
+        if (slice.getBoardAt(move.start.get()) === FourStatePiece.EMPTY.value) {
             return { legal: MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY) };
         }
         if (slice.getBoardAt(move.start.get()) === slice.getCurrentEnnemy().value) {

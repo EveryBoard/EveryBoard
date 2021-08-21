@@ -24,8 +24,8 @@ describe('GipfComponent', () => {
         componentTestUtils = await ComponentTestUtils.forGame<GipfComponent>('Gipf');
     }));
     it('should create', () => {
-        expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');
-        expect(componentTestUtils.getComponent()).toBeTruthy('GipfComponent should be created');
+        expect(componentTestUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
+        expect(componentTestUtils.getComponent()).withContext('GipfComponent should be created').toBeTruthy();
     });
     it('should fail on selecting an invalid direction', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_3_6');
@@ -179,7 +179,7 @@ describe('GipfComponent', () => {
         await componentTestUtils.expectClickSuccess('#click_1_3');
 
         const move: GipfMove = new GipfMove(new GipfPlacement(new Coord(0, 3),
-                                                              MGPOptional.of(HexaDirection.DOWN_RIGHT)),
+                                                              MGPOptional.of(HexaDirection.RIGHT)),
                                             [],
                                             [new GipfCapture([
                                                 new Coord(2, 3), new Coord(2, 4), new Coord(2, 5), new Coord(2, 6),
@@ -340,7 +340,7 @@ describe('GipfComponent', () => {
         componentTestUtils.setupSlice(slice);
 
         const move: GipfMove = new GipfMove(new GipfPlacement(new Coord(5, 4),
-                                                              MGPOptional.of(HexaDirection.UP_LEFT)),
+                                                              MGPOptional.of(HexaDirection.LEFT)),
                                             [],
                                             [
                                                 new GipfCapture([

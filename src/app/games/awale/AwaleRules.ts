@@ -53,25 +53,21 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
 
         let captured: [number, number] = [0, 0];
 
-        const y: number = move.coord.y;
         const player: number = turn % 2;
-        const ennemi: number = (turn + 1) % 2;
+        const enemy: number = (turn + 1) % 2;
 
-        if (y !== player) {
-            return AwaleLegalityStatus.failure(AwaleFailure.CANNOT_DISTRIBUTE_FROM_ENEMY_HOME);
-        }
-        const x: number = move.coord.x;
-        if (resultingBoard[y][x] === 0) {
+        const x: number = move.x;
+        if (resultingBoard[player][x] === 0) {
             return AwaleLegalityStatus.failure(AwaleFailure.MUST_CHOOSE_NONEMPTY_HOUSE);
         }
 
-        if (!AwaleRules.doesDistribute(x, y, resultingBoard) && AwaleRules.isStarving(ennemi, resultingBoard) ) {
+        if (!AwaleRules.doesDistribute(x, player, resultingBoard) && AwaleRules.isStarving(enemy, resultingBoard) ) {
             // you can distribute but you don't, illegal move
             return AwaleLegalityStatus.failure(AwaleFailure.SHOULD_DISTRIBUTE);
         }
         // arrived here you can distribute this house
         // but we'll have to check if you can capture
-        const lastCase: Coord = AwaleRules.distribute(x, y, resultingBoard);
+        const lastCase: Coord = AwaleRules.distribute(x, player, resultingBoard);
         // do the distribution and retrieve the landing part
         // of the last stone
         const landingCamp: number = lastCase.y;
@@ -81,8 +77,8 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         }
         // on as donc terminé la distribution dans le camps adverse, capture est de mise
         const boardBeforeCapture: number[][] = ArrayUtils.copyBiArray(resultingBoard);
-        captured[player] = AwaleRules.capture(lastCase.x, ennemi, player, resultingBoard);
-        if (AwaleRules.isStarving(ennemi, resultingBoard)) {
+        captured[player] = AwaleRules.capture(lastCase.x, enemy, player, resultingBoard);
+        if (AwaleRules.isStarving(enemy, resultingBoard)) {
             if (captured[player] > 0) {
                 // if the distribution would capture all seeds
                 // the move is legal but the capture is forbidden and cancelled
@@ -90,9 +86,9 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
                 captured = [0, 0];
             }
         }
-        if (AwaleRules.isStarving(player, resultingBoard) && !AwaleRules.canDistribute(ennemi, resultingBoard)) {
+        if (AwaleRules.isStarving(player, resultingBoard) && !AwaleRules.canDistribute(enemy, resultingBoard)) {
             // if the player distributed his last seeds and the opponent could not give him seeds
-            captured[ennemi] += AwaleRules.mansoon(ennemi, resultingBoard);
+            captured[enemy] += AwaleRules.mansoon(enemy, resultingBoard);
         }
         return { legal: MGPValidation.SUCCESS, captured, resultingBoard };
     }

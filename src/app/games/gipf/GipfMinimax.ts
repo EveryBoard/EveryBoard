@@ -10,45 +10,10 @@ import { GipfRules, GipfNode } from './GipfRules';
 
 
 export class GipfMinimax extends Minimax<GipfMove, GipfPartSlice, GipfLegalityStatus> {
-
-    public getBoardValue(node: GipfNode): NodeUnheritance {
-        const state: GipfPartSlice = node.gamePartSlice;
-        const score0: MGPOptional<number> = GipfRules.getPlayerScore(state, Player.ZERO);
-        const score1: MGPOptional<number> = GipfRules.getPlayerScore(state, Player.ONE);
-        if (score0.isAbsent()) {
-            return new NodeUnheritance(Player.ONE.getVictoryValue());
-        } else if (score1.isAbsent()) {
-            return new NodeUnheritance(Player.ZERO.getVictoryValue());
-        } else {
-            return new NodeUnheritance(score0.get() - score1.get());
-        }
-    }
-    public getListMoves(node: GipfNode): GipfMove[] {
-        return this.getListMoveFromSlice(node.gamePartSlice);
-    }
-    private getListMoveFromSlice(slice: GipfPartSlice): GipfMove[] {
-        const moves: GipfMove[] = [];
-
-        if (GipfRules.isGameOver(slice)) {
-            return moves;
-        }
-
-        this.getPossibleCaptureCombinations(slice).forEach((initialCaptures: ReadonlyArray<GipfCapture>) => {
-            const sliceAfterCapture: GipfPartSlice = GipfRules.applyCaptures(slice, initialCaptures);
-            GipfRules.getPlacements(sliceAfterCapture).forEach((placement: GipfPlacement) => {
-                const sliceAfterPlacement: GipfPartSlice = GipfRules.applyPlacement(sliceAfterCapture, placement);
-                this.getPossibleCaptureCombinations(sliceAfterPlacement)
-                    .forEach((finalCaptures: ReadonlyArray<GipfCapture>) => {
-                        const moveSimple: GipfMove = new GipfMove(placement, initialCaptures, finalCaptures);
-                        moves.push(moveSimple);
-                    });
-            });
-        });
-        return moves;
-    }
-    private getPossibleCaptureCombinations(slice: GipfPartSlice): Table<GipfCapture> {
-        const possibleCaptures: GipfCapture[] = GipfRules.getPossibleCaptures(slice);
-        const intersections: number[][] = this.computeIntersections(possibleCaptures);
+    public static getPossibleCaptureCombinationsFromPossibleCaptures(
+        possibleCaptures: GipfCapture[],
+    ): Table<GipfCapture> {
+        const intersections: number[][] = GipfMinimax.computeIntersections(possibleCaptures);
         let captureCombinations: number[][] = [[]];
         possibleCaptures.forEach((_capture: GipfCapture, index: number) => {
             if (intersections[index].length === 0) {
@@ -89,7 +54,7 @@ export class GipfMinimax extends Minimax<GipfMove, GipfPartSlice, GipfLegalitySt
             });
         });
     }
-    private computeIntersections(captures: GipfCapture[]): number[][] {
+    private static computeIntersections(captures: GipfCapture[]): number[][] {
         const intersections: number[][] = [];
         captures.forEach((capture1: GipfCapture, index1: number) => {
             intersections.push([]);
@@ -102,5 +67,45 @@ export class GipfMinimax extends Minimax<GipfMove, GipfPartSlice, GipfLegalitySt
             });
         });
         return intersections;
+    }
+
+    public getBoardValue(node: GipfNode): NodeUnheritance {
+        const state: GipfPartSlice = node.gamePartSlice;
+        const score0: MGPOptional<number> = GipfRules.getPlayerScore(state, Player.ZERO);
+        const score1: MGPOptional<number> = GipfRules.getPlayerScore(state, Player.ONE);
+        if (score0.isAbsent()) {
+            return new NodeUnheritance(Player.ONE.getVictoryValue());
+        } else if (score1.isAbsent()) {
+            return new NodeUnheritance(Player.ZERO.getVictoryValue());
+        } else {
+            return new NodeUnheritance(score0.get() - score1.get());
+        }
+    }
+    public getListMoves(node: GipfNode): GipfMove[] {
+        return this.getListMoveFromSlice(node.gamePartSlice);
+    }
+    private getListMoveFromSlice(slice: GipfPartSlice): GipfMove[] {
+        const moves: GipfMove[] = [];
+
+        if (GipfRules.isGameOver(slice)) {
+            return moves;
+        }
+
+        this.getPossibleCaptureCombinations(slice).forEach((initialCaptures: ReadonlyArray<GipfCapture>) => {
+            const sliceAfterCapture: GipfPartSlice = GipfRules.applyCaptures(slice, initialCaptures);
+            GipfRules.getPlacements(sliceAfterCapture).forEach((placement: GipfPlacement) => {
+                const sliceAfterPlacement: GipfPartSlice = GipfRules.applyPlacement(sliceAfterCapture, placement);
+                this.getPossibleCaptureCombinations(sliceAfterPlacement)
+                    .forEach((finalCaptures: ReadonlyArray<GipfCapture>) => {
+                        const moveSimple: GipfMove = new GipfMove(placement, initialCaptures, finalCaptures);
+                        moves.push(moveSimple);
+                    });
+            });
+        });
+        return moves;
+    }
+    private getPossibleCaptureCombinations(slice: GipfPartSlice): Table<GipfCapture> {
+        const possibleCaptures: GipfCapture[] = GipfRules.getPossibleCaptures(slice);
+        return GipfMinimax.getPossibleCaptureCombinationsFromPossibleCaptures(possibleCaptures);
     }
 }

@@ -4,14 +4,20 @@ import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppModule } from 'src/app/app.module';
 import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
+import { Direction } from 'src/app/jscaip/Direction';
+import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
+import { Move } from 'src/app/jscaip/Move';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ActivatedRouteStub } from 'src/app/utils/tests/TestUtils.spec';
-import { PickGameComponent } from '../../normal-component/pick-game/pick-game.component';
+import { GameInfo, PickGameComponent } from '../../normal-component/pick-game/pick-game.component';
+import { GameWrapperMessages } from '../../wrapper-components/GameWrapper';
 import { LocalGameWrapperComponent } from '../../wrapper-components/local-game-wrapper/local-game-wrapper.component';
+import { AbstractGameComponent } from './AbstractGameComponent';
 
 describe('AbstractGameComponent', () => {
+
     const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub();
 
     let fixture: ComponentFixture<LocalGameWrapperComponent>;
@@ -19,7 +25,6 @@ describe('AbstractGameComponent', () => {
     let component: LocalGameWrapperComponent;
 
     const gameList: ReadonlyArray<string> = new PickGameComponent().gameNameList;
-
 
     beforeEach(fakeAsync(async() => {
         await TestBed.configureTestingModule({
@@ -38,6 +43,11 @@ describe('AbstractGameComponent', () => {
     }));
     it('Clicks method should refuse when observer click', fakeAsync(async() => {
         const clickableMethods: { [gameName: string]: { [methodName: string]: unknown[] } } = {
+            Abalone: {
+                onPieceClick: [0, 0],
+                onCaseClick: [0, 0],
+                chooseDirection: [Direction.UP],
+            },
             Awale: { onClick: [0, 0] },
             Coerceo: { onClick: [0, 0] },
             Dvonn: { onClick: [0, 0] },
@@ -85,9 +95,10 @@ describe('AbstractGameComponent', () => {
                 onNeighboorClick: [0, 0],
             },
             Tablut: { onClick: [0, 0] },
+            Yinsh: { onClick: [0, 0] },
         };
-        const refusal: MGPValidation =
-            MGPValidation.failure('cloning feature will be added soon. Meanwhile, you can\'t click on the board');
+        const refusal: MGPValidation = MGPValidation.failure(GameWrapperMessages.NO_CLONING_FEATURE);
+
         for (const gameName of gameList) {
             const game: { [methodName: string]: unknown[] } = clickableMethods[gameName];
             if (game == null) {
@@ -106,5 +117,19 @@ describe('AbstractGameComponent', () => {
             }
         }
         flush();
+    }));
+    it('Component should have an encoder and a tutorial', fakeAsync(async() =>{
+        for (const gameInfo of GameInfo.ALL_GAMES) {
+            if (gameInfo.display === false) {
+                continue;
+            }
+            const gameComponent: AbstractGameComponent<Move, GamePartSlice> =
+                TestBed.createComponent(gameInfo.component).debugElement.componentInstance;
+            expect(gameComponent.encoder).withContext('Encoder missing for ' + gameInfo.urlName).toBeTruthy();
+            expect(gameComponent.tutorial).withContext('tutorial missing for ' + gameInfo.urlName).toBeTruthy();
+            if (gameComponent.tutorial) {
+                expect(gameComponent.tutorial.length).withContext('tutorial empty for ' + gameInfo.urlName).toBeGreaterThan(0);
+            }
+        }
     }));
 });
