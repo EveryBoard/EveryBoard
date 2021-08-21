@@ -232,7 +232,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
             return this.cancelMove(EpaminondasFailure.CASE_NOT_ALIGNED_WITH_SELECTED);
         }
         const distance: number = clicked.getDistance(this.firstPiece);
-        const direction: Direction = this.firstPiece.getDirectionToward(clicked);
+        const direction: Direction = this.firstPiece.getDirectionToward(clicked).get();
         switch (this.board[y][x]) {
             case Player.NONE.value:
                 if (distance === 1) {

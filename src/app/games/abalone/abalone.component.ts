@@ -105,7 +105,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
     }
     private showSideStepMove(move: AbaloneMove): void {
         let last: Coord = move.lastPiece.get();
-        const alignement: HexaDirection = move.coord.getDirectionToward(last);
+        const alignement: HexaDirection = move.coord.getDirectionToward(last).get();
         last = last.getNext(alignement);
         let processed: Coord = move.coord;
         while (processed.equals(last) === false) {
@@ -223,7 +223,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
         if (distance > 2) {
             return this.cancelMove(AbaloneFailure.CANNOT_MOVE_MORE_THAN_THREE_PIECES);
         }
-        const alignement: BaseDirection = firstPiece.getDirectionToward(coord);
+        const alignement: BaseDirection = firstPiece.getDirectionToward(coord).get();
         this.selecteds = [firstPiece];
         for (let i: number = 0; i < distance; i++) {
             this.selecteds.push(firstPiece.getNext(alignement, i + 1));

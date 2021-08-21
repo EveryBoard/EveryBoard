@@ -67,7 +67,7 @@ export class AbaloneMove extends MoveCoord {
         }
         const coords: Coord[] = [first, second];
         ArrayUtils.sortByDescending(coords, AbaloneMove.sortCoord);
-        const direction: Direction = coords[1].getDirectionToward(coords[0]);
+        const direction: Direction = coords[1].getDirectionToward(coords[0]).get();
         const hexaDirectionOptional: MGPFallible<HexaDirection> =
             HexaDirection.factory.fromDelta(direction.x, direction.y);
         if (hexaDirectionOptional.isFailure()) {

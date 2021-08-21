@@ -1,6 +1,7 @@
 import { Direction, Vector } from 'src/app/jscaip/Direction';
 import { assert, JSONObject, JSONValue, JSONValueWithoutArray } from 'src/app/utils/utils';
 import { ComparableObject } from '../utils/Comparable';
+import { MGPFallible } from '../utils/MGPFallible';
 import { Encoder } from './Encoder';
 
 export class Coord implements ComparableObject {
@@ -15,12 +16,6 @@ export class Coord implements ComparableObject {
                 casted.y != null && typeof casted.y === 'number', 'Invalid encoded coord');
             return new Coord(casted.x as number, casted.y as number);
         }
-    }
-    public static getBinarised(n: number): -1 | 0 | 1 {
-        // return a value as -1 if negatif, 0 if nul, 1 if positive
-        if (n < 0) return -1;
-        if (n === 0) return 0;
-        return 1;
     }
     constructor(public readonly x: number,
                 public readonly y: number)
@@ -101,11 +96,8 @@ export class Coord implements ComparableObject {
         }
         return false;
     }
-    public getDirectionToward(c: Coord): Direction {
-        // TODO: method might have to be deleted in favor of Direction.fromMove
-        const dx: number = Coord.getBinarised(c.x - this.x);
-        const dy: number = Coord.getBinarised(c.y - this.y);
-        return Direction.factory.of(dx, dy).get();
+    public getDirectionToward(c: Coord): MGPFallible<Direction> {
+        return Direction.factory.fromMove(this, c);
     }
     public getOrthogonalDistance(c: Coord): number {
         return Math.abs(this.x - c.x) + Math.abs(this.y - c.y);
@@ -145,7 +137,7 @@ export class Coord implements ComparableObject {
     public getCoordsToward(c: Coord): Coord[] {
         if (c.equals(this)) return [];
         if (!c.isAlignedWith(this)) return [];
-        const dir: Direction = this.getDirectionToward(c);
+        const dir: Direction = this.getDirectionToward(c).get();
         let coord: Coord = this.getNext(dir, 1);
         const coords: Coord[] = [];
         while (coord.equals(c) === false) {
