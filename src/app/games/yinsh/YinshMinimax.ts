@@ -1,5 +1,4 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { Player } from 'src/app/jscaip/Player';

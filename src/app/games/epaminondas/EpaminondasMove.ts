@@ -2,7 +2,6 @@ import { Direction } from 'src/app/jscaip/Direction';
 import { NumberEncoder } from 'src/app/jscaip/Encoder';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { assert } from 'src/app/utils/utils';
 
 export class EpaminondasMove extends MoveCoord {
     public static encoder: NumberEncoder<EpaminondasMove> = new class extends NumberEncoder<EpaminondasMove> {

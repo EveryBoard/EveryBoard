@@ -9,7 +9,7 @@ describe('Direction', () => {
     describe('factory', () => {
         describe('of', () => {
             it('should construct a direction', () => {
-                expect(Direction.factory.of(1, 0).get()).toEqual(Direction.RIGHT);
+                expect(Direction.factory.of(1, 0).get()).toBe(Direction.RIGHT);
                 expect(Direction.factory.of(-1, 0).get()).toBe(Direction.LEFT);
                 expect(Direction.factory.of(0, 1).get()).toBe(Direction.DOWN);
                 expect(Direction.factory.of(0, -1).get()).toBe(Direction.UP);

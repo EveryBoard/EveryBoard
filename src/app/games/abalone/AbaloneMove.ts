@@ -6,7 +6,6 @@ import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { assert } from 'src/app/utils/utils';
 
 export class AbaloneMove extends MoveCoord {
 

@@ -14,7 +14,6 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { AbaloneDummyMinimax } from './AbaloneDummyMinimax';
 import { AbaloneFailure } from './AbaloneFailure';

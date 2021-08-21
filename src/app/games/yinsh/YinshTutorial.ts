@@ -110,7 +110,7 @@ export const yinshTutorial: TutorialStep[] = [
     TutorialStep.fromPredicate(
         $localize`Captures composées`,
         $localize`Il est possible que lors d'un tour, vous ayez la possibilité de choisir entre plusieurs captures,
-        ou même d'effectuer plus d'une capture au total !
+        ou même d'effectuer plus d'une capture au total !
         Lorsque, lors de la sélection d'une capture, le marqueur sur lequel vous avez cliqué appartient à deux captures, il vous faudra cliquer sur un second marqueur pour lever toute ambiguité.<br/><br/>
         Ici, vous pouvez récupérer deux anneaux, faites-le !`,
         new YinshGameState(YinshBoard.of([
