@@ -33,7 +33,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
                 const piece: number = state.getAt(coord);
                 if (piece !== Player.NONE.value) {
                     for (const target of LinesOfActionRules.possibleTargets(state, coord)) {
-                        const move: LinesOfActionMove = new LinesOfActionMove(coord, target);
+                        const move: LinesOfActionMove = LinesOfActionMove.of(coord, target).get();
                         moves.push(move);
                     }
                 }
@@ -168,7 +168,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
             const numberOfPiecesOnLine: number = LinesOfActionRules.numberOfPiecesOnLine(state, start, dir);
             const target: Coord = start.getNext(dir, numberOfPiecesOnLine);
             if (LinesOfActionState.isOnBoard(target)) {
-                const move: LinesOfActionMove = new LinesOfActionMove(start, target);
+                const move: LinesOfActionMove = LinesOfActionMove.of(start, target).get();
                 const legality: LegalityStatus = LinesOfActionRules.isLegal(move, state);
                 if (legality.legal.isSuccess()) {
                     targets.push(target);

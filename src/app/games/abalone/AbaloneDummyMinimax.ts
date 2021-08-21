@@ -21,7 +21,7 @@ export class AbaloneDummyMinimax extends Minimax<AbaloneMove, AbaloneGameState, 
                     continue;
                 }
                 for (const dir of HexaDirection.factory.all) {
-                    const move: AbaloneMove = AbaloneMove.fromSingleCoord(first, dir);
+                    const move: AbaloneMove = AbaloneMove.fromSingleCoord(first, dir).get();
                     if (this.isAcceptablePush(move, state)) {
                         moves.push(move);
                     } else {
@@ -34,7 +34,7 @@ export class AbaloneDummyMinimax extends Minimax<AbaloneMove, AbaloneGameState, 
                             }
                             const second: Coord = first.getNext(alignement, distance);
                             if (second.isInRange(9, 9)) {
-                                const translation: AbaloneMove = AbaloneMove.fromDoubleCoord(first, second, dir);
+                                const translation: AbaloneMove = AbaloneMove.fromDoubleCoord(first, second, dir).get();
                                 if (AbaloneRules.isLegal(translation, state).legal.isSuccess()) {
                                     moves.push(translation);
                                 }

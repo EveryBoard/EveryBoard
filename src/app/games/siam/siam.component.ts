@@ -87,7 +87,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
             this.chosenDirection = MGPOptional.empty();
             this.landingCoord = this.chosenCoord;
         } else {
-            const dir: Orthogonal = Orthogonal.factory.fromString(direction);
+            const dir: Orthogonal = Orthogonal.factory.fromString(direction).get();
             this.chosenDirection = MGPOptional.of(dir);
             this.landingCoord = this.chosenCoord.getNext(dir);
             if (this.landingCoord.isNotInRange(5, 5)) {
@@ -104,7 +104,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.reason);
         }
-        this.chosenOrientation = Orthogonal.factory.fromString(orientation);
+        this.chosenOrientation = Orthogonal.factory.fromString(orientation).get();
         return await this.tryMove();
     }
     public async insertAt(x: number, y: number): Promise<MGPValidation> {
@@ -160,7 +160,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
         return false;
     }
     public getInsertionArrowTransform(x: number, y: number, direction: string): string {
-        const orientation: number = Orthogonal.factory.fromString(direction).toInt() - 2;
+        const orientation: number = Orthogonal.factory.fromString(direction).get().toInt() - 2;
         const rotation: string = `rotate(${orientation*90} ${this.CASE_SIZE/2} ${this.CASE_SIZE/2})`;
         const translation: string = 'translate(' + x * this.CASE_SIZE + ', ' + y * this.CASE_SIZE + ')';
         return [translation, rotation].join(' ');
@@ -175,7 +175,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
     public getArrowTransform(x: number, y: number, orientation: string): string {
         return GameComponentUtils.getArrowTransform(this.CASE_SIZE,
                                                     new Coord(x, y),
-                                                    Orthogonal.factory.fromString(orientation));
+                                                    Orthogonal.factory.fromString(orientation).get());
     }
     public getPieceClasses(c: number): string[] {
         return [this.getPlayerClass(SiamPiece.getOwner(c))];

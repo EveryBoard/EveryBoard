@@ -13,6 +13,7 @@ import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { KamisadoFailure } from './KamisadoFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 export class KamisadoNode extends MGPNode<KamisadoRules, KamisadoMove, KamisadoPartSlice> { }
 
@@ -206,20 +207,20 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice> {
             return { legal: MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_CASE) };
         }
         //  - all steps between start and end should be empty
-        try {
-            const dir: Direction = Direction.factory.fromMove(start, end);
-            if (!KamisadoRules.directionAllowedForPlayer(dir, slice.getCurrentPlayer())) {
-                return { legal: MGPValidation.failure(KamisadoFailure.DIRECTION_NOT_ALLOWED) };
-            }
-            let currentCoord: Coord = start;
-            while (!currentCoord.equals(end)) {
-                currentCoord = currentCoord.getNext(dir);
-                if (!KamisadoBoard.getPieceAt(slice.board, currentCoord).isEmpty()) {
-                    return { legal: MGPValidation.failure(KamisadoFailure.MOVE_BLOCKED) };
-                }
-            }
-        } catch (e) {
+        const directionOptional: MGPFallible<Direction> = Direction.factory.fromMove(start, end);
+        if (directionOptional.isFailure()) {
             return { legal: MGPValidation.failure(KamisadoFailure.DIRECTION_NOT_ALLOWED) };
+        }
+        const dir: Direction = directionOptional.get();
+        if (!KamisadoRules.directionAllowedForPlayer(dir, slice.getCurrentPlayer())) {
+            return { legal: MGPValidation.failure(KamisadoFailure.DIRECTION_NOT_ALLOWED) };
+        }
+        let currentCoord: Coord = start;
+        while (!currentCoord.equals(end)) {
+            currentCoord = currentCoord.getNext(dir);
+            if (!KamisadoBoard.getPieceAt(slice.board, currentCoord).isEmpty()) {
+                return { legal: MGPValidation.failure(KamisadoFailure.MOVE_BLOCKED) };
+            }
         }
         return { legal: MGPValidation.SUCCESS };
     }

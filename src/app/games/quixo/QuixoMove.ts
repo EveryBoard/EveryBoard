@@ -17,7 +17,7 @@ export class QuixoMove extends MoveCoord {
             return x + y + dir;
         }
         public decodeNumber(encodedMove: number): QuixoMove {
-            const direction: Orthogonal = Orthogonal.factory.fromInt(encodedMove % 4);
+            const direction: Orthogonal = Orthogonal.factory.fromInt(encodedMove % 4).get();
             encodedMove -= encodedMove % 4; encodedMove /= 4;
             const y: number = encodedMove % 5;
             encodedMove -= encodedMove % 5; encodedMove /= 5;
