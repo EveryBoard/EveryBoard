@@ -91,7 +91,7 @@ export const siamTutorial: TutorialStep[] = [
         <ol>
             <li>Your piece must already be oriented in the direction of the push.</li>
             <li>The number of the pieces (opponent's or not) that are facing yours (called the resistants)
-                is smaller than the number of pieces that are oriented in the same direction as the push, yourself included (the pushers)</li>
+                is smaller than the number of pieces that are oriented in the same direction as the push, yourself included (the pushers).</li>
             <li>The number of mountains on that line must be smaller or equal to the difference between the pushers and the resistants.</li>
         </ol>
         Your piece on the top right cannot push because there is one mountain too much.

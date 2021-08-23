@@ -728,9 +728,9 @@
       <trans-unit id="1625619525907045191" datatype="html">
         <source>Exchanging a tile</source>
       </trans-unit>
-      <trans-unit id="2710648987338283557" datatype="html">
+      <trans-unit id="3691443303448920401" datatype="html">
         <source>When you have a tile, you can see it on the left of the board.
-        As soon as you have two, you can click on an opponent&apos;s piece to capture it immediately.
+        As soon as you have two, you can click on an opponent&apos;s piece to capture it immediately instead of moving one of your pieces.
         This will cost you two tiles.
         If any tiles are removed during that turn, nobody will get them.&lt;br/&gt;&lt;br/&gt;
         Gain some time and capture the last piece!</source>
@@ -825,8 +825,8 @@
       <trans-unit id="5649666705061470825" datatype="html">
         <source>You must pick your piece among the remaining ones.</source>
       </trans-unit>
-      <trans-unit id="7757464288692634777" datatype="html">
-        <source>You must pick one of your piece or one square where you have the largest piece.</source>
+      <trans-unit id="6944709858503579555" datatype="html">
+        <source>You must pick one of your remaining piece or one piece on the board that is the biggest of its square.</source>
       </trans-unit>
       <trans-unit id="7341165560842722107" datatype="html">
         <source>You must select a different landing square than the square where the move originates from.</source>
@@ -892,8 +892,8 @@
       <trans-unit id="3733956045714659124" datatype="html">
         <source>A phalanx cannot contain an empty square.</source>
       </trans-unit>
-      <trans-unit id="8175810329145642315" datatype="html">
-        <source>A phalanx cannot contain an piece of the opponent.</source>
+      <trans-unit id="2183903120219891237" datatype="html">
+        <source>A phalanx cannot contain a piece of the opponent.</source>
       </trans-unit>
       <trans-unit id="8733936607898144583" datatype="html">
         <source>Initial board</source>
@@ -906,10 +906,10 @@
       <trans-unit id="6886026531074912078" datatype="html">
         <source>Goal of the game (1/2)</source>
       </trans-unit>
-      <trans-unit id="3201616758404916501" datatype="html">
+      <trans-unit id="7708528679992999324" datatype="html">
         <source>After multiple moves, if at the beginning of its turn, a player has more piece on the opponent&apos;s starting line
         than the number of pieces the opponent has on the player&apos;s starting line, the player wins.
-        Here, it&apos;s Dark turn to play: Dark has therefore won.</source>
+        Here, it&apos;s Dark&apos;s turn to play: Dark has therefore won.</source>
       </trans-unit>
       <trans-unit id="5351770434517588207" datatype="html">
         <source>Goal of the game (2/2)</source>
@@ -975,8 +975,8 @@
       <trans-unit id="6918785733984182442" datatype="html">
         <source>You must select a valid capture that contains 4 pieces or more.</source>
       </trans-unit>
-      <trans-unit id="8805744649589430247" datatype="html">
-        <source>There are captures remaining.</source>
+      <trans-unit id="6602326768713192004" datatype="html">
+        <source>There are still possible captures to be done.</source>
       </trans-unit>
       <trans-unit id="2434818181880718873" datatype="html">
         <source>Pieces must be inserted in spaces on the edge of the board.</source>
@@ -1750,13 +1750,13 @@
       <trans-unit id="4722706540028615833" datatype="html">
         <source>Failed, the piece is still on the board</source>
       </trans-unit>
-      <trans-unit id="5163808862381044782" datatype="html">
+      <trans-unit id="6493970758341875362" datatype="html">
         <source>When the landing square of your move is occupied, we use the term &quot;push&quot;.
         In order to push, multiple conditions must hold:
         &lt;ol&gt;
             &lt;li&gt;Your piece must already be oriented in the direction of the push.&lt;/li&gt;
             &lt;li&gt;The number of the pieces (opponent&apos;s or not) that are facing yours (called the resistants)
-                is smaller than the number of pieces that are oriented in the same direction as the push, yourself included (the pushers)&lt;/li&gt;
+                is smaller than the number of pieces that are oriented in the same direction as the push, yourself included (the pushers).&lt;/li&gt;
             &lt;li&gt;The number of mountains on that line must be smaller or equal to the difference between the pushers and the resistants.&lt;/li&gt;
         &lt;/ol&gt;
         Your piece on the top right cannot push because there is one mountain too much.

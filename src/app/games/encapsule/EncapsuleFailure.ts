@@ -6,7 +6,7 @@ export class EncapsuleFailure {
 
     public static readonly NOT_DROPPABLE: string = $localize`You must pick your piece among the remaining ones.`;
 
-    public static readonly INVALID_PIECE_SELECTED: string = $localize`You must pick one of your piece or one square where you have the largest piece.`;
+    public static readonly INVALID_PIECE_SELECTED: string = $localize`You must pick one of your remaining piece or one piece on the board that is the biggest of its square.`;
 
     public static readonly SAME_DEST_AS_ORIGIN: string = $localize`You must select a different landing square than the square where the move originates from.`;
 

@@ -90,7 +90,7 @@ export const coerceoTutorial: TutorialStep[] = [
     TutorialStep.fromMove(
         $localize`Exchanging a tile`,
         $localize`When you have a tile, you can see it on the left of the board.
-        As soon as you have two, you can click on an opponent's piece to capture it immediately.
+        As soon as you have two, you can click on an opponent's piece to capture it immediately instead of moving one of your pieces.
         This will cost you two tiles.
         If any tiles are removed during that turn, nobody will get them.<br/><br/>
         Gain some time and capture the last piece!`,

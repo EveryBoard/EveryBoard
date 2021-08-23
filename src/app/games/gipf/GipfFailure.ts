@@ -4,7 +4,7 @@ export class GipfFailure {
 
     public static readonly INVALID_CAPTURED_PIECES: string = $localize`You must select a valid capture that contains 4 pieces or more.`;
 
-    public static readonly MISSING_CAPTURES: string = $localize`There are captures remaining.`;
+    public static readonly MISSING_CAPTURES: string = $localize`There are still possible captures to be done.`;
 
     public static readonly PLACEMENT_NOT_ON_BORDER: string = $localize`Pieces must be inserted in spaces on the edge of the board.`;
 
