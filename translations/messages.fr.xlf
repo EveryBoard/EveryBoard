@@ -1000,7 +1000,7 @@
         <source>Exchanging a tile</source>
         <target>Échanger une tuile</target>
       </trans-unit>
-      <trans-unit id="2710648987338283557" datatype="html">
+      <trans-unit id="3691443303448920401" datatype="html">
         <source>When you have a tile, you can see it on the left of the board.
         As soon as you have two, you can click on an opponent&apos;s piece to capture it immediately instead of moving one of your pieces.
         This will cost you two tiles.
@@ -1246,7 +1246,7 @@
         <source>A phalanx cannot contain an empty square.</source>
         <target>Une phalange ne peut pas contenir de case vide.</target>
       </trans-unit>
-      <trans-unit id="2183903120219891237" datatype="html">n
+      <trans-unit id="2183903120219891237" datatype="html">
         <source>A phalanx cannot contain a piece of the opponent.</source>
         <target>Une phalange ne peut pas contenir de pièce de l'adversaire.</target>
       </trans-unit>
@@ -1266,7 +1266,7 @@
         <source>Goal of the game (1/2)</source>
         <target>But du jeu (1/2)</target>
       </trans-unit>
-      <trans-unit id="3201616758404916501" datatype="html">
+      <trans-unit id="7708528679992999324" datatype="html">
         <source>After multiple moves, if at the beginning of its turn, a player has more piece on the opponent&apos;s starting line
         than the number of pieces the opponent has on the player&apos;s starting line, the player wins.
         Here, it&apos;s Dark&apos;s turn to play: Dark has therefore won.</source>
