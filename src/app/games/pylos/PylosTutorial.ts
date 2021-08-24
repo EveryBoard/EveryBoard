@@ -59,9 +59,9 @@ export const pylosTutorial: TutorialStep[] = [
         $localize`Congratulations!<br/>
         Some important notes:
         <ol>
-            <li> You cannot move a piece that is directly below another one.</li>
-            <li> Of course, you cannot move the opponent's pieces.</li>
-            <li> You can only climb when the landing square is higher than the starting square.</li>
+            <li>You cannot move a piece that is directly below another one.</li>
+            <li>Of course, you cannot move the opponent's pieces.</li>
+            <li>You can only climb when the landing square is higher than the starting square.</li>
         </ol>`,
         $localize`Failed!`,
     ),

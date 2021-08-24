@@ -1028,9 +1028,9 @@
         Si cela arrivait à l&apos;une de vos pièces, celle-ci resterait cependant sur le plateau.&lt;br/&gt;&lt;br/&gt;
         Un coup démontrant ces deux choses est faisable pour le joueur clair, faites-le !</target>
       </trans-unit>
-      <trans-unit id="334873075452727011" datatype="html">
+      <trans-unit id="710072872152309867" datatype="html">
         <source>Congratulations! See, your piece no longer had any empty neighboring space after you have gained the tile, but it stayed on the board as it was your turn.
-        However, the opponent&apos;s piece has disappeared because the tile&apos;s capture has removed its empty neighboring space.</source>
+        However, the opponent&apos;s piece has disappeared because the tile&apos;s capture has removed its last empty neighboring space.</source>
         <target>Bravo ! Voyez, votre pièce n'a plus de case voisine libre après avoir récupéré la tuile, mais est restée car c&apos;était votre tour.
         Celle de l&apos;adversaire a disparu car la capture de la tuile lui a enlevé sa dernière case voisine libre !</target>
       </trans-unit>
@@ -1094,13 +1094,13 @@
         <source>Disconnection</source>
         <target>Déconnection</target>
       </trans-unit>
-      <trans-unit id="7296336707589349573" datatype="html">
-        <source>Red pieces are called &quot;sources&quot;.
+      <trans-unit id="2680357653080413298" datatype="html">
+        <source>Pieces with a lightning strike are called &quot;sources&quot;.
         When a stack is not directly nor indirectly connected to a source, it is removed from the board.
         You can move on a source: this forms a stack that contains the source, which therefore can never be disconnected.
         Besides this, a stack containing a source acts like any other stack: you can move it, and your opponent can move on that stack to take possession of it.&lt;br/&gt;&lt;br/&gt;
         You&apos;re playing Dark, move your piece on the source.</source>
-        <target>Les pièces rouges sont appelées “sources”.
+        <target>Les pièces avec un éclair sont appelées “sources”.
         Quand une pile n’est plus directement ou indirectement connectée à une source, elle est enlevée du plateau.
         Vous pouvez vous déplacer sur une source: cela forme une pile qui contient cette source et qui ne pourra donc jamais être déconnectée.
         De plus, une pile qui contient une source se comporte comme une autre pile: vous pouvez la déplacer, et votre adversaire peut se déplacer dessus pour en prendre possession.&lt;br/&gt;&lt;br/&gt;
@@ -1180,7 +1180,7 @@
         <source>This is the initial board. You&apos;re playing Dark.&lt;br/&gt;&lt;br/&gt;
         Pick one of your piece on the side of the board and put it on the board.</source>
         <target>Ceci est le plateau de départ. Vous jouez Foncé.&lt;br/&gt;&lt;br/&gt;
-        Choisissez une des pièces sur le côté du plateau et placez là sur le plateau.</target>
+        Choisissez une des pièces sur le côté du plateau et placez la sur le plateau.</target>
       </trans-unit>
       <trans-unit id="7284208001705901171" datatype="html">
         <source>Another possible action is to move one of your pieces that is already on the board.&lt;br/&gt;&lt;br/&gt;
@@ -1367,7 +1367,7 @@
       </trans-unit>
       <trans-unit id="7226802484619632640" datatype="html">
         <source>You can only capture when 4 or more of your pieces are aligned, and it is not the case.</source>
-        <target>Une capture ne peut que se faire si 4 pièces de votre couleurs sont alignées, ce n&apos;est pas le cas.</target>
+        <target>Une capture ne peut que se faire si 4 pièces de votre couleur sont alignées, ce n&apos;est pas le cas.</target>
       </trans-unit>
       <trans-unit id="6918785733984182442" datatype="html">
         <source>You must select a valid capture that contains 4 pieces or more.</source>
@@ -1385,25 +1385,25 @@
         <source>You must select a valid placement direction.</source>
         <target>Veuillez choisir une direction valide pour le déplacement.</target>
       </trans-unit>
-      <trans-unit id="3111415789460197695" datatype="html">
-        <source>You must select a placement alongside the insertion space.</source>
+      <trans-unit id="1164530071087410710" datatype="html">
+        <source>You must select a placement with a direction alongside the insertion space.</source>
         <target>Veuillez choisir un placement avec une direction.</target>
       </trans-unit>
       <trans-unit id="1848361274892061756" datatype="html">
         <source>You cannot place a piece on a complete line.</source>
         <target>Veuillez effectuer un placement sur une ligne non complète.</target>
       </trans-unit>
-      <trans-unit id="2854410959652074326" datatype="html">
-        <source>This piece belongs to two captures. Please select another piece in the capture you&apos;d like to take.</source>
+      <trans-unit id="1025279631840419081" datatype="html">
+        <source>This piece belongs to two captures. Please select another piece in the capture you&apos;d like to make.</source>
         <target>Veuillez sélectionner une autre case de la capture que vous souhaitez prendre, celle-ci appartient à deux captures.</target>
       </trans-unit>
       <trans-unit id="8407980394441393807" datatype="html">
         <source>You must pick a capture.</source>
         <target>Veuillez sélectionner une capture.</target>
       </trans-unit>
-      <trans-unit id="3098052306255011996" datatype="html">
-        <source>You must select a destination space at a distance of 1 from the entrance.</source>
-        <target>Veuillez sélectionner une destination à une distance de 1 de l&apos;entrée.</target>
+      <trans-unit id="3154742766975304650" datatype="html">
+        <source>You must click on an arrow to select your destination.</source>
+        <target>Veuillez cliquer sur une flèche pour sélectionner votre destination.</target>
       </trans-unit>
       <trans-unit id="8708684300793667483" datatype="html">
         <source>You cannot insert a piece here, as all lines are full. Select another space.</source>
@@ -1421,11 +1421,11 @@
         Dès qu&apos;à son tour un joueur n&apos;a plus de pièces dans sa réserve, il ne sait plus jouer et perd.
         Le premier joueur possède les pièces foncées, le deuxième les pièces claires.</target>
       </trans-unit>
-      <trans-unit id="6746842757530413418" datatype="html">
+      <trans-unit id="3717573037096411853" datatype="html">
         <source>Pieces can only enter the board through the edges. To insert a new piece:
         &lt;ol&gt;
-            &lt;li&gt; Click on a space on the edge of the board.&lt;/li&gt;
-            &lt;li&gt; If that space was already occupied, click on the arrow that indicates the direction in which you want to push the piece(s) already on the corresponding line.&lt;/li&gt;
+            &lt;li&gt;Click on a space on the edge of the board.&lt;/li&gt;
+            &lt;li&gt;If that space was already occupied, click on the arrow that indicates the direction in which you want to push the piece(s) already on the corresponding line.&lt;/li&gt;
         &lt;/ol&gt;
         You cannot push when a line is full.&lt;br/&gt;&lt;br/&gt;
         You&apos;re playing Dark, insert a piece.</source>
@@ -1441,20 +1441,20 @@
         <source>Capturing (1/3)</source>
         <target>Capture (1/3)</target>
       </trans-unit>
-      <trans-unit id="6468592179736740297" datatype="html">
+      <trans-unit id="7511966090954669277" datatype="html">
         <source>To capture, you must align 4 of your own pieces, which will be the first 4 captured pieces.
         There are multiple important aspects of a capture:
         &lt;ol&gt;
-            &lt;li&gt; When 4 pieces are captured, all pieces that are directly aligned with these 4 pieces are also captured.&lt;/li&gt;
-            &lt;li&gt; As soon as there is an empty space on the line, the capture stops.&lt;/li&gt;
-            &lt;li&gt; Your own pieces that are captured go back to your stock.
-                    Your opponent&apos;s pieces however are really captured and do not go back to your opponent&apos;s stock.&lt;/li&gt;
+            &lt;li&gt;When 4 pieces are captured, all pieces that are directly aligned with these 4 pieces are also captured.&lt;/li&gt;
+            &lt;li&gt;As soon as there is an empty space on the line, the capture stops.&lt;/li&gt;
+            &lt;li&gt;Your own pieces that are captured go back to your stock.
+                Your opponent&apos;s pieces however are really captured and do not go back to your opponent&apos;s stock.&lt;/li&gt;
             &lt;li&gt; If you create a line of 4 of your opponent&apos;s pieces, it will be at the beginning of your opponent&apos;s turn that your opponent can capture them.
                 This means that a turn happens in three phases:
                 &lt;ol type=&quot;A&quot;&gt;
-                    &lt;li&gt; Pick the capture(s) resulting from the last move of your opponent (by clicking on it).&lt;/li&gt;
-                    &lt;li&gt; Make your insertion.&lt;/li&gt;
-                    &lt;li&gt; Pick the capture(s) resulting from your move (by clicking on it).&lt;/li&gt;
+                    &lt;li&gt;Pick the capture(s) resulting from the last move of your opponent (by clicking on it).&lt;/li&gt;
+                    &lt;li&gt;Make your insertion.&lt;/li&gt;
+                    &lt;li&gt;Pick the capture(s) resulting from your move (by clicking on it).&lt;/li&gt;
                 &lt;/ol&gt;
             &lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
@@ -1494,11 +1494,11 @@
         The last way captures two of your opponent&apos;s pieces, pick that one.</source>
         <target>Ici, il est possible de capturer de trois façons différentes.
         L&apos;une ne permet aucune capture de pièce adverse.
-        L&apos;autre permet une capture de pièces adverses.&lt;br/&gt;&lt;br/&gt;
+        L&apos;autre permet une capture de pièce adverse.&lt;br/&gt;&lt;br/&gt;
         La dernière en permet deux, choisissez cette dernière.</target>
       </trans-unit>
-      <trans-unit id="5909970360139332678" datatype="html">
-        <source>Congratulations, you have gotten back 4 of your pieces and captured 2 of the opponent&apos;s ones.
+      <trans-unit id="9167352512805148919" datatype="html">
+        <source>Congratulations, you have gotten back 4 of your pieces and captured 2 of the opponent&apos;s.
         The most you can get is 3 per capture.</source>
         <target>Bravo, vous avez récupéré 4 de vos pièces et capturé 2 pièces de l&apos;adversaire.
         Le maximum possible étant 3 par captures.</target>
@@ -1523,23 +1523,21 @@
         En effectuant ensuite le bon mouvement, vous pourrez faire deux captures supplémentaires !
         Gardez à l&apos;esprit que le plus utile d&apos;une capture, est de capturer les pièces adverses !</target>
       </trans-unit>
-      <trans-unit id="1212338036122995731" datatype="html">
-        <source>Congratulations, you have gotten 12 of your pieces back and captured 2 of your opponent&apos;s pieces.
-        The maximum being 3 per capture.</source>
-        <target>Bravo, vous avez récupéré 12 de vos pièces et capturé 2 pièces de l&apos;adversaire.
-        Le maximum possible étant 3 par captures.</target>
+      <trans-unit id="2182334345707735267" datatype="html">
+        <source>Congratulations, you have gotten 12 of your pieces back and captured 2 of your opponent&apos;s pieces.</source>
+        <target>Bravo, vous avez récupéré 12 de vos pièces et capturé 2 pièces de l&apos;adversaire.</target>
       </trans-unit>
       <trans-unit id="4244295242962463153" datatype="html">
         <source>Failed, the best capture takes 2 of your opponent&apos;s pieces.</source>
-        <target>Pièces du joueur <x id="INTERPOLATION" equiv-text="{{ player + 1 }}"/></target>
+        <target>Raté, la meilleure capture prends 2 des pièces de votre adversaire.</target>
       </trans-unit>
       <trans-unit id="4172293183843503071" datatype="html">
         <source>This move is a ko, you must play somewhere else before you can play in this intersection again.</source>
-        <target>Ce mouvement est un ko, vous devez jouer ailleurs avant de pouvoir rejouer dans cette case</target>
+        <target>Ce mouvement est un ko, vous devez jouer ailleurs avant de pouvoir rejouer sur cette intersection.</target>
       </trans-unit>
-      <trans-unit id="9197288705784594537" datatype="html">
-        <source>We are not in playing nor in passed phase, you must mark stone as dead or alive or accept current board.</source>
-        <target>Ce n'est pas une phase de jeu ou une phase où il faut passer, vous devez marquer les pierres comme mortes ou vivantes, ou bien accepter l'état actuel du plateau..</target>
+      <trans-unit id="4507691580180510561" datatype="html">
+        <source>We are in counting phase, you must mark stones as dead or alive or accept current board.</source>
+        <target>Nous somme dans la phase decomptage, vous devez marquer les pierres comme mortes ou vivantes, ou bien accepter l'état actuel du plateau..</target>
       </trans-unit>
       <trans-unit id="4683884757780403263" datatype="html">
         <source>You cannot accept before the counting phase.</source>
@@ -2119,20 +2117,20 @@
         &lt;/ol&gt;&lt;br/&gt;
         Allez-y, grimpez !</target>
       </trans-unit>
-      <trans-unit id="697264300548703520" datatype="html">
+      <trans-unit id="7055621102989388488" datatype="html">
         <source>Congratulations!&lt;br/&gt;
         Some important notes:
         &lt;ol&gt;
-            &lt;li&gt; You cannot move a piece that is directly below another one.&lt;/li&gt;
-            &lt;li&gt; Of course, you cannot move the opponent&apos;s pieces.&lt;/li&gt;
-            &lt;li&gt; You can only climb when the landing square is higher than the starting square.&lt;/li&gt;
+            &lt;li&gt;You cannot move a piece that is directly below another one.&lt;/li&gt;
+            &lt;li&gt;Of course, you cannot move the opponent&apos;s pieces.&lt;/li&gt;
+            &lt;li&gt;You can only climb when the landing square is higher than the starting square.&lt;/li&gt;
         &lt;/ol&gt;</source>
         <target>Bravo !&lt;br/&gt;
         Notes importantes :
         &lt;ol&gt;
-            &lt;li&gt; On ne peut déplacer une pièce qui est en dessous d&apos;une autre.&lt;/li&gt;
-            &lt;li&gt; Naturellement, on ne peut pas déplacer les pièces adverses.&lt;/li&gt;
-            &lt;li&gt; Un déplacement ne peut se faire que quand la case d&apos;arrivée est plus haute que la case de départ.&lt;/li&gt;
+            &lt;li&gt;On ne peut déplacer une pièce qui est en dessous d&apos;une autre.&lt;/li&gt;
+            &lt;li&gt;Naturellement, on ne peut pas déplacer les pièces adverses.&lt;/li&gt;
+            &lt;li&gt;Un déplacement ne peut se faire que quand la case d&apos;arrivée est plus haute que la case de départ.&lt;/li&gt;
         &lt;/ol&gt;</target>
       </trans-unit>
       <trans-unit id="7244821610544753622" datatype="html">
@@ -2285,12 +2283,12 @@
         <source>What a move looks like (without animation)</source>
         <target>A quoi ressemble un mouvement (sans animation)</target>
       </trans-unit>
-      <trans-unit id="470293200268604229" datatype="html">
+      <trans-unit id="3695087807140370637" datatype="html">
         <source>When it is your turn:
         &lt;ol&gt;
-            &lt;li&gt; Click on one of your pieces or on a neutral piece. You cannot choose the piece of the opponent.
+            &lt;li&gt;Click on one of your pieces or on a neutral piece. You cannot choose the piece of the opponent.
                  You can only choose a piece from the edge of the board.&lt;/li&gt;
-            &lt;li&gt; Pick a direction in which you want to send the piece (by clicking on the arrow).&lt;/li&gt;
+            &lt;li&gt;Pick a direction in which you want to send the piece (by clicking on the arrow).&lt;/li&gt;
         &lt;/ol&gt;
         You have to imagine that the piece you picked has been moved to the other side of the board, in the chosen direction.
         Once on the other side, all pieces will move by one space in the opposing direction.
@@ -2418,13 +2416,13 @@
         Pour ce faire il faut occuper toutes les cases voisines de celle-ci.
         Ici, le joueur clair a perdu car sa pyramide tout à gauche est immobilisée.</target>
       </trans-unit>
-      <trans-unit id="6248955353391435185" datatype="html">
+      <trans-unit id="7043287762805865803" datatype="html">
         <source>To immobilize your opponent, you have to move your pyramids.
         When a pyramid shares its vertices with light spaces, it can move on these spaces (we call this a simple step)
         You&apos;re the first player, playing with the dark pyramids
         &lt;ol&gt;
-            &lt;li&gt; Click on one of your pyramids.&lt;/li&gt;
-            &lt;li&gt; Click then on one of the two or three neighboring spaces in order to move your pyramid there.&lt;/li&gt;
+            &lt;li&gt;Click on one of your pyramids.&lt;/li&gt;
+            &lt;li&gt;Click then on one of the two or three neighboring spaces in order to move your pyramid there.&lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
         Do any move.</source>
         <target>Pour parvenir à immobiliser l&apos;adversaire, il faut déplacer ses pyramides.
@@ -2444,12 +2442,12 @@
         <source>Double move</source>
         <target>Déplacement double</target>
       </trans-unit>
-      <trans-unit id="8816785185857430622" datatype="html">
+      <trans-unit id="8522179824520099976" datatype="html">
         <source>When a pyramid shares its vertices with dark spaces, it can move one or two steps.
         To do so:
         &lt;ol&gt;
-            &lt;li&gt; Click on the pyramid to move.&lt;/li&gt;
-            &lt;li&gt; Click on one of the 6 destinations that you can reach in two steps:
+            &lt;li&gt;Click on the pyramid to move.&lt;/li&gt;
+            &lt;li&gt;Click on one of the 6 destinations that you can reach in two steps:
                 the 6 neighboring light spaces of the 3 dark spaces that are neighbors of your pyramid.
         &lt;/ol&gt;</source>
         <target>Quand une pyramide partage ses arêtes avec des cases foncées, vous pouvez la déplacer de deux pas.
@@ -2782,10 +2780,10 @@
         <target>Au Tablut, toutes les pièces se déplacent de la même façon.
         De façon équivalente aux tours aux échecs, une pièce se déplace :
         &lt;ol&gt;
-            &lt;li&gt; D&apos;autant de case qu&apos;elle veut.&lt;/li&gt;
-            &lt;li&gt; Sans passer à travers ou s&apos;arrêter sur une autre pièce.&lt;/li&gt;
-            &lt;li&gt; Horizontalement ou verticalement.&lt;/li&gt;
-            &lt;li&gt; Seul le roi peut s&apos;arrêter sur un trône.&lt;/li&gt;
+            &lt;li&gt;D&apos;autant de case qu&apos;elle veut.&lt;/li&gt;
+            &lt;li&gt;Sans passer à travers ou s&apos;arrêter sur une autre pièce.&lt;/li&gt;
+            &lt;li&gt;Horizontalement ou verticalement.&lt;/li&gt;
+            &lt;li&gt;Seul le roi peut s&apos;arrêter sur un trône.&lt;/li&gt;
         &lt;/ol&gt;
         Pour déplacer une pièce, cliquez dessus, puis sur sa destination.&lt;br/&gt;&lt;br/&gt;
         Ceci est le plateau initial, faites le premier mouvement.</target>

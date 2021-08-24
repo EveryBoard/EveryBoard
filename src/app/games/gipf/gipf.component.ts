@@ -152,7 +152,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfPartSlic
             // We don't let the user choose it as it is ambiguous
             return this.cancelMove(GipfFailure.AMBIGUOUS_CAPTURE_COORD);
         } else if (captures.length === 0) {
-            return this.cancelMove(GipfFailure.NOT_PART_OF_CAPTURE);
+            return this.cancelMove(GipfFailure.MISSING_CAPTURES);
         }
         const capture: GipfCapture = captures[0];
 

@@ -37,8 +37,8 @@ export const saharaTutorial: TutorialStep[] = [
         When a pyramid shares its vertices with light spaces, it can move on these spaces (we call this a simple step)
         You're the first player, playing with the dark pyramids
         <ol>
-            <li> Click on one of your pyramids.</li>
-            <li> Click then on one of the two or three neighboring spaces in order to move your pyramid there.</li>
+            <li>Click on one of your pyramids.</li>
+            <li>Click then on one of the two or three neighboring spaces in order to move your pyramid there.</li>
         </ol><br/>
         Do any move.`,
         SaharaPartSlice.getInitialSlice(),
@@ -57,9 +57,9 @@ export const saharaTutorial: TutorialStep[] = [
         $localize`When a pyramid shares its vertices with dark spaces, it can move one or two steps.
         To do so:
         <ol>
-            <li> Click on the pyramid to move.</li>
-            <li> Click on one of the 6 destinations that you can reach in two steps:
-                the 6 neighboring light spaces of the 3 dark spaces that are neighbors of your pyramid.
+            <li>Click on the pyramid to move.</li>
+            <li>Click on one of the 6 destinations that you can reach in two steps:
+                 the 6 neighboring light spaces of the 3 dark spaces that are neighbors of your pyramid.
         </ol>`,
         SaharaPartSlice.getInitialSlice(),
         new SaharaMove(new Coord(7, 0), new Coord(5, 0)),

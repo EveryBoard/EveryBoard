@@ -33,7 +33,7 @@ export const dvonnTutorial: TutorialStep[] = [
     ),
     TutorialStep.fromMove(
         $localize`Disconnection`,
-        $localize`Red pieces are called "sources".
+        $localize`Pieces with a lightning strike are called "sources".
         When a stack is not directly nor indirectly connected to a source, it is removed from the board.
         You can move on a source: this forms a stack that contains the source, which therefore can never be disconnected.
         Besides this, a stack containing a source acts like any other stack: you can move it, and your opponent can move on that stack to take possession of it.<br/><br/>

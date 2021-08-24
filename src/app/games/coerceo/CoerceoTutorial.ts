@@ -134,7 +134,7 @@ export const coerceoTutorial: TutorialStep[] = [
             CoerceoMove.fromCoordToCoord(new Coord(7, 6), new Coord(8, 5)),
         ],
         $localize`Congratulations! See, your piece no longer had any empty neighboring space after you have gained the tile, but it stayed on the board as it was your turn.
-        However, the opponent's piece has disappeared because the tile's capture has removed its empty neighboring space.`,
+        However, the opponent's piece has disappeared because the tile's capture has removed its last empty neighboring space.`,
         $localize`Failed!`,
     ),
 ];

@@ -24,8 +24,8 @@ export const gipfTutorial: TutorialStep[] = [
         $localize`Pushing`,
         $localize`Pieces can only enter the board through the edges. To insert a new piece:
         <ol>
-            <li> Click on a space on the edge of the board.</li>
-            <li> If that space was already occupied, click on the arrow that indicates the direction in which you want to push the piece(s) already on the corresponding line.</li>
+            <li>Click on a space on the edge of the board.</li>
+            <li>If that space was already occupied, click on the arrow that indicates the direction in which you want to push the piece(s) already on the corresponding line.</li>
         </ol>
         You cannot push when a line is full.<br/><br/>
         You're playing Dark, insert a piece.`,
@@ -38,16 +38,16 @@ export const gipfTutorial: TutorialStep[] = [
         $localize`To capture, you must align 4 of your own pieces, which will be the first 4 captured pieces.
         There are multiple important aspects of a capture:
         <ol>
-            <li> When 4 pieces are captured, all pieces that are directly aligned with these 4 pieces are also captured.</li>
-            <li> As soon as there is an empty space on the line, the capture stops.</li>
-            <li> Your own pieces that are captured go back to your stock.
-                    Your opponent's pieces however are really captured and do not go back to your opponent's stock.</li>
-            <li> If you create a line of 4 of your opponent's pieces, it will be at the beginning of your opponent's turn that your opponent can capture them.
+            <li>When 4 pieces are captured, all pieces that are directly aligned with these 4 pieces are also captured.</li>
+            <li>As soon as there is an empty space on the line, the capture stops.</li>
+            <li>Your own pieces that are captured go back to your stock.
+                Your opponent's pieces however are really captured and do not go back to your opponent's stock.</li>
+            <li>If you create a line of 4 of your opponent's pieces, it will be at the beginning of your opponent's turn that your opponent can capture them.
                 This means that a turn happens in three phases:
                 <ol type="A">
-                    <li> Pick the capture(s) resulting from the last move of your opponent (by clicking on it).</li>
-                    <li> Make your insertion.</li>
-                    <li> Pick the capture(s) resulting from your move (by clicking on it).</li>
+                    <li>Pick the capture(s) resulting from the last move of your opponent (by clicking on it).</li>
+                    <li>Make your insertion.</li>
+                    <li>Pick the capture(s) resulting from your move (by clicking on it).</li>
                 </ol>
             </li>
         </ol><br/>
@@ -102,7 +102,7 @@ export const gipfTutorial: TutorialStep[] = [
                 new Coord(3, 6),
             ])],
         )],
-        $localize`Congratulations, you have gotten back 4 of your pieces and captured 2 of the opponent's ones.
+        $localize`Congratulations, you have gotten back 4 of your pieces and captured 2 of the opponent's.
         The most you can get is 3 per capture.`,
         $localize`Failed, the best capture was taking 2 of your opponent's pieces`,
     ),
@@ -200,8 +200,7 @@ export const gipfTutorial: TutorialStep[] = [
                 ],
             ),
         ],
-        $localize`Congratulations, you have gotten 12 of your pieces back and captured 2 of your opponent's pieces.
-        The maximum being 3 per capture.`,
+        $localize`Congratulations, you have gotten 12 of your pieces back and captured 2 of your opponent's pieces.`,
         $localize`Failed, the best capture takes 2 of your opponent's pieces.`,
     ),
 ];

@@ -21,9 +21,9 @@ export const quixoTutorial: TutorialStep[] = [
         $localize`What a move looks like (without animation)`,
         $localize`When it is your turn:
         <ol>
-            <li> Click on one of your pieces or on a neutral piece. You cannot choose the piece of the opponent.
-                 You can only choose a piece from the edge of the board.</li>
-            <li> Pick a direction in which you want to send the piece (by clicking on the arrow).</li>
+            <li>Click on one of your pieces or on a neutral piece. You cannot choose the piece of the opponent.
+                You can only choose a piece from the edge of the board.</li>
+            <li>Pick a direction in which you want to send the piece (by clicking on the arrow).</li>
         </ol>
         You have to imagine that the piece you picked has been moved to the other side of the board, in the chosen direction.
         Once on the other side, all pieces will move by one space in the opposing direction.
