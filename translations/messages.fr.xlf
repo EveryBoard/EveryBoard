@@ -1494,7 +1494,7 @@
         &lt;li&gt;Another way captures one of your opponent&apos;s pieces.&lt;/li&gt;
         &lt;li&gt;The last way captures two of your opponent&apos;s pieces.&lt;/li&gt;
         &lt;/ol&gt;
-        &lt;br/&gt;&lt;br/&gt;
+        &lt;br/&gt;
         Pick the last one.</source>
         <target>Ici, il est possible de capturer de trois façons différentes.
         &lt;ol&gt;
@@ -1688,8 +1688,8 @@
         <target>Un joueur, en posant une pierre, ne doit pas redonner au goban un état identique à l&apos;un de ceux qu&apos;il lui avait déjà donné, ce afin d&apos;empêcher qu&apos;une partie soit sans fin.&lt;br/&gt;&lt;br/&gt;
         Capturez la pierre claire.</target>
       </trans-unit>
-      <trans-unit id="1824324778467440502" datatype="html">
-        <source>Now, if Light tries to recapture the stone that Dark has put on the Goban, this one would go back to its previous state, opening the door for an endless game.
+      <trans-unit id="1862851019657740194" datatype="html">
+        <source>Now, if Light tries to recapture the stone that Dark has just put on the Goban, this one would go back to its previous state, opening the door for an endless game.
         This intersection is therefore marked with a red square, to remind the players that this intersection is forbidden.
         This rule is called the Ko.
         The trick for Light is to try to create a big enough threat so that Dark must answer immediately, and does not have the time to protect its last stone, so that Light can capture it right after.</source>
@@ -1809,9 +1809,9 @@
         Cependant, votre pièce rose est bloquée ! Dans ce cas ci, vous êtes obligé de passer votre tour.
         Foncé devra jouer son prochain tour en déplaçant lui-même sa pièce rose.</target>
       </trans-unit>
-      <trans-unit id="3704072447684559239" datatype="html">
+      <trans-unit id="5546725507412628775" datatype="html">
         <source>At any time, if a player blocks the entire game, that player loses.
-        In other words, if a player forces its opponent to move a piece that that opponent cannot move,
+        In other words, if a player forces its opponent to move a piece that the opponent cannot move,
         and the player cannot move its own piece of the same color, then that player loses.
         Here, you&apos;re playing Dark and you can force your opponent to create such a situation, hence you can force your opponent to lose!&lt;br/&gt;&lt;br/&gt;
         Try to make this move.</source>
@@ -1822,13 +1822,13 @@
         vous pouvez obliger votre adversaire à provoquer cette situation et donc l&apos;obliger à perdre !&lt;br/&gt;&lt;br/&gt;
         Essayez de faire ce mouvement.</target>
       </trans-unit>
-      <trans-unit id="1985891572391293358" datatype="html">
+      <trans-unit id="3072006962189197081" datatype="html">
         <source>Perfect!
-         Light must move its green piece on the orange square, forcing you to play with your orange piece.
+         Your opponent must move its green piece on the orange square, forcing you to play with your orange piece.
          Your orange piece will be stuck and you will have to pass your turn.
-         Light will have to pass its turn too because its orange piece is also stuck: the game is completely stuck.
+         Your opponent will have to pass its turn too because its orange piece is also stuck: the game is completely stuck.
          In this case, the last player to have moved a piece loses.
-         Here, Light will have moved its green piece last, you therefore win!</source>
+        Here, your opponent will have moved its green piece last, you therefore win!</source>
         <target>Parfait !
          Clair est obligé d&apos;avancer son pion vert sur la case orange, vous obligeant à joueur avec votre pion orange.
          Dès lors, votre pion orange sera bloqué et vous devrez donc passer votre tour.
@@ -1857,13 +1857,9 @@
         <source>At Lines of Actions, the goal is to group your pieces contiguously, orthogonally and/or diagonally.
         Here, Dark wins the game:
         Dark&apos;s pieces are forming a single group, while Light&apos;s pieces form three groups.</source>
-        <target>À Lines of Actions, le but est de regrouper toutes vos pièces de façon contigues, orthogonalement et/ou diagonalement.
+        <target>À Lines of Actions, le but est de regrouper toutes vos pièces de façon contigües, orthogonalement et/ou diagonalement.
         Ici, Foncé gagne la partie :
         ses pièces ne forment qu&apos;un seul groupe, alors que les pièces de Clair forment trois groupes.</target>
-      </trans-unit>
-      <trans-unit id="2502571338785795406" datatype="html">
-        <source>Initial board and moves</source>
-        <target>Plateau de départ et déplacement</target>
       </trans-unit>
       <trans-unit id="1803258759101178992" datatype="html">
         <source>Here is the initial board.
@@ -1929,9 +1925,9 @@
         If a player has only one piece, that player wins the game.&lt;br/&gt;&lt;br/&gt;
         On the following board, try to capture one piece with Dark.</source>
         <target>Si un déplacement se termine sur une pièce adverse, celle-ci est capturée et disparait du plateau.
-        Un déplacement par contre ne peut pas se terminer sur une pièce du joueur lui-même.
+        Votre déplacement par contre ne peut pas se terminer sur une de vos pièces.
         Attention, avoir moins de pièces à Lines of Action rend plus atteignable la condition de victoire,
-        car il est plus facile de regrouper moins de pièces !
+        car il est plus facile de regrouper un petit nombre de pièces !
         D&apos;ailleurs, s&apos;il reste une seule pièce à un joueur, il gagne la partie.&lt;br/&gt;&lt;br/&gt;
         Dans la configuration suivante, avec Foncé, essayez de capturer une pièce.</target>
       </trans-unit>
@@ -1947,9 +1943,9 @@
         simultanément, alors la partie se termine par une égalité.&lt;br/&gt;&lt;br/&gt;
         Vous jouez Foncé, forcez l&apos;égalité en un coup.</target>
       </trans-unit>
-      <trans-unit id="8220333311843814635" datatype="html">
-        <source>This column is full. Put your piece in a non-full column.</source>
-        <target>Veuillez placer votre pièce dans une colonne non remplie.</target>
+      <trans-unit id="72858407864349220" datatype="html">
+        <source>Please put your piece in a incomplete column.</source>
+        <target>Veuillez placer votre pièce dans une colonne incomplète.</target>
       </trans-unit>
       <trans-unit id="4036586801649294358" datatype="html">
         <source>The board at Four in a Row is made of 7 columns and 6 rows, and it is initially empty.
@@ -2007,7 +2003,7 @@
       </trans-unit>
       <trans-unit id="5443268424960392940" datatype="html">
         <source>The initial Pentago board is made of 6x6 spaces, subdivided in 4 blocks, which can each rotate.</source>
-        <target>Le plateau du pentago fait 6 cases de haut et de large, et est composé de quatre quadrants, ceux-ci pouvant effectuer des rotations</target>
+        <target>Le plateau du Pentago est composé de 6x6 cases, et est subdivisé en quatre quadrants, ceux-ci pouvant effectuer des rotations.</target>
       </trans-unit>
       <trans-unit id="821589059503120913" datatype="html">
         <source>The goal at Pentago is to align 5 of your pieces. In the following board, Dark wins.</source>
@@ -2038,7 +2034,7 @@
       <trans-unit id="1712930066423533652" datatype="html">
         <source>After putting a piece, arrows will appear on non-neutral blocks.&lt;br/&gt;&lt;br/&gt;
         Click on one of them and see the rotation!</source>
-        <target>Après avoir déposé sa pièce, des flèches apparaîtront sur les quadrants non neutres.&lt;br/&gt;&lt;br/&gt;
+        <target>Après avoir déposé une pièce, des flèches apparaîtront sur les quadrants non neutres.&lt;br/&gt;&lt;br/&gt;
         Cliquez sur l&apos;une d&apos;entre elles et voyez la rotation !</target>
       </trans-unit>
       <trans-unit id="5427363142376983767" datatype="html">
@@ -2075,21 +2071,21 @@
       </trans-unit>
       <trans-unit id="8839913211108039860" datatype="html">
         <source>Your second capture is invalid.</source>
-        <target>Votre seconde capture est invalide</target>
+        <target>Votre seconde capture est invalide.</target>
       </trans-unit>
-      <trans-unit id="6119747591536950491" datatype="html">
+      <trans-unit id="3567680797279323593" datatype="html">
         <source>At Pylos, the goal is to be the last to play.
         To do this, you have to save up your pieces.
         As soon as a player puts its last piece, that player loses the game immediately.
         Here is what the initial board looks like, it is a board of 4 x 4 squares.
         This board will become a pyramid, little by little.
-        It will be filled by the pieces of your stock, of which each player has 15.</source>
+        It will be filled by the pieces of your stock. Each player has 15 pieces.</source>
         <target>Au Pylos, le but est d&apos;être le dernier à jouer.
         Pour cela, il faut économiser ses pièces.
         Dès qu&apos;un joueur dépose sa dernière pièce, il perd immédiatement la partie.
         Voici à quoi ressemble le plateau initial, un plateau de 4 x 4 cases.
         Celui-ci deviendra une pyramide petit à petit.
-        Ce plateau sera rempli par les pièces dans votre réserve, au nombre de 15 chacun.</target>
+        Ce plateau sera rempli par les pièces dans votre réserve. Chaque joueur a 15 pièces.</target>
       </trans-unit>
       <trans-unit id="5521539166247507576" datatype="html">
         <source>When it is your turn, you can always drop one of your piece on an empty square.
@@ -2145,8 +2141,8 @@
         <source>Square (1/3)</source>
         <target>Carré (1/3)</target>
       </trans-unit>
-      <trans-unit id="7499997319299935391" datatype="html">
-        <source>When the piece you&apos;re moving is the fourth one of a square of your color,
+      <trans-unit id="7156552420001155973" datatype="html">
+        <source>When the piece you just moved or dropped is the fourth one of a square of your color,
         you can choose anywhere on the board one or two of your pieces.
         These pieces will be removed from the board, allowing you to save up one or two pieces.
         A chosen piece must not be directly below another piece.

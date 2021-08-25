@@ -96,7 +96,7 @@ export const kamisadoTutorial: TutorialStep[] = [
     TutorialStep.fromMove(
         $localize`Victory by blocking`,
         $localize`At any time, if a player blocks the entire game, that player loses.
-        In other words, if a player forces its opponent to move a piece that that opponent cannot move,
+        In other words, if a player forces its opponent to move a piece that the opponent cannot move,
         and the player cannot move its own piece of the same color, then that player loses.
         Here, you're playing Dark and you can force your opponent to create such a situation, hence you can force your opponent to lose!<br/><br/>
         Try to make this move.`,
@@ -112,11 +112,11 @@ export const kamisadoTutorial: TutorialStep[] = [
         ]),
         [KamisadoMove.of(new Coord(2, 4), new Coord(0, 2))],
         $localize`Perfect!
-         Light must move its green piece on the orange square, forcing you to play with your orange piece.
+         Your opponent must move its green piece on the orange square, forcing you to play with your orange piece.
          Your orange piece will be stuck and you will have to pass your turn.
-         Light will have to pass its turn too because its orange piece is also stuck: the game is completely stuck.
+         Your opponent will have to pass its turn too because its orange piece is also stuck: the game is completely stuck.
          In this case, the last player to have moved a piece loses.
-         Here, Light will have moved its green piece last, you therefore win!`,
+         Here, your opponent will have moved its green piece last, you therefore win!`,
         $localize`Failed!`,
     ),
 ];

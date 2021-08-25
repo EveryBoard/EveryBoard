@@ -140,7 +140,7 @@ export const goTutorial: TutorialStep[] = [
             [_, _, _, _, _, _, _],
         ], [0, 0], 0, MGPOptional.empty(), Phase.PLAYING),
         [new GoMove(4, 3)],
-        $localize`Now, if Light tries to recapture the stone that Dark has put on the Goban, this one would go back to its previous state, opening the door for an endless game.
+        $localize`Now, if Light tries to recapture the stone that Dark has just put on the Goban, this one would go back to its previous state, opening the door for an endless game.
         This intersection is therefore marked with a red square, to remind the players that this intersection is forbidden.
         This rule is called the Ko.
         The trick for Light is to try to create a big enough threat so that Dark must answer immediately, and does not have the time to protect its last stone, so that Light can capture it right after.`,

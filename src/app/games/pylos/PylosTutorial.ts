@@ -16,7 +16,7 @@ export const pylosTutorial: TutorialStep[] = [
         As soon as a player puts its last piece, that player loses the game immediately.
         Here is what the initial board looks like, it is a board of 4 x 4 squares.
         This board will become a pyramid, little by little.
-        It will be filled by the pieces of your stock, of which each player has 15.`,
+        It will be filled by the pieces of your stock. Each player has 15 pieces.`,
         PylosPartSlice.getInitialSlice(),
     ),
     TutorialStep.anyMove(
@@ -67,7 +67,7 @@ export const pylosTutorial: TutorialStep[] = [
     ),
     TutorialStep.fromMove(
         $localize`Square (1/3)`,
-        $localize`When the piece you're moving is the fourth one of a square of your color,
+        $localize`When the piece you just moved or dropped is the fourth one of a square of your color,
         you can choose anywhere on the board one or two of your pieces.
         These pieces will be removed from the board, allowing you to save up one or two pieces.
         A chosen piece must not be directly below another piece.

@@ -26,7 +26,7 @@ export const linesOfActionTutorial: TutorialStep[] = [
         ], 0),
     ),
     TutorialStep.anyMove(
-        $localize`Initial board and moves`,
+        $localize`Initial board and initial move`,
         $localize`Here is the initial board.
          Moves can be made orthogonally or diagonally.
          The length of a move is equal to the number of pieces that are on the line of the move.

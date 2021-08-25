@@ -1180,8 +1180,8 @@
         <source>A player, by putting a stone, cannot go back to an identical state of the Goban as before, in order to avoid an endless game.&lt;br/&gt;&lt;br/&gt;
         Capture the light stone.</source>
       </trans-unit>
-      <trans-unit id="1824324778467440502" datatype="html">
-        <source>Now, if Light tries to recapture the stone that Dark has put on the Goban, this one would go back to its previous state, opening the door for an endless game.
+      <trans-unit id="1862851019657740194" datatype="html">
+        <source>Now, if Light tries to recapture the stone that Dark has just put on the Goban, this one would go back to its previous state, opening the door for an endless game.
         This intersection is therefore marked with a red square, to remind the players that this intersection is forbidden.
         This rule is called the Ko.
         The trick for Light is to try to create a big enough threat so that Dark must answer immediately, and does not have the time to protect its last stone, so that Light can capture it right after.</source>
@@ -1258,20 +1258,20 @@
       <trans-unit id="8029874053731693714" datatype="html">
         <source>Victory by blocking</source>
       </trans-unit>
-      <trans-unit id="3704072447684559239" datatype="html">
+      <trans-unit id="5546725507412628775" datatype="html">
         <source>At any time, if a player blocks the entire game, that player loses.
-        In other words, if a player forces its opponent to move a piece that that opponent cannot move,
+        In other words, if a player forces its opponent to move a piece that the opponent cannot move,
         and the player cannot move its own piece of the same color, then that player loses.
         Here, you&apos;re playing Dark and you can force your opponent to create such a situation, hence you can force your opponent to lose!&lt;br/&gt;&lt;br/&gt;
         Try to make this move.</source>
       </trans-unit>
-      <trans-unit id="1985891572391293358" datatype="html">
+      <trans-unit id="3072006962189197081" datatype="html">
         <source>Perfect!
-         Light must move its green piece on the orange square, forcing you to play with your orange piece.
+         Your opponent must move its green piece on the orange square, forcing you to play with your orange piece.
          Your orange piece will be stuck and you will have to pass your turn.
-         Light will have to pass its turn too because its orange piece is also stuck: the game is completely stuck.
+         Your opponent will have to pass its turn too because its orange piece is also stuck: the game is completely stuck.
          In this case, the last player to have moved a piece loses.
-         Here, Light will have moved its green piece last, you therefore win!</source>
+         Here, your opponent will have moved its green piece last, you therefore win!</source>
       </trans-unit>
       <trans-unit id="6387863170048380356" datatype="html">
         <source>Your move should have a length equal to the number of pieces that exist on the same line.</source>
@@ -1289,9 +1289,6 @@
         <source>At Lines of Actions, the goal is to group your pieces contiguously, orthogonally and/or diagonally.
         Here, Dark wins the game:
         Dark&apos;s pieces are forming a single group, while Light&apos;s pieces form three groups.</source>
-      </trans-unit>
-      <trans-unit id="2502571338785795406" datatype="html">
-        <source>Initial board and moves</source>
       </trans-unit>
       <trans-unit id="1803258759101178992" datatype="html">
         <source>Here is the initial board.
@@ -1343,8 +1340,8 @@
         then the game ends up with a tie.&lt;br/&gt;&lt;br/&gt;
         You&apos;re playing Dark, force the tie in one move.</source>
       </trans-unit>
-      <trans-unit id="8220333311843814635" datatype="html">
-        <source>This column is full. Put your piece in a non-full column.</source>
+      <trans-unit id="72858407864349220" datatype="html">
+        <source>Please put your piece in a incomplete column.</source>
       </trans-unit>
       <trans-unit id="4036586801649294358" datatype="html">
         <source>The board at Four in a Row is made of 7 columns and 6 rows, and it is initially empty.
@@ -1437,13 +1434,13 @@
       <trans-unit id="8839913211108039860" datatype="html">
         <source>Your second capture is invalid.</source>
       </trans-unit>
-      <trans-unit id="6119747591536950491" datatype="html">
+      <trans-unit id="3567680797279323593" datatype="html">
         <source>At Pylos, the goal is to be the last to play.
         To do this, you have to save up your pieces.
         As soon as a player puts its last piece, that player loses the game immediately.
         Here is what the initial board looks like, it is a board of 4 x 4 squares.
         This board will become a pyramid, little by little.
-        It will be filled by the pieces of your stock, of which each player has 15.</source>
+        It will be filled by the pieces of your stock. Each player has 15 pieces.</source>
       </trans-unit>
       <trans-unit id="5521539166247507576" datatype="html">
         <source>When it is your turn, you can always drop one of your piece on an empty square.
@@ -1478,8 +1475,8 @@
       <trans-unit id="7244821610544753622" datatype="html">
         <source>Square (1/3)</source>
       </trans-unit>
-      <trans-unit id="7499997319299935391" datatype="html">
-        <source>When the piece you&apos;re moving is the fourth one of a square of your color,
+      <trans-unit id="7156552420001155973" datatype="html">
+        <source>When the piece you just moved or dropped is the fourth one of a square of your color,
         you can choose anywhere on the board one or two of your pieces.
         These pieces will be removed from the board, allowing you to save up one or two pieces.
         A chosen piece must not be directly below another piece.
