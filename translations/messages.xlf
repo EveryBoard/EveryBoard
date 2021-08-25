@@ -1063,10 +1063,10 @@
       <trans-unit id="6859741057618390920" datatype="html">
         <source>Capturing (3/3)</source>
       </trans-unit>
-      <trans-unit id="1697647848066799342" datatype="html">
+      <trans-unit id="3537904836524456622" datatype="html">
         <source>Here, you must capture at the beginning of your turn.
         This is due to a move of your opponent at the previous turn
-        (even though this is a fictional game for pedagogical purpose).
+        (even though this is a ficticious board for pedagogical purpose).
         After your capture, by performing the right move you can even capture two more of your opponent&apos;s pieces!
         Keep it mind that the most useful in a capture is to take your opponent&apos;s pieces.</source>
       </trans-unit>
@@ -1079,8 +1079,8 @@
       <trans-unit id="4172293183843503071" datatype="html">
         <source>This move is a ko, you must play somewhere else before you can play in this intersection again.</source>
       </trans-unit>
-      <trans-unit id="4507691580180510561" datatype="html">
-        <source>We are in counting phase, you must mark stones as dead or alive or accept current board.</source>
+      <trans-unit id="4133892808569917446" datatype="html">
+        <source>We are in the counting phase, you must mark stones as dead or alive or accept the current board by passing your turn.</source>
       </trans-unit>
       <trans-unit id="4683884757780403263" datatype="html">
         <source>You cannot accept before the counting phase.</source>
@@ -1116,8 +1116,8 @@
       <trans-unit id="4986672646268662936" datatype="html">
         <source>Congratulations, you have earned one point.</source>
       </trans-unit>
-      <trans-unit id="4290161289688830140" datatype="html">
-        <source>Failed, try again by playing on one of the intersection directly next to the light stone.</source>
+      <trans-unit id="8619305565260847147" datatype="html">
+        <source>Failed, try again by playing on one of the intersections directly next to the light stone.</source>
       </trans-unit>
       <trans-unit id="8946006948417629723" datatype="html">
         <source>Capturing multiple stones</source>
@@ -1144,13 +1144,13 @@
       <trans-unit id="2066383177849177665" datatype="html">
         <source>Life and death (death)</source>
       </trans-unit>
-      <trans-unit id="5995146621586456333" datatype="html">
+      <trans-unit id="980106659730787095" datatype="html">
         <source>From the capture rule follows the life and death notion:
         dead stones are stones that are definitely capturable (without losing anything else).
         Alive stones are stones that can never be captured.
         From the capture rule, Dark can play inside Light&apos;s territory and make a capture.
         In this case, we say that Light has only one eye (its last freedom) and that Light is dead (even if not yet captured).
-        At the end of the game, the dead stone will count as a capture, and the intersection it occupies as a territory.</source>
+        At the end of the game, the dead stones will count as captures, and the intersections they occupy as territories.</source>
       </trans-unit>
       <trans-unit id="6721138878022657917" datatype="html">
         <source>Life and death (eyes)</source>
@@ -1176,11 +1176,11 @@
         <source>A player, by putting a stone, cannot go back to an identical state of the Goban as before, in order to avoid an endless game.&lt;br/&gt;&lt;br/&gt;
         Capture the light stone.</source>
       </trans-unit>
-      <trans-unit id="8268334913018353590" datatype="html">
-        <source>Now, if Light tries to recapture the stone that Dark has put on the board, the Goban would go back to its previous state, opening the door for an endless game.
-        This intersection is therefore marked with a red triangle, to remind the players that this intersection is forbidden.
+      <trans-unit id="1824324778467440502" datatype="html">
+        <source>Now, if Light tries to recapture the stone that Dark has put on the Goban, this one would go back to its previous state, opening the door for an endless game.
+        This intersection is therefore marked with a red square, to remind the players that this intersection is forbidden.
         This rule is called the Ko.
-        The trick for Light is to try to create a big enough threat so that Dark must answer immediately, and does not have the time to protect its last stone, so that Light can capture it.</source>
+        The trick for Light is to try to create a big enough threat so that Dark must answer immediately, and does not have the time to protect its last stone, so that Light can capture it right after.</source>
       </trans-unit>
       <trans-unit id="1867501821252119171" datatype="html">
         <source>When a player feels that there is no advantage to putting a new stone, that player can pass a turn.

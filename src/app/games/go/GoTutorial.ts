@@ -50,7 +50,7 @@ export const goTutorial: TutorialStep[] = [
         ], [0, 0], 0, MGPOptional.empty(), Phase.PLAYING),
         [new GoMove(3, 2)],
         $localize`Congratulations, you have earned one point.`,
-        $localize`Failed, try again by playing on one of the intersection directly next to the light stone.`,
+        $localize`Failed, try again by playing on one of the intersections directly next to the light stone.`,
     ),
     TutorialStep.fromMove(
         $localize`Capturing multiple stones`,
@@ -88,7 +88,7 @@ export const goTutorial: TutorialStep[] = [
         Alive stones are stones that can never be captured.
         From the capture rule, Dark can play inside Light's territory and make a capture.
         In this case, we say that Light has only one eye (its last freedom) and that Light is dead (even if not yet captured).
-        At the end of the game, the dead stone will count as a capture, and the intersection it occupies as a territory.`,
+        At the end of the game, the dead stones will count as captures, and the intersections they occupy as territories.`,
         new GoPartSlice([
             [_, _, _, _, _],
             [O, O, O, _, _],
@@ -140,10 +140,10 @@ export const goTutorial: TutorialStep[] = [
             [_, _, _, _, _, _, _],
         ], [0, 0], 0, MGPOptional.empty(), Phase.PLAYING),
         [new GoMove(4, 3)],
-        $localize`Now, if Light tries to recapture the stone that Dark has put on the board, the Goban would go back to its previous state, opening the door for an endless game.
-        This intersection is therefore marked with a red triangle, to remind the players that this intersection is forbidden.
+        $localize`Now, if Light tries to recapture the stone that Dark has put on the Goban, this one would go back to its previous state, opening the door for an endless game.
+        This intersection is therefore marked with a red square, to remind the players that this intersection is forbidden.
         This rule is called the Ko.
-        The trick for Light is to try to create a big enough threat so that Dark must answer immediately, and does not have the time to protect its last stone, so that Light can capture it.`,
+        The trick for Light is to try to create a big enough threat so that Dark must answer immediately, and does not have the time to protect its last stone, so that Light can capture it right after.`,
         $localize`Failed!`,
     ),
     TutorialStep.fromMove(

@@ -800,7 +800,7 @@
         Capture them.</source>
         <target>En distribuant votre maison la plus à gauche, vous ferez passer une première maison de 2 à 3 graines, et la deuxième de 1 à 2.
         Ces deux maisons, étant consécutives, seront donc toutes les deux capturées.&lt;br/&gt;&lt;br/&gt;
-        Capturez-les.</target>
+        Capturez les.</target>
       </trans-unit>
       <trans-unit id="830087202472977218" datatype="html">
         <source>Nice, you win 3 points from the first house, and 2 from the second!</source>
@@ -1475,7 +1475,7 @@
                 &lt;/ol&gt;
             &lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
-        Vous jouez Foncé, une capture est faisable, faites la.</target>
+        Vous jouez Foncé, une capture est faisable, faites-la !</target>
       </trans-unit>
       <trans-unit id="8768850104658663274" datatype="html">
         <source>Congratulations, you have gotten 4 of your pieces back. This is not the most useful capture.
@@ -1511,10 +1511,10 @@
         <source>Capturing (3/3)</source>
         <target>Capture (3/3)</target>
       </trans-unit>
-      <trans-unit id="1697647848066799342" datatype="html">
+      <trans-unit id="3537904836524456622" datatype="html">
         <source>Here, you must capture at the beginning of your turn.
         This is due to a move of your opponent at the previous turn
-        (even though this is a fictional game for pedagogical purpose).
+        (even though this is a ficticious board for pedagogical purpose).
         After your capture, by performing the right move you can even capture two more of your opponent&apos;s pieces!
         Keep it mind that the most useful in a capture is to take your opponent&apos;s pieces.</source>
         <target>Ici, vous aurez une capture à faire au début de votre tour.
@@ -1535,9 +1535,9 @@
         <source>This move is a ko, you must play somewhere else before you can play in this intersection again.</source>
         <target>Ce mouvement est un ko, vous devez jouer ailleurs avant de pouvoir rejouer sur cette intersection.</target>
       </trans-unit>
-      <trans-unit id="4507691580180510561" datatype="html">
-        <source>We are in counting phase, you must mark stones as dead or alive or accept current board.</source>
-        <target>Nous somme dans la phase decomptage, vous devez marquer les pierres comme mortes ou vivantes, ou bien accepter l'état actuel du plateau..</target>
+      <trans-unit id="4133892808569917446" datatype="html">
+        <source>We are in the counting phase, you must mark stones as dead or alive or accept the current board by passing your turn.</source>
+        <target>Nous somme dans la phase de comptage, vous devez marquer les pierres comme mortes ou vivantes, ou bien accepter l'état actuel du plateau en passant votre tour.</target>
       </trans-unit>
       <trans-unit id="4683884757780403263" datatype="html">
         <source>You cannot accept before the counting phase.</source>
@@ -1585,14 +1585,14 @@
         <target>Une pierre isolée, comme la pierre claire au milieu, a 4 intersections voisines (et non 8, car on ne compte pas les diagonales).
         Si une intersection voisine est inoccupée, elle est appelée liberté.
         Si Foncé joue sur la dernière liberté de la pierre claire, cette pierre est enlevée du goban (capturée) et rapporte un point à Foncé.&lt;br/&gt;&lt;br/&gt;
-        Il ne reste plus qu&apos;une liberté à la pierre claire, capturez-la.</target>
+        Il ne reste plus qu&apos;une liberté à la pierre claire, capturez la.</target>
       </trans-unit>
       <trans-unit id="4986672646268662936" datatype="html">
         <source>Congratulations, you have earned one point.</source>
         <target>Bravo, vous avez gagné un point.</target>
       </trans-unit>
-      <trans-unit id="4290161289688830140" datatype="html">
-        <source>Failed, try again by playing on one of the intersection directly next to the light stone.</source>
+      <trans-unit id="8619305565260847147" datatype="html">
+        <source>Failed, try again by playing on one of the intersections directly next to the light stone.</source>
         <target>Raté, réessayez en jouant sur l&apos;une des intersections immédiatement voisines de la pierre claire.</target>
       </trans-unit>
       <trans-unit id="8946006948417629723" datatype="html">
@@ -1623,7 +1623,7 @@
         Here, the top left intersection is a suicide for Light.
         On the bottom right, it would be a suicide for Dark, and on the bottom left it is not a suicide for any player.</source>
         <target>Au Go le suicide est interdit.
-        Quand mettre une pierre sur une intersection ferait que le groupe de votre dernière pierre n&apos;a aucune liberté et ne capture aucunes pierres, jouer cette intersection serait un suicide, et est donc interdit.
+        Quand mettre une pierre sur une intersection ferait que le groupe de votre dernière pierre n&apos;a aucune liberté et ne capture aucune pierre, alors jouer cette intersection serait un suicide, et est donc interdit.
         Ici, l&apos;intersection en haut à gauche est un suicide pour Clair.
         En bas à droite, un suicide pour Foncé, et en bas à gauche n&apos;est un suicide pour aucun joueur.</target>
       </trans-unit>
@@ -1631,19 +1631,19 @@
         <source>Life and death (death)</source>
         <target>Vie et mort (mort)</target>
       </trans-unit>
-      <trans-unit id="5995146621586456333" datatype="html">
+      <trans-unit id="980106659730787095" datatype="html">
         <source>From the capture rule follows the life and death notion:
         dead stones are stones that are definitely capturable (without losing anything else).
         Alive stones are stones that can never be captured.
         From the capture rule, Dark can play inside Light&apos;s territory and make a capture.
         In this case, we say that Light has only one eye (its last freedom) and that Light is dead (even if not yet captured).
-        At the end of the game, the dead stone will count as a capture, and the intersection it occupies as a territory.</source>
+        At the end of the game, the dead stones will count as captures, and the intersections they occupy as territories.</source>
         <target>De la règle de capture découle la notion de vie et de mort :
         des pierres mortes sont des pierres que l&apos;on est sûr de pouvoir capturer (sans rien y perdre ailleurs).
         Tandis que des pierres vivantes sont des pierres que l&apos;on ne peut plus espérer capturer.
         D&apos;après la règle de capture, Foncé peut jouer à l&apos;intérieur du territoire de Clair et le capturer.
         On dit dans ce cas que Clair n&apos;a qu&apos;un œil (sa dernière liberté) et qu&apos;il est mort (même si pas encore capturé).
-        En fin de partie, la pierre morte est comptée comme une capture, et la case qu&apos;elle occupe comme un territoire.</target>
+        En fin de partie, les pierres mortes sont comptées comme captures, et les cases qu&apos;elles occupent comme territoires.</target>
       </trans-unit>
       <trans-unit id="6721138878022657917" datatype="html">
         <source>Life and death (eyes)</source>
@@ -1654,7 +1654,7 @@
         Light will never be able to capture Dark.
         We say that Dark has two eyes (the eye on the top left, and the one on the bottom left) and that Dark is alive.</source>
         <target>Ici, Clair ne pouvant jouer ni en haut à gauche, ni en bas à gauche, il ne pourra jamais capturer Foncé.
-        On dit alors que Foncé a deux yeux (l&apos;oeil en haut à gauche et celui en bas à gauche) et qu&apos;il est vivant.</target>
+        On dit alors que Foncé a deux yeux (l&apos;œil en haut à gauche et celui en bas à gauche) et qu&apos;il est vivant.</target>
       </trans-unit>
       <trans-unit id="8745919880228059784" datatype="html">
         <source>Seki</source>
@@ -1665,8 +1665,8 @@
         Similarly, if Light plays on the middle line, Dark will capture Light.
         In other words, there is no point in playing on the middle line.
         In that case, we say that stones in the middle are alive by Seki, and that both intersections in the middle are neutral.</source>
-        <target>Si Foncé joue au milieu en haut (ou en bas), Clair jouera au milieu en bas (ou en haut) et le capturera.
-        De même, si Clair joue au milieu haut (ou en bas), Foncé le capturera.
+        <target>Si Foncé joue sur la colonne du milieu, Clair jouera sur l'autre intersection libre de la colonne du milieu, et capturera Clair.
+         De même, si Clair joue sur la colonne du milieu, Foncé jouera sur l'autre intersection libre de la colonne du milieu et capturera Foncé.
         Autrement dit, personne n&apos;a intérêt à jouer au milieu.
         Dans ce cas, on dit que les pierres du milieu sont vivantes par Seki, et que les deux intersections du milieu sont des intersections neutres.</target>
       </trans-unit>
@@ -1680,15 +1680,15 @@
         <target>Un joueur, en posant une pierre, ne doit pas redonner au goban un état identique à l&apos;un de ceux qu&apos;il lui avait déjà donné, ce afin d&apos;empêcher qu&apos;une partie soit sans fin.&lt;br/&gt;&lt;br/&gt;
         Capturez la pierre claire.</target>
       </trans-unit>
-      <trans-unit id="8268334913018353590" datatype="html">
-        <source>Now, if Light tries to recapture the stone that Dark has put on the board, the Goban would go back to its previous state, opening the door for an endless game.
-        This intersection is therefore marked with a red triangle, to remind the players that this intersection is forbidden.
+      <trans-unit id="1824324778467440502" datatype="html">
+        <source>Now, if Light tries to recapture the stone that Dark has put on the Goban, this one would go back to its previous state, opening the door for an endless game.
+        This intersection is therefore marked with a red square, to remind the players that this intersection is forbidden.
         This rule is called the Ko.
-        The trick for Light is to try to create a big enough threat so that Dark must answer immediately, and does not have the time to protect its last stone, so that Light can capture it.</source>
+        The trick for Light is to try to create a big enough threat so that Dark must answer immediately, and does not have the time to protect its last stone, so that Light can capture it right after.</source>
         <target>Maintenant, si Clair essaye de recapturer la pierre que Foncé vient de poser, il rendrait au goban son état précédent, ouvrant la porte à une partie sans fin.
-         L&apos;emplacement de cette pièce est donc marqué d&apos;un rectangle rouge, pour rappeler que c&apos;est une intersection interdite.
+         L&apos;emplacement de cette pièce est donc marqué d&apos;un carré rouge, pour rappeler que c&apos;est une intersection interdite.
          Cette règle s&apos;appelle le Ko.
-         Toute l&apos;astuce pour Clair consiste, à essayer de créer une menace suffisamment grave pour que Foncé ait intérêt à y répondre immédiatement, et n&apos;ait pas le temps de protéger sa dernière pierre, afin que Clair puisse la recapturer.</target>
+         Toute l&apos;astuce pour Clair consiste, à essayer de créer une menace suffisamment grave pour que Foncé ait intérêt à y répondre immédiatement, et n&apos;ait pas le temps de protéger sa dernière pierre, afin que Clair puisse la recapturer juste après.</target>
       </trans-unit>
       <trans-unit id="1867501821252119171" datatype="html">
         <source>When a player feels that there is no advantage to putting a new stone, that player can pass a turn.
@@ -1728,7 +1728,7 @@
       </trans-unit>
       <trans-unit id="945155491646703687" datatype="html">
         <source>You can only move forward, orthogonally or diagonally.</source>
-        <target>Vous ne pouvez pas vous déplacer que vers l&apos;avant orthogonalement ou diagonalement.</target>
+        <target>Vous ne pouvez vous déplacer que vers l&apos;avant orthogonalement ou diagonalement.</target>
       </trans-unit>
       <trans-unit id="551820034442685617" datatype="html">
         <source>This move is blocked by another piece.</source>
@@ -2586,7 +2586,7 @@
         &lt;/ol&gt;
         Votre pièce tout en haut à droite ne peut pas pousser car il y a une montagne de trop.
         Votre pièce tout en bas à droite, elle, peut pousser.&lt;br/&gt;&lt;br/&gt;
-        Faites-le.</target>
+        Faites-le !</target>
       </trans-unit>
       <trans-unit id="4320644310018984490" datatype="html">
         <source>The game ends when a mountain is pushed out of the board.
@@ -2800,7 +2800,7 @@
         <target>Toutes les pièces, attaquantes comme défenseuses, sont des soldats, à l&apos;exception du roi.
         Pour les capturer, il faut en prendre une en sandwich entre deux de vos soldats.
         En s&apos;approchant trop, un pion de l&apos;envahisseur s&apos;est mis en danger.&lt;br/&gt;&lt;br/&gt;
-        Capturez-le.</target>
+        Capturez le.</target>
       </trans-unit>
       <trans-unit id="1504890408061490574" datatype="html">
         <source>Congratulations, that will teach him a lesson!</source>
@@ -2820,7 +2820,7 @@
         Capture it.</source>
         <target>Un deuxième moyen de capturer un soldat, est contre un trône vide.
         Le Roi a quitté son poste, et mis en danger un de ses soldats.&lt;br/&gt;&lt;br/&gt;
-        Capturez-le.</target>
+        Capturez le.</target>
       </trans-unit>
       <trans-unit id="6149168030196118189" datatype="html">
         <source>Congratulations, one less defender. But keep an eye on the king, it is the most important.</source>

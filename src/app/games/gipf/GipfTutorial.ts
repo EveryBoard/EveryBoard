@@ -110,7 +110,7 @@ export const gipfTutorial: TutorialStep[] = [
         $localize`Capturing (3/3)`,
         $localize`Here, you must capture at the beginning of your turn.
         This is due to a move of your opponent at the previous turn
-        (even though this is a fictional game for pedagogical purpose).
+        (even though this is a ficticious board for pedagogical purpose).
         After your capture, by performing the right move you can even capture two more of your opponent's pieces!
         Keep it mind that the most useful in a capture is to take your opponent's pieces.`,
         new GipfPartSlice(GipfBoard.of([
