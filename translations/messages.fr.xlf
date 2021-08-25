@@ -1429,7 +1429,7 @@
         &lt;/ol&gt;
         You cannot push when a line is full.&lt;br/&gt;&lt;br/&gt;
         You&apos;re playing Dark, insert a piece.</source>
-        <target>Les pièces ne peuvent entrer sur le plateau que par l&apos;extérieur.
+        <target>Les pièces ne peuvent entrer sur le plateau que par l&apos;extérieur. Pour insérer une nouvelle pièce :
         &lt;ol&gt;
             &lt;li&gt;Cliquez sur une case sur le bord du plateau.&lt;/li&gt;
             &lt;li&gt;Si cette case était occupée, cliquez ensuite sur la flèche représentant la direction dans laquelle pousser la/les pièces déjà présentes dans la rangée.&lt;/li&gt;
@@ -1487,15 +1487,23 @@
         <source>Capturing (2/3)</source>
         <target>Capture (2/3)</target>
       </trans-unit>
-      <trans-unit id="6012182624396746560" datatype="html">
+      <trans-unit id="723905750865646237" datatype="html">
         <source>Here, there are three different ways of capturing.
-        One way does not capture any of your opponent&apos;s pieces.
-        Another way captures one of your opponent&apos;s pieces.&lt;br/&gt;&lt;br/&gt;
-        The last way captures two of your opponent&apos;s pieces, pick that one.</source>
+        &lt;ol&gt;
+        &lt;li&gt;One way does not capture any of your opponent&apos;s pieces.&lt;/li&gt;
+        &lt;li&gt;Another way captures one of your opponent&apos;s pieces.&lt;/li&gt;
+        &lt;li&gt;The last way captures two of your opponent&apos;s pieces.&lt;/li&gt;
+        &lt;/ol&gt;
+        &lt;br/&gt;&lt;br/&gt;
+        Pick the last one.</source>
         <target>Ici, il est possible de capturer de trois façons différentes.
-        L&apos;une ne permet aucune capture de pièce adverse.
-        L&apos;autre permet une capture de pièce adverse.&lt;br/&gt;&lt;br/&gt;
-        La dernière en permet deux, choisissez cette dernière.</target>
+        &lt;ol&gt;
+        &lt;li&gt;L&apos;une ne permet aucune capture de pièce adverse.&lt;/li&gt;
+        &lt;li&gt;L&apos;autre permet une capture de pièce adverse.&lt;/li&gt;
+        &lt;li&gt;La dernière en permet deux.&lt;/li&gt;
+        &lt;/ol&gt;
+        &lt;br/&gt;&lt;br/&gt;
+        Choisissez cette dernière.</target>
       </trans-unit>
       <trans-unit id="9167352512805148919" datatype="html">
         <source>Congratulations, you have gotten back 4 of your pieces and captured 2 of the opponent&apos;s.
@@ -1563,19 +1571,19 @@
         <target>Le jeu de Go se joue sur un plateau appelé Goban, et les pierres sont placées sur les intersections.
         Le plateau traditionnel fait 19x19 intersections, mais le 13x13 est implémenté sur ce site.
         (Pour des parties plus courtes, le 9x9 et 5x5 existent, mais ne sont pas encore disponibles).
-        Pour ce tutoriel, nous utiliserons un petit 5x5 à fin pédagogique.</target>
+        Pour ce tutoriel, nous utiliserons un petit 5x5 à dans un but pédagogique.</target>
       </trans-unit>
-      <trans-unit id="5188967317336954433" datatype="html">
+      <trans-unit id="7863035928636323211" datatype="html">
         <source>The goal of the game is to have the most points at the end of the game.
         We call &quot;territories&quot; the intersections that are empty and isolated from the rest of the Goban by the stones of a single player.
         Here, Dark has 9 territories on the left, and Light has 8 on the right.
         The top part belongs to no one.
-        The score at the end of the game is the sum of the territories and the captures.</source>
+        Each player&apos;s score at the end of the game is the sum of that player&apos;s territories and captures.</source>
         <target>Le but du jeu est d&apos;avoir le plus de points en fin de partie.
         On appelle territoires les intersections inoccupées et isolées du reste du Goban par les pierres d&apos;un seul joueur.
         Ici, le joueur foncé a 9 territoires à gauche, le joueur clair en a 8 à droite.
         La zone en haut au milieu n&apos;appartient à personne.
-        Le score en fin de partie correspondra à l&apos;addition des territoires et des captures.</target>
+        Le score d'un joueur en fin de partie correspond à la somme de ses territoires et captures.</target>
       </trans-unit>
       <trans-unit id="5239727864845885036" datatype="html">
         <source>An isolated stone, like the one in the middle here, has 4 neighboring intersections (not 8, because we do not count diagonals).

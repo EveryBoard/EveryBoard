@@ -1047,11 +1047,15 @@
       <trans-unit id="5296311699765609481" datatype="html">
         <source>Capturing (2/3)</source>
       </trans-unit>
-      <trans-unit id="6012182624396746560" datatype="html">
+      <trans-unit id="723905750865646237" datatype="html">
         <source>Here, there are three different ways of capturing.
-        One way does not capture any of your opponent&apos;s pieces.
-        Another way captures one of your opponent&apos;s pieces.&lt;br/&gt;&lt;br/&gt;
-        The last way captures two of your opponent&apos;s pieces, pick that one.</source>
+        &lt;ol&gt;
+          &lt;li&gt;One way does not capture any of your opponent&apos;s pieces.&lt;/li&gt;
+          &lt;li&gt;Another way captures one of your opponent&apos;s pieces.&lt;/li&gt;
+          &lt;li&gt;The last way captures two of your opponent&apos;s pieces.&lt;/li&gt;
+        &lt;/ol&gt;
+        &lt;br/&gt;&lt;br/&gt;
+        Pick the last one.</source>
       </trans-unit>
       <trans-unit id="9167352512805148919" datatype="html">
         <source>Congratulations, you have gotten back 4 of your pieces and captured 2 of the opponent&apos;s.
@@ -1100,12 +1104,12 @@
         (For shorter parts, 9x9 and 5x5 boards exist, but are not yet available here).
         For this tutorial, we will use a small 5x5 for pedagogical purposes.</source>
       </trans-unit>
-      <trans-unit id="5188967317336954433" datatype="html">
+      <trans-unit id="7863035928636323211" datatype="html">
         <source>The goal of the game is to have the most points at the end of the game.
         We call &quot;territories&quot; the intersections that are empty and isolated from the rest of the Goban by the stones of a single player.
         Here, Dark has 9 territories on the left, and Light has 8 on the right.
         The top part belongs to no one.
-        The score at the end of the game is the sum of the territories and the captures.</source>
+        Each player&apos;s score at the end of the game is the sum of that player&apos;s territories and captures.</source>
       </trans-unit>
       <trans-unit id="5239727864845885036" datatype="html">
         <source>An isolated stone, like the one in the middle here, has 4 neighboring intersections (not 8, because we do not count diagonals).

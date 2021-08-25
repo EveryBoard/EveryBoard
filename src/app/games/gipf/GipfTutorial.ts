@@ -78,9 +78,13 @@ export const gipfTutorial: TutorialStep[] = [
     TutorialStep.fromMove(
         $localize`Capturing (2/3)`,
         $localize`Here, there are three different ways of capturing.
-        One way does not capture any of your opponent's pieces.
-        Another way captures one of your opponent's pieces.<br/><br/>
-        The last way captures two of your opponent's pieces, pick that one.`,
+        <ol>
+          <li>One way does not capture any of your opponent's pieces.</li>
+          <li>Another way captures one of your opponent's pieces.</li>
+          <li>The last way captures two of your opponent's pieces.</li>
+        </ol>
+        <br/><br/>
+        Pick the last one.`,
         new GipfPartSlice(GipfBoard.of([
             [_, _, _, _, _, _, _],
             [_, _, _, X, _, _, _],

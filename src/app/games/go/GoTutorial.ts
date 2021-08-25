@@ -25,7 +25,7 @@ export const goTutorial: TutorialStep[] = [
         We call "territories" the intersections that are empty and isolated from the rest of the Goban by the stones of a single player.
         Here, Dark has 9 territories on the left, and Light has 8 on the right.
         The top part belongs to no one.
-        The score at the end of the game is the sum of the territories and the captures.`,
+        Each player's score at the end of the game is the sum of that player's territories and captures.`,
         new GoPartSlice([
             [_, O, _, _, X, X],
             [_, O, _, _, X, _],
