@@ -19,7 +19,7 @@ export const saharaTutorial: TutorialStep[] = [
     ),
     TutorialStep.informational(
         $localize`Goal of the game`,
-        $localize`At Sâhârâ, the goal of the game is to immobilize one of the opponent's pyramid.
+        $localize`At Sâhârâ, the goal of the game is to immobilize one of the opponent's pyramids.
         To do so, you have to occupy all neighboring space of that pyramid.
         Here, Light has lost because its leftmost pyramid is immobilized.`,
         new SaharaPartSlice([

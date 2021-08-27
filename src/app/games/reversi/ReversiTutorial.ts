@@ -26,7 +26,7 @@ export const reversiTutorial: TutorialStep[] = [
     ),
     TutorialStep.anyMove(
         $localize`Capturing (1/2)`,
-        $localize`At the beginning of the game, pieces are placed like here.
+        $localize`At the beginning of the game, pieces are placed as shown here.
         For a move to be legal, it must sandwich at least one piece of the opponent between the piece you're putting and another of your pieces.<br/><br/>
         Do any move by clicking to put your piece
         Dark plays first.`,

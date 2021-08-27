@@ -1340,8 +1340,8 @@
         then the game ends up with a tie.&lt;br/&gt;&lt;br/&gt;
         You&apos;re playing Dark, force the tie in one move.</source>
       </trans-unit>
-      <trans-unit id="72858407864349220" datatype="html">
-        <source>Please put your piece in a incomplete column.</source>
+      <trans-unit id="6266016430504496647" datatype="html">
+        <source>Please put your piece in an incomplete column.</source>
       </trans-unit>
       <trans-unit id="4036586801649294358" datatype="html">
         <source>The board at Four in a Row is made of 7 columns and 6 rows, and it is initially empty.
@@ -1571,10 +1571,10 @@
       <trans-unit id="7664600147441568899" datatype="html">
         <source>What a move looks like (without animation)</source>
       </trans-unit>
-      <trans-unit id="3695087807140370637" datatype="html">
+      <trans-unit id="8312224573535963288" datatype="html">
         <source>When it is your turn:
         &lt;ol&gt;
-            &lt;li&gt;Click on one of your pieces or on a neutral piece. You cannot choose the piece of the opponent.
+            &lt;li&gt;Click on one of your pieces or on a neutral one. You cannot choose a piece of the opponent.
                 You can only choose a piece from the edge of the board.&lt;/li&gt;
             &lt;li&gt;Pick a direction in which you want to send the piece (by clicking on the arrow).&lt;/li&gt;
         &lt;/ol&gt;
@@ -1610,8 +1610,8 @@
       <trans-unit id="5374319580594970060" datatype="html">
         <source>Capturing (1/2)</source>
       </trans-unit>
-      <trans-unit id="6525142591266192640" datatype="html">
-        <source>At the beginning of the game, pieces are placed like here.
+      <trans-unit id="5285597397338861824" datatype="html">
+        <source>At the beginning of the game, pieces are placed as shown here.
         For a move to be legal, it must sandwich at least one piece of the opponent between the piece you&apos;re putting and another of your pieces.&lt;br/&gt;&lt;br/&gt;
         Do any move by clicking to put your piece
         Dark plays first.</source>
@@ -1653,8 +1653,8 @@
         <source>Sâhârâ is played on a board where each space is a triangle.
         Each player has six pyramids.</source>
       </trans-unit>
-      <trans-unit id="4702455252845146546" datatype="html">
-        <source>At Sâhârâ, the goal of the game is to immobilize one of the opponent&apos;s pyramid.
+      <trans-unit id="7077721605915290523" datatype="html">
+        <source>At Sâhârâ, the goal of the game is to immobilize one of the opponent&apos;s pyramids.
         To do so, you have to occupy all neighboring space of that pyramid.
         Here, Light has lost because its leftmost pyramid is immobilized.</source>
       </trans-unit>

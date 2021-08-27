@@ -1830,12 +1830,12 @@
          In this case, the last player to have moved a piece loses.
         Here, your opponent will have moved its green piece last, you therefore win!</source>
         <target>Parfait !
-         Clair est obligé d&apos;avancer son pion vert sur la case orange, vous obligeant à joueur avec votre pion orange.
+         Votre adversaire est obligé d&apos;avancer son pion vert sur la case orange, vous obligeant à joueur avec votre pion orange.
          Dès lors, votre pion orange sera bloqué et vous devrez donc passer votre tour.
-         Clair devra ensuite aussi passer son tour car son pion orange est aussi bloqué :
+         Votre adversaire devra ensuite aussi passer son tour car son pion orange est aussi bloqué :
          la partie est totalement bloquée.
          Dans ce cas, le dernier joueur à avoir déplacé une pièce perd la partie.
-         Ici, Clair aura déplacé sa pièce verte en dernier, vous êtes donc vainqueur !</target>
+         Ici, votre adversaire aura déplacé sa pièce verte en dernier, vous êtes donc vainqueur !</target>
       </trans-unit>
       <trans-unit id="6387863170048380356" datatype="html">
         <source>Your move should have a length equal to the number of pieces that exist on the same line.</source>
@@ -1943,8 +1943,8 @@
         simultanément, alors la partie se termine par une égalité.&lt;br/&gt;&lt;br/&gt;
         Vous jouez Foncé, forcez l&apos;égalité en un coup.</target>
       </trans-unit>
-      <trans-unit id="72858407864349220" datatype="html">
-        <source>Please put your piece in a incomplete column.</source>
+      <trans-unit id="6266016430504496647" datatype="html">
+        <source>Please put your piece in an incomplete column.</source>
         <target>Veuillez placer votre pièce dans une colonne incomplète.</target>
       </trans-unit>
       <trans-unit id="4036586801649294358" datatype="html">
@@ -2149,7 +2149,7 @@
         A chosen piece can be the piece you just placed.
         You&apos;re playing Dark.&lt;br/&gt;&lt;br/&gt;
         Form a square, then click twice on one of the four pieces to remove only that one.</source>
-        <target>Quand la pièce que vous posez est la quatrième d&apos;un carré de pièces de votre couleur,
+        <target>Quand la pièce que vous venez de poser est la quatrième d&apos;un carré de pièces de votre couleur,
         vous pouvez choisir alors n&apos;importe où sur le plateau, une à deux de vos pièces.
         Cette(ces) pièce(s) sera(seront) enlevée(s) du plateau, vous permettant d&apos;économiser 1 ou 2 pièces.
         Une pièce choisie pour être enlevée ne peut pas être en dessous d&apos;autres pièces.
@@ -2205,7 +2205,7 @@
       </trans-unit>
       <trans-unit id="6246016939611902421" datatype="html">
         <source>You cannot give the piece that was in your hands.</source>
-        <target>Vous ne pouvez pas donner la pièce qui est dans vos mains.</target>
+        <target>Vous ne pouvez pas donner la pièce qui était dans vos mains.</target>
       </trans-unit>
       <trans-unit id="8669293665052580542" datatype="html">
         <source>Quarto is an alignment game.
@@ -2218,14 +2218,14 @@
         &lt;/ul&gt;
         Here, we have a board with a victory by an alignment of dark pieces.</source>
         <target>Quarto est un jeu d&apos;alignement.
-        Le but d&apos;aligner quatre pièces qui possèdent au moins un point commun :
+        Le but est d&apos;aligner quatre pièces qui possèdent au moins un point commun :
         &lt;ul&gt;
           &lt;li&gt;leur couleur (claire ou foncée)&lt;/li&gt;
           &lt;li&gt;leur taille (grande ou petite)&lt;/li&gt;
           &lt;li&gt;leur motif (vide ou à point)&lt;/li&gt;
           &lt;li&gt;leur forme (ronde ou carrée)&lt;/li&gt;
         &lt;/ul&gt;
-        Ici, nous avons un plateau avec une victoire par alignement de pièce rondes.</target>
+        Ici, nous avons un plateau avec une victoire par alignement de pièces foncées.</target>
       </trans-unit>
       <trans-unit id="5869780110608474933" datatype="html">
         <source>Placement</source>
@@ -2237,7 +2237,7 @@
         If you prefer, the order of these two steps can be reversed.
         Keep in mind that the second click confirms the move.&lt;br/&gt;&lt;br/&gt;
         Make a move.</source>
-        <target>Chaque placement se fait en deux étapes : placer la pièce qu&apos;on a en main en cliquant sur une case du plateau,
+        <target>Chaque placement se fait en deux étapes : placer la pièce que vous avez en main (que l'adversaire vous a donné) en cliquant sur une case du plateau,
         et choisir une pièce que l&apos;adversaire devra placer, en cliquant sur une des pièces affichées à droite.
         Si vous préférez, l&apos;ordre inverse est également possible.
         Gardez juste à l&apos;esprit que le deuxième clic valide le mouvement.&lt;br/&gt;&lt;br/&gt;
@@ -2287,10 +2287,10 @@
         <source>What a move looks like (without animation)</source>
         <target>A quoi ressemble un mouvement (sans animation)</target>
       </trans-unit>
-      <trans-unit id="3695087807140370637" datatype="html">
+      <trans-unit id="8312224573535963288" datatype="html">
         <source>When it is your turn:
         &lt;ol&gt;
-            &lt;li&gt;Click on one of your pieces or on a neutral piece. You cannot choose the piece of the opponent.
+            &lt;li&gt;Click on one of your pieces or on a neutral one. You cannot choose a piece of the opponent.
                  You can only choose a piece from the edge of the board.&lt;/li&gt;
             &lt;li&gt;Pick a direction in which you want to send the piece (by clicking on the arrow).&lt;/li&gt;
         &lt;/ol&gt;
@@ -2351,8 +2351,8 @@
         <source>Capturing (1/2)</source>
         <target>Capture (1/2)</target>
       </trans-unit>
-      <trans-unit id="6525142591266192640" datatype="html">
-        <source>At the beginning of the game, pieces are placed like here.
+      <trans-unit id="5285597397338861824" datatype="html">
+        <source>At the beginning of the game, pieces are placed as shown here.
         For a move to be legal, it must sandwich at least one piece of the opponent between the piece you&apos;re putting and another of your pieces.&lt;br/&gt;&lt;br/&gt;
         Do any move by clicking to put your piece
         Dark plays first.</source>
@@ -2396,7 +2396,7 @@
       </trans-unit>
       <trans-unit id="366304395805128715" datatype="html">
         <source>You must pick one of your pyramids first.</source>
-        <target>Vous devez d&apos;abord choisir une de vos pyramides</target>
+        <target>Vous devez d&apos;abord choisir une de vos pyramides.</target>
       </trans-unit>
       <trans-unit id="6312339673351478538" datatype="html">
         <source>You must pick one of your pyramids.</source>
@@ -2412,8 +2412,8 @@
         <target>Le Sâhârâ se joue sur un plateau dont chaque case est triangulaire.
         Chaque joueur contrôle six pyramides.</target>
       </trans-unit>
-      <trans-unit id="4702455252845146546" datatype="html">
-        <source>At Sâhârâ, the goal of the game is to immobilize one of the opponent&apos;s pyramid.
+      <trans-unit id="7077721605915290523" datatype="html">
+        <source>At Sâhârâ, the goal of the game is to immobilize one of the opponent&apos;s pyramids.
         To do so, you have to occupy all neighboring space of that pyramid.
         Here, Light has lost because its leftmost pyramid is immobilized.</source>
         <target>Au Sâhârâ, le but du jeu est d&apos;immobiliser une des pyramides de l&apos;adversaire.
