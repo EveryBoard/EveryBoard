@@ -33,7 +33,7 @@ export const siamTutorial: TutorialStep[] = [
     ),
     TutorialStep.anyMove(
         $localize`Inserting a piece`,
-        $localize`Every player has 5 pieces in total.
+        $localize`Each player has 5 pieces in total.
         As long as you do not have 5 pieces on the board, you can insert new pieces. To do so:
         <ol>
             <li>Click on one of the big arrows alongside the board.</li>
@@ -82,7 +82,7 @@ export const siamTutorial: TutorialStep[] = [
         ], 0),
         [new SiamMove(2, 4, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN)],
         $localize`Congratulations, even if in this context it was not a useful move.`,
-        $localize`Failed, the piece is still on the board`,
+        $localize`Failed, the piece is still on the board.`,
     ),
     TutorialStep.fromMove(
         $localize`Pushing`,
@@ -91,7 +91,7 @@ export const siamTutorial: TutorialStep[] = [
         <ol>
             <li>Your piece must already be oriented in the direction of the push.</li>
             <li>The number of the pieces (opponent's or not) that are facing yours (called the resistants)
-                is smaller than the number of pieces that are oriented in the same direction as the push, yourself included (the pushers).</li>
+                must be smaller than the number of pieces that are oriented in the same direction as the push, yourself included (the pushers).</li>
             <li>The number of mountains on that line must be smaller or equal to the difference between the pushers and the resistants.</li>
         </ol>
         Your piece on the top right cannot push because there is one mountain too much.

@@ -16,8 +16,6 @@ export class GipfFailure {
 
     public static readonly AMBIGUOUS_CAPTURE_COORD: string = $localize`This piece belongs to two captures. Please select another piece in the capture you'd like to make.`;
 
-    public static readonly NOT_PART_OF_CAPTURE: string = $localize`You must pick a capture.`;
-
     public static readonly CLICK_FURTHER_THAN_ONE_COORD: string = $localize`You must click on an arrow to select your destination.`;
 
     public static readonly NO_DIRECTIONS_AVAILABLE: string = $localize`You cannot insert a piece here, as all lines are full. Select another space.`;

@@ -34,7 +34,7 @@ export const gipfTutorial: TutorialStep[] = [
         $localize`Congratulations!`,
     ),
     TutorialStep.fromMove(
-        $localize`Capturing (1/3)`,
+        $localize`Capture (1/3)`,
         $localize`To capture, you must align 4 of your own pieces, which will be the first 4 captured pieces.
         There are multiple important aspects of a capture:
         <ol>
@@ -76,7 +76,7 @@ export const gipfTutorial: TutorialStep[] = [
         $localize`Failed!`,
     ),
     TutorialStep.fromMove(
-        $localize`Capturing (2/3)`,
+        $localize`Capture (2/3)`,
         $localize`Here, there are three different ways of capturing.
         <ol>
           <li>One way does not capture any of your opponent's pieces.</li>
@@ -111,7 +111,7 @@ export const gipfTutorial: TutorialStep[] = [
         $localize`Failed, the best capture was taking 2 of your opponent's pieces`,
     ),
     TutorialStep.fromMove(
-        $localize`Capturing (3/3)`,
+        $localize`Capture (3/3)`,
         $localize`Here, you must capture at the beginning of your turn.
         This is due to a move of your opponent at the previous turn
         (even though this is a ficticious board for pedagogical purpose).

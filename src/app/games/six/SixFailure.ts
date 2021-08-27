@@ -2,7 +2,7 @@ export class SixFailure {
 
     public static readonly NO_DEPLACEMENT_BEFORE_TURN_40: string = $localize`You cannot move yet. Pick a space where you will put a new piece.`;
 
-    public static readonly MUST_CUT: string = $localize`Several groups are of same size, you must pick the one to keep.`;
+    public static readonly MUST_CUT: string = $localize`Several groups are of the same size, you must pick the one to keep.`;
 
     public static readonly CANNOT_CHOOSE_TO_KEEP: string = $localize`You cannot choose which part to keep when one is smaller than the other.`;
 

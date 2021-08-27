@@ -25,7 +25,7 @@ export const reversiTutorial: TutorialStep[] = [
         ], 60),
     ),
     TutorialStep.anyMove(
-        $localize`Capturing (1/2)`,
+        $localize`Capture (1/2)`,
         $localize`At the beginning of the game, pieces are placed as shown here.
         For a move to be legal, it must sandwich at least one piece of the opponent between the piece you're putting and another of your pieces.<br/><br/>
         Do any move by clicking to put your piece
@@ -35,7 +35,7 @@ export const reversiTutorial: TutorialStep[] = [
         $localize`Congratulations!`,
     ),
     TutorialStep.fromMove(
-        $localize`Capturing (2/2)`,
+        $localize`Capture (2/2)`,
         $localize`A move can also capture a bigger line, and more than one lines at a time
         You're playing light here.<br/><br/>
         Play on the bottom left to see an example.`,

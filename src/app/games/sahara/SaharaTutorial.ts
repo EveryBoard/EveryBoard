@@ -34,13 +34,13 @@ export const saharaTutorial: TutorialStep[] = [
     TutorialStep.fromPredicate(
         $localize`Simple move`,
         $localize`To immobilize your opponent, you have to move your pyramids.
-        When a pyramid shares its vertices with light spaces, it can move on these spaces (we call this a simple step)
-        You're the first player, playing with the dark pyramids
+        When a pyramid shares its vertices with light spaces, it can move on these spaces (we call this a simple step).
+        You're the first player, playing with the dark pyramids.
         <ol>
             <li>Click on one of your pyramids.</li>
-            <li>Click then on one of the two or three neighboring spaces in order to move your pyramid there.</li>
+            <li>Click on one of its two or three neighboring spaces in order to move your pyramid there.</li>
         </ol><br/>
-        Do any move.`,
+        Do any simple step.`,
         SaharaPartSlice.getInitialSlice(),
         new SaharaMove(new Coord(2, 0), new Coord(2, 1)),
         (move: SaharaMove, state: SaharaPartSlice) => {
@@ -53,7 +53,7 @@ export const saharaTutorial: TutorialStep[] = [
         $localize`Congratulations!`,
     ),
     TutorialStep.fromPredicate(
-        $localize`Double move`,
+        $localize`Double step`,
         $localize`When a pyramid shares its vertices with dark spaces, it can move one or two steps.
         To do so:
         <ol>

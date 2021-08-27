@@ -229,7 +229,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
         if (captures.length > 1) {
             return this.cancelMove(YinshFailure.AMBIGUOUS_CAPTURE_COORD);
         } else if (captures.length === 0) {
-            return this.cancelMove(YinshFailure.NOT_PART_OF_CAPTURE);
+            return this.cancelMove(YinshFailure.MISSING_CAPTURES);
         }
         const capture: YinshCapture = captures[0];
         this.currentCapture = MGPOptional.of(capture);

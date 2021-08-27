@@ -890,7 +890,7 @@
       </trans-unit>
       <trans-unit id="2954415609985904324" datatype="html">
         <source>Invalid move distance: your piece must land on one of the closest six triangles with the same color as the triangle on which the piece is.</source>
-        <target>Distance de déplacement illégal, votre pion doit atterir sur l&apos;un des six triangles les plus proches de même couleur que la case sur laquelle il est.</target>
+        <target>Distance de déplacement illégal, votre pion doit atterrir sur l&apos;un des six triangles les plus proches de même couleur que la case sur laquelle il est.</target>
       </trans-unit>
       <trans-unit id="117738177627572036" datatype="html">
         <source>You do not have enough tiles to exchange in order to capture this piece. Pick one of your piece and move it.</source>
@@ -945,12 +945,12 @@
         Perform any move.</source>
         <target>Pour effectuer un déplacement, il faut :
         &lt;ol&gt;
-            &lt;li&gt;Cliquer sur l&apos;une de vos pièces.&lt;/li&gt;
+            &lt;li&gt;Cliquer sur l&apos;une de vos pièces ;&lt;/li&gt;
             &lt;li&gt;Cliquer sur l&apos;une des cases triangulaires encadrées en jaune.&lt;/li&gt;
         &lt;/ol&gt;
         Vous pouvez passer à travers les pièces adverses.&lt;br/&gt;&lt;br/&gt;
         Vous jouez en premier, vous jouez donc Foncé, faites n&apos;importe quel déplacement.&lt;br/&gt;
-        Note : peut importe ce que vous faites, aucunes de vos pièces ne peuvent être capturée pendant votre tour.</target>
+        Note : peut importe ce que vous faites, aucune pièce ne peut être capturée pendant votre tour.</target>
       </trans-unit>
       <trans-unit id="3313068005460528101" datatype="html">
         <source>Congratulations! Let&apos;s see captures now.</source>
@@ -1024,7 +1024,7 @@
         <source>When a tile is removed from the board during your turn, some of the opponent&apos;s pieces may have lost their last free neighboring space, they will therefore be captured!
         If this happens to one of your piece during your turn, it will however stay on the board.&lt;br/&gt;&lt;br/&gt;
         A move that demonstrate both of these things can be done on this board by Light. Try it!</source>
-        <target>Dès qu&apos;une tuile est enlevée du plateau pendant votre tour, certaines pièces de l&apos;adversaire peuvent n&apos;avoir plus aucunes cases voisines libres, elle seront alors capturées !
+        <target>Dès qu&apos;une tuile est enlevée du plateau pendant votre tour, certaines pièces de l&apos;adversaire peuvent n&apos;avoir plus aucune case voisine libre, elle seront alors capturées !
         Si cela arrivait à l&apos;une de vos pièces, celle-ci resterait cependant sur le plateau.&lt;br/&gt;&lt;br/&gt;
         Un coup démontrant ces deux choses est faisable pour le joueur clair, faites-le !</target>
       </trans-unit>
@@ -1292,7 +1292,7 @@
         <target>Voici le plateau de départ, c&apos;est à Foncé de commencer.
         Commençons simplement par un déplacement d&apos;une seule pièce :
         &lt;ol&gt;
-            &lt;li&gt;Cliquez sur une pièce.&lt;/li&gt;
+            &lt;li&gt;Cliquez sur une pièce ;&lt;/li&gt;
             &lt;li&gt;Cliquez sur une case voisine libre.&lt;/li&gt;
         &lt;/ol&gt;</target>
       </trans-unit>
@@ -1318,8 +1318,8 @@
         Move a phalanx!</source>
         <target>Maintenant, comment déplacer plusieurs pièces sur une seule ligne (une phalange) :
         &lt;ol&gt;
-            &lt;li&gt;Cliquez sur la première pièce.&lt;/li&gt;
-            &lt;li&gt;Cliquez sur la dernière pièce de la phalange.&lt;/li&gt;
+            &lt;li&gt;Cliquez sur la première pièce ;&lt;/li&gt;
+            &lt;li&gt;Cliquez sur la dernière pièce de la phalange ;&lt;/li&gt;
             &lt;li&gt;Cliquez une des cases encadrées en jaune, elles vous permettent de déplacer au maximum votre phalange d&apos;une distance égale à sa taille.&lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
         Faites un déplacement de phalange !</target>
@@ -1348,8 +1348,8 @@
         Capture a phalanx.</source>
         <target>Pour capturer une phalange de l'adversaire :
         &lt;ol&gt;
-            &lt;li&gt;Il faut que celle-ci soit alignée avec la phalange en déplacement.&lt;/li&gt;
-            &lt;li&gt;Qu&apos;elle soit strictement plus courte.&lt;/li&gt;
+            &lt;li&gt;Il faut que celle-ci soit alignée avec la phalange en déplacement ;&lt;/li&gt;
+            &lt;li&gt;Qu&apos;elle soit strictement plus courte ;&lt;/li&gt;
             &lt;li&gt;Que la première pièce de votre phalange atterrisse sur la première pièce rencontrée de la phalange à capturer.&lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
         Capturez la phalange.</target>
@@ -1397,10 +1397,6 @@
         <source>This piece belongs to two captures. Please select another piece in the capture you&apos;d like to make.</source>
         <target>Veuillez sélectionner une autre case de la capture que vous souhaitez prendre, celle-ci appartient à deux captures.</target>
       </trans-unit>
-      <trans-unit id="8407980394441393807" datatype="html">
-        <source>You must pick a capture.</source>
-        <target>Veuillez sélectionner une capture.</target>
-      </trans-unit>
       <trans-unit id="3154742766975304650" datatype="html">
         <source>You must click on an arrow to select your destination.</source>
         <target>Veuillez cliquer sur une flèche pour sélectionner votre destination.</target>
@@ -1431,14 +1427,14 @@
         You&apos;re playing Dark, insert a piece.</source>
         <target>Les pièces ne peuvent entrer sur le plateau que par l&apos;extérieur. Pour insérer une nouvelle pièce :
         &lt;ol&gt;
-            &lt;li&gt;Cliquez sur une case sur le bord du plateau.&lt;/li&gt;
+            &lt;li&gt;Cliquez sur une case sur le bord du plateau ;&lt;/li&gt;
             &lt;li&gt;Si cette case était occupée, cliquez ensuite sur la flèche représentant la direction dans laquelle pousser la/les pièces déjà présentes dans la rangée.&lt;/li&gt;
         &lt;li&gt;
         Une poussée est interdite dans une rangée complète.&lt;br/&gt;&lt;br/&gt;
         Vous jouez Foncé, insérez une pièce.</target>
       </trans-unit>
-      <trans-unit id="1535764723561428490" datatype="html">
-        <source>Capturing (1/3)</source>
+      <trans-unit id="172569065763877258" datatype="html">
+        <source>Capture (1/3)</source>
         <target>Capture (1/3)</target>
       </trans-unit>
       <trans-unit id="7511966090954669277" datatype="html">
@@ -1462,15 +1458,15 @@
         <target>Pour faire une capture, il faut aligner 4 de ses propres pièces, qui seront les 4 premières capturées.
         Il y a plusieurs choses à savoir sur une capture :
         &lt;ol&gt;
-            &lt;li&gt;Quand 4 pièces sont capturées, toutes les pièces directement alignées avec ces 4 pièces le sont également.&lt;/li&gt;
-            &lt;li&gt;Dès qu&apos;il y a une case vide dans la ligne, la capture s&apos;arrête.&lt;/li&gt;
+            &lt;li&gt;Quand 4 pièces sont capturées, toutes les pièces directement alignées avec ces 4 pièces le sont également ;&lt;/li&gt;
+            &lt;li&gt;Dès qu&apos;il y a une case vide dans la ligne, la capture s&apos;arrête ;&lt;/li&gt;
             &lt;li&gt;Vos pièces capturées rejoignent votre réserve.
                 Celles de l&apos;adversaire par contre sont réellement capturées et ne rejoignent pas sa réserve.&lt;/li&gt;
             &lt;li&gt;Si vous créez une ligne de 4 pièces de l&apos;adversaire, c&apos;est au début de son tour qu&apos;il pourra les capturer.
                 Ceci implique que votre tour se passe en trois phases :
                 &lt;ol type=&quot;A&quot;&gt;
-                    &lt;li&gt;Choisir la/les capture(s) crée(s) par le dernier mouvement de votre adversaire.&lt;/li&gt;
-                    &lt;li&gt;Faire votre poussée.&lt;/li&gt;
+                    &lt;li&gt;Choisir la/les capture(s) crée(s) par le dernier mouvement de votre adversaire ;&lt;/li&gt;
+                    &lt;li&gt;Faire votre poussée ;&lt;/li&gt;
                     &lt;li&gt;Choisir la/les ligne(s) à capturer que vous venez de créer (en cliquant dessus).&lt;/li&gt;
                 &lt;/ol&gt;
             &lt;/li&gt;
@@ -1483,8 +1479,8 @@
         <target>Bravo, vous avez récupéré 4 de vos pièces, mais ce n&apos;est pas la capture la plus utile.
         Voyons maintenant la vraie utilité d&apos;une capture.</target>
       </trans-unit>
-      <trans-unit id="5296311699765609481" datatype="html">
-        <source>Capturing (2/3)</source>
+      <trans-unit id="2764152826180362947" datatype="html">
+        <source>Capture (2/3)</source>
         <target>Capture (2/3)</target>
       </trans-unit>
       <trans-unit id="723905750865646237" datatype="html">
@@ -1498,8 +1494,8 @@
         Pick the last one.</source>
         <target>Ici, il est possible de capturer de trois façons différentes.
         &lt;ol&gt;
-        &lt;li&gt;L&apos;une ne permet aucune capture de pièce adverse.&lt;/li&gt;
-        &lt;li&gt;L&apos;autre permet une capture de pièce adverse.&lt;/li&gt;
+        &lt;li&gt;L&apos;une ne permet aucune capture de pièce adverse ;&lt;/li&gt;
+        &lt;li&gt;L&apos;autre permet une capture de pièce adverse ;&lt;/li&gt;
         &lt;li&gt;La dernière en permet deux.&lt;/li&gt;
         &lt;/ol&gt;
         &lt;br/&gt;
@@ -1515,8 +1511,8 @@
         <source>Failed, the best capture was taking 2 of your opponent&apos;s pieces</source>
         <target>Raté, la capture optimale capture 2 pièces adverses.</target>
       </trans-unit>
-      <trans-unit id="6859741057618390920" datatype="html">
-        <source>Capturing (3/3)</source>
+      <trans-unit id="1459810772427125920" datatype="html">
+        <source>Capture (3/3)</source>
         <target>Capture (3/3)</target>
       </trans-unit>
       <trans-unit id="3537904836524456622" datatype="html">
@@ -1585,13 +1581,13 @@
         La zone en haut au milieu n&apos;appartient à personne.
         Le score d'un joueur en fin de partie correspond à la somme de ses territoires et captures.</target>
       </trans-unit>
-      <trans-unit id="5239727864845885036" datatype="html">
+      <trans-unit id="1578964976017754857" datatype="html">
         <source>An isolated stone, like the one in the middle here, has 4 neighboring intersections (not 8, because we do not count diagonals).
-        If a neighboring intersection is unoccupied, it is called a freedom.
-        If Dark plays on the last freedom of the light stone, this stone is removed from the Goban (captured) and Dark earns one point.&lt;br/&gt;&lt;br/&gt;
-        There&apos;s only one freedom left to the light piece, capture it.</source>
+        If a neighboring intersection is unoccupied, it is called a liberty.
+        If Dark plays on the last liberty of the light stone, this stone is removed from the Goban (captured) and Dark earns one point.&lt;br/&gt;&lt;br/&gt;
+        The light piece only has one liberty left, play there.</source>
         <target>Une pierre isolée, comme la pierre claire au milieu, a 4 intersections voisines (et non 8, car on ne compte pas les diagonales).
-        Si une intersection voisine est inoccupée, elle est appelée liberté.
+        Une intersection inocuppée, voisine d'une pierre, est appelée une liberté de cette pierre.
         Si Foncé joue sur la dernière liberté de la pierre claire, cette pierre est enlevée du goban (capturée) et rapporte un point à Foncé.&lt;br/&gt;&lt;br/&gt;
         Il ne reste plus qu&apos;une liberté à la pierre claire, capturez la.</target>
       </trans-unit>
@@ -1607,9 +1603,9 @@
         <source>Capturing multiple stones</source>
         <target>Capture de plusieurs pierres</target>
       </trans-unit>
-      <trans-unit id="1725582712854549564" datatype="html">
+      <trans-unit id="4946332372680472019" datatype="html">
         <source>Stones that are connected horizontally or vertically must be captured at the same time, and are not capturable in isolation.&lt;br/&gt;&lt;br/&gt;
-        The light group here only has one freedom left, capture it.</source>
+        The light group here only has one liberty left, capture it.</source>
         <target>Des pierres connectées horizontalement ou verticalement doivent être capturées ensemble, et ne sont pas capturables séparement.&lt;br/&gt;&lt;br/&gt;
         Ici, le groupe clair n&apos;a plus qu&apos;une liberté, capturez ce groupe.</target>
       </trans-unit>
@@ -1617,17 +1613,17 @@
         <source>Congratulations, you have earned three points and formed a territory.</source>
         <target>Bravo, vous avez gagné trois points, et formé un territoire.</target>
       </trans-unit>
-      <trans-unit id="682384900189815989" datatype="html">
-        <source>Failed, you have not captured the group. Play on the last freedom of that group.</source>
+      <trans-unit id="4825992977460901236" datatype="html">
+        <source>Failed, you have not captured the group. Play on the last liberty of that group.</source>
         <target>Raté, vous n&apos;avez pas capturé le groupe, jouez sur la dernière liberté de ce groupe.</target>
       </trans-unit>
       <trans-unit id="6220902431017372113" datatype="html">
         <source>Suicide</source>
         <target>Suicide</target>
       </trans-unit>
-      <trans-unit id="1598565563312868670" datatype="html">
+      <trans-unit id="4548165606059240492" datatype="html">
         <source>In Go, suicide is forbidden.
-        If putting a piece on an intersection removes the last freedom of your group and does not capture any stone, playing on that intersection would be a suicide and is therefore forbidden.
+        If putting a piece on an intersection removes the last liberty of your group and does not capture any stone, playing on that intersection would be a suicide and is therefore forbidden.
         Here, the top left intersection is a suicide for Light.
         On the bottom right, it would be a suicide for Dark, and on the bottom left it is not a suicide for any player.</source>
         <target>Au Go le suicide est interdit.
@@ -1639,12 +1635,12 @@
         <source>Life and death (death)</source>
         <target>Vie et mort (mort)</target>
       </trans-unit>
-      <trans-unit id="980106659730787095" datatype="html">
+      <trans-unit id="3595592714473441808" datatype="html">
         <source>From the capture rule follows the life and death notion:
         dead stones are stones that are definitely capturable (without losing anything else).
         Alive stones are stones that can never be captured.
         From the capture rule, Dark can play inside Light&apos;s territory and make a capture.
-        In this case, we say that Light has only one eye (its last freedom) and that Light is dead (even if not yet captured).
+        In this case, we say that Light has only one eye (its last liberty) and that Light is dead (even if not yet captured).
         At the end of the game, the dead stones will count as captures, and the intersections they occupy as territories.</source>
         <target>De la règle de capture découle la notion de vie et de mort :
         des pierres mortes sont des pierres que l&apos;on est sûr de pouvoir capturer (sans rien y perdre ailleurs).
@@ -1835,7 +1831,7 @@
          Votre adversaire devra ensuite aussi passer son tour car son pion orange est aussi bloqué :
          la partie est totalement bloquée.
          Dans ce cas, le dernier joueur à avoir déplacé une pièce perd la partie.
-         Ici, votre adversaire aura déplacé sa pièce verte en dernier, vous êtes donc vainqueur !</target>
+         Ici, votre adversaire a déplacé sa pièce verte en dernier, vous êtes donc vainqueur !</target>
       </trans-unit>
       <trans-unit id="6387863170048380356" datatype="html">
         <source>Your move should have a length equal to the number of pieces that exist on the same line.</source>
@@ -2116,8 +2112,8 @@
         Cependant, à ce moment là, se crée une opportunité d&apos;économiser une pièce en &quot;grimpant&quot; au lieu de déposer.
         Pour grimper :
         &lt;ol&gt;
-            &lt;li&gt;Cliquez sur une de vos pièces libres et plus basse que la case d&apos;atterrissage.&lt;/li&gt;
-            &lt;li&gt;Cliquez sur une case vide plus haute.&lt;/li&gt;
+            &lt;li&gt;Cliquez sur une de vos pièces libres et plus basse que la case d&apos;atterrissage ;&lt;/li&gt;
+            &lt;li&gt;Cliquez sur une case vide plus haute ;&lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
         Allez-y, grimpez !</target>
       </trans-unit>
@@ -2132,8 +2128,8 @@
         <target>Bravo !&lt;br/&gt;
         Notes importantes :
         &lt;ol&gt;
-            &lt;li&gt;On ne peut déplacer une pièce qui est en dessous d&apos;une autre.&lt;/li&gt;
-            &lt;li&gt;Naturellement, on ne peut pas déplacer les pièces adverses.&lt;/li&gt;
+            &lt;li&gt;On ne peut déplacer une pièce qui est en dessous d&apos;une autre ;&lt;/li&gt;
+            &lt;li&gt;Naturellement, on ne peut pas déplacer les pièces adverses ;&lt;/li&gt;
             &lt;li&gt;Un déplacement ne peut se faire que quand la case d&apos;arrivée est plus haute que la case de départ.&lt;/li&gt;
         &lt;/ol&gt;</target>
       </trans-unit>
@@ -2220,10 +2216,10 @@
         <target>Quarto est un jeu d&apos;alignement.
         Le but est d&apos;aligner quatre pièces qui possèdent au moins un point commun :
         &lt;ul&gt;
-          &lt;li&gt;leur couleur (claire ou foncée)&lt;/li&gt;
-          &lt;li&gt;leur taille (grande ou petite)&lt;/li&gt;
-          &lt;li&gt;leur motif (vide ou à point)&lt;/li&gt;
-          &lt;li&gt;leur forme (ronde ou carrée)&lt;/li&gt;
+          &lt;li&gt;leur couleur (claire ou foncée) ;&lt;/li&gt;
+          &lt;li&gt;leur taille (grande ou petite) ;&lt;/li&gt;
+          &lt;li&gt;leur motif (vide ou à point) ;&lt;/li&gt;
+          &lt;li&gt;leur forme (ronde ou carrée).&lt;/li&gt;
         &lt;/ul&gt;
         Ici, nous avons un plateau avec une victoire par alignement de pièces foncées.</target>
       </trans-unit>
@@ -2347,8 +2343,8 @@
         Le joueur possédant le plus de pièces en fin de partie gagne.
         Ici, le joueur foncé a 28 points et le joueur clair en a 36, le joueur clair a donc gagné.</target>
       </trans-unit>
-      <trans-unit id="5374319580594970060" datatype="html">
-        <source>Capturing (1/2)</source>
+      <trans-unit id="8462968705575405423" datatype="html">
+        <source>Capture (1/2)</source>
         <target>Capture (1/2)</target>
       </trans-unit>
       <trans-unit id="5285597397338861824" datatype="html">
@@ -2360,8 +2356,8 @@
         Pour qu&apos;un coup soit légal il faut qu&apos;il prenne en sandwich minimum une pièce adverse entre la pièce que vous posez et une de vos pièces.&lt;br/&gt;&lt;br/&gt;
         Foncé joue en premier, faites n&apos;importe quel mouvement en cliquant pour déposer votre pièce.</target>
       </trans-unit>
-      <trans-unit id="2992889611246141410" datatype="html">
-        <source>Capturing (2/2)</source>
+      <trans-unit id="6014794960681933717" datatype="html">
+        <source>Capture (2/2)</source>
         <target>Capture (2/2)</target>
       </trans-unit>
       <trans-unit id="5763897640314321260" datatype="html">
@@ -2420,31 +2416,31 @@
         Pour ce faire il faut occuper toutes les cases voisines de celle-ci.
         Ici, le joueur clair a perdu car sa pyramide tout à gauche est immobilisée.</target>
       </trans-unit>
-      <trans-unit id="7043287762805865803" datatype="html">
+      <trans-unit id="6555319865807115204" datatype="html">
         <source>To immobilize your opponent, you have to move your pyramids.
-        When a pyramid shares its vertices with light spaces, it can move on these spaces (we call this a simple step)
-        You&apos;re the first player, playing with the dark pyramids
+        When a pyramid shares its vertices with light spaces, it can move on these spaces (we call this a simple step).
+        You&apos;re the first player, playing with the dark pyramids.
         &lt;ol&gt;
             &lt;li&gt;Click on one of your pyramids.&lt;/li&gt;
-            &lt;li&gt;Click then on one of the two or three neighboring spaces in order to move your pyramid there.&lt;/li&gt;
+            &lt;li&gt;Click on one of its two or three neighboring spaces in order to move your pyramid there.&lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
-        Do any move.</source>
+        Do any simple step.</source>
         <target>Pour parvenir à immobiliser l&apos;adversaire, il faut déplacer ses pyramides.
         Quand une pyramide partage ses arêtes avec des cases claires, elle peut se déplacer dessus (appelons ceci, faire un pas simple).
-        Vous jouez le premier joueur, qui contrôle les pyramides foncées.
+        Vous jouez en premier et contrôlez donc les pyramides foncées.
         &lt;ol&gt;
-            &lt;li&gt;Cliquez sur une de vos pyramides.&lt;/li&gt;
+            &lt;li&gt;Cliquez sur une de vos pyramides ;&lt;/li&gt;
             &lt;li&gt;Cliquez ensuite sur une des deux ou trois cases voisines, pour y déplacer votre pyramide.&lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
-        Faite n&apos;importe quel mouvement.</target>
+        Faites un simple pas.</target>
       </trans-unit>
       <trans-unit id="6109976694950516137" datatype="html">
         <source>You have made a double step, which is good but it is the next exercise!</source>
         <target>Vous avez fait un double pas, c&apos;est très bien, mais c&apos;est l&apos;exercice suivant !</target>
       </trans-unit>
-      <trans-unit id="7534417450669487466" datatype="html">
-        <source>Double move</source>
-        <target>Déplacement double</target>
+      <trans-unit id="7415904984868552706" datatype="html">
+        <source>Double step</source>
+        <target>Double pas</target>
       </trans-unit>
       <trans-unit id="8522179824520099976" datatype="html">
         <source>When a pyramid shares its vertices with dark spaces, it can move one or two steps.
@@ -2457,7 +2453,7 @@
         <target>Quand une pyramide partage ses arêtes avec des cases foncées, vous pouvez la déplacer de deux pas.
         Pour ce faire :
         &lt;ol&gt;
-            &lt;li&gt;Cliquez sur la pyramide à déplacer (celle tout au centre).&lt;/li&gt;
+            &lt;li&gt;Cliquez sur la pyramide à déplacer (celle tout au centre) ;&lt;/li&gt;
             &lt;li&gt;Cliquez directement sur l&apos;une des 6 destinations possibles en deux pas :
                 les 6 cases claires voisines des 3 cases foncées voisines de votre pyramide.
         &lt;/li&gt;</target>
@@ -2476,7 +2472,7 @@
       </trans-unit>
       <trans-unit id="3634874399235422132" datatype="html">
         <source>You cannot push and turn at the same time.</source>
-        <target>Vous ne pouvez pas tourner et avancer en même temps !</target>
+        <target>Vous ne pouvez pas changer d'orientation quand vous poussez !</target>
       </trans-unit>
       <trans-unit id="2533760570032755409" datatype="html">
         <source>Your push is invalid: it is either not straight, is not pushing anything, or is leaving the board.</source>
@@ -2495,8 +2491,8 @@
         Le plateau de départ en contient trois, au centre, et aucun pion n&apos;est initialement sur le plateau.
         Durant son tour de jeu un joueur peut effectuer l&apos;une des trois actions suivantes :
         &lt;ol&gt;
-            &lt;li&gt;Faire entrer une pièce sur le plateau.&lt;/li&gt;
-            &lt;li&gt;Changer l&apos;orientation d&apos;une de ses pièces et optionnellement la déplacer.&lt;/li&gt;
+            &lt;li&gt;Faire entrer une pièce sur le plateau ;&lt;/li&gt;
+            &lt;li&gt;Changer l&apos;orientation d&apos;une de ses pièces et optionnellement la déplacer ;&lt;/li&gt;
             &lt;li&gt;Sortir un de ses pions du plateau.&lt;/li&gt;
         &lt;/ol&gt;</target>
       </trans-unit>
@@ -2504,8 +2500,8 @@
         <source>Inserting a piece</source>
         <target>Insérer une pièce</target>
       </trans-unit>
-      <trans-unit id="1873012772528782889" datatype="html">
-        <source>Every player has 5 pieces in total.
+      <trans-unit id="870234930796108332" datatype="html">
+        <source>Each player has 5 pieces in total.
         As long as you do not have 5 pieces on the board, you can insert new pieces. To do so:
         &lt;ol&gt;
             &lt;li&gt;Click on one of the big arrows alongside the board.&lt;/li&gt;
@@ -2516,7 +2512,7 @@
         <target>Chaque joueur a en tout 5 pièces.
         Tant qu&apos;il n&apos;en a pas 5 sur le plateau, il peut en insérer une. Pour ce faire :
         &lt;ol&gt;
-            &lt;li&gt;Appuyez sur une des grosses flèches autour du plateau.&lt;/li&gt;
+            &lt;li&gt;Appuyez sur une des grosses flèches autour du plateau ;&lt;/li&gt;
             &lt;li&gt;Cliquez sur une des 4 petites flèches apparues sur la case d&apos;arrivée de la pièce insérée.
                 Cela indiquera la direction dans laquelle sera orientée votre pièce.&lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
@@ -2539,7 +2535,7 @@
         Lors de ce déplacement on peut aussi faire sortir la pièce du plateau.
         Pour déplacer la pièce :
         &lt;ol&gt;
-            &lt;li&gt;Cliquez dessus.&lt;/li&gt;
+            &lt;li&gt;Cliquez dessus ;&lt;/li&gt;
             &lt;li&gt;Cliquez sur l&apos;une des 5 flèches pour choisir la direction dans laquelle elle va se déplacer.
                 En cliquant sur celle au milieu, vous décidez de juste changer l&apos;orientation de la pièce, sans la déplacer.&lt;/li&gt;
             &lt;li&gt;Cliquez sur l&apos;une des 4 flèches sur la case d&apos;arrivée de votre pièce pour choisir son orientation.&lt;/li&gt;
@@ -2564,17 +2560,17 @@
         <source>Congratulations, even if in this context it was not a useful move.</source>
         <target>Bravo, même si dans le contexte c&apos;était plutôt un mouvement inutile.</target>
       </trans-unit>
-      <trans-unit id="4722706540028615833" datatype="html">
-        <source>Failed, the piece is still on the board</source>
-        <target>Raté, elle est encore sur le plateau.</target>
+      <trans-unit id="2311226881614577495" datatype="html">
+        <source>Failed, the piece is still on the board.</source>
+        <target>Raté, la pièce est encore sur le plateau.</target>
       </trans-unit>
-      <trans-unit id="6493970758341875362" datatype="html">
+      <trans-unit id="7012941605576384729" datatype="html">
         <source>When the landing square of your move is occupied, we use the term &quot;push&quot;.
         In order to push, multiple conditions must hold:
         &lt;ol&gt;
             &lt;li&gt;Your piece must already be oriented in the direction of the push.&lt;/li&gt;
             &lt;li&gt;The number of the pieces (opponent&apos;s or not) that are facing yours (called the resistants)
-                is smaller than the number of pieces that are oriented in the same direction as the push, yourself included (the pushers).&lt;/li&gt;
+                must be smaller than the number of pieces that are oriented in the same direction as the push, yourself included (the pushers).&lt;/li&gt;
             &lt;li&gt;The number of mountains on that line must be smaller or equal to the difference between the pushers and the resistants.&lt;/li&gt;
         &lt;/ol&gt;
         Your piece on the top right cannot push because there is one mountain too much.
@@ -2583,9 +2579,9 @@
         <target>Quand la case d&apos;arrivée de votre déplacement est occupée, on parle de &quot;pousser&quot;.
         Pour pousser il faut plusieurs critères :
         &lt;ol&gt;
-            &lt;li&gt;Être déjà orienté dans le sens de la poussée.&lt;/li&gt;
+            &lt;li&gt;Être déjà orienté dans le sens de la poussée ;&lt;/li&gt;
             &lt;li&gt;Que le nombre de pièces (adverses ou non) qui font face à la votre (les résistants)
-                soit plus petit que le nombre de pièces qui vont dans la même direction, votre y compris (les pousseurs).&lt;/li&gt;
+                soit plus petit que le nombre de pièces qui vont dans la même direction, votre y compris (les pousseurs) ;&lt;/li&gt;
             &lt;li&gt;Le nombre de montagne doit être inférieur ou égal à la différence entre pousseurs et résistant.&lt;/li&gt;
         &lt;/ol&gt;
         Votre pièce tout en haut à droite ne peut pas pousser car il y a une montagne de trop.
@@ -2612,8 +2608,8 @@
         <source>You cannot move yet. Pick a space where you will put a new piece.</source>
         <target>Vous ne pouvez pas encore effectuer de déplacement. Choisissez une case où déposer une pièce.</target>
       </trans-unit>
-      <trans-unit id="4851986227613573606" datatype="html">
-        <source>Several groups are of same size, you must pick the one to keep.</source>
+      <trans-unit id="5972149122807464966" datatype="html">
+        <source>Several groups are of the same size, you must pick the one to keep.</source>
         <target>Plusieurs groupes ont la même taille, vous devez en choisir un à garder.</target>
       </trans-unit>
       <trans-unit id="586640917828080274" datatype="html">
@@ -2634,7 +2630,7 @@
       </trans-unit>
       <trans-unit id="4110234759792602964" datatype="html">
         <source>You must put this piece next to another piece.</source>
-        <target>Vous devez faire atterir cette pièce à côté d&apos;une autre pièce.</target>
+        <target>Vous devez faire atterrir cette pièce à côté d&apos;une autre pièce.</target>
       </trans-unit>
       <trans-unit id="4811847660786431276" datatype="html">
         <source>This move is not disconnecting a piece of your opponent. Try again with another piece.</source>
@@ -2642,13 +2638,13 @@
       </trans-unit>
       <trans-unit id="6058377963019501239" datatype="html">
         <source>You lost one of your pieces during this move. There is a way to disconnect an opponent&apos;s piece without losing any of yours, try again!</source>
-        <target>Vous avez perdu une de vos pièce pendant ce mouvement, il y a un moyen de déconnecter une pièce adversaire sans perdre aucunes pièces, recommencez !</target>
+        <target>Vous avez perdu une de vos pièce pendant ce mouvement, il y a un moyen de déconnecter une pièce adversaire sans perdre aucune pièce, recommencez !</target>
       </trans-unit>
-      <trans-unit id="5488934244958987687" datatype="html">
+      <trans-unit id="4832142792487017972" datatype="html">
         <source>Six is a game without board, where pieces are placed on the side of each other, in a contiguous block.
-        Every player has 21 pieces, 2 being already on the table.
+        Each player has 21 pieces, 2 being already on the table.
         The goal of the game is to form one of the three winning shapes with your pieces.</source>
-        <target>Le Six est une jeu sans plateau, où les pièces sont placées les unes à côtés des autres, en un quadrant continu.
+        <target>Le Six est une jeu sans plateau, où les pièces sont placées les unes à côtés des autres, en un bloc continu.
         Chaque joueur a 21 pièces à lui, 2 étant déjà placée sur le plateau.
         Le but principal du jeu est de former l&apos;une des trois formes gagnantes avec vos pièces.</target>
       </trans-unit>
@@ -2784,9 +2780,9 @@
         <target>Au Tablut, toutes les pièces se déplacent de la même façon.
         De façon équivalente aux tours aux échecs, une pièce se déplace :
         &lt;ol&gt;
-            &lt;li&gt;D&apos;autant de case qu&apos;elle veut.&lt;/li&gt;
-            &lt;li&gt;Sans passer à travers ou s&apos;arrêter sur une autre pièce.&lt;/li&gt;
-            &lt;li&gt;Horizontalement ou verticalement.&lt;/li&gt;
+            &lt;li&gt;D&apos;autant de case qu&apos;elle veut ;&lt;/li&gt;
+            &lt;li&gt;Sans passer à travers ou s&apos;arrêter sur une autre pièce ;&lt;/li&gt;
+            &lt;li&gt;Horizontalement ou verticalement ;&lt;/li&gt;
             &lt;li&gt;Seul le roi peut s&apos;arrêter sur un trône.&lt;/li&gt;
         &lt;/ol&gt;
         Pour déplacer une pièce, cliquez dessus, puis sur sa destination.&lt;br/&gt;&lt;br/&gt;

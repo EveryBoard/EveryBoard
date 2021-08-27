@@ -233,7 +233,7 @@ describe('YinshComponent', () => {
             const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
             testUtils.setupSlice(state);
 
-            await testUtils.expectClickFailure('#click_4_2', YinshFailure.NOT_PART_OF_CAPTURE);
+            await testUtils.expectClickFailure('#click_4_2', YinshFailure.MISSING_CAPTURES);
         }));
         it('should show the number of rings of each player', fakeAsync(async() => {
             const state: YinshGameState = new YinshGameState(YinshBoard.EMPTY, [2, 1], 10);

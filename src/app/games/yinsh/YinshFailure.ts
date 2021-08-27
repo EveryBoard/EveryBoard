@@ -25,8 +25,6 @@ export class YinshFailure {
 
     public static readonly AMBIGUOUS_CAPTURE_COORD: string = GipfFailure.AMBIGUOUS_CAPTURE_COORD;
 
-    public static readonly NOT_PART_OF_CAPTURE: string = GipfFailure.NOT_PART_OF_CAPTURE;
-
     public static readonly INVALID_CAPTURE: string = $localize`A capture must contain exactly 5 markers.`;
 
     public static readonly CAPTURE_SHOULD_TAKE_RING: string = $localize`When you capture markers, you must take one of your ring as well by clicking on it.`;

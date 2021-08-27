@@ -38,9 +38,9 @@ export const goTutorial: TutorialStep[] = [
     TutorialStep.fromMove(
         $localize`Simple capture`,
         $localize`An isolated stone, like the one in the middle here, has 4 neighboring intersections (not 8, because we do not count diagonals).
-        If a neighboring intersection is unoccupied, it is called a freedom.
-        If Dark plays on the last freedom of the light stone, this stone is removed from the Goban (captured) and Dark earns one point.<br/><br/>
-        There's only one freedom left to the light piece, capture it.`,
+        If a neighboring intersection is unoccupied, it is called a liberty.
+        If Dark plays on the last liberty of the light stone, this stone is removed from the Goban (captured) and Dark earns one point.<br/><br/>
+        The light piece only has one liberty left, play there.`,
         new GoPartSlice([
             [_, _, _, _, _],
             [_, _, O, _, _],
@@ -55,7 +55,7 @@ export const goTutorial: TutorialStep[] = [
     TutorialStep.fromMove(
         $localize`Capturing multiple stones`,
         $localize`Stones that are connected horizontally or vertically must be captured at the same time, and are not capturable in isolation.<br/><br/>
-        The light group here only has one freedom left, capture it.`,
+        The light group here only has one liberty left, capture it.`,
         new GoPartSlice([
             [_, O, _, _, _],
             [O, X, _, _, _],
@@ -65,12 +65,12 @@ export const goTutorial: TutorialStep[] = [
         ], [0, 0], 0, MGPOptional.empty(), Phase.PLAYING),
         [new GoMove(2, 1)],
         $localize`Congratulations, you have earned three points and formed a territory.`,
-        $localize`Failed, you have not captured the group. Play on the last freedom of that group.`,
+        $localize`Failed, you have not captured the group. Play on the last liberty of that group.`,
     ),
     TutorialStep.informational(
         $localize`Suicide`,
         $localize`In Go, suicide is forbidden.
-        If putting a piece on an intersection removes the last freedom of your group and does not capture any stone, playing on that intersection would be a suicide and is therefore forbidden.
+        If putting a piece on an intersection removes the last liberty of your group and does not capture any stone, playing on that intersection would be a suicide and is therefore forbidden.
         Here, the top left intersection is a suicide for Light.
         On the bottom right, it would be a suicide for Dark, and on the bottom left it is not a suicide for any player.`,
         new GoPartSlice([
@@ -87,7 +87,7 @@ export const goTutorial: TutorialStep[] = [
         dead stones are stones that are definitely capturable (without losing anything else).
         Alive stones are stones that can never be captured.
         From the capture rule, Dark can play inside Light's territory and make a capture.
-        In this case, we say that Light has only one eye (its last freedom) and that Light is dead (even if not yet captured).
+        In this case, we say that Light has only one eye (its last liberty) and that Light is dead (even if not yet captured).
         At the end of the game, the dead stones will count as captures, and the intersections they occupy as territories.`,
         new GoPartSlice([
             [_, _, _, _, _],

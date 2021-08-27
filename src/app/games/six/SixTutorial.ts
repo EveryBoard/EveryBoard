@@ -21,7 +21,7 @@ export const sixTutorial: TutorialStep[] = [
     TutorialStep.informational(
         $localize`Six`,
         $localize`Six is a game without board, where pieces are placed on the side of each other, in a contiguous block.
-        Every player has 21 pieces, 2 being already on the table.
+        Each player has 21 pieces, 2 being already on the table.
         The goal of the game is to form one of the three winning shapes with your pieces.`,
         SixGameState.getInitialSlice(),
     ),
