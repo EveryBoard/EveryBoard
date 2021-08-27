@@ -16,18 +16,18 @@ export class MGPOptional<T extends Comparable> {
                 if (encoded === null) {
                     return MGPOptional.empty();
                 } else {
-                    return MGPOptional.of(encoderT.decode(encoded));
+                    return MGPOptional.of(encoderT.decode(encoded) as NonNullable<T>);
                 }
             }
         };
     }
-    public static of<T extends Comparable>(value: T): MGPOptional<T> {
-        if (value == null) throw new Error('Optional cannot be create with empty value, use MGPOptional.empty instead');
+    public static of<T extends Comparable>(value: NonNullable<T>): MGPOptional<T> {
+        if (value == null) throw new Error('Optional cannot be created with empty value, use MGPOptional.empty instead');
         return new MGPOptional(value);
     }
     public static ofNullable<T extends Comparable>(value: T): MGPOptional<T> {
         if (value == null) return MGPOptional.empty();
-        return MGPOptional.of(value);
+        return MGPOptional.of(value as NonNullable<T>);
     }
     public static empty<T extends Comparable>(): MGPOptional<T> {
         return new MGPOptional(null);
@@ -40,9 +40,9 @@ export class MGPOptional<T extends Comparable> {
     public isAbsent(): boolean {
         return this.value == null;
     }
-    public get(): T {
+    public get(): NonNullable<T> {
         if (this.isPresent()) {
-            return this.value;
+            return this.value as NonNullable<T>;
         } else {
             throw new Error('Value is absent');
         }

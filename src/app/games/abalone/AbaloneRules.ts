@@ -90,7 +90,7 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneGameState, AbaloneLe
     }
     private static isLegalSideStep(move: AbaloneMove, state: AbaloneGameState): AbaloneLegalityStatus {
         let last: Coord = move.lastPiece.get();
-        const alignement: Direction = move.coord.getDirectionToward(last);
+        const alignement: Direction = move.coord.getDirectionToward(last).get();
         last = last.getNext(alignement); // to include lastPiece as well
         let tested: Coord = move.coord;
         const PLAYER: number = state.getCurrentPlayer().value;

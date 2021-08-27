@@ -2,6 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { NumberEncoder } from 'src/app/jscaip/Encoder';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { JSONValue } from 'src/app/utils/utils';
 import { LinesOfActionState } from './LinesOfActionState';
 
@@ -9,19 +10,25 @@ export class LinesOfActionMove extends MoveCoordToCoord {
     public static encoder: NumberEncoder<LinesOfActionMove> =
         MoveCoordToCoord.getEncoder<LinesOfActionMove>(LinesOfActionState.SIZE, LinesOfActionState.SIZE,
                                                        (start: Coord, end: Coord): LinesOfActionMove => {
-                                                           return new LinesOfActionMove(start, end);
+                                                           return LinesOfActionMove.of(start, end).get();
                                                        });
 
-    public readonly direction: Direction;
-    public constructor(start: Coord, end: Coord) {
+    public static of(start: Coord, end: Coord): MGPFallible<LinesOfActionMove> {
+        const directionOptional: MGPFallible<Direction> = Direction.factory.fromMove(start, end);
+        if (directionOptional.isFailure()) {
+            return MGPFallible.failure(directionOptional.getReason());
+        }
+        if (start.isNotInRange(LinesOfActionState.SIZE, LinesOfActionState.SIZE)) {
+            return MGPFallible.failure('start coord is not in range');
+        }
+        if (end.isNotInRange(LinesOfActionState.SIZE, LinesOfActionState.SIZE)) {
+            return MGPFallible.failure('end coord is not in range');
+        }
+        return MGPFallible.success(new LinesOfActionMove(start, end, directionOptional.get()));
+    }
+    private constructor(start: Coord, end: Coord, public readonly direction: Direction) {
         super(start, end);
-        if (!start.isInRange(LinesOfActionState.SIZE, LinesOfActionState.SIZE)) {
-            throw new Error('Starting coord of LinesOfActionMove must be on the board');
-        }
-        if (!end.isInRange(LinesOfActionState.SIZE, LinesOfActionState.SIZE)) {
-            throw new Error('End coord of LinesOfActionMove must be on the board');
-        }
-        this.direction = Direction.factory.fromMove(start, end);
+        this.direction = Direction.factory.fromMove(start, end).get();
     }
     public equals(o: LinesOfActionMove): boolean {
         if (o === this) return true;

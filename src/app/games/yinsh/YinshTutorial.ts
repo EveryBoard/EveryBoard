@@ -1,6 +1,8 @@
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { Coord } from 'src/app/jscaip/Coord';
+import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { YinshBoard } from './YinshBoard';
 import { YinshGameState } from './YinshGameState';
 import { YinshCapture, YinshMove } from './YinshMove';
@@ -12,6 +14,12 @@ const a: YinshPiece = YinshPiece.MARKER_ZERO;
 const A: YinshPiece = YinshPiece.RING_ZERO;
 const b: YinshPiece = YinshPiece.MARKER_ONE;
 const B: YinshPiece = YinshPiece.RING_ONE;
+
+export class YinshTutorialMessages {
+    public static readonly MUST_ALIGN_FIVE: string = $localize`Failed! You need to align 5 markers of your color in order to get them, and to get a ring at the same time.`;
+
+    public static readonly MUST_CAPTURE_TWO: string = $localize`Failed! You can capture two rings in total, by capturing two times 5 of your markers. Try again.`;
+}
 
 export const yinshTutorial: TutorialStep[] = [
     TutorialStep.informational(
@@ -68,7 +76,7 @@ export const yinshTutorial: TutorialStep[] = [
         ]), [0, 0], 20),
         new YinshMove([], new Coord(2, 4), MGPOptional.of(new Coord(4, 4)), []),
         $localize`Congratulations!`),
-    TutorialStep.fromMove(
+    TutorialStep.fromPredicate(
         $localize`Getting a ring by aligning 5 markers`,
         $localize`Finally, the last mechanic you need is to be able to get a ring from the board in order to gain points.
         To do so, you need to align 5 markers of your color.
@@ -89,9 +97,47 @@ export const yinshTutorial: TutorialStep[] = [
             [_, _, _, _, _, _, _, N, N, N, N],
             [N, _, _, _, _, N, N, N, N, N, N],
         ]), [0, 0], 20),
-        [new Coord(7, 4), new Coord(4, 6), new Coord(5, 7), new Coord(3, 8), new Coord(7, 8)].map((ringTaken: Coord) =>
-            new YinshMove([], new Coord(4, 4), MGPOptional.of(new Coord(7, 4)),
-                          [YinshCapture.of(new Coord(2, 4), new Coord(6, 4), ringTaken)])),
-        $localize`Congratulations! You need two more captures to win.`,
-        $localize`Failed! You need to align 5 markers of your color in order to get them, and to get a ring at the same time.`),
+        new YinshMove([], new Coord(4, 4), MGPOptional.of(new Coord(7, 4)),
+                      [YinshCapture.of(new Coord(2, 4), new Coord(6, 4), new Coord(7, 4))]),
+        (_: YinshMove, resultingState: YinshGameState): MGPValidation => {
+            if (resultingState.sideRings[Player.ZERO.value] === 1) {
+                return MGPValidation.SUCCESS;
+            } else {
+                return MGPValidation.failure(YinshTutorialMessages.MUST_ALIGN_FIVE);
+            }
+        },
+        $localize`Congratulations!`),
+    TutorialStep.fromPredicate(
+        $localize`Compound captures`,
+        $localize`During a turn, you could have to choose between multiple captures,
+        or you could even capture multiple times!
+        During the capture selection, if you see that the marker you clicked belongs to two captures, you have to click on a second marker to avoid any ambiguity.<br/><br/>
+        Here, you can capture two rings, do it!`,
+        new YinshGameState(YinshBoard.of([
+            [N, N, N, N, N, N, _, _, _, _, N],
+            [N, N, N, N, A, _, _, B, B, A, _],
+            [N, N, N, A, _, _, b, B, _, A, _],
+            [N, N, _, A, _, _, _, _, _, B, _],
+            [N, _, _, _, _, a, _, _, B, _, _],
+            [N, _, _, _, a, a, _, b, _, _, N],
+            [_, _, _, a, _, a, _, _, _, _, N],
+            [_, _, a, _, _, a, _, _, _, N, N],
+            [_, a, _, _, _, a, _, _, N, N, N],
+            [_, _, _, _, _, a, _, N, N, N, N],
+            [N, _, _, _, _, N, N, N, N, N, N],
+        ]), [0, 0], 10),
+        new YinshMove([
+            YinshCapture.of(new Coord(5, 4), new Coord(1, 8), new Coord(3, 2)),
+            YinshCapture.of(new Coord(5, 9), new Coord(5, 5), new Coord(3, 3)),
+        ],
+                      new Coord(4, 1), MGPOptional.of(new Coord(4, 2)),
+                      []),
+        (_: YinshMove, resultingState: YinshGameState): MGPValidation => {
+            if (resultingState.sideRings[Player.ZERO.value] === 2) {
+                return MGPValidation.SUCCESS;
+            } else {
+                return MGPValidation.failure(YinshTutorialMessages.MUST_CAPTURE_TWO);
+            }
+        },
+        $localize`Congratulations !`),
 ];

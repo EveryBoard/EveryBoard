@@ -19,6 +19,7 @@ export class GameWrapperMessages {
 
     public static readonly NO_CLONING_FEATURE: string = $localize`You cannot clone a game. This feature might be implemented later.`;
 }
+
 @Component({ template: '' })
 export abstract class GameWrapper {
     public static VERBOSE: boolean = false;

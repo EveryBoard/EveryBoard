@@ -9,6 +9,8 @@ export class YinshFailure {
 
     public static readonly CAPTURE_MUST_BE_ALIGNED: string = $localize`You can only capture when exactly 5 of your markers are aligned, and it is not the case.`
 
+    public static readonly MOVE_DIRECTION_INVALID: string = $localize`The direction of your move is invalid: a move is made along a straight line.`
+
     public static readonly INVALID_CAPTURED_PIECES: string = $localize`Please pick a valid capture that contains exactly 5 markers.`;
 
     public static readonly CAN_ONLY_CAPTURE_YOUR_MARKERS: string = $localize`You can only capture your own markers.`;

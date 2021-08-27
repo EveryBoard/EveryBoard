@@ -328,7 +328,7 @@ describe('EpaminondasComponent:', () => {
 
         await componentTestUtils.expectClickFailure('#click_1_7', EpaminondasFailure.CASE_NOT_ALIGNED_WITH_PHALANX);
     }));
-    it('Should cancelMove when third click is not aligned with phalange direction', fakeAsync(async() => {
+    it('Should cancelMove when third click is not aligned with phalanx direction', fakeAsync(async() => {
         const initialBoard: NumberTable = [
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],

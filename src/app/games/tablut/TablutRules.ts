@@ -90,7 +90,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
             }
         }
 
-        const dir: Direction = move.coord.getDirectionToward(move.end);
+        const dir: Direction = move.coord.getDirectionToward(move.end).get();
 
         const dist: number = move.coord.getOrthogonalDistance(move.end);
         let c: Coord = move.coord.getNext(dir); // the inspected coord

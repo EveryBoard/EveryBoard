@@ -2,11 +2,9 @@ import { Component } from '@angular/core';
 import { AbstractGameComponent }
     from 'src/app/components/game-components/abstract-game-component/AbstractGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
-import { DirectionError } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { assert } from 'src/app/utils/utils';
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionRules } from './LinesOfActionRules';
 import { LinesOfActionMinimax } from './LinesOfActionMinimax';
@@ -14,6 +12,7 @@ import { LinesOfActionFailure } from './LinesOfActionFailure';
 import { LinesOfActionState } from './LinesOfActionState';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { linesOfActionTutorial } from './LinesOfActionTutorial';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -57,11 +56,11 @@ export class LinesOfActionComponent extends AbstractGameComponent<LinesOfActionM
             if (this.getState().getAt(coord) === this.getState().getCurrentPlayer().value) {
                 return this.select(coord);
             } else {
-                try {
-                    const move: LinesOfActionMove = new LinesOfActionMove(this.selected.get(), new Coord(x, y));
-                    return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
-                } catch (e) {
-                    assert(e instanceof DirectionError, 'Unexpected error: ' + e);
+                const move: MGPFallible<LinesOfActionMove> =
+                    LinesOfActionMove.of(this.selected.get(), new Coord(x, y));
+                if (move.isSuccess()) {
+                    return this.chooseMove(move.get(), this.rules.node.gamePartSlice, null, null);
+                } else {
                     return this.cancelMove(LinesOfActionFailure.INVALID_DIRECTION);
                 }
             }
