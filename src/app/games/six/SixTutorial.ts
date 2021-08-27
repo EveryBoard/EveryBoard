@@ -11,7 +11,7 @@ const X: number = Player.ONE.value;
 
 export class SixTutorialMessages {
 
-    public static readonly MOVEMENT_NOT_DISCONNECTING: string = $localize`This move is not disconnecting a piece of your opponent. Try again with another piece.`;
+    public static readonly MOVEMENT_NOT_DISCONNECTING: string = $localize`This move does not disconnect your opponent's pieces. Try again with another piece.`;
 
     public static readonly MOVEMENT_SELF_DISCONNECTING: string = $localize`You lost one of your pieces during this move. There is a way to disconnect an opponent's piece without losing any of yours, try again!`;
 }
@@ -21,7 +21,7 @@ export const sixTutorial: TutorialStep[] = [
     TutorialStep.informational(
         $localize`Six`,
         $localize`Six is a game without board, where pieces are placed on the side of each other, in a contiguous block.
-        Each player has 21 pieces, 2 being already on the table.
+        Each player has 21 pieces, with one for each player already on the board.
         The goal of the game is to form one of the three winning shapes with your pieces.`,
         SixGameState.getInitialSlice(),
     ),
@@ -72,8 +72,8 @@ export const sixTutorial: TutorialStep[] = [
     TutorialStep.fromPredicate(
         $localize`Second phase`,
         $localize`After 40 turns, your pieces have all been placed and we move on to the second phase of the game.
-        You now have to move your pieces, paying attention not to remove a piece that was blocking the opponent's victory.
-        From now on, if after move, on or more pieces are disconnected from the largest group of piece, these will be taken out of the game.<br/><br/>
+        You now have to move your pieces, paying attention not to remove a piece that was preventing the opponent's victory.
+        From now on, if after move, on or more pieces are disconnected from the largest group of pieces, these will be taken out of the game.<br/><br/>
         You're playing Dark. Make a move that disconnects one of your opponent's pieces.`,
         SixGameState.fromRepresentation([
             [_, _, _, _, _, _, _, X, _],
@@ -105,8 +105,8 @@ export const sixTutorial: TutorialStep[] = [
     TutorialStep.fromPredicate(
         $localize`Victory by disconnection`,
         $localize`During the second phase of the game, on top of normal victories (line, circle, triangle), you can win by disconnection.
-        If at any time, one player does not have enough pieces to win (less than 6), the game ends.
-        The one with the most pieces wins. In case of tie, it's a draw.<br/><br/>
+        If at any time, at least one player does not have enough pieces to win (less than 6), the game ends.
+        The one with the most pieces wins. In case they both have the same number of pieces, it's a draw.<br/><br/>
         Here, you're playing Dark and you can win. Do it!`,
         SixGameState.fromRepresentation([
             [_, _, _, _, _, X],
@@ -122,7 +122,7 @@ export const sixTutorial: TutorialStep[] = [
             if (new Coord(2, 3).equals(move.start.getOrNull())) {
                 return MGPValidation.SUCCESS;
             } else {
-                return MGPValidation.failure($localize`This move does not disconnect your opponent's pieces. Try again with another piece.`);
+                return MGPValidation.failure(SixTutorialMessages.MOVEMENT_NOT_DISCONNECTING);
             }
         },
         $localize`Congratulations, you won!`,

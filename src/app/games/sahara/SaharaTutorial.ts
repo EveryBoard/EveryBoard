@@ -32,7 +32,7 @@ export const saharaTutorial: TutorialStep[] = [
         ], 3),
     ),
     TutorialStep.fromPredicate(
-        $localize`Simple move`,
+        $localize`Simple step`,
         $localize`To immobilize your opponent, you have to move your pyramids.
         When a pyramid shares its vertices with light spaces, it can move on these spaces (we call this a simple step).
         You're the first player, playing with the dark pyramids.

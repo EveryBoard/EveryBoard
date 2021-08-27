@@ -139,5 +139,5 @@ export const yinshTutorial: TutorialStep[] = [
                 return MGPValidation.failure(YinshTutorialMessages.MUST_CAPTURE_TWO);
             }
         },
-        $localize`Congratulations !`),
+        $localize`Congratulations!`),
 ];

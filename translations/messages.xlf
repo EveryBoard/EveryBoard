@@ -131,11 +131,26 @@
       <trans-unit id="5737474371494262748" datatype="html">
         <source>Put your hexagonal pieces next to another one, and create one of the 3 victorious shapes to win!</source>
       </trans-unit>
-      <trans-unit id="4713908844197056478" datatype="html">
-        <source>The vikings checkers! Invaders must capture the King, defender must make him escape!</source>
+      <trans-unit id="5829078581404563552" datatype="html">
+        <source>The Vikings checkers! Invaders must capture the King, defender must make him escape!</source>
       </trans-unit>
       <trans-unit id="7926456268600574942" datatype="html">
         <source>Align your pieces to score points, but beware, pieces can flip!</source>
+      </trans-unit>
+      <trans-unit id="6718336452622284682" datatype="html">
+        <source>Get rid of all of your opponent&apos;s pieces on a board that shrinks little by little !</source>
+      </trans-unit>
+      <trans-unit id="2422217146537870502" datatype="html">
+        <source>Create a winning alignment. The problem : you don&apos;t pick the piece that you&apos;re placing on the board !</source>
+      </trans-unit>
+      <trans-unit id="4664465757280550995" datatype="html">
+        <source>Sandwich your opponent&apos;s pieces to dominate the board !</source>
+      </trans-unit>
+      <trans-unit id="8549193272754581107" datatype="html">
+        <source>Your goal is simple: reach the last line. But the piece you move depends on your opponent&apos;s last move !</source>
+      </trans-unit>
+      <trans-unit id="8393598595179829123" datatype="html">
+        <source>Align 5 of your pieces on a board where squares slide !</source>
       </trans-unit>
       <trans-unit id="718535138834335364" datatype="html">
         <source>Four in a Row</source>
@@ -654,8 +669,8 @@
         <source>Also, as soon as on player cannot play, the other player captures all the seeds in its own side.
          Here, it was the first player&apos;s turn, and the second player has taken all the remaining seeds.</source>
       </trans-unit>
-      <trans-unit id="2954415609985904324" datatype="html">
-        <source>Invalid move distance: your piece must land on one of the closest six triangles with the same color as the triangle on which the piece is.</source>
+      <trans-unit id="6011590532570079359" datatype="html">
+        <source>Your piece must land on one of the closest six triangles with the same color as the triangle on which the piece is.</source>
       </trans-unit>
       <trans-unit id="117738177627572036" datatype="html">
         <source>You do not have enough tiles to exchange in order to capture this piece. Pick one of your piece and move it.</source>
@@ -1655,6 +1670,9 @@
         To do so, you have to occupy all neighboring space of that pyramid.
         Here, Light has lost because its leftmost pyramid is immobilized.</source>
       </trans-unit>
+      <trans-unit id="1300852626039829767" datatype="html">
+        <source>Simple step</source>
+      </trans-unit>
       <trans-unit id="6555319865807115204" datatype="html">
         <source>To immobilize your opponent, you have to move your pyramids.
         When a pyramid shares its vertices with light spaces, it can move on these spaces (we call this a simple step).
@@ -1791,15 +1809,15 @@
       <trans-unit id="4110234759792602964" datatype="html">
         <source>You must put this piece next to another piece.</source>
       </trans-unit>
-      <trans-unit id="4811847660786431276" datatype="html">
-        <source>This move is not disconnecting a piece of your opponent. Try again with another piece.</source>
+      <trans-unit id="7208567678509553256" datatype="html">
+        <source>This move does not disconnect your opponent&apos;s pieces. Try again with another piece.</source>
       </trans-unit>
       <trans-unit id="6058377963019501239" datatype="html">
         <source>You lost one of your pieces during this move. There is a way to disconnect an opponent&apos;s piece without losing any of yours, try again!</source>
       </trans-unit>
-      <trans-unit id="4832142792487017972" datatype="html">
+      <trans-unit id="6517565683560801163" datatype="html">
         <source>Six is a game without board, where pieces are placed on the side of each other, in a contiguous block.
-        Each player has 21 pieces, 2 being already on the table.
+        Each player has 21 pieces, with one for each player already on the board.
         The goal of the game is to form one of the three winning shapes with your pieces.</source>
       </trans-unit>
       <trans-unit id="1323662052932112829" datatype="html">
@@ -1829,10 +1847,10 @@
       <trans-unit id="8968454720078127329" datatype="html">
         <source>Second phase</source>
       </trans-unit>
-      <trans-unit id="4177736080893203208" datatype="html">
+      <trans-unit id="7184945664924176112" datatype="html">
         <source>After 40 turns, your pieces have all been placed and we move on to the second phase of the game.
-        You now have to move your pieces, paying attention not to remove a piece that was blocking the opponent&apos;s victory.
-        From now on, if after move, on or more pieces are disconnected from the largest group of piece, these will be taken out of the game.&lt;br/&gt;&lt;br/&gt;
+        You now have to move your pieces, paying attention not to remove a piece that was preventing the opponent&apos;s victory.
+        From now on, if after move, on or more pieces are disconnected from the largest group of pieces, these will be taken out of the game.&lt;br/&gt;&lt;br/&gt;
         You&apos;re playing Dark. Make a move that disconnects one of your opponent&apos;s pieces.</source>
       </trans-unit>
       <trans-unit id="6404013542075961070" datatype="html">
@@ -1841,14 +1859,11 @@
       <trans-unit id="4819564470925108710" datatype="html">
         <source>Victory by disconnection</source>
       </trans-unit>
-      <trans-unit id="5614996129263361767" datatype="html">
+      <trans-unit id="3845114702040437383" datatype="html">
         <source>During the second phase of the game, on top of normal victories (line, circle, triangle), you can win by disconnection.
-        If at any time, one player does not have enough pieces to win (less than 6), the game ends.
-        The one with the most pieces wins. In case of tie, it&apos;s a draw.&lt;br/&gt;&lt;br/&gt;
+        If at any time, at least one player does not have enough pieces to win (less than 6), the game ends.
+        The one with the most pieces wins. In case they both have the same number of pieces, it&apos;s a draw.&lt;br/&gt;&lt;br/&gt;
         Here, you&apos;re playing Dark and you can win. Do it!</source>
-      </trans-unit>
-      <trans-unit id="7208567678509553256" datatype="html">
-        <source>This move does not disconnect your opponent&apos;s pieces. Try again with another piece.</source>
       </trans-unit>
       <trans-unit id="631151175449209373" datatype="html">
         <source>Special disconnection</source>
@@ -1958,6 +1973,9 @@
       <trans-unit id="7464993832700646540" datatype="html">
         <source>You can only capture when exactly 5 of your markers are aligned, and it is not the case.</source>
       </trans-unit>
+      <trans-unit id="923761852987939376" datatype="html">
+        <source>The direction of your move is invalid: a move is made along a straight line.</source>
+      </trans-unit>
       <trans-unit id="1240800364123845501" datatype="html">
         <source>Please pick a valid capture that contains exactly 5 markers.</source>
       </trans-unit>
@@ -1984,6 +2002,12 @@
       </trans-unit>
       <trans-unit id="5146449464465539521" datatype="html">
         <source>When you capture markers, you must take one of your ring as well by clicking on it.</source>
+      </trans-unit>
+      <trans-unit id="7525019515401716113" datatype="html">
+        <source>Failed! You need to align 5 markers of your color in order to get them, and to get a ring at the same time.</source>
+      </trans-unit>
+      <trans-unit id="4464967427027571359" datatype="html">
+        <source>Failed! You can capture two rings in total, by capturing two times 5 of your markers. Try again.</source>
       </trans-unit>
       <trans-unit id="2051808586522733055" datatype="html">
         <source>The goal at Yinsh is to capture three rings in total.
@@ -2024,11 +2048,14 @@
         You must capture when you can.&lt;br/&gt;&lt;br/&gt;
         You&apos;re playing Dark, perform a capture!</source>
       </trans-unit>
-      <trans-unit id="7732729017555001326" datatype="html">
-        <source>Congratulations! You need two more captures to win.</source>
+      <trans-unit id="4758113906566791089" datatype="html">
+        <source>Compound captures</source>
       </trans-unit>
-      <trans-unit id="7525019515401716113" datatype="html">
-        <source>Failed! You need to align 5 markers of your color in order to get them, and to get a ring at the same time.</source>
+      <trans-unit id="323630988500443195" datatype="html">
+        <source>During a turn, you could have to choose between multiple captures,
+        or you could even capture multiple times!
+        During the capture selection, if you see that the marker you clicked belongs to two captures, you have to click on a second marker to avoid any ambiguity.&lt;br/&gt;&lt;br/&gt;
+        Here, you can capture two rings, do it!</source>
       </trans-unit>
       <trans-unit id="6079681718244869210" datatype="html">
         <source>You cannot pick a piece of the opponent.</source>

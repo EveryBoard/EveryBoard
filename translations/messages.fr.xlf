@@ -174,13 +174,33 @@
         <source>Put your hexagonal pieces next to another one, and create one of the 3 victorious shapes to win!</source>
         <target>Placez vos pièces hexagonales les unes à côté des autres et soyez le premier à créer une des trois formes requises pour gagner !</target>
       </trans-unit>
-      <trans-unit id="4713908844197056478" datatype="html">
-        <source>The vikings checkers! Invaders must capture the King, defender must make him escape!</source>
-        <target>Le jeu de dames viking ! Les envahisseurs doivent capturer le roi, tandis que les défenseurs doivent le faire s'échapper !</target>
+      <trans-unit id="5829078581404563552" datatype="html">
+        <source>The Vikings checkers! Invaders must capture the King, defender must make him escape!</source>
+        <target>Le jeu de dames Viking ! Les envahisseurs doivent capturer le roi, tandis que les défenseurs doivent le faire s'échapper !</target>
       </trans-unit>
       <trans-unit id="7926456268600574942" datatype="html">
         <source>Align your pieces to score points, but beware, pieces can flip!</source>
         <target>Alignez vos pièces pour marquer des points, mais attention aux retournements de pièces !</target>
+      </trans-unit>
+      <trans-unit id="6718336452622284682" datatype="html">
+        <source>Get rid of all of your opponent&apos;s pieces on a board that shrinks little by little !</source>
+        <target>Éliminez tous vos ennemis sur un plateau dont la taille diminue petit à petit !</target>
+      </trans-unit>
+      <trans-unit id="2422217146537870502" datatype="html">
+        <source>Create a winning alignment. The problem : you don&apos;t pick the piece that you&apos;re placing on the board !</source>
+        <target>Faites un alignement gagnant. La difficulté : vous ne choisissez pas la pièce que vous placez !</target>
+      </trans-unit>
+      <trans-unit id="4664465757280550995" datatype="html">
+        <source>Sandwich your opponent&apos;s pieces to dominate the board !</source>
+        <target>Prenez en sandwich les pièces adverses pour dominer le plateau !</target>
+      </trans-unit>
+      <trans-unit id="8549193272754581107" datatype="html">
+        <source>Your goal is simple: reach the last line. But the piece you move depends on your opponent&apos;s last move !</source>
+        <target>Votre but est simple : atteindre la dernière ligne. Mais la pièce que vous déplacez dépend du mouvement de votre adversaire !</target>
+      </trans-unit>
+      <trans-unit id="8393598595179829123" datatype="html">
+        <source>Align 5 of your pieces on a board where squares slide !</source>
+        <target>Alignez 5 de vos pièces sur un plateau dont les cases glissent !</target>
       </trans-unit>
       <trans-unit id="718535138834335364" datatype="html">
         <source>Four in a Row</source>
@@ -888,9 +908,9 @@
         <target>Aussi, dès qu&apos;un joueur ne peut plus jouer, l’autre joueur capture toutes les graines dans son propre camp.
         Ici, c&apos;était à vous de jouer et au joueur suivant de récolter toutes les graines restantes, en mettant ainsi fin à la partie.</target>
       </trans-unit>
-      <trans-unit id="2954415609985904324" datatype="html">
-        <source>Invalid move distance: your piece must land on one of the closest six triangles with the same color as the triangle on which the piece is.</source>
-        <target>Distance de déplacement illégal, votre pion doit atterrir sur l&apos;un des six triangles les plus proches de même couleur que la case sur laquelle il est.</target>
+      <trans-unit id="6011590532570079359" datatype="html">
+        <source>Your piece must land on one of the closest six triangles with the same color as the triangle on which the piece is.</source>
+        <target>Votre pion doit atterrir sur l&apos;un des six triangles les plus proches de même couleur que la case sur laquelle il est.</target>
       </trans-unit>
       <trans-unit id="117738177627572036" datatype="html">
         <source>You do not have enough tiles to exchange in order to capture this piece. Pick one of your piece and move it.</source>
@@ -945,7 +965,7 @@
         Perform any move.</source>
         <target>Pour effectuer un déplacement, il faut :
         &lt;ol&gt;
-            &lt;li&gt;Cliquer sur l&apos;une de vos pièces ;&lt;/li&gt;
+            &lt;li&gt;Cliquer sur l&apos;une de vos pièces.&lt;/li&gt;
             &lt;li&gt;Cliquer sur l&apos;une des cases triangulaires encadrées en jaune.&lt;/li&gt;
         &lt;/ol&gt;
         Vous pouvez passer à travers les pièces adverses.&lt;br/&gt;&lt;br/&gt;
@@ -1292,7 +1312,7 @@
         <target>Voici le plateau de départ, c&apos;est à Foncé de commencer.
         Commençons simplement par un déplacement d&apos;une seule pièce :
         &lt;ol&gt;
-            &lt;li&gt;Cliquez sur une pièce ;&lt;/li&gt;
+            &lt;li&gt;Cliquez sur une pièce.&lt;/li&gt;
             &lt;li&gt;Cliquez sur une case voisine libre.&lt;/li&gt;
         &lt;/ol&gt;</target>
       </trans-unit>
@@ -1318,8 +1338,8 @@
         Move a phalanx!</source>
         <target>Maintenant, comment déplacer plusieurs pièces sur une seule ligne (une phalange) :
         &lt;ol&gt;
-            &lt;li&gt;Cliquez sur la première pièce ;&lt;/li&gt;
-            &lt;li&gt;Cliquez sur la dernière pièce de la phalange ;&lt;/li&gt;
+            &lt;li&gt;Cliquez sur la première pièce.&lt;/li&gt;
+            &lt;li&gt;Cliquez sur la dernière pièce de la phalange.&lt;/li&gt;
             &lt;li&gt;Cliquez une des cases encadrées en jaune, elles vous permettent de déplacer au maximum votre phalange d&apos;une distance égale à sa taille.&lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
         Faites un déplacement de phalange !</target>
@@ -1348,8 +1368,8 @@
         Capture a phalanx.</source>
         <target>Pour capturer une phalange de l'adversaire :
         &lt;ol&gt;
-            &lt;li&gt;Il faut que celle-ci soit alignée avec la phalange en déplacement ;&lt;/li&gt;
-            &lt;li&gt;Qu&apos;elle soit strictement plus courte ;&lt;/li&gt;
+            &lt;li&gt;Il faut que celle-ci soit alignée avec la phalange en déplacement.&lt;/li&gt;
+            &lt;li&gt;Qu&apos;elle soit strictement plus courte.&lt;/li&gt;
             &lt;li&gt;Que la première pièce de votre phalange atterrisse sur la première pièce rencontrée de la phalange à capturer.&lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
         Capturez la phalange.</target>
@@ -1427,7 +1447,7 @@
         You&apos;re playing Dark, insert a piece.</source>
         <target>Les pièces ne peuvent entrer sur le plateau que par l&apos;extérieur. Pour insérer une nouvelle pièce :
         &lt;ol&gt;
-            &lt;li&gt;Cliquez sur une case sur le bord du plateau ;&lt;/li&gt;
+            &lt;li&gt;Cliquez sur une case sur le bord du plateau.&lt;/li&gt;
             &lt;li&gt;Si cette case était occupée, cliquez ensuite sur la flèche représentant la direction dans laquelle pousser la/les pièces déjà présentes dans la rangée.&lt;/li&gt;
         &lt;li&gt;
         Une poussée est interdite dans une rangée complète.&lt;br/&gt;&lt;br/&gt;
@@ -1458,15 +1478,15 @@
         <target>Pour faire une capture, il faut aligner 4 de ses propres pièces, qui seront les 4 premières capturées.
         Il y a plusieurs choses à savoir sur une capture :
         &lt;ol&gt;
-            &lt;li&gt;Quand 4 pièces sont capturées, toutes les pièces directement alignées avec ces 4 pièces le sont également ;&lt;/li&gt;
-            &lt;li&gt;Dès qu&apos;il y a une case vide dans la ligne, la capture s&apos;arrête ;&lt;/li&gt;
+            &lt;li&gt;Quand 4 pièces sont capturées, toutes les pièces directement alignées avec ces 4 pièces le sont également.&lt;/li&gt;
+            &lt;li&gt;Dès qu&apos;il y a une case vide dans la ligne, la capture s&apos;arrête.&lt;/li&gt;
             &lt;li&gt;Vos pièces capturées rejoignent votre réserve.
                 Celles de l&apos;adversaire par contre sont réellement capturées et ne rejoignent pas sa réserve.&lt;/li&gt;
             &lt;li&gt;Si vous créez une ligne de 4 pièces de l&apos;adversaire, c&apos;est au début de son tour qu&apos;il pourra les capturer.
                 Ceci implique que votre tour se passe en trois phases :
                 &lt;ol type=&quot;A&quot;&gt;
-                    &lt;li&gt;Choisir la/les capture(s) crée(s) par le dernier mouvement de votre adversaire ;&lt;/li&gt;
-                    &lt;li&gt;Faire votre poussée ;&lt;/li&gt;
+                    &lt;li&gt;Choisir la/les capture(s) crée(s) par le dernier mouvement de votre adversaire.&lt;/li&gt;
+                    &lt;li&gt;Faire votre poussée.&lt;/li&gt;
                     &lt;li&gt;Choisir la/les ligne(s) à capturer que vous venez de créer (en cliquant dessus).&lt;/li&gt;
                 &lt;/ol&gt;
             &lt;/li&gt;
@@ -1494,8 +1514,8 @@
         Pick the last one.</source>
         <target>Ici, il est possible de capturer de trois façons différentes.
         &lt;ol&gt;
-        &lt;li&gt;L&apos;une ne permet aucune capture de pièce adverse ;&lt;/li&gt;
-        &lt;li&gt;L&apos;autre permet une capture de pièce adverse ;&lt;/li&gt;
+        &lt;li&gt;L&apos;une ne permet aucune capture de pièce adverse.&lt;/li&gt;
+        &lt;li&gt;L&apos;autre permet une capture de pièce adverse.&lt;/li&gt;
         &lt;li&gt;La dernière en permet deux.&lt;/li&gt;
         &lt;/ol&gt;
         &lt;br/&gt;
@@ -1583,10 +1603,12 @@
       </trans-unit>
       <trans-unit id="1578964976017754857" datatype="html">
         <source>An isolated stone, like the one in the middle here, has 4 neighboring intersections (not 8, because we do not count diagonals).
+        It is said of a group which has exactly 2 free neighboring squares, that this group has two liberties.
         If a neighboring intersection is unoccupied, it is called a liberty.
         If Dark plays on the last liberty of the light stone, this stone is removed from the Goban (captured) and Dark earns one point.&lt;br/&gt;&lt;br/&gt;
         The light piece only has one liberty left, play there.</source>
         <target>Une pierre isolée, comme la pierre claire au milieu, a 4 intersections voisines (et non 8, car on ne compte pas les diagonales).
+        Il est dit d'un groupe de pierres qui a exactement deux cases voisines libres, que ce groupe a deux libertés.
         Une intersection inocuppée, voisine d'une pierre, est appelée une liberté de cette pierre.
         Si Foncé joue sur la dernière liberté de la pierre claire, cette pierre est enlevée du goban (capturée) et rapporte un point à Foncé.&lt;br/&gt;&lt;br/&gt;
         Il ne reste plus qu&apos;une liberté à la pierre claire, capturez la.</target>
@@ -2112,8 +2134,8 @@
         Cependant, à ce moment là, se crée une opportunité d&apos;économiser une pièce en &quot;grimpant&quot; au lieu de déposer.
         Pour grimper :
         &lt;ol&gt;
-            &lt;li&gt;Cliquez sur une de vos pièces libres et plus basse que la case d&apos;atterrissage ;&lt;/li&gt;
-            &lt;li&gt;Cliquez sur une case vide plus haute ;&lt;/li&gt;
+            &lt;li&gt;Cliquez sur une de vos pièces libres et plus basse que la case d&apos;atterrissage.&lt;/li&gt;
+            &lt;li&gt;Cliquez sur une case vide plus haute.&lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
         Allez-y, grimpez !</target>
       </trans-unit>
@@ -2128,8 +2150,8 @@
         <target>Bravo !&lt;br/&gt;
         Notes importantes :
         &lt;ol&gt;
-            &lt;li&gt;On ne peut déplacer une pièce qui est en dessous d&apos;une autre ;&lt;/li&gt;
-            &lt;li&gt;Naturellement, on ne peut pas déplacer les pièces adverses ;&lt;/li&gt;
+            &lt;li&gt;On ne peut déplacer une pièce qui est en dessous d&apos;une autre.&lt;/li&gt;
+            &lt;li&gt;Naturellement, on ne peut pas déplacer les pièces adverses.&lt;/li&gt;
             &lt;li&gt;Un déplacement ne peut se faire que quand la case d&apos;arrivée est plus haute que la case de départ.&lt;/li&gt;
         &lt;/ol&gt;</target>
       </trans-unit>
@@ -2216,9 +2238,9 @@
         <target>Quarto est un jeu d&apos;alignement.
         Le but est d&apos;aligner quatre pièces qui possèdent au moins un point commun :
         &lt;ul&gt;
-          &lt;li&gt;leur couleur (claire ou foncée) ;&lt;/li&gt;
-          &lt;li&gt;leur taille (grande ou petite) ;&lt;/li&gt;
-          &lt;li&gt;leur motif (vide ou à point) ;&lt;/li&gt;
+          &lt;li&gt;leur couleur (claire ou foncée),&lt;/li&gt;
+          &lt;li&gt;leur taille (grande ou petite),&lt;/li&gt;
+          &lt;li&gt;leur motif (vide ou à point),&lt;/li&gt;
           &lt;li&gt;leur forme (ronde ou carrée).&lt;/li&gt;
         &lt;/ul&gt;
         Ici, nous avons un plateau avec une victoire par alignement de pièces foncées.</target>
@@ -2416,6 +2438,10 @@
         Pour ce faire il faut occuper toutes les cases voisines de celle-ci.
         Ici, le joueur clair a perdu car sa pyramide tout à gauche est immobilisée.</target>
       </trans-unit>
+      <trans-unit id="1300852626039829767" datatype="html">
+        <source>Simple step</source>
+        <target>Simple pas</target>
+      </trans-unit>
       <trans-unit id="6555319865807115204" datatype="html">
         <source>To immobilize your opponent, you have to move your pyramids.
         When a pyramid shares its vertices with light spaces, it can move on these spaces (we call this a simple step).
@@ -2429,7 +2455,7 @@
         Quand une pyramide partage ses arêtes avec des cases claires, elle peut se déplacer dessus (appelons ceci, faire un pas simple).
         Vous jouez en premier et contrôlez donc les pyramides foncées.
         &lt;ol&gt;
-            &lt;li&gt;Cliquez sur une de vos pyramides ;&lt;/li&gt;
+            &lt;li&gt;Cliquez sur une de vos pyramides.&lt;/li&gt;
             &lt;li&gt;Cliquez ensuite sur une des deux ou trois cases voisines, pour y déplacer votre pyramide.&lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
         Faites un simple pas.</target>
@@ -2453,7 +2479,7 @@
         <target>Quand une pyramide partage ses arêtes avec des cases foncées, vous pouvez la déplacer de deux pas.
         Pour ce faire :
         &lt;ol&gt;
-            &lt;li&gt;Cliquez sur la pyramide à déplacer (celle tout au centre) ;&lt;/li&gt;
+            &lt;li&gt;Cliquez sur la pyramide à déplacer (celle tout au centre).&lt;/li&gt;
             &lt;li&gt;Cliquez directement sur l&apos;une des 6 destinations possibles en deux pas :
                 les 6 cases claires voisines des 3 cases foncées voisines de votre pyramide.
         &lt;/li&gt;</target>
@@ -2491,8 +2517,8 @@
         Le plateau de départ en contient trois, au centre, et aucun pion n&apos;est initialement sur le plateau.
         Durant son tour de jeu un joueur peut effectuer l&apos;une des trois actions suivantes :
         &lt;ol&gt;
-            &lt;li&gt;Faire entrer une pièce sur le plateau ;&lt;/li&gt;
-            &lt;li&gt;Changer l&apos;orientation d&apos;une de ses pièces et optionnellement la déplacer ;&lt;/li&gt;
+            &lt;li&gt;Faire entrer une pièce sur le plateau.&lt;/li&gt;
+            &lt;li&gt;Changer l&apos;orientation d&apos;une de ses pièces et optionnellement la déplacer.&lt;/li&gt;
             &lt;li&gt;Sortir un de ses pions du plateau.&lt;/li&gt;
         &lt;/ol&gt;</target>
       </trans-unit>
@@ -2512,7 +2538,7 @@
         <target>Chaque joueur a en tout 5 pièces.
         Tant qu&apos;il n&apos;en a pas 5 sur le plateau, il peut en insérer une. Pour ce faire :
         &lt;ol&gt;
-            &lt;li&gt;Appuyez sur une des grosses flèches autour du plateau ;&lt;/li&gt;
+            &lt;li&gt;Appuyez sur une des grosses flèches autour du plateau.&lt;/li&gt;
             &lt;li&gt;Cliquez sur une des 4 petites flèches apparues sur la case d&apos;arrivée de la pièce insérée.
                 Cela indiquera la direction dans laquelle sera orientée votre pièce.&lt;/li&gt;
         &lt;/ol&gt;&lt;br/&gt;
@@ -2535,7 +2561,7 @@
         Lors de ce déplacement on peut aussi faire sortir la pièce du plateau.
         Pour déplacer la pièce :
         &lt;ol&gt;
-            &lt;li&gt;Cliquez dessus ;&lt;/li&gt;
+            &lt;li&gt;Cliquez dessus.&lt;/li&gt;
             &lt;li&gt;Cliquez sur l&apos;une des 5 flèches pour choisir la direction dans laquelle elle va se déplacer.
                 En cliquant sur celle au milieu, vous décidez de juste changer l&apos;orientation de la pièce, sans la déplacer.&lt;/li&gt;
             &lt;li&gt;Cliquez sur l&apos;une des 4 flèches sur la case d&apos;arrivée de votre pièce pour choisir son orientation.&lt;/li&gt;
@@ -2579,9 +2605,9 @@
         <target>Quand la case d&apos;arrivée de votre déplacement est occupée, on parle de &quot;pousser&quot;.
         Pour pousser il faut plusieurs critères :
         &lt;ol&gt;
-            &lt;li&gt;Être déjà orienté dans le sens de la poussée ;&lt;/li&gt;
+            &lt;li&gt;Être déjà orienté dans le sens de la poussée.&lt;/li&gt;
             &lt;li&gt;Que le nombre de pièces (adverses ou non) qui font face à la votre (les résistants)
-                soit plus petit que le nombre de pièces qui vont dans la même direction, votre y compris (les pousseurs) ;&lt;/li&gt;
+                soit plus petit que le nombre de pièces qui vont dans la même direction, votre y compris (les pousseurs).&lt;/li&gt;
             &lt;li&gt;Le nombre de montagne doit être inférieur ou égal à la différence entre pousseurs et résistant.&lt;/li&gt;
         &lt;/ol&gt;
         Votre pièce tout en haut à droite ne peut pas pousser car il y a une montagne de trop.
@@ -2632,17 +2658,17 @@
         <source>You must put this piece next to another piece.</source>
         <target>Vous devez faire atterrir cette pièce à côté d&apos;une autre pièce.</target>
       </trans-unit>
-      <trans-unit id="4811847660786431276" datatype="html">
-        <source>This move is not disconnecting a piece of your opponent. Try again with another piece.</source>
-        <target>Ce mouvement ne déconnecte pas de pièce adverse ! Réessayez !</target>
+      <trans-unit id="7208567678509553256" datatype="html">
+        <source>This move does not disconnect your opponent&apos;s pieces. Try again with another piece.</source>
+        <target>Ce mouvement ne déconnecte pas du jeu de pièces adverses ! Réessayez avec une autre pièce !</target>
       </trans-unit>
       <trans-unit id="6058377963019501239" datatype="html">
         <source>You lost one of your pieces during this move. There is a way to disconnect an opponent&apos;s piece without losing any of yours, try again!</source>
         <target>Vous avez perdu une de vos pièce pendant ce mouvement, il y a un moyen de déconnecter une pièce adversaire sans perdre aucune pièce, recommencez !</target>
       </trans-unit>
-      <trans-unit id="4832142792487017972" datatype="html">
+      <trans-unit id="6517565683560801163" datatype="html">
         <source>Six is a game without board, where pieces are placed on the side of each other, in a contiguous block.
-        Each player has 21 pieces, 2 being already on the table.
+        Each player has 21 pieces, with one for each player already on the board.
         The goal of the game is to form one of the three winning shapes with your pieces.</source>
         <target>Le Six est une jeu sans plateau, où les pièces sont placées les unes à côtés des autres, en un bloc continu.
         Chaque joueur a 21 pièces à lui, 2 étant déjà placée sur le plateau.
@@ -2660,7 +2686,7 @@
       </trans-unit>
       <trans-unit id="2466439893530767761" datatype="html">
         <source>Victory (circle)</source>
-        <target>Victoires (rond)</target>
+        <target>Victoire (rond)</target>
       </trans-unit>
       <trans-unit id="4365332414018101911" datatype="html">
         <source>On this board, by putting your piece at the right place, you can form a circle with six of your pieces and win the game.&lt;br/&gt;&lt;br/&gt;
@@ -2674,7 +2700,7 @@
       </trans-unit>
       <trans-unit id="4644119482430965077" datatype="html">
         <source>Victory (triangle)</source>
-        <target>Victoires (triangle)</target>
+        <target>Victoire (triangle)</target>
       </trans-unit>
       <trans-unit id="5836697956170776107" datatype="html">
         <source>On this board, by putting your piece at the right place, you can form a triangle with six of your pieces and win the game.&lt;br/&gt;&lt;br/&gt;
@@ -2686,37 +2712,33 @@
         <source>Second phase</source>
         <target>Deuxième phase</target>
       </trans-unit>
-      <trans-unit id="4177736080893203208" datatype="html">
+      <trans-unit id="7184945664924176112" datatype="html">
         <source>After 40 turns, your pieces have all been placed and we move on to the second phase of the game.
-        You now have to move your pieces, paying attention not to remove a piece that was blocking the opponent&apos;s victory.
-        From now on, if after move, on or more pieces are disconnected from the largest group of piece, these will be taken out of the game.&lt;br/&gt;&lt;br/&gt;
+        You now have to move your pieces, paying attention not to remove a piece that was preventing the opponent&apos;s victory.
+        From now on, if after move, on or more pieces are disconnected from the largest group of pieces, these will be taken out of the game.&lt;br/&gt;&lt;br/&gt;
         You&apos;re playing Dark. Make a move that disconnects one of your opponent&apos;s pieces.</source>
         <target>Quand après 40 tours, toutes vos pièces sont placées, on passe en deuxième phase.
         Il faut maintenant déplacer ses pièces, en prenant garde à ne pas enlever une pièce qui empêchait l&apos;adversaire de gagner.
-        Dorénavant, si après un déplacement un ou plusieurs groupe de pièce est déconnecté du plus grand groupe de pièce, ces petits groupes de pièces sont enlevés définitivement du jeu.&lt;br/&gt;&lt;br/&gt;
+        Dorénavant, si après un déplacement, un ou plusieurs groupe de pièces est déconnecté du plus grand groupe de pièces, ces petits groupes de pièces sont enlevés définitivement du jeu.&lt;br/&gt;&lt;br/&gt;
         Vous jouez Foncé, effectuez un déplacement qui déconnecte une pièce de votre adversaire.</target>
       </trans-unit>
       <trans-unit id="6404013542075961070" datatype="html">
         <source>Congratulations, your opponent now has one piece less and you&apos;re closer to victory!</source>
-        <target>Bravo, vous avez fait perdre une pièce à votre adversaire et vous êtes rapproché potentiellement de la victoire !</target>
+        <target>Bravo, vous avez fait perdre une pièce à votre adversaire et vous vous êtes rapproché potentiellement de la victoire !</target>
       </trans-unit>
       <trans-unit id="4819564470925108710" datatype="html">
         <source>Victory by disconnection</source>
         <target>Victoire par déconnection</target>
       </trans-unit>
-      <trans-unit id="5614996129263361767" datatype="html">
+      <trans-unit id="3845114702040437383" datatype="html">
         <source>During the second phase of the game, on top of normal victories (line, circle, triangle), you can win by disconnection.
-        If at any time, one player does not have enough pieces to win (less than 6), the game ends.
-        The one with the most pieces wins. In case of tie, it&apos;s a draw.&lt;br/&gt;&lt;br/&gt;
+        If at any time, at least one player does not have enough pieces to win (less than 6), the game ends.
+        The one with the most pieces wins. In case they both have the same number of pieces, it&apos;s a draw.&lt;br/&gt;&lt;br/&gt;
         Here, you&apos;re playing Dark and you can win. Do it!</source>
         <target>Lors de la seconde phase de jeu, en plus des victoires normales (ligne, rond, triangle), on peux gagner par déconnection.
         Si à un moment du jeu, l&apos;un des deux joueurs n&apos;a plus assez de pièce pour gagner (il en a donc moins de 6), la partie s&apos;arrête.
         Celui qui a le plus de pièces a gagné, et en cas d&apos;égalité, c&apos;est match nul.&lt;br/&gt;&lt;br/&gt;
         Ici, vous pouvez gagner (vous jouez Foncé). Faites-le !</target>
-      </trans-unit>
-      <trans-unit id="7208567678509553256" datatype="html">
-        <source>This move does not disconnect your opponent&apos;s pieces. Try again with another piece.</source>
-        <target>Ce mouvement ne déconnecte pas du jeu de pièces adverses ! Réessayez avec une autre pièce !</target>
       </trans-unit>
       <trans-unit id="631151175449209373" datatype="html">
         <source>Special disconnection</source>
@@ -2728,11 +2750,11 @@
         You&apos;re playing Dark, play such a move!</source>
         <target>Lors d&apos;une déconnection, de deux à plusieurs groupes peuvent faire la même taille,
         auquel cas, un clic en plus sera nécessaire pour indiquer lequel vous souhaitez garder.&lt;br/&gt;&lt;br/&gt;
-        Vous jouez Foncé, créer un mouvement de la sorte !</target>
+        Vous jouez Foncé, créez un mouvement de la sorte !</target>
       </trans-unit>
       <trans-unit id="4762560256027932544" datatype="html">
         <source>This move has not cut the board in two equal halves.</source>
-        <target>Ce mouvement n&apos;as pas coupé le plateau en deux parties égales</target>
+        <target>Ce mouvement n&apos;as pas coupé le plateau en deux parties égales.</target>
       </trans-unit>
       <trans-unit id="4456476499852991526" datatype="html">
         <source>You cannot land on an occupied square.</source>
@@ -2776,13 +2798,13 @@
             &lt;li&gt;Only the king can land on a throne.&lt;/li&gt;
         &lt;/ol&gt;
         To move a piece, click on it and then on its landing square.&lt;br/&gt;&lt;br/&gt;
-        This is the initial board, do the first move</source>
+        This is the initial board, do the first move.</source>
         <target>Au Tablut, toutes les pièces se déplacent de la même façon.
         De façon équivalente aux tours aux échecs, une pièce se déplace :
         &lt;ol&gt;
-            &lt;li&gt;D&apos;autant de case qu&apos;elle veut ;&lt;/li&gt;
-            &lt;li&gt;Sans passer à travers ou s&apos;arrêter sur une autre pièce ;&lt;/li&gt;
-            &lt;li&gt;Horizontalement ou verticalement ;&lt;/li&gt;
+            &lt;li&gt;D&apos;autant de case qu&apos;elle veut.&lt;/li&gt;
+            &lt;li&gt;Sans passer à travers ou s&apos;arrêter sur une autre pièce.&lt;/li&gt;
+            &lt;li&gt;Horizontalement ou verticalement.&lt;/li&gt;
             &lt;li&gt;Seul le roi peut s&apos;arrêter sur un trône.&lt;/li&gt;
         &lt;/ol&gt;
         Pour déplacer une pièce, cliquez dessus, puis sur sa destination.&lt;br/&gt;&lt;br/&gt;
@@ -2880,6 +2902,10 @@
         <source>You can only capture when exactly 5 of your markers are aligned, and it is not the case.</source>
         <target>Vous ne pouvez effectuer une capture que quand exactement 5 de vos marqueurs sont alignées, et ce n'est pas le cas.</target>
       </trans-unit>
+      <trans-unit id="923761852987939376" datatype="html">
+        <source>The direction of your move is invalid: a move is made along a straight line.</source>
+        <target>La direction de votre mouvement est invalide: un mouvement se fait le long d'une ligne droite.</target>
+      </trans-unit>
       <trans-unit id="1240800364123845501" datatype="html">
         <source>Please pick a valid capture that contains exactly 5 markers.</source>
         <target>Veuillez choisir une capture valide qui contient exactement 5 marqueurs.</target>
@@ -2915,6 +2941,14 @@
       <trans-unit id="5146449464465539521" datatype="html">
         <source>When you capture markers, you must take one of your ring as well by clicking on it.</source>
         <target>Quand vous capturez des marqueurs, vous devez reprendre l&apos;un de vos anneaux en cliquant dessus.</target>
+      </trans-unit>
+      <trans-unit id="7525019515401716113" datatype="html">
+        <source>Failed! You need to align 5 markers of your color in order to get them, and to get a ring at the same time.</source>
+        <target>Raté ! Vous devez aligner 5 marqueurs de votre couleur pour pouvoir les capturer, ainsi que pour récupérer un anneau.</target>
+      </trans-unit>
+      <trans-unit id="4464967427027571359" datatype="html">
+        <source>Failed! You can capture two rings in total, by capturing two times 5 of your markers. Try again.</source>
+        <target>Raté ! Vous pouvez capturer deux anneaux en tout, en procédant à deux captures de 5 de vos marqueurs. Réessayez.</target>
       </trans-unit>
       <trans-unit id="2051808586522733055" datatype="html">
         <source>The goal at Yinsh is to capture three rings in total.
@@ -2980,13 +3014,19 @@
         Vous êtes obligés d&apos;effectuer une capture quand elle se présente.&lt;br/&gt;&lt;br/&gt;
         Vous jouez foncé, effectuez une capture !</target>
       </trans-unit>
-      <trans-unit id="7732729017555001326" datatype="html">
-        <source>Congratulations! You need two more captures to win.</source>
-        <target>Bravo ! Vous avez besoin de deux captures supplémentaires pour gagner.</target>
+      <trans-unit id="4758113906566791089" datatype="html">
+        <source>Compound captures</source>
+        <target>Captures composées</target>
       </trans-unit>
-      <trans-unit id="7525019515401716113" datatype="html">
-        <source>Failed! You need to align 5 markers of your color in order to get them, and to get a ring at the same time.</source>
-        <target>Raté ! Vous devez aligner 5 marqueurs pour pouvoir les récupérer et prendre un anneau par la même occasion.</target>
+      <trans-unit id="323630988500443195" datatype="html">
+        <source>During a turn, you could have to choose between multiple captures,
+        or you could even capture multiple times!
+        During the capture selection, if you see that the marker you clicked belongs to two captures, you have to click on a second marker to avoid any ambiguity.&lt;br/&gt;&lt;br/&gt;
+        Here, you can capture two rings, do it!</source>
+        <target>Il est possible que lors d'un tour, vous ayez la possibilité de choisir entre plusieurs captures,
+        ou même d'effectuer plus d'une capture au total !
+        Lorsque, lors de la sélection d'une capture, le marqueur sur lequel vous avez cliqué appartient à deux captures, il vous faudra cliquer sur un second marqueur pour lever toute ambiguité.&lt;br/&gt;&lt;br/&gt;
+        Ici, vous pouvez récupérer deux anneaux, faites-le !</target>
       </trans-unit>
       <trans-unit id="6079681718244869210" datatype="html">
         <source>You cannot pick a piece of the opponent.</source>

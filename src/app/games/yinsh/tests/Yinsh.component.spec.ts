@@ -564,7 +564,7 @@ describe('YinshComponent', () => {
             testUtils.setupSlice(state);
 
             await testUtils.expectClickSuccess('#click_5_4'); // select first capture coord
-            await testUtils.expectClickFailure('#click_6_8', YinshFailure.NOT_PART_OF_CAPTURE); // select second capture coord
+            await testUtils.expectClickFailure('#click_6_8', YinshFailure.MISSING_CAPTURES); // select second capture coord
         }));
         it('should make pieces captured at the last turn disappear upon first player action', fakeAsync(async() => {
             const board: YinshBoard = YinshBoard.of([
