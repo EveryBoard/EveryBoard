@@ -37,7 +37,7 @@ class GameDescription {
 
     public static readonly EPAMINONDAS: string = $localize`An antiquity-war inspired game. Be the first to pierce your opponent's lines!`;
 
-    public static readonly GIPF: string = $localize`A hexagonal game of alignment. Don't be the first one to be out of pieces to place on the board!`;
+    public static readonly GIPF: string = $localize`A hexagonal game of alignment. Insert your pieces on the board to capture your opponent's pieces!`;
 
     public static readonly GO: string = $localize`The oldest strategy game still practiced widely. A territory control game.`;
 
@@ -47,7 +47,7 @@ class GameDescription {
 
     public static readonly PENTAGO: string = $localize`Drop a piece, then rotate the board. The first player to align 5 pieces wins!`;
 
-    public static readonly PYLOS: string = $localize`Overlay your pieces and use two game mechanics to conserve your pieces. First player to run out of pieces loose!`;
+    public static readonly PYLOS: string = $localize`Overlay your pieces and use two game mechanics to conserve your pieces. First player to run out of pieces loses!`;
 
     public static readonly SAHARA: string = $localize`Immobilize one of your opponent's pyramids before your opponent does!`;
 

@@ -104,8 +104,8 @@
       <trans-unit id="8971165322320863634" datatype="html">
         <source>An antiquity-war inspired game. Be the first to pierce your opponent&apos;s lines!</source>
       </trans-unit>
-      <trans-unit id="6403042813790072176" datatype="html">
-        <source>A hexagonal game of alignment. Don&apos;t be the first one to be out of pieces to place on the board!</source>
+      <trans-unit id="1787395418772268592" datatype="html">
+        <source>A hexagonal game of alignment. Insert your pieces on the board to capture your opponent&apos;s pieces!</source>
       </trans-unit>
       <trans-unit id="6676975125770922470" datatype="html">
         <source>The oldest strategy game still practiced widely. A territory control game.</source>
@@ -119,8 +119,8 @@
       <trans-unit id="6377255794894182998" datatype="html">
         <source>Drop a piece, then rotate the board. The first player to align 5 pieces wins!</source>
       </trans-unit>
-      <trans-unit id="3798499751517521657" datatype="html">
-        <source>Overlay your pieces and use two game mechanics to conserve your pieces. First player to run out of pieces loose!</source>
+      <trans-unit id="1621892382051781255" datatype="html">
+        <source>Overlay your pieces and use two game mechanics to conserve your pieces. First player to run out of pieces loses!</source>
       </trans-unit>
       <trans-unit id="1827371853303540301" datatype="html">
         <source>Immobilize one of your opponent&apos;s pyramids before your opponent does!</source>
@@ -1481,8 +1481,8 @@
         You&apos;re playing Dark.&lt;br/&gt;&lt;br/&gt;
         Form a square, then click twice on one of the four pieces to remove only that one.</source>
       </trans-unit>
-      <trans-unit id="2591075612121932907" datatype="html">
-        <source>Congratulations, you have saved one piece.</source>
+      <trans-unit id="5456823255724159144" datatype="html">
+        <source>Congratulations, you have saved up one piece.</source>
       </trans-unit>
       <trans-unit id="1514360345752656911" datatype="html">
         <source>Square (2/3)</source>
@@ -1491,8 +1491,8 @@
         <source>You&apos;re playing Dark.&lt;br/&lt;br/&gt;
         Do like in the previous step, but this time click on both pieces on the top row.</source>
       </trans-unit>
-      <trans-unit id="1786899883514784892" datatype="html">
-        <source>Congratulations, you have saved two pieces.</source>
+      <trans-unit id="3455768301736755830" datatype="html">
+        <source>Congratulations, you have saved up two pieces.</source>
       </trans-unit>
       <trans-unit id="521772581425892664" datatype="html">
         <source>Square (3/3)</source>
@@ -1504,8 +1504,8 @@
         and then take the piece below it, which can now be taken.&lt;br/&gt;&lt;br/&gt;
         Go ahead.</source>
       </trans-unit>
-      <trans-unit id="7672164638957896639" datatype="html">
-        <source>Congratulations, you have saved two pieces. You are now ready to play.</source>
+      <trans-unit id="6903437514996680111" datatype="html">
+        <source>Congratulations, you have saved up two pieces. You are now ready to play.</source>
       </trans-unit>
       <trans-unit id="5796940069053691279" datatype="html">
         <source>You must give a piece.</source>
