@@ -95,6 +95,9 @@
       <trans-unit id="6262000022886850348" datatype="html">
         <source>The international version of the famous African strategy game!</source>
       </trans-unit>
+      <trans-unit id="2776505193142258762" datatype="html">
+        <source>Get rid of all of your opponent&apos;s pieces on a board that shrinks little by little!</source>
+      </trans-unit>
       <trans-unit id="1207528295664437538" datatype="html">
         <source>Stack your pieces and control as many stacks as you can to win!</source>
       </trans-unit>
@@ -110,6 +113,9 @@
       <trans-unit id="6676975125770922470" datatype="html">
         <source>The oldest strategy game still practiced widely. A territory control game.</source>
       </trans-unit>
+      <trans-unit id="3910056094130316471" datatype="html">
+        <source>Your goal is simple: reach the last line. But the piece you move depends on your opponent&apos;s last move!</source>
+      </trans-unit>
       <trans-unit id="8165475229121998889" datatype="html">
         <source>Regroup your pieces to win. But your possible moves will often change!</source>
       </trans-unit>
@@ -121,6 +127,15 @@
       </trans-unit>
       <trans-unit id="1621892382051781255" datatype="html">
         <source>Overlay your pieces and use two game mechanics to conserve your pieces. First player to run out of pieces loses!</source>
+      </trans-unit>
+      <trans-unit id="3383193846061013912" datatype="html">
+        <source>Create a winning alignment. The problem: you don&apos;t pick the piece that you&apos;re placing on the board!</source>
+      </trans-unit>
+      <trans-unit id="4372694764720308048" datatype="html">
+        <source>Align 5 of your pieces on a board where squares slide!</source>
+      </trans-unit>
+      <trans-unit id="6046365494353024298" datatype="html">
+        <source>Sandwich your opponent&apos;s pieces to dominate the board!</source>
       </trans-unit>
       <trans-unit id="1827371853303540301" datatype="html">
         <source>Immobilize one of your opponent&apos;s pyramids before your opponent does!</source>
@@ -136,21 +151,6 @@
       </trans-unit>
       <trans-unit id="7926456268600574942" datatype="html">
         <source>Align your pieces to score points, but beware, pieces can flip!</source>
-      </trans-unit>
-      <trans-unit id="6718336452622284682" datatype="html">
-        <source>Get rid of all of your opponent&apos;s pieces on a board that shrinks little by little !</source>
-      </trans-unit>
-      <trans-unit id="2422217146537870502" datatype="html">
-        <source>Create a winning alignment. The problem : you don&apos;t pick the piece that you&apos;re placing on the board !</source>
-      </trans-unit>
-      <trans-unit id="4664465757280550995" datatype="html">
-        <source>Sandwich your opponent&apos;s pieces to dominate the board !</source>
-      </trans-unit>
-      <trans-unit id="8549193272754581107" datatype="html">
-        <source>Your goal is simple: reach the last line. But the piece you move depends on your opponent&apos;s last move !</source>
-      </trans-unit>
-      <trans-unit id="8393598595179829123" datatype="html">
-        <source>Align 5 of your pieces on a board where squares slide !</source>
       </trans-unit>
       <trans-unit id="718535138834335364" datatype="html">
         <source>Four in a Row</source>
@@ -913,16 +913,16 @@
       <trans-unit id="8733936607898144583" datatype="html">
         <source>Initial board</source>
       </trans-unit>
-      <trans-unit id="6855901703200229431" datatype="html">
-        <source>This is the initial board.
+      <trans-unit id="1105286643551672919" datatype="html">
+        <source>This is the initial board of Epaminondas.
         The top line is the starting line of Light.
         The bottom line is the starting line of Dark.</source>
       </trans-unit>
       <trans-unit id="6886026531074912078" datatype="html">
         <source>Goal of the game (1/2)</source>
       </trans-unit>
-      <trans-unit id="7708528679992999324" datatype="html">
-        <source>After multiple moves, if at the beginning of its turn, a player has more piece on the opponent&apos;s starting line
+      <trans-unit id="4503256281938932188" datatype="html">
+        <source>After multiple moves, if at the beginning of its turn, a player has more pieces on the opponent&apos;s starting line
         than the number of pieces the opponent has on the player&apos;s starting line, the player wins.
         Here, it&apos;s Dark&apos;s turn to play: Dark has therefore won.</source>
       </trans-unit>

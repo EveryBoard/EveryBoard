@@ -11,14 +11,14 @@ const X: number = Player.ONE.value;
 export const epaminondasTutorial: TutorialStep[] = [
     TutorialStep.informational(
         $localize`Initial board`,
-        $localize`This is the initial board.
+        $localize`This is the initial board of Epaminondas.
         The top line is the starting line of Light.
         The bottom line is the starting line of Dark.`,
         EpaminondasPartSlice.getInitialSlice(),
     ),
     TutorialStep.informational(
         $localize`Goal of the game (1/2)`,
-        $localize`After multiple moves, if at the beginning of its turn, a player has more piece on the opponent's starting line
+        $localize`After multiple moves, if at the beginning of its turn, a player has more pieces on the opponent's starting line
         than the number of pieces the opponent has on the player's starting line, the player wins.
         Here, it's Dark's turn to play: Dark has therefore won.`,
         new EpaminondasPartSlice([

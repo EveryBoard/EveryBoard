@@ -31,7 +31,7 @@ class GameDescription {
 
     public static readonly AWALE: string = $localize`The international version of the famous African strategy game!`;
 
-    public static readonly COERCEO: string = $localize`Get rid of all of your opponent's pieces on a board that shrinks little by little !`;
+    public static readonly COERCEO: string = $localize`Get rid of all of your opponent's pieces on a board that shrinks little by little!`;
 
     public static readonly DVONN: string = $localize`Stack your pieces and control as many stacks as you can to win!`
 
@@ -43,7 +43,7 @@ class GameDescription {
 
     public static readonly GO: string = $localize`The oldest strategy game still practiced widely. A territory control game.`;
 
-    public static readonly KAMISADO: string = $localize`Your goal is simple: reach the last line. But the piece you move depends on your opponent's last move !`;
+    public static readonly KAMISADO: string = $localize`Your goal is simple: reach the last line. But the piece you move depends on your opponent's last move!`;
 
     public static readonly LINES_OF_ACTION: string = $localize`Regroup your pieces to win. But your possible moves will often change!`
 
@@ -53,11 +53,11 @@ class GameDescription {
 
     public static readonly PYLOS: string = $localize`Overlay your pieces and use two game mechanics to conserve your pieces. First player to run out of pieces loses!`;
 
-    public static readonly QUARTO: string = $localize`Create a winning alignment. The problem : you don't pick the piece that you're placing on the board !`;
+    public static readonly QUARTO: string = $localize`Create a winning alignment. The problem: you don't pick the piece that you're placing on the board!`;
 
-    public static readonly QUIXO: string = $localize`Align 5 of your pieces on a board where squares slide !`;
+    public static readonly QUIXO: string = $localize`Align 5 of your pieces on a board where squares slide!`;
 
-    public static readonly REVERSI: string = $localize`Sandwich your opponent's pieces to dominate the board !`;
+    public static readonly REVERSI: string = $localize`Sandwich your opponent's pieces to dominate the board!`;
 
     public static readonly SAHARA: string = $localize`Immobilize one of your opponent's pyramids before your opponent does!`;
 
