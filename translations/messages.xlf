@@ -131,8 +131,8 @@
       <trans-unit id="3383193846061013912" datatype="html">
         <source>Create a winning alignment. The problem: you don&apos;t pick the piece that you&apos;re placing on the board!</source>
       </trans-unit>
-      <trans-unit id="4372694764720308048" datatype="html">
-        <source>Align 5 of your pieces on a board where squares slide!</source>
+      <trans-unit id="3529667957993318888" datatype="html">
+        <source>Align 5 of your pieces on a board where pieces slide!</source>
       </trans-unit>
       <trans-unit id="6046365494353024298" datatype="html">
         <source>Sandwich your opponent&apos;s pieces to dominate the board!</source>
@@ -1079,10 +1079,10 @@
       <trans-unit id="1459810772427125920" datatype="html">
         <source>Capture (3/3)</source>
       </trans-unit>
-      <trans-unit id="3537904836524456622" datatype="html">
+      <trans-unit id="1122045241923673041" datatype="html">
         <source>Here, you must capture at the beginning of your turn.
         This is due to a move of your opponent at the previous turn
-        (even though this is a ficticious board for pedagogical purpose).
+        (even though this is a fictitious board for pedagogical purpose).
         After your capture, by performing the right move you can even capture two more of your opponent&apos;s pieces!
         Keep it mind that the most useful in a capture is to take your opponent&apos;s pieces.</source>
       </trans-unit>
@@ -1123,9 +1123,9 @@
         The top part belongs to no one.
         Each player&apos;s score at the end of the game is the sum of that player&apos;s territories and captures.</source>
       </trans-unit>
-      <trans-unit id="1578964976017754857" datatype="html">
+      <trans-unit id="6064677838844428466" datatype="html">
         <source>An isolated stone, like the one in the middle here, has 4 neighboring intersections (not 8, because we do not count diagonals).
-        If a neighboring intersection is unoccupied, it is called a liberty.
+        It is said of a group which has exactly 2 free neighboring squares, that this group has two liberties.
         If Dark plays on the last liberty of the light stone, this stone is removed from the Goban (captured) and Dark earns one point.&lt;br/&gt;&lt;br/&gt;
         The light piece only has one liberty left, play there.</source>
       </trans-unit>
@@ -1454,9 +1454,9 @@
         This board will become a pyramid, little by little.
         It will be filled by the pieces of your stock. Each player has 15 pieces.</source>
       </trans-unit>
-      <trans-unit id="5521539166247507576" datatype="html">
+      <trans-unit id="6012873055176768317" datatype="html">
         <source>When it is your turn, you can always drop one of your piece on an empty square.
-        The grey squares are where you can drop your pieces.&lt;br/&gt;&lt;br/&gt;
+        The gray squares are where you can drop your pieces.&lt;br/&gt;&lt;br/&gt;
         Click on one of the squares to drop a piece there.</source>
       </trans-unit>
       <trans-unit id="460049283627942483" datatype="html">

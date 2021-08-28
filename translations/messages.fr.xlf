@@ -140,7 +140,7 @@
       </trans-unit>
       <trans-unit id="1787395418772268592" datatype="html">
         <source>A hexagonal game of alignment. Insert your pieces on the board to capture your opponent&apos;s pieces!</source>
-        <target>Un jeu hexagonal d'alignement. Insérez vos pièces sur le plateau pour capturez les pièces de l'adversaire !</target>
+        <target>Un jeu hexagonal d'alignement. Insérez vos pièces sur le plateau pour capturer les pièces de l'adversaire !</target>
       </trans-unit>
       <trans-unit id="6676975125770922470" datatype="html">
         <source>The oldest strategy game still practiced widely. A territory control game.</source>
@@ -184,7 +184,7 @@
       </trans-unit>
       <trans-unit id="2776505193142258762" datatype="html">
         <source>Get rid of all of your opponent&apos;s pieces on a board that shrinks little by little!</source>
-        <target>Éliminez tous vos ennemis sur un plateau dont la taille diminue petit à petit !</target>
+        <target>Éliminez tous vos ennemis sur un plateau qui rapetisse petit à petit !</target>
       </trans-unit>
       <trans-unit id="3383193846061013912" datatype="html">
         <source>Create a winning alignment. The problem: you don&apos;t pick the piece that you&apos;re placing on the board!</source>
@@ -198,9 +198,9 @@
         <source>Your goal is simple: reach the last line. But the piece you move depends on your opponent&apos;s last move!</source>
         <target>Votre but est simple : atteindre la dernière ligne. Mais la pièce que vous déplacez dépend du mouvement de votre adversaire !</target>
       </trans-unit>
-      <trans-unit id="4372694764720308048" datatype="html">
-        <source>Align 5 of your pieces on a board where squares slide!</source>
-        <target>Alignez 5 de vos pièces sur un plateau dont les cases glissent !</target>
+      <trans-unit id="3529667957993318888" datatype="html">
+        <source>Align 5 of your pieces on a board where pieces slide!</source>
+        <target>Alignez 5 de vos pièces sur un plateau dont les pièces glissent !</target>
       </trans-unit>
       <trans-unit id="718535138834335364" datatype="html">
         <source>Four in a Row</source>
@@ -1535,10 +1535,10 @@
         <source>Capture (3/3)</source>
         <target>Capture (3/3)</target>
       </trans-unit>
-      <trans-unit id="3537904836524456622" datatype="html">
+      <trans-unit id="1122045241923673041" datatype="html">
         <source>Here, you must capture at the beginning of your turn.
         This is due to a move of your opponent at the previous turn
-        (even though this is a ficticious board for pedagogical purpose).
+        (even though this is a fictitious board for pedagogical purpose).
         After your capture, by performing the right move you can even capture two more of your opponent&apos;s pieces!
         Keep it mind that the most useful in a capture is to take your opponent&apos;s pieces.</source>
         <target>Ici, vous aurez une capture à faire au début de votre tour.
@@ -1601,15 +1601,13 @@
         La zone en haut au milieu n&apos;appartient à personne.
         Le score d'un joueur en fin de partie correspond à la somme de ses territoires et captures.</target>
       </trans-unit>
-      <trans-unit id="1578964976017754857" datatype="html">
+      <trans-unit id="6064677838844428466" datatype="html">
         <source>An isolated stone, like the one in the middle here, has 4 neighboring intersections (not 8, because we do not count diagonals).
         It is said of a group which has exactly 2 free neighboring squares, that this group has two liberties.
-        If a neighboring intersection is unoccupied, it is called a liberty.
         If Dark plays on the last liberty of the light stone, this stone is removed from the Goban (captured) and Dark earns one point.&lt;br/&gt;&lt;br/&gt;
         The light piece only has one liberty left, play there.</source>
         <target>Une pierre isolée, comme la pierre claire au milieu, a 4 intersections voisines (et non 8, car on ne compte pas les diagonales).
         Il est dit d'un groupe de pierres qui a exactement deux cases voisines libres, que ce groupe a deux libertés.
-        Une intersection inocuppée, voisine d'une pierre, est appelée une liberté de cette pierre.
         Si Foncé joue sur la dernière liberté de la pierre claire, cette pierre est enlevée du goban (capturée) et rapporte un point à Foncé.&lt;br/&gt;&lt;br/&gt;
         Il ne reste plus qu&apos;une liberté à la pierre claire, capturez la.</target>
       </trans-unit>
@@ -2105,9 +2103,9 @@
         Celui-ci deviendra une pyramide petit à petit.
         Ce plateau sera rempli par les pièces dans votre réserve. Chaque joueur a 15 pièces.</target>
       </trans-unit>
-      <trans-unit id="5521539166247507576" datatype="html">
+      <trans-unit id="6012873055176768317" datatype="html">
         <source>When it is your turn, you can always drop one of your piece on an empty square.
-        The grey squares are where you can drop your pieces.&lt;br/&gt;&lt;br/&gt;
+        The gray squares are where you can drop your pieces.&lt;br/&gt;&lt;br/&gt;
         Click on one of the squares to drop a piece there.</source>
         <target>Quand c&apos;est votre tour, vous avez toujours l&apos;option de déposer une de vos pièces sur une case vide.
         Les rectangles gris sont les cases sur lesquelles vous pouvez déposez vos pièces.&lt;br/&gt;&lt;br/&gt;
@@ -2750,7 +2748,7 @@
         You&apos;re playing Dark, play such a move!</source>
         <target>Lors d&apos;une déconnection, de deux à plusieurs groupes peuvent faire la même taille,
         auquel cas, un clic en plus sera nécessaire pour indiquer lequel vous souhaitez garder.&lt;br/&gt;&lt;br/&gt;
-        Vous jouez Foncé, créez un mouvement de la sorte !</target>
+        Vous jouez Foncé, coupez le plateau en deux parties égales.</target>
       </trans-unit>
       <trans-unit id="4762560256027932544" datatype="html">
         <source>This move has not cut the board in two equal halves.</source>

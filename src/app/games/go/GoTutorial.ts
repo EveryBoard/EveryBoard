@@ -38,7 +38,7 @@ export const goTutorial: TutorialStep[] = [
     TutorialStep.fromMove(
         $localize`Simple capture`,
         $localize`An isolated stone, like the one in the middle here, has 4 neighboring intersections (not 8, because we do not count diagonals).
-        If a neighboring intersection is unoccupied, it is called a liberty.
+        It is said of a group which has exactly 2 free neighboring squares, that this group has two liberties.
         If Dark plays on the last liberty of the light stone, this stone is removed from the Goban (captured) and Dark earns one point.<br/><br/>
         The light piece only has one liberty left, play there.`,
         new GoPartSlice([

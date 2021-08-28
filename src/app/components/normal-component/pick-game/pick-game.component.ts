@@ -55,7 +55,7 @@ class GameDescription {
 
     public static readonly QUARTO: string = $localize`Create a winning alignment. The problem: you don't pick the piece that you're placing on the board!`;
 
-    public static readonly QUIXO: string = $localize`Align 5 of your pieces on a board where squares slide!`;
+    public static readonly QUIXO: string = $localize`Align 5 of your pieces on a board where pieces slide!`;
 
     public static readonly REVERSI: string = $localize`Sandwich your opponent's pieces to dominate the board!`;
 

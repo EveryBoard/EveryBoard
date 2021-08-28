@@ -22,7 +22,7 @@ export const pylosTutorial: TutorialStep[] = [
     TutorialStep.anyMove(
         $localize`Dropping a piece`,
         $localize`When it is your turn, you can always drop one of your piece on an empty square.
-        The grey squares are where you can drop your pieces.<br/><br/>
+        The gray squares are where you can drop your pieces.<br/><br/>
         Click on one of the squares to drop a piece there.`,
         PylosPartSlice.getInitialSlice(),
         PylosMove.fromDrop(new PylosCoord(1, 1, 0), []),
