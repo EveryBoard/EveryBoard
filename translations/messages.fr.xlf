@@ -154,8 +154,8 @@
         <source>The classical 4 in a row game!</source>
         <target>Le classique Puissance 4 !</target>
       </trans-unit>
-      <trans-unit id="6377255794894182998" datatype="html">
-        <source>Drop a piece, then rotate the board. The first player to align 5 pieces wins!</source>
+      <trans-unit id="7007940005713233193" datatype="html">
+        <source>Drop a piece, then rotate a quadrant. The first player to align 5 pieces wins!</source>
         <target>Posez une pièces, ensuite tournez un quadrant. Le premier à aligner 5 pièces gagne !</target>
       </trans-unit>
       <trans-unit id="1621892382051781255" datatype="html">
@@ -2009,16 +2009,16 @@
         <source>You can also align 4 pieces diagonally or vertically.</source>
         <target>Vous pouvez également aligner 4 pions diagonalement ou verticalement</target>
       </trans-unit>
-      <trans-unit id="4481504026353283589" datatype="html">
-        <source>If the block to turn is neutral, please just use move without rotation.</source>
+      <trans-unit id="6103371171681226169" datatype="html">
+        <source>If the quadrant to turn is neutral, please just use move without rotation.</source>
         <target>Si le quadrant à tourner est neutre, utilisez un mouvement sans rotation.</target>
       </trans-unit>
-      <trans-unit id="8527080130603276604" datatype="html">
-        <source>No block is neutral, you must pick a block to rotate.</source>
+      <trans-unit id="960314962671621462" datatype="html">
+        <source>No quadrant is neutral, you must pick a quadrant to rotate.</source>
         <target>Aucun quadrant n&apos;étant neutre, vous devez choisir un quadrant à faire tourner.</target>
       </trans-unit>
-      <trans-unit id="5443268424960392940" datatype="html">
-        <source>The initial Pentago board is made of 6x6 spaces, subdivided in 4 blocks, which can each rotate.</source>
+      <trans-unit id="6958056470119838689" datatype="html">
+        <source>The initial Pentago board is made of 6x6 spaces, subdivided in 4 quadrants, which can each rotate.</source>
         <target>Le plateau du Pentago est composé de 6x6 cases, et est subdivisé en quatre quadrants, ceux-ci pouvant effectuer des rotations.</target>
       </trans-unit>
       <trans-unit id="821589059503120913" datatype="html">
@@ -2029,9 +2029,9 @@
         <source>Simple move</source>
         <target>Mouvement simple</target>
       </trans-unit>
-      <trans-unit id="7716841163299746976" datatype="html">
-        <source>At their turn, players put a piece on the board and possibly rotate one block.
-        As long as there are neutral blocks, i.e., blocks that would not change after being rotated, a player may skip rotating a block.
+      <trans-unit id="3238348765317457854" datatype="html">
+        <source>At their turn, players put a piece on the board and possibly rotate one quadrant.
+        As long as there are neutral quadrants, i.e., quadrants that would not change after being rotated, a player may skip rotating a quadrant.
         To do this, you have to click on the crossed circle that appears at the center of the board when it is possible.&lt;br/&gt;&lt;br/&gt;
         Do it.</source>
         <target>Chacun à son tour, les joueurs posent une pièce sur le plateau, et effectuent éventuellement une rotation d&apos;un quadrant.
@@ -2047,8 +2047,8 @@
         <source>Move with rotation</source>
         <target>Mouvement avec rotation</target>
       </trans-unit>
-      <trans-unit id="1712930066423533652" datatype="html">
-        <source>After putting a piece, arrows will appear on non-neutral blocks.&lt;br/&gt;&lt;br/&gt;
+      <trans-unit id="5122445748926838655" datatype="html">
+        <source>After putting a piece, arrows will appear on non-neutral quadrant.&lt;br/&gt;&lt;br/&gt;
         Click on one of them and see the rotation!</source>
         <target>Après avoir déposé une pièce, des flèches apparaîtront sur les quadrants non neutres.&lt;br/&gt;&lt;br/&gt;
         Cliquez sur l&apos;une d&apos;entre elles et voyez la rotation !</target>
@@ -2057,8 +2057,8 @@
         <source>You made a move without rotation, try again!</source>
         <target>Vous avez effectué un mouvement sans rotation, recommencez !</target>
       </trans-unit>
-      <trans-unit id="4197928800633217955" datatype="html">
-        <source>Congratulations! Note that if all blocks are neutral after you have put your piece, there will be no rotation.</source>
+      <trans-unit id="2426029962112596303" datatype="html">
+        <source>Congratulations! Note that if all quadrants are neutral after you have put your piece, there will be no rotation.</source>
         <target>Bravo ! Note : si tout les quadrants sont neutres après que vous ayez déposé votre pièce, il n&apos;y aura pas de rotation !</target>
       </trans-unit>
       <trans-unit id="682762602217958961" datatype="html">
@@ -2479,8 +2479,8 @@
         &lt;ol&gt;
             &lt;li&gt;Cliquez sur la pyramide à déplacer (celle tout au centre).&lt;/li&gt;
             &lt;li&gt;Cliquez directement sur l&apos;une des 6 destinations possibles en deux pas :
-                les 6 cases claires voisines des 3 cases foncées voisines de votre pyramide.
-        &lt;/li&gt;</target>
+                les 6 cases claires voisines des 3 cases foncées voisines de votre pyramide.&lt;li&gt;
+        &lt;/ol&gt;</target>
       </trans-unit>
       <trans-unit id="5302904876941698020" datatype="html">
         <source>Failed! You have made a single step.</source>
@@ -2826,9 +2826,9 @@
         <source>Congratulations, that will teach him a lesson!</source>
         <target>Bravo, ça lui apprendra !</target>
       </trans-unit>
-      <trans-unit id="3980320770441466216" datatype="html">
-        <source>Failed, you missed the opportunity to capture an opponent.</source>
-        <target>Raté, vous avez raté l&apos;occasion de capturer un adversaire.</target>
+      <trans-unit id="9035153077895210009" datatype="html">
+        <source>Failed, you missed an opportunity to capture a piece of the opponent.</source>
+        <target>Raté, vous avez manqué une occasion de capturer une pièce adverse.</target>
       </trans-unit>
       <trans-unit id="4346619065189143436" datatype="html">
         <source>Capturing a soldier (2/2)</source>
@@ -2954,7 +2954,7 @@
          Le nombre d&apos;anneaux capturés est indiqué en haut à gauche pour le joueur foncé,
          et en bas à droite pour le joueur clair. Ici, Foncé a gagné la partie.
          Notez que sur le plateau vous avez deux types des pièces pour chaque joueur :
-         des anneaux (pièces creuses) et des marqueurs (pièces entières).</target>
+         des anneaux (pièces creuses) et des marqueurs (pièces pleines).</target>
       </trans-unit>
       <trans-unit id="6047690275464996632" datatype="html">
         <source>Initial board and placement phase</source>
@@ -3084,7 +3084,7 @@
       </trans-unit>
       <trans-unit id="621011316051372308" datatype="html">
         <source>0 seconds</source>
-        <target>0 secondes</target>
+        <target>0 seconde</target>
       </trans-unit>
       <trans-unit id="5033601776243148314" datatype="html">
         <source><x id="PH" equiv-text="first"/> and <x id="PH_1" equiv-text="second"/></source>

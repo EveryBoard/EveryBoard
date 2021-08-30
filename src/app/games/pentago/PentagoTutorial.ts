@@ -11,7 +11,7 @@ const O: number = Player.ZERO.value;
 export const pentagoTutorial: TutorialStep[] = [
     TutorialStep.informational(
         $localize`Initial board`,
-        $localize`The initial Pentago board is made of 6x6 spaces, subdivided in 4 blocks, which can each rotate.`,
+        $localize`The initial Pentago board is made of 6x6 spaces, subdivided in 4 quadrants, which can each rotate.`,
         PentagoGameState.getInitialSlice(),
     ),
     TutorialStep.informational(
@@ -28,8 +28,8 @@ export const pentagoTutorial: TutorialStep[] = [
     ).withPreviousMove(PentagoMove.withRotation(0, 0, 0, false)),
     TutorialStep.fromPredicate(
         $localize`Simple move`,
-        $localize`At their turn, players put a piece on the board and possibly rotate one block.
-        As long as there are neutral blocks, i.e., blocks that would not change after being rotated, a player may skip rotating a block.
+        $localize`At their turn, players put a piece on the board and possibly rotate one quadrant.
+        As long as there are neutral quadrants, i.e., quadrants that would not change after being rotated, a player may skip rotating a quadrant.
         To do this, you have to click on the crossed circle that appears at the center of the board when it is possible.<br/><br/>
         Do it.`,
         new PentagoGameState([
@@ -52,7 +52,7 @@ export const pentagoTutorial: TutorialStep[] = [
     ),
     TutorialStep.fromPredicate(
         $localize`Move with rotation`,
-        $localize`After putting a piece, arrows will appear on non-neutral blocks.<br/><br/>
+        $localize`After putting a piece, arrows will appear on non-neutral quadrant.<br/><br/>
         Click on one of them and see the rotation!`,
         new PentagoGameState([
             [_, _, _, _, _, _],
@@ -70,6 +70,6 @@ export const pentagoTutorial: TutorialStep[] = [
                 return MGPValidation.failure($localize`You made a move without rotation, try again!`);
             }
         },
-        $localize`Congratulations! Note that if all blocks are neutral after you have put your piece, there will be no rotation.`,
+        $localize`Congratulations! Note that if all quadrants are neutral after you have put your piece, there will be no rotation.`,
     ),
 ];

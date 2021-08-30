@@ -122,8 +122,8 @@
       <trans-unit id="287142221400627248" datatype="html">
         <source>The classical 4 in a row game!</source>
       </trans-unit>
-      <trans-unit id="6377255794894182998" datatype="html">
-        <source>Drop a piece, then rotate the board. The first player to align 5 pieces wins!</source>
+      <trans-unit id="7007940005713233193" datatype="html">
+        <source>Drop a piece, then rotate a quadrant. The first player to align 5 pieces wins!</source>
       </trans-unit>
       <trans-unit id="1621892382051781255" datatype="html">
         <source>Overlay your pieces and use two game mechanics to conserve your pieces. First player to run out of pieces loses!</source>
@@ -1388,14 +1388,14 @@
       <trans-unit id="5935897420698942151" datatype="html">
         <source>You can also align 4 pieces diagonally or vertically.</source>
       </trans-unit>
-      <trans-unit id="4481504026353283589" datatype="html">
-        <source>If the block to turn is neutral, please just use move without rotation.</source>
+      <trans-unit id="6103371171681226169" datatype="html">
+        <source>If the quadrant to turn is neutral, please just use move without rotation.</source>
       </trans-unit>
-      <trans-unit id="8527080130603276604" datatype="html">
-        <source>No block is neutral, you must pick a block to rotate.</source>
+      <trans-unit id="960314962671621462" datatype="html">
+        <source>No quadrant is neutral, you must pick a quadrant to rotate.</source>
       </trans-unit>
-      <trans-unit id="5443268424960392940" datatype="html">
-        <source>The initial Pentago board is made of 6x6 spaces, subdivided in 4 blocks, which can each rotate.</source>
+      <trans-unit id="6958056470119838689" datatype="html">
+        <source>The initial Pentago board is made of 6x6 spaces, subdivided in 4 quadrants, which can each rotate.</source>
       </trans-unit>
       <trans-unit id="821589059503120913" datatype="html">
         <source>The goal at Pentago is to align 5 of your pieces. In the following board, Dark wins.</source>
@@ -1403,9 +1403,9 @@
       <trans-unit id="6144661124534225012" datatype="html">
         <source>Simple move</source>
       </trans-unit>
-      <trans-unit id="7716841163299746976" datatype="html">
-        <source>At their turn, players put a piece on the board and possibly rotate one block.
-        As long as there are neutral blocks, i.e., blocks that would not change after being rotated, a player may skip rotating a block.
+      <trans-unit id="3238348765317457854" datatype="html">
+        <source>At their turn, players put a piece on the board and possibly rotate one quadrant.
+        As long as there are neutral quadrants, i.e., quadrants that would not change after being rotated, a player may skip rotating a quadrant.
         To do this, you have to click on the crossed circle that appears at the center of the board when it is possible.&lt;br/&gt;&lt;br/&gt;
         Do it.</source>
       </trans-unit>
@@ -1415,15 +1415,15 @@
       <trans-unit id="8330321104835134748" datatype="html">
         <source>Move with rotation</source>
       </trans-unit>
-      <trans-unit id="1712930066423533652" datatype="html">
-        <source>After putting a piece, arrows will appear on non-neutral blocks.&lt;br/&gt;&lt;br/&gt;
+      <trans-unit id="5122445748926838655" datatype="html">
+        <source>After putting a piece, arrows will appear on non-neutral quadrant.&lt;br/&gt;&lt;br/&gt;
         Click on one of them and see the rotation!</source>
       </trans-unit>
       <trans-unit id="5427363142376983767" datatype="html">
         <source>You made a move without rotation, try again!</source>
       </trans-unit>
-      <trans-unit id="4197928800633217955" datatype="html">
-        <source>Congratulations! Note that if all blocks are neutral after you have put your piece, there will be no rotation.</source>
+      <trans-unit id="2426029962112596303" datatype="html">
+        <source>Congratulations! Note that if all quadrants are neutral after you have put your piece, there will be no rotation.</source>
       </trans-unit>
       <trans-unit id="682762602217958961" datatype="html">
         <source>You must move your pieces upward.</source>
@@ -1921,8 +1921,8 @@
       <trans-unit id="1504890408061490574" datatype="html">
         <source>Congratulations, that will teach him a lesson!</source>
       </trans-unit>
-      <trans-unit id="3980320770441466216" datatype="html">
-        <source>Failed, you missed the opportunity to capture an opponent.</source>
+      <trans-unit id="9035153077895210009" datatype="html">
+        <source>Failed, you missed an opportunity to capture a piece of the opponent.</source>
       </trans-unit>
       <trans-unit id="4346619065189143436" datatype="html">
         <source>Capturing a soldier (2/2)</source>

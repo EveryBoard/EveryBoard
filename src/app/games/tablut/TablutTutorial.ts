@@ -59,7 +59,7 @@ export const tablutTutorial: TutorialStep[] = [
             new TablutMove(new Coord(4, 2), new Coord(3, 2)),
         ],
         $localize`Congratulations, that will teach him a lesson!`,
-        $localize`Failed, you missed the opportunity to capture an opponent.`,
+        $localize`Failed, you missed an opportunity to capture a piece of the opponent.`,
     ),
     TutorialStep.fromMove(
         $localize`Capturing a soldier (2/2)`,
