@@ -125,16 +125,18 @@ fdescribe('ChatComponent', () => {
         switchButton = testUtils.findElement('#switchChatVisibilityButton');
         expect(switchButton.nativeElement.innerText).toEqual('Afficher le chat (1 nouveau message)');
     }));
-    fit('should scroll to the bottom on load', fakeAsync(async() => {
+    it('should scroll to the bottom on load', fakeAsync(async() => {
         // Given a visible chat with multiple messages
         AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
         testUtils.detectChanges();
-        await chatDAO.update('fauxChat', { messages: LOTS_OF_MESSAGES });
-
         const chatDiv: DebugElement = testUtils.findElement('#chatDiv');
         spyOn(chatDiv.nativeElement, 'scroll');
+        await chatDAO.update('fauxChat', { messages: LOTS_OF_MESSAGES });
+
+        console.log('[test] sending new messages')
 
         // when the chat is initialized
+        tick(10000);
         testUtils.detectChanges();
         await testUtils.whenStable();
 

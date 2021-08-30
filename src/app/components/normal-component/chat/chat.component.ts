@@ -74,6 +74,8 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
         } else {
             this.readMessages = nbMessages;
             this.updateUnreadMessagesText(0);
+            console.log('[update] scrolling to bottom')
+            this.scrollToBottom();
         }
     }
     public showUnreadMessagesButton: boolean = false;
@@ -94,15 +96,21 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     }
     private isNearBottom: boolean = true;
     private scrollToBottomIfNeeded(): void {
+        console.log('scroll to bottom if needed')
         if (this.connected && this.visible) {
-            this.updateCurrentScrollPosition();
-            if (this.isNearBottom) {
+            console.log('connected and visible');
+            const previousScrollPosition: number = this.scrollPosition;
+//            this.updateCurrentScrollPosition();
+            if (previousScrollPosition < 0 || this.isNearBottom) {
                 this.scrollToBottom();
             }
         }
     }
-    private scrollPosition: number = 0;
+    private scrollPosition: number = -1;
     public updateCurrentScrollPosition(): void {
+        if (this.chatDiv == null) {
+            return;
+        }
         const threshold: number = 20;
         const position: number = this.chatDiv.nativeElement.scrollTop + this.chatDiv.nativeElement.offsetHeight;
         const height: number = this.chatDiv.nativeElement.scrollHeight;
@@ -111,6 +119,9 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
         console.log({position, height, nearBottom: this.isNearBottom})
     }
     public scrollToBottom(): void {
+        if (this.chatDiv == null) {
+            return;
+        }
         console.log('[scrollToBottom] setting scroll top to ' + this.chatDiv.nativeElement.scrollHeight);
         this.updateUnreadMessagesText(0);
         this.chatDiv.nativeElement.scroll({
