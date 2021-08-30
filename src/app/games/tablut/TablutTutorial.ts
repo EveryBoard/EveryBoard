@@ -64,7 +64,7 @@ export const tablutTutorial: TutorialStep[] = [
     TutorialStep.fromMove(
         $localize`Capturing a soldier (2/2)`,
         $localize`A second way to capture a soldier is against an empty throne.
-        The King has moved and endangered one of its soldiers..<br/><br/>
+        The King has moved and endangered one of its soldiers.<br/><br/>
         Capture it.`,
         new TablutPartSlice([
             [_, _, _, x, x, x, _, _, _],
@@ -99,7 +99,7 @@ export const tablutTutorial: TutorialStep[] = [
             [_, _, _, _, _, _, _, _, _],
         ], 72),
         [new TablutMove(new Coord(3, 4), new Coord(2, 4))],
-        $localize`Congratulations, you won..`,
+        $localize`Congratulations, you won!`,
         $localize`Failed, you let the king run away.`,
     ),
     TutorialStep.fromMove(

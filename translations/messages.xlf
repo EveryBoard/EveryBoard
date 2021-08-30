@@ -1927,9 +1927,9 @@
       <trans-unit id="4346619065189143436" datatype="html">
         <source>Capturing a soldier (2/2)</source>
       </trans-unit>
-      <trans-unit id="7441310005881510130" datatype="html">
+      <trans-unit id="3935652819200846577" datatype="html">
         <source>A second way to capture a soldier is against an empty throne.
-        The King has moved and endangered one of its soldiers..&lt;br/&gt;&lt;br/&gt;
+        The King has moved and endangered one of its soldiers.&lt;br/&gt;&lt;br/&gt;
         Capture it.</source>
       </trans-unit>
       <trans-unit id="6149168030196118189" datatype="html">
@@ -1946,9 +1946,6 @@
         For the first solution, the four squares neighbor to the king (horizontally and vertically) must be occupied by your soldiers.
         This also works if the king is on the throne.&lt;br/&gt;&lt;br/&gt;
         Capture the king.</source>
-      </trans-unit>
-      <trans-unit id="6041867123312663432" datatype="html">
-        <source>Congratulations, you won..</source>
       </trans-unit>
       <trans-unit id="2543567724882527416" datatype="html">
         <source>Failed, you let the king run away.</source>
@@ -2028,9 +2025,9 @@
       <trans-unit id="6117091506461787133" datatype="html">
         <source>Putting a marker</source>
       </trans-unit>
-      <trans-unit id="1690773122949082144" datatype="html">
-        <source>Once the initial phase is done and all rings are on the board, you need to place markers on the board..
-        To do so, put a marker in a ring by clicking on that ring
+      <trans-unit id="2622897751178992678" datatype="html">
+        <source>Once the initial phase is done and all rings are on the board, you need to place markers on the board.
+        To do so, put a marker in a ring by clicking on that ring.
         Then, the ring must be moved in a straight line, in any direction.
         A ring cannot pass through other rings during its move.
         If it goes over a group of markers, your move must stop at the first empty space after that group.
@@ -2084,8 +2081,8 @@
       <trans-unit id="7463436103435995523" datatype="html">
         <source>You are already in a game. Finish it or cancel it first.</source>
       </trans-unit>
-      <trans-unit id="1046324921628688006" datatype="html">
-        <source>You are offline. Log in again to join a game.</source>
+      <trans-unit id="2112240517752406123" datatype="html">
+        <source>You are offline. Log in to join a game.</source>
       </trans-unit>
       <trans-unit id="682801679843744749" datatype="html">
         <source><x id="PH" equiv-text="hours"/> hours</source>

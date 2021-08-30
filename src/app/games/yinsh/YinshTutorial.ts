@@ -54,8 +54,8 @@ export const yinshTutorial: TutorialStep[] = [
         $localize`Congratulations!`),
     TutorialStep.anyMove(
         $localize`Putting a marker`,
-        $localize`Once the initial phase is done and all rings are on the board, you need to place markers on the board..
-        To do so, put a marker in a ring by clicking on that ring
+        $localize`Once the initial phase is done and all rings are on the board, you need to place markers on the board.
+        To do so, put a marker in a ring by clicking on that ring.
         Then, the ring must be moved in a straight line, in any direction.
         A ring cannot pass through other rings during its move.
         If it goes over a group of markers, your move must stop at the first empty space after that group.
