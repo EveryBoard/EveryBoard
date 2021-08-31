@@ -44,4 +44,10 @@ export abstract class GamePartSlice {
     public getCurrentEnnemy(): Player {
         return this.turn % 2 === 1 ? Player.ZERO : Player.ONE;
     }
+    public equals(other: GamePartSlice): boolean {
+        throw new Error('Method uneeded yet' + other.toString());
+    }
+    public toString(): string {
+        return '(t:'+this.turn+') = ' + JSON.stringify(this.board);
+    }
 }

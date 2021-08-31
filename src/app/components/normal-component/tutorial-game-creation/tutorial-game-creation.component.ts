@@ -2,10 +2,10 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
-    selector: 'app-didacticial-game-creation',
-    templateUrl: './didacticial-game-creation.component.html',
+    selector: 'app-tutorial-game-creation',
+    templateUrl: './tutorial-game-creation.component.html',
 })
-export class DidacticialGameCreationComponent {
+export class TutorialGameCreationComponent {
 
     public selectedGame: string;
 
@@ -14,7 +14,7 @@ export class DidacticialGameCreationComponent {
     public pickGame(pickedGame: string): void {
         this.selectedGame = pickedGame;
     }
-    public launchDidacticial(): void {
-        this.router.navigate(['didacticial/' + this.selectedGame]);
+    public launchTutorial(): void {
+        this.router.navigate(['tutorial/' + this.selectedGame]);
     }
 }

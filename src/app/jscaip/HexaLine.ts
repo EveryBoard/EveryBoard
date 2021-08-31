@@ -1,7 +1,5 @@
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { assert } from '../utils/utils';
 import { Coord } from './Coord';
-import { HexaBoard } from './HexaBoard';
 import { HexaDirection } from './HexaDirection';
 
 export class HexaLine {

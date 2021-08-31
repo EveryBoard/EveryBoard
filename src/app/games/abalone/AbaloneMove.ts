@@ -4,6 +4,7 @@ import { NumberEncoder } from 'src/app/jscaip/Encoder';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class AbaloneMove extends MoveCoord {
@@ -24,7 +25,8 @@ export class AbaloneMove extends MoveCoord {
         public decodeNumber(encodedMove: number): AbaloneMove {
             const dir: number = encodedMove % 8;
             encodedMove = (encodedMove - dir) / 8;
-            const direction: HexaDirection = HexaDirection.factory.fromInt(dir);
+            const directionOptional: MGPFallible<HexaDirection> = HexaDirection.factory.fromInt(dir);
+            const direction: HexaDirection = directionOptional.get();
 
             const y: number = encodedMove % 9;
             encodedMove = (encodedMove - y) / 9;
@@ -34,7 +36,8 @@ export class AbaloneMove extends MoveCoord {
 
             const first: Coord = new Coord(x, y);
             if (encodedMove === 0) {
-                return AbaloneMove.fromSingleCoord(first, direction);
+                const moveOptional: MGPFallible<AbaloneMove> = AbaloneMove.fromSingleCoord(first, direction);
+                return moveOptional.get();
             } else {
                 encodedMove = (encodedMove - 1) / 2;
 
@@ -46,31 +49,41 @@ export class AbaloneMove extends MoveCoord {
 
                 const last: Coord = new Coord(lx, ly);
 
-                return AbaloneMove.fromDoubleCoord(first, last, direction);
+                const moveOptional: MGPFallible<AbaloneMove> = AbaloneMove.fromDoubleCoord(first, last, direction);
+                return moveOptional.get();
             }
         }
     }
-    public static fromSingleCoord(coord: Coord, dir: HexaDirection): AbaloneMove {
-        return new AbaloneMove(coord, dir, MGPOptional.empty());
+    public static fromSingleCoord(coord: Coord, dir: HexaDirection): MGPFallible<AbaloneMove> {
+        try {
+            return MGPFallible.success(new AbaloneMove(coord, dir, MGPOptional.empty()));
+        } catch (e) {
+            return MGPFallible.failure(e.message);
+        }
     }
-    public static fromDoubleCoord(first: Coord, second: Coord, dir: HexaDirection): AbaloneMove {
+    public static fromDoubleCoord(first: Coord, second: Coord, dir: HexaDirection): MGPFallible<AbaloneMove> {
         if (second == null) {
-            throw new Error('second coord cannot be null.');
+            return MGPFallible.failure('second coord cannot be null');
         }
         const coords: Coord[] = [first, second];
         ArrayUtils.sortByDescending(coords, AbaloneMove.sortCoord);
-        const direction: Direction = coords[1].getDirectionToward(coords[0]);
-        const hexaDirection: HexaDirection = HexaDirection.factory.fromDelta(direction.x, direction.y);
+        const direction: Direction = coords[1].getDirectionToward(coords[0]).get();
+        const hexaDirectionOptional: MGPFallible<HexaDirection> =
+            HexaDirection.factory.fromDelta(direction.x, direction.y);
+        if (hexaDirectionOptional.isFailure()) {
+            return MGPFallible.failure('Invalid direction');
+        }
+        const hexaDirection: HexaDirection = hexaDirectionOptional.get();
         const distance: number = coords[1].getDistance(coords[0]);
         if (distance > 2) {
-            throw new Error('Distance between first coord and last coord is to great!');
+            return MGPFallible.failure('Distance between first coord and last coord is too great');
         }
         if (hexaDirection.equals(dir)) {
             return AbaloneMove.fromSingleCoord(coords[1], dir);
         } else if (hexaDirection.getOpposite().equals(dir)) {
             return AbaloneMove.fromSingleCoord(coords[0], dir);
         }
-        return new AbaloneMove(coords[1], dir, MGPOptional.of(coords[0]));
+        return MGPFallible.success(new AbaloneMove(coords[1], dir, MGPOptional.of(coords[0])));
     }
     public static sortCoord(coord: Coord): number {
         return coord.y * 9 + coord.x;

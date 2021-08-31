@@ -11,6 +11,8 @@ import { Player } from 'src/app/jscaip/Player';
 import { Direction } from 'src/app/jscaip/Direction';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { reversiTutorial } from './ReversiTutorial';
 
 @Component({
     selector: 'app-reversi',
@@ -27,6 +29,10 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
 
     private captureds: Coord[] = [];
 
+    public encoder: MoveEncoder<ReversiMove> = ReversiMove.encoder;
+
+    public tutorial: TutorialStep[] = reversiTutorial;
+
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.showScore = true;
@@ -36,7 +42,6 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
             new ReversiMinimax(this.rules, 'ReversiMinimax'),
         ];
     }
-    public encoder: MoveEncoder<ReversiMove> = ReversiMove.encoder;
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {

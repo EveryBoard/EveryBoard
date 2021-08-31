@@ -3,7 +3,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { YinshBoard } from '../YinshBoard';
 import { YinshGameState } from '../YinshGameState';
 import { YinshMinimax } from '../YinshMinimax';
-import { YinshCapture, YinshMove } from '../YinshMove';
+import { YinshCapture } from '../YinshMove';
 import { YinshPiece } from '../YinshPiece';
 import { YinshNode, YinshRules } from '../YinshRules';
 

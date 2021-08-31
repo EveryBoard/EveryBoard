@@ -23,7 +23,7 @@ describe('LinesOfActionComponent', () => {
     });
     it('should allow a simple move', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_2_0');
-        const move: LinesOfActionMove = new LinesOfActionMove(new Coord(2, 0), new Coord(2, 2));
+        const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(2, 0), new Coord(2, 2)).get();
         await componentTestUtils.expectMoveSuccess('#click_2_2', move);
     }));
     it('should forbid moving in an invalid direction', fakeAsync(async() => {
@@ -52,7 +52,7 @@ describe('LinesOfActionComponent', () => {
     it('should allow selecting a different piece in one click', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_2_0');
         await componentTestUtils.expectClickSuccess('#click_3_0');
-        const move: LinesOfActionMove = new LinesOfActionMove(new Coord(3, 0), new Coord(3, 2));
+        const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(3, 0), new Coord(3, 2)).get();
         await componentTestUtils.expectMoveSuccess('#click_3_2', move);
     }));
     it('should show selected piece', fakeAsync(async() => {
@@ -63,7 +63,7 @@ describe('LinesOfActionComponent', () => {
     }));
     it('should show last move cases', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_2_0');
-        const move: LinesOfActionMove = new LinesOfActionMove(new Coord(2, 0), new Coord(2, 2));
+        const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(2, 0), new Coord(2, 2)).get();
         await componentTestUtils.expectMoveSuccess('#click_2_2', move);
 
         const component: LinesOfActionComponent = componentTestUtils.getComponent();
@@ -85,7 +85,7 @@ describe('LinesOfActionComponent', () => {
         componentTestUtils.setupSlice(state);
 
         await componentTestUtils.expectClickSuccess('#click_2_0');
-        const move: LinesOfActionMove = new LinesOfActionMove(new Coord(2, 0), new Coord(2, 2));
+        const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(2, 0), new Coord(2, 2)).get();
         await componentTestUtils.expectMoveSuccess('#click_2_2', move);
 
         const component: LinesOfActionComponent = componentTestUtils.getComponent();

@@ -1,3 +1,4 @@
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { Coord } from '../Coord';
 import { Direction, Orthogonal } from '../Direction';
 
@@ -8,65 +9,66 @@ describe('Direction', () => {
     describe('factory', () => {
         describe('of', () => {
             it('should construct a direction', () => {
-                expect(Direction.factory.of(1, 0)).toBe(Direction.RIGHT);
-                expect(Direction.factory.of(-1, 0)).toBe(Direction.LEFT);
-                expect(Direction.factory.of(0, 1)).toBe(Direction.DOWN);
-                expect(Direction.factory.of(0, -1)).toBe(Direction.UP);
-                expect(Direction.factory.of(1, -1)).toBe(Direction.UP_RIGHT);
-                expect(Direction.factory.of(-1, -1)).toBe(Direction.UP_LEFT);
-                expect(Direction.factory.of(-1, 1)).toBe(Direction.DOWN_LEFT);
-                expect(Direction.factory.of(1, 1)).toBe(Direction.DOWN_RIGHT);
+                expect(Direction.factory.of(1, 0).get()).toBe(Direction.RIGHT);
+                expect(Direction.factory.of(-1, 0).get()).toBe(Direction.LEFT);
+                expect(Direction.factory.of(0, 1).get()).toBe(Direction.DOWN);
+                expect(Direction.factory.of(0, -1).get()).toBe(Direction.UP);
+                expect(Direction.factory.of(1, -1).get()).toBe(Direction.UP_RIGHT);
+                expect(Direction.factory.of(-1, -1).get()).toBe(Direction.UP_LEFT);
+                expect(Direction.factory.of(-1, 1).get()).toBe(Direction.DOWN_LEFT);
+                expect(Direction.factory.of(1, 1).get()).toBe(Direction.DOWN_RIGHT);
             });
-            it('should fail when constructing an invalid direction', () => {
-                expect(() => Direction.factory.of(2, 1)).toThrow();
+            it('should not construct an invalid direction', () => {
+                expect(Direction.factory.of(2, 1))
+                    .toEqual(MGPFallible.failure('Invalid x and y in direction construction'));
             });
         });
         describe('fromDelta', () => {
             it('should construct the directions', () => {
-                expect(Direction.factory.fromDelta(3, 0)).toBe(Direction.RIGHT);
-                expect(Direction.factory.fromDelta(-5, 0)).toBe(Direction.LEFT);
-                expect(Direction.factory.fromDelta(1, 1)).toBe(Direction.DOWN_RIGHT);
+                expect(Direction.factory.fromDelta(3, 0).get()).toBe(Direction.RIGHT);
+                expect(Direction.factory.fromDelta(-5, 0).get()).toBe(Direction.LEFT);
+                expect(Direction.factory.fromDelta(1, 1).get()).toBe(Direction.DOWN_RIGHT);
             });
-            it('should throw when trying static move', () => {
-                expect(() => Direction.factory.fromDelta(0, 0)).toThrowError('Invalid direction from static move');
+            it('should not construct from static move', () => {
+                expect(Direction.factory.fromDelta(0, 0)).toEqual(MGPFallible.failure('Empty delta for direction'));
             });
         });
         describe('fromMove', () => {
             it('should construct a direction corresponding to a move', () => {
-                expect(Direction.factory.fromMove(new Coord(0, 0), new Coord(5, 0))).toBe(Direction.RIGHT);
+                expect(Direction.factory.fromMove(new Coord(0, 0), new Coord(5, 0)).get()).toBe(Direction.RIGHT);
             });
-            it('should throw when the move does not correspond to a valid direction', () => {
-                expect(() => Direction.factory.fromMove(new Coord(0, 0), new Coord(5, 3))).toThrow();
+            it('should not construct when the move does not correspond to a valid direction', () => {
+                expect(Direction.factory.fromMove(new Coord(0, 0), new Coord(5, 3))).toEqual(MGPFallible.failure('Invalid delta for direction: 5, 3'));
             });
         });
         describe('fromString', () => {
             it('should construct the direction corresponding to the string', () => {
-                expect(Direction.factory.fromString('RIGHT')).toBe(Direction.RIGHT);
-                expect(Direction.factory.fromString('LEFT')).toBe(Direction.LEFT);
-                expect(Direction.factory.fromString('DOWN')).toBe(Direction.DOWN);
-                expect(Direction.factory.fromString('UP')).toBe(Direction.UP);
-                expect(Direction.factory.fromString('UP_RIGHT')).toBe(Direction.UP_RIGHT);
-                expect(Direction.factory.fromString('UP_LEFT')).toBe(Direction.UP_LEFT);
-                expect(Direction.factory.fromString('DOWN_LEFT')).toBe(Direction.DOWN_LEFT);
-                expect(Direction.factory.fromString('DOWN_RIGHT')).toBe(Direction.DOWN_RIGHT);
+                expect(Direction.factory.fromString('RIGHT').get()).toBe(Direction.RIGHT);
+                expect(Direction.factory.fromString('LEFT').get()).toBe(Direction.LEFT);
+                expect(Direction.factory.fromString('DOWN').get()).toBe(Direction.DOWN);
+                expect(Direction.factory.fromString('UP').get()).toBe(Direction.UP);
+                expect(Direction.factory.fromString('UP_RIGHT').get()).toBe(Direction.UP_RIGHT);
+                expect(Direction.factory.fromString('UP_LEFT').get()).toBe(Direction.UP_LEFT);
+                expect(Direction.factory.fromString('DOWN_LEFT').get()).toBe(Direction.DOWN_LEFT);
+                expect(Direction.factory.fromString('DOWN_RIGHT').get()).toBe(Direction.DOWN_RIGHT);
             });
-            it('should throw when called with a string that does not correspond to a direction', () => {
-                expect(() => Direction.factory.fromString('foo')).toThrow();
+            it('should not construct from a string that does not correspond to a direction', () => {
+                expect(Direction.factory.fromString('foo')).toEqual(MGPFallible.failure('Invalid direction string foo'));
             });
         });
         describe('fromInt', () => {
             it('should construct the direction corresponding to the int', () => {
-                expect(Direction.factory.fromInt(Direction.RIGHT.toInt())).toBe(Direction.RIGHT);
-                expect(Direction.factory.fromInt(Direction.LEFT.toInt())).toBe(Direction.LEFT);
-                expect(Direction.factory.fromInt(Direction.DOWN.toInt())).toBe(Direction.DOWN);
-                expect(Direction.factory.fromInt(Direction.UP.toInt())).toBe(Direction.UP);
-                expect(Direction.factory.fromInt(Direction.UP_RIGHT.toInt())).toBe(Direction.UP_RIGHT);
-                expect(Direction.factory.fromInt(Direction.UP_LEFT.toInt())).toBe(Direction.UP_LEFT);
-                expect(Direction.factory.fromInt(Direction.DOWN_LEFT.toInt())).toBe(Direction.DOWN_LEFT);
-                expect(Direction.factory.fromInt(Direction.DOWN_RIGHT.toInt())).toBe(Direction.DOWN_RIGHT);
+                expect(Direction.factory.fromInt(Direction.RIGHT.toInt()).get()).toBe(Direction.RIGHT);
+                expect(Direction.factory.fromInt(Direction.LEFT.toInt()).get()).toBe(Direction.LEFT);
+                expect(Direction.factory.fromInt(Direction.DOWN.toInt()).get()).toBe(Direction.DOWN);
+                expect(Direction.factory.fromInt(Direction.UP.toInt()).get()).toBe(Direction.UP);
+                expect(Direction.factory.fromInt(Direction.UP_RIGHT.toInt()).get()).toBe(Direction.UP_RIGHT);
+                expect(Direction.factory.fromInt(Direction.UP_LEFT.toInt()).get()).toBe(Direction.UP_LEFT);
+                expect(Direction.factory.fromInt(Direction.DOWN_LEFT.toInt()).get()).toBe(Direction.DOWN_LEFT);
+                expect(Direction.factory.fromInt(Direction.DOWN_RIGHT.toInt()).get()).toBe(Direction.DOWN_RIGHT);
             });
-            it('should throw when called with a string that does not correspond to a direction', () => {
-                expect(() => Direction.factory.fromInt(42)).toThrow();
+            it('should not construct when called with a string that does not correspond to a direction', () => {
+                expect(Direction.factory.fromInt(42)).toEqual(MGPFallible.failure('Invalid int direction: 42'));
             });
         });
     });
@@ -133,7 +135,7 @@ describe('Direction', () => {
         });
         it('should decode by calling Direction.factory.fromString', () => {
             const dir: string = Direction.DOWN.toString();
-            expect(Direction.encoder.decode(dir)).toEqual(Direction.factory.fromString(dir));
+            expect(Direction.encoder.decode(dir)).toEqual(Direction.factory.fromString(dir).get());
         });
     });
 });
@@ -145,14 +147,14 @@ describe('Orthogonal', () => {
     describe('factory', () => {
         describe('of', () => {
             it('should construct a direction', () => {
-                expect(Orthogonal.factory.of(1, 0)).toBe(Orthogonal.RIGHT);
-                expect(Orthogonal.factory.of(-1, 0)).toBe(Orthogonal.LEFT);
-                expect(Orthogonal.factory.of(0, 1)).toBe(Orthogonal.DOWN);
-                expect(Orthogonal.factory.of(0, -1)).toBe(Orthogonal.UP);
+                expect(Orthogonal.factory.of(1, 0).get()).toBe(Orthogonal.RIGHT);
+                expect(Orthogonal.factory.of(-1, 0).get()).toBe(Orthogonal.LEFT);
+                expect(Orthogonal.factory.of(0, 1).get()).toBe(Orthogonal.DOWN);
+                expect(Orthogonal.factory.of(0, -1).get()).toBe(Orthogonal.UP);
             });
-            it('should fail when constructing an invalid direction', () => {
-                expect(() => Orthogonal.factory.of(2, 1)).toThrow();
-                expect(() => Orthogonal.factory.of(1, 1)).toThrow();
+            it('should fail when constructing an invalid orthogonal', () => {
+                expect(Orthogonal.factory.of(2, 1)).toEqual(MGPFallible.failure('Invalid orthogonal from x and y'));
+                expect(Orthogonal.factory.of(1, 1)).toEqual(MGPFallible.failure('Invalid orthogonal from x and y'));
             });
         });
     });
@@ -163,7 +165,7 @@ describe('Orthogonal', () => {
         });
         it('should decode by calling Orthogonal.factory.fromString', () => {
             const dir: string = Orthogonal.DOWN.toString();
-            expect(Orthogonal.encoder.decode(dir)).toEqual(Orthogonal.factory.fromString(dir));
+            expect(Orthogonal.encoder.decode(dir)).toEqual(Orthogonal.factory.fromString(dir).get());
         });
     });
 });
