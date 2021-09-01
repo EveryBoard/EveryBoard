@@ -442,9 +442,9 @@
         <source><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser() }}"/> has reached their time limit.</source>
         <target><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser() }}"/> a épuisé son temps.</target>
       </trans-unit>
-      <trans-unit id="6095994516289681666" datatype="html">
-        <source>Go back to server</source>
-        <target>Retour au serveur</target>
+      <trans-unit id="4624707315308487849" datatype="html">
+        <source>Go back to the game list</source>
+        <target>Retour à la liste des parties</target>
       </trans-unit>
       <trans-unit id="7250880851290385128" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser() }}"/> has resigned.</source>
@@ -2047,8 +2047,8 @@
         <source>Move with rotation</source>
         <target>Mouvement avec rotation</target>
       </trans-unit>
-      <trans-unit id="5122445748926838655" datatype="html">
-        <source>After putting a piece, arrows will appear on non-neutral quadrant.&lt;br/&gt;&lt;br/&gt;
+      <trans-unit id="5479634148355425392" datatype="html">
+        <source>After putting a piece, arrows will appear on non-neutral quadrants.&lt;br/&gt;&lt;br/&gt;
         Click on one of them and see the rotation!</source>
         <target>Après avoir déposé une pièce, des flèches apparaîtront sur les quadrants non neutres.&lt;br/&gt;&lt;br/&gt;
         Cliquez sur l&apos;une d&apos;entre elles et voyez la rotation !</target>

@@ -332,8 +332,8 @@
       <trans-unit id="2324913504104154958" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser() }}"/> has reached their time limit.</source>
       </trans-unit>
-      <trans-unit id="6095994516289681666" datatype="html">
-        <source>Go back to server</source>
+      <trans-unit id="4624707315308487849" datatype="html">
+        <source>Go back to the game list</source>
       </trans-unit>
       <trans-unit id="7250880851290385128" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser() }}"/> has resigned.</source>
@@ -1415,8 +1415,8 @@
       <trans-unit id="8330321104835134748" datatype="html">
         <source>Move with rotation</source>
       </trans-unit>
-      <trans-unit id="5122445748926838655" datatype="html">
-        <source>After putting a piece, arrows will appear on non-neutral quadrant.&lt;br/&gt;&lt;br/&gt;
+      <trans-unit id="5479634148355425392" datatype="html">
+        <source>After putting a piece, arrows will appear on non-neutral quadrants.&lt;br/&gt;&lt;br/&gt;
         Click on one of them and see the rotation!</source>
       </trans-unit>
       <trans-unit id="5427363142376983767" datatype="html">

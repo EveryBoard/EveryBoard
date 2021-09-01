@@ -52,7 +52,7 @@ export const pentagoTutorial: TutorialStep[] = [
     ),
     TutorialStep.fromPredicate(
         $localize`Move with rotation`,
-        $localize`After putting a piece, arrows will appear on non-neutral quadrant.<br/><br/>
+        $localize`After putting a piece, arrows will appear on non-neutral quadrants.<br/><br/>
         Click on one of them and see the rotation!`,
         new PentagoGameState([
             [_, _, _, _, _, _],
