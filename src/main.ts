@@ -7,7 +7,7 @@ import { loadTranslations } from '@angular/localize';
 
 const validLocales: string[] = ['en', 'fr'];
 const foundLocale: string = localStorage.getItem('locale') || navigator.language || 'fr';
-const locale: string = foundLocale.slice(0, 2); // from en-US or fr-BE, we only want en or fr
+const locale: string = foundLocale.slice(0, 2).toLowerCase(); // from en-US or fr-BE, we only want en or frm
 
 function bootstrapApp(): void {
     if (environment.production) {
