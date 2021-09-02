@@ -1531,14 +1531,14 @@
       <trans-unit id="6246016939611902421" datatype="html">
         <source>You cannot give the piece that was in your hands.</source>
       </trans-unit>
-      <trans-unit id="8669293665052580542" datatype="html">
+      <trans-unit id="6000784742663627686" datatype="html">
         <source>Quarto is an alignment game.
         The goal is to align four pieces that have at least one common aspect:
         &lt;ul&gt;
-          &lt;li&gt;their color (light or dark)&lt;/li&gt;
-          &lt;li&gt;their size (big or small)&lt;/li&gt;
-          &lt;li&gt;their pattern (empty or dotted)&lt;/li&gt;
-          &lt;li&gt;their shape (round or square)&lt;/li&gt;
+          &lt;li&gt;their color (light or dark),&lt;/li&gt;
+          &lt;li&gt;their size (big or small),&lt;/li&gt;
+          &lt;li&gt;their pattern (empty or dotted),&lt;/li&gt;
+          &lt;li&gt;their shape (round or square).&lt;/li&gt;
         &lt;/ul&gt;
         Here, we have a board with a victory by an alignment of dark pieces.</source>
       </trans-unit>
@@ -1897,7 +1897,7 @@
         Its goal is to put the king on one of the 4 thrones in the corners.
         Note that the square in which the king starts, in the center of the board, is also a throne.</source>
       </trans-unit>
-      <trans-unit id="7807295992128286354" datatype="html">
+      <trans-unit id="688519268553438993" datatype="html">
         <source>All pieces move the same way.
         Similarly to a rook in chess, a piece can move:
         &lt;ol&gt;
@@ -1907,7 +1907,7 @@
             &lt;li&gt;Only the king can land on a throne.&lt;/li&gt;
         &lt;/ol&gt;
         To move a piece, click on it and then on its landing square.&lt;br/&gt;&lt;br/&gt;
-        This is the initial board, do the first move</source>
+        This is the initial board, do the first move.</source>
       </trans-unit>
       <trans-unit id="6012770625680782650" datatype="html">
         <source>Capturing a soldier (1/2)</source>

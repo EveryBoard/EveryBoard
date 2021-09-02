@@ -2,13 +2,17 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en-US" datatype="plaintext" original="ng2.template" target-language="fr">
     <body>
+      <trans-unit id="2576375399155055140" datatype="html">
+        <source>Show the chat (<x id="INTERPOLATION" equiv-text="{{ this.unreadMessages }}"/> new message(s))</source>
+        <target>Afficher le chat (<x id="INTERPOLATION" equiv-text="{{ this.unreadMessages }}"/> nouveau(x) message(s))</target>
+      </trans-unit>
       <trans-unit id="3360522039608797847" datatype="html">
         <source>Enter your message here</source>
         <target>Entrez votre message ici</target>
       </trans-unit>
-      <trans-unit id="2576375399155055140" datatype="html">
-        <source>Show the chat (<x id="INTERPOLATION" equiv-text="{{ this.unreadMessages }}"/> new message(s))</source>
-        <target>Afficher le chat (<x id="INTERPOLATION" equiv-text="{{ this.unreadMessages }}"/> nouveau(x) message(s))</target>
+      <trans-unit id="5287653220942723084" datatype="html">
+        <source>Be polite.</source>
+        <target>Soyez courtois.</target>
       </trans-unit>
       <trans-unit id="8426135601531729112" datatype="html">
         <source>Hide the chat (<x id="INTERPOLATION" equiv-text="{{ this.unreadMessages }}"/> new message(s))</source>
@@ -17,10 +21,6 @@
       <trans-unit id="8357348345728938526" datatype="html">
         <source>You must be logged in to see the chat.</source>
         <target>Vous devez être connecté pour voir le chat.</target>
-      </trans-unit>
-      <trans-unit id="5287653220942723084" datatype="html">
-        <source>Be polite.</source>
-        <target>Soyez courtois.</target>
       </trans-unit>
       <trans-unit id="2449879448191193445" datatype="html">
         <source>Successfully signed up</source>
@@ -126,6 +126,10 @@
         <source>The international version of the famous African strategy game!</source>
         <target>La version internationale du fameux jeu de stratégie africain !</target>
       </trans-unit>
+      <trans-unit id="2776505193142258762" datatype="html">
+        <source>Get rid of all of your opponent&apos;s pieces on a board that shrinks little by little!</source>
+        <target>Éliminez tous vos ennemis sur un plateau qui rapetisse petit à petit !</target>
+      </trans-unit>
       <trans-unit id="1207528295664437538" datatype="html">
         <source>Stack your pieces and control as many stacks as you can to win!</source>
         <target>Empilez vos pièces pour en contrôler un maximum et gagner !</target>
@@ -146,6 +150,10 @@
         <source>The oldest strategy game still practiced widely. A territory control game.</source>
         <target>Le plus vieux jeu de stratégie encore joué. Un jeu de contrôle de territoire</target>
       </trans-unit>
+      <trans-unit id="3910056094130316471" datatype="html">
+        <source>Your goal is simple: reach the last line. But the piece you move depends on your opponent&apos;s last move!</source>
+        <target>Votre but est simple : atteindre la dernière ligne. Mais la pièce que vous déplacez dépend du mouvement de votre adversaire !</target>
+      </trans-unit>
       <trans-unit id="8165475229121998889" datatype="html">
         <source>Regroup your pieces to win. But your possible moves will often change!</source>
         <target>Regroupez vos pièces pour gagner. Mais les mouvements possibles changent constamment !</target>
@@ -161,6 +169,18 @@
       <trans-unit id="1621892382051781255" datatype="html">
         <source>Overlay your pieces and use two game mechanics to conserve your pieces. First player to run out of pieces loses!</source>
         <target>Superposez vos pièces et utilisez deux mécaniques de jeux pour conserver vos pièces. Le premier joueur qui n'a plus de pièce perd !</target>
+      </trans-unit>
+      <trans-unit id="3383193846061013912" datatype="html">
+        <source>Create a winning alignment. The problem: you don&apos;t pick the piece that you&apos;re placing on the board!</source>
+        <target>Faites un alignement gagnant. La difficulté : vous ne choisissez pas la pièce que vous placez !</target>
+      </trans-unit>
+      <trans-unit id="3529667957993318888" datatype="html">
+        <source>Align 5 of your pieces on a board where pieces slide!</source>
+        <target>Alignez 5 de vos pièces sur un plateau dont les pièces glissent !</target>
+      </trans-unit>
+      <trans-unit id="6046365494353024298" datatype="html">
+        <source>Sandwich your opponent&apos;s pieces to dominate the board!</source>
+        <target>Prenez en sandwich les pièces adverses pour dominer le plateau !</target>
       </trans-unit>
       <trans-unit id="1827371853303540301" datatype="html">
         <source>Immobilize one of your opponent&apos;s pyramids before your opponent does!</source>
@@ -181,26 +201,6 @@
       <trans-unit id="7926456268600574942" datatype="html">
         <source>Align your pieces to score points, but beware, pieces can flip!</source>
         <target>Alignez vos pièces pour marquer des points, mais attention aux retournements de pièces !</target>
-      </trans-unit>
-      <trans-unit id="2776505193142258762" datatype="html">
-        <source>Get rid of all of your opponent&apos;s pieces on a board that shrinks little by little!</source>
-        <target>Éliminez tous vos ennemis sur un plateau qui rapetisse petit à petit !</target>
-      </trans-unit>
-      <trans-unit id="3383193846061013912" datatype="html">
-        <source>Create a winning alignment. The problem: you don&apos;t pick the piece that you&apos;re placing on the board!</source>
-        <target>Faites un alignement gagnant. La difficulté : vous ne choisissez pas la pièce que vous placez !</target>
-      </trans-unit>
-      <trans-unit id="6046365494353024298" datatype="html">
-        <source>Sandwich your opponent&apos;s pieces to dominate the board!</source>
-        <target>Prenez en sandwich les pièces adverses pour dominer le plateau !</target>
-      </trans-unit>
-      <trans-unit id="3910056094130316471" datatype="html">
-        <source>Your goal is simple: reach the last line. But the piece you move depends on your opponent&apos;s last move!</source>
-        <target>Votre but est simple : atteindre la dernière ligne. Mais la pièce que vous déplacez dépend du mouvement de votre adversaire !</target>
-      </trans-unit>
-      <trans-unit id="3529667957993318888" datatype="html">
-        <source>Align 5 of your pieces on a board where pieces slide!</source>
-        <target>Alignez 5 de vos pièces sur un plateau dont les pièces glissent !</target>
       </trans-unit>
       <trans-unit id="718535138834335364" datatype="html">
         <source>Four in a Row</source>
@@ -331,7 +331,7 @@
         <target>AwesomBoard</target>
       </trans-unit>
       <trans-unit id="3620319853901130962" datatype="html">
-        <source>AwesomBoard is a website to play and learn the rules of various abstract strategy games with perfect information.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Such games are games that do not include any randomness, agility, or hidden information. These games are played by two players, turn by turn. </source>
+        <source>AwesomBoard is a website to play and learn the rules of various abstract strategy games with perfect information.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Such games are games that do not include any randomness, agility, or hidden information. These games are played by two players, turn by turn.</source>
         <target>AwesomBoard est un site qui permet de jouer et d&apos;apprendre les règles de nombreux jeux de stratégie combinatoire à information parfaite.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> On comprends donc là dedans les jeux ne faisant intervenir ni hasard, ni agilité, ni informations cachées, et uniquement des jeux deux joueurs et tours par tours. </target>
       </trans-unit>
       <trans-unit id="2129768251160483742" datatype="html">
@@ -430,13 +430,13 @@
         <source>You reached your time limit.</source>
         <target>Vous avez épuisé votre temps.</target>
       </trans-unit>
-      <trans-unit id="7003355968351203755" datatype="html">
-        <source>Ask to take back one move</source>
-        <target>Demander à reprendre un coup</target>
-      </trans-unit>
       <trans-unit id="2826140657122926749" datatype="html">
         <source>You resigned.</source>
         <target>Vous avez abandonné.</target>
+      </trans-unit>
+      <trans-unit id="7003355968351203755" datatype="html">
+        <source>Ask to take back one move</source>
+        <target>Demander à reprendre un coup</target>
       </trans-unit>
       <trans-unit id="2324913504104154958" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser() }}"/> has reached their time limit.</source>
@@ -458,13 +458,13 @@
         <source>You won.</source>
         <target>Vous avez gagné.</target>
       </trans-unit>
-      <trans-unit id="860662988722297223" datatype="html">
-        <source>You lost.</source>
-        <target>Vous avez perdu.</target>
-      </trans-unit>
       <trans-unit id="4237132455292972929" datatype="html">
         <source>Accept to play again</source>
         <target>Accepter la revanche</target>
+      </trans-unit>
+      <trans-unit id="860662988722297223" datatype="html">
+        <source>You lost.</source>
+        <target>Vous avez perdu.</target>
       </trans-unit>
       <trans-unit id="6165538570244502951" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ currentPart.getWinner() }}"/> won.</source>
@@ -474,9 +474,49 @@
         <source>vs.</source>
         <target>vs.</target>
       </trans-unit>
+      <trans-unit id="4073116770334354573" datatype="html">
+        <source>Blitz</source>
+        <target>Blitz</target>
+      </trans-unit>
+      <trans-unit id="6773728044030876768" datatype="html">
+        <source>Maximal game duration: <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ partType.NORMAL_PART_DURATION | humanDuration }}"/> per player<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
+        <target>Durée maximale d'une partie : <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ partType.NORMAL_PART_DURATION | humanDuration }}"/> par joueur<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></target>
+      </trans-unit>
+      <trans-unit id="4701368818614163279" datatype="html">
+        <source>Maximal turn duration: <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ partType.BLITZ_MOVE_DURATION | humanDuration }}"/><x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
+        <target>Durée maximale d'un tour : <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ partType.BLITZ_MOVE_DURATION | humanDuration }}"/><x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></target>
+      </trans-unit>
+      <trans-unit id="7590013429208346303" datatype="html">
+        <source>Custom</source>
+        <target>Personnalisée</target>
+      </trans-unit>
+      <trans-unit id="1612262766071402559" datatype="html">
+        <source>Propose configuration</source>
+        <target>Proposer la configuration</target>
+      </trans-unit>
+      <trans-unit id="594218318757354614" datatype="html">
+        <source>Maximal game duration: <x id="START_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;output&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.totalPartDuration | humanDuration }}"/> per player<x id="CLOSE_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;/output&gt;"/></source>
+        <target>Durée maximale d'une partie : <x id="START_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;output&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.totalPartDuration | humanDuration }}"/> par joueur<x id="CLOSE_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;/output&gt;"/></target>
+      </trans-unit>
+      <trans-unit id="6482290849972032593" datatype="html">
+        <source>Cancel game</source>
+        <target>Annuler la partie</target>
+      </trans-unit>
+      <trans-unit id="3550072303786290583" datatype="html">
+        <source>Potential opponents that join the game will appear here.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Wait for an opponent to join, so that you can pick one. </source>
+        <target>Les adversaires potentiels qui rejoignent la partie apparaîtront ici.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Attendez qu&apos;un adversaire vous rejoigne pour pouvoir en choisir un.</target>
+      </trans-unit>
+      <trans-unit id="6102520113052735150" datatype="html">
+        <source>The opponent</source>
+        <target>L&apos;adversaire</target>
+      </trans-unit>
       <trans-unit id="5056292777668083757" datatype="html">
         <source>Click on the opponent against which you would like to play.</source>
         <target>Cliquez sur l&apos;adversaire contre lequel vous souhaitez jouer.</target>
+      </trans-unit>
+      <trans-unit id="5397323926664032734" datatype="html">
+        <source>Maximal turn duration: <x id="START_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;output&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.maximalMoveDuration | humanDuration }}"/><x id="CLOSE_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;/output&gt;"/></source>
+        <target>Durée maximale d'un tour : <x id="START_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;output&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.maximalMoveDuration | humanDuration }}"/><x id="CLOSE_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;/output&gt;"/></target>
       </trans-unit>
       <trans-unit id="8953033926734869941" datatype="html">
         <source>Name</source>
@@ -518,6 +558,10 @@
         <source>the first player is selected randomly</source>
         <target>le premier joueur est tiré au hasard</target>
       </trans-unit>
+      <trans-unit id="1012784993066568401" datatype="html">
+        <source>Accept and start</source>
+        <target>Accepter et commencer</target>
+      </trans-unit>
       <trans-unit id="7852346564484185703" datatype="html">
         <source>the game lasts at most <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.totalPartDuration | humanDuration }}"/> per player<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
         <target>la partie dure maximum <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.totalPartDuration | humanDuration }}"/> par joueur<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></target>
@@ -526,9 +570,9 @@
         <source>One moment...</source>
         <target>Un instant...</target>
       </trans-unit>
-      <trans-unit id="1012784993066568401" datatype="html">
-        <source>Accept and start</source>
-        <target>Accepter et commencer</target>
+      <trans-unit id="7215535622740824911" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> plays first</source>
+        <target><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> joue en premier</target>
       </trans-unit>
       <trans-unit id="4218388977213486334" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> has proposed a configuration to <x id="INTERPOLATION_1" equiv-text="{{ viewInfo.chosenOpponent }}"/>.</source>
@@ -537,10 +581,6 @@
       <trans-unit id="5068486659312004369" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> is configuring the game.</source>
         <target><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> est en train de configurer la partie.</target>
-      </trans-unit>
-      <trans-unit id="7215535622740824911" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> plays first</source>
-        <target><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> joue en premier</target>
       </trans-unit>
       <trans-unit id="353130366888208691" datatype="html">
         <source>Game creation</source>
@@ -574,49 +614,9 @@
         <source>standard</source>
         <target>standard</target>
       </trans-unit>
-      <trans-unit id="5397323926664032734" datatype="html">
-        <source>Maximal turn duration: <x id="START_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;output&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.maximalMoveDuration | humanDuration }}"/><x id="CLOSE_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;/output&gt;"/></source>
-        <target>Durée maximale d'un tour : <x id="START_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;output&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.maximalMoveDuration | humanDuration }}"/><x id="CLOSE_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;/output&gt;"/></target>
-      </trans-unit>
-      <trans-unit id="6773728044030876768" datatype="html">
-        <source>Maximal game duration: <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ partType.NORMAL_PART_DURATION | humanDuration }}"/> per player<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
-        <target>Durée maximale d'une partie : <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ partType.NORMAL_PART_DURATION | humanDuration }}"/> par joueur<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></target>
-      </trans-unit>
-      <trans-unit id="4701368818614163279" datatype="html">
-        <source>Maximal turn duration: <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ partType.BLITZ_MOVE_DURATION | humanDuration }}"/><x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
-        <target>Durée maximale d'un tour : <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ partType.BLITZ_MOVE_DURATION | humanDuration }}"/><x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></target>
-      </trans-unit>
-      <trans-unit id="594218318757354614" datatype="html">
-        <source>Maximal game duration: <x id="START_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;output&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.totalPartDuration | humanDuration }}"/> per player<x id="CLOSE_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;/output&gt;"/></source>
-        <target>Durée maximale d'une partie : <x id="START_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;output&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.totalPartDuration | humanDuration }}"/> par joueur<x id="CLOSE_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;/output&gt;"/></target>
-      </trans-unit>
-      <trans-unit id="4073116770334354573" datatype="html">
-        <source>Blitz</source>
-        <target>Blitz</target>
-      </trans-unit>
-      <trans-unit id="7590013429208346303" datatype="html">
-        <source>Custom</source>
-        <target>Personnalisée</target>
-      </trans-unit>
-      <trans-unit id="1612262766071402559" datatype="html">
-        <source>Propose configuration</source>
-        <target>Proposer la configuration</target>
-      </trans-unit>
-      <trans-unit id="6482290849972032593" datatype="html">
-        <source>Cancel game</source>
-        <target>Annuler la partie</target>
-      </trans-unit>
-      <trans-unit id="6102520113052735150" datatype="html">
-        <source>The opponent</source>
-        <target>L&apos;adversaire</target>
-      </trans-unit>
       <trans-unit id="3852843717175527075" datatype="html">
         <source>The game has been canceled!</source>
         <target>La partie a été annulée !</target>
-      </trans-unit>
-      <trans-unit id="3550072303786290583" datatype="html">
-        <source>Potential opponents that join the game will appear here.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Wait for an opponent to join, so that you can pick one. </source>
-        <target>Les adversaires potentiels qui rejoignent la partie apparaîtront ici.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Attendez qu&apos;un adversaire vous rejoigne pour pouvoir en choisir un.</target>
       </trans-unit>
       <trans-unit id="7137133530752645682" datatype="html">
         <source><x id="PH" equiv-text="userPseudo"/> left the game, please pick another opponent.</source>
@@ -1154,10 +1154,6 @@
         <source>Bad idea, by moving on the source you would have won a point.</source>
         <target>Mauvaise idée, en déplaçant votre pile sur la source, vous auriez gagné votre pièce et gagné un point.</target>
       </trans-unit>
-      <trans-unit id="6986218395331151516" datatype="html">
-        <source>You must pick one of your pieces.</source>
-        <target>Veuillez utiliser une de vos pièces.</target>
-      </trans-unit>
       <trans-unit id="6059738106874378452" datatype="html">
         <source>You do not have pieces of this type anymore.</source>
         <target>Vous n&apos;avez plus de pièces de ce type.</target>
@@ -1465,7 +1461,7 @@
             &lt;li&gt;As soon as there is an empty space on the line, the capture stops.&lt;/li&gt;
             &lt;li&gt;Your own pieces that are captured go back to your stock.
                 Your opponent&apos;s pieces however are really captured and do not go back to your opponent&apos;s stock.&lt;/li&gt;
-            &lt;li&gt; If you create a line of 4 of your opponent&apos;s pieces, it will be at the beginning of your opponent&apos;s turn that your opponent can capture them.
+            &lt;li&gt;If you create a line of 4 of your opponent&apos;s pieces, it will be at the beginning of your opponent&apos;s turn that your opponent can capture them.
                 This means that a turn happens in three phases:
                 &lt;ol type=&quot;A&quot;&gt;
                     &lt;li&gt;Pick the capture(s) resulting from the last move of your opponent (by clicking on it).&lt;/li&gt;
@@ -1506,11 +1502,11 @@
       <trans-unit id="723905750865646237" datatype="html">
         <source>Here, there are three different ways of capturing.
         &lt;ol&gt;
-        &lt;li&gt;One way does not capture any of your opponent&apos;s pieces.&lt;/li&gt;
-        &lt;li&gt;Another way captures one of your opponent&apos;s pieces.&lt;/li&gt;
-        &lt;li&gt;The last way captures two of your opponent&apos;s pieces.&lt;/li&gt;
+          &lt;li&gt;One way does not capture any of your opponent&apos;s pieces.&lt;/li&gt;
+          &lt;li&gt;Another way captures one of your opponent&apos;s pieces.&lt;/li&gt;
+          &lt;li&gt;The last way captures two of your opponent&apos;s pieces.&lt;/li&gt;
         &lt;/ol&gt;
-        &lt;br/&gt;
+        &lt;br/&gt;&lt;br/&gt;
         Pick the last one.</source>
         <target>Ici, il est possible de capturer de trois façons différentes.
         &lt;ol&gt;
@@ -1844,7 +1840,7 @@
          Your orange piece will be stuck and you will have to pass your turn.
          Your opponent will have to pass its turn too because its orange piece is also stuck: the game is completely stuck.
          In this case, the last player to have moved a piece loses.
-        Here, your opponent will have moved its green piece last, you therefore win!</source>
+         Here, your opponent will have moved its green piece last, you therefore win!</source>
         <target>Parfait !
          Votre adversaire est obligé d&apos;avancer son pion vert sur la case orange, vous obligeant à joueur avec votre pion orange.
          Dès lors, votre pion orange sera bloqué et vous devrez donc passer votre tour.
@@ -2223,14 +2219,14 @@
         <source>You cannot give the piece that was in your hands.</source>
         <target>Vous ne pouvez pas donner la pièce qui était dans vos mains.</target>
       </trans-unit>
-      <trans-unit id="8669293665052580542" datatype="html">
+      <trans-unit id="6000784742663627686" datatype="html">
         <source>Quarto is an alignment game.
         The goal is to align four pieces that have at least one common aspect:
         &lt;ul&gt;
-          &lt;li&gt;their color (light or dark)&lt;/li&gt;
-          &lt;li&gt;their size (big or small)&lt;/li&gt;
-          &lt;li&gt;their pattern (empty or dotted)&lt;/li&gt;
-          &lt;li&gt;their shape (round or square)&lt;/li&gt;
+          &lt;li&gt;their color (light or dark),&lt;/li&gt;
+          &lt;li&gt;their size (big or small),&lt;/li&gt;
+          &lt;li&gt;their pattern (empty or dotted),&lt;/li&gt;
+          &lt;li&gt;their shape (round or square).&lt;/li&gt;
         &lt;/ul&gt;
         Here, we have a board with a victory by an alignment of dark pieces.</source>
         <target>Quarto est un jeu d&apos;alignement.
@@ -2307,7 +2303,7 @@
         <source>When it is your turn:
         &lt;ol&gt;
             &lt;li&gt;Click on one of your pieces or on a neutral one. You cannot choose a piece of the opponent.
-                 You can only choose a piece from the edge of the board.&lt;/li&gt;
+                You can only choose a piece from the edge of the board.&lt;/li&gt;
             &lt;li&gt;Pick a direction in which you want to send the piece (by clicking on the arrow).&lt;/li&gt;
         &lt;/ol&gt;
         You have to imagine that the piece you picked has been moved to the other side of the board, in the chosen direction.
@@ -2332,7 +2328,7 @@
         La pièce neutre a été déplacé de 4 pièces vers la gauche est est devenue claire.</target>
       </trans-unit>
       <trans-unit id="767359644489302732" datatype="html">
-        <source>You already know everything you need in order to play, but there is one last particularity
+        <source>You already know everything you need in order to play, but there is one last particularity.
         If you create a line of 5 of your pieces, you win.
         If you create a line of 5 of your opponent&apos;s pieces, you lose.
         If you create both, you lose too!&lt;br/&gt;&lt;br/&gt;
@@ -2472,7 +2468,7 @@
         &lt;ol&gt;
             &lt;li&gt;Click on the pyramid to move.&lt;/li&gt;
             &lt;li&gt;Click on one of the 6 destinations that you can reach in two steps:
-                the 6 neighboring light spaces of the 3 dark spaces that are neighbors of your pyramid.
+                 the 6 neighboring light spaces of the 3 dark spaces that are neighbors of your pyramid.
         &lt;/ol&gt;</source>
         <target>Quand une pyramide partage ses arêtes avec des cases foncées, vous pouvez la déplacer de deux pas.
         Pour ce faire :
@@ -2786,7 +2782,7 @@
         Son but est de placer le roi sur l&apos;un des 4 trônes situés dans les coins.
         Notez que la case où est le roi au début du jeu, au centre du plateau, est également un trône.</target>
       </trans-unit>
-      <trans-unit id="7807295992128286354" datatype="html">
+      <trans-unit id="688519268553438993" datatype="html">
         <source>All pieces move the same way.
         Similarly to a rook in chess, a piece can move:
         &lt;ol&gt;
@@ -3033,6 +3029,10 @@
       <trans-unit id="8905154297816550312" datatype="html">
         <source>Your landing space should be empty or contain a piece of the opponent.</source>
         <target>Votre case d&apos;arrivée doit être vide ou contenir une pièce de l'adversaire.</target>
+      </trans-unit>
+      <trans-unit id="6986218395331151516" datatype="html">
+        <source>You must pick one of your pieces.</source>
+        <target>Veuillez utiliser une de vos pièces.</target>
       </trans-unit>
       <trans-unit id="2698327260846195509" datatype="html">
         <source>You must drop your piece on an empty space.</source>

@@ -35,6 +35,8 @@ jobs:
       - name: Run linter
         run: npm run lint
         continue-on-error: true
+      - name: Check translations
+        run: bash ./scripts/check-translations.sh
 
       - name: Setup Firebase secret on master / develop push
         if: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop' ) && false }}

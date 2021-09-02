@@ -34,6 +34,12 @@ elif [[ "$SOURCES" -lt "$TARGETS" ]]; then
     DIFF_FOUND=1
 fi
 
+if [ -n "$(diff translations/messages.xlf translations/messages.fr.xlf | grep -v '<file' | grep '^<')" ]; then
+    echo 'Some source (EN) lines differ between the two files!'
+    diff translations/messages.xlf translations/messages.fr.xlf | grep -v '<file' | grep '^<'
+    DIFF_FOUND=1
+fi
+
 if [ "$DIFF_FOUND" -eq 0 ]; then
     echo 'Translations are OK!'
     npx xlf-merge translations/messages.fr.xlf --convert json -o src/assets/fr.json

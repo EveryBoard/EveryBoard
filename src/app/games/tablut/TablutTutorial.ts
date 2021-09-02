@@ -32,7 +32,7 @@ export const tablutTutorial: TutorialStep[] = [
             <li>Only the king can land on a throne.</li>
         </ol>
         To move a piece, click on it and then on its landing square.<br/><br/>
-        This is the initial board, do the first move`,
+        This is the initial board, do the first move.`,
         TablutPartSlice.getInitialSlice(),
         new TablutMove(new Coord(4, 1), new Coord(1, 1)),
         $localize`Congratulations!`,
