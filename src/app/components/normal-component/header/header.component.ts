@@ -22,7 +22,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
                 public authenticationService: AuthenticationService) {
     }
     public ngOnInit(): void {
-        this.currentLanguage = (localStorage.getItem('locale') || navigator.language || 'fr').slice(0, 2);
+        this.currentLanguage = (localStorage.getItem('locale') || navigator.language || 'fr').slice(0, 2).toUpperCase();
         this.joueurSub = this.authenticationService.getJoueurObs()
             .subscribe((joueur: { pseudo: string, verified: boolean}) => {
                 if (joueur) this.userName = joueur.pseudo;
@@ -34,7 +34,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.router.navigate(['/login']);
     }
     public changeLanguage(language: string): void {
-        localStorage.setItem('locale', language);
+        localStorage.setItem('locale', language.toLowerCase());
         // Reload app for selected language
         window.open(environment.root, '_self');
     }
