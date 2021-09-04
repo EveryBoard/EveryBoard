@@ -28,6 +28,7 @@ if (locale !== 'en' && validLocales.some((validLocale: string): boolean => valid
             }
         })
         .then((json: any) => {
+            console.log('loading translations for locale ' + json.locale);
             loadTranslations(json.translations);
             $localize.locale = json.locale;
 

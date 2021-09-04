@@ -6,7 +6,7 @@ import {
     BrowserDynamicTestingModule,
     platformBrowserDynamicTesting,
 } from '@angular/platform-browser-dynamic/testing';
-import 'hammerjs';
+// import 'hammerjs';
 
 declare const require: any;
 
