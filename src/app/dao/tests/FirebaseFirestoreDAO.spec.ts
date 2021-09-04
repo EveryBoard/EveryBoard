@@ -26,9 +26,9 @@ class FooDAO extends FirebaseFirestoreDAO<Foo> {
 export async function setupFirestoreTestModule(): Promise<unknown> {
     TestBed.configureTestingModule({
         imports: [
-            AngularFireModule.initializeApp({ projectId: 'my-project' }),
             AngularFirestoreModule,
             HttpClientModule,
+            AngularFireModule.initializeApp({ projectId: 'my-project', databaseURL: 'http://localhost:8080' }),
         ],
         providers: [
             { provide: USE_FIRESTORE_EMULATOR, useValue: ['localhost', 8080] },
