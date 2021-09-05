@@ -146,9 +146,9 @@ describe('YinshMinimax', () => {
 
             rules.node = new YinshNode(null, null, state);
             for (const move of minimax.getListMoves(rules.node)) {
-                move.initialCaptures.forEach((capture: YinshCapture): void =>
+                move.initialCaptures.forEach((capture: YinshCapture) =>
                     expect(capture.ringTaken.equals(new Coord(-1, -1))).toBeFalse());
-                move.finalCaptures.forEach((capture: YinshCapture): void =>
+                move.finalCaptures.forEach((capture: YinshCapture) =>
                     expect(capture.ringTaken.equals(new Coord(-1, -1))).toBeFalse());
             }
         });

@@ -5,8 +5,8 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "test": "ng test --code-coverage",
-    "test:ci": "ng test --watch=false --browsers=ChromeHeadlessCustom",
+    "test": "bash ./scripts/test.sh",
+    "test:ci": "bash ./scripts/test.sh --watch=false --browsers=ChromeHeadlessCustom",
     "lint": "eslint --ext ts ./",
     "e2e": "ng e2e",
     "css-build": "sass --no-source-map src/sass/mystyles.scss src/css/mystyles.css"
@@ -49,6 +49,7 @@
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.3",
+    "firebase-tools": "^9.16.0",
     "hammerjs": "^2.0.8",
     "jasmine-core": "^3.7.1",
     "jasmine-spec-reporter": "^7.0.0",
