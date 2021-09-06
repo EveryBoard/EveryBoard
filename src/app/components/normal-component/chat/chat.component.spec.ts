@@ -128,22 +128,14 @@ fdescribe('ChatComponent', () => {
     it('should scroll to the bottom on load', fakeAsync(async() => {
         // Given a visible chat with multiple messages
         AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
-        testUtils.detectChanges();
-        const chatDiv: DebugElement = testUtils.findElement('#chatDiv');
-        spyOn(chatDiv.nativeElement, 'scroll');
+        spyOn(component, 'scrollTo');
         await chatDAO.update('fauxChat', { messages: LOTS_OF_MESSAGES });
 
         // when the chat is initialized
-        tick(10000);
         testUtils.detectChanges();
-        await testUtils.whenStable();
 
-        // then it is scrolled to the bottom
-        expect(chatDiv.nativeElement.scroll).toHaveBeenCalledWith({
-            top: chatDiv.nativeElement.scrollHeight,
-            left: 0,
-            behavior: 'smooth',
-        });
+        const chatDiv: DebugElement = testUtils.findElement('#chatDiv');
+        expect(component.scrollTo).toHaveBeenCalledWith(chatDiv.nativeElement.scrollHeight);
     }));
     it('should not scroll down upon new messages if the user scrolled up, but show an indicator', fakeAsync(async() => {
         const SCROLL: number = 200;

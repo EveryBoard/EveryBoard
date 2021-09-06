@@ -96,9 +96,11 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
         }
     }
     private isNearBottom: boolean = true;
+    private notYetScrolled: boolean = true;
     private scrollToBottomIfNeeded(): void {
         if (this.connected && this.visible) {
-            if (this.isNearBottom) {
+            console.log('near bottom' + this.isNearBottom)
+            if (this.isNearBottom || this.notYetScrolled) {
                 console.log('[scrollToBottomIfNeeded] scrolling to bottom');
                 this.scrollToBottom();
             }
@@ -119,9 +121,14 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
             return;
         }
         console.log('[scrollToBottom] setting scroll top to ' + this.chatDiv.nativeElement.scrollHeight);
+        console.log('[scrollToBottom] there are that many messages  ' + this.chat.length);
         this.updateUnreadMessagesText(0);
+        this.scrollTo(this.chatDiv.nativeElement.scrollHeight);
+        this.notYetScrolled = false;
+    }
+    public scrollTo(position: number): void {
         this.chatDiv.nativeElement.scroll({
-            top: this.chatDiv.nativeElement.scrollHeight,
+            top: position,
             left: 0,
             behavior: 'smooth',
         });
@@ -143,7 +150,8 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
         } else {
             this.visible = true;
             this.updateUnreadMessagesText(0);
-            this.chatDiv.nativeElement.scroll({ top: this.scrollPosition, left: 0 });
+            this.scrollToBottom();
+            // this.chatDiv.nativeElement.scroll({ top: this.scrollPosition, left: 0 });
             this.readMessages = this.chat.length;
         }
     }
