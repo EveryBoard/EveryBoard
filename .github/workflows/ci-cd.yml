@@ -52,10 +52,10 @@ jobs:
 
       - name: Build master
         if: ${{ github.ref == 'refs/heads/master' }}
-        run: npm run build -- --configuration=prod
+        run: npm run build -- --configuration=production,fr
       - name: Build develop
         if: ${{ github.ref == 'refs/heads/develop' }}
-        run: npm run build -- --configuration=dev
+        run: npm run build -- --configuration=production,dev,fr
 
       - name: Deploy master on push to master
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && false}}

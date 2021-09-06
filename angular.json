@@ -36,7 +36,8 @@
                         "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "aot": true,
                     },
                     "configurations": {
                         "production": {
@@ -61,6 +62,10 @@
                             "extractLicenses": true,
                             "vendorChunk": false,
                             "buildOptimizer": true,
+                            "localize": ["fr"],
+                        },
+                        "local": {
+                            "baseHref": "/"
                         },
                         "dev": {
                             "fileReplacements": [
@@ -90,7 +95,10 @@
                     "configurations": {
                         "production": {
                             "browserTarget": "pantheonsgame:build:production"
-                        }
+                        },
+                        "local": {
+                            "browserTarget": "pantheonsgame:build:local"
+                        },
                     }
                 },
                 "extract-i18n": {
@@ -129,6 +137,12 @@
                             "**/node_modules/**"
                         ]
                     }
+                }
+            },
+            "i18n": {
+                "sourceLocale": "en-US",
+                "locales": {
+                    "fr": "translations/messages.fr.xlf"
                 }
             }
         },

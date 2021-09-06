@@ -18,7 +18,8 @@ function bootstrapApp(): void {
         .catch((err: unknown) => console.error(err));
 }
 
-if (locale !== 'en' && validLocales.some((validLocale: string): boolean => validLocale === locale) ) {
+// Set to false && until we can enable runtime translations
+if (false && locale !== 'en' && validLocales.some((validLocale: string): boolean => validLocale === locale) ) {
     fetch(environment.root + 'assets/' + locale + '.json')
         .then((response: Response) => {
             if (response.ok) {
@@ -28,7 +29,6 @@ if (locale !== 'en' && validLocales.some((validLocale: string): boolean => valid
             }
         })
         .then((json: any) => {
-            console.log('loading translations for locale ' + json.locale);
             loadTranslations(json.translations);
             $localize.locale = json.locale;
 
