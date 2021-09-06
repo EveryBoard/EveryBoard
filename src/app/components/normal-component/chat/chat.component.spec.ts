@@ -1,4 +1,4 @@
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { fakeAsync, TestBed } from '@angular/core/testing';
 import { ChatComponent } from './chat.component';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { ChatService } from 'src/app/services/ChatService';
@@ -147,6 +147,7 @@ fdescribe('ChatComponent', () => {
 
         const chatDiv: DebugElement = testUtils.findElement('#chatDiv');
         chatDiv.nativeElement.scroll({ top: SCROLL, left: 0, behavior: 'auto' }); // user scrolled up in the chat
+        chatDiv.nativeElement.dispatchEvent(new Event('scroll'));
         testUtils.detectChanges();
 
         // when a new message is received
@@ -168,7 +169,7 @@ fdescribe('ChatComponent', () => {
 
         const chatDiv: DebugElement = testUtils.findElement('#chatDiv');
         chatDiv.nativeElement.scroll({ top: 0, left: 0, behavior: 'auto' }); // user scrolled up in the chat
-        chatDiv.nativeElement.dispatchEvent(new Event('input'));
+        chatDiv.nativeElement.dispatchEvent(new Event('scroll'));
         testUtils.detectChanges();
 
         await chatDAO.update('fauxChat', { messages: LOTS_OF_MESSAGES.concat(MSG) }); // new message has been received
@@ -229,7 +230,7 @@ fdescribe('ChatComponent', () => {
         //  and the form is cleared
         expect(messageInput.nativeElement.value).toBe('');
     }));
-    fit('should scroll to bottom when sending a message', fakeAsync(async() => {
+    it('should scroll to bottom when sending a message', fakeAsync(async() => {
         // given a chat with many messages
         AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
         await chatDAO.update('fauxChat', { messages: LOTS_OF_MESSAGES.concat(MSG) }); // new message has been received
