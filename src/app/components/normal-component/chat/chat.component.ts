@@ -51,7 +51,8 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
             });
     }
     public ngAfterViewChecked(): void {
-        console.log('ngAfterViewChecked');
+        console.log('ngAfterViewChecked')
+        this.updateCurrentScrollPosition();
         this.scrollToBottomIfNeeded();
     }
     public isConnectedUser(joueur: { pseudo: string; verified: boolean;}): boolean {
@@ -67,7 +68,6 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     public updateMessages(iChatId: IChatId): void {
         this.chat = iChatId.doc.messages;
         const nbMessages: number = this.chat.length;
-        console.log('updating messages')
         console.log({visible: this.visible, nearBottom: this.isNearBottom});
         if (this.visible === false || this.isNearBottom === false) {
             this.updateUnreadMessagesText(nbMessages - this.readMessages);
@@ -88,6 +88,7 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
 
         if (unreadMessages === 0) {
             this.unreadMessagesText = $localize`pas de nouveau message`;
+            this.showUnreadMessagesButton = false;
         } else if (unreadMessages === 1) {
             this.unreadMessagesText = $localize`1 nouveau message`;
         } else {
@@ -96,12 +97,9 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     }
     private isNearBottom: boolean = true;
     private scrollToBottomIfNeeded(): void {
-        console.log('scroll to bottom if needed')
         if (this.connected && this.visible) {
-            console.log('connected and visible');
-            const previousScrollPosition: number = this.scrollPosition;
-//            this.updateCurrentScrollPosition();
-            if (previousScrollPosition < 0 || this.isNearBottom) {
+            if (this.isNearBottom) {
+                console.log('[scrollToBottomIfNeeded] scrolling to bottom');
                 this.scrollToBottom();
             }
         }
@@ -115,8 +113,6 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
         const position: number = this.chatDiv.nativeElement.scrollTop + this.chatDiv.nativeElement.offsetHeight;
         const height: number = this.chatDiv.nativeElement.scrollHeight;
         this.isNearBottom = position > height - threshold;
-        this.scrollPosition = this.chatDiv.nativeElement.scrollTop;
-        console.log({position, height, nearBottom: this.isNearBottom})
     }
     public scrollToBottom(): void {
         if (this.chatDiv == null) {

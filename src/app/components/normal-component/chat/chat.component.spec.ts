@@ -133,8 +133,6 @@ fdescribe('ChatComponent', () => {
         spyOn(chatDiv.nativeElement, 'scroll');
         await chatDAO.update('fauxChat', { messages: LOTS_OF_MESSAGES });
 
-        console.log('[test] sending new messages')
-
         // when the chat is initialized
         tick(10000);
         testUtils.detectChanges();
@@ -178,17 +176,22 @@ fdescribe('ChatComponent', () => {
 
         const chatDiv: DebugElement = testUtils.findElement('#chatDiv');
         chatDiv.nativeElement.scroll({ top: 0, left: 0, behavior: 'auto' }); // user scrolled up in the chat
+        chatDiv.nativeElement.dispatchEvent(new Event('input'));
         testUtils.detectChanges();
 
         await chatDAO.update('fauxChat', { messages: LOTS_OF_MESSAGES.concat(MSG) }); // new message has been received
         testUtils.detectChanges();
 
         // when the indicator is clicked
-        spyOn(component, 'scrollToBottom');
+        spyOn(component, 'scrollToBottom').and.callThrough();
         testUtils.clickElement('#scrollToBottomIndicator');
+        testUtils.detectChanges();
+        await testUtils.whenStable();
 
         // then the view is scrolled to the bottom
         expect(component.scrollToBottom).toHaveBeenCalled();
+        // and the indicator has disappeared
+        testUtils.expectElementNotToExist('#scrollToBottomIndicator');
     }));
     it('should consider <enter> key as sending message', fakeAsync(async() => {
         spyOn(chatService, 'sendMessage');
