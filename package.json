@@ -3,10 +3,9 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --configuration=production,local",
+    "start": "ng serve --configuration=fr",
     "build": "ng build --localize --configuration=production",
-    "prebuild": "npx xlf-merge translations/messages.fr.xlf --convert json -o src/assets/fr.json",
-    "test": "ng test --code-coverage",
+    "test": "ng test --code-coverage --configuration=test",
     "test:ci": "ng test --watch=false --browsers=ChromeHeadlessCustom",
     "lint": "eslint --ext ts ./",
     "e2e": "ng e2e",

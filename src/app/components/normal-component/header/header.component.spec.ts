@@ -43,7 +43,7 @@ describe('HeaderComponent', () => {
         // then the default language is fr
         expect(testUtils.getComponent().currentLanguage).toBe('FR');
     }));
-    it('should change the language when another language is selected', fakeAsync(async() => {
+    it('should update localStorage when a language change is made', fakeAsync(async() => {
         spyOn(localStorage, 'setItem');
         spyOn(window, 'open').and.returnValue(null);
         // given that the header is loaded

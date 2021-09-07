@@ -62,10 +62,11 @@
                             "extractLicenses": true,
                             "vendorChunk": false,
                             "buildOptimizer": true,
-                            "localize": ["fr"],
+                            "baseHref": "/",
+                            "localize": ["fr"]
                         },
-                        "local": {
-                            "baseHref": "/"
+                        "fr": {
+                            "localize": ["fr"]
                         },
                         "dev": {
                             "fileReplacements": [
@@ -74,7 +75,8 @@
                                     "with": "src/environments/environment.dev.ts"
                                 }
                             ],
-                            "baseHref": "/board-dev/"
+                            "baseHref": "/board-dev/",
+                            "localize": ["fr"]
                         },
                         "test": {
                             "fileReplacements": [
@@ -83,7 +85,7 @@
                                     "with": "src/environments/environment.test.ts"
                                 }
                             ],
-                            "baseHref": "/board-test/"
+                            "baseHref": "/board-test/",
                         }
                     }
                 },
@@ -96,8 +98,8 @@
                         "production": {
                             "browserTarget": "pantheonsgame:build:production"
                         },
-                        "local": {
-                            "browserTarget": "pantheonsgame:build:local"
+                        "fr": {
+                            "browserTarget": "pantheonsgame:build:fr"
                         },
                     }
                 },
