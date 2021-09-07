@@ -84,7 +84,7 @@ describe('GameService', () => {
             const getError: (player: Player) => Promise<string> = async(player: Player) => {
                 let errorMessage: string;
                 try {
-                    await service.acceptTakeBack('joinerId', part, player);
+                    await service.acceptTakeBack('joinerId', part, player, [0, 1]);
                 } catch (error) {
                     errorMessage = error.message;
                 }

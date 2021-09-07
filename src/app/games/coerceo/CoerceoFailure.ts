@@ -6,8 +6,6 @@ export class CoerceoFailure {
 
     public static FIRST_CLICK_SHOULD_NOT_BE_NULL: string = $localize`Votre premier clic doit être sur une de vos pièce pour la déplacer, ou sur une pièce ennemie pour l'échanger contre deux tuiles.`;
 
-    public static CANNOT_CAPTURE_FROM_REMOVED: string = $localize`You cannot capture on a removed tile.`
-
     public static CANNOT_CAPTURE_FROM_EMPTY: string = $localize`You cannot capture from an empty case.`
 
     public static CANNOT_CAPTURE_OWN_PIECES: string = $localize`You cannot capture your own pieces.`

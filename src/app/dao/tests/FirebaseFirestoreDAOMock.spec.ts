@@ -9,11 +9,19 @@ import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 import { IFirebaseFirestoreDAO } from '../FirebaseFirestoreDAO';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { ObservableSubject } from 'src/app/utils/ObservableSubject';
+import { Time } from 'src/app/domain/Time';
 
 export abstract class FirebaseFirestoreDAOMock<T extends JSONObject> implements IFirebaseFirestoreDAO<T> {
 
     public static VERBOSE: boolean = false;
 
+    public static mockServerTime(): Time {
+        const dateNow: number = Date.now();
+        const ms: number = dateNow % 1000;
+        const seconds: number = (dateNow - ms) / 1000;
+        const nanoseconds: number = ms * 1000 * 1000;
+        return { seconds, nanoseconds };
+    }
     constructor(private readonly collectionName: string,
                 public VERBOSE: boolean,
     ) {
@@ -53,14 +61,7 @@ export abstract class FirebaseFirestoreDAOMock<T extends JSONObject> implements 
         const mappedNewElement: JSONObject = {};
         for (const key of Object.keys(element)) {
             if (element[key] instanceof firebase.firestore.FieldValue) {
-                const dateNow: number = Date.now();
-                const ms: number = dateNow % 1000;
-                const seconds: number = (dateNow - ms) / 1000;
-                const nanoseconds: number = ms * 1000 * 1000;
-                mappedNewElement[key] = {
-                    seconds,
-                    nanoseconds,
-                };
+                mappedNewElement[key] = FirebaseFirestoreDAOMock.mockServerTime();
             } else {
                 mappedNewElement[key] = element[key];
             }

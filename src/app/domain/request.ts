@@ -11,17 +11,15 @@ export type RequestCode =
 export class Request implements JSONObject {
     [key: string]: JSONValue; // Index signature to type to JSONObject
 
-    public static drawProposed: (player: Player) => Request = makeWithPlayer('DrawProposed');
+    public static drawProposed: (by: Player) => Request = makeWithPlayer('DrawProposed');
     public static drawAccepted: Request = make('DrawAccepted', {});
-    public static drawRefused: (player: Player) => Request = makeWithPlayer('DrawRefused');
+    public static drawRefused: (by: Player) => Request = makeWithPlayer('DrawRefused');
 
-    public static addedTime: (player: Player) => Request = makeWithPlayer('AddedTime');
+    public static takeBackAsked: (by: Player) => Request = makeWithPlayer('TakeBackAsked');
+    public static takeBackRefused: (by: Player) => Request = makeWithPlayer('TakeBackRefused');
+    public static takeBackAccepted: (by: Player) => Request = makeWithPlayer('TakeBackAccepted');
 
-    public static takeBackAsked: (player: Player) => Request = makeWithPlayer('TakeBackAsked');
-    public static takeBackRefused: (player: Player) => Request = makeWithPlayer('TakeBackRefused');
-    public static takeBackAccepted: (player: Player) => Request = makeWithPlayer('TakeBackAccepted');
-
-    public static rematchProposed: (player: Player) => Request = makeWithPlayer('RematchProposed');
+    public static rematchProposed: (by: Player) => Request = makeWithPlayer('RematchProposed');
     public static rematchAccepted(typeGame: string, partId: string): Request {
         return make('RematchAccepted', { typeGame, partId });
     }

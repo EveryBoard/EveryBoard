@@ -88,13 +88,13 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoPartSlice> {
         if (slice.tiles[slice.getCurrentPlayer().value] < 2) {
             return { legal: MGPValidation.failure(CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE) };
         }
-        if (slice.getBoardAt(move.capture.get()) === FourStatePiece.NONE.value) {
-            return { legal: MGPValidation.failure(CoerceoFailure.CANNOT_CAPTURE_FROM_REMOVED) };
-        }
-        if (slice.getBoardAt(move.capture.get()) === FourStatePiece.EMPTY.value) {
+        const captured: number = slice.getBoardAt(move.capture.get());
+        if (captured === FourStatePiece.NONE.value ||
+            captured === FourStatePiece.EMPTY.value)
+        {
             return { legal: MGPValidation.failure(CoerceoFailure.CANNOT_CAPTURE_FROM_EMPTY) };
         }
-        if (slice.getBoardAt(move.capture.get()) === slice.getCurrentPlayer().value) {
+        if (captured === slice.getCurrentPlayer().value) {
             return { legal: MGPValidation.failure(CoerceoFailure.CANNOT_CAPTURE_OWN_PIECES) };
         }
         return { legal: MGPValidation.SUCCESS };

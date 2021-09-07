@@ -30,6 +30,7 @@ import { GameService } from 'src/app/services/GameService';
 import { AuthUser } from 'src/app/services/AuthenticationService';
 import { Time } from 'src/app/domain/Time';
 import { getMsDifference } from 'src/app/utils/TimeUtils';
+import { FirebaseFirestoreDAOMock } from 'src/app/dao/tests/FirebaseFirestoreDAOMock.spec';
 
 describe('OnlineGameWrapperComponent of Quarto:', () => {
     /* Life cycle summary
@@ -141,54 +142,84 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     };
     const FIRST_MOVE: QuartoMove = new QuartoMove(0, 3, QuartoPiece.BABB);
 
+    const SECOND_MOVE: QuartoMove = new QuartoMove(2, 3, QuartoPiece.ABBA);
+
+    const THIRD_MOVE: QuartoMove = new QuartoMove(3, 3, QuartoPiece.BABA);
+
     const FIRST_MOVE_ENCODED: number = QuartoMove.encoder.encodeNumber(FIRST_MOVE);
+
+    const SECOND_MOVE_ENCODED: number = QuartoMove.encoder.encodeNumber(SECOND_MOVE);
+
+    const THIRD_MOVE_ENCODED: number = QuartoMove.encoder.encodeNumber(THIRD_MOVE);
 
     async function doMove(move: QuartoMove, legal: boolean): Promise<MGPValidation> {
         const slice: QuartoPartSlice = wrapper.gameComponent.rules.node.gamePartSlice as QuartoPartSlice;
         const result: MGPValidation = await wrapper.gameComponent.chooseMove(move, slice, null, null);
-        expect(result.isSuccess()).toEqual(legal);
+        expect(result.isSuccess())
+            .withContext('move should be legal but here: ' + result.reason)
+            .toEqual(legal);
         componentTestUtils.detectChanges();
         tick(1);
         return result;
     }
-    async function askTakeBack(): Promise<boolean> {
-        return await componentTestUtils.clickElement('#askTakeBackButton');
-    }
-    const acceptTakeBack: () => Promise<boolean> = async() => {
-        return await componentTestUtils.clickElement('#acceptTakeBackButton');
+    const askTakeBack: (success: boolean) => Promise<void> = async(success: boolean) => {
+        const concreteSuccess: boolean = await componentTestUtils.clickElement('#askTakeBackButton');
+        if (success) {
+            expect(concreteSuccess).withContext('should be able to ask to take back').toBeTrue();
+        } else {
+            expect(concreteSuccess).withContext('should not show "ask take back" button').toBeFalse();
+        }
+    };
+    const acceptTakeBack: (success: boolean) => Promise<void> = async(success: boolean) => {
+        const concreteSuccess: boolean = await componentTestUtils.clickElement('#acceptTakeBackButton');
+        if (success) {
+            expect(concreteSuccess).withContext('should be able to accept take back').toBeTrue();
+        } else {
+            expect(concreteSuccess).withContext('should not show "accept take back" button').toBeFalse();
+        }
     };
     const refuseTakeBack: () => Promise<boolean> = async() => {
         return await componentTestUtils.clickElement('#refuseTakeBackButton');
     };
     const receiveRequest: (request: Request) => Promise<void> = async(request: Request) => {
-        await partDAO.update('joinerId', { request });
+        await receivePartDAOUpdate({ request });
+    };
+    const receivePartDAOUpdate: (update: Partial<IPart>) => Promise<void> = async(update: Partial<IPart>) => {
+        await partDAO.update('joinerId', update);
         componentTestUtils.detectChanges();
         tick(1);
     };
-    const receiveNewMoves: (moves: number[]) => Promise<void> = async(moves: number[]) => {
-        await partDAO.update('joinerId', {
+    const receiveNewMoves: (moves: number[], remainingMsForZero: number, remainingMsForOne: number) => Promise<void> =
+    async(moves: number[], remainingMsForZero: number, remainingMsForOne: number) => {
+        return await receivePartDAOUpdate({
             listMoves: moves,
             turn: moves.length,
             request: null,
             scorePlayerOne: null,
             scorePlayerZero: null,
-            remainingMsForOne: 1800 * 1000,
-            remainingMsForZero: 1800 * 1000,
+            remainingMsForOne,
+            remainingMsForZero, // TODO: only send one of the two time updated, since that's what happens
             lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
         });
-        componentTestUtils.detectChanges();
-        tick(1);
-        return;
     };
     const prepareBoard: (moves: QuartoMove[]) => Promise<void> = async(moves: QuartoMove[]) => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
         const receivedMoves: number[] = [];
+        let remainingMsForZero: number = 1800 * 1000;
+        let remainingMsForOne: number = 1800 * 1000;
         for (let i: number = 0; i < moves.length; i+=2) {
             const move: QuartoMove = moves[i];
             await doMove(moves[i], true);
             receivedMoves.push(QuartoMove.encoder.encodeNumber(move), QuartoMove.encoder.encodeNumber(moves[i+1]));
-            await receiveNewMoves(receivedMoves);
+            if (i > 1) {
+                if (i % 2 === 0) {
+                    remainingMsForOne -= 1;
+                } else {
+                    remainingMsForZero -= 1;
+                }
+            }
+            await receiveNewMoves(receivedMoves, remainingMsForZero, remainingMsForOne);
         }
     };
     beforeEach(fakeAsync(async() => {
@@ -242,52 +273,12 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(wrapper.currentPart.doc.turn).toEqual(1);
 
         // Receive second move
-        await receiveNewMoves([FIRST_MOVE_ENCODED, 166]);
+        const remainingMsForZero: number = wrapper.currentPart.doc.remainingMsForZero;
+        const remainingMsForOne: number = wrapper.currentPart.doc.remainingMsForOne;
+        await receiveNewMoves([FIRST_MOVE_ENCODED, 166], remainingMsForZero, remainingMsForOne);
 
         expect(wrapper.currentPart.doc.turn).toEqual(2);
         expect(wrapper.currentPart.doc.listMoves).toEqual([FIRST_MOVE_ENCODED, 166]);
-        tick(wrapper.joiner.maximalMoveDuration * 1000);
-    }));
-    it('Opponent accepting take back should move player board backward (one move)', fakeAsync(async() => {
-        await prepareStartedGameFor({ pseudo: 'creator', verified: true });
-        tick(1);
-        // Doing a first move so take back make sens
-        await doMove(FIRST_MOVE, true);
-
-        expect(wrapper.gameComponent.rules.node.gamePartSlice.turn).toBe(1);
-        const beginningTime: Time = wrapper.currentPart.doc.beginning as Time;
-        const firstMovesEndTime: Time = wrapper.currentPart.doc.lastMoveTime as Time;
-        const timeUsedByFirstMove: number = getMsDifference(beginningTime, firstMovesEndTime);
-
-        // Asking take back
-        expect(await askTakeBack()).toBeTrue();
-
-        // Opponent accept take back
-        await partDAO.update('joinerId', {
-            request: Request.takeBackAccepted(Player.ONE),
-            listMoves: [],
-            turn: 0,
-        });
-        componentTestUtils.detectChanges();
-        tick(1);
-
-        expect(wrapper.gameComponent.rules.node.gamePartSlice.turn).toBe(0);
-
-        // Doing another move
-        spyOn(partDAO, 'update').and.callThrough();
-        const move1: QuartoMove = new QuartoMove(2, 2, QuartoPiece.AAAB);
-        await doMove(move1, true);
-
-        expect(partDAO.update).toHaveBeenCalledOnceWith('joinerId', {
-            listMoves: [QuartoMove.encoder.encodeNumber(move1)],
-            turn: 1,
-            scorePlayerZero: null,
-            scorePlayerOne: null,
-            remainingMsForZero: (1800 * 1000) - timeUsedByFirstMove,
-            remainingMsForOne: 1800 * 1000,
-            request: null,
-            lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
-        });
         tick(wrapper.joiner.maximalMoveDuration * 1000);
     }));
     it('Prepared Game for joiner should allow simple move', fakeAsync(async() => {
@@ -295,7 +286,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         tick(1);
 
         // Receive first move
-        await receiveNewMoves([FIRST_MOVE_ENCODED]);
+        await receiveNewMoves([FIRST_MOVE_ENCODED], 1800 * 1000, 1800 * 1000);
 
         expect(wrapper.currentPart.doc.listMoves).toEqual([FIRST_MOVE_ENCODED]);
         expect(wrapper.currentPart.doc.turn).toEqual(1);
@@ -320,8 +311,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             turn: 1,
             scorePlayerZero: null,
             scorePlayerOne: null,
-            remainingMsForZero: 1800 * 1000,
-            remainingMsForOne: 1800 * 1000,
+            // remaining times not updated on first turn of the component
             request: null,
             lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
         };
@@ -336,7 +326,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         const move2: QuartoMove = new QuartoMove(2, 3, QuartoPiece.BBBB);
         const move3: QuartoMove = new QuartoMove(0, 0, QuartoPiece.AABB);
         await prepareBoard([move0, move1, move2, move3]);
-        expect(componentTestUtils.findElement('#winnerIndicator')).toBeFalsy('Element should not exist yet');
+        expect(componentTestUtils.findElement('#winnerIndicator'))
+            .withContext('Element should not exist yet')
+            .toBeFalsy();
 
         spyOn(partDAO, 'update').and.callThrough();
         const winningMove: QuartoMove = new QuartoMove(3, 3, QuartoPiece.ABAA);
@@ -349,8 +341,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             turn: 5,
             scorePlayerZero: null,
             scorePlayerOne: null,
-            remainingMsForOne: 1800 * 1000,
-            remainingMsForZero: 1800 * 1000,
+            // remainingTimes are not present on the first move of a current board
             request: null,
             lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
             winner: 'creator',
@@ -362,153 +353,436 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             .toBeTruthy();
     }));
     describe('Take Back', () => {
-        it('Should send take back request when player ask to', fakeAsync(async() => {
-            // Doing a first move so take back make sense
-            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
-            tick(1);
-            await doMove(FIRST_MOVE, true);
+        describe('sending/receiving', () => {
+            it('Should send take back request when player ask to', fakeAsync(async() => {
+                // Given a board where its the opponent's (first) turn
+                await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+                tick(1);
+                await doMove(FIRST_MOVE, true);
 
-            // Asking take back
-            spyOn(partDAO, 'update').and.callThrough();
-            expect(await askTakeBack()).toBeTrue();
+                // when demanding to take back
+                spyOn(partDAO, 'update').and.callThrough();
+                await askTakeBack(true);
 
-            expect(partDAO.update).toHaveBeenCalledWith('joinerId', {
-                request: Request.takeBackAsked(Player.ZERO),
-            });
+                // then a request should be sent
+                expect(partDAO.update).toHaveBeenCalledWith('joinerId', {
+                    request: Request.takeBackAsked(Player.ZERO),
+                });
+                tick(wrapper.joiner.maximalMoveDuration * 1000);
+            }));
+            it('Should forbid to propose to take back while take back request is waiting', fakeAsync(async() => {
+                await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+                tick(1);
+                await askTakeBack(false);
+                await doMove(FIRST_MOVE, true);
+                await askTakeBack(true);
+                componentTestUtils.detectChanges();
+                await askTakeBack(false);
 
-            tick(wrapper.joiner.maximalMoveDuration * 1000);
-        }));
-        it('Player accepting take back should move player board backward (two moves)', fakeAsync(async() => {
-            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
-            tick(1);
+                tick(wrapper.joiner.maximalMoveDuration * 1000);
+            }));
+            it('Should not propose to Player.ONE to take back before his first move', fakeAsync(async() => {
+                // Given a board where nobody already played
+                await prepareStartedGameFor({ pseudo: 'firstCandidate', verified: true });
+                tick(1);
 
-            const move1: QuartoMove = new QuartoMove(3, 3, QuartoPiece.BABA);
-            const move2: QuartoMove = new QuartoMove(3, 0, QuartoPiece.ABBA);
+                // when asking take back, the button should not be here
+                await askTakeBack(false);
 
-            await doMove(FIRST_MOVE, true);
-            await receiveNewMoves([FIRST_MOVE_ENCODED, QuartoMove.encoder.encodeNumber(move1)]);
-            await doMove(move2, true);
-            await receiveRequest(Request.takeBackAsked(Player.ONE));
-            expect(wrapper.gameComponent.rules.node.gamePartSlice.turn).toBe(3);
+                // when receiving a new move, it should still not be showed nor possible
+                await receiveNewMoves([FIRST_MOVE_ENCODED], 1800 * 1000, 1800 * 1000);
+                await askTakeBack(false);
 
-            spyOn(partDAO, 'update').and.callThrough();
-            await acceptTakeBack();
-            spyOn(wrapper.chronoOneGlobal, 'pause').and.callThrough();
-            expect(partDAO.update).toHaveBeenCalledWith('joinerId', {
-                request: Request.takeBackAccepted(Player.ZERO),
-                listMoves: [FIRST_MOVE_ENCODED],
-                turn: 1,
-            });
-            expect(wrapper.gameComponent.rules.node.gamePartSlice.turn).toBe(1);
+                // when doing the first move, it should become possible, but only once
+                await doMove(new QuartoMove(2, 2, QuartoPiece.BBAA), true);
+                await askTakeBack(true);
+                await askTakeBack(false);
 
-            const move1Bis: QuartoMove = new QuartoMove(1, 1, QuartoPiece.BAAB);
-            // Receiving alternative move of Player.ONE
-            await receiveNewMoves([FIRST_MOVE_ENCODED, QuartoMove.encoder.encodeNumber(move1Bis)]);
+                tick(wrapper.joiner.maximalMoveDuration * 1000);
+            }));
+            it('Should only propose to accept take back when opponent asked', fakeAsync(async() => {
+                // given a board where opponent did not ask to take back and where both player could have ask
+                await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+                tick(1);
+                await doMove(FIRST_MOVE, true);
+                await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 1799999, 1800 * 1000);
 
-            tick(wrapper.joiner.maximalMoveDuration * 1000);
-        }));
-        it('Should forbid to propose to take back while take back request is waiting', fakeAsync(async() => {
-            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
-            tick(1);
-            expect(await askTakeBack()).toBeFalse();
-            await doMove(FIRST_MOVE, true);
-            expect(await askTakeBack()).toBeTrue();
-            componentTestUtils.detectChanges();
-            expect(await askTakeBack()).toBeFalse();
+                // accepting take back should not be proposed
+                await acceptTakeBack(false);
+                await receiveRequest(Request.takeBackAsked(Player.ONE));
 
-            tick(wrapper.joiner.maximalMoveDuration * 1000);
-        }));
-        it('Should not propose to Player.ONE to take back before his first move', fakeAsync(async() => {
-            await prepareStartedGameFor({ pseudo: 'firstCandidate', verified: true });
-            tick(1);
-            expect(await askTakeBack()).toBeFalse();
-            await receiveNewMoves([FIRST_MOVE_ENCODED]);
-            expect(await askTakeBack()).toBeFalse();
-            await doMove(new QuartoMove(2, 2, QuartoPiece.BBAA), true);
-            expect(await askTakeBack()).toBeTrue();
-            expect(await askTakeBack()).toBeFalse();
+                // then should allow it after proposing sent
+                spyOn(partDAO, 'update').and.callThrough();
+                await acceptTakeBack(true);
 
-            tick(wrapper.joiner.maximalMoveDuration * 1000);
-        }));
-        it('Should only propose to accept take back when opponent asked', fakeAsync(async() => {
-            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
-            tick(1);
-            const move1: number = QuartoMove.encoder.encodeNumber(new QuartoMove(2, 2, QuartoPiece.BBBA));
-            await doMove(FIRST_MOVE, true);
-            await receiveNewMoves([FIRST_MOVE_ENCODED, move1]);
-            expect(await acceptTakeBack()).toBeFalse();
-            await receiveRequest(Request.takeBackAsked(Player.ONE));
-            spyOn(partDAO, 'update').and.callThrough();
-            expect(await acceptTakeBack()).toBeTrue();
-            expect(await acceptTakeBack()).toBeFalse();
-            expect(partDAO.update).toHaveBeenCalledWith('joinerId', {
-                request: Request.takeBackAccepted(Player.ZERO),
-                turn: 1, listMoves: [FIRST_MOVE_ENCODED],
-            });
+                // and then again not allowing it
+                await acceptTakeBack(false);
+                tick(wrapper.joiner.maximalMoveDuration * 1000);
+            }));
+            it('Should only propose player to refuse take back when opponent asked', fakeAsync(async() => {
+                await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+                tick(1);
+                await doMove(FIRST_MOVE, true);
+                await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 1799999, 1800 * 1000);
+                expect(await refuseTakeBack()).toBeFalse();
+                await receiveRequest(Request.takeBackAsked(Player.ONE));
+                spyOn(partDAO, 'update').and.callThrough();
+                expect(await refuseTakeBack()).toBeTrue();
+                expect(await refuseTakeBack()).toBeFalse();
+                expect(partDAO.update).toHaveBeenCalledWith('joinerId', {
+                    request: Request.takeBackRefused(Player.ZERO),
+                });
 
-            tick(wrapper.joiner.maximalMoveDuration * 1000);
-        }));
-        it('Should only propose player to refuse take back when opponent asked', fakeAsync(async() => {
-            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
-            tick(1);
-            const move1: number = QuartoMove.encoder.encodeNumber(new QuartoMove(2, 2, QuartoPiece.BBBA));
-            await doMove(FIRST_MOVE, true);
-            await receiveNewMoves([FIRST_MOVE_ENCODED, move1]);
-            expect(await refuseTakeBack()).toBeFalse();
-            await receiveRequest(Request.takeBackAsked(Player.ONE));
-            spyOn(partDAO, 'update').and.callThrough();
-            expect(await refuseTakeBack()).toBeTrue();
-            expect(await refuseTakeBack()).toBeFalse();
-            expect(partDAO.update).toHaveBeenCalledWith('joinerId', {
-                request: Request.takeBackRefused(Player.ZERO),
-            });
+                tick(wrapper.joiner.maximalMoveDuration * 1000);
+            }));
+            it('Should not allow player to play while take back request is waiting for him', fakeAsync(async() => {
+                await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+                tick(1);
+                await doMove(FIRST_MOVE, true);
+                await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 1799999, 1800 * 1000);
+                await receiveRequest(Request.takeBackAsked(Player.ONE));
 
-            tick(wrapper.joiner.maximalMoveDuration * 1000);
-        }));
-        it('Should not allow player to play while take back request is waiting for him', fakeAsync(async() => {
-            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
-            tick(1);
-            await doMove(FIRST_MOVE, true);
-            const move1: number = QuartoMove.encoder.encodeNumber(new QuartoMove(2, 2, QuartoPiece.BBBA));
-            await receiveNewMoves([FIRST_MOVE_ENCODED, move1]);
-            await receiveRequest(Request.takeBackAsked(Player.ONE));
+                spyOn(partDAO, 'update').and.callThrough();
+                await doMove(THIRD_MOVE, true);
+                expect(partDAO.update).not.toHaveBeenCalled();
 
-            spyOn(partDAO, 'update').and.callThrough();
-            const move2: QuartoMove = new QuartoMove(2, 3, QuartoPiece.ABBA);
-            await doMove(move2, true);
-            expect(partDAO.update).not.toHaveBeenCalled();
+                tick(wrapper.joiner.maximalMoveDuration * 1000);
+            }));
+            it('Should cancel take back request when take back requester do a move', fakeAsync(async() => {
+                // given an initial board where a take back request has been done by user
+                await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+                tick(1);
+                await doMove(FIRST_MOVE, true);
+                await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 1799999, 1800 * 1000);
+                await askTakeBack(true);
 
-            tick(wrapper.joiner.maximalMoveDuration * 1000);
-        }));
-        it('Should cancel take back request when take back requester do a move', fakeAsync(async() => {
-            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
-            tick(1);
-            const move1: number = QuartoMove.encoder.encodeNumber(new QuartoMove(2, 2, QuartoPiece.BBBA));
-            const move2: QuartoMove = new QuartoMove(2, 1, QuartoPiece.ABBA);
-            await doMove(FIRST_MOVE, true);
-            await receiveNewMoves([FIRST_MOVE_ENCODED, move1]);
-            expect(await askTakeBack()).toBeTrue();
+                // when doing move while waiting for answer
+                spyOn(partDAO, 'update').and.callThrough();
+                await doMove(THIRD_MOVE, true);
 
-            spyOn(partDAO, 'update').and.callThrough();
-            await doMove(move2, true);
-            expect(partDAO.update).not.toHaveBeenCalledWith('joinerId', {
-                listMoves: [FIRST_MOVE_ENCODED, move1, QuartoMove.encoder.encodeNumber(move2)], turn: 3,
-                playerZero: null, playerOne: null, request: null,
-            });
+                // then update should remove request
+                expect(partDAO.update).toHaveBeenCalledWith('joinerId', {
+                    listMoves: [FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED, THIRD_MOVE_ENCODED],
+                    turn: 3,
+                    remainingMsForOne: 1799999,
+                    scorePlayerZero: null,
+                    scorePlayerOne: null, // TODO: why though ?
+                    request: null,
+                    lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
+                });
 
-            tick(wrapper.joiner.maximalMoveDuration * 1000);
-        }));
-        it('Should forbid player to ask take back again after refusal', fakeAsync(async() => {
-            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
-            tick(1);
-            await doMove(FIRST_MOVE, true);
-            expect(await askTakeBack()).toBeTrue();
-            await receiveRequest(Request.takeBackRefused(Player.ONE));
+                tick(wrapper.joiner.maximalMoveDuration * 1000);
+            }));
+            it('Should forbid player to ask take back again after refusal', fakeAsync(async() => {
+                await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+                tick(1);
+                await doMove(FIRST_MOVE, true);
+                await askTakeBack(true);
+                await receiveRequest(Request.takeBackRefused(Player.ONE));
 
-            expect(await askTakeBack()).toBeFalse();
+                await askTakeBack(false);
 
-            tick(wrapper.joiner.maximalMoveDuration * 1000);
-        }));
+                tick(wrapper.joiner.maximalMoveDuration * 1000);
+            }));
+            it('should ignore take back accepted request before they have time included', fakeAsync(async() => {
+                // Given an initial board where it's opponent's turn
+                await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+                tick(1);
+
+                await doMove(FIRST_MOVE, true);
+
+                // when opponent accept take back but lastTimeMove is not yet updated
+                spyOn(wrapper, 'takeBackTo').and.callThrough();
+                await receivePartDAOUpdate({
+                    request: Request.takeBackAccepted(Player.ONE),
+                    listMoves: [],
+                    turn: 0,
+                    lastMoveTime: null,
+                    remainingMsForZero: 179999,
+                    remainingMsForOne: 180000,
+                });
+
+                // then 'takeBackFor' should not be called
+                expect(wrapper.takeBackTo).not.toHaveBeenCalled();
+                tick(wrapper.joiner.maximalMoveDuration * 1000);
+            }));
+        });
+        describe('Opponent given take back during his turn', () => {
+            it('should move board back two turn and call restartCountDown', fakeAsync(async() => {
+                // Given an initial board where it's opponent second turn, and opponent asked for take back
+                await prepareStartedGameFor({ pseudo: 'firstCandidate', verified: true });
+                tick(1);
+
+                await receiveNewMoves([FIRST_MOVE_ENCODED], 1800 * 1000, 1800 * 1000);
+                await doMove(SECOND_MOVE, true);
+                await receiveRequest(Request.takeBackAsked(Player.ZERO));
+                expect(wrapper.gameComponent.rules.node.gamePartSlice.turn).toBe(2);
+                spyOn(wrapper, 'resetChronoFor').and.callThrough();
+
+                // when accepting opponent's take back
+                await acceptTakeBack(true);
+
+                // Then turn should be changed to 0 and resumeCountDown be called
+                expect(wrapper.resetChronoFor).toHaveBeenCalledWith(Player.ZERO);
+                expect(wrapper.gameComponent.rules.node.gamePartSlice.turn).toBe(0);
+                tick(wrapper.joiner.maximalMoveDuration * 1000);
+            }));
+            it(`should reset opponents chronos to what it was at pre-take-back turn beginning`, fakeAsync(async() => {
+                // Given an initial board where it's opponent second turn, and opponent asked for take back
+                await prepareStartedGameFor({ pseudo: 'firstCandidate', verified: true });
+                tick(1);
+
+                await receiveNewMoves([FIRST_MOVE_ENCODED], 1800 * 1000, 1800 * 1000);
+                await doMove(SECOND_MOVE, true);
+                await receiveRequest(Request.takeBackAsked(Player.ZERO));
+
+                // when accepting opponent's take back
+                spyOn(wrapper, 'resetChronoFor').and.callThrough();
+                await acceptTakeBack(true);
+
+                // Then opponents chrono should have been reset
+                expect(wrapper.resetChronoFor).toHaveBeenCalled();
+                tick(wrapper.joiner.maximalMoveDuration * 1000);
+            }));
+            it(`Should send reduce opponent's remainingTime, since opponent just played`, fakeAsync(async() => {
+                // Given an initial board where it's opponent second turn, and opponent asked for take back
+                await prepareStartedGameFor({ pseudo: 'firstCandidate', verified: true });
+                tick(1);
+
+                await receiveNewMoves([FIRST_MOVE_ENCODED], 1800 * 1000, 1800 * 1000);
+                await doMove(SECOND_MOVE, true);
+                await receiveRequest(Request.takeBackAsked(Player.ZERO));
+
+                // when accepting opponent's take back
+                spyOn(partDAO, 'update').and.callThrough();
+                await acceptTakeBack(true);
+
+                // Then opponents take back request should have include remainingTime and lastTimeMove
+                expect(partDAO.update).toHaveBeenCalledWith('joinerId', {
+                    request: Request.takeBackAccepted(Player.ONE),
+                    listMoves: [],
+                    turn: 0,
+                    remainingMsForZero: 1799999,
+                    remainingMsForOne: 1799999,
+                    lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
+                });
+                tick(wrapper.joiner.maximalMoveDuration * 1000);
+            }));
+        });
+        describe('Opponent given take back during user turn', () => {
+            it('should move board back one turn and call switchPlayer', fakeAsync(async() => {
+                // Given an initial board where it's user's (first) turn, and opponent asked for take back
+                await prepareStartedGameFor({ pseudo: 'firstCandidate', verified: true });
+                tick(1);
+
+                await receiveNewMoves([FIRST_MOVE_ENCODED], 1800 * 1000, 1800 * 1000);
+                await receiveRequest(Request.takeBackAsked(Player.ZERO));
+                expect(wrapper.gameComponent.rules.node.gamePartSlice.turn).toBe(1);
+                spyOn(wrapper, 'switchPlayer').and.callThrough();
+
+                // when accepting opponent's take back
+                await acceptTakeBack(true);
+
+                // Then turn should be changed to 0 and resumeCountDown be called
+                expect(wrapper.switchPlayer).toHaveBeenCalled();
+                expect(wrapper.gameComponent.rules.node.gamePartSlice.turn).toBe(0);
+                tick(wrapper.joiner.maximalMoveDuration * 1000);
+            }));
+            it(`Should resumeCountDown for opponent and reset user's time`, fakeAsync(async() => {
+                // Given an initial board where it's user's (first) turn, and opponent asked for take back
+                await prepareStartedGameFor({ pseudo: 'firstCandidate', verified: true });
+                tick(1);
+
+                await receiveNewMoves([FIRST_MOVE_ENCODED], 1800 * 1000, 1800 * 1000);
+                await receiveRequest(Request.takeBackAsked(Player.ZERO));
+
+                // when accepting opponent's take back after some "thinking" time
+                spyOn(wrapper, 'resumeCountDownFor').and.callThrough();
+                spyOn(wrapper.chronoZeroGlobal, 'changeDuration').and.callThrough();
+                spyOn(partDAO, 'update').and.callThrough();
+                tick(73);
+                const usedTimeOfFirstTurn: number = getMsDifference(wrapper.currentPart.doc.beginning as Time,
+                                                                    wrapper.currentPart.doc.lastMoveTime as Time);
+                const remainingMsForZero: number = (1800 * 1000) - usedTimeOfFirstTurn;
+                await acceptTakeBack(true);
+
+                // Then count down should be resumed for opponent and user shoud receive his decision time back
+                expect(partDAO.update).toHaveBeenCalledOnceWith('joinerId', {
+                    turn: 0,
+                    listMoves: [],
+                    request: Request.takeBackAccepted(Player.ONE),
+                    remainingMsForZero,
+                    remainingMsForOne: 1800 * 1000,
+                    lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
+                });
+                expect(wrapper.chronoZeroGlobal.changeDuration).toHaveBeenCalledWith(remainingMsForZero);
+
+                tick(wrapper.joiner.maximalMoveDuration * 1000);
+            }));
+        });
+        describe('User given take back during his turn', () => {
+            it('should move board back two turn and call resetChronoFor', fakeAsync(async() => {
+                // Given an initial board where it's user (second) turn, and user just asked for take back
+                await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+                tick(1);
+
+                await doMove(FIRST_MOVE, true);
+                await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 1799999, 1800 * 1000);
+                await askTakeBack(true);
+                expect(wrapper.gameComponent.rules.node.gamePartSlice.turn).toBe(2);
+                spyOn(wrapper, 'resetChronoFor').and.callThrough();
+
+                // when opponent accept user's take back
+                await receivePartDAOUpdate({
+                    request: Request.takeBackAccepted(Player.ONE),
+                    listMoves: [],
+                    turn: 0,
+                    lastMoveTime: { seconds: 123, nanoseconds: 456000000 },
+                    remainingMsForZero: 1799999,
+                    remainingMsForOne: 1799999,
+                });
+
+                // Then turn should be changed to 0 and resumeCountDown be called
+                expect(wrapper.resetChronoFor).toHaveBeenCalledWith(Player.ZERO);
+                expect(wrapper.gameComponent.rules.node.gamePartSlice.turn).toBe(0);
+                tick(wrapper.joiner.maximalMoveDuration * 1000);
+            }));
+            it('should reset user chronos to what it was at pre-take-back turn beginning', fakeAsync(async() => {
+                // Given an initial board where it's user second turn, and user just asked for take back
+                await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+                tick(1);
+
+                await doMove(FIRST_MOVE, true);
+                await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 1799999, 1800 * 1000);
+                await askTakeBack(true);
+                expect(wrapper.gameComponent.rules.node.gamePartSlice.turn).toBe(2);
+
+                // when opponent accept user's take back
+                spyOn(wrapper, 'resetChronoFor').and.callThrough();
+                await receivePartDAOUpdate({
+                    request: Request.takeBackAccepted(Player.ZERO),
+                    listMoves: [],
+                    turn: 0,
+                    lastMoveTime: { seconds: 123, nanoseconds: 456000000 },
+                    remainingMsForZero: 1799999,
+                    remainingMsForOne: 1799999,
+                });
+
+                // Then user's chronos should start again to what they were at beginning
+                expect(wrapper.resetChronoFor).toHaveBeenCalledWith(Player.ZERO);
+                tick(wrapper.joiner.maximalMoveDuration * 1000);
+            }));
+            it('should do alternative move afterwards without taking back move time off', fakeAsync(async() => {
+                // Given an initial board where user was autorised to take back
+                await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+                tick(1);
+                await doMove(FIRST_MOVE, true);
+                await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 1799999, 1800 * 1000);
+                await askTakeBack(true);
+                await receivePartDAOUpdate({
+                    request: Request.takeBackAccepted(Player.ZERO),
+                    listMoves: [],
+                    turn: 0,
+                    lastMoveTime: FirebaseFirestoreDAOMock.mockServerTime(),
+                    remainingMsForZero: 1799999,
+                    remainingMsForOne: 1799999,
+                });
+
+                // when playing alernative move
+                spyOn(partDAO, 'update').and.callThrough();
+                const ALTERNATIVE_MOVE: QuartoMove = new QuartoMove(2, 3, QuartoPiece.BBBA);
+                const ALTERNATIVE_MOVE_ENCODED: number = QuartoMove.encoder.encodeNumber(ALTERNATIVE_MOVE);
+                await doMove(ALTERNATIVE_MOVE, true);
+
+                // Then partDao should be updated without including remainingMsFor(any)
+                expect(partDAO.update).toHaveBeenCalledOnceWith('joinerId', {
+                    turn: 1,
+                    listMoves: [ALTERNATIVE_MOVE_ENCODED],
+                    request: null,
+                    lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
+                    scorePlayerZero: null,
+                    scorePlayerOne: null, // TODO: why though ?
+                });
+                tick(wrapper.joiner.maximalMoveDuration * 1000);
+            }));
+        });
+        describe('User given take back during opponent turn', () => {
+            it('should move board back one turn and call switchPlayer', fakeAsync(async() => {
+                // Given an initial board where it's opponent's [second] turn, and user just asked for take back
+                await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+                tick(1);
+
+                await doMove(FIRST_MOVE, true);
+                await askTakeBack(true);
+                expect(wrapper.gameComponent.rules.node.gamePartSlice.turn).toBe(1);
+                spyOn(wrapper, 'switchPlayer').and.callThrough();
+
+                // when opponent accept user's take back
+                await receivePartDAOUpdate({
+                    request: Request.takeBackAccepted(Player.ONE),
+                    listMoves: [],
+                    turn: 0,
+                    lastMoveTime: { seconds: 123, nanoseconds: 456000000 },
+                });
+
+                // Then turn should be changed to 0 and resumeCountDown be called
+                expect(wrapper.switchPlayer).toHaveBeenCalled();
+                expect(wrapper.gameComponent.rules.node.gamePartSlice.turn).toBe(0);
+                tick(wrapper.joiner.maximalMoveDuration * 1000);
+            }));
+            it(`should resumeCountDown for user without removing time of opponent`, fakeAsync(async() => {
+                // Given an initial board where it's opponent's [second] turn, and user just asked for take back
+                await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+                tick(1);
+
+                await doMove(FIRST_MOVE, true);
+                spyOn(wrapper, 'resumeCountDownFor').and.callThrough();
+                spyOn(partDAO, 'update').and.callThrough();
+                await askTakeBack(true);
+
+                // when opponent accept user's take back
+                await receivePartDAOUpdate({
+                    request: Request.takeBackAccepted(Player.ONE),
+                    listMoves: [],
+                    turn: 0,
+                    lastMoveTime: { seconds: 123, nanoseconds: 456000000 },
+                });
+
+                // Then count down should be resumed and update not changing time
+                expect(wrapper.resumeCountDownFor).toHaveBeenCalledWith(Player.ZERO);
+                tick(wrapper.joiner.maximalMoveDuration * 1000);
+            }));
+            it('should do alternative move afterwards without taking back move time off', fakeAsync(async() => {
+                // Given an initial board where opponent just took back the a move
+                await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+                tick(1);
+                await doMove(FIRST_MOVE, true);
+                await askTakeBack(true);
+                await receivePartDAOUpdate({
+                    request: Request.takeBackAccepted(Player.ONE),
+                    listMoves: [],
+                    turn: 0,
+                    lastMoveTime: FirebaseFirestoreDAOMock.mockServerTime(),
+                });
+
+                // when playing alernative move
+                spyOn(partDAO, 'update').and.callThrough();
+                const ALTERNATIVE_MOVE: QuartoMove = new QuartoMove(2, 3, QuartoPiece.BBBA);
+                const ALTERNATIVE_MOVE_ENCODED: number = QuartoMove.encoder.encodeNumber(ALTERNATIVE_MOVE);
+                await doMove(ALTERNATIVE_MOVE, true);
+
+                // Then partDao should be updated without including remainingMsFor(any)
+                expect(partDAO.update).toHaveBeenCalledOnceWith('joinerId', {
+                    turn: 1,
+                    listMoves: [ALTERNATIVE_MOVE_ENCODED],
+                    request: null,
+                    lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
+                    scorePlayerZero: null,
+                    scorePlayerOne: null, // TODO: why though ?
+                });
+                tick(wrapper.joiner.maximalMoveDuration * 1000);
+            }));
+        });
     });
     describe('Draw', () => {
         async function setup() {
@@ -681,9 +955,46 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(wrapper.chronoOneGlobal.stop).toHaveBeenCalled();
             expect(wrapper.notifyTimeoutVictory).toHaveBeenCalled();
         }));
-        it(`should add transmission time back to former active player`, fakeAsync(async() => {
+        it(`should send opponent his remainingTime after first move`, fakeAsync(async() => {
+            // given a board where a first move has been made
+            await prepareStartedGameFor({ pseudo: 'firstCandidate', verified: true });
+            tick(1);
+            await receiveNewMoves([FIRST_MOVE_ENCODED], 1800 * 1000, 1800 * 1000);
+            const beginning: Time = wrapper.currentPart.doc.beginning as Time;
+            const firstMoveTime: Time = wrapper.currentPart.doc.lastMoveTime as Time;
+            const msUsedForFirstMove: number = getMsDifference(beginning, firstMoveTime);
 
+            // when doing the next move
+            expect(wrapper.currentPart.doc.remainingMsForZero).toEqual(1800 * 1000);
+            await doMove(SECOND_MOVE, true);
+
+            // then the update sent should have calculated time between creation and first move
+            // and should have removed it from remainingMsForZero
+            const remainingMsForZero: number = (1800 * 1000) - msUsedForFirstMove;
+            expect(wrapper.currentPart.doc.remainingMsForZero)
+                .withContext(`Should have sent the opponent its updated remainingTime`)
+                .toEqual(remainingMsForZero);
+            tick(wrapper.joiner.maximalMoveDuration * 1000);
         }));
+        it('should update chrono when receiving your remainingTime in the update', fakeAsync(async() => {
+            // given a board where a first move has been made
+            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            tick(1);
+            spyOn(wrapper.chronoZeroGlobal, 'changeDuration').and.callThrough();
+            await doMove(FIRST_MOVE, true);
+            expect(wrapper.currentPart.doc.remainingMsForZero).toEqual(1800 * 1000);
+
+            // when receiving new move
+            await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 1799999, 1800 * 1000);
+
+            // then the global chrono of update-player should be updated
+            expect(wrapper.chronoZeroGlobal.changeDuration)
+                .withContext(`Chrono.ChangeDuration should have been refreshed with update's datas`)
+                .toHaveBeenCalledWith(wrapper.currentPart.doc.remainingMsForZero);
+            tick(wrapper.joiner.maximalMoveDuration * 1000);
+        }));
+        it('when resigning, lastMoveTime must be upToDate then remainingMs');
+        it('when winning move is done, remainingMs at last turn of opponent must be');
     });
     describe('User "handshake"', () => {
         it(`Should make opponent's name lightgrey when he is absent`, fakeAsync(async() => {
@@ -701,15 +1012,13 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
         await doMove(FIRST_MOVE, true);
-        const move1: number = QuartoMove.encoder.encodeNumber(new QuartoMove(2, 2, QuartoPiece.BBBA));
-        await receiveNewMoves([FIRST_MOVE_ENCODED, move1]);
+        await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 1799999, 1800 * 1000);
         expect(await componentTestUtils.clickElement('#resignButton'))
             .withContext('Should be possible to resign')
             .toBeTruthy();
 
         spyOn(partDAO, 'update').and.callThrough();
-        const move2: QuartoMove = new QuartoMove(2, 3, QuartoPiece.ABBA);
-        await doMove(move2, false);
+        await doMove(SECOND_MOVE, false);
         expect(partDAO.update).not.toHaveBeenCalled();
 
         tick(wrapper.joiner.maximalMoveDuration * 1000);
@@ -958,6 +1267,70 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(wrapper.getUpdateType(update)).toBe(UpdateType.TIME_ALONE);
             tick(wrapper.joiner.maximalMoveDuration * 1000 + 1);
         }));
+        it('AcceptTakeBack + Time_removed = UpdateType.ACCEPT_TAKE_BACK_WITHOUT_TIME', fakeAsync(async() => {
+            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            wrapper.currentPart = new Part({
+                typeGame: 'P4',
+                playerZero: 'who is it from who cares',
+                turn: 1,
+                listMoves: [1],
+                result: MGPResult.UNACHIEVED.value,
+                playerOne: 'Sir Meryn Trant',
+                remainingMsForZero: 1800 * 1000,
+                remainingMsForOne: 1800 * 1000,
+                beginning: { seconds: 123, nanoseconds: 456000000 },
+                lastMoveTime: { seconds: 125, nanoseconds: 456000000 },
+                request: Request.takeBackAsked(Player.ZERO),
+            });
+            const update: Part = new Part({
+                typeGame: 'P4',
+                playerZero: 'who is it from who cares',
+                turn: 1,
+                listMoves: [1],
+                result: MGPResult.UNACHIEVED.value,
+                playerOne: 'Sir Meryn Trant',
+                remainingMsForZero: 1800 * 1000,
+                remainingMsForOne: 1800 * 1000,
+                beginning: { seconds: 123, nanoseconds: 456000000 },
+                // but
+                request: Request.takeBackAccepted(Player.ONE),
+                // and no longer lastMoveTime
+            });
+            expect(wrapper.getUpdateType(update)).toBe(UpdateType.ACCEPT_TAKE_BACK_WITHOUT_TIME);
+            tick(wrapper.joiner.maximalMoveDuration * 1000 + 1);
+        }));
+        it('AcceptTakeBack + Time_updated = UpdateType.REQUEST', fakeAsync(async() => {
+            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            wrapper.currentPart = new Part({
+                typeGame: 'P4',
+                playerZero: 'who is it from who cares',
+                turn: 1,
+                listMoves: [1],
+                result: MGPResult.UNACHIEVED.value,
+                playerOne: 'Sir Meryn Trant',
+                remainingMsForZero: 1800 * 1000,
+                remainingMsForOne: 1800 * 1000,
+                beginning: { seconds: 123, nanoseconds: 456000000 },
+                lastMoveTime: { seconds: 125, nanoseconds: 456000000 },
+                request: Request.takeBackAsked(Player.ZERO),
+            });
+            const update: Part = new Part({
+                typeGame: 'P4',
+                playerZero: 'who is it from who cares',
+                turn: 1,
+                listMoves: [1],
+                result: MGPResult.UNACHIEVED.value,
+                playerOne: 'Sir Meryn Trant',
+                remainingMsForZero: 1800 * 1000,
+                remainingMsForOne: 1800 * 1000,
+                beginning: { seconds: 123, nanoseconds: 456000000 },
+                // but
+                lastMoveTime: { seconds: 127, nanoseconds: 456000000 },
+                request: Request.takeBackAccepted(Player.ONE),
+            });
+            expect(wrapper.getUpdateType(update)).toBe(UpdateType.REQUEST);
+            tick(wrapper.joiner.maximalMoveDuration * 1000 + 1);
+        }));
     });
     describe('rematch', () => {
         it('should show propose button only when game is ended', fakeAsync(async() => {
@@ -1023,7 +1396,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(wrapper.gameService.acceptRematch).toHaveBeenCalledTimes(1);
         }));
         it('should redirect to new part when rematch is accepted', fakeAsync(async() => {
-            // give a part with rematch request send by you
+            // given a part lost with rematch request send by user
             await prepareStartedGameFor({ pseudo: 'creator', verified: true });
             tick(1);
             componentTestUtils.detectChanges();
