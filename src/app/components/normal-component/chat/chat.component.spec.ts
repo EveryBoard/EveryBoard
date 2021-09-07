@@ -9,7 +9,7 @@ import { AuthenticationServiceMock } from 'src/app/services/tests/Authentication
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { IMessage } from 'src/app/domain/imessage';
 
-fdescribe('ChatComponent', () => {
+describe('ChatComponent', () => {
     let testUtils: SimpleComponentTestUtils<ChatComponent>;
 
     let component: ChatComponent;
@@ -217,7 +217,6 @@ fdescribe('ChatComponent', () => {
         // when the form is filled and the send button clicked
         const messageInput: DebugElement = testUtils.findElement('#message');
         messageInput.nativeElement.value = 'hello';
-        testUtils.detectChanges();
         messageInput.nativeElement.dispatchEvent(new Event('input'));
         await testUtils.whenStable();
 
@@ -246,32 +245,6 @@ fdescribe('ChatComponent', () => {
         // then we scroll to the bottom
         const chatDiv: DebugElement = testUtils.findElement('#chatDiv');
         expect(component.scrollTo).toHaveBeenCalledWith(chatDiv.nativeElement.scrollHeight);
-    }));
-    xit('should consider <enter> key as sending message', fakeAsync(async() => {
-        // This test is disabled because, even though the <enter> key works in practice, it seems this test can't simulate it properly
-        spyOn(chatService, 'sendMessage');
-        // given a chat
-        AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
-        testUtils.detectChanges();
-
-        // when the form is filled and the enter key is pressed
-        const messageInput: DebugElement = testUtils.findElement('#message');
-        messageInput.nativeElement.value = 'hello';
-        messageInput.nativeElement.dispatchEvent(new Event('input'));
-        testUtils.detectChanges();
-        await testUtils.whenStable();
-
-        const enterKeypress: KeyboardEvent = new KeyboardEvent('keypress', { key: 'Enter' });
-        testUtils.detectChanges();
-        await testUtils.whenStable();
-
-        testUtils.findElement('#send').nativeElement.dispatchEvent(enterKeypress);
-        messageInput.nativeElement.dispatchEvent(enterKeypress);
-        testUtils.detectChanges();
-        await testUtils.whenStable();
-        // then the message is sent and the form is cleared
-        expect(chatService.sendMessage).toHaveBeenCalledWith(AuthenticationServiceMock.CONNECTED.pseudo, 2, 'hello');
-        expect(component.userMessage).toBe('');
     }));
     afterAll(() => {
         component.ngOnDestroy();
