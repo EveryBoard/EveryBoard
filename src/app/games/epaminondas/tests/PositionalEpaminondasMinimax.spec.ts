@@ -4,10 +4,9 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasPartSlice } from '../EpaminondasPartSlice';
-import { EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
+import { EpaminondasRules } from '../EpaminondasRules';
 import { PositionalEpaminondasMinimax } from '../PositionalEpaminondasMinimax';
 import { expectSecondStateToBeBetterThanFirst } from 'src/app/utils/tests/TestUtils.spec';
-import { EpaminondasLegalityStatus } from '../epaminondaslegalitystatus';
 
 describe('PositionalEpaminondasMinimax:', () => {
 

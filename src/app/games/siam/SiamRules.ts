@@ -92,10 +92,12 @@ export class SiamRules extends _SiamRules {
                                        movingPiece !== SiamPiece.EMPTY.value;
 
         while (pushingPossible) {
-            if (pushingDir.equals(currentDirection)) {
-                totalForce++;
-            } else if (resistingDir.equals(currentDirection)) {
-                totalForce--;
+            if (currentDirection != null) {
+                if (pushingDir.equals(currentDirection)) {
+                    totalForce++;
+                } else if (resistingDir.equals(currentDirection)) {
+                    totalForce--;
+                }
             }
             display(SiamRules.VERBOSE, { totalForce, movingPiece, landingCoord });
             const tmpPiece: number = resultingBoard[landingCoord.y][landingCoord.x];
@@ -112,10 +114,12 @@ export class SiamRules extends _SiamRules {
         if (landingCoord.isNotInRange(5, 5)) {
             display(SiamRules.VERBOSE, 'This movement would push ' + movingPiece + ' outside the board');
 
-            if (pushingDir.equals(currentDirection)) {
-                totalForce++;
-            } else if (resistingDir.equals(currentDirection)) {
-                totalForce--;
+            if (currentDirection != null) {
+                if (pushingDir.equals(currentDirection)) {
+                    totalForce++;
+                } else if (resistingDir.equals(currentDirection)) {
+                    totalForce--;
+                }
             }
         }
         if (totalForce <= 0) {

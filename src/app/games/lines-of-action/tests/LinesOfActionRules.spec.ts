@@ -28,7 +28,7 @@ describe('LinesOfActionRules', () => {
     });
     it('should forbid moving a piece of the opponent', () => {
         const state: LinesOfActionState = LinesOfActionState.getInitialSlice();
-        const move: LinesOfActionMove = new LinesOfActionMove(new Coord(0, 2), new Coord(2, 2));
+        const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(0, 2), new Coord(2, 2)).get();
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.reason).toBe(LinesOfActionFailure.NOT_YOUR_PIECE);
     });
@@ -44,7 +44,7 @@ describe('LinesOfActionRules', () => {
             [_, X, X, X, X, X, X, _],
         ];
         const state: LinesOfActionState = LinesOfActionState.getInitialSlice();
-        const move: LinesOfActionMove = new LinesOfActionMove(new Coord(2, 0), new Coord(2, 2));
+        const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(2, 0), new Coord(2, 2)).get();
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingState: LinesOfActionState = rules.applyLegalMove(move, state, status);
@@ -62,7 +62,7 @@ describe('LinesOfActionRules', () => {
             [_, X, _, X, X, X, X, _],
         ];
         const state: LinesOfActionState = LinesOfActionState.getInitialSlice();
-        const move: LinesOfActionMove = new LinesOfActionMove(new Coord(2, 7), new Coord(2, 5));
+        const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(2, 7), new Coord(2, 5)).get();
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingState: LinesOfActionState = rules.applyLegalMove(move, state, status);
@@ -90,7 +90,7 @@ describe('LinesOfActionRules', () => {
             [_, X, X, X, X, X, X, _],
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
-        const move: LinesOfActionMove = new LinesOfActionMove(new Coord(2, 2), new Coord(5, 2));
+        const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(2, 2), new Coord(5, 2)).get();
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingState: LinesOfActionState = rules.applyLegalMove(move, state, status);
@@ -108,7 +108,7 @@ describe('LinesOfActionRules', () => {
             [_, X, X, X, X, X, X, _],
         ];
         const state: LinesOfActionState = LinesOfActionState.getInitialSlice();
-        const move: LinesOfActionMove = new LinesOfActionMove(new Coord(1, 0), new Coord(3, 2));
+        const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(1, 0), new Coord(3, 2)).get();
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingState: LinesOfActionState = rules.applyLegalMove(move, state, status);
@@ -126,7 +126,7 @@ describe('LinesOfActionRules', () => {
             [_, _, X, X, X, X, X, _],
         ];
         const state: LinesOfActionState = LinesOfActionState.getInitialSlice();
-        const move: LinesOfActionMove = new LinesOfActionMove(new Coord(1, 7), new Coord(3, 5));
+        const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(1, 7), new Coord(3, 5)).get();
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingState: LinesOfActionState = rules.applyLegalMove(move, state, status);
@@ -154,7 +154,7 @@ describe('LinesOfActionRules', () => {
             [O, _, _, _, _, _, _, O],
             [_, X, X, _, X, X, X, _],
         ];
-        const move: LinesOfActionMove = new LinesOfActionMove(new Coord(0, 2), new Coord(3, 5));
+        const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(0, 2), new Coord(3, 5)).get();
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingState: LinesOfActionState = rules.applyLegalMove(move, state, status);
@@ -162,7 +162,7 @@ describe('LinesOfActionRules', () => {
     });
     it('should forbid to move a piece by a different number of spaces than the number of pieces on the same line', () => {
         const state: LinesOfActionState = LinesOfActionState.getInitialSlice();
-        const move: LinesOfActionMove = new LinesOfActionMove(new Coord(2, 0), new Coord(2, 1));
+        const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(2, 0), new Coord(2, 1)).get();
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.reason).toBe(LinesOfActionFailure.INVALID_MOVE_LENGTH);
     });
@@ -178,7 +178,7 @@ describe('LinesOfActionRules', () => {
             [_, X, _, X, X, X, X, _],
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
-        const move: LinesOfActionMove = new LinesOfActionMove(new Coord(2, 0), new Coord(2, 2));
+        const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(2, 0), new Coord(2, 2)).get();
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.reason).toBe(RulesFailure.CANNOT_SELF_CAPTURE);
     });
@@ -194,7 +194,7 @@ describe('LinesOfActionRules', () => {
             [_, X, X, X, X, X, X, _],
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
-        const move: LinesOfActionMove = new LinesOfActionMove(new Coord(2, 2), new Coord(0, 2));
+        const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(2, 2), new Coord(0, 2)).get();
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.reason).toBe(LinesOfActionFailure.CANNOT_JUMP_OVER_ENEMY);
     });
@@ -210,7 +210,7 @@ describe('LinesOfActionRules', () => {
             [_, X, X, X, X, X, X, _],
         ];
         const state: LinesOfActionState = LinesOfActionState.getInitialSlice();
-        const move: LinesOfActionMove = new LinesOfActionMove(new Coord(1, 0), new Coord(7, 0));
+        const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(1, 0), new Coord(7, 0)).get();
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingState: LinesOfActionState = rules.applyLegalMove(move, state, status);
@@ -238,7 +238,7 @@ describe('LinesOfActionRules', () => {
             [_, X, X, X, X, X, X, _],
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
-        const move: LinesOfActionMove = new LinesOfActionMove(new Coord(2, 2), new Coord(4, 2));
+        const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(2, 2), new Coord(4, 2)).get();
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingState: LinesOfActionState = rules.applyLegalMove(move, state, status);
@@ -300,7 +300,7 @@ describe('LinesOfActionRules', () => {
             [_, _, _, _, _, _, _, _],
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
-        const move: LinesOfActionMove = new LinesOfActionMove(new Coord(0, 2), new Coord(4, 2));
+        const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(0, 2), new Coord(4, 2)).get();
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingState: LinesOfActionState = rules.applyLegalMove(move, state, status);

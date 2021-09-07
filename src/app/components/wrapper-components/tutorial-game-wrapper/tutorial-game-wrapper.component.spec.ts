@@ -35,6 +35,11 @@ import { PentagoRules } from 'src/app/games/pentago/PentagoRules';
 import { PentagoGameState } from 'src/app/games/pentago/PentagoGameState';
 import { pentagoTutorial } from 'src/app/games/pentago/PentagoTutorial';
 import { PentagoMove } from 'src/app/games/pentago/PentagoMove';
+import { YinshRules } from 'src/app/games/yinsh/YinshRules';
+import { YinshGameState } from 'src/app/games/yinsh/YinshGameState';
+import { yinshTutorial, YinshTutorialMessages } from 'src/app/games/yinsh/YinshTutorial';
+import { YinshCapture, YinshMove } from 'src/app/games/yinsh/YinshMove';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('TutorialGameWrapperComponent', () => {
     let componentTestUtils: ComponentTestUtils<QuartoComponent>;
@@ -1008,6 +1013,18 @@ describe('TutorialGameWrapperComponent', () => {
                     sixTutorial[6],
                     SixMove.fromCut(new Coord(2, 3), new Coord(1, 3), new Coord(3, 2)),
                     MGPValidation.failure(`Raté ! Vous avez bien coupé le plateau en deux mais vous avez choisi de conserver la moitié ou vous êtes en minorité, vous avez donc perdu. Réessayez !`),
+                ], [
+                    new YinshRules(YinshGameState),
+                    yinshTutorial[3],
+                    new YinshMove([], new Coord(4, 4), MGPOptional.of(new Coord(1, 4)), []),
+                    MGPValidation.failure(YinshTutorialMessages.MUST_ALIGN_FIVE),
+                ], [
+                    new YinshRules(YinshGameState),
+                    yinshTutorial[4],
+                    new YinshMove([YinshCapture.of(new Coord(5, 4), new Coord(5, 8), new Coord(3, 2))],
+                                  new Coord(4, 1), MGPOptional.of(new Coord(6, 1)),
+                                  []),
+                    MGPValidation.failure(YinshTutorialMessages.MUST_CAPTURE_TWO),
                 ],
             ];
             for (const stepExpectation of stepExpectations) {

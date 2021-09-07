@@ -74,6 +74,9 @@ import { SiamComponent } from './games/siam/siam.component';
 import { SixComponent } from './games/six/six.component';
 import { TablutComponent } from './games/tablut/tablut.component';
 import { YinshComponent } from './games/yinsh/Yinsh.component';
+import { environment } from 'src/environments/environment';
+
+import { USE_EMULATOR as USE_FIRESTORE_EMULATOR } from '@angular/fire/firestore';
 
 // time scp -C -r ./dist/pantheonsgame/* gaviall@awesom.eu:/home/gaviall/www/pantheonsgame/
 
@@ -172,12 +175,13 @@ const routes: Route [] = [
         RouterModule.forRoot(routes, { useHash: false }),
         ReactiveFormsModule,
         FormsModule,
-        AngularFireModule.initializeApp(firebaseConfig),
+        AngularFireModule.initializeApp(environment.useEmulators ? environment.emulatorConfig : firebaseConfig),
         AngularFirestoreModule,
         BrowserAnimationsModule,
         MaterialModule,
     ],
     providers: [
+        { provide: USE_FIRESTORE_EMULATOR, useValue: environment.useEmulators ? ['localhost', 8080] : undefined },
         AuthenticationService,
         GameService,
         JoinerService,
