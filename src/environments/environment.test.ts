@@ -1,6 +1,12 @@
-export const environment: { production: boolean, test: boolean, root: string } = {
+import { Environment } from './environment-type';
+
+export const environment: Environment = {
     production: true,
-    devPages: false,
     test: false,
     root: '/board-test/',
+    useEmulators: true,
+    emulatorConfig: {
+        projectId: 'my-project',
+        databaseURL: 'http://localhost:8080',
+    },
 };

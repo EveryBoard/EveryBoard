@@ -4,9 +4,9 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --configuration=fr",
-    "build": "ng build --localize --configuration=production",
-    "test": "ng test --code-coverage --configuration=test",
-    "test:ci": "ng test --watch=false --browsers=ChromeHeadlessCustom",
+    "build": "ng build --localize --configuration=production,fr",
+    "test": "bash ./scripts/test.sh",
+    "test:ci": "bash ./scripts/test.sh --watch=false --browsers=ChromeHeadlessCustom",
     "lint": "eslint --ext ts ./",
     "e2e": "ng e2e",
     "css-build": "sass --no-source-map src/sass/mystyles.scss src/css/mystyles.css"
@@ -48,6 +48,7 @@
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.3",
+    "firebase-tools": "^9.16.0",
     "karma": "^6.3.2",
     "karma-chrome-launcher": "^3.1.0",
     "karma-coverage": "^2.0.3",
