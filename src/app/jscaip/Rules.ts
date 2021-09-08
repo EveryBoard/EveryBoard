@@ -70,7 +70,7 @@ export abstract class Rules<M extends Move,
             display(LOCAL_VERBOSE, 'Rules.choose: current node has moves');
             const choix: MGPNode<Rules<M, S, L>, M, S, L> = this.node.getSonByMove(move);
             // let's not doing it twice
-            if (choix !== null) {
+            if (choix != null) {
                 if (status.legal.isFailure()) {
                     display(LOCAL_VERBOSE, 'Rules.choose: Move is illegal: ' + status.legal.getReason());
                     return false;

@@ -37,7 +37,7 @@ export function getDiff(before: { [key: string]: any }, after: { [key: string]: 
                 changes.removed[commonKey] = before[commonKey];
             }
         } else if (before[commonKey] == null) {
-            if (after[commonKey] !== null) {
+            if (after[commonKey] != null) {
                 changes.added[commonKey] = after[commonKey];
             }
         } else if (typeof before[commonKey] === 'function' ||

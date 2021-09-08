@@ -234,7 +234,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
     }
     private showLastMove(): void {
         const move: YinshMove = this.rules.node.move;
-        if (move !== null) {
+        if (move != null) {
             if (move.isInitialPlacement()) {
                 this.viewInfo.caseInfo[move.start.y][move.start.x].caseClasses = ['moved'];
             } else {

@@ -16,7 +16,7 @@ export const goTutorial: TutorialStep[] = [
         $localize`Le jeu de Go se joue sur un plateau appelé Goban, et les pierres sont placées sur les intersections.
         Le plateau traditionnel fait 19x19 intersections, mais le 13x13 est implémenté sur ce site.
         (Pour des parties plus courtes, le 9x9 et 5x5 existent, mais ne sont pas encore disponibles).
-        Pour ce tutoriel, nous utiliserons un petit 5x5 à fin pédagogique.`,
+        Pour ce tutoriel, nous utiliserons de plus petits plateaux à des fins pédagogiques.`,
         GoPartSlice.getInitialSlice(),
     ),
     TutorialStep.informational(

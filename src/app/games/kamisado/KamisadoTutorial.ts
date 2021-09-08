@@ -25,6 +25,7 @@ const br: number = KamisadoPiece.ZERO.BROWN.getValue();
 const Br: number = KamisadoPiece.ONE.BROWN.getValue();
 
 export const kamisadoTutorial: TutorialStep[] = [
+
     TutorialStep.informational(
         $localize`But du jeu`,
         $localize`Au Kamisado, il y a deux façons de gagner : soit en plaçant une de vos pièces sur la ligne de départ de
@@ -40,7 +41,8 @@ export const kamisadoTutorial: TutorialStep[] = [
             [__, __, __, __, __, __, __, __],
             [__, gr, re, ye, pi, pu, bl, or],
         ]),
-    ),
+    ).withPreviousMove(KamisadoMove.of(new Coord(0, 7), new Coord(0, 0))),
+
     TutorialStep.anyMove(
         $localize`Plateau de départ et déplacement initial`,
         $localize`Voici le plateau de départ.
@@ -75,7 +77,8 @@ export const kamisadoTutorial: TutorialStep[] = [
         ],
         $localize`Parfait!`,
         $localize`Vous n'avez pas avancé votre pièce rose sur une case bleue !`,
-    ),
+    ).withPreviousMove(KamisadoMove.of(new Coord(6, 7), new Coord(6, 5))),
+
     TutorialStep.informational(
         $localize`Blocage`,
         $localize`Foncé s'est déplacé sur une autre case rose, et vous oblige donc à déplacer votre pièce rose.
@@ -91,7 +94,8 @@ export const kamisadoTutorial: TutorialStep[] = [
             [__, __, __, Pi, __, __, __, __],
             [br, gr, re, ye, pi, pu, __, or],
         ]),
-    ),
+    ).withPreviousMove(KamisadoMove.of(new Coord(6, 5), new Coord(7, 4))),
+
     TutorialStep.fromMove(
         $localize`Victoire par blocage`,
         $localize`À tout moment, si un joueur provoque un blocage total du jeu, il perd.
@@ -101,8 +105,8 @@ export const kamisadoTutorial: TutorialStep[] = [
         vous pouvez obliger votre adversaire à provoquer cette situation et donc l'obliger à perdre!<br/><br/>
         Essayez de faire ce mouvement.`,
         new KamisadoPartSlice(2, KamisadoColor.RED, MGPOptional.of(new Coord(2, 4)), false, [
-            [__, Bl, Pu, __, Ye, Re, __, __],
-            [__, __, __, __, __, __, __, __],
+            [__, Bl, Pu, __, __, Re, __, __],
+            [__, __, __, Ye, __, __, __, __],
             [__, __, __, Pi, __, Pu, __, __],
             [__, __, __, ye, __, __, __, __],
             [__, __, re, __, __, __, __, __],
@@ -119,5 +123,5 @@ export const kamisadoTutorial: TutorialStep[] = [
          Dans ce cas, le dernier joueur à avoir déplacé une pièce perd la partie.
          Ici, Clair aura déplacé sa pièce verte en dernier, vous êtes donc vainqueur !`,
         $localize`Raté !`,
-    ),
+    ).withPreviousMove(KamisadoMove.of(new Coord(4, 0), new Coord(3, 1))),
 ];

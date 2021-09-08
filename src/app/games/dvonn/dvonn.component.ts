@@ -54,7 +54,11 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnGameS
         this.scores = DvonnRules.getScores(this.rules.node.gamePartSlice);
         this.hexaBoard = this.rules.node.gamePartSlice.hexaBoard;
     }
+    public hideLastMove(): void {
+        this.lastMove = null;
+    }
     public updateBoard(): void {
+        this.cancelMoveAttempt();
         const slice: DvonnGameState = this.rules.node.gamePartSlice;
         this.board = slice.getCopiedBoard();
         this.hexaBoard = slice.hexaBoard;
@@ -62,6 +66,8 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnGameS
         this.disconnecteds = [];
         if (this.lastMove) {
             this.calculateDisconnecteds();
+        } else {
+            this.hideLastMove();
         }
         this.canPass = this.rules.canOnlyPass(slice);
         this.scores = DvonnRules.getScores(slice);

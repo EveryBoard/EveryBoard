@@ -91,8 +91,11 @@ describe('FirebaseFirestoreDAO', () => {
         });
     });
     describe('observingWhere', () => {
+
         let promise: Promise<Foo[]>; // This promise will be resolved when the callback function is called
+
         let callbackFunction: (created: {doc: Foo, id: string}[]) => void;
+
         beforeEach(() => {
             let createdResolve: (value: Foo[]) => void;
             promise = new Promise((resolve: (value: Foo[]) => void) => {

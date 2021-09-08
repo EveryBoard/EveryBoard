@@ -21,9 +21,7 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
 
     public applyLegalMove(move: GipfMove, slice: GipfPartSlice, status: GipfLegalityStatus): GipfPartSlice {
         let sliceWithoutTurn: GipfPartSlice;
-        if (status.computedSlice !== null) {
-            sliceWithoutTurn = status.computedSlice;
-        } else {
+        if (status.computedSlice == null) {
             const sliceAfterInitialCapture: GipfPartSlice =
                 GipfRules.applyCaptures(slice, move.initialCaptures);
             const sliceAfterPlacement: GipfPartSlice =
@@ -31,6 +29,8 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
             const sliceAfterFinalCapture: GipfPartSlice =
                 GipfRules.applyCaptures(sliceAfterPlacement, move.finalCaptures);
             sliceWithoutTurn = sliceAfterFinalCapture;
+        } else {
+            sliceWithoutTurn = status.computedSlice;
         }
         return new GipfPartSlice(sliceWithoutTurn.hexaBoard, sliceWithoutTurn.turn+1,
                                  sliceWithoutTurn.sidePieces, sliceWithoutTurn.capturedPieces);
