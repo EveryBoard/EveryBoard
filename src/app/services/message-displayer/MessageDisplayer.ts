@@ -5,10 +5,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     providedIn: 'root',
 })
 export class MessageDisplayer {
+
     constructor(private snackBar: MatSnackBar) {
-    }
-    public errorMessage(msg: string): void {
-        this.message(msg, 'snackbar-error');
     }
     public infoMessage(msg: string): void {
         this.message(msg, 'snackbar-info');

@@ -14,4 +14,5 @@ Run `npm run build`. The result of the build will be stored in the `dist/` direc
 
 ## Running unit tests
 
-Run `npm test`
+Make sure firebase emulators are installed by running `firebase init emulators`.
+Then, run `npm test`

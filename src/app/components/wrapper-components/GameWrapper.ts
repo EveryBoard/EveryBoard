@@ -17,7 +17,7 @@ export class GameWrapperMessages {
 
     public static readonly NOT_YOUR_TURN: string = $localize`Ce n'est pas votre tour !`;
 
-    public static readonly NO_CLONING_FEATURE: string = $localize`Clôner une partie n'est pas encore possible. Cette fonctionnalité pour être implémentée dans un futur incertain.`;
+    public static readonly NO_CLONING_FEATURE: string = $localize`Clôner une partie n'est pas encore possible. Cette fonctionnalité pourrait être implémentée dans un futur incertain.`;
 }
 @Component({ template: '' })
 export abstract class GameWrapper {
@@ -82,7 +82,7 @@ export abstract class GameWrapper {
         this.gameComponent.canUserPlay = this.onUserClick; // So that when the game component click
         // the game wrapper can act accordly
         this.gameComponent.isPlayerTurn = this.isPlayerTurn;
-        this.gameComponent.cancelMoveOnWrapper = this.onCancelMove; // Mostly for interception by DidacticialGameWrapper
+        this.gameComponent.cancelMoveOnWrapper = this.onCancelMove; // Mostly for interception by TutorialGameWrapper
 
         this.gameComponent.observerRole = this.observerRole;
         this.canPass = this.gameComponent.canPass;

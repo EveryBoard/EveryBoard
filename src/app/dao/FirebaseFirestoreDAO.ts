@@ -1,4 +1,4 @@
-import { AngularFirestore, DocumentReference, CollectionReference, Action, DocumentSnapshot } from '@angular/fire/firestore';
+import { AngularFirestore, DocumentReference, Action, DocumentSnapshot } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import firebase from 'firebase/app';
@@ -20,9 +20,9 @@ export interface IFirebaseFirestoreDAO<T extends JSONObject> {
 
     getObsById(id: string): Observable<{id: string, doc: T}>;
 
-    observingWhere(field: string,
-        condition: firebase.firestore.WhereFilterOp,
-        value: any,
+    observingWhere(field: NonNullable<string>,
+        condition: NonNullable<firebase.firestore.WhereFilterOp>,
+        value: NonNullable<unknown>,
         callback: FirebaseCollectionObserver<T>): () => void;
 }
 
@@ -60,19 +60,15 @@ export abstract class FirebaseFirestoreDAO<T extends JSONObject> implements IFir
                 };
             }));
     }
-    public observingWhere(field: string,
-                          condition: firebase.firestore.WhereFilterOp,
-                          value: any,
+    public observingWhere(field: NonNullable<string>,
+                          condition: NonNullable<firebase.firestore.WhereFilterOp>,
+                          value: NonNullable<unknown>,
                           callback: FirebaseCollectionObserver<T>)
     : () => void
     {
-        let collection: CollectionReference | firebase.firestore.Query<firebase.firestore.DocumentData> =
-            this.afs.collection(this.collectionName).ref;
-        if (field && condition && value) {
-            collection = collection.where(field, condition, value);
-        }
-        return collection.where(field, condition, value)
-            .onSnapshot((snapshot) => {
+        return this.afs.collection(this.collectionName).ref
+            .where(field, condition, value)
+            .onSnapshot((snapshot: firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>) => {
                 const createdDocs: {doc: T, id: string}[] = [];
                 const modifiedDocs: {doc: T, id: string}[] = [];
                 const deletedDocs: {doc: T, id: string}[] = [];
@@ -82,9 +78,17 @@ export abstract class FirebaseFirestoreDAO<T extends JSONObject> implements IFir
                             id: change.doc.id,
                             doc: change.doc.data() as T,
                         };
-                        if (change.type === 'added') createdDocs.push(doc);
-                        else if (change.type === 'modified') modifiedDocs.push(doc);
-                        else if (change.type === 'removed') deletedDocs.push(doc);
+                        switch (change.type) {
+                            case 'added':
+                                createdDocs.push(doc);
+                                break;
+                            case 'modified':
+                                modifiedDocs.push(doc);
+                                break;
+                            case 'removed':
+                                deletedDocs.push(doc);
+                                break;
+                        }
                     });
                 if (createdDocs.length > 0) {
                     display(FirebaseFirestoreDAO.VERBOSE,

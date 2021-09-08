@@ -119,6 +119,25 @@ describe('YinshRules', () => {
 
             expectMoveSuccess(state, move, expectedState);
         });
+        it('should forbid a move in an invalid direction', () => {
+            const board: YinshBoard = YinshBoard.of([
+                [N, N, N, N, N, N, _, _, _, _, N],
+                [N, N, N, N, _, _, _, _, _, _, _],
+                [N, N, N, A, _, _, _, _, _, _, _],
+                [N, N, _, _, _, _, _, _, _, _, _],
+                [N, _, _, _, _, _, _, _, _, _, _],
+                [N, _, _, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, _, _, N, N],
+                [_, _, _, _, _, _, _, _, N, N, N],
+                [_, _, _, _, _, _, _, N, N, N, N],
+                [N, _, _, _, _, N, N, N, N, N, N],
+            ]);
+            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(5, 8)), []);
+
+            expectMoveFailure(state, move, YinshFailure.MOVE_DIRECTION_INVALID);
+        });
         it('should forbid a move that starts from an non-ring', () => {
             const board: YinshBoard = YinshBoard.of([
                 [N, N, N, N, N, N, _, _, _, _, N],

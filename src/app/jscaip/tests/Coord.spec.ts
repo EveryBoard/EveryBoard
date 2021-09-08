@@ -54,10 +54,23 @@ describe('Coord', () => {
             .toThrowError('Cannot calculate distance with non aligned coords.');
     });
     describe('getDirectionToward', () => {
-        it('Should give general direction and hence TODO be renamed', () => {
+        it('Should give direction', () => {
             const center: Coord = new Coord(0, 0);
-            const lowLeft: Coord = new Coord(2, 4);
-            expect(center.getDirectionToward(lowLeft)).toEqual(Direction.DOWN_RIGHT);
+            const lowRight: Coord = new Coord(2, 2);
+            expect(center.getDirectionToward(lowRight).get()).toEqual(Direction.DOWN_RIGHT);
+        });
+        it('Should fail when given invalid direction', () => {
+            const center: Coord = new Coord(0, 0);
+            const lowRight: Coord = new Coord(2, 4);
+            let success: boolean;
+            try {
+                center.getDirectionToward(lowRight).get();
+                success = true;
+            } catch (error) {
+                success = false;
+            } finally {
+                expect(success).toBeFalse();
+            }
         });
     });
 });

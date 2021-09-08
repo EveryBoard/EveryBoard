@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { HexagonalGameComponent } from 'src/app/components/game-components/abstract-game-component/HexagonalGameComponent';
+import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { Coord } from 'src/app/jscaip/Coord';
 import { BaseDirection, Direction } from 'src/app/jscaip/Direction';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
@@ -12,13 +13,14 @@ import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { AbaloneDummyMinimax } from './AbaloneDummyMinimax';
 import { AbaloneFailure } from './AbaloneFailure';
 import { AbaloneGameState } from './AbaloneGameState';
 import { AbaloneMove } from './AbaloneMove';
 import { AbaloneLegalityStatus, AbaloneRules } from './AbaloneRules';
+import { abaloneTutorial } from './AbaloneTutorial';
 
 export class HexaDirArrow {
     public constructor(public startCenter: Coord,
@@ -39,6 +41,8 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
     public hexaLayout: HexaLayout;
 
     public encoder: MoveEncoder<AbaloneMove> = AbaloneMove.encoder;
+
+    public tutorial: TutorialStep[] = abaloneTutorial;
 
     public moveds: Coord[] = [];
 
@@ -101,7 +105,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
     }
     private showSideStepMove(move: AbaloneMove): void {
         let last: Coord = move.lastPiece.get();
-        const alignement: HexaDirection = move.coord.getDirectionToward(last);
+        const alignement: HexaDirection = move.coord.getDirectionToward(last).get();
         last = last.getNext(alignement);
         let processed: Coord = move.coord;
         while (processed.equals(last) === false) {
@@ -167,9 +171,9 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
             }
             let theoritical: AbaloneMove;
             if (single) {
-                theoritical = AbaloneMove.fromSingleCoord(firstPiece, dir);
+                theoritical = AbaloneMove.fromSingleCoord(firstPiece, dir).get();
             } else {
-                theoritical = AbaloneMove.fromDoubleCoord(firstPiece, lastPiece, dir);
+                theoritical = AbaloneMove.fromDoubleCoord(firstPiece, lastPiece, dir).get();
             }
             const isLegal: LegalityStatus = this.rules.isLegal(theoritical, state);
             if (isLegal.legal.isSuccess()) {
@@ -219,7 +223,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
         if (distance > 2) {
             return this.cancelMove(AbaloneFailure.CANNOT_MOVE_MORE_THAN_THREE_PIECES);
         }
-        const alignement: BaseDirection = firstPiece.getDirectionToward(coord);
+        const alignement: BaseDirection = firstPiece.getDirectionToward(coord).get();
         this.selecteds = [firstPiece];
         for (let i: number = 0; i < distance; i++) {
             this.selecteds.push(firstPiece.getNext(alignement, i + 1));
@@ -254,9 +258,9 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
         return this.tryExtension(clicked, firstPiece, lastPiece);
     }
     private async tryExtension(clicked: Coord, firstPiece: Coord, lastPiece: Coord): Promise<MGPValidation> {
-        const alignement: MGPOptional<Direction> = firstPiece.tryGetDirection(clicked);
-        if (alignement.isPresent()) {
-            const secondAlignement: MGPOptional<Direction> = lastPiece.tryGetDirection(clicked);
+        const alignement: MGPFallible<Direction> = Direction.factory.fromMove(firstPiece, clicked);
+        if (alignement.isSuccess()) {
+            const secondAlignement: MGPFallible<Direction> = Direction.factory.fromMove(lastPiece, clicked);
             if (alignement.equals(secondAlignement)) {
                 // then it's an extension of the line
                 const firstDistance: number = firstPiece.getDistance(clicked);
@@ -294,10 +298,10 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
         let move: AbaloneMove;
         const firstPiece: Coord = this.selecteds[0];
         if (this.selecteds.length === 1) {
-            move = AbaloneMove.fromSingleCoord(firstPiece, dir);
+            move = AbaloneMove.fromSingleCoord(firstPiece, dir).get();
         } else {
             const lastPiece: Coord = this.selecteds[this.selecteds.length - 1];
-            move = AbaloneMove.fromDoubleCoord(firstPiece, lastPiece, dir);
+            move = AbaloneMove.fromDoubleCoord(firstPiece, lastPiece, dir).get();
         }
         return this.chooseMove(move, state, this.scores[0], this.scores[1]);
     }

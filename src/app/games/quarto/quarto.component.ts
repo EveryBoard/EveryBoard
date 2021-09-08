@@ -10,6 +10,8 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { quartoTutorial } from './QuartoTutorial';
 
 @Component({
     selector: 'app-quarto',
@@ -31,6 +33,8 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
     public victoriousCoords: Coord[] = [];
 
     public encoder: MoveEncoder<QuartoMove> = QuartoMove.encoder;
+
+    public tutorial: TutorialStep[] = quartoTutorial;
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);

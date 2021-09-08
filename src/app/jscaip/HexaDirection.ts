@@ -1,4 +1,5 @@
 import { assert } from 'src/app/utils/utils';
+import { MGPFallible } from '../utils/MGPFallible';
 import { BaseDirection, DirectionFactory } from './Direction';
 import { NumberEncoder } from './Encoder';
 
@@ -60,10 +61,11 @@ export class HexaDirection extends BaseDirection {
             case (HexaDirection.LEFT): return 300;
         }
     }
-    private constructor(public readonly x: 0|1|-1, public readonly y: 0|1|-1) {
-        super();
+    private constructor(x: 0|1|-1, y: 0|1|-1) {
+        super(x, y);
     }
     public getOpposite(): HexaDirection {
-        return HexaDirection.factory.of(-this.x, -this.y);
+        const opposite: MGPFallible<HexaDirection> = HexaDirection.factory.of(-this.x, -this.y);
+        return opposite.get();
     }
 }

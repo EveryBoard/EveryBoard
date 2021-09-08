@@ -37,8 +37,8 @@ import { OnlineGameWrapperComponent }
     from './components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
 import { LocalGameWrapperComponent }
     from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
-import { DidacticialGameWrapperComponent }
-    from './components/wrapper-components/didacticial-game-wrapper/didacticial-game-wrapper.component';
+import { TutorialGameWrapperComponent }
+    from './components/wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component';
 import { GameIncluderComponent } from './components/game-components/game-includer/game-includer.component';
 import { InscriptionComponent } from './components/normal-component/inscription/inscription.component';
 import { ConfirmInscriptionComponent }
@@ -47,8 +47,8 @@ import { LocalGameCreationComponent }
     from './components/normal-component/local-game-creation/local-game-creation.component';
 import { OnlineGameCreationComponent }
     from './components/normal-component/online-game-creation/online-game-creation.component';
-import { DidacticialGameCreationComponent }
-    from './components/normal-component/didacticial-game-creation/didacticial-game-creation.component';
+import { TutorialGameCreationComponent }
+    from './components/normal-component/tutorial-game-creation/tutorial-game-creation.component';
 import { HumanDuration } from './utils/TimeUtils';
 import { NextGameLoadingComponent } from './components/normal-component/next-game-loading/next-game-loading.component';
 
@@ -74,6 +74,9 @@ import { SiamComponent } from './games/siam/siam.component';
 import { SixComponent } from './games/six/six.component';
 import { TablutComponent } from './games/tablut/tablut.component';
 import { YinshComponent } from './games/yinsh/Yinsh.component';
+import { environment } from 'src/environments/environment';
+
+import { USE_EMULATOR as USE_FIRESTORE_EMULATOR } from '@angular/fire/firestore';
 
 // time scp -C -r ./dist/pantheonsgame/* gaviall@awesom.eu:/home/gaviall/www/pantheonsgame/
 
@@ -89,8 +92,8 @@ const routes: Route [] = [
     { path: 'play/:compo/:id', component: OnlineGameWrapperComponent, canActivate: [EmailVerified] },
     { path: 'local', component: LocalGameCreationComponent },
     { path: 'local/:compo', component: LocalGameWrapperComponent },
-    { path: 'didacticial', component: DidacticialGameCreationComponent },
-    { path: 'didacticial/:compo', component: DidacticialGameWrapperComponent },
+    { path: 'tutorial', component: TutorialGameCreationComponent },
+    { path: 'tutorial/:compo', component: TutorialGameWrapperComponent },
     { path: '', component: WelcomeComponent },
     { path: '**', component: WelcomeComponent },
 ];
@@ -111,12 +114,12 @@ const routes: Route [] = [
         CountDownComponent,
         OnlineGameWrapperComponent,
         LocalGameWrapperComponent,
-        DidacticialGameWrapperComponent,
+        TutorialGameWrapperComponent,
         GameIncluderComponent,
         ConfirmInscriptionComponent,
         LocalGameCreationComponent,
         OnlineGameCreationComponent,
-        DidacticialGameCreationComponent,
+        TutorialGameCreationComponent,
 
         AbaloneComponent,
         AwaleComponent,
@@ -172,12 +175,13 @@ const routes: Route [] = [
         RouterModule.forRoot(routes, { useHash: false }),
         ReactiveFormsModule,
         FormsModule,
-        AngularFireModule.initializeApp(firebaseConfig),
+        AngularFireModule.initializeApp(environment.useEmulators ? environment.emulatorConfig : firebaseConfig),
         AngularFirestoreModule,
         BrowserAnimationsModule,
         MaterialModule,
     ],
     providers: [
+        { provide: USE_FIRESTORE_EMULATOR, useValue: environment.useEmulators ? ['localhost', 8080] : undefined },
         AuthenticationService,
         GameService,
         JoinerService,

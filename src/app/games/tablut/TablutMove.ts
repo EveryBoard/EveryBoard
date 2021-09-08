@@ -44,7 +44,7 @@ export class TablutMove extends MoveCoordToCoord {
         if (!end.isInRange(TablutRulesConfig.WIDTH, TablutRulesConfig.WIDTH)) {
             throw new Error('Landing coord of TablutMove must be on the board, not at ' + end.toString() + '.');
         }
-        const dir: Direction = start.getDirectionToward(end);
+        const dir: Direction = start.getDirectionToward(end).get();
         if (dir.isDiagonal()) {
             throw new Error('TablutMove cannot be diagonal.');
         }
