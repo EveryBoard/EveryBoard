@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --configuration=fr",
-    "build": "ng build --localize --configuration=production,fr",
+    "build": "ng build --localize --configuration=production && cp index.html dist/pantheonsgame/",
     "test": "bash ./scripts/test.sh",
     "test:ci": "bash ./scripts/test.sh --watch=false --browsers=ChromeHeadlessCustom",
     "lint": "eslint --ext ts ./",

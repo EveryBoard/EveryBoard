@@ -36,7 +36,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     public changeLanguage(language: string): void {
         localStorage.setItem('locale', language.toLowerCase());
         // Reload app for selected language
-        window.open(environment.root, '_self');
+        window.open(environment.root + '/' + language.toLowerCase(), '_self');
     }
     public ngOnDestroy(): void {
         this.joueurSub.unsubscribe();

@@ -62,8 +62,7 @@
                             "extractLicenses": true,
                             "vendorChunk": false,
                             "buildOptimizer": true,
-                            "baseHref": "/",
-                            "localize": ["fr"]
+                            "localize": ["fr", "en"]
                         },
                         "fr": {
                             "localize": ["fr"]
@@ -76,7 +75,7 @@
                                 }
                             ],
                             "baseHref": "/board-dev/",
-                            "localize": ["fr"]
+                            "localize": ["fr", "en"]
                         },
                         "test": {
                             "fileReplacements": [
@@ -155,7 +154,7 @@
                 }
             },
             "i18n": {
-                "sourceLocale": "en-US",
+                "sourceLocale": "en",
                 "locales": {
                     "fr": "translations/messages.fr.xlf"
                 }

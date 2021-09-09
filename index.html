@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script type="text/javascript">
+
+//////////////
+/// CONFIG ///
+//////////////
+
+var defaultLocale = 'en';
+var routing = {
+  "en": 'en/',
+  "fr": 'fr/'
+};
+
+var enableLog = true;
+
+/////////////////
+/// FUNCTIONS ///
+/////////////////
+
+function getBrowserLanguage() {
+  if (!navigator) return null;
+  if (navigator.languages && navigator.languages.length > 0) return navigator.languages[0];
+  if (navigator.userLanguage) return navigator.userLanguage;
+  if (navigator.browserLanguage) return navigator.browserLanguage;
+  return navigator.language;
+}
+
+function getSubPath() {
+  var url = window.location.href;
+  var domainNameIndex = url.indexOf("//");
+  var firstSlashIndex = url.indexOf("/", domainNameIndex + 2);
+  if (firstSlashIndex === -1) return null;
+  var subPath = url.substring(firstSlashIndex + 1);
+  return subPath;
+}
+
+function getQueryParam(name) {
+  var url = window.location.href;
+  name = name.replace(/[\[\]]/g, '\\$&');
+  var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+      results = regex.exec(url);
+  if (!results) return null;
+  if (!results[2]) return '';
+  return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+
+function redirectToRoute(locale, subPath) {
+  if (enableLog) console.log('matching locale ' + locale + ' ...');
+  var route = routing[locale];
+  if (route != null) {
+    if (enableLog) console.log('will redirect to ' + route);
+    if (subPath) {
+      if (!route.endsWith('/')) route += '/';
+      route += subPath;
+      if (enableLog) console.log('full url will be ' + route);
+    }
+    window.location.replace(route);
+    return;
+  }
+  
+  var parts = locale.split('-');
+  if (parts == null || parts.length <= 1) return;
+  
+  if (enableLog) console.log("will try to use just the language");
+  redirectToRoute(parts[0], subPath);
+}
+
+////////////////
+/// REDIRECT ///
+////////////////
+
+var locale = getQueryParam('locale');
+var saveLocale = true;
+if (enableLog) console.log('url locale: ' + locale);
+
+if (locale == null) {
+  locale = localStorage.getItem('locale');
+  if (enableLog) console.log('stored locale: ' + locale);
+  if (locale != null) saveLocale = false;
+}
+
+if (locale == null) {
+  locale = getBrowserLanguage();
+  if (enableLog) console.log('browser locale: ' + locale);
+}
+
+if (saveLocale === true) {
+  if (enableLog) console.log('storing locale: ' + locale);
+  localStorage.setItem('locale', locale);
+}
+
+if (locale == null) {
+  if (enableLog) console.log('will use default ' + defaultLocale);
+  locale = defaultLocale;
+}
+
+locale = locale.toLowerCase();
+var subPath = getSubPath();
+redirectToRoute(locale, subPath);
+</script>
+</body>
+</html>

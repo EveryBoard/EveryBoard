@@ -43,7 +43,7 @@ describe('HeaderComponent', () => {
         // then the default language is fr
         expect(testUtils.getComponent().currentLanguage).toBe('FR');
     }));
-    it('should update localStorage when a language change is made', fakeAsync(async() => {
+    it('should update localStorage and redirect when a language change is made', fakeAsync(async() => {
         spyOn(localStorage, 'setItem');
         spyOn(window, 'open').and.returnValue(null);
         // given that the header is loaded
@@ -52,6 +52,6 @@ describe('HeaderComponent', () => {
         testUtils.clickElement('#language_FR');
         // then the language is changed and the page is reloaded
         expect(localStorage.setItem).toHaveBeenCalledWith('locale', 'fr');
-        expect(window.open).toHaveBeenCalledWith(environment.root, '_self');
+        expect(window.open).toHaveBeenCalledWith(environment.root + '/fr', '_self');
     }));
 });
