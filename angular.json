@@ -29,7 +29,7 @@
                         ],
                         "scripts": [
                             "./node_modules/jquery/dist/jquery.js",
-                            "./node_modules/popper.js/dist/umd/popper.js",
+                            "./node_modules/popper.js/dist/umd/popper.js"
                         ],
                         "vendorChunk": true,
                         "extractLicenses": false,
@@ -37,7 +37,7 @@
                         "sourceMap": true,
                         "optimization": false,
                         "namedChunks": true,
-                        "aot": true,
+                        "aot": true
                     },
                     "configurations": {
                         "production": {
@@ -84,7 +84,16 @@
                                     "with": "src/environments/environment.test.ts"
                                 }
                             ],
-                            "baseHref": "/board-test/",
+                            "baseHref": "/board-test/"
+                        },
+                        "local": {
+                            "fileReplacements": [
+                                {
+                                    "replace": "src/environments/environment.ts",
+                                    "with": "src/environments/environment.local.ts"
+                                }
+                            ],
+                            "baseHref": "/board-test/"
                         }
                     }
                 },
