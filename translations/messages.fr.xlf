@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-  <file source-language="en-US" datatype="plaintext" original="ng2.template" target-language="fr">
+  <file source-language="en" datatype="plaintext" original="ng2.template" target-language="fr">
     <body>
       <trans-unit id="2576375399155055140" datatype="html">
         <source>Show the chat (<x id="INTERPOLATION" equiv-text="{{ this.unreadMessages }}"/> new message(s))</source>
@@ -1521,7 +1521,7 @@
         <source>Congratulations, you have gotten back 4 of your pieces and captured 2 of the opponent&apos;s.
         The most you can get is 3 per capture.</source>
         <target>Bravo, vous avez récupéré 4 de vos pièces et capturé 2 pièces de l&apos;adversaire.
-        Le maximum possible étant 3 par captures.</target>
+        Le maximum possible étant 3 par capture.</target>
       </trans-unit>
       <trans-unit id="3200525134996933550" datatype="html">
         <source>Failed, the best capture was taking 2 of your opponent&apos;s pieces</source>
@@ -1575,15 +1575,15 @@
         <source>Preliminary information</source>
         <target>Informations préalables</target>
       </trans-unit>
-      <trans-unit id="352355973280326398" datatype="html">
+      <trans-unit id="5815912088945784390" datatype="html">
         <source>The game of Go is played on a board called a Goban, and the stones are placed on the intersections.
         The traditional board is made of 19x19 intersections, but on this website we have the 13x13 board.
         (For shorter parts, 9x9 and 5x5 boards exist, but are not yet available here).
-        For this tutorial, we will use a small 5x5 for pedagogical purposes.</source>
+        For this tutorial, we will use a smaller board for pedagogical purposes.</source>
         <target>Le jeu de Go se joue sur un plateau appelé Goban, et les pierres sont placées sur les intersections.
         Le plateau traditionnel fait 19x19 intersections, mais le 13x13 est implémenté sur ce site.
         (Pour des parties plus courtes, le 9x9 et 5x5 existent, mais ne sont pas encore disponibles).
-        Pour ce tutoriel, nous utiliserons un petit 5x5 à dans un but pédagogique.</target>
+        Pour ce tutoriel, nous utiliserons de plus petits plateaux à des fins pédagogiques.</target>
       </trans-unit>
       <trans-unit id="7863035928636323211" datatype="html">
         <source>The goal of the game is to have the most points at the end of the game.

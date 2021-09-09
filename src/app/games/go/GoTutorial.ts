@@ -16,7 +16,7 @@ export const goTutorial: TutorialStep[] = [
         $localize`The game of Go is played on a board called a Goban, and the stones are placed on the intersections.
         The traditional board is made of 19x19 intersections, but on this website we have the 13x13 board.
         (For shorter parts, 9x9 and 5x5 boards exist, but are not yet available here).
-        For this tutorial, we will use a small 5x5 for pedagogical purposes.`,
+        For this tutorial, we will use a smaller board for pedagogical purposes.`,
         GoPartSlice.getInitialSlice(),
     ),
     TutorialStep.informational(

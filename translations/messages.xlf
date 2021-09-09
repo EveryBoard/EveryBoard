@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-  <file source-language="en-US" datatype="plaintext" original="ng2.template">
+  <file source-language="en" datatype="plaintext" original="ng2.template">
     <body>
       <trans-unit id="2576375399155055140" datatype="html">
         <source>Show the chat (<x id="INTERPOLATION" equiv-text="{{ this.unreadMessages }}"/> new message(s))</source>
@@ -1110,11 +1110,11 @@
       <trans-unit id="1472088308118018916" datatype="html">
         <source>Preliminary information</source>
       </trans-unit>
-      <trans-unit id="352355973280326398" datatype="html">
+      <trans-unit id="5815912088945784390" datatype="html">
         <source>The game of Go is played on a board called a Goban, and the stones are placed on the intersections.
         The traditional board is made of 19x19 intersections, but on this website we have the 13x13 board.
         (For shorter parts, 9x9 and 5x5 boards exist, but are not yet available here).
-        For this tutorial, we will use a small 5x5 for pedagogical purposes.</source>
+        For this tutorial, we will use a smaller board for pedagogical purposes.</source>
       </trans-unit>
       <trans-unit id="7863035928636323211" datatype="html">
         <source>The goal of the game is to have the most points at the end of the game.
