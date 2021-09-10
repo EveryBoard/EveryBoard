@@ -101,9 +101,6 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
         }
     }
     public updateCurrentScrollPosition(): void {
-        if (this.chatDiv == null) {
-            return;
-        }
         const threshold: number = 10;
         const position: number = this.chatDiv.nativeElement.scrollTop + this.chatDiv.nativeElement.offsetHeight;
         const height: number = this.chatDiv.nativeElement.scrollHeight;

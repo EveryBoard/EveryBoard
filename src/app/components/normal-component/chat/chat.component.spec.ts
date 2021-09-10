@@ -113,17 +113,12 @@ describe('ChatComponent', () => {
         expect(switchButton.nativeElement.innerText).toEqual('Afficher le chat (pas de nouveau message)');
 
         // when a new message is received
-        await chatDAO.update('fauxChat', { messages: [{
-            sender: 'roger',
-            content: 'Saluuuut',
-            currentTurn: 0,
-            postedTime: 5,
-        }] });
+        await chatDAO.update('fauxChat', { messages: [MSG, MSG, MSG] });
         testUtils.detectChanges();
 
         // then the button shows how many new messages there are
         switchButton = testUtils.findElement('#switchChatVisibilityButton');
-        expect(switchButton.nativeElement.innerText).toEqual('Afficher le chat (1 nouveau message)');
+        expect(switchButton.nativeElement.innerText).toEqual('Afficher le chat (3 nouveaux messages)');
     }));
     it('should scroll to the bottom on load', fakeAsync(async() => {
         // Given a visible chat with multiple messages
