@@ -313,7 +313,7 @@ describe('KamisadoRules:', () => {
         const slice: KamisadoPartSlice =
             new KamisadoPartSlice(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
         const moves: KamisadoMove[] = KamisadoRules.getListMovesFromSlice(slice);
-        expect(KamisadoRules.canOnlyPass(slice)).toBeTrue();
+        expect(KamisadoRules.mustPass(slice)).toBeTrue();
         expect(moves.length).toEqual(1);
         const onlyMove: KamisadoMove = moves[0];
         expect(onlyMove).toEqual(KamisadoMove.PASS);

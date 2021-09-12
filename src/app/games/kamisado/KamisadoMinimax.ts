@@ -17,7 +17,7 @@ export class KamisadoMinimax extends Minimax<KamisadoMove, KamisadoPartSlice> {
     public getBoardValue(node: KamisadoNode): NodeUnheritance {
         const slice: KamisadoPartSlice = node.gamePartSlice;
         const player: Player = slice.getCurrentPlayer();
-        if (KamisadoRules.canOnlyPass(slice) && slice.alreadyPassed) {
+        if (KamisadoRules.mustPass(slice) && slice.alreadyPassed) {
             return new NodeUnheritance(player.getDefeatValue());
         }
 

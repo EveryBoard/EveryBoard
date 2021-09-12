@@ -132,7 +132,7 @@ export class SimpleComponentTestUtils<T> {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(elementName + ' should exist').toBeTruthy();
         const elementClasses: string[] = element.attributes.class.split(' ').sort();
-        expect(elementClasses).toContain(class_);
+        expect(elementClasses).withContext(elementName + ' should contain').toContain(class_);
     }
     public expectElementNotToExist(elementName: string): void {
         const element: DebugElement = this.findElement(elementName);

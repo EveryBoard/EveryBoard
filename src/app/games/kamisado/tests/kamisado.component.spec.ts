@@ -61,6 +61,25 @@ describe('KamisadoComponent', () => {
 
         expect((await componentTestUtils.getComponent().pass()).isSuccess()).toBeTrue();
     }));
+    it('should forbid all click in stuch position and ask to pass', fakeAsync(async() => {
+        // given a board where the piece that must move is stuck
+        const board: number[][] = [
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [b, r, _, _, _, _, _, _],
+            [R, G, _, _, _, _, _, _], // red is stuck
+        ];
+        const slice: KamisadoPartSlice =
+            new KamisadoPartSlice(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
+        componentTestUtils.setupSlice(slice);
+
+        // when clicking any piece, it should say that player must pass
+        await componentTestUtils.expectClickFailure('#click_1_7', RulesFailure.MUST_PASS);
+    }));
     it('should forbid de-selecting a piece that is pre-selected', fakeAsync(async() => {
         const board: number[][] = [
             [_, _, _, _, _, _, _, _],

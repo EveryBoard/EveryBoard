@@ -13,9 +13,9 @@ export class RulesFailure {
 
     public static readonly MUST_LAND_ON_EMPTY_CASE: string = $localize`Vous devez déposer votre pièce sur une case vide.`;
 
-    public static readonly CANNOT_PASS: string = $localize`Vous ne pouvez pas passer votre tour.`
+    public static readonly CANNOT_PASS: string = $localize`Vous ne pouvez pas passer votre tour.`;
 
-    public static readonly CAN_ONLY_PASS: string = $localize`Vous êtes obligés de passer votre tour.`
+    public static readonly MUST_PASS: string = $localize`Vous êtes obligés de passer votre tour.`;
 
     public static readonly MUST_CHOOSE_OWN_PIECE_NOT_EMPTY: string = $localize`Vous avez sélectionné une case vide, vous devez sélectionner l'une de vos pièces.`;
 

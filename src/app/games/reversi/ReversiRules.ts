@@ -167,7 +167,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
             return {
                 legal: ReversiRules.playerCanOnlyPass(slice) ?
                     MGPValidation.SUCCESS :
-                    MGPValidation.failure(RulesFailure.CAN_ONLY_PASS),
+                    MGPValidation.failure(RulesFailure.MUST_PASS),
                 switched: null,
             };
         }
