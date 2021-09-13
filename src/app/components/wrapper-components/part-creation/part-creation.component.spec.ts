@@ -1,14 +1,13 @@
 import { TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 import { PartCreationComponent } from './part-creation.component';
 import { JoinerService } from 'src/app/services/JoinerService';
-import { JoinerDAO } from 'src/app/dao/JoinerDAO';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
-import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
-import { PartDAO } from 'src/app/dao/PartDAO';
+import { JoinerDAO } from 'src/app/dao/JoinerDAO';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
+import { PartDAO } from 'src/app/dao/PartDAO';
 import { ChatDAO } from 'src/app/dao/ChatDAO';
-import { IPart } from 'src/app/domain/icurrentpart';
 import { JoueursDAO } from 'src/app/dao/JoueursDAO';
+import { IPart } from 'src/app/domain/icurrentpart';
 import { IJoueur } from 'src/app/domain/iuser';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { FirstPlayer, PartStatus, PartType } from 'src/app/domain/ijoiner';
@@ -22,16 +21,16 @@ describe('PartCreationComponent:', () => {
     let component: PartCreationComponent;
 
     let joinerDAOMock: JoinerDAO;
-    let partDAOMock: PartDAOMock;
+    let partDAOMock: PartDAO;
     let joueursDAOMock: JoueursDAO;
 
-    const selectCustomGameAndChangeConfig: () => Promise<void> = async() => {
+    async function selectCustomGameAndChangeConfig(): Promise<void> {
         const elementExist: boolean = await testUtils.clickElement('#partTypeCustom');
         expect(elementExist).toBeTrue();
         component.configFormGroup.get('maximalMoveDuration').setValue(100);
         component.configFormGroup.get('totalPartDuration').setValue(1000);
         testUtils.detectChanges();
-    };
+    }
     const mockCandidateArrival: () => Promise<void> = async() => {
         await joinerDAOMock.update('joinerId', { candidates: ['firstCandidate'] });
         testUtils.detectChanges();
@@ -51,7 +50,7 @@ describe('PartCreationComponent:', () => {
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(PartCreationComponent);
         const chatDAOMock: ChatDAO = TestBed.inject(ChatDAO);
-        partDAOMock = TestBed.get(PartDAO);
+        partDAOMock = TestBed.inject(PartDAO);
         joinerDAOMock = TestBed.inject(JoinerDAO);
         joueursDAOMock = TestBed.inject(JoueursDAO);
         component = testUtils.getComponent();
@@ -76,12 +75,19 @@ describe('PartCreationComponent:', () => {
         expect(component).withContext('PartCreationComponent should have been created').toBeTruthy();
     }));
     it('Joiner arrival should change joiner doc', fakeAsync(async() => {
+        // given a component where user is firstCandidate
         component.userName = 'firstCandidate';
         await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL.doc);
+
+        // when joiner arrives
+        spyOn(joinerDAOMock, 'update').and.callThrough();
         testUtils.detectChanges();
         tick();
-        testUtils.detectChanges();
 
+        // then the component should have add user and update the joiner
+        expect(joinerDAOMock.update).toHaveBeenCalledOnceWith('joinerId', {
+            candidates: ['firstCandidate'],
+        });
         expect(component.currentJoiner).toEqual(JoinerMocks.WITH_FIRST_CANDIDATE.doc);
     }));
     it(`Joiner arrival should not reset config on creator's side`, fakeAsync(async() => {
@@ -107,7 +113,7 @@ describe('PartCreationComponent:', () => {
         testUtils.detectChanges();
         await testUtils.whenStable();
 
-        // when opponent arrive, is selected and user propose config
+        // when opponent arrives, then is selected, then user proposes config
         await mockCandidateArrival();
         await chooseOpponent();
         await selectCustomGameAndChangeConfig();
@@ -172,7 +178,7 @@ describe('PartCreationComponent:', () => {
             ...JoinerMocks.WITH_ACCEPTED_CONFIG.doc,
             firstPlayer: FirstPlayer.CREATOR.value,
         });
-        const currentPart: IPart = partDAOMock.getStaticDB().get('joinerId').get().subject.value.doc;
+        const currentPart: IPart = await partDAOMock.read('joinerId');
         const expectedPart: IPart = { ...PartMocks.STARTING.doc, beginning: currentPart.beginning };
         expect(currentPart).toEqual(expectedPart);
     }));
@@ -331,11 +337,6 @@ describe('PartCreationComponent:', () => {
             component.userName = 'creator';
             await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL.doc);
             testUtils.detectChanges();
-            await testUtils.whenStable();
-            tick();
-            testUtils.detectChanges();
-            await testUtils.whenStable();
-            tick();
 
             expectAsync(testUtils.clickElement('#firstPlayerCreator')).toBeResolvedTo(true);
             expectAsync(testUtils.clickElement('#partTypeBlitz')).toBeResolvedTo(true);
@@ -443,12 +444,11 @@ describe('PartCreationComponent:', () => {
 
             expect(joinerService.startObserving).not.toHaveBeenCalled();
         }));
-        it('should not fail if joiner update is null, and redirect to server', fakeAsync(async() => {
+        it('should not fail if joiner update is null, and should redirect to server', fakeAsync(async() => {
             component.userName = 'creator';
             await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL.doc);
             testUtils.detectChanges();
             tick();
-            testUtils.detectChanges();
 
             const router: Router = TestBed.inject(Router);
             spyOn(router, 'navigate');

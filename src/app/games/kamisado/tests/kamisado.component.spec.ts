@@ -61,7 +61,7 @@ describe('KamisadoComponent', () => {
 
         expect((await componentTestUtils.getComponent().pass()).isSuccess()).toBeTrue();
     }));
-    it('should forbid all click in stuch position and ask to pass', fakeAsync(async() => {
+    it('should forbid all click in stuck position and ask to pass', fakeAsync(async() => {
         // given a board where the piece that must move is stuck
         const board: number[][] = [
             [_, _, _, _, _, _, _, _],

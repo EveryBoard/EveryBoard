@@ -11,11 +11,11 @@ import { MGPMap } from 'src/app/utils/MGPMap';
 import { ObservableSubject } from 'src/app/utils/ObservableSubject';
 
 export abstract class FirebaseFirestoreDAOMock<T extends JSONObject> implements IFirebaseFirestoreDAO<T> {
+
     public static VERBOSE: boolean = false;
 
-    constructor(
-        private readonly collectionName: string,
-        public VERBOSE: boolean,
+    constructor(public readonly collectionName: string,
+                public VERBOSE: boolean,
     ) {
         this.reset();
     }

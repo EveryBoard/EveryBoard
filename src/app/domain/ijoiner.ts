@@ -1,4 +1,4 @@
-import { JSONObject } from '../utils/utils';
+import { assert, JSONObject } from '../utils/utils';
 import { DomainWrapper } from './DomainWrapper';
 
 export interface IJoiner extends JSONObject {
@@ -40,8 +40,9 @@ export class FirstPlayer {
         switch (value) {
             case 'CREATOR': return FirstPlayer.CREATOR;
             case 'RANDOM': return FirstPlayer.RANDOM;
-            case 'CHOSEN_PLAYER': return FirstPlayer.CHOSEN_PLAYER;
-            default: throw new Error('Invalid value for FirstPlayer: ' + value + '.');
+            default:
+                assert(value === 'CHOSEN_PLAYER', 'Invalid value for FirstPlayer: ' + value + '.');
+                return FirstPlayer.CHOSEN_PLAYER;
         }
     }
 }

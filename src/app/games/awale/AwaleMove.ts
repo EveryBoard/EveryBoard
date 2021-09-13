@@ -1,5 +1,6 @@
 import { NumberEncoder } from 'src/app/jscaip/Encoder';
 import { Move } from 'src/app/jscaip/Move';
+import { assert } from 'src/app/utils/utils';
 
 export class AwaleMove extends Move {
 
@@ -22,8 +23,9 @@ export class AwaleMove extends Move {
             case 2: return AwaleMove.TWO;
             case 3: return AwaleMove.THREE;
             case 4: return AwaleMove.FOUR;
-            case 5: return AwaleMove.FIVE;
-            default: throw new Error('Invalid x for AwaleMove: ' + x);
+            default:
+                assert(x === 5, 'Invalid x for AwaleMove: ' + x);
+                return AwaleMove.FIVE;
         }
     }
     private constructor(public readonly x: number) {
