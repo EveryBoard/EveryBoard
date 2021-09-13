@@ -20,8 +20,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     public ngOnInit(): void {
         this.joueurSub = this.authenticationService.getJoueurObs()
             .subscribe((joueur: { pseudo: string, verified: boolean}) => {
-                if (joueur) this.userName = joueur.pseudo;
-                else this.userName = null;
+                this.userName = joueur.pseudo;
             });
     }
     public async logout(): Promise<void> {
