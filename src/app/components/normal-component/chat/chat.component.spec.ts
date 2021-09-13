@@ -71,7 +71,7 @@ describe('ChatComponent', () => {
         fixture.detectChanges();
         let switchButton: DebugElement = fixture.debugElement.query(By.css('#switchChatVisibilityButton'));
         let chat: DebugElement = fixture.debugElement.query(By.css('#chatForm'));
-        expect(switchButton.nativeElement.innerText).toEqual('Réduire le chat (0 nouveau(x) message(s))');
+        expect(switchButton.nativeElement.innerText).toEqual('Hide the chat (0 new message(s))');
         expect(chat).withContext('Chat should be visible on init').toBeTruthy();
 
         component.switchChatVisibility();
@@ -79,7 +79,7 @@ describe('ChatComponent', () => {
 
         switchButton = fixture.debugElement.query(By.css('#switchChatVisibilityButton'));
         chat = fixture.debugElement.query(By.css('#chatForm'));
-        expect(switchButton.nativeElement.innerText).toEqual('Afficher le chat (0 nouveau(x) message(s))');
+        expect(switchButton.nativeElement.innerText).toEqual('Show the chat (0 new message(s))');
         expect(chat).withContext('Chat should be invisible after calling hideChat').toBeFalsy();
         component.ngOnDestroy();
         await fixture.whenStable();
@@ -92,7 +92,7 @@ describe('ChatComponent', () => {
 
         let switchButton: DebugElement = fixture.debugElement.query(By.css('#switchChatVisibilityButton'));
         let chat: DebugElement = fixture.debugElement.query(By.css('#chatForm'));
-        expect(switchButton.nativeElement.innerText).toEqual('Afficher le chat (0 nouveau(x) message(s))');
+        expect(switchButton.nativeElement.innerText).toEqual('Show the chat (0 new message(s))');
         expect(chat).withContext('Chat should be hidden').toBeFalsy();
 
         component.switchChatVisibility();
@@ -100,7 +100,7 @@ describe('ChatComponent', () => {
 
         switchButton = fixture.debugElement.query(By.css('#switchChatVisibilityButton'));
         chat = fixture.debugElement.query(By.css('#chatForm'));
-        expect(switchButton.nativeElement.innerText).toEqual('Réduire le chat (0 nouveau(x) message(s))');
+        expect(switchButton.nativeElement.innerText).toEqual('Hide the chat (0 new message(s))');
         expect(chat).withContext('Chat should be visible after calling show').toBeTruthy();
         component.ngOnDestroy();
         await fixture.whenStable();
@@ -111,7 +111,7 @@ describe('ChatComponent', () => {
         component.switchChatVisibility();
         fixture.detectChanges();
         let switchButton: DebugElement = fixture.debugElement.query(By.css('#switchChatVisibilityButton'));
-        expect(switchButton.nativeElement.innerText).toEqual('Afficher le chat (0 nouveau(x) message(s))');
+        expect(switchButton.nativeElement.innerText).toEqual('Show the chat (0 new message(s))');
 
         await chatDAO.update('fauxChat', { messages: [{
             sender: 'roger',
@@ -122,7 +122,7 @@ describe('ChatComponent', () => {
         fixture.detectChanges();
 
         switchButton = fixture.debugElement.query(By.css('#switchChatVisibilityButton'));
-        expect(switchButton.nativeElement.innerText).toEqual('Afficher le chat (1 nouveau(x) message(s))');
+        expect(switchButton.nativeElement.innerText).toEqual('Show the chat (1 new message(s))');
     }));
     it('should reset new messages count once messages have been read', fakeAsync(async() => {
         AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
@@ -133,13 +133,13 @@ describe('ChatComponent', () => {
         await chatDAO.update('fauxChat', chat);
         fixture.detectChanges();
         let switchButton: DebugElement = fixture.debugElement.query(By.css('#switchChatVisibilityButton'));
-        expect(switchButton.nativeElement.innerText).toEqual('Afficher le chat (1 nouveau(x) message(s))');
+        expect(switchButton.nativeElement.innerText).toEqual('Show the chat (1 new message(s))');
 
         component.switchChatVisibility();
         fixture.detectChanges();
 
         switchButton = fixture.debugElement.query(By.css('#switchChatVisibilityButton'));
-        expect(switchButton.nativeElement.innerText).toEqual('Réduire le chat (0 nouveau(x) message(s))');
+        expect(switchButton.nativeElement.innerText).toEqual('Hide the chat (0 new message(s))');
     }));
     afterAll(() => {
         component.ngOnDestroy();

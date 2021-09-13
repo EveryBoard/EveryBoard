@@ -68,7 +68,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     public showDisconnectedChat(): void {
         const msg: IMessage = {
             sender: 'fake',
-            content: $localize`vous devez être connecté pour voir le chat...`,
+            content: $localize`You must be logged in to see the chat.`,
             postedTime: Date.now(),
             lastTurnThen: null,
         };

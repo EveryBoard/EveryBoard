@@ -68,7 +68,7 @@ describe('GipfComponent', () => {
         const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
         componentTestUtils.setupSlice(slice);
 
-        await componentTestUtils.expectClickFailure('#click_6_3', GipfFailure.NOT_PART_OF_CAPTURE);
+        await componentTestUtils.expectClickFailure('#click_6_3', GipfFailure.MISSING_CAPTURES);
     }));
     it('should highlight initial captures directly', fakeAsync(async() => {
         const board: GipfBoard = GipfBoard.of([
@@ -160,7 +160,7 @@ describe('GipfComponent', () => {
         // Perform the placement to prepare for final capture
         await componentTestUtils.expectClickSuccess('#click_0_3');
         await componentTestUtils.expectClickSuccess('#click_1_3');
-        await componentTestUtils.expectClickFailure('#click_3_3', GipfFailure.NOT_PART_OF_CAPTURE);
+        await componentTestUtils.expectClickFailure('#click_3_3', GipfFailure.MISSING_CAPTURES);
     }));
     it('should perform move after final captures has been done', fakeAsync(async() => {
         const board: GipfBoard = GipfBoard.of([
@@ -374,7 +374,7 @@ describe('GipfComponent', () => {
         await componentTestUtils.expectClickSuccess('#click_3_3');
         await componentTestUtils.expectClickSuccess('#click_4_5');
         await componentTestUtils.expectClickSuccess('#click_4_4');
-        await componentTestUtils.expectClickFailure('#click_3_3', GipfFailure.NOT_PART_OF_CAPTURE);
+        await componentTestUtils.expectClickFailure('#click_3_3', GipfFailure.MISSING_CAPTURES);
 
         componentTestUtils.expectElementToHaveClasses('#case_4_5', ['base']);
         componentTestUtils.expectElementToHaveClasses('#case_3_3', ['base']);

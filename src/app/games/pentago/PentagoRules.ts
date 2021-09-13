@@ -46,7 +46,7 @@ export class PentagoRules extends Rules<PentagoMove, PentagoGameState, PentagoLe
     }
     public isLegal(move: PentagoMove, slice: PentagoGameState): PentagoLegalityStatus {
         if (slice.getPieceAt(move.coord) !== Player.NONE) {
-            return PentagoLegalityStatus.failure(RulesFailure.MUST_LAND_ON_EMPTY_CASE);
+            return PentagoLegalityStatus.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE);
         }
         const postDropState: PentagoGameState = slice.applyLegalDrop(move);
         if (postDropState.neutralBlocks.length === 0) {

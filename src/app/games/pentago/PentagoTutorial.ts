@@ -10,20 +10,13 @@ const O: number = Player.ZERO.value;
 
 export const pentagoTutorial: TutorialStep[] = [
     TutorialStep.informational(
-        $localize`Plateau de départ`,
-        $localize`Le plateau du pentago fait 6 cases de haut et de large, et est composé de quatre blocs, ceux-ci pouvant effectuer des rotations`,
-        new PentagoGameState([
-            [_, _, _, _, _, _],
-            [_, O, _, _, X, _],
-            [_, _, _, _, _, _],
-            [_, _, _, _, _, _],
-            [_, X, _, _, O, _],
-            [_, _, _, _, _, _],
-        ], 10),
+        $localize`Initial board`,
+        $localize`The initial Pentago board is made of 6x6 spaces, subdivided in 4 quadrants, which can each rotate.`,
+        PentagoGameState.getInitialSlice(),
     ),
     TutorialStep.informational(
-        $localize`But du jeu`,
-        $localize`Le but du pentago est d'aligner 5 de vos pièces. Dans le plateau ci-dessous, Foncé gagne.`,
+        $localize`Goal of the game`,
+        $localize`The goal at Pentago is to align 5 of your pieces. In the following board, Dark wins.`,
         new PentagoGameState([
             [O, _, _, O, X, _],
             [O, X, _, _, _, _],
@@ -34,11 +27,11 @@ export const pentagoTutorial: TutorialStep[] = [
         ], 10),
     ).withPreviousMove(PentagoMove.withRotation(0, 0, 0, false)),
     TutorialStep.fromPredicate(
-        $localize`Mouvement simple`,
-        $localize`Chacun à son tour, les joueurs posent une pièce sur le plateau, et effectuent éventuellement une rotation d'un bloc.
-        Tant qu'il existe des blocs neutres, c'est à dire des blocs qui ne changeraient pas après avoir été tournés, l'option de ne pas effectueur de rotation est acceptée.
-        Pour ce faire il faut cliquer sur le rond barré qui apparaît au centre du plateau quand c'est possible.<br/><br/>
-        Faites-le.`,
+        $localize`Simple move`,
+        $localize`At their turn, players put a piece on the board and possibly rotate one quadrant.
+        As long as there are neutral quadrants, i.e., quadrants that would not change after being rotated, a player may skip rotating a quadrant.
+        To do this, you have to click on the crossed circle that appears at the center of the board when it is possible.<br/><br/>
+        Do it.`,
         new PentagoGameState([
             [_, _, _, _, _, _],
             [_, O, _, _, X, _],
@@ -48,19 +41,19 @@ export const pentagoTutorial: TutorialStep[] = [
             [_, _, _, _, _, _],
         ], 10),
         PentagoMove.rotationless(2, 2),
-        (move: PentagoMove, resultingState: PentagoGameState) => {
+        (move: PentagoMove, _: PentagoGameState) => {
             if (move.blockTurned.isPresent()) {
-                return MGPValidation.failure($localize`Vous avez effectué un mouvement avec rotation, cette étape du didacticiel concerne les tours sans rotations!`);
+                return MGPValidation.failure($localize`You have made a move with a rotation. This tutorial step is about moves without rotations!`);
             } else {
                 return MGPValidation.SUCCESS;
             }
         },
-        $localize`Bravo !`,
+        $localize`Congratulations!`,
     ),
     TutorialStep.fromPredicate(
-        $localize`Mouvement avec rotation`,
-        $localize`Après avoir déposé sa pièce, des flèches apparaîtront sur les blocs non neutres.<br/><br/>
-        Cliquez sur l'une d'entre elles et voyez la rotation!`,
+        $localize`Move with rotation`,
+        $localize`After putting a piece, arrows will appear on non-neutral quadrants.<br/><br/>
+        Click on one of them and see the rotation!`,
         new PentagoGameState([
             [_, _, _, _, _, _],
             [_, O, _, _, X, _],
@@ -70,13 +63,13 @@ export const pentagoTutorial: TutorialStep[] = [
             [_, _, _, _, _, _],
         ], 10),
         PentagoMove.withRotation(0, 0, 0, true),
-        (move: PentagoMove, resultingState: PentagoGameState) => {
+        (move: PentagoMove, _: PentagoGameState) => {
             if (move.blockTurned.isPresent()) {
                 return MGPValidation.SUCCESS;
             } else {
-                return MGPValidation.failure($localize`Vous avez effectué un mouvement sans rotation, recommencez!`);
+                return MGPValidation.failure($localize`You made a move without rotation, try again!`);
             }
         },
-        $localize`Bravo ! Note: si tout les blocs sont neutres après que vous ayez déposé votre pièce, il n'y aura pas de rotation!`,
+        $localize`Congratulations! Note that if all quadrants are neutral after you have put your piece, there will be no rotation.`,
     ),
 ];

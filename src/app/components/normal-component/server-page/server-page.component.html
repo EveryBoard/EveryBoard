@@ -5,10 +5,10 @@
                 <table class="table is-fullwidth is-hoverable is-striped">
                     <thead>
                         <tr>
-                            <th class="th" scope="col" i18n>Jeu</th>
-                            <th class="th" scope="col" i18n>Premier joueur</th>
-                            <th class="th" scope="col" i18n>Deuxième joueur</th>
-                            <th class="th" scope="col" i18n>Tour</th>
+                            <th class="th" scope="col" i18n>Game</th>
+                            <th class="th" scope="col" i18n>First player</th>
+                            <th class="th" scope="col" i18n>Second player</th>
+                            <th class="th" scope="col" i18n>Turn</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -19,7 +19,7 @@
                             <td class="td">{{ part.doc.playerZero }}</td>
                             <td class="td">
                                 <ng-container *ngIf="part.doc.playerOne else waitingForOpponent">{{ part.doc.playerOne }}</ng-container>
-                                <ng-template #waitingForOpponent i18n>En attente d'adversaire</ng-template>
+                                <ng-template #waitingForOpponent i18n>Waiting for opponent</ng-template>
                             </td>
                             <td class="td">{{ part.doc.turn }}</td>
                         </tr>
@@ -28,12 +28,12 @@
             </div>
         </div>
     </mat-tab>
-    <mat-tab id="createGameTab" label="Créer">
+    <mat-tab id="createGameTab" i18n-label label="Create">
         <div id="gameCreator" class="box">
             <app-pick-game (pickGame)="pickGame($event)"></app-pick-game>
             <button class="button is-medium is-fullwidth is-primary mb-1"
                     [disabled]="!selectedGame"
-                    (click)="createGame()" i18n>Créer une partie en ligne</button>
+                    (click)="createGame()" i18n>Create an online game</button>
         </div>
     </mat-tab>
     <mat-tab id="chatTab" label="Chat">
@@ -45,10 +45,10 @@
             </div>
             <div class="column is-3">
                 <div id="onlineUser" class="box" style="min-height: 50vh;">
-                    <p i18n>Utilisateurs connectés :</p>
+                    <p i18n>Connected users:</p>
                     <ul>
                         <li *ngFor="let user of activeUsers">
-                            {{ user.doc.pseudo }} :
+                            {{ user.doc.pseudo }}:
                             {{ (1000*user.doc.last_changed.seconds) | date:'HH:mm:ss':'+0100'}}
                         </li>
                     </ul>
