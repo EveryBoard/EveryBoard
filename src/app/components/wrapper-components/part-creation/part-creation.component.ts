@@ -79,6 +79,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
     public configFormGroup: FormGroup;
 
+    public allDocDeleted: boolean = false;
+
     public constructor(public router: Router,
                        public gameService: GameService,
                        public joinerService: JoinerService,
@@ -224,6 +226,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                                                 totalPartDuration);
     }
     private async cancelGameCreation(): Promise<void> {
+        this.allDocDeleted = true;
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.cancelGameCreation');
 
         await this.gameService.deletePart(this.partId);
@@ -235,8 +238,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         await this.chatService.deleteChat(this.partId);
         display(PartCreationComponent.VERBOSE,
                 'PartCreationComponent.cancelGameCreation: game and joiner and chat deleted');
-
-        return Promise.resolve();
+        return;
     }
     private onCurrentJoinerUpdate(iJoinerId: IJoinerId) {
         display(PartCreationComponent.VERBOSE,
@@ -265,7 +267,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.router.navigate(['server']);
     }
     private isGameStarted(joiner: IJoiner): boolean {
-        return joiner != null && (joiner.partStatus === PartStatus.PART_STARTED.value);
+        return joiner != null && joiner.partStatus === PartStatus.PART_STARTED.value;
     }
     private onGameStarted(joiner: IJoiner) {
         display(PartCreationComponent.VERBOSE, { partCreationComponent_onGameStarted: { joiner } });
@@ -288,34 +290,21 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             // We are already observing the creator
             return;
         }
-        const onDocumentCreated: (foundUser: IJoueurId[]) => void = (foundUsers: IJoueurId[]) => {
-            for (const user of foundUsers) {
-                if (user.doc.pseudo === joiner.creator && user.doc.state === 'offline') {
-                    // creator is offline, remove this part
-                    this.cancelGameCreation();
-                }
-            }
-        };
-        const onDocumentModified: (modifiedUsers: IJoueurId[]) => void = (modifiedUsers: IJoueurId[]) => {
+        const destroyDocIfCreatorOffline: (modifiedUsers: IJoueurId[]) => void = (modifiedUsers: IJoueurId[]) => {
             for (const user of modifiedUsers) {
-                if (user.doc.pseudo === joiner.creator && user.doc.state === 'offline') {
-                    this.cancelGameCreation();
-                }
-            }
-        };
-        const onDocumentDeleted: (deletedUsers: IJoueurId[]) => void = (deletedUsers: IJoueurId[]) => {
-            // This should not happen in practice, but if it does we can safely remove the joiner
-            for (const user of deletedUsers) {
-                Utils.handleError('OnlineGameWrapper: Creator was deleted' + user.doc.pseudo);
-                if (user.doc.pseudo === joiner.creator) {
+                assert(user.doc.pseudo === joiner.creator, 'found non creator while observing creator!');
+                if (user.doc.state === 'offline' &&
+                    this.allDocDeleted === false &&
+                    joiner.partStatus !== PartStatus.PART_STARTED.value)
+                {
                     this.cancelGameCreation();
                 }
             }
         };
         const callback: FirebaseCollectionObserver<IJoueur> =
-            new FirebaseCollectionObserver(onDocumentCreated,
-                                           onDocumentModified,
-                                           onDocumentDeleted);
+            new FirebaseCollectionObserver(destroyDocIfCreatorOffline,
+                                           destroyDocIfCreatorOffline,
+                                           destroyDocIfCreatorOffline);
 
         this.creatorSubscription = this.userService.observeUserByPseudo(joiner.creator, callback);
     }
@@ -339,14 +328,12 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         const onDocumentDeleted: (deletedUsers: IJoueurId[]) => void = (deletedUsers: IJoueurId[]) => {
             // This should not happen in practice, but if it does we can safely remove the user from the lobby
             for (const user of deletedUsers) {
-                Utils.handleError('OnlineGameWrapper: ' + user.doc.pseudo + ' was deleted');
                 this.removeUserFromLobby(user.doc.pseudo);
+                Utils.handleError('OnlineGameWrapper: ' + user.doc.pseudo + ' was deleted (' + user.id + ')');
             }
         };
         const callback: FirebaseCollectionObserver<IJoueur> =
-            new FirebaseCollectionObserver(onDocumentCreated,
-                                           onDocumentModified,
-                                           onDocumentDeleted);
+            new FirebaseCollectionObserver(onDocumentCreated, onDocumentModified, onDocumentDeleted);
         for (const candidateName of joiner.candidates) {
             if (this.candidateSubscription.get(candidateName).isAbsent()) {
                 // Subscribe to every new candidate
@@ -415,7 +402,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 display(PartCreationComponent.VERBOSE,
                         'PartCreationComponent.ngOnDestroy: you(creator) about to cancel creation.');
                 await this.cancelGameCreation();
-            } else {
+            } else if (this.allDocDeleted === false) {
                 display(PartCreationComponent.VERBOSE,
                         'PartCreationComponent.ngOnDestroy: you(joiner) about to cancel game joining');
                 await this.joinerService.cancelJoining(this.userName);

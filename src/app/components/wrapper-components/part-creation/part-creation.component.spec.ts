@@ -31,14 +31,14 @@ describe('PartCreationComponent:', () => {
         component.configFormGroup.get('totalPartDuration').setValue(1000);
         testUtils.detectChanges();
     }
-    const mockCandidateArrival: () => Promise<void> = async() => {
+    async function mockCandidateArrival(): Promise<void> {
         await joinerDAOMock.update('joinerId', { candidates: ['firstCandidate'] });
         testUtils.detectChanges();
-    };
-    const chooseOpponent: () => Promise<void> = async() => {
+    }
+    async function chooseOpponent(): Promise<void> {
         await component.selectOpponent('firstCandidate');
         testUtils.detectChanges();
-    };
+    }
     const CREATOR: IJoueur = {
         pseudo: 'creator',
         state: 'online',
@@ -217,6 +217,22 @@ describe('PartCreationComponent:', () => {
 
                 testUtils.expectElementNotToExist('#selected_firstCandidate');
                 expect(component.currentJoiner).toEqual(JoinerMocks.INITIAL.doc);
+            }));
+            it('when used is removed from db, part creation should go deselect user, and call handleError', fakeAsync(async() => {
+                await mockCandidateArrival();
+                await chooseOpponent();
+
+                testUtils.expectElementToExist('#selected_firstCandidate');
+                spyOn(Utils, 'handleError').and.callFake(() => {});
+                try {
+                    joueursDAOMock.delete('opponent');
+                    testUtils.detectChanges();
+                    tick();
+                } finally {
+                    expect(Utils.handleError).toHaveBeenCalledOnceWith('OnlineGameWrapper: firstCandidate was deleted (opponent)');
+                    testUtils.expectElementNotToExist('#selected_firstCandidate');
+                    expect(component.currentJoiner).toEqual(JoinerMocks.INITIAL.doc);
+                }
             }));
         });
         it('should make candidate choice possible for creator when candidate arrives', fakeAsync(async() => {
@@ -412,21 +428,23 @@ describe('PartCreationComponent:', () => {
             expect(chatService.deleteChat).toHaveBeenCalledWith('joinerId');
         }));
         it('should delete part when creator is not there', fakeAsync(async() => {
+            // Given a component where game is not started and creator offline
             component.userName = 'firstCandidate';
             await joueursDAOMock.update('creator', { state: 'offline' });
+            await partDAOMock.set('joinerId', PartMocks.INITIAL.doc);
             await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL.doc);
             const gameService: GameService = TestBed.inject(GameService);
             const joinerService: JoinerService = TestBed.inject(JoinerService);
             const chatService: ChatService = TestBed.inject(ChatService);
-            spyOn(gameService, 'deletePart');
-            spyOn(joinerService, 'deleteJoiner');
-            spyOn(chatService, 'deleteChat');
+            spyOn(gameService, 'deletePart').and.callThrough();
+            spyOn(joinerService, 'deleteJoiner').and.callThrough();
+            spyOn(chatService, 'deleteChat').and.callThrough();
 
-            testUtils.detectChanges();
-            await testUtils.whenStable();
+            // When arriving on that component
             testUtils.detectChanges();
             tick();
 
+            // Then game should be removed and all related data
             expect(gameService.deletePart).toHaveBeenCalledWith('joinerId');
             expect(joinerService.deleteJoiner).toHaveBeenCalledWith();
             expect(chatService.deleteChat).toHaveBeenCalledWith('joinerId');
