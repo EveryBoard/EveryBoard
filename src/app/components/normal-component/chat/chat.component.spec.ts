@@ -19,16 +19,15 @@ describe('ChatComponent', () => {
     let chatDAO: ChatDAO;
 
     const MSG: IMessage = { sender: 'foo', content: 'hello', currentTurn: 0, postedTime: 5 };
+    function generateMessages(n: number): IMessage[] {
+        const messages: IMessage[] = [];
+        for (let i: number = 0; i < n; i++) {
+            messages.push(MSG);
+        }
+        return messages;
+    }
     // needed to have a scrollable chat
-    const LOTS_OF_MESSAGES: IMessage[] = [
-        MSG, MSG, MSG, MSG, MSG,
-        MSG, MSG, MSG, MSG, MSG,
-        MSG, MSG, MSG, MSG, MSG,
-        MSG, MSG, MSG, MSG, MSG,
-        MSG, MSG, MSG, MSG, MSG,
-        MSG, MSG, MSG, MSG, MSG,
-        MSG, MSG, MSG, MSG, MSG,
-    ];
+    const LOTS_OF_MESSAGES: IMessage[] = generateMessages(100);
 
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(ChatComponent);
@@ -68,7 +67,7 @@ describe('ChatComponent', () => {
         testUtils.detectChanges();
         let switchButton: DebugElement = testUtils.findElement('#switchChatVisibilityButton');
         const chat: DebugElement = testUtils.findElement('#chatForm');
-        expect(switchButton.nativeElement.innerText).toEqual('Réduire le chat');
+        expect(switchButton.nativeElement.innerText).toEqual('Hide chat');
         expect(chat).withContext('Chat should be visible on init').toBeTruthy();
 
         // when switching the chat visibility
@@ -77,7 +76,7 @@ describe('ChatComponent', () => {
 
         switchButton = testUtils.findElement('#switchChatVisibilityButton');
         // Then the chat is not visible and the button changes its text
-        expect(switchButton.nativeElement.innerText).toEqual('Afficher le chat (pas de nouveau message)');
+        expect(switchButton.nativeElement.innerText).toEqual('Show chat (no new message)');
         testUtils.expectElementNotToExist('#chatDiv');
         testUtils.expectElementNotToExist('#chatForm');
     }));
@@ -90,7 +89,7 @@ describe('ChatComponent', () => {
         // Given that the chat is hidden
         let switchButton: DebugElement = testUtils.findElement('#switchChatVisibilityButton');
         let chat: DebugElement = testUtils.findElement('#chatForm');
-        expect(switchButton.nativeElement.innerText).toEqual('Afficher le chat (pas de nouveau message)');
+        expect(switchButton.nativeElement.innerText).toEqual('Show chat (no new message)');
         expect(chat).withContext('Chat should be hidden').toBeFalsy();
 
         // when showing the chat
@@ -100,7 +99,7 @@ describe('ChatComponent', () => {
         // then the chat is shown
         switchButton = testUtils.findElement('#switchChatVisibilityButton');
         chat = testUtils.findElement('#chatForm');
-        expect(switchButton.nativeElement.innerText).toEqual('Réduire le chat');
+        expect(switchButton.nativeElement.innerText).toEqual('Hide chat');
         expect(chat).withContext('Chat should be visible after calling show').toBeTruthy();
     }));
     it('should show how many messages where sent since you hide the chat', fakeAsync(async() => {
@@ -110,7 +109,7 @@ describe('ChatComponent', () => {
         testUtils.clickElement('#switchChatVisibilityButton');
         testUtils.detectChanges();
         let switchButton: DebugElement = testUtils.findElement('#switchChatVisibilityButton');
-        expect(switchButton.nativeElement.innerText).toEqual('Afficher le chat (pas de nouveau message)');
+        expect(switchButton.nativeElement.innerText).toEqual('Show chat (no new message)');
 
         // when a new message is received
         await chatDAO.update('fauxChat', { messages: [MSG, MSG, MSG] });
@@ -118,7 +117,7 @@ describe('ChatComponent', () => {
 
         // then the button shows how many new messages there are
         switchButton = testUtils.findElement('#switchChatVisibilityButton');
-        expect(switchButton.nativeElement.innerText).toEqual('Afficher le chat (3 nouveaux messages)');
+        expect(switchButton.nativeElement.innerText).toEqual('Show chat (3 new messages)');
     }));
     it('should scroll to the bottom on load', fakeAsync(async() => {
         // Given a visible chat with multiple messages
@@ -153,7 +152,7 @@ describe('ChatComponent', () => {
         expect(chatDiv.nativeElement.scrollTop).toBe(SCROLL);
         // and the indicator shows t hat there is a new message
         const indicator: DebugElement = testUtils.findElement('#scrollToBottomIndicator');
-        expect(indicator.nativeElement.innerHTML).toEqual('1 nouveau message ↓');
+        expect(indicator.nativeElement.innerHTML).toEqual('1 new message ↓');
     }));
     it('should scroll to bottom when clicking on the new message indicator', fakeAsync(async() => {
         // Given a visible chat with the indicator
@@ -191,7 +190,7 @@ describe('ChatComponent', () => {
         await chatDAO.update('fauxChat', chat);
         testUtils.detectChanges();
         let switchButton: DebugElement = testUtils.findElement('#switchChatVisibilityButton');
-        expect(switchButton.nativeElement.innerText).toEqual('Afficher le chat (1 nouveau message)');
+        expect(switchButton.nativeElement.innerText).toEqual('Show chat (1 new message)');
 
         // When the chat is shown and then hidden again
         testUtils.clickElement('#switchChatVisibilityButton');
@@ -201,7 +200,7 @@ describe('ChatComponent', () => {
 
         // Then the button text is updated
         switchButton = testUtils.findElement('#switchChatVisibilityButton');
-        expect(switchButton.nativeElement.innerText).toEqual('Afficher le chat (pas de nouveau message)');
+        expect(switchButton.nativeElement.innerText).toEqual('Show chat (no new message)');
     }));
     it('should send messages using the chat service', fakeAsync(async() => {
         spyOn(chatService, 'sendMessage');

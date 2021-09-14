@@ -102,7 +102,7 @@ export abstract class FirebaseFirestoreDAOMock<T extends JSONObject> implements 
                           value: unknown,
                           callback: FirebaseCollectionObserver<T>): () => void
     {
-        // Note, for now, only check first match field/condition/value at creation, not the added document matching it !
+        // Note, for now, only check first match field/condition/value at creation, not the added document matching it!
         display(FirebaseFirestoreDAOMock.VERBOSE,
                 'FirebaseFirestoreDAOMock.observingWhere(' + field + condition + value);
         if (condition === '==') {

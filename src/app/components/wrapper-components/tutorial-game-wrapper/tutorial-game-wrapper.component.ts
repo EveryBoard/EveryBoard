@@ -23,7 +23,7 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
 
     public static VERBOSE: boolean = false;
 
-    public COMPLETED_TUTORIAL_MESSAGE: string = $localize`Félicitation, vous avez fini le tutoriel.`;
+    public COMPLETED_TUTORIAL_MESSAGE: string = $localize`Congratulations, you completed the tutorial.`;
 
     public steps: TutorialStep[];
     public successfulSteps: number = 0;

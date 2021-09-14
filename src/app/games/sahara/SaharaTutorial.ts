@@ -12,16 +12,16 @@ const _: number = FourStatePiece.EMPTY.value;
 export const saharaTutorial: TutorialStep[] = [
 
     TutorialStep.informational(
-        $localize`Plateau initial`,
-        $localize`Le Sâhârâ se joue sur un plateau dont chaque case est triangulaire.
-        Chaque joueur contrôle six pyramides.`,
+        $localize`Initial board`,
+        $localize`Sâhârâ is played on a board where each space is a triangle.
+        Each player has six pyramids.`,
         SaharaPartSlice.getInitialSlice(),
     ),
     TutorialStep.informational(
-        $localize`But du jeu`,
-        $localize`Au Sâhârâ, le but du jeu est d'immobiliser une des pyramides de l'adversaire.
-        Pour ce faire il faut occuper toutes les cases voisines de celle-ci.
-        Ici, le joueur clair a perdu car sa pyramide tout à gauche est immobilisée.`,
+        $localize`Goal of the game`,
+        $localize`At Sâhârâ, the goal of the game is to immobilize one of the opponent's pyramids.
+        To do so, you have to occupy all neighboring space of that pyramid.
+        Here, Light has lost because its leftmost pyramid is immobilized.`,
         new SaharaPartSlice([
             [N, N, _, _, X, _, _, O, X, N, N],
             [N, _, _, _, _, _, _, _, _, _, N],
@@ -32,44 +32,44 @@ export const saharaTutorial: TutorialStep[] = [
         ], 3),
     ),
     TutorialStep.fromPredicate(
-        $localize`Déplacement simple`,
-        $localize`Pour parvenir à immobiliser l'adversaire, il faut déplacer ses pyramides.
-        Quand une pyramide partage ses arêtes avec des cases claires, elle peut se déplacer dessus (appelons ceci, faire un pas simple).
-        Vous jouez le premier joueur, qui contrôle les pyramides foncées.
-        <ul>
-            <li> 1. Cliquez sur une de vos pyramides.</li>
-            <li> 2. Cliquez ensuite sur une des deux ou trois cases voisines, pour y déplacer votre pyramide.</li>
-        </ul><br/>
-        Faite n'importe quel mouvement.`,
+        $localize`Simple step`,
+        $localize`To immobilize your opponent, you have to move your pyramids.
+        When a pyramid shares its vertices with light spaces, it can move on these spaces (we call this a simple step).
+        You're the first player, playing with the dark pyramids.
+        <ol>
+            <li>Click on one of your pyramids.</li>
+            <li>Click on one of its two or three neighboring spaces in order to move your pyramid there.</li>
+        </ol><br/>
+        Do any simple step.`,
         SaharaPartSlice.getInitialSlice(),
         new SaharaMove(new Coord(2, 0), new Coord(2, 1)),
         (move: SaharaMove, state: SaharaPartSlice) => {
             if (move.isSimpleStep()) {
                 return MGPValidation.SUCCESS;
             } else {
-                return MGPValidation.failure($localize`Vous avez fait un double pas, c'est très bien, mais c'est l'exercice suivant!`);
+                return MGPValidation.failure($localize`You have made a double step, which is good but it is the next exercise!`);
             }
         },
-        $localize`Bravo !`,
+        $localize`Congratulations!`,
     ),
     TutorialStep.fromPredicate(
-        $localize`Déplacement double`,
-        $localize`Quand une pyramide partage ses arêtes avec des cases foncées, vous pouvez la déplacer de deux pas.
-        Pour ce faire:
-        <ul>
-            <li> 1. Cliquez sur la pyramide à déplacer (celle tout au centre).</li>
-            <li> 2. Cliquez directement sur l'une des 6 destinations possibles en deux pas:
-                les 6 cases claires voisines des 3 cases foncées voisines de votre pyramide.
-        </li>`,
+        $localize`Double step`,
+        $localize`When a pyramid shares its vertices with dark spaces, it can move one or two steps.
+        To do so:
+        <ol>
+            <li>Click on the pyramid to move.</li>
+            <li>Click on one of the 6 destinations that you can reach in two steps:
+                 the 6 neighboring light spaces of the 3 dark spaces that are neighbors of your pyramid.
+        </ol>`,
         SaharaPartSlice.getInitialSlice(),
         new SaharaMove(new Coord(7, 0), new Coord(5, 0)),
-        (move: SaharaMove, state: SaharaPartSlice) => {
+        (move: SaharaMove, _: SaharaPartSlice) => {
             if (move.isSimpleStep()) {
-                return MGPValidation.failure($localize`Raté ! Vous avez fait un simple pas!`);
+                return MGPValidation.failure($localize`Failed! You have made a single step.`);
             } else {
                 return MGPValidation.SUCCESS;
             }
         },
-        $localize`Bravo !`,
+        $localize`Congratulations!`,
     ),
 ];

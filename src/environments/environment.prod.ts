@@ -1,8 +1,9 @@
-export const environment: unknown = {
+import { Environment } from './environment-type';
+
+export const environment: Environment = {
     useEmulators: false,
-    emulatorConfig:  null,
+    emulatorConfig: null,
     production: true,
-    devPages: false,
     test: false,
-    root: 'board/',
+    root: '/board/',
 };

@@ -29,6 +29,7 @@ interface PartCreationViewInfo {
 
     firstPlayer?: IFirstPlayer;
     partType?: IPartType;
+    partTypeName?: string,
     maximalMoveDuration?: number;
     totalPartDuration?: number;
     candidates?: string[];
@@ -114,6 +115,17 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 this.viewInfo.creatorIsModifyingConfig = joiner.partStatus !== PartStatus.CONFIG_PROPOSED.value;
 
                 this.viewInfo.partType = joiner.partType;
+                switch (joiner.partType) {
+                    case 'CUSTOM':
+                        this.viewInfo.partTypeName = $localize`custom`;
+                        break;
+                    case 'BLITZ':
+                        this.viewInfo.partTypeName = $localize`blitz`;
+                        break;
+                    case 'STANDARD':
+                        this.viewInfo.partTypeName = $localize`standard`;
+                        break;
+                }
                 this.viewInfo.showCustomTime = joiner.partType === 'CUSTOM';
                 this.viewInfo.maximalMoveDuration = joiner.maximalMoveDuration;
                 this.viewInfo.totalPartDuration = joiner.totalPartDuration;
@@ -235,7 +247,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     }
     private onGameCancelled() {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.onGameCancelled');
-        this.messageDisplayer.infoMessage('La partie a été annulée');
+        this.messageDisplayer.infoMessage($localize`The game has been canceled!`);
         this.router.navigate(['server']);
     }
     private isGameStarted(joiner: IJoiner): boolean {
@@ -365,7 +377,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         const candidates: string[] = beforeUser.concat(afterUser);
         if (userPseudo === this.currentJoiner.chosenPlayer) {
             // The chosen player has been removed, the user will have to review the config
-            this.messageDisplayer.infoMessage($localize`${userPseudo} a quitté la partie, veuillez choisir un autre adversaire`);
+            this.messageDisplayer.infoMessage($localize`${userPseudo} left the game, please pick another opponent.`);
             return this.joinerService.reviewConfigRemoveChosenPlayerAndUpdateCandidates(candidates);
         } else {
             this.joinerService.updateCandidates(candidates);

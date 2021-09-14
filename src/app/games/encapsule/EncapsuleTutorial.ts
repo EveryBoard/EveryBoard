@@ -18,9 +18,9 @@ const Mb: number = new EncapsuleCase(Player.NONE, Player.ONE, Player.ZERO).encod
 
 export const encapsuleTutorial: TutorialStep[] = [
     TutorialStep.informational(
-        $localize`But du jeu`,
-        $localize`Le but du jeu à Encapsule est d'aligner trois de vos pièces.
-        Ici nous avons une victoire du joueur foncé.`,
+        $localize`Goal of the game`,
+        $localize`The goal of Encapsule is to align three of your pieces.
+        Here, we have a victory of the dark player.`,
         new EncapsulePartSlice([
             [s, S, B],
             [_, m, _],
@@ -31,16 +31,16 @@ export const encapsuleTutorial: TutorialStep[] = [
             EncapsulePiece.BIG_WHITE,
         ])),
     TutorialStep.anyMove(
-        $localize`Placement`,
-        $localize`Ceci est le plateau de départ. Vous jouez Foncé.<br/><br/>
-        Choisissez une des pièces sur le côté du plateau est placez là sur le plateau.`,
+        $localize`Putting a piece`,
+        $localize`This is the initial board. You're playing Dark.<br/><br/>
+        Pick one of your piece on the side of the board and put it on the board.`,
         EncapsulePartSlice.getInitialSlice(),
         EncapsuleMove.fromDrop(EncapsulePiece.SMALL_BLACK, new Coord(1, 1)),
-        $localize`Bravo !`),
+        $localize`Congratulations!`),
     TutorialStep.fromMove(
-        $localize`Déplacement`,
-        $localize`Un autre type de coup à Encapsule est de déplacer une de ses pièces déjà sur le plateau.<br/><br/>
-        Cliquez sur votre pièce foncée et puis sur n'importe quel emplacement vide du plateau.`,
+        $localize`Moving`,
+        $localize`Another possible action is to move one of your pieces that is already on the board.<br/><br/>
+        Click on your dark piece and then on any empty square of the board.`,
         new EncapsulePartSlice([
             [s, B, _],
             [_, _, _],
@@ -55,18 +55,18 @@ export const encapsuleTutorial: TutorialStep[] = [
             EncapsuleMove.fromMove(new Coord(0, 0), new Coord(1, 2)),
             EncapsuleMove.fromMove(new Coord(0, 0), new Coord(2, 2)),
         ],
-        $localize`Bravo !`,
-        $localize`Raté, réessayez.`),
+        $localize`Congratulations!`,
+        $localize`Failed. Try again.`),
     TutorialStep.fromMove(
-        $localize`Spécificité`,
-        $localize`À Encapsule, les pièces s'encapsulent les unes sur les autres.
-        Il est donc possible d'avoir jusqu'à trois pièces par case !
-        Cependant, seulement la plus grosse pièce de chaque case compte :
-        il n'est pas possible de gagner avec une pièce « cachée » par une pièce plus grande.
-        De même, il n'est pas possible de déplacer une pièce qui est recouverte par une autre pièce plus grande.
-        Finalement, il est interdit de recouvrir une pièce avec une autre pièce plus petite.
-        Vous jouez Foncé et pouvez gagner à ce tour de plusieurs façons.<br/><br/>
-        Essayez de gagner en effectuant un déplacement, et non un placement (c'est à dire en déposant une nouvelle pièce).`,
+        $localize`Particularity`,
+        $localize`At Encapsule, pieces encapsulate each other.
+        It is therefore possible to have up to three pieces per square!
+        However, only the biggest piece of each square counts:
+        you cannot win with a piece that is "hidden" by a bigger piece.
+        Similarly, you cannot move a piece if it is encapsulated by a bigger piece.
+        Finally, you cannot encapsulate a piece with a smaller piece.
+        You're playing Dark and you can win now in various ways.<br/><br/>
+        Try to win by making a move, and not by putting a new piece on the board.`,
         new EncapsulePartSlice([
             [Sm, _, S],
             [sm, Mb, B],
@@ -80,6 +80,6 @@ export const encapsuleTutorial: TutorialStep[] = [
             EncapsuleMove.fromMove(new Coord(0, 1), new Coord(0, 2)),
             EncapsuleMove.fromMove(new Coord(1, 1), new Coord(0, 2)),
         ],
-        $localize`Bravo !`,
-        $localize`Raté, réessayez.`),
+        $localize`Congratulations!`,
+        $localize`Failed. Try again.`),
 ];

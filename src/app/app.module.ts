@@ -1,10 +1,12 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule, Route } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from '../material-modules';
+import localeFr from '@angular/common/locales/fr';
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
@@ -79,6 +81,8 @@ import { environment } from 'src/environments/environment';
 import { USE_EMULATOR as USE_FIRESTORE_EMULATOR } from '@angular/fire/firestore';
 
 // time scp -C -r ./dist/pantheonsgame/* gaviall@awesom.eu:/home/gaviall/www/pantheonsgame/
+
+registerLocaleData(localeFr);
 
 const routes: Route [] = [
     { path: 'login', component: LoginComponent },
@@ -189,6 +193,7 @@ const routes: Route [] = [
         ChatService,
         PartDAO,
         AngularFireAuth,
+        { provide: LOCALE_ID, useValue: localStorage.getItem('locale') || navigator.language || 'fr' },
     ],
     bootstrap: [AppComponent],
 })

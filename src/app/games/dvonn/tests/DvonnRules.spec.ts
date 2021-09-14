@@ -11,6 +11,7 @@ import { DvonnFailure } from '../DvonnFailure';
 import { DvonnMinimax } from '../DvonnMinimax';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 describe('DvonnRules:', () => {
 
@@ -233,7 +234,7 @@ describe('DvonnRules:', () => {
         expect(moves[0]).toEqual(DvonnMove.PASS);
         expect(rules.isLegal(DvonnMove.PASS, slice).legal.isSuccess()).toBeTrue();
         const move: DvonnMove = DvonnMove.of(new Coord(2, 0), new Coord(2, 1));
-        expect(rules.isLegal(move, slice).legal.reason).toBe(DvonnFailure.CAN_ONLY_PASS);
+        expect(rules.isLegal(move, slice).legal.reason).toBe(RulesFailure.CAN_ONLY_PASS);
     });
     it('should remove of the board any portion disconnected from a source', () => {
         const board: DvonnBoard = new DvonnBoard([

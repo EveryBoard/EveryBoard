@@ -4,22 +4,23 @@
         <button id="switchChatVisibilityButton"
                 class="button is-primary is-light is-fullwidth"
                 (click)="switchChatVisibility()">
-            <ng-container *ngIf="visible else showChat" i18n>Réduire le chat</ng-container>
-            <ng-template #showChat i18n>Afficher le chat ({{ this.unreadMessagesText }})</ng-template>
+            <ng-container *ngIf="visible else showChat" i18n>Hide chat</ng-container>
+            <ng-template #showChat i18n>Show chat ({{ this.unreadMessagesText }})</ng-template>
         </button>
 
         <div *ngIf="visible">
             <button *ngIf="this.showUnreadMessagesButton"
-                id="scrollToBottomIndicator"
-                class="notification button is-info is-light is-fullwidth"
-                (click)="scrollToBottom()"
-                >{{ this.unreadMessagesText }} &darr;</button>
+                    id="scrollToBottomIndicator"
+                    class="notification button is-info is-light is-fullwidth"
+                    (click)="scrollToBottom()"
+                    >{{ this.unreadMessagesText }} &darr;</button>
 
             <div #chatDiv
                  id="chatDiv"
                  class="is-fullwidth block"
-                 style="overflow-y:scroll; height: 5rem;"
-                 (scroll)="updateCurrentScrollPosition()">
+                 style="overflow-y:scroll; max-height: 50vh;"
+                 (scroll)="updateCurrentScrollPosition()"
+                 >
                 <p *ngFor="let msg of chat">
                     [{{ msg.postedTime | date:'HH:mm:ss':'+0100' }}] <b>{{ msg.sender }} :</b> {{ msg.content }}
                 </p>
@@ -34,7 +35,7 @@
                            #message
                            id="message"
                            type="text"
-                           placeholder="Entrez votre message ici" i18n-placeholder
+                           placeholder="Type your message here" i18n-placeholder
                            maxlength="128"
                            value=""
                            [(ngModel)]="userMessage"
@@ -50,7 +51,7 @@
                 </div>
             </div>
             <div class="content is-small">
-                <p><strong>Be polite</strong></p>
+                <p><strong i18n>Be polite</strong></p>
             </div>
         </form>
     </div>

@@ -48,7 +48,7 @@ describe('YinshComponent', () => {
             ]);
             const state: YinshGameState = new YinshGameState(board, [4, 5], 1);
             testUtils.setupSlice(state);
-            await testUtils.expectClickFailure('#click_3_2', RulesFailure.MUST_CLICK_ON_EMPTY_CASE);
+            await testUtils.expectClickFailure('#click_3_2', RulesFailure.MUST_CLICK_ON_EMPTY_SPACE);
         }));
         it('should decrease the number of rings shown on the side when a ring is placed', fakeAsync(async() => {
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.empty(), []);
@@ -263,7 +263,7 @@ describe('YinshComponent', () => {
             const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
             testUtils.setupSlice(state);
 
-            await testUtils.expectClickFailure('#click_4_2', YinshFailure.NOT_PART_OF_CAPTURE);
+            await testUtils.expectClickFailure('#click_4_2', YinshFailure.MISSING_CAPTURES);
         }));
         it('should show the number of rings of each player', fakeAsync(async() => {
             const state: YinshGameState = new YinshGameState(YinshBoard.EMPTY, [2, 1], 10);
@@ -426,7 +426,7 @@ describe('YinshComponent', () => {
             testUtils.setupSlice(state);
 
             await testUtils.expectClickSuccess('#click_3_2');
-            await testUtils.expectClickFailure('#click_3_3', YinshFailure.SHOULD_END_MOVE_ON_EMPTY_CASE);
+            await testUtils.expectClickFailure('#click_3_3', YinshFailure.SHOULD_END_MOVE_ON_EMPTY_SPACE);
         }));
         it('should allow moves with one final capture', fakeAsync(async() => {
             const board: YinshBoard = YinshBoard.of([
@@ -564,7 +564,7 @@ describe('YinshComponent', () => {
             testUtils.setupSlice(state);
 
             await testUtils.expectClickSuccess('#click_5_4'); // select first capture coord
-            await testUtils.expectClickFailure('#click_6_8', YinshFailure.NOT_PART_OF_CAPTURE); // select second capture coord
+            await testUtils.expectClickFailure('#click_6_8', YinshFailure.MISSING_CAPTURES); // select second capture coord
         }));
         it('should make pieces captured at the last turn disappear upon first player action', fakeAsync(async() => {
             const board: YinshBoard = YinshBoard.of([

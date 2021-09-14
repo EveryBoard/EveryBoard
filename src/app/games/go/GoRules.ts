@@ -50,7 +50,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
             display(GoRules.VERBOSE ||LOCAL_VERBOSE, 'GoRules.isLegal: move is marking');
             const legal: boolean = GoRules.isLegalDeadMarking(move, slice);
             return {
-                legal: legal ? MGPValidation.SUCCESS : MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_CASE),
+                legal: legal ? MGPValidation.SUCCESS : MGPValidation.failure(GoFailure.OCCUPIED_INTERSECTION),
                 capturedCoords: [],
             };
         } else {

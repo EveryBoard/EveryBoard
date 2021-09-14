@@ -5,7 +5,7 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { fakeAsync } from '@angular/core/testing';
+import { fakeAsync, tick } from '@angular/core/testing';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 describe('GoComponent', () => {
@@ -34,6 +34,7 @@ describe('GoComponent', () => {
         expect((await componentTestUtils.getComponent().pass()).isSuccess()).toBeTrue(); // Finished
 
         expect((await componentTestUtils.getComponent().pass()).reason).toBe(RulesFailure.CANNOT_PASS);
+        tick(150)
     }));
     it('Should show captures', fakeAsync(async() => {
         const board: Table<GoPiece> = [

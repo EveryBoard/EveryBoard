@@ -421,7 +421,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
     {
         let preVictory: MGPOptional<Coord> = boardInfo.preVictory;
         if (subSum === 4.16) {
-            display(this.VERBOSE, '5+1 found !');
+            display(this.VERBOSE, '5+1 found!');
             // We found 5 pieces aligned and one space, so that space is a preVictory coord
             if (preVictory.isPresent() &&
                 preVictory.get().equals(lastEmpty) === false) {

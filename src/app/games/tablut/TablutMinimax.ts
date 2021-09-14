@@ -49,7 +49,7 @@ export class TablutMinimax extends Minimax<TablutMove, TablutPartSlice, TablutLe
         const slice: TablutPartSlice = node.gamePartSlice;
         // 1. is the king escaped ?
         // 2. is the king captured ?
-        // 3. is one player immobilised ?
+        // 3. is one player immobilized ?
         // 4. let's just for now just count the pawns
         const board: number[][] = slice.getCopiedBoard();
 

@@ -11,7 +11,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
     templateUrl: './chat.component.html',
 })
 export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
-    public static VERBOSE: boolean = true;
+    public static VERBOSE: boolean = false;
 
     @Input() public chatId: string;
     @Input() public turn: number;
@@ -83,12 +83,12 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
         }
 
         if (unreadMessages === 0) {
-            this.unreadMessagesText = $localize`pas de nouveau message`;
+            this.unreadMessagesText = $localize`no new message`;
             this.showUnreadMessagesButton = false;
         } else if (unreadMessages === 1) {
-            this.unreadMessagesText = $localize`1 nouveau message`;
+            this.unreadMessagesText = $localize`1 new message`;
         } else {
-            this.unreadMessagesText = $localize`${unreadMessages} nouveaux messages`;
+            this.unreadMessagesText = $localize`${unreadMessages} new messages`;
         }
     }
     private isNearBottom: boolean = true;

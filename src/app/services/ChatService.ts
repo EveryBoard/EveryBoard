@@ -8,7 +8,7 @@ import { MGPValidation } from '../utils/MGPValidation';
 import { ArrayUtils } from '../utils/ArrayUtils';
 
 export class ChatMessages {
-    public static readonly CANNOT_SEND_MESSAGE: string = $localize`You're not allowed to send e massege here.`;
+    public static readonly CANNOT_SEND_MESSAGE: string = $localize`You're not allowed to send a message here.`;
 
     public static readonly FORBIDDEN_MESSAGE: string = $localize`This message is forbidden.`;
 }
