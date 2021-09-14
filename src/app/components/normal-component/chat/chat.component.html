@@ -13,14 +13,14 @@
                     id="scrollToBottomIndicator"
                     class="notification button is-info is-light is-fullwidth"
                     (click)="scrollToBottom()"
-                    >{{ this.unreadMessagesText }} &darr;</button>
+            >{{ this.unreadMessagesText }} &darr;</button>
 
             <div #chatDiv
                  id="chatDiv"
                  class="is-fullwidth block"
                  style="overflow-y:scroll; max-height: 50vh;"
                  (scroll)="updateCurrentScrollPosition()"
-                 >
+            >
                 <p *ngFor="let msg of chat">
                     [{{ msg.postedTime | date:'HH:mm:ss':'+0100' }}] <b>{{ msg.sender }} :</b> {{ msg.content }}
                 </p>
@@ -39,7 +39,7 @@
                            maxlength="128"
                            value=""
                            [(ngModel)]="userMessage"
-                           [ngModelOptions]="{standalone: true}">
+                           [ngModelOptions]="{standalone: true}"/>
                     <p class="help">{{ message.value.length }}/128</p>
                 </div>
                 <div class="control">
