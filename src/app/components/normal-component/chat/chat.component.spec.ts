@@ -53,13 +53,13 @@ describe('ChatComponent', () => {
         testUtils.detectChanges();
 
         // It should not observe, not load the chat content, and show the disconnected chat
-        expect(chatService.startObserving).toHaveBeenCalledTimes(0);
-        expect(component.loadChatContent).toHaveBeenCalledTimes(0);
+        expect(chatService.startObserving).not.toHaveBeenCalled();
+        expect(component.loadChatContent).not.toHaveBeenCalled();
         testUtils.expectElementToExist('#disconnected-chat');
 
         component.ngOnDestroy();
         await testUtils.whenStable();
-        expect(chatService.stopObserving).toHaveBeenCalledTimes(0);
+        expect(chatService.stopObserving).not.toHaveBeenCalled();
     }));
     it('should propose to hide chat when chat is visible, and work', fakeAsync(async() => {
         // Given the user is connected
