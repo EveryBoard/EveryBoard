@@ -42,11 +42,6 @@ function redirectToRoute(locale) {
   var route = routing[locale];
   if (route != null) {
     if (enableLog) console.log('will redirect to ' + route);
-    if (subPath) {
-      if (!route.endsWith('/')) route += '/';
-      route += subPath;
-      if (enableLog) console.log('full url will be ' + route);
-    }
     window.location.replace(route);
     return;
   }
