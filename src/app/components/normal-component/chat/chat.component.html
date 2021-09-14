@@ -28,7 +28,7 @@
         </div>
 
         <form id="chatForm" *ngIf="visible"
-              (onSubmit)="sendMessage(message.value)">
+              (onSubmit)="sendMessage()">
             <div class="field has-addons is-fullwidth">
                 <div class="control is-expanded">
                     <input class="input"
@@ -46,7 +46,7 @@
                     <button class="button is-primary"
                             type="submit"
                             id="send"
-                            (click)="sendMessage(message.value)"
+                            (click)="sendMessage()"
                             >Send</button>
                 </div>
             </div>
