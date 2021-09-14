@@ -353,6 +353,7 @@ export class ComponentTestUtils<T extends GameComponent> {
     }
     public async clickElement(elementName: string): Promise<boolean> {
         const element: DebugElement = this.findElement(elementName);
+        expect(element).withContext(elementName + ' should exist on the page').toBeTruthy();
         if (element == null) {
             return false;
         } else {
