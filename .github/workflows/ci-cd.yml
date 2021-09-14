@@ -3,7 +3,8 @@ name: CI/CD On Action
 on:
   push:
     branches: [master, develop]
-  pull_request
+  pull_request:
+    branches: [master, develop]
 
 jobs:
   build-test-and-deploy:
