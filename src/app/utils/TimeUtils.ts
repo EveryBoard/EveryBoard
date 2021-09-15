@@ -35,10 +35,10 @@ export class HumanDuration implements PipeTransform {
     }
 }
 
-export function getMs(time: Time): number {
+export function getMilliseconds(time: Time): number {
     return time.seconds * 1000 + (time.nanoseconds / (1000 * 1000));
 }
 
-export function getMsDifference(first: Time, second: Time): number {
-    return getMs(second) - getMs(first);
+export function getMillisecondsDifference(first: Time, second: Time): number {
+    return getMilliseconds(second) - getMilliseconds(first);
 }

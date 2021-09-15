@@ -1,10 +1,10 @@
 import firebase from 'firebase';
-import { JSONObject, JSONValueWithoutArray } from 'src/app/utils/utils';
+import { FirebaseJSONObject, JSONValueWithoutArray } from 'src/app/utils/utils';
 import { Request } from './request';
 import { DomainWrapper } from './DomainWrapper';
 import { Time } from './Time';
 
-export interface IPart extends JSONObject {
+export interface IPart extends FirebaseJSONObject {
     readonly typeGame: NonNullable<string>, // the type of game
     readonly playerZero: NonNullable<string>, // the id of the first player
     readonly turn: NonNullable<number>, // -1 means the part has not started, 0 is the initial turn

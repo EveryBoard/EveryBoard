@@ -3,7 +3,7 @@ import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 
-import { display, JSONObject } from 'src/app/utils/utils';
+import { display, FirebaseJSONObject } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 import { IFirebaseFirestoreDAO } from '../FirebaseFirestoreDAO';
@@ -11,7 +11,7 @@ import { MGPMap } from 'src/app/utils/MGPMap';
 import { ObservableSubject } from 'src/app/utils/ObservableSubject';
 import { Time } from 'src/app/domain/Time';
 
-export abstract class FirebaseFirestoreDAOMock<T extends JSONObject> implements IFirebaseFirestoreDAO<T> {
+export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> implements IFirebaseFirestoreDAO<T> {
 
     public static VERBOSE: boolean = false;
 
@@ -48,25 +48,25 @@ export abstract class FirebaseFirestoreDAOMock<T extends JSONObject> implements 
             // TODO: check that observing unexisting doc throws
         }
     }
-    public async create(newElement: T): Promise<string> {
+    public async create(elementWithFieldValue: T): Promise<string> {
         const elemName: string = this.collectionName + this.getStaticDB().size();
-        const mappedNewElement: T = this.getServerTimestampedObject(newElement);
-        await this.set(elemName, mappedNewElement);
+        const elementWithTime: T = this.getServerTimestampedObject(elementWithFieldValue);
+        await this.set(elemName, elementWithTime);
         return elemName;
     }
-    public getServerTimestampedObject<N extends JSONObject>(element: N, oldDoc?: N): N {
-        if (element == null) {
+    public getServerTimestampedObject<N extends FirebaseJSONObject>(elementWithFieldValue: N): N {
+        if (elementWithFieldValue == null) {
             return null;
         }
-        const mappedNewElement: JSONObject = {};
-        for (const key of Object.keys(element)) {
-            if (element[key] instanceof firebase.firestore.FieldValue) {
-                mappedNewElement[key] = FirebaseFirestoreDAOMock.mockServerTime();
+        const elementWithTime: FirebaseJSONObject = {};
+        for (const key of Object.keys(elementWithFieldValue)) {
+            if (elementWithFieldValue[key] instanceof firebase.firestore.FieldValue) {
+                elementWithTime[key] = FirebaseFirestoreDAOMock.mockServerTime();
             } else {
-                mappedNewElement[key] = element[key];
+                elementWithTime[key] = elementWithFieldValue[key];
             }
         }
-        return mappedNewElement as N;
+        return elementWithTime as N;
     }
     public async read(id: string): Promise<T> {
         display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE, this.collectionName + '.read(' + id + ')');
@@ -102,7 +102,7 @@ export abstract class FirebaseFirestoreDAOMock<T extends JSONObject> implements 
         if (optionalOS.isPresent()) {
             const observableSubject: ObservableSubject<{id: string, doc: T}> = optionalOS.get();
             const oldDoc: T = observableSubject.subject.getValue().doc;
-            const mappedUpdate: Partial<T> = this.getServerTimestampedObject(update, oldDoc);
+            const mappedUpdate: Partial<T> = this.getServerTimestampedObject(update);
             const newDoc: T = { ...oldDoc, ...mappedUpdate };
             observableSubject.subject.next({ id, doc: newDoc });
             return Promise.resolve();

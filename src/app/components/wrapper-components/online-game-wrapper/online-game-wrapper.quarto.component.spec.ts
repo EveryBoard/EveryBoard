@@ -29,7 +29,7 @@ import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { GameService } from 'src/app/services/GameService';
 import { AuthUser } from 'src/app/services/AuthenticationService';
 import { Time } from 'src/app/domain/Time';
-import { getMsDifference } from 'src/app/utils/TimeUtils';
+import { getMillisecondsDifference } from 'src/app/utils/TimeUtils';
 import { FirebaseFirestoreDAOMock } from 'src/app/dao/tests/FirebaseFirestoreDAOMock.spec';
 
 describe('OnlineGameWrapperComponent of Quarto:', () => {
@@ -601,7 +601,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 spyOn(wrapper.chronoZeroGlobal, 'changeDuration').and.callThrough();
                 spyOn(partDAO, 'update').and.callThrough();
                 tick(73);
-                const usedTimeOfFirstTurn: number = getMsDifference(wrapper.currentPart.doc.beginning as Time,
+                const usedTimeOfFirstTurn: number = getMillisecondsDifference(wrapper.currentPart.doc.beginning as Time,
                                                                     wrapper.currentPart.doc.lastMoveTime as Time);
                 const remainingMsForZero: number = (1800 * 1000) - usedTimeOfFirstTurn;
                 await acceptTakeBack(true);
@@ -962,7 +962,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await receiveNewMoves([FIRST_MOVE_ENCODED], 1800 * 1000, 1800 * 1000);
             const beginning: Time = wrapper.currentPart.doc.beginning as Time;
             const firstMoveTime: Time = wrapper.currentPart.doc.lastMoveTime as Time;
-            const msUsedForFirstMove: number = getMsDifference(beginning, firstMoveTime);
+            const msUsedForFirstMove: number = getMillisecondsDifference(beginning, firstMoveTime);
 
             // when doing the next move
             expect(wrapper.currentPart.doc.remainingMsForZero).toEqual(1800 * 1000);

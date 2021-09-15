@@ -22,7 +22,7 @@ import { getDiff, getDiffChangesNumber, ObjectDifference } from 'src/app/utils/O
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Time } from 'src/app/domain/Time';
-import { getMs, getMsDifference } from 'src/app/utils/TimeUtils';
+import { getMilliseconds, getMillisecondsDifference } from 'src/app/utils/TimeUtils';
 
 export class UpdateType {
 
@@ -211,8 +211,11 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 this.msToSubstract = this.getLastMoveTime(oldPart, part, updateType);
                 return this.doNewMoves(part);
             case UpdateType.PRE_START_DOC:
-                if (oldPart != null && oldPart.doc.beginning != null &&
-                    this.currentPart != null && this.currentPart.doc.beginning == null) {
+                const oldPartHadBeginningTime: boolean = oldPart != null &&
+                                                         oldPart.doc.beginning != null;
+                const newPartHaveNoBeginningTime: boolean = this.currentPart != null &&
+                                                            this.currentPart.doc.beginning == null;
+                if (oldPartHadBeginningTime && newPartHaveNoBeginningTime) {
                     console.log('ils nous chient dans la colle patron!!!');
                 }
                 return;
@@ -273,6 +276,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     }
     public isMove(diff: ObjectDifference, nbDiffs: number): boolean {
         if (diff.modified['listMoves'] && diff.modified['turn']) {
+            const modifOnListMovesAndTurn: number = 2;
             const lastMoveTimeModified: number = this.isLastMoveUpdated(diff) ? 1 : 0;
             const scoreZeroUpdated: number = this.isUpdated(diff, 'scorePlayerZero') ? 1 : 0;
             const scoreOneUpdated: number = this.isUpdated(diff, 'scorePlayerOne') ? 1 : 0;
@@ -285,7 +289,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                                              remainingMsForZeroUpdated +
                                              remainingMsForOneUpdated +
                                              requestRemoved +
-                                             2;
+                                             modifOnListMovesAndTurn;
             return nbDiffs === nbValidMoveDiffs;
         } else {
             return false;
@@ -319,12 +323,12 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 console.log('getLastMoveTime(' + type.value + ') has no times');
                 return [0, 0];
             } else {
-                console.log('getLastMoveTime(' + type.value + ') has ' + getMs(updateTime));
+                console.log('getLastMoveTime(' + type.value + ') has ' + getMilliseconds(updateTime));
                 return [0, 0];
             }
         } else {
             if (updateTime == null) {
-                console.log('getLastMoveTime(' + type.value + ') had ' + getMs(oldTime) + ' then nothing');
+                console.log('getLastMoveTime(' + type.value + ') had ' + getMilliseconds(oldTime) + ' then nothing');
                 return [0, 0];
             } else {
                 const last: Player = Player.fromTurn(oldPart.doc.turn);
@@ -350,9 +354,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                                    last: Player)
     : [number, number]
     {
-        // const updateMs: number = getMs(updateTime);
-        // const oldTimeMs: number = getMs(oldTime);
-        const moveDurationDBWise: number = getMsDifference(oldTime, updateTime);
+        const moveDurationDBWise: number = getMillisecondsDifference(oldTime, updateTime);
         const msToSubstract: [number, number] = [0, 0];
         msToSubstract[last.value] = moveDurationDBWise;
         console.log('getLastMoveTime(' + type.value + ') moveDurationDBWise: ' + moveDurationDBWise +' ms to substract: [' + msToSubstract[0] + ', ' + msToSubstract[1] + ']');
