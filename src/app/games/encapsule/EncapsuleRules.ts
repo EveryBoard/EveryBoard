@@ -11,6 +11,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { EncapsuleMove } from './EncapsuleMove';
 import { EncapsulePiece } from './EncapsulePiece';
 import { EncapsuleFailure } from './EncapsuleFailure';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 export class EncapsuleNode
     extends MGPNode<EncapsuleRules, EncapsuleMove, EncapsulePartSlice, EncapsuleLegalityStatus> {}
@@ -62,7 +63,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         if (move.isDropping()) {
             movingPiece = move.piece.get();
             if (slice.pieceBelongsToCurrentPlayer(movingPiece) === false) {
-                return EncapsuleLegalityStatus.failure(EncapsuleFailure.WRONG_COLOR);
+                return EncapsuleLegalityStatus.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE);
             }
             if (slice.isInRemainingPieces(movingPiece) === false) {
                 return EncapsuleLegalityStatus.failure(EncapsuleFailure.PIECE_OUT_OF_STOCK);
@@ -72,7 +73,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
             const startingCase: EncapsuleCase = EncapsuleCase.decode(boardCopy[startingCoord.y][startingCoord.x]);
             movingPiece = startingCase.getBiggest();
             if (slice.pieceBelongsToCurrentPlayer(movingPiece) === false) {
-                return EncapsuleLegalityStatus.failure(EncapsuleFailure.WRONG_COLOR);
+                return EncapsuleLegalityStatus.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE);
             }
         }
         const landingNumber: number = boardCopy[move.landingCoord.y][move.landingCoord.x];

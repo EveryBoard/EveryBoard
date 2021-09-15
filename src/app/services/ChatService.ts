@@ -29,7 +29,7 @@ export class ChatService implements OnDestroy {
             return;
         }
         if (ChatService.isForbiddenMessage(content)) {
-            display(ChatService.VERBOSE, 'HOW DARE YOU SAY THAT !');
+            display(ChatService.VERBOSE, 'HOW DARE YOU SAY THAT!');
             return;
         }
         const iChat: IChat = await this.chatDao.read(this.followedChatId);

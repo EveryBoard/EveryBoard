@@ -500,6 +500,8 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
 
             // expect navigator to have been called
             expect(compo.gameService.createGameAndRedirectOrShowError).toHaveBeenCalledWith('Quarto');
+
+            tick(1000);
         }));
     });
     describe('TutorialStep awaiting specific moves', () => {
@@ -640,7 +642,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 ),
             ];
             wrapper.startTutorial(tutorial);
-            await componentTestUtils.expectClickFailure('#chooseCoord_0_0', RulesFailure.MUST_CLICK_ON_EMPTY_CASE);
+            await componentTestUtils.expectClickFailure('#chooseCoord_0_0', RulesFailure.MUST_CLICK_ON_EMPTY_SPACE);
             tick(10);
 
             // expect to see cancelMove reason as message
@@ -650,7 +652,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             expect(currentMessage).toBe(expectedMessage);
             const currentReason: string =
                 componentTestUtils.findElement('#currentReason').nativeElement.innerHTML;
-            expect(currentReason).toBe(RulesFailure.MUST_CLICK_ON_EMPTY_CASE);
+            expect(currentReason).toBe(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE);
             // expect click to be still possible
             expect(componentTestUtils.getComponent().canUserPlay('#chooseCoord_0_0').isSuccess()).toBeTrue();
             tick(10);
@@ -794,7 +796,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             wrapper.startTutorial(tutorial);
 
             // When doing invalid click
-            await componentTestUtils.expectClickFailure('#chooseCoord_0_0', RulesFailure.MUST_CLICK_ON_EMPTY_CASE);
+            await componentTestUtils.expectClickFailure('#chooseCoord_0_0', RulesFailure.MUST_CLICK_ON_EMPTY_SPACE);
 
             // expect to see cancelMove reason as message
             const expectedMessage: string = 'Perdu.';
@@ -803,7 +805,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             expect(currentMessage).toBe(expectedMessage);
             const currentReason: string =
                 componentTestUtils.findElement('#currentReason').nativeElement.innerHTML;
-            expect(currentReason).toBe(RulesFailure.MUST_CLICK_ON_EMPTY_CASE);
+            expect(currentReason).toBe(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE);
             // expect click to be still possible
             expect(componentTestUtils.getComponent().canUserPlay('#chooseCoord_0_0').isSuccess()).toBeTrue();
         }));
@@ -847,7 +849,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             // when clicking "Next Button"
             const nextButtonMessage: string =
                 componentTestUtils.findElement('#nextButton').nativeElement.textContent;
-            expect(nextButtonMessage).toBe('Vu');
+            expect(nextButtonMessage).toBe('Ok');
             expect(await componentTestUtils.clickElement('#nextButton')).toBeTrue();
 
             // expect to see next step on component
@@ -956,38 +958,38 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
         }));
     });
     describe('Tutorials', () => {
-        it('Should make sure than predicate step have healthy behaviors', fakeAsync(async() => {
+        it('Should make sure that predicate step have healthy behaviors', fakeAsync(async() => {
             const stepExpectations: [Rules<Move, GamePartSlice>, TutorialStep, Move, MGPValidation][] = [
                 [
                     new EpaminondasRules(EpaminondasPartSlice),
                     epaminondasTutorial[3],
                     new EpaminondasMove(0, 11, 2, 1, Direction.UP),
-                    MGPValidation.failure($localize`Félicitation, vous avez un pas d'avance, ce n'est malheureusement pas l'exercice.`),
+                    MGPValidation.failure(`Congratulations, you are in advance. But this is not the exercise here, try again.`),
                 ], [
                     new EpaminondasRules(EpaminondasPartSlice),
                     epaminondasTutorial[4],
                     new EpaminondasMove(0, 10, 1, 1, Direction.UP),
-                    MGPValidation.failure($localize`Raté ! Vous n'avez bougé qu'une pièce.`),
+                    MGPValidation.failure(`Failed! You moved only one piece.`),
                 ], [
                     new PentagoRules(PentagoGameState),
                     pentagoTutorial[2],
                     PentagoMove.withRotation(0, 0, 0, true),
-                    MGPValidation.failure($localize`Vous avez effectué un mouvement avec rotation, cette étape du didacticiel concerne les tours sans rotations!`),
+                    MGPValidation.failure($localize`You have made a move with a rotation. This tutorial step is about moves without rotations!`),
                 ], [
                     new PentagoRules(PentagoGameState),
                     pentagoTutorial[3],
                     PentagoMove.rotationless(0, 0),
-                    MGPValidation.failure($localize`Vous avez effectué un mouvement sans rotation, recommencez!`),
+                    MGPValidation.failure($localize`You made a move without rotation, try again!`),
                 ], [
                     new SaharaRules(SaharaPartSlice),
                     saharaTutorial[2],
                     new SaharaMove(new Coord(7, 0), new Coord(5, 0)),
-                    MGPValidation.failure($localize`Vous avez fait un double pas, c'est très bien, mais c'est l'exercice suivant!`),
+                    MGPValidation.failure(`You have made a double step, which is good but it is the next exercise!`),
                 ], [
                     new SaharaRules(SaharaPartSlice),
                     saharaTutorial[3],
                     new SaharaMove(new Coord(2, 0), new Coord(2, 1)),
-                    MGPValidation.failure($localize`Raté ! Vous avez fait un simple pas!`),
+                    MGPValidation.failure(`Failed! You have made a single step.`),
                 ], [
                     new SixRules(SixGameState),
                     sixTutorial[4],
@@ -1002,17 +1004,17 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     new SixRules(SixGameState),
                     sixTutorial[5],
                     SixMove.fromDeplacement(new Coord(0, 6), new Coord(1, 6)),
-                    MGPValidation.failure($localize`Ce mouvement ne déconnecte pas du jeu de pièces adverses ! Réessayez avec une autre pièce !`),
+                    MGPValidation.failure(`This move does not disconnect your opponent's pieces. Try again with another piece.`),
                 ], [
                     new SixRules(SixGameState),
                     sixTutorial[6],
                     SixMove.fromDeplacement(new Coord(2, 3), new Coord(3, 3)),
-                    MGPValidation.failure($localize`Ce mouvement n'as pas coupé le plateau en deux parties égales`),
+                    MGPValidation.failure(`This move has not cut the board in two equal halves.`),
                 ], [
                     new SixRules(SixGameState),
                     sixTutorial[6],
                     SixMove.fromCut(new Coord(2, 3), new Coord(1, 3), new Coord(3, 2)),
-                    MGPValidation.failure(`Raté ! Vous avez bien coupé le plateau en deux mais vous avez choisi de conserver la moitié ou vous êtes en minorité, vous avez donc perdu. Réessayez !`),
+                    MGPValidation.failure(`Failed. You did cut the board in two but you kept the half where you're in minority. Therefore, you lost! Try again.`),
                 ], [
                     new YinshRules(YinshGameState),
                     yinshTutorial[3],

@@ -7,19 +7,19 @@ describe('TimeUtils', () => {
             pipe = new HumanDuration();
         });
         it('should not fail if duration is 0', () => {
-            expect(pipe.transform(0)).toBe('0 secondes');
+            expect(pipe.transform(0)).toBe('0 seconds');
         });
         it('should produce hours, minutes, and seconds', () => {
-            expect(pipe.transform(7322)).toBe('2 heures, 2 minutes et 2 secondes');
+            expect(pipe.transform(7322)).toBe('2 hours, 2 minutes and 2 seconds');
         });
         it('should not pluralize if not necessary', () => {
-            expect(pipe.transform(3661)).toBe('1 heure, 1 minute et 1 seconde');
+            expect(pipe.transform(3661)).toBe('1 hour, 1 minute and 1 second');
         });
         it('should only include elements which are not zero', () => {
-            expect(pipe.transform(3600)).toBe('1 heure');
+            expect(pipe.transform(3600)).toBe('1 hour');
             expect(pipe.transform(60)).toBe('1 minute');
-            expect(pipe.transform(15)).toBe('15 secondes');
-            expect(pipe.transform(3615)).toBe('1 heure et 15 secondes');
+            expect(pipe.transform(15)).toBe('15 seconds');
+            expect(pipe.transform(3615)).toBe('1 hour and 15 seconds');
         });
     });
 });

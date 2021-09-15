@@ -4,113 +4,116 @@ import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-gam
 
 export const awaleTutorial: TutorialStep[] = [
     TutorialStep.anyMove(
-        $localize`Distribuer`,
-        $localize`L’Awalé est un jeu de distribution et de capture, le but est de capturer le plus de graines possible.
-        Nous allons voir comment se distribuent les graines.
-        Comme vous jouez en premier, les 6 maisons du haut vous appartiennent.<br/><br/>
-        Cliquez sur l'une d'entre elles pour en distribuer les graines, elles seront distribués dans le sens horaires, à raison d'une graine par maison.`,
+        $localize`Sowing`,
+        $localize`Awalé is a game of distribution (sowing) and capture. Its goal is to capture the most seeds.
+         Let's see how seeds are sown.
+         As you're playing first, the 6 houses on the top are yours.<br/><br>
+         Click on any of them to sow the seeds it contains: they will be sown clockwise, one seed per house.`,
         AwalePartSlice.getInitialSlice(),
         AwaleMove.ZERO,
-        $localize`Voilà, regardez les 4 maisons suivant la maison choisie dans l’ordre horlogé, elle comptent maintenant 5 graines.
-         C’est comme cela que les graines se distribuent, une à une à partir de la maison suivante dans l’ordre horlogé de la maison d’où elles viennent!`,
+        $localize`Look at the 4 houses that follow clockwise the one you picked, they now contain 5 seeds.
+        This is how seeds are sown:
+        one by one from the house next to the one they come from, clockwise.`,
     ),
     TutorialStep.anyMove(
-        $localize`Grosse distribution`,
-        $localize`Vous êtes maintenant le joueur 2 (en bas).
-        Quand il y a assez de graines pour faire un tour complet, quelque chose d’autre se passe.<br/><br/>
-        Distribuez la maison qui contient 12 graines.`,
+        $localize`Big sowing`,
+        $localize`You are now the second player (on the bottom).
+        When there are enough seeds to make a full turn, something else happens.<br/><br/>
+        Sow the house that contains 12 seeds.`,
         new AwalePartSlice([
             [0, 0, 0, 0, 0, 0],
             [0, 12, 0, 0, 0, 0],
         ], 1, [0, 0]),
         AwaleMove.ONE,
-        $localize`Voyez, la maison distribuée n’a pas été reremplie et la distribution a continué immédiatement à la maison suivante (qui contient donc deux graines) !`,
+        $localize`See, the house that you sowed has not been refilled, and the sowing immediately continued to the next house (which therefore contains two seeds).`,
     ),
     TutorialStep.fromMove(
-        $localize`Capture simple`,
-        $localize`Après une distribution, si la dernière graine tombe dans une maison du camp adverse et qu'il y a maintenant deux ou trois graines dans cette maison, le joueur capture ces deux ou trois graines.
-        Ensuite il regarde la case précédente:
-        si elle est dans le camp adverse et contient deux ou trois graines, il les capture aussi, et ainsi de suite jusqu'à ce qu'il arrive à son camp ou jusqu'à ce qu'il y ait un nombre de graines différent de deux ou trois.<br/><br/>
-        Vous êtes le deuxième joueur, faites une capture!`,
+        $localize`Simple capture`,
+        $localize`After sowing, if the last seed falls in an opponent's house and if there is now two or three seeds in this house, the player captures these two or three seeds.
+         Then, the player looks at the preceding house:
+         if it is still in the opponent's side and contains two or three seeds, they are also captured.
+         This continues until we reach either the player's side or a house containing neither two nor three seeds.<br/><br/>
+         You are the second player, try to capture some pieces!`,
         new AwalePartSlice([
             [1, 0, 0, 0, 1, 0],
             [1, 0, 0, 0, 1, 0],
         ], 1, [0, 0]),
         [AwaleMove.ZERO],
-        $localize`Bravo ! Il s'agissait ici d'une capture simple, voyons maintenant une capture composée.`,
-        $localize`Perdu. Recommencez et distribuez la maison la plus à gauche.`,
+        $localize`Well done! This was a simple capture, now let us see how to make multiple captures.`,
+        $localize`Failed. Try again and sow from the leftmost house.`,
     ),
     TutorialStep.fromMove(
-        $localize`Capture composée`,
-        $localize`En distribuant votre maison la plus à gauche, vous ferez passer une première maison de 2 à 3 graines, et la deuxième de 1 à 2.
-        Ces deux maisons, étant consécutives, seront donc toutes les deux capturées.<br/><br/>
-        Capturez-les.`,
+        $localize`Multiple captures`,
+        $localize`By sowing from your leftmost house, you will change the number of seeds in a house from 2 to 3, and from the preceding house from 1 to 2.
+        As these are consecutive houses, all seeds in them will be captured.<br/><br/>
+        Capture them.`,
         new AwalePartSlice([
             [2, 1, 0, 0, 1, 0],
             [2, 0, 0, 0, 1, 0],
         ], 1, [0, 0]),
         [AwaleMove.ZERO],
-        $localize`Bravo, vous gagnez 3 points dans la première maison plus 2 dans la seconde!`,
-        $localize`Perdu. Recommencez.`,
+        $localize`Nice, you win 3 points from the first house, and 2 from the second!`,
+        $localize`Failed. Try again.`,
     ),
     TutorialStep.fromMove(
-        $localize`Capture interrompue`,
-        $localize`En cliquant sur votre maison la plus à gauche, vous atterrissez sur la 3ème maison, qui est capturable.<br/><br/>
-        Faites-le.`,
+        $localize`Interrupted capture`,
+        $localize`By clicking on your leftmost house, you end up on the 3rd house, which is capturable.<br/><br/>
+        Do it.`,
         new AwalePartSlice([
             [1, 0, 1, 0, 0, 1],
             [3, 0, 0, 0, 1, 0],
         ], 1, [0, 0]),
         [AwaleMove.ZERO],
-        $localize`Constatez que la 2ème maison n’étant pas capturable, la capture a été interrompue et vous n’avez pas pu capturer la 1ère maison.`,
-        $localize`Perdu. Recommencez.`,
+        $localize`Notice that because the second house was not capturable, the captured was interrupted and you have not captured the first house.`,
+        $localize`Failed. Try again.`,
     ),
     TutorialStep.fromMove(
-        $localize`Capture chez l'adversaire uniquement`,
-        $localize`Essayez de capturer les deux maisons les plus à gauche de l’adversaire.`,
+        $localize`Capture on the other side only`,
+        $localize`Try to capture the two leftmost houses of the opponent.`,
         new AwalePartSlice([
             [2, 2, 0, 0, 1, 0],
-            [1, 3, 0, 0, 1, 0],
+            [1, 3, 0, 0, 0, 0],
         ], 1, [0, 0]),
         [AwaleMove.ONE],
-        $localize`Bravo ! Constatez que la capture s'est interrompue en arrivant dans votre territoire, on ne peut pas capturer ses propres maisons!`,
-        $localize`Vous n'avez capturé qu'une seule maison, recommencez!`,
+        $localize`Congratulations! Notice that the capture was interrupted when entering your territory: you cannot capture your own houses!`,
+        $localize`You have only captured one house, try again!`,
     ),
     TutorialStep.fromMove(
-        $localize`Ne pas affamer`,
-        $localize`Vous avez une très belle capture qui semble possible, il semble que vous pouviez capturer tous les pions de l’adversaire !<br/><br/>
-        Lancez-vous !`,
+        $localize`Do not starve`,
+        $localize`You have a very nice capture that seems possible: it seems that you can capture all the opponent's seeds!<br/><br/>
+        Try it.`,
         new AwalePartSlice([
             [1, 1, 1, 1, 1, 0],
             [5, 0, 0, 1, 0, 0],
         ], 1, [0, 0]),
         [AwaleMove.ZERO],
-        $localize`Malheureusement, vous ne pouvez pas capturer, car sinon l’adversaire ne pourrait pas jouer après vous.
-        À ces moments là, le mouvement est autorisé mais la capture n’est pas effectuée!`,
-        $localize`Perdu. Recommencez.`,
+        $localize`Sadly, you cannot capture here, otherwise the opponent could not play after you.
+        When this happens, the move can be made, but no capture takes place!`,
+        $localize`Failed. Try again.`,
     ),
     TutorialStep.anyMove(
-        $localize`Nourir est obligatoire`,
-        $localize`"Affamer" est interdit, c'est-à-dire que si votre adversaire n'a plus de graines et que vous savez lui en donner au moins une, vous êtes obligé de le faire.
-        Allez-y !`,
+        $localize`Feeding is mandatory`,
+        $localize`You cannot let another player starve, meaning that if your opponent has no seeds anymore and if you can give them at least one, you have to do it.<br/><br/>
+        Go ahead!`,
         new AwalePartSlice([
             [0, 0, 0, 0, 0, 0],
             [0, 1, 2, 4, 4, 5],
         ], 1, [0, 0]),
         AwaleMove.THREE,
-        $localize`Bravo ! Notez que vous pouvez choisir de lui en donner le moins possible si cela vous arrange mieux !
-        C’est souvent un bon moyen d’avoir des captures faciles !`,
+        $localize`Congratulations! Note that you can choose to give your opponent the least number of seeds if it is better for you.
+        It is often a good way to have easy captures!`,
     ),
     TutorialStep.anyMove(
-        $localize`Fin de partie`,
-        $localize`Une partie est gagnée dès qu’un des deux joueurs a capturé 25 graines, car il a plus de la moitié de leur total.<br/><br/>
-        Distribuez la maison en haut à droite.`,
+        $localize`End of the game`,
+        $localize`A game is won as soon as one player has captured 25 seeds, as that player has more than half of all the seeds.<br/><br/>
+         Sow the house on the top right.`,
         new AwalePartSlice([
             [0, 0, 0, 0, 0, 1],
             [0, 1, 2, 3, 4, 4],
         ], 0, [0, 0]),
         AwaleMove.FIVE,
-        $localize`Aussi, dès qu'un joueur ne peut plus jouer, l’autre joueur capture toutes les graines dans son propre camp.
-        Ici, c'était à vous de jouer et au joueur suivant de récolter toutes les graines restantes, en mettant ainsi fin à la partie.`,
+        $localize`Also, as soon as on player cannot play, the other player captures all the seeds in its own side.
+         Here, it was the first player's turn, and the second player has taken all the remaining seeds.`,
     ),
 ];
+

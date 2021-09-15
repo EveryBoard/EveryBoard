@@ -5,7 +5,7 @@ import { KamisadoPiece } from 'src/app/games/kamisado/KamisadoPiece';
 import { KamisadoFailure } from 'src/app/games/kamisado/KamisadoFailure';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { KamisadoComponent } from '../kamisado.component';
-import { fakeAsync, flush } from '@angular/core/testing';
+import { fakeAsync, tick } from '@angular/core/testing';
 import { Coord } from 'src/app/jscaip/Coord';
 import { KamisadoMove } from 'src/app/games/kamisado/KamisadoMove';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -31,8 +31,8 @@ describe('KamisadoComponent', () => {
         expect(componentTestUtils.getComponent().chosen.equals(new Coord(-1, -1))).toBeTrue();
     });
     it('should not allow to pass initially', fakeAsync(async() => {
-        expect((await componentTestUtils.getComponent().pass()).reason).toBe(KamisadoFailure.CANT_PASS);
-        flush();
+        expect((await componentTestUtils.getComponent().pass()).reason).toBe(RulesFailure.CANNOT_PASS);
+        tick(1001)
     }));
     it('should allow changing initial choice', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_0_7'); // Select initial piece
@@ -130,7 +130,7 @@ describe('KamisadoComponent', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _], // brown is stuck
+            [_, _, _, _, _, _, _, _],
             [R, r, _, _, _, _, _, _],
         ];
         const slice: KamisadoPartSlice =
@@ -138,8 +138,7 @@ describe('KamisadoComponent', () => {
         componentTestUtils.setupSlice(slice);
 
         const move: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(0, 0));
-        await componentTestUtils.expectMoveFailure('#click_0_0', KamisadoFailure.GAME_ENDED, move);
-        // can't select a piece either
-        expect((componentTestUtils.getComponent().choosePiece(2, 0)).reason).toBe(KamisadoFailure.GAME_ENDED);
+        // TODO: investigate canUserPlay etc.
+        await componentTestUtils.expectMoveFailure('#click_0_0', 'You should never see this message', move);
     }));
 });

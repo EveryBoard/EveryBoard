@@ -36,3 +36,6 @@ body { margin: 0; font-family: "Roboto", "Helvetica Neue", sans-serif; }
   align-content: center; /* used this for multiple child */
   align-items: center; /* if an only child */
 }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

@@ -63,14 +63,14 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice> {
         }
         const landingCase: FourStatePiece = FourStatePiece.from(slice.getBoardAt(move.end));
         if (landingCase !== FourStatePiece.EMPTY) {
-            return { legal: MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_CASE) };
+            return { legal: MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE) };
         }
         const commonNeighboor: MGPOptional<Coord> = TriangularCheckerBoard.getCommonNeighboor(move.coord, move.end);
         if (commonNeighboor.isPresent()) {
             if (slice.getBoardAt(commonNeighboor.get()) === FourStatePiece.EMPTY.value) {
                 return { legal: MGPValidation.SUCCESS };
             } else {
-                return { legal: MGPValidation.failure(SaharaFailure.CAN_ONLY_REBOUNCE_ON_EMPTY_CASE) };
+                return { legal: MGPValidation.failure(SaharaFailure.CAN_ONLY_REBOUND_ON_EMPTY_SPACE) };
             }
         } else {
             return { legal: MGPValidation.SUCCESS };

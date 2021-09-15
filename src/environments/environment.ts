@@ -1,8 +1,9 @@
-export const environment = {
+import { Environment } from './environment-type';
+
+export const environment : Environment = {
     useEmulators: false,
     emulatorConfig: null,
     production: true,
-    devPages: true,
     test: false,
     root: '/',
 };

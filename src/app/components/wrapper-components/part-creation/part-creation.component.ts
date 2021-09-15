@@ -28,6 +28,7 @@ interface PartCreationViewInfo {
     creator?: string;
     firstPlayer?: IFirstPlayer;
     partType?: IPartType;
+    partTypeName?: string,
     maximalMoveDuration?: number;
     totalPartDuration?: number;
     candidates?: string[];
@@ -103,6 +104,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         }
         this.subscribeToJoinerDoc();
         this.subscribeToFormElements();
+
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.ngOnInit asynchronouseries finisheds');
         return;
     }
@@ -176,6 +178,17 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             this.viewInfo.partType = joiner.partType;
             this.viewInfo.chosenOpponent = joiner.chosenPlayer;
             this.viewInfo.firstPlayer = joiner.firstPlayer;
+        }
+        switch (joiner.partType) {
+            case 'CUSTOM':
+                this.viewInfo.partTypeName = $localize`custom`;
+                break;
+            case 'BLITZ':
+                this.viewInfo.partTypeName = $localize`blitz`;
+                break;
+            case 'STANDARD':
+                this.viewInfo.partTypeName = $localize`standard`;
+                break;
         }
     }
     private setDataForCreator(joiner: IJoiner): void {
@@ -263,7 +276,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     }
     private onGameCancelled() {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.onGameCancelled');
-        this.messageDisplayer.infoMessage('La partie a été annulée');
+        this.messageDisplayer.infoMessage($localize`The game has been canceled!`);
         this.router.navigate(['server']);
     }
     private isGameStarted(joiner: IJoiner): boolean {
@@ -367,7 +380,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         const candidates: string[] = beforeUser.concat(afterUser);
         if (userPseudo === this.currentJoiner.chosenPlayer) {
             // The chosen player has been removed, the user will have to review the config
-            this.messageDisplayer.infoMessage($localize`${userPseudo} a quitté la partie, veuillez choisir un autre adversaire`);
+            this.messageDisplayer.infoMessage($localize`${userPseudo} left the game, please pick another opponent.`);
             return this.joinerService.reviewConfigRemoveChosenPlayerAndUpdateCandidates(candidates);
         } else {
             this.joinerService.updateCandidates(candidates);

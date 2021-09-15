@@ -81,10 +81,10 @@
                   class="base no-fill victory-stroke"
             />
         </g>
-        <g *ngIf="pieceInHand != null"
+        <g *ngIf="pieceInHand !== null"
            [attr.transform]="'translate(0 ' + (CASE_SIZE*5) + ')'"
         >
-            <text class="text-small">Pièce en main :</text>
+            <text i18n class="text-small">Piece in hand:</text>
             <g transform="translate(120 0)"
                *ngIf="chosen.x === -1"
             >
