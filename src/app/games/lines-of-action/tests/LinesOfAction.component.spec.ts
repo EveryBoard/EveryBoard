@@ -8,11 +8,11 @@ import { LinesOfActionFailure } from '../LinesOfActionFailure';
 import { LinesOfActionState } from '../LinesOfActionState';
 
 describe('LinesOfActionComponent', () => {
+
     let componentTestUtils: ComponentTestUtils<LinesOfActionComponent>;
     const X: number = Player.ZERO.value;
     const O: number = Player.ONE.value;
     const _: number = Player.NONE.value;
-
 
     beforeEach(fakeAsync(async() => {
         componentTestUtils = await ComponentTestUtils.forGame<LinesOfActionComponent>('LinesOfAction');

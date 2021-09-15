@@ -75,7 +75,7 @@
                 Refuser un match nul
             </button>
             <button class="button is-fullwidth mb-1"
-                    *ngIf="endGame === false && isPlaying() && compo.canPass && (currentPlayer===userName)"
+                    *ngIf="endGame === false && isPlaying() && compo.canPass && (currentPlayer === userName)"
                     id="passButton"
                     (click)="compo.pass()"
                     i18n>

@@ -58,6 +58,26 @@ describe('ActivesPartsService', () => {
             // then we should learn that yes, he has some
             expect(hasUserActiveParts).toBeTrue();
         });
+        it('should return false when user is not in a game', () => {
+            // Given a partDao including an active part whose playerZero is our user
+            spyOn(service, 'getActiveParts').and.returnValue([{
+                id: 'joinerIdOrWhatever',
+                doc: {
+                    listMoves: [],
+                    playerZero: 'jeanRoger',
+                    playerOne: 'Charles Du Pied',
+                    result: 5,
+                    turn: 0,
+                    typeGame: 'P4',
+                },
+            }]);
+
+            // when asking hasActivePart('our user')
+            const hasUserActiveParts: boolean = service.hasActivePart('creator');
+
+            // then we should learn that yes, he has some
+            expect(hasUserActiveParts).toBeFalse();
+        });
     });
     afterEach(() => {
         service.ngOnDestroy();

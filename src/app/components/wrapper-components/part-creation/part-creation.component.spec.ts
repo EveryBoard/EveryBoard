@@ -116,8 +116,8 @@ describe('PartCreationComponent:', () => {
         // when opponent arrives, then is selected, then user proposes config
         await mockCandidateArrival();
         await chooseOpponent();
-        await selectCustomGameAndChangeConfig();
         spyOn(joinerDAOMock, 'update').and.callThrough();
+        await selectCustomGameAndChangeConfig();
         await component.proposeConfig();
 
         // then the data sent should be what creator saw

@@ -17,7 +17,6 @@ export class LinesOfActionNode extends MGPNode<LinesOfActionRules,
                                                LinesOfActionState,
                                                LegalityStatus> {}
 
-
 export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionState> {
 
     public static getListMovesFromState(state: LinesOfActionState): LinesOfActionMove[] {
