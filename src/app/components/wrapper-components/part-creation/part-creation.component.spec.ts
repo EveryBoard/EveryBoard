@@ -243,7 +243,7 @@ describe('PartCreationComponent:', () => {
 
             spyOn(joinerDAOMock, 'update');
 
-            expectAsync(testUtils.clickElement('#reviewConfig')).toBeResolvedTo(true);
+            await testUtils.clickElement('#reviewConfig');
             testUtils.detectChanges();
             await testUtils.whenStable();
 
@@ -259,7 +259,7 @@ describe('PartCreationComponent:', () => {
             spyOn(joinerService, 'deleteJoiner');
             spyOn(chatService, 'deleteChat');
 
-            expectAsync(testUtils.clickElement('#cancel')).toBeResolvedTo(true);
+            await testUtils.clickElement('#cancel');
             testUtils.detectChanges();
             await testUtils.whenStable();
             testUtils.detectChanges();
@@ -294,8 +294,8 @@ describe('PartCreationComponent:', () => {
             await testUtils.whenStable();
             tick();
 
-            expectAsync(testUtils.clickElement('#firstPlayerCreator')).toBeResolvedTo(true);
-            expectAsync(testUtils.clickElement('#partTypeBlitz')).toBeResolvedTo(true);
+            await testUtils.clickElement('#firstPlayerCreator');
+            await testUtils.clickElement('#partTypeBlitz');
 
             // new candidate appears
             await joinerDAOMock.update('joinerId', {

@@ -15,7 +15,7 @@ describe('InscriptionComponent', () => {
     it('Registration should navigate to ConfirmInscriptionComponent', fakeAsync(async() => {
         spyOn(testUtils.getComponent().router, 'navigate');
 
-        expect(await testUtils.clickElement('#registerButton')).toBeTrue();
+        await testUtils.clickElement('#registerButton');
 
         expect(testUtils.getComponent().router.navigate).toHaveBeenCalledWith(['/confirm-inscription']);
     }));
@@ -23,7 +23,7 @@ describe('InscriptionComponent', () => {
         spyOn(testUtils.getComponent().router, 'navigate');
         spyOn(testUtils.getComponent().authService, 'doRegister').and.rejectWith({ message: 'c\'est caca monsieur.' });
 
-        expect(await testUtils.clickElement('#registerButton')).toBeTrue();
+        await testUtils.clickElement('#registerButton');
 
         const expectedError: string = testUtils.findElement('#errorMessage').nativeElement.innerHTML;
         expect(testUtils.getComponent().router.navigate).not.toHaveBeenCalled();

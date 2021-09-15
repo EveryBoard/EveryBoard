@@ -195,7 +195,7 @@ describe('TutorialGameWrapperComponent', () => {
             tick(10);
 
             // when clicking retry
-            expect(await componentTestUtils.clickElement('#retryButton')).toBeTrue();
+            await componentTestUtils.clickElement('#retryButton');
 
             // expect to see steps instruction message on component and board restarted
             const currentMessage: string =
@@ -223,7 +223,7 @@ describe('TutorialGameWrapperComponent', () => {
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
             await componentTestUtils.expectMoveSuccess('#chooseCoord_0_0', move, QuartoPartSlice.getInitialSlice());
             tick(10);
-            expect(await componentTestUtils.clickElement('#retryButton')).toBeTrue();
+            await componentTestUtils.clickElement('#retryButton');
 
             // expect to see steps instruction message on component and board restarted
             const currentMessage: string =
@@ -280,7 +280,7 @@ describe('TutorialGameWrapperComponent', () => {
                 ),
             ];
             await componentTestUtils.expectClickSuccess('#choosePiece_15');
-            expect(await componentTestUtils.clickElement('#retryButton')).toEqual(true, 'Retry button should exist');
+            await componentTestUtils.clickElement('#retryButton');
 
             // When trying again
             await componentTestUtils.expectClickSuccess('#choosePiece_15');
@@ -314,7 +314,7 @@ describe('TutorialGameWrapperComponent', () => {
                 ),
             ];
             // when clicking "Skip"
-            expect(await componentTestUtils.clickElement('#nextButton')).toBeTrue();
+            await componentTestUtils.clickElement('#nextButton');
 
             // expect to see next step on component
             const expectedMessage: string = 'Following Following Following.';
@@ -352,12 +352,12 @@ describe('TutorialGameWrapperComponent', () => {
                 ),
             ];
             wrapper.startTutorial(tutorial);
-            expect(await componentTestUtils.clickElement('#nextButton')).toBeTrue();
-            expect(await componentTestUtils.clickElement('#nextButton')).toBeTrue();
+            await componentTestUtils.clickElement('#nextButton');
+            await componentTestUtils.clickElement('#nextButton');
             await componentTestUtils.expectClickSuccess('#chooseCoord_2_2');
 
             // When clicking next
-            expect(await componentTestUtils.clickElement('#nextButton')).toBeTrue();
+            await componentTestUtils.clickElement('#nextButton');
 
             // expect to be back at first step
             const expectedMessage: string = 'instruction 0';
@@ -394,13 +394,13 @@ describe('TutorialGameWrapperComponent', () => {
                 ),
             ];
             wrapper.startTutorial(tutorial);
-            expect(await componentTestUtils.clickElement('#nextButton')).toBeTrue(); // Go to 1
+            await componentTestUtils.clickElement('#nextButton'); // Go to 1
             await componentTestUtils.expectClickSuccess('#chooseCoord_1_1'); // Do 1
-            expect(await componentTestUtils.clickElement('#nextButton')).toBeTrue(); // Go to 2
-            expect(await componentTestUtils.clickElement('#nextButton')).toBeTrue(); // Go to 0
+            await componentTestUtils.clickElement('#nextButton'); // Go to 2
+            await componentTestUtils.clickElement('#nextButton'); // Go to 0
 
             // When clicking next
-            expect(await componentTestUtils.clickElement('#nextButton')).toBeTrue(); // Should go to 2
+            await componentTestUtils.clickElement('#nextButton'); // Should go to 2
 
             // expect to be back at first step
             const expectedMessage: string = 'instruction 2';
@@ -424,7 +424,7 @@ describe('TutorialGameWrapperComponent', () => {
             await componentTestUtils.expectClickSuccess('#chooseCoord_0_0');
 
             // when clicking next button
-            expect(await componentTestUtils.clickElement('#nextButton')).toBeTrue();
+            await componentTestUtils.clickElement('#nextButton');
 
             // expect to see end tutorial congratulations
             const expectedMessage: string = wrapper.COMPLETED_TUTORIAL_MESSAGE;
@@ -437,7 +437,7 @@ describe('TutorialGameWrapperComponent', () => {
             // expect retry button to be hidden
             componentTestUtils.expectElementNotToExist('#retryButton');
             // expect restart button to be here
-            expect(await componentTestUtils.clickElement('#restartButton')).toBeTrue();
+            await componentTestUtils.clickElement('#restartButton');
             expect(wrapper.successfulSteps).toBe(0);
         }));
         it('Should allow to restart the whole tutorial when finished', fakeAsync(async() => {
@@ -449,10 +449,10 @@ describe('TutorialGameWrapperComponent', () => {
                     QuartoPartSlice.getInitialSlice(),
                 ),
             ]);
-            expect(await componentTestUtils.clickElement('#nextButton')).toBeTrue();
+            await componentTestUtils.clickElement('#nextButton');
 
             // when clicking restart
-            expect(await componentTestUtils.clickElement('#restartButton')).toBeTrue();
+            await componentTestUtils.clickElement('#restartButton');
 
             // expect to be back on first step
             const currentMessage: string =
@@ -471,11 +471,11 @@ describe('TutorialGameWrapperComponent', () => {
                 ),
             ]);
             componentTestUtils.expectElementNotToExist('#playLocallyButton');
-            expect(await componentTestUtils.clickElement('#nextButton')).toBeTrue();
+            await componentTestUtils.clickElement('#nextButton');
 
             // when clicking play locally
             spyOn(componentTestUtils.wrapper.router, 'navigate').and.callThrough();
-            expect(await componentTestUtils.clickElement('#playLocallyButton')).toBeTrue();
+            await componentTestUtils.clickElement('#playLocallyButton');
 
             // expect navigator to have been called
             expect(componentTestUtils.wrapper.router.navigate).toHaveBeenCalledWith(['local/Quarto']);
@@ -490,13 +490,13 @@ describe('TutorialGameWrapperComponent', () => {
                 ),
             ]);
             componentTestUtils.expectElementNotToExist('#playOnlineButton');
-            expect(await componentTestUtils.clickElement('#nextButton')).toBeTrue();
+            await componentTestUtils.clickElement('#nextButton');
 
             // when clicking play locally
             const compo: TutorialGameWrapperComponent =
                 componentTestUtils.wrapper as TutorialGameWrapperComponent;
             spyOn(compo.gameService, 'createGameAndRedirectOrShowError').and.callThrough();
-            expect(await componentTestUtils.clickElement('#playOnlineButton')).toBeTrue();
+            await componentTestUtils.clickElement('#playOnlineButton');
 
             // expect navigator to have been called
             expect(compo.gameService.createGameAndRedirectOrShowError).toHaveBeenCalledWith('Quarto');
@@ -529,8 +529,7 @@ describe('TutorialGameWrapperComponent', () => {
             tick(11);
 
             // expect highlight to be present
-            const element: DebugElement = componentTestUtils.findElement('#highlight');
-            expect(element).toBeTruthy('Highlight should be present');
+            componentTestUtils.expectElementToExist('#highlight');
         }));
         it('Should show success message after step success', fakeAsync(async() => {
             // Given a TutorialStep with several moves
@@ -687,7 +686,7 @@ describe('TutorialGameWrapperComponent', () => {
                 .toBeFalse();
 
             // When clicking "Show Solution"
-            expect(await componentTestUtils.clickElement('#showSolutionButton')).toBeTrue();
+            await componentTestUtils.clickElement('#showSolutionButton');
 
             // Expect the first awaited move to have been done
             expect(componentTestUtils.getComponent().rules.node.move).toEqual(awaitedMove);
@@ -850,7 +849,7 @@ describe('TutorialGameWrapperComponent', () => {
             const nextButtonMessage: string =
                 componentTestUtils.findElement('#nextButton').nativeElement.textContent;
             expect(nextButtonMessage).toBe('Ok');
-            expect(await componentTestUtils.clickElement('#nextButton')).toBeTrue();
+            await componentTestUtils.clickElement('#nextButton');
 
             // expect to see next step on component
             const expectedMessage: string = 'Suite suite.';
@@ -869,7 +868,7 @@ describe('TutorialGameWrapperComponent', () => {
                     'You shall not pass',
                     QuartoPartSlice.getInitialSlice(),
                     new QuartoMove(1, 1, QuartoPiece.BAAB),
-                    (move: QuartoMove, resultingState: QuartoPartSlice) => {
+                    (_move: QuartoMove, _resultingState: QuartoPartSlice) => {
                         return MGPValidation.failure('chocolatine');
                     },
                     'Bravo !',
@@ -898,7 +897,7 @@ describe('TutorialGameWrapperComponent', () => {
                     'No matter what you do, it will be success!',
                     QuartoPartSlice.getInitialSlice(),
                     new QuartoMove(1, 1, QuartoPiece.BAAB),
-                    (move: QuartoMove, resultingState: QuartoPartSlice) => {
+                    (_move: QuartoMove, _resultingState: QuartoPartSlice) => {
                         return MGPValidation.SUCCESS;
                     },
                     'Bravo !',
@@ -930,7 +929,7 @@ describe('TutorialGameWrapperComponent', () => {
                     'You will have to ask me for solution anyway',
                     QuartoPartSlice.getInitialSlice(),
                     solutionMove,
-                    (move: QuartoMove, resultingState: QuartoPartSlice) => {
+                    (_move: QuartoMove, _resultingState: QuartoPartSlice) => {
                         return MGPValidation.failure('what did I say ?');
                     },
                     'Bravo !',
@@ -944,7 +943,7 @@ describe('TutorialGameWrapperComponent', () => {
             tick(10);
 
             // When clicking "Show Solution"
-            expect(await componentTestUtils.clickElement('#showSolutionButton')).toBeTrue();
+            await componentTestUtils.clickElement('#showSolutionButton');
 
             // Expect the step proposed move to have been done
             expect(componentTestUtils.getComponent().rules.node.move).toEqual(solutionMove);

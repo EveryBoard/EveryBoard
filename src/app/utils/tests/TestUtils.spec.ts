@@ -107,17 +107,15 @@ export class SimpleComponentTestUtils<T> {
     }
     private constructor() {}
 
-    public async clickElement(elementName: string): Promise<boolean> {
+    public async clickElement(elementName: string): Promise<void> {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(elementName + ' should exist on the page').toBeTruthy();
         if (element == null) {
-            return false;
-        } else {
-            element.triggerEventHandler('click', null);
-            await this.fixture.whenStable();
-            this.detectChanges();
-            return true;
+            return;
         }
+        element.triggerEventHandler('click', null);
+        await this.fixture.whenStable();
+        this.detectChanges();
     }
     public getComponent(): T {
         return this.component;
@@ -351,17 +349,15 @@ export class ComponentTestUtils<T extends GameComponent> {
             tick(150);
         }
     }
-    public async clickElement(elementName: string): Promise<boolean> {
+    public async clickElement(elementName: string): Promise<void> {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(elementName + ' should exist on the page').toBeTruthy();
         if (element == null) {
-            return false;
-        } else {
-            element.triggerEventHandler('click', null);
-            await this.fixture.whenStable();
-            this.detectChanges();
-            return true;
+            return;
         }
+        element.triggerEventHandler('click', null);
+        await this.fixture.whenStable();
+        this.detectChanges();
     }
     public expectElementNotToExist(elementName: string): void {
         const element: DebugElement = this.findElement(elementName);
