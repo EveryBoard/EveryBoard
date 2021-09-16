@@ -46,7 +46,7 @@
               dy="17">{{disconnected.caseContent.getSize()}}</text>
     </g>
     <!-- Highlight last move -->
-    <ng-container *ngIf="lastMove !== null">
+    <ng-container *ngIf="lastMove != null">
         <polyline [attr.points]="getHexaCoordsAt(lastMove.coord)"
                   class="base no-fill highlighted"/>
         <polyline [attr.points]="getHexaCoordsAt(lastMove.end)"
