@@ -69,12 +69,12 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     public updateMessages(iChatId: IChatId): void {
         this.chat = iChatId.doc.messages;
         const nbMessages: number = this.chat.length;
-        if (this.visible === false || this.isNearBottom === false) {
-            this.updateUnreadMessagesText(nbMessages - this.readMessages);
-        } else {
+        if (this.visible === true && this.isNearBottom === true) {
             this.readMessages = nbMessages;
             this.updateUnreadMessagesText(0);
             this.scrollToBottom();
+        } else {
+            this.updateUnreadMessagesText(nbMessages - this.readMessages);
         }
     }
     private updateUnreadMessagesText(unreadMessages: number): void {
