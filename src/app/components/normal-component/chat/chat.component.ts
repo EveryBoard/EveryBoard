@@ -22,8 +22,11 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     public chat: IMessage[] = [];
     public readMessages: number = 0;
     public unreadMessagesText: string = '';
-
+    public showUnreadMessagesButton: boolean = false;
     public visible: boolean = true;
+
+    private isNearBottom: boolean = true;
+    private notYetScrolled: boolean = true;
 
     @ViewChild('chatDiv') chatDiv: ElementRef<HTMLElement>;
 
@@ -74,7 +77,6 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
             this.scrollToBottom();
         }
     }
-    public showUnreadMessagesButton: boolean = false;
     private updateUnreadMessagesText(unreadMessages: number): void {
         if (this.visible && this.isNearBottom === false) {
             this.showUnreadMessagesButton = true;
@@ -91,8 +93,6 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
             this.unreadMessagesText = $localize`${unreadMessages} new messages`;
         }
     }
-    private isNearBottom: boolean = true;
-    private notYetScrolled: boolean = true;
     private scrollToBottomIfNeeded(): void {
         if (this.connected && this.visible) {
             if (this.isNearBottom || this.notYetScrolled) {
@@ -139,7 +139,6 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
             this.visible = true;
             this.updateUnreadMessagesText(0);
             this.scrollToBottom();
-            // this.chatDiv.nativeElement.scroll({ top: this.scrollPosition, left: 0 });
             this.readMessages = this.chat.length;
         }
     }

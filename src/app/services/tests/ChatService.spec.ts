@@ -65,7 +65,7 @@ describe('ChatService', () => {
             await chatDAO.set('id', EMPTY_CHAT);
             service.startObserving('id', (_: IChatId) => { });
             // when trying to observe it again, then an error is thrown
-            expect(() => service.startObserving('id', (_: IChatId) => { })).toThrowError('WTF :: Already observing chat \'id\'');
+            expect(() => service.startObserving('id', (_: IChatId) => { })).toThrowError(`WTF :: Already observing chat 'id'`);
         }));
         it('should throw when observing a second chat while a first one is already being observed', fakeAsync(async() => {
             await chatDAO.set('id', EMPTY_CHAT);
