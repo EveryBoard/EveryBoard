@@ -74,9 +74,14 @@
                                 i18n>Custom</button>
                     </div>
                 </div>
-                <div id="customTime" *ngIf="viewInfo.showCustomTime">
+                <div id="customTime"
+                     *ngIf="viewInfo.showCustomTime"
+                >
                     <div class="field">
-                        <label class="label" for="maximalMoveDuration" i18n>Maximal turn duration: <output>{{ viewInfo.maximalMoveDuration | humanDuration }}</output></label>
+                        <label class="label" for="maximalMoveDuration">
+                            <ng-container i18n>Durée maximale d'un tour : </ng-container>
+                            <output>{{ viewInfo.maximalMoveDuration | humanDuration }}</output>
+                        </label>
                         <div class="control">
                             <input class="slider is-circle is-primary"
                                    step="10"
@@ -86,7 +91,10 @@
                         </div>
                     </div>
                     <div class="field">
-                        <label class="label" for="totalPartDuration" i18n>Maximal game duration: <output>{{ viewInfo.totalPartDuration | humanDuration }} per player</output></label>
+                        <label class="label" for="totalPartDuration">
+                            <ng-container i18n>Durée maximale de la partie : </ng-container>
+                            <output>{{ viewInfo.totalPartDuration | humanDuration }} <ng-container i18n>par joueur</ng-container></output>
+                        </label>
                         <div class="control">
                             <input class="slider is-circle is-primary"
                                    step="10"
@@ -125,7 +133,9 @@
                                                 >{{ candidate }}</td>
                                             <td class="td">
                                                 <button *ngIf="viewInfo.chosenOpponent !== candidate"
-                                                        class="button is-primary" i18n>Pick</button></td>
+                                                        class="button is-primary" i18n
+                                                >Pick</button>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -137,14 +147,14 @@
             <div class="field">
                 <div class="buttons has-addons">
                     <button class="button is-primary"
-                            [disabled]="!(viewInfo.canProposeConfig)"
+                            [disabled]="!viewInfo.canProposeConfig"
                             (click)="proposeConfig()"
                             id="proposeConfig"
                             i18n>Propose configuration</button>
                     <button class="button"
                             id="reviewConfig"
                             *ngIf="viewInfo.canReviewConfig"
-                            (click)="reviewConfig()"
+                            (click)="changeConfig()"
                             i18n>Change configuration</button>
                     <button class="button"
                             id="cancel"
@@ -190,6 +200,7 @@
             </div>
         </div>
     </div>
+
     <div *ngIf="viewInfo.userIsObserver"
          class="message is-primary">
         <div class="message-header">

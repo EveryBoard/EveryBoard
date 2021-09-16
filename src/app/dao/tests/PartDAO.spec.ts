@@ -5,7 +5,9 @@ import { PartDAO } from '../PartDAO';
 import { setupFirestoreTestModule } from './FirebaseFirestoreDAO.spec';
 
 describe('PartDAO', () => {
+
     let dao: PartDAO;
+
     beforeEach(async() => {
         await setupFirestoreTestModule();
         dao = TestBed.inject(PartDAO);

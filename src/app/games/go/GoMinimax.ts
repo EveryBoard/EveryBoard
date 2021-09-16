@@ -8,7 +8,6 @@ import { GoNode, GoRules } from './GoRules';
 import { GoGroupDatas } from './GoGroupsDatas';
 import { Coord } from 'src/app/jscaip/Coord';
 
-
 export class GoMinimax extends Minimax<GoMove, GoPartSlice, GoLegalityStatus> {
 
     public getListMoves(node: GoNode): GoMove[] {

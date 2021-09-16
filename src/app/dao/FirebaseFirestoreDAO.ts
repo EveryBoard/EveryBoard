@@ -29,7 +29,7 @@ export interface IFirebaseFirestoreDAO<T extends JSONObject> {
 export abstract class FirebaseFirestoreDAO<T extends JSONObject> implements IFirebaseFirestoreDAO<T> {
     public static VERBOSE: boolean = false;
 
-    constructor(private readonly collectionName: string, protected afs: AngularFirestore) {}
+    constructor(public readonly collectionName: string, protected afs: AngularFirestore) {}
 
     public async create(newElement: T): Promise<string> {
         const docRef: DocumentReference = await this.afs.collection<T>(this.collectionName).add({ ...newElement });

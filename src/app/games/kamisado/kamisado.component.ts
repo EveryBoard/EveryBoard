@@ -29,7 +29,6 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
     public lastMove: KamisadoMove = null;
     public chosen: Coord = new Coord(-1, -1);
     public chosenAutomatically: boolean = false;
-    public canPass: boolean = false;
 
     public encoder: MoveEncoder<KamisadoMove> = KamisadoMove.encoder;
 
@@ -41,6 +40,7 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         this.availableMinimaxes = [
             new KamisadoMinimax(this.rules, 'KamisadoMinimax'),
         ];
+        this.canPass = false;
     }
     public backgroundColor(x: number, y: number): string {
         return KamisadoBoard.getColorAt(x, y).rgb;
@@ -61,7 +61,7 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         this.board = slice.getCopiedBoard();
         this.lastMove = this.rules.node.move;
 
-        this.canPass = KamisadoRules.canOnlyPass(slice);
+        this.canPass = KamisadoRules.mustPass(slice);
         if (this.canPass || slice.coordToPlay.isAbsent()) {
             this.chosenAutomatically = false;
             this.chosen = new Coord(-1, -1);
@@ -81,6 +81,9 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
+        }
+        if (this.canPass) {
+            return this.cancelMove(RulesFailure.MUST_PASS);
         }
         if (this.chosen.x === -1) {
             return this.choosePiece(x, y);

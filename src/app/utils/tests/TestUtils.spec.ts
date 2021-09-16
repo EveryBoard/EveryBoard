@@ -128,11 +128,11 @@ export class SimpleComponentTestUtils<T> {
     public async whenStable(): Promise<void> {
         return this.fixture.whenStable();
     }
-    public expectElementToHaveClass(elementName: string, class_: string): void {
+    public expectElementToHaveClass(elementName: string, cssClass: string): void {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(elementName + ' should exist').toBeTruthy();
         const elementClasses: string[] = element.attributes.class.split(' ').sort();
-        expect(elementClasses).toContain(class_);
+        expect(elementClasses).withContext(elementName + ' should contain class ' + cssClass).toContain(cssClass);
     }
     public expectElementNotToExist(elementName: string): void {
         const element: DebugElement = this.findElement(elementName);
@@ -364,17 +364,17 @@ export class ComponentTestUtils<T extends GameComponent> {
         expect(element).withContext(elementName + ' should exist').toBeTruthy();
         return element;
     }
-    public expectElementToHaveClass(elementName: string, class_: string): void {
+    public expectElementToHaveClass(elementName: string, cssClass: string): void {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(elementName + ' should exist').toBeTruthy();
         const elementClasses: string[] = element.attributes.class.split(' ').sort();
-        expect(elementClasses).toContain(class_);
+        expect(elementClasses).toContain(cssClass);
     }
-    public expectElementNotToHaveClass(elementName: string, class_: string): void {
+    public expectElementNotToHaveClass(elementName: string, cssClass: string): void {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(elementName + ' should exist').toBeTruthy();
         const elementClasses: string[] = element.attributes.class.split(' ').sort();
-        expect(elementClasses).not.toContain(class_);
+        expect(elementClasses).not.toContain(cssClass);
     }
     public expectElementToHaveClasses(elementName: string, classes: string[]): void {
         const classesSorted: string[] = [...classes].sort();

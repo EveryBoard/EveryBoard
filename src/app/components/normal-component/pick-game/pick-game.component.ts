@@ -33,7 +33,7 @@ class GameDescription {
 
     public static readonly COERCEO: string = $localize`Get rid of all of your opponent's pieces on a board that shrinks little by little!`;
 
-    public static readonly DVONN: string = $localize`Stack your pieces and control as many stacks as you can to win!`
+    public static readonly DVONN: string = $localize`Stack your pieces and control as many stacks as you can to win!`;
 
     public static readonly ENCAPSULE: string = $localize`An enhanced tic-tac-toe where piece can encapsule other and prevent them to win.`;
 
@@ -45,7 +45,7 @@ class GameDescription {
 
     public static readonly KAMISADO: string = $localize`Your goal is simple: reach the last line. But the piece you move depends on your opponent's last move!`;
 
-    public static readonly LINES_OF_ACTION: string = $localize`Regroup your pieces to win. But your possible moves will often change!`
+    public static readonly LINES_OF_ACTION: string = $localize`Regroup your pieces to win. But your possible moves will often change!`;
 
     public static readonly P4: string = $localize`The classical 4 in a row game!`;
 
@@ -120,7 +120,6 @@ export class PickGameComponent {
         GameInfo.ALL_GAMES
             .filter((game: GameInfo) => game.display === true)
             .map((game: GameInfo): string => game.urlName);
-
 
     @Output('pickGame') pickGame: EventEmitter<string> = new EventEmitter<string>();
 

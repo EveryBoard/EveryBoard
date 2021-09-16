@@ -32,11 +32,8 @@ export class Player implements ComparableObject {
         return this === other;
     }
     public getScoreModifier(): number {
-        switch (this.value) {
-            case 0: return -1;
-            case 1: return 1;
-            default: throw new Error('No score modifier');
-        }
+        if (this.value === 0) return -1;
+        return 1;
     }
     public getPreVictory(): number {
         return this.getVictoryValue() - this.getScoreModifier();

@@ -1,9 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="auto"
-     viewBox="0 -3 650 656"
+     [attr.viewBox]="'0 -3 ' + (board.length * 50) + ' ' + (6 + (board.length * 50))"
      preserveAspectRatio="xMidYMid meet">
     <rect x="0" y="0"
-          width="650" height="650"
+          [attr.width]="board.length * 50"
+          [attr.height]="board.length * 50"
           stroke="black"
           stroke-width="3"
           fill="lightgrey"
