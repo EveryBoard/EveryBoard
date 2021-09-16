@@ -127,9 +127,9 @@ describe('GoRules:', () => {
     });
     describe('Phase.PLAYING', () => {
         it('Phase.PLAYING + GoMove.PASS = Phase.PASSED', () => {
-            expect(rules.node.gamePartSlice.phase).toBe(Phase.PLAYING, `Initial phase should be 'PLAYING');
+            expect(rules.node.gamePartSlice.phase).toBe(Phase.PLAYING, `Initial phase should be 'PLAYING'`);
             expect(rules.choose(GoMove.PASS)).toBeTrue();
-            expect(rules.node.gamePartSlice.phase).toBe(Phase.PASSED, `Phase should have been switched to 'PASSED'°);
+            expect(rules.node.gamePartSlice.phase).toBe(Phase.PASSED, `Phase should have been switched to 'PASSED'`);
         });
         it('Phase.PLAYING Should forbid accepting', () => {
             const board: Table<GoPiece> = [

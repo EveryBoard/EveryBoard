@@ -9,7 +9,7 @@ describe('PylosMove', () => {
     it('Should forbid invalid move creation', () => {
         // From Climb
         expect(() => PylosMove.fromClimb(null, coord, []))
-            .toThrowError(`PylosMove: Starting Coord can't be null  if it's when created fromClimb.`);
+            .toThrowError(`PylosMove: Starting Coord can't be null if it's when created fromClimb.`);
         expect(() => PylosMove.fromClimb(coord, coord, []))
             .toThrowError('PylosMove: When piece move it must move upward.');
         expect(PylosMove.fromClimb(coord, highCoord, [])).toBeDefined();

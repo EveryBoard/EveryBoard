@@ -146,7 +146,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
 
             expect(componentTestUtils.querySelector('app-p4'))
                 .withContext(`p4Tag id should be present after startGame's async method has complete`)
-                .toBeNull();
+                .toBeTruthy();
             tick(1000);
         }));
     });
