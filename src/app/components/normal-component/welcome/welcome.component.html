@@ -1,23 +1,21 @@
 <section class="hero">
     <div class="hero-body">
-        <p class="title" i18n>
-            AwesomBoard
-        </p>
-        <p class="subtitle" i18n>
-            AwesomBoard est un site qui permet de jouer et d'apprendre les règles de nombreux jeux de stratégie combinatoire à information parfaite.<br/>
-            On comprends donc là dedans les jeux ne faisant intervenir ni hasard, ni agilité, ni informations cachées, et uniquement des jeux deux joueurs et tours par tours!
-        </p>
+        <p class="title" i18n>AwesomBoard</p>
+        <p class="subtitle" i18n
+        >AwesomBoard is a website to play and learn the rules of various abstract strategy games with perfect information.<br/>
+         Such games are games that do not include any randomness, agility, or hidden information.
+         These games are played by two players, turn by turn.</p>
     </div>
     <div class="columns">
         <div class="column">
             <div class="card">
                 <header class="card-header">
-                    <p class="card-header-title" i18n>Jouer en ligne</p>
+                    <p class="card-header-title" i18n>Play online</p>
                 </header>
                 <div class="card-content">
                     <div class="content">
-                        <button class="button is-medium is-fullwidth is-primary mb-1" routerLink="/play" i18n>Créer une partie</button>
-                        <button class="button is-medium is-fullwidth is-primary" routerLink="/server" i18n>Voir la liste des parties</button>
+                        <button class="button is-medium is-fullwidth is-primary mb-1" routerLink="/play" i18n>Create an online game</button>
+                        <button class="button is-medium is-fullwidth is-primary" routerLink="/server" i18n>See the game list</button>
                     </div>
                 </div>
             </div>
@@ -25,12 +23,12 @@
         <div class="column">
             <div class="card">
                 <header class="card-header">
-                    <p class="card-header-title" i18n>Jouer hors ligne</p>
+                    <p class="card-header-title" i18n>Play offline</p>
                 </header>
                 <div class="card-content">
                     <div class="content">
-                        <button class="button is-medium is-fullwidth is-primary mb-1" routerLink="/local" i18n>Jouer</button>
-                        <button class="button is-medium is-fullwidth is-primary" routerLink="/tutorial" i18n>Apprendre</button>
+                        <button class="button is-medium is-fullwidth is-primary mb-1" routerLink="/local" i18n>Play</button>
+                        <button class="button is-medium is-fullwidth is-primary" routerLink="/tutorial" i18n>Learn</button>
                     </div>
                 </div>
             </div>
@@ -53,9 +51,9 @@
                 </div>
             </div>
             <div class="card-footer">
-                <a id="playOnline_{{game.urlName}}" (click)="createGame(game.urlName)" class="card-footer-item" i18n>Jouer en ligne</a>
-                <a id="playLocally_{{game.urlName}}" (click)="createLocalGame(game.urlName)" class="card-footer-item" i18n>Jouer hors ligne</a>
-                <a id="startTutorial_{{game.urlName}}" (click)="createTutorial(game.urlName)" class="card-footer-item" i18n>Apprendre</a>
+                <a id="playOnline_{{game.urlName}}" (click)="createGame(game.urlName)" class="card-footer-item" i18n>Play online</a>
+                <a id="playLocally_{{game.urlName}}" (click)="createLocalGame(game.urlName)" class="card-footer-item" i18n>Play offline</a>
+                <a id="startTutorial_{{game.urlName}}" (click)="createTutorial(game.urlName)" class="card-footer-item" i18n>Learn</a>
             </div>
         </div>
     </div>

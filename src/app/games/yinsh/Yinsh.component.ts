@@ -315,7 +315,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
             this.viewInfo.selectedCoords.push(coord);
             this.moveToCaptureSelectLast(captures);
         } else if (captures.length === 0) {
-            return this.cancelMove(YinshFailure.NOT_PART_OF_CAPTURE);
+            return this.cancelMove(YinshFailure.MISSING_CAPTURES);
         } else {
             this.selectCapture(captures[0]);
         }
@@ -348,7 +348,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
         if (captures.length > 1) {
             return this.cancelMove(YinshFailure.AMBIGUOUS_CAPTURE_COORD);
         } else if (captures.length === 0) {
-            return this.cancelMove(YinshFailure.NOT_PART_OF_CAPTURE);
+            return this.cancelMove(YinshFailure.MISSING_CAPTURES);
         } else {
             this.selectCapture(captures[0]);
         }

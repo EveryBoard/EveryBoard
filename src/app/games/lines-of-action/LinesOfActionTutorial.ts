@@ -10,10 +10,10 @@ const _: number = Player.NONE.value;
 
 export const linesOfActionTutorial: TutorialStep[] = [
     TutorialStep.informational(
-        $localize`But du jeu`,
-        $localize`À Lines of Actions, le but est de regrouper toutes vos pièces de façon contigues, orthogonalement et/ou diagonalement.
-        Ici, Foncé gagne la partie :
-        ses pièces ne forment qu'un seul groupe, alors que les pièces de Clair forment trois groupes.`,
+        $localize`Goal of the game`,
+        $localize`At Lines of Actions, the goal is to group your pieces contiguously, orthogonally and/or diagonally.
+        Here, Dark wins the game:
+        Dark's pieces are forming a single group, while Light's pieces form three groups.`,
         new LinesOfActionState([
             [_, _, _, _, _, _, _, _],
             [O, _, _, _, X, _, _, O],
@@ -26,21 +26,21 @@ export const linesOfActionTutorial: TutorialStep[] = [
         ], 0),
     ),
     TutorialStep.anyMove(
-        $localize`Plateau de départ et déplacement`,
-        $localize`Voici le plateau de départ.
-        Les déplacements s'effectuent orthogonalement ou diagonalement.
-        La longueur d'un déplacement est égale au nombre de pièces présentes dans la ligne du déplacement.
-        Notez la présence d'un indicateur d'aide qui indique où une pièce peut atterrir quand vous la sélectionnez.<br/><br/>
-        Vous jouez Foncé, faites le premier déplacement !`,
+        $localize`Initial board and initial move`,
+        $localize`Here is the initial board.
+         Moves can be made orthogonally or diagonally.
+         The length of a move is equal to the number of pieces that are on the line of the move.
+         Note that there is a helping indicator to let you know where a piece can land when you select it.<br/><br/>
+         You're playing Dark, make the first move!`,
         LinesOfActionState.getInitialSlice(),
         LinesOfActionMove.of(new Coord(1, 7), new Coord(1, 5)).get(),
-        $localize`Bravo !`,
+        $localize`Congratulations!`,
     ),
     TutorialStep.fromMove(
-        $localize`Sauts`,
-        $localize`Lors d'un déplacement, il est possible de sauter au dessus de ses propres pièces.
-        Mais il est interdit de sauter au dessus des pièces de l'adversaire.<br/><br/>
-        Effectuez un saut au dessus de l'une de vos pièces avec la configuration suivante.`,
+        $localize`Jumping`,
+        $localize`During a move, it is possible to jump above your own pieces.
+        But it is forbidden to jump over the opponent's pieces.<br/><br/>
+        You're playing Dark, make a jump over one of your pieces on the following board.`,
         new LinesOfActionState([
             [_, _, _, _, _, _, _, _],
             [_, _, O, X, X, _, _, _],
@@ -52,21 +52,20 @@ export const linesOfActionTutorial: TutorialStep[] = [
             [_, _, _, _, _, _, _, X],
         ], 0),
         [LinesOfActionMove.of(new Coord(3, 1), new Coord(6, 1)).get()],
-        $localize`Bravo !`,
-        $localize`Ce n'était pas le déplacement attendu.`,
+        $localize`Congratulations!`,
+        $localize`Failed. You did not jump over one of your pieces.`,
     ),
     TutorialStep.fromMove(
-        $localize`Déplacement`,
-        $localize`Voici une configuration différente. Sélectionnez la pièce foncée au milieu (ligne 4, colonne 4)
-        et observez bien les déplacements possibles.
-        Horizontalement, elle se déplace d'une case car elle est seule sur cette ligne.
-        Verticalement, elle se déplace de trois cases car il y a en tout trois pièces sur cette ligne verticale.
-        Mais elle ne peut qu'aller vers le haut, car vers le bas la case d'atterrissage est occupée par une autre
-        de vos pièces.
-        Diagonalement, un seul mouvement est possible : sur la diagonale qui contient trois pièces, dans la seule
-        direction où on ne doit pas sauter au dessus d'une pièce adverse.
-        Sur l'autre diagonale, il y a trop de pièces pour que le déplacement se termine sur le plateau.<br/><br/>
-        Effectuez un de ces déplacements.`,
+        $localize`Moving`,
+        $localize`Here is a different board. Pick the dark piece in the middle (line 4, column 4)
+        and observe its possible moves.
+        Horizontally, this piece can move only of one square because it is the only piece on this line.
+        Vertically, this piece can move of three squares because there are in total three pieces on that vertical line.
+        But it can only go up, as below it the landing square is occupied by one of your pieces.
+        Diagonally, only one move is possible: on the diagonal that contains three pieces,
+        only in the direction where it does not jump over one of the opponent's pieces.
+        On the other diagonal, there are too many pieces to end the move on the board.<br/><br/>
+        Make one of these moves.`,
         new LinesOfActionState([
             [_, _, _, _, _, _, O, _],
             [_, _, _, _, _, X, _, _],
@@ -83,17 +82,16 @@ export const linesOfActionTutorial: TutorialStep[] = [
             LinesOfActionMove.of(new Coord(3, 3), new Coord(2, 3)).get(),
             LinesOfActionMove.of(new Coord(3, 3), new Coord(4, 3)).get(),
         ],
-        $localize`Bravo !`,
-        $localize`Ce n'était pas un des déplacements attendus`,
+        $localize`Congratulations!`,
+        $localize`Failed. This was not one of the expected moves.`,
     ),
     TutorialStep.fromMove(
-        $localize`Captures`,
-        $localize`Si un déplacement se termine sur une pièce adverse, celle-ci est capturée et disparait du plateau.
-        Un déplacement par contre ne peut pas se terminer sur une pièce du joueur lui-même.
-        Attention, avoir moins de pièces à Lines of Action rend plus atteignable la condition de victoire,
-        car il est plus facile de regrouper moins de pièces !
-        D'ailleurs, s'il reste une seule pièce à un joueur, il gagne la partie.<br/><br/>
-        Dans la configuration suivante, avec Foncé, essayez de capturer une pièce.`,
+        $localize`Capturing`,
+        $localize`If a move ends on an opponent's pieces, this one is captured and removed from the board.
+        However, a move cannot end on one of the player's pieces.
+        Watch out, having less pieces at Lines of Action makes a victory easier, as there are less pieces to regroup!
+        If a player has only one piece, that player wins the game.<br/><br/>
+        On the following board, try to capture one piece with Dark.`,
         new LinesOfActionState([
             [_, X, _, X, X, X, X, _],
             [O, _, _, _, _, _, _, O],
@@ -105,14 +103,14 @@ export const linesOfActionTutorial: TutorialStep[] = [
             [_, X, X, X, X, X, X, _],
         ], 0),
         [LinesOfActionMove.of(new Coord(2, 2), new Coord(4, 2)).get()],
-        $localize`Bravo !`,
-        $localize`Raté !`,
+        $localize`Congratulations!`,
+        $localize`Failed!`,
     ),
     TutorialStep.fromMove(
-        $localize`Égalité`,
-        $localize`Dans le cas spécial où un mouvement résulte en une connexion complète des pièces des deux joueurs,
-        simultanément, alors la partie se termine par une égalité.<br/><br/>
-        Vous jouez Foncé, forcez l'égalité en un coup.`,
+        $localize`Tie`,
+        $localize`In the special case where a move ends up connecting all pieces of both player, simultaneously,
+        then the game ends up with a tie.<br/><br/>
+        You're playing Dark, force the tie in one move.`,
         new LinesOfActionState([
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -124,7 +122,7 @@ export const linesOfActionTutorial: TutorialStep[] = [
             [_, _, _, _, _, _, _, _],
         ], 0),
         [LinesOfActionMove.of(new Coord(0, 2), new Coord(4, 2)).get()],
-        $localize`Bravo !`,
-        $localize`Raté !`,
+        $localize`Congratulations!`,
+        $localize`Failed!`,
     ),
 ];

@@ -4,23 +4,23 @@ import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-gam
 
 export const p4Tutorial: TutorialStep[] = [
     TutorialStep.informational(
-        $localize`But du jeu`,
-        $localize`Le plateau du Puissance 4 fait 7 colonnes et 6 rangées et est initialement vide.
-        Le premier joueur joue Foncé, le deuxième joue Clair.
-        Le but du du jeu est d'être le premier joueur à aligner 4 de ses pièces (horizontalement, verticalement, ou diagonalement).`,
+        $localize`Goal of the game`,
+        $localize`The board at Four in a Row is made of 7 columns and 6 rows, and it is initially empty.
+        The first player plays Dark, the second plays Light.
+        The goal is to be the first to align 4 of its pieces (horizontally, vertically, or diagonally).`,
         P4PartSlice.getInitialSlice(),
     ),
     TutorialStep.anyMove(
-        $localize`Déposez une pièce`,
-        $localize`Cliquez sur n’importe quelle case d’une colonne.`,
+        $localize`Dropping a piece`,
+        $localize`Click on any space in any column.`,
         P4PartSlice.getInitialSlice(),
         P4Move.THREE,
-        $localize`Comme vous voyez, la pièce va toujours tomber tout en bas de la colonne.`,
+        $localize`As you can see, the piece falls at the bottom of the column.`,
     ),
     TutorialStep.fromMove(
-        $localize`Victoire`,
-        $localize`Vous jouez Foncé.
-        Placez votre pion de façon à aligner horizontalement 4 de vos pièces.`,
+        $localize`Victory`,
+        $localize`You're playing Dark.
+        Place your piece so that you create a horizontal alignment of 4 of your pieces.`,
         new P4PartSlice([
             [2, 2, 2, 2, 2, 2, 2],
             [2, 2, 2, 2, 2, 2, 2],
@@ -30,12 +30,12 @@ export const p4Tutorial: TutorialStep[] = [
             [2, 2, 0, 0, 0, 1, 2],
         ], 0),
         [P4Move.of(1)],
-        $localize`Voilà, vous avez gagné!`,
-        $localize`Raté, vous n'avez pas aligné 4 pièces et perdu votre occasion de gagner.`,
+        $localize`You won!`,
+        $localize`Failed, you have not aligned 4 pieces and missed an opportunity to win.`,
     ),
     TutorialStep.fromMove(
-        $localize`Autre Victoire`,
-        $localize`Vous pouvez également aligner 4 pions diagonalement ou verticalement`,
+        $localize`Other victory`,
+        $localize`You can also align 4 pieces diagonally or vertically.`,
         new P4PartSlice([
             [2, 2, 2, 2, 2, 2, 2],
             [2, 2, 2, 2, 2, 2, 2],
@@ -48,7 +48,7 @@ export const p4Tutorial: TutorialStep[] = [
             P4Move.of(3),
             P4Move.of(4),
         ],
-        $localize`Voilà, vous avez gagné!`,
-        $localize`Raté, vous n'avez pas aligné 4 pièces et perdu votre occasion de gagner.`,
+        $localize`You won!`,
+        $localize`Failed, you have not aligned 4 pieces and missed an opportunity to win.`,
     ),
 ];

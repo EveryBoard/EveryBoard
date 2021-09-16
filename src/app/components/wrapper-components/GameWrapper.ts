@@ -15,10 +15,11 @@ import { Player } from 'src/app/jscaip/Player';
 
 export class GameWrapperMessages {
 
-    public static readonly NOT_YOUR_TURN: string = $localize`Ce n'est pas votre tour !`;
+    public static readonly NOT_YOUR_TURN: string = $localize`It is not your turn!`;
 
-    public static readonly NO_CLONING_FEATURE: string = $localize`Clôner une partie n'est pas encore possible. Cette fonctionnalité pourrait être implémentée dans un futur incertain.`;
+    public static readonly NO_CLONING_FEATURE: string = $localize`You cannot clone a game. This feature might be implemented later.`;
 }
+
 @Component({ template: '' })
 export abstract class GameWrapper {
     public static VERBOSE: boolean = false;
@@ -106,7 +107,7 @@ export abstract class GameWrapper {
             return MGPValidation.failure(GameWrapperMessages.NOT_YOUR_TURN);
         }
         if (this.endGame) {
-            return MGPValidation.failure($localize`Game is finished.`);
+            return MGPValidation.failure($localize`The game has ended.`);
         }
         const legality: LegalityStatus = this.gameComponent.rules.isLegal(move, slice);
         if (legality.legal.isFailure()) {

@@ -11,26 +11,28 @@ export class HumanDuration implements PipeTransform {
         const hours: number = (duration - (minutes * 60) - seconds) / 3600;
         const text: string[] = [];
         if (hours > 1) {
-            text.push(`${ hours } heures`);
+            text.push($localize`${ hours } hours`);
         } else if (hours === 1) {
-            text.push('1 heure');
+            text.push($localize`1 hour`);
         }
         if (minutes > 1) {
-            text.push(`${ minutes } minutes`);
+            text.push($localize`${ minutes } minutes`);
         } else if (minutes === 1) {
-            text.push('1 minute');
+            text.push($localize`1 minute`);
         }
         if (seconds > 1) {
-            text.push(`${ seconds } secondes`);
+            text.push($localize`${ seconds } seconds`);
         } else if (seconds === 1) {
-            text.push('1 seconde');
+            text.push($localize`1 second`);
         }
         if (text.length === 0) {
-            return '0 secondes';
+            return $localize`0 seconds`;
         } else if (text.length === 1) {
             return text[0];
         } else {
-            return text.slice(0, -1).join(', ') + ' et ' + text.slice(-1);
+            const first: string = text.slice(0, -1).join(', ');
+            const second: string = text.slice(-1)[0];
+            return $localize`${ first } and ${ second }`;
         }
     }
 }

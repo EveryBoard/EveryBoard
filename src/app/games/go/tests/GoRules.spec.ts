@@ -156,7 +156,7 @@ describe('GoRules:', () => {
             const state: GoPartSlice = new GoPartSlice(board, [0, 0], 1, MGPOptional.empty(), Phase.PLAYING);
             const move: GoMove = new GoMove(0, 4);
             const status: GoLegalityStatus = rules.isLegal(move, state);
-            expect(status.legal.reason).toBe(RulesFailure.MUST_CLICK_ON_EMPTY_CASE);
+            expect(status.legal.reason).toBe(GoFailure.OCCUPIED_INTERSECTION);
         });
         it('Should forbid suicide', () => {
             const board: Table<GoPiece> = [

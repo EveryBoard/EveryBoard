@@ -12,46 +12,46 @@ const O: GipfPiece = GipfPiece.PLAYER_ZERO;
 const X: GipfPiece = GipfPiece.PLAYER_ONE;
 export const gipfTutorial: TutorialStep[] = [
     TutorialStep.informational(
-        $localize`But du jeu`,
-        $localize`Le but du jeu est de capturer les pièces de l'adversaire afin qu'il ne puisse plus jouer.
-        Voici la configuration initiale du plateau.
-        Chaque joueur a 12 pièces en réserve et 3 sur le plateau.
-        Dès qu'à son tour un joueur n'a plus de pièces dans sa réserve, il ne sait plus jouer et perd.
-        Le premier joueur possède les pièces foncées, le deuxième les pièces claires.`,
+        $localize`Goal of the game`,
+        $localize`The goal of Gipf is to capture the opponent's piece so that the opponent can no longer play.
+        This is the initial board.
+        Each player has 12 pieces on the side and 3 pieces on the board.
+        When, at its turn, a player has no more pieces on the side, that player cannot play anymore and loses the game.
+        The first player plays with the dark pieces, the second player plays with the light pieces.`,
         GipfPartSlice.getInitialSlice(),
     ),
     TutorialStep.anyMove(
-        $localize`Pousser`,
-        $localize`Les pièces ne peuvent entrer sur le plateau que par l'extérieur.
-        <ul>
-            <li> 1. Cliquez sur une case sur le bord du plateau.</li>
-            <li> 2. Si cette case était occupée, cliquez ensuite sur la flèche représentant la direction dans laquelle pousser la/les pièces déjà présentes dans la rangée.</li>
-        <li>
-        Une poussée est interdite dans une rangée complète.<br/><br/>
-        Vous jouez Foncé, insérez une pièce.`,
+        $localize`Pushing`,
+        $localize`Pieces can only enter the board through the edges. To insert a new piece:
+        <ol>
+            <li>Click on a space on the edge of the board.</li>
+            <li>If that space was already occupied, click on the arrow that indicates the direction in which you want to push the piece(s) already on the corresponding line.</li>
+        </ol>
+        You cannot push when a line is full.<br/><br/>
+        You're playing Dark, insert a piece.`,
         GipfPartSlice.getInitialSlice(),
         new GipfMove(new GipfPlacement(new Coord(3, 0), MGPOptional.of(HexaDirection.DOWN)), [], []),
-        $localize`Bravo !`,
+        $localize`Congratulations!`,
     ),
     TutorialStep.fromMove(
         $localize`Capture (1/3)`,
-        $localize`Pour faire une capture, il faut aligner 4 de ses propres pièces, qui seront les 4 premières capturées.
-        Il y a plusieurs choses à savoir sur une capture :
-        <ul>
-            <li> 1. Quand 4 pièces sont capturées, toutes les pièces directement alignées avec ces 4 pièces le sont également.</li>
-            <li> 2. Dès qu'il y a une case vide dans la ligne, la capture s'arrête.</li>
-            <li> 3. Vos pièces capturées rejoignent votre réserve.
-                Celles de l'adversaire par contre sont réellement capturées et ne rejoignent pas sa réserve.</li>
-            <li> 4. Si vous créez une ligne de 4 pièces de l'adversaire, c'est au début de son tour qu'il pourra les capturer.
-                Ceci implique que votre tour se passe en trois phases :
-                <ul>
-                    <li> A. Choisir la/les capture(s) crée(s) par le dernier mouvement de votre adversaire.</li>
-                    <li> B. Faire votre poussée.</li>
-                    <li> C. Choisir la/les ligne(s) à capturer que vous venez de créer (en cliquant dessus).</li>
-                </ul>
+        $localize`To capture, you must align 4 of your own pieces, which will be the first 4 captured pieces.
+        There are multiple important aspects of a capture:
+        <ol>
+            <li>When 4 pieces are captured, all pieces that are directly aligned with these 4 pieces are also captured.</li>
+            <li>As soon as there is an empty space on the line, the capture stops.</li>
+            <li>Your own pieces that are captured go back to your stock.
+                Your opponent's pieces however are really captured and do not go back to your opponent's stock.</li>
+            <li>If you create a line of 4 of your opponent's pieces, it will be at the beginning of your opponent's turn that your opponent can capture them.
+                This means that a turn happens in three phases:
+                <ol type="A">
+                    <li>Pick the capture(s) resulting from the last move of your opponent (by clicking on it).</li>
+                    <li>Make your insertion.</li>
+                    <li>Pick the capture(s) resulting from your move (by clicking on it).</li>
+                </ol>
             </li>
-        </ul><br/>
-        Vous jouez Foncé, une capture est faisable, faites la.`,
+        </ol><br/>
+        You're playing Dark, you can make a capture, do it.`,
         new GipfPartSlice(GipfBoard.of([
             [_, _, _, O, X, _, _],
             [_, _, _, _, _, _, _],
@@ -71,16 +71,20 @@ export const gipfTutorial: TutorialStep[] = [
                 new Coord(3, 3),
             ])],
         )],
-        $localize`Bravo, vous avez récupéré 4 de vos pièces, mais ce n'est pas la capture la plus utile.
-        Voyons maintenant la vraie utilité d'une capture.`,
-        $localize`Raté !`,
+        $localize`Congratulations, you have gotten 4 of your pieces back. This is not the most useful capture.
+        Let's now see how captures can really be useful.`,
+        $localize`Failed!`,
     ),
     TutorialStep.fromMove(
         $localize`Capture (2/3)`,
-        $localize`Ici, il est possible de capturer de trois façons différentes.
-        L'une ne permet aucune capture de pièce adverse.
-        L'autre permet une capture de pièces adverses.<br/><br/>
-        La dernière en permet deux, choisissez cette dernière.`,
+        $localize`Here, there are three different ways of capturing.
+        <ol>
+          <li>One way does not capture any of your opponent's pieces.</li>
+          <li>Another way captures one of your opponent's pieces.</li>
+          <li>The last way captures two of your opponent's pieces.</li>
+        </ol>
+        <br/><br/>
+        Pick the last one.`,
         new GipfPartSlice(GipfBoard.of([
             [_, _, _, _, _, _, _],
             [_, _, _, X, _, _, _],
@@ -102,17 +106,17 @@ export const gipfTutorial: TutorialStep[] = [
                 new Coord(3, 6),
             ])],
         )],
-        $localize`Bravo, vous avez récupéré 4 de vos pièces et capturé 2 pièces de l'adversaire.
-        Le maximum possible étant 3 par captures.`,
-        $localize`Raté, la capture optimale capture 2 pièces adverses.`,
+        $localize`Congratulations, you have gotten back 4 of your pieces and captured 2 of the opponent's.
+        The most you can get is 3 per capture.`,
+        $localize`Failed, the best capture was taking 2 of your opponent's pieces`,
     ),
     TutorialStep.fromMove(
         $localize`Capture (3/3)`,
-        $localize`Ici, vous aurez une capture à faire au début de votre tour.
-        Elle a été provoquée par un mouvement de votre adversaire lors de son tour de jeu
-        (bien que ce plateau soit fictif à des fins pédagogiques).
-        En effectuant ensuite le bon mouvement, vous pourrez faire deux captures supplémentaires !
-        Gardez à l'esprit que le plus utile d'une capture, est de capturer les pièces ennemies !`,
+        $localize`Here, you must capture at the beginning of your turn.
+        This is due to a move of your opponent at the previous turn
+        (even though this is a fictitious board for pedagogical purpose).
+        After your capture, by performing the right move you can even capture two more of your opponent's pieces!
+        Keep it mind that the most useful in a capture is to take your opponent's pieces.`,
         new GipfPartSlice(GipfBoard.of([
             [_, _, _, O, _, _, O],
             [_, _, _, O, _, _, O],
@@ -200,8 +204,7 @@ export const gipfTutorial: TutorialStep[] = [
                 ],
             ),
         ],
-        $localize`Bravo, vous avez récupéré 12 de vos pièces et capturé 2 pièces de l'adversaire.
-        Le maximum possible étant 3 par captures.`,
-        $localize`Raté, la capture optimale capture 2 pièces adverses.`,
+        $localize`Congratulations, you have gotten 12 of your pieces back and captured 2 of your opponent's pieces.`,
+        $localize`Failed, the best capture takes 2 of your opponent's pieces.`,
     ),
 ];

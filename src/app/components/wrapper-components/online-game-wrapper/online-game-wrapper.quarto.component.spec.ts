@@ -79,7 +79,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         },
         state: 'online',
     };
-    const prepareComponent: (initialJoiner: IJoiner) => Promise<void> = async(initialJoiner: IJoiner) => {
+    async function prepareComponent(initialJoiner: IJoiner): Promise<void> {
         partDAO = TestBed.get(PartDAO);
         joinerDAO = TestBed.get(JoinerDAO);
         joueurDAO = TestBed.get(JoueursDAO);
@@ -91,9 +91,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await joueurDAO.set(OBSERVER.pseudo, OBSERVER);
         await chatDAOMock.set('joinerId', { messages: [], status: `I don't have a clue` });
         return Promise.resolve();
-    };
-    const prepareStartedGameFor: (user: AuthUser, shorterGlobalChrono?: boolean) => Promise<void> =
-    async(user: AuthUser, shorterGlobalChrono?: boolean) => {
+    }
+    async function prepareStartedGameFor(user: AuthUser, shorterGlobalChrono?: boolean): Promise<void> {
         AuthenticationServiceMock.setUser(user);
         componentTestUtils.prepareFixture(OnlineGameWrapperComponent);
         wrapper = componentTestUtils.wrapper as OnlineGameWrapperComponent;
@@ -139,7 +138,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         });
         componentTestUtils.detectChanges();
         return Promise.resolve();
-    };
+    }
     const FIRST_MOVE: QuartoMove = new QuartoMove(0, 3, QuartoPiece.BABB);
 
     const SECOND_MOVE: QuartoMove = new QuartoMove(2, 3, QuartoPiece.ABBA);

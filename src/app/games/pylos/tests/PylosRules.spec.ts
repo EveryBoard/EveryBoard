@@ -44,7 +44,7 @@ describe('PylosRules:', () => {
         const state: PylosPartSlice = new PylosPartSlice(board, 0);
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 0), []);
         const status: LegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.reason).toEqual(RulesFailure.MUST_LAND_ON_EMPTY_CASE);
+        expect(status.legal.reason).toEqual(RulesFailure.MUST_LAND_ON_EMPTY_SPACE);
     });
     it('should forbid move starting by an empty piece', () => {
         const board: number[][][] = [

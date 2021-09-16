@@ -1,0 +1,83 @@
+name: CI/CD On Action
+
+on:
+  push:
+    branches: [master, develop]
+  pull_request:
+    branches: [master, develop]
+
+jobs:
+  build-test-and-deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+      - name: Cache node modules
+        uses: actions/cache@v1
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        run: npm install
+
+      - name: Copy CI linter configuration
+        run: mv .eslintrc.ci.js .eslintrc.js
+      - name: Run linter
+        run: npm run lint
+        continue-on-error: true
+      - name: Update and check translations
+        run: bash ./scripts/update-translations.sh && bash ./scripts/check-translations.sh
+
+      - name: Setup Firebase secret on master / develop push
+        if: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop' ) && false }}
+        run: |
+          gpg --quiet --batch --yes --decrypt --passphrase="$ENC_SECRET" --output src/app/firebaseConfig.ts .github/firebaseConfig.ts.gpg
+        env:
+          ENC_SECRET: ${{ secrets.ENC_SECRET }}
+      - name: Setup dummy Firebase secret (others)
+        if: ${{ ! (github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop') && false) }}
+        run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
+      - name: Launch tests
+        run: npm run test:ci
+
+      - name: Build master
+        if: ${{ github.ref == 'refs/heads/master' }}
+        run: npm run build
+      - name: Build develop
+        if: ${{ github.ref == 'refs/heads/develop' }}
+        run: npm run build:dev
+
+      - name: Deploy master on push to master
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && false}}
+        uses: burnett01/rsync-deployments@4.1
+        with:
+          switches: -avzr --delete
+          path: dist/pantheonsgame/
+          remote_path: /var/www/html/board/
+          remote_host: ${{ secrets.DEPLOY_HOST }}
+          remote_user: ${{ secrets.DEPLOY_USER }}
+          remote_key: ${{ secrets.DEPLOY_KEY }}
+      - name: Deploy develop on push to develop
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/develop' }}
+        uses: burnett01/rsync-deployments@4.1
+        with:
+          switches: -avzr --delete
+          path: dist/pantheonsgame/
+          remote_path: /var/www/html/board-dev/
+          remote_host: ${{ secrets.DEPLOY_HOST }}
+          remote_user: ${{ secrets.DEPLOY_USER }}
+          remote_key: ${{ secrets.DEPLOY_KEY }}

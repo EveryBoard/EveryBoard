@@ -116,7 +116,7 @@ describe('AbstractGameComponent', () => {
                 expect(clickResult).toEqual(refusal);
             }
         }
-        flush();
+        tick(1000);
     }));
     it('Component should have an encoder and a tutorial', fakeAsync(async() =>{
         for (const gameInfo of GameInfo.ALL_GAMES) {

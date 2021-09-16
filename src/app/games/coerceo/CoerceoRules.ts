@@ -116,7 +116,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoPartSlice> {
             return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE) };
         }
         if (slice.getBoardAt(move.landingCoord.get()) === slice.getCurrentPlayer().value) {
-            return { legal: MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_CASE) };
+            return { legal: MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE) };
         }
         return { legal: MGPValidation.SUCCESS };
     }

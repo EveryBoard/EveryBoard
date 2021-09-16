@@ -12,20 +12,20 @@ const _: GoPiece = GoPiece.EMPTY;
 
 export const goTutorial: TutorialStep[] = [
     TutorialStep.informational(
-        $localize`Info préalables`,
-        $localize`Le jeu de Go se joue sur un plateau appelé Goban, et les pierres sont placées sur les intersections.
-        Le plateau traditionnel fait 19x19 intersections, mais le 13x13 est implémenté sur ce site.
-        (Pour des parties plus courtes, le 9x9 et 5x5 existent, mais ne sont pas encore disponibles).
-        Pour ce tutoriel, nous utiliserons un petit 5x5 à fin pédagogique.`,
+        $localize`Preliminary information`,
+        $localize`The game of Go is played on a board called a Goban, and the stones are placed on the intersections.
+        The traditional board is made of 19x19 intersections, but on this website we have the 13x13 board.
+        (For shorter parts, 9x9 and 5x5 boards exist, but are not yet available here).
+        For this tutorial, we will use a smaller board for pedagogical purposes.`,
         GoPartSlice.getInitialSlice(),
     ),
     TutorialStep.informational(
-        $localize`But du jeu`,
-        $localize`Le but du jeu est d'avoir le plus de points en fin de partie.
-        On appelle territoires les intersections inoccupées et isolées du reste du Goban par les pierres d'un seul joueur.
-        Ici, le joueur foncé a 9 territoires à gauche, le joueur clair en a 8 à droite.
-        La zone en haut au milieu n'appartient à personne.
-        Le score en fin de partie correspondra à l'addition des territoires et des captures.`,
+        $localize`Goal of the game`,
+        $localize`The goal of the game is to have the most points at the end of the game.
+        We call "territories" the intersections that are empty and isolated from the rest of the Goban by the stones of a single player.
+        Here, Dark has 9 territories on the left, and Light has 8 on the right.
+        The top part belongs to no one.
+        Each player's score at the end of the game is the sum of that player's territories and captures.`,
         new GoPartSlice([
             [_, O, _, _, X, X],
             [_, O, _, _, X, _],
@@ -36,11 +36,11 @@ export const goTutorial: TutorialStep[] = [
         ], [0, 0], 0, MGPOptional.empty(), Phase.PLAYING),
     ),
     TutorialStep.fromMove(
-        $localize`Capture simple`,
-        $localize`Une pierre isolée, comme la pierre claire au milieu, a 4 intersections voisines (et non 8, car on ne compte pas les diagonales).
-        Si une intersection voisine est inoccupée, elle est appelée liberté.
-        Si Foncé joue sur la dernière liberté de la pierre claire, cette pierre est enlevée du goban (capturée) et rapporte un point à Foncé.<br/><br/>
-        Il ne reste plus qu'une liberté à la pierre claire, capturez-la.`,
+        $localize`Simple capture`,
+        $localize`An isolated stone, like the one in the middle here, has 4 neighboring intersections (not 8, because we do not count diagonals).
+        It is said of a group which has exactly 2 free neighboring squares, that this group has two liberties.
+        If Dark plays on the last liberty of the light stone, this stone is removed from the Goban (captured) and Dark earns one point.<br/><br/>
+        The light piece only has one liberty left, play there.`,
         new GoPartSlice([
             [_, _, _, _, _],
             [_, _, O, _, _],
@@ -49,13 +49,13 @@ export const goTutorial: TutorialStep[] = [
             [_, _, _, _, _],
         ], [0, 0], 0, MGPOptional.empty(), Phase.PLAYING),
         [new GoMove(3, 2)],
-        $localize`Bravo, vous avez gagné un point`,
-        $localize`Raté, réessayez en jouant sur l'une des intersections immédiatement voisines de la pierre claire.`,
+        $localize`Congratulations, you have earned one point.`,
+        $localize`Failed, try again by playing on one of the intersections directly next to the light stone.`,
     ),
     TutorialStep.fromMove(
-        $localize`Capture de plusieurs pierres`,
-        $localize`Des pierres connectées horizontalement ou verticalement doivent être capturées ensemble, et ne sont pas capturables séparement.<br/><br/>
-        Le groupe clair ci-dessus n'a plus qu'une liberté, capturez ce groupe.`,
+        $localize`Capturing multiple stones`,
+        $localize`Stones that are connected horizontally or vertically must be captured at the same time, and are not capturable in isolation.<br/><br/>
+        The light group here only has one liberty left, capture it.`,
         new GoPartSlice([
             [_, O, _, _, _],
             [O, X, _, _, _],
@@ -64,15 +64,15 @@ export const goTutorial: TutorialStep[] = [
             [_, _, _, _, _],
         ], [0, 0], 0, MGPOptional.empty(), Phase.PLAYING),
         [new GoMove(2, 1)],
-        $localize`Bravo, vous avez gagné trois points, et formé un territoire.`,
-        $localize`Raté, vous n'avez pas capturé le groupe, jouez sur la dernière liberté de ce groupe.`,
+        $localize`Congratulations, you have earned three points and formed a territory.`,
+        $localize`Failed, you have not captured the group. Play on the last liberty of that group.`,
     ),
     TutorialStep.informational(
         $localize`Suicide`,
-        $localize`Au Go le suicide est interdit.
-        Quand mettre une pierre sur une intersection ferait que le groupe de votre dernière pierre n'a aucune liberté et ne capture aucunes pierres, jouer cette intersection serait un suicide, et est donc interdit.
-        Ici, l'intersection en haut à gauche est un suicide pour Clair.
-        En bas à droite, un suicide pour Foncé, et en bas à gauche n'est un suicide pour aucun joueur.`,
+        $localize`In Go, suicide is forbidden.
+        If putting a piece on an intersection removes the last liberty of your group and does not capture any stone, playing on that intersection would be a suicide and is therefore forbidden.
+        Here, the top left intersection is a suicide for Light.
+        On the bottom right, it would be a suicide for Dark, and on the bottom left it is not a suicide for any player.`,
         new GoPartSlice([
             [_, O, _, _, _],
             [O, _, _, _, _],
@@ -82,13 +82,13 @@ export const goTutorial: TutorialStep[] = [
         ], [0, 0], 0, MGPOptional.empty(), Phase.PLAYING),
     ),
     TutorialStep.informational(
-        $localize`Vie et mort (mort)`,
-        $localize`De la règle de capture découle la notion de vie et de mort:
-        des pierres mortes sont des pierres que l'on est sûr de pouvoir capturer (sans rien y perdre ailleurs).
-        Tandis que des pierres vivantes sont des pierres que l'on ne peut plus espérer capturer.
-        D'après la règle de capture, Foncé peut jouer à l'intérieur du territoire de Clair et le capturer.
-        On dit dans ce cas que Clair n'a qu'un œil (sa dernière liberté) et qu'il est mort (même si pas encore capturé).
-        En fin de partie, la pierre morte est comptée comme une capture, et la case qu'elle occupe comme un territoire.`,
+        $localize`Life and death (death)`,
+        $localize`From the capture rule follows the life and death notion:
+        dead stones are stones that are definitely capturable (without losing anything else).
+        Alive stones are stones that can never be captured.
+        From the capture rule, Dark can play inside Light's territory and make a capture.
+        In this case, we say that Light has only one eye (its last liberty) and that Light is dead (even if not yet captured).
+        At the end of the game, the dead stones will count as captures, and the intersections they occupy as territories.`,
         new GoPartSlice([
             [_, _, _, _, _],
             [O, O, O, _, _],
@@ -98,9 +98,10 @@ export const goTutorial: TutorialStep[] = [
         ], [0, 0], 0, MGPOptional.empty(), Phase.PLAYING),
     ),
     TutorialStep.informational(
-        $localize`Vie et mort (yeux)`,
-        $localize`Ici, Clair ne pouvant jouer ni en haut à gauche, ni en bas à gauche, il ne pourra jamais capturer Foncé.
-        On dit alors que Foncé a deux yeux (l'oeil en haut à gauche et celui en bas à gauche) et qu'il est vivant.`,
+        $localize`Life and death (eyes)`,
+        $localize`Here, Light cannot play on the top left, nor on the bottom left.
+        Light will never be able to capture Dark.
+        We say that Dark has two eyes (the eye on the top left, and the one on the bottom left) and that Dark is alive.`,
         new GoPartSlice([
             [_, O, X, _, _],
             [X, O, X, _, _],
@@ -111,10 +112,10 @@ export const goTutorial: TutorialStep[] = [
     ),
     TutorialStep.informational(
         $localize`Seki`,
-        $localize`Si Foncé joue au milieu en haut (ou en bas), Clair jouera au milieu en bas (ou en haut) et le capturera.
-        De même, si Clair joue au milieu haut (ou en bas), Foncé le capturera.
-        Autrement dit, personne n'a intérêt à jouer au milieu.
-        Dans ce cas, on dit que les pierres du milieu sont vivantes par Seki, et que les deux intersections du milieu sont des intersections neutres.`,
+        $localize`If Dark plays on the middle line, Light will play on the opposite intersection and capture Dark.
+        Similarly, if Light plays on the middle line, Dark will capture Light.
+        In other words, there is no point in playing on the middle line.
+        In that case, we say that stones in the middle are alive by Seki, and that both intersections in the middle are neutral.`,
         new GoPartSlice([
             [_, X, O, _, X, O, _],
             [_, X, O, O, X, O, _],
@@ -127,8 +128,8 @@ export const goTutorial: TutorialStep[] = [
     ),
     TutorialStep.fromMove(
         $localize`Ko`,
-        $localize`Un joueur, en posant une pierre, ne doit pas redonner au goban un état identique à l'un de ceux qu'il lui avait déjà donné, ce afin d'empêcher qu'une partie soit sans fin.<br/><br/>
-        Capturez la pierre claire.`,
+        $localize`A player, by putting a stone, cannot go back to an identical state of the Goban as before, in order to avoid an endless game.<br/><br/>
+        Capture the light stone.`,
         new GoPartSlice([
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
@@ -139,20 +140,20 @@ export const goTutorial: TutorialStep[] = [
             [_, _, _, _, _, _, _],
         ], [0, 0], 0, MGPOptional.empty(), Phase.PLAYING),
         [new GoMove(4, 3)],
-        $localize`Maintenant, si Clair essaye de recapturer la pierre que Foncé vient de poser, il rendrait au goban son état précédent, ouvrant la porte à une partie sans fin.
-         L'emplacement de cette pièce est donc marqué d'un rectangle rouge, pour rapeller que c'est une intersection interdite.
-         Cette règle s'appelle le Ko.
-         Toute l'astuce pour Clair consiste, à essayer de créer une menace suffisamment grave pour que Foncé ait intérêt à y répondre immédiatement, et n'ait pas le temps de protéger sa dernière pierre, afin que Clair puisse la recapturer.`,
-        $localize`Raté !`,
+        $localize`Now, if Light tries to recapture the stone that Dark has just put on the Goban, this one would go back to its previous state, opening the door for an endless game.
+        This intersection is therefore marked with a red square, to remind the players that this intersection is forbidden.
+        This rule is called the Ko.
+        The trick for Light is to try to create a big enough threat so that Dark must answer immediately, and does not have the time to protect its last stone, so that Light can capture it right after.`,
+        $localize`Failed!`,
     ),
     TutorialStep.fromMove(
-        $localize`Fin de partie`,
-        $localize`Quand un joueur estime qu'il n'a plus intérêt à placer une pierre, il l'indique en passant son tour.
-        La phase de jeu s'arrête lorsque les deux joueurs passent consécutivement, on passe alors en phase de comptage.
-        On marque alors les groupes morts en cliquant dessus.
-        Chaque intersection du territoire d'un joueur lui rapporte un point.
-        Le gagnant est celui qui a le plus de points.<br/><br/>
-        Une dernière pierre est morte, marquez-la.`,
+        $localize`End of the game`,
+        $localize`When a player feels that there is no advantage to putting a new stone, that player can pass a turn.
+        The game phase stops when both players pass consecutively, and we move on to the counting phase.
+        The dead groups are then marked by clicking on them.
+        Every intersection in a player's territory earns that player a point.
+        The winner is the one with most points.<br/><br/>
+        A last stone is dead, mark it.`,
         new GoPartSlice([
             [X, O, O, O, O, O, b, b, b],
             [X, X, X, X, O, O, O, b, b],
@@ -165,10 +166,10 @@ export const goTutorial: TutorialStep[] = [
             [b, b, O, O, O, X, X, w, w],
         ], [0, 0], 0, MGPOptional.empty(), Phase.COUNTING),
         [new GoMove(0, 3)],
-        $localize`Bravo, Foncé a 15 territoires et 3 pierres claire mortes mais encore présentes, appellées prisonnier en fin de partie.
-         Les emplacements où les prisonniers sont comptent comme territoire pour Foncé.
-         Clair a 8 territoires et 1 prisonnier.
-         Le résultat est donc 18 - 9 en faveur de Foncé.`,
-        $localize`Raté, recommencez.`,
+        $localize`Congratulations, Dark has 15 territories and 3 light stones still present, called prisoners at the end of the game.
+        The intersections where the prisoners are count as Dark's territory
+        Light has 8 territories and 1 prisoner.
+        The end result is therefore 18 - 9 for Dark.`,
+        $localize`Failed, try again.`,
     ),
 ];

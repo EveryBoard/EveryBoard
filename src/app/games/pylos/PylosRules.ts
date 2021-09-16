@@ -141,7 +141,7 @@ export class PylosRules extends Rules<PylosMove, PylosPartSlice> {
     }
     public isLegal(move: PylosMove, slice: PylosPartSlice): LegalityStatus {
         if (slice.getBoardAt(move.landingCoord) !== Player.NONE.value) {
-            return { legal: MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_CASE) };
+            return { legal: MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE) };
         }
 
         const startingCoord: PylosCoord = move.startingCoord.getOrNull();

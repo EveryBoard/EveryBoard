@@ -133,7 +133,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             expect(partCreationId).toBeFalsy('partCreation id should be absent after startGame call');
             expect(gameId).toBeTruthy('game id should be present after startGame call');
             expect(p4Tag).toBeNull('p4Tag id should still be absent after startGame call');
-            flush();
+            tick(1000);
         }));
         it('stage three should make the game component appear at last', fakeAsync(async() => {
             await prepareComponent(JoinerMocks.WITH_ACCEPTED_CONFIG.doc, PartMocks.INITIAL.doc);
@@ -148,7 +148,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
 
             expect(componentTestUtils.querySelector('app-p4'))
                 .toBeTruthy('p4Tag id should be present after startGame\'s async method has complete');
-            flush();
+            tick(1000);
         }));
     });
     describe('for chosenPlayer', () => {
@@ -167,8 +167,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             expect(partCreationId).withContext('partCreation id should be absent after startGame call').toBeFalsy();
             expect(gameId).withContext('game id should be present after startGame call').toBeTruthy();
             expect(p4Tag).withContext('p4Tag id should still be absent after startGame call').toBeNull();
-            tick(1);
-            tick(wrapper.joiner.maximalMoveDuration * 1000);
+
             flush();
         }));
     });

@@ -15,27 +15,29 @@ const X4: DvonnPieceStack = new DvonnPieceStack(Player.ONE, 4, false);
 
 export const dvonnTutorial: TutorialStep[] = [
     TutorialStep.anyMove(
-        $localize`Déplacement`,
-        $localize`Au Dvonn, chaque case hexagonale comporte une pile de pièce.
-        Si aucun nombre n'est indiqué sur une pile, c'est qu'elle ne comporte qu'une pièce.
-        Le nombre écrit sur une pile correspond au nombre de pièces empilées et donc le nombre de point qu’elle rapporte à son propriétaire.
-        Son propriétaire est celui dont une pièce est au sommet de la pile.
-        Seul son propriétaire peut déplacer la pile.
-        Il ne peut pas la déplacer si elle est entourée par 6 autres piles.
-        Il la déplace d’autant de cases que sa hauteur, en ligne droite, et doit atterrir sur une case occupée.
-        Cette ligne droite ne peut pas passer le long de l'arête de deux cases voisines, comme le ferait un déplacement vertical.
-        Il y a donc six directions possibles.
-        Le joueur avec les piles foncées commence.<br/><br/>
-        Vous jouez avec Foncé, cliquez sur une pile puis déplacez la d'une case.`,
+        $localize`Moving`,
+        $localize`At Dvonn, each hexagonal space contains a stack of pieces.
+        If no number is indicated on a stack, it means that it only contains one piece.
+        The number written on a stack indicates the number of pieces within that stack, hence the number of points its owner gets.
+        The owner of a stack is the one that has a piece at the top of the stack.
+        Only the owner of a stack can move it.
+        A stack cannot be moved if it is surrounded by 6 other stacks.
+        A stack is moved by as many spaces as there are pieces within, in a straight line, and it should land on an occupied space.
+        This line cannot move along the vertex of two neighboring spaces, as would a vertical move.
+        Therefore, there are six possible directions.
+        The player with dark pieces starts.<br/><br/>
+        You're playing Dark, click on a stack and move it by one space.`,
         DvonnGameState.getInitialSlice(),
         DvonnMove.of(new Coord(2, 0), new Coord(3, 0)),
-        $localize`Bravo !`,
+        $localize`Congratulations!`,
     ),
     TutorialStep.fromMove(
-        $localize`Déconnection`,
-        $localize`Les pièces rouges sont appelées “sources”.
-        Quand une pile n’est plus directement ou indirectement connectée à une source, elle est enlevée du plateau.<br/><br/>
-        Vous jouez Foncé, déplacez votre pièce sur la source.`,
+        $localize`Disconnection`,
+        $localize`Pieces with a lightning strike are called "sources".
+        When a stack is not directly nor indirectly connected to a source, it is removed from the board.
+        You can move on a source: this forms a stack that contains the source, which therefore can never be disconnected.
+        Besides this, a stack containing a source acts like any other stack: you can move it, and your opponent can move on that stack to take possession of it.<br/><br/>
+        You're playing Dark, move your piece on the source.`,
         new DvonnGameState(new DvonnBoard([
             [__, __, SO, __, __, __, __, __, __, __, __],
             [__, __, O1, __, __, __, __, __, __, __, __],
@@ -44,16 +46,16 @@ export const dvonnTutorial: TutorialStep[] = [
             [__, __, __, __, __, __, __, __, __, __, __],
         ]), 0, false),
         [DvonnMove.of(new Coord(2, 1), new Coord(2, 0))],
-        $localize`Bravo, vous avez déconnecté 4 pièces de l’adversaire!
-        Il a donc perdu 4 points.
-        Les piles déconnectées cesseront d'être visibles au tour suivant.`,
-        $localize`Mauvais choix! En le déplaçant sur la source vous déconnectiez l'adversaire et lui faisiez perdre ces 4 points.
-        Ici, il gagne 2 à 0.`,
+        $localize`Nice, you have disconnected 4 pieces of your opponent!
+        Your opponent therefore lost 4 points.
+        Disconnected stacks will not be visible at the next turn.`,
+        $localize`Bad choice! By moving on the source you would have disconnected the opponent's pieces and they would have lost 4 points.
+        Here, the opponent wins 2 to 0`,
     ),
     TutorialStep.fromMove(
-        $localize`Fin de partie`,
-        $localize`Quand plus aucun mouvement n’est possible, la partie est finie et le joueur avec le plus de points gagne.<br/><br/>
-        Faites votre dernier mouvement!`,
+        $localize`End of the game`,
+        $localize`When no more move is possible, the game ends and the player with the most points wins.<br/><br/>
+        Make your last move.`,
         new DvonnGameState(new DvonnBoard([
             [__, __, SO, __, __, __, __, __, __, __, __],
             [__, __, O1, __, __, __, __, __, __, __, __],
@@ -62,7 +64,7 @@ export const dvonnTutorial: TutorialStep[] = [
             [__, __, __, __, __, __, __, __, __, __, __],
         ]), 0, false),
         [DvonnMove.of(new Coord(2, 1), new Coord(2, 0))],
-        $localize`Bravo, vous avez même gagné (6 - 0)`,
-        $localize`Mauvaise idée, en la déplaçant sur la source, vous auriez gagné votre pièce et gagné un point.`,
+        $localize`Congratulations, you won 6 - 0!`,
+        $localize`Bad idea, by moving on the source you would have won a point.`,
     ),
 ];
