@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { PartCreationComponent } from './part-creation.component';
 import { JoinerService } from 'src/app/services/JoinerService';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
@@ -218,7 +218,7 @@ describe('PartCreationComponent:', () => {
                 testUtils.expectElementNotToExist('#selected_firstCandidate');
                 expect(component.currentJoiner).toEqual(JoinerMocks.INITIAL.doc);
             }));
-            it('when used is removed from db, part creation should go deselect user, and call handleError', fakeAsync(async() => {
+            it('when user is removed from db, part creation should go deselect user, and call handleError', fakeAsync(async() => {
                 await mockCandidateArrival();
                 await chooseOpponent();
 
@@ -227,7 +227,7 @@ describe('PartCreationComponent:', () => {
                 try {
                     joueursDAOMock.delete('opponent');
                     testUtils.detectChanges();
-                    tick();
+                    tick(150);
                 } finally {
                     expect(Utils.handleError).toHaveBeenCalledOnceWith('OnlineGameWrapper: firstCandidate was deleted (opponent)');
                     testUtils.expectElementNotToExist('#selected_firstCandidate');
@@ -260,7 +260,7 @@ describe('PartCreationComponent:', () => {
                 expect(component.currentJoiner).toEqual(JoinerMocks.WITH_CHOSEN_PLAYER.doc);
                 // and proposal should now be possible
                 expect(testUtils.findElement('#proposeConfig').nativeElement.disabled)
-                    .withContext('Choosing candidate should become possible after chosenPlayer is set')
+                    .withContext('Proposing config should become possible after chosenPlayer is set')
                     .toBeFalsy();
                 // and opponent should be selected
                 testUtils.expectElementToExist('#selected_firstCandidate');
@@ -442,7 +442,7 @@ describe('PartCreationComponent:', () => {
 
             // When arriving on that component
             testUtils.detectChanges();
-            tick();
+            tick(150);
 
             // Then game should be removed and all related data
             expect(gameService.deletePart).toHaveBeenCalledWith('joinerId');
@@ -463,6 +463,7 @@ describe('PartCreationComponent:', () => {
             expect(joinerService.startObserving).not.toHaveBeenCalled();
         }));
         it('should not fail if joiner update is null, and should redirect to server', fakeAsync(async() => {
+            // given a component with initial joiner present
             component.userName = 'creator';
             await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL.doc);
             testUtils.detectChanges();
@@ -471,13 +472,16 @@ describe('PartCreationComponent:', () => {
             const router: Router = TestBed.inject(Router);
             spyOn(router, 'navigate');
 
+            // when joiner is updated and put to null, it mean document has been removed
             await joinerDAOMock.set('joinerId', null);
 
+            // then user should be moved to server
             testUtils.detectChanges();
             await testUtils.whenStable();
-            // TODO: WHY LA BUSE tick(150);
             expect(router.navigate).toHaveBeenCalledWith(['server']);
-    }));
+            tick(150);
+        }));
+    });
     it('should see candidate disappear and reappear if candidates disconnects and reconnects');
 
     describe('graceful handling of unexpected situations', () => {
