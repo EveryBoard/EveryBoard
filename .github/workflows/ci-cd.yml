@@ -43,13 +43,13 @@ jobs:
         run: bash ./scripts/update-translations.sh && bash ./scripts/check-translations.sh
 
       - name: Setup Firebase secret on master / develop push
-        if: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop' ) && false }}
+        if: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop' ) }}
         run: |
           gpg --quiet --batch --yes --decrypt --passphrase="$ENC_SECRET" --output src/app/firebaseConfig.ts .github/firebaseConfig.ts.gpg
         env:
           ENC_SECRET: ${{ secrets.ENC_SECRET }}
       - name: Setup dummy Firebase secret (others)
-        if: ${{ ! (github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop') && false) }}
+        if: ${{ ! (github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop'))}}
         run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
       - name: Launch tests
         run: npm run test:ci
