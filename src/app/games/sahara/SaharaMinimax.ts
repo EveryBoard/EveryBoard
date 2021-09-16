@@ -9,7 +9,6 @@ import { SaharaNode, SaharaRules } from './SaharaRules';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 
-
 export class SaharaMinimax extends Minimax<SaharaMove, SaharaPartSlice> {
 
     public getListMoves(node: SaharaNode): SaharaMove[] {

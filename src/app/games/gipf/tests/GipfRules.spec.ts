@@ -244,7 +244,6 @@ describe('GipfRules:', () => {
             const placement: GipfPlacement = new GipfPlacement(new Coord(3, 0),
                                                                MGPOptional.of(HexaDirection.DOWN));
 
-
             const capture1: GipfCapture = new GipfCapture([
                 new Coord(0, 3), new Coord(1, 3), new Coord(2, 3), new Coord(3, 3), new Coord(4, 3),
             ]);

@@ -8,7 +8,6 @@ import { GameStatus } from 'src/app/jscaip/Rules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 
-
 export class AwaleMinimax extends Minimax<AwaleMove, AwalePartSlice, AwaleLegalityStatus> {
 
     public getListMoves(node: AwaleNode): AwaleMove[] {

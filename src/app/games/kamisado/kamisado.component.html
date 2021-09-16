@@ -1,7 +1,8 @@
 <svg  xmlns="http://www.w3.org/2000/svg"
       width="100%" height="auto"
-      viewBox="0 0 600 600"
-      preserveAspectRatio="xMidYMid meet">
+      viewBox="-4 -4 604 608"
+      preserveAspectRatio="xMidYMid meet"
+>
     <g *ngFor="let line of board; index as y">
         <g *ngFor="let caseContent of line; index as x">
             <g id="click_{{ x }}_{{ y }}"
@@ -37,12 +38,12 @@
         </g>
     </g>
     <!-- Highlight last move -->
-    <g *ngIf="lastMove !== null">
+    <g *ngIf="lastMove != null">
         <rect [attr.x]="lastMove.coord.x * CASE_SIZE"
               [attr.y]="lastMove.coord.y * CASE_SIZE"
               [attr.width]="CASE_SIZE"
               [attr.height]="CASE_SIZE"
-              class="base no-fill highlighted"/>
+              class="base no-fill mid-stroke highlighted"/>
         <rect [attr.x]="lastMove.end.x * CASE_SIZE"
               [attr.y]="lastMove.end.y * CASE_SIZE"
               [attr.width]="CASE_SIZE"
@@ -50,7 +51,7 @@
               class="base no-fill mid-stroke highlighted"/>
     </g>
     <!-- Highlight selected piece -->
-    <circle *ngIf="chosen !== null"
+    <circle *ngIf="chosen != null"
             [attr.cx]="CASE_SIZE/2 + (chosen.x * CASE_SIZE)"
             [attr.cy]="CASE_SIZE/2 + (chosen.y * CASE_SIZE)"
             r="30"

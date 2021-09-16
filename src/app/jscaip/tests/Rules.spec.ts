@@ -23,7 +23,6 @@ export function expectToBeVictoryFor<M extends Move,
     }
 }
 
-
 export function expectToBeDraw<M extends Move,
                                S extends GamePartSlice,
                                L extends LegalityStatus,

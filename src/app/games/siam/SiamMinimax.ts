@@ -11,7 +11,6 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 import { SiamRules, SiamNode } from './SiamRules';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 
-
 export class SiamMinimax extends Minimax<SiamMove, SiamPartSlice, SiamLegalityStatus> {
 
     public getBoardValue(node: SiamNode): NodeUnheritance {

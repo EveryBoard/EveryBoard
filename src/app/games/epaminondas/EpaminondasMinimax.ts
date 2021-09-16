@@ -10,7 +10,6 @@ import { EpaminondasNode, EpaminondasRules } from './EpaminondasRules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { GameStatus } from 'src/app/jscaip/Rules';
 
-
 export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasPartSlice, EpaminondasLegalityStatus> {
 
     public static getListMoves(node: EpaminondasNode): EpaminondasMove[] {

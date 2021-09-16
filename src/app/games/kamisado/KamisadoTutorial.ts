@@ -25,6 +25,7 @@ const br: number = KamisadoPiece.ZERO.BROWN.getValue();
 const Br: number = KamisadoPiece.ONE.BROWN.getValue();
 
 export const kamisadoTutorial: TutorialStep[] = [
+
     TutorialStep.informational(
         $localize`Goal of the game`,
         $localize`At Kamisado, there are two ways to win the game:
@@ -41,7 +42,8 @@ export const kamisadoTutorial: TutorialStep[] = [
             [__, __, __, __, __, __, __, __],
             [__, gr, re, ye, pi, pu, bl, or],
         ]),
-    ),
+    ).withPreviousMove(KamisadoMove.of(new Coord(0, 7), new Coord(0, 0))),
+
     TutorialStep.anyMove(
         $localize`Initial board and initial move`,
         $localize`Here is the initial board.
@@ -76,7 +78,8 @@ export const kamisadoTutorial: TutorialStep[] = [
         ],
         $localize`Congratulations!`,
         $localize`You have not moved your pink piece on a blue square!`,
-    ),
+    ).withPreviousMove(KamisadoMove.of(new Coord(6, 7), new Coord(6, 5))),
+
     TutorialStep.informational(
         $localize`Stuck situation`,
         $localize`Dark moved to another pink square, hence you have to move your pink piece again.
@@ -92,7 +95,8 @@ export const kamisadoTutorial: TutorialStep[] = [
             [__, __, __, Pi, __, __, __, __],
             [br, gr, re, ye, pi, pu, __, or],
         ]),
-    ),
+    ).withPreviousMove(KamisadoMove.of(new Coord(6, 5), new Coord(7, 4))),
+
     TutorialStep.fromMove(
         $localize`Victory by blocking`,
         $localize`At any time, if a player blocks the entire game, that player loses.
@@ -101,8 +105,8 @@ export const kamisadoTutorial: TutorialStep[] = [
         Here, you're playing Dark and you can force your opponent to create such a situation, hence you can force your opponent to lose!<br/><br/>
         Try to make this move.`,
         new KamisadoPartSlice(2, KamisadoColor.RED, MGPOptional.of(new Coord(2, 4)), false, [
-            [__, Bl, Pu, __, Ye, Re, __, __],
-            [__, __, __, __, __, __, __, __],
+            [__, Bl, Pu, __, __, Re, __, __],
+            [__, __, __, Ye, __, __, __, __],
             [__, __, __, Pi, __, Pu, __, __],
             [__, __, __, ye, __, __, __, __],
             [__, __, re, __, __, __, __, __],
@@ -118,5 +122,5 @@ export const kamisadoTutorial: TutorialStep[] = [
          In this case, the last player to have moved a piece loses.
          Here, your opponent will have moved its green piece last, you therefore win!`,
         $localize`Failed!`,
-    ),
+    ).withPreviousMove(KamisadoMove.of(new Coord(4, 0), new Coord(3, 1))),
 ];

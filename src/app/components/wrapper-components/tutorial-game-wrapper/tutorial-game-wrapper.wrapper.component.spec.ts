@@ -41,7 +41,7 @@ import { yinshTutorial, YinshTutorialMessages } from 'src/app/games/yinsh/YinshT
 import { YinshCapture, YinshMove } from 'src/app/games/yinsh/YinshMove';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-describe('TutorialGameWrapperComponent', () => {
+describe('TutorialGameWrapperComponent (wrapper)', () => {
     let componentTestUtils: ComponentTestUtils<QuartoComponent>;
     let wrapper: TutorialGameWrapperComponent;
 
