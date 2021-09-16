@@ -38,9 +38,9 @@ export class ChatService implements OnDestroy {
             this.followedChatSub = this.followedChatObs
                 .subscribe((onFullFilled: IChatId) => callback(onFullFilled));
         } else if (chatId === this.followedChatId) {
-            throw new Error('WTF :: Already observing chat \'' + chatId + '\'');
+            throw new Error(`WTF :: Already observing chat '${chatId}'`);
         } else {
-            throw new Error('Cannot ask to watch \'' + chatId + '\' while watching \'' + this.followedChatId + '\'');
+            throw new Error(`Cannot ask to watch '${chatId}' while watching '${this.followedChatId}'`);
         }
     }
     public stopObserving(): void {
@@ -85,21 +85,10 @@ export class ChatService implements OnDestroy {
         await this.chatDao.update(this.followedChatId, { messages });
         return MGPValidation.SUCCESS;
     }
-    private userCanSendMessage(userName: string, chatId: string): boolean {
-        // TODO FOR REVIEW: should check that user is part of the game or is an observer
-        // Quentin: it seems that this should be encoded in the security rules, not in the application logic.
-        // If it is not encoded in the security rules, it is possible to craft firebase queries to send messages where we're not supposed to.
-        // And if it is encoded, there is duplication between the app logic and the security rules.
-        // Also, checking it in the app is useless in the sense that userCanSendMessage *should* never be false: if we reach sendMessage, this is by doing actions that the user can.
-        // The best IMHO is: encode it in the security rules, catch "write" failures to firebase in DAO, and propagate that back
-        // If we agree, we can remove this check and the corresponding TODO.
+    private userCanSendMessage(userName: string, _chatId: string): boolean {
         return userName != null;
     }
     private isForbiddenMessage(message: string): boolean {
-        // TODO FOR REVIEW: improve? what should be forbidden in a message?
-        // Quentin: I think here the only check should be indeed for '', but nothing else.
-        // I don't see a reason to forbid anything else.
-        // If we agree, we can remove the TODO.
         return (message === '');
     }
     public ngOnDestroy(): void {

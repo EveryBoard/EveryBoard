@@ -81,7 +81,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await joueurDAO.set('firstCandidateDocId', OPPONENT);
         await joueurDAO.set('creatorDocId', CREATOR);
         await joueurDAO.set(OBSERVER.pseudo, OBSERVER);
-        await chatDAOMock.set('joinerId', { messages: [], status: 'I don\'t have a clue' });
+        await chatDAOMock.set('joinerId', { messages: [], status: `I don't have a clue` });
         return Promise.resolve();
     }
     async function prepareStartedGameFor(user: AuthUser, shorterGlobalChrono?: boolean): Promise<void> {
@@ -557,7 +557,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
     });
     describe('Timeouts', () => {
-        it('should stop player\'s global chrono when local reach end', fakeAsync(async() => {
+        it(`should stop player's global chrono when local reach end`, fakeAsync(async() => {
             await prepareStartedGameFor({ pseudo: 'creator', verified: true });
             tick(1);
             spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
@@ -566,7 +566,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(0);
             expect(wrapper.chronoZeroGlobal.stop).toHaveBeenCalled();
         }));
-        it('should stop player\'s local chrono when global chrono reach end', fakeAsync(async() => {
+        it(`should stop player's local chrono when global chrono reach end`, fakeAsync(async() => {
             await prepareStartedGameFor({ pseudo: 'creator', verified: true }, true);
             tick(1);
             spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
@@ -575,7 +575,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(0);
             expect(wrapper.chronoZeroLocal.stop).toHaveBeenCalled();
         }));
-        it('should stop ennemy\'s global chrono when local reach end', fakeAsync(async() => {
+        it(`should stop ennemy's global chrono when local reach end`, fakeAsync(async() => {
             await prepareStartedGameFor({ pseudo: 'creator', verified: true });
             tick(1);
             await doMove(FIRST_MOVE, true);
@@ -585,7 +585,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(1);
             expect(wrapper.chronoOneGlobal.stop).toHaveBeenCalled();
         }));
-        it('should stop ennemy\'s local chrono when global chrono reach end', fakeAsync(async() => {
+        it(`should stop ennemy's local chrono when global chrono reach end`, fakeAsync(async() => {
             await prepareStartedGameFor({ pseudo: 'creator', verified: true }, true);
             tick(1);
             await doMove(FIRST_MOVE, true);
@@ -597,7 +597,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
     });
     describe('User "handshake"', () => {
-        it('Should make opponent\'s name lightgrey when he is absent', fakeAsync(async() => {
+        it(`Should make opponent's name lightgrey when he is absent`, fakeAsync(async() => {
             await prepareStartedGameFor({ pseudo: 'creator', verified: true });
             tick(1);
             expect(wrapper.getPlayerNameFontColor(1)).toEqual({ color: 'black' });

@@ -1,18 +1,18 @@
 <div class="tabs is-centered">
     <ul>
-        <li ngClass="if (currentTab == 'games') 'is-active'">
+        <li ngClass="if (currentTab === 'games') 'is-active'">
             <a (click)="selectTab('games')" i18n>Games</a>
         </li>
-        <li ngClass="if (currentTab == 'create') 'is-active'">
+        <li ngClass="if (currentTab === 'create') 'is-active'">
             <a (click)="selectTab('create')" i18n>Create</a>
         </li>
-        <li ngClass="if (currentTab == 'chat') 'is-active'">
+        <li ngClass="if (currentTab === 'chat') 'is-active'">
             <a (click)="selectTab('chat')" i18n>Chat</a>
         </li>
     </ul>
 </div>
 
-<div *ngIf="currentTab == 'games'"
+<div *ngIf="currentTab === 'games'"
      id="actualGames"
      class="box">
     <div class="table-container">
@@ -42,7 +42,7 @@
     </div>
 </div>
 
-<div *ngIf="currentTab == 'create'"
+<div *ngIf="currentTab === 'create'"
      id="gameCreator"
      class="box">
     <app-pick-game (pickGame)="pickGame($event)"></app-pick-game>
@@ -50,7 +50,7 @@
             [disabled]="!selectedGame"
             (click)="createGame()" i18n>Create an online game</button>
 </div>
-<div *ngIf="currentTab == 'chat'"
+<div *ngIf="currentTab === 'chat'"
      id="chatTab"
      class="columns">
     <div id="chatContainerDiv" class="column is-9">

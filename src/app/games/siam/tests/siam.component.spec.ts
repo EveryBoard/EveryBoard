@@ -53,7 +53,7 @@ describe('SiamComponent', () => {
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
         componentTestUtils.setupSlice(slice);
 
-        await componentTestUtils.expectClickFailure('#clickPiece_4_4', 'Can\'t choose ennemy\'s pieces');
+        await componentTestUtils.expectClickFailure('#clickPiece_4_4', `Can't choose ennemy's pieces`);
     }));
     it('should cancel move when trying to insert while having selected a piece', fakeAsync(async() => {
         const board: NumberTable = [
@@ -68,7 +68,7 @@ describe('SiamComponent', () => {
 
         await componentTestUtils.expectClickSuccess('#clickPiece_0_0');
 
-        const reason: string = 'Can\'t insert when there is already a selected piece';
+        const reason: string = `Can't insert when there is already a selected piece`;
         await componentTestUtils.expectClickFailure('#insertAt_-1_2', reason);
     }));
     it('should allow rotation', fakeAsync(async() => {

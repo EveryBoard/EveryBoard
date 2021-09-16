@@ -45,7 +45,7 @@ describe('ChatComponent', () => {
         spyOn(chatService, 'startObserving');
         spyOn(chatService, 'stopObserving');
         spyOn(component, 'loadChatContent');
-        // given that the user is not connected
+        // given a user that is not connected
         AuthenticationServiceMock.setUser(AuthenticationService.NOT_CONNECTED);
 
         // when the component is initialized

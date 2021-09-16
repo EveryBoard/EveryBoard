@@ -380,7 +380,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         const switchedBoard: GoPiece[][] = switchedSlice.getCopiedBoardGoPiece();
         const switchedPiece: GoPiece = switchedBoard[groupCoord.y][groupCoord.x];
         if (switchedPiece.isEmpty()) {
-            throw new Error('Can\'t switch emptyness aliveness');
+            throw new Error(`Can't switch emptyness aliveness`);
         }
         const goGroupDatasFactory: GoGroupDatasFactory = new GoGroupDatasFactory();
         const group: GoGroupDatas = goGroupDatasFactory.getGroupDatas(groupCoord, switchedBoard) as GoGroupDatas;

@@ -1,5 +1,5 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement, Type } from '@angular/core';
-import { ComponentFixture, flush, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
 import { GamePartSlice } from '../../jscaip/GamePartSlice';
@@ -31,9 +31,6 @@ import { LocalGameWrapperComponent }
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { HumanDuration } from '../TimeUtils';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { MatListModule } from '@angular/material/list';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
 
 @Component({})
 export class BlankComponent {}
@@ -81,7 +78,7 @@ export class SimpleComponentTestUtils<T> {
                 FormsModule,
                 ReactiveFormsModule,
                 BrowserAnimationsModule,
-                MatListModule, MatIconModule, MatInputModule, NoopAnimationsModule,
+                NoopAnimationsModule,
             ],
             declarations: [
                 componentType,
@@ -96,7 +93,6 @@ export class SimpleComponentTestUtils<T> {
                 { provide: JoinerDAO, useClass: JoinerDAOMock },
                 { provide: ChatDAO, useClass: ChatDAOMock },
                 { provide: JoueursDAO, useClass: JoueursDAOMock },
-                { provide: ChatDAO, useClass: ChatDAOMock },
             ],
         }).compileComponents();
         AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);

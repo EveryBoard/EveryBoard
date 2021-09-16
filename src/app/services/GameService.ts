@@ -161,7 +161,7 @@ export class GameService implements OnDestroy {
     }
     public async deletePart(partId: string): Promise<void> {
         display(GameService.VERBOSE, 'GameService.deletePart(' + partId + ')');
-        assert(partId != null, 'Can\'t delete id for partId = null');
+        assert(partId != null, `Can't delete id for partId = null`);
         return this.partDao.delete(partId);
     }
     public async acceptConfig(partId: string, joiner: IJoiner): Promise<void> {

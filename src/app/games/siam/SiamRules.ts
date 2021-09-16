@@ -391,7 +391,7 @@ export class SiamRules extends _SiamRules {
                     // We found a piece resisting the pushing direction
                     missingForce += 1;
                     if (!mountainEncountered) {
-                        display(SiamRules.VERBOSE, 'he his before the mountain, we\'ll have to push longer');
+                        display(SiamRules.VERBOSE, `he his before the mountain, we'll have to push longer`);
                         currentDistance++;
                     }
                 } else {
@@ -404,7 +404,7 @@ export class SiamRules extends _SiamRules {
                         }
                     } else {
                         currentDistance++;
-                        display(SiamRules.VERBOSE, 'he\'ll get pushed out before the mountain');
+                        display(SiamRules.VERBOSE, `he'll get pushed out before the mountain`);
                     }
                 }
             }

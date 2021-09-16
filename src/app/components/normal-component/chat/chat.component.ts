@@ -60,7 +60,7 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
         return joueur && joueur.pseudo && joueur.pseudo !== '';
     }
     public loadChatContent(): void {
-        display(ChatComponent.VERBOSE, 'User \'' + this.userName + '\' logged, loading chat content');
+        display(ChatComponent.VERBOSE, `User '` + this.userName + `' logged, loading chat content`);
 
         this.chatService.startObserving(this.chatId, (id: IChatId) => {
             this.updateMessages(id);

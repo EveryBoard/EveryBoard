@@ -21,12 +21,12 @@ describe('InscriptionComponent', () => {
     }));
     it('Registration failure should show a message', fakeAsync(async() => {
         spyOn(testUtils.getComponent().router, 'navigate');
-        spyOn(testUtils.getComponent().authService, 'doRegister').and.rejectWith({ message: 'c\'est caca monsieur.' });
+        spyOn(testUtils.getComponent().authService, 'doRegister').and.rejectWith({ message: `c'est caca monsieur.` });
 
         await testUtils.clickElement('#registerButton');
 
         const expectedError: string = testUtils.findElement('#errorMessage').nativeElement.innerHTML;
         expect(testUtils.getComponent().router.navigate).not.toHaveBeenCalled();
-        expect(expectedError).toBe('c\'est caca monsieur.');
+        expect(expectedError).toBe(`c'est caca monsieur.`);
     }));
 });

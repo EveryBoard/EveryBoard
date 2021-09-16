@@ -50,7 +50,7 @@ describe('ChatService', () => {
             };
             expect(service.isObserving()).toBe(false);
             await chatDAO.set('id', EMPTY_CHAT);
-            // given that a chat is observed
+            // given a chat that is observed
             service.startObserving('id', callback);
             expect(service.isObserving()).toBe(true);
 
@@ -61,7 +61,7 @@ describe('ChatService', () => {
             await expectAsync(promise).toBeResolvedTo({ id: 'id', doc: NON_EMPTY_CHAT });
         }));
         it('should throw when observing the same chat twice', fakeAsync(async() => {
-            // given that a chat is observed
+            // given a chat that is observed
             await chatDAO.set('id', EMPTY_CHAT);
             service.startObserving('id', (_: IChatId) => { });
             // when trying to observe it again, then an error is thrown
@@ -69,10 +69,10 @@ describe('ChatService', () => {
         }));
         it('should throw when observing a second chat while a first one is already being observed', fakeAsync(async() => {
             await chatDAO.set('id', EMPTY_CHAT);
-            // given that a chat is observed
+            // given a chat that is observed
             service.startObserving('id', (_: IChatId) => { });
             // when trying to observe another chat, then an error is thrown
-            expect(() => service.startObserving('id2', (_: IChatId) => { })).toThrowError('Cannot ask to watch \'id2\' while watching \'id\'');
+            expect(() => service.startObserving('id2', (_: IChatId) => { })).toThrowError(`Cannot ask to watch 'id2' while watching 'id'`);
         }));
         it('should stop following updates after stopObserving is called', fakeAsync(async() => {
             let resolvePromise: (chat: IChatId) => void;
@@ -87,7 +87,7 @@ describe('ChatService', () => {
             expect(service.isObserving()).toBe(false);
             await chatDAO.set('id', EMPTY_CHAT);
 
-            // given that a chat is not observed anymore
+            // given a chat that is not observed anymore
             service.startObserving('id', callback);
             service.stopObserving();
             expect(service.isObserving()).toBe(false);
@@ -104,7 +104,7 @@ describe('ChatService', () => {
         it('should stop observing upon destroy', fakeAsync(async() => {
             spyOn(service, 'stopObserving');
             await chatDAO.set('id', EMPTY_CHAT);
-            // given that we're observing
+            // given a chat that we're observing
             service.startObserving('id', (_: IChatId) => { });
 
             // when the service is destroyed
@@ -117,7 +117,7 @@ describe('ChatService', () => {
     describe('deleteChat', () => {
         it('should delete the chat through the DAO', fakeAsync(async() => {
             spyOn(chatDAO, 'delete');
-            // given that a chat exists
+            // given a chat that exists
             await chatDAO.set('id', EMPTY_CHAT);
 
             // when calling deleteChat

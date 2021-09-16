@@ -41,7 +41,7 @@ class CaseSensible {
             // pas ajouté, compté en double
             return false;
         }
-        assert(i !== 3, 'CECI EST IMPOSSIBLE, on a rajouté trop d\'éléments dans cette CaseSensible');
+        assert(i !== 3, `CECI EST IMPOSSIBLE, on a rajouté trop d'éléments dans cette CaseSensible`);
         // TODO enlever ce débug
         this.criteres[-i - 1] = c;
         return true;

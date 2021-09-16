@@ -3068,7 +3068,7 @@
       </trans-unit>
       <trans-unit id="75196759111440200" datatype="html">
         <source>You&apos;re not allowed to send a message here.</source>
-        <target>Vous n'êtes pas autorisés à envoyer un message ici.</target>
+        <target>Vous n'êtes pas autorisé à envoyer un message ici.</target>
       </trans-unit>
       <trans-unit id="4052977957517792171" datatype="html">
         <source>This message is forbidden.</source>

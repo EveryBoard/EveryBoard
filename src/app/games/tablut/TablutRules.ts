@@ -261,7 +261,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
         if (!backCoord.isInRange(TablutRulesConfig.WIDTH, TablutRulesConfig.WIDTH)) {
             display(TablutRules.VERBOSE || LOCAL_VERBOSE,
                     'cannot capture a pawn against a wall; ' + threatenedPieceCoord +
-                    'threatened by ' + player + '\'s pawn in  ' + c +
+                    'threatened by ' + player + `'s pawn in  ` + c +
                     ' coming from this direction (' + d.x + ', ' + d.y + ')');
             return null; // no ally no sandwich (against pawn)
         }
@@ -271,7 +271,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
             if (!this.isThrone(backCoord)) {
                 display(TablutRules.VERBOSE || LOCAL_VERBOSE,
                         'cannot capture a pawn without an ally; ' +
-                        threatenedPieceCoord + 'threatened by ' + player + '\'s pawn in  ' + c +
+                        threatenedPieceCoord + 'threatened by ' + player + `'s pawn in  ` + c +
                         ' coming from this direction (' + d.x + ', ' + d.y + ')' +
                         'cannot capture a pawn without an ally behind');
                 return null;
@@ -279,7 +279,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
             if (this.CAPTURE_PAWN_AGAINST_THRONE_RULES) {
                 display(TablutRules.VERBOSE || LOCAL_VERBOSE,
                         'pawn captured by 1 ennemy and 1 throne; ' +
-                        threatenedPieceCoord + 'threatened by ' + player + '\'s pawn in  ' + c +
+                        threatenedPieceCoord + 'threatened by ' + player + `'s pawn in  ` + c +
                         ' coming from this direction (' + d.x + ', ' + d.y + ')');
                 return threatenedPieceCoord; // pawn captured by 1 ennemy and 1 throne
             }
@@ -287,12 +287,12 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
         if (back === RelativePlayer.PLAYER) {
             display(TablutRules.VERBOSE || LOCAL_VERBOSE,
                     'pawn captured by 2 ennemies; ' + threatenedPieceCoord +
-                    'threatened by ' + player + '\'s pawn in  ' + c +
+                    'threatened by ' + player + `'s pawn in  ` + c +
                     ' coming from this direction (' + d.x + ', ' + d.y + ')');
             return threatenedPieceCoord; // pawn captured by two ennemies
         }
         display(TablutRules.VERBOSE || LOCAL_VERBOSE,
-                'no captures; ' + threatenedPieceCoord + 'threatened by ' + player + '\'s pawn in  ' + c +
+                'no captures; ' + threatenedPieceCoord + 'threatened by ' + player + `'s pawn in  ` + c +
                 ' coming from this direction (' + d.x + ', ' + d.y + ')');
         return null;
     }
@@ -370,7 +370,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
                 if (TablutPartSlice.INVADER_START) {
                     if (relativeOwner !== RelativePlayer.PLAYER) {
                         display(TablutRules.VERBOSE,
-                                'player start, invader start, case is invader, but player don\'t own the case ' +
+                                `player start, invader start, case is invader, but player don't own the case ` +
                                 relativeOwner + ' :: ' + owner + ' :: ' + player);
                     }
                 } else {

@@ -22,7 +22,7 @@ describe('PylosRules:', () => {
         rules = new PylosRules(PylosPartSlice);
         minimax = new PylosMinimax(rules, 'PylosMinimax');
     });
-    it('should forbid move who\'se landing coord is not empty', () => {
+    it(`should forbid move who'se landing coord is not empty`, () => {
         const board: number[][][] = [
             [
                 [O, _, _, _],
@@ -94,7 +94,7 @@ describe('PylosRules:', () => {
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.reason).toBe(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
     });
-    it('should forbid move who\'se landing coord is not landable (not on the floor, not over 4 lower pieces)', () => {
+    it(`should forbid move who'se landing coord is not landable (not on the floor, not over 4 lower pieces)`, () => {
         const board: number[][][] = [
             [
                 [_, _, _, _],

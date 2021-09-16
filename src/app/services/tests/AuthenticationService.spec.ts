@@ -72,7 +72,7 @@ describe('AuthenticationService', () => {
             expect(user.pseudo).toBe('JeanJaja');
         });
     }));
-    it('should show email when user don\'t have a display name', fakeAsync(() => {
+    it('should show email when user don not have a display name', fakeAsync(() => {
         const afAuth: unknown = { authState: of({ email: 'jean@jaja.europe' }).pipe(delay(1)) };
         const service: AuthenticationService = setupService(afAuth);
         tick(1);
