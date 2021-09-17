@@ -6,7 +6,6 @@ import { FirstPlayer, IJoiner, PartStatus } from '../domain/ijoiner';
 import { JoinerService } from './JoinerService';
 import { ActivesPartsService } from './ActivesPartsService';
 import { ChatService } from './ChatService';
-import { IChat } from '../domain/ichat';
 import { Request } from '../domain/request';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/Player';

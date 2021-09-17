@@ -6,7 +6,6 @@ import { TablutPartSlice } from 'src/app/games/tablut/TablutPartSlice';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { TablutFailure } from '../TablutFailure';
 
 describe('TablutComponent', () => {
     let componentTestUtils: ComponentTestUtils<TablutComponent>;

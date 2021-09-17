@@ -6,14 +6,14 @@ export class TutorialStep {
 
     public static informational(title: string, instruction: string, state: GamePartSlice): TutorialStep {
         return new TutorialStep(title,
-                                   instruction,
-                                   state,
-                                   null,
-                                   null,
-                                   null,
-                                   null,
-                                   null,
-                                   null);
+                                instruction,
+                                state,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null);
     }
     public static fromMove(title: string,
                            instruction: string,
@@ -24,14 +24,14 @@ export class TutorialStep {
     ): TutorialStep
     {
         return new TutorialStep(title,
-                                   instruction,
-                                   state,
-                                   acceptedMoves,
-                                   acceptedMoves[0],
-                                   null,
-                                   null,
-                                   successMessage,
-                                   failureMessage);
+                                instruction,
+                                state,
+                                acceptedMoves,
+                                acceptedMoves[0],
+                                null,
+                                null,
+                                successMessage,
+                                failureMessage);
     }
     public static forClick(title: string,
                            instruction: string,
@@ -42,14 +42,14 @@ export class TutorialStep {
     ): TutorialStep
     {
         return new TutorialStep(title,
-                                   instruction,
-                                   state,
-                                   null,
-                                   null,
-                                   acceptedClicks,
-                                   null,
-                                   successMessage,
-                                   failureMessage);
+                                instruction,
+                                state,
+                                null,
+                                null,
+                                acceptedClicks,
+                                null,
+                                successMessage,
+                                failureMessage);
     }
     public static anyMove(title: string,
                           instruction: string,
@@ -59,14 +59,14 @@ export class TutorialStep {
     ): TutorialStep
     {
         return new TutorialStep(title,
-                                   instruction,
-                                   state,
-                                   [],
-                                   solutionMove,
-                                   null,
-                                   null,
-                                   successMessage,
-                                   null);
+                                instruction,
+                                state,
+                                [],
+                                solutionMove,
+                                null,
+                                null,
+                                successMessage,
+                                null);
     }
     public static fromPredicate(title: string,
                                 instruction: string,
@@ -77,14 +77,14 @@ export class TutorialStep {
     ): TutorialStep
     {
         return new TutorialStep(title,
-                                   instruction,
-                                   state,
-                                   null,
-                                   solutionMove,
-                                   null,
-                                   predicate,
-                                   successMessage,
-                                   null);
+                                instruction,
+                                state,
+                                null,
+                                solutionMove,
+                                null,
+                                predicate,
+                                successMessage,
+                                null);
     }
     private constructor(public readonly title: string,
                        public readonly instruction: string,
@@ -116,14 +116,14 @@ export class TutorialStep {
     }
     public withPreviousMove(previousMove: Move): TutorialStep {
         return new TutorialStep(this.title,
-                                   this.instruction,
-                                   this.state,
-                                   this.acceptedMoves,
-                                   this.solutionMove,
-                                   this.acceptedClicks,
-                                   this.predicate,
-                                   this.successMessage,
-                                   this.failureMessage,
-                                   previousMove);
+                                this.instruction,
+                                this.state,
+                                this.acceptedMoves,
+                                this.solutionMove,
+                                this.acceptedClicks,
+                                this.predicate,
+                                this.successMessage,
+                                this.failureMessage,
+                                previousMove);
     }
 }

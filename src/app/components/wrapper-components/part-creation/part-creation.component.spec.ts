@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 import { PartCreationComponent } from './part-creation.component';
 import { JoinerService } from 'src/app/services/JoinerService';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
@@ -16,7 +16,7 @@ import { GameService } from 'src/app/services/GameService';
 import { ChatService } from 'src/app/services/ChatService';
 import { Utils } from 'src/app/utils/utils';
 
-describe('PartCreationComponent:', () => {
+fdescribe('PartCreationComponent:', () => {
     let testUtils: SimpleComponentTestUtils<PartCreationComponent>;
     let component: PartCreationComponent;
 
@@ -25,8 +25,7 @@ describe('PartCreationComponent:', () => {
     let joueursDAOMock: JoueursDAO;
 
     async function selectCustomGameAndChangeConfig(): Promise<void> {
-        const elementExist: boolean = await testUtils.clickElement('#partTypeCustom');
-        expect(elementExist).toBeTrue();
+        await testUtils.clickElement('#partTypeCustom');
         component.configFormGroup.get('maximalMoveDuration').setValue(100);
         component.configFormGroup.get('totalPartDuration').setValue(1000);
         testUtils.detectChanges();
@@ -219,20 +218,29 @@ describe('PartCreationComponent:', () => {
                 expect(component.currentJoiner).toEqual(JoinerMocks.INITIAL.doc);
             }));
             it('when user is removed from db, part creation should go deselect user, and call handleError', fakeAsync(async() => {
+                // Given a part with a candidate that has been chosen
                 await mockCandidateArrival();
                 await chooseOpponent();
+                testUtils.detectChanges();
+                await testUtils.whenStable();
+                tick(3000)
 
                 testUtils.expectElementToExist('#selected_firstCandidate');
                 spyOn(Utils, 'handleError').and.callFake(() => {});
-                try {
-                    joueursDAOMock.delete('opponent');
-                    testUtils.detectChanges();
-                    tick(150);
-                } finally {
-                    expect(Utils.handleError).toHaveBeenCalledOnceWith('OnlineGameWrapper: firstCandidate was deleted (opponent)');
-                    testUtils.expectElementNotToExist('#selected_firstCandidate');
-                    expect(component.currentJoiner).toEqual(JoinerMocks.INITIAL.doc);
-                }
+                testUtils.detectChanges();
+                await testUtils.whenStable();
+                tick(3000)
+
+                // when the opponent is deleted
+                await joueursDAOMock.delete('opponent');
+                testUtils.detectChanges();
+                tick(3000);
+
+                // then handleError has been called as this is an unusual situation
+                expect(Utils.handleError).toHaveBeenCalledOnceWith('OnlineGameWrapper: firstCandidate was deleted (opponent)');
+                // and the part creation deselected the user
+                testUtils.expectElementNotToExist('#selected_firstCandidate');
+                expect(component.currentJoiner).toEqual(JoinerMocks.INITIAL.doc);
             }));
         });
         it('should make candidate choice possible for creator when candidate arrives', fakeAsync(async() => {
@@ -334,20 +342,6 @@ describe('PartCreationComponent:', () => {
             expect(joinerService.deleteJoiner).toHaveBeenCalledWith();
             expect(chatService.deleteChat).toHaveBeenCalledWith('joinerId');
 
-        }));
-        it('should reroute to server when game is cancelled', fakeAsync(async() => {
-            const router: Router = TestBed.inject(Router);
-            spyOn(router, 'navigate');
-
-            // TODO: should use joinerDAOMock.delete('joinerId'), but that method is broken
-            testUtils.getComponent()['onCurrentJoinerUpdate'](null);
-
-            testUtils.detectChanges();
-            await testUtils.whenStable();
-            testUtils.detectChanges();
-            tick(150);
-
-            expect(router.navigate).toHaveBeenCalledWith(['server']);
         }));
         it('should remember settings after a joiner update', fakeAsync(async() => {
             component.userName = 'creator';
@@ -467,21 +461,39 @@ describe('PartCreationComponent:', () => {
             component.userName = 'creator';
             await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL.doc);
             testUtils.detectChanges();
-            tick();
 
             const router: Router = TestBed.inject(Router);
             spyOn(router, 'navigate');
 
-            // when joiner is updated and put to null, it mean document has been removed
+            // when joiner is updated and put to null, it means document has been removed
             await joinerDAOMock.set('joinerId', null);
 
             // then user should be moved to server
             testUtils.detectChanges();
-            await testUtils.whenStable();
+            tick(3000); // test does not work with a tick(2999) or less
             expect(router.navigate).toHaveBeenCalledWith(['server']);
-            tick(150);
         }));
     });
+    it('should reroute to server when game is cancelled', fakeAsync(async() => {
+        // given a part creation with the initial joiner
+        component.userName = 'firstCandidate';
+        await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL.doc);
+        testUtils.detectChanges();
+        await testUtils.whenStable()
+        tick(3000);
+
+        const router: Router = TestBed.inject(Router);
+        spyOn(router, 'navigate');
+
+        // when the joiner is deleted
+        await joinerDAOMock.delete('joinerId');
+
+        // then the user is rerouted to the server
+        testUtils.detectChanges();
+        tick(3000);
+        expect(router.navigate).toHaveBeenCalledWith(['server']);
+    }));
+
     it('should see candidate disappear and reappear if candidates disconnects and reconnects');
 
     describe('graceful handling of unexpected situations', () => {

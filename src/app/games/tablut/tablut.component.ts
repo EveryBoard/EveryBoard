@@ -20,7 +20,6 @@ import { TablutPieceAndControlMinimax } from './TablutPieceAndControlMinimax';
 import { TablutEscapeThenPieceAndControlMinimax } from './TablutEscapeThenPieceThenControl';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { TablutFailure } from './TablutFailure';
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { tablutTutorial } from './TablutTutorial';
 

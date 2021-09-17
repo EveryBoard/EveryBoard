@@ -97,6 +97,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
         this.checkInputs();
         this.createForms();
+        console.log('joining game')
         const gameExists: boolean = await this.joinerService.joinGame(this.partId, this.userName);
         if (gameExists === false) {
             // We will be redirected by the GameWrapper

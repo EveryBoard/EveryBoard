@@ -12,7 +12,7 @@ import { ObservableSubject } from 'src/app/utils/ObservableSubject';
 
 export abstract class FirebaseFirestoreDAOMock<T extends JSONObject> implements IFirebaseFirestoreDAO<T> {
 
-    public static VERBOSE: boolean = false;
+    public static VERBOSE: boolean = true;
 
     constructor(public readonly collectionName: string,
                 public VERBOSE: boolean,
@@ -53,11 +53,11 @@ export abstract class FirebaseFirestoreDAOMock<T extends JSONObject> implements 
         if (optionalOS.isPresent()) {
             return optionalOS.get().subject.getValue().doc;
         } else {
-            throw new Error('Cannot read element ' + id + ' absent from ' + this.collectionName);
+            return null; // Firebase returns null if a document does not exist. This is behaviour relied upon!
         }
     }
     public async set(id: string, doc: T): Promise<void> {
-        display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE,
+        display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE || true,
                 this.collectionName + '.set(' + id + ', ' + JSON.stringify(doc) + ')');
 
         const optionalOS: MGPOptional<ObservableSubject<{id: string, doc: T}>> = this.getStaticDB().get(id);
@@ -87,7 +87,7 @@ export abstract class FirebaseFirestoreDAOMock<T extends JSONObject> implements 
         }
     }
     public async delete(id: string): Promise<void> {
-        display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE, this.collectionName + '.delete(' + id + ')');
+        display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE || true, this.collectionName + '.delete(' + id + ')');
 
         const optionalOS: MGPOptional<ObservableSubject<{id: string, doc: T}>> = this.getStaticDB().get(id);
         if (optionalOS.isPresent()) {

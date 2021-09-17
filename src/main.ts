@@ -35,7 +35,7 @@ if (false && locale !== 'en' && validLocales.some((validLocale: string): boolean
             bootstrapApp();
         })
         .catch(function(err) {
-            console.log({err});
+            console.log(err);
         });
 } else {
     bootstrapApp();

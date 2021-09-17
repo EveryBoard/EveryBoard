@@ -23,8 +23,8 @@ describe('KamisadoComponent', () => {
         componentTestUtils = await ComponentTestUtils.forGame<KamisadoComponent>('Kamisado');
     }));
     it('should create', () => {
-        expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');
-        expect(componentTestUtils.getComponent()).toBeTruthy('Component should be created');
+        expect(componentTestUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
+        expect(componentTestUtils.getComponent()).withContext('Component should be created').toBeTruthy();
     });
     it('should choose (-1,-1) as chosen coord when calling updateBoard without move', () => {
         componentTestUtils.getComponent().updateBoard();
@@ -32,7 +32,7 @@ describe('KamisadoComponent', () => {
     });
     it('should not allow to pass initially', fakeAsync(async() => {
         expect((await componentTestUtils.getComponent().pass()).reason).toBe(RulesFailure.CANNOT_PASS);
-        tick(1001)
+        tick(1001);
     }));
     it('should allow changing initial choice', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_0_7'); // Select initial piece
