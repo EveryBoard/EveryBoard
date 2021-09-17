@@ -9,7 +9,7 @@ class NonAbstractMoveCoordToCoord extends MoveCoordToCoord {
     public toString(): string {
         return 'lel';
     }
-    public equals(o: Move): boolean {
+    public equals(_: Move): boolean {
         return false;
     }
 }
@@ -19,22 +19,21 @@ describe('MoveCoordToCoord', () => {
     });
     describe('getDirection', () => {
         it('should return the direction of the move', () => {
-            expect(new NonAbstractMoveCoordToCoord(new Coord(0, 0), new Coord(0, 1)).getDirection())
-                .toEqual(MGPFallible.success(Direction.DOWN));
-            expect(new NonAbstractMoveCoordToCoord(new Coord(0, 0), new Coord(0, -1)).getDirection())
-                .toEqual(MGPFallible.success(Direction.UP));
-            expect(new NonAbstractMoveCoordToCoord(new Coord(0, 0), new Coord(1, 0)).getDirection())
-                .toEqual(MGPFallible.success(Direction.RIGHT));
-            expect(new NonAbstractMoveCoordToCoord(new Coord(0, 0), new Coord(-1, 0)).getDirection())
-                .toEqual(MGPFallible.success(Direction.LEFT));
-            expect(new NonAbstractMoveCoordToCoord(new Coord(0, 0), new Coord(-1, -1)).getDirection())
-                .toEqual(MGPFallible.success(Direction.UP_LEFT));
-            expect(new NonAbstractMoveCoordToCoord(new Coord(0, 0), new Coord(-1, 1)).getDirection())
-                .toEqual(MGPFallible.success(Direction.DOWN_LEFT));
-            expect(new NonAbstractMoveCoordToCoord(new Coord(0, 0), new Coord(1, -1)).getDirection())
-                .toEqual(MGPFallible.success(Direction.UP_RIGHT));
-            expect(new NonAbstractMoveCoordToCoord(new Coord(0, 0), new Coord(1, 1)).getDirection())
-                .toEqual(MGPFallible.success(Direction.DOWN_RIGHT));
+            const source: Coord = new Coord(0, 0);
+            const allDestsAndDirs: [Coord, Direction][] = [
+                [new Coord(0, 1), Direction.DOWN],
+                [new Coord(0, -1), Direction.UP],
+                [new Coord(1, 0), Direction.RIGHT],
+                [new Coord(-1, 0), Direction.LEFT],
+                [new Coord(-1, -1), Direction.UP_LEFT],
+                [new Coord(-1, 1), Direction.DOWN_LEFT],
+                [new Coord(1, -1), Direction.UP_RIGHT],
+                [new Coord(1, 1), Direction.DOWN_RIGHT],
+            ];
+            for (const [destination, direction] of allDestsAndDirs) {
+                expect(new NonAbstractMoveCoordToCoord(source, destination).getDirection())
+                    .toEqual(MGPFallible.success(direction));
+            }
         });
     });
     describe('length', () => {
