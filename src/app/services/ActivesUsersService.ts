@@ -13,11 +13,12 @@ export class ActivesUsersService {
 
     private activesUsersBS: BehaviorSubject<IJoueurId[]> = new BehaviorSubject<IJoueurId[]>([]);
 
-    public activesUsersObs: Observable<IJoueurId[]> = this.activesUsersBS.asObservable();
+    public activesUsersObs: Observable<IJoueurId[]>;
 
     private unsubscribe: () => void;
 
     constructor(public joueursDAO: JoueursDAO) {
+        this.activesUsersObs = this.activesUsersBS.asObservable();
     }
     public startObserving(): void {
         display(ActivesUsersService.VERBOSE, 'ActivesUsersService.startObservingActivesUsers');

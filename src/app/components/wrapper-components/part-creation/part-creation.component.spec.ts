@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { PartCreationComponent } from './part-creation.component';
 import { JoinerService } from 'src/app/services/JoinerService';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
@@ -16,7 +16,7 @@ import { GameService } from 'src/app/services/GameService';
 import { ChatService } from 'src/app/services/ChatService';
 import { Utils } from 'src/app/utils/utils';
 
-fdescribe('PartCreationComponent:', () => {
+describe('PartCreationComponent:', () => {
     let testUtils: SimpleComponentTestUtils<PartCreationComponent>;
     let component: PartCreationComponent;
 
@@ -210,9 +210,9 @@ fdescribe('PartCreationComponent:', () => {
                 await chooseOpponent();
 
                 testUtils.expectElementToExist('#selected_firstCandidate');
-                joueursDAOMock.update('opponent', { state: 'offline' });
+                await joueursDAOMock.update('opponent', { state: 'offline' });
                 testUtils.detectChanges();
-                tick(150);
+                tick(3000);
 
                 testUtils.expectElementNotToExist('#selected_firstCandidate');
                 expect(component.currentJoiner).toEqual(JoinerMocks.INITIAL.doc);
@@ -436,7 +436,7 @@ fdescribe('PartCreationComponent:', () => {
 
             // When arriving on that component
             testUtils.detectChanges();
-            tick(150);
+            tick(3000);
 
             // Then game should be removed and all related data
             expect(gameService.deletePart).toHaveBeenCalledWith('joinerId');
@@ -540,7 +540,7 @@ fdescribe('PartCreationComponent:', () => {
 
             expect(Utils.handleError).toHaveBeenCalledWith('OnlineGameWrapper: firstCandidate is already offline!');
         }));
-        xit('should not fail if an user has to be removed from the lobby but is not in it', fakeAsync(async() => {
+        it('should not fail if an user has to be removed from the lobby but is not in it', fakeAsync(async() => {
             // This could happen if we receive twice the same update to a user that needs to be removed
             component.userName = 'creator';
             await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL.doc);
@@ -564,10 +564,9 @@ fdescribe('PartCreationComponent:', () => {
             tick();
 
             testUtils.expectElementNotToExist('#presenceOf_firstCandidate');
-            expect(Utils.handleError).toHaveBeenCalledWith('OnlineGameWrapper: firstCandidate is already offline!');
+            expect(Utils.handleError).not.toHaveBeenCalled();
         }));
-        it('should remove candidate from lobby if it is deleted', fakeAsync(async() => {
-        }));
+        it('should remove candidate from lobby if it is deleted');
     });
     describe('PartType', () => {
         it('Should map correctly with PartType.of', () => {

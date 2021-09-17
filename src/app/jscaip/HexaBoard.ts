@@ -113,6 +113,7 @@ export class HexaBoard<T> {
     protected setAtUnsafe(coord: Coord, v: T): this {
         const contents: T[][] = ArrayUtils.copyBiArray(this.contents);
         contents[coord.y][coord.x] = v;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return new (<any> this.constructor)(contents, this.width, this.height, this.excludedCases, this.empty) as this;
     }
     public setAt(coord: Coord, v: T): this {

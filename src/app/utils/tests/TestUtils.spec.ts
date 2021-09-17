@@ -37,19 +37,19 @@ export class BlankComponent {}
 
 export class ActivatedRouteStub {
     private route: {[key: string]: string} = {}
-    public snapshot: { paramMap: { get: (str: string) => string } } = {
-        paramMap: {
-            get: (str: string) => {
-                const value: string = this.route[str];
-                if (value == null) {
-                    throw new Error('ActivatedRouteStub: invalid route for ' + str + ', call setRoute before using!');
-                }
-                return value;
-
-            },
-        },
-    };
+    public snapshot: { paramMap: { get: (str: string) => string } };
     public constructor(compo?: string, id?: string) {
+        this.snapshot = {
+            paramMap: {
+                get: (str: string) => {
+                    const value: string = this.route[str];
+                    if (value == null) {
+                        throw new Error('ActivatedRouteStub: invalid route for ' + str + ', call setRoute before using!');
+                    }
+                    return value;
+                },
+            },
+        };
         if (compo != null) {
             this.setRoute('compo', compo);
         }

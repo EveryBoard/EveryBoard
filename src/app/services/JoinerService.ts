@@ -70,7 +70,6 @@ export class JoinerService {
             return true;
         } else {
             joinerList[joinerList.length] = userName;
-            console.log('1')
             await this.joinerDao.update(partId, { candidates: joinerList });
             return true;
         }
@@ -104,7 +103,6 @@ export class JoinerService {
                 partStatus,
                 candidates,
             };
-            console.log('2')
             return this.joinerDao.update(this.observedJoinerId, modification);
         }
     }
@@ -112,7 +110,6 @@ export class JoinerService {
         display(JoinerService.VERBOSE, 'JoinerService.reviewConfig');
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
         const modification: Partial<IJoiner> = { candidates };
-        console.log('3')
         return this.joinerDao.update(this.observedJoinerId, modification);
     }
     public async deleteJoiner(): Promise<void> {
@@ -133,7 +130,6 @@ export class JoinerService {
         display(JoinerService.VERBOSE, 'this.followedJoinerId: ' + this.observedJoinerId);
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
 
-        console.log('4')
         return this.joinerDao.update(this.observedJoinerId, {
             partStatus: PartStatus.CONFIG_PROPOSED.value,
             chosenPlayer: chosenPlayerPseudo,
@@ -147,7 +143,6 @@ export class JoinerService {
         display(JoinerService.VERBOSE, `JoinerService.setChosenPlayer(${player})`);
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
 
-        console.log(5)
         return this.joinerDao.update(this.observedJoinerId, {
             chosenPlayer: player,
         });
@@ -156,14 +151,12 @@ export class JoinerService {
         display(JoinerService.VERBOSE, `JoinerService.setFirstPlayer(${firstPlayer})`);
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
 
-        console.log(6)
         return this.joinerDao.update(this.observedJoinerId, { firstPlayer });
     }
     public setPartType(partType: IPartType, maximalMoveDuration: number, totalPartDuration: number): Promise<void> {
         display(JoinerService.VERBOSE, `JoinerService.setPartType(${partType}, ${maximalMoveDuration}, ${totalPartDuration})`);
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
 
-        console.log(7)
         return this.joinerDao.update(this.observedJoinerId, {
             partType,
             maximalMoveDuration,
@@ -174,7 +167,6 @@ export class JoinerService {
         display(JoinerService.VERBOSE, 'JoinerService.reviewConfig');
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
 
-        console.log(8)
         return this.joinerDao.update(this.observedJoinerId, {
             partStatus: PartStatus.PART_CREATED.value,
         });
@@ -183,7 +175,6 @@ export class JoinerService {
         display(JoinerService.VERBOSE, 'JoinerService.reviewConfig');
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
 
-        console.log(9)
         return this.joinerDao.update(this.observedJoinerId, {
             partStatus: PartStatus.PART_CREATED.value,
             chosenPlayer: '',
@@ -194,7 +185,6 @@ export class JoinerService {
         display(JoinerService.VERBOSE, 'JoinerService.acceptConfig');
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
 
-        console.log(10)
         return this.joinerDao.update(this.observedJoinerId, { partStatus: PartStatus.PART_STARTED.value });
     }
     public stopObserving(): void {
@@ -224,7 +214,6 @@ export class JoinerService {
     public async updateJoinerById(partId: string, update: Partial<IJoiner>): Promise<void> {
         display(JoinerService.VERBOSE, { joinerService_updateJoinerById: { partId, update } });
 
-        console.log(11)
         return this.joinerDao.update(partId, update);
     }
 }
