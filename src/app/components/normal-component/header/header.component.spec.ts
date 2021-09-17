@@ -30,7 +30,7 @@ describe('HeaderComponent', () => {
         expect(testUtils.getComponent().userName).toBeNull();
     }));
     it('should use fr as the default language if navigator.language is not set', fakeAsync(async() => {
-        // given that the language is not set
+        // given a page where the language is not set
         Object.defineProperty(navigator, 'language', {
             get: function() {
                 return null;
@@ -44,14 +44,28 @@ describe('HeaderComponent', () => {
         expect(testUtils.getComponent().currentLanguage).toBe('FR');
     }));
     it('should update localStorage and redirect when a language change is made', fakeAsync(async() => {
+        // given a page where the header is loaded
         spyOn(localStorage, 'setItem');
         spyOn(window, 'open').and.returnValue(null);
-        // given that the header is loaded
         testUtils.detectChanges();
+
         // when another language is selected
         testUtils.clickElement('#language_FR');
+
         // then the language is changed and the page is reloaded
         expect(localStorage.setItem).toHaveBeenCalledWith('locale', 'fr');
-        expect(window.open).toHaveBeenCalledWith(environment.root + '/fr', '_self');
+        expect(window.open).toHaveBeenCalledWith(environment.root + '/fr/', '_self');
+    }));
+    it('should preserve the current route when a language change is made', fakeAsync(async() => {
+        // given a page where the header is loaded
+        spyOn(window, 'open').and.returnValue(null);
+        await testUtils.getComponent().router.navigate(['/server']);
+        testUtils.detectChanges();
+
+        // when another language is selected
+        testUtils.clickElement('#language_FR');
+
+        // then the current route is preserved when going to the new language
+        expect(window.open).toHaveBeenCalledWith(environment.root + '/fr/server', '_self');
     }));
 });
