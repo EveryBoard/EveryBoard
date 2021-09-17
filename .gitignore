@@ -29,7 +29,6 @@
 /connect.lock
 /coverage
 /libpeerconnection.log
-*.log
 /typings
 
 # System Files
