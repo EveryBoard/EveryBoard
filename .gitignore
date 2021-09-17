@@ -28,8 +28,8 @@
 /.sass-cache
 /connect.lock
 /coverage
-/libpeerconnection.log
 /typings
+*.log
 
 # System Files
 .DS_Store
