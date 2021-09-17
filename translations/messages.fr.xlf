@@ -1152,7 +1152,7 @@
         <target>Vous pouvez déplacer vos piles sur n'importe quelle pile.
         Vous pouvez donc prendre contrôle d'une source en déplaçant une de vos piles dessus.
         De cette façon, vous savez que cette pile ne peut jamais être déconnectée, car elle contient une source.&lt;br/&gt;&lt;br/&gt;
-        Vous vouez Foncé et pouvez prendre contrôle d'une source, faites-le !</target>
+        Vous jouez Foncé et pouvez prendre contrôle d'une source, faites-le !</target>
       </trans-unit>
       <trans-unit id="4900956055400728677" datatype="html">
         <source>Congratulations! However, note that your opponent could later take possession of one of your stack that contains a source, so watch out!</source>
