@@ -222,14 +222,9 @@ describe('PartCreationComponent:', () => {
                 await mockCandidateArrival();
                 await chooseOpponent();
                 testUtils.detectChanges();
-                await testUtils.whenStable();
-                tick(3000)
 
                 testUtils.expectElementToExist('#selected_firstCandidate');
                 spyOn(Utils, 'handleError').and.callFake(() => {});
-                testUtils.detectChanges();
-                await testUtils.whenStable();
-                tick(3000)
 
                 // when the opponent is deleted
                 await joueursDAOMock.delete('opponent');

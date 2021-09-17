@@ -12,7 +12,7 @@ import { ObservableSubject } from 'src/app/utils/ObservableSubject';
 
 export abstract class FirebaseFirestoreDAOMock<T extends JSONObject> implements IFirebaseFirestoreDAO<T> {
 
-    public static VERBOSE: boolean = true;
+    public static VERBOSE: boolean = false;
 
     constructor(public readonly collectionName: string,
                 public VERBOSE: boolean,
@@ -57,7 +57,7 @@ export abstract class FirebaseFirestoreDAOMock<T extends JSONObject> implements 
         }
     }
     public async set(id: string, doc: T): Promise<void> {
-        display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE || true,
+        display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE,
                 this.collectionName + '.set(' + id + ', ' + JSON.stringify(doc) + ')');
 
         const optionalOS: MGPOptional<ObservableSubject<{id: string, doc: T}>> = this.getStaticDB().get(id);
@@ -87,7 +87,7 @@ export abstract class FirebaseFirestoreDAOMock<T extends JSONObject> implements 
         }
     }
     public async delete(id: string): Promise<void> {
-        display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE || true, this.collectionName + '.delete(' + id + ')');
+        display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE, this.collectionName + '.delete(' + id + ')');
 
         const optionalOS: MGPOptional<ObservableSubject<{id: string, doc: T}>> = this.getStaticDB().get(id);
         if (optionalOS.isPresent()) {

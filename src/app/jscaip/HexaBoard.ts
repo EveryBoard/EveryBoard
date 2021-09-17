@@ -113,6 +113,11 @@ export class HexaBoard<T> {
     protected setAtUnsafe(coord: Coord, v: T): this {
         const contents: T[][] = ArrayUtils.copyBiArray(this.contents);
         contents[coord.y][coord.x] = v;
+        // Here we want to return an object of the current type (could be a child class of HexaBoard).
+        // Hence, we call our constructor (this.constructor) with its expected arguments,
+        // and cast it back to the "this" type. Without this line, we would have to redefine `setAtUnsafe`
+        // in every child class
+
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return new (<any> this.constructor)(contents, this.width, this.height, this.excludedCases, this.empty) as this;
     }

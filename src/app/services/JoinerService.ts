@@ -9,7 +9,7 @@ import { ArrayUtils } from '../utils/ArrayUtils';
     providedIn: 'root',
 })
 export class JoinerService {
-    public static VERBOSE: boolean = true;
+    public static VERBOSE: boolean = false;
 
     public static readonly EMPTY_JOINER: IJoiner = {
         creator: null,
@@ -57,7 +57,7 @@ export class JoinerService {
         return this.set(joinerId, newJoiner);
     }
     public async joinGame(partId: string, userName: string): Promise<boolean> {
-        display(JoinerService.VERBOSE || true, 'JoinerService.joinGame(' + partId + ', ' + userName + ')');
+        display(JoinerService.VERBOSE, 'JoinerService.joinGame(' + partId + ', ' + userName + ')');
 
         const joiner: IJoiner = await this.joinerDao.read(partId);
         if (joiner == null) {
@@ -75,7 +75,7 @@ export class JoinerService {
         }
     }
     public async cancelJoining(userName: string): Promise<void> {
-        display(JoinerService.VERBOSE || true,
+        display(JoinerService.VERBOSE,
                 'JoinerService.cancelJoining(' + userName + '); this.observedJoinerId = ' + this.observedJoinerId);
 
         if (this.observedJoinerId == null) {
@@ -202,7 +202,7 @@ export class JoinerService {
         return this.joinerDao.create(joiner);
     }
     public async readJoinerById(partId: string): Promise<IJoiner> {
-        display(JoinerService.VERBOSE || true, 'JoinerService.readJoinerById(' + partId + ')');
+        display(JoinerService.VERBOSE, 'JoinerService.readJoinerById(' + partId + ')');
 
         return this.joinerDao.read(partId);
     }
