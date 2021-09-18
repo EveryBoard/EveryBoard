@@ -8,7 +8,7 @@ import { CoerceoPartSlice } from '../CoerceoPartSlice';
 import { CoerceoFailure } from '../CoerceoFailure';
 import { CoerceoNode, CoerceoRules } from '../CoerceoRules';
 import { CoerceoMinimax } from '../CoerceoMinimax';
-import { expectToBeVictoryFor } from 'src/app/jscaip/tests/Rules.spec';
+import { expectToBeVictoryFor } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 

@@ -24,7 +24,7 @@ export class MGPNode<R extends Rules<M, S, L>,
     // TODO: calculate a board - value by the information of the mother.boardValue + this.move to ease the calculation
     // TODO: choose ONE commenting langage, for fuck's sake.
     // TODO: check for the proper use of LinkedList to optimise the stuff
-    // TODO: quand l'IA a tout ses choix à égalité de bestHopedValue, elle doit départager par moyenne
+    // TODO: when IA has all choice at bestHopedValue equality, she must split by average?
 
     // static fields
 
@@ -208,6 +208,9 @@ export class MGPNode<R extends Rules<M, S, L>,
         let child: MGPNode<R, M, S, L, U> = this.getSonByMove(move);
         if (child == null) {
             const status: L = minimax.ruler.isLegal(move, this.gamePartSlice);
+            if (status.legal.isFailure()) {
+                throw new Error(`C'est non... Recode ton minimax batard!`);
+            }
             const state: S = minimax.ruler.applyLegalMove(move, this.gamePartSlice, status);
             child = new MGPNode(this, move, state, minimax);
             this.childs.push(child);

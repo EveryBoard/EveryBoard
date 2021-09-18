@@ -11,7 +11,7 @@ import { GipfNode, GipfRules } from '../GipfRules';
 import { GipfMinimax } from '../GipfMinimax';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { GipfFailure } from '../GipfFailure';
-import { expectToBeVictoryFor } from 'src/app/jscaip/tests/Rules.spec';
+import { expectToBeVictoryFor } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 
 describe('GipfRules:', () => {
