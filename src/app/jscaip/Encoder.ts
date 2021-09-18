@@ -62,7 +62,6 @@ export abstract class NumberEncoder<T> extends MoveEncoder<T> {
         }
     };
 
-
     public static ofCombination<T, Fields>(encoders: NumberEncoderArray<Fields>,
                                            encode: (t: T) => Fields,
                                            decode: (fields: Fields) => T): NumberEncoder<T> {

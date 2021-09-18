@@ -22,7 +22,7 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
         const nanoseconds: number = ms * 1000 * 1000;
         return { seconds, nanoseconds };
     }
-    constructor(private readonly collectionName: string,
+    constructor(public readonly collectionName: string,
                 public VERBOSE: boolean,
     ) {
         this.reset();
@@ -152,9 +152,15 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
         for (let entryId: number = 0; entryId < db.size(); entryId++) {
             const entry: ObservableSubject<{id: string, doc: T}> = db.getByIndex(entryId).value;
             if (entry.subject.value.doc[field] === value) {
+                const ID: string = entry.subject.value.id;
+                const OBJECT: T = { ...entry.subject.value.doc };
                 callback.onDocumentCreated([entry.subject.value]);
                 return entry.observable.subscribe((document: {id: string, doc: T}) => {
-                    callback.onDocumentModified([document]);
+                    if (document == null) {
+                        callback.onDocumentDeleted([{ id: ID, doc: OBJECT }]);
+                    } else {
+                        callback.onDocumentModified([document]);
+                    }
                 });
             }
         }

@@ -225,7 +225,7 @@ export class MGPNode<R extends Rules<M, S, L>,
     }
     public getInitialNode(): MGPNode<R, M, S, L, U> {
         let almightyMom: MGPNode<R, M, S, L, U> = this;
-        while (almightyMom.mother !== null) {
+        while (almightyMom.mother != null) {
             almightyMom = almightyMom.mother;
         }
         return almightyMom;
@@ -259,7 +259,7 @@ export class MGPNode<R extends Rules<M, S, L>,
         return 'Node: ' + genealogy;
     }
     public hasMoves(): boolean {
-        return this.childs !== null;
+        return this.childs != null;
     }
     // débug
     public countDescendants(): number {

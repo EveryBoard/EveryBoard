@@ -9,36 +9,38 @@ import { ICurrentPartId } from 'src/app/domain/icurrentpart';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 
 describe('ServerPageComponent', () => {
+
     let testUtils: SimpleComponentTestUtils<ServerPageComponent>;
+    let component: ServerPageComponent;
 
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(ServerPageComponent);
         AuthenticationServiceMock.setUser(AuthenticationService.NOT_CONNECTED);
+        component = testUtils.getComponent();
     }));
     it('should create', fakeAsync(async() => {
-        expect(testUtils.getComponent()).toBeDefined();
-        testUtils.getComponent().ngOnInit();
+        expect(component).toBeDefined();
+        component.ngOnInit();
     }));
     it('should rely on game service to create online games', fakeAsync(async() => {
         const gameService: GameService = TestBed.inject(GameService);
         spyOn(gameService, 'createGameAndRedirectOrShowError');
         AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
-        testUtils.getComponent().ngOnInit();
+        component.ngOnInit();
 
-        testUtils.getComponent().pickGame('Awale');
-        testUtils.getComponent().createGame();
+        component.pickGame('Awale');
+        component.createGame();
         testUtils.detectChanges();
 
         expect(gameService.createGameAndRedirectOrShowError).toHaveBeenCalledWith('Awale');
-
     }));
     it('Should be legal for unlogged user to create local game', fakeAsync(async() => {
         const router: Router = TestBed.inject(Router);
         AuthenticationServiceMock.setUser(AuthenticationService.NOT_CONNECTED);
         spyOn(router, 'navigate');
-        testUtils.getComponent().ngOnInit();
+        component.ngOnInit();
 
-        testUtils.getComponent().playLocally();
+        component.playLocally();
         testUtils.detectChanges();
 
         expect(router.navigate).toHaveBeenCalledWith(['local/undefined']);
@@ -49,7 +51,7 @@ describe('ServerPageComponent', () => {
             id: 'oui oui le faisan',
             doc: PartMocks.INITIAL.doc,
         };
-        const compo: ServerPageComponent = testUtils.getComponent();
+        const compo: ServerPageComponent = component;
         spyOn(compo.router, 'navigate').and.callThrough();
         spyOn(compo, 'getActiveParts').and.returnValue([activePart]);
 

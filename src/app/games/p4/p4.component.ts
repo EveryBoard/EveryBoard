@@ -52,11 +52,11 @@ export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice> {
 
         this.victoryCoords = P4Rules.getVictoriousCoords(slice);
         this.board = slice.board;
-        if (lastMove !== null) {
+        if (lastMove == null) {
+            this.last = null;
+        } else {
             const y: number = P4Rules.getLowestUnoccupiedCase(slice.board, lastMove.x) + 1;
             this.last = new Coord(lastMove.x, y);
-        } else {
-            this.last = null;
         }
     }
     public getCaseClasses(x: number, y: number): string[] {

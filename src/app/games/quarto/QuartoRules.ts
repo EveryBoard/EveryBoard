@@ -128,7 +128,7 @@ class Critere {
     public isAllNull(): boolean {
         let i: number = 0;
         do {
-            if (this.subCritere[i] !== null) {
+            if (this.subCritere[i] != null) {
                 return false;
             }
             i++;
@@ -318,7 +318,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
 
         // on a maintenant traité l'entierté de la ligne
         // on en fait le bilan
-        if ((commonCrit !== null) && (!commonCrit.isAllNull())) {
+        if ((commonCrit != null) && (!commonCrit.isAllNull())) {
             // NEW
             // Cette ligne n'est pas nulle et elle a un critère en commun entre toutes ses pièces
             if (cs == null) {

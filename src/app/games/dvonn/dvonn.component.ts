@@ -32,7 +32,6 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnGameS
     public scores: number[] = [0, 0];
     public lastMove: DvonnMove = null;
     public chosen: Coord = null;
-    public canPass: boolean = false;
     public disconnecteds: { x: number, y: number, caseContent: DvonnPieceStack }[] = [];
     public hexaBoard: DvonnBoard;
 
@@ -51,10 +50,15 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnGameS
             new MaxStacksDvonnMinimax(this.rules, 'DvonnMinimaxMaximizeStacks'),
         ];
         this.showScore = true;
+        this.canPass = false;
         this.scores = DvonnRules.getScores(this.rules.node.gamePartSlice);
         this.hexaBoard = this.rules.node.gamePartSlice.hexaBoard;
     }
+    public hideLastMove(): void {
+        this.lastMove = null;
+    }
     public updateBoard(): void {
+        this.cancelMoveAttempt();
         const slice: DvonnGameState = this.rules.node.gamePartSlice;
         this.board = slice.getCopiedBoard();
         this.hexaBoard = slice.hexaBoard;
@@ -62,6 +66,8 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnGameS
         this.disconnecteds = [];
         if (this.lastMove) {
             this.calculateDisconnecteds();
+        } else {
+            this.hideLastMove();
         }
         this.canPass = this.rules.canOnlyPass(slice);
         this.scores = DvonnRules.getScores(slice);

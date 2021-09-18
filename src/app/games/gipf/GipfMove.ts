@@ -42,7 +42,7 @@ export class GipfCapture {
         let prev: Coord = null;
         // Captured cases must be consecutive
         for (const coord of this.capturedCases) {
-            if (prev !== null) {
+            if (prev != null) {
                 if (prev.getDistance(coord) !== 1) {
                     throw new Error('Cannot create a GipfCapture with non-consecutive cases');
                 }

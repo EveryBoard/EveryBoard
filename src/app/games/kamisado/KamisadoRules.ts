@@ -121,7 +121,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice> {
         return moves;
     }
     // Check if the only possible move is to pass
-    public static canOnlyPass(slice: KamisadoPartSlice): boolean {
+    public static mustPass(slice: KamisadoPartSlice): boolean {
         return this.getMovablePieces(slice).length === 0;
     }
     public static getFurthestPiecePositions(slice: KamisadoPartSlice): [number, number] {
@@ -179,7 +179,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice> {
         const colorToPlay: KamisadoColor = slice.colorToPlay;
 
         if (move === KamisadoMove.PASS) {
-            if (this.canOnlyPass(slice) && !slice.alreadyPassed) {
+            if (this.mustPass(slice) && !slice.alreadyPassed) {
                 return { legal: MGPValidation.SUCCESS };
             } else {
                 return { legal: MGPValidation.failure(RulesFailure.CANNOT_PASS) };
@@ -234,7 +234,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice> {
     public getGameStatus(node: KamisadoNode): GameStatus {
         const state: KamisadoPartSlice = node.gamePartSlice;
         const player: Player = state.getCurrentPlayer();
-        if (KamisadoRules.canOnlyPass(state) && state.alreadyPassed) {
+        if (KamisadoRules.mustPass(state) && state.alreadyPassed) {
             return GameStatus.getDefeat(player);
         }
 

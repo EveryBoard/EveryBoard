@@ -137,7 +137,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnGameState> {
             if (move === DvonnMove.PASS && !slice.alreadyPassed) {
                 return { legal: MGPValidation.SUCCESS };
             } else {
-                return { legal: MGPValidation.failure(RulesFailure.CAN_ONLY_PASS) };
+                return { legal: MGPValidation.failure(RulesFailure.MUST_PASS) };
             }
         }
 

@@ -121,7 +121,6 @@ export class PickGameComponent {
             .filter((game: GameInfo) => game.display === true)
             .map((game: GameInfo): string => game.urlName);
 
-
     @Output('pickGame') pickGame: EventEmitter<string> = new EventEmitter<string>();
 
     public onChange(game: string): void {

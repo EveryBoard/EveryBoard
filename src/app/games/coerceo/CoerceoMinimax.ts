@@ -7,7 +7,6 @@ import { CoerceoNode, CoerceoRules } from './CoerceoRules';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 
-
 export class CoerceoMinimax extends Minimax<CoerceoMove, CoerceoPartSlice> {
 
     public getListMoves(node: CoerceoNode): CoerceoMove[] {

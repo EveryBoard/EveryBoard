@@ -8,11 +8,11 @@ export class RulesFailure {
 
     public static readonly MUST_CHOOSE_PLAYER_PIECE: string = $localize`You must pick one of your pieces.`;
 
-    public static readonly MUST_LAND_ON_EMPTY_SPACE: string = $localize`You must drop your piece on an empty space.`;
-
     public static readonly CANNOT_PASS: string = $localize`You cannot pass your turn.`;
 
-    public static readonly CAN_ONLY_PASS: string = $localize`You must pass your turn.`;
+    public static readonly MUST_LAND_ON_EMPTY_SPACE: string = $localize`You must drop your piece on an empty space.`;
 
-    public static readonly MUST_CHOOSE_OWN_PIECE_NOT_EMPTY: string = $localize`You have selected an empty space, you must select one of your own pieces.`;
+    public static readonly MUST_PASS: string = $localize`You must pass your turn.`;
+
+    public static readonly MUST_CHOOSE_OWN_PIECE_NOT_EMPTY: string = $localize`You ave selected an empty space, you must select one of your own pieces.`;
 }
