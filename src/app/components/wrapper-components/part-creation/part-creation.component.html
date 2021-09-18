@@ -79,8 +79,7 @@
                 >
                     <div class="field">
                         <label class="label" for="maximalMoveDuration">
-                            <ng-container i18n>Durée maximale d'un tour : </ng-container>
-                            <output>{{ viewInfo.maximalMoveDuration | humanDuration }}</output>
+                            <ng-container i18n>Maximal turn duration: <output>{{ viewInfo.maximalMoveDuration | humanDuration }}</output></ng-container>
                         </label>
                         <div class="control">
                             <input class="slider is-circle is-primary"
@@ -92,8 +91,7 @@
                     </div>
                     <div class="field">
                         <label class="label" for="totalPartDuration">
-                            <ng-container i18n>Durée maximale de la partie : </ng-container>
-                            <output>{{ viewInfo.totalPartDuration | humanDuration }} <ng-container i18n>par joueur</ng-container></output>
+                            <ng-container i18n>Maximal game duration: <output>{{ viewInfo.totalPartDuration | humanDuration }}</output> per player</ng-container>
                         </label>
                         <div class="control">
                             <input class="slider is-circle is-primary"
