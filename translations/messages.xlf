@@ -821,8 +821,31 @@
         <source>Bad choice! By moving on the source you would have disconnected the opponent&apos;s pieces and they would have lost 4 points.
         Here, the opponent wins 2 to 0</source>
       </trans-unit>
-      <trans-unit id="3483594998155999756" datatype="html">
-        <source>When no more move is possible, the game ends and the player with the most points wins.&lt;br/&gt;&lt;br/&gt;
+      <trans-unit id="5374556513202485808" datatype="html">
+        <source>Moving on a source</source>
+      </trans-unit>
+      <trans-unit id="8343021305033605057" datatype="html">
+        <source>You are allowed to move your stacks on any other stack.
+        This means that you can take control of a source by moving one of your stack on top of it.
+        This way, you know that this stack may never be disconnected, as it contains a source.&lt;br/&gt;&lt;br/&gt;
+        You&apos;re playing Dark and you can take control of a source, do it!</source>
+      </trans-unit>
+      <trans-unit id="4900956055400728677" datatype="html">
+        <source>Congratulations! However, note that your opponent could later take possession of one of your stack that contains a source, so watch out!</source>
+      </trans-unit>
+      <trans-unit id="2060914977510915101" datatype="html">
+        <source>You have not taken possession of a source, try again.</source>
+      </trans-unit>
+      <trans-unit id="5741584858319850896" datatype="html">
+        <source>Passing</source>
+      </trans-unit>
+      <trans-unit id="721533359855729017" datatype="html">
+        <source>It can happen that you have no possible move to make.
+        If this is the case, and if your opponent can still move, you must pass your turn.&lt;br/&gt;&lt;br/&gt;
+        This is a situation that occurs here.</source>
+      </trans-unit>
+      <trans-unit id="2190782768169600552" datatype="html">
+        <source>When no more move is possible for both players, the game ends and the player with the most points wins.&lt;br/&gt;&lt;br/&gt;
         Make your last move.</source>
       </trans-unit>
       <trans-unit id="2963709509031109432" datatype="html">

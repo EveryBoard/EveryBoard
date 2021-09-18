@@ -10,6 +10,8 @@ const __: DvonnPieceStack = DvonnPieceStack.EMPTY;
 const SO: DvonnPieceStack = DvonnPieceStack.SOURCE;
 const O1: DvonnPieceStack = DvonnPieceStack.PLAYER_ZERO;
 const X1: DvonnPieceStack = DvonnPieceStack.PLAYER_ONE;
+const O2: DvonnPieceStack = new DvonnPieceStack(Player.ZERO, 2, false);
+const X2: DvonnPieceStack = new DvonnPieceStack(Player.ONE, 2, false);
 const O4: DvonnPieceStack = new DvonnPieceStack(Player.ZERO, 4, false);
 const X4: DvonnPieceStack = new DvonnPieceStack(Player.ONE, 4, false);
 
@@ -39,7 +41,7 @@ export const dvonnTutorial: TutorialStep[] = [
         Besides this, a stack containing a source acts like any other stack: you can move it, and your opponent can move on that stack to take possession of it.<br/><br/>
         You're playing Dark, move your piece on the source.`,
         new DvonnGameState(new DvonnBoard([
-            [__, __, SO, __, __, __, __, __, __, __, __],
+            [__, __, X1, SO, __, __, __, __, __, __, __],
             [__, __, O1, __, __, __, __, __, __, __, __],
             [__, __, X4, __, __, __, __, X1, SO, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
@@ -53,8 +55,38 @@ export const dvonnTutorial: TutorialStep[] = [
         Here, the opponent wins 2 to 0`,
     ),
     TutorialStep.fromMove(
+        $localize`Moving on a source`,
+        $localize`You are allowed to move your stacks on any other stack.
+        This means that you can take control of a source by moving one of your stack on top of it.
+        This way, you know that this stack may never be disconnected, as it contains a source.<br/><br/>
+        You're playing Dark and you can take control of a source, do it!`,
+        new DvonnGameState(new DvonnBoard([
+            [__, __, SO, __, __, __, __, __, __, __, __],
+            [__, __, O1, __, __, __, __, __, __, __, __],
+            [__, __, X2, __, __, __, __, X2, SO, __, __],
+            [__, __, __, __, __, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __, __, __, __],
+        ]), 0, false),
+        [DvonnMove.of(new Coord(2, 1), new Coord(2, 0))],
+        $localize`Congratulations! However, note that your opponent could later take possession of one of your stack that contains a source, so watch out!`,
+        $localize`You have not taken possession of a source, try again.`,
+    ),
+    TutorialStep.informational(
+        $localize`Passing`,
+        $localize`It can happen that you have no possible move to make.
+        If this is the case, and if your opponent can still move, you must pass your turn.<br/><br/>
+        This is a situation that occurs here.`,
+        new DvonnGameState(new DvonnBoard([
+            [__, __, SO, __, __, __, __, __, __, __, __],
+            [__, __, O2, __, __, __, __, __, __, __, __],
+            [__, __, X2, __, __, __, __, X2, SO, O4, __],
+            [__, __, __, __, __, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __, __, __, __],
+        ]), 0, false),
+    ),
+    TutorialStep.fromMove(
         $localize`End of the game`,
-        $localize`When no more move is possible, the game ends and the player with the most points wins.<br/><br/>
+        $localize`When no more move is possible for both players, the game ends and the player with the most points wins.<br/><br/>
         Make your last move.`,
         new DvonnGameState(new DvonnBoard([
             [__, __, SO, __, __, __, __, __, __, __, __],
