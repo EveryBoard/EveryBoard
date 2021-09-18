@@ -13,6 +13,7 @@ export class TutorialStep {
                                    null,
                                    null,
                                    null,
+                                   null,
                                    null);
     }
     public static fromMove(title: string,
@@ -31,7 +32,8 @@ export class TutorialStep {
                                    null,
                                    null,
                                    successMessage,
-                                   failureMessage);
+                                   failureMessage,
+                                   null);
     }
     public static forClick(title: string,
                            instruction: string,
@@ -49,7 +51,8 @@ export class TutorialStep {
                                    acceptedClicks,
                                    null,
                                    successMessage,
-                                   failureMessage);
+                                   failureMessage,
+                                   null);
     }
     public static anyMove(title: string,
                           instruction: string,
@@ -66,6 +69,7 @@ export class TutorialStep {
                                    null,
                                    null,
                                    successMessage,
+                                   null,
                                    null);
     }
     public static fromPredicate(title: string,
@@ -84,6 +88,7 @@ export class TutorialStep {
                                    null,
                                    predicate,
                                    successMessage,
+                                   null,
                                    null);
     }
     private constructor(public readonly title: string,
@@ -95,7 +100,7 @@ export class TutorialStep {
                        public readonly predicate: (move: Move, resultingState: GamePartSlice) => MGPValidation,
                        public readonly successMessage: string,
                        public readonly failureMessage: string,
-                       public readonly previousMove?: Move,
+                       public readonly previousMove: Move | null,
     ) { }
     public isMove(): boolean {
         return this.acceptedMoves != null;
