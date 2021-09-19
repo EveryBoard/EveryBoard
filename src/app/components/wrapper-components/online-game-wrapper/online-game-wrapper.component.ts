@@ -18,7 +18,7 @@ import { ChatComponent } from '../../normal-component/chat/chat.component';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { assert, display, JSONValue, JSONValueWithoutArray } from 'src/app/utils/utils';
-import { getDiff, getDiffChangesNumber, ObjectDifference } from 'src/app/utils/ObjectUtils';
+import { ObjectDifference } from 'src/app/utils/ObjectUtils';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Time } from 'src/app/domain/Time';
@@ -30,7 +30,7 @@ export class UpdateType {
 
     public static readonly STARTING_DOC: UpdateType = new UpdateType('STARTING_DOC');
 
-    public static readonly DOUBLON: UpdateType = new UpdateType('DOUBLON');
+    public static readonly DUPLICATE: UpdateType = new UpdateType('DUPLICATE');
 
     public static readonly MOVE_WITHOUT_TIME: UpdateType = new UpdateType('MOVE_WITHOUT_TIME');
 
@@ -196,7 +196,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             case UpdateType.ACCEPT_TAKE_BACK_WITHOUT_TIME:
                 this.currentPart = oldPart;
                 return;
-            case UpdateType.DOUBLON:
+            case UpdateType.DUPLICATE:
                 return;
             case UpdateType.END_GAME:
                 return this.checkEndGames();
@@ -229,11 +229,11 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     public getUpdateType(update: Part): UpdateType {
         console.log({ update })
         const currentPartDoc: IPart = this.currentPart ? this.currentPart.doc : null;
-        const diff: ObjectDifference = getDiff(currentPartDoc, update.doc);
+        const diff: ObjectDifference = ObjectDifference.from(currentPartDoc, update.doc);
         display(OnlineGameWrapperComponent.VERBOSE || true, { diff });
-        const nbDiffs: number = getDiffChangesNumber(diff);
+        const nbDiffs: number = diff.countChanges();
         if (diff == null || nbDiffs === 0) {
-            return UpdateType.DOUBLON;
+            return UpdateType.DUPLICATE;
         }
         if (this.isTimeAlone(diff, nbDiffs)) {
             return UpdateType.TIME_ALONE;

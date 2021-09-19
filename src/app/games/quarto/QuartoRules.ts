@@ -33,9 +33,10 @@ class CaseSensible {
         this.y = y;
     }
     public addCritere(c: Critere): boolean {
-        // rajoute le critère au cas où plusieurs lignes contiennent cette case sensible (de 1 à 3)
-        // sans doublons
-        // return true si le critère a été ajouté
+        /* Add criteria in case several line contains this sensible case (1 to 3 lines could)
+         * without duplicates
+         * return true if the criteria has been added
+         */
         const i: number = this.indexOf(c);
         if (i > 0) {
             // pas ajouté, compté en double

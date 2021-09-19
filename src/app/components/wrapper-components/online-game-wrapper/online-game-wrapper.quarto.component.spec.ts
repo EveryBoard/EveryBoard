@@ -79,6 +79,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         },
         state: 'online',
     };
+    const FAKE_MOMENT: Time = { seconds: 123, nanoseconds: 456000000 };
     async function prepareComponent(initialJoiner: IJoiner): Promise<void> {
         partDAO = TestBed.get(PartDAO);
         joinerDAO = TestBed.get(JoinerDAO);
@@ -636,7 +637,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                     request: Request.takeBackAccepted(Player.ONE),
                     listMoves: [],
                     turn: 0,
-                    lastMoveTime: { seconds: 123, nanoseconds: 456000000 },
+                    lastMoveTime: FAKE_MOMENT,
                     remainingMsForZero: 1799999,
                     remainingMsForOne: 1799999,
                 });
@@ -662,7 +663,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                     request: Request.takeBackAccepted(Player.ZERO),
                     listMoves: [],
                     turn: 0,
-                    lastMoveTime: { seconds: 123, nanoseconds: 456000000 },
+                    lastMoveTime: FAKE_MOMENT,
                     remainingMsForZero: 1799999,
                     remainingMsForOne: 1799999,
                 });
@@ -721,7 +722,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                     request: Request.takeBackAccepted(Player.ONE),
                     listMoves: [],
                     turn: 0,
-                    lastMoveTime: { seconds: 123, nanoseconds: 456000000 },
+                    lastMoveTime: FAKE_MOMENT,
                 });
 
                 // Then turn should be changed to 0 and resumeCountDown be called
@@ -744,7 +745,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                     request: Request.takeBackAccepted(Player.ONE),
                     listMoves: [],
                     turn: 0,
-                    lastMoveTime: { seconds: 123, nanoseconds: 456000000 },
+                    lastMoveTime: FAKE_MOMENT,
                 });
 
                 // Then count down should be resumed and update not changing time
@@ -1056,7 +1057,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 playerOne: 'Sir Meryn Trant',
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
-                beginning: { seconds: 123, nanoseconds: 456000000 },
+                beginning: FAKE_MOMENT,
                 lastMoveTime: { seconds: 333, nanoseconds: 333000000 },
                 request: Request.takeBackAccepted(Player.ZERO),
             });
@@ -1069,7 +1070,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 playerOne: 'Sir Meryn Trant',
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
-                beginning: { seconds: 123, nanoseconds: 456000000 },
+                beginning: FAKE_MOMENT,
                 lastMoveTime: { seconds: 444, nanoseconds: 444000000 },
                 // And obviously, no longer the previous request code
             });
@@ -1087,7 +1088,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 playerOne: 'Sir Meryn Trant',
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
-                beginning: { seconds: 123, nanoseconds: 456000000 },
+                beginning: FAKE_MOMENT,
             });
             const update: Part = new Part({
                 typeGame: 'P4',
@@ -1098,7 +1099,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 playerOne: 'Sir Meryn Trant',
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
-                beginning: { seconds: 123, nanoseconds: 456000000 },
+                beginning: FAKE_MOMENT,
                 // And obviously, the added score and time
                 scorePlayerZero: 0,
                 scorePlayerOne: 0,
@@ -1118,7 +1119,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 playerOne: 'Sir Meryn Trant',
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
-                beginning: { seconds: 123, nanoseconds: 456000000 },
+                beginning: FAKE_MOMENT,
                 lastMoveTime: { seconds: 1111, nanoseconds: 111000000 },
             });
             const update: Part = new Part({
@@ -1130,7 +1131,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 playerOne: 'Sir Meryn Trant',
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
-                beginning: { seconds: 123, nanoseconds: 456000000 },
+                beginning: FAKE_MOMENT,
                 // And obviously, the modified time
                 lastMoveTime: { seconds: 2222, nanoseconds: 222000000 },
             });
@@ -1148,7 +1149,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 playerOne: 'Sir Meryn Trant',
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
-                beginning: { seconds: 123, nanoseconds: 456000000 },
+                beginning: FAKE_MOMENT,
                 lastMoveTime: { seconds: 1111, nanoseconds: 111000000 },
                 scorePlayerZero: 1,
                 scorePlayerOne: 1,
@@ -1162,7 +1163,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 playerOne: 'Sir Meryn Trant',
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
-                beginning: { seconds: 123, nanoseconds: 456000000 },
+                beginning: FAKE_MOMENT,
                 lastMoveTime: { seconds: 2222, nanoseconds: 222000000 },
                 scorePlayerZero: 1,
                 // And obviously, the score update and time added
@@ -1182,7 +1183,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 playerOne: 'Sir Meryn Trant',
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
-                beginning: { seconds: 123, nanoseconds: 456000000 },
+                beginning: FAKE_MOMENT,
                 lastMoveTime: { seconds: 1111, nanoseconds: 111000000 },
             });
             const update: Part = new Part({
@@ -1194,7 +1195,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 playerOne: 'Sir Meryn Trant',
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
-                beginning: { seconds: 123, nanoseconds: 456000000 },
+                beginning: FAKE_MOMENT,
                 // And obviously, the added score
                 scorePlayerZero: 0,
                 scorePlayerOne: 0,
@@ -1214,7 +1215,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 playerOne: 'Sir Meryn Trant',
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
-                beginning: { seconds: 123, nanoseconds: 456000000 },
+                beginning: FAKE_MOMENT,
                 lastMoveTime: { seconds: 1111, nanoseconds: 111000000 },
                 scorePlayerZero: 1,
                 scorePlayerOne: 1,
@@ -1228,7 +1229,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 playerOne: 'Sir Meryn Trant',
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
-                beginning: { seconds: 123, nanoseconds: 456000000 },
+                beginning: FAKE_MOMENT,
                 scorePlayerZero: 1,
                 // lastMoveTime is removed
                 scorePlayerOne: 4, // modified
@@ -1247,7 +1248,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 playerOne: 'Sir Meryn Trant',
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
-                beginning: { seconds: 123, nanoseconds: 456000000 },
+                beginning: FAKE_MOMENT,
                 lastMoveTime: null,
             });
             const update: Part = new Part({
@@ -1259,7 +1260,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 playerOne: 'Sir Meryn Trant',
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
-                beginning: { seconds: 123, nanoseconds: 456000000 },
+                beginning: FAKE_MOMENT,
                 // the only modif
                 lastMoveTime: { seconds: 1111, nanoseconds: 111000000 },
             });
@@ -1277,7 +1278,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 playerOne: 'Sir Meryn Trant',
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
-                beginning: { seconds: 123, nanoseconds: 456000000 },
+                beginning: FAKE_MOMENT,
                 lastMoveTime: { seconds: 125, nanoseconds: 456000000 },
                 request: Request.takeBackAsked(Player.ZERO),
             });
@@ -1290,7 +1291,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 playerOne: 'Sir Meryn Trant',
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
-                beginning: { seconds: 123, nanoseconds: 456000000 },
+                beginning: FAKE_MOMENT,
                 // but
                 request: Request.takeBackAccepted(Player.ONE),
                 // and no longer lastMoveTime
@@ -1309,7 +1310,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 playerOne: 'Sir Meryn Trant',
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
-                beginning: { seconds: 123, nanoseconds: 456000000 },
+                beginning: FAKE_MOMENT,
                 lastMoveTime: { seconds: 125, nanoseconds: 456000000 },
                 request: Request.takeBackAsked(Player.ZERO),
             });
@@ -1322,7 +1323,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 playerOne: 'Sir Meryn Trant',
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
-                beginning: { seconds: 123, nanoseconds: 456000000 },
+                beginning: FAKE_MOMENT,
                 // but
                 lastMoveTime: { seconds: 127, nanoseconds: 456000000 },
                 request: Request.takeBackAccepted(Player.ONE),
