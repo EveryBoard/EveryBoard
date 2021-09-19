@@ -430,13 +430,13 @@
         <source>You reached your time limit.</source>
         <target>Vous avez épuisé votre temps.</target>
       </trans-unit>
-      <trans-unit id="2826140657122926749" datatype="html">
-        <source>You resigned.</source>
-        <target>Vous avez abandonné.</target>
-      </trans-unit>
       <trans-unit id="7003355968351203755" datatype="html">
         <source>Ask to take back one move</source>
         <target>Demander à reprendre un coup</target>
+      </trans-unit>
+      <trans-unit id="2826140657122926749" datatype="html">
+        <source>You resigned.</source>
+        <target>Vous avez abandonné.</target>
       </trans-unit>
       <trans-unit id="2324913504104154958" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser() }}"/> has reached their time limit.</source>
@@ -494,29 +494,29 @@
         <source>Propose configuration</source>
         <target>Proposer la configuration</target>
       </trans-unit>
-      <trans-unit id="594218318757354614" datatype="html">
-        <source>Maximal game duration: <x id="START_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;output&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.totalPartDuration | humanDuration }}"/> per player<x id="CLOSE_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;/output&gt;"/></source>
-        <target>Durée maximale d'une partie : <x id="START_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;output&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.totalPartDuration | humanDuration }}"/> par joueur<x id="CLOSE_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;/output&gt;"/></target>
-      </trans-unit>
       <trans-unit id="6482290849972032593" datatype="html">
         <source>Cancel game</source>
         <target>Annuler la partie</target>
       </trans-unit>
-      <trans-unit id="3550072303786290583" datatype="html">
-        <source>Potential opponents that join the game will appear here.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Wait for an opponent to join, so that you can pick one. </source>
-        <target>Les adversaires potentiels qui rejoignent la partie apparaîtront ici.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Attendez qu&apos;un adversaire vous rejoigne pour pouvoir en choisir un.</target>
+      <trans-unit id="1544438523766748366" datatype="html">
+        <source>Maximal game duration: <x id="START_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;output&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.totalPartDuration | humanDuration }}"/><x id="CLOSE_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;/output&gt;"/> per player</source>
+        <target>Durée maximale d'une partie : <x id="START_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;output&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.totalPartDuration | humanDuration }}"/><x id="CLOSE_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;/output&gt;"/> par joueur</target>
       </trans-unit>
       <trans-unit id="6102520113052735150" datatype="html">
         <source>The opponent</source>
         <target>L&apos;adversaire</target>
       </trans-unit>
-      <trans-unit id="5056292777668083757" datatype="html">
-        <source>Click on the opponent against which you would like to play.</source>
-        <target>Cliquez sur l&apos;adversaire contre lequel vous souhaitez jouer.</target>
+      <trans-unit id="3550072303786290583" datatype="html">
+        <source>Potential opponents that join the game will appear here.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Wait for an opponent to join, so that you can pick one. </source>
+        <target>Les adversaires potentiels qui rejoignent la partie apparaîtront ici.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Attendez qu&apos;un adversaire vous rejoigne pour pouvoir en choisir un.</target>
       </trans-unit>
       <trans-unit id="5397323926664032734" datatype="html">
         <source>Maximal turn duration: <x id="START_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;output&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.maximalMoveDuration | humanDuration }}"/><x id="CLOSE_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;/output&gt;"/></source>
         <target>Durée maximale d'un tour : <x id="START_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;output&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.maximalMoveDuration | humanDuration }}"/><x id="CLOSE_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;/output&gt;"/></target>
+      </trans-unit>
+      <trans-unit id="5056292777668083757" datatype="html">
+        <source>Click on the opponent against which you would like to play.</source>
+        <target>Cliquez sur l&apos;adversaire contre lequel vous souhaitez jouer.</target>
       </trans-unit>
       <trans-unit id="8953033926734869941" datatype="html">
         <source>Name</source>
@@ -538,13 +538,13 @@
         <source>Configuration proposal</source>
         <target>Proposition de configuration</target>
       </trans-unit>
-      <trans-unit id="6747612030990351046" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> proposes to play a <x id="INTERPOLATION_1" equiv-text="{{ viewInfo.partTypeName }}"/> game</source>
-        <target><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> propose de faire une partie <x id="INTERPOLATION_1" equiv-text="{{ viewInfo.partTypeName }}"/></target>
-      </trans-unit>
       <trans-unit id="7416818230860591701" datatype="html">
         <source>You have been selected as the opponent.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> <x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> is modifying the configuration.</source>
         <target>Vous avez été choisi comme adversaire<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> <x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> est en train de modifier la configuration.</target>
+      </trans-unit>
+      <trans-unit id="6747612030990351046" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> proposes to play a <x id="INTERPOLATION_1" equiv-text="{{ viewInfo.partTypeName }}"/> game</source>
+        <target><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> propose de faire une partie <x id="INTERPOLATION_1" equiv-text="{{ viewInfo.partTypeName }}"/></target>
       </trans-unit>
       <trans-unit id="3649232689954543597" datatype="html">
         <source>a turn lasts at most <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.maximalMoveDuration | humanDuration }}"/> <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
@@ -3068,13 +3068,13 @@
         <source>You must pick one of your pieces.</source>
         <target>Veuillez utiliser une de vos pièces.</target>
       </trans-unit>
-      <trans-unit id="2698327260846195509" datatype="html">
-        <source>You must drop your piece on an empty space.</source>
-        <target>Vous devez déposer votre pièce sur une case vide.</target>
-      </trans-unit>
       <trans-unit id="2056314675813734949" datatype="html">
         <source>You cannot pass your turn.</source>
         <target>Vous ne pouvez pas passer votre tour.</target>
+      </trans-unit>
+      <trans-unit id="2698327260846195509" datatype="html">
+        <source>You must drop your piece on an empty space.</source>
+        <target>Vous devez déposer votre pièce sur une case vide.</target>
       </trans-unit>
       <trans-unit id="5019447873100403310" datatype="html">
         <source>You must pass your turn.</source>
