@@ -474,7 +474,7 @@ describe('PartCreationComponent:', () => {
         component.userName = 'firstCandidate';
         await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL.doc);
         testUtils.detectChanges();
-        await testUtils.whenStable()
+        await testUtils.whenStable();
         tick(3000);
 
         const router: Router = TestBed.inject(Router);
