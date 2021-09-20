@@ -30,7 +30,6 @@ import { GameService } from 'src/app/services/GameService';
 import { AuthUser } from 'src/app/services/AuthenticationService';
 import { Time } from 'src/app/domain/Time';
 import { getMillisecondsDifference } from 'src/app/utils/TimeUtils';
-import { FirebaseFirestoreDAOMock } from 'src/app/dao/tests/FirebaseFirestoreDAOMock.spec';
 
 describe('OnlineGameWrapperComponent of Quarto:', () => {
     /* Life cycle summary
@@ -80,6 +79,13 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         state: 'online',
     };
     const FAKE_MOMENT: Time = { seconds: 123, nanoseconds: 456000000 };
+
+    const BASE_TAKE_BACK_REQUEST: Partial<IPart> = {
+        request: Request.takeBackAccepted(Player.ONE),
+        listMoves: [],
+        turn: 0,
+        lastMoveTime: FAKE_MOMENT,
+    };
     async function prepareComponent(initialJoiner: IJoiner): Promise<void> {
         partDAO = TestBed.get(PartDAO);
         joinerDAO = TestBed.get(JoinerDAO);
@@ -502,7 +508,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                     turn: 0,
                     lastMoveTime: null,
                     remainingMsForZero: 179999,
-                    remainingMsForOne: 180000,
                 });
 
                 // then 'takeBackFor' should not be called
@@ -637,11 +642,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
                 // when opponent accept user's take back
                 await receivePartDAOUpdate({
-                    request: Request.takeBackAccepted(Player.ONE),
-                    listMoves: [],
-                    turn: 0,
-                    lastMoveTime: FAKE_MOMENT,
-                    remainingMsForZero: 1799999,
+                    ...BASE_TAKE_BACK_REQUEST,
                     remainingMsForOne: 1799999,
                 });
 
@@ -663,11 +664,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 // when opponent accept user's take back
                 spyOn(wrapper, 'resetChronoFor').and.callThrough();
                 await receivePartDAOUpdate({
-                    request: Request.takeBackAccepted(Player.ZERO),
-                    listMoves: [],
-                    turn: 0,
-                    lastMoveTime: FAKE_MOMENT,
-                    remainingMsForZero: 1799999,
+                    ...BASE_TAKE_BACK_REQUEST,
                     remainingMsForOne: 1799999,
                 });
 
@@ -683,11 +680,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 1799999, 1800 * 1000);
                 await askTakeBack(true);
                 await receivePartDAOUpdate({
-                    request: Request.takeBackAccepted(Player.ZERO),
-                    listMoves: [],
-                    turn: 0,
-                    lastMoveTime: FirebaseFirestoreDAOMock.mockServerTime(),
-                    remainingMsForZero: 1799999,
+                    ...BASE_TAKE_BACK_REQUEST,
                     remainingMsForOne: 1799999,
                 });
 
@@ -721,12 +714,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 spyOn(wrapper, 'switchPlayer').and.callThrough();
 
                 // when opponent accept user's take back
-                await receivePartDAOUpdate({
-                    request: Request.takeBackAccepted(Player.ONE),
-                    listMoves: [],
-                    turn: 0,
-                    lastMoveTime: FAKE_MOMENT,
-                });
+                await receivePartDAOUpdate(BASE_TAKE_BACK_REQUEST);
 
                 // Then turn should be changed to 0 and resumeCountDown be called
                 expect(wrapper.switchPlayer).toHaveBeenCalled();
@@ -744,12 +732,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 await askTakeBack(true);
 
                 // when opponent accept user's take back
-                await receivePartDAOUpdate({
-                    request: Request.takeBackAccepted(Player.ONE),
-                    listMoves: [],
-                    turn: 0,
-                    lastMoveTime: FAKE_MOMENT,
-                });
+                await receivePartDAOUpdate(BASE_TAKE_BACK_REQUEST);
 
                 // Then count down should be resumed and update not changing time
                 expect(wrapper.resumeCountDownFor).toHaveBeenCalledWith(Player.ZERO);
@@ -761,12 +744,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 tick(1);
                 await doMove(FIRST_MOVE, true);
                 await askTakeBack(true);
-                await receivePartDAOUpdate({
-                    request: Request.takeBackAccepted(Player.ONE),
-                    listMoves: [],
-                    turn: 0,
-                    lastMoveTime: FirebaseFirestoreDAOMock.mockServerTime(),
-                });
+                await receivePartDAOUpdate(BASE_TAKE_BACK_REQUEST);
 
                 // when playing alernative move
                 spyOn(partDAO, 'update').and.callThrough();
