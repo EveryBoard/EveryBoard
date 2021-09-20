@@ -77,7 +77,7 @@ export class SiamPiece {
     public static of(orientation: Orthogonal, player: Player): SiamPiece {
         if (orientation == null) throw new Error('Orientation must be set.');
         if (player == null) throw new Error('Player must be set.');
-        if (player === Player.NONE) throw new Error('Player None don\'t have any pieces.');
+        if (player === Player.NONE) throw new Error(`Player None don't have any pieces.`);
         if (player === Player.ZERO) {
             if (orientation === Orthogonal.UP) return SiamPiece.WHITE_UP;
             if (orientation === Orthogonal.RIGHT) return SiamPiece.WHITE_RIGHT;

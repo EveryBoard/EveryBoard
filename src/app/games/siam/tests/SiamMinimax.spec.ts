@@ -266,7 +266,7 @@ describe('SiamMinimax:', () => {
             coord: new Coord(3, 5),
         }));
     });
-    it('Logical test: When 5 player on board, no outside pusher can\'t be counted', () => {
+    it('Logical test: When 5 player on board, no outside pusher cannot be counted', () => {
         const board: number[][] = [
             [d, _, _, _, R],
             [d, _, _, _, R],

@@ -3,8 +3,15 @@ import { Observable, Subscription } from 'rxjs';
 import { IChat, IChatId } from '../domain/ichat';
 import { ChatDAO } from '../dao/ChatDAO';
 import { IMessage } from '../domain/imessage';
-import { display } from 'src/app/utils/utils';
+import { assert, display } from 'src/app/utils/utils';
+import { MGPValidation } from '../utils/MGPValidation';
+import { ArrayUtils } from '../utils/ArrayUtils';
 
+export class ChatMessages {
+    public static readonly CANNOT_SEND_MESSAGE: string = $localize`You're not allowed to send a message here.`;
+
+    public static readonly FORBIDDEN_MESSAGE: string = $localize`This message is forbidden.`;
+}
 @Injectable({
     providedIn: 'root',
 })
@@ -17,38 +24,8 @@ export class ChatService implements OnDestroy {
 
     private followedChatSub: Subscription;
 
-    public static isForbiddenMessage(message: string): boolean {
-        return (message === ''); // TODO: améliorer ?
-    }
     constructor(private chatDao: ChatDAO) {
         display(ChatService.VERBOSE, 'ChatService.constructor');
-    }
-    public async sendMessage(userName: string, lastTurnThen: number, content: string): Promise<void> {
-        if (this.userForbid(this.followedChatId, userName)) {
-            display(ChatService.VERBOSE, 'you\'re not allow to sent message here');
-            return;
-        }
-        if (ChatService.isForbiddenMessage(content)) {
-            display(ChatService.VERBOSE, 'HOW DARE YOU SAY THAT!');
-            return;
-        }
-        const iChat: IChat = await this.chatDao.read(this.followedChatId);
-        const messages: IMessage[] = iChat.messages;
-        const newMessage: IMessage = {
-            content,
-            sender: userName,
-            postedTime: Date.now(), // timeStamp of the publication time
-            lastTurnThen, // number of the turn when this was write
-        };
-        messages.push(newMessage);
-        await this.chatDao.update(this.followedChatId, { messages });
-        display(ChatService.VERBOSE, 'message envoyé');
-    }
-    public userForbid(chatId: string, userName: string): boolean {
-        return userName == null ||
-               userName === '' ||
-               userName === 'null' ||
-               userName === 'undefined'; // TODO: implémenter le blocage de chat
     }
     public startObserving(chatId: string, callback: (iChat: IChatId) => void): void {
         display(ChatService.VERBOSE, 'ChatService.startObserving ' + chatId);
@@ -61,9 +38,9 @@ export class ChatService implements OnDestroy {
             this.followedChatSub = this.followedChatObs
                 .subscribe((onFullFilled: IChatId) => callback(onFullFilled));
         } else if (chatId === this.followedChatId) {
-            throw new Error('WTF :: Already observing chat \'' + chatId + '\'');
+            throw new Error(`WTF :: Already observing chat '${chatId}'`);
         } else {
-            throw new Error('Cannot ask to watch \'' + this.followedChatId + '\' while watching \'' + chatId + '\'');
+            throw new Error(`Cannot ask to watch '${chatId}' while watching '${this.followedChatId}'`);
         }
     }
     public stopObserving(): void {
@@ -72,26 +49,47 @@ export class ChatService implements OnDestroy {
         }
         display(ChatService.VERBOSE, 'stopped watching chat ' + this.followedChatId + ']');
         this.followedChatId = null;
-        if (this.followedChatSub) {
-            this.followedChatSub.unsubscribe();
-        }
+        this.followedChatSub.unsubscribe();
         this.followedChatObs = null;
     }
     public isObserving(): boolean {
         return this.followedChatId != null;
     }
-    public async deleteChat(chatId: string): Promise<void> {
+    public async deleteChat(chatId: NonNullable<string>): Promise<void> {
         display(ChatService.VERBOSE, 'ChatService.deleteChat ' + chatId);
 
-        if (chatId == null) {
-            throw new Error('Cannot delete chat of null id');
-        }
+        assert(chatId != null, 'cannot delete chat of null id');
         return this.chatDao.delete(chatId);
     }
-    // delegate
-
-    public async set(id: string, chat: IChat): Promise<void> {
-        return this.chatDao.set(id, chat);
+    public async createNewChat(id: string): Promise<void> {
+        return this.chatDao.set(id, {
+            messages: [],
+        });
+    }
+    public async sendMessage(userName: string, currentTurn: number, content: string): Promise<MGPValidation> {
+        if (this.userCanSendMessage(userName, this.followedChatId) === false) {
+            return MGPValidation.failure(ChatMessages.CANNOT_SEND_MESSAGE);
+        }
+        if (this.isForbiddenMessage(content)) {
+            return MGPValidation.failure(ChatMessages.FORBIDDEN_MESSAGE);
+        }
+        const chat: IChat = await this.chatDao.read(this.followedChatId);
+        const messages: IMessage[] = ArrayUtils.copyImmutableArray(chat.messages);
+        const newMessage: IMessage = {
+            content,
+            sender: userName,
+            postedTime: Date.now(),
+            currentTurn,
+        };
+        messages.push(newMessage);
+        await this.chatDao.update(this.followedChatId, { messages });
+        return MGPValidation.SUCCESS;
+    }
+    private userCanSendMessage(userName: string, _chatId: string): boolean {
+        return userName != null;
+    }
+    private isForbiddenMessage(message: string): boolean {
+        return (message === '');
     }
     public ngOnDestroy(): void {
         if (this.isObserving()) {

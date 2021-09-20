@@ -15,7 +15,7 @@ describe('OnlineGameCreationComponent', () => {
     it('should create and redirect to chosen game', fakeAsync(async() => {
         testUtils.getComponent().pickGame('whateverGame');
         spyOn(router, 'navigate');
-        expect(await testUtils.clickElement('#playOnline')).toBeTrue();
+        await testUtils.clickElement('#playOnline');
         tick();
         expect(router.navigate)
             .toHaveBeenCalledOnceWith(['/play/whateverGame', 'PartDAOMock0']);

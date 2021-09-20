@@ -2,25 +2,33 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en" datatype="plaintext" original="ng2.template" target-language="fr">
     <body>
-      <trans-unit id="2576375399155055140" datatype="html">
-        <source>Show the chat (<x id="INTERPOLATION" equiv-text="{{ this.unreadMessages }}"/> new message(s))</source>
-        <target>Afficher le chat (<x id="INTERPOLATION" equiv-text="{{ this.unreadMessages }}"/> nouveau(x) message(s))</target>
-      </trans-unit>
-      <trans-unit id="3360522039608797847" datatype="html">
-        <source>Enter your message here</source>
+      <trans-unit id="8403075591877274055" datatype="html">
+        <source>Type your message here</source>
         <target>Entrez votre message ici</target>
       </trans-unit>
-      <trans-unit id="5287653220942723084" datatype="html">
-        <source>Be polite.</source>
-        <target>Soyez courtois.</target>
+      <trans-unit id="2187377168518132372" datatype="html">
+        <source>Be polite</source>
+        <target>Soyez courtois</target>
       </trans-unit>
-      <trans-unit id="8426135601531729112" datatype="html">
-        <source>Hide the chat (<x id="INTERPOLATION" equiv-text="{{ this.unreadMessages }}"/> new message(s))</source>
-        <target>Cacher le chat (<x id="INTERPOLATION" equiv-text="{{ this.unreadMessages }}"/> nouveau(x) message(s))</target>
+      <trans-unit id="8447591012079458095" datatype="html">
+        <source>Hide chat</source>
+        <target>Réduire le chat</target>
       </trans-unit>
-      <trans-unit id="8357348345728938526" datatype="html">
-        <source>You must be logged in to see the chat.</source>
-        <target>Vous devez être connecté pour voir le chat.</target>
+      <trans-unit id="3331424259701651496" datatype="html">
+        <source>Show chat (<x id="INTERPOLATION" equiv-text="{{ this.unreadMessagesText }}"/>)</source>
+        <target>Afficher le chat (<x id="INTERPOLATION" equiv-text="{{ this.unreadMessagesText }}"/>)</target>
+      </trans-unit>
+      <trans-unit id="5112659486997490676" datatype="html">
+        <source>no new message</source>
+        <target>pas de nouveau message</target>
+      </trans-unit>
+      <trans-unit id="6373233342627633860" datatype="html">
+        <source>1 new message</source>
+        <target>1 nouveau message</target>
+      </trans-unit>
+      <trans-unit id="5075342719298110640" datatype="html">
+        <source><x id="PH" equiv-text="unreadMessages"/> new messages</source>
+        <target><x id="PH" equiv-text="unreadMessages"/> nouveaux messages</target>
       </trans-unit>
       <trans-unit id="2449879448191193445" datatype="html">
         <source>Successfully signed up</source>
@@ -286,6 +294,18 @@
         <source>Yinsh</source>
         <target>Yinsh</target>
       </trans-unit>
+      <trans-unit id="7656395805241225659" datatype="html">
+        <source>Games</source>
+        <target>Parties</target>
+      </trans-unit>
+      <trans-unit id="5674286808255988565" datatype="html">
+        <source>Create</source>
+        <target>Créer</target>
+      </trans-unit>
+      <trans-unit id="2299187798995800780" datatype="html">
+        <source>Chat</source>
+        <target>Chat</target>
+      </trans-unit>
       <trans-unit id="4643591148728960560" datatype="html">
         <source>Game</source>
         <target>Jeu</target>
@@ -302,17 +322,13 @@
         <source>Turn</source>
         <target>Tour</target>
       </trans-unit>
-      <trans-unit id="5674286808255988565" datatype="html">
-        <source>Create</source>
-        <target>Créer</target>
+      <trans-unit id="689957366051097321" datatype="html">
+        <source>Waiting for opponent</source>
+        <target>En attente d&apos;adversaire</target>
       </trans-unit>
       <trans-unit id="1670632975695309948" datatype="html">
         <source>Connected users:</source>
         <target>Utilisateurs connectés :</target>
-      </trans-unit>
-      <trans-unit id="689957366051097321" datatype="html">
-        <source>Waiting for opponent</source>
-        <target>En attente d&apos;adversaire</target>
       </trans-unit>
       <trans-unit id="7079545056368231407" datatype="html">
         <source>See the game list</source>
@@ -430,13 +446,13 @@
         <source>You reached your time limit.</source>
         <target>Vous avez épuisé votre temps.</target>
       </trans-unit>
-      <trans-unit id="2826140657122926749" datatype="html">
-        <source>You resigned.</source>
-        <target>Vous avez abandonné.</target>
-      </trans-unit>
       <trans-unit id="7003355968351203755" datatype="html">
         <source>Ask to take back one move</source>
         <target>Demander à reprendre un coup</target>
+      </trans-unit>
+      <trans-unit id="2826140657122926749" datatype="html">
+        <source>You resigned.</source>
+        <target>Vous avez abandonné.</target>
       </trans-unit>
       <trans-unit id="2324913504104154958" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser() }}"/> has reached their time limit.</source>
@@ -3079,6 +3095,14 @@
       <trans-unit id="5966391152315784819" datatype="html">
         <source>You have selected an empty space, you must select one of your own pieces.</source>
         <target>Vous avez sélectionné une case vide, vous devez sélectionner l&apos;une de vos pièces.</target>
+      </trans-unit>
+      <trans-unit id="75196759111440200" datatype="html">
+        <source>You&apos;re not allowed to send a message here.</source>
+        <target>Vous n'êtes pas autorisé à envoyer un message ici.</target>
+      </trans-unit>
+      <trans-unit id="4052977957517792171" datatype="html">
+        <source>This message is forbidden.</source>
+        <target>Ce message est interdit.</target>
       </trans-unit>
       <trans-unit id="7463436103435995523" datatype="html">
         <source>You are already in a game. Finish it or cancel it first.</source>

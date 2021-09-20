@@ -32,7 +32,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
     async function prepareComponent(initialJoiner: IJoiner, initialPart: IPart): Promise<void> {
         await TestBed.get(JoinerDAO).set('joinerId', initialJoiner);
         await TestBed.get(PartDAO).set('joinerId', initialPart);
-        await TestBed.get(ChatDAO).set('joinerId', { messages: [], status: 'I don\'t have a clue' });
+        await TestBed.get(ChatDAO).set('joinerId', { messages: [], status: `I don't have a clue` });
         return Promise.resolve();
     }
     beforeEach(async() => {
@@ -142,12 +142,14 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
 
             componentTestUtils.detectChanges();
             expect(componentTestUtils.querySelector('app-p4'))
-                .toBeNull('p4Tag id should be absent before startGame\'s async method has complete');
+                .withContext(`p4Tag id should be absent before startGame's async method has complete`)
+                .toBeNull();
 
             tick(1);
 
             expect(componentTestUtils.querySelector('app-p4'))
-                .toBeTruthy('p4Tag id should be present after startGame\'s async method has complete');
+                .withContext(`p4Tag id should be present after startGame's async method has complete`)
+                .toBeTruthy();
             tick(1000);
         }));
     });

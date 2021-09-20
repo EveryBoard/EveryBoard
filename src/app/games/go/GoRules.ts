@@ -12,7 +12,6 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { Coord } from 'src/app/jscaip/Coord';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { GoGroupDatasFactory } from './GoGroupDatasFactory';
 import { GoFailure } from './GoFailure';
 
@@ -380,7 +379,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         const switchedBoard: GoPiece[][] = switchedSlice.getCopiedBoardGoPiece();
         const switchedPiece: GoPiece = switchedBoard[groupCoord.y][groupCoord.x];
         if (switchedPiece.isEmpty()) {
-            throw new Error('Can\'t switch emptyness aliveness');
+            throw new Error(`Can't switch emptyness aliveness`);
         }
         const goGroupDatasFactory: GoGroupDatasFactory = new GoGroupDatasFactory();
         const group: GoGroupDatas = goGroupDatasFactory.getGroupDatas(groupCoord, switchedBoard) as GoGroupDatas;

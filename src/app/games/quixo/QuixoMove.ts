@@ -39,16 +39,16 @@ export class QuixoMove extends MoveCoord {
         if (coordValidity.isFailure()) throw new Error(coordValidity.reason);
         if (direction == null) throw new Error('Direction cannot be null.');
         if (x === 0 && direction === Orthogonal.LEFT) {
-            throw new Error('Invalid direction: pawn on the left side can\'t be moved to the left.');
+            throw new Error(`Invalid direction: pawn on the left side can't be moved to the left.`);
         }
         if (x === 4 && direction === Orthogonal.RIGHT) {
-            throw new Error('Invalid direction: pawn on the right side can\'t be moved to the right.');
+            throw new Error(`Invalid direction: pawn on the right side can't be moved to the right.`);
         }
         if (y === 0 && direction === Orthogonal.UP) {
-            throw new Error('Invalid direction: pawn on the top side can\'t be moved up.');
+            throw new Error(`Invalid direction: pawn on the top side can't be moved up.`);
         }
         if (y === 4 && direction === Orthogonal.DOWN) {
-            throw new Error('Invalid direction: pawn on the bottom side can\'t be moved down.');
+            throw new Error(`Invalid direction: pawn on the bottom side can't be moved down.`);
         }
     }
     public toString(): string {

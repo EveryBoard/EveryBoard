@@ -1,7 +1,9 @@
 {
     "compileOnSave": false,
     "angularCompilerOptions": {
-        "enableI18nLegacyMessageIdFormat": false
+        "enableI18nLegacyMessageIdFormat": false,
+        "strictTemplates": false,
+        "strictInjectionParameters": true
     },
     "compilerOptions": {
         "baseUrl": "./",
@@ -9,6 +11,7 @@
         "sourceMap": true,
         "declaration": false,
         "alwaysStrict": true,
+        "strict": false,
         "module": "es2020",
         "moduleResolution": "node",
         "experimentalDecorators": true,

@@ -1,5 +1,4 @@
-import { fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
-
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { GameService, StartingPartConfig } from '../GameService';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { of } from 'rxjs';

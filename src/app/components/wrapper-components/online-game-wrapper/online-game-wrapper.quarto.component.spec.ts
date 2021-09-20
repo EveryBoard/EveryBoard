@@ -168,25 +168,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         tick(1);
         return result;
     }
-    async function askTakeBack(success: boolean): Promise<void> {
-        const concreteSuccess: boolean = await componentTestUtils.clickElement('#askTakeBackButton');
-        if (success) {
-            expect(concreteSuccess).withContext('should be able to ask to take back').toBeTrue();
-        } else {
-            expect(concreteSuccess).withContext('should not show "ask take back" button').toBeFalse();
-        }
-    }
-    async function acceptTakeBack(success: boolean): Promise<void> {
-        const concreteSuccess: boolean = await componentTestUtils.clickElement('#acceptTakeBackButton');
-        if (success) {
-            expect(concreteSuccess).withContext('should be able to accept take back').toBeTrue();
-        } else {
-            expect(concreteSuccess).withContext('should not show "accept take back" button').toBeFalse();
-        }
-    }
-    async function refuseTakeBack(): Promise<boolean> {
-        return await componentTestUtils.clickElement('#refuseTakeBackButton');
-    }
     async function receiveRequest(request: Request): Promise<void> {
         await receivePartDAOUpdate({ request });
     }
@@ -194,6 +175,15 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await partDAO.update('joinerId', update);
         componentTestUtils.detectChanges();
         tick(1);
+    }
+    async function askTakeBack(): Promise<void> {
+        return await componentTestUtils.clickElement('#askTakeBackButton');
+    }
+    async function acceptTakeBack(): Promise<void> {
+        return await componentTestUtils.clickElement('#acceptTakeBackButton');
+    }
+    async function refuseTakeBack(): Promise<void> {
+        return await componentTestUtils.clickElement('#refuseTakeBackButton');
     }
     async function receiveNewMoves(moves: number[],
                                    remainingMsForZero: number,
@@ -335,9 +325,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         const move2: QuartoMove = new QuartoMove(2, 3, QuartoPiece.BBBB);
         const move3: QuartoMove = new QuartoMove(0, 0, QuartoPiece.AABB);
         await prepareBoard([move0, move1, move2, move3]);
-        expect(componentTestUtils.findElement('#winnerIndicator'))
-            .withContext('Element should not exist yet')
-            .toBeFalsy();
+        componentTestUtils.expectElementNotToExist('#winnerIndicator');
 
         spyOn(partDAO, 'update').and.callThrough();
         const winningMove: QuartoMove = new QuartoMove(3, 3, QuartoPiece.ABAA);
@@ -371,7 +359,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
                 // when demanding to take back
                 spyOn(partDAO, 'update').and.callThrough();
-                await askTakeBack(true);
+                await askTakeBack();
 
                 // then a request should be sent
                 expect(partDAO.update).toHaveBeenCalledWith('joinerId', {
@@ -382,11 +370,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             it('Should forbid to propose to take back while take back request is waiting', fakeAsync(async() => {
                 await prepareStartedGameFor({ pseudo: 'creator', verified: true });
                 tick(1);
-                await askTakeBack(false);
+                componentTestUtils.expectElementNotToExist('#askTakeBackButton');
                 await doMove(FIRST_MOVE, true);
-                await askTakeBack(true);
+                await askTakeBack();
                 componentTestUtils.detectChanges();
-                await askTakeBack(false);
+                componentTestUtils.expectElementNotToExist('#askTakeBackButton');
 
                 tick(wrapper.joiner.maximalMoveDuration * 1000);
             }));
@@ -396,16 +384,16 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 tick(1);
 
                 // when asking take back, the button should not be here
-                await askTakeBack(false);
+                componentTestUtils.expectElementNotToExist('#askTakeBackButton');
 
                 // when receiving a new move, it should still not be showed nor possible
                 await receiveNewMoves([FIRST_MOVE_ENCODED], 1800 * 1000, 1800 * 1000);
-                await askTakeBack(false);
+                componentTestUtils.expectElementNotToExist('#askTakeBackButton');
 
                 // when doing the first move, it should become possible, but only once
                 await doMove(new QuartoMove(2, 2, QuartoPiece.BBAA), true);
-                await askTakeBack(true);
-                await askTakeBack(false);
+                await askTakeBack();
+                componentTestUtils.expectElementNotToExist('#askTakeBackButton');
 
                 tick(wrapper.joiner.maximalMoveDuration * 1000);
             }));
@@ -417,15 +405,15 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 1799999, 1800 * 1000);
 
                 // accepting take back should not be proposed
-                await acceptTakeBack(false);
+                componentTestUtils.expectElementNotToExist('#acceptTakeBackButton');
                 await receiveRequest(Request.takeBackAsked(Player.ONE));
 
                 // then should allow it after proposing sent
                 spyOn(partDAO, 'update').and.callThrough();
-                await acceptTakeBack(true);
+                await acceptTakeBack();
 
                 // and then again not allowing it
-                await acceptTakeBack(false);
+                componentTestUtils.expectElementNotToExist('#acceptTakeBackButton');
                 tick(wrapper.joiner.maximalMoveDuration * 1000);
             }));
             it('Should only propose player to refuse take back when opponent asked', fakeAsync(async() => {
@@ -433,11 +421,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 tick(1);
                 await doMove(FIRST_MOVE, true);
                 await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 1799999, 1800 * 1000);
-                expect(await refuseTakeBack()).toBeFalse();
+                componentTestUtils.expectElementNotToExist('#refuseTakeBackButton');
                 await receiveRequest(Request.takeBackAsked(Player.ONE));
                 spyOn(partDAO, 'update').and.callThrough();
-                expect(await refuseTakeBack()).toBeTrue();
-                expect(await refuseTakeBack()).toBeFalse();
+                await refuseTakeBack();
+                componentTestUtils.expectElementNotToExist('#refuseTakeBackButton');
                 expect(partDAO.update).toHaveBeenCalledWith('joinerId', {
                     request: Request.takeBackRefused(Player.ZERO),
                 });
@@ -463,7 +451,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 tick(1);
                 await doMove(FIRST_MOVE, true);
                 await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 1799999, 1800 * 1000);
-                await askTakeBack(true);
+                await askTakeBack();
 
                 // when doing move while waiting for answer
                 spyOn(partDAO, 'update').and.callThrough();
@@ -486,10 +474,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 await prepareStartedGameFor({ pseudo: 'creator', verified: true });
                 tick(1);
                 await doMove(FIRST_MOVE, true);
-                await askTakeBack(true);
+                await askTakeBack();
                 await receiveRequest(Request.takeBackRefused(Player.ONE));
 
-                await askTakeBack(false);
+                componentTestUtils.expectElementNotToExist('#askTakeBackButton');
 
                 tick(wrapper.joiner.maximalMoveDuration * 1000);
             }));
@@ -528,7 +516,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 spyOn(wrapper, 'resetChronoFor').and.callThrough();
 
                 // when accepting opponent's take back
-                await acceptTakeBack(true);
+                await acceptTakeBack();
 
                 // Then turn should be changed to 0 and resumeCountDown be called
                 expect(wrapper.resetChronoFor).toHaveBeenCalledWith(Player.ZERO);
@@ -546,7 +534,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
                 // when accepting opponent's take back
                 spyOn(wrapper, 'resetChronoFor').and.callThrough();
-                await acceptTakeBack(true);
+                await acceptTakeBack();
 
                 // Then opponents chrono should have been reset
                 expect(wrapper.resetChronoFor).toHaveBeenCalled();
@@ -563,7 +551,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
                 // when accepting opponent's take back
                 spyOn(partDAO, 'update').and.callThrough();
-                await acceptTakeBack(true);
+                await acceptTakeBack();
 
                 // Then opponents take back request should have include remainingTime and lastTimeMove
                 expect(partDAO.update).toHaveBeenCalledWith('joinerId', {
@@ -589,7 +577,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 spyOn(wrapper, 'switchPlayer').and.callThrough();
 
                 // when accepting opponent's take back
-                await acceptTakeBack(true);
+                await acceptTakeBack();
 
                 // Then turn should be changed to 0 and resumeCountDown be called
                 expect(wrapper.switchPlayer).toHaveBeenCalled();
@@ -612,7 +600,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 const usedTimeOfFirstTurn: number = getMillisecondsDifference(wrapper.currentPart.doc.beginning as Time,
                                                                     wrapper.currentPart.doc.lastMoveTime as Time);
                 const remainingMsForZero: number = (1800 * 1000) - usedTimeOfFirstTurn;
-                await acceptTakeBack(true);
+                await acceptTakeBack();
 
                 // Then count down should be resumed for opponent and user shoud receive his decision time back
                 expect(partDAO.update).toHaveBeenCalledOnceWith('joinerId', {
@@ -636,7 +624,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
                 await doMove(FIRST_MOVE, true);
                 await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 1799999, 1800 * 1000);
-                await askTakeBack(true);
+                await askTakeBack();
                 expect(wrapper.gameComponent.rules.node.gamePartSlice.turn).toBe(2);
                 spyOn(wrapper, 'resetChronoFor').and.callThrough();
 
@@ -658,7 +646,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
                 await doMove(FIRST_MOVE, true);
                 await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 1799999, 1800 * 1000);
-                await askTakeBack(true);
+                await askTakeBack();
                 expect(wrapper.gameComponent.rules.node.gamePartSlice.turn).toBe(2);
 
                 // when opponent accept user's take back
@@ -678,7 +666,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 tick(1);
                 await doMove(FIRST_MOVE, true);
                 await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 1799999, 1800 * 1000);
-                await askTakeBack(true);
+                await askTakeBack();
                 await receivePartDAOUpdate({
                     ...BASE_TAKE_BACK_REQUEST,
                     remainingMsForOne: 1799999,
@@ -709,7 +697,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 tick(1);
 
                 await doMove(FIRST_MOVE, true);
-                await askTakeBack(true);
+                await askTakeBack();
                 expect(wrapper.gameComponent.rules.node.gamePartSlice.turn).toBe(1);
                 spyOn(wrapper, 'switchPlayer').and.callThrough();
 
@@ -729,7 +717,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 await doMove(FIRST_MOVE, true);
                 spyOn(wrapper, 'resumeCountDownFor').and.callThrough();
                 spyOn(partDAO, 'update').and.callThrough();
-                await askTakeBack(true);
+                await askTakeBack();
 
                 // when opponent accept user's take back
                 await receivePartDAOUpdate(BASE_TAKE_BACK_REQUEST);
@@ -743,7 +731,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 await prepareStartedGameFor({ pseudo: 'creator', verified: true });
                 tick(1);
                 await doMove(FIRST_MOVE, true);
-                await askTakeBack(true);
+                await askTakeBack();
                 await receivePartDAOUpdate(BASE_TAKE_BACK_REQUEST);
 
                 // when playing alernative move
@@ -775,7 +763,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await setup();
             spyOn(partDAO, 'update').and.callThrough();
 
-            expect(await componentTestUtils.clickElement('#proposeDrawButton')).toBeTrue();
+            await componentTestUtils.clickElement('#proposeDrawButton');
             expect(partDAO.update).toHaveBeenCalledWith('joinerId', {
                 request: Request.drawProposed(Player.ZERO),
             });
@@ -784,18 +772,18 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
         it('should forbid to propose to draw while draw request is waiting', fakeAsync(async() => {
             await setup();
-            expect(await componentTestUtils.clickElement('#proposeDrawButton')).toBeTrue();
-            expect(await componentTestUtils.clickElement('#proposeDrawButton')).toBeFalse();
+            await componentTestUtils.clickElement('#proposeDrawButton');
+            componentTestUtils.expectElementNotToExist('#proposeDrawButton');
 
             tick(wrapper.joiner.maximalMoveDuration * 1000);
         }));
         it('should forbid to propose to draw after refusal', fakeAsync(async() => {
             await setup();
-            expect(await componentTestUtils.clickElement('#proposeDrawButton')).toBeTrue();
+            await componentTestUtils.clickElement('#proposeDrawButton');
             await receiveRequest(Request.drawRefused(Player.ONE));
 
             tick(1);
-            expect(await componentTestUtils.clickElement('#proposeDrawButton')).toBeFalse();
+            componentTestUtils.expectElementNotToExist('#proposeDrawButton');
 
             tick(wrapper.joiner.maximalMoveDuration * 1000);
         }));
@@ -804,7 +792,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await receiveRequest(Request.drawProposed(Player.ONE));
 
             spyOn(partDAO, 'update').and.callThrough();
-            expect(await componentTestUtils.clickElement('#acceptDrawButton')).toBeTrue();
+            await componentTestUtils.clickElement('#acceptDrawButton');
 
             tick(1);
             expect(partDAO.update).toHaveBeenCalledWith('joinerId', {
@@ -816,7 +804,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
         it('should finish the game when opponent accepts our proposed draw', fakeAsync(async() => {
             await setup();
-            expect(await componentTestUtils.clickElement('#proposeDrawButton')).toBeTrue();
+            await componentTestUtils.clickElement('#proposeDrawButton');
 
             spyOn(partDAO, 'update').and.callThrough();
             await receiveRequest(Request.drawAccepted);
@@ -833,7 +821,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             spyOn(partDAO, 'update').and.callThrough();
 
-            expect(await componentTestUtils.clickElement('#refuseDrawButton')).toBeTrue();
+            await componentTestUtils.clickElement('#refuseDrawButton');
             expect(partDAO.update).toHaveBeenCalledWith('joinerId', {
                 request: Request.drawRefused(Player.ZERO),
             });
@@ -994,9 +982,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         tick(1);
         await doMove(FIRST_MOVE, true);
         await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 1799999, 1800 * 1000);
-        expect(await componentTestUtils.clickElement('#resignButton'))
-            .withContext('Should be possible to resign')
-            .toBeTruthy();
+        await componentTestUtils.clickElement('#resignButton');
 
         spyOn(partDAO, 'update').and.callThrough();
         await doMove(SECOND_MOVE, false);
@@ -1014,7 +1000,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     it('Should allow player to pass when gameComponent allows it', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
-        expect(await componentTestUtils.clickElement('#passButton')).toBeFalse();
+        componentTestUtils.expectElementNotToExist('#passButton');
 
         wrapper.gameComponent.canPass = true;
         wrapper.gameComponent['pass'] = async() => {
@@ -1022,7 +1008,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         };
         componentTestUtils.detectChanges();
 
-        expect(await componentTestUtils.clickElement('#passButton')).toBeTruthy();
+        await componentTestUtils.clickElement('#passButton');
 
         tick(wrapper.joiner.maximalMoveDuration * 1000);
     }));
