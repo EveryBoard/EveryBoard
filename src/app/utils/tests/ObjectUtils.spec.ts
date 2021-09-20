@@ -1,20 +1,20 @@
-import { Dict, ObjectDifference } from '../ObjectUtils';
+import { Dictionary, ObjectDifference } from '../ObjectUtils';
 
 describe('getUpdateType', () => {
     it('Should name modified object', () => {
-        const before: Dict = {
+        const before: Dictionary = {
             same: 5,
             changed: {
                 insideChange: 12,
             },
         };
-        const after: Dict = {
+        const after: Dictionary = {
             same: 5,
             changed: {
                 insideChange: 0,
             },
         };
-        const modified: Dict = {
+        const modified: Dictionary = {
             changed: new ObjectDifference({}, { insideChange: 0 }, {}),
         };
         const expectedDiff: ObjectDifference = new ObjectDifference({}, modified, {});

@@ -42,7 +42,9 @@
                                 <div class="dropdown-content">
                                     <div class="dropdown-item">
                                         <p>
-                                            <ng-container i18n>Maximal turn duration: <strong>{{ partType.NORMAL_MOVE_DURATION | humanDuration }}</strong></ng-container><br/>
+                                            <ng-container i18n>Maximal turn duration: </ng-container>
+                                            <strong>{{ partType.NORMAL_MOVE_DURATION | humanDuration }}</strong><br/>
+
                                             <ng-container i18n>Maximal game duration: <strong>{{ partType.NORMAL_PART_DURATION | humanDuration }} per player</strong></ng-container>
                                         </p>
                                     </div>
@@ -60,7 +62,9 @@
                                 <div class="dropdown-content">
                                     <div class="dropdown-item">
                                         <p>
-                                            <ng-container i18n>Maximal turn duration: <strong>{{ partType.BLITZ_MOVE_DURATION | humanDuration }}</strong></ng-container><br/>
+                                            <ng-container i18n>Maximal turn duration: </ng-container>
+                                            <strong>{{ partType.BLITZ_MOVE_DURATION | humanDuration }}</strong><br/>
+
                                             <ng-container i18n>Maximal game duration: <strong>{{ partType.BLITZ_PART_DURATION | humanDuration }} per player</strong></ng-container>
                                         </p>
                                     </div>
@@ -91,10 +95,7 @@
                         </div>
                     </div>
                     <div class="field">
-                        <label class="label" for="totalPartDuration">
-                                <ng-container i18n>Maximal game duration: </ng-container>
-                                <output>{{ viewInfo.totalPartDuration | humanDuration }} per player</output>
-                        </label>
+                        <label class="label" for="totalPartDuration" i18n>Maximal game duration: <output>{{ viewInfo.totalPartDuration | humanDuration }} per player</output></label>
                         <div class="control">
                             <input class="slider is-circle is-primary"
                                    step="10"

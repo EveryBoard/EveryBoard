@@ -1,9 +1,9 @@
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type Dict = { [key: string]: any };
+export type Dictionary = { [key: string]: any };
 
 export class ObjectDifference {
 
-    public static from(before: Dict, after: Dict): ObjectDifference {
+    public static from(before: Dictionary, after: Dictionary): ObjectDifference {
         const changes: ObjectDifference = new ObjectDifference({}, {}, {});
         if (before == null) {
             changes.added = { ...after };
@@ -23,11 +23,11 @@ export class ObjectDifference {
         changes.addRemovedKeys(removedKeys, before);
         return changes;
     }
-    public constructor(public added: Dict,
-                       public modified: Dict,
-                       public removed: Dict) {}
+    public constructor(public added: Dictionary,
+                       public modified: Dictionary,
+                       public removed: Dictionary) {}
     public addNewKeys(addedKeys: string[],
-                      after: Dict)
+                      after: Dictionary)
     : void
     {
         for (const addedKey of addedKeys) {
@@ -37,8 +37,8 @@ export class ObjectDifference {
         }
     }
     public addCommonKey(commonKeys: string[],
-                        after: Dict,
-                        before: Dict)
+                        after: Dictionary,
+                        before: Dictionary)
     : void
     {
         for (const commonKey of commonKeys) {
@@ -92,7 +92,7 @@ export class ObjectDifference {
         const diffAdd: number = Object.keys(this.added).length;
         return diffAdd + diffModified + diffRemoval;
     }
-    public addRemovedKeys(removedKeys: string[], before: Dict): void {
+    public addRemovedKeys(removedKeys: string[], before: Dictionary): void {
         for (const removedKey of removedKeys) {
             this.removed[removedKey] = before[removedKey];
         }

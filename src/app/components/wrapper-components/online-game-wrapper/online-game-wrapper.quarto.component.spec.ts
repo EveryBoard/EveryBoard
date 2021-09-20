@@ -162,35 +162,38 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         tick(1);
         return result;
     }
-    const askTakeBack: (success: boolean) => Promise<void> = async(success: boolean) => {
+    async function askTakeBack(success: boolean): Promise<void> {
         const concreteSuccess: boolean = await componentTestUtils.clickElement('#askTakeBackButton');
         if (success) {
             expect(concreteSuccess).withContext('should be able to ask to take back').toBeTrue();
         } else {
             expect(concreteSuccess).withContext('should not show "ask take back" button').toBeFalse();
         }
-    };
-    const acceptTakeBack: (success: boolean) => Promise<void> = async(success: boolean) => {
+    }
+    async function acceptTakeBack(success: boolean): Promise<void> {
         const concreteSuccess: boolean = await componentTestUtils.clickElement('#acceptTakeBackButton');
         if (success) {
             expect(concreteSuccess).withContext('should be able to accept take back').toBeTrue();
         } else {
             expect(concreteSuccess).withContext('should not show "accept take back" button').toBeFalse();
         }
-    };
-    const refuseTakeBack: () => Promise<boolean> = async() => {
+    }
+    async function refuseTakeBack(): Promise<boolean> {
         return await componentTestUtils.clickElement('#refuseTakeBackButton');
-    };
-    const receiveRequest: (request: Request) => Promise<void> = async(request: Request) => {
+    }
+    async function receiveRequest(request: Request): Promise<void> {
         await receivePartDAOUpdate({ request });
-    };
-    const receivePartDAOUpdate: (update: Partial<IPart>) => Promise<void> = async(update: Partial<IPart>) => {
+    }
+    async function receivePartDAOUpdate(update: Partial<IPart>): Promise<void> {
         await partDAO.update('joinerId', update);
         componentTestUtils.detectChanges();
         tick(1);
-    };
-    const receiveNewMoves: (moves: number[], remainingMsForZero: number, remainingMsForOne: number) => Promise<void> =
-    async(moves: number[], remainingMsForZero: number, remainingMsForOne: number) => {
+    }
+    async function receiveNewMoves(moves: number[],
+                                   remainingMsForZero: number,
+                                   remainingMsForOne: number)
+    : Promise<void>
+    {
         return await receivePartDAOUpdate({
             listMoves: moves,
             turn: moves.length,
@@ -201,8 +204,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             remainingMsForZero, // TODO: only send one of the two time updated, since that's what happens
             lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
         });
-    };
-    const prepareBoard: (moves: QuartoMove[]) => Promise<void> = async(moves: QuartoMove[]) => {
+    }
+    async function prepareBoard(moves: QuartoMove[]): Promise<void> {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
         const receivedMoves: number[] = [];
@@ -221,7 +224,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             }
             await receiveNewMoves(receivedMoves, remainingMsForZero, remainingMsForOne);
         }
-    };
+    }
     beforeEach(fakeAsync(async() => {
         componentTestUtils = await ComponentTestUtils.forGame('Quarto');
     }));

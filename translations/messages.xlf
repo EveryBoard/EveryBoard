@@ -359,35 +359,32 @@
       <trans-unit id="4073116770334354573" datatype="html">
         <source>Blitz</source>
       </trans-unit>
-      <trans-unit id="6773728044030876768" datatype="html">
-        <source>Maximal game duration: <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ partType.NORMAL_PART_DURATION | humanDuration }}"/> per player<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
-      </trans-unit>
-      <trans-unit id="4701368818614163279" datatype="html">
-        <source>Maximal turn duration: <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ partType.BLITZ_MOVE_DURATION | humanDuration }}"/><x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
+      <trans-unit id="3120304451891406993" datatype="html">
+        <source>Maximal turn duration: </source>
       </trans-unit>
       <trans-unit id="7590013429208346303" datatype="html">
         <source>Custom</source>
       </trans-unit>
+      <trans-unit id="6773728044030876768" datatype="html">
+        <source>Maximal game duration: <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ partType.NORMAL_PART_DURATION | humanDuration }}"/> per player<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
+      </trans-unit>
       <trans-unit id="1612262766071402559" datatype="html">
         <source>Propose configuration</source>
-      </trans-unit>
-      <trans-unit id="594218318757354614" datatype="html">
-        <source>Maximal game duration: <x id="START_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;output&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.totalPartDuration | humanDuration }}"/> per player<x id="CLOSE_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;/output&gt;"/></source>
       </trans-unit>
       <trans-unit id="6482290849972032593" datatype="html">
         <source>Cancel game</source>
       </trans-unit>
-      <trans-unit id="3550072303786290583" datatype="html">
-        <source>Potential opponents that join the game will appear here.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Wait for an opponent to join, so that you can pick one. </source>
-      </trans-unit>
       <trans-unit id="6102520113052735150" datatype="html">
         <source>The opponent</source>
+      </trans-unit>
+      <trans-unit id="3550072303786290583" datatype="html">
+        <source>Potential opponents that join the game will appear here.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Wait for an opponent to join, so that you can pick one. </source>
       </trans-unit>
       <trans-unit id="5056292777668083757" datatype="html">
         <source>Click on the opponent against which you would like to play.</source>
       </trans-unit>
-      <trans-unit id="5397323926664032734" datatype="html">
-        <source>Maximal turn duration: <x id="START_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;output&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.maximalMoveDuration | humanDuration }}"/><x id="CLOSE_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;/output&gt;"/></source>
+      <trans-unit id="594218318757354614" datatype="html">
+        <source>Maximal game duration: <x id="START_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;output&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.totalPartDuration | humanDuration }}"/> per player<x id="CLOSE_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;/output&gt;"/></source>
       </trans-unit>
       <trans-unit id="8953033926734869941" datatype="html">
         <source>Name</source>
@@ -404,11 +401,11 @@
       <trans-unit id="4046928906081232002" datatype="html">
         <source>Configuration proposal</source>
       </trans-unit>
-      <trans-unit id="6747612030990351046" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> proposes to play a <x id="INTERPOLATION_1" equiv-text="{{ viewInfo.partTypeName }}"/> game</source>
-      </trans-unit>
       <trans-unit id="7416818230860591701" datatype="html">
         <source>You have been selected as the opponent.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> <x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> is modifying the configuration.</source>
+      </trans-unit>
+      <trans-unit id="6747612030990351046" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> proposes to play a <x id="INTERPOLATION_1" equiv-text="{{ viewInfo.partTypeName }}"/> game</source>
       </trans-unit>
       <trans-unit id="3649232689954543597" datatype="html">
         <source>a turn lasts at most <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.maximalMoveDuration | humanDuration }}"/> <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
@@ -2089,11 +2086,11 @@
       <trans-unit id="6986218395331151516" datatype="html">
         <source>You must pick one of your pieces.</source>
       </trans-unit>
-      <trans-unit id="2698327260846195509" datatype="html">
-        <source>You must drop your piece on an empty space.</source>
-      </trans-unit>
       <trans-unit id="2056314675813734949" datatype="html">
         <source>You cannot pass your turn.</source>
+      </trans-unit>
+      <trans-unit id="2698327260846195509" datatype="html">
+        <source>You must drop your piece on an empty space.</source>
       </trans-unit>
       <trans-unit id="5019447873100403310" datatype="html">
         <source>You must pass your turn.</source>

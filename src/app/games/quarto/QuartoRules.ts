@@ -33,9 +33,9 @@ class CaseSensible {
         this.y = y;
     }
     public addCritere(c: Critere): boolean {
-        /* Add criteria in case several line contains this sensible case (1 to 3 lines could)
+        /* Add criterion in case several line contains this sensible case (1 to 3 lines could)
          * without duplicates
-         * return true if the criteria has been added
+         * return true if the criterion has been added
          */
         const i: number = this.indexOf(c);
         if (i > 0) {
@@ -302,7 +302,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
                 if (cs == null) {
                     cs = new CaseSensible(coord.x, coord.y);
                 } else {
-                    return boardStatus; // 2 empty case: no victory or pre-victory, or new criteria
+                    return boardStatus; // 2 empty case: no victory or pre-victory, or new criterion
                 }
             } else {
                 // si la case est occupée

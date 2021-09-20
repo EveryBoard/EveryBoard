@@ -17,7 +17,7 @@ describe('QuartoMinimax:', () => {
         const rules: QuartoRules = new QuartoRules(QuartoPartSlice);
         minimax = new QuartoMinimax(rules, 'QuartoMinimax');
     });
-    it('Should know that the board value is PRE_VICTORY when pieceInHand match board criteria', () => {
+    it('Should know that the board value is PRE_VICTORY when pieceInHand match board criterion', () => {
         const board: number[][] = [
             [NULL, ABBB, AABB, AAAB],
             [NULL, NULL, NULL, NULL],

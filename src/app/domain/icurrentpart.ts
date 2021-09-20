@@ -13,6 +13,9 @@ export interface IPart extends FirebaseJSONObject {
     readonly listMoves: NonNullable<Array<NonNullable<JSONValueWithoutArray>>>,
 
     readonly playerOne?: string, // the id of the second player
+    /* Server time being handled on server by firestore, when we send it, it's a FieldValue
+     * so firebase write the server time and send us back a timestamp in the form of Time
+     */
     readonly beginning?: firebase.firestore.FieldValue | Time,
     readonly lastMoveTime?: firebase.firestore.FieldValue | Time,
     readonly remainingMsForZero?: number;

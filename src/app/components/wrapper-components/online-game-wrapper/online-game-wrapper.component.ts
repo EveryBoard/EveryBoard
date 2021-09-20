@@ -213,9 +213,9 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             case UpdateType.PRE_START_DOC:
                 const oldPartHadBeginningTime: boolean = oldPart != null &&
                                                          oldPart.doc.beginning != null;
-                const newPartHaveNoBeginningTime: boolean = this.currentPart != null &&
+                const newPartHasNoBeginningTime: boolean = this.currentPart != null &&
                                                             this.currentPart.doc.beginning == null;
-                if (oldPartHadBeginningTime && newPartHaveNoBeginningTime) {
+                if (oldPartHadBeginningTime && newPartHasNoBeginningTime) {
                     console.log('ils nous chient dans la colle patron!!!');
                 }
                 return;
@@ -230,7 +230,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         console.log({ update })
         const currentPartDoc: IPart = this.currentPart ? this.currentPart.doc : null;
         const diff: ObjectDifference = ObjectDifference.from(currentPartDoc, update.doc);
-        display(OnlineGameWrapperComponent.VERBOSE || true, { diff });
+        display(OnlineGameWrapperComponent.VERBOSE, { diff });
         const nbDiffs: number = diff.countChanges();
         if (diff == null || nbDiffs === 0) {
             return UpdateType.DUPLICATE;
@@ -589,7 +589,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             updatedICurrentPart.doc.playerOne];
         assert(updatedICurrentPart.doc.playerOne != null, 'should not setPlayersDatas when players data is not received');
         this.currentPlayer = this.players[updatedICurrentPart.doc.turn % 2];
-        console.log({ setPlayersDatas: updatedICurrentPart });
         let opponentName: string = '';
         if (this.players[0] === this.userName) {
             this.observerRole = Player.ZERO.value;
@@ -624,7 +623,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         if (this.isOpponentWaitingForTakeBackResponse()) {
             this.gameComponent.message('You must answer to take back request');
         } else {
-            console.log('onLegalUserMove updateDBBoard with msToSubstract', this.msToSubstract)
             return this.updateDBBoard(move, scorePlayerZero, scorePlayerOne, this.msToSubstract);
         }
     }
@@ -635,7 +633,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     : Promise<void>
     {
         const encodedMove: JSONValueWithoutArray = this.gameComponent.encoder.encodeMove(move);
-        display(OnlineGameWrapperComponent.VERBOSE || true, 'OnlineGameWrapperComponent.updateDBBoard(' + move.toString() +
+        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.updateDBBoard(' + move.toString() +
                                                     ', ' + scorePlayerZero + ', ' + scorePlayerOne + ')');
         this.gameComponent.rules.choose(move);
         const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.rules.node);
@@ -731,7 +729,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
     }
     public resumeCountDownFor(player: Player): void {
-        display(OnlineGameWrapperComponent.VERBOSE || true,
+        display(OnlineGameWrapperComponent.VERBOSE,
                 'dans OnlineGameWrapperComponent.resumeCountDownFor(' + player.toString() +
                 ') (turn ' + this.currentPart.doc.turn + ')');
 
