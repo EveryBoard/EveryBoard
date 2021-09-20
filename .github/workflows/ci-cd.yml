@@ -54,6 +54,8 @@ jobs:
 
       - name: Update and check translations
         run: bash ./scripts/update-translations.sh && bash ./scripts/check-translations.sh
+      - name: Update images
+        run: bash ./scripts/update-images.sh
 
       - name: Build master
         if: ${{ github.ref == 'refs/heads/master' }}

@@ -14,5 +14,5 @@ export class RulesFailure {
 
     public static readonly MUST_PASS: string = $localize`You must pass your turn.`;
 
-    public static readonly MUST_CHOOSE_OWN_PIECE_NOT_EMPTY: string = $localize`You ave selected an empty space, you must select one of your own pieces.`;
+    public static readonly MUST_CHOOSE_OWN_PIECE_NOT_EMPTY: string = $localize`You have selected an empty space, you must select one of your own pieces.`;
 }
