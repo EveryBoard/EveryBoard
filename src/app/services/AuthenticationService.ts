@@ -132,10 +132,10 @@ export class AuthenticationService implements OnDestroy {
         display(AuthenticationService.VERBOSE, 'AuthenticationService.sendEmailVerification()');
         const user: firebase.User = firebase.auth().currentUser;
         if (!user) {
-            throw new Error('Unlogged users can\'t send email verification');
+            throw new Error(`Unlogged users can't send email verification`);
         }
         if (user.emailVerified === true) {
-            throw new Error('Verified users shouldn\'t ask twice email verification');
+            throw new Error(`Verified users shouldn't ask twice email verification`);
         } else {
             return user.sendEmailVerification();
         }

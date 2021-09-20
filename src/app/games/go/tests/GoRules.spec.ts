@@ -9,7 +9,6 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GoRules } from '../GoRules';
 import { GoMinimax } from '../GoMinimax';
 import { GoFailure } from '../GoFailure';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 describe('GoRules:', () => {
 
@@ -128,9 +127,9 @@ describe('GoRules:', () => {
     });
     describe('Phase.PLAYING', () => {
         it('Phase.PLAYING + GoMove.PASS = Phase.PASSED', () => {
-            expect(rules.node.gamePartSlice.phase).toBe(Phase.PLAYING, 'Initial phase should be \'PLAYING\'');
+            expect(rules.node.gamePartSlice.phase).toBe(Phase.PLAYING, `Initial phase should be 'PLAYING'`);
             expect(rules.choose(GoMove.PASS)).toBeTrue();
-            expect(rules.node.gamePartSlice.phase).toBe(Phase.PASSED, 'Phase should have been switched to \'PASSED\'');
+            expect(rules.node.gamePartSlice.phase).toBe(Phase.PASSED, `Phase should have been switched to 'PASSED'`);
         });
         it('Phase.PLAYING Should forbid accepting', () => {
             const board: Table<GoPiece> = [
@@ -388,7 +387,7 @@ describe('GoRules:', () => {
             expect(rules.choose(GoMove.ACCEPT)).toBeTrue();
 
             expect(rules.getGameStatus(rules.node).isEndGame).toBeTrue();
-            expect(rules.node.gamePartSlice.phase).toBe(Phase.FINISHED, 'Phase should have been switched to \'FINISHED\'');
+            expect(rules.node.gamePartSlice.phase).toBe(Phase.FINISHED, `Phase should have been switched to 'FINISHED'`);
         });
     });
     it('should markAndCountTerritory correctly, bis', () => {

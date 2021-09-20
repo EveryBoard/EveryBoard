@@ -72,7 +72,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
         const piece: number = this.board[y][x];
         const ennemy: Player = this.rules.node.gamePartSlice.getCurrentEnnemy();
         if (SiamPiece.getOwner(piece) === ennemy) {
-            return this.cancelMove('Can\'t choose ennemy\'s pieces');
+            return this.cancelMove(`Can't choose ennemy's pieces`);
         }
         this.chosenCoord = new Coord(x, y);
         return MGPValidation.SUCCESS;
@@ -114,7 +114,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
             return this.cancelMove(clickValidity.reason);
         }
         if (this.chosenCoord) {
-            return this.cancelMove('Can\'t insert when there is already a selected piece');
+            return this.cancelMove(`Can't insert when there is already a selected piece`);
         } else {
             this.chosenCoord = new Coord(x, y);
             const dir: Orthogonal = SiamRules.getCoordDirection(x, y, this.rules.node.gamePartSlice);

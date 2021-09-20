@@ -6,7 +6,6 @@ import { FirstPlayer, IJoiner, PartStatus } from '../domain/ijoiner';
 import { JoinerService } from './JoinerService';
 import { ActivesPartsService } from './ActivesPartsService';
 import { ChatService } from './ChatService';
-import { IChat } from '../domain/ichat';
 import { Request } from '../domain/request';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/Player';
@@ -108,11 +107,7 @@ export class GameService implements OnDestroy {
     protected createChat(chatId: string): Promise<void> {
         display(GameService.VERBOSE, 'GameService.createChat(' + chatId + ')');
 
-        const newChat: IChat = {
-            status: 'not implemented',
-            messages: [],
-        };
-        return this.chatService.set(chatId, newChat);
+        return this.chatService.createNewChat(chatId);
     }
     public async createPartJoinerAndChat(creatorName: string, typeGame: string, chosenPlayer: string): Promise<string> {
         display(GameService.VERBOSE, 'GameService.createGame(' + creatorName + ', ' + typeGame + ')');
@@ -165,7 +160,7 @@ export class GameService implements OnDestroy {
     }
     public async deletePart(partId: string): Promise<void> {
         display(GameService.VERBOSE, 'GameService.deletePart(' + partId + ')');
-        assert(partId != null, 'Can\'t delete id for partId = null');
+        assert(partId != null, `Can't delete id for partId = null`);
         return this.partDao.delete(partId);
     }
     public async acceptConfig(partId: string, joiner: IJoiner): Promise<void> {

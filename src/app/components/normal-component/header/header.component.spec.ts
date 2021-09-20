@@ -25,6 +25,11 @@ describe('HeaderComponent', () => {
         expect(testUtils.getComponent().authenticationService.disconnect).toHaveBeenCalledTimes(1);
     }));
     it('should have empty username when user is not authenticated', fakeAsync(async() => {
+        AuthenticationServiceMock.setUser(AuthenticationService.NOT_AUTHENTICATED);
+        testUtils.detectChanges();
+        expect(testUtils.getComponent().userName).toBeNull();
+    }));
+    it('should have empty username when user is not connected', fakeAsync(async() => {
         AuthenticationServiceMock.setUser(AuthenticationService.NOT_CONNECTED);
         testUtils.detectChanges();
         expect(testUtils.getComponent().userName).toBeNull();

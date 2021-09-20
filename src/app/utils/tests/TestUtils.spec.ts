@@ -1,5 +1,5 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement, Type } from '@angular/core';
-import { ComponentFixture, flush, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
 import { GamePartSlice } from '../../jscaip/GamePartSlice';
@@ -24,32 +24,32 @@ import { JoinerDAO } from '../../dao/JoinerDAO';
 import { JoueursDAOMock } from '../../dao/tests/JoueursDAOMock.spec';
 import { ChatDAOMock } from '../../dao/tests/ChatDAOMock.spec';
 import { PartDAOMock } from '../../dao/tests/PartDAOMock.spec';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { LocalGameWrapperComponent }
     from '../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { HumanDuration } from '../TimeUtils';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({})
 export class BlankComponent {}
 
 export class ActivatedRouteStub {
     private route: {[key: string]: string} = {}
-    public snapshot: { paramMap: { get: (str: string) => string } } = {
-        paramMap: {
-            get: (str: string) => {
-                const value: string = this.route[str];
-                if (value == null) {
-                    throw new Error('ActivatedRouteStub: invalid route for ' + str + ', call setRoute before using!');
-                }
-                return value;
-
-            },
-        },
-    };
+    public snapshot: { paramMap: { get: (str: string) => string } };
     public constructor(compo?: string, id?: string) {
+        this.snapshot = {
+            paramMap: {
+                get: (str: string) => {
+                    const value: string = this.route[str];
+                    if (value == null) {
+                        throw new Error('ActivatedRouteStub: invalid route for ' + str + ', call setRoute before using!');
+                    }
+                    return value;
+                },
+            },
+        };
         if (compo != null) {
             this.setRoute('compo', compo);
         }
@@ -75,8 +75,10 @@ export class SimpleComponentTestUtils<T> {
                 RouterTestingModule.withRoutes([
                     { path: '**', component: BlankComponent },
                 ]),
+                FormsModule,
                 ReactiveFormsModule,
                 BrowserAnimationsModule,
+                NoopAnimationsModule,
             ],
             declarations: [
                 componentType,
@@ -101,17 +103,15 @@ export class SimpleComponentTestUtils<T> {
     }
     private constructor() {}
 
-    public async clickElement(elementName: string): Promise<boolean> {
+    public async clickElement(elementName: string): Promise<void> {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(elementName + ' should exist on the page').toBeTruthy();
         if (element == null) {
-            return false;
-        } else {
-            element.triggerEventHandler('click', null);
-            await this.fixture.whenStable();
-            this.detectChanges();
-            return true;
+            return;
         }
+        element.triggerEventHandler('click', null);
+        await this.fixture.whenStable();
+        this.detectChanges();
     }
     public getComponent(): T {
         return this.component;
@@ -345,16 +345,15 @@ export class ComponentTestUtils<T extends GameComponent> {
             tick(150);
         }
     }
-    public async clickElement(elementName: string): Promise<boolean> {
+    public async clickElement(elementName: string): Promise<void> {
         const element: DebugElement = this.findElement(elementName);
+        expect(element).withContext(elementName + ' should exist on the page').toBeTruthy();
         if (element == null) {
-            return false;
-        } else {
-            element.triggerEventHandler('click', null);
-            await this.fixture.whenStable();
-            this.detectChanges();
-            return true;
+            return;
         }
+        element.triggerEventHandler('click', null);
+        await this.fixture.whenStable();
+        this.detectChanges();
     }
     public expectElementNotToExist(elementName: string): void {
         const element: DebugElement = this.findElement(elementName);
