@@ -55,7 +55,7 @@ jobs:
       - name: Update and check translations
         uses: actions/setup-python@v1
         uses: BSFishy/pip-action@v1
-        with
+        with:
           packages: lxml
         run: bash ./scripts/update-translations.sh && bash ./scripts/check-translations.sh
       - name: Update images
