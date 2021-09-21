@@ -3,10 +3,10 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
-import { display, JSONObject } from 'src/app/utils/utils';
+import { display, FirebaseJSONObject } from 'src/app/utils/utils';
 import { FirebaseCollectionObserver } from './FirebaseCollectionObserver';
 
-export interface IFirebaseFirestoreDAO<T extends JSONObject> {
+export interface IFirebaseFirestoreDAO<T extends FirebaseJSONObject> {
 
     create(newElement: T): Promise<string>;
 
@@ -26,7 +26,7 @@ export interface IFirebaseFirestoreDAO<T extends JSONObject> {
         callback: FirebaseCollectionObserver<T>): () => void;
 }
 
-export abstract class FirebaseFirestoreDAO<T extends JSONObject> implements IFirebaseFirestoreDAO<T> {
+export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> implements IFirebaseFirestoreDAO<T> {
     public static VERBOSE: boolean = false;
 
     constructor(public readonly collectionName: string, protected afs: AngularFirestore) {}

@@ -292,7 +292,7 @@ describe('CoerceoRules', () => {
             const slice: CoerceoPartSlice = new CoerceoPartSlice(board, 1, [0, 2], [0, 0]);
             const move: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(0, 0));
             const status: LegalityStatus = rules.isLegal(move, slice);
-            expect(status.legal.getReason()).toBe(CoerceoFailure.CANNOT_CAPTURE_FROM_REMOVED);
+            expect(status.legal.getReason()).toBe(CoerceoFailure.CANNOT_CAPTURE_FROM_EMPTY);
         });
         it('Should remove piece captured by tiles exchange, removing tile but no one win it', () => {
             const board: NumberTable = [

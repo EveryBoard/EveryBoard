@@ -6,6 +6,7 @@ import { display } from 'src/app/utils/utils';
     templateUrl: './count-down.component.html',
 })
 export class CountDownComponent implements OnInit, OnDestroy {
+
     public static VERBOSE: boolean = false;
 
     @Input() debugName: string;
@@ -14,6 +15,7 @@ export class CountDownComponent implements OnInit, OnDestroy {
     private timeoutHandleGlobal: number;
     private timeoutHandleSec: number;
     private isPaused: boolean = true;
+    private isSet: boolean = false;
     private started: boolean = false;
     private startTime: number;
 
@@ -41,13 +43,17 @@ export class CountDownComponent implements OnInit, OnDestroy {
         if (this.started) {
             throw new Error('Should not set a chrono that has already been started (' + this.debugName + ')!');
         }
+        this.isSet = true;
         this.remainingTime = duration;
+    }
+    public changeDuration(ms: number): void {
+        this.remainingTime = ms;
     }
     public start(): void {
         // duration is in ms
         display(CountDownComponent.VERBOSE, this.debugName + '.start(' + this.remainingTime + 'ms);');
 
-        if (this.remainingTime == null) {
+        if (this.isSet === false) {
             throw new Error('Should not start a chrono that has not been set!');
         }
         if (this.started) {
@@ -106,7 +112,7 @@ export class CountDownComponent implements OnInit, OnDestroy {
         }
         this.pause();
         this.started = false;
-        this.remainingTime = null;
+        this.isSet = false;
     }
     public isStarted(): boolean {
         return this.started;
