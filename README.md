@@ -16,3 +16,9 @@ Run `npm run build`. The result of the build will be stored in the `dist/` direc
 
 Make sure firebase emulators are installed by running `firebase init emulators`.
 Then, run `npm test`
+
+## Updating translations
+
+Run `./scripts/update-translations.sh` to update the translation files.
+Then, translate in `translations/messages.fr.xlf`.
+Finally, run `./scripts/check-translations.sh` to check that you haven't forgot anything and to generate the final translation files that will be used in deployment.

@@ -39,8 +39,6 @@ jobs:
       - name: Run linter
         run: npm run lint
         continue-on-error: true
-      - name: Update and check translations
-        run: bash ./scripts/update-translations.sh && bash ./scripts/check-translations.sh
 
       - name: Setup Firebase secret on master / develop push
         if: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop' ) }}
@@ -53,6 +51,11 @@ jobs:
         run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
       - name: Launch tests
         run: npm run test:ci
+
+      - name: Update and check translations
+        run: bash ./scripts/update-translations.sh && bash ./scripts/check-translations.sh
+      - name: Update images
+        run: bash ./scripts/update-images.sh
 
       - name: Build master
         if: ${{ github.ref == 'refs/heads/master' }}
