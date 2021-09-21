@@ -38,16 +38,16 @@ describe('ActivesUsersService', () => {
     }));
     it('should order', () => {
         const joueurIds: IJoueurId[] = [
-            { id: 'second', doc: { pseudo: 'second', last_changed: { seconds: 2 } } },
-            { id: 'first', doc: { pseudo: 'first', last_changed: { seconds: 1 } } },
-            { id: 'fourth', doc: { pseudo: 'fourth', last_changed: { seconds: 4 } } },
-            { id: 'third', doc: { pseudo: 'third', last_changed: { seconds: 3 } } },
+            { id: 'second', doc: { pseudo: 'second', last_changed: { seconds: 2, nanoseconds: 3000000 } } },
+            { id: 'first', doc: { pseudo: 'first', last_changed: { seconds: 1, nanoseconds: 3000000 } } },
+            { id: 'fourth', doc: { pseudo: 'fourth', last_changed: { seconds: 4, nanoseconds: 3000000 } } },
+            { id: 'third', doc: { pseudo: 'third', last_changed: { seconds: 3, nanoseconds: 3000000 } } },
         ];
         const expectedOrder: IJoueurId[] = [
-            { id: 'first', doc: { pseudo: 'first', last_changed: { seconds: 1 } } },
-            { id: 'second', doc: { pseudo: 'second', last_changed: { seconds: 2 } } },
-            { id: 'third', doc: { pseudo: 'third', last_changed: { seconds: 3 } } },
-            { id: 'fourth', doc: { pseudo: 'fourth', last_changed: { seconds: 4 } } },
+            { id: 'first', doc: { pseudo: 'first', last_changed: { seconds: 1, nanoseconds: 3000000 } } },
+            { id: 'second', doc: { pseudo: 'second', last_changed: { seconds: 2, nanoseconds: 3000000 } } },
+            { id: 'third', doc: { pseudo: 'third', last_changed: { seconds: 3, nanoseconds: 3000000 } } },
+            { id: 'fourth', doc: { pseudo: 'fourth', last_changed: { seconds: 4, nanoseconds: 3000000 } } },
         ];
         const orderedJoueursId: IJoueurId[] = service.order(joueurIds);
         expect(expectedOrder).toEqual(orderedJoueursId);

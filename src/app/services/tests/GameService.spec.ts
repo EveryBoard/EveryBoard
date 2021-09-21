@@ -83,7 +83,7 @@ describe('GameService', () => {
             const getError: (player: Player) => Promise<string> = async(player: Player) => {
                 let errorMessage: string;
                 try {
-                    await service.acceptTakeBack('joinerId', part, player);
+                    await service.acceptTakeBack('joinerId', part, player, [0, 1]);
                 } catch (error) {
                     errorMessage = error.message;
                 }
@@ -195,8 +195,8 @@ describe('GameService', () => {
                     result: MGPResult.VICTORY.value,
                     turn: 2,
                     typeGame: 'laMarelle',
-                    beginning: 17001025123456,
-                    lastMove: 2,
+                    beginning: { seconds: 17001025123456, nanoseconds: 680000000 },
+                    lastMoveTime: { seconds: 2, nanoseconds: 3000000 },
                     loser: 'creator',
                     winner: 'joiner',
                     request: Request.rematchProposed(Player.ZERO),
@@ -238,8 +238,8 @@ describe('GameService', () => {
                     result: MGPResult.VICTORY.value,
                     turn: 2,
                     typeGame: 'laMarelle',
-                    beginning: 17001025123456,
-                    lastMove: 2,
+                    beginning: { seconds: 17001025123456, nanoseconds: 680000000 },
+                    lastMoveTime: { seconds: 2, nanoseconds: 3000000 },
                     loser: 'creator',
                     winner: 'joiner',
                     request: Request.rematchProposed(Player.ZERO),

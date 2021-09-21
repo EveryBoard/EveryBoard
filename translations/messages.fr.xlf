@@ -494,17 +494,17 @@
         <source>Blitz</source>
         <target>Blitz</target>
       </trans-unit>
-      <trans-unit id="6773728044030876768" datatype="html">
-        <source>Maximal game duration: <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ partType.NORMAL_PART_DURATION | humanDuration }}"/> per player<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
-        <target>Durée maximale d'une partie : <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ partType.NORMAL_PART_DURATION | humanDuration }}"/> par joueur<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></target>
-      </trans-unit>
-      <trans-unit id="4701368818614163279" datatype="html">
-        <source>Maximal turn duration: <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ partType.BLITZ_MOVE_DURATION | humanDuration }}"/><x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
-        <target>Durée maximale d'un tour : <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ partType.BLITZ_MOVE_DURATION | humanDuration }}"/><x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></target>
+      <trans-unit id="3120304451891406993" datatype="html">
+        <source>Maximal turn duration: </source>
+        <target>Durée maximale d'un tour : </target>
       </trans-unit>
       <trans-unit id="7590013429208346303" datatype="html">
         <source>Custom</source>
         <target>Personnalisée</target>
+      </trans-unit>
+      <trans-unit id="6773728044030876768" datatype="html">
+        <source>Maximal game duration: <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ partType.NORMAL_PART_DURATION | humanDuration }}"/> per player<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
+        <target>Durée maximale d'une partie : <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ partType.NORMAL_PART_DURATION | humanDuration }}"/> par joueur<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></target>
       </trans-unit>
       <trans-unit id="1612262766071402559" datatype="html">
         <source>Propose configuration</source>
@@ -514,10 +514,6 @@
         <source>Cancel game</source>
         <target>Annuler la partie</target>
       </trans-unit>
-      <trans-unit id="1544438523766748366" datatype="html">
-        <source>Maximal game duration: <x id="START_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;output&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.totalPartDuration | humanDuration }}"/><x id="CLOSE_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;/output&gt;"/> per player</source>
-        <target>Durée maximale d'une partie : <x id="START_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;output&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.totalPartDuration | humanDuration }}"/><x id="CLOSE_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;/output&gt;"/> par joueur</target>
-      </trans-unit>
       <trans-unit id="6102520113052735150" datatype="html">
         <source>The opponent</source>
         <target>L&apos;adversaire</target>
@@ -526,13 +522,13 @@
         <source>Potential opponents that join the game will appear here.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Wait for an opponent to join, so that you can pick one. </source>
         <target>Les adversaires potentiels qui rejoignent la partie apparaîtront ici.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Attendez qu&apos;un adversaire vous rejoigne pour pouvoir en choisir un.</target>
       </trans-unit>
-      <trans-unit id="5397323926664032734" datatype="html">
-        <source>Maximal turn duration: <x id="START_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;output&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.maximalMoveDuration | humanDuration }}"/><x id="CLOSE_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;/output&gt;"/></source>
-        <target>Durée maximale d'un tour : <x id="START_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;output&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.maximalMoveDuration | humanDuration }}"/><x id="CLOSE_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;/output&gt;"/></target>
-      </trans-unit>
       <trans-unit id="5056292777668083757" datatype="html">
         <source>Click on the opponent against which you would like to play.</source>
         <target>Cliquez sur l&apos;adversaire contre lequel vous souhaitez jouer.</target>
+      </trans-unit>
+      <trans-unit id="594218318757354614" datatype="html">
+        <source>Maximal game duration: <x id="START_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;output&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.totalPartDuration | humanDuration }}"/> per player<x id="CLOSE_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;/output&gt;"/></source>
+        <target>Durée maximale d'une partie : <x id="START_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;output&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.totalPartDuration | humanDuration }}"/> par joueur<x id="CLOSE_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;/output&gt;"/></target>
       </trans-unit>
       <trans-unit id="8953033926734869941" datatype="html">
         <source>Name</source>

@@ -1,4 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { Time } from '../domain/Time';
 
 export type Duration = number
 
@@ -34,4 +35,12 @@ export class HumanDuration implements PipeTransform {
             return $localize`${ first } and ${ second }`;
         }
     }
+}
+
+export function getMilliseconds(time: Time): number {
+    return time.seconds * 1000 + (time.nanoseconds / (1000 * 1000));
+}
+
+export function getMillisecondsDifference(first: Time, second: Time): number {
+    return getMilliseconds(second) - getMilliseconds(first);
 }
