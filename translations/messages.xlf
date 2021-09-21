@@ -817,21 +817,21 @@
       <trans-unit id="8769382369391878948" datatype="html">
         <source>Disconnection</source>
       </trans-unit>
-      <trans-unit id="2680357653080413298" datatype="html">
+      <trans-unit id="4625150132268018420" datatype="html">
         <source>Pieces with a lightning strike are called &quot;sources&quot;.
-        When a stack is not directly nor indirectly connected to a source, it is removed from the board.
-        You can move on a source: this forms a stack that contains the source, which therefore can never be disconnected.
-        Besides this, a stack containing a source acts like any other stack: you can move it, and your opponent can move on that stack to take possession of it.&lt;br/&gt;&lt;br/&gt;
-        You&apos;re playing Dark, move your piece on the source.</source>
+        When a stack is not directly nor indirectly connected to a source, it is removed from the board.&lt;br/&gt;&lt;br/&gt;
+        You&apos;re playing Dark, try to disconnect the stack of 4 pieces from your opponent. There are two ways of doing that, one is better than the other: try to find that one!</source>
       </trans-unit>
-      <trans-unit id="600732969670597367" datatype="html">
-        <source>Nice, you have disconnected 4 pieces of your opponent!
-        Your opponent therefore lost 4 points.
+      <trans-unit id="2017860068625343028" datatype="html">
+        <source>You have successfully disconnected the stack of 4 pieces of your opponent, but on the next move your opponent will be able to move on your new stack, and to win the game! There exists a better outcome of this situation, try to find it.</source>
+      </trans-unit>
+      <trans-unit id="2366265892991791609" datatype="html">
+        <source>Bad choice! You should be able to disconnect your opponent&apos;s stack of four pieces.</source>
+      </trans-unit>
+      <trans-unit id="4457528534020479150" datatype="html">
+        <source>Nice, you have disconnected 4 pieces of your opponent, and your new stack cannot be reached by your opponent!
+        Your opponent therefore lost 5 points: 4 from the disconnected stack, and one from the stack on which you moved.
         Disconnected stacks will not be visible at the next turn.</source>
-      </trans-unit>
-      <trans-unit id="9072861571041891023" datatype="html">
-        <source>Bad choice! By moving on the source you would have disconnected the opponent&apos;s pieces and they would have lost 4 points.
-        Here, the opponent wins 2 to 0</source>
       </trans-unit>
       <trans-unit id="5374556513202485808" datatype="html">
         <source>Moving on a source</source>
@@ -842,8 +842,8 @@
         This way, you know that this stack may never be disconnected, as it contains a source.&lt;br/&gt;&lt;br/&gt;
         You&apos;re playing Dark and you can take control of a source, do it!</source>
       </trans-unit>
-      <trans-unit id="4900956055400728677" datatype="html">
-        <source>Congratulations! However, note that your opponent could later take possession of one of your stack that contains a source, so watch out!</source>
+      <trans-unit id="6422219434767688772" datatype="html">
+        <source>Congratulations! However, note that your opponent could later take possession of one of your stack that contains a source, so watch out when you take control of sources!</source>
       </trans-unit>
       <trans-unit id="2060914977510915101" datatype="html">
         <source>You have not taken possession of a source, try again.</source>
@@ -851,10 +851,10 @@
       <trans-unit id="5741584858319850896" datatype="html">
         <source>Passing</source>
       </trans-unit>
-      <trans-unit id="721533359855729017" datatype="html">
+      <trans-unit id="3832185042961281952" datatype="html">
         <source>It can happen that you have no possible move to make.
         If this is the case, and if your opponent can still move, you must pass your turn.&lt;br/&gt;&lt;br/&gt;
-        This is a situation that occurs here.</source>
+        This is a situation that occurs here for Dark.</source>
       </trans-unit>
       <trans-unit id="2190782768169600552" datatype="html">
         <source>When no more move is possible for both players, the game ends and the player with the most points wins.&lt;br/&gt;&lt;br/&gt;
