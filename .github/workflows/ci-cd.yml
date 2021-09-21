@@ -52,11 +52,11 @@ jobs:
       - name: Launch tests
         run: npm run test:ci
 
-      - name: Update and check translations
-        uses: actions/setup-python@v1
+      - name: Install python dependencies
         uses: BSFishy/pip-action@v1
         with:
           packages: lxml
+      - name: Update and check translations
         run: bash ./scripts/update-translations.sh && bash ./scripts/check-translations.sh
       - name: Update images
         run: bash ./scripts/update-images.sh
