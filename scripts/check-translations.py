@@ -12,7 +12,7 @@ for source_tu in sources.findall('.//%strans-unit' % NS):
     target_tu = targets.findall('.//%strans-unit[@id="%s"]' % (NS, source_tu.attrib['id']))
     if len(target_tu) > 1:
         failed = True
-        print('ERROR: More than one trans-unit with ID %s, please keep only one in messages.frx.lf' % source_tu.attrib['id'])
+        print('ERROR: More than one trans-unit with ID %s, please keep only one in messages.fr.xlf' % source_tu.attrib['id'])
         continue
     if len(target_tu) == 0:
         failed = True
