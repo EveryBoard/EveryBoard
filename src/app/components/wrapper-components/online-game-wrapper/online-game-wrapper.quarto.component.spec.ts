@@ -349,6 +349,53 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             .withContext('Component should show who is the winner.')
             .toBeTruthy();
     }));
+    it('Should allow player to pass when gameComponent allows it', fakeAsync(async() => {
+        await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+        tick(1);
+        componentTestUtils.expectElementNotToExist('#passButton');
+
+        wrapper.gameComponent.canPass = true;
+        wrapper.gameComponent['pass'] = async() => {
+            return MGPValidation.SUCCESS;
+        };
+        componentTestUtils.detectChanges();
+
+        await componentTestUtils.clickElement('#passButton');
+
+        tick(wrapper.joiner.maximalMoveDuration * 1000);
+    }));
+    it('Should not update currentPart when receiving MOVE_WITHOUT_TIME update', fakeAsync(async() => {
+        // Given a board where its the opponent's (first) turn
+        await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+        tick(1);
+        const CURRENT_PART: Part = wrapper.currentPart;
+
+        // when receiving a move without time
+        await receivePartDAOUpdate({
+            lastMoveTime: null,
+            listMoves: [FIRST_MOVE_ENCODED],
+            turn: 1,
+        });
+
+        // then currentPart should not be updated
+        expect(wrapper.currentPart).toEqual(CURRENT_PART);
+        tick(wrapper.joiner.maximalMoveDuration * 1000);
+    }));
+    it('Should not do anything when receiving duplicate', fakeAsync(async() => {
+        // Given a board where its the opponent's (first) turn
+        await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+        tick(1);
+        const CURRENT_PART: Part = wrapper.currentPart;
+
+        // when receiving the same move
+        await receivePartDAOUpdate({
+            ...CURRENT_PART.doc,
+        });
+
+        // then currentPart should not be updated
+        expect(wrapper.currentPart).toEqual(CURRENT_PART);
+        tick(wrapper.joiner.maximalMoveDuration * 1000);
+    }));
     describe('Take Back', () => {
         describe('sending/receiving', () => {
             it('Should send take back request when player ask to', fakeAsync(async() => {
@@ -977,41 +1024,28 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(wrapper.joiner.maximalMoveDuration * 1000);
         }));
     });
-    it('Should not allow player to move after resigning', fakeAsync(async() => {
-        await prepareStartedGameFor({ pseudo: 'creator', verified: true });
-        tick(1);
-        await doMove(FIRST_MOVE, true);
-        await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 1799999, 1800 * 1000);
-        await componentTestUtils.clickElement('#resignButton');
+    describe('Resign', () => {
+        it('Should not allow player to move after resigning', fakeAsync(async() => {
+            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            tick(1);
+            await doMove(FIRST_MOVE, true);
+            await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 1799999, 1800 * 1000);
+            await componentTestUtils.clickElement('#resignButton');
 
-        spyOn(partDAO, 'update').and.callThrough();
-        await doMove(SECOND_MOVE, false);
-        expect(partDAO.update).not.toHaveBeenCalled();
+            spyOn(partDAO, 'update').and.callThrough();
+            await doMove(SECOND_MOVE, false);
+            expect(partDAO.update).not.toHaveBeenCalled();
 
-        tick(wrapper.joiner.maximalMoveDuration * 1000);
-    }));
-    it('Should display when the opponent resigned', fakeAsync(async() => {
-        await prepareStartedGameFor({ pseudo: 'creator', verified: true });
-        tick(1);
-        await doMove(FIRST_MOVE, true);
-        await TestBed.inject(GameService).resign('joinerId', CREATOR.pseudo, OPPONENT.pseudo);
-        expect(componentTestUtils.findElement('#resignIndicator'));
-    }));
-    it('Should allow player to pass when gameComponent allows it', fakeAsync(async() => {
-        await prepareStartedGameFor({ pseudo: 'creator', verified: true });
-        tick(1);
-        componentTestUtils.expectElementNotToExist('#passButton');
-
-        wrapper.gameComponent.canPass = true;
-        wrapper.gameComponent['pass'] = async() => {
-            return MGPValidation.SUCCESS;
-        };
-        componentTestUtils.detectChanges();
-
-        await componentTestUtils.clickElement('#passButton');
-
-        tick(wrapper.joiner.maximalMoveDuration * 1000);
-    }));
+            tick(wrapper.joiner.maximalMoveDuration * 1000);
+        }));
+        it('Should display when the opponent resigned', fakeAsync(async() => {
+            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            tick(1);
+            await doMove(FIRST_MOVE, true);
+            await TestBed.inject(GameService).resign('joinerId', CREATOR.pseudo, OPPONENT.pseudo);
+            expect(componentTestUtils.findElement('#resignIndicator'));
+        }));
+    });
     describe('getUpdateType', () => {
         it('Move + Time_updated + Request_removed = UpdateType.MOVE', fakeAsync(async() => {
             await prepareStartedGameFor({ pseudo: 'creator', verified: true });
@@ -1202,36 +1236,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 scorePlayerOne: 4, // modified
             });
             expect(wrapper.getUpdateType(update)).toBe(UpdateType.MOVE_WITHOUT_TIME);
-            tick(wrapper.joiner.maximalMoveDuration * 1000 + 1);
-        }));
-        it('NoMove + Time_added = UpdateType.TIME_ALONE', fakeAsync(async() => {
-            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
-            wrapper.currentPart = new Part({
-                typeGame: 'P4',
-                playerZero: 'who is it from who cares',
-                turn: 1,
-                listMoves: [1],
-                result: MGPResult.UNACHIEVED.value,
-                playerOne: 'Sir Meryn Trant',
-                remainingMsForZero: 1800 * 1000,
-                remainingMsForOne: 1800 * 1000,
-                beginning: FAKE_MOMENT,
-                lastMoveTime: null,
-            });
-            const update: Part = new Part({
-                typeGame: 'P4',
-                playerZero: 'who is it from who cares',
-                turn: 1,
-                listMoves: [1],
-                result: MGPResult.UNACHIEVED.value,
-                playerOne: 'Sir Meryn Trant',
-                remainingMsForZero: 1800 * 1000,
-                remainingMsForOne: 1800 * 1000,
-                beginning: FAKE_MOMENT,
-                // the only modif
-                lastMoveTime: { seconds: 1111, nanoseconds: 111000000 },
-            });
-            expect(wrapper.getUpdateType(update)).toBe(UpdateType.TIME_ALONE);
             tick(wrapper.joiner.maximalMoveDuration * 1000 + 1);
         }));
         it('AcceptTakeBack + Time_removed = UpdateType.ACCEPT_TAKE_BACK_WITHOUT_TIME', fakeAsync(async() => {

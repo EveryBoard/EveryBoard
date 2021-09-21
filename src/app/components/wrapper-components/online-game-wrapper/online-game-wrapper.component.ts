@@ -22,7 +22,7 @@ import { ObjectDifference } from 'src/app/utils/ObjectUtils';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Time } from 'src/app/domain/Time';
-import { getMilliseconds, getMillisecondsDifference } from 'src/app/utils/TimeUtils';
+import { getMillisecondsDifference } from 'src/app/utils/TimeUtils';
 
 export class UpdateType {
 
@@ -33,8 +33,6 @@ export class UpdateType {
     public static readonly DUPLICATE: UpdateType = new UpdateType('DUPLICATE');
 
     public static readonly MOVE_WITHOUT_TIME: UpdateType = new UpdateType('MOVE_WITHOUT_TIME');
-
-    public static readonly TIME_ALONE: UpdateType = new UpdateType('TIME_ALONE');
 
     public static readonly MOVE: UpdateType = new UpdateType('MOVE');
 
@@ -179,16 +177,14 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             nbPlayedMoves: part.doc.listMoves.length,
         } });
         const updateType: UpdateType = this.getUpdateType(part);
-        const turn: string = update == null ? 'null' : (''+ update.doc.turn);
+        const turn: number = update.doc.turn;
         if (updateType === UpdateType.REQUEST) {
-            console.log('UpdateType: Request(' + part.doc.request.code + ') (' + turn + ')');
+            display(OnlineGameWrapperComponent.VERBOSE, 'UpdateType: Request(' + part.doc.request.code + ') (' + turn + ')');
         } else {
-            console.log('UpdateType: ' + updateType.value + '(' + turn + ')');
+            display(OnlineGameWrapperComponent.VERBOSE, 'UpdateType: ' + updateType.value + '(' + turn + ')');
         }
         const oldPart: Part = this.currentPart;
         this.currentPart = part;
-        display(OnlineGameWrapperComponent.VERBOSE,
-                'OnlineGameWrapperComponent.onCurrentPartUpdate: UpdateType.' + updateType.value);
 
         switch (updateType) {
             case UpdateType.REQUEST:
@@ -199,25 +195,19 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             case UpdateType.DUPLICATE:
                 return;
             case UpdateType.END_GAME:
-                return this.checkEndGames();
-                // TODO: might no longer be checkEndGame but "do"EndGame
+                return this.applyEndGame();
             case UpdateType.MOVE_WITHOUT_TIME:
-                this.currentPart = oldPart;
-                return;
-            case UpdateType.TIME_ALONE:
                 this.currentPart = oldPart;
                 return;
             case UpdateType.MOVE:
                 this.msToSubstract = this.getLastMoveTime(oldPart, part, updateType);
                 return this.doNewMoves(part);
             case UpdateType.PRE_START_DOC:
-                const oldPartHadBeginningTime: boolean = oldPart != null &&
-                                                         oldPart.doc.beginning != null;
-                const newPartHasNoBeginningTime: boolean = this.currentPart != null &&
-                                                            this.currentPart.doc.beginning == null;
-                if (oldPartHadBeginningTime && newPartHasNoBeginningTime) {
-                    console.log('ils nous chient dans la colle patron!!!');
-                }
+                const oldPartHadNoBeginningTime: boolean = oldPart == null ||
+                                                           oldPart.doc.beginning == null;
+                const newPartHasBeginningTime: boolean = this.currentPart == null ||
+                                                         this.currentPart.doc.beginning != null;
+                assert(oldPartHadNoBeginningTime || newPartHasBeginningTime, 'ils nous chient dans la colle patron!!!');
                 return;
             default:
                 assert(updateType === UpdateType.STARTING_DOC, 'Unexpected update type ' + updateType);
@@ -227,16 +217,12 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
     }
     public getUpdateType(update: Part): UpdateType {
-        console.log({ update })
         const currentPartDoc: IPart = this.currentPart ? this.currentPart.doc : null;
         const diff: ObjectDifference = ObjectDifference.from(currentPartDoc, update.doc);
         display(OnlineGameWrapperComponent.VERBOSE, { diff });
         const nbDiffs: number = diff.countChanges();
         if (diff == null || nbDiffs === 0) {
             return UpdateType.DUPLICATE;
-        }
-        if (this.isTimeAlone(diff, nbDiffs)) {
-            return UpdateType.TIME_ALONE;
         }
         if (update.doc.request) {
             if (update.doc.request.code === 'TakeBackAccepted' && diff.removed['lastMoveTime']) {
@@ -266,22 +252,18 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         if (update.doc.result !== MGPResult.UNACHIEVED.value) {
             return UpdateType.END_GAME;
         }
-        if (update.doc.beginning != null && update.doc.listMoves.length === 0) {
-            return UpdateType.STARTING_DOC;
-        }
-        throw new Error('Unexpected update: ' + JSON.stringify(diff));
-    }
-    public isTimeAlone(diff: ObjectDifference, nbDiffs: number): boolean {
-        return nbDiffs === 1 && diff.added['lastMoveTime'] !== undefined;
+        assert(update.doc.beginning != null && update.doc.listMoves.length === 0,
+               'Unexpected update: ' + JSON.stringify(diff));
+        return UpdateType.STARTING_DOC;
     }
     public isMove(diff: ObjectDifference, nbDiffs: number): boolean {
         if (diff.modified['listMoves'] && diff.modified['turn']) {
             const modifOnListMovesAndTurn: number = 2;
-            const lastMoveTimeModified: number = this.isLastMoveUpdated(diff) ? 1 : 0;
-            const scoreZeroUpdated: number = this.isUpdated(diff, 'scorePlayerZero') ? 1 : 0;
-            const scoreOneUpdated: number = this.isUpdated(diff, 'scorePlayerOne') ? 1 : 0;
-            const remainingMsForZeroUpdated: number = this.isUpdated(diff, 'remainingMsForZero') ? 1 : 0;
-            const remainingMsForOneUpdated: number = this.isUpdated(diff, 'remainingMsForOne') ? 1 : 0;
+            const lastMoveTimeModified: number = diff.isPresent('lastMoveTime').present ? 1 : 0;
+            const scoreZeroUpdated: number = diff.isPresent('scorePlayerZero').present ? 1 : 0;
+            const scoreOneUpdated: number = diff.isPresent('scorePlayerOne').present ? 1 : 0;
+            const remainingMsForZeroUpdated: number = diff.isPresent('remainingMsForZero').present ? 1 : 0;
+            const remainingMsForOneUpdated: number = diff.isPresent('remainingMsForOne').present ? 1 : 0;
             const requestRemoved: number = diff.removed['request'] == null ? 0 : 1;
             const nbValidMoveDiffs: number = lastMoveTimeModified +
                                              scoreZeroUpdated +
@@ -295,48 +277,13 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             return false;
         }
     }
-    public isLastMoveUpdated(diff: ObjectDifference): boolean {
-        if (diff.added['lastMoveTime']) {
-            console.log('lastMoveTime added', this.currentPart.doc.lastMoveTime)
-            return true;
-        }
-        if (diff.modified['lastMoveTime']) {
-            console.log('lastMoveTime modified', this.currentPart.doc.lastMoveTime)
-            return true;
-        }
-        if (diff.removed['lastMoveTime']) {
-            console.log('lastMoveTime removed', this.currentPart.doc.lastMoveTime)
-            return true;
-        }
-        return false;
-    }
-    public isUpdated(diff: ObjectDifference, key: string): boolean {
-        return diff.added[key] != null ||
-               diff.modified[key] != null ||
-               diff.removed[key] != null;
-    }
     public getLastMoveTime(oldPart: Part, update: Part, type: UpdateType): [number, number] {
         const oldTime: Time = this.getMoreRecentTime(oldPart);
         const updateTime: Time = this.getMoreRecentTime(update);
-        if (oldTime == null) {
-            if (updateTime == null) {
-                console.log('getLastMoveTime(' + type.value + ') has no times');
-                return [0, 0];
-            } else {
-                console.log('getLastMoveTime(' + type.value + ') has ' + getMilliseconds(updateTime));
-                return [0, 0];
-            }
-        } else {
-            if (updateTime == null) {
-                console.log('getLastMoveTime(' + type.value + ') had ' + getMilliseconds(oldTime) + ' then nothing');
-                return [0, 0];
-            } else {
-                const last: Player = Player.fromTurn(oldPart.doc.turn);
-                const tmp: [number, number] = this.getTimeUsedForLastTurn(oldTime, updateTime, type, last);
-                console.log('GET_LAST_MOVE_TIME LAST TURN IS ', tmp)
-                return tmp;
-            }
-        }
+        assert(oldTime != null, 'TODO: OLD_TIME WAS NULL, UNDO COMMENT AND TEST!');
+        assert(updateTime != null, 'TODO UPDATE_TIME WAS NULL, UNDO COMMENT AND TEST!');
+        const last: Player = Player.fromTurn(oldPart.doc.turn);
+        return this.getTimeUsedForLastTurn(oldTime, updateTime, type, last);
     }
     private getMoreRecentTime(part: Part): Time {
         if (part == null) {
@@ -357,7 +304,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         const moveDurationDBWise: number = getMillisecondsDifference(oldTime, updateTime);
         const msToSubstract: [number, number] = [0, 0];
         msToSubstract[last.value] = moveDurationDBWise;
-        console.log('getLastMoveTime(' + type.value + ') moveDurationDBWise: ' + moveDurationDBWise +' ms to substract: [' + msToSubstract[0] + ', ' + msToSubstract[1] + ']');
         return msToSubstract;
     }
     public setChronos(): void {
@@ -406,22 +352,21 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         this.pauseCountDownsFor(player);
         this.resumeCountDownFor(player);
     }
-    private checkEndGames() {
-        // fonctionne pour l'instant avec la victoire normale, l'abandon, et le timeout !
+    private applyEndGame() {
+        // currently working for normal victory, resign, and timeouts!
         const currentPart: Part = this.currentPart;
         const player: Player = Player.fromTurn(currentPart.doc.turn);
         this.endGame = true;
         if (MGPResult.VICTORY.value === currentPart.doc.result) {
             this.doNewMoves(this.currentPart);
-            this.stopCountdownsFor(player);
         } else {
             const endGameResults: MGPResult[] = [MGPResult.DRAW, MGPResult.RESIGN, MGPResult.TIMEOUT];
             const resultIsIncluded: boolean =
                 endGameResults.some((result: MGPResult) => result.value === currentPart.doc.result);
             assert(resultIsIncluded === true, 'Unknown type of end game (' + currentPart.doc.result + ')');
             display(OnlineGameWrapperComponent.VERBOSE, 'endGame est true et winner est ' + currentPart.getWinner());
-            this.stopCountdownsFor(player);
         }
+        this.stopCountdownsFor(player);
     }
     public notifyDraw(encodedMove: JSONValueWithoutArray, scorePlayerZero: number, scorePlayerOne: number): void {
         this.endGame = true;
@@ -645,7 +590,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             }
         } else {
             if (this.previousUpdateWasATakeBack === true) {
-                console.log('previousUpdateWasATakeBack so we dont diminish')
                 msToSubstract = [0, 0];
             }
             return this.gameService.updateDBBoard(this.currentPartId,

@@ -97,4 +97,16 @@ export class ObjectDifference {
             this.removed[removedKey] = before[removedKey];
         }
     }
+    public isPresent(key: string): { state?: 'added' | 'modified' | 'removed', present: boolean } {
+        if (this.added[key] != null) {
+            return { state: 'added', present: true };
+        }
+        if (this.modified[key] != null) {
+            return { state: 'modified', present: true };
+        }
+        if (this.removed[key] != null) {
+            return { state: 'removed', present: true };
+        }
+        return { state: null, present: false };
+    }
 }
