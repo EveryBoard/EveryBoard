@@ -20,7 +20,7 @@
                 </p>
             </div>
             <div class="block" *ngIf="players">
-                <p id="playerZeroIndicator" [ngStyle]="getPlayerNameFontColor(0)">{{ players[0] }}</p>
+                <p id="playerZeroIndicator" [ngStyle]="getPlayerNameFontColor(0)" class="player0-bg">{{ players[0] }}</p>
                 <p id="scoreZeroIndicator" *ngIf="currentPart && compo && compo.showScore" i18n>{{ compo.scores[0] }} points</p>
                 <app-count-down #chronoZeroGlobal
                                 [dangerTimeLimit]="60*1000"
@@ -35,7 +35,7 @@
             </div>
             <p class="is-size-3" i18n>vs.</p>
             <div class="block" *ngIf="players">
-                <p id="playerOneIndicator" [ngStyle]="getPlayerNameFontColor(1)">{{ players[1] }}</p>
+                <p id="playerOneIndicator" [ngStyle]="getPlayerNameFontColor(1)" class="player1-bg">{{ players[1] }}</p>
                 <p id="scoreOneIndicator" *ngIf="currentPart && compo && compo.showScore" i18n>{{ compo.scores[1] }} points</p>
                 <app-count-down #chronoOneGlobal
                                 [dangerTimeLimit]="60*1000"
@@ -141,7 +141,8 @@
              >Accept to play again</button>
         </div>
     </div>
-    <div class="tile is-9 is-parent">
+    <div class="tile is-9 is-parent"
+         [ngClass]="getBoardHighlight()">
         <div id="board"
              class="tile is-child box">
             <app-game-includer></app-game-includer>

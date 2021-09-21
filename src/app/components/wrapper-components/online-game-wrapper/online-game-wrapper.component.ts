@@ -628,12 +628,27 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
     }
     public getPlayerNameFontColor(player: number): { [key: string]: string} {
         if (this.observerRole === player || this.observerRole > 1) {
-            return { color: 'black' };
+            if (player === 0) {
+                return { color: 'white' };
+            } else {
+                return { color: 'black' };
+            }
         } else if (this.opponent && this.opponent.doc && this.opponent.doc.state === 'offline') {
             return this.OFFLINE_FONT_COLOR;
         } else {
-            return { color: 'black' };
+            if (player === 0) {
+                return { color: 'white' };
+            } else {
+                return { color: 'black' };
+            }
         }
+    }
+    public getBoardHighlight(): string[] {
+        if (this.observerRole != null && this.observerRole <= 1) {
+            return ['player' + this.getPlayer().value + '-bg'];
+        }
+        console.log(this.observerRole)
+        return [];
     }
     public canResign(): boolean {
         if (this.isPlaying() === false) {
