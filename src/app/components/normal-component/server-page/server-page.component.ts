@@ -8,6 +8,8 @@ import { GameService } from '../../../services/GameService';
 import { display } from 'src/app/utils/utils';
 import { ActivesPartsService } from 'src/app/services/ActivesPartsService';
 
+type Tab = 'games' | 'create' | 'chat';
+
 @Component({
     selector: 'app-server-page',
     templateUrl: './server-page.component.html',
@@ -20,6 +22,8 @@ export class ServerPageComponent implements OnInit, OnDestroy {
     public selectedGame: string;
 
     private activesUsersSub: Subscription;
+
+    public currentTab: Tab = 'games';
 
     constructor(public router: Router,
                 private userService: UserService,
@@ -52,5 +56,8 @@ export class ServerPageComponent implements OnInit, OnDestroy {
     }
     public getActiveParts(): ICurrentPartId[] {
         return this.activesPartsService.getActiveParts();
+    }
+    public selectTab(tab: Tab): void {
+        this.currentTab = tab;
     }
 }

@@ -2,25 +2,33 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en" datatype="plaintext" original="ng2.template" target-language="fr">
     <body>
-      <trans-unit id="2576375399155055140" datatype="html">
-        <source>Show the chat (<x id="INTERPOLATION" equiv-text="{{ this.unreadMessages }}"/> new message(s))</source>
-        <target>Afficher le chat (<x id="INTERPOLATION" equiv-text="{{ this.unreadMessages }}"/> nouveau(x) message(s))</target>
-      </trans-unit>
-      <trans-unit id="3360522039608797847" datatype="html">
-        <source>Enter your message here</source>
+      <trans-unit id="8403075591877274055" datatype="html">
+        <source>Type your message here</source>
         <target>Entrez votre message ici</target>
       </trans-unit>
-      <trans-unit id="5287653220942723084" datatype="html">
-        <source>Be polite.</source>
-        <target>Soyez courtois.</target>
+      <trans-unit id="2187377168518132372" datatype="html">
+        <source>Be polite</source>
+        <target>Soyez courtois</target>
       </trans-unit>
-      <trans-unit id="8426135601531729112" datatype="html">
-        <source>Hide the chat (<x id="INTERPOLATION" equiv-text="{{ this.unreadMessages }}"/> new message(s))</source>
-        <target>Cacher le chat (<x id="INTERPOLATION" equiv-text="{{ this.unreadMessages }}"/> nouveau(x) message(s))</target>
+      <trans-unit id="8447591012079458095" datatype="html">
+        <source>Hide chat</source>
+        <target>Réduire le chat</target>
       </trans-unit>
-      <trans-unit id="8357348345728938526" datatype="html">
-        <source>You must be logged in to see the chat.</source>
-        <target>Vous devez être connecté pour voir le chat.</target>
+      <trans-unit id="3331424259701651496" datatype="html">
+        <source>Show chat (<x id="INTERPOLATION" equiv-text="{{ this.unreadMessagesText }}"/>)</source>
+        <target>Afficher le chat (<x id="INTERPOLATION" equiv-text="{{ this.unreadMessagesText }}"/>)</target>
+      </trans-unit>
+      <trans-unit id="5112659486997490676" datatype="html">
+        <source>no new message</source>
+        <target>pas de nouveau message</target>
+      </trans-unit>
+      <trans-unit id="6373233342627633860" datatype="html">
+        <source>1 new message</source>
+        <target>1 nouveau message</target>
+      </trans-unit>
+      <trans-unit id="5075342719298110640" datatype="html">
+        <source><x id="PH" equiv-text="unreadMessages"/> new messages</source>
+        <target><x id="PH" equiv-text="unreadMessages"/> nouveaux messages</target>
       </trans-unit>
       <trans-unit id="2449879448191193445" datatype="html">
         <source>Successfully signed up</source>
@@ -286,6 +294,18 @@
         <source>Yinsh</source>
         <target>Yinsh</target>
       </trans-unit>
+      <trans-unit id="7656395805241225659" datatype="html">
+        <source>Games</source>
+        <target>Parties</target>
+      </trans-unit>
+      <trans-unit id="5674286808255988565" datatype="html">
+        <source>Create</source>
+        <target>Créer</target>
+      </trans-unit>
+      <trans-unit id="2299187798995800780" datatype="html">
+        <source>Chat</source>
+        <target>Chat</target>
+      </trans-unit>
       <trans-unit id="4643591148728960560" datatype="html">
         <source>Game</source>
         <target>Jeu</target>
@@ -302,17 +322,13 @@
         <source>Turn</source>
         <target>Tour</target>
       </trans-unit>
-      <trans-unit id="5674286808255988565" datatype="html">
-        <source>Create</source>
-        <target>Créer</target>
+      <trans-unit id="689957366051097321" datatype="html">
+        <source>Waiting for opponent</source>
+        <target>En attente d&apos;adversaire</target>
       </trans-unit>
       <trans-unit id="1670632975695309948" datatype="html">
         <source>Connected users:</source>
         <target>Utilisateurs connectés :</target>
-      </trans-unit>
-      <trans-unit id="689957366051097321" datatype="html">
-        <source>Waiting for opponent</source>
-        <target>En attente d&apos;adversaire</target>
       </trans-unit>
       <trans-unit id="7079545056368231407" datatype="html">
         <source>See the game list</source>
@@ -506,9 +522,9 @@
         <source>The opponent</source>
         <target>L&apos;adversaire</target>
       </trans-unit>
-      <trans-unit id="5268374384098882347" datatype="html">
-        <source>Potential opponents that join the game will appear here.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/>Wait for an opponent to join, so that you can pick one.</source>
-        <target>Les adversaires potentiels qui rejoignent la partie apparaîtront ici.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/>Attendez qu&apos;un adversaire vous rejoigne pour pouvoir en choisir un.</target>
+      <trans-unit id="3550072303786290583" datatype="html">
+        <source>Potential opponents that join the game will appear here.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Wait for an opponent to join, so that you can pick one. </source>
+        <target>Les adversaires potentiels qui rejoignent la partie apparaîtront ici.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Attendez qu&apos;un adversaire vous rejoigne pour pouvoir en choisir un.</target>
       </trans-unit>
       <trans-unit id="5397323926664032734" datatype="html">
         <source>Maximal turn duration: <x id="START_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;output&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.maximalMoveDuration | humanDuration }}"/><x id="CLOSE_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;/output&gt;"/></source>
@@ -1098,9 +1114,9 @@
         Therefore, there are six possible directions.
         The player with dark pieces starts.&lt;br/&gt;&lt;br/&gt;
         You&apos;re playing Dark, click on a stack and move it by one space.</source>
-        <target>Au Dvonn, chaque case hexagonale comporte une pile de pièce.
+        <target>Au Dvonn, chaque case hexagonale comporte une pile de pièces.
         Si aucun nombre n&apos;est indiqué sur une pile, c&apos;est qu&apos;elle ne comporte qu&apos;une pièce.
-        Le nombre écrit sur une pile correspond au nombre de pièces empilées et donc le nombre de point qu’elle rapporte à son propriétaire.
+        Le nombre écrit sur une pile correspond au nombre de pièces empilées et donc le nombre de points qu’elle rapporte à son propriétaire.
         Son propriétaire est celui dont une pièce est au sommet de la pile.
         Seul son propriétaire peut déplacer la pile.
         Il ne peut pas la déplacer si elle est entourée par 6 autres piles.
@@ -1114,31 +1130,29 @@
         <source>Disconnection</source>
         <target>Déconnection</target>
       </trans-unit>
-      <trans-unit id="2680357653080413298" datatype="html">
+      <trans-unit id="4625150132268018420" datatype="html">
         <source>Pieces with a lightning strike are called &quot;sources&quot;.
-        When a stack is not directly nor indirectly connected to a source, it is removed from the board.
-        You can move on a source: this forms a stack that contains the source, which therefore can never be disconnected.
-        Besides this, a stack containing a source acts like any other stack: you can move it, and your opponent can move on that stack to take possession of it.&lt;br/&gt;&lt;br/&gt;
-        You&apos;re playing Dark, move your piece on the source.</source>
-        <target>Les pièces avec un éclair sont appelées “sources”.
-        Quand une pile n’est plus directement ou indirectement connectée à une source, elle est enlevée du plateau.
-        Vous pouvez vous déplacer sur une source: cela forme une pile qui contient cette source et qui ne pourra donc jamais être déconnectée.
-        De plus, une pile qui contient une source se comporte comme une autre pile: vous pouvez la déplacer, et votre adversaire peut se déplacer dessus pour en prendre possession.&lt;br/&gt;&lt;br/&gt;
-        Vous jouez Foncé, déplacez votre pièce sur la source.</target>
+        When a stack is not directly nor indirectly connected to a source, it is removed from the board.&lt;br/&gt;&lt;br/&gt;
+        You&apos;re playing Dark, try to disconnect the stack of 4 pieces from your opponent. There are two ways of doing that, one is better than the other: try to find that one!</source>
+        <target>Les pièces avec un éclair sont appelées « sources ».
+        Quand une pile n’est plus directement ou indirectement connectée à une source, elle est enlevée du plateau.&lt;br/&gt;&lt;br/&gt;
+        Vous jouez Foncé, essayez de déconnecter une pile de 4 pièces de votre adversaire. Il y a deux façons de le faire, l'une étant mieux que l'autre : essayer de trouver celle-là !</target>
       </trans-unit>
-      <trans-unit id="600732969670597367" datatype="html">
-        <source>Nice, you have disconnected 4 pieces of your opponent!
-        Your opponent therefore lost 4 points.
+      <trans-unit id="2017860068625343028" datatype="html">
+        <source>You have successfully disconnected the stack of 4 pieces of your opponent, but on the next move your opponent will be able to move on your new stack, and to win the game! There exists a better outcome of this situation, try to find it.</source>
+        <target>Vous avez bien déconnecté la pile de 4 pièces de votre adversaire, mais lors du mouvement suivant il sera capable de se déplacer sur votre nouvelle pile et de gagner le jeu ! Il existe un meilleur mouvement pour vous, essayez de le trouver.</target>
+      </trans-unit>
+      <trans-unit id="2366265892991791609" datatype="html">
+        <source>Bad choice! You should be able to disconnect your opponent&apos;s stack of four pieces.</source>
+        <target>Mauvais choix! Vous devriez être capable de déconnecter la pile de quatre pièces de votre adversaire.</target>
+      </trans-unit>
+      <trans-unit id="4457528534020479150" datatype="html">
+        <source>Nice, you have disconnected 4 pieces of your opponent, and your new stack cannot be reached by your opponent!
+        Your opponent therefore lost 5 points: 4 from the disconnected stack, and one from the stack on which you moved.
         Disconnected stacks will not be visible at the next turn.</source>
-        <target>Bravo, vous avez déconnecté 4 pièces de l’adversaire !
-        Il a donc perdu 4 points.
-        Les piles déconnectées cesseront d&apos;être visibles au tour suivant.</target>
-      </trans-unit>
-      <trans-unit id="9072861571041891023" datatype="html">
-        <source>Bad choice! By moving on the source you would have disconnected the opponent&apos;s pieces and they would have lost 4 points.
-        Here, the opponent wins 2 to 0</source>
-        <target>Mauvais choix! En déplaçant votre pile sur la source vous déconnectiez l&apos;adversaire et lui faisiez perdre 4 points.
-        Ici, votre adversaire gagne 2 à 0.</target>
+        <target>Bravo, vous avez déconnecté 4 pièces de votre adversaire, et votre opposant ne peut pas atteindre votre nouvelle pile !
+        Votre opposant perd donc 5 points : 4 de la pile déconnectée, et un de la pile sur laquelle vous vous êtes déplacé.
+        Les piles déconnectées ne seront plus visible au tour suivant.</target>
       </trans-unit>
       <trans-unit id="5374556513202485808" datatype="html">
         <source>Moving on a source</source>
@@ -1154,9 +1168,9 @@
         De cette façon, vous savez que cette pile ne peut jamais être déconnectée, car elle contient une source.&lt;br/&gt;&lt;br/&gt;
         Vous jouez Foncé et pouvez prendre contrôle d'une source, faites-le !</target>
       </trans-unit>
-      <trans-unit id="4900956055400728677" datatype="html">
-        <source>Congratulations! However, note that your opponent could later take possession of one of your stack that contains a source, so watch out!</source>
-        <target>Bravo ! Cependant, notez que votre adversaire pourrait plus tard prendre possession d'une de vos piles qui contient une source, faites donc attention !</target>
+      <trans-unit id="6422219434767688772" datatype="html">
+        <source>Congratulations! However, note that your opponent could later take possession of one of your stack that contains a source, so watch out when you take control of sources!</source>
+        <target>Bravo ! Cependant, notez que votre adversaire pourrait plus tard prendre possession d'une de vos piles qui contient une source, faites donc attention quand vous prenez le contrôle d'une source !</target>
       </trans-unit>
       <trans-unit id="2060914977510915101" datatype="html">
         <source>You have not taken possession of a source, try again.</source>
@@ -1166,13 +1180,13 @@
         <source>Passing</source>
         <target>Passer</target>
       </trans-unit>
-      <trans-unit id="721533359855729017" datatype="html">
+      <trans-unit id="3832185042961281952" datatype="html">
         <source>It can happen that you have no possible move to make.
         If this is the case, and if your opponent can still move, you must pass your turn.&lt;br/&gt;&lt;br/&gt;
-        This is a situation that occurs here.</source>
+        This is a situation that occurs here for Dark.</source>
         <target>Il peut arriver que vous n'ayez aucun mouvement possible.
         Si c'est le cas, et si votre adversaire peut toujours effectuer un mouvement, vous devez passer votre tour.&lt;br/&gt;&lt;br/&gt;
-        Cette situation arrive ici.</target>
+        Cette situation arrive ici a Foncé.</target>
       </trans-unit>
       <trans-unit id="2190782768169600552" datatype="html">
         <source>When no more move is possible for both players, the game ends and the player with the most points wins.&lt;br/&gt;&lt;br/&gt;
@@ -3079,6 +3093,14 @@
       <trans-unit id="5966391152315784819" datatype="html">
         <source>You have selected an empty space, you must select one of your own pieces.</source>
         <target>Vous avez sélectionné une case vide, vous devez sélectionner l&apos;une de vos pièces.</target>
+      </trans-unit>
+      <trans-unit id="75196759111440200" datatype="html">
+        <source>You&apos;re not allowed to send a message here.</source>
+        <target>Vous n'êtes pas autorisé à envoyer un message ici.</target>
+      </trans-unit>
+      <trans-unit id="4052977957517792171" datatype="html">
+        <source>This message is forbidden.</source>
+        <target>Ce message est interdit.</target>
       </trans-unit>
       <trans-unit id="7463436103435995523" datatype="html">
         <source>You are already in a game. Finish it or cancel it first.</source>

@@ -6,15 +6,15 @@ export class TutorialStep {
 
     public static informational(title: string, instruction: string, state: GamePartSlice): TutorialStep {
         return new TutorialStep(title,
-                                   instruction,
-                                   state,
-                                   null,
-                                   null,
-                                   null,
-                                   null,
-                                   null,
-                                   null,
-                                   null);
+                                instruction,
+                                state,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null);
     }
     public static fromMove(title: string,
                            instruction: string,
@@ -25,15 +25,15 @@ export class TutorialStep {
     ): TutorialStep
     {
         return new TutorialStep(title,
-                                   instruction,
-                                   state,
-                                   acceptedMoves,
-                                   acceptedMoves[0],
-                                   null,
-                                   null,
-                                   successMessage,
-                                   failureMessage,
-                                   null);
+                                instruction,
+                                state,
+                                acceptedMoves,
+                                acceptedMoves[0],
+                                null,
+                                null,
+                                successMessage,
+                                failureMessage,
+                                null);
     }
     public static forClick(title: string,
                            instruction: string,
@@ -44,15 +44,15 @@ export class TutorialStep {
     ): TutorialStep
     {
         return new TutorialStep(title,
-                                   instruction,
-                                   state,
-                                   null,
-                                   null,
-                                   acceptedClicks,
-                                   null,
-                                   successMessage,
-                                   failureMessage,
-                                   null);
+                                instruction,
+                                state,
+                                null,
+                                null,
+                                acceptedClicks,
+                                null,
+                                successMessage,
+                                failureMessage,
+                                null);
     }
     public static anyMove(title: string,
                           instruction: string,
@@ -62,15 +62,15 @@ export class TutorialStep {
     ): TutorialStep
     {
         return new TutorialStep(title,
-                                   instruction,
-                                   state,
-                                   [],
-                                   solutionMove,
-                                   null,
-                                   null,
-                                   successMessage,
-                                   null,
-                                   null);
+                                instruction,
+                                state,
+                                [],
+                                solutionMove,
+                                null,
+                                null,
+                                successMessage,
+                                null,
+                                null);
     }
     public static fromPredicate(title: string,
                                 instruction: string,
@@ -81,26 +81,26 @@ export class TutorialStep {
     ): TutorialStep
     {
         return new TutorialStep(title,
-                                   instruction,
-                                   state,
-                                   null,
-                                   solutionMove,
-                                   null,
-                                   predicate,
-                                   successMessage,
-                                   null,
-                                   null);
+                                instruction,
+                                state,
+                                null,
+                                solutionMove,
+                                null,
+                                predicate,
+                                successMessage,
+                                null,
+                                null);
     }
     private constructor(public readonly title: string,
-                       public readonly instruction: string,
-                       public readonly state: GamePartSlice,
-                       public readonly acceptedMoves: ReadonlyArray<Move>,
-                       public readonly solutionMove: Move,
-                       public readonly acceptedClicks: ReadonlyArray<string>,
-                       public readonly predicate: (move: Move, resultingState: GamePartSlice) => MGPValidation,
-                       public readonly successMessage: string,
-                       public readonly failureMessage: string,
-                       public readonly previousMove: Move | null,
+                        public readonly instruction: string,
+                        public readonly state: GamePartSlice,
+                        public readonly acceptedMoves: ReadonlyArray<Move>,
+                        public readonly solutionMove: Move,
+                        public readonly acceptedClicks: ReadonlyArray<string>,
+                        public readonly predicate: (move: Move, resultingState: GamePartSlice) => MGPValidation,
+                        public readonly successMessage: string,
+                        public readonly failureMessage: string,
+                        public readonly previousMove: Move | null,
     ) { }
     public isMove(): boolean {
         return this.acceptedMoves != null;
@@ -121,14 +121,14 @@ export class TutorialStep {
     }
     public withPreviousMove(previousMove: Move): TutorialStep {
         return new TutorialStep(this.title,
-                                   this.instruction,
-                                   this.state,
-                                   this.acceptedMoves,
-                                   this.solutionMove,
-                                   this.acceptedClicks,
-                                   this.predicate,
-                                   this.successMessage,
-                                   this.failureMessage,
-                                   previousMove);
+                                this.instruction,
+                                this.state,
+                                this.acceptedMoves,
+                                this.solutionMove,
+                                this.acceptedClicks,
+                                this.predicate,
+                                this.successMessage,
+                                this.failureMessage,
+                                previousMove);
     }
 }

@@ -77,12 +77,12 @@ export abstract class Rules<M extends Move,
                 return true;
             }
         }
-        display(LOCAL_VERBOSE, 'Rules.choose: current node has no moves or is pruned, let\'s verify ourselves');
+        display(LOCAL_VERBOSE, `Rules.choose: current node has no moves or is pruned, let's verify ourselves`);
         if (status.legal.isFailure()) {
             display(LOCAL_VERBOSE, 'Rules.choose: Move is illegal: ' + status.legal.getReason());
             return false;
         } else {
-            display(LOCAL_VERBOSE, 'Rules.choose: Move is legal, let\'s apply it');
+            display(LOCAL_VERBOSE, `Rules.choose: Move is legal, let's apply it`);
         }
 
         const resultingState: GamePartSlice = this.applyLegalMove(move, this.node.gamePartSlice, status);
@@ -112,7 +112,7 @@ export abstract class Rules<M extends Move,
             const move: M = moveDecoder(encodedMove);
             const status: L = this.isLegal(move, state);
             if (status.legal.isFailure()) {
-                throw new Error('Can\'t create state from invalid moves (' + i + '): ' + status.legal.reason + '.');
+                throw new Error(`Can't create state from invalid moves (` + i + '): ' + status.legal.reason + '.');
             }
             state = this.applyLegalMove(move, state, status);
             i++;

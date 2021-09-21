@@ -304,7 +304,7 @@ describe('YinshRules', () => {
             expectMoveFailure(state, move, YinshFailure.CAPTURE_SHOULD_TAKE_RING);
 
         });
-        it('should allow captures, and should increase the capturing player\'s side rings by one when capturing', () => {
+        it(`should allow captures, and should increase the capturing player's side rings by one when capturing`, () => {
             const board: YinshBoard = YinshBoard.of([
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, _, _, _, _, _, _, _],
@@ -417,7 +417,7 @@ describe('YinshRules', () => {
 
             expectMoveFailure(state, move, YinshFailure.MISSING_CAPTURES);
         });
-        it('should forbid capturing the opponent\'s markers', () => {
+        it(`should forbid capturing the opponent's markers`, () => {
             const board: YinshBoard = YinshBoard.of([
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, _, _, _, _, _, _, _],

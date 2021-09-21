@@ -11,7 +11,7 @@ describe('GoGroupDatas:', () => {
 
     it('should throw when getWrapped is called on a multi wrapped group', () => {
         const group: GoGroupDatas = new GoGroupDatas(GoPiece.EMPTY, [c, c], [c, c], [c, c], [], []);
-        expect(() => group.getWrapper()).toThrowError('Can\'t call getWrapper on non-mono-wrapped group');
+        expect(() => group.getWrapper()).toThrowError(`Can't call getWrapper on non-mono-wrapped group`);
     });
     it('should not throw when getWrapped is called on a multi wrapped group where one is the alive opposite of the other', () => {
         const group: GoGroupDatas = new GoGroupDatas(GoPiece.EMPTY, [c, c], [], [c, c], [c, c], []);

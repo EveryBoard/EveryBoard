@@ -10232,7 +10232,7 @@ html {
   color: white;
 }
 
-.snacbar-info, .mat-button {
+.snackbar-info, .mat-button {
   color: black;
   background-color: white;
 }
@@ -10242,7 +10242,7 @@ html {
   color: black;
 }
 
-.snacbar-error, .mat-button {
+.snackbar-error, .mat-button {
   color: black;
   background-color: white;
 }
@@ -10252,7 +10252,7 @@ html {
   color: black;
 }
 
-.snacbar-game, .mat-button {
+.snackbar-game, .mat-button {
   color: black;
   background-color: white;
 }

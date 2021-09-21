@@ -39,7 +39,7 @@ export class PylosMove extends Move {
     }
     public static fromClimb(startingCoord: PylosCoord, landingCoord: PylosCoord, captures: PylosCoord[]): PylosMove {
         if (startingCoord == null) {
-            throw new Error('PylosMove: Starting Coord can\'t be null  if it\'s when created fromClimb.');
+            throw new Error(`PylosMove: Starting Coord can't be null if it's when created fromClimb.`);
         }
         const startingCoordOpt: MGPOptional<PylosCoord> = MGPOptional.of(startingCoord);
         const capturesOptionals: {
@@ -74,7 +74,7 @@ export class PylosMove extends Move {
                 }
                 secondCapture = MGPOptional.of(captures[1]);
                 if (captures.length > 2) {
-                    throw new Error('PylosMove: can\'t capture that much piece.');
+                    throw new Error(`PylosMove: can't capture that much piece.`);
                 }
             }
         }
@@ -107,7 +107,7 @@ export class PylosMove extends Move {
                         public readonly secondCapture: MGPOptional<PylosCoord>)
     {
         super();
-        if (landingCoord == null) throw new Error('PylosMove: Landing Coord can\'t be null.');
+        if (landingCoord == null) throw new Error(`PylosMove: Landing Coord can't be null.`);
     }
     public isClimb(): boolean {
         return this.startingCoord.isPresent();

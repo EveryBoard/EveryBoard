@@ -53,7 +53,7 @@ export abstract class FirebaseFirestoreDAOMock<T extends JSONObject> implements 
         if (optionalOS.isPresent()) {
             return optionalOS.get().subject.getValue().doc;
         } else {
-            throw new Error('Cannot read element ' + id + ' absent from ' + this.collectionName);
+            return null; // Firebase returns null if a document does not exist. This is behaviour relied upon!
         }
     }
     public async set(id: string, doc: T): Promise<void> {

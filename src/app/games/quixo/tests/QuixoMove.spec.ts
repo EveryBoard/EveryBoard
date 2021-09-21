@@ -23,15 +23,15 @@ describe('QuixoMove:', () => {
     it('Should forbid move creation without direction', () => {
         expect(() => new QuixoMove(0, 0, null)).toThrowError('Direction cannot be null.');
     });
-    it('Should forbid move creation from board who\'se side is the same as the direction', () => {
+    it('Should forbid move creation from board whose side is the same as the direction', () => {
         expect(() => new QuixoMove(0, 2, Orthogonal.LEFT))
-            .toThrowError('Invalid direction: pawn on the left side can\'t be moved to the left.');
+            .toThrowError(`Invalid direction: pawn on the left side can't be moved to the left.`);
         expect(() => new QuixoMove(4, 2, Orthogonal.RIGHT))
-            .toThrowError('Invalid direction: pawn on the right side can\'t be moved to the right.');
+            .toThrowError(`Invalid direction: pawn on the right side can't be moved to the right.`);
         expect(() => new QuixoMove(2, 0, Orthogonal.UP))
-            .toThrowError('Invalid direction: pawn on the top side can\'t be moved up.');
+            .toThrowError(`Invalid direction: pawn on the top side can't be moved up.`);
         expect(() => new QuixoMove(2, 4, Orthogonal.DOWN))
-            .toThrowError('Invalid direction: pawn on the bottom side can\'t be moved down.');
+            .toThrowError(`Invalid direction: pawn on the bottom side can't be moved down.`);
     });
     it('QuixoMove.encoder should be correct', () => {
         const board: number[][] = [

@@ -1,0 +1,48 @@
+name: CI On Master PR
+
+on:
+  pull_request:
+    branches: [ master, develop ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        node-version: [12.x]
+        base-href: [/board/]
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+      - name: Cache node modules
+        uses: actions/cache@v1
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Setup Firebase
+        run: |
+          gpg --quiet --batch --yes --decrypt --passphrase="$ENC_SECRET" --output src/app/firebaseConfig.ts .github/firebaseConfig.ts.gpg
+        env:
+          ENC_SECRET: ${{ secrets.ENC_SECRET }}
+      - name: Install dependencies
+        run: npm install
+      - name: Run linter
+        run: npm run lint
+        continue-on-error: true
+      - name: Launch tests
+        run: npm run test:ci
+      - name: Build
+        run: npm run build -- --base-href=${{ matrix.base-href }}

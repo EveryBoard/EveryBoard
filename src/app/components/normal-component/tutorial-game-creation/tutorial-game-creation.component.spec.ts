@@ -13,7 +13,7 @@ describe('TutorialGameCreationComponent', () => {
     it('should create and redirect to chosen game', fakeAsync(async() => {
         testUtils.getComponent().pickGame('whateverGame');
         spyOn(testUtils.getComponent().router, 'navigate');
-        expect(await testUtils.clickElement('#launchTutorial')).toBeTrue();
+        await testUtils.clickElement('#launchTutorial');
         expect(testUtils.getComponent().router.navigate).toHaveBeenCalledOnceWith(['tutorial/whateverGame']);
     }));
 });

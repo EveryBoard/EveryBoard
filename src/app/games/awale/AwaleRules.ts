@@ -18,13 +18,11 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
     public applyLegalMove(move: AwaleMove, slice: AwalePartSlice, status: AwaleLegalityStatus): AwalePartSlice {
         display(AwaleRules.VERBOSE, { called: 'AwaleRules.applyLegalMove', move, slice, status });
         const turn: number = slice.turn;
-        const PLAYER: number = slice.getCurrentPlayer().value;
-        const ENNEMY: number = slice.getCurrentEnnemy().value;
 
-        const captured: number[] = slice.getCapturedCopy();
-
-        captured[PLAYER] += status.captured[PLAYER];
-        captured[ENNEMY] += status.captured[ENNEMY];
+        const captured: readonly [number, number] = [
+            slice.captured[0] + status.captured[0],
+            slice.captured[1] + status.captured[1],
+        ];
 
         return new AwalePartSlice(status.resultingBoard, turn + 1, captured);
     }

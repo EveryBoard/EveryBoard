@@ -3,7 +3,7 @@ import { NumberEncoderTestUtils } from './Encoder.spec';
 
 describe('HexaDirection', () => {
     describe('all', () => {
-        it('Should have it\'s element in clockwise order', () => {
+        it('Should have its element in clockwise order', () => {
             const expectedList: HexaDirection[] = [
                 HexaDirection.UP,
                 HexaDirection.UP_RIGHT,

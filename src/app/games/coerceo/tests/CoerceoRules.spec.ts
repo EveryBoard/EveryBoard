@@ -222,7 +222,7 @@ describe('CoerceoRules', () => {
         });
     });
     describe('Tiles Exchange', () => {
-        it('Should forbid exchanges when player don\'t have enough tiles', () => {
+        it(`Should forbid exchanges when player don't have enough tiles`, () => {
             const board: NumberTable = [
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
