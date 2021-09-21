@@ -647,7 +647,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         if (this.observerRole != null && this.observerRole <= 1) {
             return ['player' + this.getPlayer().value + '-bg'];
         }
-        console.log(this.observerRole)
         return [];
     }
     public canResign(): boolean {
