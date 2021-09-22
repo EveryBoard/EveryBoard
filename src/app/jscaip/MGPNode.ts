@@ -209,7 +209,7 @@ export class MGPNode<R extends Rules<M, S, L>,
         if (child == null) {
             const status: L = minimax.ruler.isLegal(move, this.gamePartSlice);
             if (status.legal.isFailure()) {
-                Utils.handleError(`The minimax has accepted an illegal move, this should not happend.`);
+                Utils.handleError(`The minimax has accepted an illegal move, this should not happen.`);
             }
             const state: S = minimax.ruler.applyLegalMove(move, this.gamePartSlice, status);
             child = new MGPNode(this, move, state, minimax);

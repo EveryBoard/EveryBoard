@@ -91,36 +91,6 @@ export const dvonnTutorial: TutorialStep[] = [
         ]), 0, false),
     ),
     TutorialStep.fromMove(
-        $localize`Moving on a source`,
-        $localize`You are allowed to move your stacks on any other stack.
-        This means that you can take control of a source by moving one of your stack on top of it.
-        This way, you know that this stack may never be disconnected, as it contains a source.<br/><br/>
-        You're playing Dark and you can take control of a source, do it!`,
-        new DvonnGameState(new DvonnBoard([
-            [__, __, SO, __, __, __, __, __, __, __, __],
-            [__, __, O1, __, __, __, __, __, __, __, __],
-            [__, __, X2, __, __, __, __, X2, SO, __, __],
-            [__, __, __, __, __, __, __, __, __, __, __],
-            [__, __, __, __, __, __, __, __, __, __, __],
-        ]), 0, false),
-        [DvonnMove.of(new Coord(2, 1), new Coord(2, 0))],
-        $localize`Congratulations! However, note that your opponent could later take possession of one of your stack that contains a source, so watch out!`,
-        $localize`You have not taken possession of a source, try again.`,
-    ),
-    TutorialStep.informational(
-        $localize`Passing`,
-        $localize`It can happen that you have no possible move to make.
-        If this is the case, and if your opponent can still move, you must pass your turn.<br/><br/>
-        This is a situation that occurs here.`,
-        new DvonnGameState(new DvonnBoard([
-            [__, __, SO, __, __, __, __, __, __, __, __],
-            [__, __, O2, __, __, __, __, __, __, __, __],
-            [__, __, X2, __, __, __, __, X2, SO, O4, __],
-            [__, __, __, __, __, __, __, __, __, __, __],
-            [__, __, __, __, __, __, __, __, __, __, __],
-        ]), 0, false),
-    ),
-    TutorialStep.fromMove(
         $localize`End of the game`,
         $localize`When no more move is possible for both players, the game ends and the player with the most points wins.<br/><br/>
         Make your last move.`,
