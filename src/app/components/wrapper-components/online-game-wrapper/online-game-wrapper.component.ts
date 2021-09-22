@@ -627,13 +627,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         }
     }
     public getPlayerNameFontColor(player: number): { [key: string]: string} {
-        if (this.observerRole === player || this.observerRole > 1) {
-            if (player === 0) {
-                return { color: 'white' };
-            } else {
-                return { color: 'black' };
-            }
-        } else if (this.opponent && this.opponent.doc && this.opponent.doc.state === 'offline') {
+        if (this.opponent && this.opponent.doc && this.opponent.doc.state === 'offline') {
             return this.OFFLINE_FONT_COLOR;
         } else {
             if (player === 0) {
@@ -644,7 +638,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         }
     }
     public getBoardHighlight(): string[] {
-        if (this.observerRole != null && this.observerRole <= 1) {
+        const currentPlayer: number = this.getPlayer().value;
+        if (this.observerRole != null && this.observerRole === currentPlayer) {
             return ['player' + this.getPlayer().value + '-bg'];
         }
         return [];
