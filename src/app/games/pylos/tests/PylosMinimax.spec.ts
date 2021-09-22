@@ -2,7 +2,7 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { PylosCoord } from '../PylosCoord';
 import { PylosMove } from '../PylosMove';
-import { PylosPartSlice } from '../PylosPartSlice';
+import { PylosState } from '../PylosState';
 import { PylosNode, PylosRules } from '../PylosRules';
 import { PylosMinimax } from '../PylosMinimax';
 
@@ -18,7 +18,7 @@ describe('PylosMinimax:', () => {
     const O: number = Player.ZERO.value;
 
     beforeEach(() => {
-        rules = new PylosRules(PylosPartSlice);
+        rules = new PylosRules(PylosState);
         minimax = new PylosMinimax(rules, 'PylosMinimax');
     });
 
@@ -45,7 +45,7 @@ describe('PylosMinimax:', () => {
             ],
         ];
 
-        const slice: PylosPartSlice = new PylosPartSlice(board, 0);
+        const slice: PylosState = new PylosState(board, 0);
         const node: PylosNode = new MGPNode(null, null, slice);
         expect(minimax.getListMoves(node).length).toBe(31);
     });
@@ -69,7 +69,7 @@ describe('PylosMinimax:', () => {
             ],
         ];
 
-        const slice: PylosPartSlice = new PylosPartSlice(board, 0);
+        const slice: PylosState = new PylosState(board, 0);
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(2, 2, 1), []);
         expect(minimax.getBoardValue(new MGPNode(null, move, slice)).value).toBe(0);
     });
