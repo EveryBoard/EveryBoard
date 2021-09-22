@@ -68,16 +68,22 @@ describe('CountDownComponent', () => {
         it('should throw when resuming not started chrono', () => {
             expect(() => component.resume()).toThrowError('Should only resume chrono that are started and paused!');
         });
-    });
-    describe('stop', () => {
-        it('should throw when stopping not started chrono', () => {
-            expect(() => component.stop()).toThrowError('Should only stop chrono that are started!');
-        });
         it('should throw when resuming stopped chrono', () => {
             component.setDuration(1250);
             component.start();
             component.stop();
             expect(() => component.resume()).toThrowError('Should only resume chrono that are started and paused!');
+        });
+    });
+    describe('stop', () => {
+        it('should throw when stopping not started chrono', () => {
+            expect(() => component.stop()).toThrowError('Should only stop chrono that are started!');
+        });
+        it('should throw when stopping stopped chrono', () => {
+            component.setDuration(1250);
+            component.start();
+            component.stop();
+            expect(() => component.stop()).toThrowError('Should only stop chrono that are started!');
         });
     });
     it('should update written time', fakeAsync(() => {

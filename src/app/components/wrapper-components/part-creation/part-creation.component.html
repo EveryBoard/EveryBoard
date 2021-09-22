@@ -42,7 +42,9 @@
                                 <div class="dropdown-content">
                                     <div class="dropdown-item">
                                         <p>
-                                            <ng-container i18n>Maximal turn duration: <strong>{{ partType.NORMAL_MOVE_DURATION | humanDuration }}</strong></ng-container><br/>
+                                            <ng-container i18n>Maximal turn duration: </ng-container>
+                                            <strong>{{ partType.NORMAL_MOVE_DURATION | humanDuration }}</strong><br/>
+
                                             <ng-container i18n>Maximal game duration: <strong>{{ partType.NORMAL_PART_DURATION | humanDuration }} per player</strong></ng-container>
                                         </p>
                                     </div>
@@ -60,7 +62,9 @@
                                 <div class="dropdown-content">
                                     <div class="dropdown-item">
                                         <p>
-                                            <ng-container i18n>Maximal turn duration: <strong>{{ partType.BLITZ_MOVE_DURATION | humanDuration }}</strong></ng-container><br/>
+                                            <ng-container i18n>Maximal turn duration: </ng-container>
+                                            <strong>{{ partType.BLITZ_MOVE_DURATION | humanDuration }}</strong><br/>
+
                                             <ng-container i18n>Maximal game duration: <strong>{{ partType.BLITZ_PART_DURATION | humanDuration }} per player</strong></ng-container>
                                         </p>
                                     </div>
@@ -79,7 +83,8 @@
                 >
                     <div class="field">
                         <label class="label" for="maximalMoveDuration">
-                            <ng-container i18n>Maximal turn duration: <output>{{ viewInfo.maximalMoveDuration | humanDuration }}</output></ng-container>
+                            <ng-container i18n>Maximal turn duration: </ng-container>
+                            <output>{{ viewInfo.maximalMoveDuration | humanDuration }}</output>
                         </label>
                         <div class="control">
                             <input class="slider is-circle is-primary"
@@ -90,9 +95,7 @@
                         </div>
                     </div>
                     <div class="field">
-                        <label class="label" for="totalPartDuration">
-                            <ng-container i18n>Maximal game duration: <output>{{ viewInfo.totalPartDuration | humanDuration }}</output> per player</ng-container>
-                        </label>
+                        <label class="label" for="totalPartDuration" i18n>Maximal game duration: <output>{{ viewInfo.totalPartDuration | humanDuration }} per player</output></label>
                         <div class="control">
                             <input class="slider is-circle is-primary"
                                    step="10"
@@ -131,7 +134,8 @@
                                                 >{{ candidate }}</td>
                                             <td class="td">
                                                 <button *ngIf="viewInfo.chosenOpponent !== candidate"
-                                                        class="button is-primary" i18n
+                                                        class="button is-primary"
+                                                        i18n
                                                 >Pick</button>
                                             </td>
                                         </tr>
@@ -153,11 +157,13 @@
                             id="reviewConfig"
                             *ngIf="viewInfo.canReviewConfig"
                             (click)="changeConfig()"
-                            i18n>Change configuration</button>
+                            i18n
+                    >Change configuration</button>
                     <button class="button"
                             id="cancel"
                             (click)="cancelGameCreation()"
-                            i18n>Cancel game</button>
+                            i18n
+                    >Cancel game</button>
                 </div>
             </div>
         </form>

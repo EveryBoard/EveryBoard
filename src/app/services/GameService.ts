@@ -1,5 +1,9 @@
 import { Injectable, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
+
+import firebase from 'firebase/app';
+
 import { PartDAO } from '../dao/PartDAO';
 import { MGPResult, ICurrentPartId, IPart, Part } from '../domain/icurrentpart';
 import { FirstPlayer, IJoiner, PartStatus } from '../domain/ijoiner';
@@ -11,16 +15,16 @@ import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { assert, display, JSONValueWithoutArray } from 'src/app/utils/utils';
-import { Router } from '@angular/router';
 import { AuthenticationService, AuthUser } from './AuthenticationService';
 import { MessageDisplayer } from './message-displayer/MessageDisplayer';
 import { GameServiceMessages } from './GameServiceMessages';
+import { Time } from '../domain/Time';
 
 export interface StartingPartConfig extends Partial<IPart> {
     playerZero: string,
     playerOne: string,
     turn: number,
-    beginning: number,
+    beginning: firebase.firestore.FieldValue | Time,
 }
 
 @Injectable({
@@ -155,7 +159,9 @@ export class GameService implements OnDestroy {
             playerZero,
             playerOne,
             turn: 0,
-            beginning: Date.now(),
+            beginning: firebase.firestore.FieldValue.serverTimestamp(),
+            remainingMsForZero: joiner.totalPartDuration * 1000,
+            remainingMsForOne: joiner.totalPartDuration * 1000,
         };
     }
     public async deletePart(partId: string): Promise<void> {
@@ -250,7 +256,11 @@ export class GameService implements OnDestroy {
     public askTakeBack(partId: string, player: Player): Promise<void> {
         return this.sendRequest(partId, Request.takeBackAsked(player));
     }
-    public async acceptTakeBack(id: string, part: Part, observerRole: Player): Promise<void> {
+    public async acceptTakeBack(id: string,
+                                part: Part,
+                                observerRole: Player,
+                                msToSubstract: [number, number])
+    : Promise<void> {
         assert(observerRole !== Player.NONE, 'Illegal for observer to make request');
         assert(part.doc.request.data['player'] !== observerRole.value, 'Illegal to accept your own request.');
 
@@ -260,11 +270,15 @@ export class GameService implements OnDestroy {
             // Deleting a second move
             listMoves = listMoves.slice(0, listMoves.length - 1);
         }
-        return await this.partDao.update(id, {
+        const update: Partial<IPart> = {
             request,
             listMoves,
             turn: listMoves.length,
-        });
+            lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
+            remainingMsForZero: part.doc.remainingMsForZero - msToSubstract[0],
+            remainingMsForOne: part.doc.remainingMsForOne - msToSubstract[1],
+        };
+        return await this.partDao.update(id, update);
     }
     public refuseTakeBack(id: string, observerRole: Player): Promise<void> {
         assert(observerRole !== Player.NONE, 'Illegal for observer to make request');
@@ -289,13 +303,14 @@ export class GameService implements OnDestroy {
                                encodedMove: JSONValueWithoutArray,
                                scorePlayerZero: number,
                                scorePlayerOne: number,
+                               msToSubstract: [number, number],
                                notifyDraw?: boolean,
                                winner?: string,
                                loser?: string)
     : Promise<void>
     {
         display(GameService.VERBOSE, { gameService_updateDBBoard: {
-            partId, encodedMove, scorePlayerZero, scorePlayerOne, notifyDraw, winner } });
+            partId, encodedMove, scorePlayerZero, scorePlayerOne, msToSubstract, notifyDraw, winner, loser } });
 
         const part: IPart = await this.partDao.read(partId); // TODO: optimise this
         const turn: number = part.turn + 1;
@@ -307,7 +322,14 @@ export class GameService implements OnDestroy {
             scorePlayerZero,
             scorePlayerOne,
             request: null,
+            lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
         };
+        if (msToSubstract[0] > 0) {
+            update = { ...update, remainingMsForZero: part.remainingMsForZero - msToSubstract[0] };
+        }
+        if (msToSubstract[1] > 0) {
+            update = { ...update, remainingMsForOne: part.remainingMsForOne - msToSubstract[1] };
+        }
         if (winner != null) {
             update = {
                 ...update,
