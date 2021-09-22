@@ -722,23 +722,25 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             }
         }
     }
-    public getPlayerNameFontColor(player: number): { [key: string]: string} {
+    public getPlayerNameClass(player: number): string {
         if (this.opponentIsOffline()) {
-            return this.OFFLINE_FONT_COLOR;
+            return 'is-grey-light';
         } else {
             if (player === 0) {
-                return { color: 'white' };
+                return 'is-white';
             } else {
-                return { color: 'black' };
+                return 'is-black';
             }
         }
     }
     public getBoardHighlight(): string[] {
-        const currentPlayer: number = this.getPlayer().value;
-        if (this.observerRole != null && this.observerRole === currentPlayer) {
+        if (this.observerRole != null && this.isCurrentPlayer()) {
             return ['player' + this.getPlayer().value + '-bg'];
         }
         return [];
+    }
+    private isCurrentPlayer(): boolean {
+        return this.observerRole === this.gameComponent.rules.node.gamePartSlice.turn % 2;
     }
     public opponentIsOffline(): boolean {
         return this.opponent != null &&

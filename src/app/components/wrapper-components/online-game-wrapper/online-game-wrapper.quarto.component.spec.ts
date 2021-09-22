@@ -5,14 +5,11 @@ import firebase from 'firebase/app';
 
 import { OnlineGameWrapperComponent, UpdateType } from './online-game-wrapper.component';
 import { JoinerDAO } from 'src/app/dao/JoinerDAO';
-import { JoinerDAOMock } from 'src/app/dao/tests/JoinerDAOMock.spec';
 import { IJoiner, PartStatus } from 'src/app/domain/ijoiner';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 import { PartDAO } from 'src/app/dao/PartDAO';
-import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { JoueursDAO } from 'src/app/dao/JoueursDAO';
-import { JoueursDAOMock } from 'src/app/dao/tests/JoueursDAOMock.spec';
 import { ChatDAO } from 'src/app/dao/ChatDAO';
 import { ChatDAOMock } from 'src/app/dao/tests/ChatDAOMock.spec';
 import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
@@ -48,9 +45,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
     let wrapper: OnlineGameWrapperComponent;
 
-    let joinerDAO: JoinerDAOMock;
-    let partDAO: PartDAOMock;
-    let joueurDAO: JoueursDAOMock;
+    let joinerDAO: JoinerDAO;
+    let partDAO: PartDAO;
+    let joueurDAO: JoueursDAO;
 
     const CREATOR: IJoueur = {
         pseudo: 'creator',
@@ -87,9 +84,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         lastMoveTime: FAKE_MOMENT,
     };
     async function prepareComponent(initialJoiner: IJoiner): Promise<void> {
-        partDAO = TestBed.get(PartDAO);
-        joinerDAO = TestBed.get(JoinerDAO);
-        joueurDAO = TestBed.get(JoueursDAO);
+        partDAO = TestBed.inject(PartDAO);
+        joinerDAO = TestBed.inject(JoinerDAO);
+        joueurDAO = TestBed.inject(JoueursDAO);
         const chatDAOMock: ChatDAOMock = TestBed.get(ChatDAO);
         await joinerDAO.set('joinerId', initialJoiner);
         await partDAO.set('joinerId', PartMocks.INITIAL.doc);
@@ -1016,11 +1013,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it(`Should make opponent's name lightgrey when he is absent`, fakeAsync(async() => {
             await prepareStartedGameFor({ pseudo: 'creator', verified: true });
             tick(1);
-            expect(wrapper.getPlayerNameFontColor(1)).toEqual({ color: 'black' });
+            expect(wrapper.getPlayerNameClass(1)).toEqual('is-black');
             joueurDAO.update('firstCandidateDocId', { state: 'offline' });
             componentTestUtils.detectChanges();
             tick();
-            expect(wrapper.getPlayerNameFontColor(1)).toBe(wrapper.OFFLINE_FONT_COLOR);
+            expect(wrapper.getPlayerNameClass(1)).toBe('is-grey-light');
             tick(wrapper.joiner.maximalMoveDuration * 1000);
         }));
     });
@@ -1401,6 +1398,46 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             for (const name of forbiddenFunctionNames) {
                 expect(componentTestUtils.wrapper[name]()).toBeFalse();
             }
+            tick(wrapper.joiner.maximalMoveDuration * 1000);
+        }));
+    });
+    describe('Visuals', () => {
+        it('should highlight each player name in their respective color', fakeAsync(async() => {
+            // given a game that has been started
+            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            tick(1);
+            componentTestUtils.detectChanges();
+
+            // when the game is displayed
+
+            // then it should highlight the player's names
+            componentTestUtils.expectElementToHaveClass('#playerZeroIndicator', 'player0-bg');
+            componentTestUtils.expectElementToHaveClass('#playerOneIndicator', 'player1-bg');
+            tick(wrapper.joiner.maximalMoveDuration * 1000);
+        }));
+        it('should highlight the board with the color of the player when it is their turn', fakeAsync(async() => {
+            // given a game that has been started and for which it is the current player's turn
+            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            tick(1);
+            componentTestUtils.detectChanges();
+
+            // when it is displayed
+
+            // then it should highlight the board with its color
+            componentTestUtils.expectElementToHaveClass('#board-tile', 'player0-bg');
+            tick(wrapper.joiner.maximalMoveDuration * 1000);
+        }));
+        it('should not highlight the board when it is the turn of the opponent', fakeAsync(async() => {
+            // given a game that has been started and for which it is not the current player's turn
+            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            tick(1);
+            await doMove(FIRST_MOVE, true);
+            componentTestUtils.detectChanges();
+
+            // when it is displayed
+
+            // then it should not highlight the board
+            componentTestUtils.expectElementNotToHaveClass('#board-tile', 'player1-bg');
             tick(wrapper.joiner.maximalMoveDuration * 1000);
         }));
     });
