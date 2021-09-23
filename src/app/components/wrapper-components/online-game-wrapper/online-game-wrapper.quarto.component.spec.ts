@@ -1416,25 +1416,25 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(wrapper.joiner.maximalMoveDuration * 1000);
         }));
         it('should highlight the board with the color of the player when it is their turn', fakeAsync(async() => {
-            // given a game that has been started and for which it is the current player's turn
+            // given a game that has been started
             await prepareStartedGameFor({ pseudo: 'creator', verified: true });
             tick(1);
             componentTestUtils.detectChanges();
 
-            // when it is displayed
+            // when it is the current player's turn
 
             // then it should highlight the board with its color
             componentTestUtils.expectElementToHaveClass('#board-tile', 'player0-bg');
             tick(wrapper.joiner.maximalMoveDuration * 1000);
         }));
         it('should not highlight the board when it is the turn of the opponent', fakeAsync(async() => {
-            // given a game that has been started and for which it is not the current player's turn
+            // given a game that has been started
             await prepareStartedGameFor({ pseudo: 'creator', verified: true });
             tick(1);
+
+            // when it is not the current player's turn
             await doMove(FIRST_MOVE, true);
             componentTestUtils.detectChanges();
-
-            // when it is displayed
 
             // then it should not highlight the board
             componentTestUtils.expectElementNotToHaveClass('#board-tile', 'player1-bg');
