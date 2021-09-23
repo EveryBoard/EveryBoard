@@ -1013,11 +1013,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it(`Should make opponent's name lightgrey when he is absent`, fakeAsync(async() => {
             await prepareStartedGameFor({ pseudo: 'creator', verified: true });
             tick(1);
-            expect(wrapper.getPlayerNameClass(1)).toEqual('is-black');
+            expect(wrapper.getPlayerNameClass(1)).toEqual('has-text-black');
             joueurDAO.update('firstCandidateDocId', { state: 'offline' });
             componentTestUtils.detectChanges();
             tick();
-            expect(wrapper.getPlayerNameClass(1)).toBe('is-grey-light');
+            expect(wrapper.getPlayerNameClass(1)).toBe('has-text-grey-light');
             tick(wrapper.joiner.maximalMoveDuration * 1000);
         }));
     });
