@@ -335,11 +335,11 @@
       <trans-unit id="7814033294193818165" datatype="html">
         <source>You reached your time limit.</source>
       </trans-unit>
-      <trans-unit id="7003355968351203755" datatype="html">
-        <source>Ask to take back one move</source>
-      </trans-unit>
       <trans-unit id="2826140657122926749" datatype="html">
         <source>You resigned.</source>
+      </trans-unit>
+      <trans-unit id="7003355968351203755" datatype="html">
+        <source>Ask to take back one move</source>
       </trans-unit>
       <trans-unit id="2324913504104154958" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser() }}"/> has reached their time limit.</source>
@@ -378,7 +378,7 @@
         <source>Custom</source>
       </trans-unit>
       <trans-unit id="6773728044030876768" datatype="html">
-        <source>Maximal game duration: <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ partType.NORMAL_PART_DURATION | humanDuration }}"/> per player<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
+        <source>Maximal game duration: <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ partType.BLITZ_PART_DURATION | humanDuration }}"/> per player<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
       </trans-unit>
       <trans-unit id="1612262766071402559" datatype="html">
         <source>Propose configuration</source>
@@ -389,8 +389,8 @@
       <trans-unit id="6102520113052735150" datatype="html">
         <source>The opponent</source>
       </trans-unit>
-      <trans-unit id="3550072303786290583" datatype="html">
-        <source>Potential opponents that join the game will appear here.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Wait for an opponent to join, so that you can pick one. </source>
+      <trans-unit id="5268374384098882347" datatype="html">
+        <source>Potential opponents that join the game will appear here.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/>Wait for an opponent to join, so that you can pick one.</source>
       </trans-unit>
       <trans-unit id="5056292777668083757" datatype="html">
         <source>Click on the opponent against which you would like to play.</source>
@@ -1577,9 +1577,9 @@
       <trans-unit id="5869780110608474933" datatype="html">
         <source>Placement</source>
       </trans-unit>
-      <trans-unit id="1449786172410747726" datatype="html">
-        <source>Every placement occurs in two steps: placing the piece you have in hand on a square of the board,
-        and picking a piece that the opponent will have to place, by clicking on one of the pieces on the side of the board.
+      <trans-unit id="6434452961453198943" datatype="html">
+        <source>Every placement occurs in two steps: placing the piece you have in hand (in the small square) on a square of the board,
+        and picking a piece that the opponent will have to place, by clicking on one of the pieces inside the dotted square.
         If you prefer, the order of these two steps can be reversed.
         Keep in mind that the second click confirms the move.&lt;br/&gt;&lt;br/&gt;
         Make a move.</source>
@@ -1596,9 +1596,6 @@
       </trans-unit>
       <trans-unit id="4715207105849605918" datatype="html">
         <source>Well done!</source>
-      </trans-unit>
-      <trans-unit id="3309166761338954119" datatype="html">
-        <source>Piece in hand:</source>
       </trans-unit>
       <trans-unit id="8819839276456625538" datatype="html">
         <source>You must pick a space from the edge of the board.</source>

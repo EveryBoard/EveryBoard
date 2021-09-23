@@ -6,7 +6,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { ReversiLegalityStatus } from '../ReversiLegalityStatus';
-import { expectToBeVictoryFor } from 'src/app/jscaip/tests/Rules.spec';
+import { expectToBeVictoryFor } from 'src/app/jscaip/tests/RulesUtils.spec';
 
 describe('ReversiRules', () => {
     const _: number = Player.NONE.value;
