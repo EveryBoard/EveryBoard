@@ -24,11 +24,13 @@
                 <p id="scoreZeroIndicator" *ngIf="currentPart && compo && compo.showScore" i18n>{{ compo.scores[0] }} points</p>
                 <app-count-down #chronoZeroGlobal
                                 [dangerTimeLimit]="60*1000"
+                                [active]="(currentPart == null) ? false : currentPart.getTurn() % 2 === 0"
                                 debugName="ZERO Global"
                                 (outOfTimeAction)="reachedOutOfTime(0)">
                 </app-count-down>
                 <app-count-down #chronoZeroLocal
                                 [dangerTimeLimit]="15*1000"
+                                [active]="(currentPart == null) ? false : currentPart.getTurn() % 2 === 0"
                                 debugName="ZERO Local"
                                 (outOfTimeAction)="reachedOutOfTime(0)">
                 </app-count-down>
@@ -39,11 +41,13 @@
                 <p id="scoreOneIndicator" *ngIf="currentPart && compo && compo.showScore" i18n>{{ compo.scores[1] }} points</p>
                 <app-count-down #chronoOneGlobal
                                 [dangerTimeLimit]="60*1000"
+                                [active]="(currentPart == null) ? false : currentPart.getTurn() % 2 === 1"
                                 debugName="ONE Global"
                                 (outOfTimeAction)="reachedOutOfTime(1)">
                 </app-count-down>
                 <app-count-down #chronoOneLocal
                                 [dangerTimeLimit]="15*1000"
+                                [active]="(currentPart == null) ? false : currentPart.getTurn() % 2 === 1"
                                 debugName="ONE Local"
                                 (outOfTimeAction)="reachedOutOfTime(1)">
                 </app-count-down>

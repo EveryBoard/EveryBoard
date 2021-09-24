@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { LocaleUtils } from 'src/app/utils/LocaleUtils';
 
 @Component({
     selector: 'app-header',
@@ -22,7 +23,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
                 public authenticationService: AuthenticationService) {
     }
     public ngOnInit(): void {
-        this.currentLanguage = (localStorage.getItem('locale') || navigator.language || 'fr').slice(0, 2).toUpperCase();
+        this.currentLanguage = LocaleUtils.getLocale().toUpperCase();
         this.joueurSub = this.authenticationService.getJoueurObs()
             .subscribe((joueur: { pseudo: string, verified: boolean}) => {
                 if (joueur != null) {

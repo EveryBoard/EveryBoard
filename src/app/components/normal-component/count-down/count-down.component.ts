@@ -11,6 +11,8 @@ export class CountDownComponent implements OnInit, OnDestroy {
 
     @Input() debugName: string;
     @Input() dangerTimeLimit: number;
+    @Input() active: boolean;
+
     remainingTime: number;
     private timeoutHandleGlobal: number;
     private timeoutHandleSec: number;
@@ -29,6 +31,11 @@ export class CountDownComponent implements OnInit, OnDestroy {
         'color': 'white',
         'font-weight': 'bold',
         'background-color': 'red',
+    };
+    public readonly PASSIVE_STYLE: { [key: string]: string } = {
+        'color': 'lightgrey',
+        'background-color': 'darkgrey',
+        'font-size': 'italic',
     };
     public readonly SAFE_TIME: { [key: string]: string } = { color: 'black' };
 
@@ -118,6 +125,9 @@ export class CountDownComponent implements OnInit, OnDestroy {
         return this.started;
     }
     public getTimeStyle(): { [key: string]: string } {
+        if (this.active === false) {
+            return this.PASSIVE_STYLE;
+        }
         if (this.remainingTime < this.dangerTimeLimit) {
             if (this.remainingTime % 2000 < 1000) {
                 return this.DANGER_TIME_ODD;
