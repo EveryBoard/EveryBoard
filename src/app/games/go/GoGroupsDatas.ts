@@ -51,7 +51,7 @@ export class GoGroupDatas extends GroupDatas<GoPiece> {
             color === GoPiece.WHITE_TERRITORY) {
             this.emptyCoords = GroupDatas.insertAsEntryPoint(this.emptyCoords, coord);
         } else {
-            throw new Error('Cette couleur de pion de Go n\'existe pas: ' + color.value);
+            throw new Error(`Cette couleur de pion de Go n'existe pas: ` + color.value);
         }
     }
     public isMonoWrapped(): boolean {
@@ -83,7 +83,7 @@ export class GoGroupDatas extends GroupDatas<GoPiece> {
             const wrapper: number = wrapperSizes.findIndex((wrapperSize: number) => wrapperSize > 0);
             return GoPiece.of(wrapper);
         } else {
-            throw new Error('Can\'t call getWrapper on non-mono-wrapped group');
+            throw new Error(`Can't call getWrapper on non-mono-wrapped group`);
         }
     }
     public getNeighboorsEntryPoint(): Coord[] {

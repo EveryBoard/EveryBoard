@@ -6,13 +6,14 @@ import { LinesOfActionComponent } from '../LinesOfAction.component';
 import { LinesOfActionMove } from '../LinesOfActionMove';
 import { LinesOfActionFailure } from '../LinesOfActionFailure';
 import { LinesOfActionState } from '../LinesOfActionState';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 describe('LinesOfActionComponent', () => {
+
     let componentTestUtils: ComponentTestUtils<LinesOfActionComponent>;
     const X: number = Player.ZERO.value;
     const O: number = Player.ONE.value;
     const _: number = Player.NONE.value;
-
 
     beforeEach(fakeAsync(async() => {
         componentTestUtils = await ComponentTestUtils.forGame<LinesOfActionComponent>('LinesOfAction');
@@ -47,7 +48,7 @@ describe('LinesOfActionComponent', () => {
         await componentTestUtils.expectClickFailure('#click_0_0', LinesOfActionFailure.PIECE_CANNOT_MOVE);
     }));
     it('should forbid selecting a piece of the opponent', fakeAsync(async() => {
-        await componentTestUtils.expectClickFailure('#click_0_2', LinesOfActionFailure.NOT_YOUR_PIECE);
+        await componentTestUtils.expectClickFailure('#click_0_2', RulesFailure.MUST_CHOOSE_PLAYER_PIECE);
     }));
     it('should allow selecting a different piece in one click', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_2_0');

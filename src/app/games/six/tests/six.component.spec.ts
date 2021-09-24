@@ -112,7 +112,7 @@ describe('SixComponent', () => {
         componentTestUtils.expectElementToExist('#victoryCoord_0_0');
         componentTestUtils.expectElementToExist('#victoryCoord_5_0');
     }));
-    it('should show as disconnected opponent lastDrop if he\'s dumb enough to do that', fakeAsync(async() => {
+    it('should show as disconnected opponent lastDrop if he is dumb enough to do that', fakeAsync(async() => {
         const board: NumberTable = [
             [O, _, O],
             [X, _, O],

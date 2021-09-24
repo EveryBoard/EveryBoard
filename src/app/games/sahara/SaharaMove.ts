@@ -43,13 +43,13 @@ export class SaharaMove extends MoveCoordToCoord {
             }
         } else if (distance === 2) {
             if ((start.x + start.y) % 2 === 0) {
-                throw new Error(SaharaFailure.CAN_ONLY_REBOUNCE_ON_BLACK);
+                throw new Error(SaharaFailure.CAN_ONLY_REBOUND_ON_BLACK);
             }
             if (start.x === end.x) {
                 throw new Error(start.toString() + ' and ' + end.toString() + ' have no intermediary neighboors.');
             }
         } else {
-            throw new Error($localize`Vous pouvez vous déplacer maximum de 2 cases, pas de ${distance}.`);
+            throw new Error($localize`You can move one or two spaces, not ${distance}.`);
         }
     }
     constructor(start: Coord, end: Coord) {

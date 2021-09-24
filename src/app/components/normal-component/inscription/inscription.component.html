@@ -1,5 +1,5 @@
 <div class="box">
-    <p class="title">Inscription</p>
+    <p class="title">Signing up</p>
     <form [formGroup]="inscriptionForm">
         <div class="field is-horizontal">
             <div class="field-label">
@@ -8,14 +8,14 @@
             <div class="field-body">
                 <div class="field">
                     <div class="control">
-                        <input class="input" formControlName="email" name='email' placeholder="Email" type="text" required />
+                        <input class="input" formControlName="email" name='email' placeholder-i18n placeholder="Email" type="text" required />
                     </div>
                 </div>
             </div>
         </div>
         <div class="field is-horizontal">
             <div class="field-label">
-                <label class="label" for="passwordId" i18n>Mot de passe</label>
+                <label class="label" for="passwordId" i18n>Password</label>
             </div>
             <div class="field-body">
                 <div class="field">
@@ -24,7 +24,7 @@
                                class="input"
                                formControlName="password"
                                name="code"
-                               placeholder="Password"
+                               placeholder-i18n placeholder="Password"
                                type="password" />
                     </div>
                 </div>
@@ -37,14 +37,14 @@
                     <div class="control">
                         <button id="registerButton"
                                 class="button is-primary"
-                                (click)="tryRegister(inscriptionForm.value)" i18n>S'inscrire</button>
+                                (click)="tryRegister(inscriptionForm.value)" i18n>Sign up</button>
                     </div>
                 </div>
             </div>
         </div>
-        <p i18n>Un email de confirmation vous sera envoyé pour valider votre compte</p>
+        <p i18n>A confirmation email will be sent to validate your account.</p>
         <div *ngIf="errorMessage" class="message is-danger" role="alert">
-            <div class="message-header" i18n>Erreur de connexion</div>
+            <div class="message-header" i18n>Connection error</div>
             <div class="message-body" id="errorMessage">{{ errorMessage }}</div>
         </div>
     </form>

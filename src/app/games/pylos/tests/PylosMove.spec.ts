@@ -9,13 +9,13 @@ describe('PylosMove', () => {
     it('Should forbid invalid move creation', () => {
         // From Climb
         expect(() => PylosMove.fromClimb(null, coord, []))
-            .toThrowError('PylosMove: Starting Coord can\'t be null  if it\'s when created fromClimb.');
+            .toThrowError(`PylosMove: Starting Coord can't be null if it's when created fromClimb.`);
         expect(() => PylosMove.fromClimb(coord, coord, []))
             .toThrowError('PylosMove: When piece move it must move upward.');
         expect(PylosMove.fromClimb(coord, highCoord, [])).toBeDefined();
 
         // From Drop
-        expect(() => PylosMove.fromDrop(null, [])).toThrowError('PylosMove: Landing Coord can\'t be null.');
+        expect(() => PylosMove.fromDrop(null, [])).toThrowError(`PylosMove: Landing Coord can't be null.`);
         expect(PylosMove.fromDrop(coord, [coord])).toBeDefined();
     });
     it('Should check and change captures correctly', () => {
@@ -27,7 +27,7 @@ describe('PylosMove', () => {
         expect(() => PylosMove.checkCaptures([coord, coord]))
             .toThrowError('PylosMove: should not capture twice same piece.');
         expect(() => PylosMove.checkCaptures([coord, highCoord, coord]))
-            .toThrowError('PylosMove: can\'t capture that much piece.');
+            .toThrowError(`PylosMove: can't capture that much piece.`);
         expect(() => PylosMove.checkCaptures([coord, highCoord])).not.toThrowError();
 
         // Change capture
@@ -50,9 +50,9 @@ describe('PylosMove', () => {
     });
     it('Should override toString correctly', () => {
         const lightMove: PylosMove = PylosMove.fromDrop(coord, []);
-        const heavyMove: PylosMove = PylosMove.fromClimb(coord, highCoord, [coord, highCoord]);
+        const heavyMove: PylosMove = PylosMove.fromClimb(coord, highCoord, [highCoord, coord]);
         expect(lightMove.toString()).toEqual('PylosMove(-, (0, 0, 0), -, -)');
-        expect(heavyMove.toString()).toEqual('PylosMove((0, 0, 0), (0, 0, 2), (0, 0, 0), (0, 0, 2))');
+        expect(heavyMove.toString()).toEqual('PylosMove((0, 0, 0), (0, 0, 2), (0, 0, 2), (0, 0, 0))');
     });
     it('Should override equals correctly', () => {
         const badCoord: PylosCoord = new PylosCoord(1, 1, 1);
@@ -68,9 +68,8 @@ describe('PylosMove', () => {
         expect(move.equals(otherMove3)).toBeFalse();
         expect(move.equals(otherMove4)).toBeFalse();
     });
-    it('Should consider captures [a, b] and [b, a] equal', () => {
+    it('Should create [low, high] equal to [high, low]', () => {
         const moveAB: PylosMove = PylosMove.fromClimb(coord, highCoord, [coord, highCoord]);
-        const moveBA: PylosMove = PylosMove.fromClimb(coord, highCoord, [highCoord, coord]);
-        expect(moveAB.equals(moveBA)).toBeTrue();
+        expect(moveAB.firstCapture.get()).toEqual(highCoord);
     });
 });

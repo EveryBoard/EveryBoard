@@ -33,15 +33,16 @@ class CaseSensible {
         this.y = y;
     }
     public addCritere(c: Critere): boolean {
-        // rajoute le critère au cas où plusieurs lignes contiennent cette case sensible (de 1 à 3)
-        // sans doublons
-        // return true si le critère a été ajouté
+        /* Add criterion in case several line contains this sensible case (1 to 3 lines could)
+         * without duplicates
+         * return true if the criterion has been added
+         */
         const i: number = this.indexOf(c);
         if (i > 0) {
             // pas ajouté, compté en double
             return false;
         }
-        assert(i !== 3, 'CECI EST IMPOSSIBLE, on a rajouté trop d\'éléments dans cette CaseSensible');
+        assert(i !== 3, `CECI EST IMPOSSIBLE, on a rajouté trop d'éléments dans cette CaseSensible`);
         // TODO enlever ce débug
         this.criteres[-i - 1] = c;
         return true;
@@ -128,7 +129,7 @@ class Critere {
     public isAllNull(): boolean {
         let i: number = 0;
         do {
-            if (this.subCritere[i] !== null) {
+            if (this.subCritere[i] != null) {
                 return false;
             }
             i++;
@@ -222,7 +223,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
         const pieceInHand: QuartoPiece = slice.pieceInHand;
         if (QuartoRules.isOccupied(board[y][x])) {
             // on ne joue pas sur une case occupée
-            return MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_CASE);
+            return MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE);
         }
         if (pieceToGive === QuartoPiece.NONE) {
             if (slice.turn === 15) {
@@ -301,7 +302,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
                 if (cs == null) {
                     cs = new CaseSensible(coord.x, coord.y);
                 } else {
-                    return boardStatus; // 2 empty case: no victory or pre-victory, or new criteria
+                    return boardStatus; // 2 empty case: no victory or pre-victory, or new criterion
                 }
             } else {
                 // si la case est occupée
@@ -318,7 +319,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
 
         // on a maintenant traité l'entierté de la ligne
         // on en fait le bilan
-        if ((commonCrit !== null) && (!commonCrit.isAllNull())) {
+        if ((commonCrit != null) && (!commonCrit.isAllNull())) {
             // NEW
             // Cette ligne n'est pas nulle et elle a un critère en commun entre toutes ses pièces
             if (cs == null) {

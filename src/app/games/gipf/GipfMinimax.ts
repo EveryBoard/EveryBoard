@@ -8,7 +8,6 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { GipfRules, GipfNode } from './GipfRules';
 
-
 export class GipfMinimax extends Minimax<GipfMove, GipfPartSlice, GipfLegalityStatus> {
     public static getPossibleCaptureCombinationsFromPossibleCaptures(
         possibleCaptures: GipfCapture[],

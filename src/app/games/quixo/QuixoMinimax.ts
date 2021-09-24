@@ -7,7 +7,6 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { QuixoNode, QuixoRules } from './QuixoRules';
 
-
 export class QuixoMinimax extends Minimax<QuixoMove, QuixoPartSlice> {
 
     public getListMoves(node: QuixoNode): QuixoMove[] {

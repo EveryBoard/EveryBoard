@@ -1,39 +1,63 @@
-<div style="height: 100%; overflow: hidden">
+<div>
+    <div *ngIf="connected"
+         class="block">
+        <button id="switchChatVisibilityButton"
+                class="button is-primary is-light is-fullwidth"
+                (click)="switchChatVisibility()">
+            <ng-container *ngIf="visible else showChat" i18n>Hide chat</ng-container>
+            <ng-template #showChat i18n>Show chat ({{ this.unreadMessagesText }})</ng-template>
+        </button>
 
-    <button id="switchChatVisibilityButton"
-            class="button"
-            (click)="switchChatVisibility()">
-        <ng-container *ngIf="visible else showChat" i18n>Réduire le chat</ng-container>
-        <ng-template #showChat i18n>Afficher le chat</ng-template> ({{ this.unreadMessages }}<ng-container i18n> nouveau(x) message(s)</ng-container>)
-    </button>
+        <div *ngIf="visible">
+            <button *ngIf="this.showUnreadMessagesButton"
+                    id="scrollToBottomIndicator"
+                    class="notification button is-info is-light is-fullwidth"
+                    (click)="scrollToBottom()"
+            >{{ this.unreadMessagesText }} &darr;</button>
 
-    <form id="chatForm" *ngIf="visible" class="example-form" >
-        <!-- Messages -->
-        <div style="max-height: 90%; overflow: auto">
-            <mat-list *ngIf="chat">
+            <div #chatDiv
+                 id="chatDiv"
+                 class="is-fullwidth block"
+                 style="overflow-y:scroll; max-height: 50vh;"
+                 (scroll)="updateCurrentScrollPosition()"
+            >
                 <p *ngFor="let msg of chat">
                     [{{ msg.postedTime | date:'HH:mm:ss':'+0100' }}] <b>{{ msg.sender }} :</b> {{ msg.content }}
                 </p>
-            </mat-list>
+            </div>
         </div>
 
-        <!-- Text Input -->
-        <mat-form-field class="full-width"
-                        align="start"
-                        *ngIf="userName!=''">
-            <input matInput
-                   #message
-                   maxlength="128"
-                   placeholder="Envoyez un message!"
-                   [(ngModel)]="userMessage"
-                   [ngModelOptions]="{standalone: true}">
-            <mat-icon matSuffix (click)="sendMessage()">send</mat-icon>
-            <mat-hint align="start">
-                <strong i18n>Soyez courtois lol</strong>
-            </mat-hint>
-            <mat-hint align="end">
-                {{message.value.length}} / 128
-            </mat-hint>
-        </mat-form-field>
-    </form>
+        <form id="chatForm" *ngIf="visible"
+              (onSubmit)="sendMessage()">
+            <div class="field has-addons is-fullwidth">
+                <div class="control is-expanded">
+                    <input class="input"
+                           #message
+                           id="message"
+                           type="text"
+                           placeholder="Type your message here" i18n-placeholder
+                           maxlength="128"
+                           value=""
+                           [(ngModel)]="userMessage"
+                           [ngModelOptions]="{standalone: true}"/>
+                    <p class="help">{{ message.value.length }}/128</p>
+                </div>
+                <div class="control">
+                    <button class="button is-primary"
+                            type="submit"
+                            id="send"
+                            (click)="sendMessage()"
+                    >Send</button>
+                </div>
+            </div>
+            <div class="content is-small">
+                <p><strong i18n>Be polite</strong></p>
+            </div>
+        </form>
+    </div>
+    <div *ngIf="connected === false"
+         id="disconnected-chat"
+         class="message is-primary is-light">
+        <p>Only connected users can see the chat</p>
+    </div>
 </div>

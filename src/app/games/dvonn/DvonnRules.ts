@@ -11,6 +11,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { HexaBoard } from 'src/app/jscaip/HexaBoard';
 import { DvonnFailure } from './DvonnFailure';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 export abstract class DvonnNode extends MGPNode<DvonnRules, DvonnMove, DvonnGameState> { }
 
@@ -136,7 +137,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnGameState> {
             if (move === DvonnMove.PASS && !slice.alreadyPassed) {
                 return { legal: MGPValidation.SUCCESS };
             } else {
-                return { legal: MGPValidation.failure(DvonnFailure.CAN_ONLY_PASS) };
+                return { legal: MGPValidation.failure(RulesFailure.MUST_PASS) };
             }
         }
 

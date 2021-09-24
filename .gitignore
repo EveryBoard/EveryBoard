@@ -28,11 +28,8 @@
 /.sass-cache
 /connect.lock
 /coverage
-/libpeerconnection.log
-npm-debug.log
-yarn-error.log
-testem.log
 /typings
+*.log
 
 # System Files
 .DS_Store
@@ -40,3 +37,5 @@ Thumbs.db
 
 # firebase config file
 /src/app/firebaseConfig.ts
+
+package-lock.json

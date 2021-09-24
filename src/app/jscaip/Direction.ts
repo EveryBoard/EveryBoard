@@ -4,7 +4,6 @@ import { MGPFallible } from '../utils/MGPFallible';
 import { Coord } from './Coord';
 import { Encoder } from './Encoder';
 
-
 export class Vector implements ComparableObject {
     public equals(other: Vector): boolean {
         return this.x === other.x && this.y === other.y;

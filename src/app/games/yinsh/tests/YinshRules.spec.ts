@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
-import { expectToBeVictoryFor } from 'src/app/jscaip/tests/Rules.spec';
+import { expectToBeVictoryFor } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { YinshBoard } from '../YinshBoard';
@@ -304,7 +304,7 @@ describe('YinshRules', () => {
             expectMoveFailure(state, move, YinshFailure.CAPTURE_SHOULD_TAKE_RING);
 
         });
-        it('should allow captures, and should increase the capturing player\'s side rings by one when capturing', () => {
+        it(`should allow captures, and should increase the capturing player's side rings by one when capturing`, () => {
             const board: YinshBoard = YinshBoard.of([
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, _, _, _, _, _, _, _],
@@ -417,7 +417,7 @@ describe('YinshRules', () => {
 
             expectMoveFailure(state, move, YinshFailure.MISSING_CAPTURES);
         });
-        it('should forbid capturing the opponent\'s markers', () => {
+        it(`should forbid capturing the opponent's markers`, () => {
             const board: YinshBoard = YinshBoard.of([
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, _, _, _, _, _, _, _],

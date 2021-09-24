@@ -1,11 +1,12 @@
-export const environment = {
-    useEmulators: true,
-    emulatorConfig: {
-        projectId: 'my-project',
-        databaseURL: 'http://localhost:8080',
-    },
+import { firebaseConfig } from 'src/app/firebaseConfig';
+import { Environment } from './environment-type';
+
+export const environment: Environment = {
     production: true,
-    devPages: true,
     test: false,
-    root: '/',
+    root: '/board-dev/',
+    firebaseConfig: firebaseConfig,
+    emulatorConfig: {
+        firestore: undefined,
+    },
 };

@@ -1,5 +1,4 @@
-import { fakeAsync, TestBed } from '@angular/core/testing';
-
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { GameService, StartingPartConfig } from '../GameService';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { of } from 'rxjs';
@@ -84,7 +83,7 @@ describe('GameService', () => {
             const getError: (player: Player) => Promise<string> = async(player: Player) => {
                 let errorMessage: string;
                 try {
-                    await service.acceptTakeBack('joinerId', part, player);
+                    await service.acceptTakeBack('joinerId', part, player, [0, 1]);
                 } catch (error) {
                     errorMessage = error.message;
                 }
@@ -113,8 +112,10 @@ describe('GameService', () => {
             expect(await service.createGameAndRedirectOrShowError('whatever')).toBeFalse();
 
             // it should toast, and navigate
-            expect(service.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(GameServiceMessages.ALREADY_INGAME);
+            expect(service.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(GameServiceMessages.USER_OFFLINE);
             expect(service.router.navigate).toHaveBeenCalledOnceWith(['/login']);
+
+            tick(150);
         }));
         it('should show toast and navigate when creator cannot create game', fakeAsync(async() => {
             spyOn(service.router, 'navigate').and.callThrough();
@@ -124,6 +125,7 @@ describe('GameService', () => {
 
             // when calling it
             expect(await service.createGameAndRedirectOrShowError('whatever')).toBeFalse();
+            tick(150);
 
             // it should toast, and navigate
             expect(service.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(GameServiceMessages.ALREADY_INGAME);
@@ -193,8 +195,8 @@ describe('GameService', () => {
                     result: MGPResult.VICTORY.value,
                     turn: 2,
                     typeGame: 'laMarelle',
-                    beginning: 17001025123456,
-                    lastMove: 2,
+                    beginning: { seconds: 17001025123456, nanoseconds: 680000000 },
+                    lastMoveTime: { seconds: 2, nanoseconds: 3000000 },
                     loser: 'creator',
                     winner: 'joiner',
                     request: Request.rematchProposed(Player.ZERO),
@@ -236,8 +238,8 @@ describe('GameService', () => {
                     result: MGPResult.VICTORY.value,
                     turn: 2,
                     typeGame: 'laMarelle',
-                    beginning: 17001025123456,
-                    lastMove: 2,
+                    beginning: { seconds: 17001025123456, nanoseconds: 680000000 },
+                    lastMoveTime: { seconds: 2, nanoseconds: 3000000 },
                     loser: 'creator',
                     winner: 'joiner',
                     request: Request.rematchProposed(Player.ZERO),

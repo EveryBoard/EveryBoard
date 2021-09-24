@@ -8,7 +8,6 @@ import { ReversiRules, ReversiNode, ReversiMoveWithSwitched } from './ReversiRul
 import { Coord } from 'src/app/jscaip/Coord';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 
-
 export class ReversiMinimax extends Minimax<ReversiMove, ReversiPartSlice, ReversiLegalityStatus> {
 
     public getBoardValue(node: ReversiNode): NodeUnheritance {

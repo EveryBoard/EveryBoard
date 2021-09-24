@@ -1,16 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="auto"
-     viewBox="0 -4 800 1008"
+     viewBox="0 -4 800 1021"
      preserveAspectRatio="xMidYMid meet">
     <g *ngFor="let player of [0, 1]">
-        <text x="0"
-              [attr.y]="850+22+(getPieceSize()+10)*player"
-              class="text-medium" i18n>Pièces du joueur {{ player + 1 }}</text>
         <g *ngFor="let p of getPlayerSidePieces(player)">
             <circle id="piece_{{ player }}_{{ p }}"
-                    [attr.cx]="350 + (p * getPieceSize()/3)"
-                    [attr.cy]="850 + 12 + (getPieceSize() + 6) * player"
-                    [attr.r]="getPieceSize() / 3"
+                    [attr.cx]="(getPieceSize() * 0.5) + (((800 - getPieceSize()) / 14) * p)"
+                    [attr.cy]="850 + 10 + ((getPieceSize() + 10) * player)"
+                    [attr.r]="getPieceSize() * 0.5"
                     [ngClass]="getPlayerPieceClass(player)"
                     class="base small-stroke"
             />

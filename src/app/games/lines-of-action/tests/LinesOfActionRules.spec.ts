@@ -30,7 +30,7 @@ describe('LinesOfActionRules', () => {
         const state: LinesOfActionState = LinesOfActionState.getInitialSlice();
         const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(0, 2), new Coord(2, 2)).get();
         const status: LegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.reason).toBe(LinesOfActionFailure.NOT_YOUR_PIECE);
+        expect(status.legal.reason).toBe(RulesFailure.MUST_CHOOSE_PLAYER_PIECE);
     });
     it('should move a piece by exactly as many spaces as there are pieces on the same line, going down', () => {
         const expectedBoard: number[][] = [
@@ -166,7 +166,7 @@ describe('LinesOfActionRules', () => {
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.reason).toBe(LinesOfActionFailure.INVALID_MOVE_LENGTH);
     });
-    it('should forbid to land on one of the player\'s pieces', () => {
+    it(`should forbid to land on one of the player's pieces`, () => {
         const board: number[][] = [
             [_, _, X, X, X, X, X, _],
             [O, _, _, _, _, _, _, O],
@@ -182,7 +182,7 @@ describe('LinesOfActionRules', () => {
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.reason).toBe(RulesFailure.CANNOT_SELF_CAPTURE);
     });
-    it('should forbid to jump over an enemy\'s piece', () => {
+    it(`should forbid to jump over an enemy's piece`, () => {
         const board: number[][] = [
             [_, X, _, X, X, X, X, _],
             [O, _, _, _, _, _, _, O],
@@ -273,7 +273,7 @@ describe('LinesOfActionRules', () => {
         expect(LinesOfActionRules.getVictory(state)).toEqual(MGPOptional.of(Player.ONE));
         expect(minimax.getBoardValue(new MGPNode(null, null, state)).value).toBe(Player.ONE.getVictoryValue());
     });
-    it('should win when all the player\'s pieces are connected, in any direction', () => {
+    it(`should win when all the player's pieces are connected, in any direction`, () => {
         const board: number[][] = [
             [_, _, _, _, _, _, _, _],
             [O, _, _, _, X, _, _, O],

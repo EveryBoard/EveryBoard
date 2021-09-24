@@ -11,24 +11,24 @@ const X: number = Player.ONE.value;
 
 export class SixTutorialMessages {
 
-    public static readonly MOVEMENT_NOT_DISCONNECTING: string = $localize`Ce mouvement ne déconnecte pas de pièce adverse ! Réessayez !`;
+    public static readonly MOVEMENT_NOT_DISCONNECTING: string = $localize`This move does not disconnect your opponent's pieces. Try again with another piece.`;
 
-    public static readonly MOVEMENT_SELF_DISCONNECTING: string = $localize`Vous avez perdu une de vos pièce pendant ce mouvement, il y a un moyen de déconnecter une pièce adversaire sans perde aucunes pièces, recommencez!`;
+    public static readonly MOVEMENT_SELF_DISCONNECTING: string = $localize`You lost one of your pieces during this move. There is a way to disconnect an opponent's piece without losing any of yours, try again!`;
 }
 
 export const sixTutorial: TutorialStep[] = [
 
     TutorialStep.informational(
         $localize`Six`,
-        $localize`Le six est une jeu sans plateau, où les pièces sont placées les unes à côtés des autres, en un bloc continu.
-        Chaque joueur a 21 pièces à lui, 2 étant déjà placée sur le plateau.
-        Le but principal du jeu est de former l'une des trois formes gagnantes avec vos pièces.`,
+        $localize`Six is a game without board, where pieces are placed on the side of each other, in a contiguous block.
+        Each player has 21 pieces, with one for each player already on the board.
+        The goal of the game is to form one of the three winning shapes with your pieces.`,
         SixGameState.getInitialSlice(),
     ),
     TutorialStep.fromMove(
-        $localize`Victoires (ligne)`,
-        $localize`Sur ce plateau, en plaçant votre pièce au bon endroit, vous alignez six de vos pièces, et gagnez la partie.<br/><br/>
-        Trouvez la victoire, Vous jouez Foncé.`,
+        $localize`Victory (line)`,
+        $localize`On this board, by putting your piece at the right place, you can align six of your pieces and win the game<br/><br/>
+        Find the victory. You're playing Dark.`,
         SixGameState.fromRepresentation([
             [O, X, X, X, X, O],
             [_, O, X, _, O, _],
@@ -38,13 +38,13 @@ export const sixTutorial: TutorialStep[] = [
             [O, _, _, _, _, _],
         ], 0),
         [SixMove.fromDrop(new Coord(3, 2))],
-        $localize`Bravo !`,
-        $localize`Raté !`,
+        $localize`Congratulations!`,
+        $localize`Failed!`,
     ),
     TutorialStep.fromMove(
-        $localize`Victoires (rond)`,
-        $localize`Sur ce plateau, en plaçant votre pièce au bon endroit, vous dessinez un cercle avec 6 de vos pièces, et gagnez la partie.<br/><br/>
-        Trouvez la victoire, Vous jouez Foncé.`,
+        $localize`Victory (circle)`,
+        $localize`On this board, by putting your piece at the right place, you can form a circle with six of your pieces and win the game.<br/><br/>
+        Find the victory. You're playing Dark.`,
         SixGameState.fromRepresentation([
             [_, _, _, X, _, _],
             [_, _, X, X, O, O],
@@ -52,13 +52,13 @@ export const sixTutorial: TutorialStep[] = [
             [X, O, O, O, O, X],
         ], 0),
         [SixMove.fromDrop(new Coord(5, 2))],
-        $localize`Bravo ! Notez que la présence ou non d'une pièce à l'intérieur du rond ne change rien.`,
-        $localize`Raté !`,
+        $localize`Congratulations! Note that if a piece is inside the circle, it does not change anything.`,
+        $localize`Failed!`,
     ),
     TutorialStep.fromMove(
-        $localize`Victoires (triangle)`,
-        $localize`Sur ce plateau, en plaçant votre pièce au bon endroit, vous dessinez un triangle avec 6 de vos pièces, et gagnez la partie.<br/><br/>
-        Trouvez la victoire, Vous jouez Foncé.`,
+        $localize`Victory (triangle)`,
+        $localize`On this board, by putting your piece at the right place, you can form a triangle with six of your pieces and win the game.<br/><br/>
+        Find the victory. You're playing Dark.`,
         SixGameState.fromRepresentation([
             [_, _, _, X, _, _],
             [_, O, X, O, O, O],
@@ -66,15 +66,15 @@ export const sixTutorial: TutorialStep[] = [
             [X, X, X, _, X, _],
         ], 0),
         [SixMove.fromDrop(new Coord(3, 3))],
-        $localize`Bravo !`,
-        $localize`Raté !`,
+        $localize`Congratulations!`,
+        $localize`Failed!`,
     ),
     TutorialStep.fromPredicate(
-        $localize`Deuxième phase`,
-        $localize`Quand après 40 tours, toutes vos pièces sont placées, on passe en deuxième phase.
-        Il faut maintenant déplacer ses pièces, en prenant garde à ne pas enlever une pièce qui empêchait l'adversaire de gagner.
-        Dorénavant, si après un déplacement un ou plusieurs groupe de pièce est déconnecté du plus grand groupe de pièce, ces petits groupes de pièces sont enlevés définitivement du jeu.<br/><br/>
-        Vous jouez Foncé, effectuez un déplacement qui déconnecte une pièce de votre adversaire.`,
+        $localize`Second phase`,
+        $localize`After 40 turns, your pieces have all been placed and we move on to the second phase of the game.
+        You now have to move your pieces, paying attention not to remove a piece that was preventing the opponent's victory.
+        From now on, if after move, on or more pieces are disconnected from the largest group of pieces, these will be taken out of the game.<br/><br/>
+        You're playing Dark. Make a move that disconnects one of your opponent's pieces.`,
         SixGameState.fromRepresentation([
             [_, _, _, _, _, _, _, X, _],
             [_, _, _, _, _, _, O, _, _],
@@ -100,14 +100,14 @@ export const sixTutorial: TutorialStep[] = [
                 return MGPValidation.failure(SixTutorialMessages.MOVEMENT_SELF_DISCONNECTING);
             }
         },
-        $localize`Bravo, vous avez fait perdre une pièce à votre adversaire et vous êtes rapproché potentiellement de la victoire !`,
+        $localize`Congratulations, your opponent now has one piece less and you're closer to victory!`,
     ),
     TutorialStep.fromPredicate(
-        $localize`Victoire par déconnection`,
-        $localize`Lors de la seconde phase de jeu, en plus des victoires normales (ligne, rond, triangle), on peux gagner par déconnection.
-        Si à un moment du jeu, l'un des deux joueurs n'a plus assez de pièce pour gagner (il en a donc moins de 6), la partie s'arrête.
-        Celui qui a le plus de pièces a gagné, et en cas d'égalité, c'est match nul.<br/><br/>
-        Ici, vous pouvez gagner (vous jouez Foncé). Faites-le!`,
+        $localize`Victory by disconnection`,
+        $localize`During the second phase of the game, on top of normal victories (line, circle, triangle), you can win by disconnection.
+        If at any time, at least one player does not have enough pieces to win (less than 6), the game ends.
+        The one with the most pieces wins. In case they both have the same number of pieces, it's a draw.<br/><br/>
+        Here, you're playing Dark and you can win. Do it!`,
         SixGameState.fromRepresentation([
             [_, _, _, _, _, X],
             [_, _, _, _, O, X],
@@ -122,16 +122,16 @@ export const sixTutorial: TutorialStep[] = [
             if (new Coord(2, 3).equals(move.start.getOrNull())) {
                 return MGPValidation.SUCCESS;
             } else {
-                return MGPValidation.failure($localize`Ce mouvement ne déconnecte pas du jeu de pièces adverses ! Réessayez avec une autre pièce !`);
+                return MGPValidation.failure(SixTutorialMessages.MOVEMENT_NOT_DISCONNECTING);
             }
         },
-        $localize`Bravo, vous avez gagné !`,
+        $localize`Congratulations, you won!`,
     ),
     TutorialStep.fromPredicate(
-        $localize`Déconnection spéciale`,
-        $localize`Lors d'une déconnection, de deux à plusieurs groupes peuvent faire la même taille,
-        auquel cas, un clic en plus sera nécessaire pour indiquer lequel vous souhaitez garder.<br/><br/>
-        Vous jouez Foncé, créer un mouvement de la sorte !`,
+        $localize`Special disconnection`,
+        $localize`During a disconnection, two or more groups could have the same size,
+        in which case you will have to click on the group you wish to keep.<br/><br/>
+        You're playing Dark, play such a move!`,
         SixGameState.fromRepresentation([
             [_, _, _, _, _, X],
             [_, _, _, _, O, X],
@@ -144,14 +144,14 @@ export const sixTutorial: TutorialStep[] = [
         SixMove.fromCut(new Coord(2, 3), new Coord(2, 5), new Coord(2, 5)),
         (move: SixMove, resultingState: SixGameState) => {
             if (move.keep.isAbsent()) {
-                return MGPValidation.failure($localize`Ce mouvement n'as pas coupé le plateau en deux parties égales`);
+                return MGPValidation.failure($localize`This move has not cut the board in two equal halves.`);
             }
             if (resultingState.getPieceAt(move.landing.getNext(resultingState.offset)) === Player.NONE) {
-                return MGPValidation.failure(`Raté ! Vous avez bien coupé le plateau en deux mais vous avez choisi de conserver la moitié ou vous êtes en minorité, vous avez donc perdu. Réessayez !`);
+                return MGPValidation.failure(`Failed. You did cut the board in two but you kept the half where you're in minority. Therefore, you lost! Try again.`);
             } else {
                 return MGPValidation.SUCCESS;
             }
         },
-        $localize`Bravo, vous avez gagné !`,
+        $localize`Congratulations, you won!`,
     ),
 ];

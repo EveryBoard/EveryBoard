@@ -1,3 +1,4 @@
+import firebase from 'firebase';
 import { MGPResult, Part } from './icurrentpart';
 
 export class PartMocks {
@@ -16,6 +17,8 @@ export class PartMocks {
         listMoves: [],
         result: MGPResult.UNACHIEVED.value,
         playerOne: 'firstCandidate',
-        beginning: 1235,
+        remainingMsForOne: 1800 * 1000,
+        remainingMsForZero: 1800 * 1000,
+        beginning: firebase.firestore.FieldValue.serverTimestamp(),
     });
 }

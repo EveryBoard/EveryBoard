@@ -5,7 +5,7 @@ import { KamisadoPiece } from 'src/app/games/kamisado/KamisadoPiece';
 import { KamisadoFailure } from 'src/app/games/kamisado/KamisadoFailure';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { KamisadoComponent } from '../kamisado.component';
-import { fakeAsync, flush } from '@angular/core/testing';
+import { fakeAsync, tick } from '@angular/core/testing';
 import { Coord } from 'src/app/jscaip/Coord';
 import { KamisadoMove } from 'src/app/games/kamisado/KamisadoMove';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -23,16 +23,16 @@ describe('KamisadoComponent', () => {
         componentTestUtils = await ComponentTestUtils.forGame<KamisadoComponent>('Kamisado');
     }));
     it('should create', () => {
-        expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');
-        expect(componentTestUtils.getComponent()).toBeTruthy('Component should be created');
+        expect(componentTestUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
+        expect(componentTestUtils.getComponent()).withContext('Component should be created').toBeTruthy();
     });
     it('should choose (-1,-1) as chosen coord when calling updateBoard without move', () => {
         componentTestUtils.getComponent().updateBoard();
         expect(componentTestUtils.getComponent().chosen.equals(new Coord(-1, -1))).toBeTrue();
     });
     it('should not allow to pass initially', fakeAsync(async() => {
-        expect((await componentTestUtils.getComponent().pass()).reason).toBe(KamisadoFailure.CANT_PASS);
-        flush();
+        expect((await componentTestUtils.getComponent().pass()).reason).toBe(RulesFailure.CANNOT_PASS);
+        tick(1001);
     }));
     it('should allow changing initial choice', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_0_7'); // Select initial piece
@@ -60,6 +60,25 @@ describe('KamisadoComponent', () => {
         componentTestUtils.setupSlice(slice);
 
         expect((await componentTestUtils.getComponent().pass()).isSuccess()).toBeTrue();
+    }));
+    it('should forbid all click in stuck position and ask to pass', fakeAsync(async() => {
+        // given a board where the piece that must move is stuck
+        const board: number[][] = [
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [b, r, _, _, _, _, _, _],
+            [R, G, _, _, _, _, _, _], // red is stuck
+        ];
+        const slice: KamisadoPartSlice =
+            new KamisadoPartSlice(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
+        componentTestUtils.setupSlice(slice);
+
+        // when clicking any piece, it should say that player must pass
+        await componentTestUtils.expectClickFailure('#click_1_7', RulesFailure.MUST_PASS);
     }));
     it('should forbid de-selecting a piece that is pre-selected', fakeAsync(async() => {
         const board: number[][] = [
@@ -111,7 +130,7 @@ describe('KamisadoComponent', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _], // brown is stuck
+            [_, _, _, _, _, _, _, _],
             [R, r, _, _, _, _, _, _],
         ];
         const slice: KamisadoPartSlice =
@@ -119,8 +138,7 @@ describe('KamisadoComponent', () => {
         componentTestUtils.setupSlice(slice);
 
         const move: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(0, 0));
-        await componentTestUtils.expectMoveFailure('#click_0_0', KamisadoFailure.GAME_ENDED, move);
-        // can't select a piece either
-        expect((componentTestUtils.getComponent().choosePiece(2, 0)).reason).toBe(KamisadoFailure.GAME_ENDED);
+        // TODO: investigate canUserPlay etc.
+        await componentTestUtils.expectMoveFailure('#click_0_0', 'You should never see this message', move);
     }));
 });

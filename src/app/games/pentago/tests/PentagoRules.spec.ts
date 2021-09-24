@@ -30,7 +30,7 @@ describe('PentagoRules', () => {
         const state: PentagoGameState = new PentagoGameState(board, 1);
         const move: PentagoMove = PentagoMove.rotationless(1, 1);
         const status: LegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.reason).toBe(RulesFailure.MUST_LAND_ON_EMPTY_CASE);
+        expect(status.legal.reason).toBe(RulesFailure.MUST_LAND_ON_EMPTY_SPACE);
     });
     it('it should prevent redundancy by refusing rotating neutral block', () => {
         const board: number[][] = [

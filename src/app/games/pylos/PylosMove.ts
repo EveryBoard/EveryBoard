@@ -39,7 +39,7 @@ export class PylosMove extends Move {
     }
     public static fromClimb(startingCoord: PylosCoord, landingCoord: PylosCoord, captures: PylosCoord[]): PylosMove {
         if (startingCoord == null) {
-            throw new Error('PylosMove: Starting Coord can\'t be null  if it\'s when created fromClimb.');
+            throw new Error(`PylosMove: Starting Coord can't be null if it's when created fromClimb.`);
         }
         const startingCoordOpt: MGPOptional<PylosCoord> = MGPOptional.of(startingCoord);
         const capturesOptionals: {
@@ -73,8 +73,12 @@ export class PylosMove extends Move {
                     throw new Error('PylosMove: should not capture twice same piece.');
                 }
                 secondCapture = MGPOptional.of(captures[1]);
+                if (captures[1].isUpperThan(captures[0])) {
+                    firstCapture = MGPOptional.of(captures[1]);
+                    secondCapture = MGPOptional.of(captures[0]);
+                }
                 if (captures.length > 2) {
-                    throw new Error('PylosMove: can\'t capture that much piece.');
+                    throw new Error(`PylosMove: can't capture that much piece.`);
                 }
             }
         }
@@ -107,7 +111,7 @@ export class PylosMove extends Move {
                         public readonly secondCapture: MGPOptional<PylosCoord>)
     {
         super();
-        if (landingCoord == null) throw new Error('PylosMove: Landing Coord can\'t be null.');
+        if (landingCoord == null) throw new Error(`PylosMove: Landing Coord can't be null.`);
     }
     public isClimb(): boolean {
         return this.startingCoord.isPresent();
@@ -125,17 +129,10 @@ export class PylosMove extends Move {
     }
     public equals(o: PylosMove): boolean {
         if (o === this) return true;
-        if (!o.startingCoord.equals(this.startingCoord)) return false;
+        if (!this.startingCoord.equals(o.startingCoord)) return false;
         if (!this.landingCoord.equals(o.landingCoord)) return false;
-        const firstEquals: boolean =
-            o.firstCapture.equals(this.firstCapture);
-        const secondEquals: boolean =
-            o.secondCapture.equals(this.secondCapture);
-        const firstCrossedEquals: boolean =
-            o.firstCapture.equals(this.secondCapture);
-        const secondCrossedEquals: boolean =
-            o.secondCapture.equals(this.firstCapture);
-        if (firstEquals && secondEquals) return true;
-        return firstCrossedEquals && secondCrossedEquals;
+        if (!this.firstCapture.equals(o.firstCapture)) return false;
+        if (!this.secondCapture.equals(o.secondCapture)) return false;
+        return true;
     }
 }

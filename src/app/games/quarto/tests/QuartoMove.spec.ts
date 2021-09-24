@@ -15,7 +15,7 @@ describe('QuartoMove', () => {
         }
     });
     it('should refuse null piece', () => {
-        expect(() => new QuartoMove(0, 0, null)).toThrowError('Piece to give can\'t be null.');
+        expect(() => new QuartoMove(0, 0, null)).toThrowError(`Piece to give can't be null.`);
     });
     it('should override toString and equals correctly', () => {
         const move: QuartoMove = new QuartoMove(1, 1, QuartoPiece.AAAB);

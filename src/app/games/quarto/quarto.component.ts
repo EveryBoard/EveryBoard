@@ -51,10 +51,10 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
         this.pieceInHand = slice.pieceInHand;
         this.victoriousCoords = this.rules.getVictoriousCoords(slice);
 
-        if (move != null) {
-            this.lastMove = move.coord;
-        } else {
+        if (move == null) {
             this.lastMove = new Coord(-1, -1);
+        } else {
+            this.lastMove = move.coord;
         }
     }
     public async chooseCoord(x: number, y: number): Promise<MGPValidation> {
@@ -83,7 +83,7 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
             }
         } else {
             // the user chose an occupied place of the board, so an illegal move, so we cancel all
-            return this.cancelMove(RulesFailure.MUST_CLICK_ON_EMPTY_CASE);
+            return this.cancelMove(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE);
         }
     }
     public async choosePiece(givenPiece: number): Promise<MGPValidation> {

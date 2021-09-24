@@ -7,7 +7,6 @@ import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { QuartoNode, BoardStatus, QuartoRules } from './QuartoRules';
 import { Player } from 'src/app/jscaip/Player';
 
-
 export class QuartoMinimax extends Minimax<QuartoMove, QuartoPartSlice> {
 
     public static scoreToBoardValue(score: SCORE, turn: number): NodeUnheritance {

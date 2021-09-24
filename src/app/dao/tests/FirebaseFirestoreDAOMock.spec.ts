@@ -3,23 +3,30 @@ import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 
-import { display, JSONObject } from 'src/app/utils/utils';
+import { display, FirebaseJSONObject } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 import { IFirebaseFirestoreDAO } from '../FirebaseFirestoreDAO';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { ObservableSubject } from 'src/app/utils/ObservableSubject';
+import { Time } from 'src/app/domain/Time';
 
-export abstract class FirebaseFirestoreDAOMock<T extends JSONObject> implements IFirebaseFirestoreDAO<T> {
+export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> implements IFirebaseFirestoreDAO<T> {
+
     public static VERBOSE: boolean = false;
 
-    constructor(
-        private readonly collectionName: string,
-        public VERBOSE: boolean,
+    public static mockServerTime(): Time {
+        const dateNow: number = Date.now();
+        const ms: number = dateNow % 1000;
+        const seconds: number = (dateNow - ms) / 1000;
+        const nanoseconds: number = ms * 1000 * 1000;
+        return { seconds, nanoseconds };
+    }
+    constructor(public readonly collectionName: string,
+                public VERBOSE: boolean,
     ) {
         this.reset();
     }
-
     public abstract getStaticDB(): MGPMap<string, ObservableSubject<{id: string, doc: T}>>;
 
     public abstract resetStaticDB(): void;
@@ -41,10 +48,25 @@ export abstract class FirebaseFirestoreDAOMock<T extends JSONObject> implements 
             // TODO: check that observing unexisting doc throws
         }
     }
-    public async create(newElement: T): Promise<string> {
+    public async create(elementWithFieldValue: T): Promise<string> {
         const elemName: string = this.collectionName + this.getStaticDB().size();
-        await this.set(elemName, newElement);
+        const elementWithTime: T = this.getServerTimestampedObject(elementWithFieldValue);
+        await this.set(elemName, elementWithTime);
         return elemName;
+    }
+    public getServerTimestampedObject<N extends FirebaseJSONObject>(elementWithFieldValue: N): N {
+        if (elementWithFieldValue == null) {
+            return null;
+        }
+        const elementWithTime: FirebaseJSONObject = {};
+        for (const key of Object.keys(elementWithFieldValue)) {
+            if (elementWithFieldValue[key] instanceof firebase.firestore.FieldValue) {
+                elementWithTime[key] = FirebaseFirestoreDAOMock.mockServerTime();
+            } else {
+                elementWithTime[key] = elementWithFieldValue[key];
+            }
+        }
+        return elementWithTime as N;
     }
     public async read(id: string): Promise<T> {
         display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE, this.collectionName + '.read(' + id + ')');
@@ -53,15 +75,16 @@ export abstract class FirebaseFirestoreDAOMock<T extends JSONObject> implements 
         if (optionalOS.isPresent()) {
             return optionalOS.get().subject.getValue().doc;
         } else {
-            throw new Error('Cannot read element ' + id + ' absent from ' + this.collectionName);
+            return null; // Firebase returns null if a document does not exist. This is behaviour relied upon!
         }
     }
     public async set(id: string, doc: T): Promise<void> {
         display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE,
                 this.collectionName + '.set(' + id + ', ' + JSON.stringify(doc) + ')');
 
+        const mappedDoc: T = this.getServerTimestampedObject(doc);
         const optionalOS: MGPOptional<ObservableSubject<{id: string, doc: T}>> = this.getStaticDB().get(id);
-        const tid: {id: string, doc: T} = { id, doc };
+        const tid: {id: string, doc: T} = { id, doc: mappedDoc };
         if (optionalOS.isPresent()) {
             optionalOS.get().subject.next(tid);
         } else {
@@ -79,7 +102,8 @@ export abstract class FirebaseFirestoreDAOMock<T extends JSONObject> implements 
         if (optionalOS.isPresent()) {
             const observableSubject: ObservableSubject<{id: string, doc: T}> = optionalOS.get();
             const oldDoc: T = observableSubject.subject.getValue().doc;
-            const newDoc: T = { ...oldDoc, ...update };
+            const mappedUpdate: Partial<T> = this.getServerTimestampedObject(update);
+            const newDoc: T = { ...oldDoc, ...mappedUpdate };
             observableSubject.subject.next({ id, doc: newDoc });
             return Promise.resolve();
         } else {
@@ -102,7 +126,7 @@ export abstract class FirebaseFirestoreDAOMock<T extends JSONObject> implements 
                           value: unknown,
                           callback: FirebaseCollectionObserver<T>): () => void
     {
-        // Note, for now, only check first match field/condition/value at creation, not the added document matching it !
+        // Note, for now, only check first match field/condition/value at creation, not the added document matching it!
         display(FirebaseFirestoreDAOMock.VERBOSE,
                 'FirebaseFirestoreDAOMock.observingWhere(' + field + condition + value);
         if (condition === '==') {
@@ -128,9 +152,15 @@ export abstract class FirebaseFirestoreDAOMock<T extends JSONObject> implements 
         for (let entryId: number = 0; entryId < db.size(); entryId++) {
             const entry: ObservableSubject<{id: string, doc: T}> = db.getByIndex(entryId).value;
             if (entry.subject.value.doc[field] === value) {
+                const ID: string = entry.subject.value.id;
+                const OBJECT: T = { ...entry.subject.value.doc };
                 callback.onDocumentCreated([entry.subject.value]);
                 return entry.observable.subscribe((document: {id: string, doc: T}) => {
-                    callback.onDocumentModified([document]);
+                    if (document == null) {
+                        callback.onDocumentDeleted([{ id: ID, doc: OBJECT }]);
+                    } else {
+                        callback.onDocumentModified([document]);
+                    }
                 });
             }
         }

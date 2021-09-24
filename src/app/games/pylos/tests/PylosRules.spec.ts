@@ -2,7 +2,7 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 import { PylosCoord } from '../PylosCoord';
 import { PylosMove } from '../PylosMove';
-import { PylosPartSlice } from '../PylosPartSlice';
+import { PylosState } from '../PylosState';
 import { PylosRules } from '../PylosRules';
 import { PylosMinimax } from '../PylosMinimax';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
@@ -19,10 +19,10 @@ describe('PylosRules:', () => {
     const X: number = Player.ONE.value;
 
     beforeEach(() => {
-        rules = new PylosRules(PylosPartSlice);
+        rules = new PylosRules(PylosState);
         minimax = new PylosMinimax(rules, 'PylosMinimax');
     });
-    it('should forbid move who\'se landing coord is not empty', () => {
+    it(`should forbid move who'se landing coord is not empty`, () => {
         const board: number[][][] = [
             [
                 [O, _, _, _],
@@ -41,10 +41,10 @@ describe('PylosRules:', () => {
             ],
         ];
 
-        const state: PylosPartSlice = new PylosPartSlice(board, 0);
+        const state: PylosState = new PylosState(board, 0);
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 0), []);
         const status: LegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.reason).toEqual(RulesFailure.MUST_LAND_ON_EMPTY_CASE);
+        expect(status.legal.reason).toEqual(RulesFailure.MUST_LAND_ON_EMPTY_SPACE);
     });
     it('should forbid move starting by an empty piece', () => {
         const board: number[][][] = [
@@ -65,7 +65,7 @@ describe('PylosRules:', () => {
             ],
         ];
 
-        const slice: PylosPartSlice = new PylosPartSlice(board, 0);
+        const slice: PylosState = new PylosState(board, 0);
         const move: PylosMove = PylosMove.fromClimb(new PylosCoord(0, 0, 0), new PylosCoord(2, 2, 1), []);
         const status: LegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.reason).toBe(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY);
@@ -89,12 +89,12 @@ describe('PylosRules:', () => {
             ],
         ];
 
-        const state: PylosPartSlice = new PylosPartSlice(board, 0);
+        const state: PylosState = new PylosState(board, 0);
         const move: PylosMove = PylosMove.fromClimb(new PylosCoord(0, 0, 0), new PylosCoord(2, 2, 1), []);
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.reason).toBe(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
     });
-    it('should forbid move who\'se landing coord is not landable (not on the floor, not over 4 lower pieces)', () => {
+    it(`should forbid move who'se landing coord is not landable (not on the floor, not over 4 lower pieces)`, () => {
         const board: number[][][] = [
             [
                 [_, _, _, _],
@@ -113,7 +113,7 @@ describe('PylosRules:', () => {
             ],
         ];
 
-        const slice: PylosPartSlice = new PylosPartSlice(board, 0);
+        const slice: PylosState = new PylosState(board, 0);
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 1), []);
         const status: LegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.reason).toBe(PylosFailure.CANNOT_LAND);
@@ -137,7 +137,7 @@ describe('PylosRules:', () => {
             ],
         ];
 
-        const slice: PylosPartSlice = new PylosPartSlice(board, 0);
+        const slice: PylosState = new PylosState(board, 0);
         const move: PylosMove =
             PylosMove.fromDrop(new PylosCoord(0, 3, 0), [new PylosCoord(0, 0, 0), new PylosCoord(3, 3, 0)]);
         const status: LegalityStatus = rules.isLegal(move, slice);
@@ -162,7 +162,7 @@ describe('PylosRules:', () => {
             ],
         ];
 
-        const slice: PylosPartSlice = new PylosPartSlice(board, 0);
+        const slice: PylosState = new PylosState(board, 0);
 
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 0), [new PylosCoord(2, 2, 0)]);
         const status: LegalityStatus = rules.isLegal(move, slice);
@@ -192,7 +192,7 @@ describe('PylosRules:', () => {
             ],
         ];
 
-        const slice: PylosPartSlice = new PylosPartSlice(board, 0);
+        const slice: PylosState = new PylosState(board, 0);
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 0), [new PylosCoord(0, 0, 0)]);
         const status: LegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
@@ -216,7 +216,7 @@ describe('PylosRules:', () => {
             ],
         ];
 
-        const slice: PylosPartSlice = new PylosPartSlice(board, 0);
+        const slice: PylosState = new PylosState(board, 0);
         const move: PylosMove = PylosMove.fromClimb(new PylosCoord(1, 1, 0), new PylosCoord(0, 0, 1), []);
         const status: LegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.reason).toBe(PylosFailure.SHOULD_HAVE_SUPPORTING_PIECES);
@@ -240,7 +240,7 @@ describe('PylosRules:', () => {
             ],
         ];
 
-        const slice: PylosPartSlice = new PylosPartSlice(board, 0);
+        const slice: PylosState = new PylosState(board, 0);
         const move: PylosMove = PylosMove.fromClimb(new PylosCoord(1, 0, 0), new PylosCoord(0, 1, 1), []);
         const status: LegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.reason).toBe(PylosFailure.SHOULD_HAVE_SUPPORTING_PIECES);
@@ -264,7 +264,7 @@ describe('PylosRules:', () => {
             ],
         ];
 
-        const slice: PylosPartSlice = new PylosPartSlice(board, 0);
+        const slice: PylosState = new PylosState(board, 0);
         const move: PylosMove = PylosMove.fromClimb(new PylosCoord(0, 3, 0),
                                                     new PylosCoord(0, 0, 1),
                                                     [new PylosCoord(1, 0, 2), new PylosCoord(1, 0, 1)]);
@@ -290,11 +290,11 @@ describe('PylosRules:', () => {
             ],
         ];
 
-        const slice: PylosPartSlice = new PylosPartSlice(board, 0);
+        const slice: PylosState = new PylosState(board, 0);
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(2, 2, 1), []);
         const status: LegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingSlice: PylosPartSlice = rules.applyLegalMove(move, slice, status);
+        const resultingSlice: PylosState = rules.applyLegalMove(move, slice, status);
         expect(minimax.getBoardValue(new MGPNode(null, move, resultingSlice)).value).toBe(Number.MAX_SAFE_INTEGER);
     });
     it('should declare looser Player.ONE when he put his 15th ball', () => {
@@ -316,11 +316,11 @@ describe('PylosRules:', () => {
             ],
         ];
 
-        const slice: PylosPartSlice = new PylosPartSlice(board, 1);
+        const slice: PylosState = new PylosState(board, 1);
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(2, 2, 1), []);
         const status: LegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingSlice: PylosPartSlice = rules.applyLegalMove(move, slice, status);
+        const resultingSlice: PylosState = rules.applyLegalMove(move, slice, status);
         expect(minimax.getBoardValue(new MGPNode(null, move, resultingSlice)).value).toBe(Number.MIN_SAFE_INTEGER);
     });
 });

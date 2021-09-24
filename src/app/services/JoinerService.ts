@@ -76,7 +76,7 @@ export class JoinerService {
     }
     public async cancelJoining(userName: string): Promise<void> {
         display(JoinerService.VERBOSE,
-                'JoinerService.cancelJoining(' + userName + '); this.observedJoinerId =' + this.observedJoinerId);
+                'JoinerService.cancelJoining(' + userName + '); this.observedJoinerId = ' + this.observedJoinerId);
 
         if (this.observedJoinerId == null) {
             throw new Error('cannot cancel joining when not observing a joiner');

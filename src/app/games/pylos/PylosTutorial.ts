@@ -1,43 +1,46 @@
 import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
 import { PylosMove } from 'src/app/games/pylos/PylosMove';
-import { PylosPartSlice } from 'src/app/games/pylos/PylosPartSlice';
+import { PylosState } from 'src/app/games/pylos/PylosState';
 import { Player } from 'src/app/jscaip/Player';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 const _: number = Player.NONE.value;
 const O: number = Player.ZERO.value;
 const X: number = Player.ONE.value;
+
 export const pylosTutorial: TutorialStep[] = [
+
     TutorialStep.informational(
-        $localize`But du jeu`,
-        $localize`Au Pylos, le but est d'être le dernier à jouer.
-        Pour cela, il faut économiser ses pièces.
-        Dès qu'un joueur dépose sa dernière pièce, il perd immédiatement la partie.
-        Voici à quoi ressemble le plateau initial, un plateau de 4 x 4 cases.
-        Celui-ci deviendra une pyramide petit à petit.
-        Ce plateau sera rempli par les pièces dans votre réserve, au nombre de 15 chacun.`,
-        PylosPartSlice.getInitialSlice(),
+        $localize`Goal of the game`,
+        $localize`At Pylos, the goal is to be the last to play.
+        To do this, you have to save up your pieces.
+        As soon as a player puts its last piece, that player loses the game immediately.
+        Here is what the initial board looks like, it is a board of 4 x 4 squares.
+        This board will become a pyramid, little by little.
+        It will be filled by the pieces of your stock. Each player has 15 pieces.`,
+        PylosState.getInitialSlice(),
     ),
     TutorialStep.anyMove(
-        $localize`Déposer une pièce`,
-        $localize`Quand c'est votre tour, vous avez toujours l'option de déposer une de vos pièces sur une case vide.
-        Les rectangles gris sont les cases sur lesquelles vous pouvez déposez vos pièces.<br/><br/>
-        Cliquez sur une de ces cases pour déposer une pièce.`,
-        PylosPartSlice.getInitialSlice(),
+        $localize`Dropping a piece`,
+        $localize`When it is your turn, you can always drop one of your piece on an empty square.
+        The gray squares are where you can drop your pieces.<br/><br/>
+        Click on one of the squares to drop a piece there.`,
+        PylosState.getInitialSlice(),
         PylosMove.fromDrop(new PylosCoord(1, 1, 0), []),
-        $localize`Voilà, aussi simplement que ça.`,
+        $localize`There you go, as simple as that.`,
     ),
     TutorialStep.fromMove(
-        $localize`Grimper`,
-        $localize`Quand 4 pièces forment un carré, il est possible de placer une cinquième pièce dessus.
-        Cependant, à ce moment là, se crée une opportunité d'économiser une pièce en "grimpant" au lieu de déposer.
-        Pour grimper :
-        <ul>
-            <li> 1. Cliquez sur une de vos pièces libres et plus basse que la case d'atterrissage.</li>
-            <li> 2. Cliquez sur une case vide plus haute.</li>
-        </ul><br/>
-        Allez-y, grimpez!`,
-        new PylosPartSlice([
+        $localize`Climbing`,
+        $localize`When 4 pieces form a square, it is possible to put a fifth piece on top.
+        However, when that happens, you can save a piece by climbing instead of dropping a piece.
+        To climb:
+        <ol>
+            <li>Click on one of your free pieces, which should be lower than the landing square.</li>
+            <li>Click on an empty landing square, higher than your selected piece.</li>
+        </ol><br/>
+        Go ahead, climb!`,
+        new PylosState([
             [
                 [O, X, _, _],
                 [X, O, _, _],
@@ -55,25 +58,25 @@ export const pylosTutorial: TutorialStep[] = [
             ],
         ], 0),
         [PylosMove.fromClimb(new PylosCoord(3, 3, 0), new PylosCoord(0, 0, 1), [])],
-        $localize`Bravo !<br/>
-        Notes importantes:
-        <ul>
-            <li> 1. On ne peut déplacer une pièce qui est en dessous d'une autre.</li>
-            <li> 2. Naturellement, on ne peut pas déplacer les pièces adverses.</li>
-            <li> 3. Un déplacement ne peut se faire que quand la case d'arrivée est plus haute que la case de départ.</li>
-        </ul>`,
-        $localize`Raté !`,
+        $localize`Congratulations!<br/>
+        Some important notes:
+        <ol>
+            <li>You cannot move a piece that is directly below another one.</li>
+            <li>Of course, you cannot move the opponent's pieces.</li>
+            <li>You can only climb when the landing square is higher than the starting square.</li>
+        </ol>`,
+        $localize`Failed!`,
     ),
     TutorialStep.fromMove(
-        $localize`Carré (1/3)`,
-        $localize`Quand la pièce que vous posez est la quatrième d'un carré de pièces de votre couleur,
-        vous pouvez choisir alors n'importe où sur le plateau, une à deux de vos pièces.
-        Cette(ces) pièce(s) sera(seront) enlevée(s) du plateau, vous permettant d'économiser 1 ou 2 pièces.
-        Une pièce choisie pour être enlevée ne peut pas être en dessous d'autres pièces.
-        Une pièce choisie peut être la pièce que vous venez de placer.
-        Vous jouez Foncé.<br/><br/>
-        Formez un carré, puis cliquez deux fois sur l'une des quatre pièce pour n'enlever que celle là.`,
-        new PylosPartSlice([
+        $localize`Square (1/2)`,
+        $localize`When the piece you just moved or dropped is the fourth one of a square of your color,
+        you can choose anywhere on the board one or two of your pieces.
+        These pieces will be removed from the board, allowing you to save up one or two pieces.
+        A chosen piece must not be directly below another piece.
+        A chosen piece can be the piece you just placed.
+        You're playing Dark.<br/><br/>
+        Form a square, then click twice on one of the four pieces to remove only that one.`,
+        new PylosState([
             [
                 [O, O, _, _],
                 [_, O, _, _],
@@ -96,14 +99,14 @@ export const pylosTutorial: TutorialStep[] = [
             PylosMove.fromDrop(new PylosCoord(0, 1, 0), [new PylosCoord(1, 0, 0)]),
             PylosMove.fromDrop(new PylosCoord(0, 1, 0), [new PylosCoord(1, 1, 0)]),
         ],
-        $localize`Bravo, vous avez économisé une pièce.`,
-        $localize`Raté !`,
+        $localize`Congratulations, you have saved up one piece.`,
+        $localize`Failed!`,
     ),
-    TutorialStep.fromMove(
-        $localize`Carré (2/3)`,
-        $localize`Vous jouez Foncé.<br/<br/>
-        Faites comme à l'étape précédente, mais cliquez cette fois sur les deux pièces du haut.`,
-        new PylosPartSlice([
+    TutorialStep.fromPredicate(
+        $localize`Square (2/2)`,
+        $localize`You're playing Dark.<br/><br/>
+        Do like in the previous step, but this time click on two different pieces.`,
+        new PylosState([
             [
                 [O, O, _, _],
                 [_, O, _, _],
@@ -120,36 +123,16 @@ export const pylosTutorial: TutorialStep[] = [
                 [_],
             ],
         ], 0),
-        [PylosMove.fromDrop(new PylosCoord(0, 1, 0), [new PylosCoord(0, 0, 0), new PylosCoord(1, 0, 0)])],
-        $localize`Bravo, vous avez économisé deux pièces.`,
-        $localize`Raté !`,
-    ),
-    TutorialStep.fromMove(
-        $localize`Carré (3/3)`,
-        $localize`Vous jouez Foncé.
-        Faites comme à l'étape précédente, mais cette fois:
-        vous devrez, naturellement, capturer en premier votre pièce la plus haute,
-        et ensuite seulement capturer celle du dessous, qui vient d'être enlevable à nouveau.<br/><br/>
-        Allez-y.`,
-        new PylosPartSlice([
-            [
-                [O, X, X, O],
-                [X, O, O, X],
-                [X, X, O, X],
-                [O, X, O, _],
-            ], [
-                [_, O, X],
-                [O, O, X],
-                [O, X, _],
-            ], [
-                [_, X],
-                [X, _],
-            ], [
-                [_],
-            ],
-        ], 0),
-        [PylosMove.fromDrop(new PylosCoord(0, 0, 1), [new PylosCoord(0, 0, 1), new PylosCoord(0, 0, 0)])],
-        $localize`Bravo, vous avez économisé deux pièces. Vous êtes maintenant prêt à jouer.`,
-        $localize`Raté !`,
+        PylosMove.fromDrop(new PylosCoord(0, 1, 0), [new PylosCoord(0, 0, 0), new PylosCoord(1, 0, 0)]),
+        (move: PylosMove, state: PylosState) => {
+            if (move.secondCapture.isPresent()) {
+                return MGPValidation.SUCCESS;
+            }
+            if (move.firstCapture.isPresent()) {
+                return MGPValidation.failure($localize`Failed, you only captured one piece.`);
+            }
+            return MGPValidation.failure($localize`Failed, you did not capture any piece.`);
+        },
+        $localize`Congratulations, you have saved up two pieces.`,
     ),
 ];

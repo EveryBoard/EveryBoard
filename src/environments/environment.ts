@@ -1,8 +1,12 @@
-export const environment = {
-    useEmulators: false,
-    emulatorConfig: null,
+import { firebaseConfig } from 'src/app/firebaseConfig';
+import { Environment } from './environment-type';
+
+export const environment : Environment = {
     production: true,
-    devPages: true,
     test: false,
     root: '/',
+    firebaseConfig: firebaseConfig,
+    emulatorConfig: {
+        firestore: undefined,
+    },
 };

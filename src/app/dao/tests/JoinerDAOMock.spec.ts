@@ -25,7 +25,6 @@ export class JoinerDAOMock extends FirebaseFirestoreDAOMock<IJoiner> {
     }
 }
 
-
 describe('JoinerDAOMock', () => {
     let joinerDaoMock: JoinerDAOMock;
 

@@ -63,7 +63,7 @@ describe('MGPMap', () => {
         it('Should throw when unexisting key passed', () => {
             const map: MGPMap<string, number> = new MGPMap();
             map.set('first', 0);
-            expect(() => map.delete('second')).toThrowError('No Value to delete for key "second" !');
+            expect(() => map.delete('second')).toThrowError('No Value to delete for key "second"!');
         });
     });
     it('GetByIndex should give them by order of input', () => {

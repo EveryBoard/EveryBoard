@@ -121,7 +121,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice> {
         return moves;
     }
     // Check if the only possible move is to pass
-    public static canOnlyPass(slice: KamisadoPartSlice): boolean {
+    public static mustPass(slice: KamisadoPartSlice): boolean {
         return this.getMovablePieces(slice).length === 0;
     }
     public static getFurthestPiecePositions(slice: KamisadoPartSlice): [number, number] {
@@ -179,15 +179,15 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice> {
         const colorToPlay: KamisadoColor = slice.colorToPlay;
 
         if (move === KamisadoMove.PASS) {
-            if (this.canOnlyPass(slice) && !slice.alreadyPassed) {
+            if (this.mustPass(slice) && !slice.alreadyPassed) {
                 return { legal: MGPValidation.SUCCESS };
             } else {
-                return { legal: MGPValidation.failure(KamisadoFailure.CANT_PASS) };
+                return { legal: MGPValidation.failure(RulesFailure.CANNOT_PASS) };
             }
         }
 
         if (KamisadoRules.isVictory(slice)) {
-            return { legal: MGPValidation.failure(KamisadoFailure.GAME_ENDED) };
+            return { legal: MGPValidation.failure('You should never see this message') };
         }
 
         // A move is legal if:
@@ -204,7 +204,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice> {
         //  - end case should be empty
         const endPiece: KamisadoPiece = KamisadoBoard.getPieceAt(slice.board, end);
         if (!endPiece.isEmpty()) {
-            return { legal: MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_CASE) };
+            return { legal: MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE) };
         }
         //  - all steps between start and end should be empty
         const directionOptional: MGPFallible<Direction> = Direction.factory.fromMove(start, end);
@@ -234,7 +234,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice> {
     public getGameStatus(node: KamisadoNode): GameStatus {
         const state: KamisadoPartSlice = node.gamePartSlice;
         const player: Player = state.getCurrentPlayer();
-        if (KamisadoRules.canOnlyPass(state) && state.alreadyPassed) {
+        if (KamisadoRules.mustPass(state) && state.alreadyPassed) {
             return GameStatus.getDefeat(player);
         }
 

@@ -162,18 +162,18 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
         const board: number[][] = slice.getCopiedBoard();
         if (move.equals(ReversiMove.PASS)) { // if the player pass
             // let's check that pass is a legal move right now
-            // if he had no choice but to pass, then passing is legal !
+            // if he had no choice but to pass, then passing is legal!
             // else, passing was illegal
             return {
                 legal: ReversiRules.playerCanOnlyPass(slice) ?
                     MGPValidation.SUCCESS :
-                    MGPValidation.failure(RulesFailure.CAN_ONLY_PASS),
+                    MGPValidation.failure(RulesFailure.MUST_PASS),
                 switched: null,
             };
         }
         if (board[move.coord.y][move.coord.x] !== Player.NONE.value) {
             display(ReversiRules.VERBOSE, 'ReversiRules.isLegal: non, on ne peux pas jouer sur une case occupée');
-            return { legal: MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_CASE), switched: null };
+            return { legal: MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE), switched: null };
         }
         const switched: Coord[] = ReversiRules.getAllSwitcheds(move, turn, board);
         display(ReversiRules.VERBOSE, 'ReversiRules.isLegal: '+ switched.length + ' element(s) switched');

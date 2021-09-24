@@ -5,14 +5,16 @@ import { TutorialStep } from '../../components/wrapper-components/tutorial-game-
 
 export const quartoTutorial: TutorialStep[] = [
     TutorialStep.informational(
-        $localize`But du jeu`,
-        $localize`Quarto est un jeu d'alignement.
-        Le but d'aligner quatre pièces qui possèdent au moins un point commun:
-        leur couleur (claire ou foncée),
-        leur taille (grande ou petite),
-        leur motif (vide ou à point),
-        leur forme (ronde ou carrée).
-        Ici, nous avons un plateau avec une victoire par alignement de pièce rondes.`,
+        $localize`Goal of the game`,
+        $localize`Quarto is an alignment game.
+        The goal is to align four pieces that have at least one common aspect:
+        <ul>
+          <li>their color (light or dark),</li>
+          <li>their size (big or small),</li>
+          <li>their pattern (empty or dotted),</li>
+          <li>their shape (round or square).</li>
+        </ul>
+        Here, we have a board with a victory by an alignment of dark pieces.`,
         new QuartoPartSlice([
             [14, 12, 4, 2],
             [16, 16, 16, 16],
@@ -22,11 +24,11 @@ export const quartoTutorial: TutorialStep[] = [
     ),
     TutorialStep.anyMove(
         $localize`Placement`,
-        $localize`Chaque placement se fait en deux étapes: placer la pièce qu'on a en main en cliquant sur une case du plateau,
-        et choisir une pièce que l'adversaire devra placer, en cliquant sur une des pièces affichées à droite.
-        Si vous préférez, l'ordre inverse est également possible.
-        Gardez juste à l'esprit que le deuxième clic valide le mouvement.<br/><br/>
-        Effectuez un mouvement.`,
+        $localize`Every placement occurs in two steps: placing the piece you have in hand (in the small square) on a square of the board,
+        and picking a piece that the opponent will have to place, by clicking on one of the pieces inside the dotted square.
+        If you prefer, the order of these two steps can be reversed.
+        Keep in mind that the second click confirms the move.<br/><br/>
+        Make a move.`,
         new QuartoPartSlice([
             [14, 3, 6, 16],
             [16, 16, 16, 16],
@@ -34,12 +36,12 @@ export const quartoTutorial: TutorialStep[] = [
             [16, 16, 16, 16],
         ], 7, QuartoPiece.ABAA),
         new QuartoMove(2, 2, QuartoPiece.BAAB),
-        $localize`Parfait!`,
+        $localize`Perfect!`,
     ),
     TutorialStep.fromMove(
         $localize`Situation`,
-        $localize`Nous avons ici une situation délicate.<br/><br/>
-        Analysez bien le plateau et jouez votre coup, en faisant particulièrement attention de ne pas permettre à l'adversaire de l'emporter au prochain coup.`,
+        $localize`We have here a tricky situation.<br/><br/>
+        Analyze the board and play your move, carefully paying attention not to let the opponent win on the next move.`,
         new QuartoPartSlice([
             [15, 14, 13, 16],
             [4, 11, 12, 16],
@@ -47,7 +49,7 @@ export const quartoTutorial: TutorialStep[] = [
             [16, 16, 16, 16],
         ], 7, QuartoPiece.AABA),
         [new QuartoMove(3, 3, QuartoPiece.AABB)],
-        $localize`Bien joué!`,
-        $localize`Raté !`,
+        $localize`Well done!`,
+        $localize`Failed!`,
     ),
 ];

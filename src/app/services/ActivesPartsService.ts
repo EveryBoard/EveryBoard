@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { PartDAO } from '../dao/PartDAO';
 import { ICurrentPartId, IPart } from '../domain/icurrentpart';
 import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
+import { assert } from '../utils/utils';
 
 @Injectable({
     providedIn: 'root',
@@ -12,15 +13,17 @@ export class ActivesPartsService implements OnDestroy {
      * this service is used by the Server Component
      */
 
-    private activesPartsBS: BehaviorSubject<ICurrentPartId[]> = new BehaviorSubject<ICurrentPartId[]>([]);
+    private activesPartsBS: BehaviorSubject<ICurrentPartId[]>;
 
-    public activesPartsObs: Observable<ICurrentPartId[]> = this.activesPartsBS.asObservable();
+    public activesPartsObs: Observable<ICurrentPartId[]>;
 
     private activesParts: ICurrentPartId[] = [];
 
     private unsubscribe: () => void;
 
-    constructor(private partDao: PartDAO) {
+    constructor(public partDao: PartDAO) {
+        this.activesPartsBS = new BehaviorSubject<ICurrentPartId[]>([]);
+        this.activesPartsObs = this.activesPartsBS.asObservable();
         this.startObserving();
     }
     public ngOnDestroy(): void {
@@ -63,17 +66,15 @@ export class ActivesPartsService implements OnDestroy {
         });
     }
     public stopObserving(): void {
-        if (this.unsubscribe == null) {
-            throw new Error('Cannot stop observing actives part when you have not started observing');
-        }
+        assert(this.unsubscribe != null, 'Cannot stop observing actives part when you have not started observing');
         this.activesPartsBS.next([]);
         this.unsubscribe();
     }
     public hasActivePart(user: string): boolean {
-        for (const part of this.activesParts) {
+        for (const part of this.getActiveParts()) {
             const playerZero: string = part.doc.playerZero;
             const playerOne: string = part.doc.playerOne;
-            if ((user === playerZero) || (user === playerOne)) {
+            if (user === playerZero || user === playerOne) {
                 return true;
             }
         }

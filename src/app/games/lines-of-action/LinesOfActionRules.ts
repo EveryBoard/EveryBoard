@@ -17,7 +17,6 @@ export class LinesOfActionNode extends MGPNode<LinesOfActionRules,
                                                LinesOfActionState,
                                                LegalityStatus> {}
 
-
 export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionState> {
 
     public static getListMovesFromState(state: LinesOfActionState): LinesOfActionMove[] {
@@ -93,7 +92,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
     }
     public static isLegal(move: LinesOfActionMove, state: LinesOfActionState): LegalityStatus {
         if (state.getAt(move.coord) !== state.getCurrentPlayer().value) {
-            return { legal: MGPValidation.failure(LinesOfActionFailure.NOT_YOUR_PIECE) };
+            return { legal: MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE) };
         }
         if (move.length() !== this.numberOfPiecesOnLine(state, move.coord, move.direction)) {
             return { legal: MGPValidation.failure(LinesOfActionFailure.INVALID_MOVE_LENGTH) };

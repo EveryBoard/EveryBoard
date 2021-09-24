@@ -5,7 +5,7 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { fakeAsync } from '@angular/core/testing';
+import { fakeAsync, tick } from '@angular/core/testing';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 describe('GoComponent', () => {
@@ -23,8 +23,8 @@ describe('GoComponent', () => {
         componentTestUtils = await ComponentTestUtils.forGame<GoComponent>('Go');
     }));
     it('should create', () => {
-        expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');
-        expect(componentTestUtils.getComponent()).toBeTruthy('Component should be created');
+        expect(componentTestUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
+        expect(componentTestUtils.getComponent()).withContext('Component should be created').toBeTruthy();
     });
     it('Should allow to pass twice, then use "pass" as the method to "accept"', fakeAsync(async() => {
         expect((await componentTestUtils.getComponent().pass()).isSuccess()).toBeTrue(); // Passed
@@ -34,6 +34,7 @@ describe('GoComponent', () => {
         expect((await componentTestUtils.getComponent().pass()).isSuccess()).toBeTrue(); // Finished
 
         expect((await componentTestUtils.getComponent().pass()).reason).toBe(RulesFailure.CANNOT_PASS);
+        tick(150);
     }));
     it('Should show captures', fakeAsync(async() => {
         const board: Table<GoPiece> = [

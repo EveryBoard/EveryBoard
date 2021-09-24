@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppModule } from 'src/app/app.module';
@@ -116,7 +116,7 @@ describe('AbstractGameComponent', () => {
                 expect(clickResult).toEqual(refusal);
             }
         }
-        flush();
+        tick(1000);
     }));
     it('Component should have an encoder and a tutorial', fakeAsync(async() =>{
         for (const gameInfo of GameInfo.ALL_GAMES) {
