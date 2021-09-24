@@ -175,7 +175,8 @@ describe('SixMinimax', () => {
             expect(bestMove).toEqual(expectedMove);
             expect(rules.node.countDescendants()).toBe(1);
         });
-        it('Should propose only one starting piece when all piece are blocking an ennemy victory', () => {
+        it(`Should propose only one starting piece when all piece are blocking an opponent's victory`, () => {
+            // Given an initial board with all piece are blocked
             const board: number[][] = [
                 [O, _, _, _, _, _, O],
                 [X, _, _, _, _, X, _],

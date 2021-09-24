@@ -518,8 +518,8 @@
         <source>The opponent</source>
         <target>L&apos;adversaire</target>
       </trans-unit>
-      <trans-unit id="3550072303786290583" datatype="html">
-        <source>Potential opponents that join the game will appear here.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Wait for an opponent to join, so that you can pick one. </source>
+      <trans-unit id="5268374384098882347" datatype="html">
+        <source>Potential opponents that join the game will appear here.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/>Wait for an opponent to join, so that you can pick one.</source>
         <target>Les adversaires potentiels qui rejoignent la partie apparaîtront ici.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Attendez qu&apos;un adversaire vous rejoigne pour pouvoir en choisir un.</target>
       </trans-unit>
       <trans-unit id="5056292777668083757" datatype="html">
@@ -2275,14 +2275,14 @@
         <source>Placement</source>
         <target>Placement</target>
       </trans-unit>
-      <trans-unit id="1449786172410747726" datatype="html">
-        <source>Every placement occurs in two steps: placing the piece you have in hand on a square of the board,
-        and picking a piece that the opponent will have to place, by clicking on one of the pieces on the side of the board.
+      <trans-unit id="6434452961453198943" datatype="html">
+        <source>Every placement occurs in two steps: placing the piece you have in hand (in the small square) on a square of the board,
+        and picking a piece that the opponent will have to place, by clicking on one of the pieces inside the dotted square.
         If you prefer, the order of these two steps can be reversed.
         Keep in mind that the second click confirms the move.&lt;br/&gt;&lt;br/&gt;
         Make a move.</source>
-        <target>Chaque placement se fait en deux étapes : placer la pièce que vous avez en main (que l'adversaire vous a donné) en cliquant sur une case du plateau,
-        et choisir une pièce que l&apos;adversaire devra placer, en cliquant sur une des pièces affichées à droite.
+        <target>Chaque placement se fait en deux étapes : placer la pièce que vous avez en main (dans le petit carré) en cliquant sur une case du plateau,
+        et choisir une pièce que l&apos;adversaire devra placer, en cliquant sur une des pièces dans le carré pointillé.
         Si vous préférez, l&apos;ordre inverse est également possible.
         Gardez juste à l&apos;esprit que le deuxième clic valide le mouvement.&lt;br/&gt;&lt;br/&gt;
         Effectuez un mouvement.</target>
@@ -2304,10 +2304,6 @@
       <trans-unit id="4715207105849605918" datatype="html">
         <source>Well done!</source>
         <target>Bien joué !</target>
-      </trans-unit>
-      <trans-unit id="3309166761338954119" datatype="html">
-        <source>Piece in hand:</source>
-        <target>Pièce en main :</target>
       </trans-unit>
       <trans-unit id="8819839276456625538" datatype="html">
         <source>You must pick a space from the edge of the board.</source>

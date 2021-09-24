@@ -92,15 +92,15 @@ export class TutorialStep {
                                 null);
     }
     private constructor(public readonly title: string,
-                       public readonly instruction: string,
-                       public readonly state: GamePartSlice,
-                       public readonly acceptedMoves: ReadonlyArray<Move>,
-                       public readonly solutionMove: Move,
-                       public readonly acceptedClicks: ReadonlyArray<string>,
-                       public readonly predicate: (move: Move, resultingState: GamePartSlice) => MGPValidation,
-                       public readonly successMessage: string,
-                       public readonly failureMessage: string,
-                       public readonly previousMove: Move | null,
+                        public readonly instruction: string,
+                        public readonly state: GamePartSlice,
+                        public readonly acceptedMoves: ReadonlyArray<Move>,
+                        public readonly solutionMove: Move,
+                        public readonly acceptedClicks: ReadonlyArray<string>,
+                        public readonly predicate: (move: Move, resultingState: GamePartSlice) => MGPValidation,
+                        public readonly successMessage: string,
+                        public readonly failureMessage: string,
+                        public readonly previousMove: Move | null,
     ) { }
     public isMove(): boolean {
         return this.acceptedMoves != null;

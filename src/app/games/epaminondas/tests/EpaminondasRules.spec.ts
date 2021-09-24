@@ -9,7 +9,7 @@ import { EpaminondasMinimax } from '../EpaminondasMinimax';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { EpaminondasFailure } from '../EpaminondasFailure';
-import { expectToBeVictoryFor } from 'src/app/jscaip/tests/Rules.spec';
+import { expectToBeVictoryFor } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { AttackEpaminondasMinimax } from '../AttackEpaminondasMinimax';
 import { PositionalEpaminondasMinimax } from '../PositionalEpaminondasMinimax';

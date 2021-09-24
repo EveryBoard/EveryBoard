@@ -6,13 +6,13 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterModule, Route } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from '../material-modules';
+
 import localeFr from '@angular/common/locales/fr';
+import { getLocale } from './utils/LocaleUtils';
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
-
-import { firebaseConfig } from './firebaseConfig';
 
 import { PartDAO } from './dao/PartDAO';
 
@@ -76,11 +76,10 @@ import { SiamComponent } from './games/siam/siam.component';
 import { SixComponent } from './games/six/six.component';
 import { TablutComponent } from './games/tablut/tablut.component';
 import { YinshComponent } from './games/yinsh/Yinsh.component';
-import { environment } from 'src/environments/environment';
 
+import { environment } from 'src/environments/environment';
 import { USE_EMULATOR as USE_FIRESTORE_EMULATOR } from '@angular/fire/firestore';
 
-// time scp -C -r ./dist/pantheonsgame/* gaviall@awesom.eu:/home/gaviall/www/pantheonsgame/
 
 registerLocaleData(localeFr);
 
@@ -179,13 +178,13 @@ const routes: Route [] = [
         RouterModule.forRoot(routes, { useHash: false }),
         ReactiveFormsModule,
         FormsModule,
-        AngularFireModule.initializeApp(environment.useEmulators ? environment.emulatorConfig : firebaseConfig),
+        AngularFireModule.initializeApp(environment.firebaseConfig),
         AngularFirestoreModule,
         BrowserAnimationsModule,
         MaterialModule,
     ],
     providers: [
-        { provide: USE_FIRESTORE_EMULATOR, useValue: environment.useEmulators ? ['localhost', 8080] : undefined },
+        { provide: USE_FIRESTORE_EMULATOR, useValue: environment.emulatorConfig.firestore },
         AuthenticationService,
         GameService,
         JoinerService,
@@ -193,7 +192,7 @@ const routes: Route [] = [
         ChatService,
         PartDAO,
         AngularFireAuth,
-        { provide: LOCALE_ID, useValue: localStorage.getItem('locale') || navigator.language || 'fr' },
+        { provide: LOCALE_ID, useValue: getLocale() },
     ],
     bootstrap: [AppComponent],
 })

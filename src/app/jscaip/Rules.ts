@@ -68,15 +68,12 @@ export abstract class Rules<M extends Move,
         const status: L = this.isLegal(move, this.node.gamePartSlice);
         if (this.node.hasMoves()) { // if calculation has already been done by the AI
             display(LOCAL_VERBOSE, 'Rules.choose: current node has moves');
-            const choix: MGPNode<Rules<M, S, L>, M, S, L> = this.node.getSonByMove(move);
+            const choice: MGPNode<Rules<M, S, L>, M, S, L> = this.node.getSonByMove(move);
             // let's not create the node twice
-            if (choix != null) {
-                if (status.legal.isFailure()) {
-                    display(LOCAL_VERBOSE, 'Rules.choose: Move is illegal: ' + status.legal.getReason());
-                    return false;
-                }
+            if (choice != null) {
+                assert(status.legal.isSuccess(), 'Rules.choose: Move is illegal: ' + status.legal.reason);
                 display(LOCAL_VERBOSE, 'Rules.choose: and this proposed move is found in the list, so it is legal');
-                this.node = choix; // qui devient le plateau actuel
+                this.node = choice; // which become the current node
                 return true;
             }
         }
@@ -88,39 +85,39 @@ export abstract class Rules<M extends Move,
             display(LOCAL_VERBOSE, `Rules.choose: Move is legal, let's apply it`);
         }
 
-        const resultingSlice: GamePartSlice = this.applyLegalMove(move, this.node.gamePartSlice, status);
+        const resultingState: GamePartSlice = this.applyLegalMove(move, this.node.gamePartSlice, status);
         const son: MGPNode<Rules<M, S, L>, M, S, L> = new MGPNode(this.node,
                                                                   move,
-                                                                  resultingSlice as S);
+                                                                  resultingState as S);
         this.node = son;
         return true;
     }
-    public abstract applyLegalMove(move: M, slice: S, status: L): S;
+    public abstract applyLegalMove(move: M, state: S, status: L): S;
 
-    public abstract isLegal(move: M, slice: S): L;
+    public abstract isLegal(move: M, state: S): L;
     /* return a legality status about the move, allowing to return already calculated info
      * don't do any modification to the board
      */
     public setInitialBoard(): void {
         if (this.node == null) {
-            const initialSlice: S = this.stateType['getInitialSlice']();
-            this.node = MGPNode.getFirstNode(initialSlice, this);
+            const initialState: S = this.stateType['getInitialSlice']();
+            this.node = MGPNode.getFirstNode(initialState, this);
         } else {
             this.node = this.node.getInitialNode();
         }
     }
-    public applyMoves(encodedMoves: number[], slice: S, moveDecoder: (em: number) => M): S {
+    public applyMoves(encodedMoves: number[], state: S, moveDecoder: (em: number) => M): S {
         let i: number = 0;
         for (const encodedMove of encodedMoves) {
             const move: M = moveDecoder(encodedMove);
-            const status: L = this.isLegal(move, slice);
+            const status: L = this.isLegal(move, state);
             if (status.legal.isFailure()) {
-                throw new Error(`Can't create slice from invalid moves (` + i + '): ' + status.legal.reason + '.');
+                throw new Error(`Can't create state from invalid moves (` + i + '): ' + status.legal.reason + '.');
             }
-            slice = this.applyLegalMove(move, slice, status);
+            state = this.applyLegalMove(move, state, status);
             i++;
         }
-        return slice;
+        return state;
     }
     public abstract getGameStatus(node: MGPNode<Rules<M, S, L>, M, S, L>): GameStatus;
 }
