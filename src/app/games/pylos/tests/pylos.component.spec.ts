@@ -1,7 +1,7 @@
 import { PylosComponent } from '../pylos.component';
 import { PylosMove } from 'src/app/games/pylos/PylosMove';
 import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
-import { PylosPartSlice } from 'src/app/games/pylos/PylosPartSlice';
+import { PylosState } from 'src/app/games/pylos/PylosState';
 import { Player } from 'src/app/jscaip/Player';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
@@ -44,7 +44,7 @@ describe('PylosComponent', () => {
                 [_],
             ],
         ];
-        const initialSlice: PylosPartSlice = new PylosPartSlice(initialBoard, 0);
+        const initialSlice: PylosState = new PylosState(initialBoard, 0);
         componentTestUtils.setupSlice(initialSlice);
 
         await componentTestUtils.expectClickFailure('#piece_0_0_0', RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
@@ -67,7 +67,7 @@ describe('PylosComponent', () => {
                 [_],
             ],
         ];
-        const initialSlice: PylosPartSlice = new PylosPartSlice(initialBoard, 0);
+        const initialSlice: PylosState = new PylosState(initialBoard, 0);
         componentTestUtils.setupSlice(initialSlice);
 
         await componentTestUtils.expectClickSuccess('#piece_3_3_0');
@@ -92,7 +92,7 @@ describe('PylosComponent', () => {
                 [_],
             ],
         ];
-        const initialSlice: PylosPartSlice = new PylosPartSlice(initialBoard, 0);
+        const initialSlice: PylosState = new PylosState(initialBoard, 0);
         componentTestUtils.setupSlice(initialSlice);
 
         await componentTestUtils.expectClickSuccess('#drop_1_1_0'); // drop
@@ -121,7 +121,7 @@ describe('PylosComponent', () => {
                 [_],
             ],
         ];
-        const initialSlice: PylosPartSlice = new PylosPartSlice(initialBoard, 0);
+        const initialSlice: PylosState = new PylosState(initialBoard, 0);
         componentTestUtils.setupSlice(initialSlice);
 
         await componentTestUtils.expectClickSuccess('#drop_1_1_0');
@@ -154,7 +154,7 @@ describe('PylosComponent', () => {
                 [_],
             ],
         ];
-        const initialSlice: PylosPartSlice = new PylosPartSlice(initialBoard, 0);
+        const initialSlice: PylosState = new PylosState(initialBoard, 0);
         componentTestUtils.setupSlice(initialSlice);
 
         await componentTestUtils.expectClickSuccess('#piece_0_0_1');
@@ -178,7 +178,7 @@ describe('PylosComponent', () => {
                 [_],
             ],
         ];
-        const initialSlice: PylosPartSlice = new PylosPartSlice(initialBoard, 0);
+        const initialSlice: PylosState = new PylosState(initialBoard, 0);
         componentTestUtils.setupSlice(initialSlice);
 
         await componentTestUtils.expectClickSuccess('#drop_2_2_0');

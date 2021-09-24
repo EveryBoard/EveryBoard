@@ -52,6 +52,10 @@ jobs:
       - name: Launch tests
         run: npm run test:ci
 
+      - name: Install python dependencies
+        uses: BSFishy/pip-action@v1
+        with:
+          packages: lxml selenium
       - name: Update and check translations
         run: bash ./scripts/update-translations.sh && bash ./scripts/check-translations.sh
       - name: Update images

@@ -3,13 +3,13 @@ import { AngularFirestore, AngularFirestoreModule } from '@angular/fire/firestor
 import 'firebase/firestore';
 import { CUSTOM_ELEMENTS_SCHEMA, Injectable } from '@angular/core';
 import { FirebaseFirestoreDAO } from '../FirebaseFirestoreDAO';
-import { JSONObject } from 'src/app/utils/utils';
+import { FirebaseJSONObject } from 'src/app/utils/utils';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 import { USE_EMULATOR as USE_FIRESTORE_EMULATOR } from '@angular/fire/firestore';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { AngularFireModule } from '@angular/fire';
 
-interface Foo extends JSONObject {
+interface Foo extends FirebaseJSONObject {
     value: string,
     otherValue: number,
 }

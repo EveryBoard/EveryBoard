@@ -24,8 +24,8 @@ export const quartoTutorial: TutorialStep[] = [
     ),
     TutorialStep.anyMove(
         $localize`Placement`,
-        $localize`Every placement occurs in two steps: placing the piece you have in hand on a square of the board,
-        and picking a piece that the opponent will have to place, by clicking on one of the pieces on the side of the board.
+        $localize`Every placement occurs in two steps: placing the piece you have in hand (in the small square) on a square of the board,
+        and picking a piece that the opponent will have to place, by clicking on one of the pieces inside the dotted square.
         If you prefer, the order of these two steps can be reversed.
         Keep in mind that the second click confirms the move.<br/><br/>
         Make a move.`,

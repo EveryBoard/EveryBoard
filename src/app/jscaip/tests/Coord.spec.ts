@@ -1,4 +1,5 @@
 import { Coord } from '../Coord';
+import { Direction } from '../Direction';
 
 describe('Coord', () => {
     it('should compare correctly, y first', () => {
@@ -51,5 +52,25 @@ describe('Coord', () => {
         const unalignedCoord: Coord = new Coord(1, 2);
         expect(() => coord.getDistance(unalignedCoord))
             .toThrowError('Cannot calculate distance with non aligned coords.');
+    });
+    describe('getDirectionToward', () => {
+        it('Should give direction', () => {
+            const center: Coord = new Coord(0, 0);
+            const lowRight: Coord = new Coord(2, 2);
+            expect(center.getDirectionToward(lowRight).get()).toEqual(Direction.DOWN_RIGHT);
+        });
+        it('Should fail when given invalid direction', () => {
+            const center: Coord = new Coord(0, 0);
+            const lowRight: Coord = new Coord(2, 4);
+            let success: boolean;
+            try {
+                center.getDirectionToward(lowRight).get();
+                success = true;
+            } catch (error) {
+                success = false;
+            } finally {
+                expect(success).toBeFalse();
+            }
+        });
     });
 });

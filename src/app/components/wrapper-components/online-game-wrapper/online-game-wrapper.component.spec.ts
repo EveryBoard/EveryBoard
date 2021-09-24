@@ -30,9 +30,9 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
     let wrapper: OnlineGameWrapperComponent;
 
     async function prepareComponent(initialJoiner: IJoiner, initialPart: IPart): Promise<void> {
-        await TestBed.get(JoinerDAO).set('joinerId', initialJoiner);
-        await TestBed.get(PartDAO).set('joinerId', initialPart);
-        await TestBed.get(ChatDAO).set('joinerId', { messages: [], status: `I don't have a clue` });
+        await TestBed.inject(JoinerDAO).set('joinerId', initialJoiner);
+        await TestBed.inject(PartDAO).set('joinerId', initialPart);
+        await TestBed.inject(ChatDAO).set('joinerId', { messages: [], status: `I don't have a clue` });
         return Promise.resolve();
     }
     beforeEach(async() => {
@@ -44,7 +44,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
     describe('for creator', () => {
         it('Initialisation should lead to child component PartCreation to call JoinerService', fakeAsync(async() => {
             await prepareComponent(JoinerMocks.INITIAL.doc, PartMocks.INITIAL.doc);
-            const joinerService: JoinerService = TestBed.get(JoinerService);
+            const joinerService: JoinerService = TestBed.inject(JoinerService);
 
             spyOn(joinerService, 'joinGame').and.callThrough();
             spyOn(joinerService, 'observe').and.callThrough();
@@ -69,9 +69,12 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             tick(); // Finish calling async code from PartCreationComponent initialisation
 
             expect(wrapper.startGame).toHaveBeenCalledTimes(1);
-            componentTestUtils.detectChanges(); // Needed so PartCreation is destroyed and GameIncluder Component created
+
+            componentTestUtils.detectChanges();
+            // Needed so PartCreation is destroyed and GameIncluder Component created
+
             tick(1);
-            tick(wrapper.maximalMoveDuration);
+            tick(wrapper.joiner.maximalMoveDuration * 1000);
         }));
         it('Some tags are needed before initialisation', fakeAsync(async() => {
             await prepareComponent(JoinerMocks.INITIAL.doc, PartMocks.INITIAL.doc);
@@ -82,10 +85,10 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             const chatTag: DebugElement = componentTestUtils.querySelector('app-chat');
 
             expect(wrapper.gameStarted).toBeFalse();
-            expect(partCreationTag).toBeFalsy('app-part-creation tag should be present at start');
-            expect(gameIncluderTag).toBeFalsy('app-game-includer tag should be absent at start');
-            expect(p4Tag).toBeFalsy('app-p4 tag should be absent at start');
-            expect(chatTag).toBeTruthy('app-chat tag should be present at start');
+            expect(partCreationTag).withContext('app-part-creation tag should be present at start').toBeFalsy();
+            expect(gameIncluderTag).withContext('app-game-includer tag should be absent at start').toBeFalsy();
+            expect(p4Tag).withContext('app-p4 tag should be absent at start').toBeFalsy();
+            expect(chatTag).withContext('app-chat tag should be present at start').toBeTruthy();
 
             componentTestUtils.detectChanges();
             tick(1);
@@ -97,9 +100,9 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             const chatId: DebugElement = componentTestUtils.findElement('#chat');
 
             expect(wrapper.gameStarted).toBeFalse();
-            expect(partCreationId).toBeFalsy('partCreation id should be present at start');
-            expect(gameId).toBeFalsy('game id should be absent at start');
-            expect(chatId).toBeTruthy('chat id should be present at start');
+            expect(partCreationId).withContext('partCreation id should be present at start').toBeFalsy();
+            expect(gameId).withContext('game id should be absent at start').toBeFalsy();
+            expect(chatId).withContext('chat id should be present at start').toBeTruthy();
 
             componentTestUtils.detectChanges();
             tick(1);
@@ -107,13 +110,13 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         it('Initialisation should make appear PartCreationComponent', fakeAsync(async() => {
             await prepareComponent(JoinerMocks.INITIAL.doc, PartMocks.INITIAL.doc);
             let partCreationId: DebugElement = componentTestUtils.findElement('#partCreation');
-            expect(partCreationId).toBeFalsy('partCreation id should be absent before ngOnInit');
+            expect(partCreationId).withContext('partCreation id should be absent before ngOnInit').toBeFalsy();
 
             componentTestUtils.detectChanges();
             tick(1);
 
             partCreationId = componentTestUtils.findElement('#partCreation');
-            expect(partCreationId).toBeTruthy('partCreation id should be present after ngOnInit');
+            expect(partCreationId).withContext('partCreation id should be present after ngOnInit').toBeTruthy();
         }));
         it('StartGame should replace PartCreationComponent by GameIncluderComponent', fakeAsync(async() => {
             await prepareComponent(JoinerMocks.WITH_ACCEPTED_CONFIG.doc, PartMocks.INITIAL.doc);
@@ -127,9 +130,9 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             const p4Tag: DebugElement = componentTestUtils.querySelector('app-p4');
 
             expect(wrapper.gameStarted).toBeTrue();
-            expect(partCreationId).toBeFalsy('partCreation id should be absent after startGame call');
-            expect(gameId).toBeTruthy('game id should be present after startGame call');
-            expect(p4Tag).toBeNull('p4Tag id should still be absent after startGame call');
+            expect(partCreationId).withContext('partCreation id should be absent after startGame call').toBeFalsy();
+            expect(gameId).withContext('game id should be present after startGame call').toBeTruthy();
+            expect(p4Tag).withContext('p4Tag id should still be absent after startGame call').toBeNull();
             tick(1000);
         }));
         it('stage three should make the game component appear at last', fakeAsync(async() => {
@@ -163,12 +166,11 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             const p4Tag: DebugElement = componentTestUtils.querySelector('app-p4');
 
             expect(wrapper.gameStarted).toBeTrue();
-            expect(partCreationId).toBeFalsy('partCreation id should be absent after startGame call');
-            expect(gameId).toBeTruthy('game id should be present after startGame call');
-            expect(p4Tag).toBeNull('p4Tag id should still be absent after startGame call');
-            tick(1);
-            tick(wrapper.maximalMoveDuration);
-            tick(1000);
+            expect(partCreationId).withContext('partCreation id should be absent after startGame call').toBeFalsy();
+            expect(gameId).withContext('game id should be present after startGame call').toBeTruthy();
+            expect(p4Tag).withContext('p4Tag id should still be absent after startGame call').toBeNull();
+
+            flush();
         }));
     });
     it('should redirect to index page if part does not exist', fakeAsync(async() => {

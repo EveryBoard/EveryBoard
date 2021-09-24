@@ -2,7 +2,7 @@ import { AwaleNode, AwaleRules } from '../AwaleRules';
 import { AwaleMove } from '../AwaleMove';
 import { AwalePartSlice } from '../AwalePartSlice';
 import { AwaleLegalityStatus } from '../AwaleLegalityStatus';
-import { expectToBeDraw, expectToBeVictoryFor } from 'src/app/jscaip/tests/Rules.spec';
+import { expectToBeDraw, expectToBeVictoryFor } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { AwaleMinimax } from '../AwaleMinimax';
 import { MGPNode } from 'src/app/jscaip/MGPNode';

@@ -51,10 +51,10 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
         this.pieceInHand = slice.pieceInHand;
         this.victoriousCoords = this.rules.getVictoriousCoords(slice);
 
-        if (move != null) {
-            this.lastMove = move.coord;
-        } else {
+        if (move == null) {
             this.lastMove = new Coord(-1, -1);
+        } else {
+            this.lastMove = move.coord;
         }
     }
     public async chooseCoord(x: number, y: number): Promise<MGPValidation> {

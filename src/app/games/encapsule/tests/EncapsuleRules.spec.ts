@@ -6,7 +6,7 @@ import { EncapsuleCase, EncapsulePartSlice } from '../EncapsulePartSlice';
 import { Player } from 'src/app/jscaip/Player';
 import { EncapsulePiece } from '../EncapsulePiece';
 import { EncapsuleLegalityStatus } from '../EncapsuleLegalityStatus';
-import { expectToBeVictoryFor } from 'src/app/jscaip/tests/Rules.spec';
+import { expectToBeVictoryFor } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 
 describe('EncapsuleRules', () => {

@@ -5,6 +5,7 @@ import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-gam
 import { DvonnPieceStack } from 'src/app/games/dvonn/DvonnPieceStack';
 import { Player } from 'src/app/jscaip/Player';
 import { DvonnBoard } from 'src/app/games/dvonn/DvonnBoard';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 
 const __: DvonnPieceStack = DvonnPieceStack.EMPTY;
 const SO: DvonnPieceStack = DvonnPieceStack.SOURCE;
@@ -33,13 +34,11 @@ export const dvonnTutorial: TutorialStep[] = [
         DvonnMove.of(new Coord(2, 0), new Coord(3, 0)),
         $localize`Congratulations!`,
     ),
-    TutorialStep.fromMove(
+    TutorialStep.fromPredicate(
         $localize`Disconnection`,
         $localize`Pieces with a lightning strike are called "sources".
-        When a stack is not directly nor indirectly connected to a source, it is removed from the board.
-        You can move on a source: this forms a stack that contains the source, which therefore can never be disconnected.
-        Besides this, a stack containing a source acts like any other stack: you can move it, and your opponent can move on that stack to take possession of it.<br/><br/>
-        You're playing Dark, move your piece on the source.`,
+        When a stack is not directly nor indirectly connected to a source, it is removed from the board.<br/><br/>
+        You're playing Dark, try to disconnect the stack of 4 pieces from your opponent. There are two ways of doing that, one is better than the other: try to find that one!`,
         new DvonnGameState(new DvonnBoard([
             [__, __, X1, SO, __, __, __, __, __, __, __],
             [__, __, O1, __, __, __, __, __, __, __, __],
@@ -47,12 +46,19 @@ export const dvonnTutorial: TutorialStep[] = [
             [__, __, __, __, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
         ]), 0, false),
-        [DvonnMove.of(new Coord(2, 1), new Coord(2, 0))],
-        $localize`Nice, you have disconnected 4 pieces of your opponent!
-        Your opponent therefore lost 4 points.
+        DvonnMove.of(new Coord(2, 1), new Coord(2, 0)),
+        (move: DvonnMove, _state: DvonnGameState) => {
+            if (move.end.equals(new Coord(3, 0))) {
+                return MGPValidation.failure($localize`You have successfully disconnected the stack of 4 pieces of your opponent, but on the next move your opponent will be able to move on your new stack, and to win the game! There exists a better outcome of this situation, try to find it.`);
+            } else if (move.end.equals(new Coord(2, 0))) {
+                return MGPValidation.SUCCESS;
+            } else {
+                return MGPValidation.failure($localize`Bad choice! You should be able to disconnect your opponent's stack of four pieces.`);
+            }
+        },
+        $localize`Nice, you have disconnected 4 pieces of your opponent, and your new stack cannot be reached by your opponent!
+        Your opponent therefore lost 5 points: 4 from the disconnected stack, and one from the stack on which you moved.
         Disconnected stacks will not be visible at the next turn.`,
-        $localize`Bad choice! By moving on the source you would have disconnected the opponent's pieces and they would have lost 4 points.
-        Here, the opponent wins 2 to 0`,
     ),
     TutorialStep.fromMove(
         $localize`Moving on a source`,
@@ -61,21 +67,21 @@ export const dvonnTutorial: TutorialStep[] = [
         This way, you know that this stack may never be disconnected, as it contains a source.<br/><br/>
         You're playing Dark and you can take control of a source, do it!`,
         new DvonnGameState(new DvonnBoard([
-            [__, __, SO, __, __, __, __, __, __, __, __],
+            [__, __, SO, X1, __, __, __, __, __, __, __],
             [__, __, O1, __, __, __, __, __, __, __, __],
-            [__, __, X2, __, __, __, __, X2, SO, __, __],
+            [__, __, __, __, __, __, __, X2, SO, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
         ]), 0, false),
         [DvonnMove.of(new Coord(2, 1), new Coord(2, 0))],
-        $localize`Congratulations! However, note that your opponent could later take possession of one of your stack that contains a source, so watch out!`,
+        $localize`Congratulations! However, note that your opponent could later take possession of one of your stack that contains a source, so watch out when you take control of sources!`,
         $localize`You have not taken possession of a source, try again.`,
     ),
     TutorialStep.informational(
         $localize`Passing`,
         $localize`It can happen that you have no possible move to make.
         If this is the case, and if your opponent can still move, you must pass your turn.<br/><br/>
-        This is a situation that occurs here.`,
+        This is a situation that occurs here for Dark.`,
         new DvonnGameState(new DvonnBoard([
             [__, __, SO, __, __, __, __, __, __, __, __],
             [__, __, O2, __, __, __, __, __, __, __, __],

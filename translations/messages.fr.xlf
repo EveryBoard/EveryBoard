@@ -494,17 +494,17 @@
         <source>Blitz</source>
         <target>Blitz</target>
       </trans-unit>
-      <trans-unit id="6773728044030876768" datatype="html">
-        <source>Maximal game duration: <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ partType.NORMAL_PART_DURATION | humanDuration }}"/> per player<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
-        <target>Durée maximale d'une partie : <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ partType.NORMAL_PART_DURATION | humanDuration }}"/> par joueur<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></target>
-      </trans-unit>
-      <trans-unit id="4701368818614163279" datatype="html">
-        <source>Maximal turn duration: <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ partType.BLITZ_MOVE_DURATION | humanDuration }}"/><x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
-        <target>Durée maximale d'un tour : <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ partType.BLITZ_MOVE_DURATION | humanDuration }}"/><x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></target>
+      <trans-unit id="3120304451891406993" datatype="html">
+        <source>Maximal turn duration: </source>
+        <target>Durée maximale d'un tour : </target>
       </trans-unit>
       <trans-unit id="7590013429208346303" datatype="html">
         <source>Custom</source>
         <target>Personnalisée</target>
+      </trans-unit>
+      <trans-unit id="6773728044030876768" datatype="html">
+        <source>Maximal game duration: <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ partType.NORMAL_PART_DURATION | humanDuration }}"/> per player<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
+        <target>Durée maximale d'une partie : <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ partType.NORMAL_PART_DURATION | humanDuration }}"/> par joueur<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></target>
       </trans-unit>
       <trans-unit id="1612262766071402559" datatype="html">
         <source>Propose configuration</source>
@@ -514,25 +514,21 @@
         <source>Cancel game</source>
         <target>Annuler la partie</target>
       </trans-unit>
-      <trans-unit id="1544438523766748366" datatype="html">
-        <source>Maximal game duration: <x id="START_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;output&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.totalPartDuration | humanDuration }}"/><x id="CLOSE_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;/output&gt;"/> per player</source>
-        <target>Durée maximale d'une partie : <x id="START_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;output&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.totalPartDuration | humanDuration }}"/><x id="CLOSE_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;/output&gt;"/> par joueur</target>
-      </trans-unit>
       <trans-unit id="6102520113052735150" datatype="html">
         <source>The opponent</source>
         <target>L&apos;adversaire</target>
       </trans-unit>
-      <trans-unit id="3550072303786290583" datatype="html">
-        <source>Potential opponents that join the game will appear here.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Wait for an opponent to join, so that you can pick one. </source>
+      <trans-unit id="5268374384098882347" datatype="html">
+        <source>Potential opponents that join the game will appear here.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/>Wait for an opponent to join, so that you can pick one.</source>
         <target>Les adversaires potentiels qui rejoignent la partie apparaîtront ici.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Attendez qu&apos;un adversaire vous rejoigne pour pouvoir en choisir un.</target>
-      </trans-unit>
-      <trans-unit id="5397323926664032734" datatype="html">
-        <source>Maximal turn duration: <x id="START_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;output&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.maximalMoveDuration | humanDuration }}"/><x id="CLOSE_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;/output&gt;"/></source>
-        <target>Durée maximale d'un tour : <x id="START_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;output&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.maximalMoveDuration | humanDuration }}"/><x id="CLOSE_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;/output&gt;"/></target>
       </trans-unit>
       <trans-unit id="5056292777668083757" datatype="html">
         <source>Click on the opponent against which you would like to play.</source>
         <target>Cliquez sur l&apos;adversaire contre lequel vous souhaitez jouer.</target>
+      </trans-unit>
+      <trans-unit id="594218318757354614" datatype="html">
+        <source>Maximal game duration: <x id="START_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;output&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.totalPartDuration | humanDuration }}"/> per player<x id="CLOSE_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;/output&gt;"/></source>
+        <target>Durée maximale d'une partie : <x id="START_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;output&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.totalPartDuration | humanDuration }}"/> par joueur<x id="CLOSE_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;/output&gt;"/></target>
       </trans-unit>
       <trans-unit id="8953033926734869941" datatype="html">
         <source>Name</source>
@@ -1114,9 +1110,9 @@
         Therefore, there are six possible directions.
         The player with dark pieces starts.&lt;br/&gt;&lt;br/&gt;
         You&apos;re playing Dark, click on a stack and move it by one space.</source>
-        <target>Au Dvonn, chaque case hexagonale comporte une pile de pièce.
+        <target>Au Dvonn, chaque case hexagonale comporte une pile de pièces.
         Si aucun nombre n&apos;est indiqué sur une pile, c&apos;est qu&apos;elle ne comporte qu&apos;une pièce.
-        Le nombre écrit sur une pile correspond au nombre de pièces empilées et donc le nombre de point qu’elle rapporte à son propriétaire.
+        Le nombre écrit sur une pile correspond au nombre de pièces empilées et donc le nombre de points qu’elle rapporte à son propriétaire.
         Son propriétaire est celui dont une pièce est au sommet de la pile.
         Seul son propriétaire peut déplacer la pile.
         Il ne peut pas la déplacer si elle est entourée par 6 autres piles.
@@ -1130,31 +1126,29 @@
         <source>Disconnection</source>
         <target>Déconnection</target>
       </trans-unit>
-      <trans-unit id="2680357653080413298" datatype="html">
+      <trans-unit id="4625150132268018420" datatype="html">
         <source>Pieces with a lightning strike are called &quot;sources&quot;.
-        When a stack is not directly nor indirectly connected to a source, it is removed from the board.
-        You can move on a source: this forms a stack that contains the source, which therefore can never be disconnected.
-        Besides this, a stack containing a source acts like any other stack: you can move it, and your opponent can move on that stack to take possession of it.&lt;br/&gt;&lt;br/&gt;
-        You&apos;re playing Dark, move your piece on the source.</source>
-        <target>Les pièces avec un éclair sont appelées “sources”.
-        Quand une pile n’est plus directement ou indirectement connectée à une source, elle est enlevée du plateau.
-        Vous pouvez vous déplacer sur une source: cela forme une pile qui contient cette source et qui ne pourra donc jamais être déconnectée.
-        De plus, une pile qui contient une source se comporte comme une autre pile: vous pouvez la déplacer, et votre adversaire peut se déplacer dessus pour en prendre possession.&lt;br/&gt;&lt;br/&gt;
-        Vous jouez Foncé, déplacez votre pièce sur la source.</target>
+        When a stack is not directly nor indirectly connected to a source, it is removed from the board.&lt;br/&gt;&lt;br/&gt;
+        You&apos;re playing Dark, try to disconnect the stack of 4 pieces from your opponent. There are two ways of doing that, one is better than the other: try to find that one!</source>
+        <target>Les pièces avec un éclair sont appelées « sources ».
+        Quand une pile n’est plus directement ou indirectement connectée à une source, elle est enlevée du plateau.&lt;br/&gt;&lt;br/&gt;
+        Vous jouez Foncé, essayez de déconnecter une pile de 4 pièces de votre adversaire. Il y a deux façons de le faire, l'une étant mieux que l'autre : essayer de trouver celle-là !</target>
       </trans-unit>
-      <trans-unit id="600732969670597367" datatype="html">
-        <source>Nice, you have disconnected 4 pieces of your opponent!
-        Your opponent therefore lost 4 points.
+      <trans-unit id="2017860068625343028" datatype="html">
+        <source>You have successfully disconnected the stack of 4 pieces of your opponent, but on the next move your opponent will be able to move on your new stack, and to win the game! There exists a better outcome of this situation, try to find it.</source>
+        <target>Vous avez bien déconnecté la pile de 4 pièces de votre adversaire, mais lors du mouvement suivant il sera capable de se déplacer sur votre nouvelle pile et de gagner le jeu ! Il existe un meilleur mouvement pour vous, essayez de le trouver.</target>
+      </trans-unit>
+      <trans-unit id="2366265892991791609" datatype="html">
+        <source>Bad choice! You should be able to disconnect your opponent&apos;s stack of four pieces.</source>
+        <target>Mauvais choix! Vous devriez être capable de déconnecter la pile de quatre pièces de votre adversaire.</target>
+      </trans-unit>
+      <trans-unit id="4457528534020479150" datatype="html">
+        <source>Nice, you have disconnected 4 pieces of your opponent, and your new stack cannot be reached by your opponent!
+        Your opponent therefore lost 5 points: 4 from the disconnected stack, and one from the stack on which you moved.
         Disconnected stacks will not be visible at the next turn.</source>
-        <target>Bravo, vous avez déconnecté 4 pièces de l’adversaire !
-        Il a donc perdu 4 points.
-        Les piles déconnectées cesseront d&apos;être visibles au tour suivant.</target>
-      </trans-unit>
-      <trans-unit id="9072861571041891023" datatype="html">
-        <source>Bad choice! By moving on the source you would have disconnected the opponent&apos;s pieces and they would have lost 4 points.
-        Here, the opponent wins 2 to 0</source>
-        <target>Mauvais choix! En déplaçant votre pile sur la source vous déconnectiez l&apos;adversaire et lui faisiez perdre 4 points.
-        Ici, votre adversaire gagne 2 à 0.</target>
+        <target>Bravo, vous avez déconnecté 4 pièces de votre adversaire, et votre opposant ne peut pas atteindre votre nouvelle pile !
+        Votre opposant perd donc 5 points : 4 de la pile déconnectée, et un de la pile sur laquelle vous vous êtes déplacé.
+        Les piles déconnectées ne seront plus visible au tour suivant.</target>
       </trans-unit>
       <trans-unit id="5374556513202485808" datatype="html">
         <source>Moving on a source</source>
@@ -1170,9 +1164,9 @@
         De cette façon, vous savez que cette pile ne peut jamais être déconnectée, car elle contient une source.&lt;br/&gt;&lt;br/&gt;
         Vous jouez Foncé et pouvez prendre contrôle d'une source, faites-le !</target>
       </trans-unit>
-      <trans-unit id="4900956055400728677" datatype="html">
-        <source>Congratulations! However, note that your opponent could later take possession of one of your stack that contains a source, so watch out!</source>
-        <target>Bravo ! Cependant, notez que votre adversaire pourrait plus tard prendre possession d'une de vos piles qui contient une source, faites donc attention !</target>
+      <trans-unit id="6422219434767688772" datatype="html">
+        <source>Congratulations! However, note that your opponent could later take possession of one of your stack that contains a source, so watch out when you take control of sources!</source>
+        <target>Bravo ! Cependant, notez que votre adversaire pourrait plus tard prendre possession d'une de vos piles qui contient une source, faites donc attention quand vous prenez le contrôle d'une source !</target>
       </trans-unit>
       <trans-unit id="2060914977510915101" datatype="html">
         <source>You have not taken possession of a source, try again.</source>
@@ -1182,13 +1176,13 @@
         <source>Passing</source>
         <target>Passer</target>
       </trans-unit>
-      <trans-unit id="721533359855729017" datatype="html">
+      <trans-unit id="3832185042961281952" datatype="html">
         <source>It can happen that you have no possible move to make.
         If this is the case, and if your opponent can still move, you must pass your turn.&lt;br/&gt;&lt;br/&gt;
-        This is a situation that occurs here.</source>
+        This is a situation that occurs here for Dark.</source>
         <target>Il peut arriver que vous n'ayez aucun mouvement possible.
         Si c'est le cas, et si votre adversaire peut toujours effectuer un mouvement, vous devez passer votre tour.&lt;br/&gt;&lt;br/&gt;
-        Cette situation arrive ici.</target>
+        Cette situation arrive ici a Foncé.</target>
       </trans-unit>
       <trans-unit id="2190782768169600552" datatype="html">
         <source>When no more move is possible for both players, the game ends and the player with the most points wins.&lt;br/&gt;&lt;br/&gt;
@@ -2199,9 +2193,9 @@
             &lt;li&gt;Un déplacement ne peut se faire que quand la case d&apos;arrivée est plus haute que la case de départ.&lt;/li&gt;
         &lt;/ol&gt;</target>
       </trans-unit>
-      <trans-unit id="7244821610544753622" datatype="html">
-        <source>Square (1/3)</source>
-        <target>Carré (1/3)</target>
+      <trans-unit id="2195961423433457989" datatype="html">
+        <source>Square (1/2)</source>
+        <target>Carré (1/2)</target>
       </trans-unit>
       <trans-unit id="7156552420001155973" datatype="html">
         <source>When the piece you just moved or dropped is the fourth one of a square of your color,
@@ -2217,45 +2211,33 @@
         Une pièce choisie pour être enlevée ne peut pas être en dessous d&apos;autres pièces.
         Une pièce choisie peut être la pièce que vous venez de placer.
         Vous jouez Foncé.&lt;br/&gt;&lt;br/&gt;
-        Formez un carré, puis cliquez deux fois sur l&apos;une des quatre pièce pour n&apos;enlever que celle là.</target>
+        Formez un carré, puis cliquez deux fois sur l&apos;une des quatre pièces pour n&apos;enlever que celle-là.</target>
       </trans-unit>
       <trans-unit id="5456823255724159144" datatype="html">
         <source>Congratulations, you have saved up one piece.</source>
         <target>Bravo, vous avez économisé une pièce.</target>
       </trans-unit>
-      <trans-unit id="1514360345752656911" datatype="html">
-        <source>Square (2/3)</source>
-        <target>Carré (2/3)</target>
+      <trans-unit id="3444837986058371302" datatype="html">
+        <source>Square (2/2)</source>
+        <target>Carré (2/2)</target>
       </trans-unit>
-      <trans-unit id="7482163381933878807" datatype="html">
-        <source>You&apos;re playing Dark.&lt;br/&lt;br/&gt;
-        Do like in the previous step, but this time click on both pieces on the top row.</source>
-        <target>Vous jouez Foncé.&lt;br/&lt;br/&gt;
-        Faites comme à l&apos;étape précédente, mais cliquez cette fois sur les deux pièces du haut.</target>
+      <trans-unit id="635645551351663738" datatype="html">
+        <source>You&apos;re playing Dark.&lt;br/&gt;&lt;br/&gt;
+        Do like in the previous step, but this time click on two different pieces.</source>
+        <target>Vous jouez Foncé.&lt;br/&gt;&lt;br/&gt;
+        Faites comme à l&apos;étape précédente, mais cliquez cette fois sur deux pièces différentes.</target>
+      </trans-unit>
+      <trans-unit id="8313533670567464817" datatype="html">
+        <source>Failed, you only captured one piece.</source>
+        <target>Raté, vous n'avez capturé qu'une pièce.</target>
+      </trans-unit>
+      <trans-unit id="5608779123109622436" datatype="html">
+        <source>Failed, you did not capture any piece.</source>
+        <target>Raté, vous n'avez capturé aucune pièce.</target>
       </trans-unit>
       <trans-unit id="3455768301736755830" datatype="html">
         <source>Congratulations, you have saved up two pieces.</source>
         <target>Bravo, vous avez économisé deux pièces.</target>
-      </trans-unit>
-      <trans-unit id="521772581425892664" datatype="html">
-        <source>Square (3/3)</source>
-        <target>Carré (3/3)</target>
-      </trans-unit>
-      <trans-unit id="5406967993715013416" datatype="html">
-        <source>You&apos;re playing Dark.
-        Do as in the last step, but this time
-        you will have to take, as expected, the highest piece,
-        and then take the piece below it, which can now be taken.&lt;br/&gt;&lt;br/&gt;
-        Go ahead.</source>
-        <target>Vous jouez Foncé.
-        Faites comme à l&apos;étape précédente, mais cette fois :
-        vous devrez, naturellement, capturer en premier votre pièce la plus haute,
-        et ensuite seulement capturer celle du dessous, qui vient d&apos;être enlevable à nouveau.&lt;br/&gt;&lt;br/&gt;
-        Allez-y.</target>
-      </trans-unit>
-      <trans-unit id="6903437514996680111" datatype="html">
-        <source>Congratulations, you have saved up two pieces. You are now ready to play.</source>
-        <target>Bravo, vous avez économisé deux pièces. Vous êtes maintenant prêt à jouer.</target>
       </trans-unit>
       <trans-unit id="5796940069053691279" datatype="html">
         <source>You must give a piece.</source>
@@ -2293,14 +2275,14 @@
         <source>Placement</source>
         <target>Placement</target>
       </trans-unit>
-      <trans-unit id="1449786172410747726" datatype="html">
-        <source>Every placement occurs in two steps: placing the piece you have in hand on a square of the board,
-        and picking a piece that the opponent will have to place, by clicking on one of the pieces on the side of the board.
+      <trans-unit id="6434452961453198943" datatype="html">
+        <source>Every placement occurs in two steps: placing the piece you have in hand (in the small square) on a square of the board,
+        and picking a piece that the opponent will have to place, by clicking on one of the pieces inside the dotted square.
         If you prefer, the order of these two steps can be reversed.
         Keep in mind that the second click confirms the move.&lt;br/&gt;&lt;br/&gt;
         Make a move.</source>
-        <target>Chaque placement se fait en deux étapes : placer la pièce que vous avez en main (que l'adversaire vous a donné) en cliquant sur une case du plateau,
-        et choisir une pièce que l&apos;adversaire devra placer, en cliquant sur une des pièces affichées à droite.
+        <target>Chaque placement se fait en deux étapes : placer la pièce que vous avez en main (dans le petit carré) en cliquant sur une case du plateau,
+        et choisir une pièce que l&apos;adversaire devra placer, en cliquant sur une des pièces dans le carré pointillé.
         Si vous préférez, l&apos;ordre inverse est également possible.
         Gardez juste à l&apos;esprit que le deuxième clic valide le mouvement.&lt;br/&gt;&lt;br/&gt;
         Effectuez un mouvement.</target>
@@ -2322,10 +2304,6 @@
       <trans-unit id="4715207105849605918" datatype="html">
         <source>Well done!</source>
         <target>Bien joué !</target>
-      </trans-unit>
-      <trans-unit id="3309166761338954119" datatype="html">
-        <source>Piece in hand:</source>
-        <target>Pièce en main :</target>
       </trans-unit>
       <trans-unit id="8819839276456625538" datatype="html">
         <source>You must pick a space from the edge of the board.</source>
