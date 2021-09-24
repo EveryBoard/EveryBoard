@@ -5,7 +5,6 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule, Route } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MaterialModule } from '../material-modules';
 
 import localeFr from '@angular/common/locales/fr';
 import { getLocale } from './utils/LocaleUtils';
@@ -181,7 +180,6 @@ const routes: Route [] = [
         AngularFireModule.initializeApp(environment.firebaseConfig),
         AngularFirestoreModule,
         BrowserAnimationsModule,
-        MaterialModule,
     ],
     providers: [
         { provide: USE_FIRESTORE_EMULATOR, useValue: environment.emulatorConfig.firestore },
