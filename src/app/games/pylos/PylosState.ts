@@ -4,15 +4,15 @@ import { Player } from 'src/app/jscaip/Player';
 import { PylosCoord } from './PylosCoord';
 import { PylosMove } from './PylosMove';
 
-export class PylosPartSlice extends GamePartSlice {
+export class PylosState extends GamePartSlice {
 
-    public static getInitialSlice(): PylosPartSlice {
+    public static getInitialSlice(): PylosState {
         const board0: number[][] = ArrayUtils.createBiArray(4, 4, Player.NONE.value);
         const board1: number[][] = ArrayUtils.createBiArray(3, 3, Player.NONE.value);
         const board2: number[][] = ArrayUtils.createBiArray(2, 2, Player.NONE.value);
         const board3: number[][] = [[Player.NONE.value]];
         const turn: number = 0;
-        return new PylosPartSlice([board0, board1, board2, board3], turn);
+        return new PylosState([board0, board1, board2, board3], turn);
     }
     constructor(public readonly boards: Table<ReadonlyArray<number>>,
                 turn: number)
@@ -22,7 +22,7 @@ export class PylosPartSlice extends GamePartSlice {
     public getBoardAt(coord: PylosCoord): number {
         return this.boards[coord.z][coord.y][coord.x];
     }
-    public applyLegalMove(move: PylosMove): PylosPartSlice {
+    public applyLegalMove(move: PylosMove): PylosState {
         const updateValues: { coord: PylosCoord, value: Player }[] = [];
         updateValues.push({ coord: move.landingCoord, value: this.getCurrentPlayer() });
         if (move.startingCoord.isPresent()) {
@@ -36,7 +36,7 @@ export class PylosPartSlice extends GamePartSlice {
         }
         return this.setBoardAts(updateValues, this.turn + 1);
     }
-    public setBoardAts(coordValues: {coord: PylosCoord, value: Player}[], turn: number): PylosPartSlice {
+    public setBoardAts(coordValues: {coord: PylosCoord, value: Player}[], turn: number): PylosState {
         const newBoard: number[][][] = [
             ArrayUtils.copyBiArray(this.boards[0]),
             ArrayUtils.copyBiArray(this.boards[1]),
@@ -49,7 +49,7 @@ export class PylosPartSlice extends GamePartSlice {
             const value: number = coordValue.value.value;
             newBoard[coord.z][coord.y][coord.x] = value;
         }
-        return new PylosPartSlice(newBoard, turn);
+        return new PylosState(newBoard, turn);
     }
     public isLandable(coord: PylosCoord): boolean {
         if (this.getBoardAt(coord) !== Player.NONE.value) return false;

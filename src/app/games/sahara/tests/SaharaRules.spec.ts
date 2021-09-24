@@ -7,7 +7,7 @@ import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { expectToBeVictoryFor } from 'src/app/jscaip/tests/Rules.spec';
+import { expectToBeVictoryFor } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';

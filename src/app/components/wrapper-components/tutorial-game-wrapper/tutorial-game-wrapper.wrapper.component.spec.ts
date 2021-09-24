@@ -39,6 +39,11 @@ import { YinshGameState } from 'src/app/games/yinsh/YinshGameState';
 import { yinshTutorial, YinshTutorialMessages } from 'src/app/games/yinsh/YinshTutorial';
 import { YinshCapture, YinshMove } from 'src/app/games/yinsh/YinshMove';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { PylosRules } from 'src/app/games/pylos/PylosRules';
+import { PylosState } from 'src/app/games/pylos/PylosState';
+import { pylosTutorial } from 'src/app/games/pylos/PylosTutorial';
+import { PylosMove } from 'src/app/games/pylos/PylosMove';
+import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
 
 describe('TutorialGameWrapperComponent (wrapper)', () => {
     let componentTestUtils: ComponentTestUtils<QuartoComponent>;
@@ -978,6 +983,16 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     pentagoTutorial[3],
                     PentagoMove.rotationless(0, 0),
                     MGPValidation.failure($localize`You made a move without rotation, try again!`),
+                ], [
+                    new PylosRules(PylosState),
+                    pylosTutorial[4],
+                    PylosMove.fromDrop(new PylosCoord(3, 3, 0), []),
+                    MGPValidation.failure(`Failed, you did not capture any piece.`),
+                ], [
+                    new PylosRules(PylosState),
+                    pylosTutorial[4],
+                    PylosMove.fromDrop(new PylosCoord(0, 1, 0), [new PylosCoord(0, 0, 0)]),
+                    MGPValidation.failure(`Failed, you only captured one piece.`),
                 ], [
                     new SaharaRules(SaharaPartSlice),
                     saharaTutorial[2],

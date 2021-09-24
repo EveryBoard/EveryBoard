@@ -3,7 +3,7 @@ import { PylosCoord } from '../PylosCoord';
 import { PylosMinimax } from '../PylosMinimax';
 import { PylosMove } from '../PylosMove';
 import { PylosOrderedMinimax } from '../PylosOrderedMinimax';
-import { PylosPartSlice } from '../PylosPartSlice';
+import { PylosState } from '../PylosState';
 import { PylosRules } from '../PylosRules';
 
 describe('PylosOrderedMinimax', () => {
@@ -14,13 +14,13 @@ describe('PylosOrderedMinimax', () => {
     const coord2: PylosCoord = new PylosCoord(0, 0, 2);
 
     beforeEach(() => {
-        const rules: PylosRules = new PylosRules(PylosPartSlice);
+        const rules: PylosRules = new PylosRules(PylosState);
         minimax = new PylosOrderedMinimax(rules, 'PylosOrderMinimax');
     });
     it('should delegate getListMoves to PylosMinimax', () => {
         spyOn(PylosMinimax, 'getListMoves').and.callThrough();
 
-        minimax.getListMoves(new MGPNode(null, null, PylosPartSlice.getInitialSlice()));
+        minimax.getListMoves(new MGPNode(null, null, PylosState.getInitialSlice()));
 
         expect(PylosMinimax.getListMoves).toHaveBeenCalledTimes(1);
     });

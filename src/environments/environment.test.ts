@@ -1,9 +1,12 @@
+import { firebaseConfig } from 'src/app/firebaseConfig';
 import { Environment } from './environment-type';
 
 export const environment: Environment = {
     production: true,
     test: false,
-    root: '/board-test',
-    useEmulators: false,
-    emulatorConfig: null,
+    root: '/board-dev/',
+    firebaseConfig: firebaseConfig,
+    emulatorConfig: {
+        firestore: undefined,
+    },
 };

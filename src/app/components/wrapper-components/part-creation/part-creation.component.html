@@ -109,10 +109,7 @@
                 <div class="field">
                     <label class="label">Adversaire</label>
                     <div class="control">
-                        <div *ngIf="viewInfo.candidates.length === 0 else chooseCandidate" i18n
-                        >Potential opponents that join the game will appear here.<br/>
-                         Wait for an opponent to join, so that you can pick one.
-                        </div>
+                        <div *ngIf="viewInfo.candidates.length === 0 else chooseCandidate" i18n>Potential opponents that join the game will appear here.<br/>Wait for an opponent to join, so that you can pick one.</div>
                         <ng-template #chooseCandidate>
                             <ng-container i18n>Click on the opponent against which you would like to play.</ng-container>
                             <div class="table-container"

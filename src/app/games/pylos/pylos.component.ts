@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
 import { PylosMove } from 'src/app/games/pylos/PylosMove';
-import { PylosPartSlice } from 'src/app/games/pylos/PylosPartSlice';
+import { PylosState } from 'src/app/games/pylos/PylosState';
 import { PylosRules } from 'src/app/games/pylos/PylosRules';
 import { PylosMinimax } from 'src/app/games/pylos/PylosMinimax';
 import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
@@ -20,11 +20,11 @@ import { pylosTutorial } from './PylosTutorial';
     templateUrl: './pylos.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSlice> {
+export class PylosComponent extends AbstractGameComponent<PylosMove, PylosState> {
 
     public static VERBOSE: boolean = false;
 
-    public state: PylosPartSlice;
+    public state: PylosState;
 
     public lastLandingCoord: PylosCoord = null;
     public lastStartingCoord: PylosCoord = null;
@@ -46,7 +46,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = new PylosRules(PylosPartSlice);
+        this.rules = new PylosRules(PylosState);
         this.state = this.rules.node.gamePartSlice;
         this.availableMinimaxes = [
             new PylosMinimax(this.rules, 'PylosMinimax'),
@@ -103,7 +103,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
         }
         return this.tryMove(move, this.state);
     }
-    private async tryMove(move: PylosMove, slice: PylosPartSlice): Promise<MGPValidation> {
+    private async tryMove(move: PylosMove, slice: PylosState): Promise<MGPValidation> {
         this.cancelMove();
         return this.chooseMove(move, slice, null, null);
     }
@@ -204,18 +204,9 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
         this.lastMove = this.rules.node.move;
         const repartition: { [owner: number]: number } = this.state.getPiecesRepartition();
         this.remainingPieces = { 0: 15 - repartition[0], 1: 15 - repartition[1] };
+        this.highCapture = null;
         if (this.lastMove) {
-            this.lastLandingCoord = this.lastMove.landingCoord;
-            this.lastStartingCoord = this.lastMove.startingCoord.getOrNull();
-            this.lastFirstCapture = this.lastMove.firstCapture.getOrNull();
-            this.lastSecondCapture = this.lastMove.secondCapture.getOrNull();
-            if (this.lastFirstCapture &&
-                this.isDrawableCoord(this.lastFirstCapture) === false)
-            {
-                this.highCapture = this.lastFirstCapture;
-            } else {
-                this.highCapture = null;
-            }
+            this.showLastMove();
         } else {
             this.lastLandingCoord = null;
             this.lastStartingCoord = null;
@@ -224,6 +215,17 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
             this.chosenFirstCapture = null;
             this.chosenStartingCoord = null;
             this.chosenLandingCoord = null;
+        }
+    }
+    private showLastMove(): void {
+        this.lastLandingCoord = this.lastMove.landingCoord;
+        this.lastStartingCoord = this.lastMove.startingCoord.getOrNull();
+        this.lastFirstCapture = this.lastMove.firstCapture.getOrNull();
+        this.lastSecondCapture = this.lastMove.secondCapture.getOrNull();
+        if (this.lastFirstCapture &&
+            this.isDrawableCoord(this.lastFirstCapture) === false)
+        {
+            this.highCapture = this.lastFirstCapture;
         }
     }
     private isDrawableCoord(coord: PylosCoord): boolean {
