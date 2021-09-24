@@ -25,7 +25,6 @@ import { JoueursDAOMock } from '../../dao/tests/JoueursDAOMock.spec';
 import { ChatDAOMock } from '../../dao/tests/ChatDAOMock.spec';
 import { PartDAOMock } from '../../dao/tests/PartDAOMock.spec';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { LocalGameWrapperComponent }
     from '../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { Minimax } from 'src/app/jscaip/Minimax';
@@ -71,7 +70,6 @@ export class SimpleComponentTestUtils<T> {
     public static async create<T>(componentType: Type<T>): Promise<SimpleComponentTestUtils<T>> {
         await TestBed.configureTestingModule({
             imports: [
-                MatSnackBarModule,
                 RouterTestingModule.withRoutes([
                     { path: '**', component: BlankComponent },
                 ]),
@@ -175,7 +173,6 @@ export class ComponentTestUtils<T extends GameComponent> {
         const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub(game, 'joinerId');
         await TestBed.configureTestingModule({
             imports: [
-                MatSnackBarModule,
                 AppModule,
                 RouterTestingModule.withRoutes([
                     { path: 'play', component: OnlineGameWrapperComponent },

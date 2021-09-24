@@ -14,7 +14,6 @@ import { IJoiner, PartType } from 'src/app/domain/ijoiner';
 import { JoinerDAO } from 'src/app/dao/JoinerDAO';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AuthenticationService } from '../AuthenticationService';
 import { AuthenticationServiceMock } from './AuthenticationService.spec';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
@@ -29,7 +28,6 @@ describe('GameService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
-                MatSnackBarModule,
                 RouterTestingModule.withRoutes([
                     { path: '**', component: BlankComponent },
                 ]),
