@@ -4,7 +4,7 @@ describe('LocaleUtils', () => {
     describe('getLocale', () => {
         it('should use locale stored in localStorage', () => {
             // given a localStage that defines a locale
-            spyOn(localStorage, 'getItem');
+            spyOn(localStorage, 'getItem').and.returnValue('en');
             localStorage.setItem('locale', 'en');
 
             // when the locale is computed
