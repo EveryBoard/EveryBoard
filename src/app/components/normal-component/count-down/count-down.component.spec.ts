@@ -38,11 +38,11 @@ describe('CountDownComponent', () => {
             expect(() => component.start()).toThrowError(error);
         });
         it('should show remaining time once set', () => {
-            component.setDuration(2000);
+            component.setDuration(62000);
             fixture.detectChanges();
             const element: DebugElement = fixture.debugElement.query(By.css('#remainingTime'));
             const timeText: string = element.nativeElement.innerHTML;
-            expect(timeText).toBe('2.0s');
+            expect(timeText).toBe('1:02');
         });
         it('should throw when starting stopped chrono again', () => {
             component.setDuration(1250);
@@ -93,30 +93,30 @@ describe('CountDownComponent', () => {
         tick(1000);
         fixture.detectChanges();
         let timeText: string = fixture.debugElement.query(By.css('#remainingTime')).nativeElement.innerHTML;
-        expect(timeText).toBe('2.0s');
+        expect(timeText).toBe('0:02');
         tick(1000);
         fixture.detectChanges();
         timeText = fixture.debugElement.query(By.css('#remainingTime')).nativeElement.innerHTML;
-        expect(timeText).toBe('1.0s');
+        expect(timeText).toBe('0:01');
         component.stop();
     }));
-    it('should update written time correctly even when playing in less than refreshing time', fakeAsync(() => {
+    it('should update written time correctly (closest rounding) even when playing in less than refreshing time', fakeAsync(() => {
         spyOn(component.outOfTimeAction, 'emit').and.callThrough();
         component.setDuration(3000);
         component.start();
 
-        tick(800);
+        tick(800); // 2.2s -> 0:02
         component.pause();
         fixture.detectChanges();
         let timeText: string = fixture.debugElement.query(By.css('#remainingTime')).nativeElement.innerHTML;
-        expect(timeText).toBe('2.2s');
+        expect(timeText).toBe('0:02');
 
         component.resume();
-        tick(900);
+        tick(600); // 1.6s -> 0:02
         component.pause();
         fixture.detectChanges();
         timeText = fixture.debugElement.query(By.css('#remainingTime')).nativeElement.innerHTML;
-        expect(timeText).toBe('1.3s');
+        expect(timeText).toBe('0:02');
     }));
     it('should emit when timeout reached', fakeAsync(() => {
         spyOn(component.outOfTimeAction, 'emit').and.callThrough();
@@ -142,6 +142,16 @@ describe('CountDownComponent', () => {
             component.dangerTimeLimit = 10 * 1000;
             component.setDuration(8 * 1000);
             expect(component.getTimeStyle()).toEqual(component.DANGER_TIME_ODD);
+        });
+        it('Should be in passive style when passive', () => {
+            // given a chrono that could be in danger time style
+            component.setDuration(8 * 1000);
+
+            // when it become passive
+            component.active = false;
+
+            // then it should still be in passive style
+            expect(component.getTimeStyle()).toEqual(component.PASSIVE_STYLE);
         });
     });
 });
