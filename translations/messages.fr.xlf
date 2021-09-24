@@ -2193,9 +2193,9 @@
             &lt;li&gt;Un déplacement ne peut se faire que quand la case d&apos;arrivée est plus haute que la case de départ.&lt;/li&gt;
         &lt;/ol&gt;</target>
       </trans-unit>
-      <trans-unit id="7244821610544753622" datatype="html">
-        <source>Square (1/3)</source>
-        <target>Carré (1/3)</target>
+      <trans-unit id="2195961423433457989" datatype="html">
+        <source>Square (1/2)</source>
+        <target>Carré (1/2)</target>
       </trans-unit>
       <trans-unit id="7156552420001155973" datatype="html">
         <source>When the piece you just moved or dropped is the fourth one of a square of your color,
@@ -2211,45 +2211,33 @@
         Une pièce choisie pour être enlevée ne peut pas être en dessous d&apos;autres pièces.
         Une pièce choisie peut être la pièce que vous venez de placer.
         Vous jouez Foncé.&lt;br/&gt;&lt;br/&gt;
-        Formez un carré, puis cliquez deux fois sur l&apos;une des quatre pièce pour n&apos;enlever que celle là.</target>
+        Formez un carré, puis cliquez deux fois sur l&apos;une des quatre pièces pour n&apos;enlever que celle-là.</target>
       </trans-unit>
       <trans-unit id="5456823255724159144" datatype="html">
         <source>Congratulations, you have saved up one piece.</source>
         <target>Bravo, vous avez économisé une pièce.</target>
       </trans-unit>
-      <trans-unit id="1514360345752656911" datatype="html">
-        <source>Square (2/3)</source>
-        <target>Carré (2/3)</target>
+      <trans-unit id="3444837986058371302" datatype="html">
+        <source>Square (2/2)</source>
+        <target>Carré (2/2)</target>
       </trans-unit>
-      <trans-unit id="7482163381933878807" datatype="html">
-        <source>You&apos;re playing Dark.&lt;br/&lt;br/&gt;
-        Do like in the previous step, but this time click on both pieces on the top row.</source>
-        <target>Vous jouez Foncé.&lt;br/&lt;br/&gt;
-        Faites comme à l&apos;étape précédente, mais cliquez cette fois sur les deux pièces du haut.</target>
+      <trans-unit id="635645551351663738" datatype="html">
+        <source>You&apos;re playing Dark.&lt;br/&gt;&lt;br/&gt;
+        Do like in the previous step, but this time click on two different pieces.</source>
+        <target>Vous jouez Foncé.&lt;br/&gt;&lt;br/&gt;
+        Faites comme à l&apos;étape précédente, mais cliquez cette fois sur deux pièces différentes.</target>
+      </trans-unit>
+      <trans-unit id="8313533670567464817" datatype="html">
+        <source>Failed, you only captured one piece.</source>
+        <target>Raté, vous n'avez capturé qu'une pièce.</target>
+      </trans-unit>
+      <trans-unit id="5608779123109622436" datatype="html">
+        <source>Failed, you did not capture any piece.</source>
+        <target>Raté, vous n'avez capturé aucune pièce.</target>
       </trans-unit>
       <trans-unit id="3455768301736755830" datatype="html">
         <source>Congratulations, you have saved up two pieces.</source>
         <target>Bravo, vous avez économisé deux pièces.</target>
-      </trans-unit>
-      <trans-unit id="521772581425892664" datatype="html">
-        <source>Square (3/3)</source>
-        <target>Carré (3/3)</target>
-      </trans-unit>
-      <trans-unit id="5406967993715013416" datatype="html">
-        <source>You&apos;re playing Dark.
-        Do as in the last step, but this time
-        you will have to take, as expected, the highest piece,
-        and then take the piece below it, which can now be taken.&lt;br/&gt;&lt;br/&gt;
-        Go ahead.</source>
-        <target>Vous jouez Foncé.
-        Faites comme à l&apos;étape précédente, mais cette fois :
-        vous devrez, naturellement, capturer en premier votre pièce la plus haute,
-        et ensuite seulement capturer celle du dessous, qui vient d&apos;être enlevable à nouveau.&lt;br/&gt;&lt;br/&gt;
-        Allez-y.</target>
-      </trans-unit>
-      <trans-unit id="6903437514996680111" datatype="html">
-        <source>Congratulations, you have saved up two pieces. You are now ready to play.</source>
-        <target>Bravo, vous avez économisé deux pièces. Vous êtes maintenant prêt à jouer.</target>
       </trans-unit>
       <trans-unit id="5796940069053691279" datatype="html">
         <source>You must give a piece.</source>

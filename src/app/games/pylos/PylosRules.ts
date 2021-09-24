@@ -7,17 +7,17 @@ import { Player } from 'src/app/jscaip/Player';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { PylosCoord } from './PylosCoord';
 import { PylosMove } from './PylosMove';
-import { PylosPartSlice } from './PylosPartSlice';
+import { PylosState } from './PylosState';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PylosFailure } from './PylosFailure';
 
 export class PylosNode extends MGPNode<PylosRules,
                                        PylosMove,
-                                       PylosPartSlice> {}
+                                       PylosState> {}
 
-export class PylosRules extends Rules<PylosMove, PylosPartSlice> {
+export class PylosRules extends Rules<PylosMove, PylosState> {
 
-    public static getSliceInfo(slice: PylosPartSlice): { freeToMove: PylosCoord[], landable: PylosCoord[] } {
+    public static getSliceInfo(slice: PylosState): { freeToMove: PylosCoord[], landable: PylosCoord[] } {
         const freeToMove: PylosCoord[] = [];
         const landable: PylosCoord[] = [];
         for (let z: number = 0; z < 3; z++) {
@@ -57,7 +57,7 @@ export class PylosRules extends Rules<PylosMove, PylosPartSlice> {
         }
         return drops;
     }
-    public static canCapture(slice: PylosPartSlice, landingCoord: PylosCoord): boolean {
+    public static canCapture(slice: PylosState, landingCoord: PylosCoord): boolean {
         const currentPlayer: number = slice.getCurrentPlayer().value;
         for (const vertical of [Orthogonal.UP, Orthogonal.DOWN]) {
             const firstNeighboors: MGPOptional<PylosCoord> = landingCoord.getNextValid(vertical);
@@ -102,12 +102,12 @@ export class PylosRules extends Rules<PylosMove, PylosPartSlice> {
         return possiblesCapturesSet;
     }
     public static applyLegalMove(move: PylosMove,
-                                 slice: PylosPartSlice,
+                                 slice: PylosState,
                                  _status: LegalityStatus)
-    : PylosPartSlice {
+    : PylosState {
         return slice.applyLegalMove(move);
     }
-    public static isValidCapture(slice: PylosPartSlice, move: PylosMove, capture: PylosCoord): boolean {
+    public static isValidCapture(slice: PylosState, move: PylosMove, capture: PylosCoord): boolean {
         const currentPlayer: number = slice.getCurrentPlayer().value;
         if (!capture.equals(move.landingCoord) &&
             slice.getBoardAt(capture) !== currentPlayer) {
@@ -122,7 +122,7 @@ export class PylosRules extends Rules<PylosMove, PylosPartSlice> {
         return true;
     }
     public static getGameStatus(node: PylosNode): GameStatus {
-        const state: PylosPartSlice = node.gamePartSlice;
+        const state: PylosState = node.gamePartSlice;
         const ownershipMap: { [owner: number]: number } = state.getPiecesRepartition();
         if (ownershipMap[Player.ZERO.value] === 15) {
             return GameStatus.ONE_WON;
@@ -133,13 +133,13 @@ export class PylosRules extends Rules<PylosMove, PylosPartSlice> {
         }
     }
     public applyLegalMove(move: PylosMove,
-                          slice: PylosPartSlice,
+                          slice: PylosState,
                           status: LegalityStatus)
-    : PylosPartSlice
+    : PylosState
     {
         return PylosRules.applyLegalMove(move, slice, status);
     }
-    public isLegal(move: PylosMove, slice: PylosPartSlice): LegalityStatus {
+    public isLegal(move: PylosMove, slice: PylosState): LegalityStatus {
         if (slice.getBoardAt(move.landingCoord) !== Player.NONE.value) {
             return { legal: MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE) };
         }

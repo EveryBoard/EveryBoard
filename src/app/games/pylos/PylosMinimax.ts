@@ -1,16 +1,16 @@
 import { Player } from 'src/app/jscaip/Player';
 import { PylosCoord } from './PylosCoord';
 import { PylosMove } from './PylosMove';
-import { PylosPartSlice } from './PylosPartSlice';
+import { PylosState } from './PylosState';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { PylosNode, PylosRules } from './PylosRules';
 import { GameStatus } from 'src/app/jscaip/Rules';
 
-export class PylosMinimax extends Minimax<PylosMove, PylosPartSlice> {
+export class PylosMinimax extends Minimax<PylosMove, PylosState> {
 
     public static getListMoves(node: PylosNode): PylosMove[] {
-        const state: PylosPartSlice = node.gamePartSlice;
+        const state: PylosState = node.gamePartSlice;
         const result: PylosMove[] = [];
         const sliceInfo: { freeToMove: PylosCoord[]; landable: PylosCoord[]; } = PylosRules.getSliceInfo(state);
         const climbings: PylosMove[] = PylosRules.getClimbingMoves(sliceInfo);

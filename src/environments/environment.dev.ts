@@ -5,7 +5,7 @@ export const environment: Environment = {
     production: true,
     test: false,
     root: '/board-dev/',
-    firebaseConfig: firebaseConfig,
+    firebaseConfig: firebasConfig,
     emulatorConfig: {
         firestore: undefined,
     },
