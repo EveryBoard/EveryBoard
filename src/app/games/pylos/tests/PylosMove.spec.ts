@@ -68,7 +68,7 @@ describe('PylosMove', () => {
         expect(move.equals(otherMove3)).toBeFalse();
         expect(move.equals(otherMove4)).toBeFalse();
     });
-    it('Should encode [low, high] as [high, low]', () => {
+    it('Should create [low, high] equal to [high, low]', () => {
         const moveAB: PylosMove = PylosMove.fromClimb(coord, highCoord, [coord, highCoord]);
         expect(moveAB.firstCapture.get()).toEqual(highCoord);
     });
