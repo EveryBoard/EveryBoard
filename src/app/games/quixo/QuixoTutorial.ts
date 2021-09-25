@@ -1,4 +1,4 @@
-import { QuixoPartSlice } from 'src/app/games/quixo/QuixoPartSlice';
+import { QuixoState } from 'src/app/games/quixo/QuixoState';
 import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
@@ -15,7 +15,7 @@ export const quixoTutorial: TutorialStep[] = [
         The first player plays with dark pieces, the second with light pieces.
         The board is made of 25 spaces spread over a 5x5 square.
         Every piece has a neutral side, a light side, and a dark side.`,
-        QuixoPartSlice.getInitialSlice(),
+        QuixoState.getInitialState(),
     ),
     TutorialStep.fromMove(
         $localize`What a move looks like (without animation)`,
@@ -29,7 +29,7 @@ export const quixoTutorial: TutorialStep[] = [
         Once on the other side, all pieces will move by one space in the opposing direction.
         Afterwards, if the piece was neutral, it will become yours and takes your color.<br/><br/>
         For example, take the bottom right neutral piece, and move it to the left (you're playing Light).`,
-        new QuixoPartSlice([
+        new QuixoState([
             [_, _, _, _, _],
             [_, _, _, _, _],
             [_, _, _, _, _],
@@ -49,7 +49,7 @@ export const quixoTutorial: TutorialStep[] = [
         If you create both, you lose too!<br/><br/>
         You can win with this board, try it.
         You're playing Light.`,
-        new QuixoPartSlice([
+        new QuixoState([
             [_, X, _, X, X],
             [_, O, O, _, O],
             [X, X, X, O, X],

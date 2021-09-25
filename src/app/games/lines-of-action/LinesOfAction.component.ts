@@ -59,7 +59,7 @@ export class LinesOfActionComponent extends AbstractGameComponent<LinesOfActionM
                 const move: MGPFallible<LinesOfActionMove> =
                     LinesOfActionMove.of(this.selected.get(), new Coord(x, y));
                 if (move.isSuccess()) {
-                    return this.chooseMove(move.get(), this.rules.node.gamePartSlice, null, null);
+                    return this.chooseMove(move.get(), this.rules.node.gameState, null, null);
                 } else {
                     return this.cancelMove(LinesOfActionFailure.INVALID_DIRECTION);
                 }
@@ -73,17 +73,17 @@ export class LinesOfActionComponent extends AbstractGameComponent<LinesOfActionM
             return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE);
         }
         this.selected = MGPOptional.of(coord);
-        this.targets = LinesOfActionRules.possibleTargets(this.rules.node.gamePartSlice, this.selected.get());
+        this.targets = LinesOfActionRules.possibleTargets(this.rules.node.gameState, this.selected.get());
         if (this.targets.length === 0) {
             return this.cancelMove(LinesOfActionFailure.PIECE_CANNOT_MOVE);
         }
         return MGPValidation.SUCCESS;
     }
     public getState(): LinesOfActionState {
-        return this.rules.node.gamePartSlice;
+        return this.rules.node.gameState;
     }
     public getPreviousState(): LinesOfActionState {
-        return this.rules.node.mother.gamePartSlice;
+        return this.rules.node.mother.gameState;
     }
     public updateBoard(): void {
         this.cancelMoveAttempt();

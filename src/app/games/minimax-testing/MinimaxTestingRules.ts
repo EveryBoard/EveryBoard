@@ -1,6 +1,6 @@
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
-import { MinimaxTestingPartSlice } from './MinimaxTestingPartSlice';
+import { MinimaxTestingState } from './MinimaxTestingState';
 import { MinimaxTestingMove } from './MinimaxTestingMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
@@ -9,23 +9,23 @@ import { Player } from 'src/app/jscaip/Player';
 
 export abstract class MinimaxTestingNode extends MGPNode<MinimaxTestingRules,
                                                          MinimaxTestingMove,
-                                                         MinimaxTestingPartSlice> {}
+                                                         MinimaxTestingState> {}
 
-export class MinimaxTestingRules extends Rules<MinimaxTestingMove, MinimaxTestingPartSlice> {
+export class MinimaxTestingRules extends Rules<MinimaxTestingMove, MinimaxTestingState> {
 
     public applyLegalMove(move: MinimaxTestingMove,
-                          slice: MinimaxTestingPartSlice,
+                          state: MinimaxTestingState,
                           status: LegalityStatus)
-    : MinimaxTestingPartSlice
+    : MinimaxTestingState
     {
-        const newX: number = slice.location.x + (move.right === true ? 1 : 0);
-        const newY: number = slice.location.y + (move.right === false ? 1 : 0);
+        const newX: number = state.location.x + (move.right === true ? 1 : 0);
+        const newY: number = state.location.y + (move.right === false ? 1 : 0);
         const newLocation: Coord = new Coord(newX, newY);
-        return new MinimaxTestingPartSlice(slice.turn + 1, newLocation);
+        return new MinimaxTestingState(state.turn + 1, newLocation);
     }
-    public isLegal(move: MinimaxTestingMove, slice: MinimaxTestingPartSlice): LegalityStatus {
-        const coord: Coord = slice.location;
-        const board: number[][] = slice.getCopiedBoard();
+    public isLegal(move: MinimaxTestingMove, state: MinimaxTestingState): LegalityStatus {
+        const coord: Coord = state.location;
+        const board: number[][] = state.getCopiedBoard();
         if (coord.x + 1 === board[0].length && move.right === true) {
             return { legal: MGPValidation.failure('incorrect move') };
         }
@@ -35,7 +35,7 @@ export class MinimaxTestingRules extends Rules<MinimaxTestingMove, MinimaxTestin
         return { legal: MGPValidation.SUCCESS };
     }
     public getGameStatus(node: MinimaxTestingNode): GameStatus {
-        const state: MinimaxTestingPartSlice = node.gamePartSlice;
+        const state: MinimaxTestingState = node.gameState;
         const currentValue: number = state.getBoardAt(state.location);
         if (currentValue === Player.ZERO.getVictoryValue()) {
             return GameStatus.ZERO_WON;

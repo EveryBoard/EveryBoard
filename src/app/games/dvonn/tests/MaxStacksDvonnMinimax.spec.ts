@@ -2,7 +2,7 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { DvonnBoard } from '../DvonnBoard';
 import { DvonnMove } from '../DvonnMove';
-import { DvonnGameState } from '../DvonnGameState';
+import { DvonnState } from '../DvonnState';
 import { DvonnPieceStack } from '../DvonnPieceStack';
 import { DvonnRules } from '../DvonnRules';
 import { MaxStacksDvonnMinimax } from '../MaxStacksDvonnMinimax';
@@ -19,7 +19,7 @@ describe('MaxStacksDvonnMinimax', () => {
     const WW: DvonnPieceStack = new DvonnPieceStack(Player.ONE, 2, false);
 
     beforeEach(() => {
-        rules = new DvonnRules(DvonnGameState);
+        rules = new DvonnRules(DvonnState);
         minimax = new MaxStacksDvonnMinimax(rules, 'MaxStacksDvonnMinimax');
     });
     it('should propose 41 moves at first turn', () => {
@@ -35,12 +35,12 @@ describe('MaxStacksDvonnMinimax', () => {
             [_, _, _, _, _, _, _, _, _, _, _],
         ]);
 
-        const slice: DvonnGameState = new DvonnGameState(board, 0, false);
-        rules.node = new MGPNode(null, null, slice);
+        const state: DvonnState = new DvonnState(board, 0, false);
+        rules.node = new MGPNode(null, null, state);
         const bestMove: DvonnMove = rules.node.findBestMove(1, minimax);
         expect(minimax.getListMoves(rules.node).length).toBe(3); // There are three possible moves
         // The best is the one that finishes on WW
-        expect(slice.board[bestMove.end.y][bestMove.end.x]).toBe(DvonnPieceStack.encoder.encodeNumber(WW));
+        expect(state.board[bestMove.end.y][bestMove.end.x]).toBe(DvonnPieceStack.encoder.encodeNumber(WW));
     });
     it('should prefer owning an opponent piece than a source', () => {
         // B can choose between doubling one of its stack or owning an opponent's stack
@@ -52,11 +52,11 @@ describe('MaxStacksDvonnMinimax', () => {
             [_, _, _, _, _, _, _, _, _, _, _],
         ]);
 
-        const slice: DvonnGameState = new DvonnGameState(board, 0, false);
-        rules.node = new MGPNode(null, null, slice);
+        const state: DvonnState = new DvonnState(board, 0, false);
+        rules.node = new MGPNode(null, null, state);
         const bestMove: DvonnMove = rules.node.findBestMove(1, minimax);
         expect(minimax.getListMoves(rules.node).length).toBe(2);
         // The best move is the one that finishes on W
-        expect(slice.board[bestMove.end.y][bestMove.end.x]).toBe(DvonnPieceStack.encoder.encodeNumber(W));
+        expect(state.board[bestMove.end.y][bestMove.end.x]).toBe(DvonnPieceStack.encoder.encodeNumber(W));
     });
 });

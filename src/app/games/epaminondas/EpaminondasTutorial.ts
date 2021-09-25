@@ -1,5 +1,5 @@
 import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
-import { EpaminondasPartSlice } from 'src/app/games/epaminondas/EpaminondasPartSlice';
+import { EpaminondasState } from 'src/app/games/epaminondas/EpaminondasState';
 import { Direction } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -14,14 +14,14 @@ export const epaminondasTutorial: TutorialStep[] = [
         $localize`This is the initial board of Epaminondas.
         The top line is the starting line of Light.
         The bottom line is the starting line of Dark.`,
-        EpaminondasPartSlice.getInitialSlice(),
+        EpaminondasState.getInitialState(),
     ),
     TutorialStep.informational(
         $localize`Goal of the game (1/2)`,
         $localize`After multiple moves, if at the beginning of its turn, a player has more pieces on the opponent's starting line
         than the number of pieces the opponent has on the player's starting line, the player wins.
         Here, it's Dark's turn to play: Dark has therefore won.`,
-        new EpaminondasPartSlice([
+        new EpaminondasState([
             [_, _, _, _, _, O, _, _, X, X, X, X, X, X],
             [_, _, _, _, _, O, _, _, _, _, _, _, X, X],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -40,7 +40,7 @@ export const epaminondasTutorial: TutorialStep[] = [
         $localize`Goal of the game (2/2)`,
         $localize`Here, it is Light's turn.
         Light wins because they have two pieces on Dark's starting line, and Dark only has one on Light's starting line.`,
-        new EpaminondasPartSlice([
+        new EpaminondasState([
             [_, _, _, _, _, O, _, _, _, _, X, X, X, X],
             [_, _, _, _, _, O, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -63,9 +63,9 @@ export const epaminondasTutorial: TutorialStep[] = [
             <li>Click on a piece.</li>
             <li>Click on a empty neighboring square.</li>
         </ol>`,
-        EpaminondasPartSlice.getInitialSlice(),
+        EpaminondasState.getInitialState(),
         new EpaminondasMove(0, 10, 1, 1, Direction.UP),
-        (move: EpaminondasMove, state: EpaminondasPartSlice) => {
+        (move: EpaminondasMove, state: EpaminondasState) => {
             if (move.movedPieces === 1) {
                 return MGPValidation.SUCCESS;
             } else {
@@ -83,9 +83,9 @@ export const epaminondasTutorial: TutorialStep[] = [
             <li>Click on one of the squares highlighted in yellow; you can move your phalanx up to a distance equal to its length.</li>
         </ol><br/>
         Move a phalanx!`,
-        EpaminondasPartSlice.getInitialSlice(),
+        EpaminondasState.getInitialState(),
         new EpaminondasMove(0, 11, 2, 1, Direction.UP),
-        (move: EpaminondasMove, _: EpaminondasPartSlice) => {
+        (move: EpaminondasMove, _: EpaminondasState) => {
             if (move.movedPieces > 1) {
                 return MGPValidation.SUCCESS;
             } else {
@@ -106,7 +106,7 @@ export const epaminondasTutorial: TutorialStep[] = [
             <li>The first piece of your phalanx should land on the first piece of the opponent's phalanx that you want to capture.</li>
         </ol><br/>
         Capture a phalanx.`,
-        new EpaminondasPartSlice([
+        new EpaminondasState([
             [_, _, _, _, _, _, _, _, X, X, X, X, X, X],
             [_, _, _, _, _, _, X, _, _, _, _, _, _, _],
             [_, _, _, _, _, X, _, _, _, _, _, _, _, _],

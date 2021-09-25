@@ -19,13 +19,13 @@ export class YinshMinimax extends Minimax<YinshMove, YinshGameState, YinshLegali
         if (status.isEndGame) {
             return NodeUnheritance.fromWinner(status.winner);
         } else {
-            return new NodeUnheritance(node.gamePartSlice.sideRings[0] * Player.ZERO.getScoreModifier() +
-                node.gamePartSlice.sideRings[1] * Player.ONE.getScoreModifier());
+            return new NodeUnheritance(node.gameState.sideRings[0] * Player.ZERO.getScoreModifier() +
+                node.gameState.sideRings[1] * Player.ONE.getScoreModifier());
         }
     }
     public getListMoves(node: YinshNode): YinshMove[] {
         const moves: YinshMove[] = [];
-        const state: YinshGameState = node.gamePartSlice;
+        const state: YinshGameState = node.gameState;
 
         if (state.isInitialPlacementPhase()) {
             for (const [coord, content] of state.hexaBoard.getCoordsAndContents()) {

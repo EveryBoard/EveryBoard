@@ -1,5 +1,5 @@
 import { fakeAsync } from '@angular/core/testing';
-import { SixGameState } from 'src/app/games/six/SixGameState';
+import { SixState } from 'src/app/games/six/SixGameState';
 import { SixMove } from 'src/app/games/six/SixMove';
 import { SixFailure } from 'src/app/games/six/SixFailure';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -27,8 +27,8 @@ describe('SixComponent', () => {
         const board: NumberTable = [
             [O],
         ];
-        const state: SixGameState = SixGameState.fromRepresentation(board, 41);
-        componentTestUtils.setupSlice(state);
+        const state: SixState = SixState.fromRepresentation(board, 41);
+        componentTestUtils.setupState(state);
 
         await componentTestUtils.expectClickFailure('#piece_0_0', RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
     }));
@@ -46,8 +46,8 @@ describe('SixComponent', () => {
             [O],
             [X],
         ];
-        const state: SixGameState = SixGameState.fromRepresentation(board, 40);
-        componentTestUtils.setupSlice(state);
+        const state: SixState = SixState.fromRepresentation(board, 40);
+        componentTestUtils.setupState(state);
 
         const gameComponent: SixComponent = componentTestUtils.getComponent();
         await componentTestUtils.expectClickSuccess('#piece_0_0');
@@ -66,8 +66,8 @@ describe('SixComponent', () => {
             [O, O, X],
             [X, _, _],
         ];
-        const state: SixGameState = SixGameState.fromRepresentation(board, 40);
-        componentTestUtils.setupSlice(state);
+        const state: SixState = SixState.fromRepresentation(board, 40);
+        componentTestUtils.setupState(state);
 
         // Choosing piece
         await componentTestUtils.expectClickSuccess('#piece_1_2');
@@ -103,8 +103,8 @@ describe('SixComponent', () => {
             [O, O, O, O, O, X, X, X, X, X],
             [_, _, _, _, _, _, _, _, _, X],
         ];
-        const state: SixGameState = SixGameState.fromRepresentation(board, 42);
-        componentTestUtils.setupSlice(state);
+        const state: SixState = SixState.fromRepresentation(board, 42);
+        componentTestUtils.setupState(state);
 
         await componentTestUtils.expectClickSuccess('#piece_0_0');
         const move: SixMove = SixMove.fromDeplacement(new Coord(0, 0), new Coord(-1, 1));
@@ -119,8 +119,8 @@ describe('SixComponent', () => {
             [O, O, X],
             [X, _, _],
         ];
-        const state: SixGameState = SixGameState.fromRepresentation(board, 40);
-        componentTestUtils.setupSlice(state);
+        const state: SixState = SixState.fromRepresentation(board, 40);
+        componentTestUtils.setupState(state);
 
         // Choosing piece
         await componentTestUtils.expectClickSuccess('#piece_1_2');
@@ -146,8 +146,8 @@ describe('SixComponent', () => {
             [O],
             [X],
         ];
-        const state: SixGameState = SixGameState.fromRepresentation(board, 40);
-        componentTestUtils.setupSlice(state);
+        const state: SixState = SixState.fromRepresentation(board, 40);
+        componentTestUtils.setupState(state);
 
         await componentTestUtils.expectClickFailure('#neighboor_1_1', SixFailure.CAN_NO_LONGER_DROP);
     }));
@@ -160,8 +160,8 @@ describe('SixComponent', () => {
             [O],
             [X],
         ];
-        const state: SixGameState = SixGameState.fromRepresentation(board, 40);
-        componentTestUtils.setupSlice(state);
+        const state: SixState = SixState.fromRepresentation(board, 40);
+        componentTestUtils.setupState(state);
 
         await componentTestUtils.expectClickSuccess('#piece_0_2');
         await componentTestUtils.expectClickSuccess('#neighboor_0_-1');

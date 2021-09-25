@@ -1,5 +1,5 @@
 import { SaharaMove } from 'src/app/games/sahara/SaharaMove';
-import { SaharaPartSlice } from 'src/app/games/sahara/SaharaPartSlice';
+import { SaharaState } from 'src/app/games/sahara/SaharaState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -15,14 +15,14 @@ export const saharaTutorial: TutorialStep[] = [
         $localize`Initial board`,
         $localize`Sâhârâ is played on a board where each space is a triangle.
         Each player has six pyramids.`,
-        SaharaPartSlice.getInitialSlice(),
+        SaharaState.getInitialState(),
     ),
     TutorialStep.informational(
         $localize`Goal of the game`,
         $localize`At Sâhârâ, the goal of the game is to immobilize one of the opponent's pyramids.
         To do so, you have to occupy all neighboring space of that pyramid.
         Here, Light has lost because its leftmost pyramid is immobilized.`,
-        new SaharaPartSlice([
+        new SaharaState([
             [N, N, _, _, X, _, _, O, X, N, N],
             [N, _, _, _, _, _, _, _, _, _, N],
             [X, O, _, _, _, _, _, _, _, _, O],
@@ -41,9 +41,9 @@ export const saharaTutorial: TutorialStep[] = [
             <li>Click on one of its two or three neighboring spaces in order to move your pyramid there.</li>
         </ol><br/>
         Do any simple step.`,
-        SaharaPartSlice.getInitialSlice(),
+        SaharaState.getInitialState(),
         new SaharaMove(new Coord(2, 0), new Coord(2, 1)),
-        (move: SaharaMove, state: SaharaPartSlice) => {
+        (move: SaharaMove, state: SaharaState) => {
             if (move.isSimpleStep()) {
                 return MGPValidation.SUCCESS;
             } else {
@@ -61,9 +61,9 @@ export const saharaTutorial: TutorialStep[] = [
             <li>Click on one of the 6 destinations that you can reach in two steps:
                  the 6 neighboring light spaces of the 3 dark spaces that are neighbors of your pyramid.
         </ol>`,
-        SaharaPartSlice.getInitialSlice(),
+        SaharaState.getInitialState(),
         new SaharaMove(new Coord(7, 0), new Coord(5, 0)),
-        (move: SaharaMove, _: SaharaPartSlice) => {
+        (move: SaharaMove, _: SaharaState) => {
             if (move.isSimpleStep()) {
                 return MGPValidation.failure($localize`Failed! You have made a single step.`);
             } else {

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { EpaminondasLegalityStatus } from 'src/app/games/epaminondas/epaminondaslegalitystatus';
 import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
-import { EpaminondasPartSlice } from 'src/app/games/epaminondas/EpaminondasPartSlice';
+import { EpaminondasState } from 'src/app/games/epaminondas/EpaminondasState';
 import { EpaminondasRules } from 'src/app/games/epaminondas/EpaminondasRules';
 import { EpaminondasMinimax } from 'src/app/games/epaminondas/EpaminondasMinimax';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -24,7 +24,7 @@ import { epaminondasTutorial } from './EpaminondasTutorial';
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
 export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
-                                                                EpaminondasPartSlice,
+                                                                EpaminondasState,
                                                                 EpaminondasLegalityStatus>
 {
     public NONE: number = Player.NONE.value;
@@ -52,7 +52,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = new EpaminondasRules(EpaminondasPartSlice);
+        this.rules = new EpaminondasRules(EpaminondasState);
         this.availableMinimaxes = [
             new EpaminondasMinimax(this.rules, 'Normal'),
             new PositionalEpaminondasMinimax(this.rules, 'Positional'),
@@ -66,7 +66,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         if (this.rules.node.move != null) {
             this.showPreviousMove();
         }
-        this.board = this.rules.node.gamePartSlice.getCopiedBoard();
+        this.board = this.rules.node.gameState.getCopiedBoard();
     }
     private showPreviousMove() {
         const move: EpaminondasMove = this.rules.node.move;
@@ -76,9 +76,9 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
             moved = moved.getNext(move.direction, 1);
             this.moveds.push(moved);
         }
-        const PREVIOUS_ENNEMY: number = this.rules.node.mother.gamePartSlice.getCurrentEnnemy().value;
+        const PREVIOUS_ENNEMY: number = this.rules.node.mother.gameState.getCurrentEnnemy().value;
         while (moved.isInRange(14, 12) &&
-               this.rules.node.mother.gamePartSlice.getBoardAt(moved) === PREVIOUS_ENNEMY) {
+               this.rules.node.mother.gameState.getBoardAt(moved) === PREVIOUS_ENNEMY) {
             this.captureds.push(moved);
             moved = moved.getNext(move.direction, 1);
         }
@@ -98,8 +98,8 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
     }
     private async firstClick(x: number, y: number): Promise<MGPValidation> {
         this.hidePreviousMove(); // TODO check if must be deleted
-        const ENNEMY: number = this.rules.node.gamePartSlice.getCurrentEnnemy().value;
-        const PLAYER: number = this.rules.node.gamePartSlice.getCurrentPlayer().value;
+        const ENNEMY: number = this.rules.node.gameState.getCurrentEnnemy().value;
+        const PLAYER: number = this.rules.node.gameState.getCurrentPlayer().value;
         switch (this.board[y][x]) {
             case PLAYER:
                 this.firstPiece = new Coord(x, y);
@@ -184,8 +184,8 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         return neighboors;
     }
     private getLandingsToward(landing: Coord, direction: Direction, phalanxSize: number): Coord[] {
-        const PLAYER: number = this.rules.node.gamePartSlice.getCurrentPlayer().value;
-        const ENNEMY: number = this.rules.node.gamePartSlice.getCurrentEnnemy().value;
+        const PLAYER: number = this.rules.node.gameState.getCurrentPlayer().value;
+        const ENNEMY: number = this.rules.node.gameState.getCurrentEnnemy().value;
         const landings: Coord[] = [];
         while (landing.isInRange(14, 12) &&
                landings.length < phalanxSize &&
@@ -226,8 +226,8 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
             this.cancelMoveAttempt();
             return MGPValidation.SUCCESS;
         }
-        const ENNEMY: number = this.rules.node.gamePartSlice.getCurrentEnnemy().value;
-        const PLAYER: number = this.rules.node.gamePartSlice.getCurrentPlayer().value;
+        const ENNEMY: number = this.rules.node.gameState.getCurrentEnnemy().value;
+        const PLAYER: number = this.rules.node.gameState.getCurrentPlayer().value;
         if (!clicked.isAlignedWith(this.firstPiece)) {
             return this.cancelMove(EpaminondasFailure.CASE_NOT_ALIGNED_WITH_SELECTED);
         }
@@ -248,8 +248,8 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
                                                                             distance,
                                                                             1,
                                                                             direction);
-                const slice: EpaminondasPartSlice = this.rules.node.gamePartSlice;
-                const phalanxValidity: MGPValidation = EpaminondasRules.getPhalanxValidity(slice, incompleteMove);
+                const state: EpaminondasState = this.rules.node.gameState;
+                const phalanxValidity: MGPValidation = EpaminondasRules.getPhalanxValidity(state, incompleteMove);
                 if (phalanxValidity.isFailure()) {
                     return this.cancelMove(phalanxValidity.reason);
                 } else {
@@ -263,7 +263,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         }
     }
     private async thirdClick(x: number, y: number): Promise<MGPValidation> {
-        const PLAYER: number = this.rules.node.gamePartSlice.getCurrentPlayer().value;
+        const PLAYER: number = this.rules.node.gameState.getCurrentPlayer().value;
         const clicked: Coord = new Coord(x, y);
         if (clicked.equals(this.firstPiece)) {
             return this.moveFirstPiece(PLAYER);
@@ -294,7 +294,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
                                                                         phalanxSize,
                                                                         1,
                                                                         phalanxDirection);
-            const phalanxValidity: MGPValidation = EpaminondasRules.getPhalanxValidity(this.rules.node.gamePartSlice,
+            const phalanxValidity: MGPValidation = EpaminondasRules.getPhalanxValidity(this.rules.node.gameState,
                                                                                        incompleteMove);
             if (phalanxValidity.isFailure()) {
                 return this.cancelMove(phalanxValidity.reason);
@@ -346,9 +346,9 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         return MGPValidation.SUCCESS;
     }
     public tryMove(move: EpaminondasMove): Promise<MGPValidation> {
-        const slice: EpaminondasPartSlice = this.rules.node.gamePartSlice;
+        const state: EpaminondasState = this.rules.node.gameState;
         this.cancelMove();
-        return this.chooseMove(move, slice, null, null);
+        return this.chooseMove(move, state, null, null);
     }
     public getPieceClasses(x: number, y: number): string[] {
         const player: string = this.getPlayerClass(Player.of(this.board[y][x]));
@@ -387,8 +387,8 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
     }
     private getCurrentPlayerPieces(): Coord[] {
         const pieces: Coord[] = [];
-        const slice: EpaminondasPartSlice = this.rules.node.gamePartSlice;
-        const player: Player = slice.getCurrentPlayer();
+        const state: EpaminondasState = this.rules.node.gameState;
+        const player: Player = state.getCurrentPlayer();
         for (let y: number = 0; y < this.board.length; y++) {
             for (let x: number = 0; x < this.board[y].length; x++) {
                 if (this.board[y][x] === player.value) {

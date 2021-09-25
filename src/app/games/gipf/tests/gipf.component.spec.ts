@@ -8,7 +8,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { GipfPiece } from 'src/app/games/gipf/GipfPiece';
 import { GipfCapture, GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMove';
 import { GipfBoard } from 'src/app/games/gipf/GipfBoard';
-import { GipfPartSlice } from 'src/app/games/gipf/GipfPartSlice';
+import { GipfState } from 'src/app/games/gipf/GipfState';
 import { Arrow } from 'src/app/jscaip/Arrow';
 
 describe('GipfComponent', () => {
@@ -65,8 +65,8 @@ describe('GipfComponent', () => {
             [_, _, B, A, _, _, _],
             [_, _, _, _, _, _, _],
         ]);
-        const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
-        componentTestUtils.setupSlice(slice);
+        const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
+        componentTestUtils.setupState(state);
 
         await componentTestUtils.expectClickFailure('#click_6_3', GipfFailure.MISSING_CAPTURES);
     }));
@@ -80,8 +80,8 @@ describe('GipfComponent', () => {
             [_, _, _, A, _, _, _],
             [_, _, _, _, _, _, _],
         ]);
-        const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
-        componentTestUtils.setupSlice(slice);
+        const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
+        componentTestUtils.setupState(state);
 
         await componentTestUtils.expectClickSuccess('#click_3_3');
 
@@ -100,8 +100,8 @@ describe('GipfComponent', () => {
             [_, _, B, A, _, _, _],
             [_, _, _, _, _, _, _],
         ]);
-        const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
-        componentTestUtils.setupSlice(slice);
+        const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
+        componentTestUtils.setupState(state);
 
         await componentTestUtils.expectClickSuccess('#click_3_3');
         expect(componentTestUtils.getComponent().isPiece(new Coord(3, 2))).toBeFalse();
@@ -119,8 +119,8 @@ describe('GipfComponent', () => {
             [_, _, B, A, _, _, _],
             [_, _, _, _, _, _, _],
         ]);
-        const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
-        componentTestUtils.setupSlice(slice);
+        const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
+        componentTestUtils.setupState(state);
 
         await componentTestUtils.expectClickSuccess('#click_3_3');
         const move: GipfMove = new GipfMove(new GipfPlacement(new Coord(0, 4), MGPOptional.empty()),
@@ -139,8 +139,8 @@ describe('GipfComponent', () => {
             [A, _, B, _, _, _, _],
             [_, _, B, _, _, _, _],
         ]);
-        const slice: GipfPartSlice = new GipfPartSlice(board, P1Turn, [5, 5], [0, 0]);
-        componentTestUtils.setupSlice(slice);
+        const state: GipfState = new GipfState(board, P1Turn, [5, 5], [0, 0]);
+        componentTestUtils.setupState(state);
 
         await componentTestUtils.expectClickFailure('#click_2_3', GipfFailure.AMBIGUOUS_CAPTURE_COORD);
     }));
@@ -154,8 +154,8 @@ describe('GipfComponent', () => {
             [A, _, B, _, _, _, _],
             [_, _, B, _, _, _, _],
         ]);
-        const slice: GipfPartSlice = new GipfPartSlice(board, P1Turn, [5, 5], [0, 0]);
-        componentTestUtils.setupSlice(slice);
+        const state: GipfState = new GipfState(board, P1Turn, [5, 5], [0, 0]);
+        componentTestUtils.setupState(state);
 
         // Perform the placement to prepare for final capture
         await componentTestUtils.expectClickSuccess('#click_0_3');
@@ -172,8 +172,8 @@ describe('GipfComponent', () => {
             [A, _, B, _, _, _, _],
             [_, _, B, _, _, _, _],
         ]);
-        const slice: GipfPartSlice = new GipfPartSlice(board, P1Turn, [5, 5], [0, 0]);
-        componentTestUtils.setupSlice(slice);
+        const state: GipfState = new GipfState(board, P1Turn, [5, 5], [0, 0]);
+        componentTestUtils.setupState(state);
 
         await componentTestUtils.expectClickSuccess('#click_0_3');
         await componentTestUtils.expectClickSuccess('#click_1_3');
@@ -197,8 +197,8 @@ describe('GipfComponent', () => {
             [_, _, _, _, _, _, _],
             [_, B, _, _, _, _, _],
         ]);
-        const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
-        componentTestUtils.setupSlice(slice);
+        const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
+        componentTestUtils.setupState(state);
 
         const placement: GipfPlacement = new GipfPlacement(new Coord(1, 6), MGPOptional.of(HexaDirection.UP_RIGHT));
         const move: GipfMove = new GipfMove(placement, [], []);
@@ -219,8 +219,8 @@ describe('GipfComponent', () => {
             [_, _, B, A, _, _, _],
             [_, _, _, _, _, _, _],
         ]);
-        const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
-        componentTestUtils.setupSlice(slice);
+        const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
+        componentTestUtils.setupState(state);
 
         expect(componentTestUtils.getComponent().possibleCaptures).toContain(new GipfCapture([
             new Coord(3, 2),
@@ -239,8 +239,8 @@ describe('GipfComponent', () => {
             [_, _, B, A, _, _, _],
             [_, _, _, _, _, _, _],
         ]);
-        const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
-        componentTestUtils.setupSlice(slice);
+        const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
+        componentTestUtils.setupState(state);
 
         await componentTestUtils.expectClickSuccess('#click_3_3');
         const move: GipfMove = new GipfMove(new GipfPlacement(new Coord(0, 4), MGPOptional.empty()),
@@ -265,8 +265,8 @@ describe('GipfComponent', () => {
             [_, _, B, A, _, _, _],
             [_, _, _, _, _, _, _],
         ]);
-        const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
-        componentTestUtils.setupSlice(slice);
+        const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
+        componentTestUtils.setupState(state);
 
         await componentTestUtils.expectClickSuccess('#click_3_3');
         const move: GipfMove = new GipfMove(new GipfPlacement(new Coord(0, 4), MGPOptional.empty()),
@@ -289,8 +289,8 @@ describe('GipfComponent', () => {
             [_, _, B, _, _, _, _],
             [_, B, _, _, _, _, _],
         ]);
-        const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
-        componentTestUtils.setupSlice(slice);
+        const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
+        componentTestUtils.setupState(state);
 
         await componentTestUtils.expectClickSuccess('#click_1_6');
         expect(componentTestUtils.getComponent().arrows.length).toBe(1);
@@ -306,8 +306,8 @@ describe('GipfComponent', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
         ]);
-        const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
-        componentTestUtils.setupSlice(slice);
+        const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
+        componentTestUtils.setupState(state);
 
         const move: GipfMove = new GipfMove(new GipfPlacement(new Coord(6, 3),
                                                               MGPOptional.empty()),
@@ -336,8 +336,8 @@ describe('GipfComponent', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
         ]);
-        const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
-        componentTestUtils.setupSlice(slice);
+        const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
+        componentTestUtils.setupState(state);
 
         const move: GipfMove = new GipfMove(new GipfPlacement(new Coord(5, 4),
                                                               MGPOptional.of(HexaDirection.LEFT)),
@@ -368,8 +368,8 @@ describe('GipfComponent', () => {
             [_, _, _, A, A, _, _],
             [_, _, _, _, _, _, _],
         ]);
-        const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
-        componentTestUtils.setupSlice(slice);
+        const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
+        componentTestUtils.setupState(state);
 
         await componentTestUtils.expectClickSuccess('#click_3_3');
         await componentTestUtils.expectClickSuccess('#click_4_5');
@@ -390,8 +390,8 @@ describe('GipfComponent', () => {
             [A, A, A, B, B, _, _],
             [_, _, _, A, _, _, _],
         ]);
-        const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [8, 4], [2, 3]);
-        componentTestUtils.setupSlice(slice);
+        const state: GipfState = new GipfState(board, P0Turn, [8, 4], [2, 3]);
+        componentTestUtils.setupState(state);
 
         const move: GipfMove = new GipfMove(
             new GipfPlacement(new Coord(3, 6), MGPOptional.of(HexaDirection.UP)),
@@ -434,8 +434,8 @@ describe('GipfComponent', () => {
             [A, A, _, _, _, _, _],
             [B, A, B, A, B, _, _],
         ]);
-        const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
-        componentTestUtils.setupSlice(slice);
+        const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
+        componentTestUtils.setupState(state);
         await componentTestUtils.expectClickFailure('#click_0_6', GipfFailure.NO_DIRECTIONS_AVAILABLE);
     }));
 });

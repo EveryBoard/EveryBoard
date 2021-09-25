@@ -1,6 +1,6 @@
 import { SiamMove } from 'src/app/games/siam/SiamMove';
 import { SiamPiece } from 'src/app/games/siam/SiamPiece';
-import { SiamPartSlice } from 'src/app/games/siam/SiamPartSlice';
+import { SiamState } from 'src/app/games/siam/SiamState';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
@@ -29,7 +29,7 @@ export const siamTutorial: TutorialStep[] = [
             <li>Change the orientation of one of its piece, and optionally move it.</li>
             <li>Take one of its pieces out of the board.</li>
         </ol>`,
-        SiamPartSlice.getInitialSlice(),
+        SiamState.getInitialState(),
     ),
     TutorialStep.anyMove(
         $localize`Inserting a piece`,
@@ -41,7 +41,7 @@ export const siamTutorial: TutorialStep[] = [
                 This is the direction in which your piece will be oriented.</li>
         </ol><br/>
         Insert a piece on the board.`,
-        SiamPartSlice.getInitialSlice(),
+        SiamState.getInitialState(),
         new SiamMove(2, -1, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN),
         $localize`Congratulations!`,
     ),
@@ -58,7 +58,7 @@ export const siamTutorial: TutorialStep[] = [
             <li>Click on one of the 4 arrows on the landing square to pick its orientation.</li>
         </ol><br/>
         Try to move the piece that is on the board one square upwards and to orient it downwards.`,
-        new SiamPartSlice([
+        new SiamState([
             [_, _, _, _, _],
             [_, _, _, _, _],
             [_, M, M, M, _],
@@ -73,7 +73,7 @@ export const siamTutorial: TutorialStep[] = [
         $localize`Moving a piece out of the board`,
         $localize`To move a piece out of the board, you do not have to pick an orientation after the move.<br/><br/>
         Get that piece out of the board!`,
-        new SiamPartSlice([
+        new SiamState([
             [_, _, _, _, _],
             [_, _, _, _, _],
             [_, M, M, M, _],
@@ -97,7 +97,7 @@ export const siamTutorial: TutorialStep[] = [
         Your piece on the top right cannot push because there is one mountain too much.
         Your piece on the bottom right can push.<br/><br/>
         Do it.`,
-        new SiamPartSlice([
+        new SiamState([
             [R, M, M, l, L],
             [_, _, _, _, _],
             [_, _, _, M, _],
@@ -115,7 +115,7 @@ export const siamTutorial: TutorialStep[] = [
         However, if you were pushing an opponent oriented in the same direction as you, your opponent will win because that piece is closer to the mountain.
         However, if that opponent is closer to the mountain but not oriented towards it, victory will be yours.<br/><br/>
         You have two ways of ending the game here: you can either win, or lose. Choose correctly!`,
-        new SiamPartSlice([
+        new SiamState([
             [_, _, _, _, _],
             [_, _, _, _, _],
             [M, u, L, _, D],

@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { DvonnMinimax } from './DvonnMinimax';
-import { DvonnGameState } from './DvonnGameState';
+import { DvonnState } from './DvonnState';
 import { DvonnNode, DvonnRules } from './DvonnRules';
 import { DvonnPieceStack } from './DvonnPieceStack';
 import { Player } from 'src/app/jscaip/Player';
@@ -11,7 +11,7 @@ import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 
 export class MaxStacksDvonnMinimax extends DvonnMinimax {
     public getListMoves(node: DvonnNode): DvonnMove[] {
-        const state: DvonnGameState = node.gamePartSlice;
+        const state: DvonnState = node.gameState;
         const moves: DvonnMove[] = super.getListMoves(node);
 
         // Sort the moves by the size of pieces that they add to the player
@@ -28,15 +28,15 @@ export class MaxStacksDvonnMinimax extends DvonnMinimax {
     }
 
     public getBoardValue(node: DvonnNode): NodeUnheritance {
-        const slice: DvonnGameState = node.gamePartSlice;
+        const state: DvonnState = node.gameState;
         // Board value is percentage of the stacks controlled by the player
-        const scores: number[] = DvonnRules.getScores(slice);
-        const pieces: Coord[] = slice.hexaBoard.getAllPieces();
+        const scores: number[] = DvonnRules.getScores(state);
+        const pieces: Coord[] = state.hexaBoard.getAllPieces();
         const numberOfStacks: number = pieces.length;
         const player0Stacks: number = pieces.filter((c: Coord): boolean =>
-            slice.hexaBoard.getAt(c).belongsTo(Player.ZERO)).length;
+            state.hexaBoard.getAt(c).belongsTo(Player.ZERO)).length;
         const player1Stacks: number = pieces.filter((c: Coord): boolean =>
-            slice.hexaBoard.getAt(c).belongsTo(Player.ONE)).length;
+            state.hexaBoard.getAt(c).belongsTo(Player.ONE)).length;
         return new NodeUnheritance(
             ((player0Stacks * scores[0] * Player.ZERO.getScoreModifier()) +
                 (player1Stacks * scores[1] * Player.ONE.getScoreModifier())) / numberOfStacks);

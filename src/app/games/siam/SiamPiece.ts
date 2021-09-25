@@ -37,12 +37,12 @@ export class SiamPiece {
             default: throw new Error('Unknown value for SiamPiece(' + value + ').');
         }
     }
-    public static belongTo(value: number, player: Player): boolean {
+    public belongTo(player: Player): boolean {
         if (player == null) throw new Error('Player must be set (even if Player.NONE).');
         if (player === Player.ZERO) {
-            return (1 <= value && value <= 4);
+            return (1 <= this.value && this.value <= 4);
         } else if (player === Player.ONE) {
-            return (5 <= value && value <= 8);
+            return (5 <= this.value && this.value <= 8);
         } else {
             return false;
         }

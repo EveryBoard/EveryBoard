@@ -110,7 +110,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
             new YinshMinimax(this.rules, 'YinshMinimax'),
         ];
         this.showScore = true;
-        this.constructedState = this.rules.node.gamePartSlice;
+        this.constructedState = this.rules.node.gameState;
         this.constructedState.hexaBoard.allCoords().forEach((coord: Coord): void => {
             if (this.viewInfo.caseInfo[coord.y] == null) {
                 this.viewInfo.caseInfo[coord.y] = [];
@@ -129,8 +129,8 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
         });
     }
     public updateBoard(): void {
-        const state: YinshGameState = this.rules.node.gamePartSlice;
-        this.board = state.board;
+        const state: YinshGameState = this.rules.node.gameState;
+        this.board = state.hexaBoard.toNumberTable();
 
         this.cancelMoveAttempt();
     }
@@ -168,7 +168,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
                     this.constructedState.hexaBoard.getRingCoords(this.constructedState.getCurrentPlayer());
                 break;
             case 'MOVE_START':
-                if (this.rules.node.gamePartSlice.isInitialPlacementPhase() === false) {
+                if (this.rules.node.gameState.isInitialPlacementPhase() === false) {
                     this.viewInfo.selectableCoords =
                         this.constructedState.hexaBoard.getRingCoords(this.constructedState.getCurrentPlayer());
                 }
@@ -221,7 +221,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
         }
     }
     public cancelMoveAttempt(): void {
-        this.constructedState = this.rules.node.gamePartSlice;
+        this.constructedState = this.rules.node.gameState;
         this.possibleCaptures = [];
         this.initialCaptures = [];
         this.finalCaptures = [];
@@ -265,12 +265,12 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
         for (const coord of capture.capturedCases) {
             this.viewInfo.caseInfo[coord.y][coord.x].caseClasses = ['captured'];
             if (alsoShowPiece) {
-                this.markRemovedMarker(coord, this.rules.node.gamePartSlice.getCurrentPlayer().getOpponent());
+                this.markRemovedMarker(coord, this.rules.node.gameState.getCurrentPlayer().getOpponent());
             }
         }
         this.viewInfo.caseInfo[capture.ringTaken.y][capture.ringTaken.x].caseClasses = ['captured'];
         if (alsoShowPiece) {
-            this.markRemovedRing(capture.ringTaken, this.rules.node.gamePartSlice.getCurrentPlayer().getOpponent());
+            this.markRemovedRing(capture.ringTaken, this.rules.node.gameState.getCurrentPlayer().getOpponent());
         }
     }
     private moveToInitialCaptureOrMovePhase(): MGPValidation {
@@ -376,11 +376,11 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
     private markCurrentCapture(capture: YinshCapture): void {
         for (const coord of capture.capturedCases) {
             this.viewInfo.selectedCoords.push(coord);
-            this.markRemovedMarker(coord, this.rules.node.gamePartSlice.getCurrentPlayer());
+            this.markRemovedMarker(coord, this.rules.node.gameState.getCurrentPlayer());
         }
         if (!capture.ringTaken.equals(new Coord(-1, -1))) {
             this.viewInfo.selectedCoords.push(capture.ringTaken);
-            this.markRemovedRing(capture.ringTaken, this.rules.node.gamePartSlice.getCurrentPlayer());
+            this.markRemovedRing(capture.ringTaken, this.rules.node.gameState.getCurrentPlayer());
         }
     }
     private markRemovedMarker(coord: Coord, player: Player): void {
@@ -434,7 +434,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
                                               this.moveStart.get(),
                                               this.moveEnd,
                                               this.finalCaptures);
-        const validity: MGPValidation = await this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
+        const validity: MGPValidation = await this.chooseMove(move, this.rules.node.gameState, null, null);
         return validity;
     }
     private async selectMoveStart(coord: Coord): Promise<MGPValidation> {

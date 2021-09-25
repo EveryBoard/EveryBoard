@@ -1,9 +1,9 @@
-import { Table } from 'src/app/utils/ArrayUtils';
+import { Table } from '../utils/ArrayUtils';
 import { Coord } from './Coord';
-import { GamePartSlice } from './GamePartSlice';
+import { RectangularGameState } from './RectangularGameState';
 import { TriangularCheckerBoard } from './TriangularCheckerBoard';
 
-export abstract class TriangularGameState extends GamePartSlice {
+export abstract class TriangularGameState<T> extends RectangularGameState<T> {
 
     public static getEmptyNeighboors<T>(board: Table<T>, coord: Coord, empty: T): Coord[] {
         const neighboors: Coord[] = [];

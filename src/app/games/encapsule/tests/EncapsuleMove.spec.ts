@@ -1,6 +1,6 @@
 import { EncapsuleRules } from '../EncapsuleRules';
 import { EncapsuleMinimax } from '../EncapsuleMinimax';
-import { EncapsulePartSlice } from '../EncapsulePartSlice';
+import { EncapsuleState } from '../EncapsuleState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { EncapsulePiece } from '../EncapsulePiece';
 import { EncapsuleMove } from '../EncapsuleMove';
@@ -20,7 +20,7 @@ describe('EncapsuleMove', () => {
     });
     describe('encoder', () => {
         it('should be correct for first turn moves', () => {
-            const rules: EncapsuleRules = new EncapsuleRules(EncapsulePartSlice);
+            const rules: EncapsuleRules = new EncapsuleRules(EncapsuleState);
             const minimax: EncapsuleMinimax = new EncapsuleMinimax(rules, 'EncapsuleMinimax');
             const firstTurnMoves: EncapsuleMove[] = minimax.getListMoves(rules.node);
             for (const move of firstTurnMoves) {

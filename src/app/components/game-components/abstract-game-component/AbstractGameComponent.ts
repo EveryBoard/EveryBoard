@@ -1,15 +1,15 @@
 import { Move } from '../../../jscaip/Move';
 import { Rules } from '../../../jscaip/Rules';
-import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Component } from '@angular/core';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { NumberTable } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/Player';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { GameState } from 'src/app/jscaip/GameState';
 
 /* All method are to be implemented by the Concretes Game Component
  * Except chooseMove which must be set by the GameWrapper
@@ -20,7 +20,7 @@ import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/Tut
     styleUrls: ['./abstract-game-component.css'],
 })
 export abstract class AbstractGameComponent<M extends Move,
-                                            S extends GamePartSlice,
+                                            S extends GameState,
                                             L extends LegalityStatus = LegalityStatus>
 {
 
@@ -34,13 +34,13 @@ export abstract class AbstractGameComponent<M extends Move,
 
     public rules: Rules<M, S, L>;
 
-    public board: NumberTable;
+    public board: Table<any>; // TODO: generalise
 
     public canPass: boolean;
 
     public showScore: boolean;
 
-    public availableMinimaxes: Minimax<Move, GamePartSlice>[];
+    public availableMinimaxes: Minimax<Move, GameState>[];
 
     public imagesLocation: string = 'assets/images/';
 
@@ -49,7 +49,7 @@ export abstract class AbstractGameComponent<M extends Move,
     public isPlayerTurn: () => boolean;
 
     public chooseMove: (move: Move,
-                        slice: GamePartSlice,
+                        state: GameState,
                         scorePlayerZero: number,
                         scorePlayerOne: number) => Promise<MGPValidation>;
 
@@ -93,6 +93,6 @@ export abstract class AbstractGameComponent<M extends Move,
         }
     }
     public getTurn(): number {
-        return this.rules.node.gamePartSlice.turn;
+        return this.rules.node.gameState.turn;
     }
 }

@@ -1,6 +1,6 @@
 import { GoComponent } from '../go.component';
 import { GoMove } from 'src/app/games/go/GoMove';
-import { GoPartSlice, GoPiece, Phase } from 'src/app/games/go/GoPartSlice';
+import { GoState, GoPiece, Phase } from 'src/app/games/go/GoState';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -16,8 +16,8 @@ describe('GoComponent', () => {
     const X: GoPiece = GoPiece.WHITE;
 
     beforeAll(() => {
-        GoPartSlice.HEIGHT = 5;
-        GoPartSlice.WIDTH = 5;
+        GoState.HEIGHT = 5;
+        GoState.WIDTH = 5;
     });
     beforeEach(fakeAsync(async() => {
         componentTestUtils = await ComponentTestUtils.forGame<GoComponent>('Go');
@@ -44,8 +44,8 @@ describe('GoComponent', () => {
             [_, _, _, _, _],
             [_, _, _, _, _],
         ];
-        const slice: GoPartSlice = new GoPartSlice(board, [0, 0], 1, MGPOptional.empty(), Phase.PLAYING);
-        componentTestUtils.setupSlice(slice);
+        const state: GoState = new GoState(board, [0, 0], 1, MGPOptional.empty(), Phase.PLAYING);
+        componentTestUtils.setupState(state);
 
         const move: GoMove = new GoMove(0, 1);
         await componentTestUtils.expectMoveSuccess('#click_0_1', move, undefined, 0, 0);

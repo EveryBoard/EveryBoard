@@ -4,7 +4,7 @@ import { TriangularGameComponent }
     from 'src/app/components/game-components/abstract-game-component/TriangularGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { SaharaMove } from 'src/app/games/sahara/SaharaMove';
-import { SaharaPartSlice } from 'src/app/games/sahara/SaharaPartSlice';
+import { SaharaState } from 'src/app/games/sahara/SaharaState';
 import { SaharaRules } from 'src/app/games/sahara/SaharaRules';
 import { SaharaMinimax } from 'src/app/games/sahara/SaharaMinimax';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -22,7 +22,7 @@ import { saharaTutorial } from './SaharaTutorial';
     templateUrl: './sahara.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class SaharaComponent extends TriangularGameComponent<SaharaMove, SaharaPartSlice> {
+export class SaharaComponent extends TriangularGameComponent<SaharaMove, SaharaState> {
     public static VERBOSE: boolean = false;
 
     public lastCoord: Coord = new Coord(-2, -2);
@@ -37,7 +37,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaMove, SaharaP
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = new SaharaRules(SaharaPartSlice);
+        this.rules = new SaharaRules(SaharaState);
         this.availableMinimaxes = [
             new SaharaMinimax(this.rules, 'SaharaMinimax'),
         ];
@@ -54,7 +54,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaMove, SaharaP
         if (this.chosenCoord.isAbsent()) { // Must select pyramid
             return this.choosePiece(x, y);
         } else { // Must choose empty landing case
-            const currentPlayer: Player = this.rules.node.gamePartSlice.getCurrentPlayer();
+            const currentPlayer: Player = this.rules.node.gameState.getCurrentPlayer();
             const PLAYER: number = currentPlayer === Player.ZERO ? FourStatePiece.ZERO.value : FourStatePiece.ONE.value;
             if (this.board[y][x] === PLAYER) {
                 this.chosenCoord = MGPOptional.of(new Coord(x, y));
@@ -66,7 +66,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaMove, SaharaP
             } catch (error) {
                 return this.cancelMove(error.message);
             }
-            return await this.chooseMove(newMove, this.rules.node.gamePartSlice, null, null);
+            return await this.chooseMove(newMove, this.rules.node.gameState, null, null);
         }
     }
     private choosePiece(x: number, y: number): MGPValidation {
@@ -89,6 +89,6 @@ export class SaharaComponent extends TriangularGameComponent<SaharaMove, SaharaP
             this.lastCoord = move.coord;
             this.lastMoved = move.end;
         }
-        this.board = this.rules.node.gamePartSlice.board;
+        this.board = this.rules.node.gameState.board;
     }
 }

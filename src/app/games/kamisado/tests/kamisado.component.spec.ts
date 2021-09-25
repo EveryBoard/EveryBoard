@@ -1,4 +1,4 @@
-import { KamisadoPartSlice } from 'src/app/games/kamisado/KamisadoPartSlice';
+import { KamisadoState } from 'src/app/games/kamisado/KamisadoState';
 import { KamisadoColor } from 'src/app/games/kamisado/KamisadoColor';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { KamisadoPiece } from 'src/app/games/kamisado/KamisadoPiece';
@@ -55,9 +55,9 @@ describe('KamisadoComponent', () => {
             [b, r, _, _, _, _, _, _],
             [R, G, _, _, _, _, _, _], // red is stuck
         ];
-        const slice: KamisadoPartSlice =
-            new KamisadoPartSlice(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
-        componentTestUtils.setupSlice(slice);
+        const state: KamisadoState =
+            new KamisadoState(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
+        componentTestUtils.setupState(state);
 
         expect((await componentTestUtils.getComponent().pass()).isSuccess()).toBeTrue();
     }));
@@ -73,9 +73,9 @@ describe('KamisadoComponent', () => {
             [b, r, _, _, _, _, _, _],
             [R, G, _, _, _, _, _, _], // red is stuck
         ];
-        const slice: KamisadoPartSlice =
-            new KamisadoPartSlice(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
-        componentTestUtils.setupSlice(slice);
+        const state: KamisadoState =
+            new KamisadoState(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
+        componentTestUtils.setupState(state);
 
         // when clicking any piece, it should say that player must pass
         await componentTestUtils.expectClickFailure('#click_1_7', RulesFailure.MUST_PASS);
@@ -91,9 +91,9 @@ describe('KamisadoComponent', () => {
             [_, _, _, _, _, _, _, _], // brown is stuck
             [R, _, _, _, _, _, _, _],
         ];
-        const slice: KamisadoPartSlice =
-            new KamisadoPartSlice(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
-        componentTestUtils.setupSlice(slice);
+        const state: KamisadoState =
+            new KamisadoState(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
+        componentTestUtils.setupState(state);
 
         await componentTestUtils.expectClickFailure('#click_0_7', KamisadoFailure.PLAY_WITH_SELECTED_PIECE);
     }));
@@ -108,9 +108,9 @@ describe('KamisadoComponent', () => {
             [_, _, _, _, _, _, _, _], // brown is stuck
             [R, G, _, _, _, _, _, _],
         ];
-        const slice: KamisadoPartSlice =
-            new KamisadoPartSlice(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
-        componentTestUtils.setupSlice(slice);
+        const state: KamisadoState =
+            new KamisadoState(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
+        componentTestUtils.setupState(state);
 
         await componentTestUtils.expectClickFailure('#click_1_7', KamisadoFailure.PLAY_WITH_SELECTED_PIECE);
     }));
@@ -133,9 +133,9 @@ describe('KamisadoComponent', () => {
             [_, _, _, _, _, _, _, _],
             [R, r, _, _, _, _, _, _],
         ];
-        const slice: KamisadoPartSlice =
-            new KamisadoPartSlice(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
-        componentTestUtils.setupSlice(slice);
+        const state: KamisadoState =
+            new KamisadoState(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
+        componentTestUtils.setupState(state);
 
         const move: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(0, 0));
         // TODO: investigate canUserPlay etc.

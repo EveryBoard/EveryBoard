@@ -298,13 +298,13 @@ export class YinshRules extends Rules<YinshMove, YinshGameState, YinshLegalitySt
         return targets;
     }
     public getGameStatus(node: YinshNode): GameStatus {
-        if (node.gamePartSlice.isInitialPlacementPhase()) {
+        if (node.gameState.isInitialPlacementPhase()) {
             return GameStatus.ONGOING;
         }
-        if (node.gamePartSlice.sideRings[0] >= 3) {
+        if (node.gameState.sideRings[0] >= 3) {
             return GameStatus.ZERO_WON;
         }
-        if (node.gamePartSlice.sideRings[1] >= 3) {
+        if (node.gameState.sideRings[1] >= 3) {
             return GameStatus.ONE_WON;
         }
         return GameStatus.ONGOING;

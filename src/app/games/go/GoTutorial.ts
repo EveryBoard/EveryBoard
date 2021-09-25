@@ -1,5 +1,5 @@
 import { GoMove } from 'src/app/games/go/GoMove';
-import { GoPartSlice, GoPiece, Phase } from 'src/app/games/go/GoPartSlice';
+import { GoState, GoPiece, Phase } from 'src/app/games/go/GoState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
@@ -17,7 +17,7 @@ export const goTutorial: TutorialStep[] = [
         The traditional board is made of 19x19 intersections, but on this website we have the 13x13 board.
         (For shorter parts, 9x9 and 5x5 boards exist, but are not yet available here).
         For this tutorial, we will use a smaller board for pedagogical purposes.`,
-        GoPartSlice.getInitialSlice(),
+        GoState.getInitialState(),
     ),
     TutorialStep.informational(
         $localize`Goal of the game`,
@@ -26,7 +26,7 @@ export const goTutorial: TutorialStep[] = [
         Here, Dark has 9 territories on the left, and Light has 8 on the right.
         The top part belongs to no one.
         Each player's score at the end of the game is the sum of that player's territories and captures.`,
-        new GoPartSlice([
+        new GoState([
             [_, O, _, _, X, X],
             [_, O, _, _, X, _],
             [_, O, O, X, X, _],
@@ -41,7 +41,7 @@ export const goTutorial: TutorialStep[] = [
         It is said of a group which has exactly 2 free neighboring squares, that this group has two liberties.
         If Dark plays on the last liberty of the light stone, this stone is removed from the Goban (captured) and Dark earns one point.<br/><br/>
         The light piece only has one liberty left, play there.`,
-        new GoPartSlice([
+        new GoState([
             [_, _, _, _, _],
             [_, _, O, _, _],
             [_, O, X, _, _],
@@ -56,7 +56,7 @@ export const goTutorial: TutorialStep[] = [
         $localize`Capturing multiple stones`,
         $localize`Stones that are connected horizontally or vertically must be captured at the same time, and are not capturable in isolation.<br/><br/>
         The light group here only has one liberty left, capture it.`,
-        new GoPartSlice([
+        new GoState([
             [_, O, _, _, _],
             [O, X, _, _, _],
             [O, X, X, O, _],
@@ -73,7 +73,7 @@ export const goTutorial: TutorialStep[] = [
         If putting a piece on an intersection removes the last liberty of your group and does not capture any stone, playing on that intersection would be a suicide and is therefore forbidden.
         Here, the top left intersection is a suicide for Light.
         On the bottom right, it would be a suicide for Dark, and on the bottom left it is not a suicide for any player.`,
-        new GoPartSlice([
+        new GoState([
             [_, O, _, _, _],
             [O, _, _, _, _],
             [O, _, _, _, X],
@@ -89,7 +89,7 @@ export const goTutorial: TutorialStep[] = [
         From the capture rule, Dark can play inside Light's territory and make a capture.
         In this case, we say that Light has only one eye (its last liberty) and that Light is dead (even if not yet captured).
         At the end of the game, the dead stones will count as captures, and the intersections they occupy as territories.`,
-        new GoPartSlice([
+        new GoState([
             [_, _, _, _, _],
             [O, O, O, _, _],
             [X, X, O, _, _],
@@ -102,7 +102,7 @@ export const goTutorial: TutorialStep[] = [
         $localize`Here, Light cannot play on the top left, nor on the bottom left.
         Light will never be able to capture Dark.
         We say that Dark has two eyes (the eye on the top left, and the one on the bottom left) and that Dark is alive.`,
-        new GoPartSlice([
+        new GoState([
             [_, O, X, _, _],
             [X, O, X, _, _],
             [O, O, X, _, _],
@@ -116,7 +116,7 @@ export const goTutorial: TutorialStep[] = [
         Similarly, if Light plays on the middle line, Dark will capture Light.
         In other words, there is no point in playing on the middle line.
         In that case, we say that stones in the middle are alive by Seki, and that both intersections in the middle are neutral.`,
-        new GoPartSlice([
+        new GoState([
             [_, X, O, _, X, O, _],
             [_, X, O, O, X, O, _],
             [_, X, O, O, X, O, _],
@@ -130,7 +130,7 @@ export const goTutorial: TutorialStep[] = [
         $localize`Ko`,
         $localize`A player, by putting a stone, cannot go back to an identical state of the Goban as before, in order to avoid an endless game.<br/><br/>
         Capture the light stone.`,
-        new GoPartSlice([
+        new GoState([
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, O, X, _, _],
@@ -154,7 +154,7 @@ export const goTutorial: TutorialStep[] = [
         Every intersection in a player's territory earns that player a point.
         The winner is the one with most points.<br/><br/>
         A last stone is dead, mark it.`,
-        new GoPartSlice([
+        new GoState([
             [X, O, O, O, O, O, b, b, b],
             [X, X, X, X, O, O, O, b, b],
             [X, w, X, X, O, k, k, O, b],

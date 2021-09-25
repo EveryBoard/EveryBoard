@@ -1,14 +1,14 @@
-import { NumberTable } from 'src/app/utils/ArrayUtils';
-import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
+import { Table } from 'src/app/utils/ArrayUtils';
+import { RectangularGameState } from 'src/app/jscaip/RectangularGameState';
 import { Player } from 'src/app/jscaip/Player';
 
-export class EpaminondasPartSlice extends GamePartSlice {
+export class EpaminondasState extends RectangularGameState<Player> {
 
-    public static getInitialSlice(): EpaminondasPartSlice {
-        const _: number = Player.NONE.value;
-        const X: number = Player.ONE.value;
-        const O: number = Player.ZERO.value;
-        const board: NumberTable = [
+    public static getInitialState(): EpaminondasState {
+        const _: Player = Player.NONE;
+        const X: Player = Player.ONE;
+        const O: Player = Player.ZERO;
+        const board: Table<Player> = [
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -22,12 +22,12 @@ export class EpaminondasPartSlice extends GamePartSlice {
             [O, O, O, O, O, O, O, O, O, O, O, O, O, O],
             [O, O, O, O, O, O, O, O, O, O, O, O, O, O],
         ];
-        return new EpaminondasPartSlice(board, 0);
+        return new EpaminondasState(board, 0);
     }
     public count(piece: Player, row: number): number {
         let result: number = 0;
         for (let x: number = 0; x < 14; x++) {
-            if (this.board[row][x] === piece.value) {
+            if (this.board[row][x] === piece) {
                 result++;
             }
         }
@@ -36,7 +36,7 @@ export class EpaminondasPartSlice extends GamePartSlice {
     public doesOwnPiece(player: Player): boolean {
         for (let y: number = 0; y < 12; y++) {
             for (let x: number = 0; x < 14; x++) {
-                if (this.board[y][x] === player.value) {
+                if (this.board[y][x] === player) {
                     return true;
                 }
             }

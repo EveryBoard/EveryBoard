@@ -1,5 +1,5 @@
 import { Direction } from 'src/app/jscaip/Direction';
-import { EpaminondasPartSlice } from '../EpaminondasPartSlice';
+import { EpaminondasState } from '../EpaminondasState';
 import { EpaminondasRules } from '../EpaminondasRules';
 import { EpaminondasMinimax } from '../EpaminondasMinimax';
 import { EpaminondasMove } from '../EpaminondasMove';
@@ -29,7 +29,7 @@ describe('EpaminondasMove: ', () => {
             .toThrowError('Step size must be minimum one (got 0).');
     });
     it('EpaminondasMove.encoder should be correct', () => {
-        const rules: EpaminondasRules = new EpaminondasRules(EpaminondasPartSlice);
+        const rules: EpaminondasRules = new EpaminondasRules(EpaminondasState);
         const minimax: EpaminondasMinimax = new EpaminondasMinimax(rules, 'EpaminondasMinimax');
         const moves: EpaminondasMove[] = minimax.getListMoves(rules.node);
         for (const move of moves) {

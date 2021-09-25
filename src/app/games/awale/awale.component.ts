@@ -3,7 +3,7 @@ import { AbstractGameComponent } from '../../components/game-components/abstract
 import { AwaleRules } from './AwaleRules';
 import { AwaleMinimax } from './AwaleMinimax';
 import { AwaleMove } from 'src/app/games/awale/AwaleMove';
-import { AwalePartSlice } from './AwalePartSlice';
+import { AwaleState } from './AwaleState';
 import { AwaleLegalityStatus } from 'src/app/games/awale/AwaleLegalityStatus';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -18,7 +18,7 @@ import { awaleTutorial } from './AwaleTutorial';
     templateUrl: './awale.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSlice, AwaleLegalityStatus> {
+export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwaleState, AwaleLegalityStatus> {
 
     public encoder: MoveEncoder<AwaleMove> = AwaleMove.encoder;
 
@@ -34,7 +34,7 @@ export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSl
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = new AwaleRules(AwalePartSlice);
+        this.rules = new AwaleRules(AwaleState);
         this.availableMinimaxes = [
             new AwaleMinimax(this.rules, 'AwaleMinimax'),
         ];
@@ -42,14 +42,14 @@ export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSl
         this.updateBoard();
     }
     public updateBoard(): void {
-        const slice: AwalePartSlice = this.rules.node.gamePartSlice;
-        this.scores = slice.getCapturedCopy();
+        const state: AwaleState = this.rules.node.gameState;
+        this.scores = state.getCapturedCopy();
         this.hidePreviousMove();
         const lastMove: AwaleMove = this.rules.node.move;
 
-        this.board = slice.getCopiedBoard();
+        this.board = state.getCopiedBoard();
         if (lastMove != null) {
-            const lastPlayer: number = slice.getCurrentEnnemy().value;
+            const lastPlayer: number = state.getCurrentEnnemy().value;
             this.last = new Coord(lastMove.x, lastPlayer);
             this.showPreviousMove();
         } else {
@@ -61,12 +61,12 @@ export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSl
         this.moved = [];
     }
     private showPreviousMove(): void {
-        const previousSlice: AwalePartSlice = this.rules.node.mother.gamePartSlice;
+        const previousState: AwaleState = this.rules.node.mother.gameState;
         for (let y: number = 0; y <= 1; y++) {
             for (let x: number = 0; x <= 5; x++) {
                 const coord: Coord = new Coord(x, y);
                 const currentValue: number = this.board[y][x];
-                const oldValue: number = previousSlice.getBoardAt(coord);
+                const oldValue: number = previousState.getBoardAt(coord);
                 if (!coord.equals(this.last)) {
                     if (currentValue < oldValue) {
                         this.captured.push(coord);
@@ -82,14 +82,14 @@ export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSl
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        if (y !== this.rules.node.gamePartSlice.getCurrentPlayer().value) {
+        if (y !== this.rules.node.gameState.getCurrentPlayer().value) {
             return this.cancelMove(AwaleFailure.CANNOT_DISTRIBUTE_FROM_ENEMY_HOME);
         }
         this.last = new Coord(-1, -1); // now the user stop try to do a move
         // we stop showing him the last move
         const chosenMove: AwaleMove = AwaleMove.from(x);
         // let's confirm on java-server-side that the move is legal
-        return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, this.scores[0], this.scores[1]);
+        return this.chooseMove(chosenMove, this.rules.node.gameState, this.scores[0], this.scores[1]);
     }
     public getCaseClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);

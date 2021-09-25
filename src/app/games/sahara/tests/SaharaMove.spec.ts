@@ -1,7 +1,7 @@
 import { SaharaRules } from '../SaharaRules';
 import { SaharaMinimax } from '../SaharaMinimax';
 import { SaharaMove } from '../SaharaMove';
-import { SaharaPartSlice } from '../SaharaPartSlice';
+import { SaharaState } from '../SaharaState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 import { SaharaFailure } from '../SaharaFailure';
@@ -9,7 +9,7 @@ import { SaharaFailure } from '../SaharaFailure';
 describe('SaharaMoves', () => {
 
     it('SaharaMoves should be created bidirectionnaly encodable/decodable', () => {
-        const rules: SaharaRules = new SaharaRules(SaharaPartSlice);
+        const rules: SaharaRules = new SaharaRules(SaharaState);
         expect(rules).toBeTruthy();
         const minimax: SaharaMinimax = new SaharaMinimax(rules, 'SaharaMinimax');
         const moves: SaharaMove[] = minimax.getListMoves(rules.node);

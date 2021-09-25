@@ -51,11 +51,11 @@ describe('YinshRules', () => {
     });
     it('should be created', () => {
         expect(rules).toBeTruthy();
-        expect(rules.node.gamePartSlice.turn).withContext('Game should start at turn 0').toBe(0);
+        expect(rules.node.gameState.turn).withContext('Game should start at turn 0').toBe(0);
     });
     describe('isLegal and applyLegalMove', () => {
         it('should initially allow placing rings', () => {
-            const state: YinshGameState = rules.node.gamePartSlice;
+            const state: YinshGameState = rules.node.gameState;
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.empty(), []);
 
             const expectedBoard: YinshBoard = YinshBoard.of([
@@ -76,7 +76,7 @@ describe('YinshRules', () => {
             expectMoveSuccess(state, move, expectedState);
         });
         it('should initially forbid placing markers', () => {
-            const state: YinshGameState = rules.node.gamePartSlice;
+            const state: YinshGameState = rules.node.gameState;
             const move: YinshMove = new YinshMove([], new Coord(3, 3), MGPOptional.of(new Coord(3, 4)), []);
             expectMoveFailure(state, move, YinshFailure.NO_MARKERS_IN_INITIAL_PHASE);
         });
@@ -617,7 +617,7 @@ describe('YinshRules', () => {
     });
     describe('getGameStatus', () => {
         it('should consider initial phase as ongoing', () => {
-            const state: YinshGameState = YinshGameState.getInitialSlice();
+            const state: YinshGameState = YinshGameState.getInitialState();
             expect(rules.getGameStatus(new MGPNode(null, null, state))).toBe(GameStatus.ONGOING);
         });
         it('should detect part after initial phase as ongoing if victory criterion is not met', () => {

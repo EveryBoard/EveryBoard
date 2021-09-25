@@ -3,7 +3,7 @@ import { AbstractGameComponent } from '../../components/game-components/abstract
 import { GoMove } from 'src/app/games/go/GoMove';
 import { GoRules } from 'src/app/games/go/GoRules';
 import { GoMinimax } from 'src/app/games/go/GoMinimax';
-import { GoPartSlice, Phase, GoPiece } from 'src/app/games/go/GoPartSlice';
+import { GoState, Phase, GoPiece } from 'src/app/games/go/GoState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GoLegalityStatus } from 'src/app/games/go/GoLegalityStatus';
 import { display } from 'src/app/utils/utils';
@@ -21,7 +21,7 @@ import { goTutorial } from './GoTutorial';
     templateUrl: './go.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLegalityStatus> {
+export class GoComponent extends AbstractGameComponent<GoMove, GoState, GoLegalityStatus> {
     public static VERBOSE: boolean = false;
 
     public scores: number[] = [0, 0];
@@ -42,7 +42,7 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = new GoRules(GoPartSlice);
+        this.rules = new GoRules(GoState);
         this.availableMinimaxes = [
             new GoMinimax(this.rules, 'GoMinimax'),
         ];
@@ -57,18 +57,18 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
         this.last = new Coord(-1, -1); // now the user stop try to do a move
         // we stop showing him the last move
         const resultlessMove: GoMove = new GoMove(x, y);
-        return this.chooseMove(resultlessMove, this.rules.node.gamePartSlice, this.scores[0], this.scores[1]);
+        return this.chooseMove(resultlessMove, this.rules.node.gameState, this.scores[0], this.scores[1]);
     }
     public updateBoard(): void {
         display(GoComponent.VERBOSE, 'updateBoard');
 
-        const slice: GoPartSlice = this.rules.node.gamePartSlice;
+        const state: GoState = this.rules.node.gameState;
         const move: GoMove = this.rules.node.move;
-        const koCoord: MGPOptional<Coord> = slice.koCoord;
-        const phase: Phase = slice.phase;
+        const koCoord: MGPOptional<Coord> = state.koCoord;
+        const phase: Phase = state.phase;
 
-        this.board = slice.getCopiedBoard();
-        this.scores = slice.getCapturedCopy();
+        this.board = state.getCopiedBoard();
+        this.scores = state.getCapturedCopy();
 
         this.last = move ? move.coord : null;
         this.ko = koCoord.getOrNull();
@@ -80,12 +80,12 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
         this.canPass = phase !== Phase.FINISHED;
     }
     private showCaptures(): void {
-        const previousSlice: GoPartSlice = this.rules.node.mother.gamePartSlice;
+        const previousState: GoState = this.rules.node.mother.gameState;
         this.captures = [];
         for (let y: number = 0; y < this.board.length; y++) {
             for (let x: number = 0; x < this.board[0].length; x++) {
                 const coord: Coord = new Coord(x, y);
-                const wasOccupied: boolean = previousSlice.getBoardAtGoPiece(coord).isEmpty() === false;
+                const wasOccupied: boolean = previousState.getBoardAt(coord).isEmpty() === false;
                 const isEmpty: boolean = this.board[y][x] === GoPiece.EMPTY.value;
                 const isNotKo: boolean = !coord.equals(this.ko);
                 if (wasOccupied && isEmpty && isNotKo) {
@@ -95,7 +95,7 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
         }
     }
     public async pass(): Promise<MGPValidation> {
-        const phase: Phase = this.rules.node.gamePartSlice.phase;
+        const phase: Phase = this.rules.node.gameState.phase;
         if (phase === Phase.PLAYING || phase === Phase.PASSED) {
             return this.onClick(GoMove.PASS.coord.x, GoMove.PASS.coord.y);
         }
@@ -107,11 +107,11 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
         }
     }
     public getCaseClass(x: number, y: number): string {
-        const piece: GoPiece = this.rules.node.gamePartSlice.getBoardByXYGoPiece(x, y);
+        const piece: GoPiece = this.rules.node.gameState.getBoardByXY(x, y);
         return this.getPlayerClass(piece.getOwner());
     }
     public caseIsFull(x: number, y: number): boolean {
-        const piece: GoPiece = this.rules.node.gamePartSlice.getBoardByXYGoPiece(x, y);
+        const piece: GoPiece = this.rules.node.gameState.getBoardByXY(x, y);
         return piece !== GoPiece.EMPTY && !this.isTerritory(x, y);
     }
     public isLastCase(x: number, y: number): boolean {
@@ -125,9 +125,9 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
         return this.ko != null;
     }
     public isDead(x: number, y: number): boolean {
-        return this.rules.node.gamePartSlice.isDead(new Coord(x, y));
+        return this.rules.node.gameState.isDead(new Coord(x, y));
     }
     public isTerritory(x: number, y: number): boolean {
-        return this.rules.node.gamePartSlice.isTerritory(new Coord(x, y));
+        return this.rules.node.gameState.isTerritory(new Coord(x, y));
     }
 }

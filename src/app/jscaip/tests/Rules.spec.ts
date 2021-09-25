@@ -1,14 +1,13 @@
 import { P4Move } from 'src/app/games/p4/P4Move';
-import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { GamePartSlice } from '../GamePartSlice';
 import { LegalityStatus } from '../LegalityStatus';
 import { MGPNode } from '../MGPNode';
 import { GameStatus, Rules } from '../Rules';
+import { RectangularGameState } from '../RectangularGameState';
 
-class AbstractState extends GamePartSlice {
+class AbstractState extends RectangularGameState<number> {
 
-    public static getInitialSlice(): AbstractState {
+    public static getInitialState(): AbstractState {
         return new AbstractState([[]], 0);
     }
 }
@@ -17,11 +16,11 @@ class AbstractNode extends MGPNode<Rules<P4Move, AbstractState>, P4Move, Abstrac
 
 class AbstractRules extends Rules<P4Move, AbstractState> {
 
-    public applyLegalMove(move: P4Move, slice: AbstractState, status: LegalityStatus): AbstractState {
-        const board: readonly number[] = slice.board[0];
-        return new AbstractState([board.concat([move.x])], slice.turn + 1);
+    public applyLegalMove(move: P4Move, state: AbstractState, status: LegalityStatus): AbstractState {
+        const board: readonly number[] = state.board[0];
+        return new AbstractState([board.concat([move.x])], state.turn + 1);
     }
-    public isLegal(move: P4Move, slice: AbstractState): LegalityStatus {
+    public isLegal(move: P4Move, state: AbstractState): LegalityStatus {
         return { legal: MGPValidation.SUCCESS };
     }
     public getGameStatus(node: AbstractNode): GameStatus {
@@ -46,11 +45,11 @@ describe('Rules', () => {
 
         // he should be created and chosen
         expect(wasLegal).toBeTrue();
-        expect(rules.node.gamePartSlice.turn).toBe(1);
+        expect(rules.node.gameState.turn).toBe(1);
     });
     it('should allow dev to go back to specific starting board based on encodedMoveList', () => {
         // Given an initial list of encoded moves and an initial state
-        const initialState: AbstractState = AbstractState.getInitialSlice();
+        const initialState: AbstractState = AbstractState.getInitialState();
         const encodedMoveList: number[] = [0, 1, 2, 3];
 
         // when calling applyMoves

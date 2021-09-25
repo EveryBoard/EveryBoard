@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { KamisadoPartSlice } from '../KamisadoPartSlice';
+import { KamisadoState } from '../KamisadoState';
 import { KamisadoRules } from '../KamisadoRules';
 import { KamisadoMinimax } from '../KamisadoMinimax';
 import { KamisadoMove } from '../KamisadoMove';
@@ -11,7 +11,7 @@ describe('KamisadoMove', () => {
         expect(KamisadoMove.PASS.toString()).toEqual('KamisadoMove(PASS)');
     });
     it('should correctly encode and decode all moves', () => {
-        const rules: KamisadoRules = new KamisadoRules(KamisadoPartSlice);
+        const rules: KamisadoRules = new KamisadoRules(KamisadoState);
         const minimax: KamisadoMinimax = new KamisadoMinimax(rules, 'KamisadoMinimax');
         const moves: KamisadoMove[] = minimax.getListMoves(rules.node);
         moves.push(KamisadoMove.PASS);

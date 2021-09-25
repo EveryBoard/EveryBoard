@@ -1,8 +1,8 @@
 import { QuartoPiece } from '../QuartoPiece';
-import { QuartoPartSlice } from '../QuartoPartSlice';
+import { QuartoState } from '../QuartoState';
 import { QuartoMinimax } from '../QuartoMinimax';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
-import { QuartoRules } from '../QuartoRules';
+import { QuartoNode, QuartoRules } from '../QuartoRules';
 
 describe('QuartoMinimax:', () => {
     let minimax: QuartoMinimax;
@@ -14,7 +14,7 @@ describe('QuartoMinimax:', () => {
     const ABBB: number = QuartoPiece.ABBB.value;
 
     beforeEach(() => {
-        const rules: QuartoRules = new QuartoRules(QuartoPartSlice);
+        const rules: QuartoRules = new QuartoRules(QuartoState);
         minimax = new QuartoMinimax(rules, 'QuartoMinimax');
     });
     it('Should know that the board value is PRE_VICTORY when pieceInHand match board criterion', () => {
@@ -25,7 +25,8 @@ describe('QuartoMinimax:', () => {
             [NULL, NULL, NULL, NULL],
         ];
         const pieceInHand: QuartoPiece = QuartoPiece.fromInt(AAAA);
-        const slice: QuartoPartSlice = new QuartoPartSlice(board, 3, pieceInHand);
-        expect(minimax.getBoardValue(new MGPNode(null, null, slice)).value).toEqual(Number.MAX_SAFE_INTEGER - 1);
+        const state: QuartoState = new QuartoState(board, 3, pieceInHand);
+        const node: QuartoNode = new MGPNode(null, null, state);
+        expect(minimax.getBoardValue(node).value).toEqual(Number.MAX_SAFE_INTEGER - 1);
     });
 });

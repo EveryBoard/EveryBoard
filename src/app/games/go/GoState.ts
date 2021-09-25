@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
+import { RectangularGameState } from 'src/app/jscaip/RectangularGameState';
 import { Player } from 'src/app/jscaip/Player';
 import { ArrayUtils, NumberTable, Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -85,7 +85,8 @@ export enum Phase {
     ACCEPT = 'ACCEPT',
     FINISHED = 'FINISHED'
 }
-export class GoPartSlice extends GamePartSlice {
+export class GoState extends RectangularGameState<GoPiece> {
+
     public static WIDTH: number = 13;
 
     public static HEIGHT: number = 13;
@@ -108,8 +109,7 @@ export class GoPartSlice extends GamePartSlice {
                        koCoord: MGPOptional<Coord>,
                        phase: Phase)
     {
-        const intBoard: number[][] = GoPartSlice.mapGoPieceBoard(board);
-        super(intBoard, turn);
+        super(board, turn);
         if (captured == null) throw new Error('Captured cannot be null.');
         if (koCoord == null) throw new Error('Ko Coord cannot be null, use MGPOptional.empty() instead.');
         if (phase == null) throw new Error('Phase cannot be null.');
@@ -117,37 +117,27 @@ export class GoPartSlice extends GamePartSlice {
         this.koCoord = koCoord;
         this.phase = phase;
     }
-    public static getInitialSlice(): GoPartSlice {
-        const board: Table<GoPiece> = GoPartSlice.getStartingBoard();
-        return new GoPartSlice(board, [0, 0], 0, MGPOptional.empty(), Phase.PLAYING);
+    public static getInitialState(): GoState {
+        const board: Table<GoPiece> = GoState.getStartingBoard();
+        return new GoState(board, [0, 0], 0, MGPOptional.empty(), Phase.PLAYING);
     }
     public getCapturedCopy(): number[] {
         return [this.captured[0], this.captured[1]];
     }
     public static getStartingBoard(): Table<GoPiece> {
-        return ArrayUtils.createBiArray(GoPartSlice.WIDTH, GoPartSlice.HEIGHT, GoPiece.EMPTY);
+        return ArrayUtils.createBiArray(GoState.WIDTH, GoState.HEIGHT, GoPiece.EMPTY);
     }
-    public getBoardByXYGoPiece(x: number, y: number): GoPiece {
-        const intValue: number = this.getBoardByXY(x, y);
-        return GoPiece.of(intValue);
-    }
-    public getBoardAtGoPiece(coord: Coord): GoPiece {
-        return this.getBoardByXYGoPiece(coord.x, coord.y);
-    }
-    public getCopiedBoardGoPiece(): GoPiece[][] {
-        return GoPartSlice.mapNumberBoard(this.board);
-    }
-    public copy(): GoPartSlice {
-        return new GoPartSlice(this.getCopiedBoardGoPiece(),
-                               this.getCapturedCopy(),
-                               this.turn,
-                               this.koCoord,
-                               this.phase);
+    public copy(): GoState {
+        return new GoState(this.getCopiedBoard(),
+                           this.getCapturedCopy(),
+                           this.turn,
+                           this.koCoord,
+                           this.phase);
     }
     public isDead(coord: Coord): boolean {
-        return this.getBoardAtGoPiece(coord).isDead();
+        return this.getBoardAt(coord).isDead();
     }
     public isTerritory(coord: Coord): boolean {
-        return this.getBoardAtGoPiece(coord).isTerritory();
+        return this.getBoardAt(coord).isTerritory();
     }
 }

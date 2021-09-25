@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
 import { Coord } from '../../jscaip/Coord';
 import { TablutMove } from 'src/app/games/tablut/TablutMove';
-import { TablutPartSlice } from './TablutPartSlice';
+import { TablutState } from './TablutState';
 import { TablutRules } from './TablutRules';
 import { TablutMinimax } from './TablutMinimax';
 import { TablutCase } from 'src/app/games/tablut/TablutCase';
@@ -11,7 +11,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player } from 'src/app/jscaip/Player';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { TablutRulesConfig } from 'src/app/games/tablut/TablutRulesConfig';
-import { NumberTable } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/utils/ArrayUtils';
 import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
 import { TablutPieceAndInfluenceMinimax } from './TablutPieceAndInfluenceMinimax';
 import { TablutLegalityStatus } from './TablutLegalityStatus';
@@ -28,7 +28,7 @@ import { tablutTutorial } from './TablutTutorial';
     templateUrl: './tablut.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPartSlice, TablutLegalityStatus> {
+export class TablutComponent extends AbstractGameComponent<TablutMove, TablutState, TablutLegalityStatus> {
 
     public static VERBOSE: boolean = false;
 
@@ -55,7 +55,7 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = new TablutRules(TablutPartSlice);
+        this.rules = new TablutRules(TablutState);
         this.availableMinimaxes = [
             new TablutMinimax(this.rules, 'DummyBot'),
             new TablutPieceAndInfluenceMinimax(this.rules, 'Piece > Influence'),
@@ -66,7 +66,7 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
     public updateBoard(): void {
         display(TablutComponent.VERBOSE, 'tablutComponent.updateBoard');
         this.lastMove = this.rules.node.move;
-        this.board = this.rules.node.gamePartSlice.getCopiedBoard();
+        this.board = this.rules.node.gameState.getCopiedBoard();
 
         this.captureds = [];
         if (this.lastMove) {
@@ -74,15 +74,15 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
         }
     }
     private showPreviousMove(): void {
-        const previousBoard: NumberTable = this.rules.node.mother.gamePartSlice.board;
-        const ENNEMY: Player = this.rules.node.gamePartSlice.getCurrentEnnemy();
+        const previousBoard: Table<TablutCase> = this.rules.node.mother.gameState.board;
+        const ENNEMY: Player = this.rules.node.gameState.getCurrentEnnemy();
         for (const orthogonal of Orthogonal.ORTHOGONALS) {
             const captured: Coord = this.lastMove.end.getNext(orthogonal, 1);
             if (captured.isInRange(TablutRulesConfig.WIDTH, TablutRulesConfig.WIDTH)) {
                 const previously: RelativePlayer = TablutRules.getRelativeOwner(ENNEMY, captured, previousBoard);
                 const wasEnnemy: boolean = previously === RelativePlayer.ENNEMY;
-                const currently: number = this.rules.node.gamePartSlice.getBoardAt(captured);
-                const isEmpty: boolean = currently === TablutCase.UNOCCUPIED.value;
+                const currently: TablutCase = this.rules.node.gameState.getBoardAt(captured);
+                const isEmpty: boolean = currently === TablutCase.UNOCCUPIED;
                 if (wasEnnemy && isEmpty) {
                     this.captureds.push(captured);
                 }
@@ -113,7 +113,7 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
             return this.cancelMove(error.message);
         }
         this.cancelMove();
-        return await this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
+        return await this.chooseMove(move, this.rules.node.gameState, null, null);
     }
     public choosePiece(x: number, y: number): MGPValidation {
         display(TablutComponent.VERBOSE, 'TablutComponent.choosePiece');
@@ -131,7 +131,7 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
     }
     public pieceBelongToCurrentPlayer(x: number, y: number): boolean {
         // TODO: see that verification is done and refactor this shit
-        const player: Player = this.rules.node.gamePartSlice.getCurrentPlayer();
+        const player: Player = this.rules.node.gameState.getCurrentPlayer();
         const coord: Coord = new Coord(x, y);
         return TablutRules.getRelativeOwner(player, coord, this.board) === RelativePlayer.PLAYER;
     }
@@ -187,7 +187,7 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
         return this.board[y][x] === TablutCase.INVADERS.value;
     }
     public isKing(x: number, y: number): boolean {
-        return TablutRules.isKing(this.board[y][x]);
+        return this.board[y][x].isKing();
     }
     public getKingPolyline(x: number, y: number): string {
         const ax: number = 85 + 100*x; const ay: number = 85 + 100*y;

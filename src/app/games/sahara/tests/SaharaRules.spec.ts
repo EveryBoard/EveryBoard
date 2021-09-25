@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { SaharaNode, SaharaRules } from '../SaharaRules';
 import { SaharaMinimax } from '../SaharaMinimax';
 import { SaharaMove } from '../SaharaMove';
-import { SaharaPartSlice } from '../SaharaPartSlice';
+import { SaharaState } from '../SaharaState';
 import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
@@ -23,12 +23,12 @@ describe('SaharaRules', () => {
     let minimax: SaharaMinimax;
 
     beforeEach(() => {
-        rules = new SaharaRules(SaharaPartSlice);
+        rules = new SaharaRules(SaharaState);
         minimax = new SaharaMinimax(rules, 'SaharaMinimax');
     });
     it('SaharaRules should be created', () => {
         expect(rules).toBeTruthy();
-        expect(rules.node.gamePartSlice.turn).toBe(0, 'Game should start a turn 0');
+        expect(rules.node.gameState.turn).toBe(0, 'Game should start a turn 0');
         const moves: SaharaMove[] = minimax.getListMoves(rules.node);
         const expectedMoves: MGPSet<SaharaMove> = new MGPSet([
             new SaharaMove(new Coord( 2, 0), new Coord(2, 1)),
@@ -48,18 +48,18 @@ describe('SaharaRules', () => {
         expect(moves.length).toBe(12);
     });
     it('TriangularCheckerBoard should always give 3 neighboors', () => {
-        for (let y: number = 0; y < SaharaPartSlice.HEIGHT; y++) {
-            for (let x: number = 0; x < SaharaPartSlice.WIDTH; x++) {
+        for (let y: number = 0; y < SaharaState.HEIGHT; y++) {
+            for (let x: number = 0; x < SaharaState.WIDTH; x++) {
                 expect(TriangularCheckerBoard.getNeighboors(new Coord(x, y)).length).toBe(3);
             }
         }
     });
     it('Shortest victory simulation', () => {
         expect(rules.choose(new SaharaMove(new Coord(0, 3), new Coord(1, 4)))).toBeTrue();
-        expect(rules.node.gamePartSlice.getBoardAt(new Coord(1, 4)))
+        expect(rules.node.gameState.getBoardAt(new Coord(1, 4)))
             .withContext('Just moved black piece should be in her landing spot')
             .toBe(FourStatePiece.ZERO.value);
-        expect(rules.node.gamePartSlice.getBoardAt(new Coord(0, 3)))
+        expect(rules.node.gameState.getBoardAt(new Coord(0, 3)))
             .withContext('Just moved black piece should have left her initial spot')
             .toBe(FourStatePiece.EMPTY.value);
         expect(rules.choose(new SaharaMove(new Coord(3, 0), new Coord(4, 0)))).toBeTrue();
@@ -70,7 +70,7 @@ describe('SaharaRules', () => {
         expect(rules.choose(new SaharaMove(new Coord(7, 0), new Coord(8, 1)))).toBeFalse();
     });
     it('Should forbid moving ennemy piece', () => {
-        const state: SaharaPartSlice = SaharaPartSlice.getInitialSlice();
+        const state: SaharaState = SaharaState.getInitialState();
         const move: SaharaMove = new SaharaMove(new Coord(3, 0), new Coord(4, 0));
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.reason).toEqual(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
@@ -84,7 +84,7 @@ describe('SaharaRules', () => {
             [N, _, _, _, _, _, _, _, _, _, N],
             [N, N, X, O, _, _, _, X, O, N, N],
         ];
-        const state: SaharaPartSlice = new SaharaPartSlice(board, 4);
+        const state: SaharaState = new SaharaState(board, 4);
         const node: SaharaNode = new MGPNode(null, null, state);
         expectToBeVictoryFor(rules, node, Player.ONE, [new SaharaMinimax(rules, '')]);
     });

@@ -14,7 +14,7 @@ export const abaloneTutorial: TutorialStep[] = [
     TutorialStep.informational(
         $localize`Initial board and goal of the game`,
         $localize`At Abalone, the goal of the game is to be the first player to push 6 opponent's pieces out of the board. Let us see how!`,
-        AbaloneGameState.getInitialSlice(),
+        AbaloneGameState.getInitialState(),
     ),
     TutorialStep.anyMove(
         $localize`Moving a piece`,
@@ -23,7 +23,7 @@ export const abaloneTutorial: TutorialStep[] = [
         The pieces you move must be aligned and consecutive, and the move should land on an empty space (except to push, we will see that later).
         To make a move, click on one of your pieces, then click on an arrow to choose the move direction.<br/><br/>
         You're playing Dark, make any move!`,
-        AbaloneGameState.getInitialSlice(),
+        AbaloneGameState.getInitialState(),
         AbaloneMove.fromSingleCoord(new Coord(2, 6), HexaDirection.UP).get(),
         $localize`Congratulations!`,
     ),

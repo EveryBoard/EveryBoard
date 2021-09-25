@@ -2,7 +2,7 @@ import { CoerceoComponent } from '../coerceo.component';
 import { CoerceoMove } from 'src/app/games/coerceo/CoerceoMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { CoerceoFailure } from 'src/app/games/coerceo/CoerceoFailure';
-import { CoerceoPartSlice } from 'src/app/games/coerceo/CoerceoPartSlice';
+import { CoerceoState } from 'src/app/games/coerceo/CoerceoState';
 import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
@@ -17,17 +17,17 @@ describe('CoerceoComponent:', () => {
     const X: number = FourStatePiece.ONE.value;
 
     function getScore(player: number): number {
-        return componentTestUtils.getComponent().rules.node.gamePartSlice['captures'][player];
+        return componentTestUtils.getComponent().rules.node.gameState['captures'][player];
     }
     function expectCoordToBeOfRemovedFill(x: number, y: number): void {
         const gameComponent: CoerceoComponent = componentTestUtils.getComponent();
-        const caseContent: number = gameComponent.rules.node.gamePartSlice.getBoardByXY(x, y);
+        const caseContent: number = gameComponent.rules.node.gameState.getBoardByXY(x, y);
         expect(gameComponent.isEmptyCase(x, y, caseContent)).toBeTrue();
         expect(gameComponent.getEmptyClass(x, y, caseContent)).toBe('captured2');
     }
     function expectCoordToBeOfCapturedFill(x: number, y: number): void {
         const gameComponent: CoerceoComponent = componentTestUtils.getComponent();
-        const caseContent: number = gameComponent.rules.node.gamePartSlice.getBoardByXY(x, y);
+        const caseContent: number = gameComponent.rules.node.gameState.getBoardByXY(x, y);
         expect(gameComponent.isPyramid(x, y, caseContent)).toBeTrue();
         expect(gameComponent.getPyramidClass(caseContent)).toBe('captured');
     }
@@ -71,10 +71,10 @@ describe('CoerceoComponent:', () => {
         await componentTestUtils.expectClickFailure('#click_8_4', reason);
     }));
     it('Should show tile when more than zero', fakeAsync(async() => {
-        const board: NumberTable = CoerceoPartSlice.getInitialSlice().getCopiedBoard();
-        const state: CoerceoPartSlice = new CoerceoPartSlice(board, 0, [1, 0], [0, 0]);
+        const board: NumberTable = CoerceoState.getInitialState().getCopiedBoard();
+        const state: CoerceoState = new CoerceoState(board, 0, [1, 0], [0, 0]);
         componentTestUtils.expectElementNotToExist('#playerZeroTilesCount');
-        componentTestUtils.setupSlice(state);
+        componentTestUtils.setupState(state);
         componentTestUtils.expectElementToExist('#playerZeroTilesCount');
     }));
     it('Should show removed tiles, and captured piece (after tiles exchange)', fakeAsync(async() => {
@@ -103,12 +103,12 @@ describe('CoerceoComponent:', () => {
             [N, N, N, N, N, N, X, _, X, _, _, _, N, N, N],
             [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
         ];
-        const previousState: CoerceoPartSlice = new CoerceoPartSlice(previousBoard, 2, [2, 0], [0, 0]);
-        const state: CoerceoPartSlice = new CoerceoPartSlice(board, 3, [0, 0], [1, 0]);
+        const previousState: CoerceoState = new CoerceoState(previousBoard, 2, [2, 0], [0, 0]);
+        const state: CoerceoState = new CoerceoState(board, 3, [0, 0], [1, 0]);
         const previousMove: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(8, 6));
 
         // when drawing board
-        componentTestUtils.setupSlice(state, previousState, previousMove);
+        componentTestUtils.setupState(state, previousState, previousMove);
 
         // then we should see removed tiles
         expectCoordToBeOfCapturedFill(8, 6);
@@ -146,12 +146,12 @@ describe('CoerceoComponent:', () => {
             [N, N, N, N, N, N, X, _, _, N, N, N, N, N, N],
             [N, N, N, N, N, N, _, _, O, N, N, N, N, N, N],
         ];
-        const previousState: CoerceoPartSlice = new CoerceoPartSlice(previousBoard, 2, [0, 0], [0, 0]);
+        const previousState: CoerceoState = new CoerceoState(previousBoard, 2, [0, 0], [0, 0]);
         const previousMove: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(8, 6));
-        const state: CoerceoPartSlice = new CoerceoPartSlice(board, 3, [0, 0], [1, 0]);
+        const state: CoerceoState = new CoerceoState(board, 3, [0, 0], [1, 0]);
 
         // when drawing board
-        componentTestUtils.setupSlice(state, previousState, previousMove);
+        componentTestUtils.setupState(state, previousState, previousMove);
 
         // then we should see removed tiles
         expectCoordToBeOfCapturedFill(8, 6);

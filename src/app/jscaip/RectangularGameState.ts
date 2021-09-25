@@ -1,18 +1,18 @@
 import { Coord } from './Coord';
-import { Player } from './Player';
-import { ArrayUtils, NumberTable } from '../utils/ArrayUtils';
+import { ArrayUtils, Table } from '../utils/ArrayUtils';
+import { GameState } from './GameState';
 
-export abstract class GamePartSlice {
+export abstract class RectangularGameState<T> extends GameState {
 
-    public constructor(public readonly board: NumberTable,
-                       public readonly turn: number)
+    public constructor(public readonly board: Table<T>,
+                       turn: number)
     {
+        super(turn);
         if (board == null) throw new Error('Board cannot be null.');
-        if (turn == null) throw new Error('Turn cannot be null.');
     }
     // Getters
 
-    public getNullable(coord: Coord): number | null {
+    public getNullable(coord: Coord): T | null {
         if (0 <= coord.y && coord.y < this.board.length &&
             0 <= coord.x && coord.x < this.board[coord.y].length)
         {
@@ -21,7 +21,7 @@ export abstract class GamePartSlice {
             return null;
         }
     }
-    public getBoardByXY(x: number, y: number): number {
+    public getBoardByXY(x: number, y: number): T {
         if (0 <= y && y < this.board.length &&
             0 <= x && x < this.board[y].length)
         {
@@ -30,21 +30,15 @@ export abstract class GamePartSlice {
             throw new Error('Out of range coord: (' + x + ', ' + y + ').');
         }
     }
-    public getBoardAt(c: Coord): number {
+    public getBoardAt(c: Coord): T {
         return this.getBoardByXY(c.x, c.y);
     }
     // Methods:
 
-    public getCopiedBoard(): number[][] {
+    public getCopiedBoard(): T[][] {
         return ArrayUtils.copyBiArray(this.board);
     }
-    public getCurrentPlayer(): Player {
-        return Player.fromTurn(this.turn);
-    }
-    public getCurrentEnnemy(): Player {
-        return this.turn % 2 === 1 ? Player.ZERO : Player.ONE;
-    }
-    public equals(other: GamePartSlice): boolean {
+    public equals(other: RectangularGameState<T>): boolean {
         throw new Error('Method uneeded yet' + other.toString());
     }
     public toString(): string {

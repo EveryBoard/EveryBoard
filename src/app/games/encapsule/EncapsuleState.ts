@@ -1,37 +1,37 @@
-import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
+import { RectangularGameState } from 'src/app/jscaip/RectangularGameState';
 import { EncapsulePiece, Size } from 'src/app/games/encapsule/EncapsulePiece';
 import { Player } from 'src/app/jscaip/Player';
-import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
+import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/utils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { ComparableObject } from 'src/app/utils/Comparable';
 
-export class EncapsulePartSlice extends GamePartSlice {
-    private readonly remainingPieces: ReadonlyArray<EncapsulePiece>;
-    private readonly caseBoard: Table<EncapsuleCase>;
+export class EncapsuleState extends RectangularGameState<EncapsuleCase> {
 
-    constructor(board: number[][], turn: number, remainingPieces: EncapsulePiece[]) {
+    private readonly remainingPieces: ReadonlyArray<EncapsulePiece>;
+
+    constructor(board: EncapsuleCase[][], turn: number, remainingPieces: EncapsulePiece[]) {
         super(board, turn);
         if (remainingPieces == null) throw new Error('RemainingPieces cannot be null');
         this.remainingPieces = remainingPieces;
-        this.caseBoard = this.board.map((line: number[]) =>
-            line.map((n: number) => EncapsuleCase.decode(n)));
     }
-    public static getInitialSlice(): EncapsulePartSlice {
+    public static getInitialState(): EncapsuleState {
         const emptyCase: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.NONE);
         const emptyNumber: number = emptyCase.encode();
-        const startingBoard: number[][] = ArrayUtils.createBiArray(3, 3, emptyNumber);
+        const startingNumberBoard: number[][] = ArrayUtils.createBiArray(3, 3, emptyNumber);
+        const startingBoard: EncapsuleCase[][] = ArrayUtils.mapBiArray(startingNumberBoard,
+                                                                       (piece: number) => EncapsuleCase.decode(piece));
         const initialPieces: EncapsulePiece[] = [
             EncapsulePiece.BIG_BLACK, EncapsulePiece.BIG_BLACK, EncapsulePiece.BIG_WHITE,
             EncapsulePiece.BIG_WHITE, EncapsulePiece.MEDIUM_BLACK, EncapsulePiece.MEDIUM_BLACK,
             EncapsulePiece.MEDIUM_WHITE, EncapsulePiece.MEDIUM_WHITE, EncapsulePiece.SMALL_BLACK,
             EncapsulePiece.SMALL_BLACK, EncapsulePiece.SMALL_WHITE, EncapsulePiece.SMALL_WHITE,
         ];
-        return new EncapsulePartSlice(startingBoard, 0, initialPieces);
+        return new EncapsuleState(startingBoard, 0, initialPieces);
     }
     public getAt(coord: Coord): EncapsuleCase {
-        return this.caseBoard[coord.y][coord.x];
+        return this.board[coord.y][coord.x];
     }
     public getRemainingPieces(): EncapsulePiece[] {
         return ArrayUtils.copyImmutableArray(this.remainingPieces);
@@ -47,9 +47,6 @@ export class EncapsulePartSlice extends GamePartSlice {
     }
     public isInRemainingPieces(piece: EncapsulePiece): boolean {
         return this.remainingPieces.some((p: EncapsulePiece) => p === piece);
-    }
-    public toCaseBoard(): Table<EncapsuleCase> {
-        return this.caseBoard;
     }
     public getPlayerRemainingPieces(): EncapsulePiece[] {
         return this.remainingPieces.filter((piece: EncapsulePiece) => this.pieceBelongsToCurrentPlayer(piece));

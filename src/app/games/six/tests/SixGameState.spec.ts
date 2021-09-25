@@ -5,7 +5,7 @@ import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { SixMove } from '../SixMove';
-import { SixGameState } from '../SixGameState';
+import { SixState } from '../SixGameState';
 
 describe('SixGameState', () => {
 
@@ -18,7 +18,7 @@ describe('SixGameState', () => {
             const pieces: MGPMap<Coord, Player> = new MGPMap<Coord, Player>();
             pieces.put(new Coord(0, 0), Player.ONE);
             pieces.put(new Coord(1, 1), Player.ZERO);
-            const state: SixGameState = new SixGameState(pieces, 0);
+            const state: SixState = new SixState(pieces, 0);
             const expectedRepresentation: NumberTable = [
                 [X, _],
                 [_, O],
@@ -34,14 +34,14 @@ describe('SixGameState', () => {
             expectedPieces.put(new Coord(0, 0), Player.ONE);
             expectedPieces.put(new Coord(1, 1), Player.ZERO);
             expectedPieces.makeImmutable();
-            const state: SixGameState = SixGameState.fromRepresentation(representation, 0);
+            const state: SixState = SixState.fromRepresentation(representation, 0);
             expect(state.pieces).toEqual(expectedPieces);
         });
         it('Should make 0 the left and upper indexes', () => {
             const pieces: MGPMap<Coord, Player> = new MGPMap<Coord, Player>();
             pieces.put(new Coord(-1, -1), Player.ONE);
             pieces.put(new Coord(0, 0), Player.ZERO);
-            const state: SixGameState = new SixGameState(pieces, 0);
+            const state: SixState = new SixState(pieces, 0);
             const expectedRepresentation: NumberTable = [
                 [X, _],
                 [_, O],
@@ -54,7 +54,7 @@ describe('SixGameState', () => {
             pieces.put(new Coord(1, 0), Player.ONE);
             pieces.put(new Coord(2, 0), Player.ZERO);
             pieces.put(new Coord(3, 0), Player.ONE);
-            const state: SixGameState = new SixGameState(pieces, 0);
+            const state: SixState = new SixState(pieces, 0);
             const expectedRepresentation: NumberTable = [
                 [X, O, X],
             ];
@@ -66,7 +66,7 @@ describe('SixGameState', () => {
             pieces.put(new Coord(0, 1), Player.ONE);
             pieces.put(new Coord(0, 2), Player.ZERO);
             pieces.put(new Coord(0, 3), Player.ONE);
-            const state: SixGameState = new SixGameState(pieces, 0);
+            const state: SixState = new SixState(pieces, 0);
             const expectedRepresentation: NumberTable = [
                 [X],
                 [O],
@@ -80,10 +80,10 @@ describe('SixGameState', () => {
             beforePieces.put(new Coord(0, 0), Player.ONE);
             beforePieces.put(new Coord(0, 1), Player.ZERO);
             beforePieces.put(new Coord(0, 2), Player.ONE);
-            const beforeState: SixGameState = new SixGameState(beforePieces, 0);
+            const beforeState: SixState = new SixState(beforePieces, 0);
 
             const move: SixMove = SixMove.fromDeplacement(new Coord(0, 0), new Coord(0, 3));
-            const afterState: SixGameState = beforeState.applyLegalDeplacement(move, new MGPSet());
+            const afterState: SixState = beforeState.applyLegalDeplacement(move, new MGPSet());
 
             const expectedPieces: MGPMap<Coord, Player> = new MGPMap<Coord, Player>();
             expectedPieces.put(new Coord(0, 0), Player.ZERO);
@@ -104,8 +104,8 @@ describe('SixGameState', () => {
                 [_, O, _, _, _],
                 [O, _, _, _, _],
             ];
-            const state: SixGameState = SixGameState.fromRepresentation(representation, 40);
-            const groups: MGPSet<MGPSet<Coord>> = SixGameState.getGroups(state.pieces, new Coord(2, 2));
+            const state: SixState = SixState.fromRepresentation(representation, 40);
+            const groups: MGPSet<MGPSet<Coord>> = SixState.getGroups(state.pieces, new Coord(2, 2));
             const expectedGroups: MGPSet<MGPSet<Coord>> = new MGPSet([
                 new MGPSet([new Coord(2, 0), new Coord(2, 1)]),
                 new MGPSet([new Coord(3, 2), new Coord(4, 2)]),

@@ -12,7 +12,7 @@ export class AbaloneDummyMinimax extends Minimax<AbaloneMove, AbaloneGameState, 
 
     public getListMoves(node: AbaloneNode): AbaloneMove[] {
         const moves: AbaloneMove[] = [];
-        const state: AbaloneGameState = node.gamePartSlice;
+        const state: AbaloneGameState = node.gameState;
         const PLAYER: number = state.getCurrentPlayer().value;
         for (let y: number = 0; y < 9; y++) {
             for (let x: number = 0; x < 9; x++) {
@@ -69,7 +69,7 @@ export class AbaloneDummyMinimax extends Minimax<AbaloneMove, AbaloneGameState, 
         if (gameStatus.isEndGame) {
             return new NodeUnheritance(gameStatus.toBoardValue());
         }
-        const scores: [number, number] = node.gamePartSlice.getScores();
+        const scores: [number, number] = node.gameState.getScores();
         return new NodeUnheritance(scores[1] - scores[0]);
     }
 }

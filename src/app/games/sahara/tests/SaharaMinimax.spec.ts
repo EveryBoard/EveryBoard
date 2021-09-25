@@ -1,7 +1,7 @@
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { expectSecondStateToBeBetterThanFirst } from 'src/app/utils/tests/TestUtils.spec';
 import { SaharaMinimax } from '../SaharaMinimax';
-import { SaharaPartSlice } from '../SaharaPartSlice';
+import { SaharaState } from '../SaharaState';
 import { SaharaRules } from '../SaharaRules';
 
 describe('SaharaMinimax', () => {
@@ -15,7 +15,7 @@ describe('SaharaMinimax', () => {
     const _: number = FourStatePiece.EMPTY.value;
 
     beforeEach(() => {
-        rules = new SaharaRules(SaharaPartSlice);
+        rules = new SaharaRules(SaharaState);
         minimax = new SaharaMinimax(rules, 'SaharaMinimax');
     });
     it('should prefer having more freedoms', () => {
@@ -27,7 +27,7 @@ describe('SaharaMinimax', () => {
             [N, _, _, _, _, _, _, _, _, _, N],
             [N, N, X, O, _, _, _, X, O, N, N],
         ];
-        const weakState: SaharaPartSlice = new SaharaPartSlice(weakBoard, 0);
+        const weakState: SaharaState = new SaharaState(weakBoard, 0);
         const strongBoard: number[][] = [
             [N, N, _, O, X, _, _, O, X, N, N],
             [N, _, _, _, _, _, _, _, _, _, N],
@@ -36,7 +36,7 @@ describe('SaharaMinimax', () => {
             [N, _, _, _, _, _, _, _, _, _, N],
             [N, N, X, O, _, _, _, X, O, N, N],
         ];
-        const strongState: SaharaPartSlice = new SaharaPartSlice(strongBoard, 0);
+        const strongState: SaharaState = new SaharaState(strongBoard, 0);
         expectSecondStateToBeBetterThanFirst(weakState, null, strongState, null, minimax);
     });
 });

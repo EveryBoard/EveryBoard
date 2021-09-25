@@ -4,7 +4,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { KamisadoColor } from '../KamisadoColor';
 import { KamisadoMinimax } from '../KamisadoMinimax';
 import { KamisadoMove } from '../KamisadoMove';
-import { KamisadoPartSlice } from '../KamisadoPartSlice';
+import { KamisadoState } from '../KamisadoState';
 import { KamisadoPiece } from '../KamisadoPiece';
 import { KamisadoNode, KamisadoRules } from '../KamisadoRules';
 
@@ -18,7 +18,7 @@ describe('KamisadoMinimax', () => {
     const b: number = KamisadoPiece.ONE.BROWN.getValue();
 
     beforeEach(() => {
-        rules = new KamisadoRules(KamisadoPartSlice);
+        rules = new KamisadoRules(KamisadoState);
         minimax = new KamisadoMinimax(rules, 'KamisadoMinimax');
     });
     it('should provide 102 possible moves at turn 0', () => {
@@ -39,9 +39,9 @@ describe('KamisadoMinimax', () => {
             [_, _, _, _, _, _, _, _],
             [R, _, _, _, _, _, _, _],
         ];
-        const slice: KamisadoPartSlice =
-            new KamisadoPartSlice(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
-        const node: KamisadoNode = new MGPNode(null, null, slice);
+        const state: KamisadoState =
+            new KamisadoState(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
+        const node: KamisadoNode = new MGPNode(null, null, state);
         expect(minimax.getBoardValue(node).value).toEqual(2);
     });
 });

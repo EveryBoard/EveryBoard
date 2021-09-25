@@ -6,7 +6,7 @@ import { UserService } from '../../services/UserService';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
 
 import { Move } from '../../jscaip/Move';
-import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
+import { RectangularGameState } from 'src/app/jscaip/RectangularGameState';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { assert, display } from 'src/app/utils/utils';
@@ -28,7 +28,7 @@ export abstract class GameWrapper {
     @ViewChild(GameIncluderComponent)
     public gameIncluder: GameIncluderComponent;
 
-    public gameComponent: AbstractGameComponent<Move, GamePartSlice>;
+    public gameComponent: AbstractGameComponent<Move, RectangularGameState>;
 
     public userName: string = this.authenticationService.getAuthenticatedUser() != null &&
                               this.authenticationService.getAuthenticatedUser().pseudo // TODO, clean that;
@@ -48,7 +48,7 @@ export abstract class GameWrapper {
                 protected authenticationService: AuthenticationService) {
         display(GameWrapper.VERBOSE, 'GameWrapper.constructed: ' + (this.gameIncluder!=null));
     }
-    public getMatchingComponent(compoString: string): Type<AbstractGameComponent<Move, GamePartSlice>> {
+    public getMatchingComponent(compoString: string): Type<AbstractGameComponent<Move, RectangularGameState>> {
         display(GameWrapper.VERBOSE, 'GameWrapper.getMatchingComponent');
         const gameInfo: GameInfo = GameInfo.ALL_GAMES.find((gameInfo: GameInfo) => gameInfo.urlName === compoString);
         if (gameInfo == null) {
@@ -62,20 +62,20 @@ export abstract class GameWrapper {
         this.createGameComponent();
 
         this.gameComponent.rules.setInitialBoard();
-        this.gameComponent.board = this.gameComponent.rules.node.gamePartSlice.getCopiedBoard();
+        this.gameComponent.board = this.gameComponent.rules.node.gameState.getCopiedBoard();
     }
     protected createGameComponent(): void {
         display(GameWrapper.VERBOSE, 'GameWrapper.createGameComponent');
         assert(this.gameIncluder != null, 'GameIncluder should be present');
 
         const compoString: string = this.actRoute.snapshot.paramMap.get('compo');
-        const component: Type<AbstractGameComponent<Move, GamePartSlice>> =
+        const component: Type<AbstractGameComponent<Move, RectangularGameState>> =
             this.getMatchingComponent(compoString);
-        const componentFactory: ComponentFactory<AbstractGameComponent<Move, GamePartSlice>> =
+        const componentFactory: ComponentFactory<AbstractGameComponent<Move, RectangularGameState>> =
             this.componentFactoryResolver.resolveComponentFactory(component);
-        const componentRef: ComponentRef<AbstractGameComponent<Move, GamePartSlice>> =
+        const componentRef: ComponentRef<AbstractGameComponent<Move, RectangularGameState>> =
             this.gameIncluder.viewContainerRef.createComponent(componentFactory);
-        this.gameComponent = <AbstractGameComponent<Move, GamePartSlice>>componentRef.instance;
+        this.gameComponent = <AbstractGameComponent<Move, RectangularGameState>>componentRef.instance;
         // Shortent by T<S = Truc>
 
         this.gameComponent.chooseMove = this.receiveValidMove; // so that when the game component do a move
@@ -88,9 +88,9 @@ export abstract class GameWrapper {
         this.gameComponent.observerRole = this.observerRole;
         this.canPass = this.gameComponent.canPass;
     }
-    public receiveValidMove: (m: Move, s: GamePartSlice, s0: number, s1: number) => Promise<MGPValidation> =
+    public receiveValidMove: (m: Move, s: RectangularGameState, s0: number, s1: number) => Promise<MGPValidation> =
     async(move: Move,
-          slice: GamePartSlice,
+          state: RectangularGameState,
           scorePlayerZero: number,
           scorePlayerOne: number): Promise<MGPValidation> =>
     {
@@ -98,7 +98,7 @@ export abstract class GameWrapper {
         display(GameWrapper.VERBOSE || LOCAL_VERBOSE, {
             gameWrapper_receiveValidMove_AKA_chooseMove: {
                 move,
-                slice,
+                state,
                 scorePlayerZero,
                 scorePlayerOne,
             },
@@ -109,7 +109,7 @@ export abstract class GameWrapper {
         if (this.endGame) {
             return MGPValidation.failure($localize`The game has ended.`);
         }
-        const legality: LegalityStatus = this.gameComponent.rules.isLegal(move, slice);
+        const legality: LegalityStatus = this.gameComponent.rules.isLegal(move, state);
         if (legality.legal.isFailure()) {
             this.gameComponent.cancelMove(legality.legal.getReason());
             return legality.legal;
@@ -140,7 +140,7 @@ export abstract class GameWrapper {
         if (this.observerRole === Player.NONE.value) {
             return false;
         }
-        const turn: number = this.gameComponent.rules.node.gamePartSlice.turn;
+        const turn: number = this.gameComponent.rules.node.gameState.turn;
         const indexPlayer: number = turn % 2;
         display(GameWrapper.VERBOSE, { isPlayerTurn: {
             turn,
@@ -157,7 +157,7 @@ export abstract class GameWrapper {
             return true;
         }
     }
-    get compo(): AbstractGameComponent<Move, GamePartSlice> {
+    get compo(): AbstractGameComponent<Move, RectangularGameState> {
         return this.gameComponent;
     }
 }

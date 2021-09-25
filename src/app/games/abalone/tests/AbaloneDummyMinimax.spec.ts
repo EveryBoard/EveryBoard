@@ -18,7 +18,7 @@ describe('AbaloneDummyMinimax', () => {
     });
     it('should propose all non-suicidal moved at first turn, there is 42', () => {
         // given initial node
-        const initialState: AbaloneGameState = AbaloneGameState.getInitialSlice();
+        const initialState: AbaloneGameState = AbaloneGameState.getInitialState();
         const initialNode: AbaloneNode = new MGPNode(null, null, initialState);
 
         // then we should have 42 moves

@@ -19,14 +19,14 @@ export const pylosTutorial: TutorialStep[] = [
         Here is what the initial board looks like, it is a board of 4 x 4 squares.
         This board will become a pyramid, little by little.
         It will be filled by the pieces of your stock. Each player has 15 pieces.`,
-        PylosState.getInitialSlice(),
+        PylosState.getInitialState(),
     ),
     TutorialStep.anyMove(
         $localize`Dropping a piece`,
         $localize`When it is your turn, you can always drop one of your piece on an empty square.
         The gray squares are where you can drop your pieces.<br/><br/>
         Click on one of the squares to drop a piece there.`,
-        PylosState.getInitialSlice(),
+        PylosState.getInitialState(),
         PylosMove.fromDrop(new PylosCoord(1, 1, 0), []),
         $localize`There you go, as simple as that.`,
     ),

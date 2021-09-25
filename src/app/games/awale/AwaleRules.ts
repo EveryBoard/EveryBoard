@@ -1,6 +1,6 @@
 import { GameStatus, Rules } from '../../jscaip/Rules';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
-import { AwalePartSlice } from './AwalePartSlice';
+import { AwaleState } from './AwaleState';
 import { AwaleMove } from './AwaleMove';
 import { AwaleLegalityStatus } from './AwaleLegalityStatus';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
@@ -9,22 +9,22 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Coord } from 'src/app/jscaip/Coord';
 import { AwaleFailure } from './AwaleFailure';
 
-export class AwaleNode extends MGPNode<AwaleRules, AwaleMove, AwalePartSlice, AwaleLegalityStatus> {}
+export class AwaleNode extends MGPNode<AwaleRules, AwaleMove, AwaleState, AwaleLegalityStatus> {}
 
-export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalityStatus> {
+export class AwaleRules extends Rules<AwaleMove, AwaleState, AwaleLegalityStatus> {
 
     public static VERBOSE: boolean = false;
 
-    public applyLegalMove(move: AwaleMove, slice: AwalePartSlice, status: AwaleLegalityStatus): AwalePartSlice {
-        display(AwaleRules.VERBOSE, { called: 'AwaleRules.applyLegalMove', move, slice, status });
-        const turn: number = slice.turn;
+    public applyLegalMove(move: AwaleMove, state: AwaleState, status: AwaleLegalityStatus): AwaleState {
+        display(AwaleRules.VERBOSE, { called: 'AwaleRules.applyLegalMove', move, state, status });
+        const turn: number = state.turn;
 
         const captured: readonly [number, number] = [
-            slice.captured[0] + status.captured[0],
-            slice.captured[1] + status.captured[1],
+            state.captured[0] + status.captured[0],
+            state.captured[1] + status.captured[1],
         ];
 
-        return new AwalePartSlice(status.resultingBoard, turn + 1, captured);
+        return new AwaleState(status.resultingBoard, turn + 1, captured);
     }
     public static mansoon(mansooningPlayer: number, board: number[][]): number {
         /* capture all the seeds of the mansooning player
@@ -40,14 +40,14 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         } while (x < 6);
         return sum;
     }
-    public static isLegal(move: AwaleMove, slice: AwalePartSlice): AwaleLegalityStatus {
+    public static isLegal(move: AwaleMove, state: AwaleState): AwaleLegalityStatus {
         /* modify the move to addPart the capture
          * modify the board to get the after-move result
          * return -1 if it's not legal, if so, the board should not be affected
          * return the number captured otherwise
          */
-        const turn: number = slice.turn;
-        let resultingBoard: number[][] = slice.getCopiedBoard();
+        const turn: number = state.turn;
+        let resultingBoard: number[][] = state.getCopiedBoard();
 
         let captured: [number, number] = [0, 0];
 
@@ -90,8 +90,8 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         }
         return { legal: MGPValidation.SUCCESS, captured, resultingBoard };
     }
-    public isLegal(move: AwaleMove, slice: AwalePartSlice): AwaleLegalityStatus {
-        return AwaleRules.isLegal(move, slice);
+    public isLegal(move: AwaleMove, state: AwaleState): AwaleLegalityStatus {
+        return AwaleRules.isLegal(move, state);
     }
     public static doesDistribute(x: number, y: number, board: number[][]): boolean {
         if (y === 0) { // distribution from left to right
@@ -184,7 +184,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         return captured;
     }
     public static getGameStatus(node: AwaleNode): GameStatus {
-        const state: AwalePartSlice = node.gamePartSlice;
+        const state: AwaleState = node.gameState;
         if (state.captured[0] > 24) {
             return GameStatus.ZERO_WON;
         }

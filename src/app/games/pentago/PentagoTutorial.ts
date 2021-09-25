@@ -2,7 +2,7 @@ import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-gam
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { PentagoMove } from './PentagoMove';
-import { PentagoGameState } from './PentagoGameState';
+import { PentagoState } from './PentagoState';
 
 const _: number = Player.NONE.value;
 const X: number = Player.ONE.value;
@@ -12,12 +12,12 @@ export const pentagoTutorial: TutorialStep[] = [
     TutorialStep.informational(
         $localize`Initial board`,
         $localize`The initial Pentago board is made of 6x6 spaces, subdivided in 4 quadrants, which can each rotate.`,
-        PentagoGameState.getInitialSlice(),
+        PentagoState.getInitialState(),
     ),
     TutorialStep.informational(
         $localize`Goal of the game`,
         $localize`The goal at Pentago is to align 5 of your pieces. In the following board, Dark wins.`,
-        new PentagoGameState([
+        new PentagoState([
             [O, _, _, O, X, _],
             [O, X, _, _, _, _],
             [O, _, X, _, _, _],
@@ -32,7 +32,7 @@ export const pentagoTutorial: TutorialStep[] = [
         As long as there are neutral quadrants, i.e., quadrants that would not change after being rotated, a player may skip rotating a quadrant.
         To do this, you have to click on the crossed circle that appears at the center of the board when it is possible.<br/><br/>
         Do it.`,
-        new PentagoGameState([
+        new PentagoState([
             [_, _, _, _, _, _],
             [_, O, _, _, X, _],
             [_, _, _, _, _, _],
@@ -41,7 +41,7 @@ export const pentagoTutorial: TutorialStep[] = [
             [_, _, _, _, _, _],
         ], 10),
         PentagoMove.rotationless(2, 2),
-        (move: PentagoMove, _: PentagoGameState) => {
+        (move: PentagoMove, _: PentagoState) => {
             if (move.blockTurned.isPresent()) {
                 return MGPValidation.failure($localize`You have made a move with a rotation. This tutorial step is about moves without rotations!`);
             } else {
@@ -54,7 +54,7 @@ export const pentagoTutorial: TutorialStep[] = [
         $localize`Move with rotation`,
         $localize`After putting a piece, arrows will appear on non-neutral quadrants.<br/><br/>
         Click on one of them and see the rotation!`,
-        new PentagoGameState([
+        new PentagoState([
             [_, _, _, _, _, _],
             [_, O, _, _, X, _],
             [_, _, _, _, _, _],
@@ -63,7 +63,7 @@ export const pentagoTutorial: TutorialStep[] = [
             [_, _, _, _, _, _],
         ], 10),
         PentagoMove.withRotation(0, 0, 0, true),
-        (move: PentagoMove, _: PentagoGameState) => {
+        (move: PentagoMove, _: PentagoState) => {
             if (move.blockTurned.isPresent()) {
                 return MGPValidation.SUCCESS;
             } else {

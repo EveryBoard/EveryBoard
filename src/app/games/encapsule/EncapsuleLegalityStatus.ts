@@ -1,4 +1,4 @@
-import { EncapsuleCase } from './EncapsulePartSlice';
+import { EncapsuleCase } from './EncapsuleState';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 

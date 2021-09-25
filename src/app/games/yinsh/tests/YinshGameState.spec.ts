@@ -22,8 +22,8 @@ describe('YinshGameState', () => {
             [N, _, _, _, _, N, N, N, N, N, N],
         ]);
 
-        it('should detect that a slice is equal to itself', () => {
-            const state: YinshGameState = YinshGameState.getInitialSlice();
+        it('should detect that a state is equal to itself', () => {
+            const state: YinshGameState = YinshGameState.getInitialState();
             expect(state.equals(state)).toBeTrue();
         });
         it('should detect when two states differ due to their turn', () => {

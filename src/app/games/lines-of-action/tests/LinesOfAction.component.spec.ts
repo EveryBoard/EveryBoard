@@ -43,7 +43,7 @@ describe('LinesOfActionComponent', () => {
             [_, X, _, X, X, X, X, _],
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 1);
-        componentTestUtils.setupSlice(state);
+        componentTestUtils.setupState(state);
 
         await componentTestUtils.expectClickFailure('#click_0_0', LinesOfActionFailure.PIECE_CANNOT_MOVE);
     }));
@@ -83,7 +83,7 @@ describe('LinesOfActionComponent', () => {
             [_, X, _, X, X, X, X, _],
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
-        componentTestUtils.setupSlice(state);
+        componentTestUtils.setupState(state);
 
         await componentTestUtils.expectClickSuccess('#click_2_0');
         const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(2, 0), new Coord(2, 2)).get();

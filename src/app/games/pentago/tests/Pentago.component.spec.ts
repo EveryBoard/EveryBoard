@@ -4,7 +4,7 @@ import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { PentagoComponent } from '../Pentago.component';
 import { PentagoMove } from '../PentagoMove';
-import { PentagoGameState } from '../PentagoGameState';
+import { PentagoState } from '../PentagoState';
 
 describe('PentagoComponent:', () => {
     let componentTestUtils: ComponentTestUtils<PentagoComponent>;
@@ -45,8 +45,8 @@ describe('PentagoComponent:', () => {
             [_, _, _, _, _, _],
             [_, _, _, _, _, _],
         ];
-        const state: PentagoGameState = new PentagoGameState(board, 5);
-        componentTestUtils.setupSlice(state);
+        const state: PentagoState = new PentagoState(board, 5);
+        componentTestUtils.setupState(state);
         await componentTestUtils.expectClickSuccess('#click_0_0');
         componentTestUtils.expectElementNotToExist('#rotate_0_clockwise');
     }));
@@ -59,8 +59,8 @@ describe('PentagoComponent:', () => {
             [_, _, _, _, _, _],
             [_, X, X, _, _, _],
         ];
-        const state: PentagoGameState = new PentagoGameState(board, 5);
-        componentTestUtils.setupSlice(state);
+        const state: PentagoState = new PentagoState(board, 5);
+        componentTestUtils.setupState(state);
         await componentTestUtils.expectClickSuccess('#click_0_5');
         const move: PentagoMove = PentagoMove.withRotation(0, 5, 2, true);
         await componentTestUtils.expectMoveSuccess('#rotate_2_clockwise', move);
@@ -92,8 +92,8 @@ describe('PentagoComponent:', () => {
             [_, _, _, _, _, _],
             [_, _, _, _, _, _],
         ];
-        const state: PentagoGameState = new PentagoGameState(board, 5);
-        componentTestUtils.setupSlice(state);
+        const state: PentagoState = new PentagoState(board, 5);
+        componentTestUtils.setupState(state);
         await componentTestUtils.expectClickSuccess('#click_0_1');
         const move: PentagoMove = PentagoMove.withRotation(0, 1, 1, false);
         await componentTestUtils.expectMoveSuccess('#rotate_1_anticlockwise', move);

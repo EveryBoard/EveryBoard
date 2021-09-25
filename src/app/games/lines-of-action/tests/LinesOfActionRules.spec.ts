@@ -27,7 +27,7 @@ describe('LinesOfActionRules', () => {
         expect(minimax.getBoardValue(rules.node).value).toEqual(0);
     });
     it('should forbid moving a piece of the opponent', () => {
-        const state: LinesOfActionState = LinesOfActionState.getInitialSlice();
+        const state: LinesOfActionState = LinesOfActionState.getInitialState();
         const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(0, 2), new Coord(2, 2)).get();
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.reason).toBe(RulesFailure.MUST_CHOOSE_PLAYER_PIECE);
@@ -43,7 +43,7 @@ describe('LinesOfActionRules', () => {
             [O, _, _, _, _, _, _, O],
             [_, X, X, X, X, X, X, _],
         ];
-        const state: LinesOfActionState = LinesOfActionState.getInitialSlice();
+        const state: LinesOfActionState = LinesOfActionState.getInitialState();
         const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(2, 0), new Coord(2, 2)).get();
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.isSuccess()).toBeTrue();
@@ -61,7 +61,7 @@ describe('LinesOfActionRules', () => {
             [O, _, _, _, _, _, _, O],
             [_, X, _, X, X, X, X, _],
         ];
-        const state: LinesOfActionState = LinesOfActionState.getInitialSlice();
+        const state: LinesOfActionState = LinesOfActionState.getInitialState();
         const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(2, 7), new Coord(2, 5)).get();
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.isSuccess()).toBeTrue();
@@ -107,7 +107,7 @@ describe('LinesOfActionRules', () => {
             [O, _, _, _, _, _, _, O],
             [_, X, X, X, X, X, X, _],
         ];
-        const state: LinesOfActionState = LinesOfActionState.getInitialSlice();
+        const state: LinesOfActionState = LinesOfActionState.getInitialState();
         const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(1, 0), new Coord(3, 2)).get();
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.isSuccess()).toBeTrue();
@@ -125,7 +125,7 @@ describe('LinesOfActionRules', () => {
             [O, _, _, _, _, _, _, O],
             [_, _, X, X, X, X, X, _],
         ];
-        const state: LinesOfActionState = LinesOfActionState.getInitialSlice();
+        const state: LinesOfActionState = LinesOfActionState.getInitialState();
         const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(1, 7), new Coord(3, 5)).get();
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.isSuccess()).toBeTrue();
@@ -161,7 +161,7 @@ describe('LinesOfActionRules', () => {
         expect(resultingState.board).toEqual(expectedBoard);
     });
     it('should forbid to move a piece by a different number of spaces than the number of pieces on the same line', () => {
-        const state: LinesOfActionState = LinesOfActionState.getInitialSlice();
+        const state: LinesOfActionState = LinesOfActionState.getInitialState();
         const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(2, 0), new Coord(2, 1)).get();
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.reason).toBe(LinesOfActionFailure.INVALID_MOVE_LENGTH);
@@ -209,7 +209,7 @@ describe('LinesOfActionRules', () => {
             [O, _, _, _, _, _, _, O],
             [_, X, X, X, X, X, X, _],
         ];
-        const state: LinesOfActionState = LinesOfActionState.getInitialSlice();
+        const state: LinesOfActionState = LinesOfActionState.getInitialState();
         const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(1, 0), new Coord(7, 0)).get();
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.isSuccess()).toBeTrue();
@@ -307,7 +307,7 @@ describe('LinesOfActionRules', () => {
         expect(LinesOfActionRules.getVictory(resultingState)).toEqual(MGPOptional.of(Player.NONE));
     });
     it('should list all possible targets', () => {
-        const state: LinesOfActionState = LinesOfActionState.getInitialSlice();
+        const state: LinesOfActionState = LinesOfActionState.getInitialState();
         const targets: Coord[] = LinesOfActionRules.possibleTargets(state, new Coord(4, 7));
         expect(targets).toEqual([new Coord(4, 5), new Coord(6, 5), new Coord(2, 5)]);
     });
@@ -330,12 +330,12 @@ describe('LinesOfActionRules', () => {
             new Coord(1, 3), new Coord(1, 1),
         ]);
     });
-    it('should have 36 moves on the initial slice', () => {
-        const state: LinesOfActionState = LinesOfActionState.getInitialSlice();
+    it('should have 36 moves on the initial state', () => {
+        const state: LinesOfActionState = LinesOfActionState.getInitialState();
         const node: LinesOfActionNode = new LinesOfActionNode(null, null, state);
         expect(minimax.getListMoves(node).length).toBe(6 * 3 * 2);
     });
-    it('should have 0 moves on a victory slice', () => {
+    it('should have 0 moves on a victory state', () => {
         const board: number[][] = [
             [_, _, _, _, _, _, _, _],
             [O, _, _, _, X, _, _, O],

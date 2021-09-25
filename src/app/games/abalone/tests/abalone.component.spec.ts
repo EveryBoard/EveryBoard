@@ -116,7 +116,7 @@ describe('AbaloneComponent', () => {
                 [O, O, O, O, O, N, N, N, N],
             ];
             const state: AbaloneGameState = new AbaloneGameState(board, 0);
-            componentTestUtils.setupSlice(state);
+            componentTestUtils.setupState(state);
             await componentTestUtils.expectClickSuccess('#piece_1_5');
 
             // when choosing the piece that is aligned and at good distance but not making a line
@@ -226,7 +226,7 @@ describe('AbaloneComponent', () => {
             // when clicking third one then moving them
             await componentTestUtils.expectClickSuccess('#piece_4_6');
             const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(4, 6), HexaDirection.LEFT).get();
-            const state: AbaloneGameState = AbaloneGameState.getInitialSlice();
+            const state: AbaloneGameState = AbaloneGameState.getInitialState();
             await componentTestUtils.expectMoveSuccess('#direction_LEFT', move, state, 0, 0);
 
             // then three pieces should be selected
@@ -254,7 +254,7 @@ describe('AbaloneComponent', () => {
             // when clicking on coord then direction
             // then the move should be done
             const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(0, 7), HexaDirection.UP).get();
-            const state: AbaloneGameState = AbaloneGameState.getInitialSlice();
+            const state: AbaloneGameState = AbaloneGameState.getInitialState();
             await componentTestUtils.expectMoveSuccess('#direction_UP', move, state, 0, 0);
         }));
     });
@@ -265,7 +265,7 @@ describe('AbaloneComponent', () => {
         // when clicking on the case marked by the direction instead of it's arrow
         // then the move should have been done
         const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(2, 6), HexaDirection.LEFT).get();
-        const state: AbaloneGameState = AbaloneGameState.getInitialSlice();
+        const state: AbaloneGameState = AbaloneGameState.getInitialState();
         await componentTestUtils.expectMoveSuccess('#case_1_6', move, state, 0, 0);
     }));
     it('should allow clicking on arrow landing coord as if it was bellow an arrow (enemy)', fakeAsync(async() => {
@@ -282,7 +282,7 @@ describe('AbaloneComponent', () => {
             [O, O, O, O, O, N, N, N, N],
         ];
         const state: AbaloneGameState = new AbaloneGameState(board, 0);
-        componentTestUtils.setupSlice(state);
+        componentTestUtils.setupState(state);
         await componentTestUtils.expectClickSuccess('#piece_2_6');
         await componentTestUtils.expectClickSuccess('#piece_2_7');
 
@@ -308,7 +308,7 @@ describe('AbaloneComponent', () => {
             // then the translation move should be done
             const move: AbaloneMove =
                 AbaloneMove.fromDoubleCoord(new Coord(2, 6), new Coord(3, 6), HexaDirection.UP).get();
-            const state: AbaloneGameState = AbaloneGameState.getInitialSlice();
+            const state: AbaloneGameState = AbaloneGameState.getInitialState();
             await componentTestUtils.expectMoveSuccess('#direction_UP', move, state, 0, 0);
         }));
         it('should show last move moved pieces (push)', fakeAsync(async() => {
@@ -316,7 +316,7 @@ describe('AbaloneComponent', () => {
             await componentTestUtils.expectClickSuccess('#piece_0_7');
             await componentTestUtils.expectClickSuccess('#piece_0_8');
             const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(0, 7), HexaDirection.DOWN).get();
-            const state: AbaloneGameState = AbaloneGameState.getInitialSlice();
+            const state: AbaloneGameState = AbaloneGameState.getInitialState();
             await componentTestUtils.expectMoveSuccess('#direction_DOWN', move, state, 0, 0);
 
             // when ? then expect to see left and moved case

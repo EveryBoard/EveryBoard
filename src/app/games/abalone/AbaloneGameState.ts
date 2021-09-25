@@ -1,16 +1,16 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
-import { NumberTable } from 'src/app/utils/ArrayUtils';
+import { RectangularGameState } from 'src/app/jscaip/RectangularGameState';
+import { Table } from 'src/app/utils/ArrayUtils';
 
-export class AbaloneGameState extends GamePartSlice {
+export class AbaloneGameState extends RectangularGameState<FourStatePiece> {
 
-    public static getInitialSlice(): AbaloneGameState {
-        const _: number = FourStatePiece.EMPTY.value;
-        const N: number = FourStatePiece.NONE.value;
-        const O: number = FourStatePiece.ZERO.value;
-        const X: number = FourStatePiece.ONE.value;
-        const board: NumberTable = [
+    public static getInitialState(): AbaloneGameState {
+        const _: FourStatePiece = FourStatePiece.EMPTY;
+        const N: FourStatePiece = FourStatePiece.NONE;
+        const O: FourStatePiece = FourStatePiece.ZERO;
+        const X: FourStatePiece = FourStatePiece.ONE;
+        const board: Table<FourStatePiece> = [
             [N, N, N, N, X, X, X, X, X],
             [N, N, N, X, X, X, X, X, X],
             [N, N, _, _, X, X, X, _, _],
@@ -25,21 +25,21 @@ export class AbaloneGameState extends GamePartSlice {
     }
     public isInBoard(coord: Coord): boolean {
         return coord.isInRange(9, 9) &&
-               this.getBoardAt(coord) !== FourStatePiece.NONE.value;
+               this.getBoardAt(coord) !== FourStatePiece.NONE;
     }
     public isPiece(coord: Coord): boolean {
-        const piece: number = this.getBoardAt(coord);
-        return piece === FourStatePiece.ZERO.value ||
-               piece === FourStatePiece.ONE.value;
+        const piece: FourStatePiece = this.getBoardAt(coord);
+        return piece === FourStatePiece.ZERO ||
+               piece === FourStatePiece.ONE;
     }
     public getScores(): [number, number] {
         const scores: [number, number] = [14, 14];
         for (let y: number = 0; y < 9; y++) {
             for (let x: number = 0; x < 9; x++) {
-                if (this.getBoardByXY(x, y) === FourStatePiece.ZERO.value) {
+                if (this.getBoardByXY(x, y) === FourStatePiece.ZERO) {
                     scores[1] = scores[1] - 1;
                 }
-                if (this.getBoardByXY(x, y) === FourStatePiece.ONE.value) {
+                if (this.getBoardByXY(x, y) === FourStatePiece.ONE) {
                     scores[0] = scores[0] - 1;
                 }
             }

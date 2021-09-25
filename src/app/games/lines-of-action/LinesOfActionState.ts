@@ -1,15 +1,17 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
+import { RectangularGameState } from 'src/app/jscaip/RectangularGameState';
 import { Player } from 'src/app/jscaip/Player';
 import { assert } from 'src/app/utils/utils';
 
-export class LinesOfActionState extends GamePartSlice {
+export class LinesOfActionState extends RectangularGameState<Player> {
+
     public static SIZE: number = 8; // board size
-    public static getInitialSlice(): LinesOfActionState {
-        const _: number = Player.NONE.value;
-        const X: number = Player.ZERO.value;
-        const O: number = Player.ONE.value;
-        const board: number[][] = [
+
+    public static getInitialState(): LinesOfActionState {
+        const _: Player = Player.NONE;
+        const X: Player = Player.ZERO;
+        const O: Player = Player.ONE;
+        const board: Player[][] = [
             [_, X, X, X, X, X, X, _],
             [O, _, _, _, _, _, _, O],
             [O, _, _, _, _, _, _, O],
@@ -26,6 +28,6 @@ export class LinesOfActionState extends GamePartSlice {
     }
     public getAt(c: Coord): number {
         assert(LinesOfActionState.isOnBoard(c), 'Accessing coordinate outside of the board');
-        return this.board[c.y][c.x];
+        return this.board[c.y][c.x].value;
     }
 }

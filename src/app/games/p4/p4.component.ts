@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { P4PartSlice } from './P4PartSlice';
+import { P4State } from './P4State';
 import { P4Rules } from './P4Rules';
 import { P4Minimax } from './P4Minimax';
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
@@ -17,7 +17,7 @@ import { p4Tutorial } from './P4Tutorial';
     templateUrl: './p4.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice> {
+export class P4Component extends AbstractGameComponent<P4Move, P4State> {
 
     public static VERBOSE: boolean = false;
 
@@ -33,7 +33,7 @@ export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice> {
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = new P4Rules(P4PartSlice);
+        this.rules = new P4Rules(P4State);
         this.availableMinimaxes = [
             new P4Minimax(this.rules, 'P4Minimax'),
         ];
@@ -44,18 +44,18 @@ export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice> {
             return this.cancelMove(clickValidity.getReason());
         }
         const chosenMove: P4Move = P4Move.of(x);
-        return await this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
+        return await this.chooseMove(chosenMove, this.rules.node.gameState, null, null);
     }
     public updateBoard(): void {
-        const slice: P4PartSlice = this.rules.node.gamePartSlice;
+        const state: P4State = this.rules.node.gameState;
         const lastMove: P4Move = this.rules.node.move;
 
-        this.victoryCoords = P4Rules.getVictoriousCoords(slice);
-        this.board = slice.board;
+        this.victoryCoords = P4Rules.getVictoriousCoords(state);
+        this.board = state.board;
         if (lastMove == null) {
             this.last = null;
         } else {
-            const y: number = P4Rules.getLowestUnoccupiedCase(slice.board, lastMove.x) + 1;
+            const y: number = P4Rules.getLowestUnoccupiedCase(state.board, lastMove.x) + 1;
             this.last = new Coord(lastMove.x, y);
         }
     }

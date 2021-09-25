@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
 import { MinimaxTestingRules } from 'src/app/games/minimax-testing/MinimaxTestingRules';
-import { MinimaxTestingPartSlice } from 'src/app/games/minimax-testing/MinimaxTestingPartSlice';
+import { MinimaxTestingState } from 'src/app/games/minimax-testing/MinimaxTestingState';
 import { MinimaxTestingMove } from 'src/app/games/minimax-testing/MinimaxTestingMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -15,7 +15,7 @@ import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-gam
     templateUrl: './minimax-testing.component.html',
     styleUrls: [],
 })
-export class MinimaxTestingComponent extends AbstractGameComponent<MinimaxTestingMove, MinimaxTestingPartSlice> {
+export class MinimaxTestingComponent extends AbstractGameComponent<MinimaxTestingMove, MinimaxTestingState> {
     public coord: Coord = new Coord(-1, -1);
 
     public encoder: MoveEncoder<MinimaxTestingMove> = MinimaxTestingMove.encoder;
@@ -24,7 +24,7 @@ export class MinimaxTestingComponent extends AbstractGameComponent<MinimaxTestin
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = new MinimaxTestingRules(MinimaxTestingPartSlice);
+        this.rules = new MinimaxTestingRules(MinimaxTestingState);
         this.availableMinimaxes = [
             new MinimaxTestingMinimax(this.rules, 'MinimaxTestingMinimax'),
         ];
@@ -36,7 +36,7 @@ export class MinimaxTestingComponent extends AbstractGameComponent<MinimaxTestin
         }
 
         const chosenMove: MinimaxTestingMove = MinimaxTestingMove.RIGHT;
-        return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
+        return this.chooseMove(chosenMove, this.rules.node.gameState, null, null);
     }
     public async chooseDown(): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#click_down');
@@ -45,11 +45,11 @@ export class MinimaxTestingComponent extends AbstractGameComponent<MinimaxTestin
         }
 
         const chosenMove: MinimaxTestingMove = MinimaxTestingMove.DOWN;
-        return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
+        return this.chooseMove(chosenMove, this.rules.node.gameState, null, null);
     }
     public updateBoard(): void {
-        const slice: MinimaxTestingPartSlice = this.rules.node.gamePartSlice;
-        this.board = slice.getCopiedBoard();
-        this.coord = slice.location;
+        const state: MinimaxTestingState = this.rules.node.gameState;
+        this.board = state.getCopiedBoard();
+        this.coord = state.location;
     }
 }

@@ -1,23 +1,23 @@
-import { GamePartSlice } from '../../jscaip/GamePartSlice';
+import { RectangularGameState } from '../../jscaip/RectangularGameState';
 import { TablutCase } from './TablutCase';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 
-export class TablutPartSlice extends GamePartSlice {
+export class TablutState extends RectangularGameState<TablutCase> {
     // Statics Fields:
 
     public static INVADER_START: boolean = true;
 
     // Statics Methods :
 
-    public static getInitialSlice(): TablutPartSlice {
-        const board: number[][] = ArrayUtils.createBiArray(9, 9, TablutCase.UNOCCUPIED.value);
+    public static getInitialState(): TablutState {
+        const board: TablutCase[][] = ArrayUtils.createBiArray(9, 9, TablutCase.UNOCCUPIED);
 
-        const PLAYER_ONE_KING: number = TablutCase.PLAYER_ONE_KING.value;
-        const PLAYER_ZERO_KING: number = TablutCase.PLAYER_ZERO_KING.value;
-        const DEFENDERS: number = TablutCase.DEFENDERS.value;
-        const INVADERS: number = TablutCase.INVADERS.value;
+        const PLAYER_ONE_KING: TablutCase = TablutCase.PLAYER_ONE_KING;
+        const PLAYER_ZERO_KING: TablutCase = TablutCase.PLAYER_ZERO_KING;
+        const DEFENDERS: TablutCase = TablutCase.DEFENDERS;
+        const INVADERS: TablutCase = TablutCase.INVADERS;
 
-        board[4][4] = TablutPartSlice.INVADER_START ? PLAYER_ONE_KING : PLAYER_ZERO_KING;
+        board[4][4] = TablutState.INVADER_START ? PLAYER_ONE_KING : PLAYER_ZERO_KING;
 
         board[3][4] = DEFENDERS; board[5][4] = DEFENDERS; board[4][3] = DEFENDERS; board[4][5] = DEFENDERS;
         // closer most defenders
@@ -33,6 +33,6 @@ export class TablutPartSlice extends GamePartSlice {
         board[0][5] = INVADERS; board[8][5] = INVADERS; board[5][0] = INVADERS; board[5][8] = INVADERS;
         // the other side
 
-        return new TablutPartSlice(board, 0);
+        return new TablutState(board, 0);
     }
 }

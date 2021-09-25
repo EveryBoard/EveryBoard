@@ -2,7 +2,7 @@ export enum SCORE {
 
     VICTORY = 'VICTORY',
     /* VICTORY is the status of a game that is won (independent of the turn);
-     *     so a GamePartSlice with ownValue of MAX_SAFE_INTEGER or MIN_SAFE_INTEGER
+     *     so a GameState with ownValue of MAX_SAFE_INTEGER or MIN_SAFE_INTEGER
      */
 
     PRE_VICTORY = 'PRE_VICTORY',

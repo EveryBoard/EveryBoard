@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
 import { ReversiRules } from './ReversiRules';
 import { ReversiMinimax } from './ReversiMinimax';
-import { ReversiPartSlice } from './ReversiPartSlice';
+import { ReversiState } from './ReversiState';
 import { ReversiMove } from 'src/app/games/reversi/ReversiMove';
 import { ReversiLegalityStatus } from 'src/app/games/reversi/ReversiLegalityStatus';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -19,7 +19,7 @@ import { reversiTutorial } from './ReversiTutorial';
     templateUrl: './reversi.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class ReversiComponent extends AbstractGameComponent<ReversiMove, ReversiPartSlice, ReversiLegalityStatus> {
+export class ReversiComponent extends AbstractGameComponent<ReversiMove, ReversiState, ReversiLegalityStatus> {
 
     public CASE_SIZE: number = 100;
     public NONE: number = Player.NONE.value;
@@ -37,7 +37,7 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
         super(messageDisplayer);
         this.showScore = true;
         this.canPass = false;
-        this.rules = new ReversiRules(ReversiPartSlice);
+        this.rules = new ReversiRules(ReversiState);
         this.availableMinimaxes = [
             new ReversiMinimax(this.rules, 'ReversiMinimax'),
         ];
@@ -51,12 +51,12 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
         // we stop showing him the last move
         const chosenMove: ReversiMove = new ReversiMove(x, y);
 
-        return await this.chooseMove(chosenMove, this.rules.node.gamePartSlice, this.scores[0], this.scores [1]);
+        return await this.chooseMove(chosenMove, this.rules.node.gameState, this.scores[0], this.scores [1]);
     }
     public updateBoard(): void {
-        const slice: ReversiPartSlice = this.rules.node.gamePartSlice;
+        const state: ReversiState = this.rules.node.gameState;
 
-        this.board = slice.getCopiedBoard();
+        this.board = state.getCopiedBoard();
         this.captureds = [];
 
         if (this.rules.node.move) {
@@ -66,17 +66,17 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
             this.lastMove = new Coord(-2, -2);
         }
 
-        this.scores = slice.countScore();
-        this.canPass = ReversiRules.playerCanOnlyPass(slice);
+        this.scores = state.countScore();
+        this.canPass = ReversiRules.playerCanOnlyPass(state);
     }
     private showPreviousMove() {
-        const PLAYER: number = this.rules.node.gamePartSlice.getCurrentPlayer().value;
-        const ENNEMY: number = this.rules.node.gamePartSlice.getCurrentEnnemy().value;
+        const PLAYER: Player = this.rules.node.gameState.getCurrentPlayer();
+        const ENNEMY: Player = this.rules.node.gameState.getCurrentEnnemy();
         for (const dir of Direction.DIRECTIONS) {
             let captured: Coord = this.lastMove.getNext(dir, 1);
-            while (captured.isInRange(ReversiPartSlice.BOARD_WIDTH, ReversiPartSlice.BOARD_HEIGHT) &&
-                this.rules.node.gamePartSlice.getBoardAt(captured) === ENNEMY &&
-                this.rules.node.mother.gamePartSlice.getBoardAt(captured) === PLAYER)
+            while (captured.isInRange(ReversiState.BOARD_WIDTH, ReversiState.BOARD_HEIGHT) &&
+                   this.rules.node.gameState.getBoardAt(captured) === ENNEMY &&
+                   this.rules.node.mother.gameState.getBoardAt(captured) === PLAYER)
             {
                 this.captureds.push(captured);
                 captured = captured.getNext(dir, 1);

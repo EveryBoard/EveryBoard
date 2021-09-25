@@ -1,6 +1,5 @@
-import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
-import { EpaminondasPartSlice } from 'src/app/games/epaminondas/EpaminondasPartSlice';
+import { EpaminondasState } from 'src/app/games/epaminondas/EpaminondasState';
 import { Direction } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
 import { EpaminondasComponent } from '../epaminondas.component';
@@ -9,13 +8,14 @@ import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { EpaminondasFailure } from '../EpaminondasFailure';
+import { Table } from 'src/app/utils/ArrayUtils';
 
 describe('EpaminondasComponent:', () => {
     let componentTestUtils: ComponentTestUtils<EpaminondasComponent>;
 
-    const _: number = Player.NONE.value;
-    const X: number = Player.ONE.value;
-    const O: number = Player.ZERO.value;
+    const _: Player = Player.NONE;
+    const X: Player = Player.ONE;
+    const O: Player = Player.ZERO;
 
     function expectClickable(x: number, y: number): void {
         const coord: Coord = new Coord(x, y);
@@ -42,7 +42,7 @@ describe('EpaminondasComponent:', () => {
         await componentTestUtils.expectClickFailure('#click_0_0', RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
     }));
     it('Should show possible next click (after first click)', fakeAsync(async() => {
-        const initialBoard: NumberTable = [
+        const initialBoard: Table<Player> = [
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -56,8 +56,8 @@ describe('EpaminondasComponent:', () => {
             [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
-        const initialSlice: EpaminondasPartSlice = new EpaminondasPartSlice(initialBoard, 0);
-        componentTestUtils.setupSlice(initialSlice);
+        const initialState: EpaminondasState = new EpaminondasState(initialBoard, 0);
+        componentTestUtils.setupState(initialState);
 
         await componentTestUtils.expectClickSuccess('#click_0_11');
 
@@ -80,7 +80,7 @@ describe('EpaminondasComponent:', () => {
         await componentTestUtils.expectClickFailure('#click_0_8', EpaminondasFailure.SINGLE_PIECE_MUST_MOVE_BY_ONE);
     }));
     it('Should not allow single piece to capture', fakeAsync(async() => {
-        const initialBoard: NumberTable = [
+        const initialBoard: Table<Player> = [
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -94,14 +94,14 @@ describe('EpaminondasComponent:', () => {
             [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
-        const initialSlice: EpaminondasPartSlice = new EpaminondasPartSlice(initialBoard, 0);
-        componentTestUtils.setupSlice(initialSlice);
+        const initialState: EpaminondasState = new EpaminondasState(initialBoard, 0);
+        componentTestUtils.setupState(initialState);
 
         await componentTestUtils.expectClickSuccess('#click_0_9');
         await componentTestUtils.expectClickFailure('#click_0_8', EpaminondasFailure.SINGLE_PIECE_CANNOT_CAPTURE);
     }));
     it('Should deselect first piece when clicked (and no last piece exist)', fakeAsync(async() => {
-        const initialBoard: NumberTable = [
+        const initialBoard: Table<Player> = [
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -115,8 +115,8 @@ describe('EpaminondasComponent:', () => {
             [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
-        const initialSlice: EpaminondasPartSlice = new EpaminondasPartSlice(initialBoard, 0);
-        componentTestUtils.setupSlice(initialSlice);
+        const initialState: EpaminondasState = new EpaminondasState(initialBoard, 0);
+        componentTestUtils.setupState(initialState);
 
         await componentTestUtils.expectClickSuccess('#click_0_11');
         await componentTestUtils.expectClickSuccess('#click_0_11');
@@ -126,7 +126,7 @@ describe('EpaminondasComponent:', () => {
         expectClickable(0, 9);
     }));
     it('Should cancel move when selecting non-contiguous soldier line', fakeAsync(async() => {
-        const initialBoard: NumberTable = [
+        const initialBoard: Table<Player> = [
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -140,14 +140,14 @@ describe('EpaminondasComponent:', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
-        const initialSlice: EpaminondasPartSlice = new EpaminondasPartSlice(initialBoard, 0);
-        componentTestUtils.setupSlice(initialSlice);
+        const initialState: EpaminondasState = new EpaminondasState(initialBoard, 0);
+        componentTestUtils.setupState(initialState);
 
         await componentTestUtils.expectClickSuccess('#click_0_11');
         await componentTestUtils.expectClickFailure('#click_0_9', EpaminondasFailure.PHALANX_CANNOT_CONTAIN_EMPTY_CASE);
     }));
     it('Should select all soldier between first selected and new click, and show valid extension and capture both way', fakeAsync(async() => {
-        const initialBoard: NumberTable = [
+        const initialBoard: Table<Player> = [
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [X, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -161,8 +161,8 @@ describe('EpaminondasComponent:', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
-        const initialSlice: EpaminondasPartSlice = new EpaminondasPartSlice(initialBoard, 0);
-        componentTestUtils.setupSlice(initialSlice);
+        const initialState: EpaminondasState = new EpaminondasState(initialBoard, 0);
+        componentTestUtils.setupState(initialState);
 
         await componentTestUtils.expectClickSuccess('#click_0_7');
         await componentTestUtils.expectClickSuccess('#click_0_5');
@@ -179,7 +179,7 @@ describe('EpaminondasComponent:', () => {
         expectNotClickable(0, 11);
     }));
     it('Should change first piece coord when clicked and last piece is neighboors', fakeAsync(async() => {
-        const initialBoard: NumberTable = [
+        const initialBoard: Table<Player> = [
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -193,8 +193,8 @@ describe('EpaminondasComponent:', () => {
             [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
-        const initialSlice: EpaminondasPartSlice = new EpaminondasPartSlice(initialBoard, 0);
-        componentTestUtils.setupSlice(initialSlice);
+        const initialState: EpaminondasState = new EpaminondasState(initialBoard, 0);
+        componentTestUtils.setupState(initialState);
 
         await componentTestUtils.expectClickSuccess('#click_0_11'); // select first piece
         await componentTestUtils.expectClickSuccess('#click_0_10'); // select last piece neighboor
@@ -212,7 +212,7 @@ describe('EpaminondasComponent:', () => {
         expectClickable(1, 11);
     }));
     it('Should change first piece coord when clicked and last piece exist but is not neighboors', fakeAsync(async() => {
-        const initialBoard: NumberTable = [
+        const initialBoard: Table<Player> = [
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -226,8 +226,8 @@ describe('EpaminondasComponent:', () => {
             [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
-        const initialSlice: EpaminondasPartSlice = new EpaminondasPartSlice(initialBoard, 0);
-        componentTestUtils.setupSlice(initialSlice);
+        const initialState: EpaminondasState = new EpaminondasState(initialBoard, 0);
+        componentTestUtils.setupState(initialState);
 
         await componentTestUtils.expectClickSuccess('#click_0_11'); // select first piece
         await componentTestUtils.expectClickSuccess('#click_0_9'); // select last piece neighboor
@@ -242,7 +242,7 @@ describe('EpaminondasComponent:', () => {
         expectClickable(0, 11);
     }));
     it('Should change last piece coord when clicked and first piece is neighboors', fakeAsync(async() => {
-        const initialBoard: NumberTable = [
+        const initialBoard: Table<Player> = [
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -256,8 +256,8 @@ describe('EpaminondasComponent:', () => {
             [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
-        const initialSlice: EpaminondasPartSlice = new EpaminondasPartSlice(initialBoard, 0);
-        componentTestUtils.setupSlice(initialSlice);
+        const initialState: EpaminondasState = new EpaminondasState(initialBoard, 0);
+        componentTestUtils.setupState(initialState);
 
         await componentTestUtils.expectClickSuccess('#click_0_11'); // select first piece
         await componentTestUtils.expectClickSuccess('#click_0_10'); // select last piece neighboor
@@ -274,7 +274,7 @@ describe('EpaminondasComponent:', () => {
         expectClickable(1, 11);
     }));
     it('Should change last piece coord when clicked but first piece is not neighboors', fakeAsync(async() => {
-        const initialBoard: NumberTable = [
+        const initialBoard: Table<Player> = [
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -288,8 +288,8 @@ describe('EpaminondasComponent:', () => {
             [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
-        const initialSlice: EpaminondasPartSlice = new EpaminondasPartSlice(initialBoard, 0);
-        componentTestUtils.setupSlice(initialSlice);
+        const initialState: EpaminondasState = new EpaminondasState(initialBoard, 0);
+        componentTestUtils.setupState(initialState);
 
         await componentTestUtils.expectClickSuccess('#click_0_11'); // select first piece
         await componentTestUtils.expectClickSuccess('#click_0_8'); // select last piece neighboor
@@ -306,7 +306,7 @@ describe('EpaminondasComponent:', () => {
         expect(epaminondasComponent.getPieceClasses(0, 11)).toContain('highlighted');
     }));
     it('Should cancelMove when third click is not aligned with last click', fakeAsync(async() => {
-        const initialBoard: NumberTable = [
+        const initialBoard: Table<Player> = [
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -320,8 +320,8 @@ describe('EpaminondasComponent:', () => {
             [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
-        const initialSlice: EpaminondasPartSlice = new EpaminondasPartSlice(initialBoard, 0);
-        componentTestUtils.setupSlice(initialSlice);
+        const initialState: EpaminondasState = new EpaminondasState(initialBoard, 0);
+        componentTestUtils.setupState(initialState);
 
         await componentTestUtils.expectClickSuccess('#click_0_11');
         await componentTestUtils.expectClickSuccess('#click_0_9');
@@ -329,7 +329,7 @@ describe('EpaminondasComponent:', () => {
         await componentTestUtils.expectClickFailure('#click_1_7', EpaminondasFailure.CASE_NOT_ALIGNED_WITH_PHALANX);
     }));
     it('Should cancelMove when third click is not aligned with phalanx direction', fakeAsync(async() => {
-        const initialBoard: NumberTable = [
+        const initialBoard: Table<Player> = [
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -343,8 +343,8 @@ describe('EpaminondasComponent:', () => {
             [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
-        const initialSlice: EpaminondasPartSlice = new EpaminondasPartSlice(initialBoard, 0);
-        componentTestUtils.setupSlice(initialSlice);
+        const initialState: EpaminondasState = new EpaminondasState(initialBoard, 0);
+        componentTestUtils.setupState(initialState);
 
         await componentTestUtils.expectClickSuccess('#click_0_11');
         await componentTestUtils.expectClickSuccess('#click_0_9');
@@ -352,7 +352,7 @@ describe('EpaminondasComponent:', () => {
         await componentTestUtils.expectClickFailure('#click_2_9', EpaminondasFailure.CASE_NOT_ALIGNED_WITH_PHALANX);
     }));
     it('Should cancelMove when third click is an invalid extension', fakeAsync(async() => {
-        const initialBoard: NumberTable = [
+        const initialBoard: Table<Player> = [
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -366,8 +366,8 @@ describe('EpaminondasComponent:', () => {
             [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
-        const initialSlice: EpaminondasPartSlice = new EpaminondasPartSlice(initialBoard, 0);
-        componentTestUtils.setupSlice(initialSlice);
+        const initialState: EpaminondasState = new EpaminondasState(initialBoard, 0);
+        componentTestUtils.setupState(initialState);
 
         await componentTestUtils.expectClickSuccess('#click_0_11');
         await componentTestUtils.expectClickSuccess('#click_0_9');
@@ -399,7 +399,7 @@ describe('EpaminondasComponent:', () => {
         expect(epaminondasComponent.lastPiece).toEqual(new Coord(2, 10));
     }));
     it('End: Should show last move when no move is ongoing (captures, left case, moved phalanx)', fakeAsync(async() => {
-        const initialBoard: NumberTable = [
+        const initialBoard: Table<Player> = [
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -413,8 +413,8 @@ describe('EpaminondasComponent:', () => {
             [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
-        const initialSlice: EpaminondasPartSlice = new EpaminondasPartSlice(initialBoard, 0);
-        componentTestUtils.setupSlice(initialSlice);
+        const initialState: EpaminondasState = new EpaminondasState(initialBoard, 0);
+        componentTestUtils.setupState(initialState);
 
         await componentTestUtils.expectClickSuccess('#click_0_11');
         await componentTestUtils.expectClickSuccess('#click_0_9');

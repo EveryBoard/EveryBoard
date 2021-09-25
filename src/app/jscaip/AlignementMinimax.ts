@@ -1,11 +1,11 @@
 import { MGPOptional } from '../utils/MGPOptional';
 import { Coord } from './Coord';
-import { GamePartSlice } from './GamePartSlice';
 import { LegalityStatus } from './LegalityStatus';
 import { Minimax } from './Minimax';
 import { Move } from './Move';
 import { NodeUnheritance } from './NodeUnheritance';
 import { SCORE } from './SCORE';
+import { GameState } from './GameState';
 
 export interface BoardInfo {
     status: SCORE,
@@ -14,7 +14,7 @@ export interface BoardInfo {
     sum: number
 }
 export abstract class AlignementMinimax<M extends Move,
-                                        S extends GamePartSlice,
+                                        S extends GameState,
                                         L extends LegalityStatus,
                                         V,
                                         U extends NodeUnheritance = NodeUnheritance>

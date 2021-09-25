@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
 import { SiamMove } from 'src/app/games/siam/SiamMove';
-import { SiamPartSlice } from 'src/app/games/siam/SiamPartSlice';
+import { SiamState } from 'src/app/games/siam/SiamState';
 import { SiamLegalityStatus } from 'src/app/games/siam/SiamLegalityStatus';
 import { SiamRules } from 'src/app/games/siam/SiamRules';
 import { SiamMinimax } from 'src/app/games/siam/SiamMinimax';
@@ -23,7 +23,7 @@ import { siamTutorial } from './SiamTutorial';
     templateUrl: './siam.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice, SiamLegalityStatus> {
+export class SiamComponent extends AbstractGameComponent<SiamMove, SiamState, SiamLegalityStatus> {
 
     public static VERBOSE: boolean = false;
 
@@ -42,18 +42,18 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = new SiamRules(SiamPartSlice);
+        this.rules = new SiamRules(SiamState);
         this.availableMinimaxes = [
             new SiamMinimax(this.rules, 'SiamMinimax'),
         ];
     }
     public updateBoard(): void {
         display(SiamComponent.VERBOSE, 'updateBoard');
-        const slice: SiamPartSlice = this.rules.node.gamePartSlice;
-        this.board = slice.board;
+        const state: SiamState = this.rules.node.gameState;
+        this.board = state.board;
         this.lastMove = this.rules.node.move;
         if (this.lastMove) {
-            this.movedPieces = this.rules.isLegal(this.lastMove, this.rules.node.mother.gamePartSlice).moved;
+            this.movedPieces = this.rules.isLegal(this.lastMove, this.rules.node.mother.gameState).moved;
         } else {
             this.movedPieces = [];
         }
@@ -70,7 +70,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
             return this.cancelMove(clickValidity.reason);
         }
         const piece: number = this.board[y][x];
-        const ennemy: Player = this.rules.node.gamePartSlice.getCurrentEnnemy();
+        const ennemy: Player = this.rules.node.gameState.getCurrentEnnemy();
         if (SiamPiece.getOwner(piece) === ennemy) {
             return this.cancelMove(`Can't choose ennemy's pieces`);
         }
@@ -117,7 +117,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
             return this.cancelMove(`Can't insert when there is already a selected piece`);
         } else {
             this.chosenCoord = new Coord(x, y);
-            const dir: Orthogonal = SiamRules.getCoordDirection(x, y, this.rules.node.gamePartSlice);
+            const dir: Orthogonal = SiamRules.getCoordDirection(x, y, this.rules.node.gameState);
             this.chosenDirection = MGPOptional.of(dir);
             this.landingCoord = this.chosenCoord.getNext(dir);
             return MGPValidation.SUCCESS;
@@ -129,7 +129,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
                                             this.chosenDirection,
                                             this.chosenOrientation);
         this.cancelMove();
-        return await this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
+        return await this.chooseMove(move, this.rules.node.gameState, null, null);
     }
     public isPiece(c: number): boolean {
         return ![SiamPiece.EMPTY.value, SiamPiece.MOUNTAIN.value].includes(c);

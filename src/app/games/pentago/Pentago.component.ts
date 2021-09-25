@@ -11,7 +11,7 @@ import { PentagoLegalityStatus } from './PentagoLegalityStatus';
 import { PentagoMinimax } from './PentagoMinimax';
 import { PentagoMove } from './PentagoMove';
 import { PentagoRules } from './PentagoRules';
-import { PentagoGameState } from './PentagoGameState';
+import { PentagoState } from './PentagoState';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { pentagoTutorial } from './PentagoTutorial';
@@ -22,11 +22,11 @@ import { pentagoTutorial } from './PentagoTutorial';
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
 export class PentagoComponent extends AbstractGameComponent<PentagoMove,
-                                                            PentagoGameState,
+                                                            PentagoState,
                                                             PentagoLegalityStatus>
 {
 
-    public rules: PentagoRules = new PentagoRules(PentagoGameState);
+    public rules: PentagoRules = new PentagoRules(PentagoState);
 
     public encoder: MoveEncoder<PentagoMove> = PentagoMove.encoder;
 
@@ -58,8 +58,8 @@ export class PentagoComponent extends AbstractGameComponent<PentagoMove,
         this.ARROWS = this.generateArrowsCoord();
     }
     public updateBoard(): void {
-        this.board = this.rules.node.gamePartSlice.getCopiedBoard();
-        this.victoryCoords = this.rules.getVictoryCoords(this.rules.node.gamePartSlice);
+        this.board = this.rules.node.gameState.getCopiedBoard();
+        this.victoryCoords = this.rules.getVictoryCoords(this.rules.node.gameState);
         this.showLastMove();
     }
     public showLastMove(): void {
@@ -76,11 +76,11 @@ export class PentagoComponent extends AbstractGameComponent<PentagoMove,
             {
                 let postRotation: Coord;
                 if (lastMove.turnedClockwise) {
-                    postRotation = PentagoGameState.ROTATION_MAP.find((value: [Coord, Coord]) => {
+                    postRotation = PentagoState.ROTATION_MAP.find((value: [Coord, Coord]) => {
                         return value[0].equals(localCoord);
                     })[1];
                 } else {
-                    postRotation = PentagoGameState.ROTATION_MAP.find((value: [Coord, Coord]) => {
+                    postRotation = PentagoState.ROTATION_MAP.find((value: [Coord, Coord]) => {
                         return value[1].equals(localCoord);
                     })[0];
                 }
@@ -131,8 +131,8 @@ export class PentagoComponent extends AbstractGameComponent<PentagoMove,
             return this.cancelMove(clickValidity.getReason());
         }
         const drop: PentagoMove = PentagoMove.rotationless(x, y);
-        const state: PentagoGameState = this.rules.node.gamePartSlice;
-        const postDropState: PentagoGameState = state.applyLegalDrop(drop);
+        const state: PentagoState = this.rules.node.gameState;
+        const postDropState: PentagoState = state.applyLegalDrop(drop);
         if (postDropState.neutralBlocks.length === 4) {
             return this.chooseMove(drop, state, null, null);
         }
@@ -178,7 +178,7 @@ export class PentagoComponent extends AbstractGameComponent<PentagoMove,
             return this.cancelMove(clickValidity.getReason());
         }
         const move: PentagoMove = PentagoMove.withRotation(this.currentDrop.x, this.currentDrop.y, arrow[1], arrow[2]);
-        return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
+        return this.chooseMove(move, this.rules.node.gameState, null, null);
     }
     public async skipRotation(): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#skipRotation');
@@ -186,6 +186,6 @@ export class PentagoComponent extends AbstractGameComponent<PentagoMove,
             return this.cancelMove(clickValidity.getReason());
         }
         const drop: PentagoMove = PentagoMove.rotationless(this.currentDrop.x, this.currentDrop.y);
-        return this.chooseMove(drop, this.rules.node.gamePartSlice, null, null);
+        return this.chooseMove(drop, this.rules.node.gameState, null, null);
     }
 }

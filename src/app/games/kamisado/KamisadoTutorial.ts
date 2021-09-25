@@ -1,6 +1,6 @@
 import { KamisadoMove } from 'src/app/games/kamisado/KamisadoMove';
 import { KamisadoColor } from 'src/app/games/kamisado/KamisadoColor';
-import { KamisadoPartSlice } from 'src/app/games/kamisado/KamisadoPartSlice';
+import { KamisadoState } from 'src/app/games/kamisado/KamisadoState';
 import { KamisadoPiece } from 'src/app/games/kamisado/KamisadoPiece';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -32,7 +32,7 @@ export const kamisadoTutorial: TutorialStep[] = [
         either by moving one of your pieces on the opponent's starting line,
         or by forcing the opponent to make a move that blocks the entire game.
         Here, Dark wins because its brown piece is on Light's starting line, on the top left.`,
-        new KamisadoPartSlice(5, KamisadoColor.ORANGE, MGPOptional.empty(), false, [
+        new KamisadoState(5, KamisadoColor.ORANGE, MGPOptional.empty(), false, [
             [br, Bl, Pu, Pi, Ye, Re, Gr, Br],
             [__, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __],
@@ -50,7 +50,7 @@ export const kamisadoTutorial: TutorialStep[] = [
         At Kamisado, pieces can only move forward, vertically or diagonally.
         You're playing first, with dark pieces, you can make your first move.<br/><br/>
         Click on the piece of your choice and click on the landing square.`,
-        KamisadoPartSlice.getInitialSlice(),
+        KamisadoState.getInitialState(),
         KamisadoMove.of(new Coord(7, 7), new Coord(3, 3)),
         $localize`Perfect! Note that each of your piece has a different color.`,
     ),
@@ -62,7 +62,7 @@ export const kamisadoTutorial: TutorialStep[] = [
         Here, the last move ended on the pink square, hence the pink piece must move.
         It is already selected, you do not have to click on it.<br/><br/>
         Move it on a blue square.`,
-        new KamisadoPartSlice(1, KamisadoColor.PINK, MGPOptional.of(new Coord(3, 0)), false, [
+        new KamisadoState(1, KamisadoColor.PINK, MGPOptional.of(new Coord(3, 0)), false, [
             [Or, Bl, Pu, Pi, Ye, Re, Gr, Br],
             [__, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __],
@@ -85,7 +85,7 @@ export const kamisadoTutorial: TutorialStep[] = [
         $localize`Dark moved to another pink square, hence you have to move your pink piece again.
         However, your pink piece is stuck! In this case, you must pass your turn.
         Dark will now have to play by moving its pink piece.`,
-        new KamisadoPartSlice(1, KamisadoColor.PINK, MGPOptional.of(new Coord(3, 6)), false, [
+        new KamisadoState(1, KamisadoColor.PINK, MGPOptional.of(new Coord(3, 6)), false, [
             [Or, Bl, Pu, __, Ye, Re, Gr, Br],
             [__, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __],
@@ -104,7 +104,7 @@ export const kamisadoTutorial: TutorialStep[] = [
         and the player cannot move its own piece of the same color, then that player loses.
         Here, you're playing Dark and you can force your opponent to create such a situation, hence you can force your opponent to lose!<br/><br/>
         Try to make this move.`,
-        new KamisadoPartSlice(2, KamisadoColor.RED, MGPOptional.of(new Coord(2, 4)), false, [
+        new KamisadoState(2, KamisadoColor.RED, MGPOptional.of(new Coord(2, 4)), false, [
             [__, Bl, Pu, __, __, Re, __, __],
             [__, __, __, Ye, __, __, __, __],
             [__, __, __, Pi, __, Pu, __, __],

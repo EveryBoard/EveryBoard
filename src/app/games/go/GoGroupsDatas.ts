@@ -1,6 +1,6 @@
 import { GroupDatas } from 'src/app/jscaip/BoardDatas';
 import { Coord } from 'src/app/jscaip/Coord';
-import { GoPiece } from './GoPartSlice';
+import { GoPiece } from './GoState';
 
 export class GoGroupDatas extends GroupDatas<GoPiece> {
 

@@ -20,7 +20,7 @@ describe('PylosOrderedMinimax', () => {
     it('should delegate getListMoves to PylosMinimax', () => {
         spyOn(PylosMinimax, 'getListMoves').and.callThrough();
 
-        minimax.getListMoves(new MGPNode(null, null, PylosState.getInitialSlice()));
+        minimax.getListMoves(new MGPNode(null, null, PylosState.getInitialState()));
 
         expect(PylosMinimax.getListMoves).toHaveBeenCalledTimes(1);
     });

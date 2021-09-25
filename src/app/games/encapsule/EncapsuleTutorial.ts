@@ -1,6 +1,6 @@
 import { EncapsuleMove } from 'src/app/games/encapsule/EncapsuleMove';
 import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
-import { EncapsuleCase, EncapsulePartSlice } from 'src/app/games/encapsule/EncapsulePartSlice';
+import { EncapsuleCase, EncapsuleState } from 'src/app/games/encapsule/EncapsuleState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
@@ -21,7 +21,7 @@ export const encapsuleTutorial: TutorialStep[] = [
         $localize`Goal of the game`,
         $localize`The goal of Encapsule is to align three of your pieces.
         Here, we have a victory of the dark player.`,
-        new EncapsulePartSlice([
+        new EncapsuleState([
             [s, S, B],
             [_, m, _],
             [_, _, b],
@@ -34,14 +34,14 @@ export const encapsuleTutorial: TutorialStep[] = [
         $localize`Putting a piece`,
         $localize`This is the initial board. You're playing Dark.<br/><br/>
         Pick one of your piece on the side of the board and put it on the board.`,
-        EncapsulePartSlice.getInitialSlice(),
+        EncapsuleState.getInitialState(),
         EncapsuleMove.fromDrop(EncapsulePiece.SMALL_BLACK, new Coord(1, 1)),
         $localize`Congratulations!`),
     TutorialStep.fromMove(
         $localize`Moving`,
         $localize`Another possible action is to move one of your pieces that is already on the board.<br/><br/>
         Click on your dark piece and then on any empty square of the board.`,
-        new EncapsulePartSlice([
+        new EncapsuleState([
             [s, B, _],
             [_, _, _],
             [_, _, _],
@@ -67,7 +67,7 @@ export const encapsuleTutorial: TutorialStep[] = [
         Finally, you cannot encapsulate a piece with a smaller piece.
         You're playing Dark and you can win now in various ways.<br/><br/>
         Try to win by making a move, and not by putting a new piece on the board.`,
-        new EncapsulePartSlice([
+        new EncapsuleState([
             [Sm, _, S],
             [sm, Mb, B],
             [_, _, _],

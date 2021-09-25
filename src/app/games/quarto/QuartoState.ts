@@ -1,22 +1,23 @@
-import { GamePartSlice } from '../../jscaip/GamePartSlice';
+import { RectangularGameState } from '../../jscaip/RectangularGameState';
 import { QuartoPiece } from './QuartoPiece';
-import { ArrayUtils, NumberTable } from 'src/app/utils/ArrayUtils';
+import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 
-export class QuartoPartSlice extends GamePartSlice {
-    constructor(b: number[][], turn: number, public readonly pieceInHand: QuartoPiece) {
+export class QuartoState extends RectangularGameState<QuartoPiece> {
+
+    constructor(b: Table<QuartoPiece>, turn: number, public readonly pieceInHand: QuartoPiece) {
         super(b, turn);
     }
-    public static getInitialSlice(): QuartoPartSlice {
-        const board: number[][] = ArrayUtils.createBiArray(4, 4, QuartoPiece.NONE.value);
-        return new QuartoPartSlice(board, 0, QuartoPiece.AAAA);
+    public static getInitialState(): QuartoState {
+        const board: QuartoPiece[][] = ArrayUtils.createBiArray(4, 4, QuartoPiece.NONE);
+        return new QuartoState(board, 0, QuartoPiece.AAAA);
     }
-    public static isGivable(piece: QuartoPiece, board: NumberTable, pieceInHand: QuartoPiece): boolean {
+    public static isGivable(piece: QuartoPiece, board: Table<QuartoPiece>, pieceInHand: QuartoPiece): boolean {
         if (piece === pieceInHand) {
             return false;
         }
-        return QuartoPartSlice.isPlacable(piece, board);
+        return QuartoState.isPlacable(piece, board);
     }
-    public static isPlacable(piece: QuartoPiece, board: NumberTable): boolean {
+    public static isPlacable(piece: QuartoPiece, board: Table<QuartoPiece>): boolean {
         // return true if the pawn is not already placed on the board
         let found: boolean = false;
         let indexY: number = 0;
@@ -24,7 +25,7 @@ export class QuartoPartSlice extends GamePartSlice {
         while (!found && (indexY < 4)) {
             indexX = 0;
             while (!found && (indexX < 4)) {
-                found = board[indexY][indexX] === piece.value;
+                found = board[indexY][indexX] === piece;
                 indexX++;
             }
             indexY++;
@@ -37,7 +38,7 @@ export class QuartoPartSlice extends GamePartSlice {
         const allPawn: ReadonlyArray<QuartoPiece> = QuartoPiece.pieces;
         const remainingPawns: Array<QuartoPiece> = [];
         for (const piece of allPawn) {
-            if (QuartoPartSlice.isGivable(piece, this.board, this.pieceInHand)) {
+            if (QuartoState.isGivable(piece, this.board, this.pieceInHand)) {
                 remainingPawns.push(piece);
             }
         }

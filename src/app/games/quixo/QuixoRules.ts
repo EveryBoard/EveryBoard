@@ -5,35 +5,35 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
-import { QuixoPartSlice } from './QuixoPartSlice';
+import { QuixoState } from './QuixoState';
 import { QuixoMove } from './QuixoMove';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
-export abstract class QuixoNode extends MGPNode<QuixoRules, QuixoMove, QuixoPartSlice> {}
+export abstract class QuixoNode extends MGPNode<QuixoRules, QuixoMove, QuixoState> {}
 
-export class QuixoRules extends Rules<QuixoMove, QuixoPartSlice> {
+export class QuixoRules extends Rules<QuixoMove, QuixoState> {
 
     public static getVerticalCoords(node: QuixoNode): Coord[] {
-        const currentEnnemy: number = node.gamePartSlice.getCurrentEnnemy().value;
+        const currentEnnemy: Player = node.gameState.getCurrentEnnemy();
         const verticalCoords: Coord[] = [];
         for (let y: number = 0; y < 5; y++) {
-            if (node.gamePartSlice.getBoardByXY(0, y) !== currentEnnemy) {
+            if (node.gameState.getBoardByXY(0, y) !== currentEnnemy) {
                 verticalCoords.push(new Coord(0, y));
             }
-            if (node.gamePartSlice.getBoardByXY(4, y) !== currentEnnemy) {
+            if (node.gameState.getBoardByXY(4, y) !== currentEnnemy) {
                 verticalCoords.push(new Coord(4, y));
             }
         }
         return verticalCoords;
     }
     public static getHorizontalCenterCoords(node: QuixoNode): Coord[] {
-        const currentEnnemy: number = node.gamePartSlice.getCurrentEnnemy().value;
+        const currentEnnemy: Player = node.gameState.getCurrentEnnemy();
         const horizontalCenterCoords: Coord[] = [];
         for (let x: number = 1; x < 4; x++) {
-            if (node.gamePartSlice.getBoardByXY(x, 0) !== currentEnnemy) {
+            if (node.gameState.getBoardByXY(x, 0) !== currentEnnemy) {
                 horizontalCenterCoords.push(new Coord(x, 0));
             }
-            if (node.gamePartSlice.getBoardByXY(x, 4) !== currentEnnemy) {
+            if (node.gameState.getBoardByXY(x, 4) !== currentEnnemy) {
                 horizontalCenterCoords.push(new Coord(x, 4));
             }
         }
@@ -47,7 +47,7 @@ export class QuixoRules extends Rules<QuixoMove, QuixoPartSlice> {
         if (coord.y !== 4) possibleDirections.push(Orthogonal.DOWN);
         return possibleDirections;
     }
-    public static getLinesSums(slice: QuixoPartSlice): {[player: number]: {[lineType: string]: number[]}} {
+    public static getLinesSums(state: QuixoState): {[player: number]: {[lineType: string]: number[]}} {
         const sums: {[player: number]: {[lineType: string]: number[]}} = {};
         sums[Player.ZERO.value] = {
             columns: [0, 0, 0, 0, 0],
@@ -61,7 +61,7 @@ export class QuixoRules extends Rules<QuixoMove, QuixoPartSlice> {
         };
         for (let y: number = 0; y < 5; y++) {
             for (let x: number = 0; x < 5; x++) {
-                const c: number = slice.getBoardByXY(x, y);
+                const c: number = state.getBoardByXY(x, y).value;
                 if (c !== Player.NONE.value) {
                     sums[c].columns[x] = sums[c].columns[x] + 1;
                     sums[c].rows[y] = sums[c].rows[y] + 1;
@@ -72,8 +72,8 @@ export class QuixoRules extends Rules<QuixoMove, QuixoPartSlice> {
         }
         return sums;
     }
-    public static getVictoriousCoords(slice: QuixoPartSlice): Coord[] {
-        const lineSums: {[player: number]: {[lineType: string]: number[]}} = QuixoRules.getLinesSums(slice);
+    public static getVictoriousCoords(state: QuixoState): Coord[] {
+        const lineSums: {[player: number]: {[lineType: string]: number[]}} = QuixoRules.getLinesSums(state);
         const coords: Coord[] = [];
         for (let player: number = 0; player < 2; player++) {
             for (let i: number = 0; i < 5; i++) {
@@ -108,27 +108,27 @@ export class QuixoRules extends Rules<QuixoMove, QuixoPartSlice> {
         return Math.max(...linesScores);
     }
     public applyLegalMove(move: QuixoMove,
-                          slice: QuixoPartSlice,
-                          status: LegalityStatus): QuixoPartSlice
+                          state: QuixoState,
+                          status: LegalityStatus): QuixoState
     {
-        return QuixoRules.applyLegalMove(move, slice, status);
+        return QuixoRules.applyLegalMove(move, state, status);
     }
     public static applyLegalMove(move: QuixoMove,
-                                 slice: QuixoPartSlice,
+                                 state: QuixoState,
                                  status: LegalityStatus)
-    : QuixoPartSlice
+    : QuixoState
     {
-        return slice.applyLegalMove(move);
+        return state.applyLegalMove(move);
     }
-    public isLegal(move: QuixoMove, slice: QuixoPartSlice): LegalityStatus {
-        if (slice.getBoardAt(move.coord) === slice.getCurrentEnnemy().value) {
+    public isLegal(move: QuixoMove, state: QuixoState): LegalityStatus {
+        if (state.getBoardAt(move.coord) === state.getCurrentEnnemy()) {
             return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE) };
         } else {
             return { legal: MGPValidation.SUCCESS };
         }
     }
     public getGameStatus(node: QuixoNode): GameStatus {
-        const state: QuixoPartSlice = node.gamePartSlice;
+        const state: QuixoState = node.gameState;
         const linesSums: {[key: string]: {[key: number]: number[]}} =
             QuixoRules.getLinesSums(state);
         const zerosFullestLine: number = QuixoRules.getFullestLine(linesSums[Player.ZERO.value]);

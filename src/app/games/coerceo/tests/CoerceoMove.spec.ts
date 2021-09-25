@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { CoerceoPartSlice } from '../CoerceoPartSlice';
+import { CoerceoState } from '../CoerceoState';
 import { CoerceoRules } from '../CoerceoRules';
 import { CoerceoMinimax } from '../CoerceoMinimax';
 import { CoerceoFailure } from '../CoerceoFailure';
@@ -67,7 +67,7 @@ describe('CoerceoMove', () => {
             expect(deplacement.toString()).toBe('CoerceoMove((5, 5) > RIGHT > (7, 5))');
         });
         it('CoerceoMove.encoder should be correct', () => {
-            const rules: CoerceoRules = new CoerceoRules(CoerceoPartSlice);
+            const rules: CoerceoRules = new CoerceoRules(CoerceoState);
             const minimax: CoerceoMinimax = new CoerceoMinimax(rules, 'CoerceoMinimax');
             const moves: CoerceoMove[] = minimax.getListMoves(rules.node);
             for (const move of moves) {

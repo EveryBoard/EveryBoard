@@ -1,12 +1,13 @@
-import { ArrayUtils, NumberTable } from 'src/app/utils/ArrayUtils';
+import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
-import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
+import { RectangularGameState } from 'src/app/jscaip/RectangularGameState';
 import { KamisadoBoard } from './KamisadoBoard';
 import { KamisadoColor } from './KamisadoColor';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { KamisadoPiece } from './KamisadoPiece';
 
-export class KamisadoPartSlice extends GamePartSlice {
+export class KamisadoState extends RectangularGameState<KamisadoPiece> {
+
     public constructor(turn: number,
                        // The color that needs to be played next
                        public readonly colorToPlay: KamisadoColor,
@@ -14,15 +15,15 @@ export class KamisadoPartSlice extends GamePartSlice {
                        public readonly coordToPlay: MGPOptional<Coord>,
                        // Did a PASS move have been performed on the last turn?
                        public readonly alreadyPassed: boolean,
-                       board: NumberTable) {
+                       board: Table<KamisadoPiece>)
+    {
         super(ArrayUtils.copyBiArray(board), turn);
     }
-    public static getInitialSlice(): KamisadoPartSlice {
-        return new KamisadoPartSlice(0,
-                                     KamisadoColor.ANY,
-                                     MGPOptional.empty(),
-                                     false,
-                                     ArrayUtils.mapBiArray(KamisadoBoard.INITIAL,
-                                                           (p: KamisadoPiece) => p.getValue()));
+    public static getInitialState(): KamisadoState {
+        return new KamisadoState(0,
+                                 KamisadoColor.ANY,
+                                 MGPOptional.empty(),
+                                 false,
+                                 KamisadoBoard.INITIAL);
     }
 }

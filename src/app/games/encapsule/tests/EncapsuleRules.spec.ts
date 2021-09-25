@@ -2,7 +2,7 @@ import { EncapsuleNode, EncapsuleRules } from '../EncapsuleRules';
 import { EncapsuleMinimax } from '../EncapsuleMinimax';
 import { EncapsuleMove } from '../EncapsuleMove';
 import { Coord } from 'src/app/jscaip/Coord';
-import { EncapsuleCase, EncapsulePartSlice } from '../EncapsulePartSlice';
+import { EncapsuleCase, EncapsuleState } from '../EncapsuleState';
 import { Player } from 'src/app/jscaip/Player';
 import { EncapsulePiece } from '../EncapsulePiece';
 import { EncapsuleLegalityStatus } from '../EncapsuleLegalityStatus';
@@ -39,7 +39,7 @@ describe('EncapsuleRules', () => {
     const X2: EncapsulePiece = EncapsulePiece.BIG_WHITE;
 
     beforeEach(() => {
-        rules = new EncapsuleRules(EncapsulePartSlice);
+        rules = new EncapsuleRules(EncapsuleState);
         minimax = new EncapsuleMinimax(rules, 'EncapsuleMinimax');
     });
     it('should be created', () => {
@@ -52,11 +52,11 @@ describe('EncapsuleRules', () => {
                 [___, _O_, ___],
                 [___, ___, __O],
             ];
-            const slice: EncapsulePartSlice = new EncapsulePartSlice(board, 2, [
+            const state: EncapsuleState = new EncapsuleState(board, 2, [
                 X0, X0, X1, X1, X2, X2,
                 O0, O1, O2,
             ]);
-            expect(EncapsuleRules.isVictory(slice).isPresent()).toBeTrue();
+            expect(EncapsuleRules.isVictory(state).isPresent()).toBeTrue();
         });
         it('should not consider a non-victory as a victory', () => {
             const board: number[][] = [
@@ -64,7 +64,7 @@ describe('EncapsuleRules', () => {
                 [___, _X_, ___],
                 [___, ___, __X],
             ];
-            const state: EncapsulePartSlice = new EncapsulePartSlice(board, 2, [
+            const state: EncapsuleState = new EncapsuleState(board, 2, [
                 O0, O1, O1, O2, O2,
                 X0, X0, X1, X2,
             ]);
@@ -80,7 +80,7 @@ describe('EncapsuleRules', () => {
             [___, _X_, ___],
             [___, ___, __X],
         ];
-        const state: EncapsulePartSlice = new EncapsulePartSlice(board, 2, [
+        const state: EncapsuleState = new EncapsuleState(board, 2, [
             O0, O0, O1, O2, O2,
             X0, X1, X2,
         ]);
@@ -88,7 +88,7 @@ describe('EncapsuleRules', () => {
         // when doing that "actively loosing move"
         const move: EncapsuleMove = EncapsuleMove.fromMove(new Coord(0, 0), new Coord(1, 0));
         const status: EncapsuleLegalityStatus = rules.isLegal(move, state);
-        const resultingState: EncapsulePartSlice = rules.applyLegalMove(move, state, status);
+        const resultingState: EncapsuleState = rules.applyLegalMove(move, state, status);
 
         // then the active player should have lost
         const expectedBoard: number[][] = [
@@ -96,7 +96,7 @@ describe('EncapsuleRules', () => {
             [___, _X_, ___],
             [___, ___, __X],
         ];
-        const expectedState: EncapsulePartSlice = new EncapsulePartSlice(expectedBoard, 3, [
+        const expectedState: EncapsuleState = new EncapsuleState(expectedBoard, 3, [
             O0, O0, O1, O2, O2,
             X0, X1, X2,
         ]);
@@ -133,12 +133,12 @@ describe('EncapsuleRules', () => {
             X0, X1, X1, X2, X2,
             O0, O1, O1, O2, O2,
         ];
-        const state: EncapsulePartSlice = new EncapsulePartSlice(board, 2, remainingPieces);
+        const state: EncapsuleState = new EncapsuleState(board, 2, remainingPieces);
 
         // when moving a single piece elsewhere
         const move: EncapsuleMove = EncapsuleMove.fromMove(new Coord(0, 0), new Coord(2, 2));
         const status: EncapsuleLegalityStatus = rules.isLegal(move, state);
-        const resultingState: EncapsulePartSlice = rules.applyLegalMove(move, state, status);
+        const resultingState: EncapsuleState = rules.applyLegalMove(move, state, status);
 
         // then the piece should have been moved
         const expectedBoard: number[][] = [
@@ -146,7 +146,7 @@ describe('EncapsuleRules', () => {
             [___, X__, ___],
             [___, ___, O__],
         ];
-        const expectedState: EncapsulePartSlice = new EncapsulePartSlice(expectedBoard, 3, remainingPieces);
+        const expectedState: EncapsuleState = new EncapsuleState(expectedBoard, 3, remainingPieces);
         expect(status.legal.isSuccess()).toBeTrue();
         expect(resultingState).toEqual(expectedState);
     });
@@ -158,12 +158,12 @@ describe('EncapsuleRules', () => {
             [___, ___, X__],
         ];
         const remainingPieces: EncapsulePiece[] = [X0, X1, X1, X2, X2, O0, O0, O1, O1, O2, O2];
-        const state: EncapsulePartSlice = new EncapsulePartSlice(board, 2, remainingPieces);
+        const state: EncapsuleState = new EncapsuleState(board, 2, remainingPieces);
 
         // when moving a single piece elsewhere
         const move: EncapsuleMove = EncapsuleMove.fromMove(new Coord(0, 0), new Coord(2, 2));
         const status: EncapsuleLegalityStatus = rules.isLegal(move, state);
-        const resultingState: EncapsulePartSlice = rules.applyLegalMove(move, state, status);
+        const resultingState: EncapsuleState = rules.applyLegalMove(move, state, status);
 
         // then the piece should have been moved over the smaller one
         const expectedBoard: number[][] = [
@@ -171,7 +171,7 @@ describe('EncapsuleRules', () => {
             [___, ___, ___],
             [___, ___, XO_],
         ];
-        const expectedState: EncapsulePartSlice = new EncapsulePartSlice(expectedBoard, 3, remainingPieces);
+        const expectedState: EncapsuleState = new EncapsuleState(expectedBoard, 3, remainingPieces);
         expect(status.legal.isSuccess()).toBeTrue();
         expect(resultingState).toEqual(expectedState);
     });
@@ -186,7 +186,7 @@ describe('EncapsuleRules', () => {
             [___, ___, ___],
             [___, ___, ___],
         ];
-        const slice: EncapsulePartSlice = new EncapsulePartSlice(board, 2, [
+        const state: EncapsuleState = new EncapsuleState(board, 2, [
             EncapsulePiece.SMALL_WHITE, EncapsulePiece.SMALL_WHITE,
             EncapsulePiece.MEDIUM_WHITE, EncapsulePiece.MEDIUM_WHITE,
             EncapsulePiece.BIG_WHITE, EncapsulePiece.BIG_WHITE,
@@ -194,7 +194,7 @@ describe('EncapsuleRules', () => {
             EncapsulePiece.BIG_BLACK,
         ]);
         const move: EncapsuleMove = EncapsuleMove.fromDrop(EncapsulePiece.SMALL_BLACK, new Coord(0, 0));
-        expect(rules.isLegal(move, slice).legal.isFailure()).toBeTrue();
+        expect(rules.isLegal(move, state).legal.isFailure()).toBeTrue();
     });
     it('should refuse to put three identical piece on the board', () => {
         expect(drop(EncapsulePiece.SMALL_BLACK, new Coord(0, 0))).toBeTrue();

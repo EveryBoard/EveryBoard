@@ -1,4 +1,3 @@
-import { GamePartSlice } from '../GamePartSlice';
 import { LegalityStatus } from '../LegalityStatus';
 import { MGPNode } from '../MGPNode';
 import { Minimax } from '../Minimax';
@@ -6,9 +5,10 @@ import { Move } from '../Move';
 import { NodeUnheritance } from '../NodeUnheritance';
 import { Player } from '../Player';
 import { GameStatus, Rules } from '../Rules';
+import { GameState } from '../GameState';
 
 export function expectToBeVictoryFor<M extends Move,
-                                     S extends GamePartSlice,
+                                     S extends GameState,
                                      L extends LegalityStatus,
                                      U extends NodeUnheritance>(
     rules: Rules<M, S, L>,
@@ -24,7 +24,7 @@ export function expectToBeVictoryFor<M extends Move,
 }
 
 export function expectToBeDraw<M extends Move,
-                               S extends GamePartSlice,
+                               S extends GameState,
                                L extends LegalityStatus,
                                U extends NodeUnheritance>(
     rules: Rules<M, S, L>,

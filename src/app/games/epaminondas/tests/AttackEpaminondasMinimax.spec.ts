@@ -5,7 +5,7 @@ import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { expectSecondStateToBeBetterThanFirst } from 'src/app/utils/tests/TestUtils.spec';
 import { AttackEpaminondasMinimax } from '../AttackEpaminondasMinimax';
 import { EpaminondasMove } from '../EpaminondasMove';
-import { EpaminondasPartSlice } from '../EpaminondasPartSlice';
+import { EpaminondasState } from '../EpaminondasState';
 import { EpaminondasRules } from '../EpaminondasRules';
 
 describe('AttackEpaminondasMinimax:', () => {
@@ -17,7 +17,7 @@ describe('AttackEpaminondasMinimax:', () => {
     const O: number = Player.ZERO.value;
 
     beforeEach(() => {
-        rules = new EpaminondasRules(EpaminondasPartSlice);
+        rules = new EpaminondasRules(EpaminondasState);
         minimax = new AttackEpaminondasMinimax(rules, 'AttackEpaminondasMinimax');
     });
     it('Should propose 114 moves at first turn', () => {
@@ -38,8 +38,8 @@ describe('AttackEpaminondasMinimax:', () => {
             [_, _, _, _, _, _, O, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
-        const slice: EpaminondasPartSlice = new EpaminondasPartSlice(board, 1);
-        rules.node = new MGPNode(null, null, slice);
+        const state: EpaminondasState = new EpaminondasState(board, 1);
+        rules.node = new MGPNode(null, null, state);
         const expectedMove: EpaminondasMove = new EpaminondasMove(9, 1, 4, 4, Direction.LEFT);
         const bestMove: EpaminondasMove = rules.node.findBestMove(1, minimax);
         expect(bestMove).toEqual(expectedMove);
@@ -59,7 +59,7 @@ describe('AttackEpaminondasMinimax:', () => {
             [O, O, O, O, O, O, O, O, O, O, O, O, _, O],
             [O, O, O, O, O, O, O, O, O, O, O, O, _, O],
         ];
-        const greaterState: EpaminondasPartSlice = new EpaminondasPartSlice(greaterBoard, 0);
+        const greaterState: EpaminondasState = new EpaminondasState(greaterBoard, 0);
         const lesserBoard: NumberTable = [
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
@@ -74,7 +74,7 @@ describe('AttackEpaminondasMinimax:', () => {
             [O, O, O, O, O, O, O, O, O, O, O, _, _, O],
             [O, O, O, O, O, O, O, O, O, O, O, _, O, _],
         ];
-        const lesserState: EpaminondasPartSlice = new EpaminondasPartSlice(lesserBoard, 0);
+        const lesserState: EpaminondasState = new EpaminondasState(lesserBoard, 0);
         expectSecondStateToBeBetterThanFirst(lesserState, null, greaterState, null, minimax);
     });
 });

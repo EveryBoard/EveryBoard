@@ -399,8 +399,8 @@
         <target>Reprendre un coup</target>
       </trans-unit>
       <trans-unit id="1944212987695444934" datatype="html">
-        <source>Turn n°<x id="INTERPOLATION" equiv-text="{{ compo.rules.node.gamePartSlice.turn + 1 }}"/></source>
-        <target>Tour n°<x id="INTERPOLATION" equiv-text="{{ compo.rules.node.gamePartSlice.turn + 1 }}"/></target>
+        <source>Turn n°<x id="INTERPOLATION" equiv-text="{{ compo.rules.node.gameState.turn + 1 }}"/></source>
+        <target>Tour n°<x id="INTERPOLATION" equiv-text="{{ compo.rules.node.gameState.turn + 1 }}"/></target>
       </trans-unit>
       <trans-unit id="5675185658977082941" datatype="html">
         <source>Player <x id="PH" equiv-text="gameStatus.winner.value + 1"/></source>

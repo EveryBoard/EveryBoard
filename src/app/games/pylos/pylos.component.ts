@@ -47,7 +47,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosState>
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.rules = new PylosRules(PylosState);
-        this.state = this.rules.node.gamePartSlice;
+        this.state = this.rules.node.gameState;
         this.availableMinimaxes = [
             new PylosMinimax(this.rules, 'PylosMinimax'),
             new PylosOrderedMinimax(this.rules, 'PylosOrderedMinimax'),
@@ -103,9 +103,9 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosState>
         }
         return this.tryMove(move, this.state);
     }
-    private async tryMove(move: PylosMove, slice: PylosState): Promise<MGPValidation> {
+    private async tryMove(move: PylosMove, state: PylosState): Promise<MGPValidation> {
         this.cancelMove();
-        return this.chooseMove(move, slice, null, null);
+        return this.chooseMove(move, state, null, null);
     }
     public cancelMoveAttempt(): void {
         this.chosenStartingCoord = null;
@@ -161,7 +161,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosState>
     }
     public isOccupied(x: number, y: number, z: number): boolean {
         const coord: PylosCoord = new PylosCoord(x, y, z);
-        const reallyOccupied: boolean = this.rules.node.gamePartSlice.getBoardAt(coord) !== Player.NONE.value;
+        const reallyOccupied: boolean = this.rules.node.gameState.getBoardAt(coord) !== Player.NONE.value;
         const landingCoord: boolean = coord.equals(this.chosenLandingCoord);
         return reallyOccupied || landingCoord;
     }
@@ -200,7 +200,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosState>
         return pieces;
     }
     public updateBoard(): void {
-        this.state = this.rules.node.gamePartSlice;
+        this.state = this.rules.node.gameState;
         this.lastMove = this.rules.node.move;
         const repartition: { [owner: number]: number } = this.state.getPiecesRepartition();
         this.remainingPieces = { 0: 15 - repartition[0], 1: 15 - repartition[1] };

@@ -10,7 +10,8 @@ export class HexaBoard<T> {
     public static empty<T>(width: number,
                            height: number,
                            excludedCases: ReadonlyArray<number>,
-                           empty: T): HexaBoard<T> {
+                           empty: T): HexaBoard<T>
+    {
         return new HexaBoard(ArrayUtils.createBiArray(width, height, empty),
                              width,
                              height,
@@ -30,7 +31,9 @@ export class HexaBoard<T> {
     public static isOnBoard(coord: Coord,
                             width: number,
                             height: number,
-                            excludedCases: ReadonlyArray<number>): boolean {
+                            excludedCases: ReadonlyArray<number>)
+    : boolean
+    {
         const halfHeight: number = height / 2 | 0;
         if (coord.x < 0 || coord.x >= width || coord.y < 0 || coord.y >= height) {
             return false;
@@ -62,12 +65,12 @@ export class HexaBoard<T> {
             new Coord(coord.x, coord.y+distance), new Coord(coord.x, coord.y-distance),
         ];
     }
-
     public constructor(public readonly contents: Table<T>,
                        public readonly width: number,
                        public readonly height: number,
                        public readonly excludedCases: ReadonlyArray<number>,
-                       public readonly empty: T) {
+                       public readonly empty: T)
+    {
         if (this.excludedCases.length >= (this.height/2)+1) {
             throw new Error('Invalid excluded cases specification for HexaBoard.');
         }

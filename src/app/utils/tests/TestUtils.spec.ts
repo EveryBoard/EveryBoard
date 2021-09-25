@@ -1,14 +1,18 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement, Type } from '@angular/core';
 import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { RouterTestingModule } from '@angular/router/testing';
+import { ActivatedRoute } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
+
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
-import { GamePartSlice } from '../../jscaip/GamePartSlice';
+import { GameState } from '../../jscaip/GameState';
 import { LegalityStatus } from '../../jscaip/LegalityStatus';
 import { Move } from '../../jscaip/Move';
 import { MGPValidation } from '../MGPValidation';
-import { RouterTestingModule } from '@angular/router/testing';
 import { AppModule } from '../../app.module';
-import { ActivatedRoute } from '@angular/router';
 import { JoueursDAO } from '../../dao/JoueursDAO';
 import { AuthenticationService } from '../../services/AuthenticationService';
 import { MGPNode } from '../../jscaip/MGPNode';
@@ -24,13 +28,10 @@ import { JoinerDAO } from '../../dao/JoinerDAO';
 import { JoueursDAOMock } from '../../dao/tests/JoueursDAOMock.spec';
 import { ChatDAOMock } from '../../dao/tests/ChatDAOMock.spec';
 import { PartDAOMock } from '../../dao/tests/PartDAOMock.spec';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { LocalGameWrapperComponent }
     from '../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { HumanDuration } from '../TimeUtils';
-import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({})
 export class BlankComponent {}
@@ -145,7 +146,7 @@ export class SimpleComponentTestUtils<T> {
     }
 }
 
-type GameComponent = AbstractGameComponent<Move, GamePartSlice, LegalityStatus>;
+type GameComponent = AbstractGameComponent<Move, GameState, LegalityStatus>;
 
 export class ComponentTestUtils<T extends GameComponent> {
     public fixture: ComponentFixture<GameWrapper>;
@@ -217,12 +218,12 @@ export class ComponentTestUtils<T extends GameComponent> {
     public setRoute(id: string, value: string): void {
         this.activatedRouteStub.setRoute(id, value);
     }
-    public setupSlice(slice: GamePartSlice, previousSlice?: GamePartSlice, previousMove?: Move): void {
-        if (previousSlice !== undefined) {
+    public setupState(state: GameState, previousState?: GameState, previousMove?: Move): void {
+        if (previousState !== undefined) {
             this.gameComponent.rules.node =
-                new MGPNode(new MGPNode(null, null, previousSlice), previousMove, slice);
+                new MGPNode(new MGPNode(null, null, previousState), previousMove, state);
         } else {
-            this.gameComponent.rules.node = new MGPNode(null, previousMove || null, slice);
+            this.gameComponent.rules.node = new MGPNode(null, previousMove || null, state);
         }
         this.gameComponent.updateBoard();
         this.fixture.detectChanges();
@@ -283,7 +284,7 @@ export class ComponentTestUtils<T extends GameComponent> {
     }
     public async expectMoveSuccess(elementName: string,
                                    move: Move,
-                                   slice?: GamePartSlice,
+                                   state?: GameState,
                                    scoreZero?: number,
                                    scoreOne?: number)
     : Promise<void>
@@ -293,14 +294,14 @@ export class ComponentTestUtils<T extends GameComponent> {
         if (element == null) {
             return;
         } else {
-            const moveSlice: GamePartSlice = slice || this.gameComponent.rules.node.gamePartSlice;
+            const moveState: GameState = state || this.gameComponent.rules.node.gameState;
             element.triggerEventHandler('click', null);
             await this.fixture.whenStable();
             this.fixture.detectChanges();
             expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
             this.canUserPlaySpy.calls.reset();
             expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move,
-                                                                moveSlice,
+                                                                moveState,
                                                                 this.getScore(scoreZero),
                                                                 this.getScore(scoreOne));
             this.chooseMoveSpy.calls.reset();
@@ -320,7 +321,7 @@ export class ComponentTestUtils<T extends GameComponent> {
     public async expectMoveFailure(elementName: string,
                                    reason: string,
                                    move: Move,
-                                   slice?: GamePartSlice,
+                                   state?: GameState,
                                    scoreZero?: number,
                                    scoreOne?: number)
     : Promise<void>
@@ -330,14 +331,14 @@ export class ComponentTestUtils<T extends GameComponent> {
         if (element == null) {
             return;
         } else {
-            const moveSlice: GamePartSlice = slice || this.gameComponent.rules.node.gamePartSlice;
+            const moveState: GameState = state || this.gameComponent.rules.node.gameState;
             element.triggerEventHandler('click', null);
             await this.fixture.whenStable();
             this.fixture.detectChanges();
             expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
             this.canUserPlaySpy.calls.reset();
             expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(
-                move, moveSlice, this.getScore(scoreZero), this.getScore(scoreOne));
+                move, moveState, this.getScore(scoreZero), this.getScore(scoreOne));
             this.chooseMoveSpy.calls.reset();
             expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(reason);
             this.cancelMoveSpy.calls.reset();
@@ -391,23 +392,24 @@ export class ComponentTestUtils<T extends GameComponent> {
     }
 }
 
-export function expectSecondStateToBeBetterThanFirst(weakerState: GamePartSlice,
+export function expectSecondStateToBeBetterThanFirst(weakerState: GameState,
                                                      weakMove: Move,
-                                                     strongerState: GamePartSlice,
+                                                     strongerState: GameState,
                                                      strongMove: Move,
-                                                     minimax: Minimax<Move, GamePartSlice>)
+                                                     minimax: Minimax<Move, GameState>)
 : void
 {
     const weakValue: number = minimax.getBoardValue(new MGPNode(null, weakMove, weakerState)).value;
     const strongValue: number = minimax.getBoardValue(new MGPNode(null, strongMove, strongerState)).value;
     expect(weakValue).toBeLessThan(strongValue);
 }
-export function expectStateToBePreVictory(state: GamePartSlice,
+export function expectStateToBePreVictory(state: GameState,
                                           previousMove: Move,
                                           player: Player,
-                                          minimax: Minimax<Move, GamePartSlice>)
+                                          minimax: Minimax<Move, GameState>)
 : void
 {
+    // TODO: replace that and refuse it to reach develop! expectToBeVictoryFor is the way
     const value: number = minimax.getBoardNumericValue(new MGPNode(null, previousMove, state));
     const expectedValue: number = player.getPreVictory();
     expect(value).toBe(expectedValue);

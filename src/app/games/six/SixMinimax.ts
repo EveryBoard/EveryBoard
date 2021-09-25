@@ -4,7 +4,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
-import { SixGameState } from './SixGameState';
+import { SixState } from './SixGameState';
 import { SixMove } from './SixMove';
 import { SixLegalityStatus } from './SixLegalityStatus';
 import { SCORE } from 'src/app/jscaip/SCORE';
@@ -28,7 +28,7 @@ export class SixNodeUnheritance implements NodeUnheritance {
 }
 
 export class SixMinimax extends AlignementMinimax<SixMove,
-                                                  SixGameState,
+                                                  SixState,
                                                   SixLegalityStatus,
                                                   SixVictorySource>
 {
@@ -39,7 +39,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
 
     public static getInstance(): SixMinimax {
         if (SixMinimax.INSTANCE == null) {
-            const rules: SixRules = new SixRules(SixGameState);
+            const rules: SixRules = new SixRules(SixState);
             SixMinimax.INSTANCE = new SixMinimax(rules, 'SixMinimax');
         }
         return SixMinimax.INSTANCE;
@@ -50,17 +50,17 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         const minimax: SixMinimax = SixMinimax.getInstance();
         const unheritance: SixNodeUnheritance = node.getOwnValue(minimax);
         if (unheritance && unheritance.preVictory) {
-            if (node.gamePartSlice.turn < 40) {
+            if (node.gameState.turn < 40) {
                 return this.createForcedDrop(unheritance);
             } else {
                 return this.createForcedDeplacement(node, unheritance);
             }
         }
-        const legalLandings: Coord[] = SixRules.getLegalLandings(node.gamePartSlice);
-        if (node.gamePartSlice.turn < 40) {
-            return this.getListDrop(node.gamePartSlice, legalLandings);
+        const legalLandings: Coord[] = SixRules.getLegalLandings(node.gameState);
+        if (node.gameState.turn < 40) {
+            return this.getListDrop(node.gameState, legalLandings);
         } else {
-            return this.getListDeplacement(node.gamePartSlice, legalLandings);
+            return this.getListDeplacement(node.gameState, legalLandings);
         }
     }
     private createForcedDrop(unheritance: SixNodeUnheritance): SixMove[] {
@@ -74,9 +74,9 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         display(this.VERBOSE, { called: 'SixRules.createForcedDeplacement', node });
         const possiblesStarts: MGPSet<Coord> = this.getSafelyMovablePieceOrFirstOne(node);
         const legalLandings: Coord[] = [unheritance.preVictory];
-        return this.getDeplacementFrom(node.gamePartSlice, possiblesStarts, legalLandings);
+        return this.getDeplacementFrom(node.gameState, possiblesStarts, legalLandings);
     }
-    private getDeplacementFrom(state: SixGameState,
+    private getDeplacementFrom(state: SixState,
                                starts: MGPSet<Coord>,
                                landings: Coord[])
     : SixMove[]
@@ -97,7 +97,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         return deplacements;
     }
     private getSafelyMovablePieceOrFirstOne(node: SixNode): MGPSet<Coord> {
-        const state: SixGameState = node.gamePartSlice;
+        const state: SixState = node.gameState;
         const allPieces: MGPMap<Player, MGPSet<Coord>> = state.pieces.groupByValue();
         const currentPlayer: Player = state.getCurrentPlayer();
         const playerPieces: MGPSet<Coord> = allPieces.get(currentPlayer).get();
@@ -116,8 +116,8 @@ export class SixMinimax extends AlignementMinimax<SixMove,
             return new MGPSet<Coord>(safePieces);
         }
     }
-    private isPieceBlockingAVictory(state: SixGameState, playerPiece: Coord): boolean {
-        const hypotheticalState: SixGameState = state.switchPiece(playerPiece);
+    private isPieceBlockingAVictory(state: SixState, playerPiece: Coord): boolean {
+        const hypotheticalState: SixState = state.switchPiece(playerPiece);
 
         const fakeDropMove: SixMove = SixMove.fromDrop(playerPiece);
         this.startSearchingVictorySources();
@@ -132,7 +132,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         }
         return false;
     }
-    public getListDrop(_state: SixGameState, legalLandings: Coord[]): SixMove[] {
+    public getListDrop(_state: SixState, legalLandings: Coord[]): SixMove[] {
         const drops: SixMove[] = [];
         for (const landing of legalLandings) {
             const drop: SixMove = SixMove.fromDrop(landing);
@@ -140,7 +140,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         }
         return drops;
     }
-    public getListDeplacement(state: SixGameState, legalLandings: Coord[]): SixMove[] {
+    public getListDeplacement(state: SixState, legalLandings: Coord[]): SixMove[] {
         // get list pieces belonging to me
         // multiply list with legalLandings
         // check for each if a cut is needed
@@ -150,8 +150,8 @@ export class SixMinimax extends AlignementMinimax<SixMove,
     }
     public getBoardValue(node: SixNode): SixNodeUnheritance {
         const move: SixMove = node.move;
-        const slice: SixGameState = node.gamePartSlice;
-        const LAST_PLAYER: Player = slice.getCurrentEnnemy();
+        const state: SixState = node.gameState;
+        const LAST_PLAYER: Player = state.getCurrentEnnemy();
         const victoryValue: number = LAST_PLAYER.getVictoryValue();
         let shapeInfo: BoardInfo = {
             status: SCORE.DEFAULT,
@@ -160,7 +160,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
             sum: 0,
         };
         if (move) {
-            shapeInfo = this.calculateBoardValue(move, slice);
+            shapeInfo = this.calculateBoardValue(move, state);
         }
         let preVictory: Coord | null;
         if (shapeInfo.status === SCORE.DEFAULT) {
@@ -169,8 +169,8 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         if (shapeInfo.status === SCORE.VICTORY) {
             return new SixNodeUnheritance(victoryValue);
         }
-        if (slice.turn > 39) {
-            const pieces: number[] = slice.countPieces();
+        if (state.turn > 39) {
+            const pieces: number[] = state.countPieces();
             const zeroPieces: number = pieces[0];
             const onePieces: number = pieces[1];
             if (zeroPieces < 6 && onePieces < 6) {
@@ -236,7 +236,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         }
         return this.currentVictorySource;
     }
-    public searchVictoryOnly(victorySource: SixVictorySource, move: SixMove, state: SixGameState): BoardInfo {
+    public searchVictoryOnly(victorySource: SixVictorySource, move: SixMove, state: SixState): BoardInfo {
         const lastDrop: Coord = move.landing.getNext(state.offset, 1);
         display(this.VERBOSE, { called: 'SixRules.searchVictoryOnly', victorySource, move, state });
         switch (victorySource.typeSource) {
@@ -250,7 +250,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
                 return this.searchVictoryOnlyForTriangleEdge(victorySource.index, lastDrop, state);
         }
     }
-    public searchVictoryOnlyForCircle(index: number, lastDrop: Coord, state: SixGameState): BoardInfo {
+    public searchVictoryOnlyForCircle(index: number, lastDrop: Coord, state: SixState): BoardInfo {
         display(this.VERBOSE,
                 { called: 'SixRules.searchVictoryOnlyForCircle', index, lastDrop, state });
         const LAST_PLAYER: Player = state.getCurrentEnnemy();
@@ -276,7 +276,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
             preVictory: null, sum: null,
         };
     }
-    public searchVictoryOnlyForLine(index: number, lastDrop: Coord, state: SixGameState): BoardInfo {
+    public searchVictoryOnlyForLine(index: number, lastDrop: Coord, state: SixState): BoardInfo {
         const LAST_PLAYER: Player = state.getCurrentEnnemy();
         let dir: HexaDirection = HexaDirection.factory.all[index];
         let testCoord: Coord = lastDrop.getNext(dir, 1);
@@ -306,7 +306,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
             preVictory: null, sum: null,
         };
     }
-    public searchVictoryOnlyForTriangleCorner(index: number, lastDrop: Coord, state: SixGameState): BoardInfo {
+    public searchVictoryOnlyForTriangleCorner(index: number, lastDrop: Coord, state: SixState): BoardInfo {
         display(this.VERBOSE,
                 { called: 'SixRules.searchVictoryTriangleCornerOnly', index, lastDrop, state });
         const LAST_PLAYER: Player = state.getCurrentEnnemy();
@@ -336,7 +336,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
             preVictory: null, sum: null,
         };
     }
-    public searchVictoryOnlyForTriangleEdge(index: number, lastDrop: Coord, state: SixGameState): BoardInfo {
+    public searchVictoryOnlyForTriangleEdge(index: number, lastDrop: Coord, state: SixState): BoardInfo {
         display(this.VERBOSE,
                 { called: 'SixRules.searchVictoryTriangleEdgeOnly', index, lastDrop, state });
         const LAST_PLAYER: Player = state.getCurrentEnnemy();
@@ -368,7 +368,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
     }
     public getBoardInfo(victorySource: SixVictorySource,
                         move: SixMove,
-                        state: SixGameState,
+                        state: SixState,
                         boardInfo: BoardInfo)
     : BoardInfo
     {
@@ -386,7 +386,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
                 return this.getBoardInfoForTriangleEdge(victorySource.index, lastDrop, state, boardInfo);
         }
     }
-    public getBoardInfoForCircle(index: number, lastDrop: Coord, state: SixGameState, boardInfo: BoardInfo): BoardInfo {
+    public getBoardInfoForCircle(index: number, lastDrop: Coord, state: SixState, boardInfo: BoardInfo): BoardInfo {
         display(this.VERBOSE,
                 { called: 'SixMinimaw.getBoardInfoForCircle', index, lastDrop, state, boardInfo });
         const LAST_ENNEMY: Player = state.getCurrentPlayer();
@@ -447,7 +447,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
             victory: null,
         };
     }
-    public getBoardInfoForLine(index: number, lastDrop: Coord, state: SixGameState, boardInfo: BoardInfo): BoardInfo {
+    public getBoardInfoForLine(index: number, lastDrop: Coord, state: SixState, boardInfo: BoardInfo): BoardInfo {
         display(this.VERBOSE,
                 { called: 'SixRules.getBoardInfoForLine', index, lastDrop, state, boardInfo });
         const dir: HexaDirection = HexaDirection.factory.all[index];
@@ -504,7 +504,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         };
         return this.getBoardInfoResult(finalSubSum, lastEmpty, testedCoords, newBoardInfo);
     }
-    private updateEncounterAndReturnLastEmpty(state: SixGameState,
+    private updateEncounterAndReturnLastEmpty(state: SixState,
                                               testedCoord: Coord,
                                               encountered: number[]): Coord {
         const LAST_ENNEMY: Player = state.getCurrentPlayer();
@@ -523,7 +523,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
     }
     public getBoardInfoForTriangleCorner(index: number,
                                          lastDrop: Coord,
-                                         state: SixGameState,
+                                         state: SixState,
                                          boardInfo: BoardInfo)
     : BoardInfo
     {
@@ -559,7 +559,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
     }
     public getBoardInfoForTriangleEdge(index: number,
                                        lastDrop: Coord,
-                                       state: SixGameState,
+                                       state: SixState,
                                        boardInfo: BoardInfo): BoardInfo {
 
         display(this.VERBOSE, { called: 'SixRules.getBoardInfoForTriangleEdge', index, lastDrop, state, boardInfo });

@@ -1,6 +1,6 @@
 import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { expectSecondStateToBeBetterThanFirst } from 'src/app/utils/tests/TestUtils.spec';
-import { CoerceoPartSlice } from '../CoerceoPartSlice';
+import { CoerceoState } from '../CoerceoState';
 import { CoerceoMinimax } from '../CoerceoMinimax';
 import { CoerceoRules } from '../CoerceoRules';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
@@ -15,7 +15,7 @@ describe('CoerceoMinimax', () => {
     const X: number = FourStatePiece.ONE.value;
 
     beforeEach(() => {
-        const rules: CoerceoRules = new CoerceoRules(CoerceoPartSlice);
+        const rules: CoerceoRules = new CoerceoRules(CoerceoState);
         minimax = new CoerceoMinimax(rules, 'CoerceoMinimax');
     });
     it('Should prefer a board where he has more freedom', () => {
@@ -31,7 +31,7 @@ describe('CoerceoMinimax', () => {
             [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
             [N, N, N, N, N, N, _, X, O, N, N, N, N, N, N],
         ];
-        const weakState: CoerceoPartSlice = new CoerceoPartSlice(weakBoard, 0, [0, 0], [0, 0]);
+        const weakState: CoerceoState = new CoerceoState(weakBoard, 0, [0, 0], [0, 0]);
         const strongBoard: NumberTable = [
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -44,7 +44,7 @@ describe('CoerceoMinimax', () => {
             [N, N, N, N, N, N, _, X, O, N, N, N, N, N, N],
             [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
         ];
-        const strongState: CoerceoPartSlice = new CoerceoPartSlice(strongBoard, 0, [0, 0], [0, 0]);
+        const strongState: CoerceoState = new CoerceoState(strongBoard, 0, [0, 0], [0, 0]);
         expectSecondStateToBeBetterThanFirst(weakState, null, strongState, null, minimax);
     });
 });

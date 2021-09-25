@@ -1,5 +1,5 @@
 import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
-import { DvonnGameState } from 'src/app/games/dvonn/DvonnGameState';
+import { DvonnState } from 'src/app/games/dvonn/DvonnState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { DvonnPieceStack } from 'src/app/games/dvonn/DvonnPieceStack';
@@ -30,7 +30,7 @@ export const dvonnTutorial: TutorialStep[] = [
         Therefore, there are six possible directions.
         The player with dark pieces starts.<br/><br/>
         You're playing Dark, click on a stack and move it by one space.`,
-        DvonnGameState.getInitialSlice(),
+        DvonnState.getInitialState(),
         DvonnMove.of(new Coord(2, 0), new Coord(3, 0)),
         $localize`Congratulations!`,
     ),
@@ -39,7 +39,7 @@ export const dvonnTutorial: TutorialStep[] = [
         $localize`Pieces with a lightning strike are called "sources".
         When a stack is not directly nor indirectly connected to a source, it is removed from the board.<br/><br/>
         You're playing Dark, try to disconnect the stack of 4 pieces from your opponent. There are two ways of doing that, one is better than the other: try to find that one!`,
-        new DvonnGameState(new DvonnBoard([
+        new DvonnState(new DvonnBoard([
             [__, __, X1, SO, __, __, __, __, __, __, __],
             [__, __, O1, __, __, __, __, __, __, __, __],
             [__, __, X4, __, __, __, __, X1, SO, __, __],
@@ -47,7 +47,7 @@ export const dvonnTutorial: TutorialStep[] = [
             [__, __, __, __, __, __, __, __, __, __, __],
         ]), 0, false),
         DvonnMove.of(new Coord(2, 1), new Coord(2, 0)),
-        (move: DvonnMove, _state: DvonnGameState) => {
+        (move: DvonnMove, _state: DvonnState) => {
             if (move.end.equals(new Coord(3, 0))) {
                 return MGPValidation.failure($localize`You have successfully disconnected the stack of 4 pieces of your opponent, but on the next move your opponent will be able to move on your new stack, and to win the game! There exists a better outcome of this situation, try to find it.`);
             } else if (move.end.equals(new Coord(2, 0))) {
@@ -66,7 +66,7 @@ export const dvonnTutorial: TutorialStep[] = [
         This means that you can take control of a source by moving one of your stack on top of it.
         This way, you know that this stack may never be disconnected, as it contains a source.<br/><br/>
         You're playing Dark and you can take control of a source, do it!`,
-        new DvonnGameState(new DvonnBoard([
+        new DvonnState(new DvonnBoard([
             [__, __, SO, X1, __, __, __, __, __, __, __],
             [__, __, O1, __, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, X2, SO, __, __],
@@ -82,7 +82,7 @@ export const dvonnTutorial: TutorialStep[] = [
         $localize`It can happen that you have no possible move to make.
         If this is the case, and if your opponent can still move, you must pass your turn.<br/><br/>
         This is a situation that occurs here for Dark.`,
-        new DvonnGameState(new DvonnBoard([
+        new DvonnState(new DvonnBoard([
             [__, __, SO, __, __, __, __, __, __, __, __],
             [__, __, O2, __, __, __, __, __, __, __, __],
             [__, __, X2, __, __, __, __, X2, SO, O4, __],
@@ -94,7 +94,7 @@ export const dvonnTutorial: TutorialStep[] = [
         $localize`End of the game`,
         $localize`When no more move is possible for both players, the game ends and the player with the most points wins.<br/><br/>
         Make your last move.`,
-        new DvonnGameState(new DvonnBoard([
+        new DvonnState(new DvonnBoard([
             [__, __, SO, __, __, __, __, __, __, __, __],
             [__, __, O1, __, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, SO, O4, __],

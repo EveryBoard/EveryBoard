@@ -1,10 +1,10 @@
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Move } from './Move';
-import { GamePartSlice } from './GamePartSlice';
 import { LegalityStatus } from './LegalityStatus';
 import { Type } from '@angular/core';
 import { assert, display } from '../utils/utils';
 import { Player } from './Player';
+import { GameState } from './GameState';
 
 export class GameStatus {
 
@@ -43,7 +43,7 @@ export class GameStatus {
     }
 }
 export abstract class Rules<M extends Move,
-                            S extends GamePartSlice,
+                            S extends GameState,
                             L extends LegalityStatus = LegalityStatus>
 {
 
@@ -65,7 +65,7 @@ export abstract class Rules<M extends Move,
          */
         const LOCAL_VERBOSE: boolean = false;
         display(LOCAL_VERBOSE, 'Rules.choose: ' + move.toString() + ' was proposed');
-        const status: L = this.isLegal(move, this.node.gamePartSlice);
+        const status: L = this.isLegal(move, this.node.gameState);
         if (this.node.hasMoves()) { // if calculation has already been done by the AI
             display(LOCAL_VERBOSE, 'Rules.choose: current node has moves');
             const choice: MGPNode<Rules<M, S, L>, M, S, L> = this.node.getSonByMove(move);
@@ -85,7 +85,7 @@ export abstract class Rules<M extends Move,
             display(LOCAL_VERBOSE, `Rules.choose: Move is legal, let's apply it`);
         }
 
-        const resultingState: GamePartSlice = this.applyLegalMove(move, this.node.gamePartSlice, status);
+        const resultingState: GameState = this.applyLegalMove(move, this.node.gameState, status);
         const son: MGPNode<Rules<M, S, L>, M, S, L> = new MGPNode(this.node,
                                                                   move,
                                                                   resultingState as S);
@@ -100,7 +100,7 @@ export abstract class Rules<M extends Move,
      */
     public setInitialBoard(): void {
         if (this.node == null) {
-            const initialState: S = this.stateType['getInitialSlice']();
+            const initialState: S = this.stateType['getInitialState']();
             this.node = MGPNode.getFirstNode(initialState, this);
         } else {
             this.node = this.node.getInitialNode();

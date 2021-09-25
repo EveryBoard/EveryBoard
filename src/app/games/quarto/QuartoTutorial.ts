@@ -1,5 +1,5 @@
 import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
-import { QuartoPartSlice } from 'src/app/games/quarto/QuartoPartSlice';
+import { QuartoState } from 'src/app/games/quarto/QuartoState';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
 import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
@@ -15,7 +15,7 @@ export const quartoTutorial: TutorialStep[] = [
           <li>their shape (round or square).</li>
         </ul>
         Here, we have a board with a victory by an alignment of dark pieces.`,
-        new QuartoPartSlice([
+        new QuartoState([
             [14, 12, 4, 2],
             [16, 16, 16, 16],
             [16, 16, 16, 16],
@@ -29,7 +29,7 @@ export const quartoTutorial: TutorialStep[] = [
         If you prefer, the order of these two steps can be reversed.
         Keep in mind that the second click confirms the move.<br/><br/>
         Make a move.`,
-        new QuartoPartSlice([
+        new QuartoState([
             [14, 3, 6, 16],
             [16, 16, 16, 16],
             [16, 8, 16, 16],
@@ -42,7 +42,7 @@ export const quartoTutorial: TutorialStep[] = [
         $localize`Situation`,
         $localize`We have here a tricky situation.<br/><br/>
         Analyze the board and play your move, carefully paying attention not to let the opponent win on the next move.`,
-        new QuartoPartSlice([
+        new QuartoState([
             [15, 14, 13, 16],
             [4, 11, 12, 16],
             [5, 8, 9, 16],

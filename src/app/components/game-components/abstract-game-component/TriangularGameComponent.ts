@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Coord } from 'src/app/jscaip/Coord';
-import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
+import { RectangularGameState } from 'src/app/jscaip/RectangularGameState';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Move } from 'src/app/jscaip/Move';
 import { Player } from 'src/app/jscaip/Player';
@@ -8,7 +8,7 @@ import { AbstractGameComponent } from './AbstractGameComponent';
 
 @Component({ template: '' })
 export abstract class TriangularGameComponent<M extends Move,
-                                              S extends GamePartSlice,
+                                              S extends RectangularGameState,
                                               L extends LegalityStatus = LegalityStatus>
     extends AbstractGameComponent<M, S, L>
 {

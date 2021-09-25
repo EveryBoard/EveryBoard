@@ -120,7 +120,7 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneGameState, AbaloneLe
         return { legal: MGPValidation.SUCCESS, newBoard };
     }
     public static getGameStatus(node: AbaloneNode): GameStatus {
-        const scores: [number, number] = node.gamePartSlice.getScores();
+        const scores: [number, number] = node.gameState.getScores();
         if (scores[0] > 5) {
             return GameStatus.ZERO_WON;
         } else if (scores[1] > 5) {
@@ -129,11 +129,11 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneGameState, AbaloneLe
             return GameStatus.ONGOING;
         }
     }
-    public applyLegalMove(move: AbaloneMove, slice: AbaloneGameState, status: AbaloneLegalityStatus): AbaloneGameState {
-        return new AbaloneGameState(status.newBoard, slice.turn + 1);
+    public applyLegalMove(move: AbaloneMove, state: AbaloneGameState, status: AbaloneLegalityStatus): AbaloneGameState {
+        return new AbaloneGameState(status.newBoard, state.turn + 1);
     }
-    public isLegal(move: AbaloneMove, slice: AbaloneGameState): AbaloneLegalityStatus {
-        return AbaloneRules.isLegal(move, slice);
+    public isLegal(move: AbaloneMove, state: AbaloneGameState): AbaloneLegalityStatus {
+        return AbaloneRules.isLegal(move, state);
     }
     public getGameStatus(node: AbaloneNode): GameStatus {
         return AbaloneRules.getGameStatus(node);

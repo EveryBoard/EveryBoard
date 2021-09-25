@@ -1,24 +1,25 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { TablutMove } from '../TablutMove';
-import { TablutPartSlice } from '../TablutPartSlice';
+import { TablutState } from '../TablutState';
 import { TablutCase } from '../TablutCase';
 import { TablutRules } from '../TablutRules';
 import { TablutMinimax } from '../TablutMinimax';
+import { Table } from 'src/app/utils/ArrayUtils';
 
 describe('TablutMinimax:', () => {
 
     let rules: TablutRules;
-    const _: number = TablutCase.UNOCCUPIED.value;
-    const x: number = TablutCase.INVADERS.value;
-    const i: number = TablutCase.DEFENDERS.value;
-    const A: number = TablutCase.PLAYER_ONE_KING.value;
+    const _: TablutCase = TablutCase.UNOCCUPIED;
+    const x: TablutCase = TablutCase.INVADERS;
+    const i: TablutCase = TablutCase.DEFENDERS;
+    const A: TablutCase = TablutCase.PLAYER_ONE_KING;
 
     beforeEach(() => {
-        rules = new TablutRules(TablutPartSlice);
+        rules = new TablutRules(TablutState);
     });
     it('Should try to make the king escape when it can', () => {
-        const board: number[][] = [
+        const board: Table<TablutCase> = [
             [_, _, x, A, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
@@ -29,8 +30,8 @@ describe('TablutMinimax:', () => {
             [_, _, _, _, _, _, _, i, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const slice: TablutPartSlice = new TablutPartSlice(board, 1);
-        rules.node = new MGPNode(null, null, slice);
+        const state: TablutState = new TablutState(board, 1);
+        rules.node = new MGPNode(null, null, state);
         const winnerMove: TablutMove = new TablutMove(new Coord(3, 0), new Coord(8, 0));
 
         const minimax: TablutMinimax = new TablutMinimax(rules, 'TablutMinimax');

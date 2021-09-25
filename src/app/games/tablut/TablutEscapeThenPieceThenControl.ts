@@ -4,11 +4,11 @@ import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { SandwichThreat } from 'src/app/jscaip/PieceThreat';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
-import { NumberTable } from 'src/app/utils/ArrayUtils';
+import { NumberTable, Table } from 'src/app/utils/ArrayUtils';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { TablutCase } from './TablutCase';
-import { TablutPartSlice } from './TablutPartSlice';
+import { TablutState } from './TablutState';
 import { TablutPieceAndControlMinimax } from './TablutPieceAndControlMinimax';
 import { TablutNode, TablutRules } from './TablutRules';
 import { TablutRulesConfig } from './TablutRulesConfig';
@@ -35,9 +35,9 @@ export class TablutEscapeThenPieceAndControlMinimax extends TablutPieceAndContro
         if (gameStatus.isEndGame) {
             return new NodeUnheritance(gameStatus.toBoardValue());
         }
-        const state: TablutPartSlice = node.gamePartSlice;
+        const state: TablutState = node.gameState;
         const WIDTH: number = TablutRulesConfig.WIDTH;
-        const EMPTY: number = TablutCase.UNOCCUPIED.value;
+        const EMPTY: TablutCase = TablutCase.UNOCCUPIED;
 
         let safeScore: number = 0;
         let threatenedScore: number = 0;
@@ -73,11 +73,16 @@ export class TablutEscapeThenPieceAndControlMinimax extends TablutPieceAndContro
                                    (threatenedScore * 531) +
                                    controlScore);
     }
-    public getStepForEscape(board: number[][]): number {
+    public getStepForEscape(board: Table<TablutCase>): number {
         const king: Coord = TablutRules.getKingCoord(board).get();
         return this._getStepForEscape(board, 1, [king], []);
     }
-    public _getStepForEscape(board: number[][], step: number, previousGen: Coord[], handledCoords: Coord[]): number {
+    public _getStepForEscape(board: Table<TablutCase>,
+                             step: number,
+                             previousGen: Coord[],
+                             handledCoords: Coord[])
+    : number
+    {
         const nextGen: Coord[] = this.getNextGen(board, previousGen, handledCoords);
 
         if (nextGen.length === 0) {
@@ -92,13 +97,13 @@ export class TablutEscapeThenPieceAndControlMinimax extends TablutPieceAndContro
             return this._getStepForEscape(board, step, nextGen, handledCoords);
         }
     }
-    public getNextGen(board: number[][], previousGen: Coord[], handledCoords: Coord[]): Coord[] {
+    public getNextGen(board: Table<TablutCase>, previousGen: Coord[], handledCoords: Coord[]): Coord[] {
         const newGen: Coord[] = [];
         for (const piece of previousGen) {
             for (const dir of Orthogonal.ORTHOGONALS) {
                 let landing: Coord = piece.getNext(dir, 1);
                 while (landing.isInRange(TablutRulesConfig.WIDTH, TablutRulesConfig.WIDTH) &&
-                       board[landing.y][landing.x] === TablutCase.UNOCCUPIED.value)
+                       board[landing.y][landing.x] === TablutCase.UNOCCUPIED)
                 {
                     if (handledCoords.every((coord: Coord) => coord.equals(landing) === false)) {
                         // coord is new

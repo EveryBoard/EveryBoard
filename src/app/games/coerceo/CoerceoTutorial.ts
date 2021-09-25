@@ -1,6 +1,6 @@
 import { CoerceoMove } from 'src/app/games/coerceo/CoerceoMove';
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { CoerceoPartSlice } from 'src/app/games/coerceo/CoerceoPartSlice';
+import { CoerceoState } from 'src/app/games/coerceo/CoerceoState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 
@@ -18,7 +18,7 @@ export const coerceoTutorial: TutorialStep[] = [
          The dark pieces belong to the first player and can only move on the dark spaces,
          while the light pieces belong to the second player and can only move on the light spaces.
          The goal of the game is to capture all of the opponent's pieces.`,
-        CoerceoPartSlice.getInitialSlice(),
+        CoerceoState.getInitialState(),
     ),
     TutorialStep.anyMove(
         $localize`Move`,
@@ -30,7 +30,7 @@ export const coerceoTutorial: TutorialStep[] = [
         You can pass through the opponent's pieces.
         You're playing first, hence you're playing Dark.<br/><br/>
         Perform any move.`,
-        CoerceoPartSlice.getInitialSlice(),
+        CoerceoState.getInitialState(),
         CoerceoMove.fromCoordToCoord(new Coord(3, 5), new Coord(5, 5)),
         $localize`Congratulations! Let's see captures now.`,
     ),
@@ -40,7 +40,7 @@ export const coerceoTutorial: TutorialStep[] = [
         When all neighboring spaces except one are occupied, and one opponent moves to that last free space, your piece is captured!
         However, it is possible to place a piece between 3 of the opponent's pieces (or 2 on the side) without being captured.<br/><br/>
         You're playing Light, make a capture.`,
-        new CoerceoPartSlice([
+        new CoerceoState([
             [N, N, N, N, N, N, O, _, O, N, N, N, N, N, N],
             [N, N, N, O, _, _, _, _, _, O, _, _, N, N, N],
             [_, X, _, X, O, X, _, _, O, _, _, X, _, X, _],
@@ -67,7 +67,7 @@ export const coerceoTutorial: TutorialStep[] = [
         For example, here, the topmost dark piece will not disconnect its tile when leaving it.
         But, by leaving the bottom left tile, two tiles will be removed.<br/><br/>
         Perform a move that lets you gain two tiles.`,
-        new CoerceoPartSlice([
+        new CoerceoState([
             [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
             [N, N, N, N, N, N, X, _, _, N, N, N, N, N, N],
             [_, _, _, N, N, N, _, _, _, N, N, N, N, N, N],
@@ -94,7 +94,7 @@ export const coerceoTutorial: TutorialStep[] = [
         This will cost you two tiles.
         If any tiles are removed during that turn, nobody will get them.<br/><br/>
         Gain some time and capture the last piece!`,
-        new CoerceoPartSlice([
+        new CoerceoState([
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -117,7 +117,7 @@ export const coerceoTutorial: TutorialStep[] = [
         $localize`When a tile is removed from the board during your turn, some of the opponent's pieces may have lost their last free neighboring space, they will therefore be captured!
         If this happens to one of your piece during your turn, it will however stay on the board.<br/><br/>
         A move that demonstrate both of these things can be done on this board by Light. Try it!`,
-        new CoerceoPartSlice([
+        new CoerceoState([
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],

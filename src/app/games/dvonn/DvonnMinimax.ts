@@ -3,13 +3,13 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { DvonnNode, DvonnRules } from './DvonnRules';
-import { DvonnGameState } from './DvonnGameState';
+import { DvonnState } from './DvonnState';
 
-export class DvonnMinimax extends Minimax<DvonnMove, DvonnGameState> {
+export class DvonnMinimax extends Minimax<DvonnMove, DvonnState> {
 
     public getListMoves(node: DvonnNode): DvonnMove[] {
         const lastMove: DvonnMove = node.move;
-        const state: DvonnGameState = node.gamePartSlice;
+        const state: DvonnState = node.gameState;
         const moves: DvonnMove[] = [];
         // For each movable piece, look at its possible targets
         DvonnRules.getMovablePieces(state).forEach((start: Coord) => {
@@ -25,7 +25,7 @@ export class DvonnMinimax extends Minimax<DvonnMove, DvonnGameState> {
         return moves;
     }
     public getBoardValue(node: DvonnNode): NodeUnheritance {
-        const state: DvonnGameState = node.gamePartSlice;
+        const state: DvonnState = node.gameState;
         // Board value is the total number of pieces controlled by player 0 - by player 1
         const scores: number[] = DvonnRules.getScores(state);
         if (DvonnRules.getMovablePieces(state).length === 0) {
