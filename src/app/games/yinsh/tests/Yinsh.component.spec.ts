@@ -341,7 +341,7 @@ describe('YinshComponent', () => {
                 testUtils.expectElementToExist('#selectable_' + coord[0] + '_' + coord[1]);
             }
         }));
-        it('should highlight the rings instead of the captures after selecting a capture', fakeAsync(async() => {
+        fit('should highlight the rings instead of the captures after selecting a capture', fakeAsync(async() => {
             const board: YinshBoard = YinshBoard.of([
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, _, _, _, _, _, _, _],
@@ -357,6 +357,10 @@ describe('YinshComponent', () => {
             ]);
             const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
             testUtils.setupSlice(state);
+
+            const element = testUtils.findElement('#click_6_0');
+            element.triggerEventHandler('click', null); // Commenting this line breaks the test because #selectable_3_3 does not exist.
+            testUtils.detectChanges();
 
             testUtils.expectElementNotToExist('#ring_0');
             testUtils.expectElementToExist('#selectable_3_3');
