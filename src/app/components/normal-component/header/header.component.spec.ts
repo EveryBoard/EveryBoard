@@ -1,6 +1,7 @@
 import { fakeAsync } from '@angular/core/testing';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
+import { LocaleUtils } from 'src/app/utils/LocaleUtils';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { environment } from 'src/environments/environment';
 import { HeaderComponent } from './header.component';
@@ -34,13 +35,9 @@ describe('HeaderComponent', () => {
         testUtils.detectChanges();
         expect(testUtils.getComponent().userName).toBeNull();
     }));
-    it('should use fr as the default language if navigator.language is not set', fakeAsync(async() => {
-        // given a page where the language is not set
-        Object.defineProperty(navigator, 'language', {
-            get: function() {
-                return null;
-            },
-        });
+    it('should use fr as the default language if the language of the navigator is not set', fakeAsync(async() => {
+        // given a navigator where the language is not set
+        spyOn(LocaleUtils, 'getNavigatorLanguage').and.returnValue(null);
 
         // when the header is loaded
         testUtils.detectChanges();

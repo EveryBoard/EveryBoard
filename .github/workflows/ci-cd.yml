@@ -69,7 +69,7 @@ jobs:
         run: npm run build:dev
 
       - name: Deploy master on push to master
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && false}}
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
         uses: burnett01/rsync-deployments@4.1
         with:
           switches: -avzr --delete

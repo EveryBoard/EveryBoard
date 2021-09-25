@@ -4,7 +4,7 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 import { loadTranslations } from '@angular/localize';
-import { getLocale } from './app/utils/LocaleUtils';
+import { LocaleUtils } from './app/utils/LocaleUtils';
 
 function bootstrapApp(): void {
     if (environment.production) {
@@ -18,7 +18,7 @@ function bootstrapApp(): void {
 // Set to false && until we can enable runtime translations
 const runtimeTranslations: boolean = false;
 
-const locale: string = getLocale();
+const locale: string = LocaleUtils.getLocale();
 if (runtimeTranslations && locale !== 'en') {
     fetch(environment.root + 'assets/' + locale + '.json')
         .then((response: Response) => {
