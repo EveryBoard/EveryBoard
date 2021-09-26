@@ -103,7 +103,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
             this.chosenCoord = MGPOptional.of(coord);
             this.showHighlight();
         } else {
-            return this.cancelMove(CoerceoFailure.FIRST_CLICK_SHOULD_NOT_BE_NULL);
+            return this.cancelMove(CoerceoFailure.FIRST_CLICK_SHOULD_NOT_BE_NULL());
         }
     }
     private async secondClick(coord: Coord): Promise<MGPValidation> {
@@ -114,7 +114,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
             const move: CoerceoMove = CoerceoMove.fromCoordToCoord(this.chosenCoord.get(), coord);
             return this.chooseMove(move, this.state, this.state.captures[0], this.state.captures[1]);
         } else {
-            return this.cancelMove(CoerceoFailure.INVALID_DISTANCE);
+            return this.cancelMove(CoerceoFailure.INVALID_DISTANCE());
         }
     }
     public isPyramid(x: number, y: number, caseContent: number): boolean {

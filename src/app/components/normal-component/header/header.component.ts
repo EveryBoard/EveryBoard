@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { Subscription } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { LocaleUtils } from 'src/app/utils/LocaleUtils';
 
 @Component({
@@ -40,7 +39,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     public changeLanguage(language: string): void {
         localStorage.setItem('locale', language.toLowerCase());
         // Reload app for selected language
-        window.open(environment.root + '/' + language.toLowerCase() + this.router.url, '_self');
+        window.open(window.location.href, '_self');
     }
     public ngOnDestroy(): void {
         this.joueurSub.unsubscribe();

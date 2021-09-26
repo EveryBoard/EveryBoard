@@ -33,9 +33,9 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneGameState, AbaloneLe
     private static getFirstPieceValidity(move: AbaloneMove, state: AbaloneGameState): MGPValidation {
         const firstPiece: number = state.getBoardAt(move.coord);
         if (state.isPiece(move.coord) === false) {
-            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY);
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         } else if (firstPiece === state.getCurrentEnnemy().value) {
-            return MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
+            return MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
         } else {
             return MGPValidation.SUCCESS;
         }
@@ -52,7 +52,7 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneGameState, AbaloneLe
             tested = tested.getNext(move.dir);
         }
         if (pieces > 3) {
-            return { legal: MGPValidation.failure(AbaloneFailure.CANNOT_MOVE_MORE_THAN_THREE_PIECES), newBoard };
+            return { legal: MGPValidation.failure(AbaloneFailure.CANNOT_MOVE_MORE_THAN_THREE_PIECES()), newBoard };
         } else if (state.isInBoard(tested) === false) {
             return { legal: MGPValidation.SUCCESS, newBoard };
         }
@@ -77,13 +77,13 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneGameState, AbaloneLe
             firstEnnemy = firstEnnemy.getNext(move.dir);
         }
         if (enemyPieces >= pushingPieces) {
-            return { legal: MGPValidation.failure(AbaloneFailure.NOT_ENOUGH_PIECE_TO_PUSH), newBoard };
+            return { legal: MGPValidation.failure(AbaloneFailure.NOT_ENOUGH_PIECE_TO_PUSH()), newBoard };
         } else if (firstEnnemy.isInRange(9, 9)) {
             if (state.getBoardAt(firstEnnemy) === FourStatePiece.EMPTY.value) {
                 newBoard[firstEnnemy.y][firstEnnemy.x] = ENEMY;
             }
             if (state.getBoardAt(firstEnnemy) === PLAYER) {
-                return { legal: MGPValidation.failure(AbaloneFailure.CANNOT_PUSH_YOUR_OWN_PIECES), newBoard };
+                return { legal: MGPValidation.failure(AbaloneFailure.CANNOT_PUSH_YOUR_OWN_PIECES()), newBoard };
             }
         }
         return { legal: MGPValidation.SUCCESS, newBoard };
@@ -98,7 +98,7 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneGameState, AbaloneLe
         while (tested.equals(last) === false && tested.isInRange(9, 9)) {
             if (state.getBoardAt(tested) !== PLAYER) {
                 return {
-                    legal: MGPValidation.failure(AbaloneFailure.MUST_ONLY_TRANSLATE_YOUR_PIECES),
+                    legal: MGPValidation.failure(AbaloneFailure.MUST_ONLY_TRANSLATE_YOUR_PIECES()),
                     newBoard: null,
                 };
             }
@@ -107,7 +107,7 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneGameState, AbaloneLe
             if (landing.isInRange(9, 9)) {
                 if (state.isPiece(landing)) {
                     return {
-                        legal: MGPValidation.failure(AbaloneFailure.TRANSLATION_IMPOSSIBLE),
+                        legal: MGPValidation.failure(AbaloneFailure.TRANSLATION_IMPOSSIBLE()),
                         newBoard: null,
                     };
                 }

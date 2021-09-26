@@ -32,10 +32,12 @@
             <div class="navbar-item has-dropdown is-hoverable">
                 <a class="navbar-link">{{ currentLanguage }}</a>
                 <div class="navbar-dropdown">
-                    <a *ngFor="let language of availableLanguages"
-                       id="language_{{ language }}"
-                       class="navbar-item"
-                       (click)="changeLanguage(language)">{{ language }}</a>
+                    <ng-container *ngFor="let language of availableLanguages">
+                        <a *ngIf="language !== currentLanguage"
+                           id="language_{{ language }}"
+                           class="navbar-item"
+                           (click)="changeLanguage(language)">{{ language }}</a>
+                    </ng-container>
                 </div>
             </div>
             <div class="navbar-item">

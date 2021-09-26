@@ -61,7 +61,7 @@ export class LinesOfActionComponent extends AbstractGameComponent<LinesOfActionM
                 if (move.isSuccess()) {
                     return this.chooseMove(move.get(), this.rules.node.gamePartSlice, null, null);
                 } else {
-                    return this.cancelMove(LinesOfActionFailure.INVALID_DIRECTION);
+                    return this.cancelMove(LinesOfActionFailure.INVALID_DIRECTION());
                 }
             }
         } else {
@@ -70,12 +70,12 @@ export class LinesOfActionComponent extends AbstractGameComponent<LinesOfActionM
     }
     private async select(coord: Coord): Promise<MGPValidation> {
         if (this.getState().getAt(coord) !== this.getState().getCurrentPlayer().value) {
-            return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE);
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
         this.selected = MGPOptional.of(coord);
         this.targets = LinesOfActionRules.possibleTargets(this.rules.node.gamePartSlice, this.selected.get());
         if (this.targets.length === 0) {
-            return this.cancelMove(LinesOfActionFailure.PIECE_CANNOT_MOVE);
+            return this.cancelMove(LinesOfActionFailure.PIECE_CANNOT_MOVE());
         }
         return MGPValidation.SUCCESS;
     }

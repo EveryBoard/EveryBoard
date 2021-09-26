@@ -83,7 +83,7 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
             }
         } else {
             // the user chose an occupied place of the board, so an illegal move, so we cancel all
-            return this.cancelMove(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE);
+            return this.cancelMove(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
         }
     }
     public async choosePiece(givenPiece: number): Promise<MGPValidation> {

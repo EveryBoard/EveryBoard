@@ -70,23 +70,23 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
     private static getMoveValidity(player: Player, move: TablutMove, board: number[][]): MGPValidation {
         const cOwner: RelativePlayer = this.getRelativeOwner(player, move.coord, board);
         if (cOwner === RelativePlayer.NONE) {
-            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE);
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
         if (cOwner === RelativePlayer.ENNEMY) {
-            return MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
+            return MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
         }
 
         const landingCoordOwner: RelativePlayer = this.getRelativeOwner(player, move.end, board);
         if (landingCoordOwner !== RelativePlayer.NONE) {
-            return MGPValidation.failure(TablutFailure.LANDING_ON_OCCUPIED_CASE);
+            return MGPValidation.failure(TablutFailure.LANDING_ON_OCCUPIED_CASE());
         }
         if (this.isThrone(move.end)) {
             if (this.isKing(board[move.coord.y][move.coord.x])) {
                 if (this.isCentralThrone(move.end) && this.CASTLE_IS_LEFT_FOR_GOOD) {
-                    return MGPValidation.failure(TablutFailure.THRONE_IS_LEFT_FOR_GOOD);
+                    return MGPValidation.failure(TablutFailure.THRONE_IS_LEFT_FOR_GOOD());
                 }
             } else {
-                return MGPValidation.failure(TablutFailure.SOLDIERS_CANNOT_SIT_ON_THRONE);
+                return MGPValidation.failure(TablutFailure.SOLDIERS_CANNOT_SIT_ON_THRONE());
             }
         }
 
@@ -96,7 +96,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
         let c: Coord = move.coord.getNext(dir); // the inspected coord
         for (let i: number = 1; i < dist; i++) {
             if (board[c.y][c.x] !== TablutCase.UNOCCUPIED.value) {
-                return MGPValidation.failure(TablutFailure.SOMETHING_IN_THE_WAY);
+                return MGPValidation.failure(TablutFailure.SOMETHING_IN_THE_WAY());
             }
             c = c.getNext(dir);
         }

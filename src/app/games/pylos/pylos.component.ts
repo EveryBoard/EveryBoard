@@ -77,7 +77,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosState>
         const clickedPiece: number = this.state.getBoardAt(clickedCoord);
         const pieceBelongToEnnemy: boolean = clickedPiece === this.state.getCurrentEnnemy().value;
         if (pieceBelongToEnnemy) {
-            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
+            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
         }
         if (this.chosenLandingCoord == null) {
             // Starting do describe a climbing move
@@ -126,7 +126,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosState>
                 this.chosenLandingCoord = clickedCoord;
                 return this.concludeMoveWithCapture([]);
             } else {
-                return this.cancelMove(PylosFailure.MUST_MOVE_UPWARD);
+                return this.cancelMove(PylosFailure.MUST_MOVE_UPWARD());
             }
         }
     }

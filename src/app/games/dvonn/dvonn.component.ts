@@ -98,7 +98,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnGameS
         if (this.canPass) {
             return await this.chooseMove(DvonnMove.PASS, this.rules.node.gamePartSlice, null, null);
         } else {
-            return MGPValidation.failure(RulesFailure.CANNOT_PASS);
+            return MGPValidation.failure(RulesFailure.CANNOT_PASS());
         }
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {

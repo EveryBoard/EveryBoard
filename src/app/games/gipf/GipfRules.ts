@@ -217,7 +217,7 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         const linePortionOpt: MGPOptional<{ 0: Coord, 1: Coord, 2: HexaDirection}> =
             GipfRules.getLinePortionWithFourPiecesOfPlayer(slice, player, capture.getLine());
         if (linePortionOpt.isAbsent()) {
-            return MGPValidation.failure(GipfFailure.CAPTURE_MUST_BE_ALIGNED);
+            return MGPValidation.failure(GipfFailure.CAPTURE_MUST_BE_ALIGNED());
         }
 
         const linePortion: { 0: Coord, 1: Coord, 2: HexaDirection} = linePortionOpt.get();
@@ -226,7 +226,7 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         if (capturable.equals(capture)) {
             return MGPValidation.SUCCESS;
         } else {
-            return MGPValidation.failure(GipfFailure.INVALID_CAPTURED_PIECES);
+            return MGPValidation.failure(GipfFailure.INVALID_CAPTURED_PIECES());
         }
     }
     public static getLinePortionsWithFourPiecesOfPlayer(slice: GipfPartSlice, player: Player):
@@ -270,7 +270,7 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         if (linePortions.length === 0) {
             return MGPValidation.SUCCESS;
         } else {
-            return MGPValidation.failure(GipfFailure.MISSING_CAPTURES);
+            return MGPValidation.failure(GipfFailure.MISSING_CAPTURES());
         }
     }
     public placementValidity(slice: GipfPartSlice, placement: GipfPlacement): MGPValidation {
@@ -280,17 +280,17 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         }
         if (slice.hexaBoard.getAt(placement.coord) !== GipfPiece.EMPTY) {
             if (placement.direction.isAbsent()) {
-                return MGPValidation.failure(GipfFailure.PLACEMENT_WITHOUT_DIRECTION);
+                return MGPValidation.failure(GipfFailure.PLACEMENT_WITHOUT_DIRECTION());
             }
             if (GipfRules.isLineComplete(slice, placement.coord, placement.direction.get())) {
-                return MGPValidation.failure(GipfFailure.PLACEMENT_ON_COMPLETE_LINE);
+                return MGPValidation.failure(GipfFailure.PLACEMENT_ON_COMPLETE_LINE());
             }
             for (const dir of GipfRules.getAllDirectionsForEntrance(slice, placement.coord)) {
                 if (dir === placement.direction.get()) {
                     return MGPValidation.SUCCESS;
                 }
             }
-            return MGPValidation.failure(GipfFailure.INVALID_PLACEMENT_DIRECTION);
+            return MGPValidation.failure(GipfFailure.INVALID_PLACEMENT_DIRECTION());
         }
         return MGPValidation.SUCCESS;
     }
@@ -298,7 +298,7 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         if (FlatHexaOrientation.INSTANCE.isOnBorder(slice.hexaBoard, coord)) {
             return MGPValidation.SUCCESS;
         } else {
-            return MGPValidation.failure(GipfFailure.PLACEMENT_NOT_ON_BORDER);
+            return MGPValidation.failure(GipfFailure.PLACEMENT_NOT_ON_BORDER());
         }
     }
     public static getCapturable(slice: GipfPartSlice,

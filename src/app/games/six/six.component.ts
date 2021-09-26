@@ -194,10 +194,10 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
             return this.cancelMove(clickValidity.getReason());
         }
         if (this.state.turn < 40) {
-            return this.cancelMove(SixFailure.NO_DEPLACEMENT_BEFORE_TURN_40);
+            return this.cancelMove(SixFailure.NO_DEPLACEMENT_BEFORE_TURN_40());
         } else if (this.chosenLanding == null) {
             if (this.state.getPieceAt(piece) === this.state.getCurrentEnnemy()) {
-                return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
+                return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
             }
             this.selectedPiece = piece;
             return MGPValidation.SUCCESS;
@@ -215,7 +215,7 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
             return this.chooseMove(SixMove.fromDrop(neighboor), this.state, null, null);
         } else {
             if (this.selectedPiece == null) {
-                return this.cancelMove(SixFailure.CAN_NO_LONGER_DROP);
+                return this.cancelMove(SixFailure.CAN_NO_LONGER_DROP());
             } else {
                 const deplacement: SixMove = SixMove.fromDeplacement(this.selectedPiece, neighboor);
                 const legality: SixLegalityStatus = SixRules.isLegalPhaseTwoMove(deplacement, this.state);
@@ -232,7 +232,7 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
     }
     private neededCutting(legality: SixLegalityStatus): boolean {
         return legality.legal.isFailure() &&
-               legality.legal.reason === SixFailure.MUST_CUT;
+               legality.legal.reason === SixFailure.MUST_CUT();
     }
     private moveVirtuallyPiece(): void {
         this.pieces = this.pieces.filter((c: Coord) => c.equals(this.selectedPiece) === false);

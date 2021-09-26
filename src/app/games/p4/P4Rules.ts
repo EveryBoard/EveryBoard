@@ -168,7 +168,7 @@ export class P4Rules extends Rules<P4Move, P4PartSlice> {
     }
     public applyLegalMove(move: P4Move,
                           slice: P4PartSlice,
-                          status: LegalityStatus)
+                          _status: LegalityStatus)
     : P4PartSlice
     {
         const x: number = move.x;
@@ -185,7 +185,7 @@ export class P4Rules extends Rules<P4Move, P4PartSlice> {
     public isLegal(move: P4Move, slice: P4PartSlice): LegalityStatus {
         display(P4Rules.VERBOSE, { context: 'P4Rules.isLegal', move: move.toString(), slice });
         if (slice.getBoardByXY(move.x, 0) !== Player.NONE.value) {
-            return { legal: MGPValidation.failure(P4Failure.COLUMN_IS_FULL) };
+            return { legal: MGPValidation.failure(P4Failure.COLUMN_IS_FULL()) };
         }
         return { legal: MGPValidation.SUCCESS };
     }

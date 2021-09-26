@@ -223,22 +223,22 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
         const pieceInHand: QuartoPiece = slice.pieceInHand;
         if (QuartoRules.isOccupied(board[y][x])) {
             // on ne joue pas sur une case occupée
-            return MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE);
+            return MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
         if (pieceToGive === QuartoPiece.NONE) {
             if (slice.turn === 15) {
                 // on doit donner une pièce ! sauf au dernier tour
                 return MGPValidation.SUCCESS;
             }
-            return MGPValidation.failure(QuartoFailure.MUST_GIVE_A_PIECE);
+            return MGPValidation.failure(QuartoFailure.MUST_GIVE_A_PIECE());
         }
         if (!QuartoPartSlice.isPlacable(pieceToGive, board)) {
             // la piece est déjà sur le plateau
-            return MGPValidation.failure(QuartoFailure.PIECE_ALREADY_ON_BOARD);
+            return MGPValidation.failure(QuartoFailure.PIECE_ALREADY_ON_BOARD());
         }
         if (pieceInHand === pieceToGive) {
             // la pièce donnée est la même que celle en main, c'est illégal
-            return MGPValidation.failure(QuartoFailure.CANNOT_GIVE_PIECE_IN_HAND);
+            return MGPValidation.failure(QuartoFailure.CANNOT_GIVE_PIECE_IN_HAND());
         }
         return MGPValidation.SUCCESS;
     }

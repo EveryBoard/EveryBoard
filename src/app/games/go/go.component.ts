@@ -102,8 +102,8 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
         if (phase === Phase.COUNTING || phase === Phase.ACCEPT) {
             return this.onClick(GoMove.ACCEPT.coord.x, GoMove.ACCEPT.coord.y);
         } else {
-            this.message(RulesFailure.CANNOT_PASS);
-            return MGPValidation.failure(RulesFailure.CANNOT_PASS);
+            this.message(RulesFailure.CANNOT_PASS());
+            return MGPValidation.failure(RulesFailure.CANNOT_PASS());
         }
     }
     public getCaseClass(x: number, y: number): string {

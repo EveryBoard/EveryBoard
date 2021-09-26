@@ -2,6 +2,7 @@ import { SixGameState } from 'src/app/games/six/SixGameState';
 import { SixMove } from 'src/app/games/six/SixMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
+import { Localized } from 'src/app/utils/LocaleUtils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
@@ -11,9 +12,9 @@ const X: number = Player.ONE.value;
 
 export class SixTutorialMessages {
 
-    public static readonly MOVEMENT_NOT_DISCONNECTING: string = $localize`This move does not disconnect your opponent's pieces. Try again with another piece.`;
+    public static readonly MOVEMENT_NOT_DISCONNECTING: Localized = () => $localize`This move does not disconnect your opponent's pieces. Try again with another piece.`;
 
-    public static readonly MOVEMENT_SELF_DISCONNECTING: string = $localize`You lost one of your pieces during this move. There is a way to disconnect an opponent's piece without losing any of yours, try again!`;
+    public static readonly MOVEMENT_SELF_DISCONNECTING: Localized = () => $localize`You lost one of your pieces during this move. There is a way to disconnect an opponent's piece without losing any of yours, try again!`;
 }
 
 export const sixTutorial: TutorialStep[] = [
@@ -88,16 +89,16 @@ export const sixTutorial: TutorialStep[] = [
             [_, O, _, X, _, _, _, _, _],
         ], 40),
         SixMove.fromDeplacement(new Coord(6, 1), new Coord(5, 1)),
-        (move: SixMove, resultingState: SixGameState) => {
+        (_move: SixMove, resultingState: SixGameState) => {
             const pieces: [number, number] = resultingState.countPieces();
             if (pieces[0] === 19) {
                 if (pieces[1] === 18) {
                     return MGPValidation.SUCCESS;
                 } else {
-                    return MGPValidation.failure(SixTutorialMessages.MOVEMENT_NOT_DISCONNECTING);
+                    return MGPValidation.failure(SixTutorialMessages.MOVEMENT_NOT_DISCONNECTING());
                 }
             } else {
-                return MGPValidation.failure(SixTutorialMessages.MOVEMENT_SELF_DISCONNECTING);
+                return MGPValidation.failure(SixTutorialMessages.MOVEMENT_SELF_DISCONNECTING());
             }
         },
         $localize`Congratulations, your opponent now has one piece less and you're closer to victory!`,
@@ -122,7 +123,7 @@ export const sixTutorial: TutorialStep[] = [
             if (new Coord(2, 3).equals(move.start.getOrNull())) {
                 return MGPValidation.SUCCESS;
             } else {
-                return MGPValidation.failure(SixTutorialMessages.MOVEMENT_NOT_DISCONNECTING);
+                return MGPValidation.failure(SixTutorialMessages.MOVEMENT_NOT_DISCONNECTING());
             }
         },
         $localize`Congratulations, you won!`,
@@ -147,7 +148,7 @@ export const sixTutorial: TutorialStep[] = [
                 return MGPValidation.failure($localize`This move has not cut the board in two equal halves.`);
             }
             if (resultingState.getPieceAt(move.landing.getNext(resultingState.offset)) === Player.NONE) {
-                return MGPValidation.failure(`Failed. You did cut the board in two but you kept the half where you're in minority. Therefore, you lost! Try again.`);
+                return MGPValidation.failure($localize`Failed. You did cut the board in two but you kept the half where you're in minority. Therefore, you lost! Try again.`);
             } else {
                 return MGPValidation.SUCCESS;
             }

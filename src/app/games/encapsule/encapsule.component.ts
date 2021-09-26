@@ -78,11 +78,11 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove,
                     EncapsuleMove.fromDrop(this.chosenPiece, clickedCoord);
                 return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
             } else if (slice.getAt(clickedCoord).belongsTo(slice.getCurrentPlayer()) === false) {
-                return this.cancelMove(EncapsuleFailure.INVALID_PIECE_SELECTED);
+                return this.cancelMove(EncapsuleFailure.INVALID_PIECE_SELECTED());
             }
         } else {
             if (this.chosenCoord.equals(clickedCoord)) {
-                return this.cancelMove(EncapsuleFailure.SAME_DEST_AS_ORIGIN);
+                return this.cancelMove(EncapsuleFailure.SAME_DEST_AS_ORIGIN());
             } else {
                 const chosenMove: EncapsuleMove =
                     EncapsuleMove.fromMove(this.chosenCoord, clickedCoord);
@@ -103,13 +103,13 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove,
 
         const slice: EncapsulePartSlice = this.rules.node.gamePartSlice;
         if (slice.isDroppable(piece) === false) {
-            return this.cancelMove(EncapsuleFailure.NOT_DROPPABLE);
+            return this.cancelMove(EncapsuleFailure.NOT_DROPPABLE());
         } else if (this.chosenCoord == null) {
             this.chosenPiece = piece;
             this.chosenPieceIndex = index;
             return MGPValidation.SUCCESS;
         } else {
-            return this.cancelMove(EncapsuleFailure.END_YOUR_MOVE);
+            return this.cancelMove(EncapsuleFailure.END_YOUR_MOVE());
         }
     }
     public getRectClasses(x: number, y: number): string {

@@ -107,9 +107,9 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
                 this.phalanxValidLandings = this.getPhalanxValidLandings();
                 break;
             case ENNEMY:
-                return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
+                return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
             case Player.NONE.value:
-                return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY);
+                return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }
     }
     private hidePreviousMove() {
@@ -229,7 +229,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         const ENNEMY: number = this.rules.node.gamePartSlice.getCurrentEnnemy().value;
         const PLAYER: number = this.rules.node.gamePartSlice.getCurrentPlayer().value;
         if (!clicked.isAlignedWith(this.firstPiece)) {
-            return this.cancelMove(EpaminondasFailure.CASE_NOT_ALIGNED_WITH_SELECTED);
+            return this.cancelMove(EpaminondasFailure.CASE_NOT_ALIGNED_WITH_SELECTED());
         }
         const distance: number = clicked.getDistance(this.firstPiece);
         const direction: Direction = this.firstPiece.getDirectionToward(clicked).get();
@@ -238,10 +238,10 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
                 if (distance === 1) {
                     return this.tryMove(new EpaminondasMove(this.firstPiece.x, this.firstPiece.y, 1, 1, direction));
                 } else {
-                    return this.cancelMove(EpaminondasFailure.SINGLE_PIECE_MUST_MOVE_BY_ONE);
+                    return this.cancelMove(EpaminondasFailure.SINGLE_PIECE_MUST_MOVE_BY_ONE());
                 }
             case ENNEMY:
-                return this.cancelMove(EpaminondasFailure.SINGLE_PIECE_CANNOT_CAPTURE);
+                return this.cancelMove(EpaminondasFailure.SINGLE_PIECE_CANNOT_CAPTURE());
             case PLAYER:
                 const incompleteMove: EpaminondasMove = new EpaminondasMove(this.firstPiece.x,
                                                                             this.firstPiece.y,
@@ -272,7 +272,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
             return this.moveLastPiece(PLAYER);
         }
         if (!clicked.isAlignedWith(this.firstPiece)) {
-            return this.cancelMove(EpaminondasFailure.CASE_NOT_ALIGNED_WITH_PHALANX);
+            return this.cancelMove(EpaminondasFailure.CASE_NOT_ALIGNED_WITH_PHALANX());
         }
         // The directions are valid because they are is aligned
         let phalanxDirection: Direction = Direction.factory.fromMove(this.firstPiece, this.lastPiece).get();
@@ -284,7 +284,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
             phalanxDirection = phalanxLanding;
         }
         if (phalanxDirection !== phalanxLanding) {
-            return this.cancelMove(EpaminondasFailure.CASE_NOT_ALIGNED_WITH_PHALANX);
+            return this.cancelMove(EpaminondasFailure.CASE_NOT_ALIGNED_WITH_PHALANX());
         }
         if (this.board[y][x] === PLAYER) {
             this.lastPiece = clicked;

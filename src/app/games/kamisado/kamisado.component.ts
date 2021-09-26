@@ -74,7 +74,7 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         if (this.canPass) {
             return this.chooseMove(KamisadoMove.PASS, this.rules.node.gamePartSlice, null, null);
         } else {
-            return this.cancelMove(RulesFailure.CANNOT_PASS);
+            return this.cancelMove(RulesFailure.CANNOT_PASS());
         }
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
@@ -83,7 +83,7 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
             return this.cancelMove(clickValidity.getReason());
         }
         if (this.canPass) {
-            return this.cancelMove(RulesFailure.MUST_PASS);
+            return this.cancelMove(RulesFailure.MUST_PASS());
         }
         if (this.chosen.x === -1) {
             return this.choosePiece(x, y);
@@ -97,7 +97,7 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
             if (piece.belongsTo(player)) {
                 // Player clicked on another of its pieces, select it if he can
                 if (this.chosenAutomatically) {
-                    return this.cancelMove(KamisadoFailure.PLAY_WITH_SELECTED_PIECE);
+                    return this.cancelMove(KamisadoFailure.PLAY_WITH_SELECTED_PIECE());
                 } else {
                     this.chosen = new Coord(x, y);
                     return MGPValidation.SUCCESS;
@@ -114,7 +114,7 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         const piece: KamisadoPiece = KamisadoBoard.getPieceAt(this.rules.node.gamePartSlice.board, new Coord(x, y));
         const ennemy: Player = this.rules.node.gamePartSlice.getCurrentEnnemy();
         if (piece.belongsTo(ennemy)) {
-            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
+            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
         }
         this.chosen = new Coord(x, y);
         return MGPValidation.SUCCESS;

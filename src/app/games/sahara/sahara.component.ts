@@ -71,12 +71,12 @@ export class SaharaComponent extends TriangularGameComponent<SaharaMove, SaharaP
     }
     private choosePiece(x: number, y: number): MGPValidation {
         if (this.board[y][x] === FourStatePiece.EMPTY.value) { // Did not select pyramid
-            return this.cancelMove(SaharaFailure.MUST_CHOOSE_PYRAMID_FIRST);
+            return this.cancelMove(SaharaFailure.MUST_CHOOSE_PYRAMID_FIRST());
         } else if (this.getTurn() % 2 === this.board[y][x]) { // selected his own pyramid
             this.chosenCoord = MGPOptional.of(new Coord(x, y));
             return MGPValidation.SUCCESS;
         } else { // Selected ennemy pyramid
-            return this.cancelMove(SaharaFailure.MUST_CHOOSE_OWN_PYRAMID);
+            return this.cancelMove(SaharaFailure.MUST_CHOOSE_OWN_PYRAMID());
         }
     }
     public updateBoard(): void {
