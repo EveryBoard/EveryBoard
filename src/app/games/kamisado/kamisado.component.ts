@@ -14,7 +14,7 @@ import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { kamisadoTutorial } from './KamisadoTutorial';
+import { KamisadoTutorial } from './KamisadoTutorial';
 
 @Component({
     selector: 'app-kamisado',
@@ -32,7 +32,7 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
 
     public encoder: MoveEncoder<KamisadoMove> = KamisadoMove.encoder;
 
-    public tutorial: TutorialStep[] = kamisadoTutorial;
+    public tutorial: TutorialStep[] = new KamisadoTutorial().tutorial;
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);

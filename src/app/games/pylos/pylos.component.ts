@@ -13,7 +13,7 @@ import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisp
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PylosFailure } from './PylosFailure';
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { pylosTutorial } from './PylosTutorial';
+import { PylosTutorial } from './PylosTutorial';
 
 @Component({
     selector: 'app-pylos',
@@ -42,7 +42,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosState>
 
     public encoder: MoveEncoder<PylosMove> = PylosMove.encoder;
 
-    public tutorial: TutorialStep[] = pylosTutorial;
+    public tutorial: TutorialStep[] = new PylosTutorial().tutorial;
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);

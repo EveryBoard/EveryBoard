@@ -14,7 +14,7 @@ import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { EncapsuleFailure } from './EncapsuleFailure';
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { encapsuleTutorial } from './EncapsuleTutorial';
+import { EncapsuleTutorial } from './EncapsuleTutorial';
 
 @Component({
     selector: 'app-encapsule',
@@ -35,7 +35,7 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove,
 
     public encoder: MoveEncoder<EncapsuleMove> = EncapsuleMove.encoder;
 
-    public tutorial: TutorialStep[] = encapsuleTutorial;
+    public tutorial: TutorialStep[] = new EncapsuleTutorial().tutorial;
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);

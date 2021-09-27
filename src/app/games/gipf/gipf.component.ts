@@ -20,7 +20,7 @@ import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { gipfTutorial } from './GipfTutorial';
+import { GipfTutorial } from './GipfTutorial';
 
 @Component({
     selector: 'app-gipf',
@@ -62,7 +62,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfPartSlic
 
     public encoder: MoveEncoder<GipfMove> = GipfMove.encoder;
 
-    public tutorial: TutorialStep[] = gipfTutorial;
+    public tutorial: TutorialStep[] = new GipfTutorial().tutorial;
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);

@@ -16,7 +16,7 @@ import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { coerceoTutorial } from './CoerceoTutorial';
+import { CoerceoTutorial } from './CoerceoTutorial';
 
 @Component({
     selector: 'app-coerceo',
@@ -46,7 +46,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
 
     public encoder: MoveEncoder<CoerceoMove> = CoerceoMove.encoder;
 
-    public tutorial: TutorialStep[] = coerceoTutorial;
+    public tutorial: TutorialStep[] = new CoerceoTutorial().tutorial;
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);

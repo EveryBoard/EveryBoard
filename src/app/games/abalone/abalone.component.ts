@@ -20,7 +20,7 @@ import { AbaloneFailure } from './AbaloneFailure';
 import { AbaloneGameState } from './AbaloneGameState';
 import { AbaloneMove } from './AbaloneMove';
 import { AbaloneLegalityStatus, AbaloneRules } from './AbaloneRules';
-import { abaloneTutorial } from './AbaloneTutorial';
+import { AbaloneTutorial } from './AbaloneTutorial';
 
 export class HexaDirArrow {
     public constructor(public startCenter: Coord,
@@ -42,7 +42,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
 
     public encoder: MoveEncoder<AbaloneMove> = AbaloneMove.encoder;
 
-    public tutorial: TutorialStep[] = abaloneTutorial;
+    public tutorial: TutorialStep[] = new AbaloneTutorial().tutorial;
 
     public moveds: Coord[] = [];
 

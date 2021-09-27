@@ -15,7 +15,7 @@ import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisp
 import { SaharaFailure } from './SaharaFailure';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { saharaTutorial } from './SaharaTutorial';
+import { SaharaTutorial } from './SaharaTutorial';
 
 @Component({
     selector: 'app-sahara',
@@ -33,7 +33,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaMove, SaharaP
 
     public encoder: MoveEncoder<SaharaMove> = SaharaMove.encoder;
 
-    public tutorial: TutorialStep[] = saharaTutorial;
+    public tutorial: TutorialStep[] = new SaharaTutorial().tutorial;
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);

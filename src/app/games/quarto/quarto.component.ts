@@ -11,7 +11,7 @@ import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { quartoTutorial } from './QuartoTutorial';
+import { QuartoTutorial } from './QuartoTutorial';
 
 @Component({
     selector: 'app-quarto',
@@ -34,7 +34,7 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
 
     public encoder: MoveEncoder<QuartoMove> = QuartoMove.encoder;
 
-    public tutorial: TutorialStep[] = quartoTutorial;
+    public tutorial: TutorialStep[] = new QuartoTutorial().tutorial;
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);

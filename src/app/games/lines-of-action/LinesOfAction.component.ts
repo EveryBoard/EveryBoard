@@ -14,7 +14,7 @@ import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { linesOfActionTutorial } from './LinesOfActionTutorial';
+import { LinesOfActionTutorial } from './LinesOfActionTutorial';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 @Component({
@@ -36,7 +36,7 @@ export class LinesOfActionComponent extends AbstractGameComponent<LinesOfActionM
 
     public encoder: MoveEncoder<LinesOfActionMove> = LinesOfActionMove.encoder;
 
-    public tutorial: TutorialStep[] = linesOfActionTutorial;
+    public tutorial: TutorialStep[] = new LinesOfActionTutorial().tutorial;
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);

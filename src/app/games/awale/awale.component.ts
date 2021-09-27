@@ -11,7 +11,7 @@ import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { AwaleFailure } from './AwaleFailure';
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { awaleTutorial } from './AwaleTutorial';
+import { AwaleTutorial } from './AwaleTutorial';
 
 @Component({
     selector: 'app-awale-component',
@@ -22,7 +22,7 @@ export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSl
 
     public encoder: MoveEncoder<AwaleMove> = AwaleMove.encoder;
 
-    public tutorial: TutorialStep[] = awaleTutorial;
+    public tutorial: TutorialStep[] = new AwaleTutorial().tutorial;
 
     public scores: number[] = [0, 0];
 

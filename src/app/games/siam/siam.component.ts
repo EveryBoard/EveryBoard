@@ -16,9 +16,9 @@ import { GameComponentUtils } from 'src/app/components/game-components/GameCompo
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { siamTutorial } from './SiamTutorial';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { SiamFailure } from './SiamFailure';
+import { SiamTutorial } from './SiamTutorial';
 
 @Component({
     selector: 'app-siam',
@@ -40,7 +40,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
 
     public encoder: MoveEncoder<SiamMove> = SiamMove.encoder;
 
-    public tutorial: TutorialStep[] = siamTutorial;
+    public tutorial: TutorialStep[] = new SiamTutorial().tutorial;
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);

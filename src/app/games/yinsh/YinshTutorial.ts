@@ -23,6 +23,7 @@ export class YinshTutorialMessages {
 }
 
 export class YinshTutorial {
+
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             $localize`Goal of the game`,
