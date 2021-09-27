@@ -73,7 +73,7 @@ export class GipfTutorial {
                     new Coord(2, 3),
                     new Coord(3, 3),
                 ])],
-        )],
+            )],
             $localize`Congratulations, you have gotten 4 of your pieces back. This is not the most useful capture.
         Let's now see how captures can really be useful.`,
             $localize`Failed!`,

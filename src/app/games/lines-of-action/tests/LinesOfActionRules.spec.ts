@@ -30,7 +30,7 @@ describe('LinesOfActionRules', () => {
         const state: LinesOfActionState = LinesOfActionState.getInitialSlice();
         const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(0, 2), new Coord(2, 2)).get();
         const status: LegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.reason).toBe(RulesFailure.MUST_CHOOSE_PLAYER_PIECE);
+        expect(status.legal.reason).toBe(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
     });
     it('should move a piece by exactly as many spaces as there are pieces on the same line, going down', () => {
         const expectedBoard: number[][] = [
@@ -164,7 +164,7 @@ describe('LinesOfActionRules', () => {
         const state: LinesOfActionState = LinesOfActionState.getInitialSlice();
         const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(2, 0), new Coord(2, 1)).get();
         const status: LegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.reason).toBe(LinesOfActionFailure.INVALID_MOVE_LENGTH);
+        expect(status.legal.reason).toBe(LinesOfActionFailure.INVALID_MOVE_LENGTH());
     });
     it(`should forbid to land on one of the player's pieces`, () => {
         const board: number[][] = [
@@ -180,7 +180,7 @@ describe('LinesOfActionRules', () => {
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
         const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(2, 0), new Coord(2, 2)).get();
         const status: LegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.reason).toBe(RulesFailure.CANNOT_SELF_CAPTURE);
+        expect(status.legal.reason).toBe(RulesFailure.CANNOT_SELF_CAPTURE());
     });
     it(`should forbid to jump over an enemy's piece`, () => {
         const board: number[][] = [
@@ -196,7 +196,7 @@ describe('LinesOfActionRules', () => {
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
         const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(2, 2), new Coord(0, 2)).get();
         const status: LegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.reason).toBe(LinesOfActionFailure.CANNOT_JUMP_OVER_ENEMY);
+        expect(status.legal.reason).toBe(LinesOfActionFailure.CANNOT_JUMP_OVER_ENEMY());
     });
     it('should allow to jump over its own pieces', () => {
         const expectedBoard: number[][] = [

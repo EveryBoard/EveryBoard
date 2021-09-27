@@ -20,28 +20,28 @@ import { AbstractGameComponent } from '../../game-components/abstract-game-compo
 
 import { EpaminondasRules } from 'src/app/games/epaminondas/EpaminondasRules';
 import { EpaminondasPartSlice } from 'src/app/games/epaminondas/EpaminondasPartSlice';
-import { epaminondasTutorial } from '../../../games/epaminondas/EpaminondasTutorial';
+import { EpaminondasTutorial } from '../../../games/epaminondas/EpaminondasTutorial';
 import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
-import { saharaTutorial } from '../../../games/sahara/SaharaTutorial';
+import { SaharaTutorial } from '../../../games/sahara/SaharaTutorial';
 import { SaharaRules } from 'src/app/games/sahara/SaharaRules';
 import { SaharaPartSlice } from 'src/app/games/sahara/SaharaPartSlice';
 import { SaharaMove } from 'src/app/games/sahara/SaharaMove';
 import { SixMove } from 'src/app/games/six/SixMove';
 import { SixRules } from 'src/app/games/six/SixRules';
 import { SixGameState } from 'src/app/games/six/SixGameState';
-import { sixTutorial, SixTutorialMessages } from '../../../games/six/SixTutorial';
+import { SixTutorial, SixTutorialMessages } from '../../../games/six/SixTutorial';
 import { PentagoRules } from 'src/app/games/pentago/PentagoRules';
 import { PentagoGameState } from 'src/app/games/pentago/PentagoGameState';
-import { pentagoTutorial } from 'src/app/games/pentago/PentagoTutorial';
+import { PentagoTutorial } from 'src/app/games/pentago/PentagoTutorial';
 import { PentagoMove } from 'src/app/games/pentago/PentagoMove';
 import { YinshRules } from 'src/app/games/yinsh/YinshRules';
 import { YinshGameState } from 'src/app/games/yinsh/YinshGameState';
-import { yinshTutorial, YinshTutorialMessages } from 'src/app/games/yinsh/YinshTutorial';
+import { YinshTutorial, YinshTutorialMessages } from 'src/app/games/yinsh/YinshTutorial';
 import { YinshCapture, YinshMove } from 'src/app/games/yinsh/YinshMove';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { PylosRules } from 'src/app/games/pylos/PylosRules';
 import { PylosState } from 'src/app/games/pylos/PylosState';
-import { pylosTutorial } from 'src/app/games/pylos/PylosTutorial';
+import { PylosTutorial } from 'src/app/games/pylos/PylosTutorial';
 import { PylosMove } from 'src/app/games/pylos/PylosMove';
 import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
 
@@ -262,7 +262,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             tick(10);
 
             // when clicking again
-            await componentTestUtils.expectClickForbidden('#chooseCoord_2_2', TutorialFailure.STEP_FINISHED);
+            await componentTestUtils.expectClickForbidden('#chooseCoord_2_2', TutorialFailure.STEP_FINISHED());
             tick(10);
 
             // expect to see still the steps success message on component
@@ -613,7 +613,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             wrapper.startTutorial(tutorial);
 
             // when doing a (virtually) illegal move
-            const error: string = 'message de la erreur monsieur...';
+            const error: string = 'some error message...';
             spyOn(wrapper.gameComponent.rules, 'isLegal').and.returnValue({ legal: MGPValidation.failure(error) });
             await componentTestUtils.expectClickSuccess('#chooseCoord_0_0');
             tick(10);
@@ -645,7 +645,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 ),
             ];
             wrapper.startTutorial(tutorial);
-            await componentTestUtils.expectClickFailure('#chooseCoord_0_0', RulesFailure.MUST_CLICK_ON_EMPTY_SPACE);
+            await componentTestUtils.expectClickFailure('#chooseCoord_0_0', RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
             tick(10);
 
             // expect to see cancelMove reason as message
@@ -655,7 +655,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             expect(currentMessage).toBe(expectedMessage);
             const currentReason: string =
                 componentTestUtils.findElement('#currentReason').nativeElement.innerHTML;
-            expect(currentReason).toBe(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE);
+            expect(currentReason).toBe(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
             // expect click to be still possible
             expect(componentTestUtils.getComponent().canUserPlay('#chooseCoord_0_0').isSuccess()).toBeTrue();
             tick(10);
@@ -799,7 +799,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             wrapper.startTutorial(tutorial);
 
             // When doing invalid click
-            await componentTestUtils.expectClickFailure('#chooseCoord_0_0', RulesFailure.MUST_CLICK_ON_EMPTY_SPACE);
+            await componentTestUtils.expectClickFailure('#chooseCoord_0_0', RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
 
             // expect to see cancelMove reason as message
             const expectedMessage: string = 'Perdu.';
@@ -808,7 +808,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             expect(currentMessage).toBe(expectedMessage);
             const currentReason: string =
                 componentTestUtils.findElement('#currentReason').nativeElement.innerHTML;
-            expect(currentReason).toBe(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE);
+            expect(currentReason).toBe(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
             // expect click to be still possible
             expect(componentTestUtils.getComponent().canUserPlay('#chooseCoord_0_0').isSuccess()).toBeTrue();
         }));
@@ -826,7 +826,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             wrapper.startTutorial(tutorial);
 
             // when clicking
-            await componentTestUtils.expectClickForbidden('#chooseCoord_2_2', TutorialFailure.INFORMATIONAL_STEP);
+            await componentTestUtils.expectClickForbidden('#chooseCoord_2_2', TutorialFailure.INFORMATIONAL_STEP());
 
             // expect to see still the steps success message on component
             const expectedMessage: string = 'instruction 0';
@@ -962,6 +962,12 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
     });
     describe('Tutorials', () => {
         it('Should make sure that predicate step have healthy behaviors', fakeAsync(async() => {
+            const epaminondasTutorial: TutorialStep[] = new EpaminondasTutorial().tutorial;
+            const pentagoTutorial: TutorialStep[] = new PentagoTutorial().tutorial;
+            const pylosTutorial: TutorialStep[] = new PylosTutorial().tutorial;
+            const saharaTutorial: TutorialStep[] = new SaharaTutorial().tutorial;
+            const sixTutorial: TutorialStep[] = new SixTutorial().tutorial;
+            const yinshTutorial: TutorialStep[] = new YinshTutorial().tutorial;
             const stepExpectations: [Rules<Move, GamePartSlice>, TutorialStep, Move, MGPValidation][] = [
                 [
                     new EpaminondasRules(EpaminondasPartSlice),
@@ -1007,12 +1013,12 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     new SixRules(SixGameState),
                     sixTutorial[4],
                     SixMove.fromDeplacement(new Coord(6, 1), new Coord(7, 1)),
-                    MGPValidation.failure(SixTutorialMessages.MOVEMENT_NOT_DISCONNECTING),
+                    MGPValidation.failure(SixTutorialMessages.MOVEMENT_NOT_DISCONNECTING()),
                 ], [
                     new SixRules(SixGameState),
                     sixTutorial[4],
                     SixMove.fromDeplacement(new Coord(6, 1), new Coord(6, 0)),
-                    MGPValidation.failure(SixTutorialMessages.MOVEMENT_SELF_DISCONNECTING),
+                    MGPValidation.failure(SixTutorialMessages.MOVEMENT_SELF_DISCONNECTING()),
                 ], [
                     new SixRules(SixGameState),
                     sixTutorial[5],
@@ -1032,14 +1038,14 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     new YinshRules(YinshGameState),
                     yinshTutorial[3],
                     new YinshMove([], new Coord(4, 4), MGPOptional.of(new Coord(1, 4)), []),
-                    MGPValidation.failure(YinshTutorialMessages.MUST_ALIGN_FIVE),
+                    MGPValidation.failure(YinshTutorialMessages.MUST_ALIGN_FIVE()),
                 ], [
                     new YinshRules(YinshGameState),
                     yinshTutorial[4],
                     new YinshMove([YinshCapture.of(new Coord(5, 4), new Coord(5, 8), new Coord(3, 2))],
                                   new Coord(4, 1), MGPOptional.of(new Coord(6, 1)),
                                   []),
-                    MGPValidation.failure(YinshTutorialMessages.MUST_CAPTURE_TWO),
+                    MGPValidation.failure(YinshTutorialMessages.MUST_CAPTURE_TWO()),
                 ],
             ];
             for (const stepExpectation of stepExpectations) {
@@ -1054,7 +1060,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             }
         }));
         it('Should make sure all solutionMove are legal', fakeAsync(async() => {
-            for (const gameInfo of GameInfo.ALL_GAMES) {
+            for (const gameInfo of GameInfo.ALL_GAMES()) {
                 if (gameInfo.display === false) {
                     continue;
                 }

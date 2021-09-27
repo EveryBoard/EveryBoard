@@ -36,15 +36,15 @@ export class QuartoMinimax extends Minimax<QuartoMove, QuartoPartSlice> {
             for (let x: number = 0; x < 4; x++) {
                 if (board[y][x] === QuartoPiece.NONE.value) {
                     nextBoard = slice.getCopiedBoard();
-                    nextBoard[y][x] = inHand.value; // on place la pièce qu'on a en main en (x, y)
+                    nextBoard[y][x] = inHand.value; // the piece we have in hand is put in (x, y)
                     if (slice.turn === 15) {
                         const move: QuartoMove = new QuartoMove(x, y, QuartoPiece.NONE);
                         listMoves.push(move);
                         return listMoves;
                     }
                     // Pour chaque cases vides
-                    for (const remainingPiece of pawns) { // piece est la pièce qu'on va donner
-                        const move: QuartoMove = new QuartoMove(x, y, remainingPiece); // synthèse du mouvement listé
+                    for (const remainingPiece of pawns) { // the piece we will give
+                        const move: QuartoMove = new QuartoMove(x, y, remainingPiece); // this is the move
                         listMoves.push(move);
                     }
                 }

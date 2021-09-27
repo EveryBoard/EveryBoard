@@ -172,7 +172,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
             };
         }
         if (board[move.coord.y][move.coord.x] !== Player.NONE.value) {
-            display(ReversiRules.VERBOSE, 'ReversiRules.isLegal: non, on ne peux pas jouer sur une case occupée');
+            display(ReversiRules.VERBOSE, 'ReversiRules.isLegal: you cannot play on a busy case');
             return { legal: MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE()), switched: null };
         }
         const switched: Coord[] = ReversiRules.getAllSwitcheds(move, turn, board);

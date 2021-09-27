@@ -70,10 +70,10 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         // of the last stone
         const landingCamp: number = lastCase.y;
         if (landingCamp === player) {
-            // on termine la distribution dans son propre camp, rien d'autre à vérifier
+            // we finish sowing on our own side, nothing else to check
             return { legal: MGPValidation.SUCCESS, captured: [0, 0], resultingBoard };
         }
-        // on as donc terminé la distribution dans le camps adverse, capture est de mise
+        // we finish sowing on the opponent's side, we therefore check the captures
         const boardBeforeCapture: number[][] = ArrayUtils.copyBiArray(resultingBoard);
         captured[player] = AwaleRules.capture(lastCase.x, enemy, player, resultingBoard);
         if (AwaleRules.isStarving(enemy, resultingBoard)) {
@@ -122,31 +122,31 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         // does not make the capture nor verify the legality of the move
         // return the coord of the last case the move got down
 
-        // iy et ix sont les cases initiales
+        // iy and ix are the initial squares
         const ix: number = x;
         const iy: number = y;
-        // à retenir pour appliquer la règle de la jachère en cas de tour complet
+        // to remeber in order not to sow in the starting case if we make a full turn
         let inHand: number = board[y][x];
-        board[y][x] = 0; // on vide la case
+        board[y][x] = 0; // empty the case
         while (inHand > 0) {
             // get next case
             if (y === 0) {
                 if (x === 5) {
-                    y = 1; // passage de frontière du bas vers le haut
+                    y = 1; // go from the bottom row to the top row
                 } else {
-                    x++; // sens horloger en haut = de gauche à droite
+                    x++; // clockwise order on the top = left to right
                 }
             } else {
                 if (x === 0) {
-                    y = 0; // passage de frontière du haut vers le bas
+                    y = 0; // go from the bottom row to the top
                 } else {
-                    x--; // sens horloger en bas = de droite à gauche
+                    x--; // clockwise order on the bottom = right to left
                 }
             }
             if ((x !== ix) || (y !== iy)) {
-                // pour appliquer la règle de jachère
+                // not to distribute on our starting square
                 board[y][x] += 1;
-                inHand--; // on dépose dans cette case une pierre qu'on a en main
+                inHand--; // drop in this square a piece we have in hand
             }
         }
 

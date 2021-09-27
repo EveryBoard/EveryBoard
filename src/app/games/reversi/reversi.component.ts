@@ -31,7 +31,7 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
 
     public encoder: MoveEncoder<ReversiMove> = ReversiMove.encoder;
 
-    public tutorial: TutorialStep[] = new  ReversiTutorial().tutorial;
+    public tutorial: TutorialStep[] = new ReversiTutorial().tutorial;
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);

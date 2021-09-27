@@ -20,8 +20,8 @@ describe('SaharaComponent', () => {
         componentTestUtils = await ComponentTestUtils.forGame<SaharaComponent>('Sahara');
     }));
     it('should create', () => {
-        expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');
-        expect(componentTestUtils.getComponent()).toBeTruthy('Component should be created');
+        expect(componentTestUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
+        expect(componentTestUtils.getComponent()).withContext('Component should be created').toBeTruthy();
     });
     it('Should play correctly shortest victory', fakeAsync(async() => {
         const board: NumberTable = [
@@ -44,25 +44,24 @@ describe('SaharaComponent', () => {
     it('should not allow to click on empty case when no pyramid selected', fakeAsync(async() => {
         // given initial board
         // when clicking on empty case, expect move to be refused
-        await componentTestUtils.expectClickFailure('#click_2_2', SaharaFailure.MUST_CHOOSE_PYRAMID_FIRST);
+        await componentTestUtils.expectClickFailure('#click_2_2', SaharaFailure.MUST_CHOOSE_PYRAMID_FIRST());
     }));
     it('should not allow to select ennemy pyramid', fakeAsync(async() => {
         // given initial board
         // when clicking on empty case, expect move to be refused
-        await componentTestUtils.expectClickFailure('#click_0_4', SaharaFailure.MUST_CHOOSE_OWN_PYRAMID);
+        await componentTestUtils.expectClickFailure('#click_0_4', SaharaFailure.MUST_CHOOSE_OWN_PYRAMID());
     }));
     it('should not allow to land on ennemy pyramid', fakeAsync(async() => {
         // given initial board
         await componentTestUtils.expectClickSuccess('#click_2_0');
         const move: SaharaMove = new SaharaMove(new Coord(2, 0), new Coord(3, 0));
-        await componentTestUtils.expectMoveFailure('#click_3_0', RulesFailure.MUST_LAND_ON_EMPTY_SPACE, move);
+        await componentTestUtils.expectMoveFailure('#click_3_0', RulesFailure.MUST_LAND_ON_EMPTY_SPACE(), move);
     }));
     it('should not allow to bounce on occupied brown case', fakeAsync(async() => {
         // given initial board
         await componentTestUtils.expectClickSuccess('#click_7_0');
         const move: SaharaMove = new SaharaMove(new Coord(7, 0), new Coord(8, 1));
-        const reason: string = SaharaFailure.CAN_ONLY_REBOUND_ON_EMPTY_SPACE;
-        await componentTestUtils.expectMoveFailure('#click_8_1', reason, move);
+        await componentTestUtils.expectMoveFailure('#click_8_1', SaharaFailure.CAN_ONLY_REBOUND_ON_EMPTY_SPACE(), move);
     }));
     it('should not allow invalid moves', fakeAsync(async() => {
         // given initial board

@@ -31,7 +31,7 @@ describe('KamisadoComponent', () => {
         expect(componentTestUtils.getComponent().chosen.equals(new Coord(-1, -1))).toBeTrue();
     });
     it('should not allow to pass initially', fakeAsync(async() => {
-        expect((await componentTestUtils.getComponent().pass()).reason).toBe(RulesFailure.CANNOT_PASS);
+        expect((await componentTestUtils.getComponent().pass()).reason).toBe(RulesFailure.CANNOT_PASS());
         tick(1001);
     }));
     it('should allow changing initial choice', fakeAsync(async() => {
@@ -78,7 +78,7 @@ describe('KamisadoComponent', () => {
         componentTestUtils.setupSlice(slice);
 
         // when clicking any piece, it should say that player must pass
-        await componentTestUtils.expectClickFailure('#click_1_7', RulesFailure.MUST_PASS);
+        await componentTestUtils.expectClickFailure('#click_1_7', RulesFailure.MUST_PASS());
     }));
     it('should forbid de-selecting a piece that is pre-selected', fakeAsync(async() => {
         const board: number[][] = [
@@ -95,7 +95,7 @@ describe('KamisadoComponent', () => {
             new KamisadoPartSlice(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
         componentTestUtils.setupSlice(slice);
 
-        await componentTestUtils.expectClickFailure('#click_0_7', KamisadoFailure.PLAY_WITH_SELECTED_PIECE);
+        await componentTestUtils.expectClickFailure('#click_0_7', KamisadoFailure.PLAY_WITH_SELECTED_PIECE());
     }));
     it('should forbid selecting a piece if one is already pre-selected', fakeAsync(async() => {
         const board: number[][] = [
@@ -112,15 +112,15 @@ describe('KamisadoComponent', () => {
             new KamisadoPartSlice(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
         componentTestUtils.setupSlice(slice);
 
-        await componentTestUtils.expectClickFailure('#click_1_7', KamisadoFailure.PLAY_WITH_SELECTED_PIECE);
+        await componentTestUtils.expectClickFailure('#click_1_7', KamisadoFailure.PLAY_WITH_SELECTED_PIECE());
     }));
     it('should forbid moving to invalid location', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_0_7');
         const move: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(5, 4));
-        await componentTestUtils.expectMoveFailure('#click_5_4', KamisadoFailure.DIRECTION_NOT_ALLOWED, move);
+        await componentTestUtils.expectMoveFailure('#click_5_4', KamisadoFailure.DIRECTION_NOT_ALLOWED(), move);
     }));
     it('should forbid choosing an incorrect piece', fakeAsync(async() => {
-        await componentTestUtils.expectClickFailure('#click_0_0', RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
+        await componentTestUtils.expectClickFailure('#click_0_0', RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
     }));
     it('should forbid choosing a piece at end of the game', fakeAsync(async() => {
         const board: number[][] = [

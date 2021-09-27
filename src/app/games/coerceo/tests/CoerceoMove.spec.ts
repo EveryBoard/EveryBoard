@@ -20,7 +20,7 @@ describe('CoerceoMove', () => {
         });
         it('Should not create move of invalid distance', () => {
             expect(() => CoerceoMove.fromCoordToCoord(new Coord(2, 2), new Coord(9, 9)))
-                .toThrowError(CoerceoFailure.INVALID_DISTANCE);
+                .toThrowError(CoerceoFailure.INVALID_DISTANCE());
         });
         it('Should not allow out of range starting coord', () => {
             expect(() => CoerceoMove.fromDeplacement(new Coord(-1, 0), CoerceoStep.LEFT))

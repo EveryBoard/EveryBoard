@@ -48,7 +48,7 @@ describe('ServerPageComponent', () => {
     it('Should redirect to /play when clicking a game', fakeAsync(async() => {
         // given a server page with one part
         const activePart: ICurrentPartId = {
-            id: 'oui oui le faisan',
+            id: 'some-part-id',
             doc: PartMocks.INITIAL.doc,
         };
         const compo: ServerPageComponent = component;
@@ -61,6 +61,6 @@ describe('ServerPageComponent', () => {
 
         // then router should have navigate
         expect(compo.getActiveParts).toHaveBeenCalled();
-        expect(compo.router.navigate).toHaveBeenCalledOnceWith(['/play/Quarto', 'oui oui le faisan']);
+        expect(compo.router.navigate).toHaveBeenCalledOnceWith(['/play/Quarto', 'some-part-id']);
     }));
 });
