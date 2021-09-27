@@ -335,11 +335,11 @@
       <trans-unit id="7814033294193818165" datatype="html">
         <source>You reached your time limit.</source>
       </trans-unit>
-      <trans-unit id="2826140657122926749" datatype="html">
-        <source>You resigned.</source>
-      </trans-unit>
       <trans-unit id="7003355968351203755" datatype="html">
         <source>Ask to take back one move</source>
+      </trans-unit>
+      <trans-unit id="2826140657122926749" datatype="html">
+        <source>You resigned.</source>
       </trans-unit>
       <trans-unit id="2324913504104154958" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser() }}"/> has reached their time limit.</source>
@@ -350,17 +350,17 @@
       <trans-unit id="7250880851290385128" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser() }}"/> has resigned.</source>
       </trans-unit>
-      <trans-unit id="5206964189980535511" datatype="html">
-        <source>Propose to play again</source>
-      </trans-unit>
       <trans-unit id="7815479892408473764" datatype="html">
         <source>You won.</source>
       </trans-unit>
-      <trans-unit id="4237132455292972929" datatype="html">
-        <source>Accept to play again</source>
+      <trans-unit id="5206964189980535511" datatype="html">
+        <source>Propose to play again</source>
       </trans-unit>
       <trans-unit id="860662988722297223" datatype="html">
         <source>You lost.</source>
+      </trans-unit>
+      <trans-unit id="4237132455292972929" datatype="html">
+        <source>Accept to play again</source>
       </trans-unit>
       <trans-unit id="6165538570244502951" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ currentPart.getWinner() }}"/> won.</source>
@@ -822,8 +822,8 @@
       <trans-unit id="2017860068625343028" datatype="html">
         <source>You have successfully disconnected the stack of 4 pieces of your opponent, but on the next move your opponent will be able to move on your new stack, and to win the game! There exists a better outcome of this situation, try to find it.</source>
       </trans-unit>
-      <trans-unit id="2366265892991791609" datatype="html">
-        <source>Bad choice! You should be able to disconnect your opponent&apos;s stack of four pieces.</source>
+      <trans-unit id="2819827409146202013" datatype="html">
+        <source>Failed! You could make a better move.</source>
       </trans-unit>
       <trans-unit id="4457528534020479150" datatype="html">
         <source>Nice, you have disconnected 4 pieces of your opponent, and your new stack cannot be reached by your opponent!
@@ -839,11 +839,11 @@
         This way, you know that this stack may never be disconnected, as it contains a source.&lt;br/&gt;&lt;br/&gt;
         You&apos;re playing Dark and you can take control of a source, do it!</source>
       </trans-unit>
-      <trans-unit id="6422219434767688772" datatype="html">
-        <source>Congratulations! However, note that your opponent could later take possession of one of your stack that contains a source, so watch out when you take control of sources!</source>
-      </trans-unit>
       <trans-unit id="2060914977510915101" datatype="html">
         <source>You have not taken possession of a source, try again.</source>
+      </trans-unit>
+      <trans-unit id="6422219434767688772" datatype="html">
+        <source>Congratulations! However, note that your opponent could later take possession of one of your stack that contains a source, so watch out when you take control of sources!</source>
       </trans-unit>
       <trans-unit id="5741584858319850896" datatype="html">
         <source>Passing</source>
