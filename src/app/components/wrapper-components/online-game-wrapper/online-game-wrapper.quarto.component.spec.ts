@@ -27,6 +27,8 @@ import { GameService } from 'src/app/services/GameService';
 import { AuthUser } from 'src/app/services/AuthenticationService';
 import { Time } from 'src/app/domain/Time';
 import { getMillisecondsDifference } from 'src/app/utils/TimeUtils';
+import { GameWrapperMessages } from '../GameWrapper';
+import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 
 describe('OnlineGameWrapperComponent of Quarto:', () => {
     /* Life cycle summary
@@ -87,13 +89,13 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         partDAO = TestBed.inject(PartDAO);
         joinerDAO = TestBed.inject(JoinerDAO);
         joueurDAO = TestBed.inject(JoueursDAO);
-        const chatDAOMock: ChatDAOMock = TestBed.get(ChatDAO);
+        const chatDAO: ChatDAO = TestBed.inject(ChatDAO);
         await joinerDAO.set('joinerId', initialJoiner);
         await partDAO.set('joinerId', PartMocks.INITIAL.doc);
         await joueurDAO.set('firstCandidateDocId', OPPONENT);
         await joueurDAO.set('creatorDocId', CREATOR);
         await joueurDAO.set(OBSERVER.pseudo, OBSERVER);
-        await chatDAOMock.set('joinerId', { messages: [], status: `I don't have a clue` });
+        await chatDAO.set('joinerId', { messages: [], status: `I don't have a clue` });
         return Promise.resolve();
     }
     async function prepareStartedGameFor(user: AuthUser, shorterGlobalChrono?: boolean): Promise<void> {
@@ -314,6 +316,23 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         // TODO: should receive somewhere some kind of Timestamp written by DB
         expect(partDAO.update).toHaveBeenCalledTimes(1);
         expect(partDAO.update).toHaveBeenCalledWith('joinerId', expectedUpdate );
+        tick(wrapper.joiner.maximalMoveDuration * 1000);
+    }));
+    it('should forbid making a move when it is not the turn of the player', fakeAsync(async() => {
+        const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
+
+        // given a game
+        await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+        spyOn(messageDisplayer, 'gameMessage');
+        tick(1);
+
+        // when it is not the player's turn (because he made the first move)
+        await doMove(FIRST_MOVE, true);
+
+        // then the player cannot play
+        componentTestUtils.clickElement('#chooseCoord_0_0');
+        expect(messageDisplayer.gameMessage).toHaveBeenCalledWith(GameWrapperMessages.NOT_YOUR_TURN());
+
         tick(wrapper.joiner.maximalMoveDuration * 1000);
     }));
     it('Victory move from player should notifyVictory', fakeAsync(async() => {
