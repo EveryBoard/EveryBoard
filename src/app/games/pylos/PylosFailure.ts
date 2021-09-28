@@ -4,8 +4,6 @@ export class PylosFailure {
 
     public static readonly MUST_MOVE_UPWARD: Localized = () => $localize`You must move your pieces upward.`;
 
-    public static readonly SHOULD_START_FROM_PLAYER_PIECE: Localized = () => $localize`You must start your move with one of your pieces.`;
-
     public static readonly SHOULD_HAVE_SUPPORTING_PIECES: Localized = () => $localize`Your piece must land on the board or on 4 other pieces.`;
 
     public static readonly CANNOT_LAND: Localized = () => $localize`You cannot land on this space.`;

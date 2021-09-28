@@ -6,6 +6,7 @@ import { DvonnPieceStack } from 'src/app/games/dvonn/DvonnPieceStack';
 import { Player } from 'src/app/jscaip/Player';
 import { DvonnBoard } from 'src/app/games/dvonn/DvonnBoard';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { assert } from 'src/app/utils/utils';
 
 const __: DvonnPieceStack = DvonnPieceStack.EMPTY;
 const SO: DvonnPieceStack = DvonnPieceStack.SOURCE;
@@ -52,10 +53,9 @@ export class DvonnTutorial {
             (move: DvonnMove, _state: DvonnGameState) => {
                 if (move.end.equals(new Coord(3, 0))) {
                     return MGPValidation.failure($localize`You have successfully disconnected the stack of 4 pieces of your opponent, but on the next move your opponent will be able to move on your new stack, and to win the game! There exists a better outcome of this situation, try to find it.`);
-                } else if (move.end.equals(new Coord(2, 0))) {
-                    return MGPValidation.SUCCESS;
                 } else {
-                    return MGPValidation.failure($localize`Failed! You could make a better move.`);
+                    assert(move.end.equals(new Coord(2, 0)), 'player made an impossible move'); // this is the only valid move remaining
+                    return MGPValidation.SUCCESS;
                 }
             },
             $localize`Nice, you have disconnected 4 pieces of your opponent, and your new stack cannot be reached by your opponent!

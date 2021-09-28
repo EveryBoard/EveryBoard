@@ -36,6 +36,7 @@ describe('HeaderComponent', () => {
     }));
     it('should use fr as the default language if the language of the navigator is not set', fakeAsync(async() => {
         // given a navigator where the language is not set
+        localStorage.clear(); // local storage is empty
         spyOn(LocaleUtils, 'getNavigatorLanguage').and.returnValue(null);
 
         // when the header is loaded

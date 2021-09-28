@@ -106,7 +106,7 @@ export class GameInfo {
                        public readonly urlName: string,
                        public readonly component: Type<AbstractGameComponent<Move, GamePartSlice>>,
                        public readonly creationDate: Date,
-                       public readonly description: string = '',
+                       public readonly description: string,
                        public readonly display: boolean = true) {
     }
 }

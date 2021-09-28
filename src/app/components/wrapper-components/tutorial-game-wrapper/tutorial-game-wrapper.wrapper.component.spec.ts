@@ -44,6 +44,10 @@ import { PylosState } from 'src/app/games/pylos/PylosState';
 import { PylosTutorial } from 'src/app/games/pylos/PylosTutorial';
 import { PylosMove } from 'src/app/games/pylos/PylosMove';
 import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
+import { DvonnRules } from 'src/app/games/dvonn/DvonnRules';
+import { DvonnTutorial } from 'src/app/games/dvonn/DvonnTutorial';
+import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
+import { DvonnGameState } from 'src/app/games/dvonn/DvonnGameState';
 
 describe('TutorialGameWrapperComponent (wrapper)', () => {
     let componentTestUtils: ComponentTestUtils<QuartoComponent>;
@@ -962,6 +966,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
     });
     describe('Tutorials', () => {
         it('Should make sure that predicate step have healthy behaviors', fakeAsync(async() => {
+            const dvonnTutorial: TutorialStep[] = new DvonnTutorial().tutorial;
             const epaminondasTutorial: TutorialStep[] = new EpaminondasTutorial().tutorial;
             const pentagoTutorial: TutorialStep[] = new PentagoTutorial().tutorial;
             const pylosTutorial: TutorialStep[] = new PylosTutorial().tutorial;
@@ -970,6 +975,16 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const yinshTutorial: TutorialStep[] = new YinshTutorial().tutorial;
             const stepExpectations: [Rules<Move, GamePartSlice>, TutorialStep, Move, MGPValidation][] = [
                 [
+                    new DvonnRules(DvonnGameState),
+                    dvonnTutorial[1],
+                    DvonnMove.of(new Coord(2, 1), new Coord(3, 0)),
+                    MGPValidation.failure(`You have successfully disconnected the stack of 4 pieces of your opponent, but on the next move your opponent will be able to move on your new stack, and to win the game! There exists a better outcome of this situation, try to find it.`),
+                ], [
+                    new DvonnRules(DvonnGameState),
+                    dvonnTutorial[2],
+                    DvonnMove.of(new Coord(2, 1), new Coord(1, 1)),
+                    MGPValidation.failure($localize`You have not taken possession of a source, try again.`),
+                ], [
                     new EpaminondasRules(EpaminondasPartSlice),
                     epaminondasTutorial[3],
                     new EpaminondasMove(0, 11, 2, 1, Direction.UP),
