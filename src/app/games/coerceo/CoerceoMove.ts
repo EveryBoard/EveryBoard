@@ -135,15 +135,10 @@ export class CoerceoMove extends Move {
         }
     }
     public equals(o: CoerceoMove): boolean {
-        if (o == null) {
-            return false;
-        }
-        if (!this.capture.equals(o.capture)) {
-            return false;
-        }
-        if (!this.start.equals(o.start)) {
-            return false;
-        }
-        return this.landingCoord.equals(o.landingCoord);
+        if (o == null) return false;
+        if (!this.capture.equals(o.capture)) return false;
+        if (!this.start.equals(o.start)) return false;
+        if (!this.step.equals(o.step)) return false;
+        return true;
     }
 }
