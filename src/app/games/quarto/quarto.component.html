@@ -18,23 +18,23 @@
                       class="base"
                 />
                 <g *ngIf="caseContent !== EMPTY">
-                    <rect *ngIf="isRectangle(caseContent) else circle"
-                          [attr.x]="CASE_SIZE*x+(CASE_SIZE/2 - getPieceSize(caseContent))"
-                          [attr.y]="CASE_SIZE*y+(CASE_SIZE/2 - getPieceSize(caseContent))"
-                          [attr.width]="getPieceSize(caseContent)*2"
-                          [attr.height]="getPieceSize(caseContent)*2"
-                          [ngClass]="getPieceClasses(caseContent)"
+                    <rect *ngIf="isRectangle(caseContent.value) else circle"
+                          [attr.x]="CASE_SIZE*x+(CASE_SIZE/2 - getPieceSize(caseContent.value))"
+                          [attr.y]="CASE_SIZE*y+(CASE_SIZE/2 - getPieceSize(caseContent.value))"
+                          [attr.width]="getPieceSize(caseContent.value)*2"
+                          [attr.height]="getPieceSize(caseContent.value)*2"
+                          [ngClass]="getPieceClasses(caseContent.value)"
                           class="base"
                     />
                     <ng-template #circle>
                         <circle [attr.cx]="CASE_SIZE*x + CASE_SIZE/2"
                                 [attr.cy]="CASE_SIZE*y + CASE_SIZE/2"
-                                [attr.r]="getPieceSize(caseContent)"
-                                [ngClass]="getPieceClasses(caseContent)"
+                                [attr.r]="getPieceSize(caseContent.value)"
+                                [ngClass]="getPieceClasses(caseContent.value)"
                                 class="base"
                         />
                     </ng-template>
-                    <circle *ngIf="pieceHasDot(caseContent)"
+                    <circle *ngIf="pieceHasDot(caseContent.value)"
                             [attr.cx]="CASE_SIZE*x + CASE_SIZE/2"
                             [attr.cy]="CASE_SIZE*y + CASE_SIZE/2"
                             [attr.r]="10"

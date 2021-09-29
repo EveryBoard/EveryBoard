@@ -23,7 +23,7 @@ describe('GipfState', () => {
         it('should contain 3 simple pieces for each player', () => {
             let p0: number = 0;
             let p1: number = 0;
-            state.hexaBoard.forEachCoord((_: Coord, content: GipfPiece) => {
+            state.board.forEachCoord((_: Coord, content: GipfPiece) => {
                 if (content !== GipfPiece.EMPTY) {
                     if (content.player === Player.ZERO) {
                         p0 += 1;

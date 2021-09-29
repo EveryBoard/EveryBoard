@@ -40,7 +40,7 @@ export class PentagoMinimax extends Minimax<PentagoMove, PentagoState, PentagoLe
         for (let y: number = 0; y < 6; y++) {
             for (let x: number = 0; x < 6; x++) {
                 const coord: Coord = new Coord(x, y);
-                if (state.getBoardAt(coord) === Player.NONE.value) {
+                if (state.getBoardAt(coord) === Player.NONE) {
                     legalDrops.push(coord);
                 }
             }

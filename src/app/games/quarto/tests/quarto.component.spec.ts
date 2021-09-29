@@ -8,6 +8,7 @@ import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 describe('QuartoComponent', () => {
+
     let componentTestUtils: ComponentTestUtils<QuartoComponent>;
 
     const NULL: QuartoPiece = QuartoPiece.NONE;

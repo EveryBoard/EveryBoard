@@ -5,7 +5,9 @@ import { ArrayUtils, NumberTable, Table } from 'src/app/utils/ArrayUtils';
 import { YinshPiece } from './YinshPiece';
 
 export class YinshBoard extends HexaBoard<YinshPiece> {
+
     public static SIZE: number = 11;
+
     public static EXCLUDED_CASES: ReadonlyArray<number> = [6, 4, 3, 2, 1];
 
     public static EMPTY: YinshBoard =
@@ -14,12 +16,11 @@ export class YinshBoard extends HexaBoard<YinshPiece> {
     public static of(table: Table<YinshPiece>): YinshBoard {
         return new YinshBoard(table);
     }
-
-    public constructor(public readonly contents: Table<YinshPiece>) {
-        super(contents, YinshBoard.SIZE, YinshBoard.SIZE, YinshBoard.EXCLUDED_CASES, YinshPiece.EMPTY);
+    public constructor(public readonly board: Table<YinshPiece>) {
+        super(board, YinshBoard.SIZE, YinshBoard.SIZE, YinshBoard.EXCLUDED_CASES, YinshPiece.EMPTY);
     }
     public toNumberTable(): NumberTable {
-        return ArrayUtils.mapBiArray(this.contents, YinshPiece.encoder.encodeNumber);
+        return ArrayUtils.mapBiArray(this.board, YinshPiece.encoder.encodeNumber);
     }
     public isOnBoard(coord: Coord): boolean {
         if (HexaBoard.isOnBoard(coord, YinshBoard.SIZE, YinshBoard.SIZE, YinshBoard.EXCLUDED_CASES) === false) {

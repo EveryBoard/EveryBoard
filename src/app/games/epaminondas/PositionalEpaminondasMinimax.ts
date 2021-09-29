@@ -38,7 +38,7 @@ export class PositionalEpaminondasMinimax extends Minimax<EpaminondasMove,
     }
     private moveIsCapture(move: EpaminondasMove, state: EpaminondasState): boolean {
         const landing: Coord = move.coord.getNext(move.direction, move.movedPieces + move.stepSize - 1);
-        return state.board[landing.y][landing.x] === state.getCurrentEnnemy().value;
+        return state.board[landing.y][landing.x] === state.getCurrentEnnemy();
     }
     public getBoardValue(node: EpaminondasNode): NodeUnheritance {
         const gameStatus: GameStatus = this.ruler.getGameStatus(node);
@@ -56,7 +56,7 @@ export class PositionalEpaminondasMinimax extends Minimax<EpaminondasMove,
         for (let y: number = 0; y < 12; y++) {
             for (let x: number = 0; x < 14; x++) {
                 const coord: Coord = new Coord(x, y);
-                const player: Player = Player.of(state.getBoardAt(coord));
+                const player: Player = state.getBoardAt(coord);
                 if (player !== Player.NONE) {
                     let avancement: number; // entre 0 et 11
                     let dirs: Direction[];
@@ -73,7 +73,7 @@ export class PositionalEpaminondasMinimax extends Minimax<EpaminondasMove,
                     for (const dir of dirs) {
                         let neighboor: Coord = coord.getNext(dir, 1);
                         while (neighboor.isInRange(14, 12) &&
-                               state.getBoardAt(neighboor) === player.value)
+                               state.getBoardAt(neighboor) === player)
                         {
                             total += mod * SCORE_BY_ALIGNEMENT;
                             neighboor = neighboor.getNext(dir, 1);

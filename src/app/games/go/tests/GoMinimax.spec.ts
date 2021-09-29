@@ -37,16 +37,14 @@ describe('GoMinimax', () => {
             expect(moves.some((m: GoMove) => m.equals(GoMove.PASS))).toBeTrue();
         });
         it('should only have GoMove.ACCEPT in ACCEPT Phase when agreeing on the result', () => {
-            const initialBoard: GoPiece[][] =
-                GoState.mapNumberBoard(GoState.getInitialState().getCopiedBoard());
+            const initialBoard: GoPiece[][] = GoState.getInitialState().getCopiedBoard();
             const state: GoState = new GoState(initialBoard, [0, 0], 0, MGPOptional.empty(), Phase.ACCEPT);
             const initialNode: GoNode = new MGPNode(null, null, state);
             const moves: GoMove[] = minimax.getListMoves(initialNode);
             expect(moves).toEqual([GoMove.ACCEPT]);
         });
         it('should only have GoMove.ACCEPT in COUNTNG Phase when agreeing on the result', () => {
-            const initialBoard: GoPiece[][] =
-                GoState.mapNumberBoard(GoState.getInitialState().getCopiedBoard());
+            const initialBoard: GoPiece[][] = GoState.getInitialState().getCopiedBoard();
             const state: GoState = new GoState(initialBoard, [0, 0], 0, MGPOptional.empty(), Phase.COUNTING);
             const initialNode: GoNode = new MGPNode(null, null, state);
             spyOn(minimax, 'getCountingMovesList').and.returnValue([]);
@@ -54,8 +52,7 @@ describe('GoMinimax', () => {
             expect(moves).toEqual([GoMove.ACCEPT]);
         });
         it('should only have counting moves in COUNTING Phase when not agreeing on the result', () => {
-            const initialBoard: GoPiece[][] =
-                GoState.mapNumberBoard(GoState.getInitialState().getCopiedBoard());
+            const initialBoard: GoPiece[][] = GoState.getInitialState().getCopiedBoard();
             const state: GoState = new GoState(initialBoard, [0, 0], 0, MGPOptional.empty(), Phase.ACCEPT);
             const initialNode: GoNode = new MGPNode(null, null, state);
             spyOn(minimax, 'getCountingMovesList').and.returnValue([new GoMove(1, 1)]);

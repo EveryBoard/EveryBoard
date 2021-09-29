@@ -13,9 +13,9 @@ import { GameStatus } from 'src/app/jscaip/Rules';
 
 describe('LocalGameWrapperComponent', () => {
     let componentTestUtils: ComponentTestUtils<P4Component>;
-    const O: number = Player.ZERO.value;
-    const X: number = Player.ONE.value;
-    const _: number = Player.NONE.value;
+    const O: Player = Player.ZERO;
+    const X: Player = Player.ONE;
+    const _: Player = Player.NONE;
 
     beforeEach(fakeAsync(async() => {
         componentTestUtils = await ComponentTestUtils.forGame<P4Component>('P4', LocalGameWrapperComponent);
@@ -53,7 +53,7 @@ describe('LocalGameWrapperComponent', () => {
         expect(componentTestUtils.getComponent().updateBoard).toHaveBeenCalledTimes(1);
     }));
     it('should show draw', fakeAsync(async() => {
-        const board: number[][] = [
+        const board: Player[][] = [
             [O, O, O, _, O, O, O],
             [X, X, X, O, X, X, X],
             [O, O, O, X, O, O, O],
@@ -85,7 +85,7 @@ describe('LocalGameWrapperComponent', () => {
             await componentTestUtils.expectInterfaceClickSuccess('#restartButton');
         }));
         it('should allow to restart game at the end', fakeAsync(async() => {
-            const board: number[][] = [
+            const board: Player[][] = [
                 [O, O, O, _, O, O, O],
                 [X, X, X, O, X, X, X],
                 [O, O, O, X, O, O, O],

@@ -4,6 +4,7 @@ import { ComparableObject } from 'src/app/utils/Comparable';
 import { assert } from 'src/app/utils/utils';
 
 export class YinshPiece implements ComparableObject {
+
     public static encoder: NumberEncoder<YinshPiece> =
         NumberEncoder.ofCombination<YinshPiece, [Player, boolean]>(
             [Player.numberEncoder, NumberEncoder.booleanEncoder],
@@ -12,7 +13,6 @@ export class YinshPiece implements ComparableObject {
                 return YinshPiece.of(player, isRing);
             },
         );
-
     public static EMPTY: YinshPiece = new YinshPiece(Player.NONE, false);
 
     public static MARKER_ZERO: YinshPiece = new YinshPiece(Player.ZERO, false);

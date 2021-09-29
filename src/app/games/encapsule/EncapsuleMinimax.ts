@@ -20,7 +20,7 @@ export class EncapsuleMinimax extends Minimax<EncapsuleMove, EncapsuleState, Enc
     public getListMoves(n: EncapsuleNode): EncapsuleMove[] {
         const moves: EncapsuleMove[] = [];
         const state: EncapsuleState = n.gameState;
-        const board: Table<EncapsuleCase> = state.toCaseBoard();
+        const board: Table<EncapsuleCase> = state.getCopiedBoard();
         const currentPlayer: Player = state.getCurrentPlayer();
         const puttablePieces: EncapsulePiece[] = Sets.toComparableObjectSet(state.getPlayerRemainingPieces());
         for (let y: number = 0; y < 3; y++) {

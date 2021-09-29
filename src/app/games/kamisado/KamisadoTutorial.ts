@@ -6,23 +6,23 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
-const __: number = KamisadoPiece.NONE.getValue();
-const or: number = KamisadoPiece.ZERO.ORANGE.getValue();
-const Or: number = KamisadoPiece.ONE.ORANGE.getValue();
-const bl: number = KamisadoPiece.ZERO.BLUE.getValue();
-const Bl: number = KamisadoPiece.ONE.BLUE.getValue();
-const pu: number = KamisadoPiece.ZERO.PURPLE.getValue();
-const Pu: number = KamisadoPiece.ONE.PURPLE.getValue();
-const pi: number = KamisadoPiece.ZERO.PINK.getValue();
-const Pi: number = KamisadoPiece.ONE.PINK.getValue();
-const ye: number = KamisadoPiece.ZERO.YELLOW.getValue();
-const Ye: number = KamisadoPiece.ONE.YELLOW.getValue();
-const re: number = KamisadoPiece.ZERO.RED.getValue();
-const Re: number = KamisadoPiece.ONE.RED.getValue();
-const gr: number = KamisadoPiece.ZERO.GREEN.getValue();
-const Gr: number = KamisadoPiece.ONE.GREEN.getValue();
-const br: number = KamisadoPiece.ZERO.BROWN.getValue();
-const Br: number = KamisadoPiece.ONE.BROWN.getValue();
+const __: KamisadoPiece = KamisadoPiece.NONE;
+const or: KamisadoPiece = KamisadoPiece.ZERO.ORANGE;
+const Or: KamisadoPiece = KamisadoPiece.ONE.ORANGE;
+const bl: KamisadoPiece = KamisadoPiece.ZERO.BLUE;
+const Bl: KamisadoPiece = KamisadoPiece.ONE.BLUE;
+const pu: KamisadoPiece = KamisadoPiece.ZERO.PURPLE;
+const Pu: KamisadoPiece = KamisadoPiece.ONE.PURPLE;
+const pi: KamisadoPiece = KamisadoPiece.ZERO.PINK;
+const Pi: KamisadoPiece = KamisadoPiece.ONE.PINK;
+const ye: KamisadoPiece = KamisadoPiece.ZERO.YELLOW;
+const Ye: KamisadoPiece = KamisadoPiece.ONE.YELLOW;
+const re: KamisadoPiece = KamisadoPiece.ZERO.RED;
+const Re: KamisadoPiece = KamisadoPiece.ONE.RED;
+const gr: KamisadoPiece = KamisadoPiece.ZERO.GREEN;
+const Gr: KamisadoPiece = KamisadoPiece.ONE.GREEN;
+const br: KamisadoPiece = KamisadoPiece.ZERO.BROWN;
+const Br: KamisadoPiece = KamisadoPiece.ONE.BROWN;
 
 export const kamisadoTutorial: TutorialStep[] = [
 

@@ -19,6 +19,7 @@ import { TablutFailure } from './TablutFailure';
 export abstract class TablutNode extends MGPNode<TablutRules, TablutMove, TablutState, TablutLegalityStatus> {}
 
 export class TablutRules extends Rules<TablutMove, TablutState, TablutLegalityStatus> {
+
     public static VERBOSE: boolean = false;
 
     // statics fields :

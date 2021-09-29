@@ -5,18 +5,18 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
-const _: number = SiamPiece.EMPTY.value;
-const M: number = SiamPiece.MOUNTAIN.value;
+const _: SiamPiece = SiamPiece.EMPTY;
+const M: SiamPiece = SiamPiece.MOUNTAIN;
 
-const U: number = SiamPiece.WHITE_UP.value;
-const L: number = SiamPiece.WHITE_LEFT.value;
-const R: number = SiamPiece.WHITE_RIGHT.value;
-const D: number = SiamPiece.WHITE_DOWN.value;
+const U: SiamPiece = SiamPiece.WHITE_UP;
+const L: SiamPiece = SiamPiece.WHITE_LEFT;
+const R: SiamPiece = SiamPiece.WHITE_RIGHT;
+const D: SiamPiece = SiamPiece.WHITE_DOWN;
 
-const u: number = SiamPiece.BLACK_UP.value;
-const l: number = SiamPiece.BLACK_LEFT.value;
-const r: number = SiamPiece.BLACK_RIGHT.value;
-const d: number = SiamPiece.BLACK_DOWN.value;
+const u: SiamPiece = SiamPiece.BLACK_UP;
+const l: SiamPiece = SiamPiece.BLACK_LEFT;
+const r: SiamPiece = SiamPiece.BLACK_RIGHT;
+const d: SiamPiece = SiamPiece.BLACK_DOWN;
 
 export const siamTutorial: TutorialStep[] = [
     TutorialStep.informational(

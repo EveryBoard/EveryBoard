@@ -1,19 +1,22 @@
 import { Component } from '@angular/core';
 import { Coord } from 'src/app/jscaip/Coord';
-import { RectangularGameState } from 'src/app/jscaip/RectangularGameState';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Move } from 'src/app/jscaip/Move';
-import { Player } from 'src/app/jscaip/Player';
 import { AbstractGameComponent } from './AbstractGameComponent';
+import { GameState } from 'src/app/jscaip/GameState';
+import { Table } from 'src/app/utils/ArrayUtils';
 
 @Component({ template: '' })
 export abstract class TriangularGameComponent<M extends Move,
-                                              S extends RectangularGameState,
+                                              S extends GameState<Coord, P>,
+                                              P,
                                               L extends LegalityStatus = LegalityStatus>
     extends AbstractGameComponent<M, S, L>
 {
 
     public CASE_SIZE: number = 50;
+
+    public board: Table<P>;
 
     public getTriangleCornerCoords(x: number, y: number) : Coord[] {
         if ((x+y)%2 === 1) return this.getDownwardCoordinate(x, y);
@@ -87,8 +90,5 @@ export abstract class TriangularGameComponent<M extends Move,
                UP_CENTER + ',' +
                CENTER + ',' +
                DOWN_RIGHT;
-    }
-    public getPlayerClassFor(x: number, y: number): string {
-        return this.getPlayerClass(Player.of(this.board[y][x]));
     }
 }

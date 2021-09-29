@@ -146,7 +146,7 @@ export const sixTutorial: TutorialStep[] = [
             if (move.keep.isAbsent()) {
                 return MGPValidation.failure($localize`This move has not cut the board in two equal halves.`);
             }
-            if (resultingState.getPieceAt(move.landing.getNext(resultingState.offset)) === Player.NONE) {
+            if (resultingState.getBoardAt(move.landing.getNext(resultingState.offset)) === Player.NONE) {
                 return MGPValidation.failure(`Failed. You did cut the board in two but you kept the half where you're in minority. Therefore, you lost! Try again.`);
             } else {
                 return MGPValidation.SUCCESS;

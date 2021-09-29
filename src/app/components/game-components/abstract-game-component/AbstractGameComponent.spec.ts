@@ -5,7 +5,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { AppModule } from 'src/app/app.module';
 import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { Direction } from 'src/app/jscaip/Direction';
-import { RectangularGameState } from 'src/app/jscaip/RectangularGameState';
+import { GameState } from 'src/app/jscaip/GameState';
 import { Move } from 'src/app/jscaip/Move';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
@@ -123,7 +123,7 @@ describe('AbstractGameComponent', () => {
             if (gameInfo.display === false) {
                 continue;
             }
-            const gameComponent: AbstractGameComponent<Move, RectangularGameState> =
+            const gameComponent: AbstractGameComponent<Move, GameState<unknown, unknown>> =
                 TestBed.createComponent(gameInfo.component).debugElement.componentInstance;
             expect(gameComponent.encoder).withContext('Encoder missing for ' + gameInfo.urlName).toBeTruthy();
             expect(gameComponent.tutorial).withContext('tutorial missing for ' + gameInfo.urlName).toBeTruthy();

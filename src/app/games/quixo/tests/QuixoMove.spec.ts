@@ -7,10 +7,11 @@ import { QuixoMinimax } from '../QuixoMinimax';
 import { QuixoMove } from '../QuixoMove';
 import { QuixoFailure } from '../QuixoFailure';
 import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
+import { Table } from 'src/app/utils/ArrayUtils';
 
 describe('QuixoMove:', () => {
-    const _: number = Player.NONE.value;
-    const X: number = Player.ONE.value;
+    const _: Player = Player.NONE;
+    const X: Player = Player.ONE;
 
     it('Should forbid move creation for invalid x or y coord', () => {
         expect(() => new QuixoMove(-1, 0, Orthogonal.UP))
@@ -34,7 +35,7 @@ describe('QuixoMove:', () => {
             .toThrowError(`Invalid direction: pawn on the bottom side can't be moved down.`);
     });
     it('QuixoMove.encoder should be correct', () => {
-        const board: number[][] = [
+        const board: Table<Player> = [
             [_, X, _, _, _],
             [_, _, _, _, X],
             [_, _, _, _, _],

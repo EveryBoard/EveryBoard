@@ -7,13 +7,14 @@ import { LinesOfActionMove } from '../LinesOfActionMove';
 import { LinesOfActionFailure } from '../LinesOfActionFailure';
 import { LinesOfActionState } from '../LinesOfActionState';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { Table } from 'src/app/utils/ArrayUtils';
 
 describe('LinesOfActionComponent', () => {
 
     let componentTestUtils: ComponentTestUtils<LinesOfActionComponent>;
-    const X: number = Player.ZERO.value;
-    const O: number = Player.ONE.value;
-    const _: number = Player.NONE.value;
+    const X: Player = Player.ZERO;
+    const O: Player = Player.ONE;
+    const _: Player = Player.NONE;
 
     beforeEach(fakeAsync(async() => {
         componentTestUtils = await ComponentTestUtils.forGame<LinesOfActionComponent>('LinesOfAction');
@@ -32,7 +33,7 @@ describe('LinesOfActionComponent', () => {
         await componentTestUtils.expectClickFailure('#click_4_5', LinesOfActionFailure.INVALID_DIRECTION);
     }));
     it('should forbid selecting a piece that has no valid targets', fakeAsync(async() => {
-        const board: number[][] = [
+        const board: Table<Player> = [
             [O, X, X, X, X, X, X, _],
             [X, X, _, _, _, _, _, O],
             [O, _, _, _, _, _, _, _],
@@ -59,8 +60,7 @@ describe('LinesOfActionComponent', () => {
     it('should show selected piece', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_2_0');
         const component: LinesOfActionComponent = componentTestUtils.getComponent();
-        expect(component.getPieceClasses(2, 0, component.getState().getAt(new Coord(2, 0))))
-            .toEqual(['player0', 'selected']);
+        expect(component.getPieceClasses(2, 0)).toEqual(['player0', 'selected']);
     }));
     it('should show last move cases', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_2_0');
@@ -72,7 +72,7 @@ describe('LinesOfActionComponent', () => {
         expect(component.getCaseClasses(2, 0)).toEqual(['moved']);
     }));
     it('should show captures', fakeAsync(async() => {
-        const board: number[][] = [
+        const board: Table<Player> = [
             [O, X, X, X, X, X, X, X],
             [_, _, _, _, _, _, _, O],
             [_, _, O, _, _, _, _, _],

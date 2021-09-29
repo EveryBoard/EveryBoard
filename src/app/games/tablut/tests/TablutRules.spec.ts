@@ -11,7 +11,7 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { TablutFailure } from '../TablutFailure';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { expectToBeVictoryFor } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { expectToBeOngoing, expectToBeVictoryFor } from 'src/app/jscaip/tests/RulesUtils.spec';
 
 describe('TablutRules', () => {
 
@@ -244,7 +244,7 @@ describe('TablutRules', () => {
         const expectedState: TablutState = new TablutState(expectedBoard, 3);
         expect(resultingState).toEqual(expectedState);
         const node: TablutNode = new MGPNode(null, move, expectedState);
-        expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+        expectToBeOngoing(rules, node, minimaxes);
     });
     it('Capturing king against a throne should not work', () => {
         const board: Table<TablutCase> = [
@@ -277,9 +277,7 @@ describe('TablutRules', () => {
         const expectedState: TablutState = new TablutState(expectedBoard, 1);
         expect(resultingState).toEqual(expectedState);
         const node: TablutNode = new MGPNode(null, move, expectedState);
-        const boardValue: number = minimaxes[0].getBoardValue(node).value;
-        expect(boardValue).not.toEqual(Number.MIN_SAFE_INTEGER, 'This should not be a victory for player 0');
-        expect(boardValue).not.toEqual(Number.MAX_SAFE_INTEGER, 'This should not be a victory for player 1');
+        expectToBeOngoing(rules, node, minimaxes);
     });
     it('Capturing king against a throne with 3 soldier should not work', () => {
         const board: Table<TablutCase> = [
@@ -312,9 +310,7 @@ describe('TablutRules', () => {
         const expectedState: TablutState = new TablutState(expectedBoard, 13);
         expect(resultingState).toEqual(expectedState);
         const node: TablutNode = new MGPNode(null, move, expectedState);
-        const boardValue: number = minimaxes[0].getBoardValue(node).value;
-        expect(boardValue).not.toEqual(Number.MIN_SAFE_INTEGER, 'This should not be a victory for invader.');
-        expect(boardValue).not.toEqual(Number.MAX_SAFE_INTEGER, 'This should not be a victory for defender.');
+        expectToBeOngoing(rules, node, minimaxes);
     });
     it('King should be authorised to come back on the throne', () => {
         const move: TablutMove = new TablutMove(new Coord(4, 3), new Coord(4, 4));

@@ -52,6 +52,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosState>
             new PylosMinimax(this.rules, 'PylosMinimax'),
             new PylosOrderedMinimax(this.rules, 'PylosOrderedMinimax'),
         ];
+        this.updateBoard();
     }
     public getLevelRange(z: number): number[] {
         switch (z) {
@@ -62,7 +63,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosState>
     }
     public isDrawable(x: number, y: number, z: number): boolean {
         const coord: PylosCoord = new PylosCoord(x, y, z);
-        if (this.state.getBoardAt(coord) === Player.NONE.value) {
+        if (this.state.getBoardAt(coord) === Player.NONE) {
             return this.state.isLandable(coord);
         } else {
             return true;
@@ -74,8 +75,8 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosState>
             return this.cancelMove(clickValidity.getReason());
         }
         const clickedCoord: PylosCoord = new PylosCoord(x, y, z);
-        const clickedPiece: number = this.state.getBoardAt(clickedCoord);
-        const pieceBelongToEnnemy: boolean = clickedPiece === this.state.getCurrentEnnemy().value;
+        const clickedPiece: Player = this.state.getBoardAt(clickedCoord);
+        const pieceBelongToEnnemy: boolean = clickedPiece === this.state.getCurrentEnnemy();
         if (pieceBelongToEnnemy) {
             return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
         }
@@ -161,7 +162,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosState>
     }
     public isOccupied(x: number, y: number, z: number): boolean {
         const coord: PylosCoord = new PylosCoord(x, y, z);
-        const reallyOccupied: boolean = this.rules.node.gameState.getBoardAt(coord) !== Player.NONE.value;
+        const reallyOccupied: boolean = this.rules.node.gameState.getBoardAt(coord) !== Player.NONE;
         const landingCoord: boolean = coord.equals(this.chosenLandingCoord);
         return reallyOccupied || landingCoord;
     }
@@ -183,7 +184,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosState>
         if (c.equals(this.chosenLandingCoord)) {
             return this.getPlayerClass(this.state.getCurrentPlayer());
         }
-        return this.getPlayerPieceClass(this.state.getBoardAt(c));
+        return this.getPlayerPieceClass(this.state.getBoardAt(c).value);
     }
     public getPlayerPieceClass(player: number): string {
         return this.getPlayerClass(Player.of(player));

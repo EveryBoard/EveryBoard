@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
-import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
+import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { SiamMove } from 'src/app/games/siam/SiamMove';
 import { SiamState } from 'src/app/games/siam/SiamState';
 import { SiamLegalityStatus } from 'src/app/games/siam/SiamLegalityStatus';
 import { SiamRules } from 'src/app/games/siam/SiamRules';
 import { SiamMinimax } from 'src/app/games/siam/SiamMinimax';
-import { Coord } from 'src/app/jscaip/Coord';
 import { SiamPiece } from 'src/app/games/siam/SiamPiece';
+import { siamTutorial } from './SiamTutorial';
+import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -16,18 +17,15 @@ import { GameComponentUtils } from 'src/app/components/game-components/GameCompo
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { siamTutorial } from './SiamTutorial';
 
 @Component({
     selector: 'app-siam',
     templateUrl: './siam.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class SiamComponent extends AbstractGameComponent<SiamMove, SiamState, SiamLegalityStatus> {
+export class SiamComponent extends RectangularGameComponent<SiamMove, SiamState, SiamPiece, SiamLegalityStatus> {
 
     public static VERBOSE: boolean = false;
-
-    public readonly CASE_SIZE: number = 100;
 
     public lastMove: SiamMove;
     public chosenCoord: Coord;
@@ -46,6 +44,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamState, Si
         this.availableMinimaxes = [
             new SiamMinimax(this.rules, 'SiamMinimax'),
         ];
+        this.updateBoard();
     }
     public updateBoard(): void {
         display(SiamComponent.VERBOSE, 'updateBoard');
@@ -69,9 +68,9 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamState, Si
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.reason);
         }
-        const piece: number = this.board[y][x];
+        const piece: SiamPiece = this.board[y][x];
         const ennemy: Player = this.rules.node.gameState.getCurrentEnnemy();
-        if (SiamPiece.getOwner(piece) === ennemy) {
+        if (piece.getOwner() === ennemy) {
             return this.cancelMove(`Can't choose ennemy's pieces`);
         }
         this.chosenCoord = new Coord(x, y);
@@ -131,18 +130,16 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamState, Si
         this.cancelMove();
         return await this.chooseMove(move, this.rules.node.gameState, null, null);
     }
-    public isPiece(c: number): boolean {
-        return ![SiamPiece.EMPTY.value, SiamPiece.MOUNTAIN.value].includes(c);
-    }
-    public isMountain(pieceValue: number): boolean {
-        return pieceValue === SiamPiece.MOUNTAIN.value;
+    public isMountain(piece: SiamPiece): boolean {
+        return piece === SiamPiece.MOUNTAIN;
     }
     public choosingOrientation(x: number, y: number): boolean {
         const coord: Coord = new Coord(x, y);
         if (this.chosenCoord &&
             this.chosenDirection &&
             coord.equals(this.landingCoord) &&
-            this.chosenOrientation == null) {
+            this.chosenOrientation == null)
+        {
             display(SiamComponent.VERBOSE, 'choosing orientation now');
             return true;
         }
@@ -153,7 +150,8 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamState, Si
         if (coord.equals(this.chosenCoord) &&
             this.chosenDirection == null &&
             this.landingCoord == null &&
-            this.chosenOrientation == null) {
+            this.chosenOrientation == null)
+        {
             display(SiamComponent.VERBOSE, 'choosing direction now');
             return true;
         }
@@ -166,7 +164,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamState, Si
         return [translation, rotation].join(' ');
     }
     public getPieceTransform(x: number, y: number): string {
-        const piece: SiamPiece = SiamPiece.decode(this.board[y][x]);
+        const piece: SiamPiece = this.board[y][x];
         const orientation: number = piece.getDirection().toInt()-2;
         const rotation: string = `rotate(${orientation*90} ${this.CASE_SIZE/2} ${this.CASE_SIZE/2})`;
         const translation: string = 'translate(' + (x+1) * this.CASE_SIZE + ', ' + (y+1) * this.CASE_SIZE + ')';
@@ -177,8 +175,8 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamState, Si
                                                     new Coord(x, y),
                                                     Orthogonal.factory.fromString(orientation).get());
     }
-    public getPieceClasses(c: number): string[] {
-        return [this.getPlayerClass(SiamPiece.getOwner(c))];
+    public getPieceClasses(c: SiamPiece): string[] {
+        return [this.getPlayerClass(c.getOwner())];
     }
     public getCaseClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);

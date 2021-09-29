@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { AbstractGameComponent }
-    from 'src/app/components/game-components/abstract-game-component/AbstractGameComponent';
+import { RectangularGameComponent }
+    from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Direction';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
@@ -21,9 +21,10 @@ import { pentagoTutorial } from './PentagoTutorial';
     templateUrl: './Pentago.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class PentagoComponent extends AbstractGameComponent<PentagoMove,
-                                                            PentagoState,
-                                                            PentagoLegalityStatus>
+export class PentagoComponent extends RectangularGameComponent<PentagoMove,
+                                                               PentagoState,
+                                                               Player,
+                                                               PentagoLegalityStatus>
 {
 
     public rules: PentagoRules = new PentagoRules(PentagoState);
@@ -164,7 +165,7 @@ export class PentagoComponent extends AbstractGameComponent<PentagoMove,
     }
     public getCaseClasses(x: number, y: number): string[] {
         const classes: string[] = [];
-        const player: string = this.getPlayerClass(Player.of(this.board[y][x]));
+        const player: string = this.getPlayerClass(this.board[y][x]);
         classes.push(player);
         if (new Coord(x, y).equals(this.lastDrop)) {
             classes.push('last-move');

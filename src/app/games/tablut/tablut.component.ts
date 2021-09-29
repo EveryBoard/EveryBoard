@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
+import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Coord } from '../../jscaip/Coord';
 import { TablutMove } from 'src/app/games/tablut/TablutMove';
 import { TablutState } from './TablutState';
@@ -28,13 +28,14 @@ import { tablutTutorial } from './TablutTutorial';
     templateUrl: './tablut.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class TablutComponent extends AbstractGameComponent<TablutMove, TablutState, TablutLegalityStatus> {
-
+export class TablutComponent extends RectangularGameComponent<TablutMove,
+                                                              TablutState,
+                                                              TablutCase,
+                                                              TablutLegalityStatus>
+{
     public static VERBOSE: boolean = false;
 
-    public readonly CASE_SIZE: number = 100;
-
-    public NONE: number = TablutCase.UNOCCUPIED.value;
+    public NONE: TablutCase = TablutCase.UNOCCUPIED;
 
     public throneCoords: Coord[] = [
         new Coord(0, 0),
@@ -62,6 +63,7 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutSta
             new TablutPieceAndControlMinimax(this.rules, 'Piece > Control'),
             new TablutEscapeThenPieceAndControlMinimax(this.rules, 'Escape > Piece > Control'),
         ];
+        this.updateBoard();
     }
     public updateBoard(): void {
         display(TablutComponent.VERBOSE, 'tablutComponent.updateBoard');
@@ -118,7 +120,7 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutSta
     public choosePiece(x: number, y: number): MGPValidation {
         display(TablutComponent.VERBOSE, 'TablutComponent.choosePiece');
 
-        if (this.board[y][x] === TablutCase.UNOCCUPIED.value) {
+        if (this.board[y][x] === TablutCase.UNOCCUPIED) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE);
         }
         if (!this.pieceBelongToCurrentPlayer(x, y)) {
@@ -184,7 +186,7 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutSta
         return this.pieceBelongToCurrentPlayer(x, y);
     }
     public isInvader(x: number, y: number): boolean {
-        return this.board[y][x] === TablutCase.INVADERS.value;
+        return this.board[y][x] === TablutCase.INVADERS;
     }
     public isKing(x: number, y: number): boolean {
         return this.board[y][x].isKing();

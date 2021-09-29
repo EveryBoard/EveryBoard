@@ -6,6 +6,7 @@ import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { AwaleFailure } from '../AwaleFailure';
 
 describe('AwaleComponent', () => {
+
     let componentTestUtils: ComponentTestUtils<AwaleComponent>;
 
     beforeEach(fakeAsync(async() => {

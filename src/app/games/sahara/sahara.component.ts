@@ -22,7 +22,8 @@ import { saharaTutorial } from './SaharaTutorial';
     templateUrl: './sahara.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class SaharaComponent extends TriangularGameComponent<SaharaMove, SaharaState> {
+export class SaharaComponent extends TriangularGameComponent<SaharaMove, SaharaState, FourStatePiece> {
+
     public static VERBOSE: boolean = false;
 
     public lastCoord: Coord = new Coord(-2, -2);
@@ -41,6 +42,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaMove, SaharaS
         this.availableMinimaxes = [
             new SaharaMinimax(this.rules, 'SaharaMinimax'),
         ];
+        this.updateBoard();
     }
     public cancelMoveAttempt(): void {
         this.chosenCoord = MGPOptional.empty();
@@ -55,7 +57,8 @@ export class SaharaComponent extends TriangularGameComponent<SaharaMove, SaharaS
             return this.choosePiece(x, y);
         } else { // Must choose empty landing case
             const currentPlayer: Player = this.rules.node.gameState.getCurrentPlayer();
-            const PLAYER: number = currentPlayer === Player.ZERO ? FourStatePiece.ZERO.value : FourStatePiece.ONE.value;
+            const PLAYER: FourStatePiece =
+                currentPlayer === Player.ZERO ? FourStatePiece.ZERO : FourStatePiece.ONE;
             if (this.board[y][x] === PLAYER) {
                 this.chosenCoord = MGPOptional.of(new Coord(x, y));
                 return MGPValidation.SUCCESS;
@@ -70,9 +73,9 @@ export class SaharaComponent extends TriangularGameComponent<SaharaMove, SaharaS
         }
     }
     private choosePiece(x: number, y: number): MGPValidation {
-        if (this.board[y][x] === FourStatePiece.EMPTY.value) { // Did not select pyramid
+        if (this.board[y][x] === FourStatePiece.EMPTY) { // Did not select pyramid
             return this.cancelMove(SaharaFailure.MUST_CHOOSE_PYRAMID_FIRST);
-        } else if (this.getTurn() % 2 === this.board[y][x]) { // selected his own pyramid
+        } else if (this.getTurn() % 2 === this.board[y][x].value) { // selected his own pyramid
             this.chosenCoord = MGPOptional.of(new Coord(x, y));
             return MGPValidation.SUCCESS;
         } else { // Selected ennemy pyramid

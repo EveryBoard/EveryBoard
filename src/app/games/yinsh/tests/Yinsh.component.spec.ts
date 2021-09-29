@@ -6,11 +6,12 @@ import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { YinshComponent } from '../Yinsh.component';
 import { YinshBoard } from '../YinshBoard';
 import { YinshFailure } from '../YinshFailure';
-import { YinshGameState } from '../YinshGameState';
+import { YinshState } from '../YinshState';
 import { YinshCapture, YinshMove } from '../YinshMove';
 import { YinshPiece } from '../YinshPiece';
 
 describe('YinshComponent', () => {
+
     let testUtils: ComponentTestUtils<YinshComponent>;
     const _: YinshPiece = YinshPiece.EMPTY;
     const N: YinshPiece = YinshPiece.EMPTY;
@@ -46,7 +47,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [4, 5], 1);
+            const state: YinshState = new YinshState(board, [4, 5], 1);
             testUtils.setupState(state);
             await testUtils.expectClickFailure('#click_3_2', RulesFailure.MUST_CLICK_ON_EMPTY_SPACE);
         }));
@@ -72,7 +73,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             testUtils.setupState(state);
             const move: YinshMove = new YinshMove([],
                                                   new Coord(3, 2), MGPOptional.of(new Coord(3, 3)),
@@ -94,7 +95,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             testUtils.setupState(state);
             const move: YinshMove = new YinshMove([],
                                                   new Coord(3, 2), MGPOptional.of(new Coord(6, 2)),
@@ -121,7 +122,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             testUtils.setupState(state);
             testUtils.expectElementNotToExist('#marker_3_2');
             await testUtils.expectClickSuccess('#click_3_2');
@@ -142,7 +143,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             testUtils.setupState(state);
 
             const move: YinshMove = new YinshMove([YinshCapture.of(new Coord(3, 3), new Coord(3, 7), new Coord(3, 2))],
@@ -168,7 +169,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             testUtils.setupState(state);
 
             testUtils.expectElementToExist('#selectable_3_3');
@@ -191,7 +192,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             testUtils.setupState(state);
 
             testUtils.expectElementNotToExist('#selected_3_3');
@@ -230,7 +231,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             testUtils.setupState(state);
 
             const move: YinshMove = new YinshMove([
@@ -260,13 +261,13 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             testUtils.setupState(state);
 
             await testUtils.expectClickFailure('#click_4_2', YinshFailure.MISSING_CAPTURES);
         }));
         it('should show the number of rings of each player', fakeAsync(async() => {
-            const state: YinshGameState = new YinshGameState(YinshBoard.EMPTY, [2, 1], 10);
+            const state: YinshState = new YinshState(YinshBoard.EMPTY, [2, 1], 10);
             testUtils.setupState(state);
 
             testUtils.expectElementToExist('#player_0_sideRing_1');
@@ -294,7 +295,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             testUtils.setupState(state);
             testUtils.expectElementNotToExist('#player_0_sideRing_1');
 
@@ -323,7 +324,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             testUtils.setupState(state);
 
             for (const coord of [[3, 3], [3, 4], [3, 5], [3, 6], [3, 7], [4, 5], [5, 5], [6, 5], [7, 5], [8, 5]]) {
@@ -355,7 +356,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             testUtils.setupState(state);
 
             testUtils.expectElementNotToExist('#ring_0');
@@ -381,7 +382,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             testUtils.setupState(state);
 
             await testUtils.expectClickSuccess('#click_4_5');
@@ -402,7 +403,7 @@ describe('YinshComponent', () => {
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
 
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             testUtils.setupState(state);
 
             await testUtils.expectClickSuccess('#click_3_3');
@@ -422,7 +423,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             testUtils.setupState(state);
 
             await testUtils.expectClickSuccess('#click_3_2');
@@ -442,7 +443,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             testUtils.setupState(state);
 
             const move: YinshMove = new YinshMove([],
@@ -468,7 +469,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             testUtils.setupState(state);
 
             const move: YinshMove =
@@ -500,7 +501,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             testUtils.setupState(state);
 
             const move: YinshMove =
@@ -530,7 +531,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, a, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             testUtils.setupState(state);
 
             const move: YinshMove =
@@ -560,7 +561,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, a, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             testUtils.setupState(state);
 
             await testUtils.expectClickSuccess('#click_5_4'); // select first capture coord
@@ -580,7 +581,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             testUtils.setupState(state);
 
             const move: YinshMove =

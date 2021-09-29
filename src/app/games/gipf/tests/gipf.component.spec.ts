@@ -12,6 +12,7 @@ import { GipfState } from 'src/app/games/gipf/GipfState';
 import { Arrow } from 'src/app/jscaip/Arrow';
 
 describe('GipfComponent', () => {
+
     let componentTestUtils: ComponentTestUtils<GipfComponent>;
 
     const _: GipfPiece = GipfPiece.EMPTY;

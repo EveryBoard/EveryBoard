@@ -9,6 +9,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PylosFailure } from '../PylosFailure';
 
 describe('PylosComponent', () => {
+
     let componentTestUtils: ComponentTestUtils<PylosComponent>;
 
     const _: Player = Player.NONE;

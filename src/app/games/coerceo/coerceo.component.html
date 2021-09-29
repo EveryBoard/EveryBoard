@@ -7,16 +7,16 @@
            id="click_{{x}}_{{y}}"
            (click)="onClick(x, y)"
         >
-            <polyline *ngIf="isPyramid(x, y, caseContent) else emptyCase"
+            <polyline *ngIf="isPyramid(x, y) else emptyCase"
                       [attr.points]="getPyramidCoordinate(x, y)"
-                      [ngClass]="getPyramidClass(caseContent)"
+                      [ngClass]="getPyramidClass(x, y)"
                       class="base mid-stroke"
                       stroke-linecap="round"
             />
             <ng-template #emptyCase>
-                <polyline *ngIf="isEmptyCase(x, y, caseContent)"
+                <polyline *ngIf="isEmptyCase(x, y)"
                           [attr.points]="getTriangleCoordinate(x, y)"
-                          [ngClass]="getEmptyClass(x, y, caseContent)"
+                          [ngClass]="getEmptyClass(x, y)"
                           class="base small-stroke"
                           stroke-linecap="round"
                 />

@@ -93,7 +93,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
         {
             return { legal: MGPValidation.failure(CoerceoFailure.CANNOT_CAPTURE_FROM_EMPTY) };
         }
-        if (captured === state.getCurrentPlayer()) {
+        if (captured.is(state.getCurrentPlayer())) {
             return { legal: MGPValidation.failure(CoerceoFailure.CANNOT_CAPTURE_OWN_PIECES) };
         }
         return { legal: MGPValidation.SUCCESS };
@@ -108,13 +108,15 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
                 'Cannot end with a coord outside the board ' + move.landingCoord.get().toString() + '.';
             return { legal: MGPValidation.failure(reason) };
         }
-        if (state.getBoardAt(move.start.get()) === FourStatePiece.EMPTY) {
+        const starter: FourStatePiece = state.getBoardAt(move.start.get());
+        if (starter === FourStatePiece.EMPTY) {
             return { legal: MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY) };
         }
-        if (state.getBoardAt(move.start.get()) === state.getCurrentEnnemy()) {
+        if (starter.is(state.getCurrentEnnemy())) {
             return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE) };
         }
-        if (state.getBoardAt(move.landingCoord.get()) === state.getCurrentPlayer()) {
+        const lander: FourStatePiece = state.getBoardAt(move.landingCoord.get());
+        if (lander.is(state.getCurrentPlayer())) {
             return { legal: MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE) };
         }
         return { legal: MGPValidation.SUCCESS };

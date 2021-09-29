@@ -7,15 +7,17 @@ import { SiamPiece } from '../SiamPiece';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
+import { Table } from 'src/app/utils/ArrayUtils';
 
 describe('SiamMove', () => {
-    const _: number = SiamPiece.EMPTY.value;
-    const M: number = SiamPiece.MOUNTAIN.value;
 
-    const D: number = SiamPiece.WHITE_DOWN.value;
+    const _: SiamPiece = SiamPiece.EMPTY;
+    const M: SiamPiece = SiamPiece.MOUNTAIN;
+
+    const D: SiamPiece = SiamPiece.WHITE_DOWN;
 
     it('SiamMove.encoder should be correct', () => {
-        const board: number[][] = [
+        const board: Table<SiamPiece> = [
             [_, _, D, _, _],
             [_, _, _, _, _],
             [_, M, M, M, _],

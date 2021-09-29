@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
+import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { EncapsuleRules } from 'src/app/games/encapsule/EncapsuleRules';
 import { EncapsuleMinimax } from 'src/app/games/encapsule/EncapsuleMinimax';
 import { EncapsuleState, EncapsuleCase } from 'src/app/games/encapsule/EncapsuleState';
@@ -21,9 +21,10 @@ import { encapsuleTutorial } from './EncapsuleTutorial';
     templateUrl: './encapsule.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove,
-                                                              EncapsuleState,
-                                                              EncapsuleLegalityStatus> {
+export class EncapsuleComponent extends RectangularGameComponent<EncapsuleMove,
+                                                                 EncapsuleState,
+                                                                 EncapsuleCase,
+                                                                 EncapsuleLegalityStatus> {
 
     public CASE_SIZE: number = 100;
 
@@ -43,6 +44,7 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove,
         this.availableMinimaxes = [
             new EncapsuleMinimax(this.rules, 'EncapsuleMinimax'),
         ];
+        this.updateBoard();
     }
     public updateBoard(): void {
         const state: EncapsuleState = this.rules.node.gameState;
@@ -57,8 +59,8 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove,
             this.lastStartingCoord = MGPOptional.empty();
         }
     }
-    public getListPieces(content: number): EncapsulePiece[] {
-        return EncapsuleCase.decode(content).toList();
+    public getListPieces(content: EncapsuleCase): EncapsulePiece[] {
+        return content.toList();
     }
     public getRemainingPieces(player: number): EncapsulePiece[] {
         return this.rules.node.gameState.getRemainingPiecesOfPlayer(Player.of(player));

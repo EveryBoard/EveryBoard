@@ -146,7 +146,7 @@ export class SimpleComponentTestUtils<T> {
     }
 }
 
-type GameComponent = AbstractGameComponent<Move, GameState, LegalityStatus>;
+type GameComponent = AbstractGameComponent<Move, GameState<unknown, unknown>, LegalityStatus>;
 
 export class ComponentTestUtils<T extends GameComponent> {
     public fixture: ComponentFixture<GameWrapper>;
@@ -218,7 +218,11 @@ export class ComponentTestUtils<T extends GameComponent> {
     public setRoute(id: string, value: string): void {
         this.activatedRouteStub.setRoute(id, value);
     }
-    public setupState(state: GameState, previousState?: GameState, previousMove?: Move): void {
+    public setupState(state: GameState<unknown, unknown>,
+                      previousState?: GameState<unknown, unknown>,
+                      previousMove?: Move)
+    : void
+    {
         if (previousState !== undefined) {
             this.gameComponent.rules.node =
                 new MGPNode(new MGPNode(null, null, previousState), previousMove, state);
@@ -284,7 +288,7 @@ export class ComponentTestUtils<T extends GameComponent> {
     }
     public async expectMoveSuccess(elementName: string,
                                    move: Move,
-                                   state?: GameState,
+                                   state?: GameState<unknown, unknown>,
                                    scoreZero?: number,
                                    scoreOne?: number)
     : Promise<void>
@@ -294,7 +298,7 @@ export class ComponentTestUtils<T extends GameComponent> {
         if (element == null) {
             return;
         } else {
-            const moveState: GameState = state || this.gameComponent.rules.node.gameState;
+            const moveState: GameState<unknown, unknown> = state || this.gameComponent.rules.node.gameState;
             element.triggerEventHandler('click', null);
             await this.fixture.whenStable();
             this.fixture.detectChanges();
@@ -321,7 +325,7 @@ export class ComponentTestUtils<T extends GameComponent> {
     public async expectMoveFailure(elementName: string,
                                    reason: string,
                                    move: Move,
-                                   state?: GameState,
+                                   state?: GameState<unknown, unknown>,
                                    scoreZero?: number,
                                    scoreOne?: number)
     : Promise<void>
@@ -331,7 +335,7 @@ export class ComponentTestUtils<T extends GameComponent> {
         if (element == null) {
             return;
         } else {
-            const moveState: GameState = state || this.gameComponent.rules.node.gameState;
+            const moveState: GameState<unknown, unknown> = state || this.gameComponent.rules.node.gameState;
             element.triggerEventHandler('click', null);
             await this.fixture.whenStable();
             this.fixture.detectChanges();
@@ -392,21 +396,21 @@ export class ComponentTestUtils<T extends GameComponent> {
     }
 }
 
-export function expectSecondStateToBeBetterThanFirst(weakerState: GameState,
+export function expectSecondStateToBeBetterThanFirst(weakerState: GameState<unknown, unknown>,
                                                      weakMove: Move,
-                                                     strongerState: GameState,
+                                                     strongerState: GameState<unknown, unknown>,
                                                      strongMove: Move,
-                                                     minimax: Minimax<Move, GameState>)
+                                                     minimax: Minimax<Move, GameState<unknown, unknown>>)
 : void
 {
     const weakValue: number = minimax.getBoardValue(new MGPNode(null, weakMove, weakerState)).value;
     const strongValue: number = minimax.getBoardValue(new MGPNode(null, strongMove, strongerState)).value;
     expect(weakValue).toBeLessThan(strongValue);
 }
-export function expectStateToBePreVictory(state: GameState,
+export function expectStateToBePreVictory(state: GameState<unknown, unknown>,
                                           previousMove: Move,
                                           player: Player,
-                                          minimax: Minimax<Move, GameState>)
+                                          minimax: Minimax<Move, GameState<unknown, unknown>>)
 : void
 {
     // TODO: replace that and refuse it to reach develop! expectToBeVictoryFor is the way

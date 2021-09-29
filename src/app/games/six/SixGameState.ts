@@ -10,7 +10,7 @@ import { SixFailure } from './SixFailure';
 import { SixMove } from './SixMove';
 import { GameState } from 'src/app/jscaip/GameState';
 
-export class SixState extends GameState {
+export class SixState extends GameState<Coord, Player> {
 
     public readonly width: number;
 
@@ -122,7 +122,7 @@ export class SixState extends GameState {
     public toRepresentation(): NumberTable {
         const board: number[][] = ArrayUtils.createBiArray(this.width, this.height, Player.NONE.value);
         for (const piece of this.pieces.listKeys()) {
-            const pieceValue: number = this.getPieceAt(piece).value;
+            const pieceValue: number = this.getBoardAt(piece).value;
             board[piece.y][piece.x] = pieceValue;
         }
         return board;
@@ -148,12 +148,15 @@ export class SixState extends GameState {
         }
         return false;
     }
-    public getPieceAt(coord: Coord): Player {
+    public getBoardAt(coord: Coord): Player {
         if (this.pieces.containsKey(coord)) {
             return this.pieces.get(coord).get();
         } else {
             return Player.NONE;
         }
+    }
+    public getNullable(coord: Coord): Player {
+        return this.getBoardAt(coord);
     }
     public applyLegalDrop(coord: Coord): SixState {
         const pieces: MGPMap<Coord, Player> = this.pieces.getCopy();
@@ -185,7 +188,7 @@ export class SixState extends GameState {
     }
     public switchPiece(coord: Coord): SixState {
         const newPieces: MGPMap<Coord, Player> = this.pieces.getCopy();
-        const oldValue: Player = this.getPieceAt(coord);
+        const oldValue: Player = this.getBoardAt(coord);
         newPieces.replace(coord, oldValue.getOpponent());
         return new SixState(newPieces, this.turn, this.offset);
     }

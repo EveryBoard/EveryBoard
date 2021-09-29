@@ -43,7 +43,7 @@ export class GameStatus {
     }
 }
 export abstract class Rules<M extends Move,
-                            S extends GameState,
+                            S extends GameState<unknown, unknown>,
                             L extends LegalityStatus = LegalityStatus>
 {
 
@@ -85,7 +85,7 @@ export abstract class Rules<M extends Move,
             display(LOCAL_VERBOSE, `Rules.choose: Move is legal, let's apply it`);
         }
 
-        const resultingState: GameState = this.applyLegalMove(move, this.node.gameState, status);
+        const resultingState: GameState<unknown, unknown> = this.applyLegalMove(move, this.node.gameState, status);
         const son: MGPNode<Rules<M, S, L>, M, S, L> = new MGPNode(this.node,
                                                                   move,
                                                                   resultingState as S);

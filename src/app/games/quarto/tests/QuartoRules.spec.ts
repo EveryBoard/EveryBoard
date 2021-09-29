@@ -7,7 +7,7 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { expectToBeVictoryFor } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { expectToBeDraw, expectToBeVictoryFor } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { Minimax } from 'src/app/jscaip/Minimax';
 
@@ -55,9 +55,7 @@ describe('QuartoRules', () => {
         const resultingState: QuartoState = rules.node.gameState;
         const expectedState: QuartoState = new QuartoState(expectedBoard, 16, QuartoPiece.NONE);
         expect(resultingState).toEqual(expectedState);
-        expect(minimaxes[0].getBoardValue(rules.node).value).toEqual(0, 'This should be a draw.');
-        // TODO: minimax test not in rules tests!
-        expect(rules.getGameStatus(rules.node).isEndGame).toBeTrue();
+        expectToBeDraw(rules, rules.node, minimaxes);
     });
     it('Should forbid to give a piece already on the board', () => {
         const board: Table<QuartoPiece> = [

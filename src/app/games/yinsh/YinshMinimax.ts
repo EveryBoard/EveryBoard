@@ -7,13 +7,13 @@ import { Combinatorics } from 'src/app/utils/Combinatorics';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GipfMinimax } from '../gipf/GipfMinimax';
 import { GipfCapture } from '../gipf/GipfMove';
-import { YinshGameState } from './YinshGameState';
+import { YinshState } from './YinshState';
 import { YinshLegalityStatus } from './YinshLegalityStatus';
 import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';
 import { YinshNode, YinshRules } from './YinshRules';
 
-export class YinshMinimax extends Minimax<YinshMove, YinshGameState, YinshLegalityStatus> {
+export class YinshMinimax extends Minimax<YinshMove, YinshState, YinshLegalityStatus> {
     public getBoardValue(node: YinshNode): NodeUnheritance {
         const status: GameStatus = this.ruler.getGameStatus(node);
         if (status.isEndGame) {
@@ -25,10 +25,10 @@ export class YinshMinimax extends Minimax<YinshMove, YinshGameState, YinshLegali
     }
     public getListMoves(node: YinshNode): YinshMove[] {
         const moves: YinshMove[] = [];
-        const state: YinshGameState = node.gameState;
+        const state: YinshState = node.gameState;
 
         if (state.isInitialPlacementPhase()) {
-            for (const [coord, content] of state.hexaBoard.getCoordsAndContents()) {
+            for (const [coord, content] of state.board.getCoordsAndContents()) {
                 if (content === YinshPiece.EMPTY) {
                     moves.push(new YinshMove([], coord, MGPOptional.empty(), []));
                 }
@@ -37,9 +37,9 @@ export class YinshMinimax extends Minimax<YinshMove, YinshGameState, YinshLegali
             const rules: YinshRules = this.ruler as YinshRules; // TODO: ugly cast, this.rules should be a YinshRules!
             this.getPossibleCaptureCombinations(state)
                 .forEach((initialCaptures: ReadonlyArray<YinshCapture>): void => {
-                    const stateAfterCapture: YinshGameState = rules.applyCaptures(state, initialCaptures);
+                    const stateAfterCapture: YinshState = rules.applyCaptures(state, initialCaptures);
                     this.getRingMoves(stateAfterCapture).forEach((ringMove: {start: Coord, end: Coord}): void => {
-                        const stateAfterRingMove: YinshGameState =
+                        const stateAfterRingMove: YinshState =
                             rules.applyRingMoveAndFlip(stateAfterCapture, ringMove.start, ringMove.end);
                         this.getPossibleCaptureCombinations(stateAfterRingMove)
                             .forEach((finalCaptures: ReadonlyArray<YinshCapture>): void => {
@@ -54,7 +54,7 @@ export class YinshMinimax extends Minimax<YinshMove, YinshGameState, YinshLegali
         }
         return moves;
     }
-    private getPossibleCaptureCombinations(state: YinshGameState): ReadonlyArray<ReadonlyArray<YinshCapture>> {
+    private getPossibleCaptureCombinations(state: YinshState): ReadonlyArray<ReadonlyArray<YinshCapture>> {
         const rules: YinshRules = this.ruler as YinshRules;
         const possibleCaptures: YinshCapture[] = rules.getPossibleCaptures(state);
         const ringCoords: Coord[] = this.getRingCoords(state);
@@ -70,7 +70,7 @@ export class YinshMinimax extends Minimax<YinshMove, YinshGameState, YinshLegali
                 return accumulator.concat(captures);
             }, []);
     }
-    private getRingMoves(state: YinshGameState): {start: Coord, end: Coord}[] {
+    private getRingMoves(state: YinshState): {start: Coord, end: Coord}[] {
         const rules: YinshRules = this.ruler as YinshRules;
         const moves: {start: Coord, end: Coord}[] = [];
         for (const start of this.getRingCoords(state)) {
@@ -80,10 +80,10 @@ export class YinshMinimax extends Minimax<YinshMove, YinshGameState, YinshLegali
         }
         return moves;
     }
-    private getRingCoords(state: YinshGameState): Coord[] {
+    private getRingCoords(state: YinshState): Coord[] {
         const player: number = state.getCurrentPlayer().value;
         const coords: Coord[] = [];
-        state.hexaBoard.forEachCoord((coord: Coord, content: YinshPiece): void => {
+        state.board.forEachCoord((coord: Coord, content: YinshPiece): void => {
             if (content === YinshPiece.RINGS[player]) {
                 coords.push(coord);
             }

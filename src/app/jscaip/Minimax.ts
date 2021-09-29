@@ -7,7 +7,7 @@ import { Rules } from './Rules';
 import { GameState } from './GameState';
 
 export abstract class Minimax<M extends Move,
-                              S extends GameState,
+                              S extends GameState<unknown, unknown>,
                               L extends LegalityStatus = LegalityStatus,
                               U extends NodeUnheritance = NodeUnheritance> implements ComparableObject
 {

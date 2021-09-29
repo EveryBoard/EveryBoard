@@ -7,15 +7,16 @@ import { KamisadoMove } from '../KamisadoMove';
 import { KamisadoState } from '../KamisadoState';
 import { KamisadoPiece } from '../KamisadoPiece';
 import { KamisadoNode, KamisadoRules } from '../KamisadoRules';
+import { Table } from 'src/app/utils/ArrayUtils';
 
 describe('KamisadoMinimax', () => {
 
     let rules: KamisadoRules;
     let minimax: KamisadoMinimax;
 
-    const _: number = KamisadoPiece.NONE.getValue();
-    const R: number = KamisadoPiece.ZERO.RED.getValue();
-    const b: number = KamisadoPiece.ONE.BROWN.getValue();
+    const _: KamisadoPiece = KamisadoPiece.NONE;
+    const R: KamisadoPiece = KamisadoPiece.ZERO.RED;
+    const b: KamisadoPiece = KamisadoPiece.ONE.BROWN;
 
     beforeEach(() => {
         rules = new KamisadoRules(KamisadoState);
@@ -29,7 +30,7 @@ describe('KamisadoMinimax', () => {
         expect(firstTurnMoves.length).toEqual(102);
     });
     it('should assign board values based on positions', () => {
-        const board: number[][] = [
+        const board: Table<KamisadoPiece> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [b, _, _, _, _, _, _, _],

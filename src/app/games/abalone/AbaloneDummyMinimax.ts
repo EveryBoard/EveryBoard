@@ -4,20 +4,21 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { MGPSet } from 'src/app/utils/MGPSet';
-import { AbaloneGameState } from './AbaloneGameState';
+import { AbaloneState } from './AbaloneState';
 import { AbaloneMove } from './AbaloneMove';
 import { AbaloneLegalityStatus, AbaloneNode, AbaloneRules } from './AbaloneRules';
+import { Player } from 'src/app/jscaip/Player';
 
-export class AbaloneDummyMinimax extends Minimax<AbaloneMove, AbaloneGameState, AbaloneLegalityStatus> {
+export class AbaloneDummyMinimax extends Minimax<AbaloneMove, AbaloneState, AbaloneLegalityStatus> {
 
     public getListMoves(node: AbaloneNode): AbaloneMove[] {
         const moves: AbaloneMove[] = [];
-        const state: AbaloneGameState = node.gameState;
-        const PLAYER: number = state.getCurrentPlayer().value;
+        const state: AbaloneState = node.gameState;
+        const PLAYER: Player = state.getCurrentPlayer();
         for (let y: number = 0; y < 9; y++) {
             for (let x: number = 0; x < 9; x++) {
                 const first: Coord = new Coord(x, y);
-                if (state.getBoardAt(first) !== PLAYER) {
+                if (state.getBoardAt(first).is(PLAYER) === false) {
                     continue;
                 }
                 for (const dir of HexaDirection.factory.all) {
@@ -48,12 +49,12 @@ export class AbaloneDummyMinimax extends Minimax<AbaloneMove, AbaloneGameState, 
         }
         return new MGPSet(moves).getCopy();
     }
-    private isAcceptablePush(move: AbaloneMove, state: AbaloneGameState): boolean {
+    private isAcceptablePush(move: AbaloneMove, state: AbaloneState): boolean {
         const scores: [number, number] = state.getScores();
         const status: AbaloneLegalityStatus = AbaloneRules.isLegal(move, state);
         if (status.legal.isSuccess()) {
             const ENEMY: number = state.getCurrentEnnemy().value;
-            const newState: AbaloneGameState = new AbaloneGameState(status.newBoard, state.turn + 1);
+            const newState: AbaloneState = new AbaloneState(status.newBoard, state.turn + 1);
             const newScores: [number, number] = newState.getScores();
             if (newScores[ENEMY] > scores[ENEMY]) {
                 return false; // he just pushed himself

@@ -4,7 +4,6 @@ import { QuartoState } from './QuartoState';
 import { QuartoRules } from './QuartoRules';
 import { QuartoMinimax } from './QuartoMinimax';
 import { QuartoPiece } from './QuartoPiece';
-import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
@@ -12,18 +11,19 @@ import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisp
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { quartoTutorial } from './QuartoTutorial';
+import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 
 @Component({
     selector: 'app-quarto',
     templateUrl: './quarto.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoState> {
+export class QuartoComponent extends RectangularGameComponent<QuartoMove, QuartoState, QuartoPiece> {
 
     public rules: QuartoRules = new QuartoRules(QuartoState);
 
     public CASE_SIZE: number = 100;
-    public EMPTY: number = QuartoPiece.NONE.value;
+    public EMPTY: QuartoPiece = QuartoPiece.NONE;
 
     public chosen: Coord = new Coord(-1, -1);
     public lastMove: Coord = new Coord(-1, -1);
@@ -42,7 +42,7 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoSta
             new QuartoMinimax(this.rules, 'QuartoMinimax'),
         ];
         this.pieceInHand = this.rules.node.gameState.pieceInHand;
-
+        this.updateBoard();
     }
     public updateBoard(): void {
         const state: QuartoState = this.rules.node.gameState;
@@ -66,7 +66,7 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoSta
         this.hideLastMove(); // now the user tried to choose something
         // so I guess he don't need to see what's the last move of the opponent
 
-        if (this.board[y][x] === QuartoPiece.NONE.value) {
+        if (this.board[y][x] === QuartoPiece.NONE) {
             // if it's a legal place to put the piece
             this.showPieceInHandOnBoard(x, y); // let's show the user his decision
             if (this.rules.node.gameState.turn === 15) {

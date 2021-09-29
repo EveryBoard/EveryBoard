@@ -39,13 +39,11 @@ describe('SiamPiece:', () => {
         expect(() => SiamPiece.of(null, Player.ONE)).toThrowError('Orientation must be set.');
         expect(() => SiamPiece.of(Orthogonal.UP, Player.NONE)).toThrowError(`Player None don't have any pieces.`);
         expect(() => SiamPiece.decode(10)).toThrowError('Unknown value for SiamPiece(10).');
-        expect(() => SiamPiece.belongTo(1, null)).toThrowError('Player must be set (even if Player.NONE).');
-        expect(() => SiamPiece.getOwner(10)).toThrowError('Player.NONE do not own piece.');
-        expect(() => SiamPiece.getDirection(null)).toThrowError('Piece null has no direction.');
+        expect(() => SiamPiece.WHITE_RIGHT.belongTo(null)).toThrowError('Player must be set (even if Player.NONE).');
     });
-    it('Should consider moutains as belonging to no player and now which one do', () => {
-        expect(SiamPiece.belongTo(SiamPiece.MOUNTAIN.value, Player.NONE)).toBeFalse();
-        expect(SiamPiece.belongTo(SiamPiece.BLACK_DOWN.value, Player.ZERO)).toBeFalse();
-        expect(SiamPiece.belongTo(SiamPiece.WHITE_RIGHT.value, Player.ONE)).toBeFalse();
+    it('Should consider moutains as belonging to no player and know which one do', () => {
+        expect(SiamPiece.MOUNTAIN.belongTo(Player.NONE)).toBeFalse();
+        expect(SiamPiece.BLACK_DOWN.belongTo(Player.ZERO)).toBeFalse();
+        expect(SiamPiece.WHITE_RIGHT.belongTo(Player.ONE)).toBeFalse();
     });
 });

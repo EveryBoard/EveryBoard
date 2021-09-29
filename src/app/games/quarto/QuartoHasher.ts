@@ -40,10 +40,9 @@ export class QuartoHasher {
         }
         return quartoHasherInfos[0];
     }
-    public static filterSubLevel(
-        board: NumberTable,
-        depth: number,
-        quartoHashInfos: QuartoHashInfo[],
+    public static filterSubLevel(board: NumberTable,
+                                 depth: number,
+                                 quartoHashInfos: QuartoHashInfo[],
     ): QuartoHashInfo[]
     {
         let remainingHashInfos: QuartoHashInfo[] = [];

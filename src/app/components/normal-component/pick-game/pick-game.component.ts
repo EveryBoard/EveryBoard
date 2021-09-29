@@ -11,7 +11,7 @@ import { KamisadoComponent } from 'src/app/games/kamisado/kamisado.component';
 import { LinesOfActionComponent } from 'src/app/games/lines-of-action/LinesOfAction.component';
 import { MinimaxTestingComponent } from 'src/app/games/minimax-testing/minimax-testing.component';
 import { P4Component } from 'src/app/games/p4/p4.component';
-import { PentagoComponent } from 'src/app/games/pentago/Pentago.component';
+import { PentagoComponent } from 'src/app/games/pentago/pentago.component';
 import { PylosComponent } from 'src/app/games/pylos/pylos.component';
 import { QuartoComponent } from 'src/app/games/quarto/quarto.component';
 import { QuixoComponent } from 'src/app/games/quixo/quixo.component';
@@ -103,7 +103,7 @@ export class GameInfo {
 
     public constructor(public readonly name: string,
                        public readonly urlName: string,
-                       public readonly component: Type<AbstractGameComponent<Move, GameState>>,
+                       public readonly component: Type<AbstractGameComponent<Move, GameState<unknown, unknown>>>,
                        public readonly creationDate: Date,
                        public readonly description: string = '',
                        public readonly display: boolean = true) {

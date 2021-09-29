@@ -36,7 +36,7 @@ describe('GipfRules:', () => {
     });
     it('should start with the expected board for the basic variant', () => {
         const state: GipfState = rules.node.gameState;
-        const board: GipfBoard = state.hexaBoard;
+        const board: GipfBoard = state.board;
         const expectedBoard: GipfBoard = GipfBoard.of([
             [_, _, _, B, _, _, A],
             [_, _, _, _, _, _, _],
@@ -88,7 +88,7 @@ describe('GipfRules:', () => {
                 [_, _, _, _, _, _, _],
                 [B, _, _, A, _, _, _],
             ]);
-            resultingState.hexaBoard.forEachCoord((c: Coord, content: GipfPiece) => {
+            resultingState.board.forEachCoord((c: Coord, content: GipfPiece) => {
                 expect(content).toEqual(expectedBoard.getAt(c));
             });
         });

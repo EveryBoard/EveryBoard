@@ -3,7 +3,6 @@ import { Rules } from '../../../jscaip/Rules';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Component } from '@angular/core';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { Table } from 'src/app/utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/Player';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
@@ -20,10 +19,9 @@ import { GameState } from 'src/app/jscaip/GameState';
     styleUrls: ['./abstract-game-component.css'],
 })
 export abstract class AbstractGameComponent<M extends Move,
-                                            S extends GameState,
+                                            S extends GameState<unknown, unknown>,
                                             L extends LegalityStatus = LegalityStatus>
 {
-
     public abstract encoder: MoveEncoder<M>;
 
     public CASE_SIZE: number = 100;
@@ -34,13 +32,13 @@ export abstract class AbstractGameComponent<M extends Move,
 
     public rules: Rules<M, S, L>;
 
-    public board: Table<any>; // TODO: generalise
+    public availableMinimaxes: Minimax<M, S>[];
+
+    // public board: B; TODO: confirm that it's not linked to AbstractGameComponent but
 
     public canPass: boolean;
 
     public showScore: boolean;
-
-    public availableMinimaxes: Minimax<Move, GameState>[];
 
     public imagesLocation: string = 'assets/images/';
 
@@ -48,8 +46,8 @@ export abstract class AbstractGameComponent<M extends Move,
 
     public isPlayerTurn: () => boolean;
 
-    public chooseMove: (move: Move,
-                        state: GameState,
+    public chooseMove: (move: M,
+                        state: S,
                         scorePlayerZero: number,
                         scorePlayerOne: number) => Promise<MGPValidation>;
 

@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { AbstractGameComponent }
-    from 'src/app/components/game-components/abstract-game-component/AbstractGameComponent';
+import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -22,12 +21,10 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
     templateUrl: './LinesOfAction.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class LinesOfActionComponent extends AbstractGameComponent<LinesOfActionMove, LinesOfActionState> {
+export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActionMove, LinesOfActionState, Player> {
 
-    public CASE_SIZE: number = 100;
-    public STROKE_WIDTH: number = 8;
     public INDICATOR_SIZE: number = 20;
-    public EMPTY: number = Player.NONE.value;
+    public EMPTY: Player = Player.NONE;
     public targets: Coord[] = [];
     public state: LinesOfActionState;
     private selected: MGPOptional<Coord> = MGPOptional.empty();
@@ -44,6 +41,7 @@ export class LinesOfActionComponent extends AbstractGameComponent<LinesOfActionM
         this.availableMinimaxes = [
             new LinesOfActionMinimax(this.rules, 'LinesOfActionMinimax'),
         ];
+        this.updateBoard();
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
@@ -117,9 +115,10 @@ export class LinesOfActionComponent extends AbstractGameComponent<LinesOfActionM
         }
         return [];
     }
-    public getPieceClasses(x: number, y: number, content: number): string[] {
+    public getPieceClasses(x: number, y: number): string[] {
+        const content: Player = this.board[y][x];
         const coord: Coord = new Coord(x, y);
-        const classes: string[] = [this.getPlayerClass(Player.of(content))];
+        const classes: string[] = [this.getPlayerClass(content)];
         if (this.selected.isPresent() && this.selected.get().equals(coord)) {
             classes.push('selected');
         }

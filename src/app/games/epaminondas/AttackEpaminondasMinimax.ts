@@ -18,7 +18,7 @@ export class AttackEpaminondasMinimax extends EpaminondasMinimax {
         let score: number = 0;
         for (let y: number = 0; y < 12; y++) {
             for (let x: number = 0; x < 14; x++) {
-                const owner: Player = Player.of(state.getBoardAt(new Coord(x, y)));
+                const owner: Player = state.getBoardAt(new Coord(x, y));
                 if (owner !== Player.NONE) {
                     score += owner.getScoreModifier();
                 }
@@ -29,10 +29,10 @@ export class AttackEpaminondasMinimax extends EpaminondasMinimax {
     public getDefense(state: EpaminondasState): number {
         let score: number = 0;
         for (let x: number = 0; x < 14; x++) {
-            if (state.getBoardAt(new Coord(x, 11)) === Player.ZERO.value) {
+            if (state.getBoardAt(new Coord(x, 11)) === Player.ZERO) {
                 score += Player.ZERO.getScoreModifier();
             }
-            if (state.getBoardAt(new Coord(x, 0)) === Player.ONE.value) {
+            if (state.getBoardAt(new Coord(x, 0)) === Player.ONE) {
                 score += Player.ONE.getScoreModifier();
             }
         }
@@ -42,16 +42,16 @@ export class AttackEpaminondasMinimax extends EpaminondasMinimax {
         let score: number = 0;
         for (let y: number = 0; y < 12; y++) {
             for (let x: number = 0; x < 14; x++) {
-                const owner: Player = Player.of(state.getBoardAt(new Coord(x, y)));
+                const owner: Player = state.getBoardAt(new Coord(x, y));
                 if (owner !== Player.NONE) {
                     for (let dx: number = -1; dx <= 1; dx++) {
                         for (let dy: number = -1; dy <= 1; dy++) {
                             const coord: Coord = new Coord(x+dx, y+dy);
                             if (coord.isInRange(14, 12)) {
-                                const neighbour: number = state.getBoardAt(coord);
-                                if (neighbour === owner.value) {
+                                const neighbour: Player = state.getBoardAt(coord);
+                                if (neighbour === owner) {
                                     score += 1 * owner.getScoreModifier();
-                                } else if (neighbour === Player.NONE.value) {
+                                } else if (neighbour === Player.NONE) {
                                     score += 1 * owner.getScoreModifier();
                                 }
                             }
@@ -66,10 +66,10 @@ export class AttackEpaminondasMinimax extends EpaminondasMinimax {
     public getOffense(state: EpaminondasState): number {
         let score: number = 0;
         for (let x: number = 0; x < 14; x++) {
-            if (state.getBoardAt(new Coord(x, 0)) === Player.ZERO.value) {
+            if (state.getBoardAt(new Coord(x, 0)) === Player.ZERO) {
                 score += Player.ZERO.getScoreModifier();
             }
-            if (state.getBoardAt(new Coord(x, 11)) === Player.ONE.value) {
+            if (state.getBoardAt(new Coord(x, 11)) === Player.ONE) {
                 score += Player.ONE.getScoreModifier();
             }
         }
@@ -79,7 +79,7 @@ export class AttackEpaminondasMinimax extends EpaminondasMinimax {
         let score: number = 0;
         for (let y: number = 0; y < 12; y++) {
             for (let x: number = 0; x < 14; x++) {
-                const owner: Player = Player.of(state.getBoardAt(new Coord(x, y)));
+                const owner: Player = state.getBoardAt(new Coord(x, y));
                 if (owner !== Player.NONE) {
                     score += owner.getScoreModifier()*(Math.sqrt((x - 6.5)*(x - 6.5)));
                 }
@@ -94,20 +94,21 @@ export class AttackEpaminondasMinimax extends EpaminondasMinimax {
         for (let y: number = 0; y < 12; y++) {
             for (let x: number = 0; x < 14; x++) {
                 const firstCoord: Coord = new Coord(x, y);
-                const owner: Player = Player.of(state.getBoardAt(firstCoord));
+                const owner: Player = state.getBoardAt(firstCoord);
                 if (owner !== Player.NONE) {
                     for (const direction of Direction.DIRECTIONS) {
                         let movedPieces: number = 1;
                         let nextCoord: Coord = firstCoord.getNext(direction, 1);
                         while (nextCoord.isInRange(14, 12) &&
-                            state.getBoardAt(nextCoord) === owner.value) {
+                            state.getBoardAt(nextCoord) === owner) {
                             movedPieces += 1;
                             nextCoord = nextCoord.getNext(direction, 1);
                         }
                         let stepSize: number = 1;
                         while (nextCoord.isInRange(14, 12) &&
-                            stepSize <= movedPieces &&
-                            state.getBoardAt(nextCoord) === Player.NONE.value) {
+                               stepSize <= movedPieces &&
+                               state.getBoardAt(nextCoord) === Player.NONE)
+                        {
                             stepSize++;
                             nextCoord = nextCoord.getNext(direction, 1);
                         }

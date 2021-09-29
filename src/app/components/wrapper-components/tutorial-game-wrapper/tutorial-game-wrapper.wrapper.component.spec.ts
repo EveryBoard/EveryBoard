@@ -34,7 +34,7 @@ import { PentagoState } from 'src/app/games/pentago/PentagoState';
 import { pentagoTutorial } from 'src/app/games/pentago/PentagoTutorial';
 import { PentagoMove } from 'src/app/games/pentago/PentagoMove';
 import { YinshRules } from 'src/app/games/yinsh/YinshRules';
-import { YinshGameState } from 'src/app/games/yinsh/YinshGameState';
+import { YinshState } from 'src/app/games/yinsh/YinshState';
 import { yinshTutorial, YinshTutorialMessages } from 'src/app/games/yinsh/YinshTutorial';
 import { YinshCapture, YinshMove } from 'src/app/games/yinsh/YinshMove';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -962,7 +962,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
     });
     describe('Tutorials', () => {
         it('Should make sure that predicate step have healthy behaviors', fakeAsync(async() => {
-            const stepExpectations: [Rules<Move, GameState>, TutorialStep, Move, MGPValidation][] = [
+            const stepExpectations: [Rules<Move, GameState<unknown, unknown>>, TutorialStep, Move, MGPValidation][] = [
                 [
                     new EpaminondasRules(EpaminondasState),
                     epaminondasTutorial[3],
@@ -1029,12 +1029,12 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     SixMove.fromCut(new Coord(2, 3), new Coord(1, 3), new Coord(3, 2)),
                     MGPValidation.failure(`Failed. You did cut the board in two but you kept the half where you're in minority. Therefore, you lost! Try again.`),
                 ], [
-                    new YinshRules(YinshGameState),
+                    new YinshRules(YinshState),
                     yinshTutorial[3],
                     new YinshMove([], new Coord(4, 4), MGPOptional.of(new Coord(1, 4)), []),
                     MGPValidation.failure(YinshTutorialMessages.MUST_ALIGN_FIVE),
                 ], [
-                    new YinshRules(YinshGameState),
+                    new YinshRules(YinshState),
                     yinshTutorial[4],
                     new YinshMove([YinshCapture.of(new Coord(5, 4), new Coord(5, 8), new Coord(3, 2))],
                                   new Coord(4, 1), MGPOptional.of(new Coord(6, 1)),
@@ -1043,13 +1043,13 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 ],
             ];
             for (const stepExpectation of stepExpectations) {
-                const rules: Rules<Move, GameState> = stepExpectation[0];
+                const rules: Rules<Move, GameState<unknown, unknown>> = stepExpectation[0];
                 const step: TutorialStep = stepExpectation[1];
                 const move: Move = stepExpectation[2];
                 const validation: MGPValidation = stepExpectation[3];
                 const status: LegalityStatus = rules.isLegal(move, step.state);
                 expect(status.legal.reason).toBeNull();
-                const state: GameState = rules.applyLegalMove(move, step.state, status);
+                const state: GameState<unknown, unknown> = rules.applyLegalMove(move, step.state, status);
                 expect(step.predicate(move, state)).toEqual(validation);
             }
         }));
@@ -1058,16 +1058,16 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 if (gameInfo.display === false) {
                     continue;
                 }
-                const gameComponent: AbstractGameComponent<Move, GameState> =
+                const gameComponent: AbstractGameComponent<Move, GameState<unknown, unknown>> =
                     TestBed.createComponent(gameInfo.component).debugElement.componentInstance;
-                const rules: Rules<Move, GameState> = gameComponent.rules;
+                const rules: Rules<Move, GameState<unknown, unknown>> = gameComponent.rules;
                 const steps: TutorialStep[] = gameComponent.tutorial;
                 for (const step of steps) {
                     if (step.solutionMove != null) {
                         const status: LegalityStatus = rules.isLegal(step.solutionMove, step.state);
                         expect(status.legal.reason).toBeNull();
                         if (step.isPredicate()) {
-                            const state: GameState =
+                            const state: GameState<unknown, unknown> =
                                 rules.applyLegalMove(step.solutionMove, step.state, status);
                             expect(step.predicate(step.solutionMove, state)).toEqual(MGPValidation.SUCCESS);
                         }

@@ -73,9 +73,6 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfState, G
         this.constructedState = this.rules.node.gameState;
     }
     public updateBoard(): void {
-        const state: GipfState = this.rules.node.gameState;
-        this.board = state.hexaBoard.toNumberTable();
-
         this.showLastMove();
         this.cancelMoveAttempt();
         this.moveToInitialCaptureOrPlacementPhase();
@@ -100,7 +97,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfState, G
         });
     }
     public getAllCoords(): Coord[] {
-        return this.constructedState.hexaBoard.allCoords();
+        return this.constructedState.board.allCoords();
     }
     public getPlayerSidePieces(player: number): number[] {
         const nPieces: number = this.constructedState.getNumberOfPiecesToPlace(Player.of(player));
@@ -115,7 +112,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfState, G
         return piece !== GipfPiece.EMPTY;
     }
     private getPiece(coord: Coord): GipfPiece {
-        const piece: GipfPiece = this.constructedState.hexaBoard.getAt(coord);
+        const piece: GipfPiece = this.constructedState.board.getAt(coord);
         return piece;
     }
     public async onClick(coord: Coord): Promise<MGPValidation> {
@@ -217,7 +214,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfState, G
             return this.cancelMove(validity.getReason());
         }
         this.placementEntrance = MGPOptional.of(coord);
-        if (this.constructedState.hexaBoard.getAt(coord) === GipfPiece.EMPTY) {
+        if (this.constructedState.board.getAt(coord) === GipfPiece.EMPTY) {
             // Because the coord of insertion is empty, there is no need for the user to choose a direction.
             return this.selectPlacementDirection(MGPOptional.empty());
         } else {

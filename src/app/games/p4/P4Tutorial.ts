@@ -1,6 +1,11 @@
 import { P4Move } from 'src/app/games/p4/P4Move';
 import { P4State } from 'src/app/games/p4/P4State';
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { Player } from 'src/app/jscaip/Player';
+
+const O: Player = Player.ZERO;
+const X: Player = Player.ONE;
+const _: Player = Player.NONE;
 
 export const p4Tutorial: TutorialStep[] = [
     TutorialStep.informational(
@@ -22,12 +27,12 @@ export const p4Tutorial: TutorialStep[] = [
         $localize`You're playing Dark.
         Place your piece so that you create a horizontal alignment of 4 of your pieces.`,
         new P4State([
-            [2, 2, 2, 2, 2, 2, 2],
-            [2, 2, 2, 2, 2, 2, 2],
-            [2, 2, 2, 2, 2, 2, 2],
-            [2, 2, 2, 1, 2, 2, 2],
-            [2, 2, 2, 1, 2, 2, 2],
-            [2, 2, 0, 0, 0, 1, 2],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, X, _, _, _],
+            [_, _, _, X, _, _, _],
+            [_, _, O, O, O, X, _],
         ], 0),
         [P4Move.of(1)],
         $localize`You won!`,
@@ -37,12 +42,12 @@ export const p4Tutorial: TutorialStep[] = [
         $localize`Other victory`,
         $localize`You can also align 4 pieces diagonally or vertically.`,
         new P4State([
-            [2, 2, 2, 2, 2, 2, 2],
-            [2, 2, 2, 2, 2, 2, 2],
-            [2, 2, 2, 2, 2, 2, 2],
-            [2, 2, 2, 0, 1, 2, 2],
-            [2, 2, 0, 0, 1, 2, 2],
-            [2, 0, 1, 0, 0, 2, 2],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, O, X, _, _],
+            [_, _, O, O, X, _, _],
+            [_, O, X, O, O, _, _],
         ], 0),
         [
             P4Move.of(3),

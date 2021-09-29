@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
+
 import { ReversiRules } from './ReversiRules';
 import { ReversiMinimax } from './ReversiMinimax';
 import { ReversiState } from './ReversiState';
@@ -13,13 +13,17 @@ import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { reversiTutorial } from './ReversiTutorial';
+import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 
 @Component({
     selector: 'app-reversi',
     templateUrl: './reversi.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class ReversiComponent extends AbstractGameComponent<ReversiMove, ReversiState, ReversiLegalityStatus> {
+export class ReversiComponent extends RectangularGameComponent<ReversiMove,
+                                                               ReversiState,
+                                                               Player,
+                                                               ReversiLegalityStatus> {
 
     public CASE_SIZE: number = 100;
     public NONE: number = Player.NONE.value;
@@ -41,6 +45,7 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
         this.availableMinimaxes = [
             new ReversiMinimax(this.rules, 'ReversiMinimax'),
         ];
+        this.updateBoard();
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
@@ -94,7 +99,7 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
         }
     }
     public getPieceClass(x: number, y: number): string {
-        return this.getPlayerClass(Player.of(this.board[y][x]));
+        return this.getPlayerClass(this.board[y][x]);
     }
     public async pass(): Promise<MGPValidation> {
         return this.onClick(ReversiMove.PASS.coord.x, ReversiMove.PASS.coord.y);

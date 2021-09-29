@@ -129,7 +129,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
                 const caseContent: FourStatePiece = resultingState.getBoardAt(neighbor);
                 if (caseContent === FourStatePiece.EMPTY) {
                     resultingState = resultingState.removeTilesIfNeeded(neighbor, countTiles);
-                } else if (caseContent === this.getCurrentEnnemy() &&
+                } else if (caseContent.is(this.getCurrentEnnemy()) &&
                            resultingState.isSurrounded(neighbor))
                 {
                     resultingState = resultingState.capture(neighbor);

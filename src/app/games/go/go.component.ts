@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
+import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { GoMove } from 'src/app/games/go/GoMove';
 import { GoRules } from 'src/app/games/go/GoRules';
 import { GoMinimax } from 'src/app/games/go/GoMinimax';
@@ -21,7 +21,8 @@ import { goTutorial } from './GoTutorial';
     templateUrl: './go.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class GoComponent extends AbstractGameComponent<GoMove, GoState, GoLegalityStatus> {
+export class GoComponent extends RectangularGameComponent<GoMove, GoState, GoPiece, GoLegalityStatus> {
+
     public static VERBOSE: boolean = false;
 
     public scores: number[] = [0, 0];
@@ -48,6 +49,7 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoState, GoLegali
         ];
         this.canPass = true;
         this.showScore = true;
+        this.updateBoard();
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
@@ -86,7 +88,7 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoState, GoLegali
             for (let x: number = 0; x < this.board[0].length; x++) {
                 const coord: Coord = new Coord(x, y);
                 const wasOccupied: boolean = previousState.getBoardAt(coord).isEmpty() === false;
-                const isEmpty: boolean = this.board[y][x] === GoPiece.EMPTY.value;
+                const isEmpty: boolean = this.board[y][x] === GoPiece.EMPTY;
                 const isNotKo: boolean = !coord.equals(this.ko);
                 if (wasOccupied && isEmpty && isNotKo) {
                     this.captures.push(coord);

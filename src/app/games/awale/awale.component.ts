@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
+import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { AwaleRules } from './AwaleRules';
 import { AwaleMinimax } from './AwaleMinimax';
 import { AwaleMove } from 'src/app/games/awale/AwaleMove';
@@ -18,7 +18,7 @@ import { awaleTutorial } from './AwaleTutorial';
     templateUrl: './awale.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwaleState, AwaleLegalityStatus> {
+export class AwaleComponent extends RectangularGameComponent<AwaleMove, AwaleState, number, AwaleLegalityStatus> {
 
     public encoder: MoveEncoder<AwaleMove> = AwaleMove.encoder;
 

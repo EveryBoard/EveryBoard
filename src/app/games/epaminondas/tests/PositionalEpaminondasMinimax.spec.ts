@@ -1,4 +1,4 @@
-import { NumberTable } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/utils/ArrayUtils';
 import { Direction } from 'src/app/jscaip/Direction';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
@@ -12,9 +12,9 @@ describe('PositionalEpaminondasMinimax:', () => {
 
     let rules: EpaminondasRules;
     let minimax: PositionalEpaminondasMinimax;
-    const _: number = Player.NONE.value;
-    const X: number = Player.ONE.value;
-    const O: number = Player.ZERO.value;
+    const _: Player = Player.NONE;
+    const X: Player = Player.ONE;
+    const O: Player = Player.ZERO;
 
     beforeEach(() => {
         rules = new EpaminondasRules(EpaminondasState);
@@ -24,7 +24,7 @@ describe('PositionalEpaminondasMinimax:', () => {
         expect(minimax.getListMoves(rules.node).length).toBeLessThan(114);
     });
     it('Should consider possible capture the best move', () => {
-        const board: NumberTable = [
+        const board: Table<Player> = [
             [X, X, X, X, X, X, X, X, _, _, _, _, _, _],
             [_, O, O, _, _, _, X, X, X, X, _, _, _, _],
             [_, _, O, _, _, _, _, _, _, _, _, _, _, _],
@@ -46,7 +46,7 @@ describe('PositionalEpaminondasMinimax:', () => {
         expect(bestMove).toEqual(expectedMove);
     });
     it('Should prefer to get near the opponent line', () => {
-        const greaterBoard: NumberTable = [
+        const greaterBoard: Table<Player> = [
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -61,7 +61,7 @@ describe('PositionalEpaminondasMinimax:', () => {
             [O, O, O, O, O, O, O, O, O, O, O, O, _, O],
         ];
         const greaterState: EpaminondasState = new EpaminondasState(greaterBoard, 0);
-        const lesserBoard: NumberTable = [
+        const lesserBoard: Table<Player> = [
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -79,7 +79,7 @@ describe('PositionalEpaminondasMinimax:', () => {
         expectSecondStateToBeBetterThanFirst(lesserState, null, greaterState, null, minimax);
     });
     it('Should prefer to have aligned piece than higher piece', () => {
-        const greaterBoard: NumberTable = [
+        const greaterBoard: Table<Player> = [
             [X, X, X, X, X, X, X, X, X, X, X, X, _, X],
             [X, X, X, X, X, X, X, X, X, X, X, X, _, X],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -94,7 +94,7 @@ describe('PositionalEpaminondasMinimax:', () => {
             [O, O, O, O, O, O, O, _, O, O, O, O, O, O],
         ];
         const greaterState: EpaminondasState = new EpaminondasState(greaterBoard, 0);
-        const lesserBoard: NumberTable = [
+        const lesserBoard: Table<Player> = [
             [X, X, X, X, X, X, X, _, X, X, X, X, _, X],
             [X, X, X, X, X, X, X, _, X, X, X, X, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],

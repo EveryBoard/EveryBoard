@@ -9,15 +9,17 @@ import { fakeAsync, tick } from '@angular/core/testing';
 import { Coord } from 'src/app/jscaip/Coord';
 import { KamisadoMove } from 'src/app/games/kamisado/KamisadoMove';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { Table } from 'src/app/utils/ArrayUtils';
 
 describe('KamisadoComponent', () => {
+
     let componentTestUtils: ComponentTestUtils<KamisadoComponent>;
 
-    const _: number = KamisadoPiece.NONE.getValue();
-    const R: number = KamisadoPiece.ZERO.RED.getValue();
-    const G: number = KamisadoPiece.ZERO.GREEN.getValue();
-    const r: number = KamisadoPiece.ONE.RED.getValue();
-    const b: number = KamisadoPiece.ONE.BROWN.getValue();
+    const _: KamisadoPiece = KamisadoPiece.NONE;
+    const R: KamisadoPiece = KamisadoPiece.ZERO.RED;
+    const G: KamisadoPiece = KamisadoPiece.ZERO.GREEN;
+    const r: KamisadoPiece = KamisadoPiece.ONE.RED;
+    const b: KamisadoPiece = KamisadoPiece.ONE.BROWN;
 
     beforeEach(fakeAsync(async() => {
         componentTestUtils = await ComponentTestUtils.forGame<KamisadoComponent>('Kamisado');
@@ -45,7 +47,7 @@ describe('KamisadoComponent', () => {
         expect(componentTestUtils.getComponent().chosen.equals(new Coord(-1, -1))).toBeTrue();
     }));
     it('should allow to pass if stuck position', fakeAsync(async() => {
-        const board: number[][] = [
+        const board: Table<KamisadoPiece> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -63,7 +65,7 @@ describe('KamisadoComponent', () => {
     }));
     it('should forbid all click in stuck position and ask to pass', fakeAsync(async() => {
         // given a board where the piece that must move is stuck
-        const board: number[][] = [
+        const board: Table<KamisadoPiece> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -81,7 +83,7 @@ describe('KamisadoComponent', () => {
         await componentTestUtils.expectClickFailure('#click_1_7', RulesFailure.MUST_PASS);
     }));
     it('should forbid de-selecting a piece that is pre-selected', fakeAsync(async() => {
-        const board: number[][] = [
+        const board: Table<KamisadoPiece> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -98,7 +100,7 @@ describe('KamisadoComponent', () => {
         await componentTestUtils.expectClickFailure('#click_0_7', KamisadoFailure.PLAY_WITH_SELECTED_PIECE);
     }));
     it('should forbid selecting a piece if one is already pre-selected', fakeAsync(async() => {
-        const board: number[][] = [
+        const board: Table<KamisadoPiece> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -123,7 +125,7 @@ describe('KamisadoComponent', () => {
         await componentTestUtils.expectClickFailure('#click_0_0', RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
     }));
     it('should forbid choosing a piece at end of the game', fakeAsync(async() => {
-        const board: number[][] = [
+        const board: Table<KamisadoPiece> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],

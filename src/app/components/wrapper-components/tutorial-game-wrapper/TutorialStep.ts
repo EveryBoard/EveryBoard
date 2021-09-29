@@ -1,10 +1,10 @@
-import { RectangularGameState } from 'src/app/jscaip/RectangularGameState';
 import { Move } from 'src/app/jscaip/Move';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { GameState } from 'src/app/jscaip/GameState';
 
 export class TutorialStep {
 
-    public static informational(title: string, instruction: string, state: RectangularGameState): TutorialStep {
+    public static informational(title: string, instruction: string, state: GameState<unknown, unknown>): TutorialStep {
         return new TutorialStep(title,
                                 instruction,
                                 state,
@@ -18,7 +18,7 @@ export class TutorialStep {
     }
     public static fromMove(title: string,
                            instruction: string,
-                           state: RectangularGameState,
+                           state: GameState<unknown, unknown>,
                            acceptedMoves: ReadonlyArray<Move>,
                            successMessage: string,
                            failureMessage: string,
@@ -37,7 +37,7 @@ export class TutorialStep {
     }
     public static forClick(title: string,
                            instruction: string,
-                           state: RectangularGameState,
+                           state: GameState<unknown, unknown>,
                            acceptedClicks: ReadonlyArray<string>,
                            successMessage: string,
                            failureMessage: string,
@@ -56,7 +56,7 @@ export class TutorialStep {
     }
     public static anyMove(title: string,
                           instruction: string,
-                          state: RectangularGameState,
+                          state: GameState<unknown, unknown>,
                           solutionMove: Move,
                           successMessage: string,
     ): TutorialStep
@@ -74,9 +74,9 @@ export class TutorialStep {
     }
     public static fromPredicate(title: string,
                                 instruction: string,
-                                state: RectangularGameState,
+                                state: GameState<unknown, unknown>,
                                 solutionMove: Move,
-                                predicate: (move: Move, resultingState: RectangularGameState) => MGPValidation,
+                                predicate: (move: Move, resultingState: GameState<unknown, unknown>) => MGPValidation,
                                 successMessage: string,
     ): TutorialStep
     {
@@ -93,11 +93,11 @@ export class TutorialStep {
     }
     private constructor(public readonly title: string,
                         public readonly instruction: string,
-                        public readonly state: RectangularGameState,
+                        public readonly state: GameState<unknown, unknown>,
                         public readonly acceptedMoves: ReadonlyArray<Move>,
                         public readonly solutionMove: Move,
                         public readonly acceptedClicks: ReadonlyArray<string>,
-                        public readonly predicate: (move: Move, resultingState: RectangularGameState) => MGPValidation,
+                        public readonly predicate: (move: Move, resultingState: GameState<unknown, unknown>) => MGPValidation,
                         public readonly successMessage: string,
                         public readonly failureMessage: string,
                         public readonly previousMove: Move | null,

@@ -18,7 +18,7 @@ export class MGPNodeStats {
 
 export class MGPNode<R extends Rules<M, S, L>,
                      M extends Move,
-                     S extends GameState,
+                     S extends GameState<unknown, unknown>,
                      L extends LegalityStatus = LegalityStatus,
                      U extends NodeUnheritance = NodeUnheritance> {
     // TODO: calculate a board - value by the information of the mother.boardValue + this.move to ease the calculation
@@ -30,7 +30,7 @@ export class MGPNode<R extends Rules<M, S, L>,
 
     public static VERBOSE: boolean = false;
 
-    public static ruler: Rules<Move, GameState, LegalityStatus>;
+    public static ruler: Rules<Move, GameState<unknown, unknown>, LegalityStatus>;
     /* Permet d'obtenir les données propre au jeu et non au minimax, ruler restera l'unique instance d'un set de règles
      * Exemples d'états théorique d'un Node (cours)
      * Feuille - stérile: n'as pas d'enfant après un calcul
@@ -39,7 +39,7 @@ export class MGPNode<R extends Rules<M, S, L>,
      * Le tronc (la mère)
      */
 
-    public static minimaxes: MGPMap<string, Minimax<Move, GameState>> = new MGPMap();
+    public static minimaxes: MGPMap<string, Minimax<Move, GameState<unknown, unknown>>> = new MGPMap();
     // instance fields:
 
     private childs: (MGPNode<R, M, S, L, U>[]) | null = null;
@@ -92,7 +92,7 @@ export class MGPNode<R extends Rules<M, S, L>,
     }
     public static getFirstNode<R extends Rules<M, S, L>,
                                M extends Move,
-                               S extends GameState,
+                               S extends GameState<unknown, unknown>,
                                L extends LegalityStatus,
                                U extends NodeUnheritance>(initialBoard: S, gameRuler: R)
     : MGPNode<R, M, S, L, U>

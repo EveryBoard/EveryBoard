@@ -21,19 +21,19 @@ export class SiamMinimax extends Minimax<SiamMove, SiamState, SiamLegalityStatus
     public getListMoves(node: SiamNode): SiamMove[] {
         let moves: SiamMove[] = [];
         const currentPlayer: Player = node.gameState.getCurrentPlayer();
-        let c: number;
+        let c: SiamPiece;
         let legality: SiamLegalityStatus;
         for (let y: number = 0; y < 5; y++) {
             for (let x: number = 0; x < 5; x++) {
                 c = node.gameState.getBoardByXY(x, y);
-                if (SiamPiece.belongTo(c, currentPlayer)) {
-                    const currentOrientation: Orthogonal = SiamPiece.getDirection(c);
+                if (c.belongTo(currentPlayer)) {
+                    const currentOrientation: Orthogonal = c.getDirection();
                     for (const direction of Orthogonal.ORTHOGONALS) {
                         // three rotation
                         if (direction !== currentOrientation) {
-                            const newBoard: number[][] = node.gameState.getCopiedBoard();
+                            const newBoard: SiamPiece[][] = node.gameState.getCopiedBoard();
                             const newMove: SiamMove = new SiamMove(x, y, MGPOptional.empty(), direction);
-                            newBoard[y][x] = SiamPiece.of(direction, currentPlayer).value;
+                            newBoard[y][x] = SiamPiece.of(direction, currentPlayer);
                             moves.push(newMove);
                         }
 

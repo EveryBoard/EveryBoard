@@ -9,7 +9,7 @@ import { EpaminondasMinimax } from '../EpaminondasMinimax';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { EpaminondasFailure } from '../EpaminondasFailure';
-import { expectToBeVictoryFor } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { expectToBeOngoing, expectToBeVictoryFor } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { AttackEpaminondasMinimax } from '../AttackEpaminondasMinimax';
 import { PositionalEpaminondasMinimax } from '../PositionalEpaminondasMinimax';
@@ -381,11 +381,8 @@ describe('EpaminondasRules:', () => {
             const resultingState: EpaminondasState = rules.applyLegalMove(move, state, status);
             const expectedState: EpaminondasState = new EpaminondasState(expectedBoard, 2);
             expect(resultingState).toEqual(expectedState);
-            for (const minimax of minimaxes) {
-                const boardValue: number = minimax.getBoardValue(new MGPNode(null, move, expectedState)).value;
-                expect(boardValue).withContext('This should not be a victory for player 0').not.toEqual(Number.MIN_SAFE_INTEGER);
-                expect(boardValue).withContext('This should not be a victory for player 1').not.toEqual(Number.MAX_SAFE_INTEGER);
-            }
+            const node: EpaminondasNode = new MGPNode(null, move, expectedState);
+            expectToBeOngoing(rules, node, minimaxes);
         });
         it('Should declare player zero winner when last soldier of opponent has been captured', () => {
             const board: Table<Player> = [

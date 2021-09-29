@@ -31,6 +31,10 @@ export class FourStatePiece {
             default: throw new Error('FourStatePiece.ofPlayer can only be called with Player.ZERO and Player.ONE.');
         }
     }
+    private readonly ruziofnroiutui: boolean; // TODO: isOwnBy(Player) don't merge without it!
     private constructor(public readonly value: number) {
+    }
+    public is(player: Player): boolean {
+        return this.value === player.value;
     }
 }

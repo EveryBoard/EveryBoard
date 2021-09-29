@@ -7,7 +7,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { YinshBoard } from '../YinshBoard';
 import { YinshFailure } from '../YinshFailure';
-import { YinshGameState } from '../YinshGameState';
+import { YinshState } from '../YinshState';
 import { YinshLegalityStatus } from '../YinshLegalityStatus';
 import { YinshMinimax } from '../YinshMinimax';
 import { YinshCapture, YinshMove } from '../YinshMove';
@@ -26,19 +26,19 @@ describe('YinshRules', () => {
 
     let minimaxes: YinshMinimax[];
 
-    function expectMoveSuccess(stateBefore: YinshGameState, move: YinshMove, stateAfter: YinshGameState): void {
+    function expectMoveSuccess(stateBefore: YinshState, move: YinshMove, stateAfter: YinshState): void {
         const legality: YinshLegalityStatus = rules.isLegal(move, stateBefore);
         expect(legality.legal).toBeTruthy();
         expect(legality.legal.isSuccess()).toBeTrue();
         if (legality.legal.isSuccess()) {
-            const resultingState: YinshGameState = rules.applyLegalMove(move, stateBefore, legality);
+            const resultingState: YinshState = rules.applyLegalMove(move, stateBefore, legality);
             expect(resultingState.equals(stateAfter)).toBeTrue();
         } else {
             throw new Error('expected move to be valid but it is not: ' + legality.legal.getReason());
         }
     }
 
-    function expectMoveFailure(state: YinshGameState, move: YinshMove, reason: string): void {
+    function expectMoveFailure(state: YinshState, move: YinshMove, reason: string): void {
         const legality: YinshLegalityStatus = rules.isLegal(move, state);
         expect(legality.legal).toBeTruthy();
         expect(legality.legal.isFailure()).toBeTrue();
@@ -46,7 +46,7 @@ describe('YinshRules', () => {
     }
 
     beforeEach(() => {
-        rules = new YinshRules(YinshGameState);
+        rules = new YinshRules(YinshState);
         minimaxes = [new YinshMinimax(rules, 'YinshMinimax')];
     });
     it('should be created', () => {
@@ -55,7 +55,7 @@ describe('YinshRules', () => {
     });
     describe('isLegal and applyLegalMove', () => {
         it('should initially allow placing rings', () => {
-            const state: YinshGameState = rules.node.gameState;
+            const state: YinshState = rules.node.gameState;
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.empty(), []);
 
             const expectedBoard: YinshBoard = YinshBoard.of([
@@ -71,17 +71,17 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const expectedState: YinshGameState = new YinshGameState(expectedBoard, [4, 5], 1);
+            const expectedState: YinshState = new YinshState(expectedBoard, [4, 5], 1);
 
             expectMoveSuccess(state, move, expectedState);
         });
         it('should initially forbid placing markers', () => {
-            const state: YinshGameState = rules.node.gameState;
+            const state: YinshState = rules.node.gameState;
             const move: YinshMove = new YinshMove([], new Coord(3, 3), MGPOptional.of(new Coord(3, 4)), []);
             expectMoveFailure(state, move, YinshFailure.NO_MARKERS_IN_INITIAL_PHASE);
         });
         it('should forbid placing rings without moving after turn 10', () => {
-            const state: YinshGameState = new YinshGameState(YinshBoard.EMPTY, [0, 0], 10);
+            const state: YinshState = new YinshState(YinshBoard.EMPTY, [0, 0], 10);
             const move: YinshMove = new YinshMove([], new Coord(3, 3), MGPOptional.empty(), []);
             expectMoveFailure(state, move, YinshFailure.PLACEMENT_AFTER_INITIAL_PHASE);
         });
@@ -99,7 +99,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(3, 3)), []);
 
             const expectedBoard: YinshBoard = YinshBoard.of([
@@ -115,7 +115,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const expectedState: YinshGameState = new YinshGameState(expectedBoard, [0, 0], 11);
+            const expectedState: YinshState = new YinshState(expectedBoard, [0, 0], 11);
 
             expectMoveSuccess(state, move, expectedState);
         });
@@ -133,7 +133,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(5, 8)), []);
 
             expectMoveFailure(state, move, YinshFailure.MOVE_DIRECTION_INVALID);
@@ -152,7 +152,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             const move: YinshMove = new YinshMove([], new Coord(5, 5), MGPOptional.of(new Coord(3, 3)), []);
 
             expectMoveFailure(state, move, YinshFailure.SHOULD_SELECT_PLAYER_RING);
@@ -171,7 +171,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, N, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(3, 5)), []);
 
             const expectedBoard: YinshBoard = YinshBoard.of([
@@ -187,7 +187,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const expectedState: YinshGameState = new YinshGameState(expectedBoard, [0, 0], 11);
+            const expectedState: YinshState = new YinshState(expectedBoard, [0, 0], 11);
 
             expectMoveSuccess(state, move, expectedState);
         });
@@ -205,7 +205,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(3, 6)), []);
 
             const expectedBoard: YinshBoard = YinshBoard.of([
@@ -221,7 +221,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const expectedState: YinshGameState = new YinshGameState(expectedBoard, [0, 0], 11);
+            const expectedState: YinshState = new YinshState(expectedBoard, [0, 0], 11);
 
             expectMoveSuccess(state, move, expectedState);
         });
@@ -239,7 +239,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(3, 7)), []);
 
             expectMoveFailure(state, move, YinshFailure.MOVE_SHOULD_END_AT_FIRST_EMPTY_CASE_AFTER_MARKERS);
@@ -258,7 +258,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(3, 8)), []);
 
             expectMoveFailure(state, move, YinshFailure.MOVE_SHOULD_END_AT_FIRST_EMPTY_CASE_AFTER_MARKERS);
@@ -277,7 +277,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(3, 6)), []);
 
             expectMoveFailure(state, move, YinshFailure.MOVE_SHOULD_NOT_PASS_ABOVE_RING);
@@ -296,7 +296,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             const move: YinshMove = new YinshMove([],
                                                   new Coord(3, 2), MGPOptional.of(new Coord(3, 7)),
                                                   [YinshCapture.of(new Coord(3, 2), new Coord(3, 6),
@@ -318,7 +318,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             const move: YinshMove = new YinshMove([],
                                                   new Coord(3, 2), MGPOptional.of(new Coord(3, 7)),
                                                   [YinshCapture.of(new Coord(3, 2), new Coord(3, 6),
@@ -337,7 +337,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const expectedState: YinshGameState = new YinshGameState(expectedBoard, [1, 0], 11);
+            const expectedState: YinshState = new YinshState(expectedBoard, [1, 0], 11);
 
             expectMoveSuccess(state, move, expectedState);
         });
@@ -355,7 +355,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             const move: YinshMove = new YinshMove([
                 YinshCapture.of(new Coord(3, 2), new Coord(3, 6), new Coord(6, 2)),
                 YinshCapture.of(new Coord(4, 2), new Coord(4, 6), new Coord(7, 2)),
@@ -375,7 +375,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const expectedState: YinshGameState = new YinshGameState(expectedBoard, [2, 0], 11);
+            const expectedState: YinshState = new YinshState(expectedBoard, [2, 0], 11);
 
             expectMoveSuccess(state, move, expectedState);
         });
@@ -393,7 +393,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(4, 2)), []);
 
             expectMoveFailure(state, move, YinshFailure.MISSING_CAPTURES);
@@ -412,7 +412,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(3, 7)), []);
 
             expectMoveFailure(state, move, YinshFailure.MISSING_CAPTURES);
@@ -431,7 +431,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             const move: YinshMove = new YinshMove([YinshCapture.of(new Coord(3, 3), new Coord(3, 7), new Coord(4, 2))],
                                                   new Coord(3, 2), MGPOptional.of(new Coord(3, 3)),
                                                   []);
@@ -452,7 +452,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             const move: YinshMove = new YinshMove([YinshCapture.of(new Coord(3, 3), new Coord(3, 7), new Coord(4, 2))],
                                                   new Coord(3, 2), MGPOptional.of(new Coord(4, 2)),
                                                   []);
@@ -475,13 +475,13 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(3, 3)), []);
 
             const legality: YinshLegalityStatus = rules.isLegal(move, state);
             expect(legality.legal.isSuccess()).toBeTrue();
 
-            const resultingState: YinshGameState =
+            const resultingState: YinshState =
                 rules.applyLegalMove(move, state, new YinshLegalityStatus(MGPValidation.SUCCESS, null));
 
             const expectedBoard: YinshBoard = YinshBoard.of([
@@ -497,7 +497,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const expectedState: YinshGameState = new YinshGameState(expectedBoard, [0, 0], 11);
+            const expectedState: YinshState = new YinshState(expectedBoard, [0, 0], 11);
 
             expect(resultingState.equals(expectedState)).toBeTrue();
         });
@@ -517,7 +517,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             expect(rules.getPossibleCaptures(state)).toEqual([]);
         });
         it('should not consider aligned markers of different players as capturable', () => {
@@ -534,7 +534,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             expect(rules.getPossibleCaptures(state)).toEqual([]);
         });
         it('should not consider 4 aligned markers as capturable', () => {
@@ -551,7 +551,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             const captures: YinshCapture[] = rules.getPossibleCaptures(state);
             expect(captures.length).toBe(0);
         });
@@ -569,7 +569,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             const captures: YinshCapture[] = rules.getPossibleCaptures(state);
             expect(captures.length).toBe(1);
             expect(captures[0].equals(YinshCapture.of(new Coord(3, 2), new Coord(3, 6), new Coord(-1, -1)))).toBeTrue();
@@ -588,7 +588,7 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             const captures: YinshCapture[] = rules.getPossibleCaptures(state);
             expect(captures.length).toBe(2);
             expect(captures.some((c: YinshCapture): boolean =>
@@ -610,26 +610,26 @@ describe('YinshRules', () => {
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
             ]);
-            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const state: YinshState = new YinshState(board, [0, 0], 10);
             const captures: YinshCapture[] = rules.getPossibleCaptures(state);
             expect(captures.length).toBe(1);
         });
     });
     describe('getGameStatus', () => {
         it('should consider initial phase as ongoing', () => {
-            const state: YinshGameState = YinshGameState.getInitialState();
+            const state: YinshState = YinshState.getInitialState();
             expect(rules.getGameStatus(new MGPNode(null, null, state))).toBe(GameStatus.ONGOING);
         });
         it('should detect part after initial phase as ongoing if victory criterion is not met', () => {
-            const state: YinshGameState = new YinshGameState(YinshBoard.EMPTY, [0, 0], 20);
+            const state: YinshState = new YinshState(YinshBoard.EMPTY, [0, 0], 20);
             expect(rules.getGameStatus(new MGPNode(null, null, state))).toBe(GameStatus.ONGOING);
         });
         it('should detect victory for a player if it obtains more than 3 rings', () => {
-            const state1: YinshGameState = new YinshGameState(YinshBoard.EMPTY, [3, 0], 20);
+            const state1: YinshState = new YinshState(YinshBoard.EMPTY, [3, 0], 20);
             const node1: YinshNode = new MGPNode(null, null, state1);
             expectToBeVictoryFor(rules, node1, Player.ZERO, minimaxes);
 
-            const state2: YinshGameState = new YinshGameState(YinshBoard.EMPTY, [0, 3], 20);
+            const state2: YinshState = new YinshState(YinshBoard.EMPTY, [0, 3], 20);
             const node2: YinshNode = new MGPNode(null, null, state2);
             expectToBeVictoryFor(rules, node2, Player.ONE, minimaxes);
 

@@ -14,10 +14,10 @@ import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 
 describe('SaharaRules', () => {
 
-    const N: number = FourStatePiece.NONE.value;
-    const O: number = FourStatePiece.ZERO.value;
-    const X: number = FourStatePiece.ONE.value;
-    const _: number = FourStatePiece.EMPTY.value;
+    const N: FourStatePiece = FourStatePiece.NONE;
+    const O: FourStatePiece = FourStatePiece.ZERO;
+    const X: FourStatePiece = FourStatePiece.ONE;
+    const _: FourStatePiece = FourStatePiece.EMPTY;
 
     let rules: SaharaRules;
     let minimax: SaharaMinimax;
@@ -58,10 +58,10 @@ describe('SaharaRules', () => {
         expect(rules.choose(new SaharaMove(new Coord(0, 3), new Coord(1, 4)))).toBeTrue();
         expect(rules.node.gameState.getBoardAt(new Coord(1, 4)))
             .withContext('Just moved black piece should be in her landing spot')
-            .toBe(FourStatePiece.ZERO.value);
+            .toBe(FourStatePiece.ZERO);
         expect(rules.node.gameState.getBoardAt(new Coord(0, 3)))
             .withContext('Just moved black piece should have left her initial spot')
-            .toBe(FourStatePiece.EMPTY.value);
+            .toBe(FourStatePiece.EMPTY);
         expect(rules.choose(new SaharaMove(new Coord(3, 0), new Coord(4, 0)))).toBeTrue();
         expect(rules.choose(new SaharaMove(new Coord(1, 4), new Coord(2, 4)))).toBeTrue();
         expect(rules.node.getOwnValue(minimax).value).toBe(Number.MIN_SAFE_INTEGER, 'Should be victory');
@@ -76,7 +76,7 @@ describe('SaharaRules', () => {
         expect(status.legal.reason).toEqual(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
     });
     it('Should see that Player.ONE won', () => {
-        const board: number[][] = [
+        const board: FourStatePiece[][] = [
             [N, N, O, _, _, _, X, O, X, N, N],
             [N, _, _, _, _, _, _, _, _, _, N],
             [X, _, _, _, _, _, _, _, _, _, O],

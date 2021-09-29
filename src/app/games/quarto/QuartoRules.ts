@@ -73,12 +73,12 @@ class Critere {
 
     readonly subCritere: boolean[] = [null, null, null, null];
 
-    constructor(bCase: number) {
+    constructor(bCase: QuartoPiece) {
         // un critère est initialisé avec une case, il en prend la valeur
-        this.subCritere[0] = (bCase & 8) === 8;
-        this.subCritere[1] = (bCase & 4) === 4;
-        this.subCritere[2] = (bCase & 2) === 2;
-        this.subCritere[3] = (bCase & 1) === 1;
+        this.subCritere[0] = (bCase.value & 8) === 8;
+        this.subCritere[1] = (bCase.value & 4) === 4;
+        this.subCritere[2] = (bCase.value & 2) === 2;
+        this.subCritere[3] = (bCase.value & 1) === 1;
     }
     public setSubCrit(index: number, value: boolean): boolean {
         this.subCritere[index] = value;
@@ -119,12 +119,12 @@ class Critere {
 
         return (nonNull > 0);
     }
-    public mergeWithNumber(ic: number): boolean {
+    public mergeWithNumber(ic: QuartoPiece): boolean {
         const c: Critere = new Critere(ic);
         return this.mergeWith(c);
     }
     public mergeWithQuartoPiece(qe: QuartoPiece): boolean {
-        return this.mergeWithNumber(qe.value);
+        return this.mergeWithNumber(qe); // TODO deleltle
     }
     public isAllNull(): boolean {
         let i: number = 0;
@@ -148,9 +148,9 @@ class Critere {
         return false;
     }
     public matchQE(qe: QuartoPiece): boolean {
-        return this.match(new Critere(qe.value));
+        return this.match(new Critere(qe));
     }
-    public matchInt(c: number): boolean {
+    public matchInt(c: QuartoPiece): boolean {
         return this.match(new Critere(c));
     }
     public toString(): string {
@@ -179,8 +179,8 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
                           state: QuartoState)
     : QuartoState
     {
-        const newBoard: number[][] = state.getCopiedBoard();
-        newBoard[move.coord.y][move.coord.x] = state.pieceInHand.value;
+        const newBoard: QuartoPiece[][] = state.getCopiedBoard();
+        newBoard[move.coord.y][move.coord.x] = state.pieceInHand;
         const resultingState: QuartoState = new QuartoState(newBoard, state.turn + 1, move.piece);
         return resultingState;
     }
@@ -202,8 +202,8 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
 
     public node: MGPNode<QuartoRules, QuartoMove, QuartoState>;
 
-    private static isOccupied(qcase: number): boolean {
-        return (qcase !== QuartoPiece.NONE.value);
+    private static isOccupied(qcase: QuartoPiece): boolean {
+        return (qcase !== QuartoPiece.NONE);
     }
     public static printArray(array: number[]): string {
         let result: string = '[';
@@ -219,7 +219,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         const x: number = move.coord.x;
         const y: number = move.coord.y;
         const pieceToGive: QuartoPiece = move.piece;
-        const board: number[][] = state.getCopiedBoard();
+        const board: QuartoPiece[][] = state.getCopiedBoard();
         const pieceInHand: QuartoPiece = state.pieceInHand;
         if (QuartoRules.isOccupied(board[y][x])) {
             // on ne joue pas sur une case occupée
@@ -268,7 +268,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         // la seule chose susceptible de changer le résultat total est une victoire
         let coord: Coord = line.initialCoord;
         let i: number = 0; // index de la case testée
-        let c: number = state.getBoardAt(coord);
+        let c: QuartoPiece = state.getBoardAt(coord);
         const commonCrit: Critere = new Critere(c);
         while (QuartoRules.isOccupied(c) && !commonCrit.isAllNull() && (i < 3)) {
             i++;
@@ -295,9 +295,9 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
 
         let coord: Coord = line.initialCoord;
         for (let i: number = 0; i < 4; i++) {
-            const c: number = state.getBoardAt(coord);
+            const c: QuartoPiece = state.getBoardAt(coord);
             // on analyse toute la ligne
-            if (c === QuartoPiece.NONE.value) {
+            if (c === QuartoPiece.NONE) {
                 // si la case C est inoccupée
                 if (cs == null) {
                     cs = new CaseSensible(coord.x, coord.y);
@@ -327,7 +327,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
             } else {
                 // si il n'y a qu'une case vide, alors la case sensible qu'on avais trouvé et assigné
                 // est dans ce cas bel et bien une case sensible
-                if (commonCrit.matchInt(state.pieceInHand.value)) {
+                if (commonCrit.matchInt(state.pieceInHand)) {
                     boardStatus.score = SCORE.PRE_VICTORY;
                 }
                 cs.addCritere(commonCrit);

@@ -4,7 +4,7 @@ import { PylosCoord } from './PylosCoord';
 import { PylosMove } from './PylosMove';
 import { GameState } from 'src/app/jscaip/GameState';
 
-export class PylosState extends GameState {
+export class PylosState extends GameState<PylosCoord, Player> {
 
     public static getInitialState(): PylosState {
         const board0: Player[][] = ArrayUtils.createBiArray(4, 4, Player.NONE);
@@ -21,6 +21,9 @@ export class PylosState extends GameState {
     }
     public getBoardAt(coord: PylosCoord): Player {
         return this.boards[coord.z][coord.y][coord.x];
+    }
+    public getNullable(coord: PylosCoord): Player {
+        return this.getBoardAt(coord);
     }
     public applyLegalMove(move: PylosMove): PylosState {
         const updateValues: { coord: PylosCoord, value: Player }[] = [];

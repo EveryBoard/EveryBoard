@@ -13,9 +13,9 @@ import { GameStatus } from 'src/app/jscaip/Rules';
 export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasState, EpaminondasLegalityStatus> {
 
     public static getListMoves(node: EpaminondasNode): EpaminondasMove[] {
-        const PLAYER: number = node.gameState.getCurrentPlayer().value;
-        const ENNEMY: number = node.gameState.getCurrentEnnemy().value;
-        const EMPTY: number = Player.NONE.value;
+        const PLAYER: Player = node.gameState.getCurrentPlayer();
+        const ENNEMY: Player = node.gameState.getCurrentEnnemy();
+        const EMPTY: Player = Player.NONE;
 
         let moves: EpaminondasMove[] = [];
         const state: EpaminondasState = node.gameState;
@@ -90,7 +90,7 @@ export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasStat
             const wasPresent: number[] = [0, 0];
             for (let x: number = 0; x < 14; x++) {
                 const coord: Coord = new Coord(x, y);
-                const player: Player = Player.of(state.getBoardAt(coord));
+                const player: Player = state.getBoardAt(coord);
                 if (player !== Player.NONE) {
                     const mod: number = player.getScoreModifier();
                     total += SCORE_BY_PIECE * mod;
@@ -99,7 +99,7 @@ export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasStat
                     for (const dir of [Direction.UP_LEFT, Direction.UP, Direction.UP_RIGHT]) {
                         let neighboor: Coord = coord.getNext(dir, 1);
                         while (neighboor.isInRange(14, 12) &&
-                               state.getBoardAt(neighboor) === player.value)
+                               state.getBoardAt(neighboor) === player)
                         {
                             total += mod * SCORE_BY_ALIGNEMENT;
                             neighboor = neighboor.getNext(dir, 1);

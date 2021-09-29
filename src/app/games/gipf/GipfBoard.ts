@@ -10,10 +10,10 @@ export class GipfBoard extends HexaBoard<GipfPiece> {
         return new GipfBoard(table);
     }
 
-    public constructor(public readonly contents: Table<GipfPiece>) {
-        super(contents, 7, 7, [3, 2, 1], GipfPiece.EMPTY);
+    public constructor(public readonly board: Table<GipfPiece>) {
+        super(board, 7, 7, [3, 2, 1], GipfPiece.EMPTY);
     }
     public toNumberTable(): NumberTable {
-        return ArrayUtils.mapBiArray(this.contents, GipfBoard.pieceEncoder.encodeNumber);
+        return ArrayUtils.mapBiArray(this.board, GipfBoard.pieceEncoder.encodeNumber);
     }
 }

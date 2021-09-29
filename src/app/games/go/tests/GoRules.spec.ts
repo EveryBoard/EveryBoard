@@ -9,11 +9,13 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GoRules } from '../GoRules';
 import { GoMinimax } from '../GoMinimax';
 import { GoFailure } from '../GoFailure';
+import { expectToBeDraw } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { Minimax } from 'src/app/jscaip/Minimax';
 
 describe('GoRules:', () => {
 
     let rules: GoRules;
-    let minimax: GoMinimax;
+    let minimaxes: Minimax<GoMove, GoState>[];
 
     const X: GoPiece = GoPiece.WHITE;
     const O: GoPiece = GoPiece.BLACK;
@@ -29,7 +31,9 @@ describe('GoRules:', () => {
     });
     beforeEach(() => {
         rules = new GoRules(GoState);
-        minimax = new GoMinimax(rules, 'GoMinimax');
+        minimaxes = [
+            new GoMinimax(rules, 'GoMinimax'),
+        ];
     });
     it('should be created', () => {
         expect(rules).toBeTruthy();
@@ -465,6 +469,6 @@ describe('GoRules:', () => {
         expect(rules.choose(new GoMove(4, 2))).toBeTrue();
         expect(rules.choose(GoMove.ACCEPT)).toBeTrue();
         expect(rules.choose(GoMove.ACCEPT)).toBeTrue();
-        expect(minimax.getBoardValue(rules.node).value).toBe(0);
+        expectToBeDraw(rules, rules.node, minimaxes);
     });
 });

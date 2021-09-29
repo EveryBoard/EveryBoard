@@ -159,9 +159,9 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
         const start: Coord = move.coord;
         const end: Coord = move.end;
 
-        const newBoard: number[][] = state.getCopiedBoard();
+        const newBoard: KamisadoPiece[][] = state.getCopiedBoard();
         newBoard[end.y][end.x] = newBoard[start.y][start.x]; // actual move
-        newBoard[start.y][start.x] = KamisadoPiece.NONE.getValue(); // becomes unoccupied
+        newBoard[start.y][start.x] = KamisadoPiece.NONE; // becomes unoccupied
         const newColorToPlay: KamisadoColor = KamisadoBoard.getColorAt(end.x, end.y);
 
         // Get the next piece that can move

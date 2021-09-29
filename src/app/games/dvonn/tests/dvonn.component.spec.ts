@@ -10,6 +10,7 @@ import { DvonnFailure } from 'src/app/games/dvonn/DvonnFailure';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('DvonnComponent', () => {
+
     let componentTestUtils: ComponentTestUtils<DvonnComponent>;
 
     const __: DvonnPieceStack = DvonnPieceStack.EMPTY;

@@ -3,9 +3,9 @@ import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { RectangularGameState } from 'src/app/jscaip/RectangularGameState';
 import { Table } from 'src/app/utils/ArrayUtils';
 
-export class AbaloneGameState extends RectangularGameState<FourStatePiece> {
+export class AbaloneState extends RectangularGameState<FourStatePiece> {
 
-    public static getInitialState(): AbaloneGameState {
+    public static getInitialState(): AbaloneState {
         const _: FourStatePiece = FourStatePiece.EMPTY;
         const N: FourStatePiece = FourStatePiece.NONE;
         const O: FourStatePiece = FourStatePiece.ZERO;
@@ -21,7 +21,7 @@ export class AbaloneGameState extends RectangularGameState<FourStatePiece> {
             [O, O, O, O, O, O, N, N, N],
             [O, O, O, O, O, N, N, N, N],
         ];
-        return new AbaloneGameState(board, 0);
+        return new AbaloneState(board, 0);
     }
     public isInBoard(coord: Coord): boolean {
         return coord.isInRange(9, 9) &&

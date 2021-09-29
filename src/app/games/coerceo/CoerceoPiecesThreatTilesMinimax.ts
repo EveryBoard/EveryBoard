@@ -41,21 +41,18 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
         return new NodeUnheritance(score);
     }
     public getPiecesMap(state: CoerceoState): MGPMap<Player, MGPSet<Coord>> {
-        const EMPTY: number = FourStatePiece.EMPTY.value;
-        const NONE: number = FourStatePiece.NONE.value;
         const map: MGPMap<Player, MGPSet<Coord>> = new MGPMap();
         const zeroPieces: Coord[] = [];
         const onePieces: Coord[] = [];
         for (let y: number = 0; y < 10; y++) {
             for (let x: number = 0; x < 15; x++) {
                 const coord: Coord = new Coord(x, y);
-                const piece: number = state.getBoardAt(coord);
-                if (piece !== EMPTY && piece !== NONE) {
-                    if (piece === Player.ZERO.value) {
-                        zeroPieces.push(coord);
-                    } else {
-                        onePieces.push(coord);
-                    }
+                const piece: FourStatePiece = state.getBoardAt(coord);
+                if (piece === FourStatePiece.ZERO) {
+                    zeroPieces.push(coord);
+                }
+                if (piece === FourStatePiece.ONE) {
+                    onePieces.push(coord);
                 }
             }
         }
@@ -79,8 +76,8 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
         return threatMap;
     }
     public getThreat(coord: Coord, state: CoerceoState): PieceThreat { // TODO: check threat by leaving tile
-        const threatenerPlayer: Player = Player.of(state.getBoardAt(coord));
-        const ENNEMY: number = threatenerPlayer.getOpponent().value;
+        const threatenerPlayer: Player = Player.of(state.getBoardAt(coord).value);
+        const ENEMY: Player = threatenerPlayer.getOpponent();
         let freedoms: number = 0;
         let freedom: Coord;
         const directThreats: Coord[] = [];
@@ -88,10 +85,10 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
             .getNeighboors(coord)
             .filter((c: Coord) => c.isInRange(15, 10));
         for (const directThreat of neighboors) {
-            const threat: number = state.getBoardAt(directThreat);
-            if (threat === ENNEMY) {
+            const threat: FourStatePiece = state.getBoardAt(directThreat);
+            if (threat.is(ENEMY)) {
                 directThreats.push(directThreat);
-            } else if (threat === FourStatePiece.EMPTY.value) {
+            } else if (threat === FourStatePiece.EMPTY) {
                 freedoms++;
                 freedom = directThreat;
             }
@@ -101,7 +98,7 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
             for (const step of CoerceoStep.STEPS) {
                 const movingThreat: Coord = freedom.getNext(step.direction, 1);
                 if (movingThreat.isInRange(15, 10) &&
-                    state.getBoardAt(movingThreat) === ENNEMY &&
+                    state.getBoardAt(movingThreat).is(ENEMY) &&
                     directThreats.every((coord: Coord) => coord.equals(movingThreat) === false))
                 {
                     movingThreats.push(movingThreat);
@@ -120,10 +117,10 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
         const filteredThreatMap: MGPMap<Coord, PieceThreat> = new MGPMap();
         const threateneds: Coord[] = threatMap.listKeys();
         const threatenedPlayerPieces: Coord[] = threateneds.filter((coord: Coord) => {
-            return state.getBoardAt(coord) === state.getCurrentPlayer().value;
+            return state.getBoardAt(coord).is(state.getCurrentPlayer());
         });
         const threatenedEnnemyPieces: MGPSet<Coord> = new MGPSet(threateneds.filter((coord: Coord) => {
-            return state.getBoardAt(coord) === state.getCurrentEnnemy().value;
+            return state.getBoardAt(coord).is(state.getCurrentEnnemy());
         }));
         for (const threatenedPiece of threatenedPlayerPieces) {
             const oldThreat: PieceThreat = threatMap.get(threatenedPiece).get();

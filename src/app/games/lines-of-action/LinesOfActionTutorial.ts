@@ -4,9 +4,9 @@ import { Player } from 'src/app/jscaip/Player';
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionState } from './LinesOfActionState';
 
-const X: number = Player.ZERO.value;
-const O: number = Player.ONE.value;
-const _: number = Player.NONE.value;
+const X: Player = Player.ZERO;
+const O: Player = Player.ONE;
+const _: Player = Player.NONE;
 
 export const linesOfActionTutorial: TutorialStep[] = [
     TutorialStep.informational(

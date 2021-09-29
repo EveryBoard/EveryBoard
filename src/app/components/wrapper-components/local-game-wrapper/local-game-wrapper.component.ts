@@ -1,13 +1,14 @@
 import { Component, ComponentFactoryResolver, AfterViewInit,
     ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
 import { UserService } from 'src/app/services/UserService';
 import { assert, display } from 'src/app/utils/utils';
 import { MGPNode, MGPNodeStats } from 'src/app/jscaip/MGPNode';
-import { RectangularGameState } from 'src/app/jscaip/RectangularGameState';
+import { GameState } from 'src/app/jscaip/GameState';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { Player } from 'src/app/jscaip/Player';
@@ -78,7 +79,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
     }
     public proposeAIToPlay(): void {
         // check if ai's turn has come, if so, make her start after a delay
-        const playingMinimax: Minimax<Move, RectangularGameState> = this.getPlayingAI();
+        const playingMinimax: Minimax<Move, GameState<unknown, unknown>> = this.getPlayingAI();
         if (playingMinimax != null) {
             // bot's turn
             setTimeout(() => {
@@ -86,19 +87,19 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
             }, this.botTimeOut);
         }
     }
-    private getPlayingAI(): Minimax<Move, RectangularGameState> {
+    private getPlayingAI(): Minimax<Move, GameState<unknown, unknown>> {
         const turn: number = this.gameComponent.rules.node.gameState.turn % 2;
         if (this.gameComponent.rules.getGameStatus(this.gameComponent.rules.node).isEndGame) {
             // No AI is playing when the game is finished
             return null;
         }
-        return this.gameComponent.availableMinimaxes.find((a: Minimax<Move, RectangularGameState, LegalityStatus>) => {
+        return this.gameComponent.availableMinimaxes.find((a: Minimax<Move, GameState<unknown, unknown>, LegalityStatus>) => {
             return a.name === this.players[turn];
         });
     }
-    public doAIMove(playingMinimax: Minimax<Move, RectangularGameState>): void {
+    public doAIMove(playingMinimax: Minimax<Move, GameState<unknown, unknown>>): void {
         // called only when it's AI's Turn
-        const ruler: Rules<Move, RectangularGameState, LegalityStatus> = this.gameComponent.rules;
+        const ruler: Rules<Move, GameState<unknown, unknown>, LegalityStatus> = this.gameComponent.rules;
         const gameStatus: GameStatus = ruler.getGameStatus(ruler.node);
         assert(gameStatus === GameStatus.ONGOING, 'IA should not try to play when game is over!');
         const turn: number = ruler.node.gameState.turn % 2;
@@ -126,7 +127,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         return this.getPlayingAI() != null;
     }
     public restartGame(): void {
-        const state: RectangularGameState = this.gameComponent.rules.stateType['getInitialState']();
+        const state: GameState<unknown, unknown> = this.gameComponent.rules.stateType['getInitialState']();
         this.gameComponent.rules.node = new MGPNode(null, null, state);
         this.gameComponent.updateBoard();
         this.endGame = false;

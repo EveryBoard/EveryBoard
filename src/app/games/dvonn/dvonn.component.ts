@@ -52,7 +52,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnState
         this.showScore = true;
         this.canPass = false;
         this.scores = DvonnRules.getScores(this.rules.node.gameState);
-        this.hexaBoard = this.rules.node.gameState.hexaBoard;
+        this.hexaBoard = this.rules.node.gameState.board;
     }
     public hideLastMove(): void {
         this.lastMove = null;
@@ -60,8 +60,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnState
     public updateBoard(): void {
         this.cancelMoveAttempt();
         const state: DvonnState = this.rules.node.gameState;
-        this.board = state.getCopiedBoard();
-        this.hexaBoard = state.hexaBoard;
+        this.hexaBoard = state.board;
         this.lastMove = this.rules.node.move;
         this.disconnecteds = [];
         if (this.lastMove) {
@@ -75,13 +74,13 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnState
     private calculateDisconnecteds(): void {
         const previousState: DvonnState = this.rules.node.mother.gameState;
         const state: DvonnState = this.rules.node.gameState;
-        for (let y: number = 0; y < state.hexaBoard.height; y++) {
-            for (let x: number = 0; x < state.hexaBoard.width; x++) {
+        for (let y: number = 0; y < state.board.height; y++) {
+            for (let x: number = 0; x < state.board.width; x++) {
                 const coord: Coord = new Coord(x, y);
-                if (state.hexaBoard.isOnBoard(coord) === true &&
+                if (state.board.isOnBoard(coord) === true &&
                     coord.equals(this.lastMove.coord) === false) {
-                    const stack: DvonnPieceStack = state.hexaBoard.getAt(coord);
-                    const previousStack: DvonnPieceStack = previousState.hexaBoard.getAt(coord);
+                    const stack: DvonnPieceStack = state.board.getAt(coord);
+                    const previousStack: DvonnPieceStack = previousState.board.getAt(coord);
                     if (stack.isEmpty() && !previousStack.isEmpty()) {
                         const disconnected: { x: number, y: number, caseContent: DvonnPieceStack } =
                             { x, y, caseContent: previousStack };

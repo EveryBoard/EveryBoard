@@ -10,6 +10,7 @@ import { SixComponent } from '../six.component';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 describe('SixComponent', () => {
+
     let componentTestUtils: ComponentTestUtils<SixComponent>;
 
     const _: number = Player.NONE.value;

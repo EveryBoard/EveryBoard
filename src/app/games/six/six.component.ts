@@ -185,7 +185,7 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixState, SixL
         return { minX, minY, maxX, maxY, upperPiece, lefterPiece };
     }
     public getPieceClass(coord: Coord): string {
-        const player: Player = this.rules.node.gameState.getPieceAt(coord);
+        const player: Player = this.rules.node.gameState.getBoardAt(coord);
         return this.getPlayerClass(player);
     }
     public async onPieceClick(piece: Coord): Promise<MGPValidation> {
@@ -196,7 +196,7 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixState, SixL
         if (this.state.turn < 40) {
             return this.cancelMove(SixFailure.NO_DEPLACEMENT_BEFORE_TURN_40);
         } else if (this.chosenLanding == null) {
-            if (this.state.getPieceAt(piece) === this.state.getCurrentEnnemy()) {
+            if (this.state.getBoardAt(piece) === this.state.getCurrentEnnemy()) {
                 return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
             }
             this.selectedPiece = piece;

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
+import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
@@ -20,7 +20,8 @@ import { quixoTutorial } from './QuixoTutorial';
     templateUrl: './quixo.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoState> {
+export class QuixoComponent extends RectangularGameComponent<QuixoMove, QuixoState, Player> {
+
     public static VERBOSE: boolean = false;
 
     public CASE_SIZE: number = 100;
@@ -46,6 +47,7 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoState>
         this.availableMinimaxes = [
             new QuixoMinimax(this.rules, 'QuixoMinimax'),
         ];
+        this.updateBoard();
     }
     public updateBoard(): void {
         this.state = this.rules.node.gameState;
@@ -60,7 +62,7 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoState>
     }
     public getPieceClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
-        const player: Player = Player.of(this.board[y][x]);
+        const player: Player = this.board[y][x];
         const classes: string[] = [];
 
         classes.push(this.getPlayerClass(player));
@@ -79,7 +81,7 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoState>
         if (coordLegality.isFailure()) {
             return this.cancelMove(coordLegality.reason);
         }
-        if (this.board[y][x] === this.state.getCurrentEnnemy().value) {
+        if (this.board[y][x] === this.state.getCurrentEnnemy()) {
             return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
         } else {
             this.chosenCoord = clickedCoord;

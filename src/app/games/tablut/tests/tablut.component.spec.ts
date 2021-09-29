@@ -9,6 +9,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Table } from 'src/app/utils/ArrayUtils';
 
 describe('TablutComponent', () => {
+
     let componentTestUtils: ComponentTestUtils<TablutComponent>;
 
     const _: TablutCase = TablutCase.UNOCCUPIED;

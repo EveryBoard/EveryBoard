@@ -5,16 +5,16 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
-const _: number = new EncapsuleCase(Player.NONE, Player.NONE, Player.NONE).encode();
-const s: number = new EncapsuleCase(Player.ZERO, Player.NONE, Player.NONE).encode();
-const m: number = new EncapsuleCase(Player.NONE, Player.ZERO, Player.NONE).encode();
-const b: number = new EncapsuleCase(Player.NONE, Player.NONE, Player.ZERO).encode();
-const S: number = new EncapsuleCase(Player.ONE, Player.NONE, Player.NONE).encode();
-const B: number = new EncapsuleCase(Player.NONE, Player.NONE, Player.ONE).encode();
+const _: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.NONE);
+const s: EncapsuleCase = new EncapsuleCase(Player.ZERO, Player.NONE, Player.NONE);
+const m: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.ZERO, Player.NONE);
+const b: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.ZERO);
+const S: EncapsuleCase = new EncapsuleCase(Player.ONE, Player.NONE, Player.NONE);
+const B: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.ONE);
 
-const Sm: number = new EncapsuleCase(Player.ONE, Player.ZERO, Player.NONE).encode();
-const sm: number = new EncapsuleCase(Player.ZERO, Player.ZERO, Player.NONE).encode();
-const Mb: number = new EncapsuleCase(Player.NONE, Player.ONE, Player.ZERO).encode();
+const Sm: EncapsuleCase = new EncapsuleCase(Player.ONE, Player.ZERO, Player.NONE);
+const sm: EncapsuleCase = new EncapsuleCase(Player.ZERO, Player.ZERO, Player.NONE);
+const Mb: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.ONE, Player.ZERO);
 
 export const encapsuleTutorial: TutorialStep[] = [
     TutorialStep.informational(

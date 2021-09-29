@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
+import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { MinimaxTestingRules } from 'src/app/games/minimax-testing/MinimaxTestingRules';
 import { MinimaxTestingState } from 'src/app/games/minimax-testing/MinimaxTestingState';
 import { MinimaxTestingMove } from 'src/app/games/minimax-testing/MinimaxTestingMove';
@@ -15,7 +15,7 @@ import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-gam
     templateUrl: './minimax-testing.component.html',
     styleUrls: [],
 })
-export class MinimaxTestingComponent extends AbstractGameComponent<MinimaxTestingMove, MinimaxTestingState> {
+export class MinimaxTestingComponent extends RectangularGameComponent<MinimaxTestingMove, MinimaxTestingState, number> {
     public coord: Coord = new Coord(-1, -1);
 
     public encoder: MoveEncoder<MinimaxTestingMove> = MinimaxTestingMove.encoder;

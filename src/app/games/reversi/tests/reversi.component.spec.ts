@@ -7,6 +7,7 @@ import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
 
 describe('ReversiComponent', () => {
+
     let componentTestUtils: ComponentTestUtils<ReversiComponent>;
 
     const _: Player = Player.NONE;

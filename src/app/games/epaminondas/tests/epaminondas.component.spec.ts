@@ -10,7 +10,8 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { EpaminondasFailure } from '../EpaminondasFailure';
 import { Table } from 'src/app/utils/ArrayUtils';
 
-describe('EpaminondasComponent:', () => {
+describe('EpaminondasComponent', () => {
+
     let componentTestUtils: ComponentTestUtils<EpaminondasComponent>;
 
     const _: Player = Player.NONE;

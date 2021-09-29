@@ -6,7 +6,7 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { Coord } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { NumberTable } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/Player';
 import { QuixoState } from 'src/app/games/quixo/QuixoState';
 import { QuixoFailure } from 'src/app/games/quixo/QuixoFailure';
@@ -15,9 +15,9 @@ describe('QuixoComponent', () => {
 
     let componentTestUtils: ComponentTestUtils<QuixoComponent>;
 
-    const _: number = Player.NONE.value;
-    const X: number = Player.ONE.value;
-    const O: number = Player.ZERO.value;
+    const _: Player = Player.NONE;
+    const X: Player = Player.ONE;
+    const O: Player = Player.ZERO;
 
     beforeEach(fakeAsync(async() => {
         componentTestUtils = await ComponentTestUtils.forGame<QuixoComponent>('Quixo');
@@ -41,7 +41,7 @@ describe('QuixoComponent', () => {
         expect(componentTestUtils.getComponent().getPossiblesDirections()).toEqual(['LEFT', 'UP']);
     });
     it('should cancel move when trying to select ennemy piece', fakeAsync(async() => {
-        const board: NumberTable = [
+        const board: Table<Player> = [
             [O, _, _, _, _],
             [_, _, _, _, _],
             [X, _, _, _, X],
@@ -54,7 +54,7 @@ describe('QuixoComponent', () => {
         await componentTestUtils.expectClickFailure('#click_0_0', RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
     }));
     it('should cancel move when trying to select center coord', fakeAsync(async() => {
-        const board: NumberTable = [
+        const board: Table<Player> = [
             [O, _, _, _, _],
             [_, _, _, _, _],
             [X, _, _, _, X],
@@ -67,7 +67,7 @@ describe('QuixoComponent', () => {
         await componentTestUtils.expectClickFailure('#click_1_1', QuixoFailure.NO_INSIDE_CLICK);
     }));
     it('should highlight victory', fakeAsync(async() => {
-        const board: NumberTable = [
+        const board: Table<Player> = [
             [O, O, O, O, O],
             [_, _, _, _, _],
             [X, _, _, _, X],

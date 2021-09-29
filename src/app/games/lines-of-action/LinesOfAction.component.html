@@ -17,7 +17,7 @@
                 <circle *ngIf="caseContent !== EMPTY"
                         [attr.cx]="CASE_SIZE/2 + (x * CASE_SIZE)"
                         [attr.cy]="CASE_SIZE/2 + (y * CASE_SIZE)"
-                        [ngClass]="getPieceClasses(x, y, caseContent)"
+                        [ngClass]="getPieceClasses(x, y)"
                         r="40"
                         class="base"/>
             </g>

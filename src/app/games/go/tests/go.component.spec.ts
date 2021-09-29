@@ -9,6 +9,7 @@ import { fakeAsync, tick } from '@angular/core/testing';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 describe('GoComponent', () => {
+
     let componentTestUtils: ComponentTestUtils<GoComponent>;
 
     const _: GoPiece = GoPiece.EMPTY;

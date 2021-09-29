@@ -12,7 +12,7 @@ import { GoComponent } from 'src/app/games/go/go.component';
 import { KamisadoComponent } from 'src/app/games/kamisado/kamisado.component';
 import { LinesOfActionComponent } from 'src/app/games/lines-of-action/LinesOfAction.component';
 import { P4Component } from 'src/app/games/p4/p4.component';
-import { PentagoComponent } from 'src/app/games/pentago/Pentago.component';
+import { PentagoComponent } from 'src/app/games/pentago/pentago.component';
 import { PylosComponent } from 'src/app/games/pylos/pylos.component';
 import { QuartoComponent } from '../../../games/quarto/quarto.component';
 import { QuixoComponent } from 'src/app/games/quixo/quixo.component';

@@ -19,14 +19,14 @@ export class CoerceoMinimax extends Minimax<CoerceoMove, CoerceoState> {
         const exchanges: CoerceoMove[] = [];
         const state: CoerceoState = node.gameState;
         const PLAYER: number = state.getCurrentPlayer().value;
-        const ENNEMY: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentEnnemy());
+        const ENEMY: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentEnnemy());
         if (state.tiles[PLAYER] < 2) {
             return exchanges;
         }
         for (let y: number = 0; y < 10; y++) {
             for (let x: number = 0; x < 15; x++) {
                 const captured: Coord = new Coord(x, y);
-                if (state.getBoardAt(captured) === ENNEMY) {
+                if (state.getBoardAt(captured) === ENEMY) {
                     const move: CoerceoMove = CoerceoMove.fromTilesExchange(captured);
                     exchanges.push(move);
                 }
@@ -40,7 +40,7 @@ export class CoerceoMinimax extends Minimax<CoerceoMove, CoerceoState> {
         for (let y: number = 0; y < 10; y++) {
             for (let x: number = 0; x < 15; x++) {
                 const start: Coord = new Coord(x, y);
-                if (state.getBoardAt(start) === state.getCurrentPlayer()) {
+                if (state.getBoardAt(start).is(state.getCurrentPlayer())) {
                     const legalLandings: Coord[] = state.getLegalLandings(start);
                     for (const end of legalLandings) {
                         const move: CoerceoMove = CoerceoMove.fromCoordToCoord(start, end);

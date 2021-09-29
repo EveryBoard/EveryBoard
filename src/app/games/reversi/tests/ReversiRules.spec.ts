@@ -26,7 +26,7 @@ describe('ReversiRules', () => {
     });
     it('ReversiRules should be created', () => {
         expect(rules).toBeTruthy();
-        expect(rules.node.gameState.turn).toBe(0, 'Game should start a turn 0');
+        expect(rules.node.gameState.turn).withContext('Game should start a turn 0').toBe(0);
         const moves: ReversiMove[] = minimaxes[0].getListMoves(rules.node); // TODO: generalise the poopydoldi
         expect(moves.length).toBe(4);
     });

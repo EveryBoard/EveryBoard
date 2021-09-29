@@ -1,4 +1,4 @@
-import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
+import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Component } from '@angular/core';
 import { Coord } from 'src/app/jscaip/Coord';
 import { KamisadoBoard } from 'src/app/games/kamisado/KamisadoBoard';
@@ -22,10 +22,10 @@ import { kamisadoTutorial } from './KamisadoTutorial';
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
 
-export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, KamisadoState> {
+export class KamisadoComponent extends RectangularGameComponent<KamisadoMove, KamisadoState, KamisadoPiece> {
 
     public CASE_SIZE: number = 75;
-    public UNOCCUPIED: number = KamisadoPiece.NONE.getValue();
+    public UNOCCUPIED: KamisadoPiece = KamisadoPiece.NONE;
     public lastMove: KamisadoMove = null;
     public chosen: Coord = new Coord(-1, -1);
     public chosenAutomatically: boolean = false;
@@ -41,19 +41,18 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
             new KamisadoMinimax(this.rules, 'KamisadoMinimax'),
         ];
         this.canPass = false;
+        this.updateBoard();
     }
     public backgroundColor(x: number, y: number): string {
         return KamisadoBoard.getColorAt(x, y).rgb;
     }
-    public isPlayerZero(pieceValue: number): boolean {
-        return KamisadoPiece.of(pieceValue).player === Player.ZERO;
+    public isPlayerZero(piece: KamisadoPiece): boolean {
+        return piece.player === Player.ZERO;
     }
-    public pieceColor(pieceValue: number): string {
-        const piece: KamisadoPiece = KamisadoPiece.of(pieceValue);
+    public pieceColor(piece: KamisadoPiece): string {
         return piece.color.rgb;
     }
-    public piecePlayerClass(pieceValue: number): string {
-        const piece: KamisadoPiece = KamisadoPiece.of(pieceValue);
+    public piecePlayerClass(piece: KamisadoPiece): string {
         return this.getPlayerClass(piece.player);
     }
     public updateBoard(): void {

@@ -5,10 +5,10 @@ import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
-const N: number = FourStatePiece.NONE.value;
-const O: number = FourStatePiece.ZERO.value;
-const X: number = FourStatePiece.ONE.value;
-const _: number = FourStatePiece.EMPTY.value;
+const N: FourStatePiece = FourStatePiece.NONE;
+const O: FourStatePiece = FourStatePiece.ZERO;
+const X: FourStatePiece = FourStatePiece.ONE;
+const _: FourStatePiece = FourStatePiece.EMPTY;
 export const saharaTutorial: TutorialStep[] = [
 
     TutorialStep.informational(

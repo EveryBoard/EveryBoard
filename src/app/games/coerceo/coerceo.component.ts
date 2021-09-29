@@ -3,7 +3,6 @@ import { TriangularGameComponent }
     from 'src/app/components/game-components/abstract-game-component/TriangularGameComponent';
 import { CoerceoMove } from 'src/app/games/coerceo/CoerceoMove';
 import { CoerceoState } from 'src/app/games/coerceo/CoerceoState';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Coord } from 'src/app/jscaip/Coord';
 import { CoerceoNode, CoerceoRules } from 'src/app/games/coerceo/CoerceoRules';
@@ -23,20 +22,15 @@ import { coerceoTutorial } from './CoerceoTutorial';
     templateUrl: './coerceo.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
-                                                              CoerceoState,
-                                                              LegalityStatus>
-{
+export class CoerceoComponent extends TriangularGameComponent<CoerceoMove, CoerceoState, FourStatePiece> {
 
     private state: CoerceoState;
-
-    public CASE_SIZE: number = 100;
 
     public scores: { readonly 0: number; readonly 1: number; } = [0, 0];
     public tiles: { readonly 0: number; readonly 1: number; } = [0, 0];
 
     public EMPTY: number = FourStatePiece.EMPTY.value;
-    public NONE: number = FourStatePiece.NONE.value;
+    public NONE: FourStatePiece = FourStatePiece.NONE;
 
     public chosenCoord: MGPOptional<Coord> = MGPOptional.empty();
     public lastStart: MGPOptional<Coord> = MGPOptional.empty();
@@ -59,7 +53,6 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
         this.showScore = true;
         this.updateBoard();
     }
-
     public updateBoard(): void {
         this.chosenCoord = MGPOptional.empty();
         this.state = this.rules.node.gameState;
@@ -96,10 +89,10 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
     }
     private async firstClick(coord: Coord): Promise<MGPValidation> {
         const clickedPiece: FourStatePiece = this.state.getBoardAt(coord);
-        if (clickedPiece === this.state.getCurrentEnnemy()) {
+        if (clickedPiece.is(this.state.getCurrentEnnemy())) {
             const move: CoerceoMove = CoerceoMove.fromTilesExchange(coord);
             return this.chooseMove(move, this.state, this.state.captures[0], this.state.captures[1]);
-        } else if (clickedPiece === this.state.getCurrentPlayer()) {
+        } else if (clickedPiece.is(this.state.getCurrentPlayer())) {
             this.chosenCoord = MGPOptional.of(coord);
             this.showHighlight();
         } else {
@@ -117,41 +110,46 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
             return this.cancelMove(CoerceoFailure.INVALID_DISTANCE);
         }
     }
-    public isPyramid(x: number, y: number, caseContent: number): boolean {
-        return caseContent === FourStatePiece.ZERO.value ||
-               caseContent === FourStatePiece.ONE.value ||
+    public isPyramid(x: number, y: number): boolean {
+        const caseContent: FourStatePiece = this.board[y][x];
+        return caseContent === FourStatePiece.ZERO ||
+               caseContent === FourStatePiece.ONE ||
                this.wasEnnemy(x, y);
     }
     private wasEnnemy(x: number, y: number): boolean {
         const mother: CoerceoNode = this.rules.node.mother;
         return mother != null &&
-               mother.gameState.getBoardByXY(x, y) === mother.gameState.getCurrentEnnemy();
+               mother.gameState.getBoardByXY(x, y).is(mother.gameState.getCurrentEnnemy());
     }
-    public getPyramidClass(caseContent: number): string {
-        if (caseContent === FourStatePiece.ZERO.value) {
+    public getPyramidClass(x: number, y: number): string {
+        const caseContent: FourStatePiece = this.board[y][x];
+        if (caseContent === FourStatePiece.ZERO) {
             return this.getPlayerClass(Player.ZERO);
-        } else if (caseContent === FourStatePiece.ONE.value) {
+        } else if (caseContent === FourStatePiece.ONE) {
             return this.getPlayerClass(Player.ONE);
         } else {
             return 'captured';
         }
     }
-    public isEmptyCase(x: number, y: number, caseContent: number): boolean {
-        return caseContent === FourStatePiece.EMPTY.value ||
-               this.wasRemoved(x, y, caseContent);
+    public isEmptyCase(x: number, y: number): boolean {
+        const caseContent: FourStatePiece = this.board[y][x];
+        return caseContent === FourStatePiece.EMPTY ||
+               this.wasRemoved(x, y);
     }
-    private wasRemoved(x: number, y: number, caseContent: number): boolean {
+    private wasRemoved(x: number, y: number): boolean {
+        const caseContent: FourStatePiece = this.board[y][x];
         const mother: CoerceoNode = this.rules.node.mother;
-        if (caseContent === FourStatePiece.NONE.value && mother != null) {
+        if (caseContent === FourStatePiece.NONE && mother != null) {
             const previousContent: FourStatePiece = mother.gameState.getBoardByXY(x, y);
             return previousContent === FourStatePiece.EMPTY ||
-                   previousContent === mother.gameState.getCurrentPlayer();
+                   previousContent.is(mother.gameState.getCurrentPlayer());
         } else {
             return false;
         }
     }
-    public getEmptyClass(x: number, y: number, caseContent: number): string {
-        if (caseContent === FourStatePiece.EMPTY.value) {
+    public getEmptyClass(x: number, y: number): string {
+        const caseContent: FourStatePiece = this.board[y][x];
+        if (caseContent === FourStatePiece.EMPTY) {
             if ((x+y)%2 === 1) {
                 return 'background';
             } else {

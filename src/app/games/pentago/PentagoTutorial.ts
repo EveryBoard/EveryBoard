@@ -4,9 +4,9 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { PentagoMove } from './PentagoMove';
 import { PentagoState } from './PentagoState';
 
-const _: number = Player.NONE.value;
-const X: number = Player.ONE.value;
-const O: number = Player.ZERO.value;
+const _: Player = Player.NONE;
+const X: Player = Player.ONE;
+const O: Player = Player.ZERO;
 
 export const pentagoTutorial: TutorialStep[] = [
     TutorialStep.informational(

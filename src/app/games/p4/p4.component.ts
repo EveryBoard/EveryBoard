@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { P4State } from './P4State';
 import { P4Rules } from './P4Rules';
 import { P4Minimax } from './P4Minimax';
-import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
+import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { P4Move } from 'src/app/games/p4/P4Move';
 import { Player } from 'src/app/jscaip/Player';
@@ -17,11 +17,11 @@ import { p4Tutorial } from './P4Tutorial';
     templateUrl: './p4.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class P4Component extends AbstractGameComponent<P4Move, P4State> {
+export class P4Component extends RectangularGameComponent<P4Move, P4State, Player> {
 
     public static VERBOSE: boolean = false;
 
-    public EMPTY_CASE: number = Player.NONE.value;
+    public EMPTY_CASE: Player = Player.NONE;
     public CASE_SIZE: number = 100;
     public STROKE_WIDTH: number = 8;
     public last: Coord;
@@ -37,6 +37,7 @@ export class P4Component extends AbstractGameComponent<P4Move, P4State> {
         this.availableMinimaxes = [
             new P4Minimax(this.rules, 'P4Minimax'),
         ];
+        this.updateBoard();
     }
     public async onClick(x: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x);
@@ -70,7 +71,7 @@ export class P4Component extends AbstractGameComponent<P4Move, P4State> {
         return classes;
     }
     public getCaseFillClass(x: number, y: number): string[] {
-        const content: number = this.board[y][x];
-        return [this.getPlayerClass(Player.of(content))];
+        const content: Player = this.board[y][x];
+        return [this.getPlayerClass(content)];
     }
 }

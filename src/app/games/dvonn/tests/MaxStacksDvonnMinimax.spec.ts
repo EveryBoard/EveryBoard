@@ -40,7 +40,7 @@ describe('MaxStacksDvonnMinimax', () => {
         const bestMove: DvonnMove = rules.node.findBestMove(1, minimax);
         expect(minimax.getListMoves(rules.node).length).toBe(3); // There are three possible moves
         // The best is the one that finishes on WW
-        expect(state.board[bestMove.end.y][bestMove.end.x]).toBe(DvonnPieceStack.encoder.encodeNumber(WW));
+        expect(state.board.board[bestMove.end.y][bestMove.end.x]).toBe(WW);
     });
     it('should prefer owning an opponent piece than a source', () => {
         // B can choose between doubling one of its stack or owning an opponent's stack
@@ -57,6 +57,7 @@ describe('MaxStacksDvonnMinimax', () => {
         const bestMove: DvonnMove = rules.node.findBestMove(1, minimax);
         expect(minimax.getListMoves(rules.node).length).toBe(2);
         // The best move is the one that finishes on W
-        expect(state.board[bestMove.end.y][bestMove.end.x]).toBe(DvonnPieceStack.encoder.encodeNumber(W));
+        const bestMoveEnd: DvonnPieceStack = state.board.board[bestMove.end.y][bestMove.end.x];
+        expect(bestMoveEnd).toBe(W);
     });
 });

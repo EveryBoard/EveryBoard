@@ -14,7 +14,7 @@ export interface BoardInfo {
     sum: number
 }
 export abstract class AlignementMinimax<M extends Move,
-                                        S extends GameState,
+                                        S extends GameState<unknown, unknown>,
                                         L extends LegalityStatus,
                                         V,
                                         U extends NodeUnheritance = NodeUnheritance>

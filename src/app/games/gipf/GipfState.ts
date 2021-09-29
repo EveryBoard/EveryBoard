@@ -2,9 +2,9 @@ import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { GipfBoard } from './GipfBoard';
 import { GipfPiece } from './GipfPiece';
-import { GameState } from 'src/app/jscaip/GameState';
+import { HexagonalGameState } from 'src/app/jscaip/HexagonalGameState';
 
-export class GipfState extends GameState {
+export class GipfState extends HexagonalGameState<GipfPiece, GipfBoard> {
 
     public static getInitialState(): GipfState {
         const _: GipfPiece = GipfPiece.EMPTY;
@@ -19,14 +19,14 @@ export class GipfState extends GameState {
             [_, _, _, _, _, _, _],
             [X, _, _, O, _, _, _],
         ];
-        const hexaBoard: GipfBoard = GipfBoard.of(board);
-        return new GipfState(hexaBoard, 0, [12, 12], [0, 0]);
+        const gipfBoard: GipfBoard = GipfBoard.of(board);
+        return new GipfState(gipfBoard, 0, [12, 12], [0, 0]);
     }
-    public constructor(public readonly hexaBoard: GipfBoard,
+    public constructor(board: GipfBoard,
                        turn: number,
                        public readonly sidePieces: [number, number],
                        public readonly capturedPieces: [number, number]) {
-        super(turn);
+        super(turn, board);
     }
     public equals(other: GipfState): boolean {
         if (this.turn !== other.turn) return false;
@@ -34,7 +34,7 @@ export class GipfState extends GameState {
         if (this.sidePieces[1] !== other.sidePieces[1]) return false;
         if (this.capturedPieces[0] !== other.capturedPieces[0]) return false;
         if (this.capturedPieces[1] !== other.capturedPieces[1]) return false;
-        if (this.hexaBoard.equals(other.hexaBoard, (p1: GipfPiece, p2: GipfPiece) => p1 === p2) === false) return false;
+        if (this.board.equals(other.board, (p1: GipfPiece, p2: GipfPiece) => p1 === p2) === false) return false;
         return true;
     }
     public getNumberOfPiecesToPlace(player: Player): number {

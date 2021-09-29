@@ -9,6 +9,7 @@ import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
 
 describe('SiamComponent', () => {
+
     let componentTestUtils: ComponentTestUtils<SiamComponent>;
 
     const _: SiamPiece = SiamPiece.EMPTY;

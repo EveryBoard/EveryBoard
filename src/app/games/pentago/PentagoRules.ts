@@ -45,7 +45,7 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState, PentagoLegali
         return state.applyLegalMove(move);
     }
     public isLegal(move: PentagoMove, state: PentagoState): PentagoLegalityStatus {
-        if (state.getPieceAt(move.coord) !== Player.NONE) {
+        if (state.getBoardAt(move.coord) !== Player.NONE) {
             return PentagoLegalityStatus.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE);
         }
         const postDropState: PentagoState = state.applyLegalDrop(move);
@@ -66,9 +66,9 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState, PentagoLegali
     public getVictoryCoords(state: PentagoState): Coord[] {
         let victoryCoords: Coord[] = [];
         for (const maybeVictory of PentagoRules.VICTORY_SOURCE) {
-            const firstValue: number = state.getBoardAt(maybeVictory[0]);
+            const firstValue: Player = state.getBoardAt(maybeVictory[0]);
             const subVictory: Coord[] = [maybeVictory[0]];
-            if (firstValue !== Player.NONE.value) {
+            if (firstValue !== Player.NONE) {
                 let testedCoord: Coord = maybeVictory[0].getNext(maybeVictory[1]);
                 let fourAligned: boolean = true;
                 for (let i: number = 0; i < 3 && fourAligned; i++) {
@@ -102,7 +102,7 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState, PentagoLegali
         const victoryCoords: Coord[] = this.getVictoryCoords(state);
         const victoryFound: [boolean, boolean] = [false, false];
         for (let i: number = 0; i < victoryCoords.length; i += 5) {
-            victoryFound[state.getBoardAt(victoryCoords[i])] = true;
+            victoryFound[state.getBoardAt(victoryCoords[i]).value] = true;
         }
         if (victoryFound[0] === true) {
             if (victoryFound[1] === true) {

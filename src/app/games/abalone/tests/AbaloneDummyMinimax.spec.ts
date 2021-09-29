@@ -1,24 +1,24 @@
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
-import { NumberTable } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/utils/ArrayUtils';
 import { AbaloneDummyMinimax } from '../AbaloneDummyMinimax';
-import { AbaloneGameState } from '../AbaloneGameState';
+import { AbaloneState } from '../AbaloneState';
 import { AbaloneNode, AbaloneRules } from '../AbaloneRules';
 
 describe('AbaloneDummyMinimax', () => {
 
-    const _: number = FourStatePiece.EMPTY.value;
-    const N: number = FourStatePiece.NONE.value;
-    const O: number = FourStatePiece.ZERO.value;
-    const X: number = FourStatePiece.ONE.value;
+    const _: FourStatePiece = FourStatePiece.EMPTY;
+    const N: FourStatePiece = FourStatePiece.NONE;
+    const O: FourStatePiece = FourStatePiece.ZERO;
+    const X: FourStatePiece = FourStatePiece.ONE;
     let minimax: AbaloneDummyMinimax;
 
     beforeEach(() => {
-        minimax = new AbaloneDummyMinimax(new AbaloneRules(AbaloneGameState), 'dummy');
+        minimax = new AbaloneDummyMinimax(new AbaloneRules(AbaloneState), 'dummy');
     });
     it('should propose all non-suicidal moved at first turn, there is 42', () => {
         // given initial node
-        const initialState: AbaloneGameState = AbaloneGameState.getInitialState();
+        const initialState: AbaloneState = AbaloneState.getInitialState();
         const initialNode: AbaloneNode = new MGPNode(null, null, initialState);
 
         // then we should have 42 moves
@@ -26,7 +26,7 @@ describe('AbaloneDummyMinimax', () => {
     });
     it('should include pushing moves', () => {
         // given a simple node
-        const board: NumberTable = [
+        const board: Table<FourStatePiece> = [
             [N, N, N, N, _, _, _, _, _],
             [N, N, N, _, _, _, _, _, _],
             [N, N, _, _, _, _, _, _, _],
@@ -37,7 +37,7 @@ describe('AbaloneDummyMinimax', () => {
             [_, _, _, _, _, _, N, N, N],
             [_, _, _, _, _, N, N, N, N],
         ];
-        const initialState: AbaloneGameState = new AbaloneGameState(board, 0);
+        const initialState: AbaloneState = new AbaloneState(board, 0);
         const initialNode: AbaloneNode = new MGPNode(null, null, initialState);
 
         // then we should have 42 moves

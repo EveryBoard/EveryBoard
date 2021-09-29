@@ -3,9 +3,9 @@ import { ReversiState } from 'src/app/games/reversi/ReversiState';
 import { Player } from 'src/app/jscaip/Player';
 import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
-const _: number = Player.NONE.value;
-const O: number = Player.ZERO.value;
-const X: number = Player.ONE.value;
+const _: Player = Player.NONE;
+const O: Player = Player.ZERO;
+const X: Player = Player.ONE;
 export const reversiTutorial: TutorialStep[] = [
     TutorialStep.informational(
         $localize`Goal of the game`,

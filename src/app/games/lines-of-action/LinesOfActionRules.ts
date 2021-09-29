@@ -84,9 +84,9 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
                           status: LegalityStatus)
     : LinesOfActionState
     {
-        const board: number[][] = state.getCopiedBoard();
-        board[move.coord.y][move.coord.x] = Player.NONE.value;
-        board[move.end.y][move.end.x] = state.getCurrentPlayer().value;
+        const board: Player[][] = state.getCopiedBoard();
+        board[move.coord.y][move.coord.x] = Player.NONE;
+        board[move.end.y][move.end.x] = state.getCurrentPlayer();
 
         return new LinesOfActionState(board, state.turn + 1);
     }

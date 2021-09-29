@@ -7,10 +7,12 @@ import { HexaLine } from './HexaLine';
 /** An hexagonal board encoding,
     inspired by the description on this page: https://www.redblobgames.com/grids/hexagons/#map-storage */
 export class HexaBoard<T> {
+
     public static empty<T>(width: number,
                            height: number,
                            excludedCases: ReadonlyArray<number>,
-                           empty: T): HexaBoard<T>
+                           empty: T)
+    : HexaBoard<T>
     {
         return new HexaBoard(ArrayUtils.createBiArray(width, height, empty),
                              width,
@@ -20,7 +22,9 @@ export class HexaBoard<T> {
     }
     public static fromTable<T>(table: Table<T>,
                                excludedCases: ReadonlyArray<number>,
-                               empty: T): HexaBoard<T> {
+                               empty: T)
+    : HexaBoard<T>
+    {
         const height: number = table.length;
         if (height === 0) {
             throw new Error('Cannot create an HexaBoard from an empty table.');
@@ -65,7 +69,7 @@ export class HexaBoard<T> {
             new Coord(coord.x, coord.y+distance), new Coord(coord.x, coord.y-distance),
         ];
     }
-    public constructor(public readonly contents: Table<T>,
+    public constructor(public readonly board: Table<T>,
                        public readonly width: number,
                        public readonly height: number,
                        public readonly excludedCases: ReadonlyArray<number>,
@@ -104,7 +108,7 @@ export class HexaBoard<T> {
         return true;
     }
     protected getAtUnsafe(coord: Coord): T {
-        return this.contents[coord.y][coord.x];
+        return this.board[coord.y][coord.x];
     }
     public getAt(coord: Coord): T {
         if (this.isOnBoard(coord)) {
@@ -114,7 +118,7 @@ export class HexaBoard<T> {
         }
     }
     protected setAtUnsafe(coord: Coord, v: T): this {
-        const contents: T[][] = ArrayUtils.copyBiArray(this.contents);
+        const contents: T[][] = ArrayUtils.copyBiArray(this.board);
         contents[coord.y][coord.x] = v;
         // Here we want to return an object of the current type (could be a child class of HexaBoard).
         // Hence, we call our constructor (this.constructor) with its expected arguments,
