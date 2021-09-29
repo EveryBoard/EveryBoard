@@ -29,8 +29,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
     public static mansoon(mansooningPlayer: number, board: number[][]): number {
         /* capture all the seeds of the mansooning player
          * return the sum of all captured seeds
-         * is called when a game is over because of starvation
-         */
+         * is called when a game is over because of starvation */
         let sum: number = 0;
         let x: number = 0;
         do {
@@ -44,39 +43,37 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         /* modify the move to addPart the capture
          * modify the board to get the after-move result
          * return -1 if it's not legal, if so, the board should not be affected
-         * return the number captured otherwise
-         */
+         * return the number captured otherwise */
         const turn: number = slice.turn;
         let resultingBoard: number[][] = slice.getCopiedBoard();
 
         let captured: [number, number] = [0, 0];
 
         const player: number = turn % 2;
-        const enemy: number = (turn + 1) % 2;
+        const opponent: number = (turn + 1) % 2;
 
         const x: number = move.x;
         if (resultingBoard[player][x] === 0) {
             return AwaleLegalityStatus.failure(AwaleFailure.MUST_CHOOSE_NONEMPTY_HOUSE());
         }
 
-        if (!AwaleRules.doesDistribute(x, player, resultingBoard) && AwaleRules.isStarving(enemy, resultingBoard) ) {
-            // you can distribute but you don't, illegal move
+        if (!AwaleRules.doesDistribute(x, player, resultingBoard) && AwaleRules.isStarving(opponent, resultingBoard) ) {
             return AwaleLegalityStatus.failure(AwaleFailure.SHOULD_DISTRIBUTE());
         }
         // arrived here you can distribute this house
         // but we'll have to check if you can capture
-        const lastCase: Coord = AwaleRules.distribute(x, player, resultingBoard);
+        const lastSpace: Coord = AwaleRules.distribute(x, player, resultingBoard);
         // do the distribution and retrieve the landing part
         // of the last stone
-        const landingCamp: number = lastCase.y;
+        const landingCamp: number = lastSpace.y;
         if (landingCamp === player) {
             // we finish sowing on our own side, nothing else to check
             return { legal: MGPValidation.SUCCESS, captured: [0, 0], resultingBoard };
         }
         // we finish sowing on the opponent's side, we therefore check the captures
         const boardBeforeCapture: number[][] = ArrayUtils.copyBiArray(resultingBoard);
-        captured[player] = AwaleRules.capture(lastCase.x, enemy, player, resultingBoard);
-        if (AwaleRules.isStarving(enemy, resultingBoard)) {
+        captured[player] = AwaleRules.capture(lastSpace.x, opponent, player, resultingBoard);
+        if (AwaleRules.isStarving(opponent, resultingBoard)) {
             if (captured[player] > 0) {
                 // if the distribution would capture all seeds
                 // the move is legal but the capture is forbidden and cancelled
@@ -84,9 +81,9 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
                 captured = [0, 0];
             }
         }
-        if (AwaleRules.isStarving(player, resultingBoard) && !AwaleRules.canDistribute(enemy, resultingBoard)) {
+        if (AwaleRules.isStarving(player, resultingBoard) && !AwaleRules.canDistribute(opponent, resultingBoard)) {
             // if the player distributed his last seeds and the opponent could not give him seeds
-            captured[enemy] += AwaleRules.mansoon(enemy, resultingBoard);
+            captured[opponent] += AwaleRules.mansoon(opponent, resultingBoard);
         }
         return { legal: MGPValidation.SUCCESS, captured, resultingBoard };
     }
@@ -120,16 +117,16 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
     public static distribute(x: number, y: number, board: number[][]): Coord {
         // just apply's the move on the board (the distribution part)
         // does not make the capture nor verify the legality of the move
-        // return the coord of the last case the move got down
+        // return the coord of the last space the move got down
 
-        // iy and ix are the initial squares
+        // iy and ix are the initial spaces
         const ix: number = x;
         const iy: number = y;
-        // to remeber in order not to sow in the starting case if we make a full turn
+        // to remember in order not to sow in the starting space if we make a full turn
         let inHand: number = board[y][x];
-        board[y][x] = 0; // empty the case
+        board[y][x] = 0;
         while (inHand > 0) {
-            // get next case
+            // get next space
             if (y === 0) {
                 if (x === 5) {
                     y = 1; // go from the bottom row to the top row
@@ -144,9 +141,9 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
                 }
             }
             if ((x !== ix) || (y !== iy)) {
-                // not to distribute on our starting square
+                // not to distribute on our starting space
                 board[y][x] += 1;
-                inHand--; // drop in this square a piece we have in hand
+                inHand--; // drop in this space a piece we have in hand
             }
         }
 
@@ -154,14 +151,14 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
     }
     public static capture(x: number, y: number, player: number, board: number[][]): number {
         /* only called if y and player are not equal
-         * if the condition are make to make an capture into the ennemi's side are met
+         * if the condition are make to make an capture into the opponent's side are met
          * capture and return the number of captured
          * capture even if this could mean doing an illegal starvation
          */
 
         let target: number = board[y][x];
         if ((target < 2) || (target > 3)) {
-            return 0; // first case not capturable
+            return 0; // first space not capturable
         }
 
         let captured: number = 0;
