@@ -56,7 +56,7 @@ export class QuartoMinimax extends Minimax<QuartoMove, QuartoPartSlice> {
         const slice: QuartoPartSlice = node.gamePartSlice;
         let boardStatus: BoardStatus = {
             score: SCORE.DEFAULT,
-            casesSensibles: [],
+            sensitiveSquares: [],
         };
         for (const line of QuartoRules.lines) {
             boardStatus = QuartoRules.updateBoardStatus(line, slice, boardStatus);

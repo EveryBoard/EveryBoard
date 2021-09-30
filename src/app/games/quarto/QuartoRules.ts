@@ -15,9 +15,9 @@ import { QuartoFailure } from './QuartoFailure';
 
 export interface BoardStatus {
     score: SCORE;
-    casesSensibles: SensibleSquare[];
+    sensitiveSquares: SensitiveSquare[];
 }
-class SensibleSquare {
+class SensitiveSquare {
     /* list of criterias that need to be fulfilled in this square in order to win
        if the piece in hand matches one of these criterion, this is a pre-victory */
     criteria: Criterion[];
@@ -25,14 +25,14 @@ class SensibleSquare {
     y: number;
 
     constructor(x: number, y: number) {
-        /* a sensible square can be in maximum three lines
+        /* a sensitive square can be in maximum three lines
            the horizontal, the vertical, and the diagonal */
         this.criteria = new Array<Criterion>(3);
         this.x = x;
         this.y = y;
     }
     public addCriterion(c: Criterion): boolean {
-        /* Add criterion in case several line contains this sensible case (1 to 3 lines could)
+        /* Add criterion in square several line contains this sensitive square (1 to 3 lines could)
          * without duplicates
          * return true if the criterion has been added */
         const i: number = this.indexOf(c);
@@ -41,7 +41,7 @@ class SensibleSquare {
             return false;
         }
         // TODO remove this debug
-        assert(i !== 3, `This is impossible, too many elements were added in this SensibleCase`);
+        assert(i !== 3, `This is impossible, too many elements were added in this SensitiveSquare`);
         this.criteria[-i - 1] = c;
         return true;
     }
@@ -71,12 +71,12 @@ class Criterion {
 
     readonly subCriterion: boolean[] = [null, null, null, null];
 
-    constructor(bCase: number) {
+    constructor(bSquare: number) {
         // a criterion is initialized with a square, it takes the square's value
-        this.subCriterion[0] = (bCase & 8) === 8;
-        this.subCriterion[1] = (bCase & 4) === 4;
-        this.subCriterion[2] = (bCase & 2) === 2;
-        this.subCriterion[3] = (bCase & 1) === 1;
+        this.subCriterion[0] = (bSquare & 8) === 8;
+        this.subCriterion[1] = (bSquare & 4) === 4;
+        this.subCriterion[2] = (bSquare & 2) === 2;
+        this.subCriterion[3] = (bSquare & 1) === 1;
     }
     public setSubCrition(index: number, value: boolean): boolean {
         this.subCriterion[index] = value;
@@ -103,12 +103,12 @@ class Criterion {
         let nonNull: number = 4;
         do {
             if (this.subCriterion[i] !== c.subCriterion[i]) {
-                /* if the case represented by C is different from this case
+                /* if the square represented by C is different from this square
                    on their ith criterion, then there is no common criterion (null) */
                 this.subCriterion[i] = null;
             }
             if (this.subCriterion[i] == null) {
-                /* if after this, the ith criterion is null, then it loses a criterion */
+                // if after this, the ith criterion is null, then it loses a criterion
                 nonNull--;
             }
             i++;
@@ -202,8 +202,8 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
 
     public node: MGPNode<QuartoRules, QuartoMove, QuartoPartSlice>;
 
-    private static isOccupied(qcase: number): boolean {
-        return (qcase !== QuartoPiece.NONE.value);
+    private static isOccupied(square: number): boolean {
+        return (square !== QuartoPiece.NONE.value);
     }
     public static printArray(array: number[]): string {
         let result: string = '[';
@@ -252,7 +252,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
             if (this.isThereAVictoriousLine(line, slice)) {
                 return {
                     score: SCORE.VICTORY,
-                    casesSensibles: null,
+                    sensitiveSquares: null,
                 };
             } else {
                 return boardStatus;
@@ -276,7 +276,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
             commonCrit.mergeWithNumber(c);
         }
         if (QuartoRules.isOccupied(c) && !commonCrit.isAllNull()) {
-            /* the last case was occupied, and there was some common critere on all the four pieces
+            /* the last square was occupied, and there was some common critere on all the four pieces
                that's what victory is like in Quarto */
             return true;
         } else {
@@ -289,7 +289,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
     : BoardStatus
     {
         // we're looking for a victory, pre-victory, or normal score
-        let cs: SensibleSquare = null; // the first case is empty
+        let cs: SensitiveSquare = null; // the first square is empty
         let commonCrit: Criterion;
 
         let coord: Coord = line.initialCoord;
@@ -299,9 +299,9 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
             if (c === QuartoPiece.NONE.value) {
                 // if c is unoccupied
                 if (cs == null) {
-                    cs = new SensibleSquare(coord.x, coord.y);
+                    cs = new SensitiveSquare(coord.x, coord.y);
                 } else {
-                    return boardStatus; // 2 empty case: no victory or pre-victory, or new criterion
+                    return boardStatus; // 2 empty square: no victory or pre-victory, or new criterion
                 }
             } else {
                 // if c is occupied
@@ -320,14 +320,14 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
         if ((commonCrit != null) && (!commonCrit.isAllNull())) {
             // this line is not null and has a common criterion between all of its pieces
             if (cs == null) {
-                return { score: SCORE.VICTORY, casesSensibles: null };
+                return { score: SCORE.VICTORY, sensitiveSquares: null };
             } else {
-                // if these is only one empty square, then the sensible square we found is indeed sensible
+                // if these is only one empty square, then the sensitive square we found is indeed sensitive
                 if (commonCrit.matchInt(slice.pieceInHand.value)) {
                     boardStatus.score = SCORE.PRE_VICTORY;
                 }
                 cs.addCriterion(commonCrit);
-                boardStatus.casesSensibles.push(cs);
+                boardStatus.sensitiveSquares.push(cs);
             }
         }
         return boardStatus;
@@ -343,7 +343,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
         const state: QuartoPartSlice = node.gamePartSlice;
         let boardStatus: BoardStatus = {
             score: SCORE.DEFAULT,
-            casesSensibles: [],
+            sensitiveSquares: [],
         };
         for (const line of QuartoRules.lines) {
             boardStatus = QuartoRules.updateBoardStatus(line, state, boardStatus);
