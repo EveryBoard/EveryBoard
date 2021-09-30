@@ -19,7 +19,7 @@ export class InscriptionComponent {
     });
     public tryRegister(value: {email: string, pseudo: string, password: string}): void {
         this.authService
-            .doRegister(value)
+            .doRegister(value.pseudo, value.email, value.password)
             .then(
                 () => this.router.navigate(['/confirm-inscription']),
                 (err: { message: string }) => this.errorMessage = err.message);

@@ -9,6 +9,7 @@ import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 
 import { display } from 'src/app/utils/utils';
 import { IJoueur } from '../domain/iuser';
+import { MGPValidation } from '../utils/MGPValidation';
 
 interface ConnectivityStatus {
     state: string,
@@ -52,15 +53,36 @@ export class AuthenticationService implements OnDestroy {
             }
         });
     }
-    public async doEmailLogin(email: string, password: string): Promise<firebase.auth.UserCredential> {
+    /*
+     * Logs in using an email and a password. Returns a validation to indicate
+     * either success, or failure with a specific error.
+     */
+    public async doEmailLogin(email: string, password: string): Promise<MGPValidation> {
         display(AuthenticationService.VERBOSE, 'AuthenticationService.doEmailLogin(' + email + ')');
-        const userCredential: firebase.auth.UserCredential =
-            await firebase.auth().signInWithEmailAndPassword(email, password);
-        await this.updateUserDataAndGoToServer(userCredential.user);
-        return userCredential;
+        try {
+            // Login through firebase. If the login is incorrect or fails for some reason, an error is thrown.
+            const userCredential: firebase.auth.UserCredential =
+                await firebase.auth().signInWithEmailAndPassword(email, password);
+            await this.updateUserData(userCredential.user);
+            return MGPValidation.SUCCESS;
+        } catch (e) {
+            switch (e.errorCode) {
+                case 'auth/invalid-email':
+                case 'auth/user-not-found':
+                case 'auth/wrong-password':
+                    // In accordance with security best practices, we don't give too much details here
+                    return MGPValidation.failure($localize`You have entered an invalid username or password.`);
+                case 'auth/user-disabled':
+                    // TODO: not sure this is what this error code means
+                    return MGPValidation.failure($localize`You must click the confirmation link that you should have received by email.`);
+                default:
+                    // TODO: check that this cannot be covered
+                    return MGPValidation.failure(e.message);
+            }
+        }
     }
-    private updateUserDataAndGoToServer({ uid, email, displayName, emailVerified }: firebase.User): Promise<void> {
-        display(AuthenticationService.VERBOSE, 'AuthenticationService.updateUserDataAndGoToServer(' + email + ')');
+    private updateUserData({ uid, email, displayName, emailVerified }: firebase.User): Promise<void> {
+        display(AuthenticationService.VERBOSE, 'AuthenticationService.updateUserData(' + email + ')');
         // Sets user data to firestore on login
         const userRef: AngularFirestoreDocument<Partial<IJoueur>> = this.afs.doc(`joueurs/${uid}`);
 
@@ -80,14 +102,14 @@ export class AuthenticationService implements OnDestroy {
         provider.addScope('email');
         const userCredential: firebase.auth.UserCredential =
             await this.afAuth.signInWithPopup(provider);
-        await this.updateUserDataAndGoToServer(userCredential.user);
+        await this.updateUserData(userCredential.user);
         return userCredential;
     }
-    public async doRegister(value: {email: string, password: string}): Promise<firebase.auth.UserCredential> {
-        display(AuthenticationService.VERBOSE, 'AuthenticationService.doRegister(' + value.email + ')');
+    public async doRegister(pseudo: string, email: string, password: string): Promise<firebase.auth.UserCredential> {
+        display(AuthenticationService.VERBOSE, 'AuthenticationService.doRegister(' + email + ')');
         const userCredential: firebase.auth.UserCredential =
-            await firebase.auth().createUserWithEmailAndPassword(value.email, value.password);
-        await this.updateUserDataAndGoToServer(userCredential.user);
+            await firebase.auth().createUserWithEmailAndPassword(email, password);
+        await this.updateUserData(userCredential.user);
         return userCredential;
     }
     public async disconnect(): Promise<void> {

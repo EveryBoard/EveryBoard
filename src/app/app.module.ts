@@ -78,6 +78,7 @@ import { YinshComponent } from './games/yinsh/Yinsh.component';
 
 import { environment } from 'src/environments/environment';
 import { USE_EMULATOR as USE_FIRESTORE_EMULATOR } from '@angular/fire/firestore';
+import { USE_EMULATOR as USE_AUTH_EMULATOR } from '@angular/fire/auth';
 import { LocaleUtils } from './utils/LocaleUtils';
 
 
@@ -185,6 +186,7 @@ const routes: Route [] = [
     ],
     providers: [
         { provide: USE_FIRESTORE_EMULATOR, useValue: environment.emulatorConfig.firestore },
+        { provide: USE_AUTH_EMULATOR, useValue: environment.emulatorConfig.firestore },
         AuthenticationService,
         GameService,
         JoinerService,
