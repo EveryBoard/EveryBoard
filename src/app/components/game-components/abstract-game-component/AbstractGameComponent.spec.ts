@@ -5,8 +5,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { AppModule } from 'src/app/app.module';
 import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { Direction } from 'src/app/jscaip/Direction';
-import { GameState } from 'src/app/jscaip/GameState';
-import { Move } from 'src/app/jscaip/Move';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -14,7 +12,7 @@ import { ActivatedRouteStub } from 'src/app/utils/tests/TestUtils.spec';
 import { GameInfo, PickGameComponent } from '../../normal-component/pick-game/pick-game.component';
 import { GameWrapperMessages } from '../../wrapper-components/GameWrapper';
 import { LocalGameWrapperComponent } from '../../wrapper-components/local-game-wrapper/local-game-wrapper.component';
-import { AbstractGameComponent } from './AbstractGameComponent';
+import { AbstractAbstractGameComponent } from './AbstractGameComponent';
 
 describe('AbstractGameComponent', () => {
 
@@ -123,7 +121,7 @@ describe('AbstractGameComponent', () => {
             if (gameInfo.display === false) {
                 continue;
             }
-            const gameComponent: AbstractGameComponent<Move, GameState<unknown, unknown>> =
+            const gameComponent: AbstractAbstractGameComponent =
                 TestBed.createComponent(gameInfo.component).debugElement.componentInstance;
             expect(gameComponent.encoder).withContext('Encoder missing for ' + gameInfo.urlName).toBeTruthy();
             expect(gameComponent.tutorial).withContext('tutorial missing for ' + gameInfo.urlName).toBeTruthy();

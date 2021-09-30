@@ -20,8 +20,11 @@ import { saharaTutorial } from './SaharaTutorial';
     templateUrl: './sahara.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class SaharaComponent extends TriangularGameComponent<SaharaMove, SaharaState, FourStatePiece> {
-
+export class SaharaComponent extends TriangularGameComponent<SaharaRules,
+                                                             SaharaMove,
+                                                             SaharaState,
+                                                             FourStatePiece>
+{
     public static VERBOSE: boolean = false;
 
     public lastCoord: Coord = new Coord(-2, -2);

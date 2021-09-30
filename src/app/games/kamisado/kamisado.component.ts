@@ -20,8 +20,11 @@ import { kamisadoTutorial } from './KamisadoTutorial';
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
 
-export class KamisadoComponent extends RectangularGameComponent<KamisadoMove, KamisadoState, KamisadoPiece> {
-
+export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
+                                                                KamisadoMove,
+                                                                KamisadoState,
+                                                                KamisadoPiece>
+{
     public UNOCCUPIED: KamisadoPiece = KamisadoPiece.NONE;
     public lastMove: KamisadoMove = null;
     public chosen: Coord = new Coord(-1, -1);

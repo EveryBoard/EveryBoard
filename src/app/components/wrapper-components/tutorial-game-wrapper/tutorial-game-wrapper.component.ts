@@ -12,7 +12,7 @@ import { TutorialStep } from './TutorialStep';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { TutorialFailure } from './TutorialFailure';
 import { GameService } from 'src/app/services/GameService';
-import { GameState } from 'src/app/jscaip/GameState';
+import { AbstractGameState } from 'src/app/jscaip/GameState';
 
 @Component({
     selector: 'app-tutorial-game-wrapper',
@@ -105,7 +105,7 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
         this.gameComponent.updateBoard();
         this.moveAttemptMade = true;
         if (currentStep.isPredicate()) {
-            const resultingState: GameState<unknown, unknown> = this.gameComponent.rules.node.gameState;
+            const resultingState: AbstractGameState = this.gameComponent.rules.node.gameState;
             const moveValidity: MGPValidation = currentStep.predicate(move, resultingState);
             if (moveValidity.isSuccess()) {
                 this.showStepSuccess();

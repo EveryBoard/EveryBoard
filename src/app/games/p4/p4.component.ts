@@ -15,12 +15,11 @@ import { p4Tutorial } from './P4Tutorial';
     templateUrl: './p4.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class P4Component extends RectangularGameComponent<P4Move, P4State, Player> {
+export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4State, Player> {
 
     public static VERBOSE: boolean = false;
 
     public EMPTY_CASE: Player = Player.NONE;
-    public STROKE_WIDTH: number = 8; // TODOTODO
     public last: Coord;
     public victoryCoords: Coord[] = [];
 

@@ -48,7 +48,7 @@ interface ViewInfo {
     templateUrl: './yinsh.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshState, YinshLegalityStatus> {
+export class YinshComponent extends HexagonalGameComponent<YinshRules, YinshMove, YinshState, YinshLegalityStatus> {
 
     private static RING_OUTER_SIZE: number = 40;
     private static RING_MID_SIZE: number = 34;
@@ -56,20 +56,18 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshState
     private static MARKER_SIZE: number = YinshComponent.RING_INNER_SIZE;
     private static INDICATOR_SIZE: number = 10;
 
-    public rules: YinshRules = new YinshRules(YinshState); // TODOTODO
-
     public scores: number[] = [0, 0];
 
     private constructedState: YinshState;
 
     private movePhase: 'INITIAL_CAPTURE_SELECT_FIRST' |
-        'INITIAL_CAPTURE_SELECT_LAST' |
-        'INITIAL_CAPTURE_SELECT_RING' |
-        'MOVE_START' |
-        'MOVE_END' |
-        'FINAL_CAPTURE_SELECT_FIRST' |
-        'FINAL_CAPTURE_SELECT_LAST' |
-        'FINAL_CAPTURE_SELECT_RING'
+                       'INITIAL_CAPTURE_SELECT_LAST' |
+                       'INITIAL_CAPTURE_SELECT_RING' |
+                       'MOVE_START' |
+                       'MOVE_END' |
+                       'FINAL_CAPTURE_SELECT_FIRST' |
+                       'FINAL_CAPTURE_SELECT_LAST' |
+                       'FINAL_CAPTURE_SELECT_RING'
         = 'MOVE_START';
 
     private moveStart: MGPOptional<Coord> = MGPOptional.empty();
@@ -97,14 +95,15 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshState
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
+        this.rules = new YinshRules(YinshState);
         this.availableMinimaxes = [
             new YinshMinimax(this.rules, 'YinshMinimax'),
         ];
+        this.encoder = YinshMove.encoder;
+        this.tutorial = yinshTutorial;
         this.hexaLayout = new HexaLayout(YinshComponent.RING_OUTER_SIZE * 1.50,
                                          new Coord(YinshComponent.RING_OUTER_SIZE * 2, 0),
                                          FlatHexaOrientation.INSTANCE);
-        this.encoder = YinshMove.encoder;
-        this.tutorial = yinshTutorial;
         this.showScore = true;
         this.constructedState = this.rules.node.gameState;
         this.constructedState.board.allCoords().forEach((coord: Coord): void => {

@@ -4,10 +4,10 @@ import { MGPNode } from './MGPNode';
 import { Move } from './Move';
 import { NodeUnheritance } from './NodeUnheritance';
 import { Rules } from './Rules';
-import { GameState } from './GameState';
+import { AbstractGameState } from './GameState';
 
 export abstract class Minimax<M extends Move,
-                              S extends GameState<unknown, unknown>,
+                              S extends AbstractGameState,
                               L extends LegalityStatus = LegalityStatus,
                               U extends NodeUnheritance = NodeUnheritance> implements ComparableObject
 {

@@ -21,9 +21,7 @@ import { SiamComponent } from 'src/app/games/siam/siam.component';
 import { SixComponent } from 'src/app/games/six/six.component';
 import { TablutComponent } from 'src/app/games/tablut/tablut.component';
 import { YinshComponent } from 'src/app/games/yinsh/Yinsh.component';
-import { Move } from 'src/app/jscaip/Move';
-import { AbstractGameComponent } from '../../game-components/abstract-game-component/AbstractGameComponent';
-import { GameState } from 'src/app/jscaip/GameState';
+import { AbstractAbstractGameComponent } from '../../game-components/abstract-game-component/AbstractGameComponent';
 
 class GameDescription {
 
@@ -103,7 +101,7 @@ export class GameInfo {
 
     public constructor(public readonly name: string,
                        public readonly urlName: string,
-                       public readonly component: Type<AbstractGameComponent<Move, GameState<unknown, unknown>>>,
+                       public readonly component: Type<AbstractAbstractGameComponent>,
                        public readonly creationDate: Date,
                        public readonly description: string = '',
                        public readonly display: boolean = true) {

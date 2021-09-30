@@ -22,9 +22,7 @@ import { dvonnTutorial } from './DvonnTutorial';
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
 
-export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnState> {
-
-    public rules: DvonnRules = new DvonnRules(DvonnState); // TODOTODO
+export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove, DvonnState> {
 
     public scores: number[] = [0, 0];
     public lastMove: DvonnMove = null;
@@ -34,6 +32,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnState
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
+        this.rules = new DvonnRules(DvonnState);
         this.availableMinimaxes = [
             new DvonnMinimax(this.rules, 'DvonnMinimax'),
             new MaxStacksDvonnMinimax(this.rules, 'DvonnMinimaxMaximizeStacks'),

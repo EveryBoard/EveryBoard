@@ -15,7 +15,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Rules } from 'src/app/jscaip/Rules';
 import { Direction } from 'src/app/jscaip/Direction';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
-import { AbstractGameComponent } from '../../game-components/abstract-game-component/AbstractGameComponent';
+import { AbstractAbstractGameComponent } from '../../game-components/abstract-game-component/AbstractGameComponent';
 
 import { EpaminondasRules } from 'src/app/games/epaminondas/EpaminondasRules';
 import { EpaminondasState } from 'src/app/games/epaminondas/EpaminondasState';
@@ -43,7 +43,7 @@ import { PylosState } from 'src/app/games/pylos/PylosState';
 import { pylosTutorial } from 'src/app/games/pylos/PylosTutorial';
 import { PylosMove } from 'src/app/games/pylos/PylosMove';
 import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
-import { GameState } from 'src/app/jscaip/GameState';
+import { AbstractGameState } from 'src/app/jscaip/GameState';
 
 describe('TutorialGameWrapperComponent (wrapper)', () => {
     let componentTestUtils: ComponentTestUtils<QuartoComponent>;
@@ -962,7 +962,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
     });
     describe('Tutorials', () => {
         it('Should make sure that predicate step have healthy behaviors', fakeAsync(async() => {
-            const stepExpectations: [Rules<Move, GameState<unknown, unknown>>, TutorialStep, Move, MGPValidation][] = [
+            const stepExpectations: [Rules<Move, AbstractGameState>, TutorialStep, Move, MGPValidation][] = [
                 [
                     new EpaminondasRules(EpaminondasState),
                     epaminondasTutorial[3],
@@ -1043,13 +1043,13 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 ],
             ];
             for (const stepExpectation of stepExpectations) {
-                const rules: Rules<Move, GameState<unknown, unknown>> = stepExpectation[0];
+                const rules: Rules<Move, AbstractGameState> = stepExpectation[0];
                 const step: TutorialStep = stepExpectation[1];
                 const move: Move = stepExpectation[2];
                 const validation: MGPValidation = stepExpectation[3];
                 const status: LegalityStatus = rules.isLegal(move, step.state);
                 expect(status.legal.reason).toBeNull();
-                const state: GameState<unknown, unknown> = rules.applyLegalMove(move, step.state, status);
+                const state: AbstractGameState = rules.applyLegalMove(move, step.state, status);
                 expect(step.predicate(move, state)).toEqual(validation);
             }
         }));
@@ -1058,16 +1058,16 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 if (gameInfo.display === false) {
                     continue;
                 }
-                const gameComponent: AbstractGameComponent<Move, GameState<unknown, unknown>> =
+                const gameComponent: AbstractAbstractGameComponent =
                     TestBed.createComponent(gameInfo.component).debugElement.componentInstance;
-                const rules: Rules<Move, GameState<unknown, unknown>> = gameComponent.rules;
+                const rules: Rules<Move, AbstractGameState> = gameComponent.rules;
                 const steps: TutorialStep[] = gameComponent.tutorial;
                 for (const step of steps) {
                     if (step.solutionMove != null) {
                         const status: LegalityStatus = rules.isLegal(step.solutionMove, step.state);
                         expect(status.legal.reason).toBeNull();
                         if (step.isPredicate()) {
-                            const state: GameState<unknown, unknown> =
+                            const state: AbstractGameState =
                                 rules.applyLegalMove(step.solutionMove, step.state, status);
                             expect(step.predicate(step.solutionMove, state)).toEqual(MGPValidation.SUCCESS);
                         }

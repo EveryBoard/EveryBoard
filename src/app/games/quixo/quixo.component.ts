@@ -18,7 +18,7 @@ import { quixoTutorial } from './QuixoTutorial';
     templateUrl: './quixo.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class QuixoComponent extends RectangularGameComponent<QuixoMove, QuixoState, Player> {
+export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMove, QuixoState, Player> {
 
     public static VERBOSE: boolean = false;
 
@@ -35,7 +35,6 @@ export class QuixoComponent extends RectangularGameComponent<QuixoMove, QuixoSta
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.rules = new QuixoRules(QuixoState);
-        this.state = this.rules.node.gameState;
         this.availableMinimaxes = [
             new QuixoMinimax(this.rules, 'QuixoMinimax'),
         ];

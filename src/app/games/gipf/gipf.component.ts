@@ -25,9 +25,7 @@ import { gipfTutorial } from './GipfTutorial';
     templateUrl: './gipf.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfState, GipfLegalityStatus> {
-
-    public rules: GipfRules = new GipfRules(GipfState); // TODOTODO that new genericity
+export class GipfComponent extends HexagonalGameComponent<GipfRules, GipfMove, GipfState, GipfLegalityStatus> {
 
     public scores: number[] = [0, 0];
 
@@ -53,6 +51,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfState, G
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
+        this.rules = new GipfRules(GipfState);
         this.availableMinimaxes = [
             new GipfMinimax(this.rules, 'GipfMinimax'),
         ];

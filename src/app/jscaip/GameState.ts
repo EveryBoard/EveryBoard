@@ -16,3 +16,5 @@ export abstract class GameState<C, P> {
 
     public abstract getNullable(coord: C): P | null;
 }
+export abstract class AbstractGameState extends GameState<unknown, unknown> {
+}

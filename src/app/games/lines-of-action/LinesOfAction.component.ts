@@ -19,8 +19,11 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
     templateUrl: './LinesOfAction.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActionMove, LinesOfActionState, Player> {
-
+export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActionRules,
+                                                                     LinesOfActionMove,
+                                                                     LinesOfActionState,
+                                                                     Player>
+{
     public INDICATOR_SIZE: number = 20;
     public EMPTY: Player = Player.NONE;
     public targets: Coord[] = [];

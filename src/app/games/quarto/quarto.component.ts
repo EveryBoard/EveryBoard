@@ -16,10 +16,11 @@ import { RectangularGameComponent } from 'src/app/components/game-components/rec
     templateUrl: './quarto.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class QuartoComponent extends RectangularGameComponent<QuartoMove, QuartoState, QuartoPiece> {
-
-    public rules: QuartoRules = new QuartoRules(QuartoState); // TODOTODO
-
+export class QuartoComponent extends RectangularGameComponent<QuartoRules,
+                                                              QuartoMove,
+                                                              QuartoState,
+                                                              QuartoPiece>
+{
     public EMPTY: QuartoPiece = QuartoPiece.NONE;
 
     public chosen: Coord = new Coord(-1, -1);
@@ -31,6 +32,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoMove, Quarto
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
+        this.rules = new QuartoRules(QuartoState);
         this.availableMinimaxes = [
             new QuartoMinimax(this.rules, 'QuartoMinimax'),
         ];

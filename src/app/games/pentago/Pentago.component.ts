@@ -19,14 +19,12 @@ import { pentagoTutorial } from './PentagoTutorial';
     templateUrl: './Pentago.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class PentagoComponent extends RectangularGameComponent<PentagoMove,
+export class PentagoComponent extends RectangularGameComponent<PentagoRules,
+                                                               PentagoMove,
                                                                PentagoState,
                                                                Player,
                                                                PentagoLegalityStatus>
 {
-
-    public rules: PentagoRules = new PentagoRules(PentagoState); // TODOTODO
-
     public readonly BLOCK_WIDTH: number;
     public readonly BLOCK_SEPARATION: number;
     public readonly DIAGONAL_BAR_OFFSET: number;
@@ -43,7 +41,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoMove,
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.updateBoard();
+        this.rules = new PentagoRules(PentagoState);
         this.availableMinimaxes = [
             new PentagoMinimax(this.rules, 'PentagoMinimax'),
         ];
@@ -53,6 +51,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoMove,
         this.BLOCK_SEPARATION = (this.BLOCK_WIDTH + 2 * this.STROKE_WIDTH);
         this.DIAGONAL_BAR_OFFSET = Math.cos(Math.PI / 4) * 0.75 * this.CASE_SIZE;
         this.ARROWS = this.generateArrowsCoord();
+        this.updateBoard();
     }
     public updateBoard(): void {
         this.board = this.rules.node.gameState.getCopiedBoard();

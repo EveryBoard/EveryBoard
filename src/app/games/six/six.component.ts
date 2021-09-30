@@ -31,11 +31,10 @@ interface Scale {
     templateUrl: './six.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class SixComponent extends HexagonalGameComponent<SixMove, SixState, SixLegalityStatus> {
+export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixState, SixLegalityStatus> {
 
     public readonly CONCRETE_WIDTH: number = 1000;
     public readonly CONCRETE_HEIGHT: number = 800;
-    public rules: SixRules = new SixRules(SixState); // TODOTODO
     public state: SixState;
 
     public pieces: Coord[];
@@ -57,6 +56,7 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixState, SixL
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
+        this.rules = new SixRules(SixState);
         this.availableMinimaxes = [
             new SixMinimax(this.rules, 'SixMinimax'),
         ];

@@ -26,7 +26,8 @@ import { tablutTutorial } from './TablutTutorial';
     templateUrl: './tablut.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class TablutComponent extends RectangularGameComponent<TablutMove,
+export class TablutComponent extends RectangularGameComponent<TablutRules,
+                                                              TablutMove,
                                                               TablutState,
                                                               TablutCase,
                                                               TablutLegalityStatus>

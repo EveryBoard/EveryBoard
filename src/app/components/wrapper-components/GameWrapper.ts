@@ -6,18 +6,21 @@ import { UserService } from '../../services/UserService';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
 
 import { Move } from '../../jscaip/Move';
-import { GameState } from 'src/app/jscaip/GameState';
+import { AbstractGameState, GameState } from 'src/app/jscaip/GameState';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { assert, display } from 'src/app/utils/utils';
 import { GameInfo } from '../normal-component/pick-game/pick-game.component';
 import { Player } from 'src/app/jscaip/Player';
+import { Rules } from 'src/app/jscaip/Rules';
 
 export class GameWrapperMessages {
 
     public static readonly NOT_YOUR_TURN: string = $localize`It is not your turn!`;
 
     public static readonly NO_CLONING_FEATURE: string = $localize`You cannot clone a game. This feature might be implemented later.`;
+}
+export abstract class AbstractRules extends Rules<Move, AbstractGameState> {
 }
 
 @Component({ template: '' })
@@ -29,7 +32,7 @@ export abstract class GameWrapper {
     @ViewChild(GameIncluderComponent)
     public gameIncluder: GameIncluderComponent;
 
-    public gameComponent: AbstractGameComponent<Move, GameState<unknown, unknown>>;
+    public gameComponent: AbstractGameComponent<AbstractRules, Move, AbstractGameState>;
 
     public userName: string = this.authenticationService.getAuthenticatedUser() != null &&
                               this.authenticationService.getAuthenticatedUser().pseudo // TODO, clean that;
@@ -51,7 +54,7 @@ export abstract class GameWrapper {
         display(GameWrapper.VERBOSE, 'GameWrapper.constructed: ' + (this.gameIncluder!=null));
     }
     public getMatchingComponent(compoString: string)
-    : Type<AbstractGameComponent<Move, GameState<unknown, unknown>>>
+    : Type<AbstractGameComponent<AbstractRules, Move, AbstractGameState>>
     {
         display(GameWrapper.VERBOSE, 'GameWrapper.getMatchingComponent');
         const gameInfo: GameInfo = GameInfo.ALL_GAMES.find((gameInfo: GameInfo) => gameInfo.urlName === compoString);
@@ -72,13 +75,13 @@ export abstract class GameWrapper {
         assert(this.gameIncluder != null, 'GameIncluder should be present');
 
         const compoString: string = this.actRoute.snapshot.paramMap.get('compo');
-        const component: Type<AbstractGameComponent<Move, GameState<unknown, unknown>>> =
+        const component: Type<AbstractGameComponent<AbstractRules, Move, AbstractGameState>> =
             this.getMatchingComponent(compoString);
-        const componentFactory: ComponentFactory<AbstractGameComponent<Move, GameState<unknown, unknown>>> =
+        const componentFactory: ComponentFactory<AbstractGameComponent<AbstractRules, Move, AbstractGameState>> =
             this.componentFactoryResolver.resolveComponentFactory(component);
-        const componentRef: ComponentRef<AbstractGameComponent<Move, GameState<unknown, unknown>>> =
+        const componentRef: ComponentRef<AbstractGameComponent<AbstractRules, Move, AbstractGameState>> =
             this.gameIncluder.viewContainerRef.createComponent(componentFactory);
-        this.gameComponent = <AbstractGameComponent<Move, GameState<unknown, unknown>>>componentRef.instance;
+        this.gameComponent = <AbstractGameComponent<AbstractRules, Move, AbstractGameState>>componentRef.instance;
         // Shortent by T<S = Truc>
 
         this.gameComponent.chooseMove = this.receiveValidMove; // so that when the game component do a move
@@ -92,11 +95,11 @@ export abstract class GameWrapper {
         this.canPass = this.gameComponent.canPass;
     }
     public receiveValidMove: (m: Move,
-                              s: GameState<unknown, unknown>,
+                              s: AbstractGameState,
                               s0: number,
                               s1: number) => Promise<MGPValidation> =
     async(move: Move,
-          state: GameState<unknown, unknown>,
+          state: AbstractGameState,
           scorePlayerZero: number,
           scorePlayerOne: number): Promise<MGPValidation> =>
     {

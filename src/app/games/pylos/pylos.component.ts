@@ -18,7 +18,7 @@ import { pylosTutorial } from './PylosTutorial';
     templateUrl: './pylos.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class PylosComponent extends AbstractGameComponent<PylosMove, PylosState> {
+export class PylosComponent extends AbstractGameComponent<PylosRules, PylosMove, PylosState> {
 
     public static VERBOSE: boolean = false;
 
@@ -41,7 +41,6 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosState>
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.rules = new PylosRules(PylosState);
-        this.state = this.rules.node.gameState;
         this.availableMinimaxes = [
             new PylosMinimax(this.rules, 'PylosMinimax'),
             new PylosOrderedMinimax(this.rules, 'PylosOrderedMinimax'),

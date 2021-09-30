@@ -1,6 +1,6 @@
-import { GameState } from '../GameState';
+import { AbstractGameState } from '../GameState';
 
-class MyGameState extends GameState<unknown, unknown> {
+class MyGameState extends AbstractGameState {
 
     public getNullable(coord: unknown): unknown {
         throw new Error('Method not implemented.');

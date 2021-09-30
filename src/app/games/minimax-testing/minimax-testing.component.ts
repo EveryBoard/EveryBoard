@@ -13,8 +13,11 @@ import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisp
     templateUrl: './minimax-testing.component.html',
     styleUrls: [],
 })
-export class MinimaxTestingComponent extends RectangularGameComponent<MinimaxTestingMove, MinimaxTestingState, number> {
-
+export class MinimaxTestingComponent extends RectangularGameComponent<MinimaxTestingRules,
+                                                                      MinimaxTestingMove,
+                                                                      MinimaxTestingState,
+                                                                      number>
+{
     public coord: Coord = new Coord(-1, -1);
 
     public constructor(messageDisplayer: MessageDisplayer) {

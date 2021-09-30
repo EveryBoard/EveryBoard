@@ -5,22 +5,22 @@ import { MGPNode } from '../MGPNode';
 import { GameStatus, Rules } from '../Rules';
 import { RectangularGameState } from '../RectangularGameState';
 
-class AbstractState extends RectangularGameState<number> {
+class MyAbstractState extends RectangularGameState<number> {
 
-    public static getInitialState(): AbstractState {
-        return new AbstractState([[]], 0);
+    public static getInitialState(): MyAbstractState {
+        return new MyAbstractState([[]], 0);
     }
 }
 
-class AbstractNode extends MGPNode<Rules<P4Move, AbstractState>, P4Move, AbstractState> {}
+class AbstractNode extends MGPNode<Rules<P4Move, MyAbstractState>, P4Move, MyAbstractState> {}
 
-class AbstractRules extends Rules<P4Move, AbstractState> {
+class AbstractRules extends Rules<P4Move, MyAbstractState> {
 
-    public applyLegalMove(move: P4Move, state: AbstractState, status: LegalityStatus): AbstractState {
+    public applyLegalMove(move: P4Move, state: MyAbstractState, status: LegalityStatus): MyAbstractState {
         const board: readonly number[] = state.board[0];
-        return new AbstractState([board.concat([move.x])], state.turn + 1);
+        return new MyAbstractState([board.concat([move.x])], state.turn + 1);
     }
-    public isLegal(move: P4Move, state: AbstractState): LegalityStatus {
+    public isLegal(move: P4Move, state: MyAbstractState): LegalityStatus {
         return { legal: MGPValidation.SUCCESS };
     }
     public getGameStatus(node: AbstractNode): GameStatus {
@@ -33,7 +33,7 @@ describe('Rules', () => {
     let rules: AbstractRules;
 
     beforeEach(() => {
-        rules = new AbstractRules(AbstractState);
+        rules = new AbstractRules(MyAbstractState);
     });
     it('should create child to already calculated node which did not include this legal child yet', () => {
         // Given a node with sons
@@ -49,11 +49,11 @@ describe('Rules', () => {
     });
     it('should allow dev to go back to specific starting board based on encodedMoveList', () => {
         // Given an initial list of encoded moves and an initial state
-        const initialState: AbstractState = AbstractState.getInitialState();
+        const initialState: MyAbstractState = MyAbstractState.getInitialState();
         const encodedMoveList: number[] = [0, 1, 2, 3];
 
         // when calling applyMoves
-        const state: AbstractState = rules.applyMoves(encodedMoveList, initialState, P4Move.encoder.decodeNumber);
+        const state: MyAbstractState = rules.applyMoves(encodedMoveList, initialState, P4Move.encoder.decodeNumber);
 
         // then last move should be the last one encoded and state should be adapted
         expect(state.board).toEqual([encodedMoveList]);

@@ -18,7 +18,8 @@ import { RectangularGameComponent } from 'src/app/components/game-components/rec
     templateUrl: './reversi.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class ReversiComponent extends RectangularGameComponent<ReversiMove,
+export class ReversiComponent extends RectangularGameComponent<ReversiRules,
+                                                               ReversiMove,
                                                                ReversiState,
                                                                Player,
                                                                ReversiLegalityStatus>

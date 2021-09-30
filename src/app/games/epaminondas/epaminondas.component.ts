@@ -21,7 +21,8 @@ import { epaminondasTutorial } from './EpaminondasTutorial';
     templateUrl: './epaminondas.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class EpaminondasComponent extends RectangularGameComponent<EpaminondasMove,
+export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRules,
+                                                                   EpaminondasMove,
                                                                    EpaminondasState,
                                                                    Player,
                                                                    EpaminondasLegalityStatus>

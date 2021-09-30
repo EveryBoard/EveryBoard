@@ -19,7 +19,8 @@ import { encapsuleTutorial } from './EncapsuleTutorial';
     templateUrl: './encapsule.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class EncapsuleComponent extends RectangularGameComponent<EncapsuleMove,
+export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
+                                                                 EncapsuleMove,
                                                                  EncapsuleState,
                                                                  EncapsuleCase,
                                                                  EncapsuleLegalityStatus>

@@ -8,7 +8,8 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { GameState } from 'src/app/jscaip/GameState';
+import { AbstractGameState } from 'src/app/jscaip/GameState';
+
 
 /* All method are to be implemented by the concretes game components
  * Except chooseMove which must be set by the GameWrapper
@@ -18,8 +19,9 @@ import { GameState } from 'src/app/jscaip/GameState';
     template: '',
     styleUrls: ['./abstract-game-component.css'],
 })
-export abstract class AbstractGameComponent<M extends Move,
-                                            S extends GameState<unknown, unknown>,
+export abstract class AbstractGameComponent<R extends Rules<M, S, L>,
+                                            M extends Move,
+                                            S extends AbstractGameState,
                                             L extends LegalityStatus = LegalityStatus>
 {
     public encoder: MoveEncoder<M>;
@@ -30,7 +32,7 @@ export abstract class AbstractGameComponent<M extends Move,
 
     public readonly SMALL_STROKE_WIDTH: number = 2;
 
-    public rules: Rules<M, S, L>;
+    public rules: R;
 
     public availableMinimaxes: Minimax<M, S>[];
 
@@ -91,4 +93,9 @@ export abstract class AbstractGameComponent<M extends Move,
     public getTurn(): number {
         return this.rules.node.gameState.turn;
     }
+}
+
+export abstract class AbstractAbstractGameComponent extends AbstractGameComponent<Rules<Move, AbstractGameState>,
+                                                                                  Move,
+                                                                                  AbstractGameState> {
 }

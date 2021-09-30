@@ -19,7 +19,7 @@ import { goTutorial } from './GoTutorial';
     templateUrl: './go.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class GoComponent extends RectangularGameComponent<GoMove, GoState, GoPiece, GoLegalityStatus> {
+export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoState, GoPiece, GoLegalityStatus> {
 
     public static VERBOSE: boolean = false;
 

@@ -1,16 +1,18 @@
 import { Component } from '@angular/core';
 import { Coord } from 'src/app/jscaip/Coord';
-import { GameState } from 'src/app/jscaip/GameState';
+import { AbstractGameState } from 'src/app/jscaip/GameState';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Move } from 'src/app/jscaip/Move';
+import { Rules } from 'src/app/jscaip/Rules';
 import { AbstractGameComponent } from './AbstractGameComponent';
 
 @Component({ template: '' })
-export abstract class HexagonalGameComponent<M extends Move,
-                                             S extends GameState<unknown, unknown>,
+export abstract class HexagonalGameComponent<R extends Rules<M, S, L>,
+                                             M extends Move,
+                                             S extends AbstractGameState,
                                              L extends LegalityStatus = LegalityStatus>
-    extends AbstractGameComponent<M, S, L>
+    extends AbstractGameComponent<R, M, S, L>
 {
 
     public hexaLayout: HexaLayout;

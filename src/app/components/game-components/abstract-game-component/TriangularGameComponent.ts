@@ -5,15 +5,16 @@ import { Move } from 'src/app/jscaip/Move';
 import { AbstractGameComponent } from './AbstractGameComponent';
 import { GameState } from 'src/app/jscaip/GameState';
 import { Table } from 'src/app/utils/ArrayUtils';
+import { Rules } from 'src/app/jscaip/Rules';
 
 @Component({ template: '' })
-export abstract class TriangularGameComponent<M extends Move,
+export abstract class TriangularGameComponent<R extends Rules<M, S, L>,
+                                              M extends Move,
                                               S extends GameState<Coord, P>,
                                               P,
                                               L extends LegalityStatus = LegalityStatus>
-    extends AbstractGameComponent<M, S, L>
+    extends AbstractGameComponent<R, M, S, L>
 {
-
     public CASE_SIZE: number = 50;
 
     public board: Table<P>;

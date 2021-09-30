@@ -5,10 +5,10 @@ import { Move } from '../Move';
 import { NodeUnheritance } from '../NodeUnheritance';
 import { Player } from '../Player';
 import { GameStatus, Rules } from '../Rules';
-import { GameState } from '../GameState';
+import { AbstractGameState } from '../GameState';
 
 export function expectToBeVictoryFor<M extends Move,
-                                     S extends GameState<unknown, unknown>,
+                                     S extends AbstractGameState,
                                      L extends LegalityStatus,
                                      U extends NodeUnheritance>(
     rules: Rules<M, S, L>,
@@ -25,7 +25,7 @@ export function expectToBeVictoryFor<M extends Move,
     }
 }
 export function expectToBeOngoing<M extends Move,
-                                  S extends GameState<unknown, unknown>,
+                                  S extends AbstractGameState,
                                   L extends LegalityStatus,
                                   U extends NodeUnheritance>(
     rules: Rules<M, S, L>,
@@ -44,7 +44,7 @@ export function expectToBeOngoing<M extends Move,
     }
 }
 export function expectToBeDraw<M extends Move,
-                               S extends GameState<unknown, unknown>,
+                               S extends AbstractGameState,
                                L extends LegalityStatus,
                                U extends NodeUnheritance>(
     rules: Rules<M, S, L>,

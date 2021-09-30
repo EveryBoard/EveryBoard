@@ -20,8 +20,11 @@ import { coerceoTutorial } from './CoerceoTutorial';
     templateUrl: './coerceo.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class CoerceoComponent extends TriangularGameComponent<CoerceoMove, CoerceoState, FourStatePiece> {
-
+export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
+                                                              CoerceoMove,
+                                                              CoerceoState,
+                                                              FourStatePiece>
+{
     private state: CoerceoState;
 
     public scores: { readonly 0: number; readonly 1: number; } = [0, 0];

@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 import { RectangularGameState } from 'src/app/jscaip/RectangularGameState';
 import { AbstractGameComponent } from '../abstract-game-component/AbstractGameComponent';
 import { Table } from 'src/app/utils/ArrayUtils';
+import { Rules } from 'src/app/jscaip/Rules';
 
 /* All method are to be implemented by the concretes game component
  * Except chooseMove which must be set by the GameWrapper
@@ -12,11 +13,12 @@ import { Table } from 'src/app/utils/ArrayUtils';
 @Component({
     template: '',
 })
-export abstract class RectangularGameComponent<M extends Move,
+export abstract class RectangularGameComponent<R extends Rules<M, S, L>,
+                                               M extends Move,
                                                S extends RectangularGameState<P>,
                                                P,
                                                L extends LegalityStatus = LegalityStatus>
-    extends AbstractGameComponent<M, S, L>
+    extends AbstractGameComponent<R, M, S, L>
 {
 
     public board: Table<P>;

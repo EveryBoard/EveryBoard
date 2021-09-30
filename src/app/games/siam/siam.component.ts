@@ -21,8 +21,12 @@ import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisp
     templateUrl: './siam.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class SiamComponent extends RectangularGameComponent<SiamMove, SiamState, SiamPiece, SiamLegalityStatus> {
-
+export class SiamComponent extends RectangularGameComponent<SiamRules,
+                                                            SiamMove,
+                                                            SiamState,
+                                                            SiamPiece,
+                                                            SiamLegalityStatus>
+{
     public static VERBOSE: boolean = false;
 
     public lastMove: SiamMove;

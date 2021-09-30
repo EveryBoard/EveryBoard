@@ -34,8 +34,11 @@ export class HexaDirArrow {
     templateUrl: './abalone.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, AbaloneState, AbaloneLegalityStatus> {
-
+export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
+                                                             AbaloneMove,
+                                                             AbaloneState,
+                                                             AbaloneLegalityStatus>
+{
     public hexaLayout: HexaLayout;
 
     public moveds: Coord[] = [];
@@ -46,7 +49,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
 
     public scores: [number, number] = [0, 0];
 
-    public PIECE_SIZE: number = 30;
+    public PIECE_SIZE: number = 30; // TODOTODO put in common with CASE_SIZE
 
     public board: Table<FourStatePiece>;
 

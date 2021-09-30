@@ -16,8 +16,12 @@ import { awaleTutorial } from './AwaleTutorial';
     templateUrl: './awale.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class AwaleComponent extends RectangularGameComponent<AwaleMove, AwaleState, number, AwaleLegalityStatus> {
-
+export class AwaleComponent extends RectangularGameComponent<AwaleRules,
+                                                             AwaleMove,
+                                                             AwaleState,
+                                                             number,
+                                                             AwaleLegalityStatus>
+{
     public scores: number[] = [0, 0];
 
     public last: Coord = new Coord(-1, -1);
