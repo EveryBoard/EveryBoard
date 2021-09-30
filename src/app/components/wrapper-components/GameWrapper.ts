@@ -66,7 +66,6 @@ export abstract class GameWrapper {
         this.createGameComponent();
 
         this.gameComponent.rules.setInitialBoard();
-        // this.gameComponent.board = this.gameComponent.rules.node.gameState.getCopiedBoard();
     }
     protected createGameComponent(): void {
         display(GameWrapper.VERBOSE, 'GameWrapper.createGameComponent');
@@ -92,7 +91,10 @@ export abstract class GameWrapper {
         this.gameComponent.observerRole = this.observerRole;
         this.canPass = this.gameComponent.canPass;
     }
-    public receiveValidMove: (m: Move, s: GameState<unknown, unknown>, s0: number, s1: number) => Promise<MGPValidation> =
+    public receiveValidMove: (m: Move,
+                              s: GameState<unknown, unknown>,
+                              s0: number,
+                              s1: number) => Promise<MGPValidation> =
     async(move: Move,
           state: GameState<unknown, unknown>,
           scorePlayerZero: number,
@@ -160,8 +162,5 @@ export abstract class GameWrapper {
         } else {
             return true;
         }
-    }
-    get compo(): AbstractGameComponent<Move, GameState<unknown, unknown>> {
-        return this.gameComponent;
     }
 }

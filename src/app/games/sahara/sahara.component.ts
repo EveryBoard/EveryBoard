@@ -9,12 +9,10 @@ import { SaharaRules } from 'src/app/games/sahara/SaharaRules';
 import { SaharaMinimax } from 'src/app/games/sahara/SaharaMinimax';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { Player } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { SaharaFailure } from './SaharaFailure';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { saharaTutorial } from './SaharaTutorial';
 
 @Component({
@@ -32,16 +30,14 @@ export class SaharaComponent extends TriangularGameComponent<SaharaMove, SaharaS
 
     public chosenCoord: MGPOptional<Coord> = MGPOptional.empty();
 
-    public encoder: MoveEncoder<SaharaMove> = SaharaMove.encoder;
-
-    public tutorial: TutorialStep[] = saharaTutorial;
-
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.rules = new SaharaRules(SaharaState);
         this.availableMinimaxes = [
             new SaharaMinimax(this.rules, 'SaharaMinimax'),
         ];
+        this.encoder = SaharaMove.encoder;
+        this.tutorial = saharaTutorial;
         this.updateBoard();
     }
     public cancelMoveAttempt(): void {
@@ -93,5 +89,9 @@ export class SaharaComponent extends TriangularGameComponent<SaharaMove, SaharaS
             this.lastMoved = move.end;
         }
         this.board = this.rules.node.gameState.board;
+    }
+    public getPlayerClassFor(x: number, y: number): string {
+        const piece: FourStatePiece = this.board[y][x];
+        return this.getPlayerClass(Player.of(piece.value));
     }
 }

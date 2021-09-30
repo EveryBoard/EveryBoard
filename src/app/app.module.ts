@@ -8,7 +8,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from '../material-modules';
 
 import localeFr from '@angular/common/locales/fr';
-import { getLocale } from './utils/LocaleUtils';
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
@@ -79,6 +78,7 @@ import { YinshComponent } from './games/yinsh/Yinsh.component';
 
 import { environment } from 'src/environments/environment';
 import { USE_EMULATOR as USE_FIRESTORE_EMULATOR } from '@angular/fire/firestore';
+import { LocaleUtils } from './utils/LocaleUtils';
 
 
 registerLocaleData(localeFr);
@@ -192,7 +192,7 @@ const routes: Route [] = [
         ChatService,
         PartDAO,
         AngularFireAuth,
-        { provide: LOCALE_ID, useValue: getLocale() },
+        { provide: LOCALE_ID, useValue: LocaleUtils.getLocale() },
     ],
     bootstrap: [AppComponent],
 })

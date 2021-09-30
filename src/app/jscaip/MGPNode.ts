@@ -30,7 +30,7 @@ export class MGPNode<R extends Rules<M, S, L>,
 
     public static VERBOSE: boolean = false;
 
-    public static ruler: Rules<Move, GameState<unknown, unknown>, LegalityStatus>;
+    public static ruler: Rules<Move, GameState<unknown, unknown>>;
     /* Permet d'obtenir les données propre au jeu et non au minimax, ruler restera l'unique instance d'un set de règles
      * Exemples d'états théorique d'un Node (cours)
      * Feuille - stérile: n'as pas d'enfant après un calcul

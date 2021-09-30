@@ -10,10 +10,8 @@ import { KamisadoMinimax } from 'src/app/games/kamisado/KamisadoMinimax';
 import { KamisadoFailure } from 'src/app/games/kamisado/KamisadoFailure';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { kamisadoTutorial } from './KamisadoTutorial';
 
 @Component({
@@ -24,15 +22,10 @@ import { kamisadoTutorial } from './KamisadoTutorial';
 
 export class KamisadoComponent extends RectangularGameComponent<KamisadoMove, KamisadoState, KamisadoPiece> {
 
-    public CASE_SIZE: number = 75;
     public UNOCCUPIED: KamisadoPiece = KamisadoPiece.NONE;
     public lastMove: KamisadoMove = null;
     public chosen: Coord = new Coord(-1, -1);
     public chosenAutomatically: boolean = false;
-
-    public encoder: MoveEncoder<KamisadoMove> = KamisadoMove.encoder;
-
-    public tutorial: TutorialStep[] = kamisadoTutorial;
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -40,6 +33,8 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoMove, Ka
         this.availableMinimaxes = [
             new KamisadoMinimax(this.rules, 'KamisadoMinimax'),
         ];
+        this.encoder = KamisadoMove.encoder;
+        this.tutorial = kamisadoTutorial;
         this.canPass = false;
         this.updateBoard();
     }

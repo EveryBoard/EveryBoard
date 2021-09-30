@@ -37,4 +37,7 @@ export class FourStatePiece {
     public is(player: Player): boolean {
         return this.value === player.value;
     }
+    public isPlayer(): boolean {
+        return this === FourStatePiece.ZERO || this === FourStatePiece.ONE;
+    }
 }

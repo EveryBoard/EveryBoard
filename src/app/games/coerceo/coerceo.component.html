@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="auto"
-     viewBox="-5 -5 810 1010"
+     [attr.viewBox]="'-5 -5 ' + (CASE_SIZE * 8) + ' ' + (10 + CASE_SIZE * 10)"
      preserveAspectRatio="xMidYMid meet">
     <g *ngFor="let line of board; index as y">
         <g *ngFor="let caseContent of line; index as x"

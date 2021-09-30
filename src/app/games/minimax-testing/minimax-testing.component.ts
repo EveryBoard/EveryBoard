@@ -6,9 +6,7 @@ import { MinimaxTestingMove } from 'src/app/games/minimax-testing/MinimaxTesting
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MinimaxTestingMinimax } from './MinimaxTestingMinimax';
-import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
-import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 @Component({
     selector: 'app-minimax-testing',
@@ -16,11 +14,8 @@ import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-gam
     styleUrls: [],
 })
 export class MinimaxTestingComponent extends RectangularGameComponent<MinimaxTestingMove, MinimaxTestingState, number> {
+
     public coord: Coord = new Coord(-1, -1);
-
-    public encoder: MoveEncoder<MinimaxTestingMove> = MinimaxTestingMove.encoder;
-
-    public tutorial: TutorialStep[];
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -28,6 +23,7 @@ export class MinimaxTestingComponent extends RectangularGameComponent<MinimaxTes
         this.availableMinimaxes = [
             new MinimaxTestingMinimax(this.rules, 'MinimaxTestingMinimax'),
         ];
+        this.encoder = MinimaxTestingMove.encoder;
     }
     public async chooseRight(): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#click_right');

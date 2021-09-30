@@ -11,10 +11,8 @@ import { CoerceoPiecesThreatTilesMinimax } from './CoerceoPiecesThreatTilesMinim
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { CoerceoFailure } from 'src/app/games/coerceo/CoerceoFailure';
 import { Player } from 'src/app/jscaip/Player';
-import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { coerceoTutorial } from './CoerceoTutorial';
 
 @Component({
@@ -29,7 +27,6 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove, Coerc
     public scores: { readonly 0: number; readonly 1: number; } = [0, 0];
     public tiles: { readonly 0: number; readonly 1: number; } = [0, 0];
 
-    public EMPTY: number = FourStatePiece.EMPTY.value;
     public NONE: FourStatePiece = FourStatePiece.NONE;
 
     public chosenCoord: MGPOptional<Coord> = MGPOptional.empty();
@@ -38,10 +35,6 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove, Coerc
 
     public highlights: Coord[] = [];
 
-    public encoder: MoveEncoder<CoerceoMove> = CoerceoMove.encoder;
-
-    public tutorial: TutorialStep[] = coerceoTutorial;
-
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.rules = new CoerceoRules(CoerceoState);
@@ -49,7 +42,9 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove, Coerc
             new CoerceoMinimax(this.rules, 'Normal'),
             new CoerceoPiecesThreatTilesMinimax(this.rules, 'Piece > Threat > Tiles'),
         ];
-
+        this.encoder = CoerceoMove.encoder;
+        this.tutorial = coerceoTutorial;
+        this.CASE_SIZE = 70;
         this.showScore = true;
         this.updateBoard();
     }
@@ -112,9 +107,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove, Coerc
     }
     public isPyramid(x: number, y: number): boolean {
         const caseContent: FourStatePiece = this.board[y][x];
-        return caseContent === FourStatePiece.ZERO ||
-               caseContent === FourStatePiece.ONE ||
-               this.wasEnnemy(x, y);
+        return caseContent.isPlayer() || this.wasEnnemy(x, y);
     }
     private wasEnnemy(x: number, y: number): boolean {
         const mother: CoerceoNode = this.rules.node.mother;

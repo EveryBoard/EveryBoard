@@ -7,12 +7,10 @@ import { PylosMinimax } from 'src/app/games/pylos/PylosMinimax';
 import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { PylosOrderedMinimax } from './PylosOrderedMinimax';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PylosFailure } from './PylosFailure';
-import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { pylosTutorial } from './PylosTutorial';
 
 @Component({
@@ -40,10 +38,6 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosState>
 
     private remainingPieces: { [owner: number]: number } = { 0: 15, 1: 15 };
 
-    public encoder: MoveEncoder<PylosMove> = PylosMove.encoder;
-
-    public tutorial: TutorialStep[] = pylosTutorial;
-
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.rules = new PylosRules(PylosState);
@@ -52,6 +46,9 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosState>
             new PylosMinimax(this.rules, 'PylosMinimax'),
             new PylosOrderedMinimax(this.rules, 'PylosOrderedMinimax'),
         ];
+        this.encoder = PylosMove.encoder;
+        this.tutorial = pylosTutorial;
+        this.CASE_SIZE = this.getPieceRay(0);
         this.updateBoard();
     }
     public getLevelRange(z: number): number[] {
@@ -188,9 +185,6 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosState>
     }
     public getPlayerPieceClass(player: number): string {
         return this.getPlayerClass(Player.of(player));
-    }
-    public getPieceSize(): number {
-        return this.getPieceRay(0);
     }
     public getPlayerSidePieces(player: number): number[] {
         const nPieces: number = this.remainingPieces[player];

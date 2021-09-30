@@ -14,8 +14,7 @@ import { LinesOfActionState } from './LinesOfActionState';
 
 export class LinesOfActionNode extends MGPNode<LinesOfActionRules,
                                                LinesOfActionMove,
-                                               LinesOfActionState,
-                                               LegalityStatus> {}
+                                               LinesOfActionState> {}
 
 export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionState> {
 

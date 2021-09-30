@@ -3,7 +3,6 @@ import { RectangularGameComponent }
     from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Direction';
-import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -13,7 +12,6 @@ import { PentagoMove } from './PentagoMove';
 import { PentagoRules } from './PentagoRules';
 import { PentagoState } from './PentagoState';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
-import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { pentagoTutorial } from './PentagoTutorial';
 
 @Component({
@@ -27,11 +25,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoMove,
                                                                PentagoLegalityStatus>
 {
 
-    public rules: PentagoRules = new PentagoRules(PentagoState);
-
-    public encoder: MoveEncoder<PentagoMove> = PentagoMove.encoder;
-
-    public tutorial: TutorialStep[] = pentagoTutorial;
+    public rules: PentagoRules = new PentagoRules(PentagoState); // TODOTODO
 
     public readonly BLOCK_WIDTH: number;
     public readonly BLOCK_SEPARATION: number;
@@ -53,6 +47,8 @@ export class PentagoComponent extends RectangularGameComponent<PentagoMove,
         this.availableMinimaxes = [
             new PentagoMinimax(this.rules, 'PentagoMinimax'),
         ];
+        this.encoder = PentagoMove.encoder;
+        this.tutorial = pentagoTutorial;
         this.BLOCK_WIDTH = (3 * this.CASE_SIZE) + (2 * this.STROKE_WIDTH);
         this.BLOCK_SEPARATION = (this.BLOCK_WIDTH + 2 * this.STROKE_WIDTH);
         this.DIAGONAL_BAR_OFFSET = Math.cos(Math.PI / 4) * 0.75 * this.CASE_SIZE;

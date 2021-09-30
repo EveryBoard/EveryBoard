@@ -6,10 +6,8 @@ import { QuartoMinimax } from './QuartoMinimax';
 import { QuartoPiece } from './QuartoPiece';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { quartoTutorial } from './QuartoTutorial';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 
@@ -20,9 +18,8 @@ import { RectangularGameComponent } from 'src/app/components/game-components/rec
 })
 export class QuartoComponent extends RectangularGameComponent<QuartoMove, QuartoState, QuartoPiece> {
 
-    public rules: QuartoRules = new QuartoRules(QuartoState);
+    public rules: QuartoRules = new QuartoRules(QuartoState); // TODOTODO
 
-    public CASE_SIZE: number = 100;
     public EMPTY: QuartoPiece = QuartoPiece.NONE;
 
     public chosen: Coord = new Coord(-1, -1);
@@ -32,15 +29,13 @@ export class QuartoComponent extends RectangularGameComponent<QuartoMove, Quarto
     public pieceToGive: QuartoPiece = QuartoPiece.NONE; // the piece that the user wants to give to the opponent
     public victoriousCoords: Coord[] = [];
 
-    public encoder: MoveEncoder<QuartoMove> = QuartoMove.encoder;
-
-    public tutorial: TutorialStep[] = quartoTutorial;
-
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.availableMinimaxes = [
             new QuartoMinimax(this.rules, 'QuartoMinimax'),
         ];
+        this.encoder = QuartoMove.encoder;
+        this.tutorial = quartoTutorial;
         this.pieceInHand = this.rules.node.gameState.pieceInHand;
         this.updateBoard();
     }

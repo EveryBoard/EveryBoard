@@ -50,8 +50,7 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
                 const piece: FourStatePiece = state.getBoardAt(coord);
                 if (piece === FourStatePiece.ZERO) {
                     zeroPieces.push(coord);
-                }
-                if (piece === FourStatePiece.ONE) {
+                } else if (piece === FourStatePiece.ONE) {
                     onePieces.push(coord);
                 }
             }

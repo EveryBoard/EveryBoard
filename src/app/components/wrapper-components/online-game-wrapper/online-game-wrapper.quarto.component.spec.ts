@@ -1324,7 +1324,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(1);
 
             // when the propose rematch button is clicked
-            const wrapper: OnlineGameWrapperComponent = componentTestUtils.wrapper as OnlineGameWrapperComponent;
             spyOn(wrapper.gameService, 'proposeRematch').and.callThrough();
             await componentTestUtils.expectInterfaceClickSuccess('#proposeRematchButton');
 
@@ -1356,7 +1355,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await receiveRequest(Request.rematchProposed(Player.ONE));
 
             // when accepting it
-            const wrapper: OnlineGameWrapperComponent = componentTestUtils.wrapper as OnlineGameWrapperComponent;
             spyOn(wrapper.gameService, 'acceptRematch').and.callThrough();
             await componentTestUtils.expectInterfaceClickSuccess('#acceptRematchButton');
 
@@ -1373,20 +1371,20 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await componentTestUtils.expectInterfaceClickSuccess('#proposeRematchButton');
 
             // when opponent accept it
-            spyOn(componentTestUtils.wrapper.router, 'navigate');
+            spyOn(wrapper.router, 'navigate');
             await receiveRequest(Request.rematchAccepted('Quarto', 'nextPartId'));
 
             // then it should redirect to new part
             const first: string = '/nextGameLoading';
             const second: string = '/play/Quarto/nextPartId';
-            expect(componentTestUtils.wrapper.router.navigate).toHaveBeenCalledWith([first]);
-            expect(componentTestUtils.wrapper.router.navigate).toHaveBeenCalledWith([second]);
+            expect(wrapper.router.navigate).toHaveBeenCalledWith([first]);
+            expect(wrapper.router.navigate).toHaveBeenCalledWith([second]);
         }));
     });
     describe('Non Player Experience', () => {
         it('Should not be able to do anything', fakeAsync(async() => {
             await prepareStartedGameFor({ pseudo: OBSERVER.pseudo, verified: true });
-            spyOn(componentTestUtils.wrapper as OnlineGameWrapperComponent, 'startCountDownFor').and.callFake(() => null);
+            spyOn(wrapper, 'startCountDownFor').and.callFake(() => null);
 
             const forbiddenFunctionNames: string[] = [
                 'canProposeDraw',
@@ -1396,7 +1394,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 'canResign',
             ];
             for (const name of forbiddenFunctionNames) {
-                expect(componentTestUtils.wrapper[name]()).toBeFalse();
+                expect(wrapper[name]()).toBeFalse();
             }
             tick(wrapper.joiner.maximalMoveDuration * 1000);
         }));

@@ -13,7 +13,7 @@ export abstract class HexagonalGameComponent<M extends Move,
     extends AbstractGameComponent<M, S, L>
 {
 
-    public abstract hexaLayout: HexaLayout;
+    public hexaLayout: HexaLayout;
 
     public getHexaCoordsBy(x: number, y: number): string {
         const coord: Coord = new Coord(x, y);

@@ -7,9 +7,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { P4Move } from 'src/app/games/p4/P4Move';
 import { Player } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
-import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { p4Tutorial } from './P4Tutorial';
 
 @Component({
@@ -22,14 +20,9 @@ export class P4Component extends RectangularGameComponent<P4Move, P4State, Playe
     public static VERBOSE: boolean = false;
 
     public EMPTY_CASE: Player = Player.NONE;
-    public CASE_SIZE: number = 100;
-    public STROKE_WIDTH: number = 8;
+    public STROKE_WIDTH: number = 8; // TODOTODO
     public last: Coord;
     public victoryCoords: Coord[] = [];
-
-    public encoder: MoveEncoder<P4Move> = P4Move.encoder;
-
-    public tutorial: TutorialStep[] = p4Tutorial;
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -37,6 +30,8 @@ export class P4Component extends RectangularGameComponent<P4Move, P4State, Playe
         this.availableMinimaxes = [
             new P4Minimax(this.rules, 'P4Minimax'),
         ];
+        this.encoder = P4Move.encoder;
+        this.tutorial = p4Tutorial;
         this.updateBoard();
     }
     public async onClick(x: number): Promise<MGPValidation> {

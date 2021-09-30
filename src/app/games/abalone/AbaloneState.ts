@@ -29,8 +29,7 @@ export class AbaloneState extends RectangularGameState<FourStatePiece> {
     }
     public isPiece(coord: Coord): boolean {
         const piece: FourStatePiece = this.getBoardAt(coord);
-        return piece === FourStatePiece.ZERO ||
-               piece === FourStatePiece.ONE;
+        return piece.isPlayer();
     }
     public getScores(): [number, number] {
         const scores: [number, number] = [14, 14];

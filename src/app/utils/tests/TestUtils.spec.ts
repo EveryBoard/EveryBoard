@@ -9,7 +9,6 @@ import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform
 
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
 import { GameState } from '../../jscaip/GameState';
-import { LegalityStatus } from '../../jscaip/LegalityStatus';
 import { Move } from '../../jscaip/Move';
 import { MGPValidation } from '../MGPValidation';
 import { AppModule } from '../../app.module';
@@ -146,7 +145,7 @@ export class SimpleComponentTestUtils<T> {
     }
 }
 
-type GameComponent = AbstractGameComponent<Move, GameState<unknown, unknown>, LegalityStatus>;
+type GameComponent = AbstractGameComponent<Move, GameState<unknown, unknown>>;
 
 export class ComponentTestUtils<T extends GameComponent> {
     public fixture: ComponentFixture<GameWrapper>;

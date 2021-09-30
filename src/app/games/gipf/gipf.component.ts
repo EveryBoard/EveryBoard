@@ -16,10 +16,8 @@ import { GipfState } from 'src/app/games/gipf/GipfState';
 import { GipfLegalityStatus } from 'src/app/games/gipf/GipfLegalityStatus';
 import { GipfPiece } from 'src/app/games/gipf/GipfPiece';
 import { Arrow } from 'src/app/jscaip/Arrow';
-import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { gipfTutorial } from './GipfTutorial';
 
 @Component({
@@ -29,9 +27,7 @@ import { gipfTutorial } from './GipfTutorial';
 })
 export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfState, GipfLegalityStatus> {
 
-    private static PIECE_SIZE: number = 40;
-
-    public rules: GipfRules = new GipfRules(GipfState); // TODO that new genericity
+    public rules: GipfRules = new GipfRules(GipfState); // TODOTODO that new genericity
 
     public scores: number[] = [0, 0];
 
@@ -39,11 +35,6 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfState, G
     public arrows: Arrow[] = [];
     public captured: Coord[] = [];
     public moved: Coord[] = [];
-
-    public hexaLayout: HexaLayout =
-        new HexaLayout(GipfComponent.PIECE_SIZE * 1.50,
-                       new Coord(GipfComponent.PIECE_SIZE * 2, 0),
-                       FlatHexaOrientation.INSTANCE);
 
     private static PHASE_INITIAL_CAPTURE: number = 0;
     private static PHASE_PLACEMENT_COORD: number = 1;
@@ -60,17 +51,19 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfState, G
     private placementEntrance: MGPOptional<Coord> = MGPOptional.empty();
     private finalCaptures: GipfCapture[] = [];
 
-    public encoder: MoveEncoder<GipfMove> = GipfMove.encoder;
-
-    public tutorial: TutorialStep[] = gipfTutorial;
-
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.availableMinimaxes = [
             new GipfMinimax(this.rules, 'GipfMinimax'),
         ];
+        this.encoder = GipfMove.encoder;
+        this.tutorial = gipfTutorial;
+        this.CASE_SIZE = 40;
         this.showScore = true;
         this.constructedState = this.rules.node.gameState;
+        this.hexaLayout = new HexaLayout(this.CASE_SIZE * 1.50,
+                                         new Coord(this.CASE_SIZE * 2, 0),
+                                         FlatHexaOrientation.INSTANCE);
     }
     public updateBoard(): void {
         this.showLastMove();
@@ -280,8 +273,5 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfState, G
     }
     public getSidePieceClass(player: number): string {
         return this.getPlayerClass(Player.of(player));
-    }
-    public getPieceSize(): number {
-        return GipfComponent.PIECE_SIZE;
     }
 }

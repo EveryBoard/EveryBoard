@@ -9,10 +9,8 @@ import { LinesOfActionRules } from './LinesOfActionRules';
 import { LinesOfActionMinimax } from './LinesOfActionMinimax';
 import { LinesOfActionFailure } from './LinesOfActionFailure';
 import { LinesOfActionState } from './LinesOfActionState';
-import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { linesOfActionTutorial } from './LinesOfActionTutorial';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
@@ -31,16 +29,14 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
     private lastMove: MGPOptional<LinesOfActionMove> = MGPOptional.empty();
     private captured: MGPOptional<Coord> = MGPOptional.empty();
 
-    public encoder: MoveEncoder<LinesOfActionMove> = LinesOfActionMove.encoder;
-
-    public tutorial: TutorialStep[] = linesOfActionTutorial;
-
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.rules = new LinesOfActionRules(LinesOfActionState);
         this.availableMinimaxes = [
             new LinesOfActionMinimax(this.rules, 'LinesOfActionMinimax'),
         ];
+        this.encoder = LinesOfActionMove.encoder;
+        this.tutorial = linesOfActionTutorial;
         this.updateBoard();
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {

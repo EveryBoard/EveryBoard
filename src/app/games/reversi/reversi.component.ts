@@ -9,9 +9,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player } from 'src/app/jscaip/Player';
 import { Direction } from 'src/app/jscaip/Direction';
-import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
-import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { reversiTutorial } from './ReversiTutorial';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 
@@ -23,28 +21,25 @@ import { RectangularGameComponent } from 'src/app/components/game-components/rec
 export class ReversiComponent extends RectangularGameComponent<ReversiMove,
                                                                ReversiState,
                                                                Player,
-                                                               ReversiLegalityStatus> {
-
-    public CASE_SIZE: number = 100;
-    public NONE: number = Player.NONE.value;
+                                                               ReversiLegalityStatus>
+{
+    public NONE: Player = Player.NONE;
     public lastMove: Coord = new Coord(-2, -2);
 
     public scores: number[] = [2, 2];
 
     private captureds: Coord[] = [];
 
-    public encoder: MoveEncoder<ReversiMove> = ReversiMove.encoder;
-
-    public tutorial: TutorialStep[] = reversiTutorial;
-
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.showScore = true;
-        this.canPass = false;
         this.rules = new ReversiRules(ReversiState);
         this.availableMinimaxes = [
             new ReversiMinimax(this.rules, 'ReversiMinimax'),
         ];
+        this.encoder = ReversiMove.encoder;
+        this.tutorial = reversiTutorial;
+        this.showScore = true;
+        this.canPass = false;
         this.updateBoard();
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {

@@ -5,7 +5,7 @@ import { RectangularGameState } from 'src/app/jscaip/RectangularGameState';
 import { AbstractGameComponent } from '../abstract-game-component/AbstractGameComponent';
 import { Table } from 'src/app/utils/ArrayUtils';
 
-/* All method are to be implemented by the Concretes Game Component
+/* All method are to be implemented by the concretes game component
  * Except chooseMove which must be set by the GameWrapper
  * (since OnlineGameWrapper and LocalGameWrapper will not give the same action to do when a move is done)
  */

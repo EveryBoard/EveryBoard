@@ -10,10 +10,8 @@ import { display } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GroupDatas } from 'src/app/jscaip/BoardDatas';
-import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { goTutorial } from './GoTutorial';
 
 @Component({
@@ -37,16 +35,14 @@ export class GoComponent extends RectangularGameComponent<GoMove, GoState, GoPie
 
     public captures: Coord[]= [];
 
-    public encoder: MoveEncoder<GoMove> = GoMove.encoder;
-
-    public tutorial: TutorialStep[] = goTutorial;
-
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.rules = new GoRules(GoState);
         this.availableMinimaxes = [
             new GoMinimax(this.rules, 'GoMinimax'),
         ];
+        this.encoder = GoMove.encoder;
+        this.tutorial = goTutorial;
         this.canPass = true;
         this.showScore = true;
         this.updateBoard();

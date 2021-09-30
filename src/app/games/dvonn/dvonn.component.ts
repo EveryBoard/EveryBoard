@@ -11,11 +11,9 @@ import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { PointyHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { HexagonalGameComponent }
     from 'src/app/components/game-components/abstract-game-component/HexagonalGameComponent';
-import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MaxStacksDvonnMinimax } from './MaxStacksDvonnMinimax';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { dvonnTutorial } from './DvonnTutorial';
 
 @Component({
@@ -26,22 +24,13 @@ import { dvonnTutorial } from './DvonnTutorial';
 
 export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnState> {
 
-    private static CASE_SIZE: number = 30;
-    public rules: DvonnRules = new DvonnRules(DvonnState);
+    public rules: DvonnRules = new DvonnRules(DvonnState); // TODOTODO
 
     public scores: number[] = [0, 0];
     public lastMove: DvonnMove = null;
     public chosen: Coord = null;
     public disconnecteds: { x: number, y: number, caseContent: DvonnPieceStack }[] = [];
-    public hexaBoard: DvonnBoard;
-
-    public hexaLayout: HexaLayout =
-        new HexaLayout(DvonnComponent.CASE_SIZE * 1.50,
-                       new Coord(-DvonnComponent.CASE_SIZE, DvonnComponent.CASE_SIZE * 2),
-                       PointyHexaOrientation.INSTANCE);
-    public encoder: MoveEncoder<DvonnMove> = DvonnMove.encoder;
-
-    public tutorial: TutorialStep[] = dvonnTutorial;
+    public hexaBoard: DvonnBoard; // TODOTODO
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -49,9 +38,15 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnState
             new DvonnMinimax(this.rules, 'DvonnMinimax'),
             new MaxStacksDvonnMinimax(this.rules, 'DvonnMinimaxMaximizeStacks'),
         ];
+        this.encoder = DvonnMove.encoder;
+        this.tutorial = dvonnTutorial;
+        this.CASE_SIZE = 30;
         this.showScore = true;
         this.canPass = false;
         this.scores = DvonnRules.getScores(this.rules.node.gameState);
+        this.hexaLayout = new HexaLayout(this.CASE_SIZE * 1.50,
+                                         new Coord(-this.CASE_SIZE, this.CASE_SIZE * 2),
+                                         PointyHexaOrientation.INSTANCE);
         this.hexaBoard = this.rules.node.gameState.board;
     }
     public hideLastMove(): void {
@@ -141,8 +136,5 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnState
             return [playerColor, 'other-piece-stroke', 'dashed-stroke'];
         }
         return [playerColor];
-    }
-    public getPieceSize(): number {
-        return DvonnComponent.CASE_SIZE;
     }
 }

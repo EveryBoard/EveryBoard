@@ -15,4 +15,7 @@ export abstract class TriangularGameState<T> extends RectangularGameState<T> {
         }
         return neighboors;
     }
+    public getEmptyNeighboors(coord: Coord, empty: T): Coord[] {
+        return TriangularGameState.getEmptyNeighboors(this.board, coord, empty);
+    }
 }

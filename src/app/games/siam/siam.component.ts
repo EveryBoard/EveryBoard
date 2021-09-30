@@ -14,9 +14,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { display } from 'src/app/utils/utils';
 import { GameComponentUtils } from 'src/app/components/game-components/GameComponentUtils';
-import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
-import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 @Component({
     selector: 'app-siam',
@@ -34,16 +32,14 @@ export class SiamComponent extends RectangularGameComponent<SiamMove, SiamState,
     public chosenOrientation: Orthogonal;
     public movedPieces: Coord[] = [];
 
-    public encoder: MoveEncoder<SiamMove> = SiamMove.encoder;
-
-    public tutorial: TutorialStep[] = siamTutorial;
-
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.rules = new SiamRules(SiamState);
         this.availableMinimaxes = [
             new SiamMinimax(this.rules, 'SiamMinimax'),
         ];
+        this.encoder = SiamMove.encoder;
+        this.tutorial = siamTutorial;
         this.updateBoard();
     }
     public updateBoard(): void {

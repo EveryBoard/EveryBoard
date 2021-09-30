@@ -10,12 +10,10 @@ import { Direction } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { PositionalEpaminondasMinimax } from './PositionalEpaminondasMinimax';
-import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { AttackEpaminondasMinimax } from './AttackEpaminondasMinimax';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { EpaminondasFailure } from './EpaminondasFailure';
-import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { epaminondasTutorial } from './EpaminondasTutorial';
 
 @Component({
@@ -29,7 +27,6 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasMo
                                                                    EpaminondasLegalityStatus>
 {
     public NONE: Player = Player.NONE;
-    public CASE_SIZE: number = 100;
 
     public firstPiece: Coord = new Coord(-15, -1);
 
@@ -47,10 +44,6 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasMo
 
     private captureds: Coord[] = [];
 
-    public encoder: MoveEncoder<EpaminondasMove> = EpaminondasMove.encoder;
-
-    public tutorial: TutorialStep[] = epaminondasTutorial;
-
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.rules = new EpaminondasRules(EpaminondasState);
@@ -59,6 +52,8 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasMo
             new PositionalEpaminondasMinimax(this.rules, 'Positional'),
             new AttackEpaminondasMinimax(this.rules, 'Attack'),
         ];
+        this.encoder = EpaminondasMove.encoder;
+        this.tutorial = epaminondasTutorial;
         this.updateBoard();
     }
     public updateBoard(): void {

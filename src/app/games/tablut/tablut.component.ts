@@ -15,12 +15,10 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
 import { TablutPieceAndInfluenceMinimax } from './TablutPieceAndInfluenceMinimax';
 import { TablutLegalityStatus } from './TablutLegalityStatus';
-import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { TablutPieceAndControlMinimax } from './TablutPieceAndControlMinimax';
 import { TablutEscapeThenPieceAndControlMinimax } from './TablutEscapeThenPieceThenControl';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { tablutTutorial } from './TablutTutorial';
 
 @Component({
@@ -50,10 +48,6 @@ export class TablutComponent extends RectangularGameComponent<TablutMove,
 
     public lastMove: TablutMove;
 
-    public encoder: MoveEncoder<TablutMove> = TablutMove.encoder;
-
-    public tutorial: TutorialStep[] = tablutTutorial;
-
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.rules = new TablutRules(TablutState);
@@ -63,6 +57,8 @@ export class TablutComponent extends RectangularGameComponent<TablutMove,
             new TablutPieceAndControlMinimax(this.rules, 'Piece > Control'),
             new TablutEscapeThenPieceAndControlMinimax(this.rules, 'Escape > Piece > Control'),
         ];
+        this.encoder = TablutMove.encoder;
+        this.tutorial = tablutTutorial;
         this.updateBoard();
     }
     public updateBoard(): void {

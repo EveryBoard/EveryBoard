@@ -101,9 +101,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         });
     }
     public isSurrounded(coord: Coord): boolean {
-        const newBoard: FourStatePiece[][] = this.getCopiedBoard();
-        const remainingFreedom: Coord[] =
-            TriangularGameState.getEmptyNeighboors(newBoard, coord, FourStatePiece.EMPTY);
+        const remainingFreedom: Coord[] = this.getEmptyNeighboors(coord, FourStatePiece.EMPTY);
         return remainingFreedom.length === 0;
     }
     public capture(coord: Coord): CoerceoState {
@@ -225,15 +223,12 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         ];
         for (let y: number = 0; y < 10; y++) {
             for (let x: number = 0; x < 15; x++) {
-                if (this.board[y][x] !== FourStatePiece.EMPTY &&
-                    this.board[y][x] !== FourStatePiece.NONE)
-                {
-                    const nbFreedom: number = TriangularGameState.getEmptyNeighboors(this.board,
-                                                                                     new Coord(x, y),
-                                                                                     FourStatePiece.EMPTY).length;
-                    const PLAYER: FourStatePiece = this.board[y][x];
-                    const oldValue: number = playersScores[PLAYER.value][nbFreedom];
-                    playersScores[PLAYER.value][nbFreedom] = oldValue + 1;
+                const piece: FourStatePiece = this.board[y][x];
+                if (piece.isPlayer()) {
+                    const nbFreedom: number =
+                        this.getEmptyNeighboors(new Coord(x, y), FourStatePiece.EMPTY).length;
+                    const oldValue: number = playersScores[piece.value][nbFreedom];
+                    playersScores[piece.value][nbFreedom] = oldValue + 1;
                 }
             }
         }

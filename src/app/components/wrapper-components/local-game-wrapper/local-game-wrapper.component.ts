@@ -12,7 +12,6 @@ import { GameState } from 'src/app/jscaip/GameState';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { Player } from 'src/app/jscaip/Player';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 
 @Component({
     selector: 'app-local-game-wrapper',
@@ -93,13 +92,13 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
             // No AI is playing when the game is finished
             return null;
         }
-        return this.gameComponent.availableMinimaxes.find((a: Minimax<Move, GameState<unknown, unknown>, LegalityStatus>) => {
+        return this.gameComponent.availableMinimaxes.find((a: Minimax<Move, GameState<unknown, unknown>>) => {
             return a.name === this.players[turn];
         });
     }
     public doAIMove(playingMinimax: Minimax<Move, GameState<unknown, unknown>>): void {
         // called only when it's AI's Turn
-        const ruler: Rules<Move, GameState<unknown, unknown>, LegalityStatus> = this.gameComponent.rules;
+        const ruler: Rules<Move, GameState<unknown, unknown>> = this.gameComponent.rules;
         const gameStatus: GameStatus = ruler.getGameStatus(ruler.node);
         assert(gameStatus === GameStatus.ONGOING, 'IA should not try to play when game is over!');
         const turn: number = ruler.node.gameState.turn % 2;

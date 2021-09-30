@@ -10,7 +10,7 @@ import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisp
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { GameState } from 'src/app/jscaip/GameState';
 
-/* All method are to be implemented by the Concretes Game Component
+/* All method are to be implemented by the concretes game components
  * Except chooseMove which must be set by the GameWrapper
  * (since OnlineGameWrapper and LocalGameWrapper will not give the same action to do when a move is done)
  */
@@ -22,7 +22,7 @@ export abstract class AbstractGameComponent<M extends Move,
                                             S extends GameState<unknown, unknown>,
                                             L extends LegalityStatus = LegalityStatus>
 {
-    public abstract encoder: MoveEncoder<M>;
+    public encoder: MoveEncoder<M>;
 
     public CASE_SIZE: number = 100;
 
@@ -34,15 +34,13 @@ export abstract class AbstractGameComponent<M extends Move,
 
     public availableMinimaxes: Minimax<M, S>[];
 
-    // public board: B; TODO: confirm that it's not linked to AbstractGameComponent but
-
     public canPass: boolean;
 
     public showScore: boolean;
 
     public imagesLocation: string = 'assets/images/';
 
-    public abstract tutorial: TutorialStep[];
+    public tutorial: TutorialStep[];
 
     public isPlayerTurn: () => boolean;
 

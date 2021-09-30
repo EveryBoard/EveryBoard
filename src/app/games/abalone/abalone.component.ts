@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
 import { HexagonalGameComponent } from 'src/app/components/game-components/abstract-game-component/HexagonalGameComponent';
-import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { Coord } from 'src/app/jscaip/Coord';
 import { BaseDirection, Direction } from 'src/app/jscaip/Direction';
-import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
@@ -40,10 +38,6 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
 
     public hexaLayout: HexaLayout;
 
-    public encoder: MoveEncoder<AbaloneMove> = AbaloneMove.encoder;
-
-    public tutorial: TutorialStep[] = abaloneTutorial;
-
     public moveds: Coord[] = [];
 
     public directions: HexaDirArrow[] = [];
@@ -54,7 +48,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
 
     public PIECE_SIZE: number = 30;
 
-    public board: Table<FourStatePiece>; // TODO: delete ?
+    public board: Table<FourStatePiece>;
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -62,10 +56,13 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
         this.availableMinimaxes = [
             new AbaloneDummyMinimax(this.rules, 'Dummy'),
         ];
+        this.encoder = AbaloneMove.encoder;
+        this.tutorial = abaloneTutorial;
         this.showScore = true;
         this.hexaLayout = new HexaLayout(this.PIECE_SIZE,
                                          new Coord(- 8 * this.PIECE_SIZE, 2 * this.PIECE_SIZE),
                                          PointyHexaOrientation.INSTANCE);
+
         this.updateBoard();
     }
     public updateBoard(): void {

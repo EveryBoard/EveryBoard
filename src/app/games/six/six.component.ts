@@ -14,10 +14,8 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { HexagonalGameComponent }
     from '../../components/game-components/abstract-game-component/HexagonalGameComponent';
-import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
-import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { sixTutorial } from './SixTutorial';
 
 interface Scale {
@@ -37,7 +35,7 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixState, SixL
 
     public readonly CONCRETE_WIDTH: number = 1000;
     public readonly CONCRETE_HEIGHT: number = 800;
-    public rules: SixRules = new SixRules(SixState);
+    public rules: SixRules = new SixRules(SixState); // TODOTODO
     public state: SixState;
 
     public pieces: Coord[];
@@ -57,17 +55,13 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixState, SixL
     public Y_OFFSET: number;
     public PIECE_SIZE: number = 30;
 
-    public hexaLayout: HexaLayout;
-
-    public encoder: MoveEncoder<SixMove> = SixMove.encoder;
-
-    public tutorial: TutorialStep[] = sixTutorial;
-
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.availableMinimaxes = [
             new SixMinimax(this.rules, 'SixMinimax'),
         ];
+        this.encoder = SixMove.encoder;
+        this.tutorial = sixTutorial;
         this.hexaLayout = new HexaLayout(this.PIECE_SIZE * 1.50,
                                          new Coord(this.PIECE_SIZE * 2, 0),
                                          FlatHexaOrientation.INSTANCE);

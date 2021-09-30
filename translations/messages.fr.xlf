@@ -375,8 +375,8 @@
         <target>Niveau <x id="INTERPOLATION" equiv-text="{{ i }}"/></target>
       </trans-unit>
       <trans-unit id="3272612818120648715" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ compo.scores[0] }}"/> points</source>
-        <target><x id="INTERPOLATION" equiv-text="{{ compo.scores[0] }}"/> points</target>
+        <source><x id="INTERPOLATION" equiv-text="{{ gameComponent.scores[0] }}"/> points</source>
+        <target><x id="INTERPOLATION" equiv-text="{{ gameComponent.scores[0] }}"/> points</target>
       </trans-unit>
       <trans-unit id="8739046962840362623" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ winner }}"/> won</source>
@@ -399,8 +399,8 @@
         <target>Reprendre un coup</target>
       </trans-unit>
       <trans-unit id="1944212987695444934" datatype="html">
-        <source>Turn n°<x id="INTERPOLATION" equiv-text="{{ compo.rules.node.gameState.turn + 1 }}"/></source>
-        <target>Tour n°<x id="INTERPOLATION" equiv-text="{{ compo.rules.node.gameState.turn + 1 }}"/></target>
+        <source>Turn n°<x id="INTERPOLATION" equiv-text="{{ gameComponent.rules.node.gameState.turn + 1 }}"/></source>
+        <target>Tour n°<x id="INTERPOLATION" equiv-text="{{ gameComponent.rules.node.gameState.turn + 1 }}"/></target>
       </trans-unit>
       <trans-unit id="5675185658977082941" datatype="html">
         <source>Player <x id="PH" equiv-text="gameStatus.winner.value + 1"/></source>
@@ -1138,9 +1138,9 @@
         <source>You have successfully disconnected the stack of 4 pieces of your opponent, but on the next move your opponent will be able to move on your new stack, and to win the game! There exists a better outcome of this situation, try to find it.</source>
         <target>Vous avez bien déconnecté la pile de 4 pièces de votre adversaire, mais lors du mouvement suivant il sera capable de se déplacer sur votre nouvelle pile et de gagner le jeu ! Il existe un meilleur mouvement pour vous, essayez de le trouver.</target>
       </trans-unit>
-      <trans-unit id="2366265892991791609" datatype="html">
-        <source>Bad choice! You should be able to disconnect your opponent&apos;s stack of four pieces.</source>
-        <target>Mauvais choix! Vous devriez être capable de déconnecter la pile de quatre pièces de votre adversaire.</target>
+      <trans-unit id="2819827409146202013" datatype="html">
+        <source>Failed! You could make a better move.</source>
+        <target>Raté! Vous pourriez faire un meilleur mouvement.</target>
       </trans-unit>
       <trans-unit id="4457528534020479150" datatype="html">
         <source>Nice, you have disconnected 4 pieces of your opponent, and your new stack cannot be reached by your opponent!

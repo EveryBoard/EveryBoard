@@ -10,10 +10,8 @@ import { EncapsuleLegalityStatus } from 'src/app/games/encapsule/EncapsuleLegali
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { EncapsuleFailure } from './EncapsuleFailure';
-import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { encapsuleTutorial } from './EncapsuleTutorial';
 
 @Component({
@@ -24,19 +22,13 @@ import { encapsuleTutorial } from './EncapsuleTutorial';
 export class EncapsuleComponent extends RectangularGameComponent<EncapsuleMove,
                                                                  EncapsuleState,
                                                                  EncapsuleCase,
-                                                                 EncapsuleLegalityStatus> {
-
-    public CASE_SIZE: number = 100;
-
+                                                                 EncapsuleLegalityStatus>
+{
     private lastLandingCoord: Coord;
     private lastStartingCoord: MGPOptional<Coord> = MGPOptional.empty();
     private chosenCoord: Coord;
     private chosenPiece: EncapsulePiece;
     private chosenPieceIndex: number;
-
-    public encoder: MoveEncoder<EncapsuleMove> = EncapsuleMove.encoder;
-
-    public tutorial: TutorialStep[] = encapsuleTutorial;
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -44,6 +36,8 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleMove,
         this.availableMinimaxes = [
             new EncapsuleMinimax(this.rules, 'EncapsuleMinimax'),
         ];
+        this.encoder = EncapsuleMove.encoder;
+        this.tutorial = encapsuleTutorial;
         this.updateBoard();
     }
     public updateBoard(): void {

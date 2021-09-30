@@ -7,10 +7,8 @@ import { AwaleState } from './AwaleState';
 import { AwaleLegalityStatus } from 'src/app/games/awale/AwaleLegalityStatus';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { AwaleFailure } from './AwaleFailure';
-import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { awaleTutorial } from './AwaleTutorial';
 
 @Component({
@@ -19,10 +17,6 @@ import { awaleTutorial } from './AwaleTutorial';
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
 export class AwaleComponent extends RectangularGameComponent<AwaleMove, AwaleState, number, AwaleLegalityStatus> {
-
-    public encoder: MoveEncoder<AwaleMove> = AwaleMove.encoder;
-
-    public tutorial: TutorialStep[] = awaleTutorial;
 
     public scores: number[] = [0, 0];
 
@@ -38,7 +32,10 @@ export class AwaleComponent extends RectangularGameComponent<AwaleMove, AwaleSta
         this.availableMinimaxes = [
             new AwaleMinimax(this.rules, 'AwaleMinimax'),
         ];
+        this.encoder = AwaleMove.encoder;
+        this.tutorial = awaleTutorial;
         this.showScore = true;
+
         this.updateBoard();
     }
     public updateBoard(): void {

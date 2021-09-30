@@ -10,9 +10,7 @@ import { GameComponentUtils } from 'src/app/components/game-components/GameCompo
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Player } from 'src/app/jscaip/Player';
-import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
-import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { quixoTutorial } from './QuixoTutorial';
 
 @Component({
@@ -24,8 +22,6 @@ export class QuixoComponent extends RectangularGameComponent<QuixoMove, QuixoSta
 
     public static VERBOSE: boolean = false;
 
-    public CASE_SIZE: number = 100;
-
     public state: QuixoState;
 
     public lastMoveCoord: Coord = new Coord(-1, -1);
@@ -36,10 +32,6 @@ export class QuixoComponent extends RectangularGameComponent<QuixoMove, QuixoSta
 
     public victoriousCoords: Coord[] = [];
 
-    public encoder: MoveEncoder<QuixoMove> = QuixoMove.encoder;
-
-    public tutorial: TutorialStep[] = quixoTutorial;
-
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.rules = new QuixoRules(QuixoState);
@@ -47,6 +39,8 @@ export class QuixoComponent extends RectangularGameComponent<QuixoMove, QuixoSta
         this.availableMinimaxes = [
             new QuixoMinimax(this.rules, 'QuixoMinimax'),
         ];
+        this.encoder = QuixoMove.encoder;
+        this.tutorial = quixoTutorial;
         this.updateBoard();
     }
     public updateBoard(): void {
