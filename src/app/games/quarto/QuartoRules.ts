@@ -21,7 +21,7 @@ class SensitiveSquare {
     /**
      * List of criteria that need to be fulfilled in this square in order to win.
      * If the piece in hand matches one of these criterion, this is a pre-victory
-     **/
+     */
     criteria: Criterion[];
     x: number;
     y: number;

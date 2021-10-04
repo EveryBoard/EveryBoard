@@ -29,7 +29,8 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
     /**
      * Captures all the seeds of the mansooning player.
      * Returns the sum of all captured seeds.
-     * Is called when a game is over because of starvation */
+     * Is called when a game is over because of starvation
+     */
     public static mansoon(mansooningPlayer: number, board: number[][]): number {
         let sum: number = 0;
         let x: number = 0;
