@@ -4,6 +4,7 @@ import { JoueursDAO } from '../dao/JoueursDAO';
 import { IJoueur, IJoueurId } from '../domain/iuser';
 import { ActivesUsersService } from './ActivesUsersService';
 import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 @Injectable({
     providedIn: 'root',
@@ -11,7 +12,8 @@ import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
 export class UserService {
 
     constructor(private activesUsersService: ActivesUsersService,
-                private joueursDao: JoueursDAO) {
+                private joueursDao: JoueursDAO,
+                private afs: AngularFirestore) {
     }
     // On Server Component
 

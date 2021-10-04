@@ -1,13 +1,13 @@
-import { Comparable, comparableEquals } from './Comparable';
+import { Comparable, comparableEquals, comparableEqualsIfComparable } from './Comparable';
 import { MGPOptional } from './MGPOptional';
 import { assert } from './utils';
 
-export abstract class MGPFallible<T extends Comparable> {
-    public static success<T extends Comparable>(value: NonNullable<T>): MGPFallible<T> {
+export abstract class MGPFallible<T> {
+    public static success<T>(value: NonNullable<T>): MGPFallible<T> {
         if (value == null) throw new Error('Fallible cannot be created with empty value, use MGPFallible.failure instead');
         return new MGPFallibleSuccess(value);
     }
-    public static failure<T extends Comparable>(reason: NonNullable<string>): MGPFallible<T> {
+    public static failure<T>(reason: NonNullable<string>): MGPFallible<T> {
         assert(reason != null, 'reason cannot be null');
         return new MGPFallibleFailure(reason);
     }
@@ -24,12 +24,12 @@ export abstract class MGPFallible<T extends Comparable> {
         if (other.isFailure()) {
             return false;
         }
-        return comparableEquals(this.get(), other.get());
+        return comparableEqualsIfComparable(this.get(), other.get());
     }
 
 }
 
-class MGPFallibleSuccess<T extends Comparable> extends MGPFallible<T> {
+class MGPFallibleSuccess<T> extends MGPFallible<T> {
     public constructor(private readonly value: NonNullable<T>) {
         super();
     }
@@ -53,7 +53,7 @@ class MGPFallibleSuccess<T extends Comparable> extends MGPFallible<T> {
     }
 }
 
-class MGPFallibleFailure<T extends Comparable> extends MGPFallible<T> {
+class MGPFallibleFailure<T> extends MGPFallible<T> {
     public constructor(private readonly reason: string) {
         super();
     }

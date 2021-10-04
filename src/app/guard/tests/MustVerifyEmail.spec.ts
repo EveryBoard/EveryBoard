@@ -29,14 +29,14 @@ describe('EmailVerified', () => {
         expect(router.navigate).toHaveBeenCalledWith(['/login']);
     }));
     it('should move verified user to login page and refuse them', fakeAsync(async() => {
-        authService.getJoueurObs = () => of({ pseudo: 'JeanMichelNouveau user', verified: true });
+        authService.getJoueurObs = () => of({ username: 'JeanMichelNouveau user', verified: true });
 
         expect(await guard.canActivate()).toBeFalse();
 
         expect(router.navigate).toHaveBeenCalledWith(['/login']);
     }));
     it('should accept logged unverified user', fakeAsync(async() => {
-        authService.getJoueurObs = () => of({ pseudo: 'JeanJaja ToujoursLà', verified: false });
+        authService.getJoueurObs = () => of({ username: 'JeanJaja ToujoursLà', verified: false });
 
         expect(await guard.canActivate()).toBeTrue();
     }));

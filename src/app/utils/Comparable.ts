@@ -38,3 +38,8 @@ export function comparableEquals<T extends Comparable>(a: T, b: T): boolean {
         return a === b;
     }
 }
+
+export function comparableEqualsIfComparable<T>(a: T, b: T): boolean {
+    // TODO: fail if T is not a Comparable
+    return comparableEquals(a as unknown as Comparable, b as unknown as Comparable);
+}

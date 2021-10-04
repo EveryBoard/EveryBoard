@@ -9,5 +9,6 @@ export const environment : Environment = {
     emulatorConfig: {
         firestore: undefined,
         auth: undefined,
+        database: undefined,
     },
 };

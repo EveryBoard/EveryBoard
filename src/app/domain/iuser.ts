@@ -4,7 +4,6 @@ import { Time } from './Time';
 export interface IJoueur extends JSONObject {
     pseudo: string;
     email?: string;
-    displayName?: string;
     // eslint-disable-next-line camelcase
     last_changed?: Time;
     emailVerified?: boolean;

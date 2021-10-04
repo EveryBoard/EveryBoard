@@ -7,9 +7,11 @@ import 'firebase/firestore';
 import 'firebase/database';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 
-import { display } from 'src/app/utils/utils';
+import { display, Utils } from 'src/app/utils/utils';
 import { IJoueur } from '../domain/iuser';
 import { MGPValidation } from '../utils/MGPValidation';
+import { MGPFallible } from '../utils/MGPFallible';
+import { JoueursDAO } from '../dao/JoueursDAO';
 
 interface ConnectivityStatus {
     state: string,
@@ -17,16 +19,16 @@ interface ConnectivityStatus {
     last_changed: unknown,
 }
 export interface AuthUser {
-    pseudo: string,
+    username: string,
     verified: boolean,
 }
 @Injectable()
 export class AuthenticationService implements OnDestroy {
     public static VERBOSE: boolean = false;
 
-    public static NOT_AUTHENTICATED: { pseudo: string, verified: boolean } = null;
+    public static NOT_AUTHENTICATED: { username: string, verified: boolean } = null;
 
-    public static NOT_CONNECTED: { pseudo: string, verified: boolean } = { pseudo: null, verified: null };
+    public static NOT_CONNECTED: { username: string, verified: boolean } = { username: null, verified: null };
 
     private authSub: Subscription;
 
@@ -34,7 +36,9 @@ export class AuthenticationService implements OnDestroy {
 
     private joueurObs: Observable<AuthUser>;
 
-    constructor(public afAuth: AngularFireAuth, private afs: AngularFirestore) {
+    constructor(public afAuth: AngularFireAuth,
+                private afs: AngularFirestore,
+                private userDAO: JoueursDAO) {
         display(AuthenticationService.VERBOSE, '1 authService subscribe to Obs<User>');
 
         this.joueurBS = new BehaviorSubject<AuthUser>(AuthenticationService.NOT_AUTHENTICATED);
@@ -45,14 +49,64 @@ export class AuthenticationService implements OnDestroy {
                 this.joueurBS.next(AuthenticationService.NOT_CONNECTED);
             } else { // user logged in
                 this.updatePresence();
-                const pseudo: string =
-                    (user.displayName === '' || user.displayName == null) ? user.email : user.displayName;
+                const username: string = user.displayName;
                 display(AuthenticationService.VERBOSE, { userLoggedInAccordingToFireAuth: user });
                 const verified: boolean = user.emailVerified;
-                this.joueurBS.next({ pseudo, verified });
+                this.joueurBS.next({ username, verified });
             }
         });
     }
+    /*
+     * Registers an user given its username, email, and password.
+     * Returns the firebase user upon success, or a failure otherwise.
+     */
+    public async doRegister(username: string, email: string, password: string): Promise<MGPFallible<firebase.User>> {
+        display(AuthenticationService.VERBOSE, 'AuthenticationService.doRegister(' + email + ')');
+        try {
+            if (await this.userDAO.usernameIsAvailable(username)) {
+                const userCredential: firebase.auth.UserCredential =
+                    await firebase.auth().createUserWithEmailAndPassword(email, password);
+                const user: firebase.User = userCredential.user;
+                await this.updateUserData({ ...user, displayName: username });
+                return MGPFallible.success(userCredential.user);
+            } else {
+                return MGPFallible.failure($localize`This username is already in use.`);
+            }
+        } catch (e) {
+            return MGPFallible.failure(this.mapFirebaseError(e));
+        }
+    }
+    public mapFirebaseError(error: firebase.FirebaseError): string {
+        switch (error.code) {
+            case 'auth/email-already-in-use':
+                return $localize`This email address is already in use.`;
+            case 'auth/invalid-email':
+                return $localize`This email address is invalid.`;
+            case 'auth/user-not-found':
+            case 'auth/wrong-password':
+                // In accordance with security best practices, we don't give too much details here
+                return $localize`You have entered an invalid username or password.`;
+            case 'auth/invalid-credential':
+                return $localize`The credential is invalid or has expired, please try again.`;
+            default:
+                Utils.handleError('Unsupported firebase error: ' + error.code + ' (' + error.message + ')');
+                return error.message;
+        }
+    }
+    public async sendEmailVerification(): Promise<MGPValidation> {
+        display(AuthenticationService.VERBOSE, 'AuthenticationService.sendEmailVerification()');
+        const user: firebase.User = firebase.auth().currentUser;
+        if (user != null) {
+            if (user.emailVerified === true) {
+                return MGPValidation.failure('Verified users should not ask email verification twice');
+            }
+            user.sendEmailVerification();
+            return MGPValidation.SUCCESS;
+        } else {
+            return MGPValidation.failure('Unlogged users cannot request for email verification');
+        }
+    }
+
     /*
      * Logs in using an email and a password. Returns a validation to indicate
      * either success, or failure with a specific error.
@@ -66,22 +120,10 @@ export class AuthenticationService implements OnDestroy {
             await this.updateUserData(userCredential.user);
             return MGPValidation.SUCCESS;
         } catch (e) {
-            switch (e.errorCode) {
-                case 'auth/invalid-email':
-                case 'auth/user-not-found':
-                case 'auth/wrong-password':
-                    // In accordance with security best practices, we don't give too much details here
-                    return MGPValidation.failure($localize`You have entered an invalid username or password.`);
-                case 'auth/user-disabled':
-                    // TODO: not sure this is what this error code means
-                    return MGPValidation.failure($localize`You must click the confirmation link that you should have received by email.`);
-                default:
-                    // TODO: check that this cannot be covered
-                    return MGPValidation.failure(e.message);
-            }
+            return MGPValidation.failure(this.mapFirebaseError(e));
         }
     }
-    private updateUserData({ uid, email, displayName, emailVerified }: firebase.User): Promise<void> {
+    public updateUserData({ uid, email, displayName, emailVerified }: firebase.User): Promise<void> {
         display(AuthenticationService.VERBOSE, 'AuthenticationService.updateUserData(' + email + ')');
         // Sets user data to firestore on login
         const userRef: AngularFirestoreDocument<Partial<IJoueur>> = this.afs.doc(`joueurs/${uid}`);
@@ -95,31 +137,35 @@ export class AuthenticationService implements OnDestroy {
 
         return userRef.set(data, { merge: true });
     }
-    public async doGoogleLogin(): Promise<firebase.auth.UserCredential> {
-        const provider: firebase.auth.GoogleAuthProvider =
-            new firebase.auth.GoogleAuthProvider();
-        provider.addScope('profile');
-        provider.addScope('email');
-        const userCredential: firebase.auth.UserCredential =
-            await this.afAuth.signInWithPopup(provider);
-        await this.updateUserData(userCredential.user);
-        return userCredential;
+    public async doGoogleLogin(): Promise<MGPValidation> {
+        // TODO: if this is the first time we see the user, we should ask him for its desired username
+        try {
+            const provider: firebase.auth.GoogleAuthProvider =
+                new firebase.auth.GoogleAuthProvider();
+            provider.addScope('profile');
+            provider.addScope('email');
+            const userCredential: firebase.auth.UserCredential =
+                await this.afAuth.signInWithPopup(provider);
+            await this.updateUserData(userCredential.user);
+            return MGPValidation.SUCCESS;
+        } catch (e) {
+            return MGPValidation.failure(this.mapFirebaseError(e));
+        }
     }
-    public async doRegister(pseudo: string, email: string, password: string): Promise<firebase.auth.UserCredential> {
-        display(AuthenticationService.VERBOSE, 'AuthenticationService.doRegister(' + email + ')');
-        const userCredential: firebase.auth.UserCredential =
-            await firebase.auth().createUserWithEmailAndPassword(email, password);
-        await this.updateUserData(userCredential.user);
-        return userCredential;
-    }
-    public async disconnect(): Promise<void> {
-        const uid: string = firebase.auth().currentUser.uid;
-        const isOfflineForDatabase: ConnectivityStatus = {
-            state: 'offline',
-            last_changed: firebase.database.ServerValue.TIMESTAMP,
-        };
-        await firebase.database().ref('/status/' + uid).set(isOfflineForDatabase);
-        return this.afAuth.signOut();
+    public async disconnect(): Promise<MGPValidation> {
+        const user: firebase.User = firebase.auth().currentUser;
+        if (user) {
+            const uid: string = user.uid;
+            const isOfflineForDatabase: ConnectivityStatus = {
+                state: 'offline',
+                last_changed: firebase.database.ServerValue.TIMESTAMP,
+            };
+            await firebase.database().ref('/status/' + uid).set(isOfflineForDatabase);
+            await this.afAuth.signOut();
+            return MGPValidation.SUCCESS;
+        } else {
+            return MGPValidation.failure('Cannot disconnect a non-connected user');
+        }
     }
     public getAuthenticatedUser(): AuthUser {
         return this.joueurBS.getValue();
@@ -149,17 +195,5 @@ export class AuthenticationService implements OnDestroy {
     }
     public getJoueurObs(): Observable<AuthUser> {
         return this.joueurObs;
-    }
-    public sendEmailVerification(): Promise<void> {
-        display(AuthenticationService.VERBOSE, 'AuthenticationService.sendEmailVerification()');
-        const user: firebase.User = firebase.auth().currentUser;
-        if (!user) {
-            throw new Error(`Unlogged users can't send email verification`);
-        }
-        if (user.emailVerified === true) {
-            throw new Error(`Verified users shouldn't ask twice email verification`);
-        } else {
-            return user.sendEmailVerification();
-        }
     }
 }

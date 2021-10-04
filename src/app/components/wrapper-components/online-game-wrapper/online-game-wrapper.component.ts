@@ -2,7 +2,7 @@ import { Component, ComponentFactoryResolver, OnDestroy, OnInit, ViewChild } fro
 import { ActivatedRoute, NavigationEnd, Router, Event } from '@angular/router';
 import { Subscription } from 'rxjs';
 
-import { AuthenticationService } from 'src/app/services/AuthenticationService';
+import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
 import { GameService } from 'src/app/services/GameService';
 import { UserService } from 'src/app/services/UserService';
 import { Move } from '../../../jscaip/Move';
@@ -142,7 +142,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         });
         await this.setCurrentPartIdOrRedirect();
         this.userSub = this.authenticationService.getJoueurObs()
-            .subscribe((user: { pseudo: string, verified: boolean}) => this.userName = user.pseudo);
+            .subscribe((user: AuthUser) => this.userName = user.username);
     }
     public startGame(iJoiner: IJoiner): void {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.startGame');

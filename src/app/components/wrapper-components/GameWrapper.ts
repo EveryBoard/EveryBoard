@@ -31,7 +31,7 @@ export abstract class GameWrapper {
     public gameComponent: AbstractGameComponent<Move, GamePartSlice>;
 
     public userName: string = this.authenticationService.getAuthenticatedUser() != null &&
-                              this.authenticationService.getAuthenticatedUser().pseudo // TODO, clean that;
+                              this.authenticationService.getAuthenticatedUser().username // TODO, clean that;
 
     public players: string[] = [null, null];
 

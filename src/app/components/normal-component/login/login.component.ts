@@ -24,29 +24,16 @@ export class LoginComponent {
         if (result.isSuccess()) {
             await this.redirect();
         } else {
-            switch (result.getReason()) {
-                case 'The password is invalid or the user does not have a password.':
-                    this.errorMessage = ;
-                    break;
-                case 'There is no user record corresponding to this identifier. The user may have been deleted.':
-                    this.errorMessage = $localize`This email address has no account on this website.`;
-                    break;
-                case 'Missing or insufficient permissions.':
-                    this.errorMessage = $localize`You must click the confirmation link that you should have received by email.`;
-                    break;
-                default:
-                    this.errorMessage = result.getReason();
-                    break;
-            }
+            this.errorMessage = result.getReason();
         }
     }
-    public loginWithGoogle(): void {
-        this.authenticationService
-            .doGoogleLogin()
-            .then(() => this.redirect())
-            .catch((err: { message: string }) => {
-                this.errorMessage = err.message;
-            });
+    public async loginWithGoogle(): Promise<void> {
+        const result: MGPValidation = await this.authenticationService.doGoogleLogin();
+        if (result.isSuccess()) {
+            await this.redirect();
+        } else {
+            this.errorMessage = result.getReason();
+        }
     }
     private redirect(): Promise<boolean> {
         return this.router.navigate(['/server']);

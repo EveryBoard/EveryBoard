@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthenticationService } from 'src/app/services/AuthenticationService';
+import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
 import { Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { LocaleUtils } from 'src/app/utils/LocaleUtils';
@@ -25,9 +25,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     public ngOnInit(): void {
         this.currentLanguage = LocaleUtils.getLocale().toUpperCase();
         this.joueurSub = this.authenticationService.getJoueurObs()
-            .subscribe((joueur: { pseudo: string, verified: boolean}) => {
-                if (joueur != null) {
-                    this.userName = joueur.pseudo;
+            .subscribe((user: AuthUser) => {
+                if (user != null) {
+                    this.userName = user.username;
                 } else {
                     this.userName = null;
                 }

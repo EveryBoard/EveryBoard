@@ -40,10 +40,10 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
         assert(this.chatId != null && this.chatId !== '', 'No chat to join mentionned');
 
         this.authenticationService.getJoueurObs()
-            .subscribe((joueur: AuthUser) => {
-                if (this.isConnectedUser(joueur)) {
-                    display(ChatComponent.VERBOSE, JSON.stringify(joueur) + ' just connected');
-                    this.userName = MGPOptional.of(joueur.pseudo);
+            .subscribe((user: AuthUser) => {
+                if (this.isConnectedUser(user)) {
+                    display(ChatComponent.VERBOSE, JSON.stringify(user) + ' just connected');
+                    this.userName = MGPOptional.of(user.username);
                     this.connected = true;
                     this.loadChatContent();
                 } else {
@@ -56,8 +56,8 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     public ngAfterViewChecked(): void {
         this.scrollToBottomIfNeeded();
     }
-    public isConnectedUser(joueur: { pseudo: string; verified: boolean;}): boolean {
-        return joueur && joueur.pseudo && joueur.pseudo !== '';
+    public isConnectedUser(user: AuthUser): boolean {
+        return user && user.username && user.username !== '';
     }
     public loadChatContent(): void {
         display(ChatComponent.VERBOSE, `User '` + this.userName + `' logged, loading chat content`);

@@ -17,11 +17,13 @@ export class InscriptionComponent {
         email: new FormControl(),
         password: new FormControl(),
     });
-    public tryRegister(value: {email: string, pseudo: string, password: string}): void {
-        this.authService
-            .doRegister(value.pseudo, value.email, value.password)
-            .then(
-                () => this.router.navigate(['/confirm-inscription']),
-                (err: { message: string }) => this.errorMessage = err.message);
+    public async tryRegister(value: {email: string, pseudo: string, password: string}): Promise<void> {
+        try {
+            await this.authService.doRegister(value.pseudo, value.email, value.password);
+            await this.authService.sendEmailVerification();
+            this.router.navigate(['/confirm-inscription']);
+        } catch (e) {
+            this.errorMessage = e.message;
+        }
     }
 }
