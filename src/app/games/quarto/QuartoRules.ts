@@ -18,23 +18,29 @@ export interface BoardStatus {
     sensitiveSquares: SensitiveSquare[];
 }
 class SensitiveSquare {
-    /* list of criterias that need to be fulfilled in this square in order to win
-       if the piece in hand matches one of these criterion, this is a pre-victory */
+    /**
+     * List of criteria that need to be fulfilled in this square in order to win.
+     * If the piece in hand matches one of these criterion, this is a pre-victory
+     **/
     criteria: Criterion[];
     x: number;
     y: number;
 
     constructor(x: number, y: number) {
-        /* a sensitive square can be in maximum three lines
-           the horizontal, the vertical, and the diagonal */
+        /**
+         * a sensitive square can be in maximum three lines
+         * the horizontal, the vertical, and the diagonal
+         */
         this.criteria = new Array<Criterion>(3);
         this.x = x;
         this.y = y;
     }
+    /**
+     * Add a criterion in square several line contains this sensitive square (1 to 3 lines could)
+     * without duplicates
+     * return true if the criterion has been added
+     */
     public addCriterion(c: Criterion): boolean {
-        /* Add criterion in square several line contains this sensitive square (1 to 3 lines could)
-         * without duplicates
-         * return true if the criterion has been added */
         const i: number = this.indexOf(c);
         if (i > 0) {
             // not added, counted twice
@@ -45,11 +51,13 @@ class SensitiveSquare {
         this.criteria[-i - 1] = c;
         return true;
     }
+    /**
+     * See if this criterion is already part of the list
+     * Returns the index of c if it is found
+     * Returns the index of where it could be added if it is not found
+     */
     public indexOf(c: Criterion): number {
-        // TODO Critere.contains
-        /* see if this criterion is already part of the list
-           returns the index of c if it is found
-           returns the index of where it could be added if it is not found */
+        // TODO Criterion.contains
         let i: number;
         for (i = 0; i < 3; i++) {
             if (this.criteria[i] == null) {
@@ -62,12 +70,13 @@ class SensitiveSquare {
         return 4; // is not contained and there is no more room
     }
 }
+/**
+ * A criterion is a list of boolean sub-criteria, so three possible values: true, false, null.
+ * false means that we need a specific value (e.g., big), true is the opposite (e.g., small)
+ * null means that this criterion has been neutralized
+ * (if a line contains a big and a small piece, for example).
+ */
 class Criterion {
-    /* A criterion is a list of boolean sub-criteria, so three possible values: true, false, null.
-     * false means that we need a specific value (e.g., big), true is the opposite (e.g., small)
-     * null means that this criterion has been neutralized
-     * (if a line contains a big and a small piece, for example).
-     */
 
     readonly subCriterion: boolean[] = [null, null, null, null];
 
@@ -81,8 +90,10 @@ class Criterion {
     public setSubCrition(index: number, value: boolean): boolean {
         this.subCriterion[index] = value;
         return true;
-        /* TODO check if we need to keep this
-           currently, it is used to check that there is no override but it should be impossible that it happens */
+        /**
+         * TODO check if we need to keep this
+         *  currently, it is used to check that there is no override but it should be impossible that it happens
+         */
     }
     public equals(o: Criterion): boolean {
         let i: number = 0;
@@ -95,16 +106,20 @@ class Criterion {
 
         return true;
     }
+    /**
+     * Merge with another criterion.
+     * This will keep what both have in common
+     * Returns true if at least one criterion is common, false otherwise
+     */
     public mergeWith(c: Criterion): boolean {
-        /* merge with the other criterion
-           this will keep what both have in common
-           returns true if at least one criterion is common, false otherwise */
         let i: number = 0;
         let nonNull: number = 4;
         do {
             if (this.subCriterion[i] !== c.subCriterion[i]) {
-                /* if the square represented by C is different from this square
-                   on their ith criterion, then there is no common criterion (null) */
+                /*
+                 * if the square represented by C is different from this square
+                 * on their ith criterion, then there is no common criterion (null)
+                 */
                 this.subCriterion[i] = null;
             }
             if (this.subCriterion[i] == null) {
@@ -213,7 +228,8 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
         return result + ']';
     }
     private static isLegal(move: QuartoMove, slice: QuartoPartSlice): MGPValidation {
-        /* pieceInHand is the one to be placed
+        /**
+         * pieceInHand is the one to be placed
          * move.piece is the one gave to the next players
          */
         const x: number = move.coord.x;
@@ -263,8 +279,10 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
         }
     }
     private static isThereAVictoriousLine(line: Line, slice: QuartoPartSlice): boolean {
-        /* if we found a pre-victory,
-           the only thing that can change the result is a victory */
+        /**
+         * if we found a pre-victory,
+         * the only thing that can change the result is a victory
+         */
         let coord: Coord = line.initialCoord;
         let i: number = 0; // index of the tested square
         let c: number = slice.getBoardAt(coord);
@@ -276,8 +294,10 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
             commonCrit.mergeWithNumber(c);
         }
         if (QuartoRules.isOccupied(c) && !commonCrit.isAllNull()) {
-            /* the last square was occupied, and there was some common critere on all the four pieces
-               that's what victory is like in Quarto */
+            /**
+             * the last square was occupied, and there was some common critere on all the four pieces
+             * that's what victory is like in Quarto
+             */
             return true;
         } else {
             return false;

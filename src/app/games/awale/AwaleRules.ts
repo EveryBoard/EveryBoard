@@ -26,10 +26,11 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
 
         return new AwalePartSlice(status.resultingBoard, turn + 1, captured);
     }
+    /**
+     * Captures all the seeds of the mansooning player.
+     * Returns the sum of all captured seeds.
+     * Is called when a game is over because of starvation */
     public static mansoon(mansooningPlayer: number, board: number[][]): number {
-        /* capture all the seeds of the mansooning player
-         * return the sum of all captured seeds
-         * is called when a game is over because of starvation */
         let sum: number = 0;
         let x: number = 0;
         do {
@@ -39,11 +40,13 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         } while (x < 6);
         return sum;
     }
+    /**
+     * Modifies the move to addPart the capture.
+     * Modifies the board to get the after-move result.
+     * Returns -1 if it is not legal, if so, the board should not be affected
+     * Returns the number captured otherwise
+     */
     public static isLegal(move: AwaleMove, slice: AwalePartSlice): AwaleLegalityStatus {
-        /* modify the move to addPart the capture
-         * modify the board to get the after-move result
-         * return -1 if it's not legal, if so, the board should not be affected
-         * return the number captured otherwise */
         const turn: number = slice.turn;
         let resultingBoard: number[][] = slice.getCopiedBoard();
 
@@ -60,11 +63,9 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         if (!AwaleRules.doesDistribute(x, player, resultingBoard) && AwaleRules.isStarving(opponent, resultingBoard) ) {
             return AwaleLegalityStatus.failure(AwaleFailure.SHOULD_DISTRIBUTE());
         }
-        // arrived here you can distribute this house
-        // but we'll have to check if you can capture
+        // arrived here you can distribute this house but we'll have to check if you can capture
         const lastSpace: Coord = AwaleRules.distribute(x, player, resultingBoard);
-        // do the distribution and retrieve the landing part
-        // of the last stone
+        // do the distribution and retrieve the landing part of the last stone
         const landingCamp: number = lastSpace.y;
         if (landingCamp === player) {
             // we finish sowing on our own side, nothing else to check
@@ -75,8 +76,10 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         captured[player] = AwaleRules.capture(lastSpace.x, opponent, player, resultingBoard);
         if (AwaleRules.isStarving(opponent, resultingBoard)) {
             if (captured[player] > 0) {
-                // if the distribution would capture all seeds
-                // the move is legal but the capture is forbidden and cancelled
+                /**
+                 * if the distribution would capture all seeds
+                 * the move is legal but the capture is forbidden and cancelled
+                 */
                 resultingBoard = boardBeforeCapture; // undo the capturing
                 captured = [0, 0];
             }
@@ -114,11 +117,12 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         } while (i < 6);
         return true;
     }
+    /**
+     * Simply applies the move on the board (the distribution part).
+     * Does not make the capture nor verify the legality of the move
+     * Returns the coord of the last space the move got down
+     */
     public static distribute(x: number, y: number, board: number[][]): Coord {
-        // just apply's the move on the board (the distribution part)
-        // does not make the capture nor verify the legality of the move
-        // return the coord of the last space the move got down
-
         // iy and ix are the initial spaces
         const ix: number = x;
         const iy: number = y;
@@ -149,13 +153,13 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
 
         return new Coord(x, y);
     }
+    /**
+     * Only called if y and player are not equal.
+     * If the condition to make an capture into the opponent's side are met
+     * Captures and return the number of captured
+     * Captures even if this could mean doing an illegal starvation
+     */
     public static capture(x: number, y: number, player: number, board: number[][]): number {
-        /* only called if y and player are not equal
-         * if the condition are make to make an capture into the opponent's side are met
-         * capture and return the number of captured
-         * capture even if this could mean doing an illegal starvation
-         */
-
         let target: number = board[y][x];
         if ((target < 2) || (target > 3)) {
             return 0; // first space not capturable
@@ -165,7 +169,8 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         let direction: number = -1; // by defaut, capture from right to left
         let limite: number = -1;
         if (player === 0) {
-            /* if turn == 0 capture is on the bottom line
+            /**
+             * if turn == 0 capture is on the bottom line
              * means capture goes from left to right ( + 1)
              * so one ending condition of the loop is reaching index 6
              */
