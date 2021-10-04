@@ -43,13 +43,15 @@ export class AuthenticationService implements OnDestroy {
 
         this.joueurBS = new BehaviorSubject<AuthUser>(AuthenticationService.NOT_AUTHENTICATED);
         this.joueurObs = this.joueurBS.asObservable();
-        this.authSub = this.afAuth.authState.subscribe((user: firebase.User) => {
+        this.authSub = this.afAuth.authState.subscribe(async(user: firebase.User) => {
             if (user == null) { // user logged out
                 display(AuthenticationService.VERBOSE, '2.B: User is not connected, according to fireAuth');
+                console.log('not connected')
                 this.joueurBS.next(AuthenticationService.NOT_CONNECTED);
             } else { // user logged in
                 this.updatePresence();
-                const username: string = user.displayName;
+                const username: string = await userDAO.getUsername(user.uid);
+                console.log({loggedInUser: user.email, display: user.displayName, username})
                 display(AuthenticationService.VERBOSE, { userLoggedInAccordingToFireAuth: user });
                 const verified: boolean = user.emailVerified;
                 this.joueurBS.next({ username, verified });
@@ -128,6 +130,7 @@ export class AuthenticationService implements OnDestroy {
         // Sets user data to firestore on login
         const userRef: AngularFirestoreDocument<Partial<IJoueur>> = this.afs.doc(`joueurs/${uid}`);
 
+        console.log({displayName})
         const data: Partial<IJoueur> = {
             email,
             displayName,

@@ -15,13 +15,14 @@ export class InscriptionComponent {
 
     public inscriptionForm: FormGroup = new FormGroup({
         email: new FormControl(),
+        username: new FormControl(),
         password: new FormControl(),
     });
     public async tryRegister(value: {email: string, pseudo: string, password: string}): Promise<void> {
         try {
             await this.authService.doRegister(value.pseudo, value.email, value.password);
             await this.authService.sendEmailVerification();
-            this.router.navigate(['/confirm-inscription']);
+            this.router.navigate(['/']);
         } catch (e) {
             this.errorMessage = e.message;
         }

@@ -3,6 +3,14 @@ import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testin
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppModule } from 'src/app/app.module';
+import { ChatDAO } from 'src/app/dao/ChatDAO';
+import { JoinerDAO } from 'src/app/dao/JoinerDAO';
+import { JoueursDAO } from 'src/app/dao/JoueursDAO';
+import { PartDAO } from 'src/app/dao/PartDAO';
+import { ChatDAOMock } from 'src/app/dao/tests/ChatDAOMock.spec';
+import { JoinerDAOMock } from 'src/app/dao/tests/JoinerDAOMock.spec';
+import { JoueursDAOMock } from 'src/app/dao/tests/JoueursDAOMock.spec';
+import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
 import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { Direction } from 'src/app/jscaip/Direction';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
@@ -33,10 +41,17 @@ describe('AbstractGameComponent', () => {
                 RouterTestingModule.withRoutes([
                     { path: 'local', component: LocalGameWrapperComponent }]),
             ],
+            declarations: [
+                LocalGameWrapperComponent,
+            ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
-                { provide: ActivatedRoute, useValue: activatedRouteStub },
                 { provide: AuthenticationService, useClass: AuthenticationServiceMock },
+                { provide: PartDAO, useClass: PartDAOMock },
+                { provide: JoinerDAO, useClass: JoinerDAOMock },
+                { provide: ChatDAO, useClass: ChatDAOMock },
+                { provide: JoueursDAO, useClass: JoueursDAOMock },
+                { provide: ActivatedRoute, useValue: activatedRouteStub },
             ],
         }).compileComponents();
         AuthenticationServiceMock.setUser(AuthenticationService.NOT_CONNECTED);

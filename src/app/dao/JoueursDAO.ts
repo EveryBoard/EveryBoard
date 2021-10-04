@@ -16,7 +16,10 @@ export class JoueursDAO extends FirebaseFirestoreDAO<IJoueur> {
         display(JoueursDAO.VERBOSE, 'JoueursDAO.constructor');
     }
     public async usernameIsAvailable(username: string): Promise<boolean> {
-        return (await this.afs.collection('joueurs').ref.where('pseudo', '==', username).limit(1).get()).empty;
+        return (await this.afs.collection<IJoueur>('joueurs').ref.where('pseudo', '==', username).limit(1).get()).empty;
+    }
+    public async getUsername(uid: string): Promise<string> {
+        return (await this.afs.collection<IJoueur>('joueurs').ref.where('uid', '==', uid).limit(1).get()).docs[0].data().pseudo;
     }
     public observeUserByPseudo(pseudo: string, callback: FirebaseCollectionObserver<IJoueur>): () => void {
         return this.observingWhere('pseudo', '==', pseudo, callback);

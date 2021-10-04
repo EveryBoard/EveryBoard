@@ -10,5 +10,6 @@ export const environment : Environment = {
         firestore: undefined,
         auth: undefined,
         database: undefined,
+        functions: undefined,
     },
 };

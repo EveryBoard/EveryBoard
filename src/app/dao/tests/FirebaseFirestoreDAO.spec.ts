@@ -8,6 +8,7 @@ import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 import { USE_EMULATOR as USE_FIRESTORE_EMULATOR } from '@angular/fire/firestore';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { AngularFireModule } from '@angular/fire';
+import { environment } from 'src/environments/environment';
 
 interface Foo extends FirebaseJSONObject {
     value: string,
@@ -28,10 +29,10 @@ export async function setupFirestoreTestModule(): Promise<unknown> {
         imports: [
             AngularFirestoreModule,
             HttpClientModule,
-            AngularFireModule.initializeApp({ projectId: 'my-project', databaseURL: 'http://localhost:8080' }),
+            AngularFireModule.initializeApp(environment.firebaseConfig),
         ],
         providers: [
-            { provide: USE_FIRESTORE_EMULATOR, useValue: ['localhost', 8080] },
+            { provide: USE_FIRESTORE_EMULATOR, useValue: environment.emulatorConfig.firestore },
             { provide: FooDAO, useClass: FooDAO },
         ],
         schemas: [CUSTOM_ELEMENTS_SCHEMA],

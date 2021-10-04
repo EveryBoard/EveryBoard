@@ -12,6 +12,7 @@ export type EmulatorConfig = {
     firestore: [string, number] | undefined,
     auth: [string, number] | undefined,
     database: [string, number] | undefined,
+    functions: [string, number] | undefined,
 }
 
 export type Environment = {

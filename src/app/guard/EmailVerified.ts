@@ -27,6 +27,7 @@ export class EmailVerified implements CanActivate {
             this.router.navigate(['/login']);
             return false;
         } else if (user.verified === false) {
+            // TODO: page with "you must verify your email"
             this.router.navigate(['/confirm-inscription']);
             return false;
         } else {

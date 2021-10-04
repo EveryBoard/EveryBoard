@@ -15,6 +15,7 @@ import { USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/functions'
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { Utils } from 'src/app/utils/utils';
+import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class AuthenticationServiceMock {
@@ -37,20 +38,20 @@ export class AuthenticationServiceMock {
         }
         return AuthenticationServiceMock.CURRENT_USER;
     }
-    public async disconnect(): Promise<void> {
-        return;
+    public async disconnect(): Promise<MGPValidation> {
+        return MGPValidation.failure('not mocked');
     }
-    public async doRegister(): Promise<firebase.auth.UserCredential> {
-        return null;
+    public async doRegister(_username: string, _email: string, _password: string): Promise<MGPFallible<firebase.User>> {
+        return MGPFallible.failure('not mocked');
     }
-    public sendEmailVerification(): Promise<void> {
-        return null;
+    public async sendEmailVerification(): Promise<MGPValidation> {
+        return MGPValidation.failure('not mocked');
     }
-    public doEmailLogin(): Promise<unknown> {
-        return;
+    public async doEmailLogin(): Promise<MGPValidation> {
+        return MGPValidation.failure('not mocked');
     }
-    public doGoogleLogin(): Promise<unknown> {
-        return;
+    public async doGoogleLogin(): Promise<MGPValidation> {
+        return MGPValidation.failure('not mocked');
     }
 }
 
@@ -59,13 +60,13 @@ async function setupAuthTestModule(): Promise<unknown> {
         imports: [
             AngularFirestoreModule,
             HttpClientModule,
-            AngularFireModule.initializeApp({ apiKey: 'unknown', authDomain: 'unknown', projectId: 'my-project', databaseURL: 'http://localhost:8080' }),
+            AngularFireModule.initializeApp(environment.firebaseConfig),
         ],
         providers: [
-            { provide: USE_AUTH_EMULATOR, useValue: ['localhost', 9099] },
-            { provide: USE_DATABASE_EMULATOR, useValue: ['localhost', 9000] },
-            { provide: USE_FIRESTORE_EMULATOR, useValue: ['localhost', 8080] },
-            { provide: USE_FUNCTIONS_EMULATOR, useValue: ['localhost', 5001] },
+            { provide: USE_AUTH_EMULATOR, useValue: environment.emulatorConfig.auth },
+            { provide: USE_DATABASE_EMULATOR, useValue: environment.emulatorConfig.database },
+            { provide: USE_FIRESTORE_EMULATOR, useValue: environment.emulatorConfig.firestore },
+            { provide: USE_FUNCTIONS_EMULATOR, useValue: environment.emulatorConfig.functions },
             AuthenticationService,
             AngularFireAuth,
         ],
@@ -99,7 +100,7 @@ async function createGoogleUser(): Promise<firebase.auth.UserCredential> {
     return credential;
 }
 
-fdescribe('AuthenticationService', () => {
+describe('AuthenticationService', () => {
     let service: AuthenticationService;
 
     const username: string = 'jeanjaja';
@@ -326,21 +327,32 @@ fdescribe('AuthenticationService', () => {
             expect(user).toEqual(AuthenticationService.NOT_CONNECTED);
         });
     });
-    xdescribe('updatePresence', () => {
-        it('should be called and update user presence when user gets connected', async() => {
-            spyOn(service, 'updatePresence');
+    describe('updatePresence', () => {
+        xit('should be called and update user presence when user gets connected', async() => {
+            spyOn(service, 'updatePresence').and.callThrough();
+            let usernameSeen: string;
+            service.getJoueurObs().subscribe((user: AuthUser) => {
+                console.log({user})
+                if (user != null) {
+                    usernameSeen = user.username;
+                }
+            });
+
 
             // given a registered user
+            console.log('register')
             expect((await service.doRegister(username, email, password)).isSuccess()).toBeTrue();
 
+            console.log('login')
             // when the user logs in
             await service.doEmailLogin(email, password);
 
+            // and logs out
+            await firebase.auth().signOut();
+
             // Then updatePresence is called
             expect(service.updatePresence).toHaveBeenCalled();
-            service.getJoueurObs().subscribe((user: AuthUser) => {
-                expect(user.username).toBe(username);
-            });
+            expect(usernameSeen).toBe(username)
         });
     });
     afterEach(async() => {

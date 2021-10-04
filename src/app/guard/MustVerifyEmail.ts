@@ -6,6 +6,7 @@ import { AuthenticationService, AuthUser } from '../services/AuthenticationServi
 @Injectable({
     providedIn: 'root',
 })
+// TODO: not used anymore? If so, can be removed
 export class MustVerifyEmail implements CanActivate {
     constructor(private authService: AuthenticationService, private router : Router) {
     }

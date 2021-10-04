@@ -22,7 +22,6 @@ import { GameService } from './services/GameService';
 import { JoinerService } from './services/JoinerService';
 
 import { EmailVerified } from './guard/EmailVerified';
-import { MustVerifyEmail } from './guard/MustVerifyEmail';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/normal-component/header/header.component';
@@ -42,8 +41,6 @@ import { TutorialGameWrapperComponent }
     from './components/wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component';
 import { GameIncluderComponent } from './components/game-components/game-includer/game-includer.component';
 import { InscriptionComponent } from './components/normal-component/inscription/inscription.component';
-import { ConfirmInscriptionComponent }
-    from './components/normal-component/confirm-inscription/confirm-inscription.component';
 import { LocalGameCreationComponent }
     from './components/normal-component/local-game-creation/local-game-creation.component';
 import { OnlineGameCreationComponent }
@@ -90,7 +87,6 @@ const routes: Route [] = [
     { path: 'login', component: LoginComponent },
     { path: 'server', component: ServerPageComponent, canActivate: [EmailVerified] },
     { path: 'inscription', component: InscriptionComponent },
-    { path: 'confirm-inscription', component: ConfirmInscriptionComponent, canActivate: [MustVerifyEmail] },
     { path: 'notFound', component: NotFoundComponent, canActivate: [EmailVerified] },
     { path: 'nextGameLoading', component: NextGameLoadingComponent, canActivate: [EmailVerified] },
 
@@ -122,7 +118,6 @@ const routes: Route [] = [
         LocalGameWrapperComponent,
         TutorialGameWrapperComponent,
         GameIncluderComponent,
-        ConfirmInscriptionComponent,
         LocalGameCreationComponent,
         OnlineGameCreationComponent,
         TutorialGameCreationComponent,
@@ -187,10 +182,10 @@ const routes: Route [] = [
         MaterialModule,
     ],
     providers: [
-        { provide: USE_AUTH_EMULATOR, useValue: ['localhost', 9099] },
-        { provide: USE_DATABASE_EMULATOR, useValue: ['localhost', 9000] },
-        { provide: USE_FIRESTORE_EMULATOR, useValue: ['localhost', 8080] },
-        { provide: USE_FUNCTIONS_EMULATOR, useValue: ['localhost', 5001] },
+        { provide: USE_AUTH_EMULATOR, useValue: environment.emulatorConfig.auth },
+        { provide: USE_DATABASE_EMULATOR, useValue: environment.emulatorConfig.database },
+        { provide: USE_FIRESTORE_EMULATOR, useValue: environment.emulatorConfig.firestore },
+        { provide: USE_FUNCTIONS_EMULATOR, useValue: environment.emulatorConfig.functions },
         AuthenticationService,
         GameService,
         JoinerService,

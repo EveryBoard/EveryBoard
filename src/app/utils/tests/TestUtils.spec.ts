@@ -77,7 +77,6 @@ export class SimpleComponentTestUtils<T> {
                 ]),
                 FormsModule,
                 ReactiveFormsModule,
-                BrowserAnimationsModule,
                 NoopAnimationsModule,
             ],
             declarations: [
