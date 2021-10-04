@@ -46,18 +46,18 @@ export class PentagoRules extends Rules<PentagoMove, PentagoGameState, PentagoLe
     }
     public isLegal(move: PentagoMove, slice: PentagoGameState): PentagoLegalityStatus {
         if (slice.getPieceAt(move.coord) !== Player.NONE) {
-            return PentagoLegalityStatus.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE);
+            return PentagoLegalityStatus.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
         const postDropState: PentagoGameState = slice.applyLegalDrop(move);
         if (postDropState.neutralBlocks.length === 0) {
             if (move.blockTurned.isAbsent()) {
-                return PentagoLegalityStatus.failure(PentagoFailure.MUST_CHOOSE_BLOCK_TO_ROTATE);
+                return PentagoLegalityStatus.failure(PentagoFailure.MUST_CHOOSE_BLOCK_TO_ROTATE());
             }
         } else {
             if (move.blockTurned.isPresent()) {
                 const blockTurned: number = move.blockTurned.get();
                 if (postDropState.neutralBlocks.includes(blockTurned)) {
-                    return PentagoLegalityStatus.failure(PentagoFailure.CANNOT_ROTATE_NEUTRAL_BLOCK);
+                    return PentagoLegalityStatus.failure(PentagoFailure.CANNOT_ROTATE_NEUTRAL_BLOCK());
                 }
             }
         }

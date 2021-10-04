@@ -20,7 +20,7 @@ import { AbaloneFailure } from './AbaloneFailure';
 import { AbaloneGameState } from './AbaloneGameState';
 import { AbaloneMove } from './AbaloneMove';
 import { AbaloneLegalityStatus, AbaloneRules } from './AbaloneRules';
-import { abaloneTutorial } from './AbaloneTutorial';
+import { AbaloneTutorial } from './AbaloneTutorial';
 
 export class HexaDirArrow {
     public constructor(public startCenter: Coord,
@@ -42,7 +42,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
 
     public encoder: MoveEncoder<AbaloneMove> = AbaloneMove.encoder;
 
-    public tutorial: TutorialStep[] = abaloneTutorial;
+    public tutorial: TutorialStep[] = new AbaloneTutorial().tutorial;
 
     public moveds: Coord[] = [];
 
@@ -136,7 +136,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
         if (directionValidity.isSuccess()) {
             return MGPValidation.SUCCESS;
         } else {
-            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
+            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
         }
     }
     private async firstClick(x: number, y: number): Promise<MGPValidation> {
@@ -221,7 +221,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
         }
         const distance: number = coord.getDistance(firstPiece);
         if (distance > 2) {
-            return this.cancelMove(AbaloneFailure.CANNOT_MOVE_MORE_THAN_THREE_PIECES);
+            return this.cancelMove(AbaloneFailure.CANNOT_MOVE_MORE_THAN_THREE_PIECES());
         }
         const alignement: BaseDirection = firstPiece.getDirectionToward(coord).get();
         this.selecteds = [firstPiece];
@@ -271,11 +271,11 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
                     this.showPossibleDirections();
                     return MGPValidation.SUCCESS;
                 } else {
-                    return this.cancelMove(AbaloneFailure.CANNOT_MOVE_MORE_THAN_THREE_PIECES);
+                    return this.cancelMove(AbaloneFailure.CANNOT_MOVE_MORE_THAN_THREE_PIECES());
                 }
             }
         }
-        const legality: MGPValidation = this.cancelMove(AbaloneFailure.LINE_AND_COORD_NOT_ALIGNED);
+        const legality: MGPValidation = this.cancelMove(AbaloneFailure.LINE_AND_COORD_NOT_ALIGNED());
         this.firstClick(clicked.x, clicked.y);
         return legality;
     }

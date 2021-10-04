@@ -8,7 +8,7 @@ import { GameInfo } from '../pick-game/pick-game.component';
     templateUrl: './welcome.component.html',
 })
 export class WelcomeComponent {
-    public readonly games: GameInfo[] = GameInfo.ALL_GAMES.filter((game: GameInfo) => game.display === true);
+    public readonly games: GameInfo[] = GameInfo.ALL_GAMES().filter((game: GameInfo) => game.display === true);
 
     public constructor(private gameService: GameService,
                        private router: Router) {

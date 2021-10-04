@@ -12,7 +12,7 @@ import { Direction } from 'src/app/jscaip/Direction';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { reversiTutorial } from './ReversiTutorial';
+import { ReversiTutorial } from './ReversiTutorial';
 
 @Component({
     selector: 'app-reversi',
@@ -31,7 +31,7 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
 
     public encoder: MoveEncoder<ReversiMove> = ReversiMove.encoder;
 
-    public tutorial: TutorialStep[] = reversiTutorial;
+    public tutorial: TutorialStep[] = new ReversiTutorial().tutorial;
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);

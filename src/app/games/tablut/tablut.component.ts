@@ -21,7 +21,7 @@ import { TablutEscapeThenPieceAndControlMinimax } from './TablutEscapeThenPieceT
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { tablutTutorial } from './TablutTutorial';
+import { TablutTutorial } from './TablutTutorial';
 
 @Component({
     selector: 'app-tablut',
@@ -51,7 +51,7 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
 
     public encoder: MoveEncoder<TablutMove> = TablutMove.encoder;
 
-    public tutorial: TutorialStep[] = tablutTutorial;
+    public tutorial: TutorialStep[] = new TablutTutorial().tutorial;
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -119,10 +119,10 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
         display(TablutComponent.VERBOSE, 'TablutComponent.choosePiece');
 
         if (this.board[y][x] === TablutCase.UNOCCUPIED.value) {
-            return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE);
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
         if (!this.pieceBelongToCurrentPlayer(x, y)) {
-            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
+            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
         }
 
         this.chosen = new Coord(x, y);

@@ -15,81 +15,90 @@ import { QuartoFailure } from './QuartoFailure';
 
 export interface BoardStatus {
     score: SCORE;
-    casesSensibles: CaseSensible[];
+    sensitiveSquares: SensitiveSquare[];
 }
-class CaseSensible {
-    criteres: Critere[];
-    // listes des critères qu'il faut remplir dans cette case pour gagner
-    // si la pièce en main match un de ces critères, c'est une pré-victoire
+class SensitiveSquare {
+    /**
+     * List of criteria that need to be fulfilled in this square in order to win.
+     * If the piece in hand matches one of these criterion, this is a pre-victory
+     */
+    criteria: Criterion[];
     x: number;
     y: number;
 
     constructor(x: number, y: number) {
-        this.criteres = new Array<Critere>(3);
-        /* une case sensible peut faire au maxium partie de trois lignes
-         * l'horizontale, la verticale, la diagonale
+        /**
+         * a sensitive square can be in maximum three lines
+         * the horizontal, the vertical, and the diagonal
          */
+        this.criteria = new Array<Criterion>(3);
         this.x = x;
         this.y = y;
     }
-    public addCritere(c: Critere): boolean {
-        /* Add criterion in case several line contains this sensible case (1 to 3 lines could)
-         * without duplicates
-         * return true if the criterion has been added
-         */
+    /**
+     * Add a criterion in square several line contains this sensitive square (1 to 3 lines could)
+     * without duplicates
+     * return true if the criterion has been added
+     */
+    public addCriterion(c: Criterion): boolean {
         const i: number = this.indexOf(c);
         if (i > 0) {
-            // pas ajouté, compté en double
+            // not added, counted twice
             return false;
         }
-        assert(i !== 3, `CECI EST IMPOSSIBLE, on a rajouté trop d'éléments dans cette CaseSensible`);
-        // TODO enlever ce débug
-        this.criteres[-i - 1] = c;
+        // TODO remove this debug
+        assert(i !== 3, `This is impossible, too many elements were added in this SensitiveSquare`);
+        this.criteria[-i - 1] = c;
         return true;
     }
-    public indexOf(c: Critere): number {
-        // TODO Critere.contains
-        // voit si ce critère est déjà contenu dans la liste
-        // retourne l'index de c si il le trouve
-        // retourne l'index de l'endroit ou on pourrait le mettre si il n'est pas dedans
+    /**
+     * See if this criterion is already part of the list
+     * Returns the index of c if it is found
+     * Returns the index of where it could be added if it is not found
+     */
+    public indexOf(c: Criterion): number {
+        // TODO Criterion.contains
         let i: number;
         for (i = 0; i < 3; i++) {
-            if (this.criteres[i] == null) {
-                return -i - 1; // n'est pas contenu et il reste de la place à l'indice i
+            if (this.criteria[i] == null) {
+                return -i - 1; // is not contained, and there is room at index i
             }
-            if (this.criteres[i].equals(c)) {
-                return i + 1; // est contenu à l'indice i
+            if (this.criteria[i].equals(c)) {
+                return i + 1; // is contained at index i
             }
         }
-        return 4; // n'est pas contenu et il n'y as plus de place
+        return 4; // is not contained and there is no more room
     }
 }
-class Critere {
-    /* Un critère est une liste sous-critères booléens, donc trois valeurs possibles, True, False, Null
-     * False veut dire qu'il faut avoir une valeur spécifique (Grand, par exemple), True son opposé (Petit)
-     * Null veut dire que ce critère a déjà été 'neutralisé'/'pacifié'
-     * (si une ligne contient un Grand et un Petit pion, par exemple)
-     */
+/**
+ * A criterion is a list of boolean sub-criteria, so three possible values: true, false, null.
+ * false means that we need a specific value (e.g., big), true is the opposite (e.g., small)
+ * null means that this criterion has been neutralized
+ * (if a line contains a big and a small piece, for example).
+ */
+class Criterion {
 
-    readonly subCritere: boolean[] = [null, null, null, null];
+    readonly subCriterion: boolean[] = [null, null, null, null];
 
-    constructor(bCase: number) {
-        // un critère est initialisé avec une case, il en prend la valeur
-        this.subCritere[0] = (bCase & 8) === 8;
-        this.subCritere[1] = (bCase & 4) === 4;
-        this.subCritere[2] = (bCase & 2) === 2;
-        this.subCritere[3] = (bCase & 1) === 1;
+    constructor(bSquare: number) {
+        // a criterion is initialized with a square, it takes the square's value
+        this.subCriterion[0] = (bSquare & 8) === 8;
+        this.subCriterion[1] = (bSquare & 4) === 4;
+        this.subCriterion[2] = (bSquare & 2) === 2;
+        this.subCriterion[3] = (bSquare & 1) === 1;
     }
-    public setSubCrit(index: number, value: boolean): boolean {
-        this.subCritere[index] = value;
-        return true; // TODO vérifier si j'ai un intérêt à garder ceci
-        // pour l'instant ça me permet de pouvoir vérifier si il n'y a pas écrasement ou donnée
-        // mais je crois que c'est impossible vu l'usage que je compte en faire
+    public setSubCrition(index: number, value: boolean): boolean {
+        this.subCriterion[index] = value;
+        return true;
+        /**
+         * TODO check if we need to keep this
+         *  currently, it is used to check that there is no override but it should be impossible that it happens
+         */
     }
-    public equals(o: Critere): boolean {
+    public equals(o: Criterion): boolean {
         let i: number = 0;
         do {
-            if (this.subCritere[i] !== o.subCritere[i]) {
+            if (this.subCriterion[i] !== o.subCriterion[i]) {
                 return false; // a!=b
             }
             i++;
@@ -97,21 +106,24 @@ class Critere {
 
         return true;
     }
-    public mergeWith(c: Critere): boolean {
-        // merge avec l'autre critere
-        // ce qu'ils signifie qu'on prendra ce qu'ils ont en commun
-        // return true si ils ont au moins un critere en commun, false sinon
-
+    /**
+     * Merge with another criterion.
+     * This will keep what both have in common
+     * Returns true if at least one criterion is common, false otherwise
+     */
+    public mergeWith(c: Criterion): boolean {
         let i: number = 0;
         let nonNull: number = 4;
         do {
-            if (this.subCritere[i] !== c.subCritere[i]) {
-                // si la case représentée par C et cette case ci sont différentes
-                // sur leurs i'ième critère respectifs, alors il n'y a pas de critère en commun (NULL)
-                this.subCritere[i] = null;
+            if (this.subCriterion[i] !== c.subCriterion[i]) {
+                /*
+                 * if the square represented by C is different from this square
+                 * on their ith criterion, then there is no common criterion (null)
+                 */
+                this.subCriterion[i] = null;
             }
-            if (this.subCritere[i] == null) {
-                // si après ceci le i'ième critère de cette représentation est NULL, alors il perd un critère
+            if (this.subCriterion[i] == null) {
+                // if after this, the ith criterion is null, then it loses a criterion
                 nonNull--;
             }
             i++;
@@ -120,7 +132,7 @@ class Critere {
         return (nonNull > 0);
     }
     public mergeWithNumber(ic: number): boolean {
-        const c: Critere = new Critere(ic);
+        const c: Criterion = new Criterion(ic);
         return this.mergeWith(c);
     }
     public mergeWithQuartoPiece(qe: QuartoPiece): boolean {
@@ -129,18 +141,18 @@ class Critere {
     public isAllNull(): boolean {
         let i: number = 0;
         do {
-            if (this.subCritere[i] != null) {
+            if (this.subCriterion[i] != null) {
                 return false;
             }
             i++;
         } while (i < 4);
         return true;
     }
-    public match(c: Critere): boolean {
-        // return true if there is at least one sub-critere in common between the two
+    public match(c: Criterion): boolean {
+        // returns true if there is at least one sub-critere in common between the two
         let i: number = 0;
         do {
-            if (this.subCritere[i] === c.subCritere[i]) {
+            if (this.subCriterion[i] === c.subCriterion[i]) {
                 return true;
             }
             i++;
@@ -148,14 +160,14 @@ class Critere {
         return false;
     }
     public matchQE(qe: QuartoPiece): boolean {
-        return this.match(new Critere(qe.value));
+        return this.match(new Criterion(qe.value));
     }
     public matchInt(c: number): boolean {
-        return this.match(new Critere(c));
+        return this.match(new Criterion(c));
     }
     public toString(): string {
-        return 'Critere{' + QuartoRules.printArray(
-            this.subCritere.map((b: boolean) => {
+        return 'Criterion{' + QuartoRules.printArray(
+            this.subCriterion.map((b: boolean) => {
                 return (b === true) ? 1 : 0;
             })) + '}';
     }
@@ -188,22 +200,25 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
     public static VERBOSE: boolean = false;
 
     public static readonly lines: ReadonlyArray<Line> = [
-        new Line(new Coord(0, 0), Direction.DOWN), // les verticales
+        // verticals
+        new Line(new Coord(0, 0), Direction.DOWN),
         new Line(new Coord(1, 0), Direction.DOWN),
         new Line(new Coord(2, 0), Direction.DOWN),
         new Line(new Coord(3, 0), Direction.DOWN),
-        new Line(new Coord(0, 0), Direction.RIGHT), // les horizontales
+        // horizontals
+        new Line(new Coord(0, 0), Direction.RIGHT),
         new Line(new Coord(0, 1), Direction.RIGHT),
         new Line(new Coord(0, 2), Direction.RIGHT),
         new Line(new Coord(0, 3), Direction.RIGHT),
-        new Line(new Coord(0, 0), Direction.DOWN_RIGHT), // les diagonales
+        // diagonals
+        new Line(new Coord(0, 0), Direction.DOWN_RIGHT),
         new Line(new Coord(0, 3), Direction.UP_RIGHT),
     ];
 
     public node: MGPNode<QuartoRules, QuartoMove, QuartoPartSlice>;
 
-    private static isOccupied(qcase: number): boolean {
-        return (qcase !== QuartoPiece.NONE.value);
+    private static isOccupied(square: number): boolean {
+        return (square !== QuartoPiece.NONE.value);
     }
     public static printArray(array: number[]): string {
         let result: string = '[';
@@ -213,7 +228,8 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
         return result + ']';
     }
     private static isLegal(move: QuartoMove, slice: QuartoPartSlice): MGPValidation {
-        /* pieceInHand is the one to be placed
+        /**
+         * pieceInHand is the one to be placed
          * move.piece is the one gave to the next players
          */
         const x: number = move.coord.x;
@@ -222,23 +238,23 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
         const board: number[][] = slice.getCopiedBoard();
         const pieceInHand: QuartoPiece = slice.pieceInHand;
         if (QuartoRules.isOccupied(board[y][x])) {
-            // on ne joue pas sur une case occupée
-            return MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE);
+            // we can't play on an occupied square
+            return MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
         if (pieceToGive === QuartoPiece.NONE) {
             if (slice.turn === 15) {
-                // on doit donner une pièce ! sauf au dernier tour
+                // we must give a piece, except on the last turn
                 return MGPValidation.SUCCESS;
             }
-            return MGPValidation.failure(QuartoFailure.MUST_GIVE_A_PIECE);
+            return MGPValidation.failure(QuartoFailure.MUST_GIVE_A_PIECE());
         }
         if (!QuartoPartSlice.isPlacable(pieceToGive, board)) {
-            // la piece est déjà sur le plateau
-            return MGPValidation.failure(QuartoFailure.PIECE_ALREADY_ON_BOARD);
+            // the piece is already on the board
+            return MGPValidation.failure(QuartoFailure.PIECE_ALREADY_ON_BOARD());
         }
         if (pieceInHand === pieceToGive) {
-            // la pièce donnée est la même que celle en main, c'est illégal
-            return MGPValidation.failure(QuartoFailure.CANNOT_GIVE_PIECE_IN_HAND);
+            // the piece given is the one in our hands, which is illegal
+            return MGPValidation.failure(QuartoFailure.CANNOT_GIVE_PIECE_IN_HAND());
         }
         return MGPValidation.SUCCESS;
     }
@@ -248,15 +264,14 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
         return { legal: QuartoRules.isLegal(move, slice) };
     }
     public static updateBoardStatus(line: Line, slice: QuartoPartSlice, boardStatus: BoardStatus): BoardStatus {
-        // pour chaque ligne (les horizontales, verticales, puis diagonales)
         if (boardStatus.score === SCORE.PRE_VICTORY) {
             if (this.isThereAVictoriousLine(line, slice)) {
                 return {
                     score: SCORE.VICTORY,
-                    casesSensibles: null,
+                    sensitiveSquares: null,
                 };
             } else {
-                return boardStatus; // Nothing changed exploring this line
+                return boardStatus;
             }
         } else {
             const newStatus: BoardStatus = this.searchForVictoryOrPreVictoryInLine(line, slice, boardStatus);
@@ -264,12 +279,14 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
         }
     }
     private static isThereAVictoriousLine(line: Line, slice: QuartoPartSlice): boolean {
-        // si on a trouvé une pré-victoire
-        // la seule chose susceptible de changer le résultat total est une victoire
+        /**
+         * if we found a pre-victory,
+         * the only thing that can change the result is a victory
+         */
         let coord: Coord = line.initialCoord;
-        let i: number = 0; // index de la case testée
+        let i: number = 0; // index of the tested square
         let c: number = slice.getBoardAt(coord);
-        const commonCrit: Critere = new Critere(c);
+        const commonCrit: Criterion = new Criterion(c);
         while (QuartoRules.isOccupied(c) && !commonCrit.isAllNull() && (i < 3)) {
             i++;
             coord = coord.getNext(line.direction, 1);
@@ -277,8 +294,10 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
             commonCrit.mergeWithNumber(c);
         }
         if (QuartoRules.isOccupied(c) && !commonCrit.isAllNull()) {
-            // the last case was occupied, and there was some common critere on all the four pieces
-            // that's what victory is like in Quarto
+            /**
+             * the last square was occupied, and there was some common critere on all the four pieces
+             * that's what victory is like in Quarto
+             */
             return true;
         } else {
             return false;
@@ -289,25 +308,25 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
                                                       boardStatus: BoardStatus)
     : BoardStatus
     {
-        // on cherche pour une victoire, pré victoire, ou un score normal
-        let cs: CaseSensible = null; // la première case vide
-        let commonCrit: Critere;
+        // we're looking for a victory, pre-victory, or normal score
+        let cs: SensitiveSquare = null; // the first square is empty
+        let commonCrit: Criterion;
 
         let coord: Coord = line.initialCoord;
         for (let i: number = 0; i < 4; i++) {
             const c: number = slice.getBoardAt(coord);
-            // on analyse toute la ligne
+            // we look through the entire line
             if (c === QuartoPiece.NONE.value) {
-                // si la case C est inoccupée
+                // if c is unoccupied
                 if (cs == null) {
-                    cs = new CaseSensible(coord.x, coord.y);
+                    cs = new SensitiveSquare(coord.x, coord.y);
                 } else {
-                    return boardStatus; // 2 empty case: no victory or pre-victory, or new criterion
+                    return boardStatus; // 2 empty square: no victory or pre-victory, or new criterion
                 }
             } else {
-                // si la case est occupée
+                // if c is occupied
                 if (commonCrit == null) {
-                    commonCrit = new Critere(c);
+                    commonCrit = new Criterion(c);
                     display(QuartoRules.VERBOSE, 'set commonCrit to ' + commonCrit.toString());
                 } else {
                     commonCrit.mergeWithNumber(c);
@@ -317,21 +336,18 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
             coord = coord.getNext(line.direction, 1);
         }
 
-        // on a maintenant traité l'entierté de la ligne
-        // on en fait le bilan
+        // we now have looked through the entire line, we summarize everything
         if ((commonCrit != null) && (!commonCrit.isAllNull())) {
-            // NEW
-            // Cette ligne n'est pas nulle et elle a un critère en commun entre toutes ses pièces
+            // this line is not null and has a common criterion between all of its pieces
             if (cs == null) {
-                return { score: SCORE.VICTORY, casesSensibles: null };
+                return { score: SCORE.VICTORY, sensitiveSquares: null };
             } else {
-                // si il n'y a qu'une case vide, alors la case sensible qu'on avais trouvé et assigné
-                // est dans ce cas bel et bien une case sensible
+                // if these is only one empty square, then the sensitive square we found is indeed sensitive
                 if (commonCrit.matchInt(slice.pieceInHand.value)) {
                     boardStatus.score = SCORE.PRE_VICTORY;
                 }
-                cs.addCritere(commonCrit);
-                boardStatus.casesSensibles.push(cs);
+                cs.addCriterion(commonCrit);
+                boardStatus.sensitiveSquares.push(cs);
             }
         }
         return boardStatus;
@@ -347,7 +363,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
         const state: QuartoPartSlice = node.gamePartSlice;
         let boardStatus: BoardStatus = {
             score: SCORE.DEFAULT,
-            casesSensibles: [],
+            sensitiveSquares: [],
         };
         for (const line of QuartoRules.lines) {
             boardStatus = QuartoRules.updateBoardStatus(line, state, boardStatus);

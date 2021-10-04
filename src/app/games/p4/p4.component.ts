@@ -10,7 +10,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { p4Tutorial } from './P4Tutorial';
+import { P4Tutorial } from './P4Tutorial';
 
 @Component({
     selector: 'app-p4',
@@ -29,7 +29,7 @@ export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice> {
 
     public encoder: MoveEncoder<P4Move> = P4Move.encoder;
 
-    public tutorial: TutorialStep[] = p4Tutorial;
+    public tutorial: TutorialStep[] = new P4Tutorial().tutorial;
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);

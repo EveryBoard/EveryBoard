@@ -16,7 +16,7 @@ import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { coerceoTutorial } from './CoerceoTutorial';
+import { CoerceoTutorial } from './CoerceoTutorial';
 
 @Component({
     selector: 'app-coerceo',
@@ -46,7 +46,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
 
     public encoder: MoveEncoder<CoerceoMove> = CoerceoMove.encoder;
 
-    public tutorial: TutorialStep[] = coerceoTutorial;
+    public tutorial: TutorialStep[] = new CoerceoTutorial().tutorial;
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -103,7 +103,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
             this.chosenCoord = MGPOptional.of(coord);
             this.showHighlight();
         } else {
-            return this.cancelMove(CoerceoFailure.FIRST_CLICK_SHOULD_NOT_BE_NULL);
+            return this.cancelMove(CoerceoFailure.FIRST_CLICK_SHOULD_NOT_BE_NULL());
         }
     }
     private async secondClick(coord: Coord): Promise<MGPValidation> {
@@ -114,7 +114,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
             const move: CoerceoMove = CoerceoMove.fromCoordToCoord(this.chosenCoord.get(), coord);
             return this.chooseMove(move, this.state, this.state.captures[0], this.state.captures[1]);
         } else {
-            return this.cancelMove(CoerceoFailure.INVALID_DISTANCE);
+            return this.cancelMove(CoerceoFailure.INVALID_DISTANCE());
         }
     }
     public isPyramid(x: number, y: number, caseContent: number): boolean {

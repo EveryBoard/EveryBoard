@@ -1,5 +1,4 @@
 import { P4Move } from 'src/app/games/p4/P4Move';
-import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { GamePartSlice } from '../GamePartSlice';
 import { LegalityStatus } from '../LegalityStatus';

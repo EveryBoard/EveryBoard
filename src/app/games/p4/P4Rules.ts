@@ -47,9 +47,8 @@ export class P4Rules extends Rules<P4Move, P4PartSlice> {
                     // if we find a pre-victory
                     display(P4Rules.VERBOSE, { preVictoryOrVictory: { slice, tmpScore, coord: { x, y } } });
                     return new NodeUnheritance(tmpScore); // we return it
-                    // TODO vérifier que PRE_VICTORY n'écrase pas les VICTORY dans ce cas ci
-                    // Il semble tout à fait possible d'avoir une pré-victoire sur une colonne,
-                    // et une victoire sur la suivante
+                    // TODO check that PRE_VICTORY does not overwrite VICTORY in this case
+                    // It seems possible to have a pre victory on one column, and a victory on the next
                 }
                 score += tmpScore;
             }
@@ -69,17 +68,17 @@ export class P4Rules extends Rules<P4Move, P4PartSlice> {
                                                  ennemy: number,
                                                  ally: number): [number, number] {
         /*
-       * pour une case i(iX, iY) contenant un pion 'allie' (dont les ennemis sont naturellement 'ennemi'
-       * on parcours le plateau à partir de i dans la direction d(dX, dY)
-       * et ce à une distance maximum de 3 cases
+       * for a square i(iX, iY) containing an ally
+       * we go through the board from i in the direction d(dX, dY)
+       * and until a maximal distance of 3 cases
        */
 
-        let freeSpaces: number = 0; // le nombre de case libres alignées
-        let allies: number = 0; // le nombre de case alliées alignées
+        let freeSpaces: number = 0; // the number of aligned free square
+        let allies: number = 0; // the number of alligned allies
         let allAlliesAreSideBySide: boolean = true;
         let coord: Coord = new Coord(i.x + dir.x, i.y + dir.y);
         while (coord.isInRange(7, 6) && freeSpaces !== 3) {
-            // tant qu'on ne sort pas du plateau
+            // while we're on the board
             const currentCase: number = board[coord.y][coord.x];
             if (currentCase === ennemy) {
                 return [freeSpaces, allies];
@@ -87,14 +86,13 @@ export class P4Rules extends Rules<P4Move, P4PartSlice> {
             if (currentCase === ally && allAlliesAreSideBySide) {
                 allies++;
             } else {
-                allAlliesAreSideBySide = false; // on arrête de compter les alliées sur cette ligne
+                allAlliesAreSideBySide = false; // we stop counting the allies on this line
             }
-            // dès que l'un d'entre eux n'est plus collé
+            // as soon as there is a hole
             if (currentCase !== ennemy && currentCase !== ally) {
                 // TODO: this condition was not there before, check that it makes sense (but the body was there)
                 freeSpaces++;
             }
-            // co = new Coord(co.x + dir.x, co.y + dir.y);
             coord = coord.getNext(dir);
         }
         return [freeSpaces, allies];
@@ -105,7 +103,7 @@ export class P4Rules extends Rules<P4Move, P4PartSlice> {
         return (c === Player.ONE.value) ? Player.ZERO.value : Player.ONE.value;
     }
     public static getCaseScore(board: NumberTable, c: Coord): number {
-        display(P4Rules.VERBOSE, 'getCaseScore(board, ' + c.x + ', ' + c.y + ') appellée');
+        display(P4Rules.VERBOSE, 'getCaseScore(board, ' + c.x + ', ' + c.y + ') called');
         display(P4Rules.VERBOSE, board);
         assert(board[c.y][c.x] !== Player.NONE.value, 'getCaseScore should not be called on an empty case');
 
@@ -168,7 +166,7 @@ export class P4Rules extends Rules<P4Move, P4PartSlice> {
     }
     public applyLegalMove(move: P4Move,
                           slice: P4PartSlice,
-                          status: LegalityStatus)
+                          _status: LegalityStatus)
     : P4PartSlice
     {
         const x: number = move.x;
@@ -185,7 +183,7 @@ export class P4Rules extends Rules<P4Move, P4PartSlice> {
     public isLegal(move: P4Move, slice: P4PartSlice): LegalityStatus {
         display(P4Rules.VERBOSE, { context: 'P4Rules.isLegal', move: move.toString(), slice });
         if (slice.getBoardByXY(move.x, 0) !== Player.NONE.value) {
-            return { legal: MGPValidation.failure(P4Failure.COLUMN_IS_FULL) };
+            return { legal: MGPValidation.failure(P4Failure.COLUMN_IS_FULL()) };
         }
         return { legal: MGPValidation.SUCCESS };
     }

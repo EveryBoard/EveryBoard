@@ -30,7 +30,7 @@ describe('PentagoRules', () => {
         const state: PentagoGameState = new PentagoGameState(board, 1);
         const move: PentagoMove = PentagoMove.rotationless(1, 1);
         const status: LegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.reason).toBe(RulesFailure.MUST_LAND_ON_EMPTY_SPACE);
+        expect(status.legal.reason).toBe(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
     });
     it('it should prevent redundancy by refusing rotating neutral block', () => {
         const board: number[][] = [
@@ -44,7 +44,7 @@ describe('PentagoRules', () => {
         const state: PentagoGameState = new PentagoGameState(board, 1);
         const move: PentagoMove = PentagoMove.withRotation(4, 1, 3, true);
         const status: LegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.reason).toBe(PentagoFailure.CANNOT_ROTATE_NEUTRAL_BLOCK);
+        expect(status.legal.reason).toBe(PentagoFailure.CANNOT_ROTATE_NEUTRAL_BLOCK());
     });
     it('it should refuse rotation less move when there is no neutral block', () => {
         const board: number[][] = [
@@ -58,7 +58,7 @@ describe('PentagoRules', () => {
         const state: PentagoGameState = new PentagoGameState(board, 3);
         const move: PentagoMove = PentagoMove.rotationless(0, 0);
         const status: LegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.reason).toBe(PentagoFailure.MUST_CHOOSE_BLOCK_TO_ROTATE);
+        expect(status.legal.reason).toBe(PentagoFailure.MUST_CHOOSE_BLOCK_TO_ROTATE());
     });
     it('it should allow rotation-free move when there is neutral block', () => {
         const board: number[][] = [
@@ -110,7 +110,7 @@ describe('PentagoRules', () => {
         const resultingSlice: PentagoGameState = rules.applyLegalMove(move, state, status);
         expect(resultingSlice).toEqual(expectedState);
         const boardStatus: GameStatus = rules.getGameStatus(new MGPNode(null, move, resultingSlice));
-        expect(boardStatus).toEqual(GameStatus.ONGOING, 'Game should not be over');
+        expect(boardStatus).withContext('Game should not be over').toEqual(GameStatus.ONGOING);
     });
     it('it should be able to twist any board anti-clockwise', () => {
         const board: number[][] = [
@@ -137,7 +137,7 @@ describe('PentagoRules', () => {
         const resultingSlice: PentagoGameState = rules.applyLegalMove(move, state, status);
         expect(resultingSlice).toEqual(expectedState);
         const boardStatus: GameStatus = rules.getGameStatus(new MGPNode(null, move, resultingSlice));
-        expect(boardStatus).toEqual(GameStatus.ONE_WON, 'This should be a victory for player one');
+        expect(boardStatus).withContext('This should be a victory for player one').toEqual(GameStatus.ONE_WON);
     });
     describe('victories', () => {
         it('it should notice victory', () => {
@@ -165,7 +165,7 @@ describe('PentagoRules', () => {
             const expectedSlice: PentagoGameState = new PentagoGameState(expectedBoard, 11);
             expect(resultingSlice).toEqual(expectedSlice);
             const boardStatus: GameStatus = rules.getGameStatus(new MGPNode(null, move, expectedSlice));
-            expect(boardStatus).toEqual(GameStatus.ZERO_WON, 'This should be a victory for player 0');
+            expect(boardStatus).withContext('This should be a victory for player 0').toEqual(GameStatus.ZERO_WON);
         });
         it('it should notice draw by end game', () => {
             const board: number[][] = [
@@ -192,7 +192,7 @@ describe('PentagoRules', () => {
             const expectedSlice: PentagoGameState = new PentagoGameState(expectedBoard, 36);
             expect(resultingSlice).toEqual(expectedSlice);
             const boardStatus: GameStatus = rules.getGameStatus(new MGPNode(null, move, expectedSlice));
-            expect(boardStatus).toEqual(GameStatus.DRAW, 'This should be a draw');
+            expect(boardStatus).withContext('This should be a draw').toEqual(GameStatus.DRAW);
         });
         it('it should notice draw by double-victory', () => {
             const board: number[][] = [
@@ -219,7 +219,7 @@ describe('PentagoRules', () => {
             const expectedSlice: PentagoGameState = new PentagoGameState(expectedBoard, 11);
             expect(resultingSlice).toEqual(expectedSlice);
             const boardStatus: GameStatus = rules.getGameStatus(new MGPNode(null, move, expectedSlice));
-            expect(boardStatus).toEqual(GameStatus.DRAW, 'This should be a draw');
+            expect(boardStatus).withContext('This should be a draw').toEqual(GameStatus.DRAW);
         });
     });
 });

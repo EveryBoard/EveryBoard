@@ -132,7 +132,7 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
         display(TutorialGameWrapperComponent.VERBOSE, 'tutorialGameWrapper.onUserClick(' + elementName + ')');
         this.currentReason = null;
         if (this.stepFinished[this.stepIndex] || this.moveAttemptMade) {
-            return MGPValidation.failure(TutorialFailure.STEP_FINISHED);
+            return MGPValidation.failure(TutorialFailure.STEP_FINISHED());
         }
         const currentStep: TutorialStep = this.steps[this.stepIndex];
         if (currentStep.isClick()) {
@@ -149,7 +149,7 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
             }, 10);
             return MGPValidation.SUCCESS;
         } else {
-            return MGPValidation.failure(TutorialFailure.INFORMATIONAL_STEP);
+            return MGPValidation.failure(TutorialFailure.INFORMATIONAL_STEP());
         }
     }
     public onCancelMove: (reason?: string) => void = (reason?: string) => {

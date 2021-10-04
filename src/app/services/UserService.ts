@@ -16,7 +16,7 @@ export class UserService {
     // On Server Component
 
     public getActivesUsersObs(): Observable<IJoueurId[]> {
-        // TODO: désabonnements aux autres services user
+        // TODO: unsubscriptions from other user services
         this.activesUsersService.startObserving();
         return this.activesUsersService.activesUsersObs;
     }

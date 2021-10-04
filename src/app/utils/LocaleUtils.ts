@@ -1,3 +1,5 @@
+export type Localized = () => string
+
 export class LocaleUtils {
     public static getNavigatorLanguage(): string | null {
         // In a separate function so that it can be mocked

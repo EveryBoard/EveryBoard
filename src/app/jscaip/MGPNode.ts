@@ -30,25 +30,18 @@ export class MGPNode<R extends Rules<M, S, L>,
 
     public static VERBOSE: boolean = false;
 
+    // Contains data related to the game and not to the minimax, ruler is the only instance of a set of rules
     public static ruler: Rules<Move, GamePartSlice, LegalityStatus>;
-    /* Permet d'obtenir les données propre au jeu et non au minimax, ruler restera l'unique instance d'un set de règles
-     * Exemples d'états théorique d'un Node (cours)
-     * Feuille - stérile: n'as pas d'enfant après un calcul
-     * Feuille - bourgeon: n'as pas d'enfant avant un calcul
-     * Une branche
-     * Le tronc (la mère)
-     */
 
     public static minimaxes: MGPMap<string, Minimax<Move, GamePartSlice>> = new MGPMap();
     // instance fields:
 
     private childs: (MGPNode<R, M, S, L, U>[]) | null = null;
-    /* null si: on as pas encore crée les potentiels enfant de cette Node
-    * et donc naturellement si c'est une feuille (depth = 0)
+    /* null if we did not create potential children of a node, hence also if it is a leaf (depth = 0)
     *
-    * une ArrayList vide si: c'est une fin de partie (et donc une feuille)
+    * an empty ArrayList if it is the end of the game (and then a leaf)
     *
-    * une ArrayList de toutes les Nodes qu'on peut obtenir depuis celles ci sinon.
+    * otherwise, an ArrayList of all nodes that we can obtain from this node.
     */
 
     private readonly hopedValue: MGPMap<string, number> = new MGPMap();
@@ -97,7 +90,7 @@ export class MGPNode<R extends Rules<M, S, L>,
                                U extends NodeUnheritance>(initialBoard: S, gameRuler: R)
     : MGPNode<R, M, S, L, U>
     {
-        MGPNode.ruler = gameRuler; // pour toutes les node, gameRuler sera le référent
+        MGPNode.ruler = gameRuler; // for all nodes, gameRuler is the ruler
         return new MGPNode(null, null, initialBoard);
     }
     // instance methods:
@@ -246,7 +239,7 @@ export class MGPNode<R extends Rules<M, S, L>,
         }
         return ownValue;
     }
-    public myToString(minimax: Minimax<M, S, L, U>): string {
+    public myToString(_minimax: Minimax<M, S, L, U>): string {
         let genealogy: string = '';
         let node: MGPNode<R, M, S, L, U> = this;
         if (node.mother == null) {
@@ -264,7 +257,7 @@ export class MGPNode<R extends Rules<M, S, L>,
     public hasMoves(): boolean {
         return this.childs != null;
     }
-    // débug
+    // debug
     public countDescendants(): number {
         if (this.childs === null) {
             return 0;
