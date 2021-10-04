@@ -19,7 +19,7 @@ export class ArrayUtils {
         }
         return result;
     }
-    public static createBiArray<T>(width: number, height: number, initValue: T): T[][] {
+    public static createTable<T>(width: number, height: number, initValue: T): T[][] {
         const retour: Array<Array<T>> = [];
         let y: number = height - 1;
         while (y >= 0) {
@@ -64,11 +64,18 @@ export class ArrayUtils {
             }
         });
     }
-    public static equals<T extends Comparable>(t1: ReadonlyArray<T>, t2: ReadonlyArray<T>): boolean {
+    public static compareArray<T extends Comparable>(t1: ReadonlyArray<T>, t2: ReadonlyArray<T>): boolean {
         if (t1.length !== t2.length) return false;
         for (let i: number = 0; i < t1.length; i++) {
             if (comparableEquals(t1[i], t2[i]) === false) return false;
         }
         return true;
+    }
+    public static compareTable<T extends Comparable>(t1: Table<T>, t2: Table<T>): boolean {
+        if (t1.length !== t2.length) return false;
+        for (let i: number = 0; i < t1.length; i++) {
+            if (ArrayUtils.compareArray(t1[i], t2[i]) === false) return false;
+        }
+        return true; // TODOTODO test
     }
 }

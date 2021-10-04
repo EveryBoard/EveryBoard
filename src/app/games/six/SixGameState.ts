@@ -58,7 +58,7 @@ export class SixState extends GameState<Coord, Player> {
                                    piece: Coord,
                                    coordsGroup: MGPMap<Coord, string>,
                                    group: string)
-                                   : MGPMap<Coord, string>
+    : MGPMap<Coord, string>
     {
         if (pieces.get(piece).isPresent() &&
            coordsGroup.get(piece).isAbsent())
@@ -120,7 +120,7 @@ export class SixState extends GameState<Coord, Player> {
         };
     }
     public toRepresentation(): NumberTable {
-        const board: number[][] = ArrayUtils.createBiArray(this.width, this.height, Player.NONE.value);
+        const board: number[][] = ArrayUtils.createTable(this.width, this.height, Player.NONE.value);
         for (const piece of this.pieces.listKeys()) {
             const pieceValue: number = this.getBoardAt(piece).value;
             board[piece.y][piece.x] = pieceValue;
@@ -148,15 +148,18 @@ export class SixState extends GameState<Coord, Player> {
         }
         return false;
     }
+    public isOnBoard(coord: Coord): boolean {
+        return this.pieces.containsKey(coord);
+    }
     public getBoardAt(coord: Coord): Player {
-        if (this.pieces.containsKey(coord)) {
+        if (this.isOnBoard(coord)) {
             return this.pieces.get(coord).get();
         } else {
             return Player.NONE;
         }
     }
     public getNullable(coord: Coord): Player {
-        return this.getBoardAt(coord);
+        return this.pieces.get(coord).getOrNull();
     }
     public applyLegalDrop(coord: Coord): SixState {
         const pieces: MGPMap<Coord, Player> = this.pieces.getCopy();

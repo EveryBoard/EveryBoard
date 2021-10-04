@@ -20,8 +20,8 @@ import { SaharaComponent } from 'src/app/games/sahara/sahara.component';
 import { SiamComponent } from 'src/app/games/siam/siam.component';
 import { SixComponent } from 'src/app/games/six/six.component';
 import { TablutComponent } from 'src/app/games/tablut/tablut.component';
-import { YinshComponent } from 'src/app/games/yinsh/Yinsh.component';
-import { AbstractAbstractGameComponent } from '../../game-components/abstract-game-component/AbstractGameComponent';
+import { YinshComponent } from 'src/app/games/yinsh/yinsh.component';
+import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 
 class GameDescription {
 
@@ -101,7 +101,7 @@ export class GameInfo {
 
     public constructor(public readonly name: string,
                        public readonly urlName: string,
-                       public readonly component: Type<AbstractAbstractGameComponent>,
+                       public readonly component: Type<AbstractGameComponent>,
                        public readonly creationDate: Date,
                        public readonly description: string = '',
                        public readonly display: boolean = true) {

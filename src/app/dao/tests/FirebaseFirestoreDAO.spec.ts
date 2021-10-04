@@ -41,7 +41,7 @@ export async function setupFirestoreTestModule(): Promise<unknown> {
     return http.delete('http://localhost:8080/emulator/v1/projects/my-project/databases/(default)/documents').toPromise();
 }
 
-describe('FirebaseFirestoreDAO', () => {
+xdescribe('FirebaseFirestoreDAO', () => {
     let dao: FooDAO;
     beforeEach(async() => {
         await setupFirestoreTestModule();

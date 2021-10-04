@@ -19,7 +19,7 @@ export class EncapsuleState extends RectangularGameState<EncapsuleCase> {
     public static getInitialState(): EncapsuleState {
         const emptyCase: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.NONE);
         const emptyNumber: number = emptyCase.encode();
-        const startingNumberBoard: number[][] = ArrayUtils.createBiArray(3, 3, emptyNumber);
+        const startingNumberBoard: number[][] = ArrayUtils.createTable(3, 3, emptyNumber);
         const startingBoard: EncapsuleCase[][] = ArrayUtils.mapBiArray(startingNumberBoard,
                                                                        (piece: number) => EncapsuleCase.decode(piece));
         const initialPieces: EncapsulePiece[] = [

@@ -5,7 +5,7 @@ import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 export class SiamState extends RectangularGameState<SiamPiece> {
 
     public static getInitialState(): SiamState {
-        const board: SiamPiece[][] = ArrayUtils.createBiArray(5, 5, SiamPiece.EMPTY);
+        const board: SiamPiece[][] = ArrayUtils.createTable(5, 5, SiamPiece.EMPTY);
 
         board[2][1] = SiamPiece.MOUNTAIN;
         board[2][2] = SiamPiece.MOUNTAIN;

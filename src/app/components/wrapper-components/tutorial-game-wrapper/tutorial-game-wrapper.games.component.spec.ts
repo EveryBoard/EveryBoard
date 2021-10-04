@@ -21,7 +21,7 @@ import { SaharaComponent } from 'src/app/games/sahara/sahara.component';
 import { SiamComponent } from 'src/app/games/siam/siam.component';
 import { SixComponent } from 'src/app/games/six/six.component';
 import { TablutComponent } from 'src/app/games/tablut/tablut.component';
-import { YinshComponent } from 'src/app/games/yinsh/Yinsh.component';
+import { YinshComponent } from 'src/app/games/yinsh/yinsh.component';
 
 describe('TutorialGameWrapperComponent (games)', () => {
 

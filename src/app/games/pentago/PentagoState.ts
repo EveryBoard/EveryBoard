@@ -18,7 +18,7 @@ export class PentagoState extends RectangularGameState<Player> {
         [new Coord(-1, 0), new Coord(0, -1)],
     ];
     public static getInitialState(): PentagoState {
-        const initialBoard: Table<Player> = ArrayUtils.createBiArray(6, 6, Player.NONE);
+        const initialBoard: Table<Player> = ArrayUtils.createTable(6, 6, Player.NONE);
         return new PentagoState(initialBoard, 0);
     }
     public readonly neutralBlocks: number[];

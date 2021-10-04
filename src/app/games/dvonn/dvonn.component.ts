@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Coord } from 'src/app/jscaip/Coord';
-import { DvonnBoard } from 'src/app/games/dvonn/DvonnBoard';
 import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
 import { DvonnState } from 'src/app/games/dvonn/DvonnState';
 import { DvonnRules } from 'src/app/games/dvonn/DvonnRules';
@@ -10,7 +9,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { PointyHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { HexagonalGameComponent }
-    from 'src/app/components/game-components/abstract-game-component/HexagonalGameComponent';
+    from 'src/app/components/game-components/game-component/HexagonalGameComponent';
 import { MaxStacksDvonnMinimax } from './MaxStacksDvonnMinimax';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -19,16 +18,16 @@ import { dvonnTutorial } from './DvonnTutorial';
 @Component({
     selector: 'app-dvonn',
     templateUrl: './dvonn.component.html',
-    styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.css'],
 })
 
-export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove, DvonnState> {
+export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove, DvonnState, DvonnPieceStack> {
 
     public scores: number[] = [0, 0];
     public lastMove: DvonnMove = null;
     public chosen: Coord = null;
     public disconnecteds: { x: number, y: number, caseContent: DvonnPieceStack }[] = [];
-    public hexaBoard: DvonnBoard; // TODOTODO
+    public state: DvonnState;
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -46,6 +45,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         this.hexaLayout = new HexaLayout(this.CASE_SIZE * 1.50,
                                          new Coord(-this.CASE_SIZE, this.CASE_SIZE * 2),
                                          PointyHexaOrientation.INSTANCE);
+        this.state = this.rules.node.gameState;
         this.hexaBoard = this.rules.node.gameState.board;
     }
     public hideLastMove(): void {
@@ -53,8 +53,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
     }
     public updateBoard(): void {
         this.cancelMoveAttempt();
-        const state: DvonnState = this.rules.node.gameState;
-        this.hexaBoard = state.board;
+        this.state = this.rules.node.gameState;
         this.lastMove = this.rules.node.move;
         this.disconnecteds = [];
         if (this.lastMove) {
@@ -62,19 +61,19 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         } else {
             this.hideLastMove();
         }
-        this.canPass = this.rules.canOnlyPass(state);
-        this.scores = DvonnRules.getScores(state);
+        this.canPass = this.rules.canOnlyPass(this.state);
+        this.scores = DvonnRules.getScores(this.state);
     }
     private calculateDisconnecteds(): void {
         const previousState: DvonnState = this.rules.node.mother.gameState;
         const state: DvonnState = this.rules.node.gameState;
-        for (let y: number = 0; y < state.board.height; y++) {
-            for (let x: number = 0; x < state.board.width; x++) {
+        for (let y: number = 0; y < state.board.length; y++) {
+            for (let x: number = 0; x < state.board[y].length; x++) {
                 const coord: Coord = new Coord(x, y);
-                if (state.board.isOnBoard(coord) === true &&
+                if (state.isOnBoard(coord) === true &&
                     coord.equals(this.lastMove.coord) === false) {
-                    const stack: DvonnPieceStack = state.board.getAt(coord);
-                    const previousStack: DvonnPieceStack = previousState.board.getAt(coord);
+                    const stack: DvonnPieceStack = state.getBoardAt(coord);
+                    const previousStack: DvonnPieceStack = previousState.getBoardAt(coord);
                     if (stack.isEmpty() && !previousStack.isEmpty()) {
                         const disconnected: { x: number, y: number, caseContent: DvonnPieceStack } =
                             { x, y, caseContent: previousStack };

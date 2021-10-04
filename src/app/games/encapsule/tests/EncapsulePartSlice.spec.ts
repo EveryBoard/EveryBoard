@@ -9,7 +9,7 @@ describe('EncapsuleState', () => {
 
     const _: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.NONE);
 
-    const emptyBoard: EncapsuleCase[][] = ArrayUtils.createBiArray(3, 3, _);
+    const emptyBoard: EncapsuleCase[][] = ArrayUtils.createTable(3, 3, _);
 
     it('should forbid construction of state with null remaining pieces', () => {
         expect(() => new EncapsuleState(emptyBoard, 0, null)).toThrow();

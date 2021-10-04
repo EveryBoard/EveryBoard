@@ -3,13 +3,12 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { YinshBoard } from './YinshBoard';
 import { YinshState } from './YinshState';
 import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';
 
 const _: YinshPiece = YinshPiece.EMPTY;
-const N: YinshPiece = YinshPiece.EMPTY;
+const N: YinshPiece = YinshPiece.NONE;
 const a: YinshPiece = YinshPiece.MARKER_ZERO;
 const A: YinshPiece = YinshPiece.RING_ZERO;
 const b: YinshPiece = YinshPiece.MARKER_ONE;
@@ -29,7 +28,7 @@ export const yinshTutorial: TutorialStep[] = [
         and on the bottom right for the light player. Here, Dark won the game.
         Note that on the board you have two types of pieces for each player:
         rings (empty circles) and markers (full circles).`,
-        new YinshState(YinshBoard.of([
+        new YinshState([
             [N, N, N, N, N, N, _, _, _, _, N],
             [N, N, N, N, _, _, _, _, _, _, _],
             [N, N, N, a, B, _, _, _, _, _, _],
@@ -41,7 +40,7 @@ export const yinshTutorial: TutorialStep[] = [
             [_, _, _, _, _, _, _, _, N, N, N],
             [_, _, _, _, _, _, _, N, N, N, N],
             [N, _, _, _, _, N, N, N, N, N, N],
-        ]), [3, 1], 20),
+        ], [3, 1], 20),
     ),
     TutorialStep.anyMove(
         $localize`Initial board and placement phase`,
@@ -49,7 +48,7 @@ export const yinshTutorial: TutorialStep[] = [
         At the beginning of the game, each player puts one of its ring on the board at their turn.
         This phase stops when all rings have been placed on the board.
         Put one of your ring on the board by clicking the space where you want to place it.`,
-        new YinshState(YinshBoard.EMPTY, [5, 5], 0),
+        new YinshState(YinshState.getInitialState().board, [5, 5], 0),
         new YinshMove([], new Coord(5, 5), MGPOptional.empty(), []),
         $localize`Congratulations!`),
     TutorialStep.anyMove(
@@ -61,7 +60,7 @@ export const yinshTutorial: TutorialStep[] = [
         If it goes over a group of markers, your move must stop at the first empty space after that group.
         All markers in the group are then flipped and their color change.<br/><br/>
         You're playing Dark, do a move.`,
-        new YinshState(YinshBoard.of([
+        new YinshState([
             [N, N, N, N, N, N, _, _, _, _, N],
             [N, N, N, N, _, _, _, _, _, _, _],
             [N, N, N, B, _, _, _, _, _, _, _],
@@ -73,7 +72,7 @@ export const yinshTutorial: TutorialStep[] = [
             [_, _, _, A, _, _, _, N, N, N, N],
             [_, _, _, _, _, _, _, N, N, N, N],
             [N, _, _, _, _, N, N, N, N, N, N],
-        ]), [0, 0], 20),
+        ], [0, 0], 20),
         new YinshMove([], new Coord(2, 4), MGPOptional.of(new Coord(4, 4)), []),
         $localize`Congratulations!`),
     TutorialStep.fromPredicate(
@@ -84,7 +83,7 @@ export const yinshTutorial: TutorialStep[] = [
         You will then have one more point.
         You must capture when you can.<br/><br/>
         You're playing Dark, perform a capture!`,
-        new YinshState(YinshBoard.of([
+        new YinshState([
             [N, N, N, N, N, N, _, _, _, _, N],
             [N, N, N, N, _, _, _, _, _, _, _],
             [N, N, N, B, _, _, _, _, _, _, _],
@@ -96,7 +95,7 @@ export const yinshTutorial: TutorialStep[] = [
             [_, _, _, A, _, _, _, A, N, N, N],
             [_, _, _, _, _, _, _, N, N, N, N],
             [N, _, _, _, _, N, N, N, N, N, N],
-        ]), [0, 0], 20),
+        ], [0, 0], 20),
         new YinshMove([], new Coord(4, 4), MGPOptional.of(new Coord(7, 4)),
                       [YinshCapture.of(new Coord(2, 4), new Coord(6, 4), new Coord(7, 4))]),
         (_: YinshMove, resultingState: YinshState): MGPValidation => {
@@ -113,7 +112,7 @@ export const yinshTutorial: TutorialStep[] = [
         or you could even capture multiple times!
         During the capture selection, if you see that the marker you clicked belongs to two captures, you have to click on a second marker to avoid any ambiguity.<br/><br/>
         Here, you can capture two rings, do it!`,
-        new YinshState(YinshBoard.of([
+        new YinshState([
             [N, N, N, N, N, N, _, _, _, _, N],
             [N, N, N, N, A, _, _, B, B, A, _],
             [N, N, N, A, _, _, b, B, _, A, _],
@@ -125,7 +124,7 @@ export const yinshTutorial: TutorialStep[] = [
             [_, a, _, _, _, a, _, _, N, N, N],
             [_, _, _, _, _, a, _, N, N, N, N],
             [N, _, _, _, _, N, N, N, N, N, N],
-        ]), [0, 0], 10),
+        ], [0, 0], 10),
         new YinshMove([
             YinshCapture.of(new Coord(5, 4), new Coord(1, 8), new Coord(3, 2)),
             YinshCapture.of(new Coord(5, 9), new Coord(5, 5), new Coord(3, 3)),

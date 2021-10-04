@@ -16,7 +16,7 @@ import { quixoTutorial } from './QuixoTutorial';
 @Component({
     selector: 'app-quixo',
     templateUrl: './quixo.component.html',
-    styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.css'],
 })
 export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMove, QuixoState, Player> {
 

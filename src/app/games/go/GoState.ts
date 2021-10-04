@@ -125,7 +125,7 @@ export class GoState extends RectangularGameState<GoPiece> {
         return [this.captured[0], this.captured[1]];
     }
     public static getStartingBoard(): Table<GoPiece> {
-        return ArrayUtils.createBiArray(GoState.WIDTH, GoState.HEIGHT, GoPiece.EMPTY);
+        return ArrayUtils.createTable(GoState.WIDTH, GoState.HEIGHT, GoPiece.EMPTY);
     }
     public copy(): GoState {
         return new GoState(this.getCopiedBoard(),

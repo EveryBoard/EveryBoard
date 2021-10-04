@@ -45,4 +45,9 @@ export class AbaloneState extends RectangularGameState<FourStatePiece> {
         }
         return scores;
     }
+    public setAtUnsafe(coord: Coord, v: FourStatePiece): this {
+        const newBoard: FourStatePiece[][] = this.getCopiedBoard();
+        newBoard[coord.y][coord.x] = v;
+        return new AbaloneState(newBoard, this.turn) as this;
+    }
 }

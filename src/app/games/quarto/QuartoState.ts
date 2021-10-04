@@ -8,7 +8,7 @@ export class QuartoState extends RectangularGameState<QuartoPiece> {
         super(b, turn);
     }
     public static getInitialState(): QuartoState {
-        const board: QuartoPiece[][] = ArrayUtils.createBiArray(4, 4, QuartoPiece.NONE);
+        const board: QuartoPiece[][] = ArrayUtils.createTable(4, 4, QuartoPiece.NONE);
         return new QuartoState(board, 0, QuartoPiece.AAAA);
     }
     public static isGivable(piece: QuartoPiece, board: Table<QuartoPiece>, pieceInHand: QuartoPiece): boolean {

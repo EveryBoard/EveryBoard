@@ -40,7 +40,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         return moves;
     }
     public static getNumberOfGroups(state: LinesOfActionState): [number, number] {
-        const groups: number[][] = ArrayUtils.createBiArray(LinesOfActionState.SIZE, LinesOfActionState.SIZE, -1);
+        const groups: number[][] = ArrayUtils.createTable(LinesOfActionState.SIZE, LinesOfActionState.SIZE, -1);
         const numGroups: [number, number] = [0, 0];
         let highestGroup: number = 0;
         for (let y: number = 0; y < LinesOfActionState.SIZE; y++) {

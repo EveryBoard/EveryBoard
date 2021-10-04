@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { HexagonalGameComponent } from 'src/app/components/game-components/abstract-game-component/HexagonalGameComponent';
+import { HexagonalGameComponent } from 'src/app/components/game-components/game-component/HexagonalGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
@@ -46,7 +46,7 @@ interface ViewInfo {
 @Component({
     selector: 'app-yinsh',
     templateUrl: './yinsh.component.html',
-    styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.css'],
 })
 export class YinshComponent extends HexagonalGameComponent<YinshRules, YinshMove, YinshState, YinshLegalityStatus> {
 
@@ -92,7 +92,6 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules, YinshMove
         sideRings: [5, 5],
         sideRingClass: ['player0-stroke', 'player1-stroke'],
     };
-
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.rules = new YinshRules(YinshState);
@@ -106,7 +105,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules, YinshMove
                                          FlatHexaOrientation.INSTANCE);
         this.showScore = true;
         this.constructedState = this.rules.node.gameState;
-        this.constructedState.board.allCoords().forEach((coord: Coord): void => {
+        this.constructedState.allCoords().forEach((coord: Coord): void => {
             if (this.viewInfo.caseInfo[coord.y] == null) {
                 this.viewInfo.caseInfo[coord.y] = [];
             }
@@ -127,9 +126,12 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules, YinshMove
         this.cancelMoveAttempt();
     }
     public updateViewInfo(): void {
-        this.constructedState.board.allCoords().forEach((coord: Coord): void => {
+        this.constructedState.allCoords().forEach((coord: Coord): void => {
+            if (this.constructedState.getBoardAt(coord) === YinshPiece.NONE) {
+                return;
+            }
             this.viewInfo.caseInfo[coord.y][coord.x].caseClasses = this.getCaseClasses(coord);
-            const piece: YinshPiece = this.constructedState.board.getAt(coord);
+            const piece: YinshPiece = this.constructedState.getBoardAt(coord);
             this.viewInfo.caseInfo[coord.y][coord.x].removedClass = '';
             this.setRingInfo(coord, piece);
             this.setMarkerInfo(coord, piece);
@@ -157,12 +159,12 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules, YinshMove
             case 'INITIAL_CAPTURE_SELECT_RING':
             case 'FINAL_CAPTURE_SELECT_RING':
                 this.viewInfo.selectableCoords =
-                    this.constructedState.board.getRingCoords(this.constructedState.getCurrentPlayer());
+                    this.constructedState.getRingCoords(this.constructedState.getCurrentPlayer());
                 break;
             case 'MOVE_START':
                 if (this.rules.node.gameState.isInitialPlacementPhase() === false) {
                     this.viewInfo.selectableCoords =
-                        this.constructedState.board.getRingCoords(this.constructedState.getCurrentPlayer());
+                        this.constructedState.getRingCoords(this.constructedState.getCurrentPlayer());
                 }
                 break;
             case 'MOVE_END':
@@ -246,7 +248,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules, YinshMove
         const coords: Coord[] = [];
         const dir: HexaDirection = HexaDirection.factory.fromMove(start, end).get();
         for (let cur: Coord = start; !cur.equals(end); cur = cur.getNext(dir)) {
-            if (this.constructedState.board.getAt(cur) !== YinshPiece.EMPTY) {
+            if (this.constructedState.getBoardAt(cur) !== YinshPiece.EMPTY) {
                 coords.push(cur);
             }
             coords.push(end);
@@ -383,7 +385,6 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules, YinshMove
         this.viewInfo.caseInfo[coord.y][coord.x].removedClass = 'transparent';
         this.setRingInfo(coord, YinshPiece.RINGS[player.value]);
     }
-
     private async selectRing(coord: Coord): Promise<MGPValidation> {
         const validity: MGPValidation = this.rules.ringSelectionValidity(this.constructedState, coord);
         if (validity.isFailure()) {

@@ -20,8 +20,8 @@ describe('LinesOfActionComponent', () => {
         componentTestUtils = await ComponentTestUtils.forGame<LinesOfActionComponent>('LinesOfAction');
     }));
     it('should create', () => {
-        expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');
-        expect(componentTestUtils.getComponent()).toBeTruthy('GipfComponent should be created');
+        expect(componentTestUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
+        expect(componentTestUtils.getComponent()).withContext('LinesOfActionComponent should be created').toBeTruthy();
     });
     it('should allow a simple move', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_2_0');

@@ -14,6 +14,7 @@ import { YinshPiece } from './YinshPiece';
 import { YinshNode, YinshRules } from './YinshRules';
 
 export class YinshMinimax extends Minimax<YinshMove, YinshState, YinshLegalityStatus> {
+
     public getBoardValue(node: YinshNode): NodeUnheritance {
         const status: GameStatus = this.ruler.getGameStatus(node);
         if (status.isEndGame) {
@@ -28,7 +29,7 @@ export class YinshMinimax extends Minimax<YinshMove, YinshState, YinshLegalitySt
         const state: YinshState = node.gameState;
 
         if (state.isInitialPlacementPhase()) {
-            for (const [coord, content] of state.board.getCoordsAndContents()) {
+            for (const [coord, content] of state.getCoordsAndContents()) {
                 if (content === YinshPiece.EMPTY) {
                     moves.push(new YinshMove([], coord, MGPOptional.empty(), []));
                 }
@@ -83,7 +84,7 @@ export class YinshMinimax extends Minimax<YinshMove, YinshState, YinshLegalitySt
     private getRingCoords(state: YinshState): Coord[] {
         const player: number = state.getCurrentPlayer().value;
         const coords: Coord[] = [];
-        state.board.forEachCoord((coord: Coord, content: YinshPiece): void => {
+        state.forEachCoord((coord: Coord, content: YinshPiece): void => {
             if (content === YinshPiece.RINGS[player]) {
                 coords.push(coord);
             }

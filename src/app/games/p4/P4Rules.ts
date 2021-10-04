@@ -148,11 +148,11 @@ export class P4Rules extends Rules<P4Move, P4State> {
         display(P4Rules.VERBOSE, { context: 'P4Rules.getListMoves', node });
 
         // should be called only if the game is not over
-        const originalPartState: P4State = node.gameState;
+        const originalState: P4State = node.gameState;
         const moves: P4Move[] = [];
 
         for (let x: number = 0; x < 7; x++) {
-            if (originalPartState.getBoardByXY(x, 0) === Player.NONE) {
+            if (originalState.getBoardByXY(x, 0) === Player.NONE) {
                 const move: P4Move = P4Move.of(x);
                 moves.push(move);
             }

@@ -10,9 +10,9 @@ export class ReversiState extends RectangularGameState<Player> {
     public static readonly BOARD_HEIGHT: number = 8; // default
 
     public static getInitialState(): ReversiState {
-        const board: Player[][] = ArrayUtils.createBiArray(ReversiState.BOARD_WIDTH,
-                                                           ReversiState.BOARD_HEIGHT,
-                                                           Player.NONE);
+        const board: Player[][] = ArrayUtils.createTable(ReversiState.BOARD_WIDTH,
+                                                         ReversiState.BOARD_HEIGHT,
+                                                         Player.NONE);
         board[3][3] = Player.ZERO;
         board[4][4] = Player.ZERO;
         board[3][4] = Player.ONE;

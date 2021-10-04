@@ -14,7 +14,7 @@ import { RectangularGameComponent } from 'src/app/components/game-components/rec
 @Component({
     selector: 'app-quarto',
     templateUrl: './quarto.component.html',
-    styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.css'],
 })
 export class QuartoComponent extends RectangularGameComponent<QuartoRules,
                                                               QuartoMove,

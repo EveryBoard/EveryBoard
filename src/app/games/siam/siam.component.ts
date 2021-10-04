@@ -19,7 +19,7 @@ import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisp
 @Component({
     selector: 'app-siam',
     templateUrl: './siam.component.html',
-    styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.css'],
 })
 export class SiamComponent extends RectangularGameComponent<SiamRules,
                                                             SiamMove,

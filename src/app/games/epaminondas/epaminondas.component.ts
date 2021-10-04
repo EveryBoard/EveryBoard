@@ -19,7 +19,7 @@ import { epaminondasTutorial } from './EpaminondasTutorial';
 @Component({
     selector: 'app-epaminondas',
     templateUrl: './epaminondas.component.html',
-    styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.css'],
 })
 export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRules,
                                                                    EpaminondasMove,

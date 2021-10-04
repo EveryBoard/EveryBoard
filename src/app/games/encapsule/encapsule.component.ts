@@ -17,7 +17,7 @@ import { encapsuleTutorial } from './EncapsuleTutorial';
 @Component({
     selector: 'app-encapsule',
     templateUrl: './encapsule.component.html',
-    styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.css'],
 })
 export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
                                                                  EncapsuleMove,

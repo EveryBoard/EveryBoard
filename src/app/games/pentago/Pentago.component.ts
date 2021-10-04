@@ -17,7 +17,7 @@ import { pentagoTutorial } from './PentagoTutorial';
 @Component({
     selector: 'app-pentago',
     templateUrl: './Pentago.component.html',
-    styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.css'],
 })
 export class PentagoComponent extends RectangularGameComponent<PentagoRules,
                                                                PentagoMove,

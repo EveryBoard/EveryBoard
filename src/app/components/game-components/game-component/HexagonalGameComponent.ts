@@ -5,17 +5,21 @@ import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Move } from 'src/app/jscaip/Move';
 import { Rules } from 'src/app/jscaip/Rules';
-import { AbstractGameComponent } from './AbstractGameComponent';
+import { Table } from 'src/app/utils/ArrayUtils';
+import { GameComponent } from './GameComponent';
 
 @Component({ template: '' })
 export abstract class HexagonalGameComponent<R extends Rules<M, S, L>,
                                              M extends Move,
                                              S extends AbstractGameState,
+                                             P,
                                              L extends LegalityStatus = LegalityStatus>
-    extends AbstractGameComponent<R, M, S, L>
+    extends GameComponent<R, M, S, L>
 {
 
     public hexaLayout: HexaLayout;
+
+    public hexaBoard: Table<P>;
 
     public getHexaCoordsBy(x: number, y: number): string {
         const coord: Coord = new Coord(x, y);

@@ -17,7 +17,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 @Component({
     selector: 'app-linesofaction',
     templateUrl: './LinesOfAction.component.html',
-    styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.css'],
 })
 export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActionRules,
                                                                      LinesOfActionMove,

@@ -13,7 +13,7 @@ import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { HexagonalGameComponent }
-    from '../../components/game-components/abstract-game-component/HexagonalGameComponent';
+    from '../../components/game-components/game-component/HexagonalGameComponent';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { sixTutorial } from './SixTutorial';
@@ -29,7 +29,7 @@ interface Scale {
 @Component({
     selector: 'app-six',
     templateUrl: './six.component.html',
-    styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.css'],
 })
 export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixState, SixLegalityStatus> {
 
@@ -52,7 +52,6 @@ export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixS
     public pointScale: Scale;
     public coordScale: Scale;
     public Y_OFFSET: number;
-    public PIECE_SIZE: number = 30;
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -62,14 +61,15 @@ export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixS
         ];
         this.encoder = SixMove.encoder;
         this.tutorial = sixTutorial;
-        this.hexaLayout = new HexaLayout(this.PIECE_SIZE * 1.50,
-                                         new Coord(this.PIECE_SIZE * 2, 0),
+        this.CASE_SIZE = 30;
+        this.hexaLayout = new HexaLayout(this.CASE_SIZE * 1.50,
+                                         new Coord(this.CASE_SIZE * 2, 0),
                                          FlatHexaOrientation.INSTANCE);
         this.setPieceSize(25);
         this.updateBoard();
     }
     private setPieceSize(rayon: number): void {
-        this.PIECE_SIZE = 2 * rayon;
+        this.CASE_SIZE = 2 * rayon;
         this.hexaLayout = new HexaLayout(rayon,
                                          new Coord(0, 0),
                                          FlatHexaOrientation.INSTANCE);

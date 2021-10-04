@@ -125,10 +125,10 @@ export class GoMinimax extends Minimax<GoMove, GoState, GoLegalityStatus> {
 
         display(GoRules.VERBOSE || LOCAL_VERBOSE, 'GoRules.getBoardValue');
 
-        const goPartState: GoState = GoRules.markTerritoryAndCount(state);
+        const goState: GoState = GoRules.markTerritoryAndCount(state);
 
-        const goScore: number[] = goPartState.getCapturedCopy();
-        const goKilled: number[] = GoRules.getDeadStones(goPartState);
+        const goScore: number[] = goState.getCapturedCopy();
+        const goKilled: number[] = GoRules.getDeadStones(goState);
         return new NodeUnheritance((goScore[1] + (2 * goKilled[0])) - (goScore[0] + (2 * goKilled[1])));
     }
 }

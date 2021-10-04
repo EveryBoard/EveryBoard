@@ -18,7 +18,7 @@ describe('GoBoardDatas', () => {
     it('should create one big group for initial board', () => {
         const board: Table<GoPiece> = GoState.getStartingBoard();
         const datas: BoardDatas = BoardDatas.ofBoard(board, new GoGroupDatasFactory());
-        const allZeroBoard: number[][] = ArrayUtils.createBiArray<number>(GoState.WIDTH, GoState.HEIGHT, 0);
+        const allZeroBoard: number[][] = ArrayUtils.createTable<number>(GoState.WIDTH, GoState.HEIGHT, 0);
         expect(datas.groupIndexes).toEqual(allZeroBoard);
         expect(datas.groups.length).toBe(1);
         const groupInfos: GroupInfos = datas.groups[0];

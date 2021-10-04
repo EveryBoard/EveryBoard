@@ -13,7 +13,7 @@ import { p4Tutorial } from './P4Tutorial';
 @Component({
     selector: 'app-p4',
     templateUrl: './p4.component.html',
-    styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.css'],
 })
 export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4State, Player> {
 

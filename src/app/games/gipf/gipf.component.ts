@@ -10,11 +10,11 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { HexagonalGameComponent }
-    from '../../components/game-components/abstract-game-component/HexagonalGameComponent';
+    from '../../components/game-components/game-component/HexagonalGameComponent';
 import { GipfCapture, GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMove';
 import { GipfState } from 'src/app/games/gipf/GipfState';
 import { GipfLegalityStatus } from 'src/app/games/gipf/GipfLegalityStatus';
-import { GipfPiece } from 'src/app/games/gipf/GipfPiece';
+import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Arrow } from 'src/app/jscaip/Arrow';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
@@ -23,7 +23,7 @@ import { gipfTutorial } from './GipfTutorial';
 @Component({
     selector: 'app-gipf',
     templateUrl: './gipf.component.html',
-    styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.css'],
 })
 export class GipfComponent extends HexagonalGameComponent<GipfRules, GipfMove, GipfState, GipfLegalityStatus> {
 
@@ -89,7 +89,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules, GipfMove, G
         });
     }
     public getAllCoords(): Coord[] {
-        return this.constructedState.board.allCoords();
+        return this.constructedState.allCoords();
     }
     public getPlayerSidePieces(player: number): number[] {
         const nPieces: number = this.constructedState.getNumberOfPiecesToPlace(Player.of(player));
@@ -100,11 +100,11 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules, GipfMove, G
         return pieces;
     }
     public isPiece(coord: Coord): boolean {
-        const piece: GipfPiece = this.getPiece(coord);
-        return piece !== GipfPiece.EMPTY;
+        const piece: FourStatePiece = this.getPiece(coord);
+        return piece !== FourStatePiece.EMPTY;
     }
-    private getPiece(coord: Coord): GipfPiece {
-        const piece: GipfPiece = this.constructedState.board.getAt(coord);
+    private getPiece(coord: Coord): FourStatePiece {
+        const piece: FourStatePiece = this.constructedState.getBoardAt(coord);
         return piece;
     }
     public async onClick(coord: Coord): Promise<MGPValidation> {
@@ -206,7 +206,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules, GipfMove, G
             return this.cancelMove(validity.getReason());
         }
         this.placementEntrance = MGPOptional.of(coord);
-        if (this.constructedState.board.getAt(coord) === GipfPiece.EMPTY) {
+        if (this.constructedState.getBoardAt(coord) === FourStatePiece.EMPTY) {
             // Because the coord of insertion is empty, there is no need for the user to choose a direction.
             return this.selectPlacementDirection(MGPOptional.empty());
         } else {
@@ -267,8 +267,8 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules, GipfMove, G
         }
     }
     public getPieceClass(coord: Coord): string {
-        const piece: GipfPiece = this.getPiece(coord);
-        return this.getPlayerClass(piece.player);
+        const piece: FourStatePiece = this.getPiece(coord);
+        return this.getPlayerClass(Player.of(piece.value));
     }
     public getSidePieceClass(player: number): string {
         return this.getPlayerClass(Player.of(player));

@@ -4,10 +4,10 @@ import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
 import { DvonnPieceStack } from 'src/app/games/dvonn/DvonnPieceStack';
 import { DvonnState } from 'src/app/games/dvonn/DvonnState';
 import { Player } from 'src/app/jscaip/Player';
-import { DvonnBoard } from 'src/app/games/dvonn/DvonnBoard';
 import { fakeAsync } from '@angular/core/testing';
 import { DvonnFailure } from 'src/app/games/dvonn/DvonnFailure';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { Table } from 'src/app/utils/ArrayUtils';
 
 describe('DvonnComponent', () => {
 
@@ -34,13 +34,13 @@ describe('DvonnComponent', () => {
         await componentTestUtils.expectMoveSuccess('#click_2_1', move);
     }));
     it('should allow to pass if stuck position', fakeAsync(async() => {
-        const board: DvonnBoard = new DvonnBoard([
+        const board: Table<DvonnPieceStack> = [
             [__, __, WW, __, __, __, __, __, __, __, __],
             [__, __, D_, __, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
-        ]);
+        ];
         const state: DvonnState = new DvonnState(board, 0, false);
         componentTestUtils.setupState(state);
         expect(componentTestUtils.getComponent().canPass).toBeTrue();
@@ -52,13 +52,13 @@ describe('DvonnComponent', () => {
     }));
     it('should show disconnection/captures precisely', fakeAsync(async() => {
         // given board with ready disconnection
-        const board: DvonnBoard = new DvonnBoard([
+        const board: Table<DvonnPieceStack> = [
             [__, __, WW, __, __, __, __, __, __, __, __],
             [__, __, D_, W_, W_, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
-        ]);
+        ];
         componentTestUtils.setupState(new DvonnState(board, 0, false));
 
         // When doing that disconnection

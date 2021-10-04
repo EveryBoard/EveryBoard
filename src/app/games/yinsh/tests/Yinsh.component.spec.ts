@@ -3,18 +3,18 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { YinshComponent } from '../Yinsh.component';
-import { YinshBoard } from '../YinshBoard';
+import { YinshComponent } from '../yinsh.component';
 import { YinshFailure } from '../YinshFailure';
 import { YinshState } from '../YinshState';
 import { YinshCapture, YinshMove } from '../YinshMove';
 import { YinshPiece } from '../YinshPiece';
+import { Table } from 'src/app/utils/ArrayUtils';
 
 describe('YinshComponent', () => {
 
     let testUtils: ComponentTestUtils<YinshComponent>;
     const _: YinshPiece = YinshPiece.EMPTY;
-    const N: YinshPiece = YinshPiece.EMPTY;
+    const N: YinshPiece = YinshPiece.NONE;
     const a: YinshPiece = YinshPiece.MARKER_ZERO;
     const b: YinshPiece = YinshPiece.MARKER_ONE;
     const A: YinshPiece = YinshPiece.RING_ZERO;
@@ -34,7 +34,7 @@ describe('YinshComponent', () => {
             testUtils.expectElementToHaveClasses('#case_3_2', ['base', 'moved']);
         }));
         it('should forbid placing a ring on an occupied space', fakeAsync(async() => {
-            const board: YinshBoard = YinshBoard.of([
+            const board: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, _, _, _, _, _, _, _],
                 [N, N, N, A, _, _, _, _, _, _, _],
@@ -46,7 +46,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, _, N, N, N],
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
-            ]);
+            ];
             const state: YinshState = new YinshState(board, [4, 5], 1);
             testUtils.setupState(state);
             await testUtils.expectClickFailure('#click_3_2', RulesFailure.MUST_CLICK_ON_EMPTY_SPACE);
@@ -60,7 +60,7 @@ describe('YinshComponent', () => {
     });
     describe('Main phase', () => {
         it('should allow a simple move without capture', fakeAsync(async() => {
-            const board: YinshBoard = YinshBoard.of([
+            const board: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, _, _, _, _, _, _, _],
                 [N, N, N, A, _, _, _, _, _, _, _],
@@ -72,7 +72,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, _, N, N, N],
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
-            ]);
+            ];
             const state: YinshState = new YinshState(board, [0, 0], 10);
             testUtils.setupState(state);
             const move: YinshMove = new YinshMove([],
@@ -82,7 +82,7 @@ describe('YinshComponent', () => {
             await testUtils.expectMoveSuccess('#click_3_3', move);
         }));
         it('should show flipped markers as moved', fakeAsync(async() => {
-            const board: YinshBoard = YinshBoard.of([
+            const board: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, _, _, _, _, _, _, _],
                 [N, N, N, A, a, b, _, _, _, _, _],
@@ -94,7 +94,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, _, N, N, N],
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
-            ]);
+            ];
             const state: YinshState = new YinshState(board, [0, 0], 10);
             testUtils.setupState(state);
             const move: YinshMove = new YinshMove([],
@@ -109,7 +109,7 @@ describe('YinshComponent', () => {
             testUtils.expectElementToHaveClass('#case_6_2', 'moved'); // the moved ring
         }));
         it('should fill the ring selected at the beginning of a move', fakeAsync(async() => {
-            const board: YinshBoard = YinshBoard.of([
+            const board: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, _, _, _, _, _, _, _],
                 [N, N, N, A, _, _, _, _, _, _, _],
@@ -121,7 +121,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, _, N, N, N],
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
-            ]);
+            ];
             const state: YinshState = new YinshState(board, [0, 0], 10);
             testUtils.setupState(state);
             testUtils.expectElementNotToExist('#marker_3_2');
@@ -130,7 +130,7 @@ describe('YinshComponent', () => {
             testUtils.expectElementToHaveClass('#ring_3_2', 'player0-stroke');
         }));
         it('should enable selecting capture by first clicking the capture group, then the ring taken', fakeAsync(async() => {
-            const board: YinshBoard = YinshBoard.of([
+            const board: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, _, _, _, _, _, _, _],
                 [N, N, N, A, A, _, _, _, _, _, _],
@@ -142,7 +142,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, _, N, N, N],
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
-            ]);
+            ];
             const state: YinshState = new YinshState(board, [0, 0], 10);
             testUtils.setupState(state);
 
@@ -156,7 +156,7 @@ describe('YinshComponent', () => {
             await testUtils.expectMoveSuccess('#click_4_3', move); // move it
         }));
         it('should highlight possible captures', fakeAsync(async() => {
-            const board: YinshBoard = YinshBoard.of([
+            const board: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, _, _, _, _, _, _, _],
                 [N, N, N, A, A, _, _, _, _, _, _],
@@ -168,7 +168,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, _, N, N, N],
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
-            ]);
+            ];
             const state: YinshState = new YinshState(board, [0, 0], 10);
             testUtils.setupState(state);
 
@@ -179,7 +179,7 @@ describe('YinshComponent', () => {
             testUtils.expectElementToHaveClass('#selectable_3_6', 'capturable');
         }));
         it('should show selected captures, and remove highlight upon cancellation', fakeAsync(async() => {
-            const board: YinshBoard = YinshBoard.of([
+            const board: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, _, _, _, _, _, _, _],
                 [N, N, N, A, A, _, _, _, _, _, _],
@@ -191,7 +191,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, _, N, N, N],
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
-            ]);
+            ];
             const state: YinshState = new YinshState(board, [0, 0], 10);
             testUtils.setupState(state);
 
@@ -218,7 +218,7 @@ describe('YinshComponent', () => {
 
         }));
         it('should support multiple captures', fakeAsync(async() => {
-            const board: YinshBoard = YinshBoard.of([
+            const board: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, _, _, _, _, _, _, _],
                 [N, N, N, A, A, A, _, _, _, _, _],
@@ -230,7 +230,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, _, N, N, N],
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
-            ]);
+            ];
             const state: YinshState = new YinshState(board, [0, 0], 10);
             testUtils.setupState(state);
 
@@ -248,7 +248,7 @@ describe('YinshComponent', () => {
             await testUtils.expectMoveSuccess('#click_4_2', move); // move it
         }));
         it('should fail when trying to move while there are still captures', fakeAsync(async() => {
-            const board: YinshBoard = YinshBoard.of([
+            const board: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, _, _, _, _, _, _, _],
                 [N, N, N, A, A, _, _, _, _, _, _],
@@ -260,14 +260,14 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, _, N, N, N],
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
-            ]);
+            ];
             const state: YinshState = new YinshState(board, [0, 0], 10);
             testUtils.setupState(state);
 
             await testUtils.expectClickFailure('#click_4_2', YinshFailure.MISSING_CAPTURES);
         }));
         it('should show the number of rings of each player', fakeAsync(async() => {
-            const state: YinshState = new YinshState(YinshBoard.EMPTY, [2, 1], 10);
+            const state: YinshState = new YinshState(YinshState.getInitialState().board, [2, 1], 10);
             testUtils.setupState(state);
 
             testUtils.expectElementToExist('#player_0_sideRing_1');
@@ -282,7 +282,7 @@ describe('YinshComponent', () => {
             testUtils.expectElementNotToExist('#player_1_sideRing_5');
         }));
         it('should increase the number of rings shown when a player makes a capture', fakeAsync(async() => {
-            const board: YinshBoard = YinshBoard.of([
+            const board: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, _, _, _, _, _, _, _],
                 [N, N, N, A, A, _, _, _, _, _, _],
@@ -294,7 +294,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, _, N, N, N],
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
-            ]);
+            ];
             const state: YinshState = new YinshState(board, [0, 0], 10);
             testUtils.setupState(state);
             testUtils.expectElementNotToExist('#player_0_sideRing_1');
@@ -311,7 +311,7 @@ describe('YinshComponent', () => {
             testUtils.expectElementToExist('#player_0_sideRing_1');
         }));
         it('should recompute captures upon intersecting captures', fakeAsync(async() => {
-            const board: YinshBoard = YinshBoard.of([
+            const board: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, _, _, _, _, _, _, _],
                 [N, N, N, A, A, _, _, _, _, _, _],
@@ -323,7 +323,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, _, N, N, N],
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
-            ]);
+            ];
             const state: YinshState = new YinshState(board, [0, 0], 10);
             testUtils.setupState(state);
 
@@ -343,7 +343,7 @@ describe('YinshComponent', () => {
             }
         }));
         it('should highlight the rings instead of the captures after selecting a capture', fakeAsync(async() => {
-            const board: YinshBoard = YinshBoard.of([
+            const board: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, _, _, _, _, _, _, _],
                 [N, N, N, A, A, _, _, _, _, _, _],
@@ -355,7 +355,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, _, N, N, N],
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
-            ]);
+            ];
             const state: YinshState = new YinshState(board, [0, 0], 10);
             testUtils.setupState(state);
 
@@ -369,7 +369,7 @@ describe('YinshComponent', () => {
             testUtils.expectElementToExist('#selectable_4_2'); // other ring
         }));
         it('should forbid clicking on two ambiguous capture coordinates', fakeAsync(async() => {
-            const board: YinshBoard = YinshBoard.of([
+            const board: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, _, _, _, _, _, _, _],
                 [N, N, N, A, A, _, _, _, _, _, _],
@@ -381,7 +381,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, _, N, N, N],
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
-            ]);
+            ];
             const state: YinshState = new YinshState(board, [0, 0], 10);
             testUtils.setupState(state);
 
@@ -389,7 +389,7 @@ describe('YinshComponent', () => {
             await testUtils.expectClickFailure('#click_5_5', YinshFailure.AMBIGUOUS_CAPTURE_COORD);
         }));
         it('should cancel the move when clicking on something else than a ring after a capture', fakeAsync(async() => {
-            const board: YinshBoard = YinshBoard.of([
+            const board: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, _, _, _, _, _, _, _],
                 [N, N, N, A, A, _, _, _, _, _, _],
@@ -401,7 +401,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, _, N, N, N],
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
-            ]);
+            ];
 
             const state: YinshState = new YinshState(board, [0, 0], 10);
             testUtils.setupState(state);
@@ -410,7 +410,7 @@ describe('YinshComponent', () => {
             await testUtils.expectClickFailure('#click_3_5', YinshFailure.CAPTURE_SHOULD_TAKE_RING);
         }));
         it('should cancel the move when clicking on an invalid move destination', fakeAsync(async() => {
-            const board: YinshBoard = YinshBoard.of([
+            const board: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, _, _, _, _, _, _, _],
                 [N, N, N, A, A, _, _, _, _, _, _],
@@ -422,7 +422,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, _, N, N, N],
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
-            ]);
+            ];
             const state: YinshState = new YinshState(board, [0, 0], 10);
             testUtils.setupState(state);
 
@@ -430,7 +430,7 @@ describe('YinshComponent', () => {
             await testUtils.expectClickFailure('#click_3_3', YinshFailure.SHOULD_END_MOVE_ON_EMPTY_SPACE);
         }));
         it('should allow moves with one final capture', fakeAsync(async() => {
-            const board: YinshBoard = YinshBoard.of([
+            const board: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, _, _, _, _, _, _, _],
                 [N, N, N, a, A, _, _, _, _, _, _],
@@ -442,7 +442,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, _, N, N, N],
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
-            ]);
+            ];
             const state: YinshState = new YinshState(board, [0, 0], 10);
             testUtils.setupState(state);
 
@@ -456,7 +456,7 @@ describe('YinshComponent', () => {
             await testUtils.expectMoveSuccess('#click_4_2', move); // Take a ring
         }));
         it('should allow moves with two final captures', fakeAsync(async() => {
-            const board: YinshBoard = YinshBoard.of([
+            const board: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, _, _, _, _, _, _, _],
                 [N, N, N, a, A, A, _, _, _, _, _],
@@ -468,7 +468,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, _, N, N, N],
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
-            ]);
+            ];
             const state: YinshState = new YinshState(board, [0, 0], 10);
             testUtils.setupState(state);
 
@@ -488,7 +488,7 @@ describe('YinshComponent', () => {
             await testUtils.expectMoveSuccess('#click_5_2', move); // Take another ring
         }));
         it('should allow moves with two final captures, when selecting ambiguous coord first', fakeAsync(async() => {
-            const board: YinshBoard = YinshBoard.of([
+            const board: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, _, _, _, _, _, _, _],
                 [N, N, N, a, A, A, _, _, _, _, _],
@@ -500,7 +500,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, _, N, N, N],
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
-            ]);
+            ];
             const state: YinshState = new YinshState(board, [0, 0], 10);
             testUtils.setupState(state);
 
@@ -518,7 +518,7 @@ describe('YinshComponent', () => {
             await testUtils.expectMoveSuccess('#click_4_2', move); // Take a ring
         }));
         it('should allow selecting ambiguous captures with two clicks', fakeAsync(async() => {
-            const board: YinshBoard = YinshBoard.of([
+            const board: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, A, _, _, _, _, _, _],
                 [N, N, N, A, _, _, _, _, _, _, _],
@@ -530,7 +530,7 @@ describe('YinshComponent', () => {
                 [_, a, _, _, _, a, _, _, N, N, N],
                 [_, _, _, _, _, a, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
-            ]);
+            ];
             const state: YinshState = new YinshState(board, [0, 0], 10);
             testUtils.setupState(state);
 
@@ -548,7 +548,7 @@ describe('YinshComponent', () => {
             await testUtils.expectMoveSuccess('#click_4_2', move); // move the ring
         }));
         it('should cancel move when second ambiguous capture click is invalid', fakeAsync(async() => {
-            const board: YinshBoard = YinshBoard.of([
+            const board: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, A, _, _, _, _, _, _],
                 [N, N, N, A, _, _, _, _, _, _, _],
@@ -560,7 +560,7 @@ describe('YinshComponent', () => {
                 [_, a, _, _, _, a, _, _, N, N, N],
                 [_, _, _, _, _, a, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
-            ]);
+            ];
             const state: YinshState = new YinshState(board, [0, 0], 10);
             testUtils.setupState(state);
 
@@ -568,7 +568,7 @@ describe('YinshComponent', () => {
             await testUtils.expectClickFailure('#click_6_8', YinshFailure.MISSING_CAPTURES); // select second capture coord
         }));
         it('should make pieces captured at the last turn disappear upon first player action', fakeAsync(async() => {
-            const board: YinshBoard = YinshBoard.of([
+            const board: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, _, _, _, _, _, _, _],
                 [N, N, N, A, A, B, _, _, _, _, _],
@@ -580,7 +580,7 @@ describe('YinshComponent', () => {
                 [_, _, _, _, _, _, _, _, N, N, N],
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
-            ]);
+            ];
             const state: YinshState = new YinshState(board, [0, 0], 10);
             testUtils.setupState(state);
 

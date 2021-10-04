@@ -12,9 +12,9 @@ import { ActivatedRouteStub } from 'src/app/utils/tests/TestUtils.spec';
 import { GameInfo, PickGameComponent } from '../../normal-component/pick-game/pick-game.component';
 import { GameWrapperMessages } from '../../wrapper-components/GameWrapper';
 import { LocalGameWrapperComponent } from '../../wrapper-components/local-game-wrapper/local-game-wrapper.component';
-import { AbstractAbstractGameComponent } from './AbstractGameComponent';
+import { AbstractGameComponent } from './GameComponent';
 
-describe('AbstractGameComponent', () => {
+describe('GameComponent', () => {
 
     const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub();
 
@@ -121,7 +121,7 @@ describe('AbstractGameComponent', () => {
             if (gameInfo.display === false) {
                 continue;
             }
-            const gameComponent: AbstractAbstractGameComponent =
+            const gameComponent: AbstractGameComponent =
                 TestBed.createComponent(gameInfo.component).debugElement.componentInstance;
             expect(gameComponent.encoder).withContext('Encoder missing for ' + gameInfo.urlName).toBeTruthy();
             expect(gameComponent.tutorial).withContext('tutorial missing for ' + gameInfo.urlName).toBeTruthy();

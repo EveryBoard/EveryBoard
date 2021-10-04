@@ -7,7 +7,7 @@ import { QuixoMove } from './QuixoMove';
 export class QuixoState extends RectangularGameState<Player> {
 
     public static getInitialState(): QuixoState {
-        const initialBoard: Player[][] = ArrayUtils.createBiArray(5, 5, Player.NONE);
+        const initialBoard: Player[][] = ArrayUtils.createTable(5, 5, Player.NONE);
         return new QuixoState(initialBoard, 0);
     }
     public applyLegalMove(move: QuixoMove): QuixoState {

@@ -48,7 +48,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
 
             spyOn(joinerService, 'joinGame').and.callThrough();
             spyOn(joinerService, 'observe').and.callThrough();
-            expect(wrapper.currentPartId).not.toBeDefined();
+            expect(wrapper.currentPartId).toBeTruthy();
             expect(joinerService.joinGame).not.toHaveBeenCalled();
             expect(joinerService.observe).not.toHaveBeenCalled();
 

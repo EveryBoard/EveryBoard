@@ -2,7 +2,9 @@ import { Coord } from '../Coord';
 import { RectangularGameState } from '../RectangularGameState';
 
 class MyGameState extends RectangularGameState<number> {
-
+    public setAtUnsafe(coord: Coord, v: number): this {
+        throw new Error('Method was useless back then.');
+    }
 }
 
 describe('GameState', () => {

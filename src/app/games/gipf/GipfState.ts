@@ -1,32 +1,33 @@
 import { Player } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/utils/ArrayUtils';
-import { GipfBoard } from './GipfBoard';
-import { GipfPiece } from './GipfPiece';
+import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { HexagonalGameState } from 'src/app/jscaip/HexagonalGameState';
+import { Coord } from 'src/app/jscaip/Coord';
+import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 
-export class GipfState extends HexagonalGameState<GipfPiece, GipfBoard> {
+export class GipfState extends HexagonalGameState<FourStatePiece> {
 
     public static getInitialState(): GipfState {
-        const _: GipfPiece = GipfPiece.EMPTY;
-        const O: GipfPiece = GipfPiece.PLAYER_ZERO;
-        const X: GipfPiece = GipfPiece.PLAYER_ONE;
-        const board: Table<GipfPiece> = [
-            [_, _, _, X, _, _, O],
-            [_, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _],
+        const _: FourStatePiece = FourStatePiece.EMPTY;
+        const N: FourStatePiece = FourStatePiece.NONE;
+        const O: FourStatePiece = FourStatePiece.ZERO;
+        const X: FourStatePiece = FourStatePiece.ONE;
+        const board: Table<FourStatePiece> = [
+            [N, N, N, X, _, _, O],
+            [N, N, _, _, _, _, _],
+            [N, _, _, _, _, _, _],
             [O, _, _, _, _, _, X],
-            [_, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _],
-            [X, _, _, O, _, _, _],
+            [_, _, _, _, _, _, N],
+            [_, _, _, _, _, N, N],
+            [X, _, _, O, N, N, N],
         ];
-        const gipfBoard: GipfBoard = GipfBoard.of(board);
-        return new GipfState(gipfBoard, 0, [12, 12], [0, 0]);
+        return new GipfState(board, 0, [12, 12], [0, 0]);
     }
-    public constructor(board: GipfBoard,
+    public constructor(board: Table<FourStatePiece>,
                        turn: number,
                        public readonly sidePieces: [number, number],
-                       public readonly capturedPieces: [number, number]) {
-        super(turn, board);
+                       public readonly capturedPieces: [number, number])
+    {
+        super(turn, board, 7, 7, [3, 2, 1], FourStatePiece.EMPTY);
     }
     public equals(other: GipfState): boolean {
         if (this.turn !== other.turn) return false;
@@ -34,13 +35,23 @@ export class GipfState extends HexagonalGameState<GipfPiece, GipfBoard> {
         if (this.sidePieces[1] !== other.sidePieces[1]) return false;
         if (this.capturedPieces[0] !== other.capturedPieces[0]) return false;
         if (this.capturedPieces[1] !== other.capturedPieces[1]) return false;
-        if (this.board.equals(other.board, (p1: GipfPiece, p2: GipfPiece) => p1 === p2) === false) return false;
-        return true;
+        return ArrayUtils.compareTable(this.board, other.board);
     }
     public getNumberOfPiecesToPlace(player: Player): number {
         return this.sidePieces[player.value];
     }
     public getNumberOfPiecesCaptured(player: Player): number {
         return this.capturedPieces[player.value];
+    }
+    public setAtUnsafe(coord: Coord, v: FourStatePiece): this {
+        const newBoard: FourStatePiece[][] = ArrayUtils.copyBiArray(this.board);
+        newBoard[coord.y][coord.x] = v;
+        return new GipfState(newBoard, this.turn, this.sidePieces, this.capturedPieces) as this;
+    }
+    public isOnBoard(coord: Coord): boolean {
+        if (coord.isNotInRange(this.width, this.height)) {
+            return false;
+        }
+        return this.board[coord.y][coord.x] !== FourStatePiece.NONE;
     }
 }

@@ -7,9 +7,9 @@ import { GameState } from 'src/app/jscaip/GameState';
 export class PylosState extends GameState<PylosCoord, Player> {
 
     public static getInitialState(): PylosState {
-        const board0: Player[][] = ArrayUtils.createBiArray(4, 4, Player.NONE);
-        const board1: Player[][] = ArrayUtils.createBiArray(3, 3, Player.NONE);
-        const board2: Player[][] = ArrayUtils.createBiArray(2, 2, Player.NONE);
+        const board0: Player[][] = ArrayUtils.createTable(4, 4, Player.NONE);
+        const board1: Player[][] = ArrayUtils.createTable(3, 3, Player.NONE);
+        const board2: Player[][] = ArrayUtils.createTable(2, 2, Player.NONE);
         const board3: Player[][] = [[Player.NONE]];
         const turn: number = 0;
         return new PylosState([board0, board1, board2, board3], turn);
@@ -18,6 +18,9 @@ export class PylosState extends GameState<PylosCoord, Player> {
                 turn: number)
     {
         super(turn);
+    }
+    public isOnBoard(coord: PylosCoord): boolean {
+        return this.getBoardAt(coord) != null;
     }
     public getBoardAt(coord: PylosCoord): Player {
         return this.boards[coord.z][coord.y][coord.x];

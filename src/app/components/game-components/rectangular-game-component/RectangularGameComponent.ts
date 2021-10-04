@@ -2,7 +2,7 @@ import { Move } from '../../../jscaip/Move';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Component } from '@angular/core';
 import { RectangularGameState } from 'src/app/jscaip/RectangularGameState';
-import { AbstractGameComponent } from '../abstract-game-component/AbstractGameComponent';
+import { GameComponent } from '../game-component/GameComponent';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { Rules } from 'src/app/jscaip/Rules';
 
@@ -18,7 +18,7 @@ export abstract class RectangularGameComponent<R extends Rules<M, S, L>,
                                                S extends RectangularGameState<P>,
                                                P,
                                                L extends LegalityStatus = LegalityStatus>
-    extends AbstractGameComponent<R, M, S, L>
+    extends GameComponent<R, M, S, L>
 {
 
     public board: Table<P>;

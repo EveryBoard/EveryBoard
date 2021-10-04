@@ -15,7 +15,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Rules } from 'src/app/jscaip/Rules';
 import { Direction } from 'src/app/jscaip/Direction';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
-import { AbstractAbstractGameComponent } from '../../game-components/abstract-game-component/AbstractGameComponent';
+import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 
 import { EpaminondasRules } from 'src/app/games/epaminondas/EpaminondasRules';
 import { EpaminondasState } from 'src/app/games/epaminondas/EpaminondasState';
@@ -1058,7 +1058,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 if (gameInfo.display === false) {
                     continue;
                 }
-                const gameComponent: AbstractAbstractGameComponent =
+                const gameComponent: AbstractGameComponent =
                     TestBed.createComponent(gameInfo.component).debugElement.componentInstance;
                 const rules: Rules<Move, AbstractGameState> = gameComponent.rules;
                 const steps: TutorialStep[] = gameComponent.tutorial;

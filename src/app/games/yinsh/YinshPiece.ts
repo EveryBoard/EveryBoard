@@ -13,6 +13,8 @@ export class YinshPiece implements ComparableObject {
                 return YinshPiece.of(player, isRing);
             },
         );
+    public static NONE: YinshPiece = new YinshPiece(Player.NONE, false);
+
     public static EMPTY: YinshPiece = new YinshPiece(Player.NONE, false);
 
     public static MARKER_ZERO: YinshPiece = new YinshPiece(Player.ZERO, false);
@@ -35,7 +37,7 @@ export class YinshPiece implements ComparableObject {
         }
     }
 
-    private constructor(public player: Player, public isRing: boolean) {
+    private constructor(public readonly player: Player, public readonly isRing: boolean) {
     }
     public equals(piece: YinshPiece): boolean {
         return this === piece;
@@ -47,6 +49,7 @@ export class YinshPiece implements ComparableObject {
     }
     public toString(): string {
         switch (this) {
+            case YinshPiece.NONE: return 'NONE';
             case YinshPiece.EMPTY: return 'EMPTY';
             case YinshPiece.MARKER_ZERO: return 'MARKER_ZERO';
             case YinshPiece.MARKER_ONE: return 'MARKER_ONE';

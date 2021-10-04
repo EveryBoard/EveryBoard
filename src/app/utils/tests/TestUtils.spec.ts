@@ -7,8 +7,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
-import { AbstractGameState, GameState } from '../../jscaip/GameState';
+import { GameComponent } from '../../components/game-components/game-component/GameComponent';
+import { AbstractGameState } from '../../jscaip/GameState';
 import { Move } from '../../jscaip/Move';
 import { MGPValidation } from '../MGPValidation';
 import { AppModule } from '../../app.module';
@@ -146,23 +146,23 @@ export class SimpleComponentTestUtils<T> {
     }
 }
 
-type GameComponent = AbstractGameComponent<Rules<Move, AbstractGameState>,
+type MyGameComponent = GameComponent<Rules<Move, AbstractGameState>,
                                            Move,
                                            AbstractGameState>;
 
-export class ComponentTestUtils<T extends GameComponent> {
+export class ComponentTestUtils<T extends MyGameComponent> {
     public fixture: ComponentFixture<GameWrapper>;
     public wrapper: GameWrapper;
     private debugElement: DebugElement;
-    private gameComponent: GameComponent;
+    private gameComponent: MyGameComponent;
 
     private canUserPlaySpy: jasmine.Spy;
     private cancelMoveSpy: jasmine.Spy;
     private chooseMoveSpy: jasmine.Spy;
     private onLegalUserMoveSpy: jasmine.Spy;
 
-    public static async forGame<T extends GameComponent>(game: string,
-                                                         wrapperKind: Type<GameWrapper> = LocalGameWrapperComponent)
+    public static async forGame<T extends MyGameComponent>(game: string,
+                                                           wrapperKind: Type<GameWrapper> = LocalGameWrapperComponent)
     : Promise<ComponentTestUtils<T>>
     {
         const testUtils: ComponentTestUtils<T> = await ComponentTestUtils.basic(game);
@@ -174,7 +174,7 @@ export class ComponentTestUtils<T extends GameComponent> {
         testUtils.prepareSpies();
         return testUtils;
     }
-    public static async basic<T extends GameComponent>(game: string): Promise<ComponentTestUtils<T>> {
+    public static async basic<T extends MyGameComponent>(game: string): Promise<ComponentTestUtils<T>> {
         const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub(game, 'joinerId');
         await TestBed.configureTestingModule({
             imports: [

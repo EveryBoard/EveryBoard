@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 import { TriangularGameComponent }
-    from 'src/app/components/game-components/abstract-game-component/TriangularGameComponent';
+    from 'src/app/components/game-components/game-component/TriangularGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { SaharaMove } from 'src/app/games/sahara/SaharaMove';
 import { SaharaState } from 'src/app/games/sahara/SaharaState';
@@ -18,7 +18,7 @@ import { saharaTutorial } from './SaharaTutorial';
 @Component({
     selector: 'app-sahara',
     templateUrl: './sahara.component.html',
-    styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.css'],
 })
 export class SaharaComponent extends TriangularGameComponent<SaharaRules,
                                                              SaharaMove,

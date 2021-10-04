@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
+import { GameComponent } from '../../components/game-components/game-component/GameComponent';
 import { PylosMove } from 'src/app/games/pylos/PylosMove';
 import { PylosState } from 'src/app/games/pylos/PylosState';
 import { PylosRules } from 'src/app/games/pylos/PylosRules';
@@ -16,9 +16,9 @@ import { pylosTutorial } from './PylosTutorial';
 @Component({
     selector: 'app-pylos',
     templateUrl: './pylos.component.html',
-    styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.css'],
 })
-export class PylosComponent extends AbstractGameComponent<PylosRules, PylosMove, PylosState> {
+export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosState> {
 
     public static VERBOSE: boolean = false;
 

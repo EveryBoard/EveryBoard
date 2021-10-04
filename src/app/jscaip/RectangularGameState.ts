@@ -21,10 +21,12 @@ export abstract class RectangularGameState<P> extends GameState<Coord, P> {
             return null;
         }
     }
+    public isOnBoard(coord: Coord): boolean {
+        return 0 <= coord.y && coord.y < this.board.length &&
+               0 <= coord.x && coord.x < this.board[coord.y].length;
+    }
     public getBoardByXY(x: number, y: number): P {
-        if (0 <= y && y < this.board.length &&
-            0 <= x && x < this.board[y].length)
-        {
+        if (this.isOnBoard(new Coord(x, y))) {
             return this.board[y][x];
         } else {
             throw new Error('Out of range coord: (' + x + ', ' + y + ').');

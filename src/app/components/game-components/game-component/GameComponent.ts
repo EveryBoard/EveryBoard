@@ -17,12 +17,12 @@ import { AbstractGameState } from 'src/app/jscaip/GameState';
  */
 @Component({
     template: '',
-    styleUrls: ['./abstract-game-component.css'],
+    styleUrls: ['./game-component.css'],
 })
-export abstract class AbstractGameComponent<R extends Rules<M, S, L>,
-                                            M extends Move,
-                                            S extends AbstractGameState,
-                                            L extends LegalityStatus = LegalityStatus>
+export abstract class GameComponent<R extends Rules<M, S, L>,
+                                    M extends Move,
+                                    S extends AbstractGameState,
+                                    L extends LegalityStatus = LegalityStatus>
 {
     public encoder: MoveEncoder<M>;
 
@@ -95,7 +95,7 @@ export abstract class AbstractGameComponent<R extends Rules<M, S, L>,
     }
 }
 
-export abstract class AbstractAbstractGameComponent extends AbstractGameComponent<Rules<Move, AbstractGameState>,
-                                                                                  Move,
-                                                                                  AbstractGameState> {
+export abstract class AbstractGameComponent extends GameComponent<Rules<Move, AbstractGameState>,
+                                                                  Move,
+                                                                  AbstractGameState> {
 }

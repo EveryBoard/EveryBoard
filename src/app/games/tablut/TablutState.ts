@@ -3,6 +3,7 @@ import { TablutCase } from './TablutCase';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 
 export class TablutState extends RectangularGameState<TablutCase> {
+
     // Statics Fields:
 
     public static INVADER_START: boolean = true;
@@ -10,7 +11,7 @@ export class TablutState extends RectangularGameState<TablutCase> {
     // Statics Methods :
 
     public static getInitialState(): TablutState {
-        const board: TablutCase[][] = ArrayUtils.createBiArray(9, 9, TablutCase.UNOCCUPIED);
+        const board: TablutCase[][] = ArrayUtils.createTable(9, 9, TablutCase.UNOCCUPIED);
 
         const PLAYER_ONE_KING: TablutCase = TablutCase.PLAYER_ONE_KING;
         const PLAYER_ZERO_KING: TablutCase = TablutCase.PLAYER_ZERO_KING;

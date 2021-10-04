@@ -1,15 +1,15 @@
-import { GipfBoard } from 'src/app/games/gipf/GipfBoard';
 import { GipfCapture, GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMove';
 import { GipfState } from 'src/app/games/gipf/GipfState';
-import { GipfPiece } from 'src/app/games/gipf/GipfPiece';
+import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
-const _: GipfPiece = GipfPiece.EMPTY;
-const O: GipfPiece = GipfPiece.PLAYER_ZERO;
-const X: GipfPiece = GipfPiece.PLAYER_ONE;
+const N: FourStatePiece = FourStatePiece.NONE;
+const _: FourStatePiece = FourStatePiece.EMPTY;
+const O: FourStatePiece = FourStatePiece.ZERO;
+const X: FourStatePiece = FourStatePiece.ONE;
 export const gipfTutorial: TutorialStep[] = [
     TutorialStep.informational(
         $localize`Goal of the game`,
@@ -52,15 +52,15 @@ export const gipfTutorial: TutorialStep[] = [
             </li>
         </ol><br/>
         You're playing Dark, you can make a capture, do it.`,
-        new GipfState(GipfBoard.of([
-            [_, _, _, O, X, _, _],
-            [_, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _],
+        new GipfState([
+            [N, N, N, O, X, _, _],
+            [N, N, _, _, _, _, _],
+            [N, _, _, _, _, _, _],
             [O, O, O, _, _, _, _],
-            [X, _, _, _, _, _, _],
-            [_, _, _, X, _, _, _],
-            [_, _, _, X, _, _, _],
-        ]), 42, [8, 8], [0, 0]),
+            [X, _, _, _, _, _, N],
+            [_, _, _, X, _, N, N],
+            [_, _, _, X, N, N, N],
+        ], 42, [8, 8], [0, 0]),
         [new GipfMove(
             new GipfPlacement(new Coord(0, 3), MGPOptional.of(HexaDirection.RIGHT)),
             [],
@@ -85,15 +85,15 @@ export const gipfTutorial: TutorialStep[] = [
         </ol>
         <br/><br/>
         Pick the last one.`,
-        new GipfState(GipfBoard.of([
-            [_, _, _, _, _, _, _],
-            [_, _, _, X, _, _, _],
-            [_, _, _, O, _, _, _],
+        new GipfState([
+            [N, N, N, _, _, _, _],
+            [N, N, _, X, _, _, _],
+            [N, _, _, O, _, _, _],
             [O, O, O, X, _, _, _],
-            [_, _, _, O, _, _, _],
-            [_, _, _, O, _, _, _],
-            [_, _, _, X, _, _, _],
-        ]), 42, [8, 4], [2, 3]),
+            [_, _, _, O, _, _, N],
+            [_, _, _, O, _, N, N],
+            [_, _, _, X, N, N, N],
+        ], 42, [8, 4], [2, 3]),
         [new GipfMove(
             new GipfPlacement(new Coord(0, 3), MGPOptional.of(HexaDirection.RIGHT)),
             [],
@@ -117,15 +117,15 @@ export const gipfTutorial: TutorialStep[] = [
         (even though this is a fictitious board for pedagogical purpose).
         After your capture, by performing the right move you can even capture two more of your opponent's pieces!
         Keep it mind that the most useful in a capture is to take your opponent's pieces.`,
-        new GipfState(GipfBoard.of([
+        new GipfState([
+            [N, N, N, O, _, _, O],
+            [N, N, _, O, _, _, O],
+            [N, O, O, _, O, X, O],
             [_, _, _, O, _, _, O],
-            [_, _, _, O, _, _, O],
-            [_, O, O, _, O, X, O],
-            [_, _, _, O, _, _, O],
-            [_, _, _, O, _, _, _],
-            [O, O, O, X, X, _, _],
-            [_, _, _, O, _, _, _],
-        ]), 42, [8, 4], [2, 3]),
+            [_, _, _, O, _, _, N],
+            [O, O, O, X, X, N, N],
+            [_, _, _, O, N, N, N],
+        ], 42, [8, 4], [2, 3]),
         [
             new GipfMove(
                 new GipfPlacement(new Coord(3, 6), MGPOptional.of(HexaDirection.UP)),

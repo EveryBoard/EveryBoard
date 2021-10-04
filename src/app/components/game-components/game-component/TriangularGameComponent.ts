@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Coord } from 'src/app/jscaip/Coord';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Move } from 'src/app/jscaip/Move';
-import { AbstractGameComponent } from './AbstractGameComponent';
+import { GameComponent } from './GameComponent';
 import { GameState } from 'src/app/jscaip/GameState';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { Rules } from 'src/app/jscaip/Rules';
@@ -13,7 +13,7 @@ export abstract class TriangularGameComponent<R extends Rules<M, S, L>,
                                               S extends GameState<Coord, P>,
                                               P,
                                               L extends LegalityStatus = LegalityStatus>
-    extends AbstractGameComponent<R, M, S, L>
+    extends GameComponent<R, M, S, L>
 {
     public CASE_SIZE: number = 50;
 

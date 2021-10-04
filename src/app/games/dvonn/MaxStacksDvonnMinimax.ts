@@ -22,7 +22,7 @@ export class MaxStacksDvonnMinimax extends DvonnMinimax {
             // We can't have DvonnMove.PASS here, because it would be the single move of the list
             assert(move !== DvonnMove.PASS, 'Cannot sort with DvonnMove.PASS');
 
-            const stack: DvonnPieceStack = state.board.getAt(move.end);
+            const stack: DvonnPieceStack = state.getBoardAt(move.end);
             const opponentPieces: number = stack.belongsTo(opponent) ? stack.getSize() : 0;
             return opponentPieces;
         });
@@ -36,12 +36,12 @@ export class MaxStacksDvonnMinimax extends DvonnMinimax {
         const state: DvonnState = node.gameState;
         // Board value is percentage of the stacks controlled by the player
         const scores: number[] = DvonnRules.getScores(state);
-        const pieces: Coord[] = state.board.getAllPieces();
+        const pieces: Coord[] = state.getAllPieces();
         const numberOfStacks: number = pieces.length;
         const player0Stacks: number = pieces.filter((c: Coord): boolean =>
-            state.board.getAt(c).belongsTo(Player.ZERO)).length;
+            state.getBoardAt(c).belongsTo(Player.ZERO)).length;
         const player1Stacks: number = pieces.filter((c: Coord): boolean =>
-            state.board.getAt(c).belongsTo(Player.ONE)).length;
+            state.getBoardAt(c).belongsTo(Player.ONE)).length;
         const zeroControlled: number = player0Stacks * scores[0];
         const oneControlled: number = player1Stacks * scores[1];
         return new NodeUnheritance((oneControlled - zeroControlled) / numberOfStacks);

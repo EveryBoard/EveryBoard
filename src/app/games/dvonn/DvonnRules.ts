@@ -6,10 +6,9 @@ import { DvonnMove } from './DvonnMove';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { Coord } from 'src/app/jscaip/Coord';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { DvonnBoard } from './DvonnBoard';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { HexaBoard } from 'src/app/jscaip/HexaBoard';
+import { HexagonalGameState } from 'src/app/jscaip/HexagonalGameState';
 import { DvonnFailure } from './DvonnFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
@@ -41,30 +40,30 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
     }
     private static getFreePieces(state: DvonnState): Coord[] {
         // Free pieces are the ones that have less than 6 neighbors (and belong to the current player)
-        return state.board.getAllPieces()
+        return state.getAllPieces()
             .filter((c: Coord): boolean =>
-                state.board.getAt(c).belongsTo(state.getCurrentPlayer()) &&
-                state.board.numberOfNeighbors(c) < 6);
+                state.getBoardAt(c).belongsTo(state.getCurrentPlayer()) &&
+                state.numberOfNeighbors(c) < 6);
     }
     private static pieceHasTarget(state: DvonnState, coord: Coord): boolean {
         // A piece has a target if it can move to an occupied space at a distance equal to its length
-        const stackSize: number = state.board.getAt(coord).getSize();
-        const possibleTargets: Coord[] = HexaBoard.neighbors(coord, stackSize);
+        const stackSize: number = state.getBoardAt(coord).getSize();
+        const possibleTargets: Coord[] = HexagonalGameState.neighbors(coord, stackSize);
         return possibleTargets.find((c: Coord): boolean =>
-            state.board.isOnBoard(c) && !state.board.getAt(c).isEmpty()) !== undefined;
+            state.isOnBoard(c) && !state.getBoardAt(c).isEmpty()) !== undefined;
     }
     public static pieceTargets(state: DvonnState, coord: Coord): Coord[] {
-        const stackSize: number = state.board.getAt(coord).getSize();
-        const possibleTargets: Coord[] = HexaBoard.neighbors(coord, stackSize);
+        const stackSize: number = state.getBoardAt(coord).getSize();
+        const possibleTargets: Coord[] = HexagonalGameState.neighbors(coord, stackSize);
         return possibleTargets.filter((c: Coord): boolean =>
-            state.board.isOnBoard(c) && state.board.getAt(c).isEmpty() === false);
+            state.isOnBoard(c) && state.getBoardAt(c).isEmpty() === false);
     }
     public static getScores(state: DvonnState): number[] {
         // Board value is the total number of pieces controlled by player 0 - by player 1
         let p0Score: number = 0;
         let p1Score: number = 0;
-        state.board.getAllPieces().map((c: Coord) => {
-            const stack: DvonnPieceStack = state.board.getAt(c);
+        state.getAllPieces().map((c: Coord) => {
+            const stack: DvonnPieceStack = state.getBoardAt(c);
             if (stack.belongsTo(Player.ZERO)) {
                 p0Score += stack.getSize();
             } else if (stack.belongsTo(Player.ONE)) {
@@ -74,17 +73,17 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
         return [p0Score, p1Score];
     }
     public isMovablePiece(state: DvonnState, coord: Coord): MGPValidation {
-        if (!state.board.isOnBoard(coord)) {
+        if (!state.isOnBoard(coord)) {
             return MGPValidation.failure(DvonnFailure.INVALID_COORD);
         }
-        const stack: DvonnPieceStack = state.board.getAt(coord);
+        const stack: DvonnPieceStack = state.getBoardAt(coord);
         if (stack.getSize() < 1) {
             return MGPValidation.failure(DvonnFailure.EMPTY_STACK);
         }
         if (!stack.belongsTo(state.getCurrentPlayer())) {
             return MGPValidation.failure(DvonnFailure.NOT_PLAYER_PIECE);
         }
-        if (state.board.numberOfNeighbors(coord) >= 6) {
+        if (state.numberOfNeighbors(coord) >= 6) {
             return MGPValidation.failure(DvonnFailure.TOO_MANY_NEIGHBORS);
         }
         if (!DvonnRules.pieceHasTarget(state, coord)) {
@@ -96,15 +95,15 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
         return DvonnRules.getMovablePieces(state).length === 0;
     }
     private sourceCoords(state: DvonnState): Coord[] {
-        return state.board.getAllPieces()
+        return state.getAllPieces()
             .filter((c: Coord): boolean =>
-                state.board.getAt(c).containsSource());
+                state.getBoardAt(c).containsSource());
     }
     private markPiecesConnectedTo(state: DvonnState, coord: Coord, markBoard: boolean[][]) {
         // For each neighbor, mark it as connected (if it contains something),
         // and recurse from there (only if it was not already marked)
-        HexaBoard.neighbors(coord, 1).forEach((c: Coord) => {
-            if (state.board.isOnBoard(c) && !markBoard[c.y][c.x] && !state.board.getAt(c).isEmpty()) {
+        HexagonalGameState.neighbors(coord, 1).forEach((c: Coord) => {
+            if (state.isOnBoard(c) && !markBoard[c.y][c.x] && !state.getBoardAt(c).isEmpty()) {
                 // This piece has not been marked as connected, but it is connected, and not empty
                 markBoard[c.y][c.x] = true; // mark it as connected
                 this.markPiecesConnectedTo(state, c, markBoard); // find all pieces connected to this one
@@ -113,18 +112,18 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
     }
     private removeDisconnectedPieces(state: DvonnState): DvonnState {
         // This will contain true for each piece connected to a source
-        const markBoard: boolean[][] = ArrayUtils.createBiArray(DvonnBoard.WIDTH, DvonnBoard.HEIGHT, false);
+        const markBoard: boolean[][] = ArrayUtils.createTable(DvonnState.WIDTH, DvonnState.HEIGHT, false);
         this.sourceCoords(state).forEach((c: Coord) => {
             markBoard[c.y][c.x] = true; // marks the source as true in the markBoard
             this.markPiecesConnectedTo(state, c, markBoard);
         });
-        let newBoard: DvonnBoard = state.board;
-        state.board.getAllPieces().forEach((c: Coord) => {
+        let newState: DvonnState = state;
+        newState.getAllPieces().forEach((c: Coord) => {
             if (!markBoard[c.y][c.x]) {
-                newBoard = newBoard.setAt(c, DvonnPieceStack.EMPTY);
+                newState = newState.setAt(c, DvonnPieceStack.EMPTY);
             }
         });
-        return new DvonnState(newBoard, state.turn, state.alreadyPassed);
+        return newState;
     }
     public applyLegalMove(move: DvonnMove,
                           state: DvonnState,
@@ -136,13 +135,13 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
         } else {
             // To apply a legal move, the stack is added in the front of its end coordinate
             // (and removed from its start coordinate)
-            const stack: DvonnPieceStack = state.board.getAt(move.coord);
-            const targetStack: DvonnPieceStack = state.board.getAt(move.end);
-            const newBoard: DvonnBoard = state.board
+            const stack: DvonnPieceStack = state.getBoardAt(move.coord);
+            const targetStack: DvonnPieceStack = state.getBoardAt(move.end);
+            const newState: DvonnState = state
                 .setAt(move.coord, DvonnPieceStack.EMPTY)
                 .setAt(move.end, DvonnPieceStack.append(stack, targetStack));
             const resultingState: DvonnState =
-                this.removeDisconnectedPieces(new DvonnState(newBoard, state.turn+1, false));
+                this.removeDisconnectedPieces(new DvonnState(newState.board, state.turn + 1, false));
             return resultingState;
         }
     }
@@ -162,12 +161,12 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
             return { legal: pieceMovable };
         }
 
-        const stack: DvonnPieceStack = state.board.getAt(move.coord);
+        const stack: DvonnPieceStack = state.getBoardAt(move.coord);
         if (move.length() !== stack.getSize()) {
             return { legal: MGPValidation.failure(DvonnFailure.INVALID_MOVE_LENGTH) };
         }
 
-        const targetStack: DvonnPieceStack = state.board.getAt(move.end);
+        const targetStack: DvonnPieceStack = state.getBoardAt(move.end);
         if (targetStack.isEmpty()) {
             return { legal: MGPValidation.failure(DvonnFailure.EMPTY_TARGET_STACK) };
         }
