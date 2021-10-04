@@ -336,7 +336,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
             coord = coord.getNext(line.direction, 1);
         }
 
-        /* we now have looked through the entire line, we summarize everything */
+        // we now have looked through the entire line, we summarize everything
         if ((commonCrit != null) && (!commonCrit.isAllNull())) {
             // this line is not null and has a common criterion between all of its pieces
             if (cs == null) {
