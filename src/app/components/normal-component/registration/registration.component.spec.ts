@@ -10,6 +10,10 @@ import firebase from 'firebase/app';
 fdescribe('RegistrationComponent', () => {
     let testUtils: SimpleComponentTestUtils<RegistrationComponent>;
 
+    const username: string = 'jeanjaja';
+    const email: string = 'jean@jaja.europe';
+    const password: string = 'hunter2';
+
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(RegistrationComponent);
         testUtils.detectChanges();
@@ -25,9 +29,9 @@ fdescribe('RegistrationComponent', () => {
         spyOn(authService, 'sendEmailVerification').and.resolveTo(MGPValidation.SUCCESS);
 
         // given some user
-        testUtils.findElement('#email').nativeElement.value = 'jean@jaja.europe';
-        testUtils.findElement('#username').nativeElement.value = 'jeanjaja';
-        testUtils.findElement('#password').nativeElement.value = 'hunter2';
+        testUtils.fillInput('#email', email);
+        testUtils.fillInput('#username', username);
+        testUtils.fillInput('#password', password);
 
         // when the user registers
         await testUtils.clickElement('#registerButton');
@@ -35,6 +39,7 @@ fdescribe('RegistrationComponent', () => {
         // then the user is registered
         expect(router.navigate).toHaveBeenCalledWith(['/']);
         expect(authService.sendEmailVerification).toHaveBeenCalledWith();
+        expect(authService.doRegister).toHaveBeenCalledWith(username, email, password);
     }));
     it('Registration failure should show a message', fakeAsync(async() => {
         const router: Router = TestBed.inject(Router);

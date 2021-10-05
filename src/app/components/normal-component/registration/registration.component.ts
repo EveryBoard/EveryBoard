@@ -21,9 +21,9 @@ export class RegistrationComponent {
         username: new FormControl(),
         password: new FormControl(),
     });
-    public async tryRegister(value: {email: string, pseudo: string, password: string}): Promise<boolean> {
+    public async tryRegister(value: {email: string, username: string, password: string}): Promise<boolean> {
         const registrationResult: MGPFallible<firebase.User> =
-            await this.authService.doRegister(value.pseudo, value.email, value.password);
+            await this.authService.doRegister(value.username, value.email, value.password);
         if (registrationResult.isSuccess()) {
             const emailResult: MGPValidation =
                 await this.authService.sendEmailVerification();
