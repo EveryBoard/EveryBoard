@@ -44,12 +44,12 @@ export class GameService implements OnDestroy {
 
     private userName: string;
 
-    constructor(public partDao: PartDAO,
-                public activesPartsService: ActivesPartsService,
-                public joinerService: JoinerService,
+    constructor(private partDao: PartDAO,
+                private activesPartsService: ActivesPartsService,
+                private joinerService: JoinerService,
                 private chatService: ChatService,
-                public router: Router,
-                public messageDisplayer: MessageDisplayer,
+                private router: Router,
+                private messageDisplayer: MessageDisplayer,
                 private authenticationService: AuthenticationService)
     {
         display(GameService.VERBOSE, 'GameService.constructor');

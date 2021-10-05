@@ -32,7 +32,7 @@ xdescribe('EmailVerified', () => {
 
         expect(router.navigate).toHaveBeenCalledWith(['/login']);
     }));
-    it('should move unverified user to confirm-inscription page and refuse them', fakeAsync(async() => {
+    it('should move unverified user to must-verify-email page and refuse them', fakeAsync(async() => {
         authService.getJoueurObs = () => of({ username: 'JeanMichelNouveau user', verified: false });
 
         expect(await guard.canActivate()).toBeFalse();

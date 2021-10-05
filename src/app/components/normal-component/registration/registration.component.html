@@ -1,6 +1,6 @@
 <div class="box">
     <p class="title">Signing up</p>
-    <form [formGroup]="inscriptionForm">
+    <form [formGroup]="registrationForm">
         <div class="field is-horizontal">
             <div class="field-label">
                 <label class="label" for="email" i18n>Email</label>
@@ -50,7 +50,7 @@
                     <div class="control">
                         <button id="registerButton"
                                 class="button is-primary"
-                                (click)="tryRegister(inscriptionForm.value)" i18n>Sign up</button>
+                                (click)="tryRegister(registrationForm.value)" i18n>Sign up</button>
                     </div>
                 </div>
             </div>

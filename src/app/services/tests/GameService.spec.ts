@@ -20,6 +20,9 @@ import { AuthenticationServiceMock } from './AuthenticationService.spec';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 import { GameServiceMessages } from '../GameServiceMessages';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Router } from '@angular/router';
+import { MessageDisplayer } from '../message-displayer/MessageDisplayer';
+import { JoinerService } from '../JoinerService';
 
 describe('GameService', () => {
     let service: GameService;
@@ -94,32 +97,37 @@ describe('GameService', () => {
         }
     }));
     it('acceptConfig should delegate to joinerService and call startGameWithConfig', fakeAsync(async() => {
+        const joinerService: JoinerService = TestBed.inject(JoinerService);
         const joiner: IJoiner = JoinerMocks.WITH_PROPOSED_CONFIG.doc;
-        spyOn(service.joinerService, 'acceptConfig').and.returnValue(null);
+        spyOn(joinerService, 'acceptConfig').and.returnValue(null);
         spyOn(partDao, 'update').and.returnValue(null);
 
         await service.acceptConfig('partId', joiner);
 
-        expect(service.joinerService.acceptConfig).toHaveBeenCalled();
+        expect(joinerService.acceptConfig).toHaveBeenCalled();
     }));
     describe('createGameAndRedirectOrShowError', () => {
         it('should show toast and navigate when creator is offline', fakeAsync(async() => {
-            spyOn(service.router, 'navigate').and.callThrough();
-            spyOn(service.messageDisplayer, 'infoMessage').and.callThrough();
+            const router: Router = TestBed.inject(Router);
+            const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
+            spyOn(router, 'navigate').and.callThrough();
+            spyOn(messageDisplayer, 'infoMessage').and.callThrough();
             spyOn(service, 'isUserOffline').and.returnValue(true);
 
             // when calling it
             expect(await service.createGameAndRedirectOrShowError('whatever')).toBeFalse();
 
             // it should toast, and navigate
-            expect(service.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(GameServiceMessages.USER_OFFLINE);
-            expect(service.router.navigate).toHaveBeenCalledOnceWith(['/login']);
+            expect(messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(GameServiceMessages.USER_OFFLINE);
+            expect(router.navigate).toHaveBeenCalledOnceWith(['/login']);
 
             tick(150);
         }));
         it('should show toast and navigate when creator cannot create game', fakeAsync(async() => {
-            spyOn(service.router, 'navigate').and.callThrough();
-            spyOn(service.messageDisplayer, 'infoMessage').and.callThrough();
+            const router: Router = TestBed.inject(Router);
+            const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
+            spyOn(router, 'navigate').and.callThrough();
+            spyOn(messageDisplayer, 'infoMessage').and.callThrough();
             spyOn(service, 'isUserOffline').and.returnValue(false);
             spyOn(service, 'canCreateGame').and.returnValue(false);
 
@@ -128,8 +136,8 @@ describe('GameService', () => {
             tick(150);
 
             // it should toast, and navigate
-            expect(service.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(GameServiceMessages.ALREADY_INGAME);
-            expect(service.router.navigate).toHaveBeenCalledOnceWith(['/server']);
+            expect(messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(GameServiceMessages.ALREADY_INGAME);
+            expect(router.navigate).toHaveBeenCalledOnceWith(['/server']);
         }));
     });
     describe('getStartingConfig', () => {
@@ -177,6 +185,12 @@ describe('GameService', () => {
         }));
     });
     describe('rematch', () => {
+        let joinerService: JoinerService;
+        let partDao: PartDAO;
+        beforeEach(() => {
+            joinerService = TestBed.inject(JoinerService);
+            partDao = TestBed.inject(PartDAO);
+        });
         it('should send request when proposing a rematch', fakeAsync(async() => {
             spyOn(service, 'sendRequest').and.callFake(() => null);
 
@@ -213,9 +227,9 @@ describe('GameService', () => {
                 totalPartDuration: 25,
             };
             spyOn(service, 'sendRequest').and.callFake(() => null);
-            spyOn(service.joinerService, 'readJoinerById').and.returnValue(Promise.resolve(lastGameJoiner));
+            spyOn(joinerService, 'readJoinerById').and.returnValue(Promise.resolve(lastGameJoiner));
             let called: boolean = false;
-            spyOn(service.partDao, 'set').and.callFake(async(id: string, element: IPart) => {
+            spyOn(partDao, 'set').and.callFake(async(_id: string, element: IPart) => {
                 expect(element.playerZero).toEqual(lastPart.doc.playerOne);
                 expect(element.playerOne).toEqual(lastPart.doc.playerZero);
                 called = true;
@@ -256,9 +270,9 @@ describe('GameService', () => {
                 totalPartDuration: 25,
             };
             spyOn(service, 'sendRequest').and.callFake(() => null);
-            spyOn(service.joinerService, 'readJoinerById').and.returnValue(Promise.resolve(lastGameJoiner));
+            spyOn(joinerService, 'readJoinerById').and.returnValue(Promise.resolve(lastGameJoiner));
             let called: boolean = false;
-            spyOn(service.partDao, 'set').and.callFake(async(id: string, element: IPart) => {
+            spyOn(partDao, 'set').and.callFake(async(_id: string, element: IPart) => {
                 expect(element.playerZero).toEqual(lastPart.doc.playerOne);
                 expect(element.playerOne).toEqual(lastPart.doc.playerZero);
                 called = true;
