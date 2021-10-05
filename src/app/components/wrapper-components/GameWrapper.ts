@@ -44,7 +44,6 @@ export abstract class GameWrapper {
     constructor(protected componentFactoryResolver: ComponentFactoryResolver,
                 protected actRoute: ActivatedRoute,
                 public router: Router,
-                protected userService: UserService,
                 protected authenticationService: AuthenticationService) {
         display(GameWrapper.VERBOSE, 'GameWrapper.constructed: ' + (this.gameIncluder!=null));
     }
