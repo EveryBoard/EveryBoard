@@ -1,8 +1,7 @@
 import { Component, ComponentFactory, ComponentFactoryResolver, ComponentRef, Type, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { AbstractGameComponent } from '../game-components/abstract-game-component/AbstractGameComponent';
 import { GameIncluderComponent } from '../game-components/game-includer/game-includer.component';
-import { UserService } from '../../services/UserService';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
 
 import { Move } from '../../jscaip/Move';
@@ -43,7 +42,6 @@ export abstract class GameWrapper {
 
     constructor(protected componentFactoryResolver: ComponentFactoryResolver,
                 protected actRoute: ActivatedRoute,
-                public router: Router,
                 protected authenticationService: AuthenticationService) {
         display(GameWrapper.VERBOSE, 'GameWrapper.constructed: ' + (this.gameIncluder!=null));
     }

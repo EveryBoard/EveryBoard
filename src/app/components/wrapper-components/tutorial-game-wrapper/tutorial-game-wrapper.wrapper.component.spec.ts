@@ -44,6 +44,7 @@ import { PylosState } from 'src/app/games/pylos/PylosState';
 import { pylosTutorial } from 'src/app/games/pylos/PylosTutorial';
 import { PylosMove } from 'src/app/games/pylos/PylosMove';
 import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
+import { Router } from '@angular/router';
 
 describe('TutorialGameWrapperComponent (wrapper)', () => {
     let componentTestUtils: ComponentTestUtils<QuartoComponent>;
@@ -466,6 +467,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             expect(wrapper.stepIndex).toEqual(0);
         }));
         it('Should redirect to local game when asking for it when finished', fakeAsync(async() => {
+            const router: Router = TestBed.inject(Router);
             // Given a finish tutorial
             wrapper.startTutorial([
                 TutorialStep.informational(
@@ -478,11 +480,11 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await componentTestUtils.clickElement('#nextButton');
 
             // when clicking play locally
-            spyOn(componentTestUtils.wrapper.router, 'navigate').and.callThrough();
+            spyOn(router, 'navigate').and.callThrough();
             await componentTestUtils.clickElement('#playLocallyButton');
 
             // expect navigator to have been called
-            expect(componentTestUtils.wrapper.router.navigate).toHaveBeenCalledWith(['local/Quarto']);
+            expect(router.navigate).toHaveBeenCalledWith(['local/Quarto']);
         }));
         it('Should redirect to online game when asking for it when finished and user is online', fakeAsync(async() => {
             // Given a finish tutorial

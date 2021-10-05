@@ -27,6 +27,7 @@ import { GameService } from 'src/app/services/GameService';
 import { AuthUser } from 'src/app/services/AuthenticationService';
 import { Time } from 'src/app/domain/Time';
 import { getMillisecondsDifference } from 'src/app/utils/TimeUtils';
+import { Router } from '@angular/router';
 
 describe('OnlineGameWrapperComponent of Quarto:', () => {
     /* Life cycle summary
@@ -87,13 +88,13 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         partDAO = TestBed.inject(PartDAO);
         joinerDAO = TestBed.inject(JoinerDAO);
         joueurDAO = TestBed.inject(JoueursDAO);
-        const chatDAOMock: ChatDAOMock = TestBed.get(ChatDAO);
+        const chatDAO: ChatDAO = TestBed.inject(ChatDAO);
         await joinerDAO.set('joinerId', initialJoiner);
         await partDAO.set('joinerId', PartMocks.INITIAL.doc);
         await joueurDAO.set('firstCandidateDocId', OPPONENT);
         await joueurDAO.set('creatorDocId', CREATOR);
         await joueurDAO.set(OBSERVER.pseudo, OBSERVER);
-        await chatDAOMock.set('joinerId', { messages: [], status: `I don't have a clue` });
+        await chatDAO.set('joinerId', { messages: [], status: `I don't have a clue` });
         return Promise.resolve();
     }
     async function prepareStartedGameFor(user: AuthUser, shorterGlobalChrono?: boolean): Promise<void> {
@@ -1316,6 +1317,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             componentTestUtils.expectElementToExist('#proposeRematchButton');
         }));
         it('should sent proposal request when proposing', fakeAsync(async() => {
+            const gameService: GameService = TestBed.inject(GameService);
             // given an ended game
             await prepareStartedGameFor({ username: 'creator', verified: true });
             tick(1);
@@ -1324,12 +1326,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(1);
 
             // when the propose rematch button is clicked
-            const wrapper: OnlineGameWrapperComponent = componentTestUtils.wrapper as OnlineGameWrapperComponent;
-            spyOn(wrapper.gameService, 'proposeRematch').and.callThrough();
+            spyOn(gameService, 'proposeRematch').and.callThrough();
             await componentTestUtils.expectInterfaceClickSuccess('#proposeRematchButton');
 
             // then the gameService must be called
-            expect(wrapper.gameService.proposeRematch).toHaveBeenCalledOnceWith('joinerId', Player.ZERO);
+            expect(gameService.proposeRematch).toHaveBeenCalledOnceWith('joinerId', Player.ZERO);
         }));
         it('should show accept/refuse button when proposition has been sent', fakeAsync(async() => {
             // given an ended game
@@ -1347,6 +1348,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             componentTestUtils.expectElementToExist('#acceptRematchButton');
         }));
         it('should sent accepting request when user accept rematch', fakeAsync(async() => {
+            const gameService: GameService = TestBed.inject(GameService);
             // give a part with rematch request send by opponent
             await prepareStartedGameFor({ username: 'creator', verified: true });
             tick(1);
@@ -1356,14 +1358,14 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await receiveRequest(Request.rematchProposed(Player.ONE));
 
             // when accepting it
-            const wrapper: OnlineGameWrapperComponent = componentTestUtils.wrapper as OnlineGameWrapperComponent;
-            spyOn(wrapper.gameService, 'acceptRematch').and.callThrough();
+            spyOn(gameService, 'acceptRematch').and.callThrough();
             await componentTestUtils.expectInterfaceClickSuccess('#acceptRematchButton');
 
             // then it should have called acceptRematch
-            expect(wrapper.gameService.acceptRematch).toHaveBeenCalledTimes(1);
+            expect(gameService.acceptRematch).toHaveBeenCalledTimes(1);
         }));
         it('should redirect to new part when rematch is accepted', fakeAsync(async() => {
+            const router: Router = TestBed.inject(Router);
             // given a part lost with rematch request send by user
             await prepareStartedGameFor({ username: 'creator', verified: true });
             tick(1);
@@ -1373,14 +1375,14 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await componentTestUtils.expectInterfaceClickSuccess('#proposeRematchButton');
 
             // when opponent accept it
-            spyOn(componentTestUtils.wrapper.router, 'navigate');
+            spyOn(router, 'navigate');
             await receiveRequest(Request.rematchAccepted('Quarto', 'nextPartId'));
 
             // then it should redirect to new part
             const first: string = '/nextGameLoading';
             const second: string = '/play/Quarto/nextPartId';
-            expect(componentTestUtils.wrapper.router.navigate).toHaveBeenCalledWith([first]);
-            expect(componentTestUtils.wrapper.router.navigate).toHaveBeenCalledWith([second]);
+            expect(router.navigate).toHaveBeenCalledWith([first]);
+            expect(router.navigate).toHaveBeenCalledWith([second]);
         }));
     });
     describe('Non Player Experience', () => {

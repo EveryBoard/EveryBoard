@@ -6,7 +6,6 @@ import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Move } from 'src/app/jscaip/Move';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
-import { UserService } from 'src/app/services/UserService';
 import { assert, display } from 'src/app/utils/utils';
 import { TutorialStep } from './TutorialStep';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -36,12 +35,12 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
 
     constructor(componentFactoryResolver: ComponentFactoryResolver,
                 actRoute: ActivatedRoute,
-                router: Router,
+                public router: Router,
                 authenticationService: AuthenticationService,
                 public cdr: ChangeDetectorRef,
                 public gameService: GameService)
     {
-        super(componentFactoryResolver, actRoute, router, authenticationService);
+        super(componentFactoryResolver, actRoute, authenticationService);
         display(TutorialGameWrapperComponent.VERBOSE, 'TutorialGameWrapperComponent.constructor');
     }
     private getCompletionArray(): boolean[] {
