@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { SixState } from 'src/app/games/six/SixGameState';
+import { SixState } from 'src/app/games/six/SixState';
 import { SixMove } from 'src/app/games/six/SixMove';
 import { SixFailure } from 'src/app/games/six/SixFailure';
 import { SixNode, SixRules } from 'src/app/games/six/SixRules';
@@ -16,7 +16,7 @@ import { HexagonalGameComponent }
     from '../../components/game-components/game-component/HexagonalGameComponent';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
-import { sixTutorial } from './SixTutorial';
+import { SixTutorial } from './SixTutorial';
 
 interface Scale {
     minX: number;
@@ -60,7 +60,7 @@ export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixS
             new SixMinimax(this.rules, 'SixMinimax'),
         ];
         this.encoder = SixMove.encoder;
-        this.tutorial = sixTutorial;
+        this.tutorial = new SixTutorial().tutorial;
         this.CASE_SIZE = 30;
         this.hexaLayout = new HexaLayout(this.CASE_SIZE * 1.50,
                                          new Coord(this.CASE_SIZE * 2, 0),
@@ -188,10 +188,10 @@ export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixS
             return this.cancelMove(clickValidity.getReason());
         }
         if (this.state.turn < 40) {
-            return this.cancelMove(SixFailure.NO_DEPLACEMENT_BEFORE_TURN_40);
+            return this.cancelMove(SixFailure.NO_DEPLACEMENT_BEFORE_TURN_40());
         } else if (this.chosenLanding == null) {
             if (this.state.getBoardAt(piece) === this.state.getCurrentEnnemy()) {
-                return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
+                return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
             }
             this.selectedPiece = piece;
             return MGPValidation.SUCCESS;
@@ -209,7 +209,7 @@ export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixS
             return this.chooseMove(SixMove.fromDrop(neighboor), this.state, null, null);
         } else {
             if (this.selectedPiece == null) {
-                return this.cancelMove(SixFailure.CAN_NO_LONGER_DROP);
+                return this.cancelMove(SixFailure.CAN_NO_LONGER_DROP());
             } else {
                 const deplacement: SixMove = SixMove.fromDeplacement(this.selectedPiece, neighboor);
                 const legality: SixLegalityStatus = SixRules.isLegalPhaseTwoMove(deplacement, this.state);
@@ -226,7 +226,7 @@ export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixS
     }
     private neededCutting(legality: SixLegalityStatus): boolean {
         return legality.legal.isFailure() &&
-               legality.legal.reason === SixFailure.MUST_CUT;
+               legality.legal.reason === SixFailure.MUST_CUT();
     }
     private moveVirtuallyPiece(): void {
         this.pieces = this.pieces.filter((c: Coord) => c.equals(this.selectedPiece) === false);

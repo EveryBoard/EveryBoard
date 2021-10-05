@@ -36,11 +36,8 @@ export class KamisadoBoard {
     public static isOnBoard(coord: Coord): boolean {
         return coord.isInRange(KamisadoBoard.SIZE, KamisadoBoard.SIZE);
     }
-    public static getPieceAt(board: Table<KamisadoPiece>, coord: Coord): KamisadoPiece {
-        return board[coord.y][coord.x];
-    }
     public static isEmptyAt(board: Table<KamisadoPiece>, coord: Coord): boolean {
-        return KamisadoBoard.getPieceAt(board, coord).equals(KamisadoPiece.NONE);
+        return board[coord.y][coord.x].equals(KamisadoPiece.NONE);
     }
     public static allPieceCoords(board: Table<KamisadoPiece>): Coord[] {
         const l: Coord[] = [];

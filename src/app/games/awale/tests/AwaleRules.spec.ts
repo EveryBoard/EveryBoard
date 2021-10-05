@@ -73,7 +73,7 @@ describe('AwaleRules', () => {
         const status: AwaleLegalityStatus = rules.isLegal(move, state);
 
         // then the move is illegal
-        expect(status.legal.reason).toBe(AwaleFailure.SHOULD_DISTRIBUTE);
+        expect(status.legal.reason).toBe(AwaleFailure.SHOULD_DISTRIBUTE());
     });
     it('shoud distribute but not capture in case of would-starve move', () => {
         // given a board in which the player could capture all opponents seeds

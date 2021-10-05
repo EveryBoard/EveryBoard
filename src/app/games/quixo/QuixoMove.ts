@@ -29,7 +29,7 @@ export class QuixoMove extends MoveCoord {
             return MGPValidation.failure('Invalid coord for QuixoMove: ' + coord.toString() + ' is outside the board.');
         }
         if (coord.x !== 0 && coord.x !== 4 && coord.y !== 0 && coord.y !== 4) {
-            return MGPValidation.failure(QuixoFailure.NO_INSIDE_CLICK);
+            return MGPValidation.failure(QuixoFailure.NO_INSIDE_CLICK());
         }
         return MGPValidation.SUCCESS;
     }

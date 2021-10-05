@@ -115,14 +115,14 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
     }
     public static applyLegalMove(move: QuixoMove,
                                  state: QuixoState,
-                                 status: LegalityStatus)
+                                 _status: LegalityStatus)
     : QuixoState
     {
         return state.applyLegalMove(move);
     }
     public isLegal(move: QuixoMove, state: QuixoState): LegalityStatus {
         if (state.getBoardAt(move.coord) === state.getCurrentEnnemy()) {
-            return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE) };
+            return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE()) };
         } else {
             return { legal: MGPValidation.SUCCESS };
         }

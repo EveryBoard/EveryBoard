@@ -41,7 +41,7 @@ describe('SiamRules:', () => {
     });
     it('Should be created', () => {
         expect(rules).toBeTruthy();
-        expect(rules.node.gameState.turn).toBe(0, 'Game should start a turn 0');
+        expect(rules.node.gameState.turn).withContext('Game should start a turn 0').toBe(0);
     });
     it('Should provide 44 first turn childs at turn 0', () => {
         const firstTurnMoves: SiamMove[] = minimaxes[0].getListMoves(rules.node); // TODO: inside minimax tests!
@@ -104,7 +104,7 @@ describe('SiamRules:', () => {
         const state: SiamState = new SiamState(board, 0);
         const move: SiamMove = new SiamMove(2, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
         const status: SiamLegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.reason).toBe(RulesFailure.MUST_CHOOSE_PLAYER_PIECE);
+        expect(status.legal.reason).toBe(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
     });
     it('Side pushing should work', () => {
         const board: Table<SiamPiece> = [
@@ -209,7 +209,7 @@ describe('SiamRules:', () => {
         const state: SiamState = new SiamState(board, 0);
         const move: SiamMove = new SiamMove(2, 4, MGPOptional.empty(), Orthogonal.UP);
         const status: SiamLegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.reason).toBe(SiamFailure.ILLEGAL_ROTATION);
+        expect(status.legal.reason).toBe(SiamFailure.ILLEGAL_ROTATION());
     });
     it('Moving in a direction different from the piece should be legal', () => {
         const board: Table<SiamPiece> = [
@@ -245,7 +245,7 @@ describe('SiamRules:', () => {
         const state: SiamState = new SiamState(board, 0);
         const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
         const status: SiamLegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.reason).toBe(SiamFailure.NOT_ENOUGH_FORCE_TO_PUSH);
+        expect(status.legal.reason).toBe(SiamFailure.NOT_ENOUGH_FORCE_TO_PUSH());
     });
     it('One vs one push should not work even if one of the involved is at the border', () => {
         const board: Table<SiamPiece> = [
@@ -258,7 +258,7 @@ describe('SiamRules:', () => {
         const state: SiamState = new SiamState(board, 0);
         const move: SiamMove = new SiamMove(0, 3, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN);
         const status: SiamLegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.reason).toBe(SiamFailure.NOT_ENOUGH_FORCE_TO_PUSH);
+        expect(status.legal.reason).toBe(SiamFailure.NOT_ENOUGH_FORCE_TO_PUSH());
     });
     it('Two vs one push should work', () => {
         const board: Table<SiamPiece> = [
@@ -294,7 +294,7 @@ describe('SiamRules:', () => {
         const state: SiamState = new SiamState(board, 0);
         const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
         const status: SiamLegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.reason).toBe(SiamFailure.NOT_ENOUGH_FORCE_TO_PUSH);
+        expect(status.legal.reason).toBe(SiamFailure.NOT_ENOUGH_FORCE_TO_PUSH());
     });
     it('Pushing while changing direction should be impossible', () => {
         const board: Table<SiamPiece> = [
@@ -307,7 +307,7 @@ describe('SiamRules:', () => {
         const state: SiamState = new SiamState(board, 0);
         const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.LEFT);
         const status: SiamLegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.reason).toBe(SiamFailure.ILLEGAL_PUSH);
+        expect(status.legal.reason).toBe(SiamFailure.ILLEGAL_PUSH());
     });
     it('6 insertions should be impossible', () => {
         const board: Table<SiamPiece> = [
@@ -320,7 +320,7 @@ describe('SiamRules:', () => {
         const state: SiamState = new SiamState(board, 0);
         const move: SiamMove = new SiamMove(0, -1, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN);
         const status: SiamLegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.reason).toBe(SiamFailure.NO_REMAINING_PIECE_TO_INSERT);
+        expect(status.legal.reason).toBe(SiamFailure.NO_REMAINING_PIECE_TO_INSERT());
     });
     it('Pushing several mountains should be illegal', () => {
         const board: Table<SiamPiece> = [
@@ -333,7 +333,7 @@ describe('SiamRules:', () => {
         const state: SiamState = new SiamState(board, 0);
         const move: SiamMove = new SiamMove(0, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT);
         const status: SiamLegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.reason).toBe(SiamFailure.NOT_ENOUGH_FORCE_TO_PUSH);
+        expect(status.legal.reason).toBe(SiamFailure.NOT_ENOUGH_FORCE_TO_PUSH());
     });
     it('Two pusher can push two mountain', () => {
         const board: Table<SiamPiece> = [

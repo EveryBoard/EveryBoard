@@ -1,10 +1,10 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { expectSecondStateToBeBetterThanFirst, expectStateToBePreVictory } from 'src/app/utils/tests/TestUtils.spec';
-import { SixState } from '../SixGameState';
+import { SixState } from '../SixState';
 import { SixMove } from '../SixMove';
 import { SixNode, SixRules } from '../SixRules';
-import { SixMinimax } from '../SixMinimax';
+import { SixMinimax, SixNodeUnheritance } from '../SixMinimax';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 
 describe('SixMinimax', () => {
@@ -19,6 +19,19 @@ describe('SixMinimax', () => {
     beforeEach(() => {
         rules = new SixRules(SixState);
         minimax = new SixMinimax(rules, 'SixMinimax');
+    });
+    describe('chooseMove', () => {
+        it('should have boardInfo after first move', () => {
+            let moveSuccess: boolean = rules.choose(SixMove.fromDrop(new Coord(-1, 0)));
+            expect(moveSuccess).toBeTrue();
+            let unheritance: SixNodeUnheritance = rules.node.getOwnValue(minimax);
+            expect(unheritance.preVictory).toBeNull();
+
+            moveSuccess = rules.choose(SixMove.fromDrop(new Coord(-1, 0)));
+            expect(moveSuccess).toBeTrue();
+            unheritance = rules.node.getOwnValue(minimax);
+            expect(unheritance.preVictory).toBeNull();
+        });
     });
     describe('pre-victories', () => {
         it('Should pass forcing move to children node to minimise calculations', () => {

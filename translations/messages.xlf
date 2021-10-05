@@ -1723,6 +1723,9 @@
       <trans-unit id="5302904876941698020" datatype="html">
         <source>Failed! You have made a single step.</source>
       </trans-unit>
+      <trans-unit id="5300676389075722498" datatype="html">
+        <source>You cannot insert a piece when you have already selected a piece.</source>
+      </trans-unit>
       <trans-unit id="5162969671337604607" datatype="html">
         <source>You cannot insert a piece, all your pieces are already on the board.</source>
       </trans-unit>
@@ -1897,6 +1900,9 @@
       </trans-unit>
       <trans-unit id="4762560256027932544" datatype="html">
         <source>This move has not cut the board in two equal halves.</source>
+      </trans-unit>
+      <trans-unit id="4274208426593680443" datatype="html">
+        <source>Failed. You did cut the board in two but you kept the half where you&apos;re in minority. Therefore, you lost! Try again.</source>
       </trans-unit>
       <trans-unit id="4456476499852991526" datatype="html">
         <source>You cannot land on an occupied square.</source>

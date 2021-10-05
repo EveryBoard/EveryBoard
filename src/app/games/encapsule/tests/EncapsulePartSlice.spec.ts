@@ -14,7 +14,7 @@ describe('EncapsuleState', () => {
     it('should forbid construction of state with null remaining pieces', () => {
         expect(() => new EncapsuleState(emptyBoard, 0, null)).toThrow();
     });
-    describe('getAt', () => {
+    describe('getBoardAt', () => {
         it('should return the expected case', () => {
             const someCase: EncapsuleCase = new EncapsuleCase(Player.ONE, Player.NONE, Player.NONE);
             const board: EncapsuleCase[][] = [

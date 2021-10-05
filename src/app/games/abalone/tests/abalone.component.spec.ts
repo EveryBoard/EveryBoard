@@ -42,8 +42,7 @@ describe('AbaloneComponent', () => {
 
             // when clicking on an enemy piece
             // then expect click to be a failure
-            const reason: string = RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE;
-            await componentTestUtils.expectClickFailure('#piece_8_0', reason);
+            await componentTestUtils.expectClickFailure('#piece_8_0', RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
         }));
     });
     describe('second piece click', () => {
@@ -132,7 +131,7 @@ describe('AbaloneComponent', () => {
             await componentTestUtils.expectClickSuccess('#piece_0_7');
 
             // when clicking 3 case on the right
-            await componentTestUtils.expectClickFailure('#piece_3_7', AbaloneFailure.CANNOT_MOVE_MORE_THAN_THREE_PIECES);
+            await componentTestUtils.expectClickFailure('#piece_3_7', AbaloneFailure.CANNOT_MOVE_MORE_THAN_THREE_PIECES());
 
             // then piece should no longer be selected
             const compo: AbaloneComponent = componentTestUtils.getComponent();
@@ -192,8 +191,7 @@ describe('AbaloneComponent', () => {
             await componentTestUtils.expectClickSuccess('#piece_4_6');
 
             // when clicking on not aligned piece, then expect failure
-            const reason: string = AbaloneFailure.LINE_AND_COORD_NOT_ALIGNED;
-            await componentTestUtils.expectClickFailure('#piece_4_7', reason);
+            await componentTestUtils.expectClickFailure('#piece_4_7', AbaloneFailure.LINE_AND_COORD_NOT_ALIGNED());
         }));
         it('should cancel move then select clicked piece as first piece when it is not aligned with second piece', fakeAsync(async() => {
             // given initial board with a line selected
@@ -201,8 +199,7 @@ describe('AbaloneComponent', () => {
             await componentTestUtils.expectClickSuccess('#piece_4_6');
 
             // when clicking on not aligned piece, then expect failure
-            const reason: string = AbaloneFailure.LINE_AND_COORD_NOT_ALIGNED;
-            await componentTestUtils.expectClickFailure('#piece_2_7', reason);
+            await componentTestUtils.expectClickFailure('#piece_2_7', AbaloneFailure.LINE_AND_COORD_NOT_ALIGNED());
         }));
         it('should recognize line extension and show new directions (1-2-3)', fakeAsync(async() => {
             // given initial board with an extendable two piece line selected
@@ -243,7 +240,7 @@ describe('AbaloneComponent', () => {
 
             // when selecting an aligned piece too far
             // then move should be cancel for "too-long-line" reason
-            await componentTestUtils.expectClickFailure('#piece_3_7', AbaloneFailure.CANNOT_MOVE_MORE_THAN_THREE_PIECES);
+            await componentTestUtils.expectClickFailure('#piece_3_7', AbaloneFailure.CANNOT_MOVE_MORE_THAN_THREE_PIECES());
         }));
     });
     describe('direction click', () => {

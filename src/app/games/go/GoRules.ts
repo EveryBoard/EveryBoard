@@ -33,7 +33,7 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityStatus> {
                     ' passing on ' + state.getCopiedBoard());
             return {
                 legal: (playing || passed) ? MGPValidation.SUCCESS :
-                    MGPValidation.failure(GoFailure.CANNOT_PASS_AFTER_PASSED_PHASE),
+                    MGPValidation.failure(GoFailure.CANNOT_PASS_AFTER_PASSED_PHASE()),
                 capturedCoords: [],
             };
         } else if (GoRules.isAccept(move)) {
@@ -41,7 +41,7 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityStatus> {
             const accept: boolean = state.phase === Phase.ACCEPT;
             return {
                 legal: (counting || accept) ? MGPValidation.SUCCESS :
-                    MGPValidation.failure(GoFailure.CANNOT_ACCEPT_BEFORE_COUNTING_PHASE),
+                    MGPValidation.failure(GoFailure.CANNOT_ACCEPT_BEFORE_COUNTING_PHASE()),
                 capturedCoords: [],
             };
         }
@@ -49,7 +49,7 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityStatus> {
             display(GoRules.VERBOSE ||LOCAL_VERBOSE, 'GoRules.isLegal: move is marking');
             const legal: boolean = GoRules.isLegalDeadMarking(move, state);
             return {
-                legal: legal ? MGPValidation.SUCCESS : MGPValidation.failure(GoFailure.OCCUPIED_INTERSECTION),
+                legal: legal ? MGPValidation.SUCCESS : MGPValidation.failure(GoFailure.OCCUPIED_INTERSECTION()),
                 capturedCoords: [],
             };
         } else {
@@ -71,7 +71,7 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityStatus> {
 
         const boardCopy: GoPiece[][] = state.getCopiedBoard();
         if (GoRules.isKo(move, state)) {
-            return GoLegalityStatus.failure(GoFailure.ILLEGAL_KO);
+            return GoLegalityStatus.failure(GoFailure.ILLEGAL_KO());
         }
         if ([Phase.COUNTING, Phase.ACCEPT].includes(state.phase)) {
             state = GoRules.resurrectStones(state);
@@ -88,7 +88,7 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityStatus> {
             boardCopy[move.coord.y][move.coord.x] = GoPiece.EMPTY;
 
             if (isSuicide) {
-                return GoLegalityStatus.failure(GoFailure.CANNOT_COMMIT_SUICIDE);
+                return GoLegalityStatus.failure(GoFailure.CANNOT_COMMIT_SUICIDE());
             } else {
                 return { legal: MGPValidation.SUCCESS, capturedCoords: [] };
             }
@@ -125,7 +125,7 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityStatus> {
         if (neightbooringCoord.isInRange(state.board[0].length, state.board.length)) {
             const ennemi: GoPiece = state.turn%2 === 0 ? GoPiece.WHITE : GoPiece.BLACK;
             if (copiedBoard[neightbooringCoord.y][neightbooringCoord.x] === ennemi) {
-                display(GoRules.VERBOSE ||LOCAL_VERBOSE, 'un groupe pourrait être capturé');
+                display(GoRules.VERBOSE ||LOCAL_VERBOSE, 'a group could be captured');
                 const goGroupDatasFactory: GoGroupDatasFactory = new GoGroupDatasFactory();
                 const neightbooringGroup: GoGroupDatas =
                     goGroupDatasFactory.getGroupDatas(neightbooringCoord, copiedBoard) as GoGroupDatas;

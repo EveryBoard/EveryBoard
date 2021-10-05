@@ -8,7 +8,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { quartoTutorial } from './QuartoTutorial';
+import { QuartoTutorial } from './QuartoTutorial';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 
 @Component({
@@ -37,7 +37,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
             new QuartoMinimax(this.rules, 'QuartoMinimax'),
         ];
         this.encoder = QuartoMove.encoder;
-        this.tutorial = quartoTutorial;
+        this.tutorial = new QuartoTutorial().tutorial;
         this.pieceInHand = this.rules.node.gameState.pieceInHand;
         this.updateBoard();
     }
@@ -80,7 +80,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
             }
         } else {
             // the user chose an occupied place of the board, so an illegal move, so we cancel all
-            return this.cancelMove(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE);
+            return this.cancelMove(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
         }
     }
     public async choosePiece(givenPiece: number): Promise<MGPValidation> {

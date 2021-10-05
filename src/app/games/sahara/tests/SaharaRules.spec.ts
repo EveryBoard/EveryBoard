@@ -28,7 +28,7 @@ describe('SaharaRules', () => {
     });
     it('SaharaRules should be created', () => {
         expect(rules).toBeTruthy();
-        expect(rules.node.gameState.turn).toBe(0, 'Game should start a turn 0');
+        expect(rules.node.gameState.turn).withContext('Game should start a turn 0').toBe(0);
         const moves: SaharaMove[] = minimax.getListMoves(rules.node);
         const expectedMoves: MGPSet<SaharaMove> = new MGPSet([
             new SaharaMove(new Coord( 2, 0), new Coord(2, 1)),
@@ -64,7 +64,7 @@ describe('SaharaRules', () => {
             .toBe(FourStatePiece.EMPTY);
         expect(rules.choose(new SaharaMove(new Coord(3, 0), new Coord(4, 0)))).toBeTrue();
         expect(rules.choose(new SaharaMove(new Coord(1, 4), new Coord(2, 4)))).toBeTrue();
-        expect(rules.node.getOwnValue(minimax).value).toBe(Number.MIN_SAFE_INTEGER, 'Should be victory');
+        expect(rules.node.getOwnValue(minimax).value).withContext('Should be victory').toBe(Number.MIN_SAFE_INTEGER);
     });
     it('Bouncing on occupied case should be illegal', () => {
         expect(rules.choose(new SaharaMove(new Coord(7, 0), new Coord(8, 1)))).toBeFalse();
@@ -73,7 +73,7 @@ describe('SaharaRules', () => {
         const state: SaharaState = SaharaState.getInitialState();
         const move: SaharaMove = new SaharaMove(new Coord(3, 0), new Coord(4, 0));
         const status: LegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.reason).toEqual(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
+        expect(status.legal.reason).toEqual(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
     });
     it('Should see that Player.ONE won', () => {
         const board: FourStatePiece[][] = [

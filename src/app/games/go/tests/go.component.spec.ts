@@ -34,7 +34,7 @@ describe('GoComponent', () => {
 
         expect((await componentTestUtils.getComponent().pass()).isSuccess()).toBeTrue(); // Finished
 
-        expect((await componentTestUtils.getComponent().pass()).reason).toBe(RulesFailure.CANNOT_PASS);
+        expect((await componentTestUtils.getComponent().pass()).reason).toBe(RulesFailure.CANNOT_PASS());
         tick(150);
     }));
     it('Should show captures', fakeAsync(async() => {

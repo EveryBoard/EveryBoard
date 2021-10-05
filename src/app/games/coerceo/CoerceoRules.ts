@@ -29,7 +29,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
     }
     public applyLegalTileExchange(move: CoerceoMove,
                                   state: CoerceoState,
-                                  status: LegalityStatus)
+                                  _status: LegalityStatus)
     : CoerceoState
     {
         const newBoard: FourStatePiece[][] = state.getCopiedBoard();
@@ -85,16 +85,16 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
     }
     public isLegalTileExchange(move: CoerceoMove, state: CoerceoState): LegalityStatus {
         if (state.tiles[state.getCurrentPlayer().value] < 2) {
-            return { legal: MGPValidation.failure(CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE) };
+            return { legal: MGPValidation.failure(CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE()) };
         }
         const captured: FourStatePiece = state.getBoardAt(move.capture.get());
         if (captured === FourStatePiece.NONE ||
             captured === FourStatePiece.EMPTY)
         {
-            return { legal: MGPValidation.failure(CoerceoFailure.CANNOT_CAPTURE_FROM_EMPTY) };
+            return { legal: MGPValidation.failure(CoerceoFailure.CANNOT_CAPTURE_FROM_EMPTY()) };
         }
         if (captured.is(state.getCurrentPlayer())) {
-            return { legal: MGPValidation.failure(CoerceoFailure.CANNOT_CAPTURE_OWN_PIECES) };
+            return { legal: MGPValidation.failure(CoerceoFailure.CANNOT_CAPTURE_OWN_PIECES()) };
         }
         return { legal: MGPValidation.SUCCESS };
     }
@@ -110,14 +110,14 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
         }
         const starter: FourStatePiece = state.getBoardAt(move.start.get());
         if (starter === FourStatePiece.EMPTY) {
-            return { legal: MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY) };
+            return { legal: MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY()) };
         }
         if (starter.is(state.getCurrentEnnemy())) {
-            return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE) };
+            return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE()) };
         }
         const lander: FourStatePiece = state.getBoardAt(move.landingCoord.get());
         if (lander.is(state.getCurrentPlayer())) {
-            return { legal: MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE) };
+            return { legal: MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE()) };
         }
         return { legal: MGPValidation.SUCCESS };
     }

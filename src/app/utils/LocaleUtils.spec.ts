@@ -46,6 +46,8 @@ describe('LocaleUtils', () => {
 
             // then it should default to fr
             expect(locale).toEqual('fr');
+
+            localStorage.clear(); // clear local storage
         });
     });
 });

@@ -36,15 +36,15 @@ export class QuartoMinimax extends Minimax<QuartoMove, QuartoState> {
             for (let x: number = 0; x < 4; x++) {
                 if (board[y][x] === QuartoPiece.NONE) {
                     nextBoard = state.getCopiedBoard();
-                    nextBoard[y][x] = inHand; // on place la pièce qu'on a en main en (x, y)
+                    nextBoard[y][x] = inHand; // the piece we have in hand is put in (x, y)
                     if (state.turn === 15) {
                         const move: QuartoMove = new QuartoMove(x, y, QuartoPiece.NONE);
                         listMoves.push(move);
                         return listMoves;
                     }
                     // Pour chaque cases vides
-                    for (const remainingPiece of pawns) { // piece est la pièce qu'on va donner
-                        const move: QuartoMove = new QuartoMove(x, y, remainingPiece); // synthèse du mouvement listé
+                    for (const remainingPiece of pawns) { // the piece we will give
+                        const move: QuartoMove = new QuartoMove(x, y, remainingPiece); // this is the move
                         listMoves.push(move);
                     }
                 }
@@ -56,7 +56,7 @@ export class QuartoMinimax extends Minimax<QuartoMove, QuartoState> {
         const state: QuartoState = node.gameState;
         let boardStatus: BoardStatus = {
             score: SCORE.DEFAULT,
-            casesSensibles: [],
+            sensitiveSquares: [],
         };
         for (const line of QuartoRules.lines) {
             boardStatus = QuartoRules.updateBoardStatus(line, state, boardStatus);

@@ -148,7 +148,7 @@ describe('P4Rules', () => {
         const state: P4State = new P4State(board, 12);
         const move: P4Move = P4Move.of(0);
         const status: LegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.reason).toBe(P4Failure.COLUMN_IS_FULL);
+        expect(status.legal.reason).toBe(P4Failure.COLUMN_IS_FULL());
     });
     it('should assign greater score to center column', () => {
         const board1: Player[][] = [

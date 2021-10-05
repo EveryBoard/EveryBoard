@@ -45,8 +45,7 @@ describe('SaharaMoves', () => {
     it('Should throw error when trying to bounce on white triangle', () => {
         const start: Coord = new Coord(0, 0);
         const end: Coord = new Coord(2, 0);
-        const expectedError: string = SaharaFailure.CAN_ONLY_REBOUND_ON_BLACK;
-        expect(() => new SaharaMove(start, end)).toThrowError(expectedError);
+        expect(() => new SaharaMove(start, end)).toThrowError(SaharaFailure.CAN_ONLY_REBOUND_ON_BLACK());
     });
     it('Should throw error when distance is 2 but common neighboors is the fake neighboors', () => {
         const start: Coord = new Coord(1, 0);

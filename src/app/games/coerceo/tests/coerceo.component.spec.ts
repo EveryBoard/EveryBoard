@@ -34,13 +34,12 @@ describe('CoerceoComponent', () => {
         componentTestUtils = await ComponentTestUtils.forGame<CoerceoComponent>('Coerceo');
     }));
     it('should create', () => {
-        expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');
-        expect(componentTestUtils.getComponent()).toBeTruthy('CoerceoComponent should be created');
+        expect(componentTestUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
+        expect(componentTestUtils.getComponent()).withContext('CoerceoComponent should be created').toBeTruthy();
     });
     it('Should accept tiles exchange proposal as first click', fakeAsync(async() => {
         const move: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(6, 9));
-        const reason: string = CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE;
-        await componentTestUtils.expectMoveFailure('#click_6_9', reason,
+        await componentTestUtils.expectMoveFailure('#click_6_9', CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE(),
                                                    move, undefined, getScore(0), getScore(1));
     }));
     it('Should show possibles destination after choosing your own piece', fakeAsync(async() => {
@@ -62,12 +61,11 @@ describe('CoerceoComponent', () => {
         expect(componentTestUtils.getComponent().highlights).toEqual([]);
     }));
     it('Should cancelMove when first click is on empty case', fakeAsync(async() => {
-        await componentTestUtils.expectClickFailure('#click_5_5', CoerceoFailure.FIRST_CLICK_SHOULD_NOT_BE_NULL);
+        await componentTestUtils.expectClickFailure('#click_5_5', CoerceoFailure.FIRST_CLICK_SHOULD_NOT_BE_NULL());
     }));
     it('Should refuse invalid deplacement', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_6_2');
-        const reason: string = CoerceoFailure.INVALID_DISTANCE;
-        await componentTestUtils.expectClickFailure('#click_8_4', reason);
+        await componentTestUtils.expectClickFailure('#click_8_4', CoerceoFailure.INVALID_DISTANCE());
     }));
     it('Should show tile when more than zero', fakeAsync(async() => {
         const board: Table<FourStatePiece> = CoerceoState.getInitialState().getCopiedBoard();

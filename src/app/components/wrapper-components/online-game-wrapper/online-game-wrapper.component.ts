@@ -207,7 +207,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                                                            oldPart.doc.beginning == null;
                 const newPartHasBeginningTime: boolean = this.currentPart == null ||
                                                          this.currentPart.doc.beginning != null;
-                assert(oldPartHadNoBeginningTime || newPartHasBeginningTime, 'ils nous chient dans la colle patron!!!');
+                // Assert from ~September 2021, could be removed if it is never encountered
+                assert(oldPartHadNoBeginningTime || newPartHasBeginningTime, 'old part had no beginning time or new part has, we did not expect this!');
                 return;
             default:
                 assert(updateType === UpdateType.STARTING_DOC, 'Unexpected update type ' + updateType);

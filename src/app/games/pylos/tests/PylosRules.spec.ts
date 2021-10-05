@@ -44,7 +44,7 @@ describe('PylosRules:', () => {
         const state: PylosState = new PylosState(board, 0);
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 0), []);
         const status: LegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.reason).toEqual(RulesFailure.MUST_LAND_ON_EMPTY_SPACE);
+        expect(status.legal.reason).toEqual(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
     });
     it('should forbid move starting by an empty piece', () => {
         const board: Player[][][] = [
@@ -68,7 +68,7 @@ describe('PylosRules:', () => {
         const state: PylosState = new PylosState(board, 0);
         const move: PylosMove = PylosMove.fromClimb(new PylosCoord(0, 0, 0), new PylosCoord(2, 2, 1), []);
         const status: LegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.reason).toBe(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY);
+        expect(status.legal.reason).toBe(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
     });
     it('should forbid move starting by an enemy piece', () => {
         const board: Player[][][] = [
@@ -92,7 +92,7 @@ describe('PylosRules:', () => {
         const state: PylosState = new PylosState(board, 0);
         const move: PylosMove = PylosMove.fromClimb(new PylosCoord(0, 0, 0), new PylosCoord(2, 2, 1), []);
         const status: LegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.reason).toBe(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
+        expect(status.legal.reason).toBe(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
     });
     it(`should forbid move who'se landing coord is not landable (not on the floor, not over 4 lower pieces)`, () => {
         const board: Player[][][] = [
@@ -116,7 +116,7 @@ describe('PylosRules:', () => {
         const state: PylosState = new PylosState(board, 0);
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 1), []);
         const status: LegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.reason).toBe(PylosFailure.CANNOT_LAND);
+        expect(status.legal.reason).toBe(PylosFailure.CANNOT_LAND());
     });
     it('should forbid move who capture without having formed a squared', () => {
         const board: Player[][][] = [
@@ -141,7 +141,7 @@ describe('PylosRules:', () => {
         const move: PylosMove =
             PylosMove.fromDrop(new PylosCoord(0, 3, 0), [new PylosCoord(0, 0, 0), new PylosCoord(3, 3, 0)]);
         const status: LegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.reason).toBe(PylosFailure.CANNOT_CAPTURE);
+        expect(status.legal.reason).toBe(PylosFailure.CANNOT_CAPTURE());
     });
     it('should forbid move who capture non-player piece or supporting-piece', () => {
         const board: Player[][][] = [
@@ -166,12 +166,12 @@ describe('PylosRules:', () => {
 
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 0), [new PylosCoord(2, 2, 0)]);
         const status: LegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.reason).toBe(PylosFailure.INVALID_FIRST_CAPTURE);
+        expect(status.legal.reason).toBe(PylosFailure.INVALID_FIRST_CAPTURE());
 
         const otherMove: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 0),
                                                         [new PylosCoord(0, 0, 0), new PylosCoord(1, 0, 0)]);
         const otherStatus: LegalityStatus = rules.isLegal(otherMove, state);
-        expect(otherStatus.legal.reason).toBe(PylosFailure.INVALID_SECOND_CAPTURE);
+        expect(otherStatus.legal.reason).toBe(PylosFailure.INVALID_SECOND_CAPTURE());
     });
     it('should allow legal capture to include landing piece', () => {
         const board: Player[][][] = [
@@ -219,7 +219,7 @@ describe('PylosRules:', () => {
         const state: PylosState = new PylosState(board, 0);
         const move: PylosMove = PylosMove.fromClimb(new PylosCoord(1, 1, 0), new PylosCoord(0, 0, 1), []);
         const status: LegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.reason).toBe(PylosFailure.SHOULD_HAVE_SUPPORTING_PIECES);
+        expect(status.legal.reason).toBe(PylosFailure.SHOULD_HAVE_SUPPORTING_PIECES());
     });
     it('should forbid piece to climb when supporting', () => {
         const board: Player[][][] = [
@@ -243,7 +243,7 @@ describe('PylosRules:', () => {
         const state: PylosState = new PylosState(board, 0);
         const move: PylosMove = PylosMove.fromClimb(new PylosCoord(1, 0, 0), new PylosCoord(0, 1, 1), []);
         const status: LegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.reason).toBe(PylosFailure.SHOULD_HAVE_SUPPORTING_PIECES);
+        expect(status.legal.reason).toBe(PylosFailure.SHOULD_HAVE_SUPPORTING_PIECES());
     });
     it('should allow legal capture to include piece supporting previously captured stone', () => {
         const board: Player[][][] = [

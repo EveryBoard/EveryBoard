@@ -4,7 +4,6 @@ import { Player } from 'src/app/jscaip/Player';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/utils';
-import { Coord } from 'src/app/jscaip/Coord';
 import { ComparableObject } from 'src/app/utils/Comparable';
 
 export class EncapsuleState extends RectangularGameState<EncapsuleCase> {
@@ -29,9 +28,6 @@ export class EncapsuleState extends RectangularGameState<EncapsuleCase> {
             EncapsulePiece.SMALL_BLACK, EncapsulePiece.SMALL_WHITE, EncapsulePiece.SMALL_WHITE,
         ];
         return new EncapsuleState(startingBoard, 0, initialPieces);
-    }
-    public getAt(coord: Coord): EncapsuleCase {
-        return this.board[coord.y][coord.x];
     }
     public getRemainingPieces(): EncapsulePiece[] {
         return ArrayUtils.copyImmutableArray(this.remainingPieces);

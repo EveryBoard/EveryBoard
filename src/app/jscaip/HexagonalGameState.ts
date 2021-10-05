@@ -1,4 +1,4 @@
-import { ArrayUtils, Table } from '../utils/ArrayUtils';
+import { Table } from '../utils/ArrayUtils';
 import { assert } from '../utils/utils';
 import { Coord } from './Coord';
 import { GameState } from './GameState';

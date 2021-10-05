@@ -11,7 +11,7 @@ import { LinesOfActionFailure } from './LinesOfActionFailure';
 import { LinesOfActionState } from './LinesOfActionState';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { linesOfActionTutorial } from './LinesOfActionTutorial';
+import { LinesOfActionTutorial } from './LinesOfActionTutorial';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 @Component({
@@ -39,7 +39,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
             new LinesOfActionMinimax(this.rules, 'LinesOfActionMinimax'),
         ];
         this.encoder = LinesOfActionMove.encoder;
-        this.tutorial = linesOfActionTutorial;
+        this.tutorial = new LinesOfActionTutorial().tutorial;
         this.updateBoard();
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
@@ -50,7 +50,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
 
         const coord: Coord = new Coord(x, y);
         if (this.selected.isPresent()) {
-            if (this.getState().getAt(coord) === this.getState().getCurrentPlayer().value) {
+            if (this.getState().getBoardAt(coord) === this.getState().getCurrentPlayer()) {
                 return this.select(coord);
             } else {
                 const move: MGPFallible<LinesOfActionMove> =
@@ -58,7 +58,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
                 if (move.isSuccess()) {
                     return this.chooseMove(move.get(), this.rules.node.gameState, null, null);
                 } else {
-                    return this.cancelMove(LinesOfActionFailure.INVALID_DIRECTION);
+                    return this.cancelMove(LinesOfActionFailure.INVALID_DIRECTION());
                 }
             }
         } else {
@@ -66,13 +66,13 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
         }
     }
     private async select(coord: Coord): Promise<MGPValidation> {
-        if (this.getState().getAt(coord) !== this.getState().getCurrentPlayer().value) {
-            return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE);
+        if (this.getState().getBoardAt(coord) !== this.getState().getCurrentPlayer()) {
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
         this.selected = MGPOptional.of(coord);
         this.targets = LinesOfActionRules.possibleTargets(this.rules.node.gameState, this.selected.get());
         if (this.targets.length === 0) {
-            return this.cancelMove(LinesOfActionFailure.PIECE_CANNOT_MOVE);
+            return this.cancelMove(LinesOfActionFailure.PIECE_CANNOT_MOVE());
         }
         return MGPValidation.SUCCESS;
     }
@@ -88,7 +88,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
         this.lastMove = MGPOptional.ofNullable(this.rules.node.move);
         if (this.lastMove.isPresent()) {
             const lastMove: LinesOfActionMove = this.lastMove.get();
-            if (this.getPreviousState().getAt(lastMove.end) !== Player.NONE.value) {
+            if (this.getPreviousState().getBoardAt(lastMove.end) !== Player.NONE) {
                 this.captured = MGPOptional.of(lastMove.end);
             } else {
                 this.captured = MGPOptional.empty();

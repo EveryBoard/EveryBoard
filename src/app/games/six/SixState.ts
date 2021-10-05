@@ -134,7 +134,7 @@ export class SixState extends GameState<Coord, Player> {
         if (this.isCoordConnected(landing, start)) {
             return MGPValidation.SUCCESS;
         } else {
-            return MGPValidation.failure(SixFailure.MUST_DROP_NEXT_TO_OTHER_PIECE);
+            return MGPValidation.failure(SixFailure.MUST_DROP_NEXT_TO_OTHER_PIECE());
         }
     }
     public isCoordConnected(coord: Coord, except: Coord | null): boolean {

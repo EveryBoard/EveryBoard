@@ -10,8 +10,8 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player } from 'src/app/jscaip/Player';
 import { Direction } from 'src/app/jscaip/Direction';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
-import { reversiTutorial } from './ReversiTutorial';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
+import { ReversiTutorial } from './ReversiTutorial';
 
 @Component({
     selector: 'app-reversi',
@@ -38,7 +38,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
             new ReversiMinimax(this.rules, 'ReversiMinimax'),
         ];
         this.encoder = ReversiMove.encoder;
-        this.tutorial = reversiTutorial;
+        this.tutorial = new ReversiTutorial().tutorial;
         this.showScore = true;
         this.canPass = false;
         this.updateBoard();

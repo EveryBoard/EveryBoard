@@ -13,12 +13,13 @@ import { assert, display } from 'src/app/utils/utils';
 import { GameInfo } from '../normal-component/pick-game/pick-game.component';
 import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
+import { Localized } from 'src/app/utils/LocaleUtils';
 
 export class GameWrapperMessages {
 
-    public static readonly NOT_YOUR_TURN: string = $localize`It is not your turn!`;
+    public static readonly NOT_YOUR_TURN: Localized = () => $localize`It is not your turn!`;
 
-    public static readonly NO_CLONING_FEATURE: string = $localize`You cannot clone a game. This feature might be implemented later.`;
+    public static readonly NO_CLONING_FEATURE: Localized = () => $localize`You cannot clone a game. This feature might be implemented later.`;
 }
 export abstract class AbstractRules extends Rules<Move, AbstractGameState> {
 }
@@ -57,7 +58,7 @@ export abstract class GameWrapper {
     : Type<GameComponent<AbstractRules, Move, AbstractGameState>>
     {
         display(GameWrapper.VERBOSE, 'GameWrapper.getMatchingComponent');
-        const gameInfo: GameInfo = GameInfo.ALL_GAMES.find((gameInfo: GameInfo) => gameInfo.urlName === compoString);
+        const gameInfo: GameInfo = GameInfo.ALL_GAMES().find((gameInfo: GameInfo) => gameInfo.urlName === compoString);
         if (gameInfo == null) {
             throw new Error('Unknown Games are unwrappable');
         }
@@ -113,7 +114,7 @@ export abstract class GameWrapper {
             },
         });
         if (!this.isPlayerTurn()) {
-            return MGPValidation.failure(GameWrapperMessages.NOT_YOUR_TURN);
+            return MGPValidation.failure(GameWrapperMessages.NOT_YOUR_TURN());
         }
         if (this.endGame) {
             return MGPValidation.failure($localize`The game has ended.`);
@@ -133,13 +134,13 @@ export abstract class GameWrapper {
     public onUserClick: (elementName: string) => MGPValidation = (_elementName: string) => {
         // TODO: Not the same logic to use in Online and Local, make abstract
         if (this.observerRole === Player.NONE.value) {
-            const message: string = GameWrapperMessages.NO_CLONING_FEATURE;
+            const message: string = GameWrapperMessages.NO_CLONING_FEATURE();
             return MGPValidation.failure(message);
         }
         if (this.isPlayerTurn()) {
             return MGPValidation.SUCCESS;
         } else {
-            return MGPValidation.failure(GameWrapperMessages.NOT_YOUR_TURN);
+            return MGPValidation.failure(GameWrapperMessages.NOT_YOUR_TURN());
         }
     }
     public onCancelMove(): void {

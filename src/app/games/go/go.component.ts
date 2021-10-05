@@ -12,7 +12,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GroupDatas } from 'src/app/jscaip/BoardDatas';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { goTutorial } from './GoTutorial';
+import { GoTutorial } from './GoTutorial';
 
 @Component({
     selector: 'app-go',
@@ -42,7 +42,7 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
             new GoMinimax(this.rules, 'GoMinimax'),
         ];
         this.encoder = GoMove.encoder;
-        this.tutorial = goTutorial;
+        this.tutorial = new GoTutorial().tutorial;
         this.canPass = true;
         this.showScore = true;
         this.updateBoard();
@@ -100,8 +100,7 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
         if (phase === Phase.COUNTING || phase === Phase.ACCEPT) {
             return this.onClick(GoMove.ACCEPT.coord.x, GoMove.ACCEPT.coord.y);
         } else {
-            this.message(RulesFailure.CANNOT_PASS);
-            return MGPValidation.failure(RulesFailure.CANNOT_PASS);
+            return this.cancelMove(RulesFailure.CANNOT_PASS());
         }
     }
     public getCaseClass(x: number, y: number): string {

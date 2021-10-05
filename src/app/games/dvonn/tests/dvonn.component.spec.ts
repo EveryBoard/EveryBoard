@@ -48,7 +48,7 @@ describe('DvonnComponent', () => {
     }));
     it('should forbid choosing an incorrect piece', fakeAsync(async() => {
         // select black piece (but white plays first)
-        await componentTestUtils.expectClickFailure('#click_1_1', DvonnFailure.NOT_PLAYER_PIECE);
+        await componentTestUtils.expectClickFailure('#click_1_1', DvonnFailure.NOT_PLAYER_PIECE());
     }));
     it('should show disconnection/captures precisely', fakeAsync(async() => {
         // given board with ready disconnection

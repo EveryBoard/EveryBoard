@@ -37,10 +37,10 @@ describe('EpaminondasComponent', () => {
         expect(componentTestUtils.getComponent()).withContext('EpaminondasComponent should be created').toBeTruthy();
     });
     it('Should cancelMove when clicking on empty case at first', fakeAsync(async() => {
-        await componentTestUtils.expectClickFailure('#click_5_5', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY);
+        await componentTestUtils.expectClickFailure('#click_5_5', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
     }));
     it('Should not accept ennemy click as a move first click', fakeAsync(async() => {
-        await componentTestUtils.expectClickFailure('#click_0_0', RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
+        await componentTestUtils.expectClickFailure('#click_0_0', RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
     }));
     it('Should show possible next click (after first click)', fakeAsync(async() => {
         const initialBoard: Table<Player> = [
@@ -69,7 +69,7 @@ describe('EpaminondasComponent', () => {
     }));
     it('Should cancel move when clicking on non aligned pice', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_0_11');
-        await componentTestUtils.expectClickFailure('#click_2_10', EpaminondasFailure.CASE_NOT_ALIGNED_WITH_SELECTED);
+        await componentTestUtils.expectClickFailure('#click_2_10', EpaminondasFailure.CASE_NOT_ALIGNED_WITH_SELECTED());
     }));
     it('Should move firstPiece one step when clicking next to it without lastPiece selected', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_0_10');
@@ -78,7 +78,7 @@ describe('EpaminondasComponent', () => {
     }));
     it('Should not move single piece two step', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_0_10');
-        await componentTestUtils.expectClickFailure('#click_0_8', EpaminondasFailure.SINGLE_PIECE_MUST_MOVE_BY_ONE);
+        await componentTestUtils.expectClickFailure('#click_0_8', EpaminondasFailure.SINGLE_PIECE_MUST_MOVE_BY_ONE());
     }));
     it('Should not allow single piece to capture', fakeAsync(async() => {
         const initialBoard: Table<Player> = [
@@ -99,7 +99,7 @@ describe('EpaminondasComponent', () => {
         componentTestUtils.setupState(initialState);
 
         await componentTestUtils.expectClickSuccess('#click_0_9');
-        await componentTestUtils.expectClickFailure('#click_0_8', EpaminondasFailure.SINGLE_PIECE_CANNOT_CAPTURE);
+        await componentTestUtils.expectClickFailure('#click_0_8', EpaminondasFailure.SINGLE_PIECE_CANNOT_CAPTURE());
     }));
     it('Should deselect first piece when clicked (and no last piece exist)', fakeAsync(async() => {
         const initialBoard: Table<Player> = [
@@ -145,7 +145,8 @@ describe('EpaminondasComponent', () => {
         componentTestUtils.setupState(initialState);
 
         await componentTestUtils.expectClickSuccess('#click_0_11');
-        await componentTestUtils.expectClickFailure('#click_0_9', EpaminondasFailure.PHALANX_CANNOT_CONTAIN_EMPTY_CASE);
+        await componentTestUtils.expectClickFailure('#click_0_9',
+                                                    EpaminondasFailure.PHALANX_CANNOT_CONTAIN_EMPTY_CASE());
     }));
     it('Should select all soldier between first selected and new click, and show valid extension and capture both way', fakeAsync(async() => {
         const initialBoard: Table<Player> = [
@@ -327,7 +328,7 @@ describe('EpaminondasComponent', () => {
         await componentTestUtils.expectClickSuccess('#click_0_11');
         await componentTestUtils.expectClickSuccess('#click_0_9');
 
-        await componentTestUtils.expectClickFailure('#click_1_7', EpaminondasFailure.CASE_NOT_ALIGNED_WITH_PHALANX);
+        await componentTestUtils.expectClickFailure('#click_1_7', EpaminondasFailure.CASE_NOT_ALIGNED_WITH_PHALANX());
     }));
     it('Should cancelMove when third click is not aligned with phalanx direction', fakeAsync(async() => {
         const initialBoard: Table<Player> = [
@@ -350,7 +351,7 @@ describe('EpaminondasComponent', () => {
         await componentTestUtils.expectClickSuccess('#click_0_11');
         await componentTestUtils.expectClickSuccess('#click_0_9');
 
-        await componentTestUtils.expectClickFailure('#click_2_9', EpaminondasFailure.CASE_NOT_ALIGNED_WITH_PHALANX);
+        await componentTestUtils.expectClickFailure('#click_2_9', EpaminondasFailure.CASE_NOT_ALIGNED_WITH_PHALANX());
     }));
     it('Should cancelMove when third click is an invalid extension', fakeAsync(async() => {
         const initialBoard: Table<Player> = [
@@ -373,7 +374,7 @@ describe('EpaminondasComponent', () => {
         await componentTestUtils.expectClickSuccess('#click_0_11');
         await componentTestUtils.expectClickSuccess('#click_0_9');
 
-        await componentTestUtils.expectClickFailure('#click_0_7', EpaminondasFailure.PHALANX_CANNOT_CONTAIN_ENEMY_PIECE);
+        await componentTestUtils.expectClickFailure('#click_0_7', EpaminondasFailure.PHALANX_CANNOT_CONTAIN_ENEMY_PIECE());
     }));
     it('Should change first soldier coord when last click was a phalanx extension in the opposite direction of the phalanx', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_1_10');

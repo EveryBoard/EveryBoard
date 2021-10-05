@@ -11,7 +11,7 @@ import { PylosOrderedMinimax } from './PylosOrderedMinimax';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PylosFailure } from './PylosFailure';
-import { pylosTutorial } from './PylosTutorial';
+import { PylosTutorial } from './PylosTutorial';
 
 @Component({
     selector: 'app-pylos',
@@ -46,7 +46,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
             new PylosOrderedMinimax(this.rules, 'PylosOrderedMinimax'),
         ];
         this.encoder = PylosMove.encoder;
-        this.tutorial = pylosTutorial;
+        this.tutorial = new PylosTutorial().tutorial;
         this.CASE_SIZE = this.getPieceRay(0);
         this.updateBoard();
     }
@@ -74,7 +74,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         const clickedPiece: Player = this.state.getBoardAt(clickedCoord);
         const pieceBelongToEnnemy: boolean = clickedPiece === this.state.getCurrentEnnemy();
         if (pieceBelongToEnnemy) {
-            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
+            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
         }
         if (this.chosenLandingCoord == null) {
             // Starting do describe a climbing move
@@ -123,7 +123,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
                 this.chosenLandingCoord = clickedCoord;
                 return this.concludeMoveWithCapture([]);
             } else {
-                return this.cancelMove(PylosFailure.MUST_MOVE_UPWARD);
+                return this.cancelMove(PylosFailure.MUST_MOVE_UPWARD());
             }
         }
     }

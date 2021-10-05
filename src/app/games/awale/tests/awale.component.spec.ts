@@ -41,7 +41,7 @@ describe('AwaleComponent', () => {
 
         const move: AwaleMove = AwaleMove.ZERO;
         await componentTestUtils.expectMoveFailure('#click_0_0',
-                                                   AwaleFailure.MUST_CHOOSE_NONEMPTY_HOUSE,
+                                                   AwaleFailure.MUST_CHOOSE_NONEMPTY_HOUSE(),
                                                    move, undefined, 0, 0);
     }));
 });

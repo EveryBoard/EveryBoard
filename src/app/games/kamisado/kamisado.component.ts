@@ -12,7 +12,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { kamisadoTutorial } from './KamisadoTutorial';
+import { KamisadoTutorial } from './KamisadoTutorial';
 
 @Component({
     selector: 'app-kamisado',
@@ -37,7 +37,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
             new KamisadoMinimax(this.rules, 'KamisadoMinimax'),
         ];
         this.encoder = KamisadoMove.encoder;
-        this.tutorial = kamisadoTutorial;
+        this.tutorial = new KamisadoTutorial().tutorial;
         this.canPass = false;
         this.updateBoard();
     }
@@ -71,7 +71,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
         if (this.canPass) {
             return this.chooseMove(KamisadoMove.PASS, this.rules.node.gameState, null, null);
         } else {
-            return this.cancelMove(RulesFailure.CANNOT_PASS);
+            return this.cancelMove(RulesFailure.CANNOT_PASS());
         }
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
@@ -80,7 +80,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
             return this.cancelMove(clickValidity.getReason());
         }
         if (this.canPass) {
-            return this.cancelMove(RulesFailure.MUST_PASS);
+            return this.cancelMove(RulesFailure.MUST_PASS());
         }
         if (this.chosen.x === -1) {
             return this.choosePiece(x, y);
@@ -94,7 +94,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
             if (piece.belongsTo(player)) {
                 // Player clicked on another of its pieces, select it if he can
                 if (this.chosenAutomatically) {
-                    return this.cancelMove(KamisadoFailure.PLAY_WITH_SELECTED_PIECE);
+                    return this.cancelMove(KamisadoFailure.PLAY_WITH_SELECTED_PIECE());
                 } else {
                     this.chosen = new Coord(x, y);
                     return MGPValidation.SUCCESS;
@@ -111,7 +111,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
         const piece: KamisadoPiece = this.rules.node.gameState.getBoardByXY(x, y);
         const ennemy: Player = this.rules.node.gameState.getCurrentEnnemy();
         if (piece.belongsTo(ennemy)) {
-            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
+            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
         }
         this.chosen = new Coord(x, y);
         return MGPValidation.SUCCESS;

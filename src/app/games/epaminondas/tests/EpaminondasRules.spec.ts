@@ -49,7 +49,7 @@ describe('EpaminondasRules:', () => {
         const move: EpaminondasMove = new EpaminondasMove(0, 11, 1, 1, Direction.DOWN);
         const status: EpaminondasLegalityStatus = rules.isLegal(move, state);
         expect(status.legal.getReason())
-            .toBe(EpaminondasFailure.PHALANX_IS_LEAVING_BOARD);
+            .toBe(EpaminondasFailure.PHALANX_IS_LEAVING_BOARD());
     });
     it('Should forbid phalanx to go outside the board (head)', () => {
         const board: Table<Player> = [
@@ -70,7 +70,7 @@ describe('EpaminondasRules:', () => {
         const move: EpaminondasMove = new EpaminondasMove(1, 11, 2, 2, Direction.UP_LEFT);
         const status: EpaminondasLegalityStatus = rules.isLegal(move, state);
         expect(status.legal.getReason())
-            .toBe(EpaminondasFailure.PHALANX_IS_LEAVING_BOARD);
+            .toBe(EpaminondasFailure.PHALANX_IS_LEAVING_BOARD());
     });
     it('Should forbid invalid phalanx (phalanx containing coord outside the board)', () => {
         const board: Table<Player> = [
@@ -90,7 +90,7 @@ describe('EpaminondasRules:', () => {
         const state: EpaminondasState = new EpaminondasState(board, 0);
         const move: EpaminondasMove = new EpaminondasMove(0, 11, 2, 1, Direction.DOWN);
         const status: EpaminondasLegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.getReason()).toBe(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_PIECES_OUTSIDE_BOARD);
+        expect(status.legal.getReason()).toBe(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_PIECES_OUTSIDE_BOARD());
     });
     it('Should forbid phalanx to pass through other pieces', () => {
         const board: Table<Player> = [
@@ -110,7 +110,7 @@ describe('EpaminondasRules:', () => {
         const state: EpaminondasState = new EpaminondasState(board, 0);
         const move: EpaminondasMove = new EpaminondasMove(0, 11, 3, 3, Direction.UP);
         const status: EpaminondasLegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.getReason()).toBe(EpaminondasFailure.SOMETHING_IN_PHALANX_WAY);
+        expect(status.legal.getReason()).toBe(EpaminondasFailure.SOMETHING_IN_PHALANX_WAY());
     });
     it('Should forbid to capture greater phalanx', () => {
         const board: Table<Player> = [
@@ -130,7 +130,7 @@ describe('EpaminondasRules:', () => {
         const state: EpaminondasState = new EpaminondasState(board, 0);
         const move: EpaminondasMove = new EpaminondasMove(0, 10, 1, 1, Direction.UP);
         const status: EpaminondasLegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.getReason()).toBe(EpaminondasFailure.PHALANX_SHOULD_BE_GREATER_TO_CAPTURE);
+        expect(status.legal.getReason()).toBe(EpaminondasFailure.PHALANX_SHOULD_BE_GREATER_TO_CAPTURE());
     });
     it('Should forbid to capture same sized phalanx', () => {
         const board: Table<Player> = [
@@ -150,7 +150,7 @@ describe('EpaminondasRules:', () => {
         const state: EpaminondasState = new EpaminondasState(board, 0);
         const move: EpaminondasMove = new EpaminondasMove(0, 11, 2, 2, Direction.UP);
         const status: EpaminondasLegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.getReason()).toBe(EpaminondasFailure.PHALANX_SHOULD_BE_GREATER_TO_CAPTURE);
+        expect(status.legal.getReason()).toBe(EpaminondasFailure.PHALANX_SHOULD_BE_GREATER_TO_CAPTURE());
     });
     it('Should forbid to capture your own pieces phalanx', () => {
         const board: Table<Player> = [
@@ -170,7 +170,7 @@ describe('EpaminondasRules:', () => {
         const state: EpaminondasState = new EpaminondasState(board, 0);
         const move: EpaminondasMove = new EpaminondasMove(0, 11, 2, 2, Direction.UP);
         const status: EpaminondasLegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.getReason()).toBe(RulesFailure.CANNOT_SELF_CAPTURE);
+        expect(status.legal.getReason()).toBe(RulesFailure.CANNOT_SELF_CAPTURE());
     });
     it('Should forbid moving ennemy pieces', () => {
         const board: Table<Player> = [
@@ -190,7 +190,7 @@ describe('EpaminondasRules:', () => {
         const state: EpaminondasState = new EpaminondasState(board, 1);
         const move: EpaminondasMove = new EpaminondasMove(0, 10, 1, 1, Direction.UP);
         const status: EpaminondasLegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.getReason()).toBe(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_ENEMY_PIECE);
+        expect(status.legal.getReason()).toBe(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_ENEMY_PIECE());
     });
     it('Should allow legal move', () => {
         const board: Table<Player> = [

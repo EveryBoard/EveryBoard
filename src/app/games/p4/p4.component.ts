@@ -8,7 +8,7 @@ import { P4Move } from 'src/app/games/p4/P4Move';
 import { Player } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
-import { p4Tutorial } from './P4Tutorial';
+import { P4Tutorial } from './P4Tutorial';
 
 @Component({
     selector: 'app-p4',
@@ -30,7 +30,7 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
             new P4Minimax(this.rules, 'P4Minimax'),
         ];
         this.encoder = P4Move.encoder;
-        this.tutorial = p4Tutorial;
+        this.tutorial = new P4Tutorial().tutorial;
         this.updateBoard();
     }
     public async onClick(x: number): Promise<MGPValidation> {

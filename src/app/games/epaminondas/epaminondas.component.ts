@@ -14,7 +14,7 @@ import { AttackEpaminondasMinimax } from './AttackEpaminondasMinimax';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { EpaminondasFailure } from './EpaminondasFailure';
-import { epaminondasTutorial } from './EpaminondasTutorial';
+import { EpaminondasTutorial } from './EpaminondasTutorial';
 
 @Component({
     selector: 'app-epaminondas',
@@ -54,7 +54,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
             new AttackEpaminondasMinimax(this.rules, 'Attack'),
         ];
         this.encoder = EpaminondasMove.encoder;
-        this.tutorial = epaminondasTutorial;
+        this.tutorial = new EpaminondasTutorial().tutorial;
         this.updateBoard();
     }
     public updateBoard(): void {
@@ -105,9 +105,9 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
                 this.phalanxValidLandings = this.getPhalanxValidLandings();
                 break;
             case ENNEMY:
-                return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
+                return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
             case Player.NONE:
-                return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY);
+                return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }
     }
     private hidePreviousMove() {
@@ -227,7 +227,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         const ENNEMY: Player = this.rules.node.gameState.getCurrentEnnemy();
         const PLAYER: Player = this.rules.node.gameState.getCurrentPlayer();
         if (!clicked.isAlignedWith(this.firstPiece)) {
-            return this.cancelMove(EpaminondasFailure.CASE_NOT_ALIGNED_WITH_SELECTED);
+            return this.cancelMove(EpaminondasFailure.CASE_NOT_ALIGNED_WITH_SELECTED());
         }
         const distance: number = clicked.getDistance(this.firstPiece);
         const direction: Direction = this.firstPiece.getDirectionToward(clicked).get();
@@ -236,10 +236,10 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
                 if (distance === 1) {
                     return this.tryMove(new EpaminondasMove(this.firstPiece.x, this.firstPiece.y, 1, 1, direction));
                 } else {
-                    return this.cancelMove(EpaminondasFailure.SINGLE_PIECE_MUST_MOVE_BY_ONE);
+                    return this.cancelMove(EpaminondasFailure.SINGLE_PIECE_MUST_MOVE_BY_ONE());
                 }
             case ENNEMY:
-                return this.cancelMove(EpaminondasFailure.SINGLE_PIECE_CANNOT_CAPTURE);
+                return this.cancelMove(EpaminondasFailure.SINGLE_PIECE_CANNOT_CAPTURE());
             case PLAYER:
                 const incompleteMove: EpaminondasMove = new EpaminondasMove(this.firstPiece.x,
                                                                             this.firstPiece.y,
@@ -270,7 +270,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
             return this.moveLastPiece(PLAYER);
         }
         if (!clicked.isAlignedWith(this.firstPiece)) {
-            return this.cancelMove(EpaminondasFailure.CASE_NOT_ALIGNED_WITH_PHALANX);
+            return this.cancelMove(EpaminondasFailure.CASE_NOT_ALIGNED_WITH_PHALANX());
         }
         // The directions are valid because they are is aligned
         let phalanxDirection: Direction = Direction.factory.fromMove(this.firstPiece, this.lastPiece).get();
@@ -282,7 +282,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
             phalanxDirection = phalanxLanding;
         }
         if (phalanxDirection !== phalanxLanding) {
-            return this.cancelMove(EpaminondasFailure.CASE_NOT_ALIGNED_WITH_PHALANX);
+            return this.cancelMove(EpaminondasFailure.CASE_NOT_ALIGNED_WITH_PHALANX());
         }
         if (this.board[y][x] === PLAYER) {
             this.lastPiece = clicked;

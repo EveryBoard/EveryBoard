@@ -12,7 +12,7 @@ import { PentagoMove } from './PentagoMove';
 import { PentagoRules } from './PentagoRules';
 import { PentagoState } from './PentagoState';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
-import { pentagoTutorial } from './PentagoTutorial';
+import { PentagoTutorial } from './PentagoTutorial';
 
 @Component({
     selector: 'app-pentago',
@@ -46,7 +46,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
             new PentagoMinimax(this.rules, 'PentagoMinimax'),
         ];
         this.encoder = PentagoMove.encoder;
-        this.tutorial = pentagoTutorial;
+        this.tutorial = new PentagoTutorial().tutorial;
         this.BLOCK_WIDTH = (3 * this.CASE_SIZE) + (2 * this.STROKE_WIDTH);
         this.BLOCK_SEPARATION = (this.BLOCK_WIDTH + 2 * this.STROKE_WIDTH);
         this.DIAGONAL_BAR_OFFSET = Math.cos(Math.PI / 4) * 0.75 * this.CASE_SIZE;

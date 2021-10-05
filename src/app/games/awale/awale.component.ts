@@ -9,7 +9,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { AwaleFailure } from './AwaleFailure';
-import { awaleTutorial } from './AwaleTutorial';
+import { AwaleTutorial } from './AwaleTutorial';
 
 @Component({
     selector: 'app-awale-component',
@@ -37,7 +37,7 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
             new AwaleMinimax(this.rules, 'AwaleMinimax'),
         ];
         this.encoder = AwaleMove.encoder;
-        this.tutorial = awaleTutorial;
+        this.tutorial = new AwaleTutorial().tutorial;
         this.showScore = true;
 
         this.updateBoard();
@@ -84,7 +84,7 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
             return this.cancelMove(clickValidity.getReason());
         }
         if (y !== this.rules.node.gameState.getCurrentPlayer().value) {
-            return this.cancelMove(AwaleFailure.CANNOT_DISTRIBUTE_FROM_ENEMY_HOME);
+            return this.cancelMove(AwaleFailure.CANNOT_DISTRIBUTE_FROM_ENEMY_HOME());
         }
         this.last = new Coord(-1, -1); // now the user stop try to do a move
         // we stop showing him the last move

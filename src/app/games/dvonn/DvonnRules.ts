@@ -74,20 +74,20 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
     }
     public isMovablePiece(state: DvonnState, coord: Coord): MGPValidation {
         if (!state.isOnBoard(coord)) {
-            return MGPValidation.failure(DvonnFailure.INVALID_COORD);
+            return MGPValidation.failure(DvonnFailure.INVALID_COORD());
         }
         const stack: DvonnPieceStack = state.getBoardAt(coord);
         if (stack.getSize() < 1) {
-            return MGPValidation.failure(DvonnFailure.EMPTY_STACK);
+            return MGPValidation.failure(DvonnFailure.EMPTY_STACK());
         }
         if (!stack.belongsTo(state.getCurrentPlayer())) {
-            return MGPValidation.failure(DvonnFailure.NOT_PLAYER_PIECE);
+            return MGPValidation.failure(DvonnFailure.NOT_PLAYER_PIECE());
         }
         if (state.numberOfNeighbors(coord) >= 6) {
-            return MGPValidation.failure(DvonnFailure.TOO_MANY_NEIGHBORS);
+            return MGPValidation.failure(DvonnFailure.TOO_MANY_NEIGHBORS());
         }
         if (!DvonnRules.pieceHasTarget(state, coord)) {
-            return MGPValidation.failure(DvonnFailure.CANT_REACH_TARGET);
+            return MGPValidation.failure(DvonnFailure.CANT_REACH_TARGET());
         }
         return MGPValidation.SUCCESS;
     }
@@ -127,7 +127,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
     }
     public applyLegalMove(move: DvonnMove,
                           state: DvonnState,
-                          status: LegalityStatus)
+                          _status: LegalityStatus)
     : DvonnState
     {
         if (move === DvonnMove.PASS) {
@@ -152,7 +152,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
             if (move === DvonnMove.PASS && !state.alreadyPassed) {
                 return { legal: MGPValidation.SUCCESS };
             } else {
-                return { legal: MGPValidation.failure(RulesFailure.MUST_PASS) };
+                return { legal: MGPValidation.failure(RulesFailure.MUST_PASS()) };
             }
         }
 
@@ -163,12 +163,12 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
 
         const stack: DvonnPieceStack = state.getBoardAt(move.coord);
         if (move.length() !== stack.getSize()) {
-            return { legal: MGPValidation.failure(DvonnFailure.INVALID_MOVE_LENGTH) };
+            return { legal: MGPValidation.failure(DvonnFailure.INVALID_MOVE_LENGTH()) };
         }
 
         const targetStack: DvonnPieceStack = state.getBoardAt(move.end);
         if (targetStack.isEmpty()) {
-            return { legal: MGPValidation.failure(DvonnFailure.EMPTY_TARGET_STACK) };
+            return { legal: MGPValidation.failure(DvonnFailure.EMPTY_TARGET_STACK()) };
         }
         return { legal: MGPValidation.SUCCESS };
     }

@@ -1,7 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { RectangularGameState } from 'src/app/jscaip/RectangularGameState';
 import { Player } from 'src/app/jscaip/Player';
-import { assert } from 'src/app/utils/utils';
 
 export class LinesOfActionState extends RectangularGameState<Player> {
 
@@ -25,9 +24,5 @@ export class LinesOfActionState extends RectangularGameState<Player> {
     }
     public static isOnBoard(c: Coord): boolean {
         return c.isInRange(LinesOfActionState.SIZE, LinesOfActionState.SIZE);
-    }
-    public getAt(c: Coord): number {
-        assert(LinesOfActionState.isOnBoard(c), 'Accessing coordinate outside of the board');
-        return this.board[c.y][c.x].value;
     }
 }

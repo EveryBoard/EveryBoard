@@ -20,7 +20,7 @@ describe('CoerceoMove', () => {
         });
         it('Should not create move of invalid distance', () => {
             expect(() => CoerceoMove.fromCoordToCoord(new Coord(2, 2), new Coord(9, 9)))
-                .toThrowError(CoerceoFailure.INVALID_DISTANCE);
+                .toThrowError(CoerceoFailure.INVALID_DISTANCE());
         });
         it('Should not allow out of range starting coord', () => {
             expect(() => CoerceoMove.fromDeplacement(new Coord(-1, 0), CoerceoStep.LEFT))
@@ -42,12 +42,12 @@ describe('CoerceoMove', () => {
             const a: Coord = new Coord(0, 0);
             const b: Coord = new Coord(2, 0);
             const c: Coord = new Coord(4, 0);
-            const d: Coord = new Coord(6, 0);
+            const d: Coord = new Coord(1, 1);
             const tileExchange: CoerceoMove = CoerceoMove.fromTilesExchange(a);
             const differentCapture: CoerceoMove = CoerceoMove.fromTilesExchange(b);
             const deplacement: CoerceoMove = CoerceoMove.fromCoordToCoord(a, b);
             const differentStart: CoerceoMove = CoerceoMove.fromCoordToCoord(c, b);
-            const differentEnd: CoerceoMove = CoerceoMove.fromCoordToCoord(c, d);
+            const differentEnd: CoerceoMove = CoerceoMove.fromCoordToCoord(a, d);
 
             expect(tileExchange.equals(null)).toBeFalse();
             expect(tileExchange.equals(differentCapture)).toBeFalse();
@@ -66,13 +66,19 @@ describe('CoerceoMove', () => {
             expect(tileExchange.toString()).toBe('CoerceoMove((5, 5))');
             expect(deplacement.toString()).toBe('CoerceoMove((5, 5) > RIGHT > (7, 5))');
         });
-        it('CoerceoMove.encoder should be correct', () => {
-            const rules: CoerceoRules = new CoerceoRules(CoerceoState);
-            const minimax: CoerceoMinimax = new CoerceoMinimax(rules, 'CoerceoMinimax');
-            const moves: CoerceoMove[] = minimax.getListMoves(rules.node);
-            for (const move of moves) {
+        describe('encoder', () => {
+            it('should be correct with first turn moves', () => {
+                const rules: CoerceoRules = new CoerceoRules(CoerceoState);
+                const minimax: CoerceoMinimax = new CoerceoMinimax(rules, 'CoerceoMinimax');
+                const moves: CoerceoMove[] = minimax.getListMoves(rules.node);
+                for (const move of moves) {
+                    NumberEncoderTestUtils.expectToBeCorrect(CoerceoMove.encoder, move);
+                }
+            });
+            it('should be correct with tiles exchanges', () => {
+                const move: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(5, 7));
                 NumberEncoderTestUtils.expectToBeCorrect(CoerceoMove.encoder, move);
-            }
+            });
         });
     });
 });

@@ -218,7 +218,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityStatus> {
         const linePortionOpt: MGPOptional<{ 0: Coord, 1: Coord, 2: HexaDirection}> =
             GipfRules.getLinePortionWithFourPiecesOfPlayer(state, player, capture.getLine());
         if (linePortionOpt.isAbsent()) {
-            return MGPValidation.failure(GipfFailure.CAPTURE_MUST_BE_ALIGNED);
+            return MGPValidation.failure(GipfFailure.CAPTURE_MUST_BE_ALIGNED());
         }
 
         const linePortion: { 0: Coord, 1: Coord, 2: HexaDirection} = linePortionOpt.get();
@@ -227,7 +227,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityStatus> {
         if (capturable.equals(capture)) {
             return MGPValidation.SUCCESS;
         } else {
-            return MGPValidation.failure(GipfFailure.INVALID_CAPTURED_PIECES);
+            return MGPValidation.failure(GipfFailure.INVALID_CAPTURED_PIECES());
         }
     }
     public static getLinePortionsWithFourPiecesOfPlayer(state: GipfState, player: Player):
@@ -271,7 +271,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityStatus> {
         if (linePortions.length === 0) {
             return MGPValidation.SUCCESS;
         } else {
-            return MGPValidation.failure(GipfFailure.MISSING_CAPTURES);
+            return MGPValidation.failure(GipfFailure.MISSING_CAPTURES());
         }
     }
     public placementValidity(state: GipfState, placement: GipfPlacement): MGPValidation {
@@ -281,17 +281,17 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityStatus> {
         }
         if (state.getBoardAt(placement.coord) !== FourStatePiece.EMPTY) {
             if (placement.direction.isAbsent()) {
-                return MGPValidation.failure(GipfFailure.PLACEMENT_WITHOUT_DIRECTION);
+                return MGPValidation.failure(GipfFailure.PLACEMENT_WITHOUT_DIRECTION());
             }
             if (GipfRules.isLineComplete(state, placement.coord, placement.direction.get())) {
-                return MGPValidation.failure(GipfFailure.PLACEMENT_ON_COMPLETE_LINE);
+                return MGPValidation.failure(GipfFailure.PLACEMENT_ON_COMPLETE_LINE());
             }
             for (const dir of GipfRules.getAllDirectionsForEntrance(state, placement.coord)) {
                 if (dir === placement.direction.get()) {
                     return MGPValidation.SUCCESS;
                 }
             }
-            return MGPValidation.failure(GipfFailure.INVALID_PLACEMENT_DIRECTION);
+            return MGPValidation.failure(GipfFailure.INVALID_PLACEMENT_DIRECTION());
         }
         return MGPValidation.SUCCESS;
     }
@@ -299,7 +299,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityStatus> {
         if (FlatHexaOrientation.INSTANCE.isOnBorder(state, coord)) {
             return MGPValidation.SUCCESS;
         } else {
-            return MGPValidation.failure(GipfFailure.PLACEMENT_NOT_ON_BORDER);
+            return MGPValidation.failure(GipfFailure.PLACEMENT_NOT_ON_BORDER());
         }
     }
     public static getCapturable(state: GipfState,
@@ -313,7 +313,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityStatus> {
         const dir: HexaDirection = linePortion[2];
         const oppositeDir: HexaDirection = dir.getOpposite();
         for (let cur: Coord = start.getNext(oppositeDir);
-            state.isOnBoard(cur) && state.getBoardAt(cur) !== FourStatePiece.EMPTY; // TODOTODO: monofunctionnise
+            state.getNullable(cur) !== FourStatePiece.EMPTY;
             cur = cur.getNext(oppositeDir))
         {
             // Go backwards to identify capturable pieces before the 4 aligned pieces

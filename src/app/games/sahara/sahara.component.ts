@@ -13,7 +13,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { SaharaFailure } from './SaharaFailure';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { saharaTutorial } from './SaharaTutorial';
+import { SaharaTutorial } from './SaharaTutorial';
 
 @Component({
     selector: 'app-sahara',
@@ -40,7 +40,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
             new SaharaMinimax(this.rules, 'SaharaMinimax'),
         ];
         this.encoder = SaharaMove.encoder;
-        this.tutorial = saharaTutorial;
+        this.tutorial = new SaharaTutorial().tutorial;
         this.updateBoard();
     }
     public cancelMoveAttempt(): void {
@@ -73,12 +73,12 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
     }
     private choosePiece(x: number, y: number): MGPValidation {
         if (this.board[y][x] === FourStatePiece.EMPTY) { // Did not select pyramid
-            return this.cancelMove(SaharaFailure.MUST_CHOOSE_PYRAMID_FIRST);
-        } else if (this.getTurn() % 2 === this.board[y][x].value) { // selected his own pyramid
+            return this.cancelMove(SaharaFailure.MUST_CHOOSE_PYRAMID_FIRST());
+        } else if (this.board[y][x].value === this.getTurn() % 2) { // selected his own pyramid
             this.chosenCoord = MGPOptional.of(new Coord(x, y));
             return MGPValidation.SUCCESS;
         } else { // Selected ennemy pyramid
-            return this.cancelMove(SaharaFailure.MUST_CHOOSE_OWN_PYRAMID);
+            return this.cancelMove(SaharaFailure.MUST_CHOOSE_OWN_PYRAMID());
         }
     }
     public updateBoard(): void {

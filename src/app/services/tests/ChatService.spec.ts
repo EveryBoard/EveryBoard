@@ -138,10 +138,10 @@ describe('ChatService', () => {
     });
     describe('sendMessage', () => {
         it('should not send message if the user is not allowed to send a message in the chat', fakeAsync(async() => {
-            await expectAsync(service.sendMessage(null, 2, 'foo')).toBeResolvedTo(MGPValidation.failure(ChatMessages.CANNOT_SEND_MESSAGE));
+            await expectAsync(service.sendMessage(null, 2, 'foo')).toBeResolvedTo(MGPValidation.failure(ChatMessages.CANNOT_SEND_MESSAGE()));
         }));
         it('should not send message if it is empty', fakeAsync(async() => {
-            await expectAsync(service.sendMessage('sender', 2, '')).toBeResolvedTo(MGPValidation.failure(ChatMessages.FORBIDDEN_MESSAGE));
+            await expectAsync(service.sendMessage('sender', 2, '')).toBeResolvedTo(MGPValidation.failure(ChatMessages.FORBIDDEN_MESSAGE()));
         }));
         it('should update the chat with the new message in the DAO', fakeAsync(async() => {
             spyOn(Date, 'now').and.returnValue(42);

@@ -50,7 +50,7 @@ export class DvonnState extends HexagonalGameState<DvonnPieceStack> {
         for (let y: number = 0; y < DvonnState.HEIGHT; y++) {
             for (let x: number = 0; x < DvonnState.WIDTH; x++) {
                 const coord: Coord = new Coord(x, y);
-                if (this.isOnBoard(coord) && this.getBoardAt(coord).isEmpty() === false) { // TODOTODO: monofunctionise
+                if (this.isOnBoard(coord) && this.getBoardAt(coord).isEmpty() === false) {
                     pieces.push(coord);
                 }
             }

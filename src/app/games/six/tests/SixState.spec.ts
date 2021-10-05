@@ -5,7 +5,7 @@ import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { SixMove } from '../SixMove';
-import { SixState } from '../SixGameState';
+import { SixState } from '../SixState';
 
 describe('SixGameState', () => {
 

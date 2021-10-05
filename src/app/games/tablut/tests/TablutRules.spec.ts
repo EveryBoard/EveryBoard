@@ -30,7 +30,7 @@ describe('TablutRules', () => {
     });
     it('Should be created', () => {
         expect(rules).toBeTruthy();
-        expect(rules.node.gameState.turn).toBe(0, 'Game should start a turn 0');
+        expect(rules.node.gameState.turn).withContext('Game should start a turn 0').toBe(0);
     });
     describe('getSurroundings', () => {
         it('Should return neighboorings cases', () => {
@@ -343,7 +343,7 @@ describe('TablutRules', () => {
         const state: TablutState = new TablutState(board, 1);
         const move: TablutMove = new TablutMove(new Coord(0, 4), new Coord(4, 4));
         const status: TablutLegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.getReason()).toBe(TablutFailure.SOLDIERS_CANNOT_SIT_ON_THRONE);
+        expect(status.legal.getReason()).toBe(TablutFailure.SOLDIERS_CANNOT_SIT_ON_THRONE());
     });
     it('Should consider invader winner when all defender are immobilized', () => {
         const board: Table<TablutCase> = [

@@ -95,7 +95,7 @@ describe('GameComponent', () => {
             Tablut: { onClick: [0, 0] },
             Yinsh: { onClick: [0, 0] },
         };
-        const refusal: MGPValidation = MGPValidation.failure(GameWrapperMessages.NO_CLONING_FEATURE);
+        const refusal: MGPValidation = MGPValidation.failure(GameWrapperMessages.NO_CLONING_FEATURE());
 
         for (const gameName of gameList) {
             const game: { [methodName: string]: unknown[] } = clickableMethods[gameName];
@@ -117,7 +117,7 @@ describe('GameComponent', () => {
         tick(1000);
     }));
     it('Component should have an encoder and a tutorial', fakeAsync(async() =>{
-        for (const gameInfo of GameInfo.ALL_GAMES) {
+        for (const gameInfo of GameInfo.ALL_GAMES()) {
             if (gameInfo.display === false) {
                 continue;
             }

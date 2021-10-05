@@ -11,7 +11,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Player } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
-import { quixoTutorial } from './QuixoTutorial';
+import { QuixoTutorial } from './QuixoTutorial';
 
 @Component({
     selector: 'app-quixo',
@@ -39,7 +39,7 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
             new QuixoMinimax(this.rules, 'QuixoMinimax'),
         ];
         this.encoder = QuixoMove.encoder;
-        this.tutorial = quixoTutorial;
+        this.tutorial = new QuixoTutorial().tutorial;
         this.updateBoard();
     }
     public updateBoard(): void {
@@ -75,7 +75,7 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
             return this.cancelMove(coordLegality.reason);
         }
         if (this.board[y][x] === this.state.getCurrentEnnemy()) {
-            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
+            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
         } else {
             this.chosenCoord = clickedCoord;
             return MGPValidation.SUCCESS;

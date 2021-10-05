@@ -67,7 +67,7 @@ describe('AbaloneRules', () => {
         const status: AbaloneLegalityStatus = rules.isLegal(move, state);
 
         // Then the movement should be refused
-        expect(status.legal.reason).toBe(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
+        expect(status.legal.reason).toBe(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
     });
     it('should refuse move starting by empty case', () => {
         // Given an initial board (for simplicity)
@@ -78,7 +78,7 @@ describe('AbaloneRules', () => {
         const status: AbaloneLegalityStatus = rules.isLegal(move, state);
 
         // Then the movement should be refused
-        expect(status.legal.reason).toBe(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY);
+        expect(status.legal.reason).toBe(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
     });
     it('should move group of piece in provided direction', () => {
         // Given an initial board (for simplicity)
@@ -125,7 +125,7 @@ describe('AbaloneRules', () => {
         const status: AbaloneLegalityStatus = rules.isLegal(move, state);
 
         // Then the move should be forbidden
-        expect(status.legal.reason).toBe(AbaloneFailure.CANNOT_MOVE_MORE_THAN_THREE_PIECES);
+        expect(status.legal.reason).toBe(AbaloneFailure.CANNOT_MOVE_MORE_THAN_THREE_PIECES());
     });
     it(`should refuse moving group of piece smaller than the enemy's group`, () => {
         // Given a board with 4 piece aligned
@@ -147,7 +147,7 @@ describe('AbaloneRules', () => {
         const status: AbaloneLegalityStatus = rules.isLegal(move, state);
 
         // Then the move should be forbidden
-        expect(status.legal.reason).toBe(AbaloneFailure.NOT_ENOUGH_PIECE_TO_PUSH);
+        expect(status.legal.reason).toBe(AbaloneFailure.NOT_ENOUGH_PIECE_TO_PUSH());
     });
     it('Should refuse moving a group of piece of equal size to the enemy', () => {
         // Given a board with 4 piece aligned
@@ -169,7 +169,7 @@ describe('AbaloneRules', () => {
         const status: AbaloneLegalityStatus = rules.isLegal(move, state);
 
         // Then the move should be forbidden
-        expect(status.legal.reason).toBe(AbaloneFailure.NOT_ENOUGH_PIECE_TO_PUSH);
+        expect(status.legal.reason).toBe(AbaloneFailure.NOT_ENOUGH_PIECE_TO_PUSH());
     });
     it('Should refuse moving a group of piece when first piece after the enemy group is not empty', () => {
         // Given a board with possible push that is self-blocked
@@ -191,7 +191,7 @@ describe('AbaloneRules', () => {
         const status: AbaloneLegalityStatus = rules.isLegal(move, state);
 
         // Then the move should be forbidden
-        expect(status.legal.reason).toBe(AbaloneFailure.CANNOT_PUSH_YOUR_OWN_PIECES);
+        expect(status.legal.reason).toBe(AbaloneFailure.CANNOT_PUSH_YOUR_OWN_PIECES());
     });
     it('should make pushed piece get of the board', () => {
         // Given an board where 3 can push 1 out of 2 aligned pieces out of the board
@@ -308,7 +308,7 @@ describe('AbaloneRules', () => {
         const status: AbaloneLegalityStatus = rules.isLegal(move, state);
 
         // Then the move should be forbidden
-        expect(status.legal.reason).toBe(AbaloneFailure.TRANSLATION_IMPOSSIBLE);
+        expect(status.legal.reason).toBe(AbaloneFailure.TRANSLATION_IMPOSSIBLE());
     });
     it('should refuse to translate a group containing non player piece', () => {
         // Given a board with 2 aligned piece separated by a hole
@@ -332,7 +332,7 @@ describe('AbaloneRules', () => {
         const status: AbaloneLegalityStatus = rules.isLegal(move, state);
 
         // Then the move should be forbidden
-        expect(status.legal.reason).toBe(AbaloneFailure.MUST_ONLY_TRANSLATE_YOUR_PIECES);
+        expect(status.legal.reason).toBe(AbaloneFailure.MUST_ONLY_TRANSLATE_YOUR_PIECES());
     });
     it('Should push on NONE the same way as outside the array board', () => {
         // given initial state

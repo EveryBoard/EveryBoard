@@ -36,7 +36,7 @@ export class GoGroupDatas extends GroupDatas<GoPiece> {
     }
     public addPawn(coord: Coord, color: GoPiece): void {
         if (this.countains(coord)) {
-            throw new Error('Ce groupe contient déjà ' + coord);
+            throw new Error('This group already contains ' + coord);
         }
         if (color === GoPiece.BLACK) {
             this.blackCoords = GroupDatas.insertAsEntryPoint(this.blackCoords, coord);
@@ -51,7 +51,7 @@ export class GoGroupDatas extends GroupDatas<GoPiece> {
             color === GoPiece.WHITE_TERRITORY) {
             this.emptyCoords = GroupDatas.insertAsEntryPoint(this.emptyCoords, coord);
         } else {
-            throw new Error(`Cette couleur de pion de Go n'existe pas: ` + color.value);
+            throw new Error(`This pawn color does not exist for Go: ` + color.value);
         }
     }
     public isMonoWrapped(): boolean {

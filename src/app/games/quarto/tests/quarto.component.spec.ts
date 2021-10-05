@@ -30,7 +30,7 @@ describe('QuartoComponent', () => {
         ];
         const state: QuartoState = new QuartoState(board, 1, QuartoPiece.AAAB);
         componentTestUtils.setupState(state);
-        await componentTestUtils.expectClickFailure('#chooseCoord_0_0', RulesFailure.MUST_CLICK_ON_EMPTY_SPACE);
+        await componentTestUtils.expectClickFailure('#chooseCoord_0_0', RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
     }));
     it('should accept move when choosing piece then choosing coord', fakeAsync(async() => {
         const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.AAAB);

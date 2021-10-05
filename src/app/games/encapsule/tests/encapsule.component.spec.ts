@@ -26,8 +26,8 @@ describe('EncapsuleComponent', () => {
         componentTestUtils = await ComponentTestUtils.forGame<EncapsuleComponent>('Encapsule');
     }));
     it('should create', () => {
-        expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');
-        expect(componentTestUtils.getComponent()).toBeTruthy('EncapsuleComponent should be created');
+        expect(componentTestUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
+        expect(componentTestUtils.getComponent()).withContext('EncapsuleComponent should be created').toBeTruthy();
     });
     it('should drop a piece on the board when selecting it and dropping it', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#piece_0_SMALL_BLACK');
@@ -36,7 +36,7 @@ describe('EncapsuleComponent', () => {
         await componentTestUtils.expectMoveSuccess('#click_0_0', move);
     }));
     it('should forbid clicking directly on the board without selecting a piece', fakeAsync(async() => {
-        await componentTestUtils.expectClickFailure('#click_0_0', EncapsuleFailure.INVALID_PIECE_SELECTED);
+        await componentTestUtils.expectClickFailure('#click_0_0', EncapsuleFailure.INVALID_PIECE_SELECTED());
     }));
     it('should allow dropping a piece on a smaller one', fakeAsync(async() => {
         const x: EncapsuleCase = new EncapsuleCase(Player.ONE, Player.NONE, Player.NONE);
@@ -62,7 +62,7 @@ describe('EncapsuleComponent', () => {
         await componentTestUtils.expectClickSuccess('#piece_0_SMALL_BLACK');
 
         const move: EncapsuleMove = EncapsuleMove.fromDrop(EncapsulePiece.SMALL_BLACK, new Coord(0, 1));
-        await componentTestUtils.expectMoveFailure('#click_0_1', EncapsuleFailure.INVALID_PLACEMENT, move);
+        await componentTestUtils.expectMoveFailure('#click_0_1', EncapsuleFailure.INVALID_PLACEMENT(), move);
     }));
     it('should forbid selecting a piece that is not remaining', fakeAsync(async() => {
         componentTestUtils.setupState(new EncapsuleState(emptyBoard, P0Turn, []));
@@ -72,7 +72,7 @@ describe('EncapsuleComponent', () => {
     it('should forbid selecting a piece from the other player', fakeAsync(async() => {
         componentTestUtils.setupState(new EncapsuleState(emptyBoard, P0Turn, [EncapsulePiece.SMALL_WHITE]));
 
-        await componentTestUtils.expectClickFailure('#piece_1_SMALL_WHITE', EncapsuleFailure.NOT_DROPPABLE);
+        await componentTestUtils.expectClickFailure('#piece_1_SMALL_WHITE', EncapsuleFailure.NOT_DROPPABLE());
     }));
     it('should move a piece when clicking on the piece and clicking on its destination coord', fakeAsync(async() => {
         const x: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.ZERO, Player.NONE);
@@ -97,7 +97,7 @@ describe('EncapsuleComponent', () => {
         ];
         componentTestUtils.setupState(new EncapsuleState(board, P0Turn, []));
 
-        await componentTestUtils.expectClickFailure('#click_0_1', EncapsuleFailure.INVALID_PIECE_SELECTED);
+        await componentTestUtils.expectClickFailure('#click_0_1', EncapsuleFailure.INVALID_PIECE_SELECTED());
     }));
     it('should allow moving a piece on top of a smaller one', fakeAsync(async() => {
         const x: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.ZERO, Player.NONE);
@@ -127,7 +127,7 @@ describe('EncapsuleComponent', () => {
         await componentTestUtils.expectClickSuccess('#click_0_1');
 
         const move: EncapsuleMove = EncapsuleMove.fromMove(new Coord(0, 1), new Coord(1, 1));
-        await componentTestUtils.expectMoveFailure('#click_1_1', EncapsuleFailure.INVALID_PLACEMENT, move);
+        await componentTestUtils.expectMoveFailure('#click_1_1', EncapsuleFailure.INVALID_PLACEMENT(), move);
     }));
     it('should detect victory', fakeAsync(async() => {
         const x: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.ZERO, Player.NONE);
@@ -161,7 +161,7 @@ describe('EncapsuleComponent', () => {
 
         await componentTestUtils.expectClickSuccess('#click_0_1');
 
-        await componentTestUtils.expectClickFailure('#click_0_1', EncapsuleFailure.SAME_DEST_AS_ORIGIN);
+        await componentTestUtils.expectClickFailure('#click_0_1', EncapsuleFailure.SAME_DEST_AS_ORIGIN());
     }));
     it('should forbid selecting a remaining piece is a move is being constructed', fakeAsync(async() => {
         const x: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.ZERO, Player.NONE);
@@ -174,6 +174,6 @@ describe('EncapsuleComponent', () => {
 
         await componentTestUtils.expectClickSuccess('#click_0_1');
 
-        await componentTestUtils.expectClickFailure('#piece_0_SMALL_BLACK', EncapsuleFailure.END_YOUR_MOVE);
+        await componentTestUtils.expectClickFailure('#piece_0_SMALL_BLACK', EncapsuleFailure.END_YOUR_MOVE());
     }));
 });

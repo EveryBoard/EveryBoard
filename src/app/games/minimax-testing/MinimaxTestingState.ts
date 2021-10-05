@@ -7,7 +7,7 @@ const m: number = Number.MIN_SAFE_INTEGER;
 
 export class MinimaxTestingState extends RectangularGameState<number> {
 
-    public static readonly BOARD_0: NumberTable = [ // first player win, even with minimax at depth=1
+    public static readonly BOARD_0: NumberTable = [ // first player wins, even with a minimax with depth = 1
         [6, 4, 3, 1],
         [4, 4, 3, 1],
         [3, 3, 2, 0],

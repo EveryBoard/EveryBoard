@@ -1,5 +1,5 @@
 import { fakeAsync } from '@angular/core/testing';
-import { SixState } from 'src/app/games/six/SixGameState';
+import { SixState } from 'src/app/games/six/SixState';
 import { SixMove } from 'src/app/games/six/SixMove';
 import { SixFailure } from 'src/app/games/six/SixFailure';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -21,8 +21,8 @@ describe('SixComponent', () => {
         componentTestUtils = await ComponentTestUtils.forGame<SixComponent>('Six');
     }));
     it('should create', () => {
-        expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');
-        expect(componentTestUtils.getComponent()).toBeTruthy('Component should be created');
+        expect(componentTestUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
+        expect(componentTestUtils.getComponent()).withContext('Component should be created').toBeTruthy();
     });
     it('should cancel move when clicking on ennemy piece', fakeAsync(async() => {
         const board: NumberTable = [
@@ -31,7 +31,7 @@ describe('SixComponent', () => {
         const state: SixState = SixState.fromRepresentation(board, 41);
         componentTestUtils.setupState(state);
 
-        await componentTestUtils.expectClickFailure('#piece_0_0', RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
+        await componentTestUtils.expectClickFailure('#piece_0_0', RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
     }));
     it('Should drop before 40th turn', fakeAsync(async() => {
         componentTestUtils.fixture.detectChanges();
@@ -136,7 +136,7 @@ describe('SixComponent', () => {
         componentTestUtils.expectElementToExist('#disconnected_2_3');
     }));
     it('should cancel move when clicking on piece before 40th turn', fakeAsync(async() => {
-        await componentTestUtils.expectClickFailure('#piece_0_0', SixFailure.NO_DEPLACEMENT_BEFORE_TURN_40);
+        await componentTestUtils.expectClickFailure('#piece_0_0', SixFailure.NO_DEPLACEMENT_BEFORE_TURN_40());
     }));
     it('should cancel move when clicking on empty case as first click after 40th turn', fakeAsync(async() => {
         const board: NumberTable = [
@@ -150,7 +150,7 @@ describe('SixComponent', () => {
         const state: SixState = SixState.fromRepresentation(board, 40);
         componentTestUtils.setupState(state);
 
-        await componentTestUtils.expectClickFailure('#neighboor_1_1', SixFailure.CAN_NO_LONGER_DROP);
+        await componentTestUtils.expectClickFailure('#neighboor_1_1', SixFailure.CAN_NO_LONGER_DROP());
     }));
     it('should still allow to click on ennemy piece after 40th as a third click', fakeAsync(async() => {
         const board: NumberTable = [

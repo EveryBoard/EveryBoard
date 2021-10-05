@@ -41,14 +41,14 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
         const ENNEMY: Player = state.getCurrentEnnemy();
         while (soldierIndex < move.movedPieces) {
             if (coord.isNotInRange(14, 12)) {
-                return MGPValidation.failure(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_PIECES_OUTSIDE_BOARD);
+                return MGPValidation.failure(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_PIECES_OUTSIDE_BOARD());
             }
             caseContent = state.getBoardAt(coord);
             if (caseContent === Player.NONE) {
-                return MGPValidation.failure(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_EMPTY_CASE);
+                return MGPValidation.failure(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_EMPTY_CASE());
             }
             if (caseContent === ENNEMY) {
-                return MGPValidation.failure(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_ENEMY_PIECE);
+                return MGPValidation.failure(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_ENEMY_PIECE());
             }
             coord = coord.getNext(move.direction, 1);
             soldierIndex++;
@@ -65,20 +65,20 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
             newBoard[emptied.y][emptied.x] = Player.NONE;
             newBoard[landingCoord.y][landingCoord.x] = CURRENT_PLAYER;
             if (landingCoord.isNotInRange(14, 12)) {
-                return EpaminondasLegalityStatus.failure(EpaminondasFailure.PHALANX_IS_LEAVING_BOARD);
+                return EpaminondasLegalityStatus.failure(EpaminondasFailure.PHALANX_IS_LEAVING_BOARD());
             }
             if (state.getBoardAt(landingCoord) !== Player.NONE) {
-                return EpaminondasLegalityStatus.failure(EpaminondasFailure.SOMETHING_IN_PHALANX_WAY);
+                return EpaminondasLegalityStatus.failure(EpaminondasFailure.SOMETHING_IN_PHALANX_WAY());
             }
             landingIndex++;
             landingCoord = landingCoord.getNext(move.direction, 1);
             emptied = emptied.getNext(move.direction, 1);
         }
         if (landingCoord.isNotInRange(14, 12)) {
-            return EpaminondasLegalityStatus.failure(EpaminondasFailure.PHALANX_IS_LEAVING_BOARD);
+            return EpaminondasLegalityStatus.failure(EpaminondasFailure.PHALANX_IS_LEAVING_BOARD());
         }
         if (state.getBoardAt(landingCoord) === CURRENT_PLAYER) {
-            return EpaminondasLegalityStatus.failure(RulesFailure.CANNOT_SELF_CAPTURE);
+            return EpaminondasLegalityStatus.failure(RulesFailure.CANNOT_SELF_CAPTURE());
         }
         newBoard[emptied.y][emptied.x] = Player.NONE;
         newBoard[landingCoord.y][landingCoord.x] = CURRENT_PLAYER;
@@ -102,7 +102,7 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
             }
             captured++;
             if (captured >= move.movedPieces) {
-                return EpaminondasLegalityStatus.failure(EpaminondasFailure.PHALANX_SHOULD_BE_GREATER_TO_CAPTURE);
+                return EpaminondasLegalityStatus.failure(EpaminondasFailure.PHALANX_SHOULD_BE_GREATER_TO_CAPTURE());
             }
             capturedSoldier = capturedSoldier.getNext(move.direction, 1);
         }

@@ -62,7 +62,6 @@ export class ActivatedRouteStub {
         this.route[key] = value;
     }
 }
-
 export class SimpleComponentTestUtils<T> {
 
     private fixture: ComponentFixture<T>;
@@ -145,7 +144,6 @@ export class SimpleComponentTestUtils<T> {
         return element;
     }
 }
-
 type MyGameComponent = GameComponent<Rules<Move, AbstractGameState>,
                                            Move,
                                            AbstractGameState>;

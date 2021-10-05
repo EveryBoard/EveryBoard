@@ -6,7 +6,7 @@ import { SiamLegalityStatus } from 'src/app/games/siam/SiamLegalityStatus';
 import { SiamRules } from 'src/app/games/siam/SiamRules';
 import { SiamMinimax } from 'src/app/games/siam/SiamMinimax';
 import { SiamPiece } from 'src/app/games/siam/SiamPiece';
-import { siamTutorial } from './SiamTutorial';
+import { SiamTutorial } from './SiamTutorial';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
@@ -15,6 +15,8 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { display } from 'src/app/utils/utils';
 import { GameComponentUtils } from 'src/app/components/game-components/GameComponentUtils';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { SiamFailure } from './SiamFailure';
 
 @Component({
     selector: 'app-siam',
@@ -43,7 +45,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
             new SiamMinimax(this.rules, 'SiamMinimax'),
         ];
         this.encoder = SiamMove.encoder;
-        this.tutorial = siamTutorial;
+        this.tutorial = new SiamTutorial().tutorial;
         this.updateBoard();
     }
     public updateBoard(): void {
@@ -69,9 +71,9 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
             return this.cancelMove(clickValidity.reason);
         }
         const piece: SiamPiece = this.board[y][x];
-        const ennemy: Player = this.rules.node.gameState.getCurrentEnnemy();
-        if (piece.getOwner() === ennemy) {
-            return this.cancelMove(`Can't choose ennemy's pieces`);
+        const opponent: Player = this.rules.node.gameState.getCurrentEnnemy();
+        if (piece.getOwner() === opponent) {
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
         this.chosenCoord = new Coord(x, y);
         return MGPValidation.SUCCESS;
@@ -113,7 +115,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
             return this.cancelMove(clickValidity.reason);
         }
         if (this.chosenCoord) {
-            return this.cancelMove(`Can't insert when there is already a selected piece`);
+            return this.cancelMove(SiamFailure.CANNOT_INSERT_WHEN_SELECTED());
         } else {
             this.chosenCoord = new Coord(x, y);
             const dir: Orthogonal = SiamRules.getCoordDirection(x, y, this.rules.node.gameState);

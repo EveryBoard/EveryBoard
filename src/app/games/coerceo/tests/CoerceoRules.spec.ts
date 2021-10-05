@@ -79,7 +79,7 @@ describe('CoerceoRules', () => {
             const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [0, 0]);
             const move: CoerceoMove = CoerceoMove.fromDeplacement(new Coord(6, 6), CoerceoStep.RIGHT);
             const status: LegalityStatus = rules.isLegal(move, state);
-            expect(status.legal.getReason()).toBe(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
+            expect(status.legal.getReason()).toBe(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
         });
         it('Should forbid to move empty pieces', () => {
             const board: FourStatePiece[][] = [
@@ -97,7 +97,7 @@ describe('CoerceoRules', () => {
             const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [0, 0]);
             const move: CoerceoMove = CoerceoMove.fromDeplacement(new Coord(7, 7), CoerceoStep.UP_RIGHT);
             const status: LegalityStatus = rules.isLegal(move, state);
-            expect(status.legal.getReason()).toBe(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY);
+            expect(status.legal.getReason()).toBe(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         });
         it('Should forbid to land on occupied piece', () => {
             const board: FourStatePiece[][] = [
@@ -115,7 +115,7 @@ describe('CoerceoRules', () => {
             const state: CoerceoState = new CoerceoState(board, 1, [0, 0], [0, 0]);
             const move: CoerceoMove = CoerceoMove.fromDeplacement(new Coord(6, 6), CoerceoStep.DOWN_RIGHT);
             const status: LegalityStatus = rules.isLegal(move, state);
-            expect(status.legal.getReason()).toBe(RulesFailure.MUST_LAND_ON_EMPTY_SPACE);
+            expect(status.legal.getReason()).toBe(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         });
         it('Should remove pieces captured by deplacement', () => {
             const board: FourStatePiece[][] = [
@@ -237,7 +237,7 @@ describe('CoerceoRules', () => {
             const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [0, 0]);
             const move: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(6, 6));
             const status: LegalityStatus = rules.isLegal(move, state);
-            expect(status.legal.getReason()).toBe(CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE);
+            expect(status.legal.getReason()).toBe(CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE());
         });
         it('Should forbid capturing one own piece', () => {
             const board: FourStatePiece[][] = [
@@ -255,7 +255,7 @@ describe('CoerceoRules', () => {
             const state: CoerceoState = new CoerceoState(board, 1, [0, 2], [0, 0]);
             const move: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(6, 6));
             const status: LegalityStatus = rules.isLegal(move, state);
-            expect(status.legal.getReason()).toBe(CoerceoFailure.CANNOT_CAPTURE_OWN_PIECES);
+            expect(status.legal.getReason()).toBe(CoerceoFailure.CANNOT_CAPTURE_OWN_PIECES());
         });
         it('Should forbid capturing empty case', () => {
             const board: FourStatePiece[][] = [
@@ -273,7 +273,7 @@ describe('CoerceoRules', () => {
             const state: CoerceoState = new CoerceoState(board, 1, [0, 2], [0, 0]);
             const move: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(7, 7));
             const status: LegalityStatus = rules.isLegal(move, state);
-            expect(status.legal.getReason()).toBe(CoerceoFailure.CANNOT_CAPTURE_FROM_EMPTY);
+            expect(status.legal.getReason()).toBe(CoerceoFailure.CANNOT_CAPTURE_FROM_EMPTY());
         });
         it('Should forbid capturing coord of removed tile', () => {
             const board: FourStatePiece[][] = [
@@ -291,7 +291,7 @@ describe('CoerceoRules', () => {
             const state: CoerceoState = new CoerceoState(board, 1, [0, 2], [0, 0]);
             const move: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(0, 0));
             const status: LegalityStatus = rules.isLegal(move, state);
-            expect(status.legal.getReason()).toBe(CoerceoFailure.CANNOT_CAPTURE_FROM_EMPTY);
+            expect(status.legal.getReason()).toBe(CoerceoFailure.CANNOT_CAPTURE_FROM_EMPTY());
         });
         it('Should remove piece captured by tiles exchange, removing tile but no one win it', () => {
             const board: FourStatePiece[][] = [

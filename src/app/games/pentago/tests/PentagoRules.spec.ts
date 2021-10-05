@@ -1,13 +1,12 @@
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
-import { GameStatus } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PentagoFailure } from '../PentagoFailure';
 import { PentagoMove } from '../PentagoMove';
 import { PentagoNode, PentagoRules } from '../PentagoRules';
 import { PentagoState } from '../PentagoState';
-import { expectToBeVictoryFor } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { expectToBeDraw, expectToBeOngoing, expectToBeVictoryFor } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { PentagoLegalityStatus } from '../PentagoLegalityStatus';
 import { PentagoMinimax } from '../PentagoMinimax';
@@ -39,7 +38,7 @@ describe('PentagoRules', () => {
         const state: PentagoState = new PentagoState(board, 1);
         const move: PentagoMove = PentagoMove.rotationless(1, 1);
         const status: LegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.reason).toBe(RulesFailure.MUST_LAND_ON_EMPTY_SPACE);
+        expect(status.legal.reason).toBe(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
     });
     it('it should prevent redundancy by refusing rotating neutral block', () => {
         const board: Table<Player> = [
@@ -53,7 +52,7 @@ describe('PentagoRules', () => {
         const state: PentagoState = new PentagoState(board, 1);
         const move: PentagoMove = PentagoMove.withRotation(4, 1, 3, true);
         const status: LegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.reason).toBe(PentagoFailure.CANNOT_ROTATE_NEUTRAL_BLOCK);
+        expect(status.legal.reason).toBe(PentagoFailure.CANNOT_ROTATE_NEUTRAL_BLOCK());
     });
     it('it should refuse rotation less move when there is no neutral block', () => {
         const board: Table<Player> = [
@@ -67,7 +66,7 @@ describe('PentagoRules', () => {
         const state: PentagoState = new PentagoState(board, 3);
         const move: PentagoMove = PentagoMove.rotationless(0, 0);
         const status: LegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.reason).toBe(PentagoFailure.MUST_CHOOSE_BLOCK_TO_ROTATE);
+        expect(status.legal.reason).toBe(PentagoFailure.MUST_CHOOSE_BLOCK_TO_ROTATE());
     });
     it('it should allow rotation-free move when there is neutral block', () => {
         const board: Table<Player> = [
@@ -118,8 +117,7 @@ describe('PentagoRules', () => {
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingState: PentagoState = rules.applyLegalMove(move, state, status);
         expect(resultingState).toEqual(expectedState);
-        const boardStatus: GameStatus = rules.getGameStatus(new MGPNode(null, move, resultingState));
-        expect(boardStatus).toEqual(GameStatus.ONGOING, 'Game should not be over');
+        expectToBeOngoing(rules, new MGPNode(null, move, resultingState), minimaxes);
     });
     it('it should be able to twist any board anti-clockwise', () => {
         const board: Table<Player> = [
@@ -200,8 +198,8 @@ describe('PentagoRules', () => {
             const resultingState: PentagoState = rules.applyLegalMove(move, state, status);
             const expectedState: PentagoState = new PentagoState(expectedBoard, 36);
             expect(resultingState).toEqual(expectedState);
-            const boardStatus: GameStatus = rules.getGameStatus(new MGPNode(null, move, expectedState));
-            expect(boardStatus).toEqual(GameStatus.DRAW, 'This should be a draw');
+            const node: PentagoNode = new MGPNode(null, move, expectedState);
+            expectToBeDraw(rules, node, minimaxes);
         });
         it('it should notice draw by double-victory', () => {
             const board: Table<Player> = [
@@ -227,8 +225,8 @@ describe('PentagoRules', () => {
             const resultingState: PentagoState = rules.applyLegalMove(move, state, status);
             const expectedState: PentagoState = new PentagoState(expectedBoard, 11);
             expect(resultingState).toEqual(expectedState);
-            const boardStatus: GameStatus = rules.getGameStatus(new MGPNode(null, move, expectedState));
-            expect(boardStatus).toEqual(GameStatus.DRAW, 'This should be a draw');
+            const node: PentagoNode = new MGPNode(null, move, expectedState);
+            expectToBeDraw(rules, node, minimaxes);
         });
     });
 });

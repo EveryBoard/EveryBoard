@@ -144,7 +144,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
     }
     public isLegal(move: PylosMove, state: PylosState): LegalityStatus {
         if (state.getBoardAt(move.landingCoord) !== Player.NONE) {
-            return { legal: MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE) };
+            return { legal: MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE()) };
         }
 
         const startingCoord: PylosCoord = move.startingCoord.getOrNull();
@@ -153,33 +153,33 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
         if (startingCoord != null) {
             const startingPiece: Player = state.getBoardAt(startingCoord);
             if (startingPiece === ENNEMY) {
-                return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE) };
+                return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE()) };
             } else if (startingPiece === Player.NONE) {
-                return { legal: MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY) };
+                return { legal: MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY()) };
             }
 
             const supportedPieces: PylosCoord[] = startingCoord.getHigherPieces()
                 .filter((p: PylosCoord) => state.getBoardAt(p) !== Player.NONE ||
                                            p.equals(move.landingCoord));
             if (supportedPieces.length > 0) {
-                return { legal: MGPValidation.failure(PylosFailure.SHOULD_HAVE_SUPPORTING_PIECES) };
+                return { legal: MGPValidation.failure(PylosFailure.SHOULD_HAVE_SUPPORTING_PIECES()) };
             }
         }
         if (!state.isLandable(move.landingCoord)) {
-            return { legal: MGPValidation.failure(PylosFailure.CANNOT_LAND) };
+            return { legal: MGPValidation.failure(PylosFailure.CANNOT_LAND()) };
         }
 
         if (move.firstCapture.isPresent()) {
             if (PylosRules.canCapture(state, move.landingCoord) === false) {
-                return { legal: MGPValidation.failure(PylosFailure.CANNOT_CAPTURE) };
+                return { legal: MGPValidation.failure(PylosFailure.CANNOT_CAPTURE()) };
             }
 
             if (PylosRules.isValidCapture(state, move, move.firstCapture.get())) {
                 if (move.secondCapture.isPresent() &&
                     !PylosRules.isValidCapture(state, move, move.secondCapture.get())) {
-                    return { legal: MGPValidation.failure(PylosFailure.INVALID_SECOND_CAPTURE) };
+                    return { legal: MGPValidation.failure(PylosFailure.INVALID_SECOND_CAPTURE()) };
                 }
-            } else return { legal: MGPValidation.failure(PylosFailure.INVALID_FIRST_CAPTURE) };
+            } else return { legal: MGPValidation.failure(PylosFailure.INVALID_FIRST_CAPTURE()) };
         }
         return { legal: MGPValidation.SUCCESS };
     }

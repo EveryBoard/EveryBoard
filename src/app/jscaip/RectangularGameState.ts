@@ -13,9 +13,7 @@ export abstract class RectangularGameState<P> extends GameState<Coord, P> {
     // Getters
 
     public getNullable(coord: Coord): P | null {
-        if (0 <= coord.y && coord.y < this.board.length &&
-            0 <= coord.x && coord.x < this.board[coord.y].length)
-        {
+        if (this.isOnBoard(coord)) {
             return this.board[coord.y][coord.x];
         } else {
             return null;
@@ -26,14 +24,14 @@ export abstract class RectangularGameState<P> extends GameState<Coord, P> {
                0 <= coord.x && coord.x < this.board[coord.y].length;
     }
     public getBoardByXY(x: number, y: number): P {
-        if (this.isOnBoard(new Coord(x, y))) {
-            return this.board[y][x];
-        } else {
-            throw new Error('Out of range coord: (' + x + ', ' + y + ').');
-        }
+        return this.getBoardAt(new Coord(x, y));
     }
     public getBoardAt(c: Coord): P {
-        return this.getBoardByXY(c.x, c.y);
+        if (this.isOnBoard(c)) {
+            return this.board[c.y][c.x];
+        } else {
+            throw new Error('Out of range coord: (' + c.x + ', ' + c.y + ').');
+        }
     }
     // Methods:
 

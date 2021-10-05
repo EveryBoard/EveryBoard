@@ -161,19 +161,19 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
             return {
                 legal: ReversiRules.playerCanOnlyPass(state) ?
                     MGPValidation.SUCCESS :
-                    MGPValidation.failure(RulesFailure.MUST_PASS),
+                    MGPValidation.failure(RulesFailure.MUST_PASS()),
                 switched: null,
             };
         }
         if (board[move.coord.y][move.coord.x] !== Player.NONE) {
-            display(ReversiRules.VERBOSE, 'ReversiRules.isLegal: non, on ne peux pas jouer sur une case occupée');
-            return { legal: MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE), switched: null };
+            display(ReversiRules.VERBOSE, 'ReversiRules.isLegal: you cannot play on a busy case');
+            return { legal: MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE()), switched: null };
         }
         const switched: Coord[] = ReversiRules.getAllSwitcheds(move, state.getCurrentPlayer(), board);
         display(ReversiRules.VERBOSE, 'ReversiRules.isLegal: '+ switched.length + ' element(s) switched');
         return {
             legal: (switched.length === 0) ?
-                MGPValidation.failure(ReversiFailure.NO_ELEMENT_SWITCHED) : MGPValidation.SUCCESS,
+                MGPValidation.failure(ReversiFailure.NO_ELEMENT_SWITCHED()) : MGPValidation.SUCCESS,
             switched,
         };
     }
