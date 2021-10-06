@@ -20,6 +20,7 @@ export class LoginComponent {
                 public authenticationService: AuthenticationService) {
     }
     public async loginWithEmail(value: {email: string, password: string}): Promise<void> {
+        console.log({value})
         const result: MGPValidation = await this.authenticationService.doEmailLogin(value.email, value.password);
         if (result.isSuccess()) {
             await this.redirect();

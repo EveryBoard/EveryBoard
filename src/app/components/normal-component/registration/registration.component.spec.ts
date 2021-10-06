@@ -7,7 +7,7 @@ import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { RegistrationComponent } from './registration.component';
 import firebase from 'firebase/app';
 
-fdescribe('RegistrationComponent', () => {
+describe('RegistrationComponent', () => {
     let testUtils: SimpleComponentTestUtils<RegistrationComponent>;
 
     const username: string = 'jeanjaja';

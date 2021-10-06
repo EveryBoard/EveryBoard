@@ -8,7 +8,13 @@
             <div class="field-body">
                 <div class="field">
                     <div class="control">
-                        <input class="input" type="text" placeholder-i18n placeholder="Email" formControlName="email" name="email" required />
+                        <input class="input"
+                               type="text"
+                               placeholder-i18n placeholder="Email"
+                               formControlName="email"
+                               name="email"
+                               id="email"
+                               required />
                     </div>
                 </div>
             </div>
@@ -20,7 +26,13 @@
             <div class="field-body">
                 <div class="field">
                     <div class="control">
-                        <input class="input" type="password" placeholder-i18n placeholder="password" formControlName="password" name="password" required />
+                        <input class="input"
+                               type="password"
+                               placeholder-i18n placeholder="password"
+                               formControlName="password"
+                               name="password"
+                               id="password"
+                               required />
                     </div>
                 </div>
             </div>
@@ -31,9 +43,9 @@
                 <div class="field">
                     <div class="control">
                         <button class="button is-primary"
-                                id="login-button"
+                                id="loginButton"
                                 (click)="loginWithEmail(loginForm.value)"
-                                >Connexion</button>
+                                i18n>Log in</button>
                     </div>
                 </div>
             </div>
