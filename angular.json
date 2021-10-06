@@ -62,7 +62,6 @@
                             "extractLicenses": true,
                             "vendorChunk": false,
                             "buildOptimizer": true,
-                            "localize": ["fr", "en"]
                         },
                         "fr": {
                             "localize": ["fr"]
@@ -75,7 +74,6 @@
                                 }
                             ],
                             "baseHref": "/board-dev/",
-                            "localize": ["fr", "en"]
                         },
                         "test": {
                             "fileReplacements": [
