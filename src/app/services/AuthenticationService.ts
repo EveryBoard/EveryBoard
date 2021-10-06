@@ -46,12 +46,10 @@ export class AuthenticationService implements OnDestroy {
         this.authSub = this.afAuth.authState.subscribe(async(user: firebase.User) => {
             if (user == null) { // user logged out
                 display(AuthenticationService.VERBOSE, '2.B: User is not connected, according to fireAuth');
-                console.log('not connected')
                 this.joueurBS.next(AuthenticationService.NOT_CONNECTED);
             } else { // user logged in
                 this.updatePresence();
                 const username: string = await userDAO.getUsername(user.uid);
-                console.log({loggedInUser: user.email, display: user.displayName, username})
                 display(AuthenticationService.VERBOSE, { userLoggedInAccordingToFireAuth: user });
                 const verified: boolean = user.emailVerified;
                 this.joueurBS.next({ username, verified });
@@ -130,7 +128,6 @@ export class AuthenticationService implements OnDestroy {
         // Sets user data to firestore on login
         const userRef: AngularFirestoreDocument<Partial<IJoueur>> = this.afs.doc(`joueurs/${uid}`);
 
-        console.log({displayName})
         const data: Partial<IJoueur> = {
             email,
             displayName,
@@ -141,7 +138,6 @@ export class AuthenticationService implements OnDestroy {
         return userRef.set(data, { merge: true });
     }
     public async doGoogleLogin(): Promise<MGPValidation> {
-        // TODO: if this is the first time we see the user, we should ask him for its desired username
         try {
             const provider: firebase.auth.GoogleAuthProvider =
                 new firebase.auth.GoogleAuthProvider();
