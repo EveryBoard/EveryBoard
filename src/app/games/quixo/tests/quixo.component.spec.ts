@@ -23,8 +23,8 @@ describe('QuixoComponent', () => {
         componentTestUtils = await ComponentTestUtils.forGame<QuixoComponent>('Quixo');
     }));
     it('should create', () => {
-        expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');
-        expect(componentTestUtils.getComponent()).toBeTruthy('Component should be created');
+        expect(componentTestUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
+        expect(componentTestUtils.getComponent()).withContext('Component should be created').toBeTruthy();
     });
     it('should style piece correctly', () => {
         componentTestUtils.getComponent().chosenCoord = new Coord(0, 0);
@@ -51,7 +51,7 @@ describe('QuixoComponent', () => {
         const state: QuixoPartSlice = new QuixoPartSlice(board, 3);
         componentTestUtils.setupSlice(state);
 
-        await componentTestUtils.expectClickFailure('#click_0_0', RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
+        await componentTestUtils.expectClickFailure('#click_0_0', RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
     }));
     it('should cancel move when trying to select center coord', fakeAsync(async() => {
         const board: NumberTable = [
@@ -64,7 +64,7 @@ describe('QuixoComponent', () => {
         const state: QuixoPartSlice = new QuixoPartSlice(board, 3);
         componentTestUtils.setupSlice(state);
 
-        await componentTestUtils.expectClickFailure('#click_1_1', QuixoFailure.NO_INSIDE_CLICK);
+        await componentTestUtils.expectClickFailure('#click_1_1', QuixoFailure.NO_INSIDE_CLICK());
     }));
     it('should highlight victory', fakeAsync(async() => {
         const board: NumberTable = [

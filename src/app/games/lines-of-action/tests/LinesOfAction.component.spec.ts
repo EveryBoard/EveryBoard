@@ -19,8 +19,8 @@ describe('LinesOfActionComponent', () => {
         componentTestUtils = await ComponentTestUtils.forGame<LinesOfActionComponent>('LinesOfAction');
     }));
     it('should create', () => {
-        expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');
-        expect(componentTestUtils.getComponent()).toBeTruthy('GipfComponent should be created');
+        expect(componentTestUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
+        expect(componentTestUtils.getComponent()).withContext('GipfComponent should be created').toBeTruthy();
     });
     it('should allow a simple move', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_2_0');
@@ -29,7 +29,7 @@ describe('LinesOfActionComponent', () => {
     }));
     it('should forbid moving in an invalid direction', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_2_0');
-        await componentTestUtils.expectClickFailure('#click_4_5', LinesOfActionFailure.INVALID_DIRECTION);
+        await componentTestUtils.expectClickFailure('#click_4_5', LinesOfActionFailure.INVALID_DIRECTION());
     }));
     it('should forbid selecting a piece that has no valid targets', fakeAsync(async() => {
         const board: number[][] = [
@@ -45,10 +45,10 @@ describe('LinesOfActionComponent', () => {
         const state: LinesOfActionState = new LinesOfActionState(board, 1);
         componentTestUtils.setupSlice(state);
 
-        await componentTestUtils.expectClickFailure('#click_0_0', LinesOfActionFailure.PIECE_CANNOT_MOVE);
+        await componentTestUtils.expectClickFailure('#click_0_0', LinesOfActionFailure.PIECE_CANNOT_MOVE());
     }));
     it('should forbid selecting a piece of the opponent', fakeAsync(async() => {
-        await componentTestUtils.expectClickFailure('#click_0_2', RulesFailure.MUST_CHOOSE_PLAYER_PIECE);
+        await componentTestUtils.expectClickFailure('#click_0_2', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
     }));
     it('should allow selecting a different piece in one click', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_2_0');

@@ -49,7 +49,7 @@ describe('QuartoRules', () => {
         const resultingSlice: QuartoPartSlice = rules.node.gamePartSlice;
         const expectedSlice: QuartoPartSlice = new QuartoPartSlice(expectedBoard, 16, QuartoPiece.NONE);
         expect(resultingSlice).toEqual(expectedSlice);
-        expect(minimax.getBoardValue(rules.node).value).toEqual(0, 'This should be a draw.');
+        expect(minimax.getBoardValue(rules.node).value).withContext('This should be a draw.').toEqual(0);
         expect(rules.getGameStatus(rules.node).isEndGame).toBeTrue();
     });
     it('Should forbid to give a piece already on the board', () => {
@@ -80,7 +80,7 @@ describe('QuartoRules', () => {
         const slice: QuartoPartSlice = new QuartoPartSlice(board, 1, QuartoPiece.AABA);
         const move: QuartoMove = new QuartoMove(0, 3, QuartoPiece.BBAA);
         const status: LegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.reason).toEqual(RulesFailure.MUST_LAND_ON_EMPTY_SPACE);
+        expect(status.legal.reason).toEqual(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
     });
     it('Should allow simple move', () => {
         const move: QuartoMove = new QuartoMove(2, 2, QuartoPiece.AAAB);
@@ -108,7 +108,7 @@ describe('QuartoRules', () => {
         const expectedSlice: QuartoPartSlice = new QuartoPartSlice(expectedBoard, 5, QuartoPiece.AAAB);
         expect(resultingSlice).toEqual(expectedSlice);
         const boardValue: number = minimax.getBoardValue(new MGPNode(null, move, expectedSlice)).value;
-        expect(boardValue).toEqual(Number.MIN_SAFE_INTEGER, 'This should be a victory for player 0.');
+        expect(boardValue).withContext('This should be a victory for player 0.').toEqual(Number.MIN_SAFE_INTEGER);
     });
     it('Should considered player 1 winner when doing a full line', () => {
         const board: number[][] = [
@@ -131,6 +131,6 @@ describe('QuartoRules', () => {
         const expectedSlice: QuartoPartSlice = new QuartoPartSlice(expectedBoard, 10, QuartoPiece.AABA);
         expect(resultingSlice).toEqual(expectedSlice);
         const boardValue: number = minimax.getBoardValue(new MGPNode(null, move, expectedSlice)).value;
-        expect(boardValue).toEqual(Number.MAX_SAFE_INTEGER, 'This should be a victory for player 1.');
+        expect(boardValue).withContext('This should be a victory for player 1.').toEqual(Number.MAX_SAFE_INTEGER);
     });
 });

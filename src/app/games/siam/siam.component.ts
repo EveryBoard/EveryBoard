@@ -16,7 +16,9 @@ import { GameComponentUtils } from 'src/app/components/game-components/GameCompo
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { siamTutorial } from './SiamTutorial';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { SiamFailure } from './SiamFailure';
+import { SiamTutorial } from './SiamTutorial';
 
 @Component({
     selector: 'app-siam',
@@ -38,7 +40,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
 
     public encoder: MoveEncoder<SiamMove> = SiamMove.encoder;
 
-    public tutorial: TutorialStep[] = siamTutorial;
+    public tutorial: TutorialStep[] = new SiamTutorial().tutorial;
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -72,7 +74,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
         const piece: number = this.board[y][x];
         const ennemy: Player = this.rules.node.gamePartSlice.getCurrentEnnemy();
         if (SiamPiece.getOwner(piece) === ennemy) {
-            return this.cancelMove(`Can't choose ennemy's pieces`);
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
         this.chosenCoord = new Coord(x, y);
         return MGPValidation.SUCCESS;
@@ -114,7 +116,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
             return this.cancelMove(clickValidity.reason);
         }
         if (this.chosenCoord) {
-            return this.cancelMove(`Can't insert when there is already a selected piece`);
+            return this.cancelMove(SiamFailure.CANNOT_INSERT_WHEN_SELECTED());
         } else {
             this.chosenCoord = new Coord(x, y);
             const dir: Orthogonal = SiamRules.getCoordDirection(x, y, this.rules.node.gamePartSlice);

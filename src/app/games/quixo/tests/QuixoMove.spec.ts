@@ -18,7 +18,7 @@ describe('QuixoMove:', () => {
     });
     it('Should forbid move creation from coord not on the side', () => {
         expect(() => new QuixoMove(1, 1, Orthogonal.UP))
-            .toThrowError(QuixoFailure.NO_INSIDE_CLICK);
+            .toThrowError(QuixoFailure.NO_INSIDE_CLICK());
     });
     it('Should forbid move creation without direction', () => {
         expect(() => new QuixoMove(0, 0, null)).toThrowError('Direction cannot be null.');

@@ -11,7 +11,7 @@ import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { AwaleFailure } from './AwaleFailure';
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { awaleTutorial } from './AwaleTutorial';
+import { AwaleTutorial } from './AwaleTutorial';
 
 @Component({
     selector: 'app-awale-component',
@@ -22,7 +22,7 @@ export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSl
 
     public encoder: MoveEncoder<AwaleMove> = AwaleMove.encoder;
 
-    public tutorial: TutorialStep[] = awaleTutorial;
+    public tutorial: TutorialStep[] = new AwaleTutorial().tutorial;
 
     public scores: number[] = [0, 0];
 
@@ -83,7 +83,7 @@ export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSl
             return this.cancelMove(clickValidity.getReason());
         }
         if (y !== this.rules.node.gamePartSlice.getCurrentPlayer().value) {
-            return this.cancelMove(AwaleFailure.CANNOT_DISTRIBUTE_FROM_ENEMY_HOME);
+            return this.cancelMove(AwaleFailure.CANNOT_DISTRIBUTE_FROM_ENEMY_HOME());
         }
         this.last = new Coord(-1, -1); // now the user stop try to do a move
         // we stop showing him the last move

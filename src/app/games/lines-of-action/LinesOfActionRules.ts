@@ -81,7 +81,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
     }
     public applyLegalMove(move: LinesOfActionMove,
                           state: LinesOfActionState,
-                          status: LegalityStatus)
+                          _status: LegalityStatus)
     : LinesOfActionState
     {
         const board: number[][] = state.getCopiedBoard();
@@ -92,17 +92,17 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
     }
     public static isLegal(move: LinesOfActionMove, state: LinesOfActionState): LegalityStatus {
         if (state.getAt(move.coord) !== state.getCurrentPlayer().value) {
-            return { legal: MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE) };
+            return { legal: MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE()) };
         }
         if (move.length() !== this.numberOfPiecesOnLine(state, move.coord, move.direction)) {
-            return { legal: MGPValidation.failure(LinesOfActionFailure.INVALID_MOVE_LENGTH) };
+            return { legal: MGPValidation.failure(LinesOfActionFailure.INVALID_MOVE_LENGTH()) };
         }
         if (move.coord.getCoordsToward(move.end).some((c: Coord) =>
             state.getAt(c) === state.getCurrentEnnemy().value)) {
-            return { legal: MGPValidation.failure(LinesOfActionFailure.CANNOT_JUMP_OVER_ENEMY) };
+            return { legal: MGPValidation.failure(LinesOfActionFailure.CANNOT_JUMP_OVER_ENEMY()) };
         }
         if (state.getAt(move.end) === state.getCurrentPlayer().value) {
-            return { legal: MGPValidation.failure(RulesFailure.CANNOT_SELF_CAPTURE) };
+            return { legal: MGPValidation.failure(RulesFailure.CANNOT_SELF_CAPTURE()) };
         }
         return { legal: MGPValidation.SUCCESS };
     }

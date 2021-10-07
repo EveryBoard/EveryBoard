@@ -56,8 +56,8 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
         // move is legal here
         const depart: Coord = move.coord;
         const arrival: Coord = move.end;
-        board[arrival.y][arrival.x] = board[depart.y][depart.x]; // dédoublement
-        board[depart.y][depart.x] = TablutCase.UNOCCUPIED.value; // suppression du précédent
+        board[arrival.y][arrival.x] = board[depart.y][depart.x]; // move the piece to the new position
+        board[depart.y][depart.x] = TablutCase.UNOCCUPIED.value; // remove it from the previous position
         let captured: Coord;
         for (const d of Orthogonal.ORTHOGONALS) {
             captured = this.tryCapture(player, move.end, d, board);
@@ -70,23 +70,23 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
     private static getMoveValidity(player: Player, move: TablutMove, board: number[][]): MGPValidation {
         const cOwner: RelativePlayer = this.getRelativeOwner(player, move.coord, board);
         if (cOwner === RelativePlayer.NONE) {
-            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE);
+            return MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
         if (cOwner === RelativePlayer.ENNEMY) {
-            return MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
+            return MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
         }
 
         const landingCoordOwner: RelativePlayer = this.getRelativeOwner(player, move.end, board);
         if (landingCoordOwner !== RelativePlayer.NONE) {
-            return MGPValidation.failure(TablutFailure.LANDING_ON_OCCUPIED_CASE);
+            return MGPValidation.failure(TablutFailure.LANDING_ON_OCCUPIED_CASE());
         }
         if (this.isThrone(move.end)) {
             if (this.isKing(board[move.coord.y][move.coord.x])) {
                 if (this.isCentralThrone(move.end) && this.CASTLE_IS_LEFT_FOR_GOOD) {
-                    return MGPValidation.failure(TablutFailure.THRONE_IS_LEFT_FOR_GOOD);
+                    return MGPValidation.failure(TablutFailure.THRONE_IS_LEFT_FOR_GOOD());
                 }
             } else {
-                return MGPValidation.failure(TablutFailure.SOLDIERS_CANNOT_SIT_ON_THRONE);
+                return MGPValidation.failure(TablutFailure.SOLDIERS_CANNOT_SIT_ON_THRONE());
             }
         }
 
@@ -96,7 +96,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
         let c: Coord = move.coord.getNext(dir); // the inspected coord
         for (let i: number = 1; i < dist; i++) {
             if (board[c.y][c.x] !== TablutCase.UNOCCUPIED.value) {
-                return MGPValidation.failure(TablutFailure.SOMETHING_IN_THE_WAY);
+                return MGPValidation.failure(TablutFailure.SOMETHING_IN_THE_WAY());
             }
             c = c.getNext(dir);
         }
@@ -562,14 +562,14 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
         const currentPlayer: Player = slice.getCurrentPlayer();
         for (let y: number = 0; y < TablutRulesConfig.WIDTH; y++) {
             for (let x: number = 0; x < TablutRulesConfig.WIDTH; x++) {
-                // pour chaque case
+                // for each square
                 coord = new Coord(x, y);
                 owner = TablutRules.getRelativeOwner(currentPlayer, coord, currentBoard);
                 if (owner === RelativePlayer.PLAYER) {
-                    // pour l'envahisseur :
+                    // for the attacker :
                     //     if the king is capturable : the only choice is the capturing
                     //     if the king is close to escape:  the only choice are the blocking one
-                    // pour les défenseurs :
+                    // for the defender :
                     //     if the king can win : the only choice is the winning
                     //     if king threatened : the only choice is to save him
                     //         a: by escape

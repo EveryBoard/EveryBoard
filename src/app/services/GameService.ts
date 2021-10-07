@@ -61,7 +61,7 @@ export class GameService implements OnDestroy {
     }
     public async createGameAndRedirectOrShowError(game: string): Promise<boolean> {
         if (this.isUserOffline()) {
-            this.messageDisplayer.infoMessage(GameServiceMessages.USER_OFFLINE);
+            this.messageDisplayer.infoMessage(GameServiceMessages.USER_OFFLINE());
             this.router.navigate(['/login']);
             return false;
         } else if (this.canCreateGame() === true) {
@@ -70,7 +70,7 @@ export class GameService implements OnDestroy {
             this.router.navigate(['/play/' + game, gameId]);
             return true;
         } else {
-            this.messageDisplayer.infoMessage(GameServiceMessages.ALREADY_INGAME);
+            this.messageDisplayer.infoMessage(GameServiceMessages.ALREADY_INGAME());
             this.router.navigate(['/server']);
             return false;
         }

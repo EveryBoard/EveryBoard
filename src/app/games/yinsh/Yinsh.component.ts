@@ -17,7 +17,7 @@ import { YinshMinimax } from './YinshMinimax';
 import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';
 import { YinshRules } from './YinshRules';
-import { yinshTutorial } from './YinshTutorial';
+import { YinshTutorial } from './YinshTutorial';
 
 interface CaseInfo {
     coord: Coord,
@@ -65,7 +65,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
 
     public encoder: MoveEncoder<YinshMove> = YinshMove.encoder;
 
-    public tutorial: TutorialStep[] = yinshTutorial;
+    public tutorial: TutorialStep[] = new YinshTutorial().tutorial;
 
     public scores: number[] = [0, 0];
 
@@ -315,7 +315,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
             this.viewInfo.selectedCoords.push(coord);
             this.moveToCaptureSelectLast(captures);
         } else if (captures.length === 0) {
-            return this.cancelMove(YinshFailure.MISSING_CAPTURES);
+            return this.cancelMove(YinshFailure.MISSING_CAPTURES());
         } else {
             this.selectCapture(captures[0]);
         }
@@ -346,9 +346,9 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
             }
         });
         if (captures.length > 1) {
-            return this.cancelMove(YinshFailure.AMBIGUOUS_CAPTURE_COORD);
+            return this.cancelMove(YinshFailure.AMBIGUOUS_CAPTURE_COORD());
         } else if (captures.length === 0) {
-            return this.cancelMove(YinshFailure.MISSING_CAPTURES);
+            return this.cancelMove(YinshFailure.MISSING_CAPTURES());
         } else {
             this.selectCapture(captures[0]);
         }

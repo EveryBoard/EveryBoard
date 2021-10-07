@@ -47,7 +47,7 @@ describe('PylosComponent', () => {
         const initialSlice: PylosState = new PylosState(initialBoard, 0);
         componentTestUtils.setupSlice(initialSlice);
 
-        await componentTestUtils.expectClickFailure('#piece_0_0_0', RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
+        await componentTestUtils.expectClickFailure('#piece_0_0_0', RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
     }));
     it('should allow climbing', fakeAsync(async() => {
         const initialBoard: number[][][] = [
@@ -158,7 +158,7 @@ describe('PylosComponent', () => {
         componentTestUtils.setupSlice(initialSlice);
 
         await componentTestUtils.expectClickSuccess('#piece_0_0_1');
-        await componentTestUtils.expectClickFailure('#drop_2_2_0', PylosFailure.MUST_MOVE_UPWARD);
+        await componentTestUtils.expectClickFailure('#drop_2_2_0', PylosFailure.MUST_MOVE_UPWARD());
     }));
     it('should show disappeared square when it has been captured', fakeAsync(async() => {
         const initialBoard: number[][][] = [

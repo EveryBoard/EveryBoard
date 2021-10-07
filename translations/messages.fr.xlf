@@ -932,10 +932,6 @@
         <source>Your first click must be on the piece that you want to move, or on a piece of your opponent that you want to exchange against two tiles.</source>
         <target>Votre premier clic doit être sur une de vos pièce pour la déplacer, ou sur une pièce de l'adversaire pour l&apos;échanger contre deux tuiles.</target>
       </trans-unit>
-      <trans-unit id="6829098107854171134" datatype="html">
-        <source>You cannot capture on a removed tile.</source>
-        <target>Vous ne pouvez pas capturer sur une tuile qui a été supprimée.</target>
-      </trans-unit>
       <trans-unit id="7341385722923686160" datatype="html">
         <source>You cannot capture from an empty space.</source>
         <target>Vous ne pouvez pas capturer sur une case vide.</target>
@@ -1137,10 +1133,6 @@
       <trans-unit id="2017860068625343028" datatype="html">
         <source>You have successfully disconnected the stack of 4 pieces of your opponent, but on the next move your opponent will be able to move on your new stack, and to win the game! There exists a better outcome of this situation, try to find it.</source>
         <target>Vous avez bien déconnecté la pile de 4 pièces de votre adversaire, mais lors du mouvement suivant il sera capable de se déplacer sur votre nouvelle pile et de gagner le jeu ! Il existe un meilleur mouvement pour vous, essayez de le trouver.</target>
-      </trans-unit>
-      <trans-unit id="2366265892991791609" datatype="html">
-        <source>Bad choice! You should be able to disconnect your opponent&apos;s stack of four pieces.</source>
-        <target>Mauvais choix! Vous devriez être capable de déconnecter la pile de quatre pièces de votre adversaire.</target>
       </trans-unit>
       <trans-unit id="4457528534020479150" datatype="html">
         <source>Nice, you have disconnected 4 pieces of your opponent, and your new stack cannot be reached by your opponent!
@@ -1786,10 +1778,6 @@
         <source>This piece is not of the color you have to play.</source>
         <target>La pièce n&apos;est pas de la couleur à jouer.</target>
       </trans-unit>
-      <trans-unit id="5767893885549492996" datatype="html">
-        <source>You must move to an empty square.</source>
-        <target>Vous devez vous déplacer vers une case vide.</target>
-      </trans-unit>
       <trans-unit id="945155491646703687" datatype="html">
         <source>You can only move forward, orthogonally or diagonally.</source>
         <target>Vous ne pouvez vous déplacer que vers l&apos;avant orthogonalement ou diagonalement.</target>
@@ -2104,10 +2092,6 @@
       <trans-unit id="682762602217958961" datatype="html">
         <source>You must move your pieces upward.</source>
         <target>Vous devez déplacer vos pièces vers le haut.</target>
-      </trans-unit>
-      <trans-unit id="1573455518890855659" datatype="html">
-        <source>You must start your move with one of your pieces.</source>
-        <target>Votre mouvement devrait commencer avec une de vos pièces !</target>
       </trans-unit>
       <trans-unit id="2162535855239454361" datatype="html">
         <source>Your piece must land on the board or on 4 other pieces.</source>
@@ -2508,7 +2492,11 @@
       </trans-unit>
       <trans-unit id="5302904876941698020" datatype="html">
         <source>Failed! You have made a single step.</source>
-        <target>Raté ! Vous avez fait un simple pas !</target>
+        <target>Raté ! Vous avez fait un simple pas.</target>
+      </trans-unit>
+      <trans-unit id="5300676389075722498" datatype="html">
+        <source>You cannot insert a piece when you have already selected a piece.</source>
+        <target>Vous ne pouvez pas insérer une pièce si vous avez déjà sélectionné une pièce.</target>
       </trans-unit>
       <trans-unit id="5162969671337604607" datatype="html">
         <source>You cannot insert a piece, all your pieces are already on the board.</source>
@@ -2778,6 +2766,10 @@
         <source>This move has not cut the board in two equal halves.</source>
         <target>Ce mouvement n&apos;as pas coupé le plateau en deux parties égales.</target>
       </trans-unit>
+      <trans-unit id="4274208426593680443" datatype="html">
+        <source>Failed. You did cut the board in two but you kept the half where you&apos;re in minority. Therefore, you lost! Try again.</source>
+        <target>Raté. Vous avez coupé le plateau en deux parties, mais avez gardé la partie où vous êtes en minorité. Vous avez donc perdu ! Essayez à nouveau.</target>
+      </trans-unit>
       <trans-unit id="4456476499852991526" datatype="html">
         <source>You cannot land on an occupied square.</source>
         <target>Vous ne pouvez pas atterrir sur une case occupée.</target>
@@ -2916,25 +2908,13 @@
         <source>You cannot put a marker in a ring before placing all of your rings.</source>
         <target>Vous ne pouvez pas placer vos marqueurs avant d&apos;avoir placé tous vos anneaux.</target>
       </trans-unit>
-      <trans-unit id="7464993832700646540" datatype="html">
-        <source>You can only capture when exactly 5 of your markers are aligned, and it is not the case.</source>
-        <target>Vous ne pouvez effectuer une capture que quand exactement 5 de vos marqueurs sont alignés, et ce n'est pas le cas.</target>
-      </trans-unit>
       <trans-unit id="923761852987939376" datatype="html">
         <source>The direction of your move is invalid: a move is made along a straight line.</source>
         <target>La direction de votre mouvement est invalide: un mouvement se fait le long d'une ligne droite.</target>
       </trans-unit>
-      <trans-unit id="1240800364123845501" datatype="html">
-        <source>Please pick a valid capture that contains exactly 5 markers.</source>
-        <target>Veuillez choisir une capture valide qui contient exactement 5 marqueurs.</target>
-      </trans-unit>
       <trans-unit id="4828021707700375959" datatype="html">
         <source>You can only capture your own markers.</source>
         <target>Vous ne pouvez que capturer vos propres marqueurs.</target>
-      </trans-unit>
-      <trans-unit id="7551920604130573364" datatype="html">
-        <source>Captured markers must follow each other without holes, your capture contains a hole.</source>
-        <target>Les marqueurs capturés doivent être consécutifs : votre capture contient un trou.</target>
       </trans-unit>
       <trans-unit id="8518184052895338328" datatype="html">
         <source>You must pick one of your own rings to move.</source>
@@ -2951,10 +2931,6 @@
       <trans-unit id="3047973571712211401" datatype="html">
         <source>Your ring must land on the first empty space after a group of markers.</source>
         <target>Votre déplacement doit s&apos;arrêter à la première case vide après un groupe de marqueurs.</target>
-      </trans-unit>
-      <trans-unit id="1305060453231120345" datatype="html">
-        <source>A capture must contain exactly 5 markers.</source>
-        <target>Une capture doit se composer d&apos;exactement 5 marqueurs.</target>
       </trans-unit>
       <trans-unit id="5146449464465539521" datatype="html">
         <source>When you capture markers, you must take one of your ring as well by clicking on it.</source>

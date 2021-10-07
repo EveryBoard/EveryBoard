@@ -16,7 +16,7 @@ import { MaxStacksDvonnMinimax } from './MaxStacksDvonnMinimax';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { dvonnTutorial } from './DvonnTutorial';
+import { DvonnTutorial } from './DvonnTutorial';
 
 @Component({
     selector: 'app-dvonn',
@@ -41,7 +41,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnGameS
                        PointyHexaOrientation.INSTANCE);
     public encoder: MoveEncoder<DvonnMove> = DvonnMove.encoder;
 
-    public tutorial: TutorialStep[] = dvonnTutorial;
+    public tutorial: TutorialStep[] = new DvonnTutorial().tutorial;
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -98,7 +98,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnGameS
         if (this.canPass) {
             return await this.chooseMove(DvonnMove.PASS, this.rules.node.gamePartSlice, null, null);
         } else {
-            return MGPValidation.failure(RulesFailure.CANNOT_PASS);
+            return MGPValidation.failure(RulesFailure.CANNOT_PASS());
         }
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {

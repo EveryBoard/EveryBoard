@@ -63,17 +63,17 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         if (move.isDropping()) {
             movingPiece = move.piece.get();
             if (slice.pieceBelongsToCurrentPlayer(movingPiece) === false) {
-                return EncapsuleLegalityStatus.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE);
+                return EncapsuleLegalityStatus.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
             }
             if (slice.isInRemainingPieces(movingPiece) === false) {
-                return EncapsuleLegalityStatus.failure(EncapsuleFailure.PIECE_OUT_OF_STOCK);
+                return EncapsuleLegalityStatus.failure(EncapsuleFailure.PIECE_OUT_OF_STOCK());
             }
         } else {
             const startingCoord: Coord = move.startingCoord.get();
             const startingCase: EncapsuleCase = EncapsuleCase.decode(boardCopy[startingCoord.y][startingCoord.x]);
             movingPiece = startingCase.getBiggest();
             if (slice.pieceBelongsToCurrentPlayer(movingPiece) === false) {
-                return EncapsuleLegalityStatus.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE);
+                return EncapsuleLegalityStatus.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
             }
         }
         const landingNumber: number = boardCopy[move.landingCoord.y][move.landingCoord.x];
@@ -82,7 +82,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         if (superpositionResult.isPresent()) {
             return { legal: MGPValidation.SUCCESS, newLandingCase: superpositionResult.get() };
         }
-        return EncapsuleLegalityStatus.failure(EncapsuleFailure.INVALID_PLACEMENT);
+        return EncapsuleLegalityStatus.failure(EncapsuleFailure.INVALID_PLACEMENT());
     }
     public isLegal(move: EncapsuleMove, slice: EncapsulePartSlice): EncapsuleLegalityStatus {
         return EncapsuleRules.isLegal(move, slice);

@@ -5,13 +5,13 @@ import { ArrayUtils, NumberTable } from 'src/app/utils/ArrayUtils';
 const M: number = Number.MAX_SAFE_INTEGER;
 const m: number = Number.MIN_SAFE_INTEGER;
 export class MinimaxTestingPartSlice extends GamePartSlice {
-    public static readonly BOARD_0: NumberTable = [ // le premier joueur gagne, même minimax avec depth=1
+    public static readonly BOARD_0: NumberTable = [ // first player wins, even with a minimax with depth = 1
         [6, 4, 3, 1],
         [4, 4, 3, 1],
         [3, 3, 2, 0],
         [1, 1, 0, 0],
     ];
-    public static readonly BOARD_1: NumberTable = [ // le premier joueur gagne, même minimax avec depth=1
+    public static readonly BOARD_1: NumberTable = [ // second player wins, even with minimax with depth = 1
         [+0, +M, -1, -1],
         [+1, +2, +M, -1],
         [+m, +3, +4, -1],

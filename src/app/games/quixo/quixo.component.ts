@@ -13,7 +13,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { quixoTutorial } from './QuixoTutorial';
+import { QuixoTutorial } from './QuixoTutorial';
 
 @Component({
     selector: 'app-quixo',
@@ -37,7 +37,7 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
 
     public encoder: MoveEncoder<QuixoMove> = QuixoMove.encoder;
 
-    public tutorial: TutorialStep[] = quixoTutorial;
+    public tutorial: TutorialStep[] = new QuixoTutorial().tutorial;
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -80,7 +80,7 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
             return this.cancelMove(coordLegality.reason);
         }
         if (this.board[y][x] === this.slice.getCurrentEnnemy().value) {
-            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
+            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
         } else {
             this.chosenCoord = clickedCoord;
             return MGPValidation.SUCCESS;

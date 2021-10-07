@@ -43,7 +43,7 @@ export class SaharaMove extends MoveCoordToCoord {
             }
         } else if (distance === 2) {
             if ((start.x + start.y) % 2 === 0) {
-                throw new Error(SaharaFailure.CAN_ONLY_REBOUND_ON_BLACK);
+                throw new Error(SaharaFailure.CAN_ONLY_REBOUND_ON_BLACK());
             }
             if (start.x === end.x) {
                 throw new Error(start.toString() + ' and ' + end.toString() + ' have no intermediary neighboors.');

@@ -59,20 +59,20 @@ export class DvonnRules extends Rules<DvonnMove, DvonnGameState> {
     }
     public isMovablePiece(slice: DvonnGameState, coord: Coord): MGPValidation {
         if (!slice.hexaBoard.isOnBoard(coord)) {
-            return MGPValidation.failure(DvonnFailure.INVALID_COORD);
+            return MGPValidation.failure(DvonnFailure.INVALID_COORD());
         }
         const stack: DvonnPieceStack = slice.hexaBoard.getAt(coord);
         if (stack.getSize() < 1) {
-            return MGPValidation.failure(DvonnFailure.EMPTY_STACK);
+            return MGPValidation.failure(DvonnFailure.EMPTY_STACK());
         }
         if (!stack.belongsTo(slice.getCurrentPlayer())) {
-            return MGPValidation.failure(DvonnFailure.NOT_PLAYER_PIECE);
+            return MGPValidation.failure(DvonnFailure.NOT_PLAYER_PIECE());
         }
         if (slice.hexaBoard.numberOfNeighbors(coord) >= 6) {
-            return MGPValidation.failure(DvonnFailure.TOO_MANY_NEIGHBORS);
+            return MGPValidation.failure(DvonnFailure.TOO_MANY_NEIGHBORS());
         }
         if (!DvonnRules.pieceHasTarget(slice, coord)) {
-            return MGPValidation.failure(DvonnFailure.CANT_REACH_TARGET);
+            return MGPValidation.failure(DvonnFailure.CANT_REACH_TARGET());
         }
         return MGPValidation.SUCCESS;
     }
@@ -112,7 +112,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnGameState> {
     }
     public applyLegalMove(move: DvonnMove,
                           slice: DvonnGameState,
-                          status: LegalityStatus)
+                          _status: LegalityStatus)
     : DvonnGameState
     {
         if (move === DvonnMove.PASS) {
@@ -137,7 +137,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnGameState> {
             if (move === DvonnMove.PASS && !slice.alreadyPassed) {
                 return { legal: MGPValidation.SUCCESS };
             } else {
-                return { legal: MGPValidation.failure(RulesFailure.MUST_PASS) };
+                return { legal: MGPValidation.failure(RulesFailure.MUST_PASS()) };
             }
         }
 
@@ -148,12 +148,12 @@ export class DvonnRules extends Rules<DvonnMove, DvonnGameState> {
 
         const stack: DvonnPieceStack = slice.hexaBoard.getAt(move.coord);
         if (move.length() !== stack.getSize()) {
-            return { legal: MGPValidation.failure(DvonnFailure.INVALID_MOVE_LENGTH) };
+            return { legal: MGPValidation.failure(DvonnFailure.INVALID_MOVE_LENGTH()) };
         }
 
         const targetStack: DvonnPieceStack = slice.hexaBoard.getAt(move.end);
         if (targetStack.isEmpty()) {
-            return { legal: MGPValidation.failure(DvonnFailure.EMPTY_TARGET_STACK) };
+            return { legal: MGPValidation.failure(DvonnFailure.EMPTY_TARGET_STACK()) };
         }
         return { legal: MGPValidation.SUCCESS };
     }

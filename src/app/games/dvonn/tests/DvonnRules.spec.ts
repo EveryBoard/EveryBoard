@@ -42,7 +42,7 @@ describe('DvonnRules:', () => {
     });
     it('should be created', () => {
         expect(rules).toBeTruthy();
-        expect(rules.node.gamePartSlice.turn).toBe(0, 'Game should start at turn 0');
+        expect(rules.node.gamePartSlice.turn).withContext('Game should start at turn 0').toBe(0);
     });
     it('initial stacks should be of size 1', () => {
         const slice: DvonnGameState = rules.node.gamePartSlice;
@@ -85,13 +85,13 @@ describe('DvonnRules:', () => {
         }
         const move: DvonnMove = DvonnMove.of(new Coord(1, 1), new Coord(1, 2));
         const status: LegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.reason).toBe(DvonnFailure.NOT_PLAYER_PIECE);
+        expect(status.legal.reason).toBe(DvonnFailure.NOT_PLAYER_PIECE());
     });
     it('should forbid moves for pieces with more than 6 neighbors', () => {
         const slice: DvonnGameState = rules.node.gamePartSlice;
         const move: DvonnMove = DvonnMove.of(new Coord(1, 3), new Coord(1, 2));
         const status: LegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.reason).toBe(DvonnFailure.TOO_MANY_NEIGHBORS);
+        expect(status.legal.reason).toBe(DvonnFailure.TOO_MANY_NEIGHBORS());
     });
     it('should forbid moves from an empty stack', () => {
         const board: DvonnBoard = new DvonnBoard([
@@ -104,7 +104,7 @@ describe('DvonnRules:', () => {
         const slice: DvonnGameState = new DvonnGameState(board, 0, false);
         const move: DvonnMove = DvonnMove.of(new Coord(2, 0), new Coord(2, 1));
         const legality: MGPValidation = rules.isLegal(move, slice).legal;
-        expect(legality).toEqual(MGPValidation.failure(DvonnFailure.EMPTY_STACK));
+        expect(legality).toEqual(MGPValidation.failure(DvonnFailure.EMPTY_STACK()));
     });
     it('should forbid moves with pieces that cannot reach any target', () => {
         const board: DvonnBoard = new DvonnBoard([
@@ -117,7 +117,7 @@ describe('DvonnRules:', () => {
         const slice: DvonnGameState = new DvonnGameState(board, 0, false);
         const move: DvonnMove = DvonnMove.of(new Coord(2, 0), new Coord(4, 0));
         const legality: MGPValidation = rules.isLegal(move, slice).legal;
-        expect(legality).toEqual(MGPValidation.failure(DvonnFailure.CANT_REACH_TARGET));
+        expect(legality).toEqual(MGPValidation.failure(DvonnFailure.CANT_REACH_TARGET()));
     });
     it('should forbid moves with a different length than the stack size', () => {
         const board: DvonnBoard = new DvonnBoard([
@@ -130,7 +130,7 @@ describe('DvonnRules:', () => {
         const slice: DvonnGameState = new DvonnGameState(board, 0, false);
         const move: DvonnMove = DvonnMove.of(new Coord(2, 0), new Coord(3, 0));
         const legality: MGPValidation = rules.isLegal(move, slice).legal;
-        expect(legality).toEqual(MGPValidation.failure(DvonnFailure.INVALID_MOVE_LENGTH));
+        expect(legality).toEqual(MGPValidation.failure(DvonnFailure.INVALID_MOVE_LENGTH()));
     });
     it('should have the target stack owned by the owner of the source stack after the move', () => {
         const expectedBoard: DvonnBoard = new DvonnBoard([
@@ -163,7 +163,7 @@ describe('DvonnRules:', () => {
             expect(board.getAt(move.end).isEmpty()).toBeFalse();
         }
         const move: DvonnMove = DvonnMove.of(new Coord(3, 1), new Coord(3, 2));
-        expect(rules.isLegal(move, slice).legal.reason).toBe(DvonnFailure.EMPTY_TARGET_STACK);
+        expect(rules.isLegal(move, slice).legal.reason).toBe(DvonnFailure.EMPTY_TARGET_STACK());
     });
     it('should move stacks as a whole, by as many spaces as there are pieces in the stack', () => {
         const board: DvonnBoard = new DvonnBoard([
@@ -180,7 +180,7 @@ describe('DvonnRules:', () => {
         }
         const move: DvonnMove = DvonnMove.of(new Coord(2, 0), new Coord(3, 0));
         const status: LegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.reason).toBe(DvonnFailure.INVALID_MOVE_LENGTH);
+        expect(status.legal.reason).toBe(DvonnFailure.INVALID_MOVE_LENGTH());
     });
     it('should not allow moves that end on an empty space', () => {
         const board: DvonnBoard = new DvonnBoard([
@@ -212,13 +212,13 @@ describe('DvonnRules:', () => {
             expect(stack.belongsTo(slice.getCurrentPlayer())).toBeTrue();
         }
         const move: DvonnMove = DvonnMove.of(new Coord(2, 0), new Coord(2, 4));
-        expect(rules.isLegal(move, slice).legal.reason).toBe(DvonnFailure.INVALID_MOVE_LENGTH);
+        expect(rules.isLegal(move, slice).legal.reason).toBe(DvonnFailure.INVALID_MOVE_LENGTH());
     });
     it('should not allow to pass turns if moves are possible', () => {
         const slice: DvonnGameState = rules.node.gamePartSlice;
-        expect(rules.isLegal(DvonnMove.PASS, slice).legal.reason).toBe(DvonnFailure.INVALID_COORD);
-        // TODO: le message devrait correspondre à la raison de son apparition
-        // (l'user ne peut pas passer car il doit jouer, pas à cause de la coord)
+        expect(rules.isLegal(DvonnMove.PASS, slice).legal.reason).toBe(DvonnFailure.INVALID_COORD());
+        // TODO: message should be linked to the reason of why it appears
+        // (user cannot pass because they need to play, not due to the coord)
     });
     it('should allow to pass turn if no moves are possible', () => {
         const board: DvonnBoard = new DvonnBoard([
@@ -234,7 +234,7 @@ describe('DvonnRules:', () => {
         expect(moves[0]).toEqual(DvonnMove.PASS);
         expect(rules.isLegal(DvonnMove.PASS, slice).legal.isSuccess()).toBeTrue();
         const move: DvonnMove = DvonnMove.of(new Coord(2, 0), new Coord(2, 1));
-        expect(rules.isLegal(move, slice).legal.reason).toBe(RulesFailure.MUST_PASS);
+        expect(rules.isLegal(move, slice).legal.reason).toBe(RulesFailure.MUST_PASS());
     });
     it('should remove of the board any portion disconnected from a source', () => {
         const board: DvonnBoard = new DvonnBoard([

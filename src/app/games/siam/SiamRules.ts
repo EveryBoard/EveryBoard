@@ -27,7 +27,7 @@ export class SiamRules extends _SiamRules {
         if (!move.isInsertion()) {
             const movedPiece: number = slice.getBoardAt(move.coord);
             if (!SiamPiece.belongTo(movedPiece, slice.getCurrentPlayer())) {
-                return SiamLegalityStatus.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE);
+                return SiamLegalityStatus.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
             }
         }
         if (move.isRotation()) {
@@ -55,7 +55,7 @@ export class SiamRules extends _SiamRules {
         const currentPlayer: Player = slice.getCurrentPlayer();
         const legal: MGPValidation = (numberOnBoard < 5) ?
             MGPValidation.SUCCESS :
-            MGPValidation.failure(SiamFailure.NO_REMAINING_PIECE_TO_INSERT);
+            MGPValidation.failure(SiamFailure.NO_REMAINING_PIECE_TO_INSERT());
         const insertedPiece: number = SiamRules.getInsertedPiece(coord, currentPlayer).value;
         return { insertedPiece, legal };
     }
@@ -78,7 +78,7 @@ export class SiamRules extends _SiamRules {
         ) {
             display(SiamRules.VERBOSE,
                     'Illegal push because not straight or not pushing anything or leaving the board');
-            return SiamLegalityStatus.failure(SiamFailure.ILLEGAL_PUSH);
+            return SiamLegalityStatus.failure(SiamFailure.ILLEGAL_PUSH());
         }
         let currentDirection: Orthogonal = pushingDir;
         const resistingDir: Orthogonal = pushingDir.getOpposite();
@@ -124,7 +124,7 @@ export class SiamRules extends _SiamRules {
         }
         if (totalForce <= 0) {
             display(SiamRules.VERBOSE, 'This move is an illegal push: ' + resultingBoard);
-            return SiamLegalityStatus.failure(SiamFailure.NOT_ENOUGH_FORCE_TO_PUSH);
+            return SiamLegalityStatus.failure(SiamFailure.NOT_ENOUGH_FORCE_TO_PUSH());
         }
 
         display(SiamRules.VERBOSE, 'This move is a legal push: '+resultingBoard);
@@ -143,7 +143,7 @@ export class SiamRules extends _SiamRules {
         const currentPiece: number = slice.getBoardAt(c);
         const currentPlayer: Player = slice.getCurrentPlayer();
         if (SiamPiece.getDirection(currentPiece) === rotation.landingOrientation) {
-            return SiamLegalityStatus.failure(SiamFailure.ILLEGAL_ROTATION);
+            return SiamLegalityStatus.failure(SiamFailure.ILLEGAL_ROTATION());
         }
         const resultingBoard: number[][] = slice.getCopiedBoard();
         resultingBoard[c.y][c.x] = SiamPiece.of(rotation.landingOrientation, currentPlayer).value;

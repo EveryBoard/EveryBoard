@@ -6,11 +6,12 @@ import { IMessage } from '../domain/imessage';
 import { assert, display } from 'src/app/utils/utils';
 import { MGPValidation } from '../utils/MGPValidation';
 import { ArrayUtils } from '../utils/ArrayUtils';
+import { Localized } from '../utils/LocaleUtils';
 
 export class ChatMessages {
-    public static readonly CANNOT_SEND_MESSAGE: string = $localize`You're not allowed to send a message here.`;
+    public static readonly CANNOT_SEND_MESSAGE: Localized = () => $localize`You're not allowed to send a message here.`;
 
-    public static readonly FORBIDDEN_MESSAGE: string = $localize`This message is forbidden.`;
+    public static readonly FORBIDDEN_MESSAGE: Localized = () => $localize`This message is forbidden.`;
 }
 @Injectable({
     providedIn: 'root',
@@ -68,10 +69,10 @@ export class ChatService implements OnDestroy {
     }
     public async sendMessage(userName: string, currentTurn: number, content: string): Promise<MGPValidation> {
         if (this.userCanSendMessage(userName, this.followedChatId) === false) {
-            return MGPValidation.failure(ChatMessages.CANNOT_SEND_MESSAGE);
+            return MGPValidation.failure(ChatMessages.CANNOT_SEND_MESSAGE());
         }
         if (this.isForbiddenMessage(content)) {
-            return MGPValidation.failure(ChatMessages.FORBIDDEN_MESSAGE);
+            return MGPValidation.failure(ChatMessages.FORBIDDEN_MESSAGE());
         }
         const chat: IChat = await this.chatDao.read(this.followedChatId);
         const messages: IMessage[] = ArrayUtils.copyImmutableArray(chat.messages);

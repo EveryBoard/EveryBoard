@@ -14,7 +14,7 @@ import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { EncapsuleFailure } from './EncapsuleFailure';
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { encapsuleTutorial } from './EncapsuleTutorial';
+import { EncapsuleTutorial } from './EncapsuleTutorial';
 
 @Component({
     selector: 'app-encapsule',
@@ -35,7 +35,7 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove,
 
     public encoder: MoveEncoder<EncapsuleMove> = EncapsuleMove.encoder;
 
-    public tutorial: TutorialStep[] = encapsuleTutorial;
+    public tutorial: TutorialStep[] = new EncapsuleTutorial().tutorial;
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -78,11 +78,11 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove,
                     EncapsuleMove.fromDrop(this.chosenPiece, clickedCoord);
                 return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
             } else if (slice.getAt(clickedCoord).belongsTo(slice.getCurrentPlayer()) === false) {
-                return this.cancelMove(EncapsuleFailure.INVALID_PIECE_SELECTED);
+                return this.cancelMove(EncapsuleFailure.INVALID_PIECE_SELECTED());
             }
         } else {
             if (this.chosenCoord.equals(clickedCoord)) {
-                return this.cancelMove(EncapsuleFailure.SAME_DEST_AS_ORIGIN);
+                return this.cancelMove(EncapsuleFailure.SAME_DEST_AS_ORIGIN());
             } else {
                 const chosenMove: EncapsuleMove =
                     EncapsuleMove.fromMove(this.chosenCoord, clickedCoord);
@@ -103,13 +103,13 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove,
 
         const slice: EncapsulePartSlice = this.rules.node.gamePartSlice;
         if (slice.isDroppable(piece) === false) {
-            return this.cancelMove(EncapsuleFailure.NOT_DROPPABLE);
+            return this.cancelMove(EncapsuleFailure.NOT_DROPPABLE());
         } else if (this.chosenCoord == null) {
             this.chosenPiece = piece;
             this.chosenPieceIndex = index;
             return MGPValidation.SUCCESS;
         } else {
-            return this.cancelMove(EncapsuleFailure.END_YOUR_MOVE);
+            return this.cancelMove(EncapsuleFailure.END_YOUR_MOVE());
         }
     }
     public getRectClasses(x: number, y: number): string {

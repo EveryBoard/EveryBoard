@@ -118,7 +118,7 @@ describe('GameService', () => {
             expect(await service.createGameAndRedirectOrShowError('whatever')).toBeFalse();
 
             // it should toast, and navigate
-            expect(messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(GameServiceMessages.USER_OFFLINE);
+            expect(messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(GameServiceMessages.USER_OFFLINE());
             expect(router.navigate).toHaveBeenCalledOnceWith(['/login']);
 
             tick(150);
@@ -136,7 +136,7 @@ describe('GameService', () => {
             tick(150);
 
             // it should toast, and navigate
-            expect(messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(GameServiceMessages.ALREADY_INGAME);
+            expect(messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(GameServiceMessages.ALREADY_INGAME());
             expect(router.navigate).toHaveBeenCalledOnceWith(['/server']);
         }));
     });

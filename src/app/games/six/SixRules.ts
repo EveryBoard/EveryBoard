@@ -83,7 +83,7 @@ export class SixRules extends Rules<SixMove,
             case Player.NONE:
                 return { legal: MGPValidation.failure('Cannot move empty coord!'), kept: null };
             case state.getCurrentEnnemy():
-                return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE), kept: null };
+                return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE()), kept: null };
         }
         const piecesAfterDeplacement: MGPMap<Coord, Player> = SixGameState.deplacePiece(state, move);
         const groupsAfterMove: MGPSet<MGPSet<Coord>> =
@@ -93,7 +93,7 @@ export class SixRules extends Rules<SixMove,
             if (biggerGroups.size() === 1) {
                 if (move.keep.isPresent()) {
                     return {
-                        legal: MGPValidation.failure(SixFailure.CANNOT_CHOOSE_TO_KEEP),
+                        legal: MGPValidation.failure(SixFailure.CANNOT_CHOOSE_TO_KEEP()),
                         kept: null,
                     };
                 } else {
@@ -134,12 +134,12 @@ export class SixRules extends Rules<SixMove,
     {
         if (keep.isAbsent()) {
             return {
-                legal: MGPValidation.failure(SixFailure.MUST_CUT),
+                legal: MGPValidation.failure(SixFailure.MUST_CUT()),
                 kept: null,
             };
         }
         if (pieces.get(keep.get()).isAbsent()) {
-            return { legal: MGPValidation.failure(SixFailure.CANNOT_KEEP_EMPTY_COORD), kept: null };
+            return { legal: MGPValidation.failure(SixFailure.CANNOT_KEEP_EMPTY_COORD()), kept: null };
         }
         const keptCoord: Coord = keep.get();
         for (let i: number = 0; i < biggerGroups.size(); i++) {
@@ -149,7 +149,7 @@ export class SixRules extends Rules<SixMove,
             }
         }
         return {
-            legal: MGPValidation.failure(SixFailure.MUST_CAPTURE_BIGGEST_GROUPS),
+            legal: MGPValidation.failure(SixFailure.MUST_CAPTURE_BIGGEST_GROUPS()),
             kept: null,
         };
     }

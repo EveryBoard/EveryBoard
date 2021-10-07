@@ -148,7 +148,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice> {
         }));
     }
     // Apply the move by only relying on tryMove
-    public applyLegalMove(move: KamisadoMove, slice: KamisadoPartSlice, status: LegalityStatus)
+    public applyLegalMove(move: KamisadoMove, slice: KamisadoPartSlice, _status: LegalityStatus)
     : KamisadoPartSlice {
         if (move === KamisadoMove.PASS) {
             const nextCoord: MGPOptional<Coord> = this.nextCoordToPlay(slice, slice.colorToPlay);
@@ -182,7 +182,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice> {
             if (this.mustPass(slice) && !slice.alreadyPassed) {
                 return { legal: MGPValidation.SUCCESS };
             } else {
-                return { legal: MGPValidation.failure(RulesFailure.CANNOT_PASS) };
+                return { legal: MGPValidation.failure(RulesFailure.CANNOT_PASS()) };
             }
         }
 
@@ -195,31 +195,31 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice> {
         //   - start piece should be owned by the current player
         const piece: KamisadoPiece = KamisadoBoard.getPieceAt(slice.board, start);
         if (!piece.belongsTo(slice.getCurrentPlayer())) {
-            return { legal: MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE) };
+            return { legal: MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE()) };
         }
         //  - start case should contain a piece of the right color (or any color can be played)
         if (colorToPlay !== KamisadoColor.ANY && piece.color !== colorToPlay) {
-            return { legal: MGPValidation.failure(KamisadoFailure.NOT_RIGHT_COLOR) };
+            return { legal: MGPValidation.failure(KamisadoFailure.NOT_RIGHT_COLOR()) };
         }
         //  - end case should be empty
         const endPiece: KamisadoPiece = KamisadoBoard.getPieceAt(slice.board, end);
         if (!endPiece.isEmpty()) {
-            return { legal: MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE) };
+            return { legal: MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE()) };
         }
         //  - all steps between start and end should be empty
         const directionOptional: MGPFallible<Direction> = Direction.factory.fromMove(start, end);
         if (directionOptional.isFailure()) {
-            return { legal: MGPValidation.failure(KamisadoFailure.DIRECTION_NOT_ALLOWED) };
+            return { legal: MGPValidation.failure(KamisadoFailure.DIRECTION_NOT_ALLOWED()) };
         }
         const dir: Direction = directionOptional.get();
         if (!KamisadoRules.directionAllowedForPlayer(dir, slice.getCurrentPlayer())) {
-            return { legal: MGPValidation.failure(KamisadoFailure.DIRECTION_NOT_ALLOWED) };
+            return { legal: MGPValidation.failure(KamisadoFailure.DIRECTION_NOT_ALLOWED()) };
         }
         let currentCoord: Coord = start;
         while (!currentCoord.equals(end)) {
             currentCoord = currentCoord.getNext(dir);
             if (!KamisadoBoard.getPieceAt(slice.board, currentCoord).isEmpty()) {
-                return { legal: MGPValidation.failure(KamisadoFailure.MOVE_BLOCKED) };
+                return { legal: MGPValidation.failure(KamisadoFailure.MOVE_BLOCKED()) };
             }
         }
         return { legal: MGPValidation.SUCCESS };

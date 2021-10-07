@@ -29,7 +29,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoPartSlice> {
     }
     public applyLegalTileExchange(move: CoerceoMove,
                                   slice: CoerceoPartSlice,
-                                  status: LegalityStatus)
+                                  _status: LegalityStatus)
     : CoerceoPartSlice
     {
         const newBoard: number[][] = slice.getCopiedBoard();
@@ -86,16 +86,16 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoPartSlice> {
     }
     public isLegalTileExchange(move: CoerceoMove, slice: CoerceoPartSlice): LegalityStatus {
         if (slice.tiles[slice.getCurrentPlayer().value] < 2) {
-            return { legal: MGPValidation.failure(CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE) };
+            return { legal: MGPValidation.failure(CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE()) };
         }
         const captured: number = slice.getBoardAt(move.capture.get());
         if (captured === FourStatePiece.NONE.value ||
             captured === FourStatePiece.EMPTY.value)
         {
-            return { legal: MGPValidation.failure(CoerceoFailure.CANNOT_CAPTURE_FROM_EMPTY) };
+            return { legal: MGPValidation.failure(CoerceoFailure.CANNOT_CAPTURE_FROM_EMPTY()) };
         }
         if (captured === slice.getCurrentPlayer().value) {
-            return { legal: MGPValidation.failure(CoerceoFailure.CANNOT_CAPTURE_OWN_PIECES) };
+            return { legal: MGPValidation.failure(CoerceoFailure.CANNOT_CAPTURE_OWN_PIECES()) };
         }
         return { legal: MGPValidation.SUCCESS };
     }
@@ -110,13 +110,13 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoPartSlice> {
             return { legal: MGPValidation.failure(reason) };
         }
         if (slice.getBoardAt(move.start.get()) === FourStatePiece.EMPTY.value) {
-            return { legal: MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY) };
+            return { legal: MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY()) };
         }
         if (slice.getBoardAt(move.start.get()) === slice.getCurrentEnnemy().value) {
-            return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE) };
+            return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE()) };
         }
         if (slice.getBoardAt(move.landingCoord.get()) === slice.getCurrentPlayer().value) {
-            return { legal: MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE) };
+            return { legal: MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE()) };
         }
         return { legal: MGPValidation.SUCCESS };
     }

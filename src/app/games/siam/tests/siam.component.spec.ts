@@ -7,6 +7,8 @@ import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { SiamPartSlice } from 'src/app/games/siam/SiamPartSlice';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { SiamFailure } from '../SiamFailure';
 
 describe('SiamComponent', () => {
     let componentTestUtils: ComponentTestUtils<SiamComponent>;
@@ -34,8 +36,8 @@ describe('SiamComponent', () => {
         componentTestUtils = await ComponentTestUtils.forGame<SiamComponent>('Siam');
     }));
     it('should create', () => {
-        expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');
-        expect(componentTestUtils.getComponent()).toBeTruthy('Component should be created');
+        expect(componentTestUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
+        expect(componentTestUtils.getComponent()).withContext('Component should be created').toBeTruthy();
     });
     it('should accept insertion at first turn', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#insertAt_2_-1');
@@ -53,7 +55,7 @@ describe('SiamComponent', () => {
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
         componentTestUtils.setupSlice(slice);
 
-        await componentTestUtils.expectClickFailure('#clickPiece_4_4', `Can't choose ennemy's pieces`);
+        await componentTestUtils.expectClickFailure('#clickPiece_4_4', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
     }));
     it('should cancel move when trying to insert while having selected a piece', fakeAsync(async() => {
         const board: NumberTable = [
@@ -68,8 +70,7 @@ describe('SiamComponent', () => {
 
         await componentTestUtils.expectClickSuccess('#clickPiece_0_0');
 
-        const reason: string = `Can't insert when there is already a selected piece`;
-        await componentTestUtils.expectClickFailure('#insertAt_-1_2', reason);
+        await componentTestUtils.expectClickFailure('#insertAt_-1_2', SiamFailure.CANNOT_INSERT_WHEN_SELECTED());
     }));
     it('should allow rotation', fakeAsync(async() => {
         const board: NumberTable = [

@@ -14,7 +14,7 @@ import { PentagoRules } from './PentagoRules';
 import { PentagoGameState } from './PentagoGameState';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { pentagoTutorial } from './PentagoTutorial';
+import { PentagoTutorial } from './PentagoTutorial';
 
 @Component({
     selector: 'app-pentago',
@@ -30,7 +30,7 @@ export class PentagoComponent extends AbstractGameComponent<PentagoMove,
 
     public encoder: MoveEncoder<PentagoMove> = PentagoMove.encoder;
 
-    public tutorial: TutorialStep[] = pentagoTutorial;
+    public tutorial: TutorialStep[] = new PentagoTutorial().tutorial;
 
     public readonly BLOCK_WIDTH: number;
     public readonly BLOCK_SEPARATION: number;

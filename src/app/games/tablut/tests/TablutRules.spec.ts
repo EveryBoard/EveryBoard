@@ -25,7 +25,7 @@ describe('TablutRules', () => {
     });
     it('Should be created', () => {
         expect(rules).toBeTruthy();
-        expect(rules.node.gamePartSlice.turn).toBe(0, 'Game should start a turn 0');
+        expect(rules.node.gamePartSlice.turn).withContext('Game should start a turn 0').toBe(0);
     });
     describe('getSurroundings', () => {
         it('Should return neighboorings cases', () => {
@@ -109,7 +109,7 @@ describe('TablutRules', () => {
         const expectedSlice: TablutPartSlice = new TablutPartSlice(expectedBoard, 24);
         expect(resultingSlice).toEqual(expectedSlice);
         const boardValue: number = minimax.getBoardValue(new MGPNode(null, move, expectedSlice)).value;
-        expect(boardValue).toEqual(Number.MAX_SAFE_INTEGER, 'This should be a victory for defender.');
+        expect(boardValue).withContext('This should be a victory for defender.').toEqual(Number.MAX_SAFE_INTEGER);
     });
     it('Capturing against empty throne should work', () => {
         const board: number[][] = [
@@ -173,7 +173,7 @@ describe('TablutRules', () => {
         const expectedSlice: TablutPartSlice = new TablutPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
         const boardValue: number = minimax.getBoardValue(new MGPNode(null, move, expectedSlice)).value;
-        expect(boardValue).toEqual(Number.MIN_SAFE_INTEGER, 'This should be a victory for player 0');
+        expect(boardValue).withContext('This should be a victory for player 0').toEqual(Number.MIN_SAFE_INTEGER);
     });
     it('Capturing king should require three invader and an edge lead to victory', () => {
         const board: number[][] = [
@@ -206,7 +206,7 @@ describe('TablutRules', () => {
         const expectedSlice: TablutPartSlice = new TablutPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
         const boardValue: number = minimax.getBoardValue(new MGPNode(null, move, expectedSlice)).value;
-        expect(boardValue).toEqual(Number.MIN_SAFE_INTEGER, 'This should be a victory for invader.');
+        expect(boardValue).withContext('This should be a victory for invader.').toEqual(Number.MIN_SAFE_INTEGER);
     });
     it('Capturing king with two soldier, one throne, and one edge should not work be a victory', () => {
         const board: number[][] = [
@@ -239,7 +239,7 @@ describe('TablutRules', () => {
         const expectedSlice: TablutPartSlice = new TablutPartSlice(expectedBoard, 3);
         expect(resultingSlice).toEqual(expectedSlice);
         const boardValue: number = minimax.getBoardValue(new MGPNode(null, move, expectedSlice)).value;
-        expect(boardValue).not.toEqual(Number.MIN_SAFE_INTEGER, 'This should not be a victory.');
+        expect(boardValue).not.withContext('This should not be a victory.').toEqual(Number.MIN_SAFE_INTEGER);
     });
     it('Capturing king against a throne should not work', () => {
         const board: number[][] = [
@@ -272,8 +272,8 @@ describe('TablutRules', () => {
         const expectedSlice: TablutPartSlice = new TablutPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
         const boardValue: number = minimax.getBoardValue(new MGPNode(null, move, expectedSlice)).value;
-        expect(boardValue).not.toEqual(Number.MIN_SAFE_INTEGER, 'This should not be a victory for player 0');
-        expect(boardValue).not.toEqual(Number.MAX_SAFE_INTEGER, 'This should not be a victory for player 1');
+        expect(boardValue).withContext('This should not be a victory for player 0').not.toEqual(Number.MIN_SAFE_INTEGER);
+        expect(boardValue).withContext('This should not be a victory for player 1').not.toEqual(Number.MAX_SAFE_INTEGER);
     });
     it('Capturing king against a throne with 3 soldier should not work', () => {
         const board: number[][] = [
@@ -306,8 +306,8 @@ describe('TablutRules', () => {
         const expectedSlice: TablutPartSlice = new TablutPartSlice(expectedBoard, 13);
         expect(resultingSlice).toEqual(expectedSlice);
         const boardValue: number = minimax.getBoardValue(new MGPNode(null, move, expectedSlice)).value;
-        expect(boardValue).not.toEqual(Number.MIN_SAFE_INTEGER, 'This should not be a victory for invader.');
-        expect(boardValue).not.toEqual(Number.MAX_SAFE_INTEGER, 'This should not be a victory for defender.');
+        expect(boardValue).withContext('This should not be a victory for invader.').not.toEqual(Number.MIN_SAFE_INTEGER);
+        expect(boardValue).withContext('This should not be a victory for defender.').not.toEqual(Number.MAX_SAFE_INTEGER);
     });
     it('King should be authorised to come back on the throne', () => {
         const move: TablutMove = new TablutMove(new Coord(4, 3), new Coord(4, 4));
@@ -340,7 +340,7 @@ describe('TablutRules', () => {
         const slice: TablutPartSlice = new TablutPartSlice(board, 1);
         const move: TablutMove = new TablutMove(new Coord(0, 4), new Coord(4, 4));
         const status: TablutLegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.getReason()).toBe(TablutFailure.SOLDIERS_CANNOT_SIT_ON_THRONE);
+        expect(status.legal.getReason()).toBe(TablutFailure.SOLDIERS_CANNOT_SIT_ON_THRONE());
     });
     it('Should consider invader winner when all defender are immobilized', () => {
         const board: number[][] = [
@@ -373,6 +373,6 @@ describe('TablutRules', () => {
         const expectedSlice: TablutPartSlice = new TablutPartSlice(expectedBoard, 25);
         expect(resultingSlice).toEqual(expectedSlice);
         const boardValue: number = minimax.getBoardValue(new MGPNode(null, move, expectedSlice)).value;
-        expect(boardValue).toEqual(Number.MIN_SAFE_INTEGER, 'This should be a victory for invader.');
+        expect(boardValue).withContext('This should be a victory for invader.').toEqual(Number.MIN_SAFE_INTEGER);
     });
 });
