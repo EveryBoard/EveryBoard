@@ -20,6 +20,6 @@ export class EpaminondasFailure {
 
     public static readonly PHALANX_CANNOT_CONTAIN_EMPTY_CASE: Localized = () => $localize`A phalanx cannot contain an empty square.`;
 
-    public static readonly PHALANX_CANNOT_CONTAIN_ENEMY_PIECE: Localized = () => $localize`A phalanx cannot contain a piece of the opponent.`;
+    public static readonly PHALANX_CANNOT_CONTAIN_OPPONENT_PIECE: Localized = () => $localize`A phalanx cannot contain a piece of the opponent.`;
 
 }

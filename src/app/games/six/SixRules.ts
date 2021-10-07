@@ -83,7 +83,7 @@ export class SixRules extends Rules<SixMove,
             case Player.NONE:
                 return { legal: MGPValidation.failure('Cannot move empty coord!'), kept: null };
             case state.getCurrentOpponent():
-                return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE()), kept: null };
+                return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE()), kept: null };
         }
         const piecesAfterDeplacement: MGPMap<Coord, Player> = SixState.deplacePiece(state, move);
         const groupsAfterMove: MGPSet<MGPSet<Coord>> =

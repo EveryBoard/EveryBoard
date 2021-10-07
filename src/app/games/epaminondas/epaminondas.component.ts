@@ -105,7 +105,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
                 this.phalanxValidLandings = this.getPhalanxValidLandings();
                 break;
             case OPPONENT:
-                return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
+                return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
             case Player.NONE:
                 return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }

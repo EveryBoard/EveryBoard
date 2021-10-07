@@ -31,7 +31,7 @@ describe('SixComponent', () => {
         const state: SixState = SixState.fromRepresentation(board, 41);
         componentTestUtils.setupState(state);
 
-        await componentTestUtils.expectClickFailure('#piece_0_0', RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
+        await componentTestUtils.expectClickFailure('#piece_0_0', RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
     }));
     it('Should drop before 40th turn', fakeAsync(async() => {
         componentTestUtils.fixture.detectChanges();

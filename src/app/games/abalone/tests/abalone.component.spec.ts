@@ -37,12 +37,12 @@ describe('AbaloneComponent', () => {
             componentTestUtils.expectElementNotToExist('#direction_DOWN');
             componentTestUtils.expectElementNotToExist('#direction_DOWN_LEFT');
         }));
-        it('should cancel move when clicking on enemy piece', fakeAsync(async() => {
+        it('should cancel move when clicking on opponent piece', fakeAsync(async() => {
             // given initial board
 
-            // when clicking on an enemy piece
+            // when clicking on an opponent piece
             // then expect click to be a failure
-            await componentTestUtils.expectClickFailure('#piece_8_0', RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
+            await componentTestUtils.expectClickFailure('#piece_8_0', RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         }));
     });
     describe('second piece click', () => {
@@ -265,7 +265,7 @@ describe('AbaloneComponent', () => {
         const state: AbaloneState = AbaloneState.getInitialState();
         await componentTestUtils.expectMoveSuccess('#case_1_6', move, state, 0, 0);
     }));
-    it('should allow clicking on arrow landing coord as if it was bellow an arrow (enemy)', fakeAsync(async() => {
+    it('should allow clicking on arrow landing coord as if it was bellow an arrow (opponent)', fakeAsync(async() => {
         // Given a board with a possible push
         const board: Table<FourStatePiece> = [
             [N, N, N, N, X, X, X, X, X],

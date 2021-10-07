@@ -70,7 +70,7 @@ describe('PylosRules:', () => {
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.reason).toBe(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
     });
-    it('should forbid move starting by an enemy piece', () => {
+    it('should forbid move starting by an opponent piece', () => {
         const board: Player[][][] = [
             [
                 [X, _, _, _],
@@ -92,7 +92,7 @@ describe('PylosRules:', () => {
         const state: PylosState = new PylosState(board, 0);
         const move: PylosMove = PylosMove.fromClimb(new PylosCoord(0, 0, 0), new PylosCoord(2, 2, 1), []);
         const status: LegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.reason).toBe(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
+        expect(status.legal.reason).toBe(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
     });
     it(`should forbid move who'se landing coord is not landable (not on the floor, not over 4 lower pieces)`, () => {
         const board: Player[][][] = [

@@ -74,7 +74,7 @@ export class TablutRules extends Rules<TablutMove, TablutState, TablutLegalitySt
             return MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
         if (cOwner === RelativePlayer.OPPONENT) {
-            return MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
+            return MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         }
 
         const landingCoordOwner: RelativePlayer = this.getRelativeOwner(player, move.end, board);
@@ -257,8 +257,8 @@ export class TablutRules extends Rules<TablutMove, TablutState, TablutLegalitySt
          * c partipate in the capture
          *
          * So these are the different capture ways :
-         * - 2 ennemies
-         * - 1 ennemies 1 empty-throne
+         * - 2 opponents
+         * - 1 opponents 1 empty-throne
          */
         const LOCAL_VERBOSE: boolean = false;
 
@@ -294,10 +294,10 @@ export class TablutRules extends Rules<TablutMove, TablutState, TablutLegalitySt
         }
         if (back === RelativePlayer.PLAYER) {
             display(TablutRules.VERBOSE || LOCAL_VERBOSE,
-                    'pawn captured by 2 ennemies; ' + threatenedPieceCoord +
+                    'pawn captured by 2 opponents; ' + threatenedPieceCoord +
                     'threatened by ' + player + `'s pawn in  ` + c +
                     ' coming from this direction (' + d.x + ', ' + d.y + ')');
-            return threatenedPieceCoord; // pawn captured by two ennemies
+            return threatenedPieceCoord; // pawn captured by two opponents
         }
         display(TablutRules.VERBOSE || LOCAL_VERBOSE,
                 'no captures; ' + threatenedPieceCoord + 'threatened by ' + player + `'s pawn in  ` + c +

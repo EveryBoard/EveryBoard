@@ -40,7 +40,7 @@ describe('EpaminondasComponent', () => {
         await componentTestUtils.expectClickFailure('#click_5_5', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
     }));
     it('Should not accept opponent click as a move first click', fakeAsync(async() => {
-        await componentTestUtils.expectClickFailure('#click_0_0', RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
+        await componentTestUtils.expectClickFailure('#click_0_0', RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
     }));
     it('Should show possible next click (after first click)', fakeAsync(async() => {
         const initialBoard: Table<Player> = [
@@ -374,7 +374,7 @@ describe('EpaminondasComponent', () => {
         await componentTestUtils.expectClickSuccess('#click_0_11');
         await componentTestUtils.expectClickSuccess('#click_0_9');
 
-        await componentTestUtils.expectClickFailure('#click_0_7', EpaminondasFailure.PHALANX_CANNOT_CONTAIN_ENEMY_PIECE());
+        await componentTestUtils.expectClickFailure('#click_0_7', EpaminondasFailure.PHALANX_CANNOT_CONTAIN_OPPONENT_PIECE());
     }));
     it('Should change first soldier coord when last click was a phalanx extension in the opposite direction of the phalanx', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_1_10');

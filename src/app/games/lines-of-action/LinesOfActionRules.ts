@@ -98,7 +98,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         }
         if (move.coord.getCoordsToward(move.end).some((c: Coord) =>
             state.getPieceAt(c) === state.getCurrentOpponent())) {
-            return { legal: MGPValidation.failure(LinesOfActionFailure.CANNOT_JUMP_OVER_ENEMY()) };
+            return { legal: MGPValidation.failure(LinesOfActionFailure.CANNOT_JUMP_OVER_OPPONENT()) };
         }
         if (state.getPieceAt(move.end) === state.getCurrentPlayer()) {
             return { legal: MGPValidation.failure(RulesFailure.CANNOT_SELF_CAPTURE()) };

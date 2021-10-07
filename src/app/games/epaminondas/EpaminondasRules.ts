@@ -48,7 +48,7 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
                 return MGPValidation.failure(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_EMPTY_CASE());
             }
             if (caseContent === OPPONENT) {
-                return MGPValidation.failure(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_ENEMY_PIECE());
+                return MGPValidation.failure(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_OPPONENT_PIECE());
             }
             coord = coord.getNext(move.direction, 1);
             soldierIndex++;

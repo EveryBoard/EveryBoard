@@ -122,7 +122,7 @@ describe('KamisadoComponent', () => {
         await componentTestUtils.expectMoveFailure('#click_5_4', KamisadoFailure.DIRECTION_NOT_ALLOWED(), move);
     }));
     it('should forbid choosing an incorrect piece', fakeAsync(async() => {
-        await componentTestUtils.expectClickFailure('#click_0_0', RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
+        await componentTestUtils.expectClickFailure('#click_0_0', RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
     }));
     it('should forbid choosing a piece at end of the game', fakeAsync(async() => {
         const board: Table<KamisadoPiece> = [

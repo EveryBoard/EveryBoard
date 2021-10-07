@@ -84,7 +84,7 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
             return this.cancelMove(clickValidity.getReason());
         }
         if (y !== this.rules.node.gameState.getCurrentPlayer().value) {
-            return this.cancelMove(AwaleFailure.CANNOT_DISTRIBUTE_FROM_ENEMY_HOME());
+            return this.cancelMove(AwaleFailure.CANNOT_DISTRIBUTE_FROM_OPPONENT_HOME());
         }
         this.last = new Coord(-1, -1); // now the user stop try to do a move
         // we stop showing him the last move

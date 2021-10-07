@@ -190,7 +190,7 @@ describe('EpaminondasRules:', () => {
         const state: EpaminondasState = new EpaminondasState(board, 1);
         const move: EpaminondasMove = new EpaminondasMove(0, 10, 1, 1, Direction.UP);
         const status: EpaminondasLegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.getReason()).toBe(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_ENEMY_PIECE());
+        expect(status.legal.getReason()).toBe(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_OPPONENT_PIECE());
     });
     it('Should allow legal move', () => {
         const board: Table<Player> = [

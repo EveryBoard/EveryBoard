@@ -58,16 +58,16 @@ describe('AbaloneRules', () => {
         expect(status.legal.reason).toBeNull();
         expect(resultingState).toEqual(expectedState);
     });
-    it('should refuse move starting by enemy piece', () => {
+    it('should refuse move starting by opponent piece', () => {
         // Given an initial board (for simplicity)
         const state: AbaloneState = AbaloneState.getInitialState();
 
-        // When moving one enemy piece
+        // When moving one opponent piece
         const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(8, 1), HexaDirection.DOWN).get();
         const status: AbaloneLegalityStatus = rules.isLegal(move, state);
 
         // Then the movement should be refused
-        expect(status.legal.reason).toBe(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
+        expect(status.legal.reason).toBe(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
     });
     it('should refuse move starting by empty case', () => {
         // Given an initial board (for simplicity)
@@ -127,7 +127,7 @@ describe('AbaloneRules', () => {
         // Then the move should be forbidden
         expect(status.legal.reason).toBe(AbaloneFailure.CANNOT_MOVE_MORE_THAN_THREE_PIECES());
     });
-    it(`should refuse moving group of piece smaller than the enemy's group`, () => {
+    it(`should refuse moving group of piece smaller than the opponent's group`, () => {
         // Given a board with 4 piece aligned
         const board: FourStatePiece[][] = [
             [N, N, N, N, _, _, _, _, _],
@@ -149,7 +149,7 @@ describe('AbaloneRules', () => {
         // Then the move should be forbidden
         expect(status.legal.reason).toBe(AbaloneFailure.NOT_ENOUGH_PIECE_TO_PUSH());
     });
-    it('Should refuse moving a group of piece of equal size to the enemy', () => {
+    it('Should refuse moving a group of piece of equal size to the opponent', () => {
         // Given a board with 4 piece aligned
         const board: FourStatePiece[][] = [
             [N, N, N, N, _, _, _, _, _],
@@ -171,7 +171,7 @@ describe('AbaloneRules', () => {
         // Then the move should be forbidden
         expect(status.legal.reason).toBe(AbaloneFailure.NOT_ENOUGH_PIECE_TO_PUSH());
     });
-    it('Should refuse moving a group of piece when first piece after the enemy group is not empty', () => {
+    it('Should refuse moving a group of piece when first piece after the opponent group is not empty', () => {
         // Given a board with possible push that is self-blocked
         const board: FourStatePiece[][] = [
             [N, N, N, N, _, _, _, _, _],
@@ -229,7 +229,7 @@ describe('AbaloneRules', () => {
         expect(status.legal.reason).toBeNull();
         expect(resultingState).toEqual(expectedState);
     });
-    it('should declare player zero winner when he push a 6th enemy piece out of the board', () => {
+    it('should declare player zero winner when he push a 6th opponent piece out of the board', () => {
         const winningBoard: FourStatePiece[][] = [
             [N, N, N, N, X, X, X, X, X],
             [N, N, N, _, _, _, _, _, _],
@@ -245,7 +245,7 @@ describe('AbaloneRules', () => {
         const node: AbaloneNode = new MGPNode(null, null, winningState);
         expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
-    it('should declare player one winner when he push a 6th enemy piece out of the board', () => {
+    it('should declare player one winner when he push a 6th opponent piece out of the board', () => {
         const winningBoard: FourStatePiece[][] = [
             [N, N, N, N, X, X, X, X, X],
             [N, N, N, X, X, X, X, X, X],

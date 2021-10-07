@@ -183,7 +183,7 @@ describe('LinesOfActionRules', () => {
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.reason).toBe(RulesFailure.CANNOT_SELF_CAPTURE());
     });
-    it(`should forbid to jump over an enemy's piece`, () => {
+    it(`should forbid to jump over an opponent's piece`, () => {
         const board: Table<Player> = [
             [_, X, _, X, X, X, X, _],
             [O, _, _, _, _, _, _, O],
@@ -197,7 +197,7 @@ describe('LinesOfActionRules', () => {
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
         const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(2, 2), new Coord(0, 2)).get();
         const status: LegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.reason).toBe(LinesOfActionFailure.CANNOT_JUMP_OVER_ENEMY());
+        expect(status.legal.reason).toBe(LinesOfActionFailure.CANNOT_JUMP_OVER_OPPONENT());
     });
     it('should allow to jump over its own pieces', () => {
         const expectedBoard: Table<Player> = [
@@ -217,7 +217,7 @@ describe('LinesOfActionRules', () => {
         const resultingState: LinesOfActionState = rules.applyLegalMove(move, state, status);
         expect(resultingState.board).toEqual(expectedBoard);
     });
-    it('should capture when landing on an enemy', () => {
+    it('should capture when landing on an opponent', () => {
         const board: Table<Player> = [
             [_, X, _, X, X, X, X, _],
             [O, _, _, _, _, _, _, O],

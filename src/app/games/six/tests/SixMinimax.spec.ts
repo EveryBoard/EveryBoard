@@ -153,7 +153,7 @@ describe('SixMinimax', () => {
             expectSecondStateToBeBetterThanFirst(weakerState, move, strongerState, move, minimax);
         });
     });
-    describe('4 pieces aligned with two spaces should be better than 4 aligned with two ennemies', () => {
+    describe('4 pieces aligned with two spaces should be better than 4 aligned with two opponents', () => {
         it('should be true with lines', () => {
             const move: SixMove = SixMove.fromDrop(new Coord(1, 1));
             const weakerState: SixState = SixState.fromRepresentation([

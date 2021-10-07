@@ -73,7 +73,7 @@ describe('SaharaRules', () => {
         const state: SaharaState = SaharaState.getInitialState();
         const move: SaharaMove = new SaharaMove(new Coord(3, 0), new Coord(4, 0));
         const status: LegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.reason).toEqual(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
+        expect(status.legal.reason).toEqual(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
     });
     it('Should see that Player.ONE won', () => {
         const board: FourStatePiece[][] = [

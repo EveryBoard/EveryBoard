@@ -113,7 +113,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
             return { legal: MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY()) };
         }
         if (starter.is(state.getCurrentOpponent())) {
-            return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE()) };
+            return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE()) };
         }
         const lander: FourStatePiece = state.getPieceAt(move.landingCoord.get());
         if (lander.is(state.getCurrentPlayer())) {

@@ -79,7 +79,7 @@ describe('CoerceoRules', () => {
             const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [0, 0]);
             const move: CoerceoMove = CoerceoMove.fromDeplacement(new Coord(6, 6), CoerceoStep.RIGHT);
             const status: LegalityStatus = rules.isLegal(move, state);
-            expect(status.legal.getReason()).toBe(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
+            expect(status.legal.getReason()).toBe(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         });
         it('Should forbid to move empty pieces', () => {
             const board: FourStatePiece[][] = [

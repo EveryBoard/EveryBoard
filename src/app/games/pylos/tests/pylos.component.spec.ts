@@ -48,7 +48,7 @@ describe('PylosComponent', () => {
         const initialState: PylosState = new PylosState(initialBoard, 0);
         componentTestUtils.setupState(initialState);
 
-        await componentTestUtils.expectClickFailure('#piece_0_0_0', RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
+        await componentTestUtils.expectClickFailure('#piece_0_0_0', RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
     }));
     it('should allow climbing', fakeAsync(async() => {
         const initialBoard: Player[][][] = [

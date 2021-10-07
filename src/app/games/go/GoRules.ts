@@ -123,8 +123,8 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityStatus> {
         const copiedBoard: GoPiece[][] = state.getCopiedBoard();
         const neightbooringCoord: Coord = coord.getNext(direction);
         if (neightbooringCoord.isInRange(state.board[0].length, state.board.length)) {
-            const ennemi: GoPiece = state.turn%2 === 0 ? GoPiece.WHITE : GoPiece.BLACK;
-            if (copiedBoard[neightbooringCoord.y][neightbooringCoord.x] === ennemi) {
+            const opponent: GoPiece = state.turn%2 === 0 ? GoPiece.WHITE : GoPiece.BLACK;
+            if (copiedBoard[neightbooringCoord.y][neightbooringCoord.x] === opponent) {
                 display(GoRules.VERBOSE ||LOCAL_VERBOSE, 'a group could be captured');
                 const goGroupDatasFactory: GoGroupDatasFactory = new GoGroupDatasFactory();
                 const neightbooringGroup: GoGroupDatas =

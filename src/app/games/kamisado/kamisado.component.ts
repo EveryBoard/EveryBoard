@@ -111,7 +111,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
         const piece: KamisadoPiece = this.rules.node.gameState.getPieceAtXY(x, y);
         const opponent: Player = this.rules.node.gameState.getCurrentOpponent();
         if (piece.belongsTo(opponent)) {
-            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
+            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         }
         this.chosen = new Coord(x, y);
         return MGPValidation.SUCCESS;

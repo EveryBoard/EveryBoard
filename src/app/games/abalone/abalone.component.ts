@@ -119,7 +119,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         }
         const OPPONENT: Player = this.rules.node.gameState.getCurrentOpponent();
         if (this.hexaBoard[y][x].is(OPPONENT)) {
-            return this.enemyClick(x, y);
+            return this.opponentClick(x, y);
         }
         if (this.selecteds.length === 0) {
             return this.firstClick(x, y);
@@ -129,12 +129,12 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
             return this.thirdClick(x, y);
         }
     }
-    private async enemyClick(x: number, y: number): Promise<MGPValidation> {
+    private async opponentClick(x: number, y: number): Promise<MGPValidation> {
         const directionValidity: MGPValidation = await this.tryChoosingDirection(x, y);
         if (directionValidity.isSuccess()) {
             return MGPValidation.SUCCESS;
         } else {
-            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
+            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         }
     }
     private async firstClick(x: number, y: number): Promise<MGPValidation> {

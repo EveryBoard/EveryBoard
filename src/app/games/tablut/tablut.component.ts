@@ -121,7 +121,7 @@ export class TablutComponent extends RectangularGameComponent<TablutRules,
             return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
         if (!this.pieceBelongToCurrentPlayer(x, y)) {
-            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
+            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         }
 
         this.chosen = new Coord(x, y);

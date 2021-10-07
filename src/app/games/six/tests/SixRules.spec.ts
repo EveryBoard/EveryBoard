@@ -121,7 +121,7 @@ describe('SixRules', () => {
             const state: SixState = SixState.fromRepresentation(board, 42);
             const move: SixMove = SixMove.fromDeplacement(new Coord(0, 2), new Coord(2, 1));
             const status: LegalityStatus = rules.isLegal(move, state);
-            expect(status.legal.getReason()).toBe(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
+            expect(status.legal.getReason()).toBe(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         });
         it('Should forbid moving empty piece', () => {
             const board: NumberTable = [
