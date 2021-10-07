@@ -47,10 +47,6 @@ describe('QuartoRules', () => {
         const state: QuartoState = new QuartoState(board, 15, QuartoPiece.BAAB);
         rules.node = new MGPNode(null, null, state);
         const move: QuartoMove = new QuartoMove(3, 3, QuartoPiece.NONE);
-        const possiblesMoves: QuartoMove[] = minimaxes[0].getListMoves(rules.node);
-        // TODO: minimax test not in rules tests!
-        expect(possiblesMoves.length).toBe(1);
-        expect(possiblesMoves[0]).toEqual(move);
         expect(rules.choose(move)).toBeTrue();
         const resultingState: QuartoState = rules.node.gameState;
         const expectedState: QuartoState = new QuartoState(expectedBoard, 16, QuartoPiece.NONE);

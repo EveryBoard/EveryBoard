@@ -27,8 +27,6 @@ describe('ReversiRules', () => {
     it('ReversiRules should be created', () => {
         expect(rules).toBeTruthy();
         expect(rules.node.gameState.turn).withContext('Game should start a turn 0').toBe(0);
-        const moves: ReversiMove[] = minimaxes[0].getListMoves(rules.node); // TODO: generalise the poopydoldi
-        expect(moves.length).toBe(4);
     });
     it('First move should be legal and change score', () => {
         const isLegal: boolean = rules.choose(new ReversiMove(2, 4));
@@ -64,10 +62,6 @@ describe('ReversiRules', () => {
         ];
         const state: ReversiState = new ReversiState(board, 1);
         rules.node = new MGPNode(null, null, state);
-        const moves: ReversiMove[] = minimaxes[0].getListMoves(rules.node);
-        // TODO: generalise le poop
-        expect(moves.length).toBe(1);
-        expect(moves[0]).toBe(ReversiMove.PASS);
         expect(rules.choose(ReversiMove.PASS)).toBeTrue();
     });
     it('Should consider the player with the more point the winner at the end', () => {

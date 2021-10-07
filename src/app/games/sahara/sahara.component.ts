@@ -56,8 +56,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
             return this.choosePiece(x, y);
         } else { // Must choose empty landing case
             const currentPlayer: Player = this.rules.node.gameState.getCurrentPlayer();
-            const PLAYER: FourStatePiece =
-                currentPlayer === Player.ZERO ? FourStatePiece.ZERO : FourStatePiece.ONE;
+            const PLAYER: FourStatePiece = FourStatePiece.ofPlayer(currentPlayer);
             if (this.board[y][x] === PLAYER) {
                 this.chosenCoord = MGPOptional.of(new Coord(x, y));
                 return MGPValidation.SUCCESS;

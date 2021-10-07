@@ -12,6 +12,7 @@ import { Table } from 'src/app/utils/ArrayUtils';
 
 describe('SiamMinimax:', () => {
 
+    let rules: SiamRules;
     let minimax: SiamMinimax;
 
     const _: SiamPiece = SiamPiece.EMPTY;
@@ -27,7 +28,12 @@ describe('SiamMinimax:', () => {
     const d: SiamPiece = SiamPiece.BLACK_DOWN;
 
     beforeEach(() => {
-        minimax = new SiamMinimax(new SiamRules(SiamState), 'SiamMinimax');
+        rules = new SiamRules(SiamState);
+        minimax = new SiamMinimax(rules, 'SiamMinimax');
+    });
+    it('Should provide 44 first turn childs at turn 0', () => {
+        const firstTurnMoves: SiamMove[] = minimax.getListMoves(rules.node);
+        expect(firstTurnMoves.length).toEqual(44);
     });
     it('Board value test: Should know who is closer to win (1)', () => {
         const board: Table<SiamPiece> = [

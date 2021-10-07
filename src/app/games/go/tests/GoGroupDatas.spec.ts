@@ -1,4 +1,4 @@
-import { GoPiece } from '../../games/go/GoState';
+import { GoPiece } from '../GoState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GoGroupDatas } from 'src/app/games/go/GoGroupsDatas';
 

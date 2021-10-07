@@ -22,9 +22,9 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
 
     public static getStartingCoords(board: FourStatePiece[][], player: Player): Coord[] {
         const startingCoords: Coord[] = [];
-        for (let y: number = 0; y<SaharaState.HEIGHT; y++) {
-            for (let x: number = 0; x<SaharaState.WIDTH; x++) {
-                if (board[y][x].value === player.value) {
+        for (let y: number = 0; y < SaharaState.HEIGHT; y++) {
+            for (let x: number = 0; x < SaharaState.WIDTH; x++) {
+                if (board[y][x].is(player)) {
                     startingCoords.push(new Coord(x, y));
                 }
             }

@@ -19,6 +19,10 @@ describe('ReversiMinimax', () => {
         rules = new ReversiRules(ReversiState);
         minimax = new ReversiMinimax(rules, 'ReversiMinimax');
     });
+    it('should have 4 choices at first turn', () => {
+        const moves: ReversiMove[] = minimax.getListMoves(rules.node);
+        expect(moves.length).toBe(4);
+    });
     it('should not throw at first choice', () => {
         const bestMove: ReversiMove = rules.node.findBestMove(2, minimax);
         expect(rules.isLegal(bestMove, rules.node.gameState).legal.isSuccess()).toBeTrue();
@@ -38,5 +42,22 @@ describe('ReversiMinimax', () => {
         rules.node = new MGPNode(null, null, state);
         const bestMove: ReversiMove = rules.node.findBestMove(2, minimax);
         expect(bestMove.equals(new ReversiMove(0, 0)));
+    });
+    it('Should propose passing move when no other moves are possible', () => {
+        const board: Table<Player> = [
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, X, _, _, _],
+            [_, _, _, _, O, _, _, _],
+        ];
+        const state: ReversiState = new ReversiState(board, 1);
+        rules.node = new MGPNode(null, null, state);
+        const moves: ReversiMove[] = minimax.getListMoves(rules.node);
+        expect(moves.length).toBe(1);
+        expect(moves[0]).toBe(ReversiMove.PASS);
     });
 });

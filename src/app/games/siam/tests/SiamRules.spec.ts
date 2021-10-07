@@ -43,10 +43,6 @@ describe('SiamRules:', () => {
         expect(rules).toBeTruthy();
         expect(rules.node.gameState.turn).withContext('Game should start a turn 0').toBe(0);
     });
-    it('Should provide 44 first turn childs at turn 0', () => {
-        const firstTurnMoves: SiamMove[] = minimaxes[0].getListMoves(rules.node); // TODO: inside minimax tests!
-        expect(firstTurnMoves.length).toEqual(44);
-    });
     it('Insertion should work', () => {
         const board: Table<SiamPiece> = [
             [_, _, _, _, _],

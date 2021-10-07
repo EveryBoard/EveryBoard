@@ -4,9 +4,11 @@ import { QuartoMinimax } from '../QuartoMinimax';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { QuartoNode, QuartoRules } from '../QuartoRules';
 import { Table } from 'src/app/utils/ArrayUtils';
+import { QuartoMove } from '../QuartoMove';
 
 describe('QuartoMinimax:', () => {
 
+    let rules: QuartoRules;
     let minimax: QuartoMinimax;
 
     const NULL: QuartoPiece = QuartoPiece.NONE;
@@ -16,7 +18,7 @@ describe('QuartoMinimax:', () => {
     const ABBB: QuartoPiece = QuartoPiece.ABBB;
 
     beforeEach(() => {
-        const rules: QuartoRules = new QuartoRules(QuartoState);
+        rules = new QuartoRules(QuartoState);
         minimax = new QuartoMinimax(rules, 'QuartoMinimax');
     });
     it('Should know that the board value is PRE_VICTORY when pieceInHand match board criterion', () => {
@@ -30,5 +32,19 @@ describe('QuartoMinimax:', () => {
         const state: QuartoState = new QuartoState(board, 3, pieceInHand);
         const node: QuartoNode = new MGPNode(null, null, state);
         expect(minimax.getBoardValue(node).value).toEqual(Number.MAX_SAFE_INTEGER - 1);
+    });
+    it('Should only propose one move at last turn', () => {
+        const board: Table<QuartoPiece> = [
+            [QuartoPiece.AABB, QuartoPiece.AAAB, QuartoPiece.ABBA, QuartoPiece.BBAA],
+            [QuartoPiece.BBAB, QuartoPiece.BAAA, QuartoPiece.BBBA, QuartoPiece.ABBB],
+            [QuartoPiece.BABA, QuartoPiece.BBBB, QuartoPiece.ABAA, QuartoPiece.AABA],
+            [QuartoPiece.AAAA, QuartoPiece.ABAB, QuartoPiece.BABB, QuartoPiece.NONE],
+        ];
+        const state: QuartoState = new QuartoState(board, 15, QuartoPiece.BAAB);
+        rules.node = new MGPNode(null, null, state);
+        const move: QuartoMove = new QuartoMove(3, 3, QuartoPiece.NONE);
+        const possiblesMoves: QuartoMove[] = minimax.getListMoves(rules.node);
+        expect(possiblesMoves.length).toBe(1);
+        expect(possiblesMoves[0]).toEqual(move);
     });
 });

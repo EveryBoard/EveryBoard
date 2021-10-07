@@ -76,6 +76,6 @@ export class ArrayUtils {
         for (let i: number = 0; i < t1.length; i++) {
             if (ArrayUtils.compareArray(t1[i], t2[i]) === false) return false;
         }
-        return true; // TODOTODO test
+        return true;
     }
 }

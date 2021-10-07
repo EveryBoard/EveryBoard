@@ -7,6 +7,7 @@ import { CoerceoNode, CoerceoRules } from './CoerceoRules';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
+import { Player } from 'src/app/jscaip/Player';
 
 export class CoerceoMinimax extends Minimax<CoerceoMove, CoerceoState> {
 
@@ -37,10 +38,11 @@ export class CoerceoMinimax extends Minimax<CoerceoMove, CoerceoState> {
     public getListDeplacement(node: CoerceoNode): CoerceoMove[] {
         const deplacements: CoerceoMove[] = [];
         const state: CoerceoState = node.gameState;
+        const PLAYER: Player = state.getCurrentPlayer();
         for (let y: number = 0; y < 10; y++) {
             for (let x: number = 0; x < 15; x++) {
                 const start: Coord = new Coord(x, y);
-                if (state.getPieceAt(start).is(state.getCurrentPlayer())) {
+                if (state.getPieceAt(start).is(PLAYER)) {
                     const legalLandings: Coord[] = state.getLegalLandings(start);
                     for (const end of legalLandings) {
                         const move: CoerceoMove = CoerceoMove.fromCoordToCoord(start, end);
