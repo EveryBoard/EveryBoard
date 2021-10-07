@@ -9,6 +9,14 @@ export type JSONValue = JSONPrimitive | JSONObject | Array<JSONValueWithoutArray
 export type JSONValueWithoutArray = JSONPrimitive | JSONObject
 export type JSONObject = { [member: string]: JSONValue };
 
+export function isJSONPrimitive(value: unknown): value is JSONPrimitive {
+    if (typeof value === 'string') return true;
+    if (typeof value === 'number') return true;
+    if (typeof value === 'boolean') return true;
+    if (value === null) return true;
+    return false;
+}
+
 export type FirebaseJSONPrimitive = JSONPrimitive | firebase.firestore.FieldValue;
 export type FirebaseJSONValue = FirebaseJSONPrimitive | FirebaseJSONObject | Array<FirebaseJSONValueWithoutArray>;
 export type FirebaseJSONValueWithoutArray = FirebaseJSONPrimitive | FirebaseJSONObject
