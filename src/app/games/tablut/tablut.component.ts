@@ -80,7 +80,7 @@ export class TablutComponent extends RectangularGameComponent<TablutRules,
             if (captured.isInRange(TablutRulesConfig.WIDTH, TablutRulesConfig.WIDTH)) {
                 const previously: RelativePlayer = TablutRules.getRelativeOwner(ENNEMY, captured, previousBoard);
                 const wasEnnemy: boolean = previously === RelativePlayer.ENNEMY;
-                const currently: TablutCase = this.rules.node.gameState.getBoardAt(captured);
+                const currently: TablutCase = this.rules.node.gameState.getPieceAt(captured);
                 const isEmpty: boolean = currently === TablutCase.UNOCCUPIED;
                 if (wasEnnemy && isEmpty) {
                     this.captureds.push(captured);

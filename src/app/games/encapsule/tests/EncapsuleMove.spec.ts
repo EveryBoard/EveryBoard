@@ -7,6 +7,7 @@ import { EncapsuleMove } from '../EncapsuleMove';
 import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 
 describe('EncapsuleMove', () => {
+
     it('should construct valid moves with success', () => {
         expect(EncapsuleMove.fromDrop(EncapsulePiece.SMALL_BLACK, new Coord(2, 1))).toBeTruthy();
         expect(EncapsuleMove.fromMove(new Coord(1, 1), new Coord(2, 1))).toBeTruthy();

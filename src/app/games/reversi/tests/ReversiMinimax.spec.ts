@@ -7,6 +7,7 @@ import { ReversiRules } from '../ReversiRules';
 import { Table } from 'src/app/utils/ArrayUtils';
 
 describe('ReversiMinimax', () => {
+
     const _: Player = Player.NONE;
     const X: Player = Player.ONE;
     const O: Player = Player.ZERO;

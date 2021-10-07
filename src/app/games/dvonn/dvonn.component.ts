@@ -72,8 +72,8 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
                 const coord: Coord = new Coord(x, y);
                 if (state.isOnBoard(coord) === true &&
                     coord.equals(this.lastMove.coord) === false) {
-                    const stack: DvonnPieceStack = state.getBoardAt(coord);
-                    const previousStack: DvonnPieceStack = previousState.getBoardAt(coord);
+                    const stack: DvonnPieceStack = state.getPieceAt(coord);
+                    const previousStack: DvonnPieceStack = previousState.getPieceAt(coord);
                     if (stack.isEmpty() && !previousStack.isEmpty()) {
                         const disconnected: { x: number, y: number, caseContent: DvonnPieceStack } =
                             { x, y, caseContent: previousStack };

@@ -83,7 +83,7 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
         for (let y: number = 0; y < this.board.length; y++) {
             for (let x: number = 0; x < this.board[0].length; x++) {
                 const coord: Coord = new Coord(x, y);
-                const wasOccupied: boolean = previousState.getBoardAt(coord).isEmpty() === false;
+                const wasOccupied: boolean = previousState.getPieceAt(coord).isEmpty() === false;
                 const isEmpty: boolean = this.board[y][x] === GoPiece.EMPTY;
                 const isNotKo: boolean = !coord.equals(this.ko);
                 if (wasOccupied && isEmpty && isNotKo) {
@@ -104,11 +104,11 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
         }
     }
     public getCaseClass(x: number, y: number): string {
-        const piece: GoPiece = this.rules.node.gameState.getBoardByXY(x, y);
+        const piece: GoPiece = this.rules.node.gameState.getPieceAtXY(x, y);
         return this.getPlayerClass(piece.getOwner());
     }
     public caseIsFull(x: number, y: number): boolean {
-        const piece: GoPiece = this.rules.node.gameState.getBoardByXY(x, y);
+        const piece: GoPiece = this.rules.node.gameState.getPieceAtXY(x, y);
         return piece !== GoPiece.EMPTY && !this.isTerritory(x, y);
     }
     public isLastCase(x: number, y: number): boolean {

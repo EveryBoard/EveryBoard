@@ -6,6 +6,7 @@ import { EpaminondasMove } from '../EpaminondasMove';
 import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 
 describe('EpaminondasMove: ', () => {
+
     it('Should forbid null values', () => {
         expect(() => new EpaminondasMove(null, 1, 1, 1, Direction.UP)).toThrowError('X cannot be null.');
         expect(() => new EpaminondasMove(1, null, 1, 1, Direction.UP)).toThrowError('Y cannot be null.');

@@ -1,8 +1,8 @@
-import { RectangularGameState } from '../../jscaip/RectangularGameState';
+import { GameStateWithTable } from '../../jscaip/GameStateWithTable';
 import { QuartoPiece } from './QuartoPiece';
 import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 
-export class QuartoState extends RectangularGameState<QuartoPiece> {
+export class QuartoState extends GameStateWithTable<QuartoPiece> {
 
     constructor(b: Table<QuartoPiece>, turn: number, public readonly pieceInHand: QuartoPiece) {
         super(b, turn);

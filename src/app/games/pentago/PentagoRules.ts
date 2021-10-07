@@ -45,7 +45,7 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState, PentagoLegali
         return state.applyLegalMove(move);
     }
     public isLegal(move: PentagoMove, state: PentagoState): PentagoLegalityStatus {
-        if (state.getBoardAt(move.coord) !== Player.NONE) {
+        if (state.getPieceAt(move.coord) !== Player.NONE) {
             return PentagoLegalityStatus.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
         const postDropState: PentagoState = state.applyLegalDrop(move);
@@ -66,13 +66,13 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState, PentagoLegali
     public getVictoryCoords(state: PentagoState): Coord[] {
         let victoryCoords: Coord[] = [];
         for (const maybeVictory of PentagoRules.VICTORY_SOURCE) {
-            const firstValue: Player = state.getBoardAt(maybeVictory[0]);
+            const firstValue: Player = state.getPieceAt(maybeVictory[0]);
             const subVictory: Coord[] = [maybeVictory[0]];
             if (firstValue !== Player.NONE) {
                 let testedCoord: Coord = maybeVictory[0].getNext(maybeVictory[1]);
                 let fourAligned: boolean = true;
                 for (let i: number = 0; i < 3 && fourAligned; i++) {
-                    if (state.getBoardAt(testedCoord) !== firstValue) {
+                    if (state.getPieceAt(testedCoord) !== firstValue) {
                         fourAligned = false;
                     } else {
                         subVictory.push(testedCoord);
@@ -81,13 +81,13 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState, PentagoLegali
                 }
                 if (fourAligned) {
                     // check first alignement
-                    if (state.getBoardAt(testedCoord) === firstValue) {
+                    if (state.getPieceAt(testedCoord) === firstValue) {
                         subVictory.push(testedCoord);
                         victoryCoords = victoryCoords.concat(subVictory);
                     }
                     if (maybeVictory[2]) {
                         const coordZero: Coord = maybeVictory[0].getPrevious(maybeVictory[1], 1);
-                        if (state.getBoardAt(coordZero) === firstValue) {
+                        if (state.getPieceAt(coordZero) === firstValue) {
                             subVictory.push(coordZero);
                             victoryCoords = victoryCoords.concat(subVictory);
                         }
@@ -102,7 +102,7 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState, PentagoLegali
         const victoryCoords: Coord[] = this.getVictoryCoords(state);
         const victoryFound: [boolean, boolean] = [false, false];
         for (let i: number = 0; i < victoryCoords.length; i += 5) {
-            victoryFound[state.getBoardAt(victoryCoords[i]).value] = true;
+            victoryFound[state.getPieceAt(victoryCoords[i]).value] = true;
         }
         if (victoryFound[0] === true) {
             if (victoryFound[1] === true) {

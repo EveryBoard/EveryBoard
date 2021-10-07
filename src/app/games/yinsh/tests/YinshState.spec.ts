@@ -3,6 +3,7 @@ import { YinshPiece } from '../YinshPiece';
 import { Table } from 'src/app/utils/ArrayUtils';
 
 describe('YinshState', () => {
+
     describe('equals', () => {
         const _: YinshPiece = YinshPiece.EMPTY;
         const N: YinshPiece = YinshPiece.NONE;

@@ -17,10 +17,10 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
         const currentEnnemy: Player = node.gameState.getCurrentEnnemy();
         const verticalCoords: Coord[] = [];
         for (let y: number = 0; y < 5; y++) {
-            if (node.gameState.getBoardByXY(0, y) !== currentEnnemy) {
+            if (node.gameState.getPieceAtXY(0, y) !== currentEnnemy) {
                 verticalCoords.push(new Coord(0, y));
             }
-            if (node.gameState.getBoardByXY(4, y) !== currentEnnemy) {
+            if (node.gameState.getPieceAtXY(4, y) !== currentEnnemy) {
                 verticalCoords.push(new Coord(4, y));
             }
         }
@@ -30,10 +30,10 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
         const currentEnnemy: Player = node.gameState.getCurrentEnnemy();
         const horizontalCenterCoords: Coord[] = [];
         for (let x: number = 1; x < 4; x++) {
-            if (node.gameState.getBoardByXY(x, 0) !== currentEnnemy) {
+            if (node.gameState.getPieceAtXY(x, 0) !== currentEnnemy) {
                 horizontalCenterCoords.push(new Coord(x, 0));
             }
-            if (node.gameState.getBoardByXY(x, 4) !== currentEnnemy) {
+            if (node.gameState.getPieceAtXY(x, 4) !== currentEnnemy) {
                 horizontalCenterCoords.push(new Coord(x, 4));
             }
         }
@@ -61,7 +61,7 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
         };
         for (let y: number = 0; y < 5; y++) {
             for (let x: number = 0; x < 5; x++) {
-                const c: number = state.getBoardByXY(x, y).value;
+                const c: number = state.getPieceAtXY(x, y).value;
                 if (c !== Player.NONE.value) {
                     sums[c].columns[x] = sums[c].columns[x] + 1;
                     sums[c].rows[y] = sums[c].rows[y] + 1;
@@ -121,7 +121,7 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
         return state.applyLegalMove(move);
     }
     public isLegal(move: QuixoMove, state: QuixoState): LegalityStatus {
-        if (state.getBoardAt(move.coord) === state.getCurrentEnnemy()) {
+        if (state.getPieceAt(move.coord) === state.getCurrentEnnemy()) {
             return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE()) };
         } else {
             return { legal: MGPValidation.SUCCESS };

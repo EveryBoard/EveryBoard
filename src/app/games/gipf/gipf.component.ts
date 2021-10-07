@@ -104,7 +104,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules, GipfMove, G
         return piece !== FourStatePiece.EMPTY;
     }
     private getPiece(coord: Coord): FourStatePiece {
-        const piece: FourStatePiece = this.constructedState.getBoardAt(coord);
+        const piece: FourStatePiece = this.constructedState.getPieceAt(coord);
         return piece;
     }
     public async onClick(coord: Coord): Promise<MGPValidation> {
@@ -206,7 +206,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules, GipfMove, G
             return this.cancelMove(validity.getReason());
         }
         this.placementEntrance = MGPOptional.of(coord);
-        if (this.constructedState.getBoardAt(coord) === FourStatePiece.EMPTY) {
+        if (this.constructedState.getPieceAt(coord) === FourStatePiece.EMPTY) {
             // Because the coord of insertion is empty, there is no need for the user to choose a direction.
             return this.selectPlacementDirection(MGPOptional.empty());
         } else {

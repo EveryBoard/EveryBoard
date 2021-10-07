@@ -76,7 +76,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         }
         const PREVIOUS_ENNEMY: Player = this.rules.node.mother.gameState.getCurrentEnnemy();
         while (moved.isInRange(14, 12) &&
-               this.rules.node.mother.gameState.getBoardAt(moved) === PREVIOUS_ENNEMY) {
+               this.rules.node.mother.gameState.getPieceAt(moved) === PREVIOUS_ENNEMY) {
             this.captureds.push(moved);
             moved = moved.getNext(move.direction, 1);
         }

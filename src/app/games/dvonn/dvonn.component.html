@@ -3,7 +3,7 @@
      viewBox="0 0 875 380"
      preserveAspectRatio="xMidYMid meet">
     <g *ngFor="let coord of state.allCoords()">
-        <g *ngFor="let caseContent of [state.getBoardAt(coord)]"
+        <g *ngFor="let caseContent of [state.getPieceAt(coord)]"
            id="click_{{ coord.x }}_{{ coord.y }}"
            (click)="onClick(coord.x, coord.y)">
             <!-- Background -->

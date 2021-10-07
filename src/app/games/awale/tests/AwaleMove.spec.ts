@@ -5,6 +5,7 @@ import { AwaleState } from '../AwaleState';
 import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 
 describe('AwaleMove', () => {
+
     it('AwaleMove.encoder should be correct', () => {
         const rules: AwaleRules = new AwaleRules(AwaleState);
         const minimax: AwaleMinimax = new AwaleMinimax(rules, 'AwaleMinimax');

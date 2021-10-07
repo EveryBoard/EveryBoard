@@ -8,6 +8,7 @@ import { YinshNode, YinshRules } from '../YinshRules';
 import { Table } from 'src/app/utils/ArrayUtils';
 
 describe('YinshMinimax', () => {
+
     const _: YinshPiece = YinshPiece.EMPTY;
     const N: YinshPiece = YinshPiece.NONE;
     const a: YinshPiece = YinshPiece.MARKER_ZERO;

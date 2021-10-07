@@ -1,10 +1,10 @@
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
-import { RectangularGameState } from 'src/app/jscaip/RectangularGameState';
+import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player } from 'src/app/jscaip/Player';
 import { QuixoMove } from './QuixoMove';
 
-export class QuixoState extends RectangularGameState<Player> {
+export class QuixoState extends GameStateWithTable<Player> {
 
     public static getInitialState(): QuixoState {
         const initialBoard: Player[][] = ArrayUtils.createTable(5, 5, Player.NONE);

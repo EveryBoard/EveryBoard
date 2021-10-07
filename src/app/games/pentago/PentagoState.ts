@@ -1,11 +1,11 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
-import { RectangularGameState } from 'src/app/jscaip/RectangularGameState';
+import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player } from 'src/app/jscaip/Player';
 import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { PentagoMove } from './PentagoMove';
 
-export class PentagoState extends RectangularGameState<Player> {
+export class PentagoState extends GameStateWithTable<Player> {
 
     public static ROTATION_MAP: [Coord, Coord][] = [
         [new Coord(-1, -1), new Coord(1, -1)],
@@ -39,19 +39,19 @@ export class PentagoState extends RectangularGameState<Player> {
     }
     private getBlockNeutrality(blockIndex: number): boolean {
         const center: Coord = PentagoState.getBlockCenter(blockIndex);
-        const initialUp: Player = this.getBoardAt(center.getNext(Direction.UP, 1));
-        const initialDiagonal: Player = this.getBoardAt(center.getNext(Direction.UP_LEFT, 1));
+        const initialUp: Player = this.getPieceAt(center.getNext(Direction.UP, 1));
+        const initialDiagonal: Player = this.getPieceAt(center.getNext(Direction.UP_LEFT, 1));
         // Testing edges
-        if (this.getBoardAt(center.getNext(Direction.RIGHT, 1)) !== initialUp ||
-            this.getBoardAt(center.getNext(Direction.DOWN, 1)) !== initialUp ||
-            this.getBoardAt(center.getNext(Direction.LEFT, 1)) !== initialUp)
+        if (this.getPieceAt(center.getNext(Direction.RIGHT, 1)) !== initialUp ||
+            this.getPieceAt(center.getNext(Direction.DOWN, 1)) !== initialUp ||
+            this.getPieceAt(center.getNext(Direction.LEFT, 1)) !== initialUp)
         {
             return false;
         }
         // Testing corners
-        return this.getBoardAt(center.getNext(Direction.UP_RIGHT, 1)) === initialDiagonal &&
-               this.getBoardAt(center.getNext(Direction.DOWN_RIGHT, 1)) === initialDiagonal &&
-               this.getBoardAt(center.getNext(Direction.DOWN_LEFT, 1)) === initialDiagonal;
+        return this.getPieceAt(center.getNext(Direction.UP_RIGHT, 1)) === initialDiagonal &&
+               this.getPieceAt(center.getNext(Direction.DOWN_RIGHT, 1)) === initialDiagonal &&
+               this.getPieceAt(center.getNext(Direction.DOWN_LEFT, 1)) === initialDiagonal;
     }
     public static getBlockCenter(blockIndex: number): Coord {
         const cx: number = 1 + (blockIndex % 2 === 0 ? 0 : 3);
@@ -72,14 +72,14 @@ export class PentagoState extends RectangularGameState<Player> {
                 for (const translation of PentagoState.ROTATION_MAP) {
                     const oldCoord: Coord = translation[0].getNext(blockCenter);
                     const newCoord: Coord = translation[1].getNext(blockCenter);
-                    const oldValue: Player = postDropState.getBoardAt(oldCoord);
+                    const oldValue: Player = postDropState.getPieceAt(oldCoord);
                     newBoard[newCoord.y][newCoord.x] = oldValue;
                 }
             } else {
                 for (const translation of PentagoState.ROTATION_MAP) {
                     const oldCoord: Coord = translation[1].getNext(blockCenter);
                     const newCoord: Coord = translation[0].getNext(blockCenter);
-                    const oldValue: Player = postDropState.getBoardAt(oldCoord);
+                    const oldValue: Player = postDropState.getPieceAt(oldCoord);
                     newBoard[newCoord.y][newCoord.x] = oldValue;
                 }
             }

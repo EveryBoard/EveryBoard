@@ -150,7 +150,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
         const moves: P4Move[] = [];
 
         for (let x: number = 0; x < 7; x++) {
-            if (originalState.getBoardByXY(x, 0) === Player.NONE) {
+            if (originalState.getPieceAtXY(x, 0) === Player.NONE) {
                 const move: P4Move = P4Move.of(x);
                 moves.push(move);
             }
@@ -182,7 +182,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
     }
     public isLegal(move: P4Move, state: P4State): LegalityStatus {
         display(P4Rules.VERBOSE, { context: 'P4Rules.isLegal', move: move.toString(), state });
-        if (state.getBoardByXY(move.x, 0) !== Player.NONE) {
+        if (state.getPieceAtXY(move.x, 0) !== Player.NONE) {
             return { legal: MGPValidation.failure(P4Failure.COLUMN_IS_FULL()) };
         }
         return { legal: MGPValidation.SUCCESS };

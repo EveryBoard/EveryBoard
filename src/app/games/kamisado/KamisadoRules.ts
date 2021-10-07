@@ -43,7 +43,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
                 // For each direction, create a move of 1 in that direction
                 for (const dir of this.playerDirections(state.getCurrentPlayer())) {
                     const endCoord: Coord = startCoord.getNext(dir);
-                    if (KamisadoBoard.isOnBoard(endCoord) && KamisadoBoard.isEmptyAt(state.board, endCoord)) {
+                    if (state.isOnBoard(endCoord) && KamisadoBoard.isEmptyAt(state.board, endCoord)) {
                         // Move is valid, check legality
                         const move: KamisadoMove = KamisadoMove.of(startCoord, endCoord);
                         if (this.isLegal(move, state)) {
@@ -100,12 +100,12 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
                         let endCoord: Coord = startCoord;
                         for (let j: number = 0; j < i; j++) {
                             endCoord = endCoord.getNext(dir);
-                            if (!KamisadoBoard.isOnBoard(endCoord) || !KamisadoBoard.isEmptyAt(state.board, endCoord)) {
+                            if (!state.isOnBoard(endCoord) || !KamisadoBoard.isEmptyAt(state.board, endCoord)) {
                                 // Way is obstructed, don't continue
                                 break;
                             }
                         }
-                        if (KamisadoBoard.isOnBoard(endCoord) && KamisadoBoard.isEmptyAt(state.board, endCoord)) {
+                        if (state.isOnBoard(endCoord) && KamisadoBoard.isEmptyAt(state.board, endCoord)) {
                             // Check if the move can be done, and if so,
                             // add the resulting state to the map to be returned
                             const move: KamisadoMove = KamisadoMove.of(startCoord, endCoord);
@@ -129,7 +129,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
         let furthest1: number = 0; // player 1 goes from top (0) to bottom (7)
 
         KamisadoBoard.allPieceCoords(state.board).forEach((c: Coord) => {
-            const piece: KamisadoPiece = state.getBoardAt(c);
+            const piece: KamisadoPiece = state.getPieceAt(c);
             if (piece !== KamisadoPiece.NONE) {
                 if (piece.player === Player.ONE) { // player 1, top (0) to bottom (7) so we want the max
                     furthest1 = Math.max(furthest1, c.y);
@@ -143,7 +143,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
     // Returns the next coord that plays
     public nextCoordToPlay(state: KamisadoState, colorToPlay: KamisadoColor): MGPOptional<Coord> {
         return MGPOptional.ofNullable(KamisadoBoard.allPieceCoords(state.board).find((c: Coord): boolean => {
-            const piece: KamisadoPiece = state.getBoardAt(c);
+            const piece: KamisadoPiece = state.getPieceAt(c);
             return piece.player === state.getCurrentEnnemy() && piece.color === colorToPlay;
         }));
     }
@@ -194,7 +194,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
         // A move is legal if:
         //   - the move is within the board (this has been checked when constructing the move)
         //   - start piece should be owned by the current player
-        const piece: KamisadoPiece = state.getBoardAt(start);
+        const piece: KamisadoPiece = state.getPieceAt(start);
         if (!piece.belongsTo(state.getCurrentPlayer())) {
             return { legal: MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE()) };
         }
@@ -203,7 +203,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
             return { legal: MGPValidation.failure(KamisadoFailure.NOT_RIGHT_COLOR()) };
         }
         //  - end case should be empty
-        const endPiece: KamisadoPiece = state.getBoardAt(end);
+        const endPiece: KamisadoPiece = state.getPieceAt(end);
         if (!endPiece.isEmpty()) {
             return { legal: MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE()) };
         }
@@ -219,7 +219,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
         let currentCoord: Coord = start;
         while (!currentCoord.equals(end)) {
             currentCoord = currentCoord.getNext(dir);
-            if (!state.getBoardAt(currentCoord).isEmpty()) {
+            if (!state.getPieceAt(currentCoord).isEmpty()) {
                 return { legal: MGPValidation.failure(KamisadoFailure.MOVE_BLOCKED()) };
             }
         }

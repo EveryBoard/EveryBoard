@@ -68,13 +68,13 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, Encapsu
             }
         } else {
             const startingCoord: Coord = move.startingCoord.get();
-            const startingCase: EncapsuleCase = state.getBoardAt(startingCoord);
+            const startingCase: EncapsuleCase = state.getPieceAt(startingCoord);
             movingPiece = startingCase.getBiggest();
             if (state.pieceBelongsToCurrentPlayer(movingPiece) === false) {
                 return EncapsuleLegalityStatus.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
             }
         }
-        const landingCase: EncapsuleCase = state.getBoardAt(move.landingCoord);
+        const landingCase: EncapsuleCase = state.getPieceAt(move.landingCoord);
         const superpositionResult: MGPOptional<EncapsuleCase> = landingCase.tryToSuperposePiece(movingPiece);
         if (superpositionResult.isPresent()) {
             return { legal: MGPValidation.SUCCESS, newLandingCase: superpositionResult.get() };

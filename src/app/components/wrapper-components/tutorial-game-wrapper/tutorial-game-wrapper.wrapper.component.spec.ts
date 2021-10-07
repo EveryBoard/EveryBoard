@@ -50,6 +50,7 @@ import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
 import { DvonnState } from 'src/app/games/dvonn/DvonnState';
 
 describe('TutorialGameWrapperComponent (wrapper)', () => {
+
     let componentTestUtils: ComponentTestUtils<QuartoComponent>;
     let wrapper: TutorialGameWrapperComponent;
 

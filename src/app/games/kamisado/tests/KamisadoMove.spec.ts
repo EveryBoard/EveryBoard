@@ -6,6 +6,7 @@ import { KamisadoMove } from '../KamisadoMove';
 import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 
 describe('KamisadoMove', () => {
+
     it('should toString in a readable way', () => {
         expect((KamisadoMove.of(new Coord(0, 0), new Coord(1, 5))).toString()).toEqual('KamisadoMove((0, 0)->(1, 5))');
         expect(KamisadoMove.PASS.toString()).toEqual('KamisadoMove(PASS)');

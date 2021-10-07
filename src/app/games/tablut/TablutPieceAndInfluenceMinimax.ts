@@ -43,7 +43,7 @@ export class TablutPieceAndInfluenceMinimax extends TablutMinimax {
                     let influence: number = 0;
                     for (const dir of Orthogonal.ORTHOGONALS) {
                         let testedCoord: Coord = coord.getNext(dir, 1);
-                        while (testedCoord.isInRange(WIDTH, WIDTH) && state.getBoardAt(testedCoord) === EMPTY) {
+                        while (testedCoord.isInRange(WIDTH, WIDTH) && state.getPieceAt(testedCoord) === EMPTY) {
                             influence++;
                             testedCoord = testedCoord.getNext(dir, 1);
                         }
@@ -64,7 +64,7 @@ export class TablutPieceAndInfluenceMinimax extends TablutMinimax {
         for (let y: number = 0; y < WIDTH; y++) {
             for (let x: number = 0; x < WIDTH; x++) {
                 const coord: Coord = new Coord(x, y);
-                const piece: TablutCase = state.getBoardAt(coord);
+                const piece: TablutCase = state.getPieceAt(coord);
                 if (piece !== EMPTY) {
                     const owner: Player = TablutRules.getAbsoluteOwner(coord, board);
                     if (owner === Player.ZERO) {
@@ -108,7 +108,7 @@ export class TablutPieceAndInfluenceMinimax extends TablutMinimax {
                     }
                     let futureCapturer: Coord = coord.getNext(dir, 1);
                     while (futureCapturer.isInRange(TablutRulesConfig.WIDTH, TablutRulesConfig.WIDTH) &&
-                           state.getBoardAt(futureCapturer) === TablutCase.UNOCCUPIED)
+                           state.getPieceAt(futureCapturer) === TablutCase.UNOCCUPIED)
                     {
                         futureCapturer = futureCapturer.getNext(captureDirection);
                     }
@@ -135,7 +135,7 @@ export class TablutPieceAndInfluenceMinimax extends TablutMinimax {
             if (ennemy === Player.ONE) { // Defender
                 return true;
             } else {
-                return state.getBoardAt(coord) === TablutCase.UNOCCUPIED;
+                return state.getPieceAt(coord) === TablutCase.UNOCCUPIED;
             }
         }
     }
@@ -143,7 +143,7 @@ export class TablutPieceAndInfluenceMinimax extends TablutMinimax {
         if (threats.length === 0) {
             return false;
         }
-        if (state.getBoardAt(coord).isKing()) {
+        if (state.getPieceAt(coord).isKing()) {
             return threats.length === 3;
         } else {
             for (const threat of threats) {

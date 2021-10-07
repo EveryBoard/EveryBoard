@@ -8,7 +8,7 @@ export class MinimaxTestingMinimax extends Minimax<MinimaxTestingMove, MinimaxTe
 
     public getBoardValue(node: MinimaxTestingNode): NodeUnheritance {
         const state: MinimaxTestingState = node.gameState;
-        return new NodeUnheritance(state.getBoardAt(state.location));
+        return new NodeUnheritance(state.getPieceAt(state.location));
     }
     public getListMoves(n: MinimaxTestingNode): MinimaxTestingMove[] {
         const moves: MinimaxTestingMove[] = [];

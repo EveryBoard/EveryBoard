@@ -10,6 +10,7 @@ import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
 
 describe('QuixoMove:', () => {
+
     const _: Player = Player.NONE;
     const X: Player = Player.ONE;
 

@@ -59,7 +59,7 @@ export class SixRules extends Rules<SixMove,
         for (const piece of state.pieces.listKeys()) {
             for (const dir of HexaDirection.factory.all) {
                 const neighboor: Coord = piece.getNext(dir, 1);
-                if (state.getBoardAt(neighboor) === Player.NONE) {
+                if (state.getPieceAt(neighboor) === Player.NONE) {
                     neighboors.add(neighboor);
                 }
             }
@@ -79,7 +79,7 @@ export class SixRules extends Rules<SixMove,
         if (move.isDrop()) {
             return { legal: MGPValidation.failure('Can no longer drop after 40th turn!'), kept: null };
         }
-        switch (state.getBoardAt(move.start.get())) {
+        switch (state.getPieceAt(move.start.get())) {
             case Player.NONE:
                 return { legal: MGPValidation.failure('Cannot move empty coord!'), kept: null };
             case state.getCurrentEnnemy():
@@ -260,7 +260,7 @@ export class SixRules extends Rules<SixMove,
         const victory: Coord[] = [lastDrop];
         let testCoord: Coord = lastDrop.getNext(initialDirection, 1);
         while (victory.length < 6) {
-            const testedPiece: Player = state.getBoardAt(testCoord);
+            const testedPiece: Player = state.getPieceAt(testCoord);
             if (testedPiece !== LAST_PLAYER) {
                 return [];
             }
@@ -278,7 +278,7 @@ export class SixRules extends Rules<SixMove,
         const victory: Coord[] = [lastDrop];
         let twoDirectionCovered: boolean = false;
         while (victory.length < 6) {
-            const testedPiece: Player = state.getBoardAt(testCoord);
+            const testedPiece: Player = state.getPieceAt(testCoord);
             if (testedPiece === LAST_PLAYER) {
                 victory.push(testCoord);
             } else {
@@ -303,7 +303,7 @@ export class SixRules extends Rules<SixMove,
         let testCoord: Coord = lastDrop.getNext(edgeDirection, 1);
         while (victory.length < 6) {
             // Testing the corner
-            const testedPiece: Player = state.getBoardAt(testCoord);
+            const testedPiece: Player = state.getPieceAt(testCoord);
             if (testedPiece !== LAST_PLAYER) {
                 return [];
             }
@@ -326,7 +326,7 @@ export class SixRules extends Rules<SixMove,
         let testCoord: Coord = lastDrop.getNext(edgeDirection, 1);
         while (victory.length < 6) {
             // Testing the corner
-            const testedPiece: Player = state.getBoardAt(testCoord);
+            const testedPiece: Player = state.getPieceAt(testCoord);
             if (testedPiece !== LAST_PLAYER) {
                 return [];
             }

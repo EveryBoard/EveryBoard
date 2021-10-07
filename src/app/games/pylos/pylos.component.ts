@@ -47,7 +47,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         ];
         this.encoder = PylosMove.encoder;
         this.tutorial = new PylosTutorial().tutorial;
-        this.CASE_SIZE = this.getPieceRay(0);
+        this.CASE_SIZE = this.getPieceRadius(0);
         this.updateBoard();
     }
     public getLevelRange(z: number): number[] {
@@ -59,7 +59,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     }
     public isDrawable(x: number, y: number, z: number): boolean {
         const coord: PylosCoord = new PylosCoord(x, y, z);
-        if (this.state.getBoardAt(coord) === Player.NONE) {
+        if (this.state.getPieceAt(coord) === Player.NONE) {
             return this.state.isLandable(coord);
         } else {
             return true;
@@ -71,7 +71,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
             return this.cancelMove(clickValidity.getReason());
         }
         const clickedCoord: PylosCoord = new PylosCoord(x, y, z);
-        const clickedPiece: Player = this.state.getBoardAt(clickedCoord);
+        const clickedPiece: Player = this.state.getPieceAt(clickedCoord);
         const pieceBelongToEnnemy: boolean = clickedPiece === this.state.getCurrentEnnemy();
         if (pieceBelongToEnnemy) {
             return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
@@ -147,7 +147,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         }
         return [];
     }
-    public getPieceRay(z: number): number {
+    public getPieceRadius(z: number): number {
         return 90 + (z * 5);
     }
     public getPieceCx(x: number, y: number, z: number): number {
@@ -158,7 +158,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     }
     public isOccupied(x: number, y: number, z: number): boolean {
         const coord: PylosCoord = new PylosCoord(x, y, z);
-        const reallyOccupied: boolean = this.rules.node.gameState.getBoardAt(coord) !== Player.NONE;
+        const reallyOccupied: boolean = this.rules.node.gameState.getPieceAt(coord) !== Player.NONE;
         const landingCoord: boolean = coord.equals(this.chosenLandingCoord);
         return reallyOccupied || landingCoord;
     }
@@ -180,7 +180,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         if (c.equals(this.chosenLandingCoord)) {
             return this.getPlayerClass(this.state.getCurrentPlayer());
         }
-        return this.getPlayerPieceClass(this.state.getBoardAt(c).value);
+        return this.getPlayerPieceClass(this.state.getPieceAt(c).value);
     }
     public getPlayerPieceClass(player: number): string {
         return this.getPlayerClass(Player.of(player));

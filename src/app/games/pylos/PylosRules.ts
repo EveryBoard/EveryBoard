@@ -24,7 +24,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
             for (let y: number = 0; y < (4 - z); y++) {
                 for (let x: number = 0; x < (4 - z); x++) {
                     const c: PylosCoord = new PylosCoord(x, y, z);
-                    if (state.getBoardAt(c) === state.getCurrentPlayer() &&
+                    if (state.getPieceAt(c) === state.getCurrentPlayer() &&
                         state.isSupporting(c) === false)
                     {
                         freeToMove.push(c);
@@ -62,18 +62,18 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
         const currentPlayer: Player = state.getCurrentPlayer();
         for (const vertical of [Orthogonal.UP, Orthogonal.DOWN]) {
             const firstNeighboors: MGPOptional<PylosCoord> = landingCoord.getNextValid(vertical);
-            if (firstNeighboors.isPresent() && state.getBoardAt(firstNeighboors.get()) === currentPlayer) {
+            if (firstNeighboors.isPresent() && state.getPieceAt(firstNeighboors.get()) === currentPlayer) {
                 for (const horizontal of [Orthogonal.LEFT, Orthogonal.RIGHT]) {
                     const secondNeighboors: PylosCoord = firstNeighboors
                         .get()
                         .getNextValid(horizontal)
                         .getOrNull();
                     if (secondNeighboors != null &&
-                        state.getBoardAt(secondNeighboors) === currentPlayer)
+                        state.getPieceAt(secondNeighboors) === currentPlayer)
                     {
                         const thirdDirection: Orthogonal = vertical.getOpposite();
                         const thirdNeighboors: PylosCoord = secondNeighboors.getNextValid(thirdDirection).get();
-                        if (state.getBoardAt(thirdNeighboors) === currentPlayer) {
+                        if (state.getPieceAt(thirdNeighboors) === currentPlayer) {
                             return true;
                         }
                     }
@@ -112,12 +112,12 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
     public static isValidCapture(state: PylosState, move: PylosMove, capture: PylosCoord): boolean {
         const currentPlayer: Player = state.getCurrentPlayer();
         if (!capture.equals(move.landingCoord) &&
-            state.getBoardAt(capture) !== currentPlayer)
+            state.getPieceAt(capture) !== currentPlayer)
         {
             return false;
         }
         const supportedPieces: PylosCoord[] = capture.getHigherPieces()
-            .filter((p: PylosCoord) => state.getBoardAt(p) !== Player.NONE &&
+            .filter((p: PylosCoord) => state.getPieceAt(p) !== Player.NONE &&
                                        p.equals(move.firstCapture.get()) === false);
         if (supportedPieces.length > 0) {
             return false;
@@ -143,7 +143,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
         return PylosRules.applyLegalMove(move, state, status);
     }
     public isLegal(move: PylosMove, state: PylosState): LegalityStatus {
-        if (state.getBoardAt(move.landingCoord) !== Player.NONE) {
+        if (state.getPieceAt(move.landingCoord) !== Player.NONE) {
             return { legal: MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE()) };
         }
 
@@ -151,7 +151,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
         const ENNEMY: Player = state.getCurrentEnnemy();
 
         if (startingCoord != null) {
-            const startingPiece: Player = state.getBoardAt(startingCoord);
+            const startingPiece: Player = state.getPieceAt(startingCoord);
             if (startingPiece === ENNEMY) {
                 return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE()) };
             } else if (startingPiece === Player.NONE) {
@@ -159,7 +159,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
             }
 
             const supportedPieces: PylosCoord[] = startingCoord.getHigherPieces()
-                .filter((p: PylosCoord) => state.getBoardAt(p) !== Player.NONE ||
+                .filter((p: PylosCoord) => state.getPieceAt(p) !== Player.NONE ||
                                            p.equals(move.landingCoord));
             if (supportedPieces.length > 0) {
                 return { legal: MGPValidation.failure(PylosFailure.SHOULD_HAVE_SUPPORTING_PIECES()) };

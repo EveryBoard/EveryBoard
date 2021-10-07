@@ -51,7 +51,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityStatus> {
         const sidePieces: [number, number] = [state.sidePieces[0], state.sidePieces[1]];
         const capturedPieces: [number, number] = [state.capturedPieces[0], state.capturedPieces[1]];
         capture.forEach((coord: Coord) => {
-            const piece: FourStatePiece = state.getBoardAt(coord);
+            const piece: FourStatePiece = state.getPieceAt(coord);
             newState = newState.setAt(coord, FourStatePiece.EMPTY);
             if (piece.is(player)) {
                 sidePieces[player.value] += 1;
@@ -64,7 +64,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityStatus> {
     public static getPlacements(state: GipfState): GipfPlacement[] {
         const placements: GipfPlacement[] = [];
         FlatHexaOrientation.INSTANCE.getAllBorders(state).forEach((entrance: Coord) => {
-            if (state.getBoardAt(entrance) === FourStatePiece.EMPTY) {
+            if (state.getPieceAt(entrance) === FourStatePiece.EMPTY) {
                 placements.push(new GipfPlacement(entrance, MGPOptional.empty()));
             } else {
                 GipfRules.getAllDirectionsForEntrance(state, entrance).forEach((dir: HexaDirection) => {
@@ -81,7 +81,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityStatus> {
     }
     private static nextGapInLine(state: GipfState, start: Coord, dir: HexaDirection): MGPOptional<Coord> {
         for (let cur: Coord = start; state.isOnBoard(cur); cur = cur.getNext(dir)) {
-            if (state.getBoardAt(cur) === FourStatePiece.EMPTY) {
+            if (state.getPieceAt(cur) === FourStatePiece.EMPTY) {
                 return MGPOptional.of(cur);
             }
         }
@@ -94,7 +94,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityStatus> {
         if (placement.direction.isAbsent()) {
             // Only valid if there is an empty spot
             const coord: Coord = placement.coord;
-            if (state.getBoardAt(coord) !== FourStatePiece.EMPTY) {
+            if (state.getPieceAt(coord) !== FourStatePiece.EMPTY) {
                 throw new Error('Apply placement called without direction while the coord is occupied');
             }
             newState = newState.setAt(coord, prevPiece);
@@ -102,7 +102,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityStatus> {
             for (let cur: Coord = placement.coord;
                 newState.isOnBoard(cur) && prevPiece !== FourStatePiece.EMPTY;
                 cur = cur.getNext(placement.direction.get())) {
-                const curPiece: FourStatePiece = state.getBoardAt(cur);
+                const curPiece: FourStatePiece = state.getPieceAt(cur);
                 newState = newState.setAt(cur, prevPiece);
                 prevPiece = curPiece;
             }
@@ -123,12 +123,12 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityStatus> {
             moved.push(placement.coord);
             let cur: Coord = placement.coord.getNext(dir);
             while (stateAfterCapture.isOnBoard(cur) &&
-                stateAfterCapture.getBoardAt(cur) !== FourStatePiece.EMPTY) {
+                stateAfterCapture.getPieceAt(cur) !== FourStatePiece.EMPTY) {
                 moved.push(cur);
                 cur = cur.getNext(dir);
             }
             assert(stateAfterCapture.isOnBoard(cur) &&
-                   stateAfterCapture.getBoardAt(cur) === FourStatePiece.EMPTY,
+                   stateAfterCapture.getPieceAt(cur) === FourStatePiece.EMPTY,
                    'getPiecesMoved called with an invalid placement performed on a full line');
             // This is the case filled by the last pushed piece
             moved.push(cur);
@@ -250,7 +250,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityStatus> {
         const dir: HexaDirection = line.getDirection();
         let start: Coord = coord;
         for (let cur: Coord = coord; state.isOnBoard(cur); cur = cur.getNext(dir)) {
-            if (state.getBoardAt(cur).is(player)) {
+            if (state.getPieceAt(cur).is(player)) {
                 if (consecutives === 0) {
                     start = cur;
                 }
@@ -279,7 +279,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityStatus> {
         if (coordValidity.isFailure()) {
             return coordValidity;
         }
-        if (state.getBoardAt(placement.coord) !== FourStatePiece.EMPTY) {
+        if (state.getPieceAt(placement.coord) !== FourStatePiece.EMPTY) {
             if (placement.direction.isAbsent()) {
                 return MGPValidation.failure(GipfFailure.PLACEMENT_WITHOUT_DIRECTION());
             }
@@ -312,19 +312,18 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityStatus> {
         const end: Coord = linePortion[1];
         const dir: HexaDirection = linePortion[2];
         const oppositeDir: HexaDirection = dir.getOpposite();
-        for (let cur: Coord = start.getNext(oppositeDir);
-            state.getNullable(cur) !== FourStatePiece.EMPTY;
-            cur = cur.getNext(oppositeDir))
-        {
+        let cur: Coord = start.getNext(oppositeDir);
+        while (state.isOnBoard(cur) && state.getPieceAt(cur) !== FourStatePiece.EMPTY) {
             // Go backwards to identify capturable pieces before the 4 aligned pieces
             capturable.push(cur);
+            cur = cur.getNext(oppositeDir);
         }
         for (let cur: Coord = start; !cur.equals(end); cur = cur.getNext(dir)) {
             // The 4 pieces are capturable
             capturable.push(cur);
         }
         for (let cur: Coord = end;
-            state.isOnBoard(cur) && state.getBoardAt(cur) !== FourStatePiece.EMPTY;
+            state.isOnBoard(cur) && state.getPieceAt(cur) !== FourStatePiece.EMPTY;
             cur = cur.getNext(dir))
         {
             // Go forward to identify capturable pieces after the 4 aligned pieces

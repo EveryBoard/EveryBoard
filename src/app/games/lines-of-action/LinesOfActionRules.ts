@@ -28,7 +28,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         for (let y: number = 0; y < LinesOfActionState.SIZE; y++) {
             for (let x: number = 0; x < LinesOfActionState.SIZE; x++) {
                 const coord: Coord = new Coord(x, y);
-                const piece: Player = state.getBoardAt(coord);
+                const piece: Player = state.getPieceAt(coord);
                 if (piece !== Player.NONE) {
                     for (const target of LinesOfActionRules.possibleTargets(state, coord)) {
                         const move: LinesOfActionMove = LinesOfActionMove.of(coord, target).get();
@@ -46,7 +46,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         for (let y: number = 0; y < LinesOfActionState.SIZE; y++) {
             for (let x: number = 0; x < LinesOfActionState.SIZE; x++) {
                 if (groups[y][x] === -1) {
-                    const content: Player = state.getBoardAt(new Coord(x, y));
+                    const content: Player = state.getPieceAt(new Coord(x, y));
                     if (content !== Player.NONE) {
                         highestGroup += 1;
                         LinesOfActionRules.markGroupStartingAt(state, groups, new Coord(x, y), highestGroup);
@@ -59,16 +59,16 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
     }
     private static markGroupStartingAt(state: LinesOfActionState, groups: number[][], pos: Coord, id: number): void {
         const stack: Coord[] = [pos];
-        const player: Player = state.getBoardAt(pos);
+        const player: Player = state.getPieceAt(pos);
         while (stack.length > 0) {
             const coord: Coord = stack.pop();
             if (groups[coord.y][coord.x] === -1) {
-                const content: Player = state.getBoardAt(coord);
+                const content: Player = state.getPieceAt(coord);
                 if (content === player) {
                     groups[coord.y][coord.x] = id;
                     for (const dir of Direction.DIRECTIONS) {
                         const next: Coord = coord.getNext(dir);
-                        if (LinesOfActionState.isOnBoard(next)) {
+                        if (state.isOnBoard(next)) {
                             stack.push(next);
                         }
                     }
@@ -90,17 +90,17 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         return new LinesOfActionState(board, state.turn + 1);
     }
     public static isLegal(move: LinesOfActionMove, state: LinesOfActionState): LegalityStatus {
-        if (state.getBoardAt(move.coord) !== state.getCurrentPlayer()) {
+        if (state.getPieceAt(move.coord) !== state.getCurrentPlayer()) {
             return { legal: MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE()) };
         }
         if (move.length() !== this.numberOfPiecesOnLine(state, move.coord, move.direction)) {
             return { legal: MGPValidation.failure(LinesOfActionFailure.INVALID_MOVE_LENGTH()) };
         }
         if (move.coord.getCoordsToward(move.end).some((c: Coord) =>
-            state.getBoardAt(c) === state.getCurrentEnnemy())) {
+            state.getPieceAt(c) === state.getCurrentEnnemy())) {
             return { legal: MGPValidation.failure(LinesOfActionFailure.CANNOT_JUMP_OVER_ENEMY()) };
         }
-        if (state.getBoardAt(move.end) === state.getCurrentPlayer()) {
+        if (state.getPieceAt(move.end) === state.getCurrentPlayer()) {
             return { legal: MGPValidation.failure(RulesFailure.CANNOT_SELF_CAPTURE()) };
         }
         return { legal: MGPValidation.SUCCESS };
@@ -111,7 +111,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
     private static numberOfPiecesOnLine(state: LinesOfActionState, pos: Coord, dir: Direction): number {
         let count: number = 0;
         for (const coord of LinesOfActionRules.getLineCoords(pos, dir)) {
-            if (state.getBoardAt(coord) !== Player.NONE) {
+            if (state.getPieceAt(coord) !== Player.NONE) {
                 count += 1;
             }
         }
@@ -165,7 +165,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         for (const dir of Direction.DIRECTIONS) {
             const numberOfPiecesOnLine: number = LinesOfActionRules.numberOfPiecesOnLine(state, start, dir);
             const target: Coord = start.getNext(dir, numberOfPiecesOnLine);
-            if (LinesOfActionState.isOnBoard(target)) {
+            if (state.isOnBoard(target)) {
                 const move: LinesOfActionMove = LinesOfActionMove.of(start, target).get();
                 const legality: LegalityStatus = LinesOfActionRules.isLegal(move, state);
                 if (legality.legal.isSuccess()) {

@@ -3,14 +3,11 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { LegalityStatus } from '../LegalityStatus';
 import { MGPNode } from '../MGPNode';
 import { GameStatus, Rules } from '../Rules';
-import { RectangularGameState } from '../RectangularGameState';
-import { Coord } from '../Coord';
+import { GameStateWithTable } from '../GameStateWithTable';
 
-class MyAbstractState extends RectangularGameState<number> {
 
-    public setAtUnsafe(coord: Coord, v: number): this {
-        throw new Error('It was useless for testing so far.');
-    }
+class MyAbstractState extends GameStateWithTable<number> {
+
     public static getInitialState(): MyAbstractState {
         return new MyAbstractState([[]], 0);
     }

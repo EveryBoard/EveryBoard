@@ -35,10 +35,11 @@ export function expectToBeOngoing<M extends Move,
 {
     expect(rules.getGameStatus(node)).toEqual(GameStatus.ONGOING);
     for (const minimax of minimaxes) {
-        expect(minimax.getBoardValue(node).value)
+        const minimaxBoardValue: number = minimax.getBoardValue(node).value;
+        expect(minimaxBoardValue)
             .withContext(minimax.name + ' should not consider it a victory for player zero.')
             .not.toEqual(Player.ZERO.getVictoryValue());
-        expect(minimax.getBoardValue(node).value)
+        expect(minimaxBoardValue)
             .withContext(minimax.name + ' should not consider it a victory for player one.')
             .not.toEqual(Player.ONE.getVictoryValue());
     }

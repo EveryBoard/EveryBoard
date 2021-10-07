@@ -4,6 +4,7 @@ import { By } from '@angular/platform-browser';
 import { CountDownComponent } from './count-down.component';
 
 describe('CountDownComponent', () => {
+
     let component: CountDownComponent;
 
     let fixture: ComponentFixture<CountDownComponent>;

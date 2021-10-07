@@ -56,10 +56,10 @@ describe('SaharaRules', () => {
     });
     it('Shortest victory simulation', () => {
         expect(rules.choose(new SaharaMove(new Coord(0, 3), new Coord(1, 4)))).toBeTrue();
-        expect(rules.node.gameState.getBoardAt(new Coord(1, 4)))
+        expect(rules.node.gameState.getPieceAt(new Coord(1, 4)))
             .withContext('Just moved black piece should be in her landing spot')
             .toBe(FourStatePiece.ZERO);
-        expect(rules.node.gameState.getBoardAt(new Coord(0, 3)))
+        expect(rules.node.gameState.getPieceAt(new Coord(0, 3)))
             .withContext('Just moved black piece should have left her initial spot')
             .toBe(FourStatePiece.EMPTY);
         expect(rules.choose(new SaharaMove(new Coord(3, 0), new Coord(4, 0)))).toBeTrue();

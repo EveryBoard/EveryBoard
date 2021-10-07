@@ -131,12 +131,9 @@ class Criterion {
 
         return (nonNull > 0);
     }
-    public mergeWithNumber(ic: QuartoPiece): boolean {
+    public mergeWithQuartoPiece(ic: QuartoPiece): boolean {
         const c: Criterion = new Criterion(ic);
         return this.mergeWith(c);
-    }
-    public mergeWithQuartoPiece(qe: QuartoPiece): boolean {
-        return this.mergeWithNumber(qe); // TODO deleltle
     }
     public isAllNull(): boolean {
         let i: number = 0;
@@ -285,13 +282,13 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
          */
         let coord: Coord = line.initialCoord;
         let i: number = 0; // index of the tested square
-        let c: QuartoPiece = state.getBoardAt(coord);
+        let c: QuartoPiece = state.getPieceAt(coord);
         const commonCrit: Criterion = new Criterion(c);
         while (QuartoRules.isOccupied(c) && !commonCrit.isAllNull() && (i < 3)) {
             i++;
             coord = coord.getNext(line.direction, 1);
-            c = state.getBoardAt(coord);
-            commonCrit.mergeWithNumber(c);
+            c = state.getPieceAt(coord);
+            commonCrit.mergeWithQuartoPiece(c);
         }
         if (QuartoRules.isOccupied(c) && !commonCrit.isAllNull()) {
             /**
@@ -314,7 +311,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
 
         let coord: Coord = line.initialCoord;
         for (let i: number = 0; i < 4; i++) {
-            const c: QuartoPiece = state.getBoardAt(coord);
+            const c: QuartoPiece = state.getPieceAt(coord);
             // we look through the entire line
             if (c === QuartoPiece.NONE) {
                 // if c is unoccupied
@@ -329,7 +326,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
                     commonCrit = new Criterion(c);
                     display(QuartoRules.VERBOSE, 'set commonCrit to ' + commonCrit.toString());
                 } else {
-                    commonCrit.mergeWithNumber(c);
+                    commonCrit.mergeWithQuartoPiece(c);
                     display(QuartoRules.VERBOSE, 'update commonCrit: ' + commonCrit.toString());
                 }
             }

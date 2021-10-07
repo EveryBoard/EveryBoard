@@ -120,9 +120,6 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         }
         return [];
     }
-    public isRectangle(piece: number): boolean {
-        return piece % 4 < 2;
-    }
     public getPieceClasses(piece: number): string[] {
         const classes: string[] = [];
         if (piece % 2 === 0) {

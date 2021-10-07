@@ -50,7 +50,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
 
         const coord: Coord = new Coord(x, y);
         if (this.selected.isPresent()) {
-            if (this.getState().getBoardAt(coord) === this.getState().getCurrentPlayer()) {
+            if (this.getState().getPieceAt(coord) === this.getState().getCurrentPlayer()) {
                 return this.select(coord);
             } else {
                 const move: MGPFallible<LinesOfActionMove> =
@@ -66,7 +66,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
         }
     }
     private async select(coord: Coord): Promise<MGPValidation> {
-        if (this.getState().getBoardAt(coord) !== this.getState().getCurrentPlayer()) {
+        if (this.getState().getPieceAt(coord) !== this.getState().getCurrentPlayer()) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
         this.selected = MGPOptional.of(coord);
@@ -88,7 +88,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
         this.lastMove = MGPOptional.ofNullable(this.rules.node.move);
         if (this.lastMove.isPresent()) {
             const lastMove: LinesOfActionMove = this.lastMove.get();
-            if (this.getPreviousState().getBoardAt(lastMove.end) !== Player.NONE) {
+            if (this.getPreviousState().getPieceAt(lastMove.end) !== Player.NONE) {
                 this.captured = MGPOptional.of(lastMove.end);
             } else {
                 this.captured = MGPOptional.empty();

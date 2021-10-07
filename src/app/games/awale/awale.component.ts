@@ -67,7 +67,7 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
             for (let x: number = 0; x <= 5; x++) {
                 const coord: Coord = new Coord(x, y);
                 const currentValue: number = this.board[y][x];
-                const oldValue: number = previousState.getBoardAt(coord);
+                const oldValue: number = previousState.getPieceAt(coord);
                 if (!coord.equals(this.last)) {
                     if (currentValue < oldValue) {
                         this.captured.push(coord);

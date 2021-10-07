@@ -1,8 +1,8 @@
-import { RectangularGameState } from '../../jscaip/RectangularGameState';
+import { GameStateWithTable } from '../../jscaip/GameStateWithTable';
 import { TablutCase } from './TablutCase';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 
-export class TablutState extends RectangularGameState<TablutCase> {
+export class TablutState extends GameStateWithTable<TablutCase> {
 
     // Statics Fields:
 

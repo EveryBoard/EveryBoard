@@ -8,7 +8,7 @@ class MyGameState extends AbstractGameState {
     public getNullable(coord: unknown): unknown {
         throw new Error('Method not implemented.');
     }
-    public getBoardAt(coord: unknown): unknown {
+    public getPieceAt(coord: unknown): unknown {
         throw new Error('Method not implemented.');
     }
     public setAtUnsafe(coord: unknown, v: unknown): this {

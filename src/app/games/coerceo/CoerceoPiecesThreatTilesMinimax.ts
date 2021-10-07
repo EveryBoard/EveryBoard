@@ -47,7 +47,7 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
         for (let y: number = 0; y < 10; y++) {
             for (let x: number = 0; x < 15; x++) {
                 const coord: Coord = new Coord(x, y);
-                const piece: FourStatePiece = state.getBoardAt(coord);
+                const piece: FourStatePiece = state.getPieceAt(coord);
                 if (piece === FourStatePiece.ZERO) {
                     zeroPieces.push(coord);
                 } else if (piece === FourStatePiece.ONE) {
@@ -75,8 +75,8 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
         return threatMap;
     }
     public getThreat(coord: Coord, state: CoerceoState): PieceThreat { // TODO: check threat by leaving tile
-        const threatenerPlayer: Player = Player.of(state.getBoardAt(coord).value);
-        const ENEMY: Player = threatenerPlayer.getOpponent();
+        const threatenerPlayer: Player = Player.of(state.getPieceAt(coord).value);
+        const OPPONENT: Player = threatenerPlayer.getOpponent();
         let freedoms: number = 0;
         let freedom: Coord;
         const directThreats: Coord[] = [];
@@ -84,8 +84,8 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
             .getNeighboors(coord)
             .filter((c: Coord) => c.isInRange(15, 10));
         for (const directThreat of neighboors) {
-            const threat: FourStatePiece = state.getBoardAt(directThreat);
-            if (threat.is(ENEMY)) {
+            const threat: FourStatePiece = state.getPieceAt(directThreat);
+            if (threat.is(OPPONENT)) {
                 directThreats.push(directThreat);
             } else if (threat === FourStatePiece.EMPTY) {
                 freedoms++;
@@ -97,7 +97,7 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
             for (const step of CoerceoStep.STEPS) {
                 const movingThreat: Coord = freedom.getNext(step.direction, 1);
                 if (movingThreat.isInRange(15, 10) &&
-                    state.getBoardAt(movingThreat).is(ENEMY) &&
+                    state.getPieceAt(movingThreat).is(OPPONENT) &&
                     directThreats.every((coord: Coord) => coord.equals(movingThreat) === false))
                 {
                     movingThreats.push(movingThreat);
@@ -116,10 +116,10 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
         const filteredThreatMap: MGPMap<Coord, PieceThreat> = new MGPMap();
         const threateneds: Coord[] = threatMap.listKeys();
         const threatenedPlayerPieces: Coord[] = threateneds.filter((coord: Coord) => {
-            return state.getBoardAt(coord).is(state.getCurrentPlayer());
+            return state.getPieceAt(coord).is(state.getCurrentPlayer());
         });
         const threatenedEnnemyPieces: MGPSet<Coord> = new MGPSet(threateneds.filter((coord: Coord) => {
-            return state.getBoardAt(coord).is(state.getCurrentEnnemy());
+            return state.getPieceAt(coord).is(state.getCurrentEnnemy());
         }));
         for (const threatenedPiece of threatenedPlayerPieces) {
             const oldThreat: PieceThreat = threatMap.get(threatenedPiece).get();

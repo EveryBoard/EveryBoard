@@ -14,7 +14,7 @@ describe('EncapsuleState', () => {
     it('should forbid construction of state with null remaining pieces', () => {
         expect(() => new EncapsuleState(emptyBoard, 0, null)).toThrow();
     });
-    describe('getBoardAt', () => {
+    describe('getPieceAt', () => {
         it('should return the expected case', () => {
             const someCase: EncapsuleCase = new EncapsuleCase(Player.ONE, Player.NONE, Player.NONE);
             const board: EncapsuleCase[][] = [
@@ -22,7 +22,7 @@ describe('EncapsuleState', () => {
                 [someCase, _, _],
                 [_, _, _]];
             const state: EncapsuleState = new EncapsuleState(board, 0, []);
-            expect(state.getBoardAt(new Coord(0, 1))).toBe(someCase);
+            expect(state.getPieceAt(new Coord(0, 1))).toBe(someCase);
         });
     });
     describe('isDroppable', () => {
@@ -42,6 +42,7 @@ describe('EncapsuleState', () => {
 });
 
 describe('EncapsuleCase', () => {
+
     it('should forbid construction with any null member', () => {
         expect(() => new EncapsuleCase(null, Player.NONE, Player.NONE)).toThrow();
         expect(() => new EncapsuleCase(Player.NONE, null, Player.NONE)).toThrow();

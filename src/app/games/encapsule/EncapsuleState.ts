@@ -1,4 +1,4 @@
-import { RectangularGameState } from 'src/app/jscaip/RectangularGameState';
+import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { EncapsulePiece, Size } from 'src/app/games/encapsule/EncapsulePiece';
 import { Player } from 'src/app/jscaip/Player';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
@@ -6,7 +6,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/utils';
 import { ComparableObject } from 'src/app/utils/Comparable';
 
-export class EncapsuleState extends RectangularGameState<EncapsuleCase> {
+export class EncapsuleState extends GameStateWithTable<EncapsuleCase> {
 
     private readonly remainingPieces: ReadonlyArray<EncapsulePiece>;
 

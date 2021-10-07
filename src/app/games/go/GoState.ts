@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { RectangularGameState } from 'src/app/jscaip/RectangularGameState';
+import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player } from 'src/app/jscaip/Player';
 import { ArrayUtils, NumberTable, Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -85,7 +85,7 @@ export enum Phase {
     ACCEPT = 'ACCEPT',
     FINISHED = 'FINISHED'
 }
-export class GoState extends RectangularGameState<GoPiece> {
+export class GoState extends GameStateWithTable<GoPiece> {
 
     public static WIDTH: number = 13;
 
@@ -135,9 +135,9 @@ export class GoState extends RectangularGameState<GoPiece> {
                            this.phase);
     }
     public isDead(coord: Coord): boolean {
-        return this.getBoardAt(coord).isDead();
+        return this.getPieceAt(coord).isDead();
     }
     public isTerritory(coord: Coord): boolean {
-        return this.getBoardAt(coord).isTerritory();
+        return this.getPieceAt(coord).isTerritory();
     }
 }

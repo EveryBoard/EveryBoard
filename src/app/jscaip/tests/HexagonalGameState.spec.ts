@@ -103,14 +103,14 @@ describe('HexagonalGameState', () => {
             expect(board1.equals(board2, numCompare)).toBeFalse();
         });
     });
-    describe('getBoardAt', () => {
+    describe('getPieceAt', () => {
         it('should fail when accessing coords not on board', () => {
             spyOn(state, 'isOnBoard').and.returnValue(false);
-            expect(() => state.getBoardAt(new Coord(0, 0))).toThrow();
+            expect(() => state.getPieceAt(new Coord(0, 0))).toThrow();
         });
         it('should return the right content', () => {
             const state: TestingHexagonalState = TestingHexagonalState.fromTable(1, [[0, 1, 0]], [], 0);
-            expect(state.getBoardAt(new Coord(1, 0))).toBe(1);
+            expect(state.getPieceAt(new Coord(1, 0))).toBe(1);
         });
     });
     describe('setAt', () => {
@@ -120,16 +120,16 @@ describe('HexagonalGameState', () => {
         it('should return updated board upon modification', () => {
             const coord: Coord = new Coord(4, 3);
             const updatedState: TestingHexagonalState = state.setAt(coord, 42);
-            expect(updatedState.getBoardAt(coord)).toEqual(42);
+            expect(updatedState.getPieceAt(coord)).toEqual(42);
         });
     });
     describe('forEachCoord', () => {
         it('should iterate over coords with forEachCoord', () => {
             let count: number = 0;
-            state.forEachCoord((coord: Coord, _: number) => {
+            state.forEachCoord((_coord: Coord, _content: number) => {
                 count += 1;
             });
-            expect(count).toEqual(49);
+            expect(count).toEqual(37);
         });
     });
     describe('allLines', () => {

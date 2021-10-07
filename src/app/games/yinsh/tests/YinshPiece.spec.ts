@@ -2,6 +2,7 @@ import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 import { YinshPiece } from '../YinshPiece';
 
 describe('YinshPiece', () => {
+
     it('should correctly encode and decode all pieces', () => {
         for (const piece of [
             YinshPiece.NONE,

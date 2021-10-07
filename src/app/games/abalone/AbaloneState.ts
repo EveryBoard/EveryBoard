@@ -1,9 +1,9 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { RectangularGameState } from 'src/app/jscaip/RectangularGameState';
+import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Table } from 'src/app/utils/ArrayUtils';
 
-export class AbaloneState extends RectangularGameState<FourStatePiece> {
+export class AbaloneState extends GameStateWithTable<FourStatePiece> {
 
     public static getInitialState(): AbaloneState {
         const _: FourStatePiece = FourStatePiece.EMPTY;
@@ -24,30 +24,24 @@ export class AbaloneState extends RectangularGameState<FourStatePiece> {
         return new AbaloneState(board, 0);
     }
     public isInBoard(coord: Coord): boolean {
-        return coord.isInRange(9, 9) &&
-               this.getBoardAt(coord) !== FourStatePiece.NONE;
+        return coord.isInRange(9, 9) && this.getPieceAt(coord) !== FourStatePiece.NONE;
     }
     public isPiece(coord: Coord): boolean {
-        const piece: FourStatePiece = this.getBoardAt(coord);
+        const piece: FourStatePiece = this.getPieceAt(coord);
         return piece.isPlayer();
     }
     public getScores(): [number, number] {
         const scores: [number, number] = [14, 14];
         for (let y: number = 0; y < 9; y++) {
             for (let x: number = 0; x < 9; x++) {
-                if (this.getBoardByXY(x, y) === FourStatePiece.ZERO) {
+                if (this.getPieceAtXY(x, y) === FourStatePiece.ZERO) {
                     scores[1] = scores[1] - 1;
                 }
-                if (this.getBoardByXY(x, y) === FourStatePiece.ONE) {
+                if (this.getPieceAtXY(x, y) === FourStatePiece.ONE) {
                     scores[0] = scores[0] - 1;
                 }
             }
         }
         return scores;
-    }
-    public setAtUnsafe(coord: Coord, v: FourStatePiece): this {
-        const newBoard: FourStatePiece[][] = this.getCopiedBoard();
-        newBoard[coord.y][coord.x] = v;
-        return new AbaloneState(newBoard, this.turn) as this;
     }
 }

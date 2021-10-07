@@ -3,6 +3,7 @@ import { EncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 import { SixMove } from '../SixMove';
 
 describe('SixMove', () => {
+
     it('Should allow dropping', () => {
         const move: SixMove = SixMove.fromDrop(new Coord(0, 0));
         expect(move).toBeTruthy();

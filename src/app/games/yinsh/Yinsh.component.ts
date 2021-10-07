@@ -127,11 +127,11 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules, YinshMove
     }
     public updateViewInfo(): void {
         this.constructedState.allCoords().forEach((coord: Coord): void => {
-            if (this.constructedState.getBoardAt(coord) === YinshPiece.NONE) {
+            if (this.constructedState.getPieceAt(coord) === YinshPiece.NONE) {
                 return;
             }
             this.viewInfo.caseInfo[coord.y][coord.x].caseClasses = this.getCaseClasses(coord);
-            const piece: YinshPiece = this.constructedState.getBoardAt(coord);
+            const piece: YinshPiece = this.constructedState.getPieceAt(coord);
             this.viewInfo.caseInfo[coord.y][coord.x].removedClass = '';
             this.setRingInfo(coord, piece);
             this.setMarkerInfo(coord, piece);
@@ -248,7 +248,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules, YinshMove
         const coords: Coord[] = [];
         const dir: HexaDirection = HexaDirection.factory.fromMove(start, end).get();
         for (let cur: Coord = start; !cur.equals(end); cur = cur.getNext(dir)) {
-            if (this.constructedState.getBoardAt(cur) !== YinshPiece.EMPTY) {
+            if (this.constructedState.getPieceAt(cur) !== YinshPiece.EMPTY) {
                 coords.push(cur);
             }
             coords.push(end);

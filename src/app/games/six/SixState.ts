@@ -122,7 +122,7 @@ export class SixState extends GameState<Coord, Player> {
     public toRepresentation(): NumberTable {
         const board: number[][] = ArrayUtils.createTable(this.width, this.height, Player.NONE.value);
         for (const piece of this.pieces.listKeys()) {
-            const pieceValue: number = this.getBoardAt(piece).value;
+            const pieceValue: number = this.getPieceAt(piece).value;
             board[piece.y][piece.x] = pieceValue;
         }
         return board;
@@ -151,7 +151,7 @@ export class SixState extends GameState<Coord, Player> {
     public isOnBoard(coord: Coord): boolean {
         return this.pieces.containsKey(coord);
     }
-    public getBoardAt(coord: Coord): Player {
+    public getPieceAt(coord: Coord): Player {
         if (this.isOnBoard(coord)) {
             return this.pieces.get(coord).get();
         } else {
@@ -191,7 +191,7 @@ export class SixState extends GameState<Coord, Player> {
     }
     public switchPiece(coord: Coord): SixState {
         const newPieces: MGPMap<Coord, Player> = this.pieces.getCopy();
-        const oldValue: Player = this.getBoardAt(coord);
+        const oldValue: Player = this.getPieceAt(coord);
         newPieces.replace(coord, oldValue.getOpponent());
         return new SixState(newPieces, this.turn, this.offset);
     }

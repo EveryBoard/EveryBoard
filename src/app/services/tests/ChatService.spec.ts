@@ -7,6 +7,7 @@ import { IChat, IChatId } from 'src/app/domain/ichat';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 
 describe('ChatService', () => {
+
     let service: ChatService;
     let chatDAO: ChatDAO;
 

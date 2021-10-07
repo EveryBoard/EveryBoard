@@ -1,8 +1,8 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { RectangularGameState } from 'src/app/jscaip/RectangularGameState';
+import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player } from 'src/app/jscaip/Player';
 
-export class LinesOfActionState extends RectangularGameState<Player> {
+export class LinesOfActionState extends GameStateWithTable<Player> {
 
     public static SIZE: number = 8; // board size
 

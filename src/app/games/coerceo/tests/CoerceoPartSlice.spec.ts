@@ -3,6 +3,7 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { CoerceoState } from '../CoerceoState';
 
 describe('CoerceoState', () => {
+
     describe('isDeconnectable', () => {
         it('Should not deconnect tile with more than 3 neighboor (v _ _ v v v)', () => {
             const state: CoerceoState = new CoerceoState([], 0, [0, 0], [0, 0]);

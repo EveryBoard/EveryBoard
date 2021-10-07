@@ -5,6 +5,7 @@ import { ReversiState } from '../ReversiState';
 import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 
 describe('ReversiMove', () => {
+
     it('ReversiMove.encoder should be correct', () => {
         const rules: ReversiRules = new ReversiRules(ReversiState);
         const minimax: ReversiMinimax = new ReversiMinimax(rules, 'ReversiMinimax');

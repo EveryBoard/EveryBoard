@@ -36,7 +36,7 @@ export class MinimaxTestingRules extends Rules<MinimaxTestingMove, MinimaxTestin
     }
     public getGameStatus(node: MinimaxTestingNode): GameStatus {
         const state: MinimaxTestingState = node.gameState;
-        const currentValue: number = state.getBoardAt(state.location);
+        const currentValue: number = state.getPieceAt(state.location);
         if (currentValue === Player.ZERO.getVictoryValue()) {
             return GameStatus.ZERO_WON;
         }

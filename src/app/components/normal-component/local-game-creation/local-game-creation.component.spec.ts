@@ -3,6 +3,7 @@ import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { LocalGameCreationComponent } from './local-game-creation.component';
 
 describe('LocalGameCreationComponent', () => {
+
     let testUtils: SimpleComponentTestUtils<LocalGameCreationComponent>;
 
     beforeEach(async() => {

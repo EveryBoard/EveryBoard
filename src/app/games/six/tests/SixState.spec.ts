@@ -7,7 +7,7 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 import { SixMove } from '../SixMove';
 import { SixState } from '../SixState';
 
-describe('SixGameState', () => {
+describe('SixState', () => {
 
     const _: number = Player.NONE.value;
     const O: number = Player.ZERO.value;

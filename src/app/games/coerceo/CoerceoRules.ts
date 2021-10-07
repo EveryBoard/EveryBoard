@@ -87,7 +87,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
         if (state.tiles[state.getCurrentPlayer().value] < 2) {
             return { legal: MGPValidation.failure(CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE()) };
         }
-        const captured: FourStatePiece = state.getBoardAt(move.capture.get());
+        const captured: FourStatePiece = state.getPieceAt(move.capture.get());
         if (captured === FourStatePiece.NONE ||
             captured === FourStatePiece.EMPTY)
         {
@@ -99,23 +99,23 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
         return { legal: MGPValidation.SUCCESS };
     }
     public isLegalDeplacement(move: CoerceoMove, state: CoerceoState): LegalityStatus {
-        if (state.getBoardAt(move.start.get()) === FourStatePiece.NONE) {
+        if (state.getPieceAt(move.start.get()) === FourStatePiece.NONE) {
             const reason: string = 'Cannot start with a coord outside the board ' + move.start.get().toString() + '.';
             return { legal: MGPValidation.failure(reason) };
         }
-        if (state.getBoardAt(move.landingCoord.get()) === FourStatePiece.NONE) {
+        if (state.getPieceAt(move.landingCoord.get()) === FourStatePiece.NONE) {
             const reason: string =
                 'Cannot end with a coord outside the board ' + move.landingCoord.get().toString() + '.';
             return { legal: MGPValidation.failure(reason) };
         }
-        const starter: FourStatePiece = state.getBoardAt(move.start.get());
+        const starter: FourStatePiece = state.getPieceAt(move.start.get());
         if (starter === FourStatePiece.EMPTY) {
             return { legal: MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY()) };
         }
         if (starter.is(state.getCurrentEnnemy())) {
             return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE()) };
         }
-        const lander: FourStatePiece = state.getBoardAt(move.landingCoord.get());
+        const lander: FourStatePiece = state.getPieceAt(move.landingCoord.get());
         if (lander.is(state.getCurrentPlayer())) {
             return { legal: MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE()) };
         }

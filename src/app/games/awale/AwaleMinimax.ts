@@ -19,7 +19,7 @@ export class AwaleMinimax extends Minimax<AwaleMove, AwaleState, AwaleLegalitySt
         let x: number = 0;
         do {
             // for each house that might be playable
-            if (state.getBoardByXY(x, player) !== 0) {
+            if (state.getPieceAtXY(x, player) !== 0) {
                 // if the house is not empty
                 newMove = AwaleMove.from(x);
                 const legality: AwaleLegalityStatus = AwaleRules.isLegal(newMove, state); // see if the move is legal

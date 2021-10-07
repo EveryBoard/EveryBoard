@@ -74,7 +74,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityStatus
     }
     public ringSelectionValidity(state: YinshState, coord: Coord): MGPValidation {
         const player: number = state.getCurrentPlayer().value;
-        if (state.getBoardAt(coord) === YinshPiece.RINGS[player]) {
+        if (state.getPieceAt(coord) === YinshPiece.RINGS[player]) {
             return MGPValidation.SUCCESS;
         } else {
             return MGPValidation.failure(YinshFailure.CAPTURE_SHOULD_TAKE_RING());
@@ -90,7 +90,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityStatus
         // Direction is valid because this function is called with a valid move
         const dir: HexaDirection = HexaDirection.factory.fromMove(start, end).get();
         for (let coord: Coord = start.getNext(dir); coord.equals(end) === false; coord = coord.getNext(dir)) {
-            const piece: YinshPiece = newState.getBoardAt(coord);
+            const piece: YinshPiece = newState.getPieceAt(coord);
             if (piece !== YinshPiece.EMPTY) {
                 newState = newState.setAt(coord, piece.flip());
             }
@@ -136,7 +136,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityStatus
         if (state.isInitialPlacementPhase() !== true) {
             return MGPValidation.failure(YinshFailure.PLACEMENT_AFTER_INITIAL_PHASE());
         }
-        if (state.getBoardAt(coord) !== YinshPiece.EMPTY) {
+        if (state.getPieceAt(coord) !== YinshPiece.EMPTY) {
             return MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
         }
         return MGPValidation.SUCCESS;
@@ -144,7 +144,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityStatus
     public moveStartValidity(state: YinshState, start: Coord): MGPValidation {
         const player: number = state.getCurrentPlayer().value;
         // Start coord has to contain a ring of the current player
-        if (state.getBoardAt(start) !== YinshPiece.RINGS[player]) {
+        if (state.getPieceAt(start) !== YinshPiece.RINGS[player]) {
             return MGPValidation.failure(YinshFailure.SHOULD_SELECT_PLAYER_RING());
         }
         return MGPValidation.SUCCESS;
@@ -155,7 +155,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityStatus
             return moveStartValidity;
         }
         // End coord has to be empty
-        if (state.getBoardAt(end) !== YinshPiece.EMPTY) {
+        if (state.getPieceAt(end) !== YinshPiece.EMPTY) {
             return MGPValidation.failure(YinshFailure.SHOULD_END_MOVE_ON_EMPTY_SPACE());
         }
         // There should only be markers or empty cases between start and end
@@ -168,7 +168,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityStatus
         const direction: HexaDirection = directionOptional.get();
         let markersPassed: boolean = false;
         for (let cur: Coord = start.getNext(direction); cur.equals(end) === false; cur = cur.getNext(direction)) {
-            const piece: YinshPiece = state.getBoardAt(cur);
+            const piece: YinshPiece = state.getPieceAt(cur);
             if (piece === YinshPiece.EMPTY) {
                 if (markersPassed) {
                     return MGPValidation.failure(YinshFailure.MOVE_SHOULD_END_AT_FIRST_EMPTY_CASE_AFTER_MARKERS());
@@ -200,12 +200,12 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityStatus
         // There should be exactly 5 consecutive cases, on the same line (invariants of YinshCapture)
         for (const coord of capture.capturedCases) {
             // The captured cases must contain markers of the current player
-            if (state.getBoardAt(coord) !== YinshPiece.MARKERS[player]) {
+            if (state.getPieceAt(coord) !== YinshPiece.MARKERS[player]) {
                 return MGPValidation.failure(YinshFailure.CAN_ONLY_CAPTURE_YOUR_MARKERS());
             }
         }
         // The ring taken should be a ring
-        if (state.getBoardAt(capture.ringTaken) !== YinshPiece.RINGS[player]) {
+        if (state.getPieceAt(capture.ringTaken) !== YinshPiece.RINGS[player]) {
             return MGPValidation.failure(YinshFailure.CAPTURE_SHOULD_TAKE_RING());
         }
         return MGPValidation.SUCCESS;
@@ -242,7 +242,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityStatus
         let start: Coord = coord;
         let cur: Coord;
         for (cur = coord; state.isOnBoard(cur); cur = cur.getNext(dir)) {
-            const piece: YinshPiece = state.getBoardAt(cur);
+            const piece: YinshPiece = state.getPieceAt(cur);
             if (piece.player === player && piece.isRing === false) {
                 if (consecutives === 0) {
                     start = cur;
@@ -279,7 +279,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityStatus
         for (const dir of HexaDirection.factory.all) {
             let pieceSeen: boolean = false;
             for (let cur: Coord = start.getNext(dir); state.isOnBoard(cur); cur = cur.getNext(dir)) {
-                const piece: YinshPiece = state.getBoardAt(cur);
+                const piece: YinshPiece = state.getPieceAt(cur);
                 if (piece === YinshPiece.EMPTY) {
                     targets.push(cur);
                     if (pieceSeen) {

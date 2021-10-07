@@ -6,6 +6,7 @@ import { QuartoPiece } from '../QuartoPiece';
 import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 
 describe('QuartoMove', () => {
+
     it('QuartoMove.encoder should be correct', () => {
         const rules: QuartoRules = new QuartoRules(QuartoState);
         const minimax: QuartoMinimax = new QuartoMinimax(rules, 'QuartoMinimax');

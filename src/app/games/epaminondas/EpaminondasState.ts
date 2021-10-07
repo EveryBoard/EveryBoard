@@ -1,8 +1,8 @@
 import { Table } from 'src/app/utils/ArrayUtils';
-import { RectangularGameState } from 'src/app/jscaip/RectangularGameState';
+import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player } from 'src/app/jscaip/Player';
 
-export class EpaminondasState extends RectangularGameState<Player> {
+export class EpaminondasState extends GameStateWithTable<Player> {
 
     public static getInitialState(): EpaminondasState {
         const _: Player = Player.NONE;

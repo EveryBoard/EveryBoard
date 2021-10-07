@@ -18,7 +18,7 @@ export class AbaloneDummyMinimax extends Minimax<AbaloneMove, AbaloneState, Abal
         for (let y: number = 0; y < 9; y++) {
             for (let x: number = 0; x < 9; x++) {
                 const first: Coord = new Coord(x, y);
-                if (state.getBoardAt(first).is(PLAYER) === false) {
+                if (state.getPieceAt(first).is(PLAYER) === false) {
                     continue;
                 }
                 for (const dir of HexaDirection.factory.all) {

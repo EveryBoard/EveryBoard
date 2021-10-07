@@ -20,13 +20,13 @@ export class PylosState extends GameState<PylosCoord, Player> {
         super(turn);
     }
     public isOnBoard(coord: PylosCoord): boolean {
-        return this.getBoardAt(coord) != null;
+        return this.getPieceAt(coord) != null;
     }
-    public getBoardAt(coord: PylosCoord): Player {
+    public getPieceAt(coord: PylosCoord): Player {
         return this.boards[coord.z][coord.y][coord.x];
     }
     public getNullable(coord: PylosCoord): Player {
-        return this.getBoardAt(coord);
+        return this.getPieceAt(coord);
     }
     public applyLegalMove(move: PylosMove): PylosState {
         const updateValues: { coord: PylosCoord, value: Player }[] = [];
@@ -58,11 +58,11 @@ export class PylosState extends GameState<PylosCoord, Player> {
         return new PylosState(newBoard, turn);
     }
     public isLandable(coord: PylosCoord): boolean {
-        if (this.getBoardAt(coord) !== Player.NONE) return false;
+        if (this.getPieceAt(coord) !== Player.NONE) return false;
         if (coord.z === 0) return true;
         const lowerPieces: PylosCoord[] = coord.getLowerPieces();
         for (const lowerPiece of lowerPieces) {
-            if (this.getBoardAt(lowerPiece) === Player.NONE) {
+            if (this.getPieceAt(lowerPiece) === Player.NONE) {
                 return false;
             }
         }
@@ -72,7 +72,7 @@ export class PylosState extends GameState<PylosCoord, Player> {
         if (coord.z === 3) return false;
         const higherPieces: PylosCoord[] = coord.getHigherPieces();
         for (const higherPiece of higherPieces) {
-            if (this.getBoardAt(higherPiece) !== Player.NONE) return true;
+            if (this.getPieceAt(higherPiece) !== Player.NONE) return true;
         }
         return false;
     }
@@ -85,7 +85,7 @@ export class PylosState extends GameState<PylosCoord, Player> {
             for (let y: number = 0; y < (4 - z); y++) {
                 for (let x: number = 0; x < (4 - z); x++) {
                     const c: PylosCoord = new PylosCoord(x, y, z);
-                    const v: Player = this.getBoardAt(c);
+                    const v: Player = this.getPieceAt(c);
                     ownershipMap[v.value] = 1 + ownershipMap[v.value];
                 }
             }

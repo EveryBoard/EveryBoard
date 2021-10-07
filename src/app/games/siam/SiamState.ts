@@ -1,8 +1,8 @@
-import { RectangularGameState } from 'src/app/jscaip/RectangularGameState';
+import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { SiamPiece } from './SiamPiece';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 
-export class SiamState extends RectangularGameState<SiamPiece> {
+export class SiamState extends GameStateWithTable<SiamPiece> {
 
     public static getInitialState(): SiamState {
         const board: SiamPiece[][] = ArrayUtils.createTable(5, 5, SiamPiece.EMPTY);

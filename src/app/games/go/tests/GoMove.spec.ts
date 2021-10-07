@@ -5,6 +5,7 @@ import { GoMove } from '../GoMove';
 import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 
 describe('GoMove', () => {
+
     it('GoMove.encoder should be correct', () => {
         const rules: GoRules = new GoRules(GoState);
         const minimax: GoMinimax = new GoMinimax(rules, 'GoMinimax');

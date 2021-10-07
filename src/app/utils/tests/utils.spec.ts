@@ -1,6 +1,7 @@
 import { assert, display, Utils } from '../utils';
 
 describe('utils', () => {
+
     describe('display', () => {
         it('should log if verbose is true', () => {
             spyOn(console, 'log');

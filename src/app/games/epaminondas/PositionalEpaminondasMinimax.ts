@@ -56,7 +56,7 @@ export class PositionalEpaminondasMinimax extends Minimax<EpaminondasMove,
         for (let y: number = 0; y < 12; y++) {
             for (let x: number = 0; x < 14; x++) {
                 const coord: Coord = new Coord(x, y);
-                const player: Player = state.getBoardAt(coord);
+                const player: Player = state.getPieceAt(coord);
                 if (player !== Player.NONE) {
                     let avancement: number; // entre 0 et 11
                     let dirs: Direction[];
@@ -73,7 +73,7 @@ export class PositionalEpaminondasMinimax extends Minimax<EpaminondasMove,
                     for (const dir of dirs) {
                         let neighboor: Coord = coord.getNext(dir, 1);
                         while (neighboor.isInRange(14, 12) &&
-                               state.getBoardAt(neighboor) === player)
+                               state.getPieceAt(neighboor) === player)
                         {
                             total += mod * SCORE_BY_ALIGNEMENT;
                             neighboor = neighboor.getNext(dir, 1);

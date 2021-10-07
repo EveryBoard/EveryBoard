@@ -1,12 +1,12 @@
 import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
-import { RectangularGameState } from 'src/app/jscaip/RectangularGameState';
+import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { KamisadoBoard } from './KamisadoBoard';
 import { KamisadoColor } from './KamisadoColor';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { KamisadoPiece } from './KamisadoPiece';
 
-export class KamisadoState extends RectangularGameState<KamisadoPiece> {
+export class KamisadoState extends GameStateWithTable<KamisadoPiece> {
 
     public constructor(turn: number,
                        // The color that needs to be played next

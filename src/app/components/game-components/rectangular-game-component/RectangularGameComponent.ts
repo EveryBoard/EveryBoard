@@ -1,21 +1,17 @@
 import { Move } from '../../../jscaip/Move';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Component } from '@angular/core';
-import { RectangularGameState } from 'src/app/jscaip/RectangularGameState';
+import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { GameComponent } from '../game-component/GameComponent';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { Rules } from 'src/app/jscaip/Rules';
 
-/* All method are to be implemented by the concretes game component
- * Except chooseMove which must be set by the GameWrapper
- * (since OnlineGameWrapper and LocalGameWrapper will not give the same action to do when a move is done)
- */
 @Component({
     template: '',
 })
 export abstract class RectangularGameComponent<R extends Rules<M, S, L>,
                                                M extends Move,
-                                               S extends RectangularGameState<P>,
+                                               S extends GameStateWithTable<P>,
                                                P,
                                                L extends LegalityStatus = LegalityStatus>
     extends GameComponent<R, M, S, L>

@@ -12,6 +12,7 @@ import { P4Rules } from 'src/app/games/p4/P4Rules';
 import { GameStatus } from 'src/app/jscaip/Rules';
 
 describe('LocalGameWrapperComponent', () => {
+
     let componentTestUtils: ComponentTestUtils<P4Component>;
     const O: Player = Player.ZERO;
     const X: Player = Player.ONE;

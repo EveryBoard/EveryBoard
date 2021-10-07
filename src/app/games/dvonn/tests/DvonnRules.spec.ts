@@ -56,7 +56,7 @@ describe('DvonnRules:', () => {
             for (let x: number = 0; x < DvonnState.WIDTH; x++) {
                 const coord: Coord = new Coord(x, y);
                 if (state.isOnBoard(coord)) {
-                    const stack: DvonnPieceStack = state.getBoardAt(coord);
+                    const stack: DvonnPieceStack = state.getPieceAt(coord);
                     expect(stack.getSize()).toEqual(1);
                     expect(stack.isEmpty()).toBeFalse();
                 }
@@ -81,13 +81,13 @@ describe('DvonnRules:', () => {
         const state: DvonnState = rules.node.gameState;
         const movablePieces: Coord[] = DvonnRules.getMovablePieces(state);
         for (const coord of movablePieces) {
-            expect(state.getBoardAt(coord).belongsTo(Player.ZERO));
+            expect(state.getPieceAt(coord).belongsTo(Player.ZERO));
         }
         const moves: DvonnMove[] = minimaxes[0].getListMoves(rules.node);
         const state2: DvonnState = rules.applyLegalMove(moves[0], state, { legal: MGPValidation.SUCCESS });
         const movablePieces2: Coord[] = DvonnRules.getMovablePieces(state2);
         for (const coord of movablePieces2) {
-            expect(state2.getBoardAt(coord).belongsTo(Player.ONE)).toBeTrue();
+            expect(state2.getPieceAt(coord).belongsTo(Player.ONE)).toBeTrue();
         }
         const move: DvonnMove = DvonnMove.of(new Coord(1, 1), new Coord(1, 2));
         const status: LegalityStatus = rules.isLegal(move, state);
@@ -152,7 +152,7 @@ describe('DvonnRules:', () => {
         expect(legality.legal.isSuccess()).toBeTrue();
         const resultingState: DvonnState = rules.applyLegalMove(move, state, legality);
         expect(resultingState.board).toEqual(expectedBoard);
-        const stack: DvonnPieceStack = resultingState.getBoardAt(new Coord(0, 2));
+        const stack: DvonnPieceStack = resultingState.getPieceAt(new Coord(0, 2));
         expect(stack.belongsTo(Player.ZERO)).toBeTrue();
     });
     it('should allow moves only to occupied spaces', () => {
@@ -166,7 +166,7 @@ describe('DvonnRules:', () => {
         const state: DvonnState = new DvonnState(board, 0, false);
         const moves: DvonnMove[] = minimaxes[0].getListMoves(new MGPNode(null, null, state));
         for (const move of moves) {
-            expect(state.getBoardAt(move.end).isEmpty()).toBeFalse();
+            expect(state.getPieceAt(move.end).isEmpty()).toBeFalse();
         }
         const move: DvonnMove = DvonnMove.of(new Coord(3, 1), new Coord(3, 2));
         expect(rules.isLegal(move, state).legal.reason).toBe(DvonnFailure.EMPTY_TARGET_STACK());
@@ -182,7 +182,7 @@ describe('DvonnRules:', () => {
         const state: DvonnState = new DvonnState(board, 0, false);
         const moves: DvonnMove[] = minimaxes[0].getListMoves(new MGPNode(null, null, state));
         for (const move of moves) {
-            expect(move.length()).toEqual(state.getBoardAt(move.coord).getSize());
+            expect(move.length()).toEqual(state.getPieceAt(move.coord).getSize());
         }
         const move: DvonnMove = DvonnMove.of(new Coord(2, 0), new Coord(3, 0));
         const status: LegalityStatus = rules.isLegal(move, state);
@@ -199,7 +199,7 @@ describe('DvonnRules:', () => {
         const state: DvonnState = new DvonnState(board, 0, false);
         const moves: DvonnMove[] = minimaxes[0].getListMoves(new MGPNode(null, null, state));
         for (const move of moves) {
-            expect(state.getBoardAt(move.end).isEmpty()).toBeFalse();
+            expect(state.getPieceAt(move.end).isEmpty()).toBeFalse();
         }
     });
     it('should not allow to move a single red piece, but allows stacks with red pieces within it to move', () => {
@@ -213,7 +213,7 @@ describe('DvonnRules:', () => {
         const state: DvonnState = new DvonnState(board, 0, false);
         const moves: DvonnMove[] = minimaxes[0].getListMoves(new MGPNode(null, null, state));
         for (const move of moves) {
-            const stack: DvonnPieceStack = state.getBoardAt(move.coord);
+            const stack: DvonnPieceStack = state.getPieceAt(move.coord);
             // every movable piece should belong to the current player
             expect(stack.belongsTo(state.getCurrentPlayer())).toBeTrue();
         }

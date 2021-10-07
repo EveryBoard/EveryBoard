@@ -37,7 +37,7 @@ export class GoMinimax extends Minimax<GoMove, GoState, GoLegalityStatus> {
         for (let y: number = 0; y < state.board.length; y++) {
             for (let x: number = 0; x < state.board[0].length; x++) {
                 newMove = new GoMove(x, y);
-                if (state.getBoardAt(newMove.coord) === GoPiece.EMPTY) {
+                if (state.getPieceAt(newMove.coord) === GoPiece.EMPTY) {
                     const legality: GoLegalityStatus = GoRules.isLegal(newMove, state);
                     if (legality.legal.isSuccess()) {
                         choices.push(newMove);
@@ -65,7 +65,7 @@ export class GoMinimax extends Minimax<GoMove, GoState, GoLegalityStatus> {
         for (const group of groupsData) {
             const coord: Coord = group.getCoords()[0];
             const correctContent: GoPiece = correctBoard[coord.y][coord.x];
-            const actualContent: GoPiece = currentState.getBoardAt(coord);
+            const actualContent: GoPiece = currentState.getPieceAt(coord);
             if (actualContent !== correctContent) {
                 const move: GoMove = new GoMove(coord.x, coord.y);
                 choices.push(move);

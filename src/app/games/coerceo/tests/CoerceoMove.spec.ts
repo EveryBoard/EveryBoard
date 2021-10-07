@@ -7,6 +7,7 @@ import { CoerceoMove, CoerceoStep } from '../CoerceoMove';
 import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 
 describe('CoerceoMove', () => {
+
     it('Should distinguish move and capture based on presence or not of capture', () => {
         const move: CoerceoMove = CoerceoMove.fromDeplacement(new Coord(5, 5), CoerceoStep.UP_RIGHT);
         expect(move.isTileExchange()).toBeFalse();

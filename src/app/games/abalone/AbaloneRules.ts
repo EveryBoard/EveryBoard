@@ -31,7 +31,7 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
         }
     }
     private static getFirstPieceValidity(move: AbaloneMove, state: AbaloneState): MGPValidation {
-        const firstPiece: FourStatePiece = state.getBoardAt(move.coord);
+        const firstPiece: FourStatePiece = state.getPieceAt(move.coord);
         if (state.isPiece(move.coord) === false) {
             return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         } else if (firstPiece === FourStatePiece.ofPlayer(state.getCurrentEnnemy())) {
@@ -57,7 +57,7 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
             return { legal: MGPValidation.SUCCESS, newBoard };
         }
         newBoard[tested.y][tested.x] = PLAYER;
-        if (state.getBoardAt(tested) === EMPTY) {
+        if (state.getPieceAt(tested) === EMPTY) {
             return { legal: MGPValidation.SUCCESS, newBoard };
         }
         return AbaloneRules.isLegalRealPush(tested, move, state, pieces, newBoard);
@@ -80,10 +80,10 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
         if (enemyPieces >= pushingPieces) {
             return { legal: MGPValidation.failure(AbaloneFailure.NOT_ENOUGH_PIECE_TO_PUSH()), newBoard };
         } else if (firstEnnemy.isInRange(9, 9)) {
-            if (state.getBoardAt(firstEnnemy) === FourStatePiece.EMPTY) {
+            if (state.getPieceAt(firstEnnemy) === FourStatePiece.EMPTY) {
                 newBoard[firstEnnemy.y][firstEnnemy.x] = ENEMY;
             }
-            if (state.getBoardAt(firstEnnemy) === PLAYER) {
+            if (state.getPieceAt(firstEnnemy) === PLAYER) {
                 return { legal: MGPValidation.failure(AbaloneFailure.CANNOT_PUSH_YOUR_OWN_PIECES()), newBoard };
             }
         }
@@ -97,7 +97,7 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
         const PLAYER: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentPlayer());
         const newBoard: FourStatePiece[][] = state.getCopiedBoard();
         while (tested.equals(last) === false && tested.isInRange(9, 9)) {
-            if (state.getBoardAt(tested) !== PLAYER) {
+            if (state.getPieceAt(tested) !== PLAYER) {
                 return {
                     legal: MGPValidation.failure(AbaloneFailure.MUST_ONLY_TRANSLATE_YOUR_PIECES()),
                     newBoard: null,
@@ -112,7 +112,7 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
                         newBoard: null,
                     };
                 }
-                if (state.getBoardAt(landing) === FourStatePiece.EMPTY) {
+                if (state.getPieceAt(landing) === FourStatePiece.EMPTY) {
                     newBoard[landing.y][landing.x] = PLAYER;
                 }
             }

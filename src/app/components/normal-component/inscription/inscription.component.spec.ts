@@ -3,6 +3,7 @@ import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { InscriptionComponent } from './inscription.component';
 
 describe('InscriptionComponent', () => {
+
     let testUtils: SimpleComponentTestUtils<InscriptionComponent>;
 
     beforeEach(fakeAsync(async() => {

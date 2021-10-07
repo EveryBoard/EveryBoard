@@ -1,6 +1,7 @@
 import { Combinatorics } from '../Combinatorics';
 
 describe('Combinatorics', () => {
+
     describe('getSubsetOfSize', () => {
         it('should return all subsets of a given size', () => {
             const elements: number[] = [0, 1, 2];

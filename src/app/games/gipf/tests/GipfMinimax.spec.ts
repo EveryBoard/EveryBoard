@@ -10,6 +10,7 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Table } from 'src/app/utils/ArrayUtils';
 
 describe('GipfMinimax', () => {
+
     const N: FourStatePiece = FourStatePiece.NONE;
     const _: FourStatePiece = FourStatePiece.EMPTY;
     const A: FourStatePiece = FourStatePiece.ZERO;

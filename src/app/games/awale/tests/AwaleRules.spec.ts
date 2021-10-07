@@ -9,6 +9,7 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { AwaleFailure } from '../AwaleFailure';
 
 describe('AwaleRules', () => {
+
     let rules: AwaleRules;
     let minimaxes: AwaleMinimax[];
 

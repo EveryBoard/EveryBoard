@@ -1,6 +1,7 @@
 import { ArrayUtils, NumberTable } from '../ArrayUtils';
 
 describe('ArrayUtils', () => {
+
     describe('compareTable', () => {
         it('Should notice different size board', () => {
             const shortBoard: NumberTable = [[1]];

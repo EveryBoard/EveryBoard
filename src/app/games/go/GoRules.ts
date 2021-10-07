@@ -215,7 +215,7 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityStatus> {
     public static resurrectStones(state: GoState): GoState {
         for (let y: number = 0; y < state.board.length; y++) {
             for (let x: number = 0; x < state.board[0].length; x++) {
-                if (state.getBoardByXY(x, y).isDead()) {
+                if (state.getPieceAtXY(x, y).isDead()) {
                     state = GoRules.switchAliveness(new Coord(x, y), state);
                 }
             }
@@ -307,7 +307,7 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityStatus> {
         const killed: number[] = [0, 0];
         for (let y: number = 0; y < state.board.length; y++) {
             for (let x: number = 0; x < state.board[0].length; x++) {
-                const piece: GoPiece = state.getBoardByXY(x, y);
+                const piece: GoPiece = state.getPieceAtXY(x, y);
                 if (piece === GoPiece.DEAD_BLACK) {
                     killed[0] = killed[0] + 1;
                 } else if (piece === GoPiece.DEAD_WHITE) {
@@ -365,7 +365,7 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityStatus> {
         let currentCase: GoPiece;
         for (let y: number = 0; y < state.board.length; y++) {
             for (let x: number = 0; x < state.board[0].length; x++) {
-                currentCase = state.getBoardByXY(x, y);
+                currentCase = state.getPieceAtXY(x, y);
                 if (currentCase === GoPiece.DEAD_BLACK) {
                     whiteScore++;
                 } else if (currentCase === GoPiece.DEAD_WHITE) {

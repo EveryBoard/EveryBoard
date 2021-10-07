@@ -4,6 +4,7 @@ import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { PickGameComponent } from './pick-game.component';
 
 describe('PickGameComponent', () => {
+
     let testUtils: SimpleComponentTestUtils<PickGameComponent>;
 
     beforeEach(fakeAsync(async() => {

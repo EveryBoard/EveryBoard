@@ -4,6 +4,7 @@ import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 
 describe('ConfirmInscriptionComponent', () => {
+
     let component: ConfirmInscriptionComponent;
 
     let fixture: ComponentFixture<ConfirmInscriptionComponent>;

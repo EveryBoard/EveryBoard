@@ -5,6 +5,7 @@ import { MinimaxTestingMinimax } from '../MinimaxTestingMinimax';
 import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 
 describe('MinimaxTestingMove', () => {
+
     it('MinimaxTestingMove.encoder should be correct', () => {
         MinimaxTestingState.initialBoard = MinimaxTestingState.BOARD_1;
         const rules: MinimaxTestingRules = new MinimaxTestingRules(MinimaxTestingState);

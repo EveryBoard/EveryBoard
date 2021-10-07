@@ -1,6 +1,6 @@
 import { Component, ComponentFactory, ComponentFactoryResolver, ComponentRef, Type, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GameComponent } from '../game-components/game-component/GameComponent';
+import { AbstractGameComponent } from '../game-components/game-component/GameComponent';
 import { GameIncluderComponent } from '../game-components/game-includer/game-includer.component';
 import { UserService } from '../../services/UserService';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
@@ -33,7 +33,7 @@ export abstract class GameWrapper {
     @ViewChild(GameIncluderComponent)
     public gameIncluder: GameIncluderComponent;
 
-    public gameComponent: GameComponent<AbstractRules, Move, AbstractGameState>;
+    public gameComponent: AbstractGameComponent;
 
     public userName: string = this.authenticationService.getAuthenticatedUser() != null &&
                               this.authenticationService.getAuthenticatedUser().pseudo // TODO, clean that;
@@ -54,9 +54,7 @@ export abstract class GameWrapper {
     {
         display(GameWrapper.VERBOSE, 'GameWrapper.constructed: ' + (this.gameIncluder!=null));
     }
-    public getMatchingComponent(compoString: string)
-    : Type<GameComponent<AbstractRules, Move, AbstractGameState>>
-    {
+    public getMatchingComponent(compoString: string) : Type<AbstractGameComponent> {
         display(GameWrapper.VERBOSE, 'GameWrapper.getMatchingComponent');
         const gameInfo: GameInfo = GameInfo.ALL_GAMES().find((gameInfo: GameInfo) => gameInfo.urlName === compoString);
         if (gameInfo == null) {
@@ -76,13 +74,12 @@ export abstract class GameWrapper {
         assert(this.gameIncluder != null, 'GameIncluder should be present');
 
         const compoString: string = this.actRoute.snapshot.paramMap.get('compo');
-        const component: Type<GameComponent<AbstractRules, Move, AbstractGameState>> =
-            this.getMatchingComponent(compoString);
-        const componentFactory: ComponentFactory<GameComponent<AbstractRules, Move, AbstractGameState>> =
+        const component: Type<AbstractGameComponent> = this.getMatchingComponent(compoString);
+        const componentFactory: ComponentFactory<AbstractGameComponent> =
             this.componentFactoryResolver.resolveComponentFactory(component);
-        const componentRef: ComponentRef<GameComponent<AbstractRules, Move, AbstractGameState>> =
+        const componentRef: ComponentRef<AbstractGameComponent> =
             this.gameIncluder.viewContainerRef.createComponent(componentFactory);
-        this.gameComponent = <GameComponent<AbstractRules, Move, AbstractGameState>>componentRef.instance;
+        this.gameComponent = <AbstractGameComponent>componentRef.instance;
         // Shortent by T<S = Truc>
 
         this.gameComponent.chooseMove = this.receiveValidMove; // so that when the game component do a move

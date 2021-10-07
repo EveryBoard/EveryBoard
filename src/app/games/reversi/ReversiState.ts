@@ -1,9 +1,9 @@
-import { RectangularGameState } from '../../jscaip/RectangularGameState';
+import { GameStateWithTable } from '../../jscaip/GameStateWithTable';
 import { Coord } from '../../jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 
-export class ReversiState extends RectangularGameState<Player> {
+export class ReversiState extends GameStateWithTable<Player> {
 
     public static readonly BOARD_WIDTH: number = 8;
 

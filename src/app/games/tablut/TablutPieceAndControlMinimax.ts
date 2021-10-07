@@ -53,7 +53,7 @@ export class TablutPieceAndControlMinimax extends TablutPieceAndInfluenceMinimax
                     for (const dir of Orthogonal.ORTHOGONALS) {
                         let testedCoord: Coord = coord.getNext(dir, 1);
                         while (testedCoord.isInRange(WIDTH, WIDTH) &&
-                               state.getBoardAt(testedCoord) === EMPTY)
+                               state.getPieceAt(testedCoord) === EMPTY)
                         {
                             controlleds.add(testedCoord);
                             testedCoord = testedCoord.getNext(dir, 1);

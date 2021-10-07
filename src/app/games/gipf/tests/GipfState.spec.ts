@@ -5,6 +5,7 @@ import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Table } from 'src/app/utils/ArrayUtils';
 
 describe('GipfState', () => {
+
     const _: FourStatePiece = FourStatePiece.EMPTY;
     const A: FourStatePiece = FourStatePiece.ZERO;
     const B: FourStatePiece = FourStatePiece.ONE;

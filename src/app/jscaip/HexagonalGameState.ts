@@ -1,17 +1,20 @@
 import { Table } from '../utils/ArrayUtils';
 import { assert } from '../utils/utils';
 import { Coord } from './Coord';
-import { GameState } from './GameState';
+import { GameStateWithTable } from './GameStateWithTable';
 import { HexaDirection } from './HexaDirection';
 import { HexaLine } from './HexaLine';
 
-export abstract class HexagonalGameState<P> extends GameState<Coord, P> {
+export abstract class HexagonalGameState<P> extends GameStateWithTable<P> {
 
     public static neighbors(coord: Coord, distance: number): Coord[] {
         return [
-            new Coord(coord.x+distance, coord.y-distance), new Coord(coord.x+distance, coord.y),
-            new Coord(coord.x-distance, coord.y+distance), new Coord(coord.x-distance, coord.y),
-            new Coord(coord.x, coord.y+distance), new Coord(coord.x, coord.y-distance),
+            new Coord(coord.x + distance, coord.y - distance),
+            new Coord(coord.x + distance, coord.y),
+            new Coord(coord.x - distance, coord.y + distance),
+            new Coord(coord.x - distance, coord.y),
+            new Coord(coord.x, coord.y + distance),
+            new Coord(coord.x, coord.y - distance),
         ];
     }
     public constructor(turn: number,
@@ -21,9 +24,19 @@ export abstract class HexagonalGameState<P> extends GameState<Coord, P> {
                        public readonly excludedCases: ReadonlyArray<number>,
                        public readonly empty: P)
     {
-        super(turn);
+        super(board, turn);
         if (this.excludedCases.length >= (this.height/2)+1) {
-            throw new Error('Invalid excluded cases specification for HexaBoard.');
+            throw new Error('Invalid excluded cases specification for HexagonalGameState.');
+        }
+    }
+    public setAtUnsafe(coord: Coord, v: P): this {
+        throw new Error('Should be overridden');
+    }
+    public setAt(coord: Coord, v: P): this {
+        if (this.isOnBoard(coord)) {
+            return this.setAtUnsafe(coord, v);
+        } else {
+            throw new Error('Setting coord not on board: ' + coord + '.');
         }
     }
     public equals(other: HexagonalGameState<P>, equalT: (a: P, b: P) => boolean): boolean {
@@ -53,33 +66,6 @@ export abstract class HexagonalGameState<P> extends GameState<Coord, P> {
             }
         }
         return true;
-    }
-    public getNullable(coord: Coord): P {
-        return this.board[coord.y][coord.x];
-    }
-    public getBoardAt(coord: Coord): P {
-        if (this.isOnBoard(coord)) {
-            return this.getNullable(coord);
-        } else {
-            throw new Error('Accessing coord not on hexa board: ' + coord + '.');
-        }
-    }
-    public forEachCoord(callback: (coord: Coord, content: P) => void): void {
-        for (const [coord, content] of this.getCoordsAndContents()) {
-            callback(coord, content);
-        }
-    }
-    public getCoordsAndContents(): [Coord, P][] {
-        const coordsAndContents: [Coord, P][] = [];
-        for (let y: number = 0; y < this.height; y++) {
-            for (let x: number = 0; x < this.width; x++) {
-                const coord: Coord = new Coord(x, y);
-                if (this.isOnBoard(coord)) {
-                    coordsAndContents.push([coord, this.getBoardAt(coord)]);
-                }
-            }
-        }
-        return coordsAndContents;
     }
     public allCoords(): Coord[] {
         const coords: Coord[] = [];

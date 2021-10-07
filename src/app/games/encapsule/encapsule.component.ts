@@ -74,7 +74,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
                 const chosenMove: EncapsuleMove =
                     EncapsuleMove.fromDrop(this.chosenPiece, clickedCoord);
                 return this.chooseMove(chosenMove, this.rules.node.gameState, null, null);
-            } else if (state.getBoardAt(clickedCoord).belongsTo(state.getCurrentPlayer()) === false) {
+            } else if (state.getPieceAt(clickedCoord).belongsTo(state.getCurrentPlayer()) === false) {
                 return this.cancelMove(EncapsuleFailure.INVALID_PIECE_SELECTED());
             }
         } else {

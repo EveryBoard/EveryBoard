@@ -54,7 +54,7 @@ export class TablutEscapeThenPieceAndControlMinimax extends TablutPieceAndContro
                     safeScore += owner.getScoreModifier();
                     for (const dir of Orthogonal.ORTHOGONALS) {
                         let testedCoord: Coord = coord.getNext(dir, 1);
-                        while (testedCoord.isInRange(WIDTH, WIDTH) && state.getBoardAt(testedCoord) === EMPTY) {
+                        while (testedCoord.isInRange(WIDTH, WIDTH) && state.getPieceAt(testedCoord) === EMPTY) {
                             controlleds.add(testedCoord);
                             testedCoord = testedCoord.getNext(dir, 1);
                         }

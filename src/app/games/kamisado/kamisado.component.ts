@@ -89,7 +89,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
             this.cancelMoveAttempt();
             return MGPValidation.SUCCESS;
         } else {
-            const piece: KamisadoPiece = this.rules.node.gameState.getBoardByXY(x, y);
+            const piece: KamisadoPiece = this.rules.node.gameState.getPieceAtXY(x, y);
             const player: Player = this.rules.node.gameState.getCurrentPlayer();
             if (piece.belongsTo(player)) {
                 // Player clicked on another of its pieces, select it if he can
@@ -108,7 +108,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
         if (this.rules.getGameStatus(this.rules.node).isEndGame) { // TODO: what the hell !!!! should be done upper!
             return this.cancelMove('You should never see this message');
         }
-        const piece: KamisadoPiece = this.rules.node.gameState.getBoardByXY(x, y);
+        const piece: KamisadoPiece = this.rules.node.gameState.getPieceAtXY(x, y);
         const ennemy: Player = this.rules.node.gameState.getCurrentEnnemy();
         if (piece.belongsTo(ennemy)) {
             return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());

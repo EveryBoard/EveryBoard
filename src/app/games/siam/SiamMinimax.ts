@@ -25,7 +25,7 @@ export class SiamMinimax extends Minimax<SiamMove, SiamState, SiamLegalityStatus
         let legality: SiamLegalityStatus;
         for (let y: number = 0; y < 5; y++) {
             for (let x: number = 0; x < 5; x++) {
-                c = node.gameState.getBoardByXY(x, y);
+                c = node.gameState.getPieceAtXY(x, y);
                 if (c.belongTo(currentPlayer)) {
                     const currentOrientation: Orthogonal = c.getDirection();
                     for (const direction of Orthogonal.ORTHOGONALS) {

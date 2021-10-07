@@ -2,6 +2,7 @@ import { MGPMap } from '../MGPMap';
 import { MGPOptional } from '../MGPOptional';
 
 describe('MGPMap', () => {
+
     it('Null key should throw error with every method', () => {
         const map: MGPMap<string, string> = new MGPMap();
         expect(() => map.set(null, '')).toThrowError('Key cannot be null!');

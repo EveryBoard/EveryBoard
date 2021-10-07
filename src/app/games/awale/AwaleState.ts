@@ -1,8 +1,8 @@
-import { RectangularGameState } from '../../jscaip/RectangularGameState';
+import { GameStateWithTable } from '../../jscaip/GameStateWithTable';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { assert } from 'src/app/utils/utils';
 
-export class AwaleState extends RectangularGameState<number> {
+export class AwaleState extends GameStateWithTable<number> {
 
     public static getInitialState(): AwaleState {
         const board: number[][] = ArrayUtils.createTable(6, 2, 4);

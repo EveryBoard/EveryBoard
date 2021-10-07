@@ -64,7 +64,7 @@
             [attr.cx]="getCenter(victoryCoord.x)"
             [attr.cy]="getCenter(victoryCoord.y)"
             [attr.r]="(CASE_SIZE - STROKE_WIDTH) / 2"
-            [ngClass]="rules.node.gameState.getBoardAt(victoryCoord) === 0 ? 'player0' : 'player1'"
+            [ngClass]="rules.node.gameState.getPieceAt(victoryCoord) === 0 ? 'player0' : 'player1'"
             class="base victory-stroke"
             [stroke-width]="STROKE_WIDTH"
     />

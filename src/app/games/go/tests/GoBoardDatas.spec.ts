@@ -5,6 +5,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { GoGroupDatasFactory } from '../GoGroupDatasFactory';
 
 describe('GoBoardDatas', () => {
+
     const _: GoPiece = GoPiece.EMPTY;
 
     const X: GoPiece = GoPiece.WHITE;

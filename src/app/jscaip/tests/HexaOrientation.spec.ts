@@ -4,9 +4,11 @@ import { FlatHexaOrientation } from '../HexaOrientation';
 import { TestingHexagonalState } from './HexagonalGameState.spec';
 
 describe('PointyHexaOrientation', () => {
+
 });
 
 describe('FlatHexaOrientation', () => {
+
     describe('on a 7x5 board', () => {
 
         const state: HexagonalGameState<number> = TestingHexagonalState.empty(7, 5, [2, 1], 0);

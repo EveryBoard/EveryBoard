@@ -43,7 +43,7 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
             if (coord.isNotInRange(14, 12)) {
                 return MGPValidation.failure(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_PIECES_OUTSIDE_BOARD());
             }
-            caseContent = state.getBoardAt(coord);
+            caseContent = state.getPieceAt(coord);
             if (caseContent === Player.NONE) {
                 return MGPValidation.failure(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_EMPTY_CASE());
             }
@@ -67,7 +67,7 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
             if (landingCoord.isNotInRange(14, 12)) {
                 return EpaminondasLegalityStatus.failure(EpaminondasFailure.PHALANX_IS_LEAVING_BOARD());
             }
-            if (state.getBoardAt(landingCoord) !== Player.NONE) {
+            if (state.getPieceAt(landingCoord) !== Player.NONE) {
                 return EpaminondasLegalityStatus.failure(EpaminondasFailure.SOMETHING_IN_PHALANX_WAY());
             }
             landingIndex++;
@@ -77,7 +77,7 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
         if (landingCoord.isNotInRange(14, 12)) {
             return EpaminondasLegalityStatus.failure(EpaminondasFailure.PHALANX_IS_LEAVING_BOARD());
         }
-        if (state.getBoardAt(landingCoord) === CURRENT_PLAYER) {
+        if (state.getPieceAt(landingCoord) === CURRENT_PLAYER) {
             return EpaminondasLegalityStatus.failure(RulesFailure.CANNOT_SELF_CAPTURE());
         }
         newBoard[emptied.y][emptied.x] = Player.NONE;
@@ -94,7 +94,7 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
         const EMPTY: Player = Player.NONE;
         let captured: number = 0;
         while (capturedSoldier.isInRange(14, 12) &&
-               oldState.getBoardAt(capturedSoldier) === ENNEMY
+               oldState.getPieceAt(capturedSoldier) === ENNEMY
         ) {
             // Capture
             if (captured > 0) {

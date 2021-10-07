@@ -6,6 +6,7 @@ import { QuartoNode, QuartoRules } from '../QuartoRules';
 import { Table } from 'src/app/utils/ArrayUtils';
 
 describe('QuartoMinimax:', () => {
+
     let minimax: QuartoMinimax;
 
     const NULL: QuartoPiece = QuartoPiece.NONE;

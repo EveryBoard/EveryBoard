@@ -8,6 +8,7 @@ import { MaxStacksDvonnMinimax } from '../MaxStacksDvonnMinimax';
 import { Table } from 'src/app/utils/ArrayUtils';
 
 describe('MaxStacksDvonnMinimax', () => {
+
     let rules: DvonnRules;
     let minimax: MaxStacksDvonnMinimax;
 

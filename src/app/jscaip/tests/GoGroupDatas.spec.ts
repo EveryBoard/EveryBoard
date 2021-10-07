@@ -3,6 +3,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { GoGroupDatas } from 'src/app/games/go/GoGroupsDatas';
 
 describe('GoGroupDatas:', () => {
+
     const c: Coord = new Coord(0, 0);
 
     // dead wrapping => that wrapping alive opposite

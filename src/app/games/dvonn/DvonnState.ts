@@ -50,7 +50,7 @@ export class DvonnState extends HexagonalGameState<DvonnPieceStack> {
         for (let y: number = 0; y < DvonnState.HEIGHT; y++) {
             for (let x: number = 0; x < DvonnState.WIDTH; x++) {
                 const coord: Coord = new Coord(x, y);
-                if (this.isOnBoard(coord) && this.getBoardAt(coord).isEmpty() === false) {
+                if (this.isOnBoard(coord) && this.getPieceAt(coord).isEmpty() === false) {
                     pieces.push(coord);
                 }
             }
@@ -62,7 +62,7 @@ export class DvonnState extends HexagonalGameState<DvonnPieceStack> {
     }
     public numberOfNeighbors(coord: Coord): number {
         return HexagonalGameState.neighbors(coord, 1)
-            .filter((c: Coord): boolean => this.isOnBoard(c) && this.getBoardAt(c).isEmpty() === false)
+            .filter((c: Coord): boolean => this.isOnBoard(c) && this.getPieceAt(c).isEmpty() === false)
             .length;
     }
     public toNumberTable(): NumberTable {

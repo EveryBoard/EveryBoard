@@ -11,7 +11,6 @@ import { PartDAO } from 'src/app/dao/PartDAO';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { JoueursDAO } from 'src/app/dao/JoueursDAO';
 import { ChatDAO } from 'src/app/dao/ChatDAO';
-import { ChatDAOMock } from 'src/app/dao/tests/ChatDAOMock.spec';
 import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
 import { QuartoState } from 'src/app/games/quarto/QuartoState';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
@@ -31,6 +30,7 @@ import { GameWrapperMessages } from '../GameWrapper';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 
 describe('OnlineGameWrapperComponent of Quarto:', () => {
+
     /* Life cycle summary
      * component construction (beforeEach)
      * stage 0

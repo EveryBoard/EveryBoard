@@ -2,6 +2,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { DvonnPieceStack } from '../DvonnPieceStack';
 
 describe('DvonnPieceStack', () => {
+
     const stack1: DvonnPieceStack = new DvonnPieceStack(Player.ZERO, 1, false);
     const stack2: DvonnPieceStack = new DvonnPieceStack(Player.ONE, 2, false);
     const stack4: DvonnPieceStack = new DvonnPieceStack(Player.ZERO, 4, true);

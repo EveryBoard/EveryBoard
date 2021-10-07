@@ -11,7 +11,8 @@ import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/Tut
 import { AbstractGameState } from 'src/app/jscaip/GameState';
 
 
-/* All method are to be implemented by the concretes game components
+/**
+ * All method are to be implemented by the "final" GameComponent classes
  * Except chooseMove which must be set by the GameWrapper
  * (since OnlineGameWrapper and LocalGameWrapper will not give the same action to do when a move is done)
  */

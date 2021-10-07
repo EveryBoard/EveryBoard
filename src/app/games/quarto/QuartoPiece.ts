@@ -60,4 +60,7 @@ export class QuartoPiece implements ComparableObject {
     public toString(): string {
         return 'QuartoPiece(' + this.value + ')';
     }
+    public isRectangle(): boolean {
+        return this.value % 4 < 2;
+    }
 }

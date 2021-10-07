@@ -94,7 +94,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
             if (neighbor.isNotInRange(15, 10)) {
                 return false;
             }
-            if (this.getBoardAt(neighbor) === ENEMY) {
+            if (this.getPieceAt(neighbor) === ENEMY) {
                 return this.isSurrounded(neighbor);
             }
             return false;
@@ -124,7 +124,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
             resultingState = this.deconnectTile(currentTile, countTiles);
             const neighbors: Coord[] = CoerceoState.getPresentNeighboorEntrances(currentTile);
             for (const neighbor of neighbors) {
-                const caseContent: FourStatePiece = resultingState.getBoardAt(neighbor);
+                const caseContent: FourStatePiece = resultingState.getPieceAt(neighbor);
                 if (caseContent === FourStatePiece.EMPTY) {
                     resultingState = resultingState.removeTilesIfNeeded(neighbor, countTiles);
                 } else if (caseContent.is(this.getCurrentEnnemy()) &&
@@ -137,12 +137,12 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         return resultingState;
     }
     public isTileEmpty(tileUpperLeft: Coord): boolean {
-        assert(this.getBoardAt(tileUpperLeft) !== FourStatePiece.NONE,
+        assert(this.getPieceAt(tileUpperLeft) !== FourStatePiece.NONE,
                'Should not call isTileEmpty on removed tile');
         for (let y: number = 0; y < 2; y++) {
             for (let x: number = 0; x < 3; x++) {
                 const coord: Coord = tileUpperLeft.getNext(new Vector(x, y), 1);
-                if (this.getBoardAt(coord) !== FourStatePiece.EMPTY) {
+                if (this.getPieceAt(coord) !== FourStatePiece.EMPTY) {
                     return false;
                 }
             }
@@ -176,7 +176,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
             const vector: Vector = CoerceoState.NEIGHBOORS_TILES_DIRECTIONS[i];
             const neighboorTile: Coord = tile.getNext(vector, 1);
             if (neighboorTile.isInRange(15, 10) &&
-                this.getBoardAt(neighboorTile) !== FourStatePiece.NONE)
+                this.getPieceAt(neighboorTile) !== FourStatePiece.NONE)
             {
                 if (firstIndex == null) {
                     firstIndex = i;
@@ -210,7 +210,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         const legalLandings: Coord[] = [];
         for (const step of CoerceoStep.STEPS) {
             const landing: Coord = coord.getNext(step.direction, 1);
-            if (landing.isInRange(15, 10) && this.getBoardAt(landing) === FourStatePiece.EMPTY) {
+            if (landing.isInRange(15, 10) && this.getPieceAt(landing) === FourStatePiece.EMPTY) {
                 legalLandings.push(landing);
             }
         }
