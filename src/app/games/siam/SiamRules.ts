@@ -262,12 +262,12 @@ export class SiamRules extends _SiamRules {
             const moveStarterDir: Orthogonal = finishingMove.landingOrientation;
             moveStarterPiece = state.getPieceAt(moveStarterCoord.getNext(moveStarterDir));
         } else { // insertion
-            moveStarterPiece = SiamRules.getInsertedPiece(moveStarterCoord, state.getCurrentEnnemy());
+            moveStarterPiece = SiamRules.getInsertedPiece(moveStarterCoord, state.getCurrentOpponent());
         }
         const pushingDirection: Orthogonal = moveStarterPiece.getDirection();
         const pusherCoord: Coord = SiamRules.getPusherCoord(state, pushingDirection, moveStarterCoord);
         const winner: Player = state.getPieceAt(pusherCoord).getOwner();
-        display(SiamRules.VERBOSE, moveStarterCoord.toString() + ' belong to ' + state.getCurrentEnnemy().value + ', ' +
+        display(SiamRules.VERBOSE, moveStarterCoord.toString() + ' belong to ' + state.getCurrentOpponent().value + ', ' +
                 pusherCoord.toString() + ' belong to ' + winner.value + ', ' + winner.value + ' win');
         return winner;
     }

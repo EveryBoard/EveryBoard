@@ -14,7 +14,7 @@ export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasStat
 
     public static getListMoves(node: EpaminondasNode): EpaminondasMove[] {
         const PLAYER: Player = node.gameState.getCurrentPlayer();
-        const ENNEMY: Player = node.gameState.getCurrentEnnemy();
+        const OPPONENT: Player = node.gameState.getCurrentOpponent();
         const EMPTY: Player = Player.NONE;
 
         let moves: EpaminondasMove[] = [];
@@ -44,7 +44,7 @@ export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasStat
                         }
                         if (nextCoord.isInRange(14, 12) &&
                             stepSize <= movedPieces &&
-                            state.getPieceAt(nextCoord) === ENNEMY) {
+                            state.getPieceAt(nextCoord) === OPPONENT) {
                             move = new EpaminondasMove(x, y, movedPieces, stepSize, direction);
                             moves = this.addMove(moves, move, state);
                         }

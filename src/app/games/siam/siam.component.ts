@@ -71,7 +71,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
             return this.cancelMove(clickValidity.reason);
         }
         const piece: SiamPiece = this.board[y][x];
-        const opponent: Player = this.rules.node.gameState.getCurrentEnnemy();
+        const opponent: Player = this.rules.node.gameState.getCurrentOpponent();
         if (piece.getOwner() === opponent) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }

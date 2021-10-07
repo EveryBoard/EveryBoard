@@ -50,7 +50,7 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
 
         this.board = state.getCopiedBoard();
         if (lastMove != null) {
-            const lastPlayer: number = state.getCurrentEnnemy().value;
+            const lastPlayer: number = state.getCurrentOpponent().value;
             this.last = new Coord(lastMove.x, lastPlayer);
             this.showPreviousMove();
         } else {

@@ -19,14 +19,14 @@ export class CoerceoMinimax extends Minimax<CoerceoMove, CoerceoState> {
         const exchanges: CoerceoMove[] = [];
         const state: CoerceoState = node.gameState;
         const PLAYER: number = state.getCurrentPlayer().value;
-        const ENEMY: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentEnnemy());
+        const OPPONENT: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentOpponent());
         if (state.tiles[PLAYER] < 2) {
             return exchanges;
         }
         for (let y: number = 0; y < 10; y++) {
             for (let x: number = 0; x < 15; x++) {
                 const captured: Coord = new Coord(x, y);
-                if (state.getPieceAt(captured) === ENEMY) {
+                if (state.getPieceAt(captured) === OPPONENT) {
                     const move: CoerceoMove = CoerceoMove.fromTilesExchange(captured);
                     exchanges.push(move);
                 }

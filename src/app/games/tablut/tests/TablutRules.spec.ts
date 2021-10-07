@@ -74,7 +74,7 @@ describe('TablutRules', () => {
     it('Moving emptyness should be illegal', () => {
         expect(rules.choose(new TablutMove(new Coord(0, 1), new Coord(1, 1)))).toBeFalse();
     });
-    it('Moving ennemy pawn should be illegal', () => {
+    it('Moving opponent pawn should be illegal', () => {
         expect(rules.choose(new TablutMove(new Coord(4, 2), new Coord(4, 3)))).toBeFalse();
     });
     it('Landing on pawn should be illegal', () => {

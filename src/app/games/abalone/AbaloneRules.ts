@@ -34,7 +34,7 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
         const firstPiece: FourStatePiece = state.getPieceAt(move.coord);
         if (state.isPiece(move.coord) === false) {
             return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
-        } else if (firstPiece === FourStatePiece.ofPlayer(state.getCurrentEnnemy())) {
+        } else if (firstPiece === FourStatePiece.ofPlayer(state.getCurrentOpponent())) {
             return MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
         } else {
             return MGPValidation.SUCCESS;
@@ -62,7 +62,7 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
         }
         return AbaloneRules.isLegalRealPush(tested, move, state, pieces, newBoard);
     }
-    private static isLegalRealPush(firstEnnemy: Coord,
+    private static isLegalRealPush(firstOpponent: Coord,
                                    move: AbaloneMove,
                                    state: AbaloneState,
                                    pushingPieces: number,
@@ -70,20 +70,19 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
     : AbaloneLegalityStatus
     {
         let enemyPieces: number = 0;
-        const ENEMY: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentEnnemy());
+        const OPPONENT: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentOpponent());
         const PLAYER: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentPlayer());
-        // TODO: find a way for Player not to be assigned to FourStatePiece putain
-        while (enemyPieces < pushingPieces && state.getNullable(firstEnnemy) === ENEMY) {
+        while (enemyPieces < pushingPieces && state.getNullable(firstOpponent) === OPPONENT) {
             enemyPieces++;
-            firstEnnemy = firstEnnemy.getNext(move.dir);
+            firstOpponent = firstOpponent.getNext(move.dir);
         }
         if (enemyPieces >= pushingPieces) {
             return { legal: MGPValidation.failure(AbaloneFailure.NOT_ENOUGH_PIECE_TO_PUSH()), newBoard };
-        } else if (firstEnnemy.isInRange(9, 9)) {
-            if (state.getPieceAt(firstEnnemy) === FourStatePiece.EMPTY) {
-                newBoard[firstEnnemy.y][firstEnnemy.x] = ENEMY;
+        } else if (firstOpponent.isInRange(9, 9)) {
+            if (state.getPieceAt(firstOpponent) === FourStatePiece.EMPTY) {
+                newBoard[firstOpponent.y][firstOpponent.x] = OPPONENT;
             }
-            if (state.getPieceAt(firstEnnemy) === PLAYER) {
+            if (state.getPieceAt(firstOpponent) === PLAYER) {
                 return { legal: MGPValidation.failure(AbaloneFailure.CANNOT_PUSH_YOUR_OWN_PIECES()), newBoard };
             }
         }

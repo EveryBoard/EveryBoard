@@ -118,17 +118,17 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
         const threatenedPlayerPieces: Coord[] = threateneds.filter((coord: Coord) => {
             return state.getPieceAt(coord).is(state.getCurrentPlayer());
         });
-        const threatenedEnnemyPieces: MGPSet<Coord> = new MGPSet(threateneds.filter((coord: Coord) => {
-            return state.getPieceAt(coord).is(state.getCurrentEnnemy());
+        const threatenedOpponentPieces: MGPSet<Coord> = new MGPSet(threateneds.filter((coord: Coord) => {
+            return state.getPieceAt(coord).is(state.getCurrentOpponent());
         }));
         for (const threatenedPiece of threatenedPlayerPieces) {
             const oldThreat: PieceThreat = threatMap.get(threatenedPiece).get();
             let newThreat: PieceThreat;
-            if (threatenedEnnemyPieces.contains(oldThreat.direct.get(0)) === false) {
+            if (threatenedOpponentPieces.contains(oldThreat.direct.get(0)) === false) {
                 // if the direct threat of this piece is not a false threat
                 const newMover: Coord[] = [];
                 for (const mover of oldThreat.mover.getCopy()) {
-                    if (threatenedEnnemyPieces.contains(mover) === false) {
+                    if (threatenedOpponentPieces.contains(mover) === false) {
                         // if the moving threat of this piece is real
                         newMover.push(mover);
                     }
@@ -141,9 +141,9 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
                 filteredThreatMap.set(threatenedPiece, newThreat);
             }
         }
-        for (const threatenedEnnemyPiece of threatenedEnnemyPieces.getCopy()) {
-            const threatSet: PieceThreat = threatMap.get(threatenedEnnemyPiece).get();
-            filteredThreatMap.set(threatenedEnnemyPiece, threatSet);
+        for (const threatenedOpponentPiece of threatenedOpponentPieces.getCopy()) {
+            const threatSet: PieceThreat = threatMap.get(threatenedOpponentPiece).get();
+            filteredThreatMap.set(threatenedOpponentPiece, threatSet);
         }
         return filteredThreatMap;
     }

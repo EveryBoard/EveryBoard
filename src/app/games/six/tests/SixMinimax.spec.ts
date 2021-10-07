@@ -170,7 +170,7 @@ describe('SixMinimax', () => {
         });
     });
     describe('Phase 2', () => {
-        it('Should not consider moving piece that are blocking an ennemy victory', () => {
+        it('Should not consider moving piece that are blocking an opponent victory', () => {
             const board: number[][] = [
                 [O, O, _, _, _, _, O],
                 [X, _, _, _, _, X, _],

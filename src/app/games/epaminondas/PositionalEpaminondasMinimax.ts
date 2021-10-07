@@ -38,7 +38,7 @@ export class PositionalEpaminondasMinimax extends Minimax<EpaminondasMove,
     }
     private moveIsCapture(move: EpaminondasMove, state: EpaminondasState): boolean {
         const landing: Coord = move.coord.getNext(move.direction, move.movedPieces + move.stepSize - 1);
-        return state.board[landing.y][landing.x] === state.getCurrentEnnemy();
+        return state.board[landing.y][landing.x] === state.getCurrentOpponent();
     }
     public getBoardValue(node: EpaminondasNode): NodeUnheritance {
         const gameStatus: GameStatus = this.ruler.getGameStatus(node);

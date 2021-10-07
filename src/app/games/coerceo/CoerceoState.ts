@@ -88,13 +88,13 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         return resultingState;
     }
     public getCapturedNeighbors(coord: Coord): Coord[] {
-        const ENEMY: FourStatePiece = FourStatePiece.ofPlayer(this.getCurrentEnnemy());
+        const OPPONENT: FourStatePiece = FourStatePiece.ofPlayer(this.getCurrentOpponent());
         const neighbors: Coord[] = TriangularCheckerBoard.getNeighboors(coord);
         return neighbors.filter((neighbor: Coord) => {
             if (neighbor.isNotInRange(15, 10)) {
                 return false;
             }
-            if (this.getPieceAt(neighbor) === ENEMY) {
+            if (this.getPieceAt(neighbor) === OPPONENT) {
                 return this.isSurrounded(neighbor);
             }
             return false;
@@ -127,7 +127,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
                 const caseContent: FourStatePiece = resultingState.getPieceAt(neighbor);
                 if (caseContent === FourStatePiece.EMPTY) {
                     resultingState = resultingState.removeTilesIfNeeded(neighbor, countTiles);
-                } else if (caseContent.is(this.getCurrentEnnemy()) &&
+                } else if (caseContent.is(this.getCurrentOpponent()) &&
                            resultingState.isSurrounded(neighbor))
                 {
                     resultingState = resultingState.capture(neighbor);

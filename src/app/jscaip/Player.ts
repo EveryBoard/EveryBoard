@@ -3,6 +3,7 @@ import { ComparableObject } from 'src/app/utils/Comparable';
 import { NumberEncoder } from './Encoder';
 
 export class Player implements ComparableObject {
+
     public static numberEncoder: NumberEncoder<Player> = NumberEncoder.ofN(2, (player: Player) => {
         return player.value;
     }, (encoded: number) => {
@@ -23,7 +24,6 @@ export class Player implements ComparableObject {
     public static fromTurn(turn: number): Player {
         return turn % 2 === 0 ? Player.ZERO : Player.ONE;
     }
-    private readonly refijerofijtio: boolean;
     private constructor(public readonly value: number) {}
 
     public toString(): string {

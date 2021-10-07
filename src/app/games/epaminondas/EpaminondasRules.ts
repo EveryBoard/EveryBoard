@@ -26,9 +26,9 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
             return landingStatus;
         }
         const newBoard: Player[][] = landingStatus.newBoard;
-        const ENNEMY: Player = state.getCurrentEnnemy();
+        const OPPONENT: Player = state.getCurrentOpponent();
         const captureValidity: EpaminondasLegalityStatus =
-            EpaminondasRules.getCaptureValidity(state, newBoard, move, ENNEMY);
+            EpaminondasRules.getCaptureValidity(state, newBoard, move, OPPONENT);
         if (captureValidity.legal.isFailure()) {
             return EpaminondasLegalityStatus.failure(captureValidity.legal.reason);
         }
@@ -38,7 +38,7 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
         let coord: Coord = move.coord;
         let soldierIndex: number = 0;
         let caseContent: Player;
-        const ENNEMY: Player = state.getCurrentEnnemy();
+        const OPPONENT: Player = state.getCurrentOpponent();
         while (soldierIndex < move.movedPieces) {
             if (coord.isNotInRange(14, 12)) {
                 return MGPValidation.failure(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_PIECES_OUTSIDE_BOARD());
@@ -47,7 +47,7 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
             if (caseContent === Player.NONE) {
                 return MGPValidation.failure(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_EMPTY_CASE());
             }
-            if (caseContent === ENNEMY) {
+            if (caseContent === OPPONENT) {
                 return MGPValidation.failure(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_ENEMY_PIECE());
             }
             coord = coord.getNext(move.direction, 1);
@@ -87,14 +87,14 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
     public static getCaptureValidity(oldState: EpaminondasState,
                                      board: Player[][],
                                      move: EpaminondasMove,
-                                     ENNEMY: Player)
+                                     OPPONENT: Player)
     : EpaminondasLegalityStatus
     {
         let capturedSoldier: Coord = move.coord.getNext(move.direction, move.movedPieces + move.stepSize - 1);
         const EMPTY: Player = Player.NONE;
         let captured: number = 0;
         while (capturedSoldier.isInRange(14, 12) &&
-               oldState.getPieceAt(capturedSoldier) === ENNEMY
+               oldState.getPieceAt(capturedSoldier) === OPPONENT
         ) {
             // Capture
             if (captured > 0) {

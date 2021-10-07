@@ -39,7 +39,7 @@ describe('EpaminondasComponent', () => {
     it('Should cancelMove when clicking on empty case at first', fakeAsync(async() => {
         await componentTestUtils.expectClickFailure('#click_5_5', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
     }));
-    it('Should not accept ennemy click as a move first click', fakeAsync(async() => {
+    it('Should not accept opponent click as a move first click', fakeAsync(async() => {
         await componentTestUtils.expectClickFailure('#click_0_0', RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
     }));
     it('Should show possible next click (after first click)', fakeAsync(async() => {

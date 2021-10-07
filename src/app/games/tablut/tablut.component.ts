@@ -74,15 +74,15 @@ export class TablutComponent extends RectangularGameComponent<TablutRules,
     }
     private showPreviousMove(): void {
         const previousBoard: Table<TablutCase> = this.rules.node.mother.gameState.board;
-        const ENNEMY: Player = this.rules.node.gameState.getCurrentEnnemy();
+        const OPPONENT: Player = this.rules.node.gameState.getCurrentOpponent();
         for (const orthogonal of Orthogonal.ORTHOGONALS) {
             const captured: Coord = this.lastMove.end.getNext(orthogonal, 1);
             if (captured.isInRange(TablutRulesConfig.WIDTH, TablutRulesConfig.WIDTH)) {
-                const previously: RelativePlayer = TablutRules.getRelativeOwner(ENNEMY, captured, previousBoard);
-                const wasEnnemy: boolean = previously === RelativePlayer.ENNEMY;
+                const previously: RelativePlayer = TablutRules.getRelativeOwner(OPPONENT, captured, previousBoard);
+                const wasOpponent: boolean = previously === RelativePlayer.OPPONENT;
                 const currently: TablutCase = this.rules.node.gameState.getPieceAt(captured);
                 const isEmpty: boolean = currently === TablutCase.UNOCCUPIED;
-                if (wasEnnemy && isEmpty) {
+                if (wasOpponent && isEmpty) {
                     this.captureds.push(captured);
                 }
             }

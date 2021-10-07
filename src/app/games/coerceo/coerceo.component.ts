@@ -87,7 +87,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     }
     private async firstClick(coord: Coord): Promise<MGPValidation> {
         const clickedPiece: FourStatePiece = this.state.getPieceAt(coord);
-        if (clickedPiece.is(this.state.getCurrentEnnemy())) {
+        if (clickedPiece.is(this.state.getCurrentOpponent())) {
             const move: CoerceoMove = CoerceoMove.fromTilesExchange(coord);
             return this.chooseMove(move, this.state, this.state.captures[0], this.state.captures[1]);
         } else if (clickedPiece.is(this.state.getCurrentPlayer())) {
@@ -110,12 +110,12 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     }
     public isPyramid(x: number, y: number): boolean {
         const caseContent: FourStatePiece = this.board[y][x];
-        return caseContent.isPlayer() || this.wasEnnemy(x, y);
+        return caseContent.isPlayer() || this.wasOpponent(x, y);
     }
-    private wasEnnemy(x: number, y: number): boolean {
+    private wasOpponent(x: number, y: number): boolean {
         const mother: CoerceoNode = this.rules.node.mother;
         return mother != null &&
-               mother.gameState.getPieceAtXY(x, y).is(mother.gameState.getCurrentEnnemy());
+               mother.gameState.getPieceAtXY(x, y).is(mother.gameState.getCurrentOpponent());
     }
     public getPyramidClass(x: number, y: number): string {
         const caseContent: FourStatePiece = this.board[y][x];

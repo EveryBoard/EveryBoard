@@ -32,7 +32,6 @@ export class FourStatePiece implements ComparableObject {
             default: throw new Error('FourStatePiece.ofPlayer can only be called with Player.ZERO and Player.ONE.');
         }
     }
-
     private constructor(public readonly value: number) {
     }
     public equals(o: ComparableObject): boolean {

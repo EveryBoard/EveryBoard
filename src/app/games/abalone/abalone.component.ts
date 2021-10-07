@@ -117,8 +117,8 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        const ENEMY: Player = this.rules.node.gameState.getCurrentEnnemy();
-        if (this.hexaBoard[y][x].is(ENEMY)) {
+        const OPPONENT: Player = this.rules.node.gameState.getCurrentOpponent();
+        if (this.hexaBoard[y][x].is(OPPONENT)) {
             return this.enemyClick(x, y);
         }
         if (this.selecteds.length === 0) {

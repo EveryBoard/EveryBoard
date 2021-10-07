@@ -12,7 +12,6 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { assert, display } from 'src/app/utils/utils';
 import { GameInfo } from '../normal-component/pick-game/pick-game.component';
 import { Player } from 'src/app/jscaip/Player';
-import { Rules } from 'src/app/jscaip/Rules';
 import { Localized } from 'src/app/utils/LocaleUtils';
 
 export class GameWrapperMessages {
@@ -20,8 +19,6 @@ export class GameWrapperMessages {
     public static readonly NOT_YOUR_TURN: Localized = () => $localize`It is not your turn!`;
 
     public static readonly NO_CLONING_FEATURE: Localized = () => $localize`You cannot clone a game. This feature might be implemented later.`;
-}
-export abstract class AbstractRules extends Rules<Move, AbstractGameState> {
 }
 
 @Component({ template: '' })

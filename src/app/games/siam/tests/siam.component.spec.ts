@@ -45,7 +45,7 @@ describe('SiamComponent', () => {
         const move: SiamMove = new SiamMove(2, -1, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN);
         await componentTestUtils.expectMoveSuccess('#chooseOrientation_DOWN', move);
     }));
-    it('Should not allow to move ennemy pieces', fakeAsync(async() => {
+    it('Should not allow to move opponent pieces', fakeAsync(async() => {
         const board: Table<SiamPiece> = [
             [_, _, _, _, _],
             [_, _, _, _, _],

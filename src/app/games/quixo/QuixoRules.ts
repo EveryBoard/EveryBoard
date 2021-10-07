@@ -14,26 +14,26 @@ export abstract class QuixoNode extends MGPNode<QuixoRules, QuixoMove, QuixoStat
 export class QuixoRules extends Rules<QuixoMove, QuixoState> {
 
     public static getVerticalCoords(node: QuixoNode): Coord[] {
-        const currentEnnemy: Player = node.gameState.getCurrentEnnemy();
+        const currentOpponent: Player = node.gameState.getCurrentOpponent();
         const verticalCoords: Coord[] = [];
         for (let y: number = 0; y < 5; y++) {
-            if (node.gameState.getPieceAtXY(0, y) !== currentEnnemy) {
+            if (node.gameState.getPieceAtXY(0, y) !== currentOpponent) {
                 verticalCoords.push(new Coord(0, y));
             }
-            if (node.gameState.getPieceAtXY(4, y) !== currentEnnemy) {
+            if (node.gameState.getPieceAtXY(4, y) !== currentOpponent) {
                 verticalCoords.push(new Coord(4, y));
             }
         }
         return verticalCoords;
     }
     public static getHorizontalCenterCoords(node: QuixoNode): Coord[] {
-        const currentEnnemy: Player = node.gameState.getCurrentEnnemy();
+        const currentOpponent: Player = node.gameState.getCurrentOpponent();
         const horizontalCenterCoords: Coord[] = [];
         for (let x: number = 1; x < 4; x++) {
-            if (node.gameState.getPieceAtXY(x, 0) !== currentEnnemy) {
+            if (node.gameState.getPieceAtXY(x, 0) !== currentOpponent) {
                 horizontalCenterCoords.push(new Coord(x, 0));
             }
-            if (node.gameState.getPieceAtXY(x, 4) !== currentEnnemy) {
+            if (node.gameState.getPieceAtXY(x, 4) !== currentOpponent) {
                 horizontalCenterCoords.push(new Coord(x, 4));
             }
         }
@@ -121,7 +121,7 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
         return state.applyLegalMove(move);
     }
     public isLegal(move: QuixoMove, state: QuixoState): LegalityStatus {
-        if (state.getPieceAt(move.coord) === state.getCurrentEnnemy()) {
+        if (state.getPieceAt(move.coord) === state.getCurrentOpponent()) {
             return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE()) };
         } else {
             return { legal: MGPValidation.SUCCESS };

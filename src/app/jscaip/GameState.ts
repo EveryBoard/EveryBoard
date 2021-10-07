@@ -8,7 +8,7 @@ export abstract class GameState<C, P> {
     public getCurrentPlayer(): Player {
         return Player.fromTurn(this.turn);
     }
-    public getCurrentEnnemy(): Player {
+    public getCurrentOpponent(): Player {
         return this.turn % 2 === 1 ? Player.ZERO : Player.ONE;
     }
     public abstract getPieceAt(coord: C): P;

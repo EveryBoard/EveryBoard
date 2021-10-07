@@ -40,7 +40,7 @@ describe('QuixoComponent', () => {
         componentTestUtils.getComponent().onBoardClick(4, 4);
         expect(componentTestUtils.getComponent().getPossiblesDirections()).toEqual(['LEFT', 'UP']);
     });
-    it('should cancel move when trying to select ennemy piece', fakeAsync(async() => {
+    it('should cancel move when trying to select opponent piece', fakeAsync(async() => {
         const board: Table<Player> = [
             [O, _, _, _, _],
             [_, _, _, _, _],

@@ -74,7 +74,7 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
         if (coordLegality.isFailure()) {
             return this.cancelMove(coordLegality.reason);
         }
-        if (this.board[y][x] === this.state.getCurrentEnnemy()) {
+        if (this.board[y][x] === this.state.getCurrentOpponent()) {
             return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
         } else {
             this.chosenCoord = clickedCoord;

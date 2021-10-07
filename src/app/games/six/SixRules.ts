@@ -82,7 +82,7 @@ export class SixRules extends Rules<SixMove,
         switch (state.getPieceAt(move.start.get())) {
             case Player.NONE:
                 return { legal: MGPValidation.failure('Cannot move empty coord!'), kept: null };
-            case state.getCurrentEnnemy():
+            case state.getCurrentOpponent():
                 return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE()), kept: null };
         }
         const piecesAfterDeplacement: MGPMap<Coord, Player> = SixState.deplacePiece(state, move);
@@ -155,7 +155,7 @@ export class SixRules extends Rules<SixMove,
     }
     public getGameStatus(node: SixNode): GameStatus {
         const state: SixState = node.gameState;
-        const LAST_PLAYER: Player = state.getCurrentEnnemy();
+        const LAST_PLAYER: Player = state.getCurrentOpponent();
         let shapeVictory: Coord[] = [];
         if (node.move) {
             shapeVictory = this.getShapeVictory(node.move, state);
@@ -255,7 +255,7 @@ export class SixRules extends Rules<SixMove,
     private searchVictoryOnlyForCircle(index: number, lastDrop: Coord, state: SixState): Coord[] {
         display(this.VERBOSE,
                 { called: 'SixRules.searchVictoryOnlyForCircle', index, lastDrop, state });
-        const LAST_PLAYER: Player = state.getCurrentEnnemy();
+        const LAST_PLAYER: Player = state.getCurrentOpponent();
         const initialDirection: HexaDirection = HexaDirection.factory.all[index];
         const victory: Coord[] = [lastDrop];
         let testCoord: Coord = lastDrop.getNext(initialDirection, 1);
@@ -272,7 +272,7 @@ export class SixRules extends Rules<SixMove,
         return victory;
     }
     private searchVictoryOnlyForLine(index: number, lastDrop: Coord, state: SixState): Coord[] {
-        const LAST_PLAYER: Player = state.getCurrentEnnemy();
+        const LAST_PLAYER: Player = state.getCurrentOpponent();
         let dir: HexaDirection = HexaDirection.factory.all[index];
         let testCoord: Coord = lastDrop.getNext(dir, 1);
         const victory: Coord[] = [lastDrop];
@@ -297,7 +297,7 @@ export class SixRules extends Rules<SixMove,
     private searchVictoryOnlyForTriangleCorner(index: number, lastDrop: Coord, state: SixState): Coord[] {
         display(this.VERBOSE,
                 { called: 'SixRules.searchVictoryTriangleCornerOnly', index, lastDrop, state });
-        const LAST_PLAYER: Player = state.getCurrentEnnemy();
+        const LAST_PLAYER: Player = state.getCurrentOpponent();
         let edgeDirection: HexaDirection = HexaDirection.factory.all[index];
         const victory: Coord[] = [lastDrop];
         let testCoord: Coord = lastDrop.getNext(edgeDirection, 1);
@@ -320,7 +320,7 @@ export class SixRules extends Rules<SixMove,
     private searchVictoryOnlyForTriangleEdge(index: number, lastDrop: Coord, state: SixState): Coord[] {
         display(this.VERBOSE,
                 { called: 'SixRules.searchVictoryTriangleEdgeOnly', index, lastDrop, state });
-        const LAST_PLAYER: Player = state.getCurrentEnnemy();
+        const LAST_PLAYER: Player = state.getCurrentOpponent();
         let edgeDirection: HexaDirection = HexaDirection.factory.all[index];
         const victory: Coord[] = [lastDrop];
         let testCoord: Coord = lastDrop.getNext(edgeDirection, 1);

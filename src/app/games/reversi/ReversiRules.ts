@@ -42,12 +42,12 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
     public static getAllSwitcheds(move: ReversiMove, player: Player, board: Player[][]): Coord[] {
         // try the move, do it if legal, and return the switched pieces
         const switcheds: Coord[] = [];
-        const ENEMY: Player = player.getOpponent();
+        const OPPONENT: Player = player.getOpponent();
 
         for (const direction of Direction.DIRECTIONS) {
             const firstCase: Coord = move.coord.getNext(direction);
             if (firstCase.isInRange(ReversiState.BOARD_WIDTH, ReversiState.BOARD_HEIGHT)) {
-                if (board[firstCase.y][firstCase.x] === ENEMY) {
+                if (board[firstCase.y][firstCase.x] === OPPONENT) {
                     // let's test this direction
                     const switchedInDir: Coord[] = ReversiRules.getSandwicheds(player, direction, firstCase, board);
                     for (const switched of switchedInDir) {
@@ -119,16 +119,16 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
         let nextBoard: Player[][];
 
         const player: Player = state.getCurrentPlayer();
-        const ennemy: Player = state.getCurrentEnnemy();
+        const opponent: Player = state.getCurrentOpponent();
 
         for (let y: number = 0; y < 8; y++) {
             for (let x: number = 0; x < 8; x++) {
                 if (state.getPieceAtXY(x, y) === Player.NONE) {
                     // For each empty cases
                     nextBoard = state.getCopiedBoard();
-                    const ennemyNeighboors: Coord[] = ReversiState.getNeighbooringPawnLike(nextBoard, ennemy, x, y);
-                    if (ennemyNeighboors.length > 0) {
-                        // if one of the 8 neighbooring case is an ennemy then, there could be a switch,
+                    const opponentNeighboors: Coord[] = ReversiState.getNeighbooringPawnLike(nextBoard, opponent, x, y);
+                    if (opponentNeighboors.length > 0) {
+                        // if one of the 8 neighbooring case is an opponent then, there could be a switch,
                         // and hence a legal move
                         const move: ReversiMove = new ReversiMove(x, y);
                         const result: Coord[] = ReversiRules.getAllSwitcheds(move, player, nextBoard);

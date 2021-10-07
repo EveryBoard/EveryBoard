@@ -208,7 +208,7 @@ describe('EncapsuleRules', () => {
         expect(drop(EncapsulePiece.MEDIUM_WHITE, new Coord(1, 0))).toBeTrue();
         expect(move(new Coord(0, 0), new Coord(1, 0))).toBeFalse();
     });
-    it('should refuse to move ennemy piece on the board', () => {
+    it('should refuse to move opponent piece on the board', () => {
         expect(drop(EncapsulePiece.SMALL_BLACK, new Coord(0, 0))).toBeTrue();
         expect(move(new Coord(0, 0), new Coord(1, 0))).toBeFalse();
     });

@@ -29,9 +29,9 @@ export class TablutRules extends Rules<TablutMove, TablutState, TablutLegalitySt
     public static NORMAL_CAPTURE_WORK_ON_THE_KING: boolean = false;
     // king can be capture by only two opposed invaders
     public static CAPTURE_KING_AGAINST_THRONE_RULES: boolean = false;
-    // the throne is considered an ennemy to the king
+    // the throne is considered an opponent to the king
     public static CAPTURE_PAWN_AGAINST_THRONE_RULES: boolean = true;
-    // the throne is considered an ennemy to the pawn
+    // the throne is considered an opponent to the pawn
     public static THREE_INVADER_AND_A_BORDER_CAN_CAPTURE_KING: boolean = true;
     // the king can be captured by only three invaders if he's against the corner
 
@@ -73,7 +73,7 @@ export class TablutRules extends Rules<TablutMove, TablutState, TablutLegalitySt
         if (cOwner === RelativePlayer.NONE) {
             return MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
-        if (cOwner === RelativePlayer.ENNEMY) {
+        if (cOwner === RelativePlayer.OPPONENT) {
             return MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
         }
 
@@ -108,7 +108,7 @@ export class TablutRules extends Rules<TablutMove, TablutState, TablutLegalitySt
          * d the direction in witch we look for capture
          * return the captured coord, or null if no capture possible
          * 1. the threatened case dont exist         -> no capture
-         * 2: the threatened case is not an ennemy   -> no capture
+         * 2: the threatened case is not an opponent -> no capture
          * 3: the threatened case is a king -> delegate calculation
          * 4: the threatened case is a pawn -> delegate calculation
          */
@@ -117,8 +117,8 @@ export class TablutRules extends Rules<TablutMove, TablutState, TablutLegalitySt
             return null; // 1: the threatened case dont exist, no capture
         }
         const threatenedPawnOwner: RelativePlayer = this.getRelativeOwner(player, threatened, board);
-        if (threatenedPawnOwner !== RelativePlayer.ENNEMY) {
-            return null; // 2: the threatened case is not an ennemy
+        if (threatenedPawnOwner !== RelativePlayer.OPPONENT) {
+            return null; // 2: the threatened case is not an opponent
         }
         if (board[threatened.y][threatened.x].isKing()) {
             return this.captureKing(player, landingPawn, d, board);
@@ -286,10 +286,10 @@ export class TablutRules extends Rules<TablutMove, TablutState, TablutLegalitySt
             } // here, back is an empty throne
             if (this.CAPTURE_PAWN_AGAINST_THRONE_RULES) {
                 display(TablutRules.VERBOSE || LOCAL_VERBOSE,
-                        'pawn captured by 1 ennemy and 1 throne; ' +
+                        'pawn captured by 1 opponent and 1 throne; ' +
                         threatenedPieceCoord + 'threatened by ' + player + `'s pawn in  ` + c +
                         ' coming from this direction (' + d.x + ', ' + d.y + ')');
-                return threatenedPieceCoord; // pawn captured by 1 ennemy and 1 throne
+                return threatenedPieceCoord; // pawn captured by 1 opponent and 1 throne
             }
         }
         if (back === RelativePlayer.PLAYER) {
@@ -363,7 +363,7 @@ export class TablutRules extends Rules<TablutMove, TablutState, TablutLegalitySt
         } else if (player === owner) {
             relativeOwner = RelativePlayer.PLAYER;
         } else {
-            relativeOwner = RelativePlayer.ENNEMY;
+            relativeOwner = RelativePlayer.OPPONENT;
         }
         // TESTS
         if (caseC === TablutCase.UNOCCUPIED) {
@@ -381,9 +381,9 @@ export class TablutRules extends Rules<TablutMove, TablutState, TablutLegalitySt
                                 relativeOwner + ' :: ' + owner + ' :: ' + player);
                     }
                 } else {
-                    if (relativeOwner !== RelativePlayer.ENNEMY) {
+                    if (relativeOwner !== RelativePlayer.OPPONENT) {
                         display(TablutRules.VERBOSE,
-                                'player start, defender start, case is invader, but is not ennemy ??? ' +
+                                'player start, defender start, case is invader, but is not opponent ??? ' +
                                 relativeOwner + ' :: ' + owner + ' :: ' + player);
                     }
                 }
@@ -393,9 +393,9 @@ export class TablutRules extends Rules<TablutMove, TablutState, TablutLegalitySt
         } else { // player follow
             if (TablutState.INVADER_START) {
                 if (caseC === TablutCase.INVADERS) {
-                    if (relativeOwner !== RelativePlayer.ENNEMY) {
+                    if (relativeOwner !== RelativePlayer.OPPONENT) {
                         display(TablutRules.VERBOSE,
-                                'player follow, invader start, case is invader, but case is not ennemy ' +
+                                'player follow, invader start, case is invader, but case is not opponent ' +
                             relativeOwner + ' :: ' + owner + ' :: ' + player);
                     }
                 }

@@ -151,7 +151,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
     public getBoardValue(node: SixNode): SixNodeUnheritance {
         const move: SixMove = node.move;
         const state: SixState = node.gameState;
-        const LAST_PLAYER: Player = state.getCurrentEnnemy();
+        const LAST_PLAYER: Player = state.getCurrentOpponent();
         const victoryValue: number = LAST_PLAYER.getVictoryValue();
         let shapeInfo: BoardInfo = {
             status: SCORE.DEFAULT,
@@ -253,7 +253,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
     public searchVictoryOnlyForCircle(index: number, lastDrop: Coord, state: SixState): BoardInfo {
         display(this.VERBOSE,
                 { called: 'SixRules.searchVictoryOnlyForCircle', index, lastDrop, state });
-        const LAST_PLAYER: Player = state.getCurrentEnnemy();
+        const LAST_PLAYER: Player = state.getCurrentOpponent();
         const initialDirection: HexaDirection = HexaDirection.factory.all[index];
         const testedCoords: Coord[] = [lastDrop];
         let testCoord: Coord = lastDrop.getNext(initialDirection, 1);
@@ -277,7 +277,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         };
     }
     public searchVictoryOnlyForLine(index: number, lastDrop: Coord, state: SixState): BoardInfo {
-        const LAST_PLAYER: Player = state.getCurrentEnnemy();
+        const LAST_PLAYER: Player = state.getCurrentOpponent();
         let dir: HexaDirection = HexaDirection.factory.all[index];
         let testCoord: Coord = lastDrop.getNext(dir, 1);
         const victory: Coord[] = [lastDrop];
@@ -309,7 +309,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
     public searchVictoryOnlyForTriangleCorner(index: number, lastDrop: Coord, state: SixState): BoardInfo {
         display(this.VERBOSE,
                 { called: 'SixRules.searchVictoryTriangleCornerOnly', index, lastDrop, state });
-        const LAST_PLAYER: Player = state.getCurrentEnnemy();
+        const LAST_PLAYER: Player = state.getCurrentOpponent();
         let edgeDirection: HexaDirection = HexaDirection.factory.all[index];
         const testedCoords: Coord[] = [lastDrop];
         let testCoord: Coord = lastDrop.getNext(edgeDirection, 1);
@@ -339,7 +339,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
     public searchVictoryOnlyForTriangleEdge(index: number, lastDrop: Coord, state: SixState): BoardInfo {
         display(this.VERBOSE,
                 { called: 'SixRules.searchVictoryTriangleEdgeOnly', index, lastDrop, state });
-        const LAST_PLAYER: Player = state.getCurrentEnnemy();
+        const LAST_PLAYER: Player = state.getCurrentOpponent();
         let edgeDirection: HexaDirection = HexaDirection.factory.all[index];
         const testedCoords: Coord[] = [lastDrop];
         let testCoord: Coord = lastDrop.getNext(edgeDirection, 1);
@@ -389,7 +389,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
     public getBoardInfoForCircle(index: number, lastDrop: Coord, state: SixState, boardInfo: BoardInfo): BoardInfo {
         display(this.VERBOSE,
                 { called: 'SixMinimaw.getBoardInfoForCircle', index, lastDrop, state, boardInfo });
-        const LAST_ENNEMY: Player = state.getCurrentPlayer();
+        const LAST_OPPONENT: Player = state.getCurrentPlayer();
         const initialDirection: HexaDirection = HexaDirection.factory.all[index];
         const testedCoords: Coord[] = [lastDrop];
         let testCoord: Coord = lastDrop.getNext(initialDirection, 1);
@@ -397,7 +397,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         let lastEmpty: Coord;
         while (testedCoords.length < 6) {
             const testedPiece: Player = state.getPieceAt(testCoord);
-            if (testedPiece === LAST_ENNEMY) {
+            if (testedPiece === LAST_OPPONENT) {
                 return boardInfo; // nothing to add here
             }
             const dirIndex: number = (index + testedCoords.length) % 6;
@@ -507,11 +507,11 @@ export class SixMinimax extends AlignementMinimax<SixMove,
     private updateEncounterAndReturnLastEmpty(state: SixState,
                                               testedCoord: Coord,
                                               encountered: number[]): Coord {
-        const LAST_ENNEMY: Player = state.getCurrentPlayer();
+        const LAST_OPPONENT: Player = state.getCurrentPlayer();
         switch (state.getPieceAt(testedCoord)) {
-            case LAST_ENNEMY:
+            case LAST_OPPONENT:
                 encountered.push(-7);
-                // just enough to make sum negative when ennemy encountered
+                // just enough to make sum negative when opponent encountered
                 break;
             case Player.NONE:
                 encountered.push(0.16);
@@ -529,7 +529,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
     {
         display(this.VERBOSE,
                 { called: 'SixRules.getBoardInfoForTriangleCorner', index, lastDrop, state, boardInfo });
-        const LAST_ENNEMY: Player = state.getCurrentPlayer();
+        const LAST_OPPONENT: Player = state.getCurrentPlayer();
         let edgeDirection: HexaDirection = HexaDirection.factory.all[index];
         const testedCoords: Coord[] = [lastDrop];
         let testCoord: Coord = lastDrop.getNext(edgeDirection, 1);
@@ -538,7 +538,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         while (testedCoords.length < 6) {
             // Testing the corner
             const testedPiece: Player = state.getPieceAt(testCoord);
-            if (testedPiece === LAST_ENNEMY) {
+            if (testedPiece === LAST_OPPONENT) {
                 return boardInfo;
             }
             if (testedPiece === Player.NONE) {
@@ -563,7 +563,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
                                        boardInfo: BoardInfo): BoardInfo {
 
         display(this.VERBOSE, { called: 'SixRules.getBoardInfoForTriangleEdge', index, lastDrop, state, boardInfo });
-        const LAST_ENNEMY: Player = state.getCurrentPlayer();
+        const LAST_OPPONENT: Player = state.getCurrentPlayer();
         let edgeDirection: HexaDirection = HexaDirection.factory.all[index];
         const testedCoords: Coord[] = [lastDrop];
         let testCoord: Coord = lastDrop.getNext(edgeDirection, 1);
@@ -572,7 +572,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         while (testedCoords.length < 6) {
             // Testing the corner
             const testedPiece: Player = state.getPieceAt(testCoord);
-            if (testedPiece === LAST_ENNEMY) {
+            if (testedPiece === LAST_OPPONENT) {
                 return boardInfo;
             }
             if (testedPiece === Player.NONE) {

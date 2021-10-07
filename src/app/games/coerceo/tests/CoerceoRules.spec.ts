@@ -63,7 +63,7 @@ describe('CoerceoRules', () => {
             const status: LegalityStatus = rules.isLegal(move, state);
             expect(status.legal.getReason()).toBe('Cannot end with a coord outside the board (4, 6).');
         });
-        it('Should forbid to move ennemy pieces', () => {
+        it('Should forbid to move ppponent pieces', () => {
             const board: FourStatePiece[][] = [
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],

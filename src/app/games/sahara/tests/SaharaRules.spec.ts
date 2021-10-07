@@ -69,7 +69,7 @@ describe('SaharaRules', () => {
     it('Bouncing on occupied case should be illegal', () => {
         expect(rules.choose(new SaharaMove(new Coord(7, 0), new Coord(8, 1)))).toBeFalse();
     });
-    it('Should forbid moving ennemy piece', () => {
+    it('Should forbid moving opponent piece', () => {
         const state: SaharaState = SaharaState.getInitialState();
         const move: SaharaMove = new SaharaMove(new Coord(3, 0), new Coord(4, 0));
         const status: LegalityStatus = rules.isLegal(move, state);

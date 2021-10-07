@@ -24,7 +24,7 @@ describe('SixComponent', () => {
         expect(componentTestUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
         expect(componentTestUtils.getComponent()).withContext('Component should be created').toBeTruthy();
     });
-    it('should cancel move when clicking on ennemy piece', fakeAsync(async() => {
+    it('should cancel move when clicking on opponent piece', fakeAsync(async() => {
         const board: NumberTable = [
             [O],
         ];
@@ -152,7 +152,7 @@ describe('SixComponent', () => {
 
         await componentTestUtils.expectClickFailure('#neighboor_1_1', SixFailure.CAN_NO_LONGER_DROP());
     }));
-    it('should still allow to click on ennemy piece after 40th as a third click', fakeAsync(async() => {
+    it('should still allow to click on opponent piece after 40th as a third click', fakeAsync(async() => {
         const board: NumberTable = [
             [O],
             [X],

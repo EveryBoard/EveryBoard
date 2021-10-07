@@ -112,7 +112,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
         if (starter === FourStatePiece.EMPTY) {
             return { legal: MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY()) };
         }
-        if (starter.is(state.getCurrentEnnemy())) {
+        if (starter.is(state.getCurrentOpponent())) {
             return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE()) };
         }
         const lander: FourStatePiece = state.getPieceAt(move.landingCoord.get());

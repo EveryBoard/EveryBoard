@@ -144,7 +144,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
     public nextCoordToPlay(state: KamisadoState, colorToPlay: KamisadoColor): MGPOptional<Coord> {
         return MGPOptional.ofNullable(KamisadoBoard.allPieceCoords(state.board).find((c: Coord): boolean => {
             const piece: KamisadoPiece = state.getPieceAt(c);
-            return piece.player === state.getCurrentEnnemy() && piece.color === colorToPlay;
+            return piece.player === state.getCurrentOpponent() && piece.color === colorToPlay;
         }));
     }
     // Apply the move by only relying on tryMove

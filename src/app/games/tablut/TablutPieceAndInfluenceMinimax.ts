@@ -124,15 +124,15 @@ export class TablutPieceAndInfluenceMinimax extends TablutMinimax {
         }
         return threats;
     }
-    public isAThreat(coord: Coord, state: TablutState, ennemy: Player): boolean {
+    public isAThreat(coord: Coord, state: TablutState, opponent: Player): boolean {
         if (coord.isNotInRange(TablutRulesConfig.WIDTH, TablutRulesConfig.WIDTH)) {
             return false;
         }
-        if (TablutRules.getAbsoluteOwner(coord, state.getCopiedBoard()) === ennemy) {
+        if (TablutRules.getAbsoluteOwner(coord, state.getCopiedBoard()) === opponent) {
             return true;
         }
         if (TablutRules.isThrone(coord)) {
-            if (ennemy === Player.ONE) { // Defender
+            if (opponent === Player.ONE) { // Defender
                 return true;
             } else {
                 return state.getPieceAt(coord) === TablutCase.UNOCCUPIED;
@@ -164,18 +164,18 @@ export class TablutPieceAndInfluenceMinimax extends TablutMinimax {
         const threatenedPlayerPieces: Coord[] = threateneds.filter((coord: Coord) => {
             return TablutRules.getAbsoluteOwner(coord, board) === state.getCurrentPlayer();
         });
-        const threatenedEnnemyPieces: MGPSet<Coord> = new MGPSet(threateneds.filter((coord: Coord) => {
-            return TablutRules.getAbsoluteOwner(coord, board) === state.getCurrentEnnemy();
+        const threatenedOpponentPieces: MGPSet<Coord> = new MGPSet(threateneds.filter((coord: Coord) => {
+            return TablutRules.getAbsoluteOwner(coord, board) === state.getCurrentOpponent();
         }));
         for (const threatenedPiece of threatenedPlayerPieces) {
             const oldThreatSet: SandwichThreat[] = threatMap.get(threatenedPiece).get().getCopy();
             const newThreatSet: SandwichThreat[] = [];
             for (const threat of oldThreatSet) {
-                if (threatenedEnnemyPieces.contains(threat.direct.get(0)) === false) {
+                if (threatenedOpponentPieces.contains(threat.direct.get(0)) === false) {
                     // if the direct threat of this piece is not a false threat
                     const newMover: Coord[] = [];
                     for (const mover of threat.mover.getCopy()) {
-                        if (threatenedEnnemyPieces.contains(mover) === false) {
+                        if (threatenedOpponentPieces.contains(mover) === false) {
                             // if the moving threat of this piece is real
                             newMover.push(mover);
                         }
@@ -189,9 +189,9 @@ export class TablutPieceAndInfluenceMinimax extends TablutMinimax {
                 filteredThreatMap.set(threatenedPiece, new MGPSet(newThreatSet));
             }
         }
-        for (const threatenedEnnemyPiece of threatenedEnnemyPieces.getCopy()) {
-            const threatSet: MGPSet<SandwichThreat> = threatMap.get(threatenedEnnemyPiece).get();
-            filteredThreatMap.set(threatenedEnnemyPiece, threatSet);
+        for (const threatenedOpponentPiece of threatenedOpponentPieces.getCopy()) {
+            const threatSet: MGPSet<SandwichThreat> = threatMap.get(threatenedOpponentPiece).get();
+            filteredThreatMap.set(threatenedOpponentPiece, threatSet);
         }
         return filteredThreatMap;
     }

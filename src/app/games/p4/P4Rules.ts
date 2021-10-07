@@ -65,7 +65,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
     public static getNumberOfFreeSpacesAndAllies(board: Table<Player>,
                                                  i: Coord,
                                                  dir: Direction,
-                                                 ennemy: Player,
+                                                 opponent: Player,
                                                  ally: Player): [number, number] {
         /*
        * for a square i(iX, iY) containing an ally
@@ -80,7 +80,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
         while (coord.isInRange(7, 6) && freeSpaces !== 3) {
             // while we're on the board
             const currentCase: Player = board[coord.y][coord.x];
-            if (currentCase === ennemy) {
+            if (currentCase === opponent) {
                 return [freeSpaces, allies];
             }
             if (currentCase === ally && allAlliesAreSideBySide) {
@@ -89,7 +89,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
                 allAlliesAreSideBySide = false; // we stop counting the allies on this line
             }
             // as soon as there is a hole
-            if (currentCase !== ennemy && currentCase !== ally) {
+            if (currentCase !== opponent && currentCase !== ally) {
                 // TODO: this condition was not there before, check that it makes sense (but the body was there)
                 freeSpaces++;
             }
@@ -97,9 +97,9 @@ export class P4Rules extends Rules<P4Move, P4State> {
         }
         return [freeSpaces, allies];
     }
-    private static getEnnemy(board: Table<Player>, coord: Coord): Player {
+    private static getOpponent(board: Table<Player>, coord: Coord): Player {
         const c: Player = board[coord.y][coord.x];
-        assert(c !== Player.NONE, 'getEnnemy should not be called with Player.NONE');
+        assert(c !== Player.NONE, 'getOpponent should not be called with Player.NONE');
         return (c === Player.ONE) ? Player.ZERO : Player.ONE;
     }
     public static getCaseScore(board: Table<Player>, c: Coord): number {
@@ -109,14 +109,14 @@ export class P4Rules extends Rules<P4Move, P4State> {
 
         let score: number = 0; // final result, count the theoretical victorys possibility
 
-        const ennemy: Player = P4Rules.getEnnemy(board, c);
+        const opponent: Player = P4Rules.getOpponent(board, c);
         const ally: Player = board[c.y][c.x];
 
         const distByDirs: Map<Direction, number> = new Map();
         const alliesByDirs: Map<Direction, number> = new Map();
 
         for (const dir of Direction.DIRECTIONS) {
-            const tmpData: [number, number] = P4Rules.getNumberOfFreeSpacesAndAllies(board, c, dir, ennemy, ally);
+            const tmpData: [number, number] = P4Rules.getNumberOfFreeSpacesAndAllies(board, c, dir, opponent, ally);
             distByDirs.set(dir, tmpData[0]);
             alliesByDirs.set(dir, tmpData[1]);
         }
@@ -195,7 +195,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
                 // while we haven't reached the top or an empty case
                 const tmpScore: number = P4Rules.getCaseScore(state.board, new Coord(x, y));
                 if (MGPNode.getScoreStatus(tmpScore) === SCORE.VICTORY) {
-                    return GameStatus.getVictory(state.getCurrentEnnemy());
+                    return GameStatus.getVictory(state.getCurrentOpponent());
                 }
             }
         }

@@ -172,7 +172,7 @@ describe('EpaminondasRules:', () => {
         const status: EpaminondasLegalityStatus = rules.isLegal(move, state);
         expect(status.legal.getReason()).toBe(RulesFailure.CANNOT_SELF_CAPTURE());
     });
-    it('Should forbid moving ennemy pieces', () => {
+    it('Should forbid moving opponent pieces', () => {
         const board: Table<Player> = [
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],

@@ -27,7 +27,7 @@ describe('PylosComponent', () => {
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 0), []);
         await componentTestUtils.expectMoveSuccess('#drop_0_0_0', move);
     }));
-    it('should forbid clicking on ennemy piece', fakeAsync(async() => {
+    it('should forbid clicking on opponent piece', fakeAsync(async() => {
         const initialBoard: Player[][][] = [
             [
                 [X, _, _, _],

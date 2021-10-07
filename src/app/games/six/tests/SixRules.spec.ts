@@ -112,7 +112,7 @@ describe('SixRules', () => {
             const status: LegalityStatus = rules.isLegal(move, state);
             expect(status.legal.getReason()).toBe('Cannot do deplacement before 42th turn!');
         });
-        it('Should forbid moving ennemy piece', () => {
+        it('Should forbid moving opponent piece', () => {
             const board: NumberTable = [
                 [_, _, O],
                 [_, X, _],

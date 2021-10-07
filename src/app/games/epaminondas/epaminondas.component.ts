@@ -74,9 +74,9 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
             moved = moved.getNext(move.direction, 1);
             this.moveds.push(moved);
         }
-        const PREVIOUS_ENNEMY: Player = this.rules.node.mother.gameState.getCurrentEnnemy();
+        const PREVIOUS_OPPONENT: Player = this.rules.node.mother.gameState.getCurrentOpponent();
         while (moved.isInRange(14, 12) &&
-               this.rules.node.mother.gameState.getPieceAt(moved) === PREVIOUS_ENNEMY) {
+               this.rules.node.mother.gameState.getPieceAt(moved) === PREVIOUS_OPPONENT) {
             this.captureds.push(moved);
             moved = moved.getNext(move.direction, 1);
         }
@@ -96,7 +96,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     }
     private async firstClick(x: number, y: number): Promise<MGPValidation> {
         this.hidePreviousMove(); // TODO check if must be deleted
-        const ENNEMY: Player = this.rules.node.gameState.getCurrentEnnemy();
+        const OPPONENT: Player = this.rules.node.gameState.getCurrentOpponent();
         const PLAYER: Player = this.rules.node.gameState.getCurrentPlayer();
         switch (this.board[y][x]) {
             case PLAYER:
@@ -104,7 +104,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
                 this.validExtensions = this.getValidExtensions(PLAYER);
                 this.phalanxValidLandings = this.getPhalanxValidLandings();
                 break;
-            case ENNEMY:
+            case OPPONENT:
                 return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
             case Player.NONE:
                 return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
@@ -183,13 +183,13 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     }
     private getLandingsToward(landing: Coord, direction: Direction, phalanxSize: number): Coord[] {
         const PLAYER: Player = this.rules.node.gameState.getCurrentPlayer();
-        const ENNEMY: Player = this.rules.node.gameState.getCurrentEnnemy();
+        const OPPONENT: Player = this.rules.node.gameState.getCurrentOpponent();
         const landings: Coord[] = [];
         while (landing.isInRange(14, 12) &&
                landings.length < phalanxSize &&
                this.board[landing.y][landing.x] !== PLAYER) {
-            if (this.board[landing.y][landing.x] === ENNEMY) {
-                if (this.getPhalanxLength(landing, direction, ENNEMY) < phalanxSize) {
+            if (this.board[landing.y][landing.x] === OPPONENT) {
+                if (this.getPhalanxLength(landing, direction, OPPONENT) < phalanxSize) {
                     landings.push(landing);
                 }
                 return landings;
@@ -224,7 +224,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
             this.cancelMoveAttempt();
             return MGPValidation.SUCCESS;
         }
-        const ENNEMY: Player = this.rules.node.gameState.getCurrentEnnemy();
+        const OPPONENT: Player = this.rules.node.gameState.getCurrentOpponent();
         const PLAYER: Player = this.rules.node.gameState.getCurrentPlayer();
         if (!clicked.isAlignedWith(this.firstPiece)) {
             return this.cancelMove(EpaminondasFailure.CASE_NOT_ALIGNED_WITH_SELECTED());
@@ -238,7 +238,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
                 } else {
                     return this.cancelMove(EpaminondasFailure.SINGLE_PIECE_MUST_MOVE_BY_ONE());
                 }
-            case ENNEMY:
+            case OPPONENT:
                 return this.cancelMove(EpaminondasFailure.SINGLE_PIECE_CANNOT_CAPTURE());
             case PLAYER:
                 const incompleteMove: EpaminondasMove = new EpaminondasMove(this.firstPiece.x,
