@@ -53,6 +53,7 @@ describe('Comparable', () => {
             expect(isComparableJSON({ 'foo': 5 })).toBeTrue();
             expect(isComparableJSON(new DummyNonComparableObject(5))).toBeFalse();
             expect(isComparableJSON({ 'foo': new DummyNonComparableObject(5) })).toBeFalse();
+            expect(isComparableJSON({ 1: 'foo' })).toBeTrue();
         });
     });
     describe('isComparableValue', () => {

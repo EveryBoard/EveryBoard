@@ -47,13 +47,8 @@ export function isComparableObject(value: unknown): value is ComparableObject {
 export function isComparableJSON(value: any): value is ComparableJSON {
     if (typeof value === 'object') {
         for (const key in value) {
-            if (typeof key === 'string' || typeof key === 'number') {
-                if (isComparableValue(value[key]) === false) {
-                    return false;
-                }
-            } else {
-                return false;
-            }
+            // TODO FOR REVIEW: can key be any other type than string or number? If so, this needs to be checked
+            if (isComparableValue(value[key]) === false) return false;
         }
         return true;
     } else {
@@ -67,7 +62,7 @@ export function isComparableValue(value: unknown): value is ComparableValue {
 
 export function comparableEqualsIfComparable<T>(a: T, b: T): boolean {
     if (isComparableValue(a) && isComparableValue(b)) {
-        return comparableEquals(a as unknown as Comparable, b as unknown as Comparable);
+        return comparableEquals(a, b);
     } else {
         Utils.handleError('Comparing non comparable objects');
         return false;
