@@ -47,10 +47,7 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        this.lastMove = new Coord(-1, -1); // now the user stop try to do a move
-        // we stop showing him the last move
         const chosenMove: ReversiMove = new ReversiMove(x, y);
-
         return await this.chooseMove(chosenMove, this.rules.node.gamePartSlice, this.scores[0], this.scores [1]);
     }
     public updateBoard(): void {
@@ -60,7 +57,6 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
         this.captureds = [];
 
         if (this.rules.node.move) {
-            this.lastMove = this.rules.node.move.coord;
             this.showPreviousMove();
         } else {
             this.lastMove = new Coord(-2, -2);
@@ -70,6 +66,7 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
         this.canPass = ReversiRules.playerCanOnlyPass(slice);
     }
     private showPreviousMove() {
+        this.lastMove = this.rules.node.move.coord;
         const PLAYER: number = this.rules.node.gamePartSlice.getCurrentPlayer().value;
         const ENNEMY: number = this.rules.node.gamePartSlice.getCurrentEnnemy().value;
         for (const dir of Direction.DIRECTIONS) {
