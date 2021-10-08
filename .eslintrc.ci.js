@@ -7,7 +7,7 @@ module.exports = {
     parserOptions: {
         ecmaVersion: 12,
         sourceType: 'module',
-        project: 'tsconfig.json',
+//        project: 'tsconfig.json',
     },
     plugins: [
         '@typescript-eslint',
@@ -25,7 +25,7 @@ module.exports = {
                 'parameter': true,
             },
         ],
-        '@typescript-eslint/strict-boolean-expressions': ['error'],
+//        '@typescript-eslint/strict-boolean-expressions': ['error'],
         '@typescript-eslint/no-empty-function': ['off'],
         '@typescript-eslint/no-namespace': ['off'],
         '@typescript-eslint/ban-types': [
