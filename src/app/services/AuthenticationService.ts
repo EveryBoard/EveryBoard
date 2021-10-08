@@ -5,7 +5,7 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/database';
-import { Observable, BehaviorSubject, Subscription } from 'rxjs';
+import { Observable, BehaviorSubject, Subscription, ReplaySubject } from 'rxjs';
 
 import { display, Utils } from 'src/app/utils/utils';
 import { IJoueur } from '../domain/iuser';
@@ -26,13 +26,14 @@ export interface AuthUser {
 export class AuthenticationService implements OnDestroy {
     public static VERBOSE: boolean = false;
 
-    public static NOT_AUTHENTICATED: { username: string, verified: boolean } = null;
-
+    /**
+     * Represents the fact the user is not connected
+     */
     public static NOT_CONNECTED: { username: string, verified: boolean } = { username: null, verified: null };
 
     private authSub: Subscription;
 
-    private joueurBS: BehaviorSubject<AuthUser>;
+    private joueurRS: ReplaySubject<AuthUser>;
 
     private joueurObs: Observable<AuthUser>;
 
@@ -41,18 +42,18 @@ export class AuthenticationService implements OnDestroy {
                 private userDAO: JoueursDAO) {
         display(AuthenticationService.VERBOSE, '1 authService subscribe to Obs<User>');
 
-        this.joueurBS = new BehaviorSubject<AuthUser>(AuthenticationService.NOT_AUTHENTICATED);
-        this.joueurObs = this.joueurBS.asObservable();
+        this.joueurRS = new ReplaySubject<AuthUser>(1);
+        this.joueurObs = this.joueurRS.asObservable();
         this.authSub = this.afAuth.authState.subscribe(async(user: firebase.User) => {
             if (user == null) { // user logged out
                 display(AuthenticationService.VERBOSE, '2.B: User is not connected, according to fireAuth');
-                this.joueurBS.next(AuthenticationService.NOT_CONNECTED);
+                this.joueurRS.next(AuthenticationService.NOT_CONNECTED);
             } else { // user logged in
                 this.updatePresence();
                 const username: string = await userDAO.getUsername(user.uid);
                 display(AuthenticationService.VERBOSE, { userLoggedInAccordingToFireAuth: user });
                 const verified: boolean = user.emailVerified;
-                this.joueurBS.next({ username, verified });
+                this.joueurRS.next({ username, verified });
             }
         });
     }

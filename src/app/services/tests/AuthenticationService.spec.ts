@@ -310,11 +310,11 @@ describe('AuthenticationService', () => {
         });
     });
 
-    it('To be clear for non async use, should distinguish non-connected and disconnected', async() => {
+    it('To be clear for non async use, should distinguish not initialized and not connected', async() => {
         let first: boolean = true;
         service.getJoueurObs().subscribe((user: AuthUser) => {
             if (first) {
-                expect(user).toBe(AuthenticationService.NOT_AUTHENTICATED);
+                expect(user).toBe(AuthenticationService.NOT_INITIALIZED);
                 first = false;
             }
         });

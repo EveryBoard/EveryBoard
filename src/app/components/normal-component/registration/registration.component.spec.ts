@@ -10,28 +10,36 @@ import firebase from 'firebase/app';
 describe('RegistrationComponent', () => {
     let testUtils: SimpleComponentTestUtils<RegistrationComponent>;
 
+    let router: Router;
+
+    let authService: AuthenticationService;
+
     const username: string = 'jeanjaja';
     const email: string = 'jean@jaja.europe';
     const password: string = 'hunter2';
 
+    function fillInUserDetails() {
+        testUtils.fillInput('#email', email);
+        testUtils.fillInput('#username', username);
+        testUtils.fillInput('#password', password);
+    }
+
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(RegistrationComponent);
         testUtils.detectChanges();
+        router = TestBed.inject(Router);
+        authService = TestBed.inject(AuthenticationService);
     }));
     it('should create', () => {
         expect(testUtils.getComponent()).toBeTruthy();
     });
-    it('Registration should register, send email verification, and navigate back to homepage', fakeAsync(async() => {
-        const router: Router = TestBed.inject(Router);
-        const authService: AuthenticationService = TestBed.inject(AuthenticationService);
+    it('should register, send email verification, and navigate back to homepage upon success', fakeAsync(async() => {
         spyOn(router, 'navigate');
         spyOn(authService, 'doRegister').and.resolveTo(MGPFallible.success({ displayName: 'jeanjaja', email: 'jean@jaja.europe' } as firebase.User));
         spyOn(authService, 'sendEmailVerification').and.resolveTo(MGPValidation.SUCCESS);
 
         // given some user
-        testUtils.fillInput('#email', email);
-        testUtils.fillInput('#username', username);
-        testUtils.fillInput('#password', password);
+        fillInUserDetails();
 
         // when the user registers
         await testUtils.clickElement('#registerButton');
@@ -41,15 +49,36 @@ describe('RegistrationComponent', () => {
         expect(authService.sendEmailVerification).toHaveBeenCalledWith();
         expect(authService.doRegister).toHaveBeenCalledWith(username, email, password);
     }));
-    it('Registration failure should show a message', fakeAsync(async() => {
+    it('should show a message upon registration failure', fakeAsync(async() => {
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate');
-        spyOn(testUtils.getComponent().authService, 'doRegister').and.resolveTo(MGPFallible.failure(`c'est caca monsieur.` ));
 
+        // given some user
+        fillInUserDetails();
+
+        // when the user registers and it fails
+        spyOn(authService, 'doRegister').and.resolveTo(MGPFallible.failure(`c'est caca monsieur.` ));
         await testUtils.clickElement('#registerButton');
 
+        // then an error message is shown
         const expectedError: string = testUtils.findElement('#errorMessage').nativeElement.innerHTML;
-        expect(router.navigate).not.toHaveBeenCalled();
         expect(expectedError).toBe(`c'est caca monsieur.`);
+        expect(router.navigate).not.toHaveBeenCalled();
+    }));
+    it('should show a message upon registration failure', fakeAsync(async() => {
+        const router: Router = TestBed.inject(Router);
+        spyOn(router, 'navigate');
+
+        // given some user
+        fillInUserDetails();
+
+        // when the user registers and it fails
+        spyOn(authService, 'sendEmailVerification').and.resolveTo(MGPValidation.failure(`c'est caca monsieur.` ));
+        await testUtils.clickElement('#registerButton');
+
+        // then an error message is shown
+        const expectedError: string = testUtils.findElement('#errorMessage').nativeElement.innerHTML;
+        expect(expectedError).toBe(`c'est caca monsieur.`);
+        expect(router.navigate).not.toHaveBeenCalled();
     }));
 });
