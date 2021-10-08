@@ -2,7 +2,7 @@ import { Localized } from '../utils/LocaleUtils';
 
 export class RulesFailure {
 
-    public static readonly CANNOT_CHOOSE_ENEMY_PIECE: Localized = () => $localize`You cannot pick a piece of the opponent.`;
+    public static readonly CANNOT_CHOOSE_OPPONENT_PIECE: Localized = () => $localize`You cannot pick a piece of the opponent.`;
 
     public static readonly MUST_CLICK_ON_EMPTY_SPACE: Localized = () => $localize`You must click on an empty space.`;
 

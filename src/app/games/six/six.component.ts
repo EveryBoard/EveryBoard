@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { SixGameState } from 'src/app/games/six/SixGameState';
+import { SixState } from 'src/app/games/six/SixState';
 import { SixMove } from 'src/app/games/six/SixMove';
 import { SixFailure } from 'src/app/games/six/SixFailure';
 import { SixNode, SixRules } from 'src/app/games/six/SixRules';
@@ -13,11 +13,9 @@ import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { HexagonalGameComponent }
-    from '../../components/game-components/abstract-game-component/HexagonalGameComponent';
-import { MoveEncoder } from 'src/app/jscaip/Encoder';
+    from '../../components/game-components/game-component/HexagonalGameComponent';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
-import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { SixTutorial } from './SixTutorial';
 
 interface Scale {
@@ -31,14 +29,13 @@ interface Scale {
 @Component({
     selector: 'app-six',
     templateUrl: './six.component.html',
-    styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.css'],
 })
-export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, SixLegalityStatus> {
+export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixState, SixLegalityStatus> {
 
     public readonly CONCRETE_WIDTH: number = 1000;
     public readonly CONCRETE_HEIGHT: number = 800;
-    public rules: SixRules = new SixRules(SixGameState);
-    public state: SixGameState;
+    public state: SixState;
 
     public pieces: Coord[];
     public disconnecteds: Coord[] = [];
@@ -55,27 +52,24 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
     public pointScale: Scale;
     public coordScale: Scale;
     public Y_OFFSET: number;
-    public PIECE_SIZE: number = 30;
-
-    public hexaLayout: HexaLayout;
-
-    public encoder: MoveEncoder<SixMove> = SixMove.encoder;
-
-    public tutorial: TutorialStep[] = new SixTutorial().tutorial;
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
+        this.rules = new SixRules(SixState);
         this.availableMinimaxes = [
             new SixMinimax(this.rules, 'SixMinimax'),
         ];
-        this.hexaLayout = new HexaLayout(this.PIECE_SIZE * 1.50,
-                                         new Coord(this.PIECE_SIZE * 2, 0),
+        this.encoder = SixMove.encoder;
+        this.tutorial = new SixTutorial().tutorial;
+        this.CASE_SIZE = 30;
+        this.hexaLayout = new HexaLayout(this.CASE_SIZE * 1.50,
+                                         new Coord(this.CASE_SIZE * 2, 0),
                                          FlatHexaOrientation.INSTANCE);
         this.setPieceSize(25);
         this.updateBoard();
     }
     private setPieceSize(rayon: number): void {
-        this.PIECE_SIZE = 2 * rayon;
+        this.CASE_SIZE = 2 * rayon;
         this.hexaLayout = new HexaLayout(rayon,
                                          new Coord(0, 0),
                                          FlatHexaOrientation.INSTANCE);
@@ -88,7 +82,7 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
     }
     public updateBoard(): void {
         const node: SixNode = this.rules.node;
-        this.state = node.gamePartSlice;
+        this.state = node.gameState;
         const lastMove: SixMove = this.rules.node.move;
         if (lastMove) {
             this.showLastMove();
@@ -111,15 +105,15 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
         } else {
             this.leftCoord = null;
         }
-        const state: SixGameState = this.rules.node.gamePartSlice;
+        const state: SixState = this.rules.node.gameState;
         if (this.rules.getGameStatus(this.rules.node).isEndGame) {
             this.victoryCoords = this.rules.getShapeVictory(lastMove, state);
         }
         this.disconnecteds = this.getDisconnected();
     }
     private getDisconnected(): Coord[] {
-        const oldPieces: Coord[] = this.rules.node.mother.gamePartSlice.pieces.listKeys();
-        const newPieces: Coord[] = this.rules.node.gamePartSlice.pieces.listKeys();
+        const oldPieces: Coord[] = this.rules.node.mother.gameState.pieces.listKeys();
+        const newPieces: Coord[] = this.rules.node.gameState.pieces.listKeys();
         const disconnecteds: Coord[] =[];
         for (const oldPiece of oldPieces) {
             if (oldPiece.equals(this.rules.node.move.start.getOrNull()) === false &&
@@ -185,7 +179,7 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
         return { minX, minY, maxX, maxY, upperPiece, lefterPiece };
     }
     public getPieceClass(coord: Coord): string {
-        const player: Player = this.rules.node.gamePartSlice.getPieceAt(coord);
+        const player: Player = this.rules.node.gameState.getPieceAt(coord);
         return this.getPlayerClass(player);
     }
     public async onPieceClick(piece: Coord): Promise<MGPValidation> {
@@ -196,8 +190,8 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
         if (this.state.turn < 40) {
             return this.cancelMove(SixFailure.NO_DEPLACEMENT_BEFORE_TURN_40());
         } else if (this.chosenLanding == null) {
-            if (this.state.getPieceAt(piece) === this.state.getCurrentEnnemy()) {
-                return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
+            if (this.state.getPieceAt(piece) === this.state.getCurrentOpponent()) {
+                return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
             }
             this.selectedPiece = piece;
             return MGPValidation.SUCCESS;
@@ -240,9 +234,9 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
     }
     private showCuttable(): void {
         const deplacement: SixMove = SixMove.fromDeplacement(this.selectedPiece, this.chosenLanding);
-        const piecesAfterDeplacement: MGPMap<Coord, Player> = SixGameState.deplacePiece(this.state, deplacement);
+        const piecesAfterDeplacement: MGPMap<Coord, Player> = SixState.deplacePiece(this.state, deplacement);
         const groupsAfterMove: MGPSet<MGPSet<Coord>> =
-            SixGameState.getGroups(piecesAfterDeplacement, deplacement.start.get());
+            SixState.getGroups(piecesAfterDeplacement, deplacement.start.get());
         const biggerGroups: MGPSet<MGPSet<Coord>> = SixRules.getBiggerGroups(groupsAfterMove);
         this.cuttableGroups = [];
         for (let i: number = 0; i < biggerGroups.size(); i++) {

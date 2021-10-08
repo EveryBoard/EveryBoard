@@ -3,6 +3,7 @@ import { Comparable, ComparableObject } from '../Comparable';
 import { Sets } from '../Sets';
 
 describe('Sets', () => {
+
     it('Should remove duplicate (with ComparableObject)', () => {
         const withDuplicate: ComparableObject[] = [new Coord(0, 0), new Coord(0, 0), new Coord(1, 1)];
 

@@ -2,6 +2,7 @@ import { Localized } from 'src/app/utils/LocaleUtils';
 import { GipfFailure } from '../gipf/GipfFailure';
 
 export class YinshFailure {
+
     public static readonly PLACEMENT_AFTER_INITIAL_PHASE: Localized = () => $localize`You cannot put a new ring after the tenth turn.`;
 
     public static readonly NO_MARKERS_IN_INITIAL_PHASE: Localized = () => $localize`You cannot put a marker in a ring before placing all of your rings.`;

@@ -28,14 +28,14 @@
                   [ngClass]="getCaseClasses(x, y)"
                   class="base"
             />
-            <g *ngIf="isPiece(c)">
+            <g *ngIf="c.isPiece()">
                 <use xlink:href="#arrow"
                      id="clickPiece_{{x}}_{{y}}"
                      (click)="clickPiece(x, y)"
                      [attr.transform]="getPieceTransform(x, y)"
                      [ngClass]="getPieceClasses(c)"
                      class="base mid-stroke"
-                     />
+            />
                 <g *ngIf="choosingDirection(x, y)">
                     <circle id="chooseDirection_"
                             (click)="chooseDirection('')"

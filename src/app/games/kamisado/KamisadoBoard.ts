@@ -1,6 +1,6 @@
 import { KamisadoColor } from './KamisadoColor';
 import { KamisadoPiece } from './KamisadoPiece';
-import { ArrayUtils, Table, NumberTable } from 'src/app/utils/ArrayUtils';
+import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 
 export class KamisadoBoard {
@@ -33,16 +33,10 @@ export class KamisadoBoard {
             [8, 7, 6, 5, 4, 3, 2, 1].map(KamisadoPiece.ZERO.of),
         ];
     }
-    public static isOnBoard(coord: Coord): boolean {
-        return coord.isInRange(KamisadoBoard.SIZE, KamisadoBoard.SIZE);
+    public static isEmptyAt(board: Table<KamisadoPiece>, coord: Coord): boolean {
+        return board[coord.y][coord.x].equals(KamisadoPiece.NONE);
     }
-    public static getPieceAt(board: NumberTable, coord: Coord): KamisadoPiece {
-        return KamisadoPiece.of(board[coord.y][coord.x]);
-    }
-    public static isEmptyAt(board: NumberTable, coord: Coord): boolean {
-        return KamisadoBoard.getPieceAt(board, coord).equals(KamisadoPiece.NONE);
-    }
-    public static allPieceCoords(board: NumberTable): Coord[] {
+    public static allPieceCoords(board: Table<KamisadoPiece>): Coord[] {
         const l: Coord[] = [];
         for (let y: number = 0; y < board.length; y++) {
             for (let x: number = 0; x < board[y].length; x++) {

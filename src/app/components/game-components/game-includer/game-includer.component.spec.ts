@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { GameIncluderComponent } from './game-includer.component';
 
 describe('GameIncluderComponent', () => {
+
     let component: GameIncluderComponent;
     let fixture: ComponentFixture<GameIncluderComponent>;
 
@@ -10,8 +11,6 @@ describe('GameIncluderComponent', () => {
         TestBed.configureTestingModule({
             declarations: [GameIncluderComponent],
         }).compileComponents();
-    });
-    beforeEach(() => {
         fixture = TestBed.createComponent(GameIncluderComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();

@@ -3,20 +3,21 @@ import { SiamMove } from 'src/app/games/siam/SiamMove';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { SiamPiece } from 'src/app/games/siam/SiamPiece';
-import { NumberTable } from 'src/app/utils/ArrayUtils';
-import { SiamPartSlice } from 'src/app/games/siam/SiamPartSlice';
+import { Table } from 'src/app/utils/ArrayUtils';
+import { SiamState } from 'src/app/games/siam/SiamState';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { SiamFailure } from '../SiamFailure';
 
 describe('SiamComponent', () => {
+
     let componentTestUtils: ComponentTestUtils<SiamComponent>;
 
-    const _: number = SiamPiece.EMPTY.value;
-    const M: number = SiamPiece.MOUNTAIN.value;
-    const U: number = SiamPiece.WHITE_UP.value;
-    const u: number = SiamPiece.BLACK_UP.value;
+    const _: SiamPiece = SiamPiece.EMPTY;
+    const M: SiamPiece = SiamPiece.MOUNTAIN;
+    const U: SiamPiece = SiamPiece.WHITE_UP;
+    const u: SiamPiece = SiamPiece.BLACK_UP;
 
     const expectMoveLegality: (move: SiamMove) => Promise<void> = async(move: SiamMove) => {
         if (move.isInsertion()) {
@@ -44,72 +45,72 @@ describe('SiamComponent', () => {
         const move: SiamMove = new SiamMove(2, -1, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN);
         await componentTestUtils.expectMoveSuccess('#chooseOrientation_DOWN', move);
     }));
-    it('Should not allow to move ennemy pieces', fakeAsync(async() => {
-        const board: NumberTable = [
+    it('Should not allow to move opponent pieces', fakeAsync(async() => {
+        const board: Table<SiamPiece> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
             [_, M, M, M, _],
             [_, _, _, _, _],
             [_, _, _, _, u],
         ];
-        const slice: SiamPartSlice = new SiamPartSlice(board, 0);
-        componentTestUtils.setupSlice(slice);
+        const state: SiamState = new SiamState(board, 0);
+        componentTestUtils.setupState(state);
 
         await componentTestUtils.expectClickFailure('#clickPiece_4_4', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
     }));
     it('should cancel move when trying to insert while having selected a piece', fakeAsync(async() => {
-        const board: NumberTable = [
+        const board: Table<SiamPiece> = [
             [U, _, _, _, _],
             [_, _, _, _, _],
             [_, M, M, M, _],
             [_, _, _, _, _],
             [_, _, _, _, _],
         ];
-        const slice: SiamPartSlice = new SiamPartSlice(board, 0);
-        componentTestUtils.setupSlice(slice);
+        const state: SiamState = new SiamState(board, 0);
+        componentTestUtils.setupState(state);
 
         await componentTestUtils.expectClickSuccess('#clickPiece_0_0');
 
         await componentTestUtils.expectClickFailure('#insertAt_-1_2', SiamFailure.CANNOT_INSERT_WHEN_SELECTED());
     }));
     it('should allow rotation', fakeAsync(async() => {
-        const board: NumberTable = [
+        const board: Table<SiamPiece> = [
             [U, _, _, _, _],
             [_, _, _, _, _],
             [_, M, M, M, _],
             [_, _, _, _, _],
             [_, _, _, _, _],
         ];
-        const slice: SiamPartSlice = new SiamPartSlice(board, 0);
-        componentTestUtils.setupSlice(slice);
+        const state: SiamState = new SiamState(board, 0);
+        componentTestUtils.setupState(state);
 
         const move: SiamMove = new SiamMove(0, 0, MGPOptional.empty(), Orthogonal.DOWN);
         await expectMoveLegality(move);
     }));
     it('should allow normal move', fakeAsync(async() => {
-        const board: NumberTable = [
+        const board: Table<SiamPiece> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
             [_, M, M, M, _],
             [_, _, _, _, _],
             [_, _, _, _, U],
         ];
-        const slice: SiamPartSlice = new SiamPartSlice(board, 0);
-        componentTestUtils.setupSlice(slice);
+        const state: SiamState = new SiamState(board, 0);
+        componentTestUtils.setupState(state);
 
         const move: SiamMove = new SiamMove(4, 4, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT);
         await expectMoveLegality(move);
     }));
     it('should highlight all moved pieces upon push', fakeAsync(async() => {
-        const board: NumberTable = [
+        const board: Table<SiamPiece> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
             [_, M, M, M, _],
             [_, _, _, _, _],
             [_, _, _, _, U],
         ];
-        const slice: SiamPartSlice = new SiamPartSlice(board, 0);
-        componentTestUtils.setupSlice(slice);
+        const state: SiamState = new SiamState(board, 0);
+        componentTestUtils.setupState(state);
 
         const move: SiamMove = new SiamMove(5, 4, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT);
         await expectMoveLegality(move);
@@ -119,15 +120,15 @@ describe('SiamComponent', () => {
         expect(componentTestUtils.expectElementToHaveClasses('#insertAt_2_4', ['base']));
     }));
     it('should decide outing orientation automatically', fakeAsync(async() => {
-        const board: NumberTable = [
+        const board: Table<SiamPiece> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
             [_, M, M, M, _],
             [_, _, _, _, _],
             [_, _, _, _, U],
         ];
-        const slice: SiamPartSlice = new SiamPartSlice(board, 0);
-        componentTestUtils.setupSlice(slice);
+        const state: SiamState = new SiamState(board, 0);
+        componentTestUtils.setupState(state);
 
         await componentTestUtils.expectClickSuccess('#clickPiece_4_4');
         const move: SiamMove = new SiamMove(4, 4, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN);

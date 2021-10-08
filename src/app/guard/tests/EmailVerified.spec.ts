@@ -8,6 +8,7 @@ import { AuthenticationServiceUnderTest } from 'src/app/services/tests/Authentic
 import { fakeAsync } from '@angular/core/testing';
 
 describe('EmailVerified', () => {
+
     let guard: EmailVerified;
 
     let authService: AuthenticationService;

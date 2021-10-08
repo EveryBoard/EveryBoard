@@ -7,15 +7,15 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PentagoFailure } from './PentagoFailure';
 import { PentagoLegalityStatus } from './PentagoLegalityStatus';
 import { PentagoMove } from './PentagoMove';
-import { PentagoGameState } from './PentagoGameState';
+import { PentagoState } from './PentagoState';
 
 export abstract class PentagoNode extends MGPNode<PentagoRules,
                                                   PentagoMove,
-                                                  PentagoGameState,
+                                                  PentagoState,
                                                   PentagoLegalityStatus> {}
-export class PentagoRules extends Rules<PentagoMove, PentagoGameState, PentagoLegalityStatus> {
+export class PentagoRules extends Rules<PentagoMove, PentagoState, PentagoLegalityStatus> {
 
-    public static readonly singleton: PentagoRules = new PentagoRules(PentagoGameState);
+    public static readonly singleton: PentagoRules = new PentagoRules(PentagoState);
 
     public static VICTORY_SOURCE: [Coord, Vector, boolean][] = [
         // [ firstCoordToTest, directionToTest, shouldLookTheCaseBeforeAsWellAsCaseAfter]
@@ -41,14 +41,14 @@ export class PentagoRules extends Rules<PentagoMove, PentagoGameState, PentagoLe
         [new Coord(1, 4), new Vector(1, 0), true],
         [new Coord(1, 5), new Vector(1, 0), true],
     ];
-    public applyLegalMove(move: PentagoMove, slice: PentagoGameState, status: PentagoLegalityStatus): PentagoGameState {
-        return slice.applyLegalMove(move);
+    public applyLegalMove(move: PentagoMove, state: PentagoState, status: PentagoLegalityStatus): PentagoState {
+        return state.applyLegalMove(move);
     }
-    public isLegal(move: PentagoMove, slice: PentagoGameState): PentagoLegalityStatus {
-        if (slice.getPieceAt(move.coord) !== Player.NONE) {
+    public isLegal(move: PentagoMove, state: PentagoState): PentagoLegalityStatus {
+        if (state.getPieceAt(move.coord) !== Player.NONE) {
             return PentagoLegalityStatus.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
-        const postDropState: PentagoGameState = slice.applyLegalDrop(move);
+        const postDropState: PentagoState = state.applyLegalDrop(move);
         if (postDropState.neutralBlocks.length === 0) {
             if (move.blockTurned.isAbsent()) {
                 return PentagoLegalityStatus.failure(PentagoFailure.MUST_CHOOSE_BLOCK_TO_ROTATE());
@@ -63,16 +63,16 @@ export class PentagoRules extends Rules<PentagoMove, PentagoGameState, PentagoLe
         }
         return PentagoLegalityStatus.SUCCESS;
     }
-    public getVictoryCoords(state: PentagoGameState): Coord[] {
+    public getVictoryCoords(state: PentagoState): Coord[] {
         let victoryCoords: Coord[] = [];
         for (const maybeVictory of PentagoRules.VICTORY_SOURCE) {
-            const firstValue: number = state.getBoardAt(maybeVictory[0]);
+            const firstValue: Player = state.getPieceAt(maybeVictory[0]);
             const subVictory: Coord[] = [maybeVictory[0]];
-            if (firstValue !== Player.NONE.value) {
+            if (firstValue !== Player.NONE) {
                 let testedCoord: Coord = maybeVictory[0].getNext(maybeVictory[1]);
                 let fourAligned: boolean = true;
                 for (let i: number = 0; i < 3 && fourAligned; i++) {
-                    if (state.getBoardAt(testedCoord) !== firstValue) {
+                    if (state.getPieceAt(testedCoord) !== firstValue) {
                         fourAligned = false;
                     } else {
                         subVictory.push(testedCoord);
@@ -81,13 +81,13 @@ export class PentagoRules extends Rules<PentagoMove, PentagoGameState, PentagoLe
                 }
                 if (fourAligned) {
                     // check first alignement
-                    if (state.getBoardAt(testedCoord) === firstValue) {
+                    if (state.getPieceAt(testedCoord) === firstValue) {
                         subVictory.push(testedCoord);
                         victoryCoords = victoryCoords.concat(subVictory);
                     }
                     if (maybeVictory[2]) {
                         const coordZero: Coord = maybeVictory[0].getPrevious(maybeVictory[1], 1);
-                        if (state.getBoardAt(coordZero) === firstValue) {
+                        if (state.getPieceAt(coordZero) === firstValue) {
                             subVictory.push(coordZero);
                             victoryCoords = victoryCoords.concat(subVictory);
                         }
@@ -98,11 +98,11 @@ export class PentagoRules extends Rules<PentagoMove, PentagoGameState, PentagoLe
         return victoryCoords;
     }
     public getGameStatus(node: PentagoNode): GameStatus {
-        const state: PentagoGameState = node.gamePartSlice;
+        const state: PentagoState = node.gameState;
         const victoryCoords: Coord[] = this.getVictoryCoords(state);
         const victoryFound: [boolean, boolean] = [false, false];
         for (let i: number = 0; i < victoryCoords.length; i += 5) {
-            victoryFound[state.getBoardAt(victoryCoords[i])] = true;
+            victoryFound[state.getPieceAt(victoryCoords[i]).value] = true;
         }
         if (victoryFound[0] === true) {
             if (victoryFound[1] === true) {

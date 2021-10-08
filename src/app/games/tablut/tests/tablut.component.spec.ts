@@ -2,18 +2,20 @@ import { TablutComponent } from '../tablut.component';
 import { TablutMove } from 'src/app/games/tablut/TablutMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { TablutCase } from 'src/app/games/tablut/TablutCase';
-import { TablutPartSlice } from 'src/app/games/tablut/TablutPartSlice';
+import { TablutState } from 'src/app/games/tablut/TablutState';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { Table } from 'src/app/utils/ArrayUtils';
 
 describe('TablutComponent', () => {
+
     let componentTestUtils: ComponentTestUtils<TablutComponent>;
 
-    const _: number = TablutCase.UNOCCUPIED.value;
-    const x: number = TablutCase.INVADERS.value;
-    const i: number = TablutCase.DEFENDERS.value;
-    const A: number = TablutCase.PLAYER_ONE_KING.value;
+    const _: TablutCase = TablutCase.UNOCCUPIED;
+    const x: TablutCase = TablutCase.INVADERS;
+    const i: TablutCase = TablutCase.DEFENDERS;
+    const A: TablutCase = TablutCase.PLAYER_ONE_KING;
 
     beforeEach(fakeAsync(async() => {
         componentTestUtils = await ComponentTestUtils.forGame<TablutComponent>('Tablut');
@@ -23,7 +25,7 @@ describe('TablutComponent', () => {
         expect(componentTestUtils.getComponent()).withContext('Component should be created').toBeDefined();
     });
     it('Should cancel move when clicking on opponent piece', fakeAsync( async() => {
-        await componentTestUtils.expectClickFailure('#click_4_4', RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
+        await componentTestUtils.expectClickFailure('#click_4_4', RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
     }));
     it('Should cancel move when first click on empty case', fakeAsync( async() => {
         await componentTestUtils.expectClickFailure('#click_0_0', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
@@ -39,7 +41,7 @@ describe('TablutComponent', () => {
         expect(async() => await componentTestUtils.expectClickFailure('#click_4_1', message)).not.toThrow();
     }));
     it('Should show captured piece and left cases', fakeAsync(async() => {
-        const board: number[][] = [
+        const board: Table<TablutCase> = [
             [_, A, _, _, _, _, _, _, _],
             [_, x, x, _, _, _, _, _, _],
             [_, _, i, _, _, _, _, _, _],
@@ -50,8 +52,8 @@ describe('TablutComponent', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const initialSlice: TablutPartSlice = new TablutPartSlice(board, 1);
-        componentTestUtils.setupSlice(initialSlice);
+        const initialState: TablutState = new TablutState(board, 1);
+        componentTestUtils.setupState(initialState);
 
         await componentTestUtils.expectClickSuccess('#click_1_0');
         const move: TablutMove = new TablutMove(new Coord(1, 0), new Coord(2, 0));

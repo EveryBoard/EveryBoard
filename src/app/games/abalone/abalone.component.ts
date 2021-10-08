@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
-import { HexagonalGameComponent } from 'src/app/components/game-components/abstract-game-component/HexagonalGameComponent';
-import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { HexagonalGameComponent } from 'src/app/components/game-components/game-component/HexagonalGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { BaseDirection, Direction } from 'src/app/jscaip/Direction';
-import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
@@ -17,7 +15,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { AbaloneDummyMinimax } from './AbaloneDummyMinimax';
 import { AbaloneFailure } from './AbaloneFailure';
-import { AbaloneGameState } from './AbaloneGameState';
+import { AbaloneState } from './AbaloneState';
 import { AbaloneMove } from './AbaloneMove';
 import { AbaloneLegalityStatus, AbaloneRules } from './AbaloneRules';
 import { AbaloneTutorial } from './AbaloneTutorial';
@@ -34,16 +32,14 @@ export class HexaDirArrow {
 @Component({
     selector: 'app-abalone',
     templateUrl: './abalone.component.html',
-    styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.css'],
 })
-export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, AbaloneGameState, AbaloneLegalityStatus> {
-
-    public hexaLayout: HexaLayout;
-
-    public encoder: MoveEncoder<AbaloneMove> = AbaloneMove.encoder;
-
-    public tutorial: TutorialStep[] = new AbaloneTutorial().tutorial;
-
+export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
+                                                             AbaloneMove,
+                                                             AbaloneState,
+                                                             FourStatePiece,
+                                                             AbaloneLegalityStatus>
+{
     public moveds: Coord[] = [];
 
     public directions: HexaDirArrow[] = [];
@@ -52,18 +48,20 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
 
     public scores: [number, number] = [0, 0];
 
-    public PIECE_SIZE: number = 30;
-
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = new AbaloneRules(AbaloneGameState);
+        this.rules = new AbaloneRules(AbaloneState);
         this.availableMinimaxes = [
             new AbaloneDummyMinimax(this.rules, 'Dummy'),
         ];
+        this.encoder = AbaloneMove.encoder;
+        this.tutorial = new AbaloneTutorial().tutorial;
         this.showScore = true;
-        this.hexaLayout = new HexaLayout(this.PIECE_SIZE,
-                                         new Coord(- 8 * this.PIECE_SIZE, 2 * this.PIECE_SIZE),
+        this.CASE_SIZE = 30;
+        this.hexaLayout = new HexaLayout(this.CASE_SIZE,
+                                         new Coord(- 8 * this.CASE_SIZE, 2 * this.CASE_SIZE),
                                          PointyHexaOrientation.INSTANCE);
+
         this.updateBoard();
     }
     public updateBoard(): void {
@@ -72,8 +70,8 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
         if (this.rules.node.move != null) {
             this.showPreviousMove();
         }
-        this.board = this.rules.node.gamePartSlice.getCopiedBoard();
-        this.scores = this.rules.node.gamePartSlice.getScores();
+        this.hexaBoard = this.rules.node.gameState.getCopiedBoard();
+        this.scores = this.rules.node.gameState.getScores();
     }
     private hidePreviousMove(): void {
         this.moveds = [];
@@ -91,7 +89,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
         }
     }
     private showPushingMove(move: AbaloneMove): void {
-        const previousState: AbaloneGameState = this.rules.node.mother.gamePartSlice;
+        const previousState: AbaloneState = this.rules.node.mother.gameState;
         let moved: Coord = move.coord;
         this.moveds = [moved];
         moved = moved.getNext(move.dir);
@@ -119,9 +117,9 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        const ENEMY: number = this.rules.node.gamePartSlice.getCurrentEnnemy().value;
-        if (this.board[y][x] === ENEMY) {
-            return this.enemyClick(x, y);
+        const OPPONENT: Player = this.rules.node.gameState.getCurrentOpponent();
+        if (this.hexaBoard[y][x].is(OPPONENT)) {
+            return this.opponentClick(x, y);
         }
         if (this.selecteds.length === 0) {
             return this.firstClick(x, y);
@@ -131,12 +129,12 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
             return this.thirdClick(x, y);
         }
     }
-    private async enemyClick(x: number, y: number): Promise<MGPValidation> {
+    private async opponentClick(x: number, y: number): Promise<MGPValidation> {
         const directionValidity: MGPValidation = await this.tryChoosingDirection(x, y);
         if (directionValidity.isSuccess()) {
             return MGPValidation.SUCCESS;
         } else {
-            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
+            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         }
     }
     private async firstClick(x: number, y: number): Promise<MGPValidation> {
@@ -153,8 +151,8 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
         }
     }
     private showDirection(single: boolean): void {
-        const state: AbaloneGameState = this.rules.node.gamePartSlice;
-        const PLAYER: number = state.getCurrentPlayer().value;
+        const state: AbaloneState = this.rules.node.gameState;
+        const PLAYER: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentPlayer());
         const firstPiece: Coord = this.selecteds[0];
         const lastPiece: Coord = this.selecteds[this.selecteds.length - 1];
         for (const dir of HexaDirection.factory.all) {
@@ -202,11 +200,11 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
         const halfDy: number = (lastCenter.y - firstCenter.y) / 2;
         return new Coord(firstCenter.x + halfDx, firstCenter.y + halfDy);
     }
-    public isBoard(c: number): boolean {
-        return c !== FourStatePiece.NONE.value;
+    public isBoard(c: FourStatePiece): boolean {
+        return c !== FourStatePiece.NONE;
     }
-    public isPiece(c: number): boolean {
-        return c !== FourStatePiece.EMPTY.value;
+    public isPiece(c: FourStatePiece): boolean {
+        return c !== FourStatePiece.EMPTY;
     }
     private async secondClick(x: number, y: number): Promise<MGPValidation> {
         const firstPiece: Coord = this.selecteds[0];
@@ -230,8 +228,8 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
         }
         if (this.selecteds.length === 3) {
             const middle: Coord = this.selecteds[1];
-            const PLAYER: number = this.rules.node.gamePartSlice.getCurrentPlayer().value;
-            if (this.board[middle.y][middle.x] !== PLAYER) {
+            const PLAYER: Player = this.rules.node.gameState.getCurrentPlayer();
+            if (this.hexaBoard[middle.y][middle.x].is(PLAYER) === false) {
                 this.cancelMoveAttempt();
                 return this.firstClick(x, y);
             }
@@ -294,7 +292,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
         return this._chooseDirection(dir);
     }
     private async _chooseDirection(dir: HexaDirection): Promise<MGPValidation> {
-        const state: AbaloneGameState = this.rules.node.gamePartSlice;
+        const state: AbaloneState = this.rules.node.gameState;
         let move: AbaloneMove;
         const firstPiece: Coord = this.selecteds[0];
         if (this.selecteds.length === 1) {
@@ -331,7 +329,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
     }
     public getPieceClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
-        const player: Player = Player.of(this.board[y][x]);
+        const player: Player = Player.of(this.hexaBoard[y][x].value);
         const classes: string[] = [this.getPlayerClass(player)];
         if (this.selecteds.some((c: Coord) => c.equals(coord))) {
             classes.push('highlighted');

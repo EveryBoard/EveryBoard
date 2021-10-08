@@ -1,7 +1,7 @@
 import { TutorialGameWrapperComponent } from './tutorial-game-wrapper.component';
 import { TutorialStep } from './TutorialStep';
 import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
-import { QuartoPartSlice } from 'src/app/games/quarto/QuartoPartSlice';
+import { QuartoState } from 'src/app/games/quarto/QuartoState';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
@@ -11,31 +11,30 @@ import { TutorialFailure } from './TutorialFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Move } from 'src/app/jscaip/Move';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Rules } from 'src/app/jscaip/Rules';
 import { Direction } from 'src/app/jscaip/Direction';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
-import { AbstractGameComponent } from '../../game-components/abstract-game-component/AbstractGameComponent';
+import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 
 import { EpaminondasRules } from 'src/app/games/epaminondas/EpaminondasRules';
-import { EpaminondasPartSlice } from 'src/app/games/epaminondas/EpaminondasPartSlice';
+import { EpaminondasState } from 'src/app/games/epaminondas/EpaminondasState';
 import { EpaminondasTutorial } from '../../../games/epaminondas/EpaminondasTutorial';
 import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
 import { SaharaTutorial } from '../../../games/sahara/SaharaTutorial';
 import { SaharaRules } from 'src/app/games/sahara/SaharaRules';
-import { SaharaPartSlice } from 'src/app/games/sahara/SaharaPartSlice';
+import { SaharaState } from 'src/app/games/sahara/SaharaState';
 import { SaharaMove } from 'src/app/games/sahara/SaharaMove';
 import { SixMove } from 'src/app/games/six/SixMove';
 import { SixRules } from 'src/app/games/six/SixRules';
-import { SixGameState } from 'src/app/games/six/SixGameState';
+import { SixState } from 'src/app/games/six/SixState';
 import { SixTutorial, SixTutorialMessages } from '../../../games/six/SixTutorial';
 import { PentagoRules } from 'src/app/games/pentago/PentagoRules';
-import { PentagoGameState } from 'src/app/games/pentago/PentagoGameState';
+import { PentagoState } from 'src/app/games/pentago/PentagoState';
 import { PentagoTutorial } from 'src/app/games/pentago/PentagoTutorial';
 import { PentagoMove } from 'src/app/games/pentago/PentagoMove';
 import { YinshRules } from 'src/app/games/yinsh/YinshRules';
-import { YinshGameState } from 'src/app/games/yinsh/YinshGameState';
+import { YinshState } from 'src/app/games/yinsh/YinshState';
 import { YinshTutorial, YinshTutorialMessages } from 'src/app/games/yinsh/YinshTutorial';
 import { YinshCapture, YinshMove } from 'src/app/games/yinsh/YinshMove';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -44,12 +43,14 @@ import { PylosState } from 'src/app/games/pylos/PylosState';
 import { PylosTutorial } from 'src/app/games/pylos/PylosTutorial';
 import { PylosMove } from 'src/app/games/pylos/PylosMove';
 import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
+import { AbstractGameState } from 'src/app/jscaip/GameState';
 import { DvonnRules } from 'src/app/games/dvonn/DvonnRules';
 import { DvonnTutorial } from 'src/app/games/dvonn/DvonnTutorial';
 import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
-import { DvonnGameState } from 'src/app/games/dvonn/DvonnGameState';
+import { DvonnState } from 'src/app/games/dvonn/DvonnState';
 
 describe('TutorialGameWrapperComponent (wrapper)', () => {
+
     let componentTestUtils: ComponentTestUtils<QuartoComponent>;
     let wrapper: TutorialGameWrapperComponent;
 
@@ -66,17 +67,17 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
         });
         it('Should show informations bellow/beside the board', fakeAsync(async() => {
             // Given a certain TutorialStep
-            const slice: QuartoPartSlice = new QuartoPartSlice([
-                [0, 0, 0, 0],
-                [0, 1, 2, 3],
-                [0, 1, 2, 3],
-                [0, 1, 2, 3],
+            const state: QuartoState = new QuartoState([
+                [QuartoPiece.AAAA, QuartoPiece.AAAA, QuartoPiece.AAAA, QuartoPiece.AAAA],
+                [QuartoPiece.AAAA, QuartoPiece.AAAB, QuartoPiece.AABA, QuartoPiece.AABB],
+                [QuartoPiece.AAAA, QuartoPiece.AAAB, QuartoPiece.AABA, QuartoPiece.AABB],
+                [QuartoPiece.AAAA, QuartoPiece.AAAB, QuartoPiece.AABA, QuartoPiece.AABB],
             ], 0, QuartoPiece.BBAA);
             const tutorial: TutorialStep[] = [
                 TutorialStep.forClick(
                     'title',
                     'instruction',
-                    slice,
+                    state,
                     ['#click_0_0'],
                     'Bravo !',
                     'Perdu.',
@@ -89,24 +90,24 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const expectedMessage: string = 'instruction';
             const currentMessage: string = componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
-            const actualSlice: QuartoPartSlice =
-                componentTestUtils.getComponent().rules.node.gamePartSlice as QuartoPartSlice;
-            expect(actualSlice).toEqual(slice);
+            const actualState: QuartoState =
+                componentTestUtils.getComponent().rules.node.gameState as QuartoState;
+            expect(actualState).toEqual(state);
         }));
         it('Should show previousMove when set', fakeAsync(async() => {
             // Given a certain TutorialStep
-            const slice: QuartoPartSlice = new QuartoPartSlice([
-                [0, 0, 0, 0],
-                [0, 1, 2, 3],
-                [0, 1, 2, 3],
-                [0, 1, 2, 3],
+            const state: QuartoState = new QuartoState([
+                [QuartoPiece.AAAA, QuartoPiece.AAAA, QuartoPiece.AAAA, QuartoPiece.AAAA],
+                [QuartoPiece.AAAA, QuartoPiece.AAAB, QuartoPiece.AABA, QuartoPiece.AABB],
+                [QuartoPiece.AAAA, QuartoPiece.AAAB, QuartoPiece.AABA, QuartoPiece.AABB],
+                [QuartoPiece.AAAA, QuartoPiece.AAAB, QuartoPiece.AABA, QuartoPiece.AABB],
             ], 0, QuartoPiece.BBAA);
             const expectedPreviousMove: QuartoMove = new QuartoMove(1, 1, QuartoPiece.AAAB);
             const tutorial: TutorialStep[] = [
                 TutorialStep.forClick(
                     'title',
                     'instruction',
-                    slice,
+                    state,
                     ['#click_0_0'],
                     'Bravo !',
                     'Perdu.',
@@ -125,17 +126,17 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.informational(
                     'title 0',
                     'instruction',
-                    QuartoPartSlice.getInitialSlice(),
+                    QuartoState.getInitialState(),
                 ),
                 TutorialStep.informational(
                     'title 1',
                     'instruction',
-                    QuartoPartSlice.getInitialSlice(),
+                    QuartoState.getInitialState(),
                 ),
                 TutorialStep.informational(
                     'title 2',
                     'instruction',
-                    QuartoPartSlice.getInitialSlice(),
+                    QuartoState.getInitialState(),
                 ),
             ];
             // when page rendered
@@ -156,17 +157,17 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.informational(
                     'title 0',
                     'instruction 0',
-                    QuartoPartSlice.getInitialSlice(),
+                    QuartoState.getInitialState(),
                 ),
                 TutorialStep.informational(
                     'title 1',
                     'instruction 1',
-                    QuartoPartSlice.getInitialSlice(),
+                    QuartoState.getInitialState(),
                 ),
                 TutorialStep.informational(
                     'title 2',
                     'instruction 2',
-                    QuartoPartSlice.getInitialSlice(),
+                    QuartoState.getInitialState(),
                 ),
             ];
             wrapper.startTutorial(tutorial);
@@ -189,7 +190,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.fromMove(
                     'title',
                     'instruction',
-                    QuartoPartSlice.getInitialSlice(),
+                    QuartoState.getInitialState(),
                     [new QuartoMove(0, 0, QuartoPiece.BBBB)],
                     'Bravo !',
                     'Perdu.',
@@ -199,7 +200,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await componentTestUtils.expectClickSuccess('#choosePiece_8');
             tick(10);
             const move: QuartoMove = new QuartoMove(1, 1, QuartoPiece.BAAA);
-            await componentTestUtils.expectMoveSuccess('#chooseCoord_1_1', move, QuartoPartSlice.getInitialSlice());
+            await componentTestUtils.expectMoveSuccess('#chooseCoord_1_1', move, QuartoState.getInitialState());
             tick(10);
 
             // when clicking retry
@@ -209,8 +210,8 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const currentMessage: string =
                 componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe('instruction');
-            expect(componentTestUtils.getComponent().rules.node.gamePartSlice)
-                .toEqual(QuartoPartSlice.getInitialSlice());
+            expect(componentTestUtils.getComponent().rules.node.gameState)
+                .toEqual(QuartoState.getInitialState());
         }));
         it('Should start step again after clicking "retry" on step success', fakeAsync(async() => {
             // Given any TutorialStep
@@ -218,7 +219,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.fromMove(
                     'title',
                     'instruction',
-                    QuartoPartSlice.getInitialSlice(),
+                    QuartoState.getInitialState(),
                     [new QuartoMove(0, 0, QuartoPiece.BBBB)],
                     'Bravo !',
                     'Perdu.',
@@ -229,7 +230,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await componentTestUtils.expectClickSuccess('#choosePiece_15');
             tick(10);
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
-            await componentTestUtils.expectMoveSuccess('#chooseCoord_0_0', move, QuartoPartSlice.getInitialSlice());
+            await componentTestUtils.expectMoveSuccess('#chooseCoord_0_0', move, QuartoState.getInitialState());
             tick(10);
             await componentTestUtils.clickElement('#retryButton');
 
@@ -237,8 +238,8 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const currentMessage: string =
                 componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe('instruction');
-            expect(componentTestUtils.getComponent().rules.node.gamePartSlice)
-                .toEqual(QuartoPartSlice.getInitialSlice());
+            expect(componentTestUtils.getComponent().rules.node.gameState)
+                .toEqual(QuartoState.getInitialState());
         }));
         it('Should forbid clicking again on the board after success', fakeAsync(async() => {
             // Given a TutorialStep on which a valid move has been done.
@@ -246,7 +247,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.fromMove(
                     'title',
                     'Put your piece in a corner and give the opposite one.',
-                    QuartoPartSlice.getInitialSlice(),
+                    QuartoState.getInitialState(),
                     [
                         new QuartoMove(0, 0, QuartoPiece.BBBB),
                         new QuartoMove(0, 3, QuartoPiece.BBBB),
@@ -262,7 +263,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await componentTestUtils.expectClickSuccess('#chooseCoord_0_0');
             tick(10);
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
-            await componentTestUtils.expectMoveSuccess('#choosePiece_15', move, QuartoPartSlice.getInitialSlice());
+            await componentTestUtils.expectMoveSuccess('#choosePiece_15', move, QuartoState.getInitialState());
             tick(10);
 
             // when clicking again
@@ -281,7 +282,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.forClick(
                     'title',
                     'instruction',
-                    QuartoPartSlice.getInitialSlice(),
+                    QuartoState.getInitialState(),
                     ['#choosePiece_15'],
                     'Bravo !',
                     'Perdu.',
@@ -297,8 +298,8 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const currentMessage: string =
                 componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe('Bravo !');
-            expect(componentTestUtils.getComponent().rules.node.gamePartSlice)
-                .toEqual(QuartoPartSlice.getInitialSlice());
+            expect(componentTestUtils.getComponent().rules.node.gameState)
+                .toEqual(QuartoState.getInitialState());
         }));
         // /////////////////////// Next /////////////////////////////////////////////////////////
         it('Should allow to skip step', fakeAsync(async() => {
@@ -307,7 +308,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.forClick(
                     'title',
                     'Explanation Explanation Explanation.',
-                    QuartoPartSlice.getInitialSlice(),
+                    QuartoState.getInitialState(),
                     ['chooseCoord_0_0'],
                     'Bravo !',
                     'Perdu.',
@@ -315,7 +316,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.forClick(
                     'title',
                     'Following Following Following.',
-                    QuartoPartSlice.getInitialSlice(),
+                    QuartoState.getInitialState(),
                     ['#chooseCoord_0_0'],
                     'Fini.',
                     'Reperdu.',
@@ -337,7 +338,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.forClick(
                     'title 0',
                     'instruction 0',
-                    QuartoPartSlice.getInitialSlice(),
+                    QuartoState.getInitialState(),
                     ['#chooseCoord_0_0'],
                     'Bravo !',
                     'Perdu.',
@@ -345,7 +346,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.forClick(
                     'title 1',
                     'instruction 1',
-                    QuartoPartSlice.getInitialSlice(),
+                    QuartoState.getInitialState(),
                     ['#chooseCoord_1_1'],
                     'Bravo !',
                     'Perdu.',
@@ -353,7 +354,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.forClick(
                     'title 2',
                     'instruction 2',
-                    QuartoPartSlice.getInitialSlice(),
+                    QuartoState.getInitialState(),
                     ['#chooseCoord_2_2'],
                     'Bravo !',
                     'Perdu.',
@@ -379,7 +380,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.forClick(
                     'title 0',
                     'instruction 0',
-                    QuartoPartSlice.getInitialSlice(),
+                    QuartoState.getInitialState(),
                     ['#chooseCoord_0_0'],
                     'Bravo !',
                     'Perdu.',
@@ -387,7 +388,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.forClick(
                     'title 1',
                     'instruction 1',
-                    QuartoPartSlice.getInitialSlice(),
+                    QuartoState.getInitialState(),
                     ['#chooseCoord_1_1'],
                     'Bravo !',
                     'Perdu.',
@@ -395,7 +396,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.forClick(
                     'title 2',
                     'instruction 2',
-                    QuartoPartSlice.getInitialSlice(),
+                    QuartoState.getInitialState(),
                     ['#chooseCoord_2_2'],
                     'Bravo !',
                     'Perdu.',
@@ -422,7 +423,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.forClick(
                     'title 0',
                     'instruction 0',
-                    QuartoPartSlice.getInitialSlice(),
+                    QuartoState.getInitialState(),
                     ['#chooseCoord_0_0'],
                     'Bravo !',
                     'Perdu.',
@@ -454,7 +455,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.informational(
                     'title 0',
                     'instruction 0',
-                    QuartoPartSlice.getInitialSlice(),
+                    QuartoState.getInitialState(),
                 ),
             ]);
             await componentTestUtils.clickElement('#nextButton');
@@ -475,7 +476,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.informational(
                     'title 0',
                     'instruction 0',
-                    QuartoPartSlice.getInitialSlice(),
+                    QuartoState.getInitialState(),
                 ),
             ]);
             componentTestUtils.expectElementNotToExist('#playLocallyButton');
@@ -494,7 +495,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.informational(
                     'title 0',
                     'instruction 0',
-                    QuartoPartSlice.getInitialSlice(),
+                    QuartoState.getInitialState(),
                 ),
             ]);
             componentTestUtils.expectElementNotToExist('#playOnlineButton');
@@ -519,7 +520,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.fromMove(
                     'title',
                     'Put your piece in a corner and give the opposite one.',
-                    QuartoPartSlice.getInitialSlice(),
+                    QuartoState.getInitialState(),
                     [
                         new QuartoMove(0, 0, QuartoPiece.BBBB),
                         new QuartoMove(0, 3, QuartoPiece.BBBB),
@@ -545,7 +546,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.fromMove(
                     'title',
                     'Put your piece in a corner and give the opposite one.',
-                    QuartoPartSlice.getInitialSlice(),
+                    QuartoState.getInitialState(),
                     [
                         new QuartoMove(0, 0, QuartoPiece.BBBB),
                         new QuartoMove(0, 3, QuartoPiece.BBBB),
@@ -562,7 +563,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await componentTestUtils.expectClickSuccess('#chooseCoord_0_0');
             tick(10);
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
-            await componentTestUtils.expectMoveSuccess('#choosePiece_15', move, QuartoPartSlice.getInitialSlice());
+            await componentTestUtils.expectMoveSuccess('#choosePiece_15', move, QuartoState.getInitialState());
             tick(10);
 
             // expect to see steps success message on component
@@ -577,7 +578,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.fromMove(
                     'title',
                     'Put your piece in a corner and give the opposite one.',
-                    QuartoPartSlice.getInitialSlice(),
+                    QuartoState.getInitialState(),
                     [
                         new QuartoMove(0, 0, QuartoPiece.BBBB),
                         new QuartoMove(0, 3, QuartoPiece.BBBB),
@@ -594,7 +595,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await componentTestUtils.expectClickSuccess('#chooseCoord_1_1');
             tick(10);
             const move: QuartoMove = new QuartoMove(1, 1, QuartoPiece.BBBB);
-            await componentTestUtils.expectMoveSuccess('#choosePiece_15', move, QuartoPartSlice.getInitialSlice());
+            await componentTestUtils.expectMoveSuccess('#choosePiece_15', move, QuartoState.getInitialState());
             tick(10);
 
             // expect to see steps success message on component
@@ -609,7 +610,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.anyMove(
                     'title',
                     'instruction',
-                    QuartoPartSlice.getInitialSlice(),
+                    QuartoState.getInitialState(),
                     new QuartoMove(0, 0, QuartoPiece.BABA),
                     'Bravo !',
                 ),
@@ -637,11 +638,11 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.fromMove(
                     'title 0',
                     'instruction 0.',
-                    new QuartoPartSlice([
-                        [0, 16, 16, 16],
-                        [16, 16, 16, 16],
-                        [16, 16, 16, 16],
-                        [16, 16, 16, 16],
+                    new QuartoState([
+                        [QuartoPiece.AAAA, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
+                        [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
+                        [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
+                        [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
                     ], 0, QuartoPiece.ABBA),
                     [new QuartoMove(3, 3, QuartoPiece.BBBB)],
                     'Bravo !',
@@ -672,11 +673,11 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.fromMove(
                     'title 0',
                     'instruction 0.',
-                    new QuartoPartSlice([
-                        [0, 16, 16, 16],
-                        [16, 16, 16, 16],
-                        [16, 16, 16, 16],
-                        [16, 16, 16, 16],
+                    new QuartoState([
+                        [QuartoPiece.AAAA, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
+                        [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
+                        [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
+                        [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
                     ], stepInitialTurn, QuartoPiece.ABBA),
                     [awaitedMove],
                     'Bravo !',
@@ -698,7 +699,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
 
             // Expect the first awaited move to have been done
             expect(componentTestUtils.getComponent().rules.node.move).toEqual(awaitedMove);
-            expect(componentTestUtils.getComponent().rules.node.gamePartSlice.turn).toEqual(stepInitialTurn + 1);
+            expect(componentTestUtils.getComponent().rules.node.gameState.turn).toEqual(stepInitialTurn + 1);
             // expect 'solution' message to be shown
             const currentMessage: string =
                 componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
@@ -715,7 +716,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.anyMove(
                     'title',
                     'instruction',
-                    QuartoPartSlice.getInitialSlice(),
+                    QuartoState.getInitialState(),
                     new QuartoMove(0, 0, QuartoPiece.BABA),
                     'Bravo !',
                 ),
@@ -726,7 +727,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await componentTestUtils.expectClickSuccess('#chooseCoord_0_0');
             tick(10);
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
-            await componentTestUtils.expectMoveSuccess('#choosePiece_15', move, QuartoPartSlice.getInitialSlice());
+            await componentTestUtils.expectMoveSuccess('#choosePiece_15', move, QuartoState.getInitialState());
             tick(10);
 
             // expect to see steps success message on component
@@ -743,7 +744,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.forClick(
                     'title',
                     'Click on (0, 0) or (3, 3)',
-                    QuartoPartSlice.getInitialSlice(),
+                    QuartoState.getInitialState(),
                     ['#chooseCoord_0_0', '#chooseCoord_3_3'],
                     'Bravo !',
                     'Perdu.',
@@ -766,7 +767,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.forClick(
                     'title',
                     'Click on (0, 0) or (3, 3)',
-                    QuartoPartSlice.getInitialSlice(),
+                    QuartoState.getInitialState(),
                     ['#chooseCoord_0_0', '#chooseCoord_3_3'],
                     'Bravo !',
                     'Perdu.',
@@ -789,11 +790,11 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.forClick(
                     'title 0',
                     'instruction 0.',
-                    new QuartoPartSlice([
-                        [0, 16, 16, 16],
-                        [16, 16, 16, 16],
-                        [16, 16, 16, 16],
-                        [16, 16, 16, 16],
+                    new QuartoState([
+                        [QuartoPiece.AAAA, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
+                        [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
+                        [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
+                        [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
                     ], 0, QuartoPiece.ABBA),
                     ['#chooseCoord_3_3'],
                     'Bravo !',
@@ -824,7 +825,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.informational(
                     'title 0',
                     'instruction 0',
-                    QuartoPartSlice.getInitialSlice(),
+                    QuartoState.getInitialState(),
                 ),
             ];
             wrapper.startTutorial(tutorial);
@@ -844,12 +845,12 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.informational(
                     'title',
                     'Explanation Explanation Explanation.',
-                    QuartoPartSlice.getInitialSlice(),
+                    QuartoState.getInitialState(),
                 ),
                 TutorialStep.informational(
                     'title',
                     'Suite suite.',
-                    QuartoPartSlice.getInitialSlice(),
+                    QuartoState.getInitialState(),
                 ),
             ];
             wrapper.startTutorial(tutorial);
@@ -874,9 +875,9 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.fromPredicate(
                     'title',
                     'You shall not pass',
-                    QuartoPartSlice.getInitialSlice(),
+                    QuartoState.getInitialState(),
                     new QuartoMove(1, 1, QuartoPiece.BAAB),
-                    (_move: QuartoMove, _resultingState: QuartoPartSlice) => {
+                    (_move: QuartoMove, _resultingState: QuartoState) => {
                         return MGPValidation.failure('chocolatine');
                     },
                     'Bravo !',
@@ -888,7 +889,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await componentTestUtils.expectClickSuccess('#chooseCoord_0_0');
             tick(10);
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
-            await componentTestUtils.expectMoveSuccess('#choosePiece_15', move, QuartoPartSlice.getInitialSlice());
+            await componentTestUtils.expectMoveSuccess('#choosePiece_15', move, QuartoState.getInitialState());
             tick(10);
 
             // expect to see steps success message on component
@@ -903,9 +904,9 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.fromPredicate(
                     'title',
                     'No matter what you do, it will be success!',
-                    QuartoPartSlice.getInitialSlice(),
+                    QuartoState.getInitialState(),
                     new QuartoMove(1, 1, QuartoPiece.BAAB),
-                    (_move: QuartoMove, _resultingState: QuartoPartSlice) => {
+                    (_move: QuartoMove, _resultingState: QuartoState) => {
                         return MGPValidation.SUCCESS;
                     },
                     'Bravo !',
@@ -917,7 +918,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await componentTestUtils.expectClickSuccess('#chooseCoord_0_0');
             tick(10);
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
-            await componentTestUtils.expectMoveSuccess('#choosePiece_15', move, QuartoPartSlice.getInitialSlice());
+            await componentTestUtils.expectMoveSuccess('#choosePiece_15', move, QuartoState.getInitialState());
             tick(10);
 
             // expect to see steps success message on component
@@ -935,9 +936,9 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 TutorialStep.fromPredicate(
                     'title',
                     'You will have to ask me for solution anyway',
-                    QuartoPartSlice.getInitialSlice(),
+                    QuartoState.getInitialState(),
                     solutionMove,
-                    (_move: QuartoMove, _resultingState: QuartoPartSlice) => {
+                    (_move: QuartoMove, _resultingState: QuartoState) => {
                         return MGPValidation.failure('what did I say ?');
                     },
                     'Bravo !',
@@ -947,7 +948,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await componentTestUtils.expectClickSuccess('#chooseCoord_0_0');
             tick(10);
             const proposedMove: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
-            await componentTestUtils.expectMoveSuccess('#choosePiece_15', proposedMove, QuartoPartSlice.getInitialSlice());
+            await componentTestUtils.expectMoveSuccess('#choosePiece_15', proposedMove, QuartoState.getInitialState());
             tick(10);
 
             // When clicking "Show Solution"
@@ -955,7 +956,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
 
             // Expect the step proposed move to have been done
             expect(componentTestUtils.getComponent().rules.node.move).toEqual(solutionMove);
-            expect(componentTestUtils.getComponent().rules.node.gamePartSlice.turn).toEqual(1);
+            expect(componentTestUtils.getComponent().rules.node.gameState.turn).toEqual(1);
             // expect 'solution' message to be shown
             const currentMessage: string =
                 componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
@@ -973,34 +974,34 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const saharaTutorial: TutorialStep[] = new SaharaTutorial().tutorial;
             const sixTutorial: TutorialStep[] = new SixTutorial().tutorial;
             const yinshTutorial: TutorialStep[] = new YinshTutorial().tutorial;
-            const stepExpectations: [Rules<Move, GamePartSlice>, TutorialStep, Move, MGPValidation][] = [
+            const stepExpectations: [Rules<Move, AbstractGameState>, TutorialStep, Move, MGPValidation][] = [
                 [
-                    new DvonnRules(DvonnGameState),
+                    new DvonnRules(DvonnState),
                     dvonnTutorial[1],
                     DvonnMove.of(new Coord(2, 1), new Coord(3, 0)),
                     MGPValidation.failure(`You have successfully disconnected the stack of 4 pieces of your opponent, but on the next move your opponent will be able to move on your new stack, and to win the game! There exists a better outcome of this situation, try to find it.`),
                 ], [
-                    new DvonnRules(DvonnGameState),
+                    new DvonnRules(DvonnState),
                     dvonnTutorial[2],
                     DvonnMove.of(new Coord(2, 1), new Coord(1, 1)),
                     MGPValidation.failure($localize`You have not taken possession of a source, try again.`),
                 ], [
-                    new EpaminondasRules(EpaminondasPartSlice),
+                    new EpaminondasRules(EpaminondasState),
                     epaminondasTutorial[3],
                     new EpaminondasMove(0, 11, 2, 1, Direction.UP),
                     MGPValidation.failure(`Congratulations, you are in advance. But this is not the exercise here, try again.`),
                 ], [
-                    new EpaminondasRules(EpaminondasPartSlice),
+                    new EpaminondasRules(EpaminondasState),
                     epaminondasTutorial[4],
                     new EpaminondasMove(0, 10, 1, 1, Direction.UP),
                     MGPValidation.failure(`Failed! You moved only one piece.`),
                 ], [
-                    new PentagoRules(PentagoGameState),
+                    new PentagoRules(PentagoState),
                     pentagoTutorial[2],
                     PentagoMove.withRotation(0, 0, 0, true),
                     MGPValidation.failure($localize`You have made a move with a rotation. This tutorial step is about moves without rotations!`),
                 ], [
-                    new PentagoRules(PentagoGameState),
+                    new PentagoRules(PentagoState),
                     pentagoTutorial[3],
                     PentagoMove.rotationless(0, 0),
                     MGPValidation.failure($localize`You made a move without rotation, try again!`),
@@ -1015,47 +1016,47 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     PylosMove.fromDrop(new PylosCoord(0, 1, 0), [new PylosCoord(0, 0, 0)]),
                     MGPValidation.failure(`Failed, you only captured one piece.`),
                 ], [
-                    new SaharaRules(SaharaPartSlice),
+                    new SaharaRules(SaharaState),
                     saharaTutorial[2],
                     new SaharaMove(new Coord(7, 0), new Coord(5, 0)),
                     MGPValidation.failure(`You have made a double step, which is good but it is the next exercise!`),
                 ], [
-                    new SaharaRules(SaharaPartSlice),
+                    new SaharaRules(SaharaState),
                     saharaTutorial[3],
                     new SaharaMove(new Coord(2, 0), new Coord(2, 1)),
                     MGPValidation.failure(`Failed! You have made a single step.`),
                 ], [
-                    new SixRules(SixGameState),
+                    new SixRules(SixState),
                     sixTutorial[4],
                     SixMove.fromDeplacement(new Coord(6, 1), new Coord(7, 1)),
                     MGPValidation.failure(SixTutorialMessages.MOVEMENT_NOT_DISCONNECTING()),
                 ], [
-                    new SixRules(SixGameState),
+                    new SixRules(SixState),
                     sixTutorial[4],
                     SixMove.fromDeplacement(new Coord(6, 1), new Coord(6, 0)),
                     MGPValidation.failure(SixTutorialMessages.MOVEMENT_SELF_DISCONNECTING()),
                 ], [
-                    new SixRules(SixGameState),
+                    new SixRules(SixState),
                     sixTutorial[5],
                     SixMove.fromDeplacement(new Coord(0, 6), new Coord(1, 6)),
                     MGPValidation.failure(`This move does not disconnect your opponent's pieces. Try again with another piece.`),
                 ], [
-                    new SixRules(SixGameState),
+                    new SixRules(SixState),
                     sixTutorial[6],
                     SixMove.fromDeplacement(new Coord(2, 3), new Coord(3, 3)),
                     MGPValidation.failure(`This move has not cut the board in two equal halves.`),
                 ], [
-                    new SixRules(SixGameState),
+                    new SixRules(SixState),
                     sixTutorial[6],
                     SixMove.fromCut(new Coord(2, 3), new Coord(1, 3), new Coord(3, 2)),
                     MGPValidation.failure(`Failed. You did cut the board in two but you kept the half where you're in minority. Therefore, you lost! Try again.`),
                 ], [
-                    new YinshRules(YinshGameState),
+                    new YinshRules(YinshState),
                     yinshTutorial[3],
                     new YinshMove([], new Coord(4, 4), MGPOptional.of(new Coord(1, 4)), []),
                     MGPValidation.failure(YinshTutorialMessages.MUST_ALIGN_FIVE()),
                 ], [
-                    new YinshRules(YinshGameState),
+                    new YinshRules(YinshState),
                     yinshTutorial[4],
                     new YinshMove([YinshCapture.of(new Coord(5, 4), new Coord(5, 8), new Coord(3, 2))],
                                   new Coord(4, 1), MGPOptional.of(new Coord(6, 1)),
@@ -1064,13 +1065,13 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 ],
             ];
             for (const stepExpectation of stepExpectations) {
-                const rules: Rules<Move, GamePartSlice> = stepExpectation[0];
+                const rules: Rules<Move, AbstractGameState> = stepExpectation[0];
                 const step: TutorialStep = stepExpectation[1];
                 const move: Move = stepExpectation[2];
                 const validation: MGPValidation = stepExpectation[3];
                 const status: LegalityStatus = rules.isLegal(move, step.state);
                 expect(status.legal.reason).toBeNull();
-                const state: GamePartSlice = rules.applyLegalMove(move, step.state, status);
+                const state: AbstractGameState = rules.applyLegalMove(move, step.state, status);
                 expect(step.predicate(move, state)).toEqual(validation);
             }
         }));
@@ -1079,16 +1080,17 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 if (gameInfo.display === false) {
                     continue;
                 }
-                const gameComponent: AbstractGameComponent<Move, GamePartSlice> =
+                const gameComponent: AbstractGameComponent =
                     TestBed.createComponent(gameInfo.component).debugElement.componentInstance;
-                const rules: Rules<Move, GamePartSlice> = gameComponent.rules;
+                const rules: Rules<Move, AbstractGameState> = gameComponent.rules;
                 const steps: TutorialStep[] = gameComponent.tutorial;
                 for (const step of steps) {
                     if (step.solutionMove != null) {
                         const status: LegalityStatus = rules.isLegal(step.solutionMove, step.state);
                         expect(status.legal.reason).toBeNull();
                         if (step.isPredicate()) {
-                            const state: GamePartSlice = rules.applyLegalMove(step.solutionMove, step.state, status);
+                            const state: AbstractGameState =
+                                rules.applyLegalMove(step.solutionMove, step.state, status);
                             expect(step.predicate(step.solutionMove, state)).toEqual(MGPValidation.SUCCESS);
                         }
                     }

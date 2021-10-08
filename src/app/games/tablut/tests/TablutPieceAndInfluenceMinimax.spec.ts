@@ -1,13 +1,13 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
-import { NumberTable } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { expectSecondStateToBeBetterThanFirst } from 'src/app/utils/tests/TestUtils.spec';
 import { TablutCase } from '../TablutCase';
 import { TablutMove } from '../TablutMove';
-import { TablutPartSlice } from '../TablutPartSlice';
+import { TablutState } from '../TablutState';
 import { TablutPieceAndInfluenceMinimax } from '../TablutPieceAndInfluenceMinimax';
 import { SandwichThreat } from '../../../jscaip/PieceThreat';
 import { TablutRules } from '../TablutRules';
@@ -15,17 +15,17 @@ import { TablutRules } from '../TablutRules';
 describe('TablutPieceAndInfluenceMinimax', () => {
 
     let minimax: TablutPieceAndInfluenceMinimax;
-    const _: number = TablutCase.UNOCCUPIED.value;
-    const O: number = TablutCase.INVADERS.value;
-    const X: number = TablutCase.DEFENDERS.value;
-    const T: number = TablutCase.PLAYER_ONE_KING.value;
+    const _: TablutCase = TablutCase.UNOCCUPIED;
+    const O: TablutCase = TablutCase.INVADERS;
+    const X: TablutCase = TablutCase.DEFENDERS;
+    const T: TablutCase = TablutCase.PLAYER_ONE_KING;
 
     beforeEach(() => {
-        const rules: TablutRules = new TablutRules(TablutPartSlice);
+        const rules: TablutRules = new TablutRules(TablutState);
         minimax = new TablutPieceAndInfluenceMinimax(rules, 'TablutPieceAndInfluenceMinimax');
     });
     it('Should be better of with more piece', () => {
-        const weakBoard: NumberTable = [
+        const weakBoard: Table<TablutCase> = [
             [_, _, _, _, _, _, _, _, _],
             [_, _, O, T, O, _, _, _, _],
             [_, _, _, O, _, _, _, _, _],
@@ -36,8 +36,8 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const weakState: TablutPartSlice = new TablutPartSlice(weakBoard, 0);
-        const strongBoard: NumberTable = [
+        const weakState: TablutState = new TablutState(weakBoard, 0);
+        const strongBoard: Table<TablutCase> = [
             [_, _, _, _, _, _, _, _, _],
             [_, _, O, T, O, _, X, _, _],
             [_, _, _, O, _, _, _, _, _],
@@ -48,11 +48,11 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const strongState: TablutPartSlice = new TablutPartSlice(strongBoard, 0);
+        const strongState: TablutState = new TablutState(strongBoard, 0);
         expectSecondStateToBeBetterThanFirst(weakState, null, strongState, null, minimax);
     });
     it('Should be better of with more influence (at piece number equal)', () => {
-        const weakBoard: NumberTable = [
+        const weakBoard: Table<TablutCase> = [
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, O, _, _, _, _],
@@ -63,8 +63,8 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const weakState: TablutPartSlice = new TablutPartSlice(weakBoard, 0);
-        const strongBoard: NumberTable = [
+        const weakState: TablutState = new TablutState(weakBoard, 0);
+        const strongBoard: Table<TablutCase> = [
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, O, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
@@ -75,11 +75,11 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, O, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const strongState: TablutPartSlice = new TablutPartSlice(strongBoard, 0);
+        const strongState: TablutState = new TablutState(strongBoard, 0);
         expectSecondStateToBeBetterThanFirst(weakState, null, strongState, null, minimax);
     });
     it('Should be better of with non threatened piece (at piece number equal)', () => {
-        const weakBoard: NumberTable = [
+        const weakBoard: Table<TablutCase> = [
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
             [O, _, _, X, O, _, _, _, _],
@@ -90,8 +90,8 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const weakState: TablutPartSlice = new TablutPartSlice(weakBoard, 0);
-        const strongBoard: NumberTable = [
+        const weakState: TablutState = new TablutState(weakBoard, 0);
+        const strongBoard: Table<TablutCase> = [
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
             [O, _, X, _, O, _, _, _, _],
@@ -102,11 +102,11 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const strongState: TablutPartSlice = new TablutPartSlice(strongBoard, 0);
+        const strongState: TablutState = new TablutState(strongBoard, 0);
         expectSecondStateToBeBetterThanFirst(weakState, null, strongState, null, minimax);
     });
     it('Should be better of with non threatened piece (at piece number equal) (opposite one)', () => {
-        const weakBoard: NumberTable = [
+        const weakBoard: Table<TablutCase> = [
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
             [X, _, O, _, X, _, _, _, _],
@@ -117,8 +117,8 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const weakState: TablutPartSlice = new TablutPartSlice(weakBoard, 0);
-        const strongBoard: NumberTable = [
+        const weakState: TablutState = new TablutState(weakBoard, 0);
+        const strongBoard: Table<TablutCase> = [
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
             [X, _, _, O, X, _, _, _, _],
@@ -129,11 +129,11 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const strongState: TablutPartSlice = new TablutPartSlice(strongBoard, 0);
+        const strongState: TablutState = new TablutState(strongBoard, 0);
         expectSecondStateToBeBetterThanFirst(weakState, null, strongState, null, minimax);
     });
     it('Should be better of with more kill than influence', () => {
-        const weakBoard: NumberTable = [
+        const weakBoard: Table<TablutCase> = [
             [_, _, _, _, _, _, _, _, _],
             [O, _, _, _, _, _, _, _, _],
             [_, X, X, _, _, _, _, _, _],
@@ -144,8 +144,8 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const weakState: TablutPartSlice = new TablutPartSlice(weakBoard, 0);
-        const strongBoard: NumberTable = [
+        const weakState: TablutState = new TablutState(weakBoard, 0);
+        const strongBoard: Table<TablutCase> = [
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
             [X, _, X, _, _, _, _, _, _],
@@ -156,12 +156,12 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const strongState: TablutPartSlice = new TablutPartSlice(strongBoard, 0);
+        const strongState: TablutState = new TablutState(strongBoard, 0);
         expectSecondStateToBeBetterThanFirst(weakState, null, strongState, null, minimax);
     });
     describe('isThreatened', () => {
         it('should now that empty thrones are threats', () => {
-            const board: NumberTable = [
+            const board: Table<TablutCase> = [
                 [_, _, _, _, _, _, _, _, _],
                 [X, _, _, _, _, _, _, _, _],
                 [_, _, O, _, _, _, _, _, _],
@@ -172,14 +172,14 @@ describe('TablutPieceAndInfluenceMinimax', () => {
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
             ];
-            const state: TablutPartSlice = new TablutPartSlice(board, 0);
+            const state: TablutState = new TablutState(board, 0);
             const pieces: MGPMap<Player, MGPSet<Coord>> = minimax.getPiecesMap(state);
             const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.getThreatMap(state, pieces);
             const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.filterThreatMap(threatMap, state);
             expect(filteredThreatMap.containsKey(new Coord(0, 1))).toBeTrue();
         });
         it('should see threats coming straight', () => {
-            const board: NumberTable = [
+            const board: Table<TablutCase> = [
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
                 [X, _, _, _, _, _, _, _, _],
@@ -190,14 +190,14 @@ describe('TablutPieceAndInfluenceMinimax', () => {
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
             ];
-            const state: TablutPartSlice = new TablutPartSlice(board, 0);
+            const state: TablutState = new TablutState(board, 0);
             const pieces: MGPMap<Player, MGPSet<Coord>> = minimax.getPiecesMap(state);
             const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.getThreatMap(state, pieces);
             const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.filterThreatMap(threatMap, state);
             expect(filteredThreatMap.containsKey(new Coord(0, 4))).toBeTrue();
         });
         it('should see threats coming sideways', () => {
-            const board: NumberTable = [
+            const board: Table<TablutCase> = [
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
@@ -208,14 +208,14 @@ describe('TablutPieceAndInfluenceMinimax', () => {
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
             ];
-            const state: TablutPartSlice = new TablutPartSlice(board, 0);
+            const state: TablutState = new TablutState(board, 0);
             const pieces: MGPMap<Player, MGPSet<Coord>> = minimax.getPiecesMap(state);
             const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.getThreatMap(state, pieces);
             const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.filterThreatMap(threatMap, state);
             expect(filteredThreatMap.containsKey(new Coord(0, 4))).toBeTrue();
         });
         it('should not consider king threatened by one piece only', () => {
-            const board: NumberTable = [
+            const board: Table<TablutCase> = [
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
@@ -226,14 +226,14 @@ describe('TablutPieceAndInfluenceMinimax', () => {
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
             ];
-            const state: TablutPartSlice = new TablutPartSlice(board, 0);
+            const state: TablutState = new TablutState(board, 0);
             const pieces: MGPMap<Player, MGPSet<Coord>> = minimax.getPiecesMap(state);
             const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.getThreatMap(state, pieces);
             const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.filterThreatMap(threatMap, state);
             expect(filteredThreatMap.containsKey(new Coord(3, 4))).toBeFalse();
         });
         it('should not consider opponent-threatened piece as threats', () => {
-            const board: NumberTable = [
+            const board: Table<TablutCase> = [
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, X, _, _, _, _],
@@ -244,7 +244,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
             ];
-            const state: TablutPartSlice = new TablutPartSlice(board, 1);
+            const state: TablutState = new TablutState(board, 1);
             const pieces: MGPMap<Player, MGPSet<Coord>> = minimax.getPiecesMap(state);
             const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.getThreatMap(state, pieces);
             const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.filterThreatMap(threatMap, state);
@@ -257,7 +257,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             expect(filteredThreatMap.equals(expectedMap)).toBeTrue();
         });
         it('should not consider ensandwiched piece as threats', () => {
-            const board: NumberTable = [
+            const board: Table<TablutCase> = [
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
@@ -268,7 +268,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
             ];
-            const state: TablutPartSlice = new TablutPartSlice(board, 0);
+            const state: TablutState = new TablutState(board, 0);
             const pieces: MGPMap<Player, MGPSet<Coord>> = minimax.getPiecesMap(state);
             const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.getThreatMap(state, pieces);
             const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.filterThreatMap(threatMap, state);
@@ -277,7 +277,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
     });
     describe('Victory', () => {
         it('Should choose king escape, at depth 1 and more', () => {
-            const board: NumberTable = [
+            const board: Table<TablutCase> = [
                 [_, T, _, _, _, _, _, O, _],
                 [_, O, _, O, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
@@ -288,8 +288,8 @@ describe('TablutPieceAndInfluenceMinimax', () => {
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
             ];
-            const state: TablutPartSlice = new TablutPartSlice(board, 1);
-            const node: MGPNode<TablutRules, TablutMove, TablutPartSlice> = new MGPNode(null, null, state);
+            const state: TablutState = new TablutState(board, 1);
+            const node: MGPNode<TablutRules, TablutMove, TablutState> = new MGPNode(null, null, state);
             const expectedMove: TablutMove = new TablutMove(new Coord(1, 0), new Coord(0, 0));
             for (let depth: number = 1; depth < 4; depth++) {
                 const chosenMove: TablutMove = node.findBestMove(depth, minimax);

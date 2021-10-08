@@ -1,11 +1,11 @@
 import { ReversiMove } from 'src/app/games/reversi/ReversiMove';
-import { ReversiPartSlice } from 'src/app/games/reversi/ReversiPartSlice';
+import { ReversiState } from 'src/app/games/reversi/ReversiState';
 import { Player } from 'src/app/jscaip/Player';
 import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
-const _: number = Player.NONE.value;
-const O: number = Player.ZERO.value;
-const X: number = Player.ONE.value;
+const _: Player = Player.NONE;
+const O: Player = Player.ZERO;
+const X: Player = Player.ONE;
 
 export class ReversiTutorial {
     public tutorial: TutorialStep[] = [
@@ -15,7 +15,7 @@ export class ReversiTutorial {
         When one piece is flipped, its owner changes.
         The player owning the most pieces at the end of the game wins.
         Here, Dark has 28 points and Light has 36, hence Light wins.`,
-            new ReversiPartSlice([
+            new ReversiState([
                 [O, O, O, O, O, O, O, O],
                 [O, X, X, X, X, X, X, O],
                 [O, X, X, X, X, X, X, O],
@@ -32,7 +32,7 @@ export class ReversiTutorial {
         For a move to be legal, it must sandwich at least one piece of the opponent between the piece you're putting and another of your pieces.<br/><br/>
         Do any move by clicking to put your piece
         Dark plays first.`,
-            ReversiPartSlice.getInitialSlice(),
+            ReversiState.getInitialState(),
             new ReversiMove(2, 4),
             $localize`Congratulations!`,
         ),
@@ -41,7 +41,7 @@ export class ReversiTutorial {
             $localize`A move can also capture a bigger line, and more than one lines at a time
         You're playing light here.<br/><br/>
         Play on the bottom left to see an example.`,
-            new ReversiPartSlice([
+            new ReversiState([
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
@@ -59,7 +59,7 @@ export class ReversiTutorial {
             $localize`Passing a turn`,
             $localize`If, during its turn, a player has no move that would allow that player to flip a piece, that player must pass
         Moreover, if the next player could not play neither, the game ends before the board is full, and points are counted in the usual way.`,
-            new ReversiPartSlice([
+            new ReversiState([
                 [X, O, O, O, O, O, X, O],
                 [O, X, X, X, X, X, X, O],
                 [O, X, X, X, X, X, X, O],

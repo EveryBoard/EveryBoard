@@ -1,19 +1,19 @@
 import { NumberEncoder } from 'src/app/jscaip/Encoder';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
-import { ReversiPartSlice } from './ReversiPartSlice';
+import { ReversiState } from './ReversiState';
 
 export class ReversiMove extends MoveCoord {
     public static encoder: NumberEncoder<ReversiMove> = new class extends NumberEncoder<ReversiMove> {
         public maxValue(): number {
-            return (ReversiPartSlice.BOARD_HEIGHT-1)*ReversiPartSlice.BOARD_WIDTH +
-                (ReversiPartSlice.BOARD_WIDTH-1);
+            return (ReversiState.BOARD_HEIGHT-1)*ReversiState.BOARD_WIDTH +
+                (ReversiState.BOARD_WIDTH-1);
         }
         public encodeNumber(move: ReversiMove): number {
-            return (move.coord.y*ReversiPartSlice.BOARD_WIDTH) + move.coord.x;
+            return (move.coord.y*ReversiState.BOARD_WIDTH) + move.coord.x;
         }
         public decodeNumber(encodedMove: number): ReversiMove {
-            const x: number = encodedMove % ReversiPartSlice.BOARD_WIDTH;
-            const y: number = (encodedMove - x) / ReversiPartSlice.BOARD_WIDTH;
+            const x: number = encodedMove % ReversiState.BOARD_WIDTH;
+            const y: number = (encodedMove - x) / ReversiState.BOARD_WIDTH;
             return new ReversiMove(x, y);
         }
     }

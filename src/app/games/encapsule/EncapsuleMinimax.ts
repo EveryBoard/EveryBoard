@@ -1,4 +1,4 @@
-import { EncapsulePartSlice, EncapsuleCase } from './EncapsulePartSlice';
+import { EncapsuleState, EncapsuleCase } from './EncapsuleState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Sets } from 'src/app/utils/Sets';
 import { EncapsuleLegalityStatus } from './EncapsuleLegalityStatus';
@@ -11,7 +11,7 @@ import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { EncapsuleRules, EncapsuleNode } from './EncapsuleRules';
 import { GameStatus } from 'src/app/jscaip/Rules';
 
-export class EncapsuleMinimax extends Minimax<EncapsuleMove, EncapsulePartSlice, EncapsuleLegalityStatus> {
+export class EncapsuleMinimax extends Minimax<EncapsuleMove, EncapsuleState, EncapsuleLegalityStatus> {
 
     public getBoardValue(node: EncapsuleNode): NodeUnheritance {
         const status: GameStatus = EncapsuleRules.getGameStatus(node);
@@ -19,17 +19,17 @@ export class EncapsuleMinimax extends Minimax<EncapsuleMove, EncapsulePartSlice,
     }
     public getListMoves(n: EncapsuleNode): EncapsuleMove[] {
         const moves: EncapsuleMove[] = [];
-        const slice: EncapsulePartSlice = n.gamePartSlice;
-        const board: Table<EncapsuleCase> = slice.toCaseBoard();
-        const currentPlayer: Player = slice.getCurrentPlayer();
-        const puttablePieces: EncapsulePiece[] = Sets.toComparableObjectSet(slice.getPlayerRemainingPieces());
+        const state: EncapsuleState = n.gameState;
+        const board: Table<EncapsuleCase> = state.getCopiedBoard();
+        const currentPlayer: Player = state.getCurrentPlayer();
+        const puttablePieces: EncapsulePiece[] = Sets.toComparableObjectSet(state.getPlayerRemainingPieces());
         for (let y: number = 0; y < 3; y++) {
             for (let x: number = 0; x < 3; x++) {
                 const coord: Coord = new Coord(x, y);
                 // each drop
                 for (const piece of puttablePieces) {
                     const move: EncapsuleMove = EncapsuleMove.fromDrop(piece, coord);
-                    const status: EncapsuleLegalityStatus = EncapsuleRules.isLegal(move, slice);
+                    const status: EncapsuleLegalityStatus = EncapsuleRules.isLegal(move, state);
                     if (status.legal.isSuccess()) {
                         moves.push(move);
                     }
@@ -40,7 +40,7 @@ export class EncapsuleMinimax extends Minimax<EncapsuleMove, EncapsulePartSlice,
                             const landingCoord: Coord = new Coord(lx, ly);
                             if (!landingCoord.equals(coord)) {
                                 const newMove: EncapsuleMove = EncapsuleMove.fromMove(coord, landingCoord);
-                                const status: EncapsuleLegalityStatus = EncapsuleRules.isLegal(newMove, slice);
+                                const status: EncapsuleLegalityStatus = EncapsuleRules.isLegal(newMove, state);
                                 if (status.legal.isSuccess()) {
                                     moves.push(newMove);
                                 }

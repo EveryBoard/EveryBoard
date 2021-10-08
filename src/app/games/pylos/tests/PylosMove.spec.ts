@@ -3,6 +3,7 @@ import { PylosCoord } from '../PylosCoord';
 import { PylosMove } from '../PylosMove';
 
 describe('PylosMove', () => {
+
     const coord: PylosCoord = new PylosCoord(0, 0, 0);
     const highCoord: PylosCoord = new PylosCoord(0, 0, 2);
 

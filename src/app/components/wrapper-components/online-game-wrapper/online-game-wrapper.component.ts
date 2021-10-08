@@ -173,7 +173,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             before: this.currentPart,
             then: update.doc,
             before_part_turn: part.doc.turn,
-            before_slice_turn: this.gameComponent.rules.node.gamePartSlice.turn,
+            before_state_turn: this.gameComponent.rules.node.gameState.turn,
             nbPlayedMoves: part.doc.listMoves.length,
         } });
         const updateType: UpdateType = this.getUpdateType(part);
@@ -322,15 +322,15 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         this.switchPlayer();
         let currentPartTurn: number;
         const listMoves: JSONValue[] = ArrayUtils.copyImmutableArray(part.doc.listMoves);
-        while (this.gameComponent.rules.node.gamePartSlice.turn < listMoves.length) {
-            currentPartTurn = this.gameComponent.rules.node.gamePartSlice.turn;
+        while (this.gameComponent.rules.node.gameState.turn < listMoves.length) {
+            currentPartTurn = this.gameComponent.rules.node.gameState.turn;
             const chosenMove: Move = this.gameComponent.encoder.decode(listMoves[currentPartTurn]);
             const correctDBMove: boolean = this.gameComponent.rules.choose(chosenMove);
             const message: string = 'We received an incorrect db move: ' + chosenMove.toString() +
                                     ' in ' + listMoves + ' at turn ' + currentPartTurn;
             assert(correctDBMove === true, message);
         }
-        this.currentPlayer = this.players[this.gameComponent.rules.node.gamePartSlice.turn % 2];
+        this.currentPlayer = this.players[this.gameComponent.rules.node.gameState.turn % 2];
         this.gameComponent.updateBoard();
     }
     public switchPlayer(): void {
@@ -518,7 +518,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     }
     public takeBackTo(turn: number): void {
         this.gameComponent.rules.node = this.gameComponent.rules.node.mother;
-        if (this.gameComponent.rules.node.gamePartSlice.turn === turn) {
+        if (this.gameComponent.rules.node.gameState.turn === turn) {
             this.switchPlayer();
         } else {
             // Second time to make sure it end up on player's turn
@@ -741,7 +741,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         return [];
     }
     private isUserCurrentPlayer(): boolean {
-        return this.gameComponent != null && this.observerRole === this.gameComponent.rules.node.gamePartSlice.turn % 2;
+        return this.gameComponent != null && this.observerRole === this.gameComponent.rules.node.gameState.turn % 2;
     }
     public opponentIsOffline(): boolean {
         return this.opponent != null &&

@@ -1,4 +1,4 @@
-import { QuartoPartSlice } from './QuartoPartSlice';
+import { QuartoState } from './QuartoState';
 import { QuartoMove } from './QuartoMove';
 import { QuartoPiece } from './QuartoPiece';
 import { SCORE } from 'src/app/jscaip/SCORE';
@@ -7,7 +7,7 @@ import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { QuartoNode, BoardStatus, QuartoRules } from './QuartoRules';
 import { Player } from 'src/app/jscaip/Player';
 
-export class QuartoMinimax extends Minimax<QuartoMove, QuartoPartSlice> {
+export class QuartoMinimax extends Minimax<QuartoMove, QuartoState> {
 
     public static scoreToBoardValue(score: SCORE, turn: number): NodeUnheritance {
         if (score === SCORE.DEFAULT) {
@@ -24,20 +24,20 @@ export class QuartoMinimax extends Minimax<QuartoMove, QuartoPartSlice> {
     public getListMoves(node: QuartoNode): QuartoMove[] {
         const listMoves: QuartoMove[] = [];
 
-        const slice: QuartoPartSlice = node.gamePartSlice;
+        const state: QuartoState = node.gameState;
 
-        const board: number[][] = slice.getCopiedBoard();
-        const pawns: Array<QuartoPiece> = slice.getRemainingPawns();
-        const inHand: QuartoPiece = slice.pieceInHand;
+        const board: QuartoPiece[][] = state.getCopiedBoard();
+        const pawns: Array<QuartoPiece> = state.getRemainingPawns();
+        const inHand: QuartoPiece = state.pieceInHand;
 
-        let nextBoard: number[][];
+        let nextBoard: QuartoPiece[][];
 
         for (let y: number = 0; y < 4; y++) {
             for (let x: number = 0; x < 4; x++) {
-                if (board[y][x] === QuartoPiece.NONE.value) {
-                    nextBoard = slice.getCopiedBoard();
-                    nextBoard[y][x] = inHand.value; // the piece we have in hand is put in (x, y)
-                    if (slice.turn === 15) {
+                if (board[y][x] === QuartoPiece.NONE) {
+                    nextBoard = state.getCopiedBoard();
+                    nextBoard[y][x] = inHand; // the piece we have in hand is put in (x, y)
+                    if (state.turn === 15) {
                         const move: QuartoMove = new QuartoMove(x, y, QuartoPiece.NONE);
                         listMoves.push(move);
                         return listMoves;
@@ -53,17 +53,17 @@ export class QuartoMinimax extends Minimax<QuartoMove, QuartoPartSlice> {
         return listMoves;
     }
     public getBoardValue(node: QuartoNode): NodeUnheritance {
-        const slice: QuartoPartSlice = node.gamePartSlice;
+        const state: QuartoState = node.gameState;
         let boardStatus: BoardStatus = {
             score: SCORE.DEFAULT,
             sensitiveSquares: [],
         };
         for (const line of QuartoRules.lines) {
-            boardStatus = QuartoRules.updateBoardStatus(line, slice, boardStatus);
+            boardStatus = QuartoRules.updateBoardStatus(line, state, boardStatus);
             if (boardStatus.score === SCORE.VICTORY) {
-                return QuartoMinimax.scoreToBoardValue(boardStatus.score, slice.turn);
+                return QuartoMinimax.scoreToBoardValue(boardStatus.score, state.turn);
             }
         }
-        return QuartoMinimax.scoreToBoardValue(boardStatus.score, slice.turn);
+        return QuartoMinimax.scoreToBoardValue(boardStatus.score, state.turn);
     }
 }

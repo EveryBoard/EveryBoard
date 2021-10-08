@@ -22,6 +22,7 @@ import { GameServiceMessages } from '../GameServiceMessages';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('GameService', () => {
+
     let service: GameService;
 
     let partDao: PartDAO;

@@ -3,6 +3,7 @@ import { ComparableObject } from 'src/app/utils/Comparable';
 import { NumberEncoder } from './Encoder';
 
 export class Player implements ComparableObject {
+
     public static numberEncoder: NumberEncoder<Player> = NumberEncoder.ofN(2, (player: Player) => {
         return player.value;
     }, (encoded: number) => {

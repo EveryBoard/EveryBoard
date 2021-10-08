@@ -7,6 +7,7 @@ import { By } from '@angular/platform-browser';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 
 describe('LoginComponent', () => {
+
     let component: LoginComponent;
 
     let fixture: ComponentFixture<LoginComponent>;

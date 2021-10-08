@@ -1,13 +1,13 @@
 import { TablutMove } from 'src/app/games/tablut/TablutMove';
 import { TablutCase } from 'src/app/games/tablut/TablutCase';
-import { TablutPartSlice } from 'src/app/games/tablut/TablutPartSlice';
+import { TablutState } from 'src/app/games/tablut/TablutState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
-const _: number = TablutCase.UNOCCUPIED.value;
-const x: number = TablutCase.INVADERS.value;
-const i: number = TablutCase.DEFENDERS.value;
-const A: number = TablutCase.PLAYER_ONE_KING.value;
+const _: TablutCase = TablutCase.UNOCCUPIED;
+const x: TablutCase = TablutCase.INVADERS;
+const i: TablutCase = TablutCase.DEFENDERS;
+const A: TablutCase = TablutCase.PLAYER_ONE_KING;
 
 export class TablutTutorial {
     public tutorial: TutorialStep[] = [
@@ -20,7 +20,7 @@ export class TablutTutorial {
         The defender plays second. Its pieces (light) are in the middle.
         Its goal is to put the king on one of the 4 thrones in the corners.
         Note that the square in which the king starts, in the center of the board, is also a throne.`,
-            TablutPartSlice.getInitialSlice(),
+            TablutState.getInitialState(),
         ),
         TutorialStep.anyMove(
             $localize`Moving`,
@@ -34,7 +34,7 @@ export class TablutTutorial {
         </ol>
         To move a piece, click on it and then on its landing square.<br/><br/>
         This is the initial board, do the first move.`,
-            TablutPartSlice.getInitialSlice(),
+            TablutState.getInitialState(),
             new TablutMove(new Coord(4, 1), new Coord(1, 1)),
             $localize`Congratulations!`,
         ),
@@ -44,7 +44,7 @@ export class TablutTutorial {
         To capture them, they have to be sandwiched between two of your pieces.
         By getting too close, an attacker's soldier is in danger.<br/><br/>
         Capture it.`,
-            new TablutPartSlice([
+            new TablutState([
                 [_, _, _, x, x, x, _, _, _],
                 [_, _, _, _, x, _, _, _, _],
                 [_, _, _, _, i, _, _, _, _],
@@ -67,7 +67,7 @@ export class TablutTutorial {
             $localize`A second way to capture a soldier is against an empty throne.
         The King has moved and endangered one of its soldiers.<br/><br/>
         Capture it.`,
-            new TablutPartSlice([
+            new TablutState([
                 [_, _, _, x, x, x, _, _, _],
                 [_, _, _, _, x, _, _, _, _],
                 [_, _, _, _, i, _, _, _, _],
@@ -88,7 +88,7 @@ export class TablutTutorial {
         For the first solution, the four squares neighbor to the king (horizontally and vertically) must be occupied by your soldiers.
         This also works if the king is on the throne.<br/><br/>
         Capture the king.`,
-            new TablutPartSlice([
+            new TablutState([
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
@@ -108,7 +108,7 @@ export class TablutTutorial {
             $localize`Another way to capture the king is to immobilize it against an edge of the board.
         Note that the king cannot be captured next to a throne.<br/><br/>
         Capture the king.`,
-            new TablutPartSlice([
+            new TablutState([
                 [_, _, x, A, x, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],

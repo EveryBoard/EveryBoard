@@ -11,6 +11,7 @@ class DummyObject implements ComparableObject {
 }
 
 describe('Comparable', () => {
+
     describe('comparableEquals', () => {
         it('should support primitive values', () => {
             expect(comparableEquals(5, 5)).toBeTrue();

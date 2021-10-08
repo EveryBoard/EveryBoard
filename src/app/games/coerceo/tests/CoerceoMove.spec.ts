@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { CoerceoPartSlice } from '../CoerceoPartSlice';
+import { CoerceoState } from '../CoerceoState';
 import { CoerceoRules } from '../CoerceoRules';
 import { CoerceoMinimax } from '../CoerceoMinimax';
 import { CoerceoFailure } from '../CoerceoFailure';
@@ -7,6 +7,7 @@ import { CoerceoMove, CoerceoStep } from '../CoerceoMove';
 import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 
 describe('CoerceoMove', () => {
+
     it('Should distinguish move and capture based on presence or not of capture', () => {
         const move: CoerceoMove = CoerceoMove.fromDeplacement(new Coord(5, 5), CoerceoStep.UP_RIGHT);
         expect(move.isTileExchange()).toBeFalse();
@@ -68,7 +69,7 @@ describe('CoerceoMove', () => {
         });
         describe('encoder', () => {
             it('should be correct with first turn moves', () => {
-                const rules: CoerceoRules = new CoerceoRules(CoerceoPartSlice);
+                const rules: CoerceoRules = new CoerceoRules(CoerceoState);
                 const minimax: CoerceoMinimax = new CoerceoMinimax(rules, 'CoerceoMinimax');
                 const moves: CoerceoMove[] = minimax.getListMoves(rules.node);
                 for (const move of moves) {

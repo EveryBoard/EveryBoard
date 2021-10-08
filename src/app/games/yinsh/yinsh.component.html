@@ -6,7 +6,8 @@
         <g *ngFor="let caseInfo of viewInfo.caseInfo[y]; index as x">
             <g *ngIf="caseInfo != null"
                (click)="onClick(caseInfo.coord)"
-               id="click_{{ x }}_{{ y }}">
+               id="click_{{ x }}_{{ y }}"
+            >
                 <polyline [attr.points]="caseInfo.coordinates"
                           id="case_{{ x }}_{{ y }}"
                           [ngClass]="caseInfo.caseClasses"
@@ -63,7 +64,7 @@
               [attr.y]="viewInfo.caseInfo[coord.y][coord.x].center.y-viewInfo.indicatorSize/2"
               [attr.width]="viewInfo.indicatorSize"
               [attr.height]="viewInfo.indicatorSize"
-              (click)="onClick"
+              (click)="onClick(coord)"
               class="indicator" />
     </g>
     <g *ngFor="let player of [0, 1]">

@@ -8,10 +8,10 @@ import { LinesOfActionNode, LinesOfActionRules } from './LinesOfActionRules';
 export class LinesOfActionMinimax extends Minimax<LinesOfActionMove, LinesOfActionState> {
 
     public getListMoves(node: LinesOfActionNode): LinesOfActionMove[] {
-        return LinesOfActionRules.getListMovesFromState(node.gamePartSlice);
+        return LinesOfActionRules.getListMovesFromState(node.gameState);
     }
     public getBoardValue(node: LinesOfActionNode): NodeUnheritance {
-        const state: LinesOfActionState = node.gamePartSlice;
+        const state: LinesOfActionState = node.gameState;
         const [zero, one]: [number, number] = LinesOfActionRules.getNumberOfGroups(state);
         if (zero === 1 && one > 1) {
             return new NodeUnheritance(Player.ZERO.getVictoryValue());
