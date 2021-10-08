@@ -48,10 +48,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        this.lastMove = new Coord(-1, -1); // now the user stop try to do a move
-        // we stop showing him the last move
         const chosenMove: ReversiMove = new ReversiMove(x, y);
-
         return await this.chooseMove(chosenMove, this.rules.node.gameState, this.scores[0], this.scores [1]);
     }
     public updateBoard(): void {
@@ -61,7 +58,6 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
         this.captureds = [];
 
         if (this.rules.node.move) {
-            this.lastMove = this.rules.node.move.coord;
             this.showPreviousMove();
         } else {
             this.lastMove = new Coord(-2, -2);
@@ -71,8 +67,14 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
         this.canPass = ReversiRules.playerCanOnlyPass(state);
     }
     private showPreviousMove() {
+<<<<<<< HEAD
         const PLAYER: Player = this.rules.node.gameState.getCurrentPlayer();
         const OPPONENT: Player = this.rules.node.gameState.getCurrentOpponent();
+=======
+        this.lastMove = this.rules.node.move.coord;
+        const PLAYER: number = this.rules.node.gamePartSlice.getCurrentPlayer().value;
+        const ENNEMY: number = this.rules.node.gamePartSlice.getCurrentEnnemy().value;
+>>>>>>> a6c7cc22a3e893abe5c29bfeae34a46d7fa5c745
         for (const dir of Direction.DIRECTIONS) {
             let captured: Coord = this.lastMove.getNext(dir, 1);
             while (captured.isInRange(ReversiState.BOARD_WIDTH, ReversiState.BOARD_HEIGHT) &&
