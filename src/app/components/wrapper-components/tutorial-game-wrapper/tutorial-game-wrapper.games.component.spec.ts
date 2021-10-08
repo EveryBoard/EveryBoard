@@ -10,7 +10,7 @@ import { EpaminondasComponent } from 'src/app/games/epaminondas/epaminondas.comp
 import { GipfComponent } from 'src/app/games/gipf/gipf.component';
 import { GoComponent } from 'src/app/games/go/go.component';
 import { KamisadoComponent } from 'src/app/games/kamisado/kamisado.component';
-import { LinesOfActionComponent } from 'src/app/games/lines-of-action/LinesOfAction.component';
+import { LinesOfActionComponent } from 'src/app/games/lines-of-action/lines-of-action.component';
 import { P4Component } from 'src/app/games/p4/p4.component';
 import { PentagoComponent } from 'src/app/games/pentago/pentago.component';
 import { PylosComponent } from 'src/app/games/pylos/pylos.component';
