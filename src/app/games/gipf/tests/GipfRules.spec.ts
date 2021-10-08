@@ -262,13 +262,13 @@ describe('GipfRules:', () => {
             const capture1Legality: GipfLegalityStatus = rules.isLegal(moveWithCapture1, state);
             expect(capture1Legality.legal.isSuccess()).toBeTrue();
 
-            // const moveWithCapture2: GipfMove = new GipfMove(placement, [capture2], []);
-            // const capture2Legality: GipfLegalityStatus = rules.isLegal(moveWithCapture2, state);
-            // expect(capture2Legality.legal.isSuccess()).toBeTrue();
+            const moveWithCapture2: GipfMove = new GipfMove(placement, [capture2], []);
+            const capture2Legality: GipfLegalityStatus = rules.isLegal(moveWithCapture2, state);
+            expect(capture2Legality.legal.isSuccess()).toBeTrue();
 
-            // const moveWithBothCaptures: GipfMove = new GipfMove(placement, [capture1, capture2], []);
-            // const capturesLegality: GipfLegalityStatus = rules.isLegal(moveWithBothCaptures, state);
-            // expect(capturesLegality.legal.reason).toBe(GipfFailure.CAPTURE_MUST_BE_ALIGNED());
+            const moveWithBothCaptures: GipfMove = new GipfMove(placement, [capture1, capture2], []);
+            const capturesLegality: GipfLegalityStatus = rules.isLegal(moveWithBothCaptures, state);
+            expect(capturesLegality.legal.reason).toBe(GipfFailure.CAPTURE_MUST_BE_ALIGNED());
         });
         it('should force both players to capture when possible', () => {
             // This is the board before diagram 7

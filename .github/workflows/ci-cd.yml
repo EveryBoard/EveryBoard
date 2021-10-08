@@ -38,7 +38,6 @@ jobs:
         run: mv .eslintrc.ci.js .eslintrc.js
       - name: Run linter
         run: npm run lint
-        continue-on-error: true
 
       - name: Setup Firebase secret on master / develop push
         if: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop' ) }}
