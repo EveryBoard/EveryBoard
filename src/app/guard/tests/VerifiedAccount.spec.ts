@@ -1,4 +1,4 @@
-import { EmailVerified } from '../EmailVerified';
+import { VerifiedAccount } from '../VerifiedAccount';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
@@ -7,8 +7,8 @@ import { of } from 'rxjs';
 import { AuthenticationServiceUnderTest } from 'src/app/services/tests/AuthenticationService.spec';
 import { fakeAsync } from '@angular/core/testing';
 
-xdescribe('EmailVerified', () => {
-    let guard: EmailVerified;
+xdescribe('VerifiedAccount', () => {
+    let guard: VerifiedAccount;
 
     let authService: AuthenticationService;
 
@@ -20,7 +20,7 @@ xdescribe('EmailVerified', () => {
         router = {
             navigate: jasmine.createSpy('navigate'),
         } as unknown as Router;
-        guard = new EmailVerified(authService, router);
+        guard = new VerifiedAccount(authService, router);
     });
     it('should create', () => {
         expect(guard).toBeTruthy();

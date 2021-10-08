@@ -30,9 +30,6 @@ export abstract class GameWrapper {
 
     public gameComponent: AbstractGameComponent<Move, GamePartSlice>;
 
-    public userName: string = this.authenticationService.getAuthenticatedUser() != null &&
-                              this.authenticationService.getAuthenticatedUser().username // TODO, clean that;
-
     public players: string[] = [null, null];
 
     public observerRole: number;
@@ -49,9 +46,7 @@ export abstract class GameWrapper {
     public getMatchingComponent(compoString: string): Type<AbstractGameComponent<Move, GamePartSlice>> {
         display(GameWrapper.VERBOSE, 'GameWrapper.getMatchingComponent');
         const gameInfo: GameInfo = GameInfo.ALL_GAMES().find((gameInfo: GameInfo) => gameInfo.urlName === compoString);
-        if (gameInfo == null) {
-            throw new Error('Unknown Games are unwrappable');
-        }
+        assert(gameInfo != null, 'Unknown Games are unwrappable');
         return gameInfo.component;
     }
     protected afterGameIncluderViewInit(): void {
@@ -76,21 +71,33 @@ export abstract class GameWrapper {
         this.gameComponent = <AbstractGameComponent<Move, GamePartSlice>>componentRef.instance;
         // Shortent by T<S = Truc>
 
-        this.gameComponent.chooseMove = this.receiveValidMove; // so that when the game component do a move
+        this.gameComponent.chooseMove = // so that when the game component do a move
+            (m: Move, s: GamePartSlice, s0: number, s1: number): Promise<MGPValidation> => {
+                return this.receiveValidMove(m, s, s0, s1);
+            };
         // the game wrapper can then act accordingly to the chosen move.
-        this.gameComponent.canUserPlay = this.onUserClick; // So that when the game component click
+        this.gameComponent.canUserPlay =
+            // So that when the game component click
+            (elementName: string): MGPValidation => {
+                return this.onUserClick(elementName);
+            };
         // the game wrapper can act accordly
-        this.gameComponent.isPlayerTurn = this.isPlayerTurn;
-        this.gameComponent.cancelMoveOnWrapper = this.onCancelMove; // Mostly for interception by TutorialGameWrapper
+        this.gameComponent.isPlayerTurn = (): boolean => {
+            return this.isPlayerTurn();
+        };
+        this.gameComponent.cancelMoveOnWrapper =
+            // Mostly for interception by TutorialGameWrapper
+            (reason?: string): void => {
+                this.onCancelMove(reason);
+            };
 
         this.gameComponent.observerRole = this.observerRole;
         this.canPass = this.gameComponent.canPass;
     }
-    public receiveValidMove: (m: Move, s: GamePartSlice, s0: number, s1: number) => Promise<MGPValidation> =
-    async(move: Move,
-          slice: GamePartSlice,
-          scorePlayerZero: number,
-          scorePlayerOne: number): Promise<MGPValidation> =>
+    public async receiveValidMove(move: Move,
+                                  slice: GamePartSlice,
+                                  scorePlayerZero: number,
+                                  scorePlayerOne: number): Promise<MGPValidation>
     {
         const LOCAL_VERBOSE: boolean = false;
         display(GameWrapper.VERBOSE || LOCAL_VERBOSE, {
@@ -119,7 +126,7 @@ export abstract class GameWrapper {
     }
     public abstract onLegalUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<void>;
 
-    public onUserClick: (elementName: string) => MGPValidation = (_elementName: string) => {
+    public onUserClick(_elementName: string): MGPValidation {
         // TODO: Not the same logic to use in Online and Local, make abstract
         if (this.observerRole === Player.NONE.value) {
             const message: string = GameWrapperMessages.NO_CLONING_FEATURE();
@@ -131,30 +138,32 @@ export abstract class GameWrapper {
             return MGPValidation.failure(GameWrapperMessages.NOT_YOUR_TURN());
         }
     }
-    public onCancelMove(): void {
-        // Non needed by default'
+    public onCancelMove(_reason: string): void {
+        // Not needed by default'
     }
-    public isPlayerTurn: () => boolean = () => {
+    public isPlayerTurn(): boolean {
         if (this.observerRole === Player.NONE.value) {
             return false;
         }
         const turn: number = this.gameComponent.rules.node.gamePartSlice.turn;
         const indexPlayer: number = turn % 2;
+        const username: string = this.getPlayerName();
         display(GameWrapper.VERBOSE, { isPlayerTurn: {
             turn,
             players: this.players,
-            username: this.userName,
+            username,
             observer: this.observerRole,
-            areYouPlayer: (this.players[indexPlayer] && this.players[indexPlayer] === this.userName),
+            areYouPlayer: (this.players[indexPlayer] && this.players[indexPlayer] === username),
             isThereAPlayer: this.players[indexPlayer],
         } });
         if (this.players[indexPlayer]) {
-            return this.players[indexPlayer] === this.userName ||
-                   this.players[indexPlayer] === 'humain';
+            return this.players[indexPlayer] === username;
         } else {
             return true;
         }
     }
+    public abstract getPlayerName(): string
+
     get compo(): AbstractGameComponent<Move, GamePartSlice> {
         return this.gameComponent;
     }

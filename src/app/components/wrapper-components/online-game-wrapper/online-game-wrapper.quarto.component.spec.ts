@@ -362,9 +362,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             loser: 'firstCandidate',
             result: MGPResult.VICTORY.value,
         });
-        expect(componentTestUtils.findElement('#youWonIndicator'))
-            .withContext('Component should show who is the winner.')
-            .toBeTruthy();
+        componentTestUtils.expectElementToExist('#winnerIndicator');
+        componentTestUtils.expectElementToExist('#youWonIndicator');
     }));
     it('Should allow player to pass when gameComponent allows it', fakeAsync(async() => {
         await prepareStartedGameFor({ username: 'creator', verified: true });

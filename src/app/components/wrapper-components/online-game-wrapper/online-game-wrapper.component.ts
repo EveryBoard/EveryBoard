@@ -2,7 +2,7 @@ import { Component, ComponentFactoryResolver, OnDestroy, OnInit, ViewChild } fro
 import { ActivatedRoute, NavigationEnd, Router, Event } from '@angular/router';
 import { Subscription } from 'rxjs';
 
-import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
+import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { GameService } from 'src/app/services/GameService';
 import { UserService } from 'src/app/services/UserService';
 import { Move } from '../../../jscaip/Move';
@@ -111,6 +111,9 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     private getPlayer(): Player {
         return Player.of(this.observerRole);
     }
+    public getPlayerName(): string {
+        return this.authenticationService.getCurrentUser().username;
+    }
     private isPlayer(player: Player): boolean {
         return this.observerRole === player.value;
     }
@@ -141,8 +144,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             }
         });
         await this.setCurrentPartIdOrRedirect();
-        this.userSub = this.authenticationService.getJoueurObs()
-            .subscribe((user: AuthUser) => this.userName = user.username);
     }
     public startGame(iJoiner: IJoiner): void {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.startGame');
@@ -483,7 +484,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             return Player.NONE;
         }
     }
-    protected async onRequest(request: Request, oldPart: Part, part: Part): Promise<void> {
+    protected async onRequest(request: Request, oldPart: Part, _part: Part): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, { called: 'OnlineGameWrapper.onRequest(', request, oldPart });
         switch (request.code) {
             case 'TakeBackAsked':
@@ -536,10 +537,10 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         assert(updatedICurrentPart.doc.playerOne != null, 'should not setPlayersDatas when players data is not received');
         this.currentPlayer = this.players[updatedICurrentPart.doc.turn % 2];
         let opponentName: string = '';
-        if (this.players[0] === this.userName) {
+        if (this.players[0] === this.getPlayerName()) {
             this.observerRole = Player.ZERO.value;
             opponentName = this.players[1];
-        } else if (this.players[1] === this.userName) {
+        } else if (this.players[1] === this.getPlayerName()) {
             this.observerRole = Player.ONE.value;
             opponentName = this.players[0];
         } else {
@@ -609,12 +610,12 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         this.stopCountdownsFor(Player.of(player));
         if (player === this.observerRole) {
             // the player has run out of time, he'll notify his own defeat by time
-            this.notifyTimeoutVictory(this.opponent.doc.pseudo, this.userName);
+            this.notifyTimeoutVictory(this.opponent.doc.pseudo, this.getPlayerName());
         } else {
             if (this.endGame) {
                 display(true, 'time might be better handled in the future');
             } else if (this.opponentIsOffline()) { // the other player has timed out
-                this.notifyTimeoutVictory(this.userName, this.opponent.doc.pseudo);
+                this.notifyTimeoutVictory(this.getPlayerName(), this.opponent.doc.pseudo);
                 this.endGame = true;
             }
         }

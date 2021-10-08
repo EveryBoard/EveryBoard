@@ -25,11 +25,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.currentLanguage = LocaleUtils.getLocale().toUpperCase();
         this.joueurSub = this.authenticationService.getJoueurObs()
             .subscribe((user: AuthUser) => {
-                if (user != null) {
-                    this.userName = user.username;
-                } else {
-                    this.userName = null;
-                }
+                this.userName = user.username;
             });
     }
     public async logout(): Promise<void> {

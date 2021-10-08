@@ -21,7 +21,7 @@ import { AuthenticationService } from './services/AuthenticationService';
 import { GameService } from './services/GameService';
 import { JoinerService } from './services/JoinerService';
 
-import { EmailVerified } from './guard/EmailVerified';
+import { VerifiedAccount } from './guard/VerifiedAccount';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/normal-component/header/header.component';
@@ -85,13 +85,13 @@ registerLocaleData(localeFr);
 
 const routes: Route [] = [
     { path: 'login', component: LoginComponent },
-    { path: 'server', component: ServerPageComponent, canActivate: [EmailVerified] },
+    { path: 'server', component: ServerPageComponent, canActivate: [VerifiedAccount] },
     { path: 'registration', component: RegistrationComponent },
-    { path: 'notFound', component: NotFoundComponent, canActivate: [EmailVerified] },
-    { path: 'nextGameLoading', component: NextGameLoadingComponent, canActivate: [EmailVerified] },
+    { path: 'notFound', component: NotFoundComponent, canActivate: [VerifiedAccount] },
+    { path: 'nextGameLoading', component: NextGameLoadingComponent, canActivate: [VerifiedAccount] },
 
-    { path: 'play', component: OnlineGameCreationComponent, canActivate: [EmailVerified] },
-    { path: 'play/:compo/:id', component: OnlineGameWrapperComponent, canActivate: [EmailVerified] },
+    { path: 'play', component: OnlineGameCreationComponent, canActivate: [VerifiedAccount] },
+    { path: 'play/:compo/:id', component: OnlineGameWrapperComponent, canActivate: [VerifiedAccount] },
     { path: 'local', component: LocalGameCreationComponent },
     { path: 'local/:compo', component: LocalGameWrapperComponent },
     { path: 'tutorial', component: TutorialGameCreationComponent },

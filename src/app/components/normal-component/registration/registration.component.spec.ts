@@ -17,11 +17,13 @@ describe('RegistrationComponent', () => {
     const username: string = 'jeanjaja';
     const email: string = 'jean@jaja.europe';
     const password: string = 'hunter2';
+    const user: firebase.User = { displayName: 'jeanjaja', email: 'jean@jaja.europe' } as firebase.User;
 
     function fillInUserDetails() {
         testUtils.fillInput('#email', email);
         testUtils.fillInput('#username', username);
         testUtils.fillInput('#password', password);
+        testUtils.detectChanges();
     }
 
     beforeEach(fakeAsync(async() => {
@@ -35,7 +37,7 @@ describe('RegistrationComponent', () => {
     });
     it('should register, send email verification, and navigate back to homepage upon success', fakeAsync(async() => {
         spyOn(router, 'navigate');
-        spyOn(authService, 'doRegister').and.resolveTo(MGPFallible.success({ displayName: 'jeanjaja', email: 'jean@jaja.europe' } as firebase.User));
+        spyOn(authService, 'doRegister').and.resolveTo(MGPFallible.success(user));
         spyOn(authService, 'sendEmailVerification').and.resolveTo(MGPValidation.SUCCESS);
 
         // given some user
@@ -58,6 +60,7 @@ describe('RegistrationComponent', () => {
 
         // when the user registers and it fails
         spyOn(authService, 'doRegister').and.resolveTo(MGPFallible.failure(`c'est caca monsieur.` ));
+        spyOn(authService, 'sendEmailVerification').and.resolveTo(MGPValidation.SUCCESS);
         await testUtils.clickElement('#registerButton');
 
         // then an error message is shown
@@ -73,8 +76,10 @@ describe('RegistrationComponent', () => {
         fillInUserDetails();
 
         // when the user registers and it fails
+        spyOn(authService, 'doRegister').and.resolveTo(MGPFallible.success(user));
         spyOn(authService, 'sendEmailVerification').and.resolveTo(MGPValidation.failure(`c'est caca monsieur.` ));
         await testUtils.clickElement('#registerButton');
+        testUtils.detectChanges();
 
         // then an error message is shown
         const expectedError: string = testUtils.findElement('#errorMessage').nativeElement.innerHTML;

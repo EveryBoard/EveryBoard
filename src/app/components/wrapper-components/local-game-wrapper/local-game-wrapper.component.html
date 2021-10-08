@@ -12,13 +12,13 @@
                                 (change)="updatePlayer(0)"
                                 [(ngModel)]="players[0]">
                             <option selected
-                                    value="humain" i18n>Human</option>
+                                    value="human" i18n>Human</option>
                             <option *ngFor="let minimax of compo.availableMinimaxes"
                                     [value]="minimax.name">{{ minimax.name }}</option>
                         </select>
                     </div>
                     <div class="select">
-                        <select *ngIf="players[0] !== 'humain'"
+                        <select *ngIf="players[0] !== 'human'"
                                 id="aiZeroDepthSelect"
                                 [(ngModel)]="aiDepths[0]"
                                 (change)="updatePlayer(0)">
@@ -38,13 +38,13 @@
                                 (change)="updatePlayer(1)"
                                 [(ngModel)]="players[1]">
                             <option selected
-                                    value="humain">Human</option>
+                                    value="human">Human</option>
                             <option *ngFor="let minimax of compo.availableMinimaxes"
                                     [value]="minimax.name">{{ minimax.name }}</option>
                         </select>
                     </div>
                     <div class="select">
-                        <select *ngIf="players[1] !== 'humain'"
+                        <select *ngIf="players[1] !== 'human'"
                                 id="aiOneDepthSelect"
                                 [(ngModel)]="aiDepths[1]"
                                 (change)="updatePlayer(1)">

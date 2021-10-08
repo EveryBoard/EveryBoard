@@ -33,7 +33,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
                 public cdr: ChangeDetectorRef)
     {
         super(componentFactoryResolver, actRoute, authenticationService);
-        this.players = ['humain', 'humain'];
+        this.players = ['human', 'human'];
         display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapper.constructor');
     }
     public getCreatedNodes(): number {
@@ -52,7 +52,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         }, 1);
     }
     public updatePlayer(player: 0|1): void {
-        if (this.players[player] !== 'humain' && this.aiDepths[player] !== '0') {
+        if (this.players[player] !== 'human' && this.aiDepths[player] !== '0') {
             this.proposeAIToPlay();
         }
     }
@@ -128,8 +128,11 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         this.gameComponent.updateBoard();
         this.endGame = false;
         this.winner = null;
-        if (this.players[Player.ZERO.value] !== 'humain' && this.aiDepths[Player.ZERO.value] !== '0') {
+        if (this.players[Player.ZERO.value] !== 'human' && this.aiDepths[Player.ZERO.value] !== '0') {
             this.proposeAIToPlay();
         }
+    }
+    public getPlayerName(): string {
+        return 'human';
     }
 }

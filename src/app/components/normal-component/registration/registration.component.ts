@@ -27,6 +27,7 @@ export class RegistrationComponent {
         if (registrationResult.isSuccess()) {
             const emailResult: MGPValidation =
                 await this.authService.sendEmailVerification();
+            console.log(emailResult)
             if (emailResult.isSuccess()) {
                 return this.router.navigate(['/']);
             } else {

@@ -126,7 +126,7 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
         this.moveAttemptMade = false;
         this.showStep(this.stepIndex);
     }
-    public onUserClick: (elementName: string) => MGPValidation = (elementName: string) => {
+    public onUserClick(elementName: string): MGPValidation {
         display(TutorialGameWrapperComponent.VERBOSE, 'tutorialGameWrapper.onUserClick(' + elementName + ')');
         this.currentReason = null;
         if (this.stepFinished[this.stepIndex] || this.moveAttemptMade) {
@@ -150,7 +150,7 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
             return MGPValidation.failure(TutorialFailure.INFORMATIONAL_STEP());
         }
     }
-    public onCancelMove: (reason?: string) => void = (reason?: string) => {
+    public onCancelMove(reason?: string): void {
         display(TutorialGameWrapperComponent.VERBOSE,
                 'tutorialGameWrapperComponent.onCancelMove(' + reason + ')');
         // this.moveAttemptMade = true;
@@ -212,5 +212,8 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
     public createGame(): void {
         const game: string = this.actRoute.snapshot.paramMap.get('compo');
         this.gameService.createGameAndRedirectOrShowError(game);
+    }
+    public getPlayerName(): string {
+        return ''; // Not important for tutorial?
     }
 }

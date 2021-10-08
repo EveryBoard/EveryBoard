@@ -5,7 +5,7 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/database';
-import { Observable, BehaviorSubject, Subscription, ReplaySubject } from 'rxjs';
+import { Observable, Subscription, ReplaySubject } from 'rxjs';
 
 import { display, Utils } from 'src/app/utils/utils';
 import { IJoueur } from '../domain/iuser';
@@ -37,6 +37,8 @@ export class AuthenticationService implements OnDestroy {
 
     private joueurObs: Observable<AuthUser>;
 
+    private currentUser: AuthUser;
+
     constructor(public afAuth: AngularFireAuth,
                 private afs: AngularFirestore,
                 private userDAO: JoueursDAO) {
@@ -47,12 +49,14 @@ export class AuthenticationService implements OnDestroy {
         this.authSub = this.afAuth.authState.subscribe(async(user: firebase.User) => {
             if (user == null) { // user logged out
                 display(AuthenticationService.VERBOSE, '2.B: User is not connected, according to fireAuth');
+                this.currentUser = AuthenticationService.NOT_CONNECTED;
                 this.joueurRS.next(AuthenticationService.NOT_CONNECTED);
             } else { // user logged in
                 this.updatePresence();
                 const username: string = await userDAO.getUsername(user.uid);
                 display(AuthenticationService.VERBOSE, { userLoggedInAccordingToFireAuth: user });
                 const verified: boolean = user.emailVerified;
+                this.currentUser = { username, verified };
                 this.joueurRS.next({ username, verified });
             }
         });
@@ -167,9 +171,6 @@ export class AuthenticationService implements OnDestroy {
             return MGPValidation.failure('Cannot disconnect a non-connected user');
         }
     }
-    public getAuthenticatedUser(): AuthUser {
-        return this.joueurBS.getValue();
-    }
     public updatePresence(): void {
         const uid: string = firebase.auth().currentUser.uid;
         const userStatusDatabaseRef: firebase.database.Reference = firebase.database().ref('/status/' + uid);
@@ -190,10 +191,14 @@ export class AuthenticationService implements OnDestroy {
             });
         });
     }
-    public ngOnDestroy(): void {
-        if (this.authSub) this.authSub.unsubscribe();
+    public getCurrentUser(): AuthUser {
+        return this.currentUser;
     }
     public getJoueurObs(): Observable<AuthUser> {
         return this.joueurObs;
     }
+    public ngOnDestroy(): void {
+        if (this.authSub) this.authSub.unsubscribe();
+    }
+
 }

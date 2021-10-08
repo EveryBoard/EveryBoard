@@ -29,6 +29,10 @@ export class AuthenticationServiceMock {
         AuthenticationServiceMock.CURRENT_USER = user;
     }
 
+    public getCurrentUser(): AuthUser {
+        return AuthenticationServiceMock.CURRENT_USER;
+    }
+
     public getJoueurObs(): Observable<AuthUser> {
         return of(AuthenticationServiceMock.CURRENT_USER);
     }
@@ -310,23 +314,6 @@ describe('AuthenticationService', () => {
         });
     });
 
-    it('To be clear for non async use, should distinguish not initialized and not connected', async() => {
-        let first: boolean = true;
-        service.getJoueurObs().subscribe((user: AuthUser) => {
-            if (first) {
-                expect(user).toBe(AuthenticationService.NOT_INITIALIZED);
-                first = false;
-            }
-        });
-        // when the user connects and disconnect
-        await createConnectedGoogleUser();
-        await firebase.auth().signOut();
-
-        // then it is definitely disconnected
-        service.getJoueurObs().subscribe((user: AuthUser) => {
-            expect(user).toEqual(AuthenticationService.NOT_CONNECTED);
-        });
-    });
     describe('updatePresence', () => {
         xit('should be called and update user presence when user gets connected', async() => {
             spyOn(service, 'updatePresence').and.callThrough();
