@@ -10,16 +10,16 @@ import { GameStatus } from 'src/app/jscaip/Rules';
 export class PylosMinimax extends Minimax<PylosMove, PylosState> {
 
     public static getListMoves(node: PylosNode): PylosMove[] {
-        const state: PylosState = node.gamePartSlice;
+        const state: PylosState = node.gameState;
         const result: PylosMove[] = [];
-        const sliceInfo: { freeToMove: PylosCoord[]; landable: PylosCoord[]; } = PylosRules.getSliceInfo(state);
-        const climbings: PylosMove[] = PylosRules.getClimbingMoves(sliceInfo);
-        const drops: PylosMove[] = PylosRules.getDropMoves(sliceInfo);
+        const stateInfo: { freeToMove: PylosCoord[]; landable: PylosCoord[]; } = PylosRules.getStateInfo(state);
+        const climbings: PylosMove[] = PylosRules.getClimbingMoves(stateInfo);
+        const drops: PylosMove[] = PylosRules.getDropMoves(stateInfo);
         const moves: PylosMove[] = climbings.concat(drops);
         for (const move of moves) {
             let possiblesCaptures: PylosCoord[][] = [[]];
             if (PylosRules.canCapture(state, move.landingCoord)) {
-                possiblesCaptures = PylosRules.getPossibleCaptures(sliceInfo.freeToMove,
+                possiblesCaptures = PylosRules.getPossibleCaptures(stateInfo.freeToMove,
                                                                    move.startingCoord,
                                                                    move.landingCoord);
             }
@@ -38,7 +38,7 @@ export class PylosMinimax extends Minimax<PylosMove, PylosState> {
         if (gameStatus.isEndGame) {
             return new NodeUnheritance(gameStatus.toBoardValue());
         } else {
-            const ownershipMap: { [owner: number]: number; } = node.gamePartSlice.getPiecesRepartition();
+            const ownershipMap: { [owner: number]: number; } = node.gameState.getPiecesRepartition();
             return new NodeUnheritance(ownershipMap[Player.ZERO.value] - ownershipMap[Player.ONE.value]);
         }
     }

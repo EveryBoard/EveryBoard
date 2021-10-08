@@ -14,6 +14,7 @@ class NonAbstractMoveCoordToCoord extends MoveCoordToCoord {
     }
 }
 describe('MoveCoordToCoord', () => {
+
     it('should throw when created with a null end', () => {
         expect(() => new NonAbstractMoveCoordToCoord(new Coord(0, 0), null)).toThrowError('End cannot be null!');
     });

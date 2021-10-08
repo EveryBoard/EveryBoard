@@ -15,6 +15,7 @@ import { P4Component } from 'src/app/games/p4/p4.component';
 import { IPart } from 'src/app/domain/icurrentpart';
 
 describe('OnlineGameWrapperComponent Lifecycle', () => {
+
     /* Life cycle summary
      * component construction (beforeEach)
      * stage 0
@@ -55,7 +56,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             componentTestUtils.detectChanges();
             tick();
 
-            expect(wrapper.currentPartId).toBeDefined();
+            expect(wrapper.currentPartId).withContext('currentPartId should be defined').toBeDefined();
             expect(joinerService.joinGame).toHaveBeenCalledTimes(1);
             expect(joinerService.observe).toHaveBeenCalledTimes(1);
         }));

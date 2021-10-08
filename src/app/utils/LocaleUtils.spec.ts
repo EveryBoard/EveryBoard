@@ -1,6 +1,7 @@
 import { LocaleUtils } from './LocaleUtils';
 
 describe('LocaleUtils', () => {
+
     describe('getNavigatorLanguage', () => {
         it('should be english in the test environment', () => {
             expect(LocaleUtils.getNavigatorLanguage()).toEqual('en-US');

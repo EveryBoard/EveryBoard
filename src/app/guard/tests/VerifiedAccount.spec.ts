@@ -7,7 +7,7 @@ import { of } from 'rxjs';
 import { AuthenticationServiceUnderTest } from 'src/app/services/tests/AuthenticationService.spec';
 import { fakeAsync } from '@angular/core/testing';
 
-xdescribe('VerifiedAccount', () => {
+describe('VerifiedAccount', () => {
     let guard: VerifiedAccount;
 
     let authService: AuthenticationService;

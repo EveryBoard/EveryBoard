@@ -21,9 +21,9 @@ export interface IFirebaseFirestoreDAO<T extends FirebaseJSONObject> {
     getObsById(id: string): Observable<{id: string, doc: T}>;
 
     observingWhere(field: NonNullable<string>,
-        condition: NonNullable<firebase.firestore.WhereFilterOp>,
-        value: NonNullable<unknown>,
-        callback: FirebaseCollectionObserver<T>): () => void;
+                   condition: NonNullable<firebase.firestore.WhereFilterOp>,
+                   value: NonNullable<unknown>,
+                   callback: FirebaseCollectionObserver<T>): () => void;
 }
 
 export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> implements IFirebaseFirestoreDAO<T> {

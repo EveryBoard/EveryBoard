@@ -1,6 +1,7 @@
 import { assert, display, isJSONPrimitive, Utils } from '../utils';
 
 describe('utils', () => {
+
     describe('isJSONPrimitive', () => {
         it('should return true for all types of JSON primitives', () => {
             expect(isJSONPrimitive('foo')).toBeTrue();

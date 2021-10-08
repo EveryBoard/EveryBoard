@@ -8,10 +8,10 @@ import { EpaminondasComponent } from 'src/app/games/epaminondas/epaminondas.comp
 import { GipfComponent } from 'src/app/games/gipf/gipf.component';
 import { GoComponent } from 'src/app/games/go/go.component';
 import { KamisadoComponent } from 'src/app/games/kamisado/kamisado.component';
-import { LinesOfActionComponent } from 'src/app/games/lines-of-action/LinesOfAction.component';
+import { LinesOfActionComponent } from 'src/app/games/lines-of-action/lines-of-action.component';
 import { MinimaxTestingComponent } from 'src/app/games/minimax-testing/minimax-testing.component';
 import { P4Component } from 'src/app/games/p4/p4.component';
-import { PentagoComponent } from 'src/app/games/pentago/Pentago.component';
+import { PentagoComponent } from 'src/app/games/pentago/pentago.component';
 import { PylosComponent } from 'src/app/games/pylos/pylos.component';
 import { QuartoComponent } from 'src/app/games/quarto/quarto.component';
 import { QuixoComponent } from 'src/app/games/quixo/quixo.component';
@@ -20,11 +20,9 @@ import { SaharaComponent } from 'src/app/games/sahara/sahara.component';
 import { SiamComponent } from 'src/app/games/siam/siam.component';
 import { SixComponent } from 'src/app/games/six/six.component';
 import { TablutComponent } from 'src/app/games/tablut/tablut.component';
-import { YinshComponent } from 'src/app/games/yinsh/Yinsh.component';
-import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
-import { Move } from 'src/app/jscaip/Move';
+import { YinshComponent } from 'src/app/games/yinsh/yinsh.component';
+import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { Localized } from 'src/app/utils/LocaleUtils';
-import { AbstractGameComponent } from '../../game-components/abstract-game-component/AbstractGameComponent';
 
 class GameDescription {
 
@@ -104,7 +102,7 @@ export class GameInfo {
 
     public constructor(public readonly name: string,
                        public readonly urlName: string,
-                       public readonly component: Type<AbstractGameComponent<Move, GamePartSlice>>,
+                       public readonly component: Type<AbstractGameComponent>,
                        public readonly creationDate: Date,
                        public readonly description: string,
                        public readonly display: boolean = true) {

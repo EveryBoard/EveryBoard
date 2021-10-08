@@ -1,17 +1,17 @@
 import { Component, ComponentFactory, ComponentFactoryResolver, ComponentRef, Type, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AbstractGameComponent } from '../game-components/abstract-game-component/AbstractGameComponent';
 import { GameIncluderComponent } from '../game-components/game-includer/game-includer.component';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
 
 import { Move } from '../../jscaip/Move';
-import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { assert, display } from 'src/app/utils/utils';
 import { GameInfo } from '../normal-component/pick-game/pick-game.component';
 import { Player } from 'src/app/jscaip/Player';
 import { Localized } from 'src/app/utils/LocaleUtils';
+import { AbstractGameComponent } from '../game-components/game-component/GameComponent';
+import { AbstractGameState } from 'src/app/jscaip/GameState';
 
 export class GameWrapperMessages {
 
@@ -22,13 +22,14 @@ export class GameWrapperMessages {
 
 @Component({ template: '' })
 export abstract class GameWrapper {
+
     public static VERBOSE: boolean = false;
 
     // component loading
     @ViewChild(GameIncluderComponent)
     public gameIncluder: GameIncluderComponent;
 
-    public gameComponent: AbstractGameComponent<Move, GamePartSlice>;
+    public gameComponent: AbstractGameComponent;
 
     public players: string[] = [null, null];
 
@@ -43,7 +44,7 @@ export abstract class GameWrapper {
                 protected authenticationService: AuthenticationService) {
         display(GameWrapper.VERBOSE, 'GameWrapper.constructed: ' + (this.gameIncluder!=null));
     }
-    public getMatchingComponent(compoString: string): Type<AbstractGameComponent<Move, GamePartSlice>> {
+    public getMatchingComponent(compoString: string) : Type<AbstractGameComponent> {
         display(GameWrapper.VERBOSE, 'GameWrapper.getMatchingComponent');
         const gameInfo: GameInfo = GameInfo.ALL_GAMES().find((gameInfo: GameInfo) => gameInfo.urlName === compoString);
         assert(gameInfo != null, 'Unknown Games are unwrappable');
@@ -55,24 +56,22 @@ export abstract class GameWrapper {
         this.createGameComponent();
 
         this.gameComponent.rules.setInitialBoard();
-        this.gameComponent.board = this.gameComponent.rules.node.gamePartSlice.getCopiedBoard();
     }
     protected createGameComponent(): void {
         display(GameWrapper.VERBOSE, 'GameWrapper.createGameComponent');
         assert(this.gameIncluder != null, 'GameIncluder should be present');
 
         const compoString: string = this.actRoute.snapshot.paramMap.get('compo');
-        const component: Type<AbstractGameComponent<Move, GamePartSlice>> =
-            this.getMatchingComponent(compoString);
-        const componentFactory: ComponentFactory<AbstractGameComponent<Move, GamePartSlice>> =
+        const component: Type<AbstractGameComponent> = this.getMatchingComponent(compoString);
+        const componentFactory: ComponentFactory<AbstractGameComponent> =
             this.componentFactoryResolver.resolveComponentFactory(component);
-        const componentRef: ComponentRef<AbstractGameComponent<Move, GamePartSlice>> =
+        const componentRef: ComponentRef<AbstractGameComponent> =
             this.gameIncluder.viewContainerRef.createComponent(componentFactory);
-        this.gameComponent = <AbstractGameComponent<Move, GamePartSlice>>componentRef.instance;
+        this.gameComponent = <AbstractGameComponent>componentRef.instance;
         // Shortent by T<S = Truc>
 
         this.gameComponent.chooseMove = // so that when the game component do a move
-            (m: Move, s: GamePartSlice, s0: number, s1: number): Promise<MGPValidation> => {
+            (m: Move, s: AbstractGameState, s0: number, s1: number): Promise<MGPValidation> => {
                 return this.receiveValidMove(m, s, s0, s1);
             };
         // the game wrapper can then act accordingly to the chosen move.
@@ -95,7 +94,7 @@ export abstract class GameWrapper {
         this.canPass = this.gameComponent.canPass;
     }
     public async receiveValidMove(move: Move,
-                                  slice: GamePartSlice,
+                                  state: AbstractGameState,
                                   scorePlayerZero: number,
                                   scorePlayerOne: number): Promise<MGPValidation>
     {
@@ -103,7 +102,7 @@ export abstract class GameWrapper {
         display(GameWrapper.VERBOSE || LOCAL_VERBOSE, {
             gameWrapper_receiveValidMove_AKA_chooseMove: {
                 move,
-                slice,
+                state,
                 scorePlayerZero,
                 scorePlayerOne,
             },
@@ -114,7 +113,7 @@ export abstract class GameWrapper {
         if (this.endGame) {
             return MGPValidation.failure($localize`The game has ended.`);
         }
-        const legality: LegalityStatus = this.gameComponent.rules.isLegal(move, slice);
+        const legality: LegalityStatus = this.gameComponent.rules.isLegal(move, state);
         if (legality.legal.isFailure()) {
             this.gameComponent.cancelMove(legality.legal.getReason());
             return legality.legal;
@@ -145,7 +144,7 @@ export abstract class GameWrapper {
         if (this.observerRole === Player.NONE.value) {
             return false;
         }
-        const turn: number = this.gameComponent.rules.node.gamePartSlice.turn;
+        const turn: number = this.gameComponent.rules.node.gameState.turn;
         const indexPlayer: number = turn % 2;
         const username: string = this.getPlayerName();
         display(GameWrapper.VERBOSE, { isPlayerTurn: {
@@ -164,7 +163,4 @@ export abstract class GameWrapper {
     }
     public abstract getPlayerName(): string
 
-    get compo(): AbstractGameComponent<Move, GamePartSlice> {
-        return this.gameComponent;
-    }
 }

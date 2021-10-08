@@ -1,85 +1,86 @@
-import { QuartoRules } from '../QuartoRules';
+import { QuartoNode, QuartoRules } from '../QuartoRules';
 import { QuartoMinimax } from '../QuartoMinimax';
 import { QuartoMove } from '../QuartoMove';
 import { QuartoPiece } from '../QuartoPiece';
-import { QuartoPartSlice } from '../QuartoPartSlice';
+import { QuartoState } from '../QuartoState';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/utils/ArrayUtils';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { expectToBeDraw, expectToBeVictoryFor } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { Player } from 'src/app/jscaip/Player';
+import { Minimax } from 'src/app/jscaip/Minimax';
 
 describe('QuartoRules', () => {
 
     let rules: QuartoRules;
-    let minimax: QuartoMinimax;
+    let minimaxes: Minimax<QuartoMove, QuartoState>[];
 
     beforeEach(() => {
-        rules = new QuartoRules(QuartoPartSlice);
-        minimax = new QuartoMinimax(rules, 'QuartoMinimax');
+        rules = new QuartoRules(QuartoState);
+        minimaxes = [
+            new QuartoMinimax(rules, 'QuartoMinimax'),
+        ];
     });
     it('Should create', () => {
         expect(rules).toBeTruthy();
     });
     it('Should forbid not to give a piece when not last turn', () => {
-        const slice: QuartoPartSlice = QuartoPartSlice.getInitialSlice();
+        const state: QuartoState = QuartoState.getInitialState();
         const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.NONE);
-        const status: LegalityStatus = rules.isLegal(move, slice);
+        const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.getReason()).toBe('You must give a piece.');
     });
     it('Should allow not to give a piece when last turn, and consider the game a draw if no one win', () => {
-        const board: number[][] = ArrayUtils.mapBiArray([
+        const board: Table<QuartoPiece> = [
             [QuartoPiece.AABB, QuartoPiece.AAAB, QuartoPiece.ABBA, QuartoPiece.BBAA],
             [QuartoPiece.BBAB, QuartoPiece.BAAA, QuartoPiece.BBBA, QuartoPiece.ABBB],
             [QuartoPiece.BABA, QuartoPiece.BBBB, QuartoPiece.ABAA, QuartoPiece.AABA],
             [QuartoPiece.AAAA, QuartoPiece.ABAB, QuartoPiece.BABB, QuartoPiece.NONE],
-        ], QuartoPiece.toInt);
-        const expectedBoard: number[][] = ArrayUtils.mapBiArray([
+        ];
+        const expectedBoard: Table<QuartoPiece> = [
             [QuartoPiece.AABB, QuartoPiece.AAAB, QuartoPiece.ABBA, QuartoPiece.BBAA],
             [QuartoPiece.BBAB, QuartoPiece.BAAA, QuartoPiece.BBBA, QuartoPiece.ABBB],
             [QuartoPiece.BABA, QuartoPiece.BBBB, QuartoPiece.ABAA, QuartoPiece.AABA],
             [QuartoPiece.AAAA, QuartoPiece.ABAB, QuartoPiece.BABB, QuartoPiece.BAAB],
-        ], QuartoPiece.toInt);
-        const slice: QuartoPartSlice = new QuartoPartSlice(board, 15, QuartoPiece.BAAB);
-        rules.node = new MGPNode(null, null, slice);
+        ];
+        const state: QuartoState = new QuartoState(board, 15, QuartoPiece.BAAB);
+        rules.node = new MGPNode(null, null, state);
         const move: QuartoMove = new QuartoMove(3, 3, QuartoPiece.NONE);
-        const possiblesMoves: QuartoMove[] = minimax.getListMoves(rules.node);
-        expect(possiblesMoves.length).toBe(1);
-        expect(possiblesMoves[0]).toEqual(move);
         expect(rules.choose(move)).toBeTrue();
-        const resultingSlice: QuartoPartSlice = rules.node.gamePartSlice;
-        const expectedSlice: QuartoPartSlice = new QuartoPartSlice(expectedBoard, 16, QuartoPiece.NONE);
-        expect(resultingSlice).toEqual(expectedSlice);
-        expect(minimax.getBoardValue(rules.node).value).withContext('This should be a draw.').toEqual(0);
-        expect(rules.getGameStatus(rules.node).isEndGame).toBeTrue();
+        const resultingState: QuartoState = rules.node.gameState;
+        const expectedState: QuartoState = new QuartoState(expectedBoard, 16, QuartoPiece.NONE);
+        expect(resultingState).toEqual(expectedState);
+        expectToBeDraw(rules, rules.node, minimaxes);
     });
     it('Should forbid to give a piece already on the board', () => {
-        const board: number[][] = [
-            [16, 16, 16, 16],
-            [16, 16, 16, 16],
-            [16, 16, 16, 16],
-            [0, 16, 16, 16],
+        const board: Table<QuartoPiece> = [
+            [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
+            [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
+            [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
+            [QuartoPiece.AAAA, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
         ];
-        const slice: QuartoPartSlice = new QuartoPartSlice(board, 1, QuartoPiece.AABA);
+        const state: QuartoState = new QuartoState(board, 1, QuartoPiece.AABA);
         const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.AAAA);
-        const status: LegalityStatus = rules.isLegal(move, slice);
+        const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.getReason()).toBe('That piece is already on the board.');
     });
     it('Should forbid to give the piece that you had in your hand', () => {
-        const slice: QuartoPartSlice = QuartoPartSlice.getInitialSlice();
+        const state: QuartoState = QuartoState.getInitialState();
         const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.AAAA);
-        const status: LegalityStatus = rules.isLegal(move, slice);
+        const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.getReason()).toBe('You cannot give the piece that was in your hands.');
     });
     it('Should forbid to play on occupied case', () => {
-        const board: number[][] = [
-            [16, 16, 16, 16],
-            [16, 16, 16, 16],
-            [16, 16, 16, 16],
-            [0, 16, 16, 16],
+        const board: Table<QuartoPiece> = [
+            [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
+            [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
+            [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
+            [QuartoPiece.AAAA, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
         ];
-        const slice: QuartoPartSlice = new QuartoPartSlice(board, 1, QuartoPiece.AABA);
+        const state: QuartoState = new QuartoState(board, 1, QuartoPiece.AABA);
         const move: QuartoMove = new QuartoMove(0, 3, QuartoPiece.BBAA);
-        const status: LegalityStatus = rules.isLegal(move, slice);
+        const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.reason).toEqual(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
     });
     it('Should allow simple move', () => {
@@ -88,49 +89,49 @@ describe('QuartoRules', () => {
         expect(isLegal).toBeTrue();
     });
     it('Should considered player 0 winner when doing a full line', () => {
-        const board: number[][] = [
-            [15, 14, 13, 16],
-            [16, 16, 16, 16],
-            [16, 16, 16, 16],
-            [0, 16, 16, 16],
+        const board: Table<QuartoPiece> = [
+            [QuartoPiece.BBBB, QuartoPiece.BBBA, QuartoPiece.BBAB, QuartoPiece.NONE],
+            [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
+            [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
+            [QuartoPiece.AAAA, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
         ];
-        const expectedBoard: number[][] = [
-            [15, 14, 13, 12],
-            [16, 16, 16, 16],
-            [16, 16, 16, 16],
-            [0, 16, 16, 16],
+        const expectedBoard: Table<QuartoPiece> = [
+            [QuartoPiece.BBBB, QuartoPiece.BBBA, QuartoPiece.BBAB, QuartoPiece.BBAA],
+            [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
+            [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
+            [QuartoPiece.AAAA, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
         ];
-        const slice: QuartoPartSlice = new QuartoPartSlice(board, 4, QuartoPiece.BBAA);
+        const state: QuartoState = new QuartoState(board, 4, QuartoPiece.BBAA);
         const move: QuartoMove = new QuartoMove(3, 0, QuartoPiece.AAAB);
-        const status: LegalityStatus = rules.isLegal(move, slice);
+        const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingSlice: QuartoPartSlice = rules.applyLegalMove(move, slice);
-        const expectedSlice: QuartoPartSlice = new QuartoPartSlice(expectedBoard, 5, QuartoPiece.AAAB);
-        expect(resultingSlice).toEqual(expectedSlice);
-        const boardValue: number = minimax.getBoardValue(new MGPNode(null, move, expectedSlice)).value;
-        expect(boardValue).withContext('This should be a victory for player 0.').toEqual(Number.MIN_SAFE_INTEGER);
+        const resultingState: QuartoState = rules.applyLegalMove(move, state);
+        const expectedState: QuartoState = new QuartoState(expectedBoard, 5, QuartoPiece.AAAB);
+        expect(resultingState).toEqual(expectedState);
+        const node: QuartoNode = new MGPNode(null, move, expectedState);
+        expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
     it('Should considered player 1 winner when doing a full line', () => {
-        const board: number[][] = [
-            [5, 16, 3, 16],
-            [16, 1, 11, 16],
-            [16, 0, 12, 14],
-            [7, 16, 9, 16],
+        const board: Table<QuartoPiece> = [
+            [QuartoPiece.ABAB, QuartoPiece.NONE, QuartoPiece.AABB, QuartoPiece.NONE],
+            [QuartoPiece.NONE, QuartoPiece.AAAB, QuartoPiece.BABB, QuartoPiece.NONE],
+            [QuartoPiece.NONE, QuartoPiece.AAAA, QuartoPiece.BBAA, QuartoPiece.BBBA],
+            [QuartoPiece.ABBB, QuartoPiece.NONE, QuartoPiece.BAAB, QuartoPiece.NONE],
         ];
-        const expectedBoard: number[][] = [
-            [5, 16, 3, 16],
-            [16, 1, 11, 16],
-            [16, 0, 12, 14],
-            [7, 16, 9, 13],
+        const expectedBoard: Table<QuartoPiece> = [
+            [QuartoPiece.ABAB, QuartoPiece.NONE, QuartoPiece.AABB, QuartoPiece.NONE],
+            [QuartoPiece.NONE, QuartoPiece.AAAB, QuartoPiece.BABB, QuartoPiece.NONE],
+            [QuartoPiece.NONE, QuartoPiece.AAAA, QuartoPiece.BBAA, QuartoPiece.BBBA],
+            [QuartoPiece.ABBB, QuartoPiece.NONE, QuartoPiece.BAAB, QuartoPiece.BBAB],
         ];
-        const slice: QuartoPartSlice = new QuartoPartSlice(board, 9, QuartoPiece.BBAB);
+        const state: QuartoState = new QuartoState(board, 9, QuartoPiece.BBAB);
         const move: QuartoMove = new QuartoMove(3, 3, QuartoPiece.AABA);
-        const status: LegalityStatus = rules.isLegal(move, slice);
+        const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingSlice: QuartoPartSlice = rules.applyLegalMove(move, slice);
-        const expectedSlice: QuartoPartSlice = new QuartoPartSlice(expectedBoard, 10, QuartoPiece.AABA);
-        expect(resultingSlice).toEqual(expectedSlice);
-        const boardValue: number = minimax.getBoardValue(new MGPNode(null, move, expectedSlice)).value;
-        expect(boardValue).withContext('This should be a victory for player 1.').toEqual(Number.MAX_SAFE_INTEGER);
+        const resultingState: QuartoState = rules.applyLegalMove(move, state);
+        const expectedState: QuartoState = new QuartoState(expectedBoard, 10, QuartoPiece.AABA);
+        expect(resultingState).toEqual(expectedState);
+        const node: QuartoNode = new MGPNode(null, move, expectedState);
+        expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
 });

@@ -1,7 +1,7 @@
 import { GroupDatasFactory } from 'src/app/jscaip/BoardDatas';
 import { Direction, Orthogonal } from 'src/app/jscaip/Direction';
 import { GoGroupDatas } from './GoGroupsDatas';
-import { GoPiece } from './GoPartSlice';
+import { GoPiece } from './GoState';
 
 export class GoGroupDatasFactory extends GroupDatasFactory<GoPiece> {
 

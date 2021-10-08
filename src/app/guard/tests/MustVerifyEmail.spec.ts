@@ -4,7 +4,8 @@ import { of } from 'rxjs';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { MustVerifyEmail } from '../MustVerifyEmail';
 
-describe('EmailVerified', () => {
+describe('MustVerifyEmail', () => {
+
     let guard: MustVerifyEmail;
 
     let authService: AuthenticationService;

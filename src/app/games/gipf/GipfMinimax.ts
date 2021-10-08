@@ -2,13 +2,13 @@ import { Player } from 'src/app/jscaip/Player';
 import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GipfCapture, GipfMove, GipfPlacement } from './GipfMove';
-import { GipfPartSlice } from './GipfPartSlice';
+import { GipfState } from './GipfState';
 import { GipfLegalityStatus } from './GipfLegalityStatus';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { GipfRules, GipfNode } from './GipfRules';
 
-export class GipfMinimax extends Minimax<GipfMove, GipfPartSlice, GipfLegalityStatus> {
+export class GipfMinimax extends Minimax<GipfMove, GipfState, GipfLegalityStatus> {
     public static getPossibleCaptureCombinationsFromPossibleCaptures(
         possibleCaptures: GipfCapture[],
     ): Table<GipfCapture> {
@@ -69,7 +69,7 @@ export class GipfMinimax extends Minimax<GipfMove, GipfPartSlice, GipfLegalitySt
     }
 
     public getBoardValue(node: GipfNode): NodeUnheritance {
-        const state: GipfPartSlice = node.gamePartSlice;
+        const state: GipfState = node.gameState;
         const score0: MGPOptional<number> = GipfRules.getPlayerScore(state, Player.ZERO);
         const score1: MGPOptional<number> = GipfRules.getPlayerScore(state, Player.ONE);
         if (score0.isAbsent()) {
@@ -81,20 +81,20 @@ export class GipfMinimax extends Minimax<GipfMove, GipfPartSlice, GipfLegalitySt
         }
     }
     public getListMoves(node: GipfNode): GipfMove[] {
-        return this.getListMoveFromSlice(node.gamePartSlice);
+        return this.getListMoveFromState(node.gameState);
     }
-    private getListMoveFromSlice(slice: GipfPartSlice): GipfMove[] {
+    private getListMoveFromState(state: GipfState): GipfMove[] {
         const moves: GipfMove[] = [];
 
-        if (GipfRules.isGameOver(slice)) {
+        if (GipfRules.isGameOver(state)) {
             return moves;
         }
 
-        this.getPossibleCaptureCombinations(slice).forEach((initialCaptures: ReadonlyArray<GipfCapture>) => {
-            const sliceAfterCapture: GipfPartSlice = GipfRules.applyCaptures(slice, initialCaptures);
-            GipfRules.getPlacements(sliceAfterCapture).forEach((placement: GipfPlacement) => {
-                const sliceAfterPlacement: GipfPartSlice = GipfRules.applyPlacement(sliceAfterCapture, placement);
-                this.getPossibleCaptureCombinations(sliceAfterPlacement)
+        this.getPossibleCaptureCombinations(state).forEach((initialCaptures: ReadonlyArray<GipfCapture>) => {
+            const stateAfterCapture: GipfState = GipfRules.applyCaptures(state, initialCaptures);
+            GipfRules.getPlacements(stateAfterCapture).forEach((placement: GipfPlacement) => {
+                const stateAfterPlacement: GipfState = GipfRules.applyPlacement(stateAfterCapture, placement);
+                this.getPossibleCaptureCombinations(stateAfterPlacement)
                     .forEach((finalCaptures: ReadonlyArray<GipfCapture>) => {
                         const moveSimple: GipfMove = new GipfMove(placement, initialCaptures, finalCaptures);
                         moves.push(moveSimple);
@@ -103,8 +103,8 @@ export class GipfMinimax extends Minimax<GipfMove, GipfPartSlice, GipfLegalitySt
         });
         return moves;
     }
-    private getPossibleCaptureCombinations(slice: GipfPartSlice): Table<GipfCapture> {
-        const possibleCaptures: GipfCapture[] = GipfRules.getPossibleCaptures(slice);
+    private getPossibleCaptureCombinations(state: GipfState): Table<GipfCapture> {
+        const possibleCaptures: GipfCapture[] = GipfRules.getPossibleCaptures(state);
         return GipfMinimax.getPossibleCaptureCombinationsFromPossibleCaptures(possibleCaptures);
     }
 }

@@ -1,16 +1,18 @@
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
-import { QuixoPartSlice } from '../QuixoPartSlice';
+import { QuixoState } from '../QuixoState';
 import { QuixoNode, QuixoRules } from '../QuixoRules';
 import { QuixoMinimax } from '../QuixoMinimax';
 import { QuixoMove } from '../QuixoMove';
 import { QuixoFailure } from '../QuixoFailure';
 import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
+import { Table } from 'src/app/utils/ArrayUtils';
 
 describe('QuixoMove:', () => {
-    const _: number = Player.NONE.value;
-    const X: number = Player.ONE.value;
+
+    const _: Player = Player.NONE;
+    const X: Player = Player.ONE;
 
     it('Should forbid move creation for invalid x or y coord', () => {
         expect(() => new QuixoMove(-1, 0, Orthogonal.UP))
@@ -34,7 +36,7 @@ describe('QuixoMove:', () => {
             .toThrowError(`Invalid direction: pawn on the bottom side can't be moved down.`);
     });
     it('QuixoMove.encoder should be correct', () => {
-        const board: number[][] = [
+        const board: Table<Player> = [
             [_, X, _, _, _],
             [_, _, _, _, X],
             [_, _, _, _, _],
@@ -42,9 +44,9 @@ describe('QuixoMove:', () => {
             [_, _, _, X, _],
         ];
         const move: QuixoMove = new QuixoMove(0, 0, Orthogonal.DOWN);
-        const slice: QuixoPartSlice = new QuixoPartSlice(board, 0);
-        const node: QuixoNode = new MGPNode(null, move, slice);
-        const rules: QuixoRules = new QuixoRules(QuixoPartSlice);
+        const state: QuixoState = new QuixoState(board, 0);
+        const node: QuixoNode = new MGPNode(null, move, state);
+        const rules: QuixoRules = new QuixoRules(QuixoState);
         const minimax: QuixoMinimax = new QuixoMinimax(rules, 'QuixoMinimax');
         const moves: QuixoMove[] = minimax.getListMoves(node);
         for (const move of moves) {

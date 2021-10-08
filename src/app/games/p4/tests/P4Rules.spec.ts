@@ -1,6 +1,6 @@
 import { P4Node, P4Rules } from '../P4Rules';
 import { Player } from 'src/app/jscaip/Player';
-import { P4PartSlice } from '../P4PartSlice';
+import { P4State } from '../P4State';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { P4Move } from '../P4Move';
@@ -11,12 +11,12 @@ describe('P4Rules', () => {
 
     let rules: P4Rules;
     let minimax: P4Minimax;
-    const O: number = Player.ZERO.value;
-    const X: number = Player.ONE.value;
-    const _: number = Player.NONE.value;
+    const O: Player = Player.ZERO;
+    const X: Player = Player.ONE;
+    const _: Player = Player.NONE;
 
     beforeEach(() => {
-        rules = new P4Rules(P4PartSlice);
+        rules = new P4Rules(P4State);
         minimax = new P4Minimax(rules, 'P4Minimax');
     });
     it('should be created', () => {
@@ -24,7 +24,7 @@ describe('P4Rules', () => {
         expect(minimax.getBoardValue(rules.node).value).toEqual(0);
     });
     it('Should drop piece on the lowest case of the column', () => {
-        const board: number[][] = [
+        const board: Player[][] = [
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
@@ -32,7 +32,7 @@ describe('P4Rules', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
         ];
-        const expectedBoard: number[][] = [
+        const expectedBoard: Player[][] = [
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
@@ -40,15 +40,15 @@ describe('P4Rules', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, O, _, _, _],
         ];
-        const slice: P4PartSlice = new P4PartSlice(board, 0);
+        const state: P4State = new P4State(board, 0);
         const move: P4Move = P4Move.of(3);
-        const status: LegalityStatus = rules.isLegal(move, slice);
+        const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingSlice: P4PartSlice = rules.applyLegalMove(move, slice, status);
-        expect(resultingSlice.board).toEqual(expectedBoard);
+        const resultingState: P4State = rules.applyLegalMove(move, state, status);
+        expect(resultingState.board).toEqual(expectedBoard);
     });
     it('First player should win vertically', () => {
-        const board: number[][] = [
+        const board: Player[][] = [
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
@@ -56,7 +56,7 @@ describe('P4Rules', () => {
             [_, _, _, O, _, _, _],
             [_, _, _, O, _, _, _],
         ];
-        const expectedBoard: number[][] = [
+        const expectedBoard: Player[][] = [
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, O, _, _, _],
@@ -64,16 +64,16 @@ describe('P4Rules', () => {
             [_, _, _, O, _, _, _],
             [_, _, _, O, _, _, _],
         ];
-        const slice: P4PartSlice = new P4PartSlice(board, 0);
-        rules.node = new MGPNode(null, null, slice);
+        const state: P4State = new P4State(board, 0);
+        rules.node = new MGPNode(null, null, state);
         const move: P4Move = P4Move.of(3);
         expect(rules.choose(move)).toBeTrue();
-        expect(rules.node.gamePartSlice.board).toEqual(expectedBoard);
+        expect(rules.node.gameState.board).toEqual(expectedBoard);
         expect(rules.node.getOwnValue(minimax).value).toEqual(Number.MIN_SAFE_INTEGER);
         expect(rules.getGameStatus(rules.node).isEndGame).toBeTrue();
     });
     it('Second player should win vertically', () => {
-        const board: number[][] = [
+        const board: Player[][] = [
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
@@ -81,7 +81,7 @@ describe('P4Rules', () => {
             [_, _, _, X, _, _, _],
             [_, _, _, X, _, _, _],
         ];
-        const expectedBoard: number[][] = [
+        const expectedBoard: Player[][] = [
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, X, _, _, _],
@@ -89,16 +89,16 @@ describe('P4Rules', () => {
             [_, _, _, X, _, _, _],
             [_, _, _, X, _, _, _],
         ];
-        const slice: P4PartSlice = new P4PartSlice(board, 1);
-        rules.node = new MGPNode(null, null, slice);
+        const state: P4State = new P4State(board, 1);
+        rules.node = new MGPNode(null, null, state);
         const move: P4Move = P4Move.of(3);
         expect(rules.choose(move)).toBeTrue();
-        expect(rules.node.gamePartSlice.board).toEqual(expectedBoard);
+        expect(rules.node.gameState.board).toEqual(expectedBoard);
         expect(rules.node.getOwnValue(minimax).value).toEqual(Number.MAX_SAFE_INTEGER);
         expect(rules.getGameStatus(rules.node).isEndGame).toBeTrue();
     });
     it('Should be a draw', () => {
-        const board: number[][] = [
+        const board: Player[][] = [
             [O, O, O, _, O, O, O],
             [X, X, X, O, X, X, X],
             [O, O, O, X, O, O, O],
@@ -106,7 +106,7 @@ describe('P4Rules', () => {
             [O, O, O, X, O, O, O],
             [X, X, X, O, X, X, X],
         ];
-        const expectedBoard: number[][] = [
+        const expectedBoard: Player[][] = [
             [O, O, O, X, O, O, O],
             [X, X, X, O, X, X, X],
             [O, O, O, X, O, O, O],
@@ -114,17 +114,17 @@ describe('P4Rules', () => {
             [O, O, O, X, O, O, O],
             [X, X, X, O, X, X, X],
         ];
-        const slice: P4PartSlice = new P4PartSlice(board, 41);
-        rules.node = new MGPNode(null, null, slice);
+        const state: P4State = new P4State(board, 41);
+        rules.node = new MGPNode(null, null, state);
         const move: P4Move = P4Move.of(3);
         expect(rules.choose(move)).toBeTrue();
-        const resultingSlice: P4PartSlice = rules.node.gamePartSlice;
-        expect(resultingSlice.board).toEqual(expectedBoard);
+        const resultingState: P4State = rules.node.gameState;
+        expect(resultingState.board).toEqual(expectedBoard);
         expect(rules.getGameStatus(rules.node).isEndGame).toBeTrue();
         expect(rules.node.getOwnValue(minimax).value).toBe(0);
     });
     it('Should know when a column is full or not', () => {
-        const board: number[][] = [
+        const board: Player[][] = [
             [X, _, _, _, _, _, _],
             [O, _, _, _, _, _, _],
             [X, _, _, _, _, _, _],
@@ -132,12 +132,12 @@ describe('P4Rules', () => {
             [X, _, _, _, _, _, _],
             [O, O, X, O, X, O, X],
         ];
-        const slice: P4PartSlice = new P4PartSlice(board, 12);
-        const node: P4Node = new MGPNode(null, null, slice);
+        const state: P4State = new P4State(board, 12);
+        const node: P4Node = new MGPNode(null, null, state);
         expect(minimax.getListMoves(node).length).toBe(6);
     });
     it('should forbid placing a piece on a full column', () => {
-        const board: number[][] = [
+        const board: Player[][] = [
             [X, _, _, _, _, _, _],
             [O, _, _, _, _, _, _],
             [X, _, _, _, _, _, _],
@@ -145,13 +145,13 @@ describe('P4Rules', () => {
             [X, _, _, _, _, _, _],
             [O, O, X, O, X, O, X],
         ];
-        const slice: P4PartSlice = new P4PartSlice(board, 12);
+        const state: P4State = new P4State(board, 12);
         const move: P4Move = P4Move.of(0);
-        const status: LegalityStatus = rules.isLegal(move, slice);
+        const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.reason).toBe(P4Failure.COLUMN_IS_FULL());
     });
     it('should assign greater score to center column', () => {
-        const board1: number[][] = [
+        const board1: Player[][] = [
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
@@ -159,8 +159,8 @@ describe('P4Rules', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, O, _, _, _],
         ];
-        const slice1: P4PartSlice = new P4PartSlice(board1, 12);
-        const board2: number[][] = [
+        const state1: P4State = new P4State(board1, 12);
+        const board2: Player[][] = [
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
@@ -168,12 +168,12 @@ describe('P4Rules', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, O],
         ];
-        const slice2: P4PartSlice = new P4PartSlice(board2, 12);
+        const state2: P4State = new P4State(board2, 12);
 
-        expect(P4Rules.getBoardValue(slice1).value).toBeLessThan(P4Rules.getBoardValue(slice2).value);
+        expect(P4Rules.getBoardValue(state1).value).toBeLessThan(P4Rules.getBoardValue(state2).value);
     });
     it('should know where the lowest case is', () => {
-        const board: number[][] = [
+        const board: Player[][] = [
             [_, _, _, X, _, _, _],
             [_, _, O, O, _, _, _],
             [_, _, X, X, _, _, _],

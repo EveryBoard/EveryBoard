@@ -10,6 +10,7 @@ import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { IMessage } from 'src/app/domain/imessage';
 
 describe('ChatComponent', () => {
+
     let testUtils: SimpleComponentTestUtils<ChatComponent>;
 
     let component: ChatComponent;

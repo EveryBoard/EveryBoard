@@ -2,6 +2,7 @@ import { Coord } from '../Coord';
 import { Direction } from '../Direction';
 
 describe('Coord', () => {
+
     it('should compare correctly, y first', () => {
         const smallCoord: Coord = new Coord(2, 1);
         const bigCoord: Coord = new Coord(1, 2);

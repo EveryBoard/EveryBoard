@@ -1,6 +1,5 @@
 #!/usr/bin/python
 from lxml import html
-import requests
 
 f = open('coverage/index.html',mode='r')
 page = f.read()

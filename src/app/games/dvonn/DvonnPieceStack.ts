@@ -2,7 +2,9 @@ import { Player } from 'src/app/jscaip/Player';
 import { NumberEncoder } from 'src/app/jscaip/Encoder';
 
 export class DvonnPieceStack {
+
     public static sizeEncoder: NumberEncoder<number> = NumberEncoder.numberEncoder(49);
+
     public static encoder: NumberEncoder<DvonnPieceStack> = NumberEncoder.ofCombination(
         [NumberEncoder.booleanEncoder, Player.numberEncoder, DvonnPieceStack.sizeEncoder],
         (stack: DvonnPieceStack): [boolean, Player, number] => [stack.source, stack.owner, stack.size],
@@ -11,6 +13,7 @@ export class DvonnPieceStack {
         })
     public static MAX_SIZE: number = 49; // The maximal possible size for a stack
     public static EMPTY: DvonnPieceStack = new DvonnPieceStack(Player.NONE, 0, false);
+    public static NONE: DvonnPieceStack = new DvonnPieceStack(Player.NONE, -1, false);
     public static PLAYER_ZERO: DvonnPieceStack = new DvonnPieceStack(Player.ZERO, 1, false);
     public static PLAYER_ONE: DvonnPieceStack = new DvonnPieceStack(Player.ONE, 1, false);
     public static SOURCE: DvonnPieceStack = new DvonnPieceStack(Player.NONE, 1, true);

@@ -4,6 +4,7 @@ import { HexaDirection } from '../HexaDirection';
 import { HexaLine } from '../HexaLine';
 
 describe('HexaLine', () => {
+
     describe('fromTwoCoords', () => {
         it('should create a line from two coordinates', () => {
             const line1: MGPOptional<HexaLine> = HexaLine.fromTwoCoords(new Coord(0, 3), new Coord(0, 4));

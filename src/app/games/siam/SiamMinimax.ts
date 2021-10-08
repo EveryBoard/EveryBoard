@@ -1,5 +1,5 @@
 import { SiamMove } from './SiamMove';
-import { SiamPartSlice } from './SiamPartSlice';
+import { SiamState } from './SiamState';
 import { SiamPiece } from './SiamPiece';
 import { Player } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -11,29 +11,29 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 import { SiamRules, SiamNode } from './SiamRules';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 
-export class SiamMinimax extends Minimax<SiamMove, SiamPartSlice, SiamLegalityStatus> {
+export class SiamMinimax extends Minimax<SiamMove, SiamState, SiamLegalityStatus> {
 
     public getBoardValue(node: SiamNode): NodeUnheritance {
         const move: SiamMove = node.move;
-        const slice: SiamPartSlice = node.gamePartSlice;
-        return new NodeUnheritance(SiamRules.getBoardValueInfo(move, slice).boardValue);
+        const state: SiamState = node.gameState;
+        return new NodeUnheritance(SiamRules.getBoardValueInfo(move, state).boardValue);
     }
     public getListMoves(node: SiamNode): SiamMove[] {
         let moves: SiamMove[] = [];
-        const currentPlayer: Player = node.gamePartSlice.getCurrentPlayer();
-        let c: number;
+        const currentPlayer: Player = node.gameState.getCurrentPlayer();
+        let c: SiamPiece;
         let legality: SiamLegalityStatus;
         for (let y: number = 0; y < 5; y++) {
             for (let x: number = 0; x < 5; x++) {
-                c = node.gamePartSlice.getBoardByXY(x, y);
-                if (SiamPiece.belongTo(c, currentPlayer)) {
-                    const currentOrientation: Orthogonal = SiamPiece.getDirection(c);
+                c = node.gameState.getPieceAtXY(x, y);
+                if (c.belongTo(currentPlayer)) {
+                    const currentOrientation: Orthogonal = c.getDirection();
                     for (const direction of Orthogonal.ORTHOGONALS) {
                         // three rotation
                         if (direction !== currentOrientation) {
-                            const newBoard: number[][] = node.gamePartSlice.getCopiedBoard();
+                            const newBoard: SiamPiece[][] = node.gameState.getCopiedBoard();
                             const newMove: SiamMove = new SiamMove(x, y, MGPOptional.empty(), direction);
-                            newBoard[y][x] = SiamPiece.of(direction, currentPlayer).value;
+                            newBoard[y][x] = SiamPiece.of(direction, currentPlayer);
                             moves.push(newMove);
                         }
 
@@ -46,7 +46,7 @@ export class SiamMinimax extends Minimax<SiamMove, SiamPartSlice, SiamLegalitySt
                         }
                         for (const orientation of orientations) {
                             const forwardMove: SiamMove = new SiamMove(x, y, MGPOptional.of(direction), orientation);
-                            legality = SiamRules.isLegalForwarding(forwardMove, node.gamePartSlice, c);
+                            legality = SiamRules.isLegalForwarding(forwardMove, node.gameState, c);
                             if (legality.legal.isSuccess()) {
                                 moves.push(forwardMove);
                             }
@@ -55,7 +55,7 @@ export class SiamMinimax extends Minimax<SiamMove, SiamPartSlice, SiamLegalitySt
                 }
             }
         }
-        if (node.gamePartSlice.countPlayerPawn() < 5) {
+        if (node.gameState.countPlayerPawn() < 5) {
             // up to 20 pushing insertion
             moves = moves.concat(SiamRules.getPushingInsertions(node));
             // up to 24 deraping insertion

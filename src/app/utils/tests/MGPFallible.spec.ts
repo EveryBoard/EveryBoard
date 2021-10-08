@@ -2,6 +2,7 @@ import { MGPFallible } from '../MGPFallible';
 import { MGPOptional } from '../MGPOptional';
 
 describe('MGPFallible', () => {
+
     describe('success', () => {
         const value: MGPFallible<number> = MGPFallible.success(42);
         it('should not accept null values', () => {

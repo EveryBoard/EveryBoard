@@ -1,10 +1,11 @@
 import { BoardDatas, GroupInfos } from '../../../jscaip/BoardDatas';
-import { GoPartSlice, GoPiece } from '../GoPartSlice';
+import { GoState, GoPiece } from '../GoState';
 import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GoGroupDatasFactory } from '../GoGroupDatasFactory';
 
 describe('GoBoardDatas', () => {
+
     const _: GoPiece = GoPiece.EMPTY;
 
     const X: GoPiece = GoPiece.WHITE;
@@ -12,17 +13,17 @@ describe('GoBoardDatas', () => {
     const O: GoPiece = GoPiece.BLACK;
 
     beforeAll(() => {
-        GoPartSlice.HEIGHT = 5;
-        GoPartSlice.WIDTH = 5;
+        GoState.HEIGHT = 5;
+        GoState.WIDTH = 5;
     });
     it('should create one big group for initial board', () => {
-        const board: Table<GoPiece> = GoPartSlice.getStartingBoard();
+        const board: Table<GoPiece> = GoState.getStartingBoard();
         const datas: BoardDatas = BoardDatas.ofBoard(board, new GoGroupDatasFactory());
-        const allZeroBoard: number[][] = ArrayUtils.createBiArray<number>(GoPartSlice.WIDTH, GoPartSlice.HEIGHT, 0);
+        const allZeroBoard: number[][] = ArrayUtils.createTable<number>(GoState.WIDTH, GoState.HEIGHT, 0);
         expect(datas.groupIndexes).toEqual(allZeroBoard);
         expect(datas.groups.length).toBe(1);
         const groupInfos: GroupInfos = datas.groups[0];
-        expect(groupInfos.coords.length).toBe(GoPartSlice.WIDTH * GoPartSlice.HEIGHT);
+        expect(groupInfos.coords.length).toBe(GoState.WIDTH * GoState.HEIGHT);
         expect(groupInfos.neighboorsEP.length).toBe(0);
     });
     it('should create three neighboor group', () => {

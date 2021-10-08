@@ -5,6 +5,7 @@ import { JSONValue } from 'src/app/utils/utils';
 import { LinesOfActionMove } from '../LinesOfActionMove';
 
 describe('LinesOfActionMove', () => {
+
     const move: LinesOfActionMove = LinesOfActionMove.of(new Coord(5, 3), new Coord(3, 5)).get();
 
     describe('encoder', () => {

@@ -11,4 +11,8 @@ export class TablutCase {
 
     private constructor(public readonly value: number) {
     }
+    public isKing(): boolean {
+        return this === TablutCase.PLAYER_ZERO_KING ||
+               this === TablutCase.PLAYER_ONE_KING;
+    }
 }

@@ -3,7 +3,7 @@
      viewBox="-165 0 470 500"
      preserveAspectRatio="xMidYMid meet"
 >
-    <g *ngFor="let line of board; index as y">
+    <g *ngFor="let line of hexaBoard; index as y">
         <g *ngFor="let c of line; index as x">
             <g *ngIf="isBoard(c)">
                 <polyline id="case_{{ x }}_{{ y }}"
@@ -18,7 +18,7 @@
                         (click)="onPieceClick(x, y)"
                         [attr.cx]="getCenterBy(x, y).x"
                         [attr.cy]="getCenterBy(x, y).y"
-                        [attr.r]="PIECE_SIZE * 0.5"
+                        [attr.r]="CASE_SIZE * 0.5"
                         [ngClass]="getPieceClasses(x, y)"
                         class="base"
                 />

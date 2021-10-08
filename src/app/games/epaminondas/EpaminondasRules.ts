@@ -5,69 +5,69 @@ import { Player } from 'src/app/jscaip/Player';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { EpaminondasLegalityStatus } from './epaminondaslegalitystatus';
 import { EpaminondasMove } from './EpaminondasMove';
-import { EpaminondasPartSlice } from './EpaminondasPartSlice';
+import { EpaminondasState } from './EpaminondasState';
 import { EpaminondasFailure } from './EpaminondasFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 export class EpaminondasNode extends MGPNode<EpaminondasRules,
                                              EpaminondasMove,
-                                             EpaminondasPartSlice,
+                                             EpaminondasState,
                                              EpaminondasLegalityStatus> {}
 
-export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasPartSlice, EpaminondasLegalityStatus> {
+export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, EpaminondasLegalityStatus> {
 
-    public static isLegal(move: EpaminondasMove, slice: EpaminondasPartSlice): EpaminondasLegalityStatus {
-        const phalanxValidity: MGPValidation = this.getPhalanxValidity(slice, move);
+    public static isLegal(move: EpaminondasMove, state: EpaminondasState): EpaminondasLegalityStatus {
+        const phalanxValidity: MGPValidation = this.getPhalanxValidity(state, move);
         if (phalanxValidity.isFailure()) {
             return EpaminondasLegalityStatus.failure(phalanxValidity.reason);
         }
-        const landingStatus: EpaminondasLegalityStatus = this.getLandingStatus(slice, move);
+        const landingStatus: EpaminondasLegalityStatus = this.getLandingStatus(state, move);
         if (landingStatus.legal.isFailure()) {
             return landingStatus;
         }
-        const newBoard: number[][] = landingStatus.newBoard;
-        const ENNEMY: number = slice.getCurrentEnnemy().value;
+        const newBoard: Player[][] = landingStatus.newBoard;
+        const OPPONENT: Player = state.getCurrentOpponent();
         const captureValidity: EpaminondasLegalityStatus =
-            EpaminondasRules.getCaptureValidity(slice, newBoard, move, ENNEMY);
+            EpaminondasRules.getCaptureValidity(state, newBoard, move, OPPONENT);
         if (captureValidity.legal.isFailure()) {
             return EpaminondasLegalityStatus.failure(captureValidity.legal.reason);
         }
         return { newBoard, legal: MGPValidation.SUCCESS };
     }
-    public static getPhalanxValidity(slice: EpaminondasPartSlice, move: EpaminondasMove): MGPValidation {
+    public static getPhalanxValidity(state: EpaminondasState, move: EpaminondasMove): MGPValidation {
         let coord: Coord = move.coord;
         let soldierIndex: number = 0;
-        let caseContent: number;
-        const ENNEMY: number = slice.getCurrentEnnemy().value;
+        let caseContent: Player;
+        const OPPONENT: Player = state.getCurrentOpponent();
         while (soldierIndex < move.movedPieces) {
             if (coord.isNotInRange(14, 12)) {
                 return MGPValidation.failure(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_PIECES_OUTSIDE_BOARD());
             }
-            caseContent = slice.getBoardAt(coord);
-            if (caseContent === Player.NONE.value) {
+            caseContent = state.getPieceAt(coord);
+            if (caseContent === Player.NONE) {
                 return MGPValidation.failure(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_EMPTY_CASE());
             }
-            if (caseContent === ENNEMY) {
-                return MGPValidation.failure(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_ENEMY_PIECE());
+            if (caseContent === OPPONENT) {
+                return MGPValidation.failure(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_OPPONENT_PIECE());
             }
             coord = coord.getNext(move.direction, 1);
             soldierIndex++;
         }
         return MGPValidation.SUCCESS;
     }
-    public static getLandingStatus(slice: EpaminondasPartSlice, move: EpaminondasMove): EpaminondasLegalityStatus {
-        const newBoard: number[][] = slice.getCopiedBoard();
-        const CURRENT_PLAYER: number = slice.getCurrentPlayer().value;
+    public static getLandingStatus(state: EpaminondasState, move: EpaminondasMove): EpaminondasLegalityStatus {
+        const newBoard: Player[][] = state.getCopiedBoard();
+        const CURRENT_PLAYER: Player = state.getCurrentPlayer();
         let emptied: Coord = move.coord;
         let landingCoord: Coord = move.coord.getNext(move.direction, move.movedPieces);
         let landingIndex: number = 0;
         while (landingIndex + 1 < move.stepSize) {
-            newBoard[emptied.y][emptied.x] = Player.NONE.value;
+            newBoard[emptied.y][emptied.x] = Player.NONE;
             newBoard[landingCoord.y][landingCoord.x] = CURRENT_PLAYER;
             if (landingCoord.isNotInRange(14, 12)) {
                 return EpaminondasLegalityStatus.failure(EpaminondasFailure.PHALANX_IS_LEAVING_BOARD());
             }
-            if (slice.getBoardAt(landingCoord) !== Player.NONE.value) {
+            if (state.getPieceAt(landingCoord) !== Player.NONE) {
                 return EpaminondasLegalityStatus.failure(EpaminondasFailure.SOMETHING_IN_PHALANX_WAY());
             }
             landingIndex++;
@@ -77,24 +77,24 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasPartSlic
         if (landingCoord.isNotInRange(14, 12)) {
             return EpaminondasLegalityStatus.failure(EpaminondasFailure.PHALANX_IS_LEAVING_BOARD());
         }
-        if (slice.getBoardAt(landingCoord) === CURRENT_PLAYER) {
+        if (state.getPieceAt(landingCoord) === CURRENT_PLAYER) {
             return EpaminondasLegalityStatus.failure(RulesFailure.CANNOT_SELF_CAPTURE());
         }
-        newBoard[emptied.y][emptied.x] = Player.NONE.value;
+        newBoard[emptied.y][emptied.x] = Player.NONE;
         newBoard[landingCoord.y][landingCoord.x] = CURRENT_PLAYER;
         return { newBoard, legal: MGPValidation.SUCCESS };
     }
-    public static getCaptureValidity(oldSlice: EpaminondasPartSlice,
-                                     board: number[][],
+    public static getCaptureValidity(oldState: EpaminondasState,
+                                     board: Player[][],
                                      move: EpaminondasMove,
-                                     ENNEMY: number)
+                                     OPPONENT: Player)
     : EpaminondasLegalityStatus
     {
         let capturedSoldier: Coord = move.coord.getNext(move.direction, move.movedPieces + move.stepSize - 1);
-        const EMPTY: number = Player.NONE.value;
+        const EMPTY: Player = Player.NONE;
         let captured: number = 0;
         while (capturedSoldier.isInRange(14, 12) &&
-               oldSlice.getBoardAt(capturedSoldier) === ENNEMY
+               oldState.getPieceAt(capturedSoldier) === OPPONENT
         ) {
             // Capture
             if (captured > 0) {
@@ -108,19 +108,19 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasPartSlic
         }
         return { newBoard: board, legal: MGPValidation.SUCCESS };
     }
-    public isLegal(move: EpaminondasMove, slice: EpaminondasPartSlice): EpaminondasLegalityStatus {
-        return EpaminondasRules.isLegal(move, slice);
+    public isLegal(move: EpaminondasMove, state: EpaminondasState): EpaminondasLegalityStatus {
+        return EpaminondasRules.isLegal(move, state);
     }
-    public applyLegalMove(_move: EpaminondasMove,
-                          slice: EpaminondasPartSlice,
+    public applyLegalMove(move: EpaminondasMove,
+                          state: EpaminondasState,
                           status: EpaminondasLegalityStatus)
-    : EpaminondasPartSlice
+    : EpaminondasState
     {
-        const resultingSlice: EpaminondasPartSlice = new EpaminondasPartSlice(status.newBoard, slice.turn + 1);
-        return resultingSlice;
+        const resultingState: EpaminondasState = new EpaminondasState(status.newBoard, state.turn + 1);
+        return resultingState;
     }
     public getGameStatus(node: EpaminondasNode): GameStatus {
-        const state: EpaminondasPartSlice = node.gamePartSlice;
+        const state: EpaminondasState = node.gameState;
         const zerosInFirstLine: number = state.count(Player.ZERO, 0);
         const onesInLastLine: number = state.count(Player.ONE, 11);
         if (state.turn % 2 === 0) {

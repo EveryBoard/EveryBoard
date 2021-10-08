@@ -1,78 +1,75 @@
-import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
+import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Component } from '@angular/core';
 import { Coord } from 'src/app/jscaip/Coord';
 import { KamisadoBoard } from 'src/app/games/kamisado/KamisadoBoard';
 import { KamisadoMove } from 'src/app/games/kamisado/KamisadoMove';
-import { KamisadoPartSlice } from 'src/app/games/kamisado/KamisadoPartSlice';
+import { KamisadoState } from 'src/app/games/kamisado/KamisadoState';
 import { KamisadoPiece } from 'src/app/games/kamisado/KamisadoPiece';
 import { KamisadoRules } from 'src/app/games/kamisado/KamisadoRules';
 import { KamisadoMinimax } from 'src/app/games/kamisado/KamisadoMinimax';
 import { KamisadoFailure } from 'src/app/games/kamisado/KamisadoFailure';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { KamisadoTutorial } from './KamisadoTutorial';
 
 @Component({
     selector: 'app-kamisado',
     templateUrl: './kamisado.component.html',
-    styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.css'],
 })
 
-export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, KamisadoPartSlice> {
-
-    public CASE_SIZE: number = 75;
-    public UNOCCUPIED: number = KamisadoPiece.NONE.getValue();
+export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
+                                                                KamisadoMove,
+                                                                KamisadoState,
+                                                                KamisadoPiece>
+{
+    public UNOCCUPIED: KamisadoPiece = KamisadoPiece.NONE;
     public lastMove: KamisadoMove = null;
     public chosen: Coord = new Coord(-1, -1);
     public chosenAutomatically: boolean = false;
 
-    public encoder: MoveEncoder<KamisadoMove> = KamisadoMove.encoder;
-
-    public tutorial: TutorialStep[] = new KamisadoTutorial().tutorial;
-
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = new KamisadoRules(KamisadoPartSlice);
+        this.rules = new KamisadoRules(KamisadoState);
         this.availableMinimaxes = [
             new KamisadoMinimax(this.rules, 'KamisadoMinimax'),
         ];
+        this.encoder = KamisadoMove.encoder;
+        this.tutorial = new KamisadoTutorial().tutorial;
         this.canPass = false;
+        this.updateBoard();
     }
     public backgroundColor(x: number, y: number): string {
         return KamisadoBoard.getColorAt(x, y).rgb;
     }
-    public isPlayerZero(pieceValue: number): boolean {
-        return KamisadoPiece.of(pieceValue).player === Player.ZERO;
+    public isPlayerZero(piece: KamisadoPiece): boolean {
+        return piece.player === Player.ZERO;
     }
-    public pieceColor(pieceValue: number): string {
-        const piece: KamisadoPiece = KamisadoPiece.of(pieceValue);
+    public pieceColor(piece: KamisadoPiece): string {
         return piece.color.rgb;
     }
-    public piecePlayerClass(pieceValue: number): string {
-        const piece: KamisadoPiece = KamisadoPiece.of(pieceValue);
+    public piecePlayerClass(piece: KamisadoPiece): string {
         return this.getPlayerClass(piece.player);
     }
     public updateBoard(): void {
-        const slice: KamisadoPartSlice = this.rules.node.gamePartSlice;
-        this.board = slice.getCopiedBoard();
+        const state: KamisadoState = this.rules.node.gameState;
+        this.board = state.getCopiedBoard();
         this.lastMove = this.rules.node.move;
 
-        this.canPass = KamisadoRules.mustPass(slice);
-        if (this.canPass || slice.coordToPlay.isAbsent()) {
+        this.canPass = KamisadoRules.mustPass(state);
+        if (this.canPass || state.coordToPlay.isAbsent()) {
             this.chosenAutomatically = false;
             this.chosen = new Coord(-1, -1);
         } else {
             this.chosenAutomatically = true;
-            this.chosen = slice.coordToPlay.get();
+            this.chosen = state.coordToPlay.get();
         }
     }
     public async pass(): Promise<MGPValidation> {
         if (this.canPass) {
-            return this.chooseMove(KamisadoMove.PASS, this.rules.node.gamePartSlice, null, null);
+            return this.chooseMove(KamisadoMove.PASS, this.rules.node.gameState, null, null);
         } else {
             return this.cancelMove(RulesFailure.CANNOT_PASS());
         }
@@ -92,8 +89,8 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
             this.cancelMoveAttempt();
             return MGPValidation.SUCCESS;
         } else {
-            const piece: KamisadoPiece = KamisadoBoard.getPieceAt(this.rules.node.gamePartSlice.board, new Coord(x, y));
-            const player: Player = this.rules.node.gamePartSlice.getCurrentPlayer();
+            const piece: KamisadoPiece = this.rules.node.gameState.getPieceAtXY(x, y);
+            const player: Player = this.rules.node.gameState.getCurrentPlayer();
             if (piece.belongsTo(player)) {
                 // Player clicked on another of its pieces, select it if he can
                 if (this.chosenAutomatically) {
@@ -111,10 +108,10 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         if (this.rules.getGameStatus(this.rules.node).isEndGame) { // TODO: what the hell !!!! should be done upper!
             return this.cancelMove('You should never see this message');
         }
-        const piece: KamisadoPiece = KamisadoBoard.getPieceAt(this.rules.node.gamePartSlice.board, new Coord(x, y));
-        const ennemy: Player = this.rules.node.gamePartSlice.getCurrentEnnemy();
-        if (piece.belongsTo(ennemy)) {
-            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE());
+        const piece: KamisadoPiece = this.rules.node.gameState.getPieceAtXY(x, y);
+        const opponent: Player = this.rules.node.gameState.getCurrentOpponent();
+        if (piece.belongsTo(opponent)) {
+            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         }
         this.chosen = new Coord(x, y);
         return MGPValidation.SUCCESS;
@@ -123,7 +120,7 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         const chosenPiece: Coord = this.chosen;
         const chosenDestination: Coord = new Coord(x, y);
         const move: KamisadoMove = KamisadoMove.of(chosenPiece, chosenDestination);
-        return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
+        return this.chooseMove(move, this.rules.node.gameState, null, null);
     }
     public cancelMoveAttempt(): void {
         if (!this.chosenAutomatically) {

@@ -4,6 +4,7 @@ import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { OnlineGameCreationComponent } from './online-game-creation.component';
 
 describe('OnlineGameCreationComponent', () => {
+
     let testUtils: SimpleComponentTestUtils<OnlineGameCreationComponent>;
     let router: Router;
 

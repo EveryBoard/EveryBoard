@@ -282,7 +282,7 @@
         <source>Level <x id="INTERPOLATION" equiv-text="{{ i }}"/></source>
       </trans-unit>
       <trans-unit id="3272612818120648715" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ compo.scores[0] }}"/> points</source>
+        <source><x id="INTERPOLATION" equiv-text="{{ gameComponent.scores[0] }}"/> points</source>
       </trans-unit>
       <trans-unit id="8739046962840362623" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ winner }}"/> won</source>
@@ -300,7 +300,7 @@
         <source>Take back move</source>
       </trans-unit>
       <trans-unit id="1944212987695444934" datatype="html">
-        <source>Turn n°<x id="INTERPOLATION" equiv-text="{{ compo.rules.node.gamePartSlice.turn + 1 }}"/></source>
+        <source>Turn n°<x id="INTERPOLATION" equiv-text="{{ gameComponent.rules.node.gameState.turn + 1 }}"/></source>
       </trans-unit>
       <trans-unit id="5675185658977082941" datatype="html">
         <source>Player <x id="PH" equiv-text="gameStatus.winner.value + 1"/></source>

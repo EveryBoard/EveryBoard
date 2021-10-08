@@ -1,14 +1,14 @@
 import { TablutRules } from '../TablutRules';
 import { TablutMinimax } from '../TablutMinimax';
 import { TablutMove } from '../TablutMove';
-import { TablutPartSlice } from '../TablutPartSlice';
+import { TablutState } from '../TablutState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 
 describe('TablutMove', () => {
 
     it('encoder should be correct', () => {
-        const rules: TablutRules = new TablutRules(TablutPartSlice);
+        const rules: TablutRules = new TablutRules(TablutState);
         const minimax: TablutMinimax = new TablutMinimax(rules, 'TablutMinimax');
         const firstTurnMoves: TablutMove[] = minimax.getListMoves(rules.node);
         for (const move of firstTurnMoves) {

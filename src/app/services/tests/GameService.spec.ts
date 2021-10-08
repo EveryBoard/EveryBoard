@@ -25,6 +25,7 @@ import { MessageDisplayer } from '../message-displayer/MessageDisplayer';
 import { JoinerService } from '../JoinerService';
 
 describe('GameService', () => {
+
     let service: GameService;
 
     let partDao: PartDAO;

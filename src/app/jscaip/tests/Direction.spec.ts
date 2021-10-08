@@ -3,6 +3,7 @@ import { Coord } from '../Coord';
 import { Direction, Orthogonal } from '../Direction';
 
 describe('Direction', () => {
+
     it('should have 8 directions', () => {
         expect(Direction.DIRECTIONS.length).toBe(8);
     });
@@ -141,6 +142,7 @@ describe('Direction', () => {
 });
 
 describe('Orthogonal', () => {
+
     it('should have 4 directions', () => {
         expect(Orthogonal.ORTHOGONALS.length).toBe(4);
     });

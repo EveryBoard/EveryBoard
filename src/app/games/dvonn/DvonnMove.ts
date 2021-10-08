@@ -1,9 +1,10 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { NumberEncoder } from 'src/app/jscaip/Encoder';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
-import { DvonnBoard } from './DvonnBoard';
+import { DvonnState } from './DvonnState';
 
 export class DvonnMove extends MoveCoordToCoord {
+
     public static PASS: DvonnMove = new DvonnMove(new Coord(-1, -1), new Coord(-2, -2));
     public static encoder: NumberEncoder<DvonnMove> = new class extends NumberEncoder<DvonnMove> {
         public maxValue(): number {
@@ -37,10 +38,10 @@ export class DvonnMove extends MoveCoordToCoord {
             return DvonnMove.PASS;
         }
         // Move should be on board
-        if (!DvonnBoard.isOnBoard(start)) {
+        if (!DvonnState.isOnBoard(start)) {
             throw new Error('Starting coord of DvonnMove must be on the board, not at ' + start.toString());
         }
-        if (!DvonnBoard.isOnBoard(end)) {
+        if (!DvonnState.isOnBoard(end)) {
             throw new Error('End coord of DvonnMove must be on the board, not at ' + start.toString());
         }
         // Move should be a straight line

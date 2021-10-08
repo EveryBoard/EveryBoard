@@ -1,4 +1,4 @@
-import { ReversiPartSlice } from './ReversiPartSlice';
+import { ReversiState } from './ReversiState';
 import { ReversiMove } from './ReversiMove';
 import { ReversiLegalityStatus } from './ReversiLegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
@@ -8,29 +8,29 @@ import { ReversiRules, ReversiNode, ReversiMoveWithSwitched } from './ReversiRul
 import { Coord } from 'src/app/jscaip/Coord';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 
-export class ReversiMinimax extends Minimax<ReversiMove, ReversiPartSlice, ReversiLegalityStatus> {
+export class ReversiMinimax extends Minimax<ReversiMove, ReversiState, ReversiLegalityStatus> {
 
     public getBoardValue(node: ReversiNode): NodeUnheritance {
-        const slice: ReversiPartSlice = node.gamePartSlice;
-        const gameIsEnded: boolean = ReversiRules.isGameEnded(slice);
-        const board: number[][] = slice.getCopiedBoard();
+        const state: ReversiState = node.gameState;
+        const gameIsEnded: boolean = ReversiRules.isGameEnded(state);
+        const board: Player[][] = state.getCopiedBoard();
         let player0Count: number = 0;
         let player1Count: number = 0;
-        for (let y: number = 0; y < ReversiPartSlice.BOARD_HEIGHT; y++) {
-            for (let x: number = 0; x < ReversiPartSlice.BOARD_WIDTH; x++) {
+        for (let y: number = 0; y < ReversiState.BOARD_HEIGHT; y++) {
+            for (let x: number = 0; x < ReversiState.BOARD_WIDTH; x++) {
                 let locationValue: number;
                 if (gameIsEnded) {
                     locationValue = 1;
                 } else {
-                    const verticalBorder: boolean = (x === 0) || (x === ReversiPartSlice.BOARD_WIDTH - 1);
-                    const horizontalBorder: boolean = (y === 0) || (y === ReversiPartSlice.BOARD_HEIGHT - 1);
+                    const verticalBorder: boolean = (x === 0) || (x === ReversiState.BOARD_WIDTH - 1);
+                    const horizontalBorder: boolean = (y === 0) || (y === ReversiState.BOARD_HEIGHT - 1);
                     locationValue = (verticalBorder ? 4 : 1) * (horizontalBorder ? 4 : 1);
                 }
 
-                if (board[y][x] === Player.ZERO.value) {
+                if (board[y][x] === Player.ZERO) {
                     player0Count += locationValue;
                 }
-                if (board[y][x] === Player.ONE.value) {
+                if (board[y][x] === Player.ONE) {
                     player1Count += locationValue;
                 }
             }
@@ -48,13 +48,13 @@ export class ReversiMinimax extends Minimax<ReversiMove, ReversiPartSlice, Rever
         return new NodeUnheritance(diff);
     }
     public getListMoves(n: ReversiNode): ReversiMove[] {
-        const moves: ReversiMoveWithSwitched[] = ReversiRules.getListMoves(n.gamePartSlice);
+        const moves: ReversiMoveWithSwitched[] = ReversiRules.getListMoves(n.gameState);
         // Best moves are on the corner, otherwise moves are sorted by number of pieces switched
         const bestCoords: Coord[] = [
             new Coord(0, 0),
-            new Coord(0, ReversiPartSlice.BOARD_HEIGHT-1),
-            new Coord(ReversiPartSlice.BOARD_WIDTH-1, 0),
-            new Coord(ReversiPartSlice.BOARD_WIDTH-1, ReversiPartSlice.BOARD_HEIGHT-1),
+            new Coord(0, ReversiState.BOARD_HEIGHT-1),
+            new Coord(ReversiState.BOARD_WIDTH-1, 0),
+            new Coord(ReversiState.BOARD_WIDTH-1, ReversiState.BOARD_HEIGHT-1),
         ];
         ArrayUtils.sortByDescending(moves, (moveWithSwitched: ReversiMoveWithSwitched): number => {
             if (bestCoords.some((coord: Coord): boolean => moveWithSwitched.move.coord.equals(coord))) {

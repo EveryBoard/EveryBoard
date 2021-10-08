@@ -4,6 +4,7 @@ import { MinimaxTestingMove } from 'src/app/games/minimax-testing/MinimaxTesting
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('MinimaxTestingComponent', () => {
+
     let componentTestUtils: ComponentTestUtils<MinimaxTestingComponent>;
 
     beforeEach(fakeAsync(async() => {

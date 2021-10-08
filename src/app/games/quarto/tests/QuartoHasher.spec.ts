@@ -6,6 +6,7 @@ import { QuartoPiece } from '../QuartoPiece';
 import { CoordDir, QuartoHasher, QuartoHashInfo } from '../QuartoHasher';
 
 describe('QuartoHasher', () => {
+
     const NULL: number = QuartoPiece.NONE.value;
     const AAAA: number = QuartoPiece.AAAA.value;
     const AAAB: number = QuartoPiece.AAAB.value;

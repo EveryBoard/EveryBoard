@@ -6,6 +6,7 @@ import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { HeaderComponent } from './header.component';
 
 describe('HeaderComponent', () => {
+
     let testUtils: SimpleComponentTestUtils<HeaderComponent>;
 
     beforeEach(fakeAsync(async() => {

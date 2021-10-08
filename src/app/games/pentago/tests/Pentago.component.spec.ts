@@ -1,17 +1,18 @@
 import { fakeAsync } from '@angular/core/testing';
 import { Player } from 'src/app/jscaip/Player';
-import { NumberTable } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/utils/ArrayUtils';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { PentagoComponent } from '../Pentago.component';
+import { PentagoComponent } from '../pentago.component';
 import { PentagoMove } from '../PentagoMove';
-import { PentagoGameState } from '../PentagoGameState';
+import { PentagoState } from '../PentagoState';
 
-describe('PentagoComponent:', () => {
+describe('PentagoComponent', () => {
+
     let componentTestUtils: ComponentTestUtils<PentagoComponent>;
 
-    const _: number = Player.NONE.value;
-    const X: number = Player.ONE.value;
-    const O: number = Player.ZERO.value;
+    const _: Player = Player.NONE;
+    const X: Player = Player.ONE;
+    const O: Player = Player.ZERO;
 
     beforeEach(fakeAsync(async() => {
         componentTestUtils = await ComponentTestUtils.forGame<PentagoComponent>('Pentago');
@@ -37,7 +38,7 @@ describe('PentagoComponent:', () => {
         // TODO: test that block itself is of moved style
     }));
     it('Should not display arrows on neutral blocks and display dropped piece meanwhile', fakeAsync(async() => {
-        const board: NumberTable = [
+        const board: Table<Player> = [
             [_, _, X, _, _, _],
             [_, O, _, _, _, _],
             [X, _, X, _, _, _],
@@ -45,13 +46,13 @@ describe('PentagoComponent:', () => {
             [_, _, _, _, _, _],
             [_, _, _, _, _, _],
         ];
-        const state: PentagoGameState = new PentagoGameState(board, 5);
-        componentTestUtils.setupSlice(state);
+        const state: PentagoState = new PentagoState(board, 5);
+        componentTestUtils.setupState(state);
         await componentTestUtils.expectClickSuccess('#click_0_0');
         componentTestUtils.expectElementNotToExist('#rotate_0_clockwise');
     }));
     it('Should show highlighted winning line', fakeAsync(async() => {
-        const board: NumberTable = [
+        const board: Table<Player> = [
             [_, _, _, _, _, _],
             [X, _, _, _, _, _],
             [X, _, _, _, _, _],
@@ -59,8 +60,8 @@ describe('PentagoComponent:', () => {
             [_, _, _, _, _, _],
             [_, X, X, _, _, _],
         ];
-        const state: PentagoGameState = new PentagoGameState(board, 5);
-        componentTestUtils.setupSlice(state);
+        const state: PentagoState = new PentagoState(board, 5);
+        componentTestUtils.setupState(state);
         await componentTestUtils.expectClickSuccess('#click_0_5');
         const move: PentagoMove = PentagoMove.withRotation(0, 5, 2, true);
         await componentTestUtils.expectMoveSuccess('#rotate_2_clockwise', move);
@@ -84,7 +85,7 @@ describe('PentagoComponent:', () => {
         expect(component.getCaseClasses(2, 5)).toEqual(['player0', 'last-move']);
     }));
     it('Should highlight last move (with rotation, but not of last drop)', fakeAsync(async() => {
-        const board: NumberTable = [
+        const board: Table<Player> = [
             [_, _, _, _, _, _],
             [_, _, _, O, _, _],
             [_, _, _, _, _, _],
@@ -92,8 +93,8 @@ describe('PentagoComponent:', () => {
             [_, _, _, _, _, _],
             [_, _, _, _, _, _],
         ];
-        const state: PentagoGameState = new PentagoGameState(board, 5);
-        componentTestUtils.setupSlice(state);
+        const state: PentagoState = new PentagoState(board, 5);
+        componentTestUtils.setupState(state);
         await componentTestUtils.expectClickSuccess('#click_0_1');
         const move: PentagoMove = PentagoMove.withRotation(0, 1, 1, false);
         await componentTestUtils.expectMoveSuccess('#rotate_1_anticlockwise', move);

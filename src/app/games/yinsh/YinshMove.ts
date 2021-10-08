@@ -102,8 +102,8 @@ export class YinshMove extends Move {
         if (this === other) return true;
         if (this.start.equals(other.start) === false) return false;
         if (this.end.equals(other.end) === false) return false;
-        if (ArrayUtils.equals(this.initialCaptures, other.initialCaptures) === false) return false;
-        if (ArrayUtils.equals(this.finalCaptures, other.finalCaptures) === false) return false;
+        if (ArrayUtils.compareArray(this.initialCaptures, other.initialCaptures) === false) return false;
+        if (ArrayUtils.compareArray(this.finalCaptures, other.finalCaptures) === false) return false;
         return true;
     }
     public toString(): string {

@@ -1,7 +1,7 @@
 import { AwaleRules } from '../AwaleRules';
 import { AwaleMinimax } from '../AwaleMinimax';
 import { AwaleMove } from '../AwaleMove';
-import { AwalePartSlice } from '../AwalePartSlice';
+import { AwaleState } from '../AwaleState';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 
 describe('AwaleMinimax:', () => {
@@ -11,20 +11,20 @@ describe('AwaleMinimax:', () => {
     let minimax: AwaleMinimax;
 
     beforeEach(() => {
-        rules = new AwaleRules(AwalePartSlice);
+        rules = new AwaleRules(AwaleState);
         minimax = new AwaleMinimax(rules, 'AwaleMinimax');
     });
     it('should not throw at first choice', () => {
         const bestMove: AwaleMove = rules.node.findBestMove(2, minimax);
-        expect(rules.isLegal(bestMove, rules.node.gamePartSlice).legal.isSuccess()).toBeTrue();
+        expect(rules.isLegal(bestMove, rules.node.gameState).legal.isSuccess()).toBeTrue();
     });
     it('should choose capture when possible (at depth 1)', () => {
         const board: number[][] = [
             [4, 4, 4, 4, 4, 4],
             [4, 4, 4, 4, 4, 1],
         ];
-        const state: AwalePartSlice = new AwalePartSlice(board, 0, [0, 0]);
-        const node: MGPNode<AwaleRules, AwaleMove, AwalePartSlice> = new MGPNode(null, null, state);
+        const state: AwaleState = new AwaleState(board, 0, [0, 0]);
+        const node: MGPNode<AwaleRules, AwaleMove, AwaleState> = new MGPNode(null, null, state);
         const bestMove: AwaleMove = node.findBestMove(1, minimax);
         expect(bestMove).toEqual(AwaleMove.TWO);
     });
@@ -33,8 +33,8 @@ describe('AwaleMinimax:', () => {
             [0, 0, 0, 0, 3, 1],
             [0, 0, 0, 0, 1, 0],
         ];
-        const state: AwalePartSlice = new AwalePartSlice(board, 0, [0, 0]);
-        const node: MGPNode<AwaleRules, AwaleMove, AwalePartSlice> = new MGPNode(null, null, state);
+        const state: AwaleState = new AwaleState(board, 0, [0, 0]);
+        const node: MGPNode<AwaleRules, AwaleMove, AwaleState> = new MGPNode(null, null, state);
         const bestMove: AwaleMove = node.findBestMove(2, minimax);
         expect(bestMove).toEqual(AwaleMove.FOUR);
     });
