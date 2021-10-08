@@ -1,4 +1,4 @@
-import { Comparable, comparableEquals, comparableEqualsIfComparable } from './Comparable';
+import { comparableEqualsIfComparable } from './Comparable';
 import { MGPOptional } from './MGPOptional';
 import { assert } from './utils';
 

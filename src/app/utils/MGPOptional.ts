@@ -1,5 +1,5 @@
 import { Encoder } from 'src/app/jscaip/Encoder';
-import { Comparable, comparableEquals, comparableEqualsIfComparable } from './Comparable';
+import { comparableEqualsIfComparable } from './Comparable';
 import { JSONValue } from './utils';
 
 export class MGPOptional<T> {

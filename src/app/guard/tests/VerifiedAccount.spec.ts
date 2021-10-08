@@ -1,13 +1,12 @@
 import { VerifiedAccount } from '../VerifiedAccount';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { Router } from '@angular/router';
-import { AngularFireAuth } from '@angular/fire/auth';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { of } from 'rxjs';
-import { AuthenticationServiceUnderTest } from 'src/app/services/tests/AuthenticationService.spec';
-import { fakeAsync } from '@angular/core/testing';
+import { fakeAsync, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
+import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 
-describe('VerifiedAccount', () => {
+fdescribe('VerifiedAccount', () => {
     let guard: VerifiedAccount;
 
     let authService: AuthenticationService;
@@ -15,32 +14,40 @@ describe('VerifiedAccount', () => {
     let router: Router;
 
     beforeEach(() => {
-        /* TODO authService = new AuthenticationServiceUnderTest(
-            { authState: of(null) } as AngularFireAuth, {} as AngularFirestore); */
-        router = {
-            navigate: jasmine.createSpy('navigate'),
-        } as unknown as Router;
+        TestBed.configureTestingModule({
+            imports: [
+                RouterTestingModule.withRoutes([
+                    { path: '**', component: BlankComponent },
+                ]),
+            ],
+            providers: [
+                { provide: AuthenticationService, useClass: AuthenticationServiceMock },
+            ],
+        }).compileComponents();
+        router = TestBed.inject(Router);
+        spyOn(router, 'navigate');
+        authService = TestBed.inject(AuthenticationService);
         guard = new VerifiedAccount(authService, router);
     });
     it('should create', () => {
-        expect(guard).toBeTruthy();
+        expect(guard).toBeDefined();
     });
     it('should move unconnected user to login page and refuse them', fakeAsync(async() => {
-        authService.getJoueurObs = () => of(AuthenticationService.NOT_CONNECTED);
+        AuthenticationServiceMock.setUser(AuthenticationService.NOT_CONNECTED);
 
         expect(await guard.canActivate()).toBeFalse();
 
         expect(router.navigate).toHaveBeenCalledWith(['/login']);
     }));
     it('should move unverified user to must-verify-email page and refuse them', fakeAsync(async() => {
-        authService.getJoueurObs = () => of({ username: 'JeanMichelNouveau user', verified: false });
+        AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED_UNVERIFIED);
 
         expect(await guard.canActivate()).toBeFalse();
 
         expect(router.navigate).toHaveBeenCalledWith(['/confirm-inscription']);
     }));
-    it('should accept logged user', fakeAsync(async() => {
-        authService.getJoueurObs = () => of({ username: 'JeanJaJa Toujours là', verified: true });
+    it('should accept verified user', fakeAsync(async() => {
+        AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
 
         expect(await guard.canActivate()).toBeTrue();
     }));

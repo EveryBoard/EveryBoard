@@ -21,10 +21,17 @@ import { environment } from 'src/environments/environment';
 export class AuthenticationServiceMock {
     private static CURRENT_USER: AuthUser = null;
 
+    public static CONNECTED_UNVERIFIED: AuthUser = {
+        username: 'Jean Jaja',
+        verified: false,
+    }
+
+    // TODO TODO: rename to VERIFIED
     public static CONNECTED: AuthUser = {
         username: 'Jean Jaja',
         verified: true,
     }
+
     public static setUser(user: AuthUser): void {
         AuthenticationServiceMock.CURRENT_USER = user;
     }
