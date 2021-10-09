@@ -1,13 +1,13 @@
-import { VerifiedAccount } from '../VerifiedAccount';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { Router } from '@angular/router';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
+import { ConnectedGuard } from '../connected.guard';
 
-fdescribe('VerifiedAccount', () => {
-    let guard: VerifiedAccount;
+describe('ConnectedGuard', () => {
+    let guard: ConnectedGuard;
 
     let authService: AuthenticationService;
 
@@ -27,28 +27,21 @@ fdescribe('VerifiedAccount', () => {
         router = TestBed.inject(Router);
         spyOn(router, 'navigate');
         authService = TestBed.inject(AuthenticationService);
-        guard = new VerifiedAccount(authService, router);
+        guard = new ConnectedGuard(authService, router);
     });
     it('should create', () => {
         expect(guard).toBeDefined();
     });
-    it('should move unconnected user to login page and refuse them', fakeAsync(async() => {
+    it('should move unconnected user to login page', fakeAsync(async() => {
         AuthenticationServiceMock.setUser(AuthenticationService.NOT_CONNECTED);
-
-        expect(await guard.canActivate()).toBeFalse();
-
-        expect(router.navigate).toHaveBeenCalledWith(['/login']);
+        await expectAsync(guard.canActivate()).toBeResolvedTo(router.parseUrl('/login'));
     }));
-    it('should move unverified user to must-verify-email page and refuse them', fakeAsync(async() => {
+    it('should accept unverified users', fakeAsync(async() => {
         AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED_UNVERIFIED);
-
-        expect(await guard.canActivate()).toBeFalse();
-
-        expect(router.navigate).toHaveBeenCalledWith(['/confirm-inscription']);
+        await expectAsync(guard.canActivate()).toBeResolvedTo(true);
     }));
-    it('should accept verified user', fakeAsync(async() => {
+    it('should move verified user to the main page', fakeAsync(async() => {
         AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
-
-        expect(await guard.canActivate()).toBeTrue();
+        await expectAsync(guard.canActivate()).toBeResolvedTo(router.parseUrl('/'));
     }));
 });

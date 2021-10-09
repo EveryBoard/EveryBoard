@@ -19,7 +19,8 @@ interface ConnectivityStatus {
     last_changed: unknown,
 }
 export interface AuthUser {
-    username: string,
+    email: string | null,
+    username: string | null,
     verified: boolean,
 }
 @Injectable()
@@ -29,7 +30,11 @@ export class AuthenticationService implements OnDestroy {
     /**
      * Represents the fact the user is not connected
      */
-    public static NOT_CONNECTED: { username: string, verified: boolean } = { username: null, verified: null };
+    public static NOT_CONNECTED: AuthUser = {
+        username: null,
+        email: null,
+        verified: false,
+    };
 
     private authSub: Subscription;
 
@@ -56,8 +61,8 @@ export class AuthenticationService implements OnDestroy {
                 const username: string = await userDAO.getUsername(user.uid);
                 display(AuthenticationService.VERBOSE, { userLoggedInAccordingToFireAuth: user });
                 const verified: boolean = user.emailVerified;
-                this.currentUser = { username, verified };
-                this.joueurRS.next({ username, verified });
+                this.currentUser = { username, verified, email: user.email };
+                this.joueurRS.next(this.currentUser);
             }
         });
     }
@@ -196,6 +201,20 @@ export class AuthenticationService implements OnDestroy {
     }
     public getJoueurObs(): Observable<AuthUser> {
         return this.joueurObs;
+    }
+    public async setUsername(username: string): Promise<MGPValidation> {
+        try {
+            await firebase.auth().currentUser.updateProfile({ displayName: username });
+        } catch (e) {
+            return MGPValidation.failure(this.mapFirebaseError(e));
+        }
+    }
+    public async setPicture(url: string): Promise<MGPValidation> {
+        try {
+            await firebase.auth().currentUser.updateProfile({ photoURL: url });
+        } catch (e) {
+            return MGPValidation.failure(this.mapFirebaseError(e));
+        }
     }
     public ngOnDestroy(): void {
         if (this.authSub) this.authSub.unsubscribe();

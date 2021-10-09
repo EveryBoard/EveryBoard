@@ -29,7 +29,7 @@ export class RegistrationComponent {
                 await this.authService.sendEmailVerification();
             console.log(emailResult)
             if (emailResult.isSuccess()) {
-                return this.router.navigate(['/']);
+                return this.router.navigate(['/verify-account']);
             } else {
                 this.errorMessage = emailResult.getReason();
             }

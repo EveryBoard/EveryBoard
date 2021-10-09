@@ -1,0 +1,46 @@
+<div class="box">
+    <div class="message is-info">
+        <div class="message-header" i18n>Account verification</div>
+        <div class="message-body"
+             id="success"
+             *ngIf="success"
+        i18n>Your account has now been finalized, you can go back to the <a [routerLink]="'/server'">list of games</a>.
+        </div>
+        <div class="message-body"
+             id="verificationEmail"
+             *ngIf="!success && verificationType === 'send-email'">
+            <ng-container i18n>In order to finalize your account, you must click on the link that you should have received on your email address ({{ emailAddress }}). If you have not received the email, click on the following button to send it again.</ng-container><br/>
+            <button class="button is-primary" (click)="sendEmailVerification()" i18n>Send verification email</button>
+        </div>
+        <div class="message-body"
+             id="askUsername"
+             *ngIf="!success && verificationType === 'enter-username'">
+            <ng-container i18n>In order to finalize your account, you must choose a username.</ng-container>
+            <form [formGroup]="usernameForm">
+                <div class="field has-addons">
+                    <div class="control">
+                        <input class="input"
+                               type="text"
+                               placeholder-i18n placeholder="Username"
+                               id="username"
+                               name="username"
+                               required
+                               formControlName="username"
+                         />
+                    </div>
+                    <div class="control">
+                        <button class="button is-info"
+                                id="pickUsername"
+                                (click)="pickUsername(usernameForm.value)"
+                        i18n>Pick username</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="message is-danger">
+        <div class="message-body"
+             *ngIf="errorMessage"
+         >{{ errorMessage }}</div>
+    </div>
+</div>

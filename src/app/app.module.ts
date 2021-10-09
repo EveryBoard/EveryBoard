@@ -21,8 +21,6 @@ import { AuthenticationService } from './services/AuthenticationService';
 import { GameService } from './services/GameService';
 import { JoinerService } from './services/JoinerService';
 
-import { VerifiedAccount } from './guard/VerifiedAccount';
-
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/normal-component/header/header.component';
 import { WelcomeComponent } from './components/normal-component/welcome/welcome.component';
@@ -79,19 +77,23 @@ import { USE_EMULATOR as USE_DATABASE_EMULATOR } from '@angular/fire/database';
 import { USE_EMULATOR as USE_AUTH_EMULATOR } from '@angular/fire/auth';
 import { USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/functions';
 import { LocaleUtils } from './utils/LocaleUtils';
+import { VerifiedAccountGuard } from './guard/verified-account.guard';
+import { VerifyAccountComponent } from './components/normal-component/verify-account/verify-account.component';
+import { ConnectedGuard } from './guard/connected.guard';
 
 
 registerLocaleData(localeFr);
 
 const routes: Route [] = [
     { path: 'login', component: LoginComponent },
-    { path: 'server', component: ServerPageComponent, canActivate: [VerifiedAccount] },
+    { path: 'server', component: ServerPageComponent, canActivate: [VerifiedAccountGuard] },
     { path: 'registration', component: RegistrationComponent },
-    { path: 'notFound', component: NotFoundComponent, canActivate: [VerifiedAccount] },
-    { path: 'nextGameLoading', component: NextGameLoadingComponent, canActivate: [VerifiedAccount] },
+    { path: 'notFound', component: NotFoundComponent, canActivate: [VerifiedAccountGuard] },
+    { path: 'nextGameLoading', component: NextGameLoadingComponent, canActivate: [VerifiedAccountGuard] },
+    { path: 'verify-account', component: VerifyAccountComponent, canActivate: [ConnectedGuard] },
 
-    { path: 'play', component: OnlineGameCreationComponent, canActivate: [VerifiedAccount] },
-    { path: 'play/:compo/:id', component: OnlineGameWrapperComponent, canActivate: [VerifiedAccount] },
+    { path: 'play', component: OnlineGameCreationComponent, canActivate: [VerifiedAccountGuard] },
+    { path: 'play/:compo/:id', component: OnlineGameWrapperComponent, canActivate: [VerifiedAccountGuard] },
     { path: 'local', component: LocalGameCreationComponent },
     { path: 'local/:compo', component: LocalGameWrapperComponent },
     { path: 'tutorial', component: TutorialGameCreationComponent },

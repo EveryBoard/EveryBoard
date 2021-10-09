@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import { CanActivate, Router, UrlTree } from '@angular/router';
 import { AuthenticationService, AuthUser } from '../services/AuthenticationService';
 
 /**
@@ -8,23 +8,23 @@ import { AuthenticationService, AuthUser } from '../services/AuthenticationServi
 @Injectable({
     providedIn: 'root',
 })
-export class VerifiedAccount implements CanActivate {
+export class VerifiedAccountGuard implements CanActivate {
     constructor(private authService: AuthenticationService, private router : Router) {
     }
-    public canActivate(): Promise<boolean> {
+    public canActivate(): Promise<boolean | UrlTree > {
         return new Promise((resolve: (value: boolean) => void) => {
             this.authService.getJoueurObs().subscribe((user: AuthUser): void => {
                 this.evaluateUserPermission(user).then(resolve);
             });
         });
     }
-    private async evaluateUserPermission(user: AuthUser): Promise<boolean> {
+    private async evaluateUserPermission(user: AuthUser): Promise<boolean | UrlTree> {
         if (user === AuthenticationService.NOT_CONNECTED) {
-            await this.router.navigate(['/login']);
-            return false;
-        } else if (user.verified === false) {
-            await this.router.navigate(['/verify-account']);
-            return false;
+            // Redirects the user to the login page
+            return this.router.parseUrl('/login');
+        } else if (user.verified === false || user.username == null) {
+            // Redirects the user to the account verification page
+            return this.router.parseUrl('/verify-account');
         } else {
             return true;
         }

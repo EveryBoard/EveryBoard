@@ -22,12 +22,13 @@ export class AuthenticationServiceMock {
     private static CURRENT_USER: AuthUser = null;
 
     public static CONNECTED_UNVERIFIED: AuthUser = {
+        email: 'jean@jaja.europe',
         username: 'Jean Jaja',
         verified: false,
     }
 
-    // TODO TODO: rename to VERIFIED
     public static CONNECTED: AuthUser = {
+        email: 'jean@jaja.europe',
         username: 'Jean Jaja',
         verified: true,
     }
@@ -62,6 +63,9 @@ export class AuthenticationServiceMock {
         return MGPValidation.failure('not mocked');
     }
     public async doGoogleLogin(): Promise<MGPValidation> {
+        return MGPValidation.failure('not mocked');
+    }
+    public async setUsername(_username: string): Promise<MGPValidation> {
         return MGPValidation.failure('not mocked');
     }
 }

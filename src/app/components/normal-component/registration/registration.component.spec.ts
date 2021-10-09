@@ -35,7 +35,7 @@ describe('RegistrationComponent', () => {
     it('should create', () => {
         expect(testUtils.getComponent()).toBeTruthy();
     });
-    it('should register, send email verification, and navigate back to homepage upon success', fakeAsync(async() => {
+    it('should register, send email verification, and navigate to verification page upon success', fakeAsync(async() => {
         spyOn(router, 'navigate');
         spyOn(authService, 'doRegister').and.resolveTo(MGPFallible.success(user));
         spyOn(authService, 'sendEmailVerification').and.resolveTo(MGPValidation.SUCCESS);
@@ -47,7 +47,7 @@ describe('RegistrationComponent', () => {
         await testUtils.clickElement('#registerButton');
 
         // then the user is registered
-        expect(router.navigate).toHaveBeenCalledWith(['/']);
+        expect(router.navigate).toHaveBeenCalledWith(['/verify-account']);
         expect(authService.sendEmailVerification).toHaveBeenCalledWith();
         expect(authService.doRegister).toHaveBeenCalledWith(username, email, password);
     }));
