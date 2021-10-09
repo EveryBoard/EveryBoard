@@ -1,4 +1,4 @@
 <div>
     <p id="remainingTime"
-       [ngStyle]="getTimeStyle()">{{ (remainingTime/(60 * 1000)) | number:'1.0-0' }}:{{ ((remainingTime%(60 * 1000))/1000) | number:'2.0-0' }}</p>
+       [ngStyle]="getTimeStyle()">{{ displayedMinute }}:{{ displayedSec | number:'2.0-0' }}</p>
 </div>
