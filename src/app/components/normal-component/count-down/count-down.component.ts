@@ -13,7 +13,9 @@ export class CountDownComponent implements OnInit, OnDestroy {
     @Input() dangerTimeLimit: number;
     @Input() active: boolean;
 
-    remainingTime: number;
+    public remainingMs: number;
+    public displayedSec: number;
+    public displayedMinute: number;
     private timeoutHandleGlobal: number;
     private timeoutHandleSec: number;
     private isPaused: boolean = true;
@@ -51,14 +53,17 @@ export class CountDownComponent implements OnInit, OnDestroy {
             throw new Error('Should not set a chrono that has already been started (' + this.debugName + ')!');
         }
         this.isSet = true;
-        this.remainingTime = duration;
+        this.changeDuration(duration);
     }
     public changeDuration(ms: number): void {
-        this.remainingTime = ms;
+        this.remainingMs = ms;
+        this.displayedSec = ms % (60 * 1000);
+        this.displayedMinute = (ms - this.displayedSec) / (60 * 1000);
+        this.displayedSec = Math.round(this.displayedSec / 1000);
     }
     public start(): void {
         // duration is in ms
-        display(CountDownComponent.VERBOSE, this.debugName + '.start(' + this.remainingTime + 'ms);');
+        display(CountDownComponent.VERBOSE, this.debugName + '.start(' + this.remainingMs + 'ms);');
 
         if (this.isSet === false) {
             throw new Error('Should not start a chrono that has not been set!');
@@ -70,13 +75,13 @@ export class CountDownComponent implements OnInit, OnDestroy {
         this.resume();
     }
     public resume(): void {
-        display(CountDownComponent.VERBOSE, this.debugName + '.resume(' + this.remainingTime + 'ms)');
+        display(CountDownComponent.VERBOSE, this.debugName + '.resume(' + this.remainingMs + 'ms)');
 
         if (this.isPaused === false || this.started === false) {
             throw new Error('Should only resume chrono that are started and paused!');
         }
         this.startTime = Date.now();
-        const remainingTimeOnResume: number = this.remainingTime;
+        const remainingTimeOnResume: number = this.remainingMs;
         this.isPaused = false;
         this.timeoutHandleGlobal = window.setTimeout(() => {
             this.onEndReached();
@@ -89,7 +94,7 @@ export class CountDownComponent implements OnInit, OnDestroy {
         this.isPaused = true;
         this.started = false;
         this.clearTimeouts();
-        this.remainingTime = 0;
+        this.changeDuration(0);
         this.outOfTimeAction.emit();
     }
     private countSeconds(): void {
@@ -98,7 +103,7 @@ export class CountDownComponent implements OnInit, OnDestroy {
         }, 1000);
     }
     public pause(): void {
-        display(CountDownComponent.VERBOSE, this.debugName + '.pause(' + this.remainingTime + 'ms)');
+        display(CountDownComponent.VERBOSE, this.debugName + '.pause(' + this.remainingMs + 'ms)');
 
         if (!this.started) {
             throw new Error('Should not pause not started chrono (' + this.debugName + ')');
@@ -112,7 +117,7 @@ export class CountDownComponent implements OnInit, OnDestroy {
         this.updateShownTime();
     }
     public stop(): void {
-        display(CountDownComponent.VERBOSE, this.debugName + '.stop(' + this.remainingTime + 'ms)');
+        display(CountDownComponent.VERBOSE, this.debugName + '.stop(' + this.remainingMs + 'ms)');
 
         if (this.started === false) {
             throw new Error('Should only stop chrono that are started!');
@@ -128,8 +133,8 @@ export class CountDownComponent implements OnInit, OnDestroy {
         if (this.active === false) {
             return this.PASSIVE_STYLE;
         }
-        if (this.remainingTime < this.dangerTimeLimit) {
-            if (this.remainingTime % 2000 < 1000) {
+        if (this.remainingMs < this.dangerTimeLimit) {
+            if (this.remainingMs % 2000 < 1000) {
                 return this.DANGER_TIME_ODD;
             } else {
                 return this.DANGER_TIME_EVEN;
@@ -140,7 +145,8 @@ export class CountDownComponent implements OnInit, OnDestroy {
     }
     private updateShownTime(): void {
         const now: number = Date.now();
-        this.remainingTime -= (now - this.startTime);
+        this.remainingMs -= (now - this.startTime);
+        this.changeDuration(this.remainingMs);
         this.style = this.getTimeStyle();
         this.startTime = now;
         if (!this.isPaused) {
