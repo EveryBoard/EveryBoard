@@ -13,10 +13,11 @@ import { PentagoRules } from './PentagoRules';
 import { PentagoState } from './PentagoState';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { PentagoTutorial } from './PentagoTutorial';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 @Component({
     selector: 'app-pentago',
-    templateUrl: './Pentago.component.html',
+    templateUrl: './pentago.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.css'],
 })
 export class PentagoComponent extends RectangularGameComponent<PentagoRules,
@@ -125,6 +126,9 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
+        }
+        if (this.board[y][x] !== Player.NONE) {
+            return this.cancelMove(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
         const drop: PentagoMove = PentagoMove.rotationless(x, y);
         const state: PentagoState = this.rules.node.gameState;

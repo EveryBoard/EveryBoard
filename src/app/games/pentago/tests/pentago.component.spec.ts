@@ -1,5 +1,6 @@
 import { fakeAsync } from '@angular/core/testing';
 import { Player } from 'src/app/jscaip/Player';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { PentagoComponent } from '../pentago.component';
@@ -101,5 +102,21 @@ describe('PentagoComponent', () => {
         const component: PentagoComponent = componentTestUtils.getComponent();
         expect(component.getBlockClasses(1, 0)).toEqual(['moved']);
         expect(component.getCaseClasses(0, 1)).toEqual(['player1', 'last-move']);
+    }));
+    it('should not accept click on pieces', fakeAsync(async() => {
+        // Given an initial state with a piece on it
+        const board: Table<Player> = [
+            [O, _, _, _, _, _],
+            [_, _, _, _, _, _],
+            [_, _, _, _, _, _],
+            [_, _, _, _, _, _],
+            [_, _, _, _, _, _],
+            [_, _, _, _, _, _],
+        ];
+        const state: PentagoState = new PentagoState(board, 5);
+        componentTestUtils.setupState(state);
+
+        // "then" there should not be clickable thing there
+        await componentTestUtils.expectClickFailure('#click_0_0', RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
     }));
 });
