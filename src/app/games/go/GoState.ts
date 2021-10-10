@@ -2,50 +2,59 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player } from 'src/app/jscaip/Player';
 import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
+import { ComparableObject } from 'src/app/utils/Comparable';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/utils';
 
 type PieceType = 'alive' | 'dead' | 'territory' | 'empty';
-export class GoPiece {
-    public static BLACK: GoPiece = new GoPiece(Player.ZERO.value, Player.ZERO, 'alive');
+export class GoPiece implements ComparableObject {
 
-    public static WHITE: GoPiece = new GoPiece(Player.ONE.value, Player.ONE, 'alive');
+    public static BLACK: GoPiece = new GoPiece(Player.ZERO, 'alive');
 
-    public static EMPTY: GoPiece = new GoPiece(Player.NONE.value, Player.NONE, 'empty');
+    public static WHITE: GoPiece = new GoPiece(Player.ONE, 'alive');
 
-    public static DEAD_BLACK: GoPiece = new GoPiece(3, Player.ZERO, 'dead');
+    public static EMPTY: GoPiece = new GoPiece(Player.NONE, 'empty');
 
-    public static DEAD_WHITE: GoPiece = new GoPiece(4, Player.ONE, 'dead');
+    public static DEAD_BLACK: GoPiece = new GoPiece(Player.ZERO, 'dead');
 
-    public static BLACK_TERRITORY: GoPiece = new GoPiece(5, Player.NONE, 'territory');
+    public static DEAD_WHITE: GoPiece = new GoPiece(Player.ONE, 'dead');
 
-    public static WHITE_TERRITORY: GoPiece = new GoPiece(6, Player.NONE, 'territory');
+    public static BLACK_TERRITORY: GoPiece = new GoPiece(Player.NONE, 'territory');
 
-    private constructor(readonly value: number, readonly player: Player, readonly type: PieceType) {}
+    public static WHITE_TERRITORY: GoPiece = new GoPiece(Player.NONE, 'territory');
 
+    private constructor(readonly player: Player, readonly type: PieceType) {}
+
+    public equals(o: GoPiece): boolean {
+        return o === this;
+    }
+    public toString(): string {
+        switch (this) {
+            case GoPiece.BLACK:
+                return 'GoPiece.BLACK';
+            case GoPiece.WHITE:
+                return 'GoPiece.WHITE';
+            case GoPiece.EMPTY:
+                return 'GoPiece.EMPTY';
+            case GoPiece.DEAD_BLACK:
+                return 'GoPiece.DEAD_BLACK';
+            case GoPiece.DEAD_WHITE:
+                return 'GoPiece.DEAD_WHITE';
+            case GoPiece.BLACK_TERRITORY:
+                return 'GoPiece.BLACK_TERRITORY';
+            default:
+                assert(this === GoPiece.WHITE_TERRITORY, 'Unexisting GoPiece');
+                return 'GoPiece.WHITE_TERRITORY';
+        }
+    }
     public static pieceBelongTo(piece: GoPiece, owner: Player): boolean {
         assert(owner !== Player.NONE, 'Owner must be Player.ZERO or Player.ONE, got Player.NONE.');
         return owner === piece.player && piece.type !== 'territory';
     }
-    public static of(value: number): GoPiece {
-        switch (value) {
-            case Player.ZERO.value:
-                return GoPiece.BLACK;
-            case Player.ONE.value:
-                return GoPiece.WHITE;
-            case Player.NONE.value:
-                return GoPiece.EMPTY;
-            case 3:
-                return GoPiece.DEAD_BLACK;
-            case 4:
-                return GoPiece.DEAD_WHITE;
-            case 5:
-                return GoPiece.BLACK_TERRITORY;
-            case 6:
-                return GoPiece.WHITE_TERRITORY;
-            default:
-                throw new Error('Invalid value for GoPiece: ' + value + '.');
-        }
+    public static ofPlayer(player: Player): GoPiece {
+        if (player === Player.ZERO) return GoPiece.BLACK;
+        else if (player === Player.ONE) return GoPiece.WHITE;
+        else throw new Error('GoPiece.ofPlayer should only be called with Player.ZERO and Player.ONE.');
     }
     public isOccupied(): boolean {
         return [GoPiece.BLACK, GoPiece.WHITE, GoPiece.DEAD_BLACK, GoPiece.DEAD_WHITE].includes(this);

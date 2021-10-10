@@ -7,19 +7,14 @@ import { GoState, GoPiece, Phase } from '../GoState';
 describe('GoState', () => {
 
     describe('GoPiece', () => {
-        describe('GoPiece.of', () => {
-            it('should map correctly all pieces', () => {
-                expect(GoPiece.of(0)).toBe(GoPiece.BLACK);
-                expect(GoPiece.of(1)).toBe(GoPiece.WHITE);
-                expect(GoPiece.of(2)).toBe(GoPiece.EMPTY);
-                expect(GoPiece.of(3)).toBe(GoPiece.DEAD_BLACK);
-                expect(GoPiece.of(4)).toBe(GoPiece.DEAD_WHITE);
-                expect(GoPiece.of(5)).toBe(GoPiece.BLACK_TERRITORY);
-                expect(GoPiece.of(6)).toBe(GoPiece.WHITE_TERRITORY);
+        describe('GoPiece.ofPlayer', () => {
+            it('should map correctly the normal player', () => {
+                expect(GoPiece.ofPlayer(Player.ZERO)).toBe(GoPiece.BLACK);
+                expect(GoPiece.ofPlayer(Player.ONE)).toBe(GoPiece.WHITE);
             });
             it('Should throw when GoPiece.of is called with invalid number', () => {
-                const error: string = 'Invalid value for GoPiece: 123.';
-                expect(() => GoPiece.of(123)).toThrowError(error);
+                const error: string = 'GoPiece.ofPlayer should only be called with Player.ZERO and Player.ONE.';
+                expect(() => GoPiece.ofPlayer(Player.NONE)).toThrowError(error);
             });
         });
         it('Should throw when GoPiece.pieceBelongTo is called with Player.NONE', () => {
