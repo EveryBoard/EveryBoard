@@ -55,14 +55,42 @@ fdescribe('VerifyAccountComponent', () => {
             await testUtils.whenStable();
 
             // then the failure message is shown
+            testUtils.expectElementNotToExist('#success');
             testUtils.expectElementToExist('#errorMessage');
             expect(testUtils.findElement('#errorMessage').nativeElement.innerHTML).toEqual(failure);
         }));
     });
     describe('email user', () => {
-        // TODO TODO
-        it('should show that email verification is needed for email users');
-        it('should resend email verification if asked by the user');
-        it('should show error if sending the verification email failed');
+        beforeEach(() => {
+            // given a user that registered through its email
+            AuthenticationServiceMock.setUser({ email: 'jean@jaja.europe', verified: false, username: 'jeanjaja' });
+            testUtils.detectChanges();
+        });
+        it('should resend email verification if asked by the user and show that it succeeded', fakeAsync(async() => {
+            testUtils.expectElementNotToExist('#success');
+
+            // when the user asks for sending the email
+            spyOn(authService, 'sendEmailVerification').and.resolveTo(MGPValidation.SUCCESS);
+            testUtils.expectElementToExist('#verificationEmail');
+            testUtils.clickElement('#sendEmail');
+            await testUtils.whenStable();
+
+            // then the success message is shown
+            testUtils.expectElementToExist('#success');
+            expect(authService.sendEmailVerification).toHaveBeenCalledWith();
+        }));
+        it('should show error if sending the verification email failed', fakeAsync(async() => {
+            const failure: string = 'I cannot send emails!';
+
+            // when the user asks for sending the email
+            spyOn(authService, 'sendEmailVerification').and.resolveTo(MGPValidation.failure(failure));
+            testUtils.clickElement('#sendEmail');
+            await testUtils.whenStable();
+
+            // then the success message is shown
+            testUtils.expectElementNotToExist('#success');
+            testUtils.expectElementToExist('#errorMessage');
+            expect(testUtils.findElement('#errorMessage').nativeElement.innerHTML).toEqual(failure);
+        }));
     });
 });
