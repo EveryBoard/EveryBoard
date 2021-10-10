@@ -40,7 +40,9 @@ export class ReversiMinimax extends Minimax<ReversiMove, ReversiState, ReversiLe
                 }
             }
         }
-        return new NodeUnheritance(player1Count - player0Count);
+        player0Count *= Player.ZERO.getScoreModifier();
+        player1Count *= Player.ONE.getScoreModifier();
+        return new NodeUnheritance(player1Count + player0Count);
     }
     public getListMoves(n: ReversiNode): ReversiMove[] {
         const moves: ReversiMoveWithSwitched[] = ReversiRules.getListMoves(n.gameState);
