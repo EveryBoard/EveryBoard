@@ -60,10 +60,10 @@ export class TablutMinimax extends Minimax<TablutMove, TablutState, TablutLegali
         }
         const nbPlayerZeroPawns: number = TablutRules.getPlayerListPawns(Player.ZERO, board).length;
         const nbPlayerOnePawns: number = TablutRules.getPlayerListPawns(Player.ONE, board).length;
-        const zeroMult: number = TablutState.INVADER_START ? 1 : 2; // invaders pawn are twice as numerous
-        const oneMult: number = TablutState.INVADER_START ? 2 : 1; // so they're twice less valuable
+        const zeroMult: number = [1, 2][TablutState.INVADER.value]; // invaders pawn are twice as numerous
+        const oneMult: number = [2, 1][TablutState.INVADER.value]; // so they're twice less valuable
         const scoreZero: number = nbPlayerZeroPawns * zeroMult;
         const scoreOne: number = nbPlayerOnePawns * oneMult;
-        return new NodeUnheritance(scoreOne - scoreZero); // TODO : countInvader vs Defenders
+        return new NodeUnheritance(scoreOne - scoreZero);
     }
 }

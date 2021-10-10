@@ -342,10 +342,10 @@ export class TablutRules extends Rules<TablutMove, TablutState, TablutLegalitySt
                 owner = Player.ONE;
                 break;
             case TablutCase.INVADERS:
-                owner = TablutState.INVADER_START ? Player.ZERO : Player.ONE;
+                owner = TablutState.INVADER;
                 break;
             case TablutCase.DEFENDERS:
-                owner = TablutState.INVADER_START ? Player.ONE : Player.ZERO;
+                owner = TablutState.INVADER.getOpponent();
                 break;
             default:
                 assert(caseC === TablutCase.UNOCCUPIED, 'Invalid value on the board: ' + caseC);
@@ -374,7 +374,7 @@ export class TablutRules extends Rules<TablutMove, TablutState, TablutLegalitySt
             }
         } else if (player === Player.ZERO) {
             if (caseC === TablutCase.INVADERS) {
-                if (TablutState.INVADER_START) {
+                if (TablutState.INVADER === Player.ZERO) {
                     if (relativeOwner !== RelativePlayer.PLAYER) {
                         display(TablutRules.VERBOSE,
                                 `player start, invader start, case is invader, but player don't own the case ` +
@@ -391,7 +391,7 @@ export class TablutRules extends Rules<TablutMove, TablutState, TablutLegalitySt
                 // TODO
             }
         } else { // player follow
-            if (TablutState.INVADER_START) {
+            if (TablutState.INVADER === Player.ZERO) {
                 if (caseC === TablutCase.INVADERS) {
                     if (relativeOwner !== RelativePlayer.OPPONENT) {
                         display(TablutRules.VERBOSE,
@@ -455,20 +455,10 @@ export class TablutRules extends Rules<TablutMove, TablutState, TablutLegalitySt
         return MGPOptional.empty();
     }
     public static getInvader(): Player {
-        display(TablutRules.VERBOSE, 'TablutRules.getInvaderVictoryValue');
-
-        if (TablutState.INVADER_START) {
-            return Player.ZERO;
-        } else {
-            return Player.ONE;
-        }
+        return TablutState.INVADER;
     }
     public static getDefender(): Player {
-        if (TablutState.INVADER_START) {
-            return Player.ONE;
-        } else {
-            return Player.ZERO;
-        }
+        return TablutState.INVADER.getOpponent();
     }
     public static isPlayerImmobilized(player: Player, board: Table<TablutCase>): boolean {
         return this.getPlayerListMoves(player, board).length === 0;
