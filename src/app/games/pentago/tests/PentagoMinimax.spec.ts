@@ -34,7 +34,8 @@ describe('PentagoMinimax', () => {
         const state: PentagoState = new PentagoState(board, 1);
         rules.node = new MGPNode(rules.node, PentagoMove.rotationless(0, 0), state, minimax);
 
-        /* when calculating the list of moves, then there should be 105
+        /*
+         * when calculating the list of moves, then there should be 105
          * so: 35 without any rotation
          * + the 3 center times 2 rotation of the first block (6)
          * + the 8 coords in the first block times the two rotations possibles (16)
@@ -58,7 +59,8 @@ describe('PentagoMinimax', () => {
         const state: PentagoState = new PentagoState(board, 8);
         rules.node = new MGPNode(rules.node, null, state, minimax);
 
-        /* when calculating the list of moves
+        /*
+         * when calculating the list of moves
          * there should be 28 drop tilmes 8 rotations
          * and no rotationless moves
          */
@@ -80,7 +82,8 @@ describe('PentagoMinimax', () => {
         const state: PentagoState = new PentagoState(board, 4);
         rules.node = new MGPNode(rules.node, null, state, minimax);
 
-        /* when calculating the list of moves
+        /*
+         * when calculating the list of moves
          * there should be 24 drop not followed by no-rotations + rotations of the 6 others block (24 * 7)
          * + 8 drops followed only by clockwise rotation + rotations of the others 6 blocks (8 * 7)
          */
