@@ -1,36 +1,31 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player } from 'src/app/jscaip/Player';
-import { ArrayUtils, NumberTable, Table } from 'src/app/utils/ArrayUtils';
+import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { assert } from 'src/app/utils/utils';
 
+type PieceType = 'alive' | 'dead' | 'territory' | 'empty';
 export class GoPiece {
-    public static BLACK: GoPiece = new GoPiece(Player.ZERO.value);
+    public static BLACK: GoPiece = new GoPiece(Player.ZERO.value, Player.ZERO, 'alive');
 
-    public static WHITE: GoPiece = new GoPiece(Player.ONE.value);
+    public static WHITE: GoPiece = new GoPiece(Player.ONE.value, Player.ONE, 'alive');
 
-    public static EMPTY: GoPiece = new GoPiece(Player.NONE.value);
+    public static EMPTY: GoPiece = new GoPiece(Player.NONE.value, Player.NONE, 'empty');
 
-    public static DEAD_BLACK: GoPiece = new GoPiece(3);
+    public static DEAD_BLACK: GoPiece = new GoPiece(3, Player.ZERO, 'dead');
 
-    public static DEAD_WHITE: GoPiece = new GoPiece(4);
+    public static DEAD_WHITE: GoPiece = new GoPiece(4, Player.ONE, 'dead');
 
-    public static BLACK_TERRITORY: GoPiece = new GoPiece(5);
+    public static BLACK_TERRITORY: GoPiece = new GoPiece(5, Player.NONE, 'territory');
 
-    public static WHITE_TERRITORY: GoPiece = new GoPiece(6);
+    public static WHITE_TERRITORY: GoPiece = new GoPiece(6, Player.NONE, 'territory');
 
-    private constructor(readonly value: number) {}
+    private constructor(readonly value: number, readonly player: Player, readonly type: PieceType) {}
 
     public static pieceBelongTo(piece: GoPiece, owner: Player): boolean {
-        if (owner === Player.ZERO) {
-            return piece === GoPiece.BLACK ||
-                   piece === GoPiece.DEAD_BLACK;
-        }
-        if (owner === Player.ONE) {
-            return piece === GoPiece.WHITE ||
-                   piece === GoPiece.DEAD_WHITE;
-        }
-        throw new Error('Owner must be Player.ZERO or Player.ONE, got Player.NONE.');
+        assert(owner !== Player.NONE, 'Owner must be Player.ZERO or Player.ONE, got Player.NONE.');
+        return owner === piece.player && piece.type !== 'territory';
     }
     public static of(value: number): GoPiece {
         switch (value) {
@@ -65,13 +60,7 @@ export class GoPiece {
         return [GoPiece.BLACK_TERRITORY, GoPiece.WHITE_TERRITORY].includes(this);
     }
     public getOwner(): Player {
-        if (this.isEmpty()) {
-            return Player.NONE;
-        } else if (this === GoPiece.BLACK || this === GoPiece.DEAD_BLACK) {
-            return Player.ZERO;
-        } else {
-            return Player.ONE;
-        }
+        return this.player;
     }
     public nonTerritory(): GoPiece {
         if (this.isEmpty()) return GoPiece.EMPTY;
@@ -97,12 +86,6 @@ export class GoState extends GameStateWithTable<GoPiece> {
 
     public readonly phase: Phase;
 
-    public static mapGoPieceBoard(board: Table<GoPiece>): number[][] {
-        return ArrayUtils.mapBiArray<GoPiece, number>(board, (goPiece: GoPiece) => goPiece.value);
-    }
-    public static mapNumberBoard(board: NumberTable): GoPiece[][] {
-        return ArrayUtils.mapBiArray<number, GoPiece>(board, GoPiece.of);
-    }
     public constructor(board: Table<GoPiece>,
                        captured: number[],
                        turn: number,
