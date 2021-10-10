@@ -1,5 +1,4 @@
 import { P4Move } from 'src/app/games/p4/P4Move';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { LegalityStatus } from '../LegalityStatus';
 import { MGPNode } from '../MGPNode';
 import { GameStatus, Rules } from '../Rules';
@@ -22,7 +21,7 @@ class AbstractRules extends Rules<P4Move, MyAbstractState> {
         return new MyAbstractState([board.concat([move.x])], state.turn + 1);
     }
     public isLegal(move: P4Move, state: MyAbstractState): LegalityStatus {
-        return { legal: MGPValidation.SUCCESS };
+        return LegalityStatus.SUCCESS;
     }
     public getGameStatus(node: AbstractNode): GameStatus {
         return GameStatus.ONGOING;

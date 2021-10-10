@@ -26,23 +26,11 @@ export class KamisadoPiece implements ComparableObject {
 
     public static ONE = KamisadoPiece.createPlayerColors(Player.ONE);
 
-    public static of(value: number): KamisadoPiece {
-        if (value == null) {
-            // This should not be necessary, but is a safeguard in case an invalid board location is accessed
-            throw new Error('KamisadoPiece.of null!');
-        }
-        const color: number = value % 16;
-        const player: number = (value - color) / 16;
-        return new KamisadoPiece(Player.of(player), KamisadoColor.of(color));
-    }
-    public getValue(): number {
-        return (this.player.value * 16) + this.color.value;
-    }
     public equals(piece: KamisadoPiece): boolean {
         return piece.player === this.player && piece.color === this.color;
     }
     public isEmpty(): boolean {
-        return this.player === Player.NONE; // equals(KamisadoPiece.NONE);
+        return this.player.equals(Player.NONE);
     }
     public belongsTo(player: Player): boolean {
         return this.player === player;

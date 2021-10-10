@@ -619,7 +619,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
 
             // when doing a (virtually) illegal move
             const error: string = 'some error message...';
-            spyOn(wrapper.gameComponent.rules, 'isLegal').and.returnValue({ legal: MGPValidation.failure(error) });
+            spyOn(wrapper.gameComponent.rules, 'isLegal').and.returnValue(LegalityStatus.failure(error));
             await componentTestUtils.expectClickSuccess('#chooseCoord_0_0');
             tick(10);
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);

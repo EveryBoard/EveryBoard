@@ -7,7 +7,6 @@ import { SaharaMove } from './SaharaMove';
 import { SaharaState } from './SaharaState';
 import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { display } from 'src/app/utils/utils';
 import { TriangularGameState } from 'src/app/jscaip/TriangularGameState';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -59,21 +58,21 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
     public isLegal(move: SaharaMove, state: SaharaState): LegalityStatus {
         const movedPawn: FourStatePiece = state.getPieceAt(move.coord);
         if (movedPawn.value !== state.getCurrentPlayer().value) {
-            return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE()) };
+            return LegalityStatus.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         }
         const landingCase: FourStatePiece = state.getPieceAt(move.end);
         if (landingCase !== FourStatePiece.EMPTY) {
-            return { legal: MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE()) };
+            return LegalityStatus.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
         const commonNeighboor: MGPOptional<Coord> = TriangularCheckerBoard.getCommonNeighboor(move.coord, move.end);
         if (commonNeighboor.isPresent()) {
             if (state.getPieceAt(commonNeighboor.get()) === FourStatePiece.EMPTY) {
-                return { legal: MGPValidation.SUCCESS };
+                return LegalityStatus.SUCCESS;
             } else {
-                return { legal: MGPValidation.failure(SaharaFailure.CAN_ONLY_REBOUND_ON_EMPTY_SPACE()) };
+                return LegalityStatus.failure(SaharaFailure.CAN_ONLY_REBOUND_ON_EMPTY_SPACE());
             }
         } else {
-            return { legal: MGPValidation.SUCCESS };
+            return LegalityStatus.SUCCESS;
         }
     }
     public getGameStatus(node: SaharaNode): GameStatus {

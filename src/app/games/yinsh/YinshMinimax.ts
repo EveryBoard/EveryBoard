@@ -16,9 +16,9 @@ import { YinshNode, YinshRules } from './YinshRules';
 export class YinshMinimax extends Minimax<YinshMove, YinshState, YinshLegalityStatus> {
 
     public getBoardValue(node: YinshNode): NodeUnheritance {
-        const status: GameStatus = this.ruler.getGameStatus(node);
-        if (status.isEndGame) {
-            return NodeUnheritance.fromWinner(status.winner);
+        const gameStatus: GameStatus = this.ruler.getGameStatus(node);
+        if (gameStatus.isEndGame) {
+            return NodeUnheritance.fromWinner(gameStatus.winner);
         } else {
             return new NodeUnheritance(node.gameState.sideRings[0] * Player.ZERO.getScoreModifier() +
                 node.gameState.sideRings[1] * Player.ONE.getScoreModifier());

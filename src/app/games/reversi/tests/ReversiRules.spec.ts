@@ -1,4 +1,4 @@
-import { ReversiRules } from '../ReversiRules';
+import { ReversiNode, ReversiRules } from '../ReversiRules';
 import { ReversiMinimax } from '../ReversiMinimax';
 import { ReversiMove } from '../ReversiMove';
 import { ReversiState } from '../ReversiState';
@@ -6,7 +6,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { ReversiLegalityStatus } from '../ReversiLegalityStatus';
-import { expectToBeVictoryFor } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { expectToBeDraw, expectToBeVictoryFor } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Minimax } from 'src/app/jscaip/Minimax';
 
 describe('ReversiRules', () => {
@@ -64,34 +64,97 @@ describe('ReversiRules', () => {
         rules.node = new MGPNode(null, null, state);
         expect(rules.choose(ReversiMove.PASS)).toBeTrue();
     });
-    it('Should consider the player with the more point the winner at the end', () => {
-        const board: Table<Player> = [
-            [O, X, X, X, X, X, X, O],
-            [O, X, X, O, O, X, X, O],
-            [O, X, O, X, X, X, X, O],
-            [O, X, X, X, X, X, X, O],
-            [O, X, X, X, O, O, X, O],
-            [O, X, X, O, O, O, X, O],
-            [O, O, O, O, O, O, O, O],
-            [_, O, O, O, O, O, X, O],
-        ];
-        const expectedBoard: Table<Player> = [
-            [O, X, X, X, X, X, X, O],
-            [O, X, X, O, O, X, X, O],
-            [O, X, O, X, X, X, X, O],
-            [O, X, X, X, X, X, X, O],
-            [O, X, X, X, O, O, X, O],
-            [O, X, X, O, O, O, X, O],
-            [O, X, O, O, O, O, O, O],
-            [X, X, X, X, X, X, X, O],
-        ];
-        const state: ReversiState = new ReversiState(board, 59);
-        const move: ReversiMove = new ReversiMove(0, 7);
-        const status: ReversiLegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.isSuccess()).toBeTrue();
-        const resultingState: ReversiState = rules.applyLegalMove(move, state, status);
-        const expectedState: ReversiState = new ReversiState(expectedBoard, 60);
-        expect(resultingState).toEqual(expectedState);
-        expectToBeVictoryFor(rules, new MGPNode(null, move, expectedState), Player.ONE, minimaxes);
+    describe('Endgames', () => {
+        it('Should consider the player with the more point the winner at the end', () => {
+            const board: Table<Player> = [
+                [O, X, X, X, X, X, X, O],
+                [O, X, X, O, O, X, X, O],
+                [O, X, O, X, X, X, X, O],
+                [O, X, X, X, X, X, X, O],
+                [O, X, X, X, O, O, X, O],
+                [O, X, X, O, O, O, X, O],
+                [O, O, O, O, O, O, O, O],
+                [_, O, O, O, O, O, X, O],
+            ];
+            const expectedBoard: Table<Player> = [
+                [O, X, X, X, X, X, X, O],
+                [O, X, X, O, O, X, X, O],
+                [O, X, O, X, X, X, X, O],
+                [O, X, X, X, X, X, X, O],
+                [O, X, X, X, O, O, X, O],
+                [O, X, X, O, O, O, X, O],
+                [O, X, O, O, O, O, O, O],
+                [X, X, X, X, X, X, X, O],
+            ];
+            const state: ReversiState = new ReversiState(board, 59);
+            const move: ReversiMove = new ReversiMove(0, 7);
+            const status: ReversiLegalityStatus = rules.isLegal(move, state);
+            expect(status.legal.isSuccess()).toBeTrue();
+            const resultingState: ReversiState = rules.applyLegalMove(move, state, status);
+            const expectedState: ReversiState = new ReversiState(expectedBoard, 60);
+            expect(resultingState).toEqual(expectedState);
+            expectToBeVictoryFor(rules, new MGPNode(null, move, expectedState), Player.ONE, minimaxes);
+        });
+        it('Should consider the player with the more point the winner at the end (Player.ZERO remix)', () => {
+            const board: Table<Player> = [
+                [X, O, O, O, O, O, O, X],
+                [X, O, O, X, X, O, O, X],
+                [X, O, X, O, O, O, O, X],
+                [X, O, O, O, O, O, O, X],
+                [X, O, O, O, X, X, O, X],
+                [X, O, O, X, X, X, O, X],
+                [X, X, X, X, X, X, X, X],
+                [_, X, X, X, X, X, O, X],
+            ];
+            const expectedBoard: Table<Player> = [
+                [X, O, O, O, O, O, O, X],
+                [X, O, O, X, X, O, O, X],
+                [X, O, X, O, O, O, O, X],
+                [X, O, O, O, O, O, O, X],
+                [X, O, O, O, X, X, O, X],
+                [X, O, O, X, X, X, O, X],
+                [X, O, X, X, X, X, X, X],
+                [O, O, O, O, O, O, O, X],
+            ];
+            const state: ReversiState = new ReversiState(board, 60);
+            const move: ReversiMove = new ReversiMove(0, 7);
+            const status: ReversiLegalityStatus = rules.isLegal(move, state);
+            expect(status.legal.isSuccess()).toBeTrue();
+            const resultingState: ReversiState = rules.applyLegalMove(move, state, status);
+            const expectedState: ReversiState = new ReversiState(expectedBoard, 61);
+            expect(resultingState).toEqual(expectedState);
+            expectToBeVictoryFor(rules, new MGPNode(null, move, expectedState), Player.ZERO, minimaxes);
+        });
+        it('Should recognize draws', () => {
+            const board: Table<Player> = [
+                [O, O, O, O, X, X, X, X],
+                [X, O, O, O, X, X, X, X],
+                [X, O, O, O, X, X, X, X],
+                [X, O, O, O, X, X, X, X],
+                [X, O, O, O, X, X, X, X],
+                [X, O, O, O, X, X, X, X],
+                [X, O, O, O, X, X, X, X],
+                [_, O, O, O, X, X, X, X],
+            ];
+            const expectedBoard: Table<Player> = [
+                [O, O, O, O, X, X, X, X],
+                [O, O, O, O, X, X, X, X],
+                [O, O, O, O, X, X, X, X],
+                [O, O, O, O, X, X, X, X],
+                [O, O, O, O, X, X, X, X],
+                [O, O, O, O, X, X, X, X],
+                [O, O, O, O, X, X, X, X],
+                [O, O, O, O, X, X, X, X],
+            ];
+            const state: ReversiState = new ReversiState(board, 60);
+            const move: ReversiMove = new ReversiMove(0, 7);
+            const status: ReversiLegalityStatus = rules.isLegal(move, state);
+            expect(status.legal.isSuccess()).toBeTrue();
+            const resultingState: ReversiState = rules.applyLegalMove(move, state, status);
+            const expectedState: ReversiState = new ReversiState(expectedBoard, 61);
+            expect(resultingState).toEqual(expectedState);
+            const node: ReversiNode = new MGPNode(null, move, resultingState);
+            expectToBeDraw(rules, node, minimaxes);
+        });
     });
 });
