@@ -261,7 +261,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
             expect(this.chooseMoveSpy).not.toHaveBeenCalled();
             expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(reason);
             this.cancelMoveSpy.calls.reset();
-            tick(150);
+            tick(3000);
         }
     }
     public async expectClickForbidden(elementName: string, reason: string): Promise<void> {
@@ -280,7 +280,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
             this.canUserPlaySpy.calls.reset();
             expect(this.chooseMoveSpy).not.toHaveBeenCalled();
             expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(clickValidity.reason);
-            tick(150);
+            tick(3000);
         }
     }
     public async expectMoveSuccess(elementName: string,
@@ -344,7 +344,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
             expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(reason);
             this.cancelMoveSpy.calls.reset();
             expect(this.onLegalUserMoveSpy).not.toHaveBeenCalled();
-            tick(150);
+            tick(3000);
         }
     }
     public async clickElement(elementName: string): Promise<void> {
