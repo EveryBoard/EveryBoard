@@ -5,7 +5,7 @@ import { VerifyAccountComponent } from './verify-account.component';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 
-fdescribe('VerifyAccountComponent', () => {
+describe('VerifyAccountComponent', () => {
     let testUtils: SimpleComponentTestUtils<VerifyAccountComponent>;
 
     let authService: AuthenticationService;

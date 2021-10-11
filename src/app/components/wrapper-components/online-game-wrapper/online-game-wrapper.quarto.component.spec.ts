@@ -588,7 +588,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
                 // Then turn should be changed to 0 and resumeCountDown be called
                 const opponentTurnDiv: DebugElement = componentTestUtils.findElement('#currentPlayerIndicator');
-                expect(opponentTurnDiv.nativeElement.innerText).toBe(`It is creator's turn.`);
+                expect(opponentTurnDiv.nativeElement.innerText).toBe(`It is your turn.`);
                 expect(wrapper.resetChronoFor).toHaveBeenCalledWith(Player.ZERO);
                 expect(wrapper.gameComponent.rules.node.gameState.turn).toBe(0);
                 tick(wrapper.joiner.maximalMoveDuration * 1000);
@@ -651,7 +651,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
                 // Then turn should be changed to 0 and resumeCountDown be called
                 const opponentTurnDiv: DebugElement = componentTestUtils.findElement('#currentPlayerIndicator');
-                expect(opponentTurnDiv.nativeElement.innerText).toBe(`It is creator's turn.`);
+                expect(opponentTurnDiv.nativeElement.innerText).toBe(`It is your turn.`);
                 expect(wrapper.switchPlayer).toHaveBeenCalled();
                 expect(wrapper.gameComponent.rules.node.gameState.turn).toBe(0);
                 tick(wrapper.joiner.maximalMoveDuration * 1000);
