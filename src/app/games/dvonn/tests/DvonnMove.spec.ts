@@ -3,6 +3,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 
 describe('DvonnMove', () => {
+
     it('should toString in a readable way', () => {
         expect((DvonnMove.of(new Coord(3, 2), new Coord(3, 3))).toString()).toEqual('DvonnMove((3, 2)->(3, 3))');
         expect(DvonnMove.PASS.toString()).toEqual('DvonnMove.PASS');

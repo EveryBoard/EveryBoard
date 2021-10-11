@@ -1,6 +1,6 @@
 import { AwaleNode, AwaleRules } from '../AwaleRules';
 import { AwaleMove } from '../AwaleMove';
-import { AwalePartSlice } from '../AwalePartSlice';
+import { AwaleState } from '../AwaleState';
 import { AwaleLegalityStatus } from '../AwaleLegalityStatus';
 import { expectToBeDraw, expectToBeVictoryFor } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
@@ -9,11 +9,12 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { AwaleFailure } from '../AwaleFailure';
 
 describe('AwaleRules', () => {
+
     let rules: AwaleRules;
     let minimaxes: AwaleMinimax[];
 
     beforeEach(() => {
-        rules = new AwaleRules(AwalePartSlice);
+        rules = new AwaleRules(AwaleState);
         minimaxes = [
             new AwaleMinimax(rules, 'AwaleMinimax'),
         ];
@@ -27,14 +28,14 @@ describe('AwaleRules', () => {
             [0, 0, 0, 0, 1, 0],
             [0, 0, 0, 0, 1, 0],
         ];
-        const slice: AwalePartSlice = new AwalePartSlice(board, 0, [1, 2]);
+        const state: AwaleState = new AwaleState(board, 0, [1, 2]);
         const move: AwaleMove = AwaleMove.FIVE;
-        const status: AwaleLegalityStatus = rules.isLegal(move, slice);
+        const status: AwaleLegalityStatus = rules.isLegal(move, state);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingSlice: AwalePartSlice = rules.applyLegalMove(move, slice, status);
-        const expectedSlice: AwalePartSlice =
-            new AwalePartSlice(expectedBoard, 1, [3, 2]);
-        expect(resultingSlice).toEqual(expectedSlice);
+        const resultingState: AwaleState = rules.applyLegalMove(move, state, status);
+        const expectedState: AwaleState =
+            new AwaleState(expectedBoard, 1, [3, 2]);
+        expect(resultingState).toEqual(expectedState);
     });
     it('should do mansoon when impossible distribution', () => {
         // given a board where a player is about to give his last stone to opponent
@@ -42,19 +43,19 @@ describe('AwaleRules', () => {
             [0, 0, 0, 0, 0, 1],
             [0, 1, 2, 3, 4, 4],
         ];
-        const state: AwalePartSlice = new AwalePartSlice(board, 0, [23, 10]);
+        const state: AwaleState = new AwaleState(board, 0, [23, 10]);
 
         // when player give his last stone
         const move: AwaleMove = AwaleMove.FIVE;
         const status: AwaleLegalityStatus = rules.isLegal(move, state);
-        const resultingState: AwalePartSlice = rules.applyLegalMove(move, state, status);
+        const resultingState: AwaleState = rules.applyLegalMove(move, state, status);
 
         // then, since other player can't distribute, he mansoon all his pieces
         const expectedBoard: number[][] = [
             [0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0],
         ];
-        const expectedState: AwalePartSlice = new AwalePartSlice(expectedBoard, 1, [23, 25]);
+        const expectedState: AwaleState = new AwaleState(expectedBoard, 1, [23, 25]);
         expect(status.legal.isSuccess()).toBeTrue();
         expect(resultingState).toEqual(expectedState);
         const node: AwaleNode = new MGPNode(null, move, resultingState);
@@ -66,14 +67,14 @@ describe('AwaleRules', () => {
             [1, 0, 0, 0, 0, 1],
             [0, 0, 0, 0, 0, 0],
         ];
-        const state: AwalePartSlice = new AwalePartSlice(board, 0, [23, 23]);
+        const state: AwaleState = new AwaleState(board, 0, [23, 23]);
 
         // when he does not
         const move: AwaleMove = AwaleMove.ZERO;
         const status: AwaleLegalityStatus = rules.isLegal(move, state);
 
         // then the move is illegal
-        expect(status.legal.reason).toBe(AwaleFailure.SHOULD_DISTRIBUTE);
+        expect(status.legal.reason).toBe(AwaleFailure.SHOULD_DISTRIBUTE());
     });
     it('shoud distribute but not capture in case of would-starve move', () => {
         // given a board in which the player could capture all opponents seeds
@@ -81,19 +82,19 @@ describe('AwaleRules', () => {
             [1, 0, 0, 0, 0, 2],
             [0, 0, 0, 0, 1, 1],
         ];
-        const state: AwalePartSlice = new AwalePartSlice(board, 0, [0, 0]);
+        const state: AwaleState = new AwaleState(board, 0, [0, 0]);
 
         // when player does a would-starve move
         const move: AwaleMove = AwaleMove.FIVE;
         const status: AwaleLegalityStatus = rules.isLegal(move, state);
-        const resultingState: AwalePartSlice = rules.applyLegalMove(move, state, status);
+        const resultingState: AwaleState = rules.applyLegalMove(move, state, status);
 
         // then, the distribution should be done but not the capture
         const expectedBoard: number[][] = [
             [1, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 2, 2],
         ];
-        const expectedState: AwalePartSlice = new AwalePartSlice(expectedBoard, 1, [0, 0]);
+        const expectedState: AwaleState = new AwaleState(expectedBoard, 1, [0, 0]);
         expect(status.legal.isSuccess()).toBeTrue();
         expect(resultingState).toEqual(expectedState);
     });
@@ -103,7 +104,7 @@ describe('AwaleRules', () => {
                 [0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0],
             ];
-            const state: AwalePartSlice = new AwalePartSlice(board, 5, [26, 22]);
+            const state: AwaleState = new AwaleState(board, 5, [26, 22]);
             const node: AwaleNode = new AwaleNode(null, null, state);
             expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
         });
@@ -112,7 +113,7 @@ describe('AwaleRules', () => {
                 [0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0],
             ];
-            const state: AwalePartSlice = new AwalePartSlice(board, 5, [22, 26]);
+            const state: AwaleState = new AwaleState(board, 5, [22, 26]);
             const node: AwaleNode = new AwaleNode(null, null, state);
             expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
         });
@@ -121,7 +122,7 @@ describe('AwaleRules', () => {
                 [0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0],
             ];
-            const state: AwalePartSlice = new AwalePartSlice(board, 5, [24, 24]);
+            const state: AwaleState = new AwaleState(board, 5, [24, 24]);
             const node: AwaleNode = new AwaleNode(null, null, state);
             expectToBeDraw(rules, node, minimaxes);
         });

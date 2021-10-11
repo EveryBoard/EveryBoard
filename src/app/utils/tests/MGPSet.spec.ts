@@ -2,6 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MGPSet } from '../MGPSet';
 
 describe('MGPSet', () => {
+
     it('should create an empty list when not provided with argument', () => {
         const set: MGPSet<number> = new MGPSet<number>();
         expect(set.size()).toBe(0);

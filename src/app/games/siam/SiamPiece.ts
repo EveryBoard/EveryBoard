@@ -2,6 +2,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 
 export class SiamPiece {
+
     public static readonly EMPTY: SiamPiece = new SiamPiece(0);
 
     public static readonly WHITE_UP: SiamPiece = new SiamPiece(1);
@@ -37,26 +38,29 @@ export class SiamPiece {
             default: throw new Error('Unknown value for SiamPiece(' + value + ').');
         }
     }
-    public static belongTo(value: number, player: Player): boolean {
+    public belongTo(player: Player): boolean {
         if (player == null) throw new Error('Player must be set (even if Player.NONE).');
         if (player === Player.ZERO) {
-            return (1 <= value && value <= 4);
+            return (1 <= this.value && this.value <= 4);
         } else if (player === Player.ONE) {
-            return (5 <= value && value <= 8);
+            return (5 <= this.value && this.value <= 8);
         } else {
             return false;
         }
     }
-    public static isEmptyOrMountain(value: number): boolean {
-        return [0, 9].includes(value);
+    public isEmptyOrMountain(): boolean {
+        return this.value === 0 || this.value === 9;
     }
-    public static getOwner(value: number): Player {
-        if (1 <= value && value <= 4) return Player.ZERO;
-        if (5 <= value && value <= 8) return Player.ONE;
+    public isPiece(): boolean {
+        return !this.isEmptyOrMountain();
+    }
+    public getOwner(): Player {
+        if (1 <= this.value && this.value <= 4) return Player.ZERO;
+        if (5 <= this.value && this.value <= 8) return Player.ONE;
         throw new Error('Player.NONE do not own piece.');
     }
-    public static getNullableDirection(value: number): Orthogonal {
-        switch (value) {
+    public getNullableDirection(): Orthogonal {
+        switch (this.value) {
             case 0: return null;
             case 1: return Orthogonal.UP;
             case 5: return Orthogonal.UP;
@@ -68,11 +72,6 @@ export class SiamPiece {
             case 8: return Orthogonal.LEFT;
             case 9: return null;
         }
-    }
-    public static getDirection(value: number): Orthogonal {
-        const direction: Orthogonal = SiamPiece.getNullableDirection(value);
-        if (direction == null) throw new Error('Piece ' + value + ' has no direction.');
-        return direction;
     }
     public static of(orientation: Orthogonal, player: Player): SiamPiece {
         if (orientation == null) throw new Error('Orientation must be set.');
@@ -93,7 +92,9 @@ export class SiamPiece {
     private constructor(public readonly value: number) {}
 
     public getDirection(): Orthogonal {
-        return SiamPiece.getDirection(this.value);
+        const direction: Orthogonal = this.getNullableDirection();
+        if (direction == null) throw new Error('Piece ' + this.value + ' has no direction.');
+        return direction;
     }
     public toString(): string {
         switch (this.value) {

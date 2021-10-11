@@ -59,8 +59,7 @@
                             "namedChunks": false,
                             "extractLicenses": true,
                             "vendorChunk": false,
-                            "buildOptimizer": true,
-                            "localize": ["fr", "en"]
+                            "buildOptimizer": true
                         },
                         "fr": {
                             "localize": ["fr"]
@@ -72,8 +71,7 @@
                                     "with": "src/environments/environment.dev.ts"
                                 }
                             ],
-                            "baseHref": "/board-dev/",
-                            "localize": ["fr", "en"]
+                            "baseHref": "/board-dev/"
                         },
                         "test": {
                             "fileReplacements": [
@@ -103,7 +101,7 @@
                     "configurations": {
                         "fr": {
                             "browserTarget": "pantheonsgame:build:fr"
-                        },
+                        }
                     }
                 },
                 "extract-i18n": {
@@ -187,5 +185,5 @@
             }
         }
     },
-    "defaultProject": "pantheonsgame",
+    "defaultProject": "pantheonsgame"
 }

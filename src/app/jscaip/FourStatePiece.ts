@@ -1,6 +1,7 @@
+import { ComparableObject } from '../utils/Comparable';
 import { Player } from './Player';
 
-export class FourStatePiece {
+export class FourStatePiece implements ComparableObject {
 
     public static ZERO: FourStatePiece = new FourStatePiece(Player.ZERO.value);
 
@@ -32,5 +33,17 @@ export class FourStatePiece {
         }
     }
     private constructor(public readonly value: number) {
+    }
+    public equals(o: ComparableObject): boolean {
+        return this === o;
+    }
+    public toString(): string {
+        throw new Error('Method not implemented.');
+    }
+    public is(player: Player): boolean {
+        return this.value === player.value;
+    }
+    public isPlayer(): boolean {
+        return this === FourStatePiece.ZERO || this === FourStatePiece.ONE;
     }
 }

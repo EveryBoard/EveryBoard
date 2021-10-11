@@ -1,6 +1,7 @@
 import { MGPValidation } from '../MGPValidation';
 
 describe('MGPValidation', () => {
+
     it('Should not accept null reason', () => {
         expect(() => MGPValidation.failure(null)).toThrowError('MGPValidation.failure cannot be called with null.');
     });

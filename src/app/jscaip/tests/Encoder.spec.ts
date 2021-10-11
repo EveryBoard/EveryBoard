@@ -21,6 +21,7 @@ export class NumberEncoderTestUtils {
 }
 
 describe('NumberEncoder', () => {
+
     describe('booleanEncoder', () => {
         const encoder: NumberEncoder<boolean> = NumberEncoder.booleanEncoder;
         it('should successfully encode and decode all booleans', () => {

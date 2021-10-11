@@ -1,5 +1,5 @@
 import { fakeAsync } from '@angular/core/testing';
-import { SixGameState } from 'src/app/games/six/SixGameState';
+import { SixState } from 'src/app/games/six/SixState';
 import { SixMove } from 'src/app/games/six/SixMove';
 import { SixFailure } from 'src/app/games/six/SixFailure';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -10,6 +10,7 @@ import { SixComponent } from '../six.component';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 describe('SixComponent', () => {
+
     let componentTestUtils: ComponentTestUtils<SixComponent>;
 
     const _: number = Player.NONE.value;
@@ -20,17 +21,17 @@ describe('SixComponent', () => {
         componentTestUtils = await ComponentTestUtils.forGame<SixComponent>('Six');
     }));
     it('should create', () => {
-        expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');
-        expect(componentTestUtils.getComponent()).toBeTruthy('Component should be created');
+        expect(componentTestUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
+        expect(componentTestUtils.getComponent()).withContext('Component should be created').toBeTruthy();
     });
-    it('should cancel move when clicking on ennemy piece', fakeAsync(async() => {
+    it('should cancel move when clicking on opponent piece', fakeAsync(async() => {
         const board: NumberTable = [
             [O],
         ];
-        const state: SixGameState = SixGameState.fromRepresentation(board, 41);
-        componentTestUtils.setupSlice(state);
+        const state: SixState = SixState.fromRepresentation(board, 41);
+        componentTestUtils.setupState(state);
 
-        await componentTestUtils.expectClickFailure('#piece_0_0', RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
+        await componentTestUtils.expectClickFailure('#piece_0_0', RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
     }));
     it('Should drop before 40th turn', fakeAsync(async() => {
         componentTestUtils.fixture.detectChanges();
@@ -46,8 +47,8 @@ describe('SixComponent', () => {
             [O],
             [X],
         ];
-        const state: SixGameState = SixGameState.fromRepresentation(board, 40);
-        componentTestUtils.setupSlice(state);
+        const state: SixState = SixState.fromRepresentation(board, 40);
+        componentTestUtils.setupState(state);
 
         const gameComponent: SixComponent = componentTestUtils.getComponent();
         await componentTestUtils.expectClickSuccess('#piece_0_0');
@@ -66,8 +67,8 @@ describe('SixComponent', () => {
             [O, O, X],
             [X, _, _],
         ];
-        const state: SixGameState = SixGameState.fromRepresentation(board, 40);
-        componentTestUtils.setupSlice(state);
+        const state: SixState = SixState.fromRepresentation(board, 40);
+        componentTestUtils.setupState(state);
 
         // Choosing piece
         await componentTestUtils.expectClickSuccess('#piece_1_2');
@@ -103,8 +104,8 @@ describe('SixComponent', () => {
             [O, O, O, O, O, X, X, X, X, X],
             [_, _, _, _, _, _, _, _, _, X],
         ];
-        const state: SixGameState = SixGameState.fromRepresentation(board, 42);
-        componentTestUtils.setupSlice(state);
+        const state: SixState = SixState.fromRepresentation(board, 42);
+        componentTestUtils.setupState(state);
 
         await componentTestUtils.expectClickSuccess('#piece_0_0');
         const move: SixMove = SixMove.fromDeplacement(new Coord(0, 0), new Coord(-1, 1));
@@ -119,8 +120,8 @@ describe('SixComponent', () => {
             [O, O, X],
             [X, _, _],
         ];
-        const state: SixGameState = SixGameState.fromRepresentation(board, 40);
-        componentTestUtils.setupSlice(state);
+        const state: SixState = SixState.fromRepresentation(board, 40);
+        componentTestUtils.setupState(state);
 
         // Choosing piece
         await componentTestUtils.expectClickSuccess('#piece_1_2');
@@ -135,7 +136,7 @@ describe('SixComponent', () => {
         componentTestUtils.expectElementToExist('#disconnected_2_3');
     }));
     it('should cancel move when clicking on piece before 40th turn', fakeAsync(async() => {
-        await componentTestUtils.expectClickFailure('#piece_0_0', SixFailure.NO_DEPLACEMENT_BEFORE_TURN_40);
+        await componentTestUtils.expectClickFailure('#piece_0_0', SixFailure.NO_DEPLACEMENT_BEFORE_TURN_40());
     }));
     it('should cancel move when clicking on empty case as first click after 40th turn', fakeAsync(async() => {
         const board: NumberTable = [
@@ -146,12 +147,12 @@ describe('SixComponent', () => {
             [O],
             [X],
         ];
-        const state: SixGameState = SixGameState.fromRepresentation(board, 40);
-        componentTestUtils.setupSlice(state);
+        const state: SixState = SixState.fromRepresentation(board, 40);
+        componentTestUtils.setupState(state);
 
-        await componentTestUtils.expectClickFailure('#neighboor_1_1', SixFailure.CAN_NO_LONGER_DROP);
+        await componentTestUtils.expectClickFailure('#neighboor_1_1', SixFailure.CAN_NO_LONGER_DROP());
     }));
-    it('should still allow to click on ennemy piece after 40th as a third click', fakeAsync(async() => {
+    it('should still allow to click on opponent piece after 40th as a third click', fakeAsync(async() => {
         const board: NumberTable = [
             [O],
             [X],
@@ -160,8 +161,8 @@ describe('SixComponent', () => {
             [O],
             [X],
         ];
-        const state: SixGameState = SixGameState.fromRepresentation(board, 40);
-        componentTestUtils.setupSlice(state);
+        const state: SixState = SixState.fromRepresentation(board, 40);
+        componentTestUtils.setupState(state);
 
         await componentTestUtils.expectClickSuccess('#piece_0_2');
         await componentTestUtils.expectClickSuccess('#neighboor_0_-1');

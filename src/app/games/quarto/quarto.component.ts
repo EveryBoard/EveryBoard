@@ -1,29 +1,27 @@
 import { Component } from '@angular/core';
 import { QuartoMove } from './QuartoMove';
-import { QuartoPartSlice } from './QuartoPartSlice';
+import { QuartoState } from './QuartoState';
 import { QuartoRules } from './QuartoRules';
 import { QuartoMinimax } from './QuartoMinimax';
 import { QuartoPiece } from './QuartoPiece';
-import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { quartoTutorial } from './QuartoTutorial';
+import { QuartoTutorial } from './QuartoTutorial';
+import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 
 @Component({
     selector: 'app-quarto',
     templateUrl: './quarto.component.html',
-    styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.css'],
 })
-export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPartSlice> {
-
-    public rules: QuartoRules = new QuartoRules(QuartoPartSlice);
-
-    public CASE_SIZE: number = 100;
-    public EMPTY: number = QuartoPiece.NONE.value;
+export class QuartoComponent extends RectangularGameComponent<QuartoRules,
+                                                              QuartoMove,
+                                                              QuartoState,
+                                                              QuartoPiece>
+{
+    public EMPTY: QuartoPiece = QuartoPiece.NONE;
 
     public chosen: Coord = new Coord(-1, -1);
     public lastMove: Coord = new Coord(-1, -1);
@@ -32,24 +30,23 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
     public pieceToGive: QuartoPiece = QuartoPiece.NONE; // the piece that the user wants to give to the opponent
     public victoriousCoords: Coord[] = [];
 
-    public encoder: MoveEncoder<QuartoMove> = QuartoMove.encoder;
-
-    public tutorial: TutorialStep[] = quartoTutorial;
-
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
+        this.rules = new QuartoRules(QuartoState);
         this.availableMinimaxes = [
             new QuartoMinimax(this.rules, 'QuartoMinimax'),
         ];
-        this.pieceInHand = this.rules.node.gamePartSlice.pieceInHand;
-
+        this.encoder = QuartoMove.encoder;
+        this.tutorial = new QuartoTutorial().tutorial;
+        this.pieceInHand = this.rules.node.gameState.pieceInHand;
+        this.updateBoard();
     }
     public updateBoard(): void {
-        const slice: QuartoPartSlice = this.rules.node.gamePartSlice;
+        const state: QuartoState = this.rules.node.gameState;
         const move: QuartoMove = this.rules.node.move;
-        this.board = slice.getCopiedBoard();
-        this.pieceInHand = slice.pieceInHand;
-        this.victoriousCoords = this.rules.getVictoriousCoords(slice);
+        this.board = state.getCopiedBoard();
+        this.pieceInHand = state.pieceInHand;
+        this.victoriousCoords = this.rules.getVictoriousCoords(state);
 
         if (move == null) {
             this.lastMove = new Coord(-1, -1);
@@ -66,24 +63,24 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
         this.hideLastMove(); // now the user tried to choose something
         // so I guess he don't need to see what's the last move of the opponent
 
-        if (this.board[y][x] === QuartoPiece.NONE.value) {
+        if (this.board[y][x] === QuartoPiece.NONE) {
             // if it's a legal place to put the piece
             this.showPieceInHandOnBoard(x, y); // let's show the user his decision
-            if (this.rules.node.gamePartSlice.turn === 15) {
+            if (this.rules.node.gameState.turn === 15) {
                 // on last turn user won't be able to click on a piece to give
                 // thereby we must put his piece in hand right
                 const chosenMove: QuartoMove = new QuartoMove(x, y, QuartoPiece.NONE);
-                return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
+                return this.chooseMove(chosenMove, this.rules.node.gameState, null, null);
             } else if (this.pieceToGive === QuartoPiece.NONE) {
                 return MGPValidation.SUCCESS; // the user has just chosen his coord
             } else {
                 // the user has already chosen his piece before his coord
                 const chosenMove: QuartoMove = new QuartoMove(x, y, this.pieceToGive);
-                return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
+                return this.chooseMove(chosenMove, this.rules.node.gameState, null, null);
             }
         } else {
             // the user chose an occupied place of the board, so an illegal move, so we cancel all
-            return this.cancelMove(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE);
+            return this.cancelMove(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
         }
     }
     public async choosePiece(givenPiece: number): Promise<MGPValidation> {
@@ -100,7 +97,7 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
         } else {
             // the user has chosen the coord before the piece
             const chosenMove: QuartoMove = new QuartoMove(this.chosen.x, this.chosen.y, this.pieceToGive);
-            return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
+            return this.chooseMove(chosenMove, this.rules.node.gameState, null, null);
         }
     }
     private hideLastMove(): void {
@@ -114,7 +111,7 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
         this.chosen = new Coord(x, y);
     }
     public isRemaining(pawn: number): boolean {
-        return QuartoPartSlice.isGivable(QuartoPiece.fromInt(pawn), this.board, this.pieceInHand);
+        return QuartoState.isGivable(QuartoPiece.fromInt(pawn), this.board, this.pieceInHand);
     }
     public getCaseClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
@@ -122,9 +119,6 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
             return ['moved'];
         }
         return [];
-    }
-    public isRectangle(piece: number): boolean {
-        return piece % 4 < 2;
     }
     public getPieceClasses(piece: number): string[] {
         const classes: string[] = [];

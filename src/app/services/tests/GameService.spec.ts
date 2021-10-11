@@ -21,6 +21,7 @@ import { GameServiceMessages } from '../GameServiceMessages';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('GameService', () => {
+
     let service: GameService;
 
     let partDao: PartDAO;
@@ -110,7 +111,7 @@ describe('GameService', () => {
             expect(await service.createGameAndRedirectOrShowError('whatever')).toBeFalse();
 
             // it should toast, and navigate
-            expect(service.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(GameServiceMessages.USER_OFFLINE);
+            expect(service.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(GameServiceMessages.USER_OFFLINE());
             expect(service.router.navigate).toHaveBeenCalledOnceWith(['/login']);
 
             tick(150);
@@ -126,7 +127,7 @@ describe('GameService', () => {
             tick(150);
 
             // it should toast, and navigate
-            expect(service.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(GameServiceMessages.ALREADY_INGAME);
+            expect(service.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(GameServiceMessages.ALREADY_INGAME());
             expect(service.router.navigate).toHaveBeenCalledOnceWith(['/server']);
         }));
     });
@@ -213,7 +214,7 @@ describe('GameService', () => {
             spyOn(service, 'sendRequest').and.callFake(() => null);
             spyOn(service.joinerService, 'readJoinerById').and.returnValue(Promise.resolve(lastGameJoiner));
             let called: boolean = false;
-            spyOn(service.partDao, 'set').and.callFake(async(id: string, element: IPart) => {
+            spyOn(service.partDao, 'set').and.callFake(async(_id: string, element: IPart) => {
                 expect(element.playerZero).toEqual(lastPart.doc.playerOne);
                 expect(element.playerOne).toEqual(lastPart.doc.playerZero);
                 called = true;
@@ -256,7 +257,7 @@ describe('GameService', () => {
             spyOn(service, 'sendRequest').and.callFake(() => null);
             spyOn(service.joinerService, 'readJoinerById').and.returnValue(Promise.resolve(lastGameJoiner));
             let called: boolean = false;
-            spyOn(service.partDao, 'set').and.callFake(async(id: string, element: IPart) => {
+            spyOn(service.partDao, 'set').and.callFake(async(_id: string, element: IPart) => {
                 expect(element.playerZero).toEqual(lastPart.doc.playerOne);
                 expect(element.playerOne).toEqual(lastPart.doc.playerZero);
                 called = true;

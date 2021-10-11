@@ -8,9 +8,9 @@ export class QuartoMove extends MoveCoord {
             return 3 * 128 + 3 * 32 + 16;
         }
         public encodeNumber(move: QuartoMove): number {
-            /* x va de 0 à 3
-             * y va de 0 à 3
-             * p va de 0 à 16 compris, 16 pour le dernier tour
+            /* x from 0 to 3
+             * y from 0 to 3
+             * p from 0 to 16 included, 16 for the last turn
              */
             const x: number = move.coord.x;
             const y: number = move.coord.y;
@@ -18,9 +18,9 @@ export class QuartoMove extends MoveCoord {
             return (x * 128) + (y * 32) + p;
         }
         public decodeNumber(encodedMove: number): QuartoMove {
-            // traduit en UN entier le pion choisis, encodé sous la forme binaire
+            // translates in an integer the chosen piece, encoded in binary form
             // xx yy pppp p
-            const piece: number = encodedMove % 32; // résultat de 0 à 16
+            const piece: number = encodedMove % 32; // result from 0 to 16
             encodedMove -= piece;
             encodedMove /= 32;
             const y: number = encodedMove % 4;

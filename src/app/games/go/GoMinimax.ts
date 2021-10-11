@@ -1,4 +1,4 @@
-import { GoPartSlice, GoPiece, Phase } from './GoPartSlice';
+import { GoState, GoPiece, Phase } from './GoState';
 import { GoMove } from './GoMove';
 import { GoLegalityStatus } from './GoLegalityStatus';
 import { display } from 'src/app/utils/utils';
@@ -8,21 +8,21 @@ import { GoNode, GoRules } from './GoRules';
 import { GoGroupDatas } from './GoGroupsDatas';
 import { Coord } from 'src/app/jscaip/Coord';
 
-export class GoMinimax extends Minimax<GoMove, GoPartSlice, GoLegalityStatus> {
+export class GoMinimax extends Minimax<GoMove, GoState, GoLegalityStatus> {
 
     public getListMoves(node: GoNode): GoMove[] {
         const LOCAL_VERBOSE: boolean = false;
         display(GoRules.VERBOSE || LOCAL_VERBOSE, 'GoRules.getListMoves');
 
-        const currentSlice: GoPartSlice = node.gamePartSlice;
-        const playingMoves: GoMove[] = this.getPlayingMovesList(currentSlice);
-        if (currentSlice.phase === Phase.PLAYING ||
-            currentSlice.phase === Phase.PASSED) {
+        const currentState: GoState = node.gameState;
+        const playingMoves: GoMove[] = this.getPlayingMovesList(currentState);
+        if (currentState.phase === Phase.PLAYING ||
+            currentState.phase === Phase.PASSED) {
             playingMoves.push(GoMove.PASS);
             return playingMoves;
         } else {
             display(GoRules.VERBOSE || LOCAL_VERBOSE, 'GoRules.getListMoves in counting phase');
-            const markingMoves: GoMove[] = this.getCountingMovesList(currentSlice);
+            const markingMoves: GoMove[] = this.getCountingMovesList(currentState);
             if (markingMoves.length === 0) {
                 return [GoMove.ACCEPT];
             } else {
@@ -30,14 +30,14 @@ export class GoMinimax extends Minimax<GoMove, GoPartSlice, GoLegalityStatus> {
             }
         }
     }
-    public getPlayingMovesList(state: GoPartSlice): GoMove[] {
+    public getPlayingMovesList(state: GoState): GoMove[] {
         const choices: GoMove[] = [];
         let newMove: GoMove;
 
         for (let y: number = 0; y < state.board.length; y++) {
             for (let x: number = 0; x < state.board[0].length; x++) {
                 newMove = new GoMove(x, y);
-                if (state.getBoardAtGoPiece(newMove.coord) === GoPiece.EMPTY) {
+                if (state.getPieceAt(newMove.coord) === GoPiece.EMPTY) {
                     const legality: GoLegalityStatus = GoRules.isLegal(newMove, state);
                     if (legality.legal.isSuccess()) {
                         choices.push(newMove);
@@ -47,7 +47,7 @@ export class GoMinimax extends Minimax<GoMove, GoPartSlice, GoLegalityStatus> {
         }
         return choices;
     }
-    public getCountingMovesList(currentState: GoPartSlice): GoMove[] {
+    public getCountingMovesList(currentState: GoState): GoMove[] {
         const choices: GoMove[] = [];
 
         // 1. put all to dead
@@ -57,7 +57,7 @@ export class GoMinimax extends Minimax<GoMove, GoPartSlice, GoLegalityStatus> {
         // 5. remove the entry points which on the true actual board are link to an already dead group
         // 6. return that list of alive group that AI consider dead
 
-        const correctBoard: GoPiece[][] = this.getCorrectBoard(currentState).getCopiedBoardGoPiece();
+        const correctBoard: GoPiece[][] = this.getCorrectBoard(currentState).getCopiedBoard();
 
         const groupsData: GoGroupDatas[] =
             GoRules.getGroupsDatasWhere(correctBoard, (pawn: GoPiece) => pawn !== GoPiece.EMPTY);
@@ -65,7 +65,7 @@ export class GoMinimax extends Minimax<GoMove, GoPartSlice, GoLegalityStatus> {
         for (const group of groupsData) {
             const coord: Coord = group.getCoords()[0];
             const correctContent: GoPiece = correctBoard[coord.y][coord.x];
-            const actualContent: GoPiece = currentState.getBoardAtGoPiece(coord);
+            const actualContent: GoPiece = currentState.getPieceAt(coord);
             if (actualContent !== correctContent) {
                 const move: GoMove = new GoMove(coord.x, coord.y);
                 choices.push(move);
@@ -74,7 +74,7 @@ export class GoMinimax extends Minimax<GoMove, GoPartSlice, GoLegalityStatus> {
         }
         return choices;
     }
-    public getCorrectBoard(currentState: GoPartSlice): GoPartSlice {
+    public getCorrectBoard(currentState: GoState): GoState {
         const markAsDead: (pawn: GoPiece) => GoPiece = (pawn: GoPiece) => {
             if (pawn === GoPiece.BLACK) return GoPiece.DEAD_BLACK;
             if (pawn === GoPiece.WHITE) return GoPiece.DEAD_WHITE;
@@ -84,13 +84,13 @@ export class GoMinimax extends Minimax<GoMove, GoPartSlice, GoLegalityStatus> {
                 return pawn;
             }
         };
-        const allDeadBoard: GoPiece[][] = this.mapBoard(currentState.getCopiedBoardGoPiece(),
+        const allDeadBoard: GoPiece[][] = this.mapBoard(currentState.getCopiedBoard(),
                                                         markAsDead);
-        const allDeadState: GoPartSlice = new GoPartSlice(allDeadBoard,
-                                                          currentState.getCapturedCopy(),
-                                                          currentState.turn,
-                                                          currentState.koCoord,
-                                                          currentState.phase);
+        const allDeadState: GoState = new GoState(allDeadBoard,
+                                                  currentState.getCapturedCopy(),
+                                                  currentState.turn,
+                                                  currentState.koCoord,
+                                                  currentState.phase);
         const territoryLikeGroups: GoGroupDatas[] = GoRules.getTerritoryLikeGroup(allDeadState);
 
         return this.setAliveUniqueWrapper(allDeadState, territoryLikeGroups);
@@ -103,11 +103,11 @@ export class GoMinimax extends Minimax<GoMove, GoPartSlice, GoLegalityStatus> {
         }
         return board;
     }
-    public setAliveUniqueWrapper(allDeadState: GoPartSlice,
+    public setAliveUniqueWrapper(allDeadState: GoState,
                                  monoWrappedEmptyGroups: GoGroupDatas[])
-    : GoPartSlice
+    : GoState
     {
-        let resultingState: GoPartSlice = allDeadState.copy();
+        let resultingState: GoState = allDeadState.copy();
         let aliveCoords: Coord[];
         for (const monoWrappedEmptyGroup of monoWrappedEmptyGroups) {
             aliveCoords = monoWrappedEmptyGroup.deadBlackCoords.concat(monoWrappedEmptyGroup.deadWhiteCoords);
@@ -120,15 +120,15 @@ export class GoMinimax extends Minimax<GoMove, GoPartSlice, GoLegalityStatus> {
         return resultingState;
     }
     public getBoardValue(node: GoNode): NodeUnheritance {
-        const state: GoPartSlice = node.gamePartSlice;
+        const state: GoState = node.gameState;
         const LOCAL_VERBOSE: boolean = false;
 
         display(GoRules.VERBOSE || LOCAL_VERBOSE, 'GoRules.getBoardValue');
 
-        const goPartSlice: GoPartSlice = GoRules.markTerritoryAndCount(state);
+        const goState: GoState = GoRules.markTerritoryAndCount(state);
 
-        const goScore: number[] = goPartSlice.getCapturedCopy();
-        const goKilled: number[] = GoRules.getDeadStones(goPartSlice);
+        const goScore: number[] = goState.getCapturedCopy();
+        const goKilled: number[] = GoRules.getDeadStones(goState);
         return new NodeUnheritance((goScore[1] + (2 * goKilled[0])) - (goScore[0] + (2 * goKilled[1])));
     }
 }

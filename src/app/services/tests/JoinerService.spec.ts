@@ -8,6 +8,7 @@ import { JoinerDAOMock } from 'src/app/dao/tests/JoinerDAOMock.spec';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 
 describe('JoinerService', () => {
+
     let dao: JoinerDAOMock;
 
     let service: JoinerService;

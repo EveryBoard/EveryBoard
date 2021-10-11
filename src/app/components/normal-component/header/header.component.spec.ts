@@ -3,10 +3,10 @@ import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { LocaleUtils } from 'src/app/utils/LocaleUtils';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { environment } from 'src/environments/environment';
 import { HeaderComponent } from './header.component';
 
 describe('HeaderComponent', () => {
+
     let testUtils: SimpleComponentTestUtils<HeaderComponent>;
 
     beforeEach(fakeAsync(async() => {
@@ -37,6 +37,7 @@ describe('HeaderComponent', () => {
     }));
     it('should use fr as the default language if the language of the navigator is not set', fakeAsync(async() => {
         // given a navigator where the language is not set
+        localStorage.clear(); // local storage is empty
         spyOn(LocaleUtils, 'getNavigatorLanguage').and.returnValue(null);
 
         // when the header is loaded
@@ -46,7 +47,8 @@ describe('HeaderComponent', () => {
         expect(testUtils.getComponent().currentLanguage).toBe('FR');
     }));
     it('should update localStorage and redirect when a language change is made', fakeAsync(async() => {
-        // given a page where the header is loaded
+        // given a page in english where the header is loaded
+        spyOn(LocaleUtils, 'getNavigatorLanguage').and.returnValue('en-US');
         spyOn(localStorage, 'setItem');
         spyOn(window, 'open').and.returnValue(null);
         testUtils.detectChanges();
@@ -56,10 +58,13 @@ describe('HeaderComponent', () => {
 
         // then the language is changed and the page is reloaded
         expect(localStorage.setItem).toHaveBeenCalledWith('locale', 'fr');
-        expect(window.open).toHaveBeenCalledWith(environment.root + '/fr/', '_self');
+        expect(window.open).toHaveBeenCalledWith(window.location.href, '_self');
+
+        localStorage.clear(); // clean up local storage
     }));
     it('should preserve the current route when a language change is made', fakeAsync(async() => {
-        // given a page where the header is loaded
+        // given a page in english where the header is loaded
+        spyOn(LocaleUtils, 'getNavigatorLanguage').and.returnValue('en-US');
         spyOn(window, 'open').and.returnValue(null);
         await testUtils.getComponent().router.navigate(['/server']);
         testUtils.detectChanges();
@@ -68,6 +73,8 @@ describe('HeaderComponent', () => {
         testUtils.clickElement('#language_FR');
 
         // then the current route is preserved when going to the new language
-        expect(window.open).toHaveBeenCalledWith(environment.root + '/fr/server', '_self');
+        expect(window.open).toHaveBeenCalledWith(window.location.href, '_self');
+
+        localStorage.clear(); // clean up local storage
     }));
 });

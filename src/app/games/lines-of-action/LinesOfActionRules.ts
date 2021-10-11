@@ -7,15 +7,11 @@ import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { LinesOfActionFailure } from './LinesOfActionFailure';
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionState } from './LinesOfActionState';
 
-export class LinesOfActionNode extends MGPNode<LinesOfActionRules,
-                                               LinesOfActionMove,
-                                               LinesOfActionState,
-                                               LegalityStatus> {}
+export class LinesOfActionNode extends MGPNode<LinesOfActionRules, LinesOfActionMove, LinesOfActionState> {}
 
 export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionState> {
 
@@ -29,8 +25,8 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         for (let y: number = 0; y < LinesOfActionState.SIZE; y++) {
             for (let x: number = 0; x < LinesOfActionState.SIZE; x++) {
                 const coord: Coord = new Coord(x, y);
-                const piece: number = state.getAt(coord);
-                if (piece !== Player.NONE.value) {
+                const piece: Player = state.getPieceAt(coord);
+                if (piece !== Player.NONE) {
                     for (const target of LinesOfActionRules.possibleTargets(state, coord)) {
                         const move: LinesOfActionMove = LinesOfActionMove.of(coord, target).get();
                         moves.push(move);
@@ -41,17 +37,17 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         return moves;
     }
     public static getNumberOfGroups(state: LinesOfActionState): [number, number] {
-        const groups: number[][] = ArrayUtils.createBiArray(LinesOfActionState.SIZE, LinesOfActionState.SIZE, -1);
+        const groups: number[][] = ArrayUtils.createTable(LinesOfActionState.SIZE, LinesOfActionState.SIZE, -1);
         const numGroups: [number, number] = [0, 0];
         let highestGroup: number = 0;
         for (let y: number = 0; y < LinesOfActionState.SIZE; y++) {
             for (let x: number = 0; x < LinesOfActionState.SIZE; x++) {
                 if (groups[y][x] === -1) {
-                    const content: number = state.getAt(new Coord(x, y));
-                    if (content !== Player.NONE.value) {
+                    const content: Player = state.getPieceAt(new Coord(x, y));
+                    if (content !== Player.NONE) {
                         highestGroup += 1;
                         LinesOfActionRules.markGroupStartingAt(state, groups, new Coord(x, y), highestGroup);
-                        numGroups[content] += 1;
+                        numGroups[content.value] += 1;
                     }
                 }
             }
@@ -60,20 +56,20 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
     }
     private static markGroupStartingAt(state: LinesOfActionState, groups: number[][], pos: Coord, id: number): void {
         const stack: Coord[] = [pos];
-        const player: number = state.getAt(pos);
+        const player: Player = state.getPieceAt(pos);
         while (stack.length > 0) {
             const coord: Coord = stack.pop();
             if (groups[coord.y][coord.x] === -1) {
-                const content: number = state.getAt(coord);
+                const content: Player = state.getPieceAt(coord);
                 if (content === player) {
                     groups[coord.y][coord.x] = id;
                     for (const dir of Direction.DIRECTIONS) {
                         const next: Coord = coord.getNext(dir);
-                        if (LinesOfActionState.isOnBoard(next)) {
+                        if (state.isOnBoard(next)) {
                             stack.push(next);
                         }
                     }
-                } else if (content === Player.NONE.value) {
+                } else if (content === Player.NONE) {
                     groups[coord.y][coord.x] = 0;
                 }
             }
@@ -81,30 +77,30 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
     }
     public applyLegalMove(move: LinesOfActionMove,
                           state: LinesOfActionState,
-                          status: LegalityStatus)
+                          _status: LegalityStatus)
     : LinesOfActionState
     {
-        const board: number[][] = state.getCopiedBoard();
-        board[move.coord.y][move.coord.x] = Player.NONE.value;
-        board[move.end.y][move.end.x] = state.getCurrentPlayer().value;
+        const board: Player[][] = state.getCopiedBoard();
+        board[move.coord.y][move.coord.x] = Player.NONE;
+        board[move.end.y][move.end.x] = state.getCurrentPlayer();
 
         return new LinesOfActionState(board, state.turn + 1);
     }
     public static isLegal(move: LinesOfActionMove, state: LinesOfActionState): LegalityStatus {
-        if (state.getAt(move.coord) !== state.getCurrentPlayer().value) {
-            return { legal: MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE) };
+        if (state.getPieceAt(move.coord) !== state.getCurrentPlayer()) {
+            return LegalityStatus.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
         if (move.length() !== this.numberOfPiecesOnLine(state, move.coord, move.direction)) {
-            return { legal: MGPValidation.failure(LinesOfActionFailure.INVALID_MOVE_LENGTH) };
+            return LegalityStatus.failure(LinesOfActionFailure.INVALID_MOVE_LENGTH());
         }
         if (move.coord.getCoordsToward(move.end).some((c: Coord) =>
-            state.getAt(c) === state.getCurrentEnnemy().value)) {
-            return { legal: MGPValidation.failure(LinesOfActionFailure.CANNOT_JUMP_OVER_ENEMY) };
+            state.getPieceAt(c) === state.getCurrentOpponent())) {
+            return LegalityStatus.failure(LinesOfActionFailure.CANNOT_JUMP_OVER_OPPONENT());
         }
-        if (state.getAt(move.end) === state.getCurrentPlayer().value) {
-            return { legal: MGPValidation.failure(RulesFailure.CANNOT_SELF_CAPTURE) };
+        if (state.getPieceAt(move.end) === state.getCurrentPlayer()) {
+            return LegalityStatus.failure(RulesFailure.CANNOT_SELF_CAPTURE());
         }
-        return { legal: MGPValidation.SUCCESS };
+        return LegalityStatus.SUCCESS;
     }
     public isLegal(move: LinesOfActionMove, state: LinesOfActionState): LegalityStatus {
         return LinesOfActionRules.isLegal(move, state);
@@ -112,7 +108,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
     private static numberOfPiecesOnLine(state: LinesOfActionState, pos: Coord, dir: Direction): number {
         let count: number = 0;
         for (const coord of LinesOfActionRules.getLineCoords(pos, dir)) {
-            if (state.getAt(coord) !== Player.NONE.value) {
+            if (state.getPieceAt(coord) !== Player.NONE) {
                 count += 1;
             }
         }
@@ -166,7 +162,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         for (const dir of Direction.DIRECTIONS) {
             const numberOfPiecesOnLine: number = LinesOfActionRules.numberOfPiecesOnLine(state, start, dir);
             const target: Coord = start.getNext(dir, numberOfPiecesOnLine);
-            if (LinesOfActionState.isOnBoard(target)) {
+            if (state.isOnBoard(target)) {
                 const move: LinesOfActionMove = LinesOfActionMove.of(start, target).get();
                 const legality: LegalityStatus = LinesOfActionRules.isLegal(move, state);
                 if (legality.legal.isSuccess()) {
@@ -177,7 +173,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         return targets;
     }
     public getGameStatus(node: LinesOfActionNode): GameStatus {
-        const state: LinesOfActionState = node.gamePartSlice;
+        const state: LinesOfActionState = node.gameState;
         const [zero, one]: [number, number] = LinesOfActionRules.getNumberOfGroups(state);
         if (zero === 1 && one > 1) {
             return GameStatus.ZERO_WON;

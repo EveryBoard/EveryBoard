@@ -1,13 +1,13 @@
 import { ComparableObject } from '../utils/Comparable';
-import { GamePartSlice } from './GamePartSlice';
 import { LegalityStatus } from './LegalityStatus';
 import { MGPNode } from './MGPNode';
 import { Move } from './Move';
 import { NodeUnheritance } from './NodeUnheritance';
 import { Rules } from './Rules';
+import { AbstractGameState } from './GameState';
 
 export abstract class Minimax<M extends Move,
-                              S extends GamePartSlice,
+                              S extends AbstractGameState,
                               L extends LegalityStatus = LegalityStatus,
                               U extends NodeUnheritance = NodeUnheritance> implements ComparableObject
 {
@@ -30,7 +30,7 @@ export abstract class Minimax<M extends Move,
         }
     }
     public abstract getBoardValue(node: MGPNode<Rules<M, S, L>, M, S, L>): U;
-    /* used to give a comparable data type linked to the gameSlicePart of the moment
+    /* used to give a comparable data type linked to the GameState of the moment
      * so that the AI can know what is best, according to you algorithm in there
      */
 

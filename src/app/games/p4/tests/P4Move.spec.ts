@@ -2,6 +2,7 @@ import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 import { P4Move } from '../P4Move';
 
 describe('P4Move', () => {
+
     describe('of', () => {
         it('should return the same instance every time', () => {
             expect(P4Move.of(3)).toBe(P4Move.of(3));

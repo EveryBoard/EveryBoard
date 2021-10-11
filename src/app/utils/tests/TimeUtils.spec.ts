@@ -1,6 +1,7 @@
 import { HumanDuration } from '../TimeUtils';
 
 describe('TimeUtils', () => {
+
     describe('HumanDuration', () => {
         let pipe: HumanDuration;
         beforeEach(() => {

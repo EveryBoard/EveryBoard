@@ -5,6 +5,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GipfCapture, GipfMove, GipfPlacement } from '../GipfMove';
 
 describe('GipfCapture', () => {
+
     it('should not allow construction of captures smaller than 4', () => {
         const coords: Coord[] = [new Coord(1, -3), new Coord(0, -2), new Coord(-1, -1)];
         expect(() => new GipfCapture(coords)).toThrow();
@@ -105,6 +106,7 @@ describe('GipfCapture', () => {
 });
 
 describe('GipfPlacement', () => {
+
     describe('toString', () => {
         it('should work on placements without direction', () => {
             const placement: GipfPlacement = new GipfPlacement(new Coord(-3, 0), MGPOptional.empty());
@@ -142,6 +144,7 @@ describe('GipfPlacement', () => {
 });
 
 describe('GipfMove', () => {
+
     describe('toString', () => {
         it('should work on a move without capture', () => {
             const placement: GipfPlacement = new GipfPlacement(new Coord(-3, 0),

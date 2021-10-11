@@ -4,6 +4,7 @@ import { By } from '@angular/platform-browser';
 import { CountDownComponent } from './count-down.component';
 
 describe('CountDownComponent', () => {
+
     let component: CountDownComponent;
 
     let fixture: ComponentFixture<CountDownComponent>;
@@ -102,21 +103,21 @@ describe('CountDownComponent', () => {
     }));
     it('should update written time correctly (closest rounding) even when playing in less than refreshing time', fakeAsync(() => {
         spyOn(component.outOfTimeAction, 'emit').and.callThrough();
-        component.setDuration(3000);
+        component.setDuration(10 * 60 * 1000); // 10 minutes
         component.start();
 
-        tick(800); // 2.2s -> 0:02
+        tick(800); // 9 min 59.2s -> 9:59
         component.pause();
         fixture.detectChanges();
         let timeText: string = fixture.debugElement.query(By.css('#remainingTime')).nativeElement.innerHTML;
-        expect(timeText).toBe('0:02');
+        expect(timeText).toBe('9:59');
 
         component.resume();
-        tick(600); // 1.6s -> 0:02
+        tick(600); // 9min58.6 -> 9:59
         component.pause();
         fixture.detectChanges();
         timeText = fixture.debugElement.query(By.css('#remainingTime')).nativeElement.innerHTML;
-        expect(timeText).toBe('0:02');
+        expect(timeText).toBe('9:59');
     }));
     it('should emit when timeout reached', fakeAsync(() => {
         spyOn(component.outOfTimeAction, 'emit').and.callThrough();

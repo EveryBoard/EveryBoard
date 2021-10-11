@@ -61,10 +61,10 @@ import { EpaminondasComponent } from './games/epaminondas/epaminondas.component'
 import { GipfComponent } from './games/gipf/gipf.component';
 import { GoComponent } from './games/go/go.component';
 import { KamisadoComponent } from './games/kamisado/kamisado.component';
-import { LinesOfActionComponent } from './games/lines-of-action/LinesOfAction.component';
+import { LinesOfActionComponent } from './games/lines-of-action/lines-of-action.component';
 import { MinimaxTestingComponent } from './games/minimax-testing/minimax-testing.component';
 import { P4Component } from './games/p4/p4.component';
-import { PentagoComponent } from './games/pentago/Pentago.component';
+import { PentagoComponent } from './games/pentago/pentago.component';
 import { PylosComponent } from './games/pylos/pylos.component';
 import { QuartoComponent } from './games/quarto/quarto.component';
 import { QuixoComponent } from './games/quixo/quixo.component';
@@ -73,7 +73,7 @@ import { SaharaComponent } from './games/sahara/sahara.component';
 import { SiamComponent } from './games/siam/siam.component';
 import { SixComponent } from './games/six/six.component';
 import { TablutComponent } from './games/tablut/tablut.component';
-import { YinshComponent } from './games/yinsh/Yinsh.component';
+import { YinshComponent } from './games/yinsh/yinsh.component';
 
 import { environment } from 'src/environments/environment';
 import { USE_EMULATOR as USE_FIRESTORE_EMULATOR } from '@angular/fire/firestore';

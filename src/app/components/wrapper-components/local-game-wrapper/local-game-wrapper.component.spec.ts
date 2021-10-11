@@ -1,5 +1,5 @@
-import { fakeAsync, flush, tick } from '@angular/core/testing';
-import { P4PartSlice } from 'src/app/games/p4/P4PartSlice';
+import { fakeAsync, tick } from '@angular/core/testing';
+import { P4State } from 'src/app/games/p4/P4State';
 import { Player } from 'src/app/jscaip/Player';
 import { P4Move } from 'src/app/games/p4/P4Move';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
@@ -12,10 +12,11 @@ import { P4Rules } from 'src/app/games/p4/P4Rules';
 import { GameStatus } from 'src/app/jscaip/Rules';
 
 describe('LocalGameWrapperComponent', () => {
+
     let componentTestUtils: ComponentTestUtils<P4Component>;
-    const O: number = Player.ZERO.value;
-    const X: number = Player.ONE.value;
-    const _: number = Player.NONE.value;
+    const O: Player = Player.ZERO;
+    const X: Player = Player.ONE;
+    const _: Player = Player.NONE;
 
     beforeEach(fakeAsync(async() => {
         componentTestUtils = await ComponentTestUtils.forGame<P4Component>('P4', LocalGameWrapperComponent);
@@ -40,20 +41,20 @@ describe('LocalGameWrapperComponent', () => {
         await componentTestUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
     }));
     it('should allow to go back one move', fakeAsync(async() => {
-        const slice: P4PartSlice = componentTestUtils.getComponent().rules.node.gamePartSlice;
-        expect(slice.turn).toBe(0);
+        const state: P4State = componentTestUtils.getComponent().rules.node.gameState;
+        expect(state.turn).toBe(0);
 
         await componentTestUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
-        expect(componentTestUtils.getComponent().rules.node.gamePartSlice.turn).toBe(1);
+        expect(componentTestUtils.getComponent().rules.node.gameState.turn).toBe(1);
 
         spyOn(componentTestUtils.getComponent(), 'updateBoard').and.callThrough();
         await componentTestUtils.expectInterfaceClickSuccess('#takeBack');
 
-        expect(componentTestUtils.getComponent().rules.node.gamePartSlice.turn).toBe(0);
+        expect(componentTestUtils.getComponent().rules.node.gameState.turn).toBe(0);
         expect(componentTestUtils.getComponent().updateBoard).toHaveBeenCalledTimes(1);
     }));
     it('should show draw', fakeAsync(async() => {
-        const board: number[][] = [
+        const board: Player[][] = [
             [O, O, O, _, O, O, O],
             [X, X, X, O, X, X, X],
             [O, O, O, X, O, O, O],
@@ -61,8 +62,8 @@ describe('LocalGameWrapperComponent', () => {
             [O, O, O, X, O, O, O],
             [X, X, X, O, X, X, X],
         ];
-        const state: P4PartSlice = new P4PartSlice(board, 41);
-        componentTestUtils.setupSlice(state);
+        const state: P4State = new P4State(board, 41);
+        componentTestUtils.setupState(state);
 
         await componentTestUtils.expectMoveSuccess('#click_3', P4Move.THREE);
         expect(componentTestUtils.findElement('#draw')).withContext('Draw indicator should be present').toBeTruthy();
@@ -85,7 +86,7 @@ describe('LocalGameWrapperComponent', () => {
             await componentTestUtils.expectInterfaceClickSuccess('#restartButton');
         }));
         it('should allow to restart game at the end', fakeAsync(async() => {
-            const board: number[][] = [
+            const board: Player[][] = [
                 [O, O, O, _, O, O, O],
                 [X, X, X, O, X, X, X],
                 [O, O, O, X, O, O, O],
@@ -93,8 +94,8 @@ describe('LocalGameWrapperComponent', () => {
                 [O, O, O, X, O, O, O],
                 [X, X, X, O, X, X, X],
             ];
-            const slice: P4PartSlice = new P4PartSlice(board, 41);
-            componentTestUtils.setupSlice(slice);
+            const state: P4State = new P4State(board, 41);
+            componentTestUtils.setupState(state);
 
             await componentTestUtils.expectMoveSuccess('#click_3', P4Move.THREE);
 
@@ -103,7 +104,7 @@ describe('LocalGameWrapperComponent', () => {
 
             await componentTestUtils.expectInterfaceClickSuccess('#restartButton');
 
-            expect(componentTestUtils.getComponent().rules.node.gamePartSlice.turn).toBe(0);
+            expect(componentTestUtils.getComponent().rules.node.gameState.turn).toBe(0);
             expect(componentTestUtils.findElement('#draw')).withContext('Draw indicator should be removed').toBeFalsy();
             tick(1000);
         }));
@@ -183,21 +184,21 @@ describe('LocalGameWrapperComponent', () => {
             componentTestUtils.detectChanges();
             await componentTestUtils.fixture.whenStable();
 
-            const slice: P4PartSlice = componentTestUtils.getComponent().rules.node.gamePartSlice;
-            expect(slice.turn).toBe(0);
+            const state: P4State = componentTestUtils.getComponent().rules.node.gameState;
+            expect(state.turn).toBe(0);
 
             await componentTestUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
-            expect(componentTestUtils.getComponent().rules.node.gamePartSlice.turn).toBe(1);
+            expect(componentTestUtils.getComponent().rules.node.gameState.turn).toBe(1);
 
             tick(componentTestUtils.wrapper['botTimeOut']);
-            expect(componentTestUtils.getComponent().rules.node.gamePartSlice.turn).toBe(2);
+            expect(componentTestUtils.getComponent().rules.node.gameState.turn).toBe(2);
 
             // // when taking back
             spyOn(componentTestUtils.getComponent(), 'updateBoard').and.callThrough();
             await componentTestUtils.expectInterfaceClickSuccess('#takeBack');
 
             // // expect to be back two turn, not one
-            expect(componentTestUtils.getComponent().rules.node.gamePartSlice.turn).toBe(0);
+            expect(componentTestUtils.getComponent().rules.node.gameState.turn).toBe(0);
 
             tick(1000);
         }));
@@ -210,7 +211,7 @@ describe('LocalGameWrapperComponent', () => {
             // when it's bugged ai's turn to play (and do a illegal move)
             // then we should get a error throwed
             const localGameWrapper: LocalGameWrapperComponent = componentTestUtils.wrapper as LocalGameWrapperComponent;
-            const minimax: P4Minimax = new P4Minimax(new P4Rules(P4PartSlice), 'P4');
+            const minimax: P4Minimax = new P4Minimax(new P4Rules(P4State), 'P4');
             const errorMessage: string = 'AI choosed illegal move (P4Move(0))';
             expect(() => localGameWrapper.doAIMove(minimax)).toThrowError(errorMessage);
             tick(1000);

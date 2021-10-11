@@ -1,31 +1,28 @@
 import { Component } from '@angular/core';
-import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
+import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
-import { QuixoPartSlice } from 'src/app/games/quixo/QuixoPartSlice';
+import { QuixoState } from 'src/app/games/quixo/QuixoState';
 import { QuixoRules } from 'src/app/games/quixo/QuixoRules';
 import { QuixoMinimax } from 'src/app/games/quixo/QuixoMinimax';
 import { GameComponentUtils } from 'src/app/components/game-components/GameComponentUtils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Player } from 'src/app/jscaip/Player';
-import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
-import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { quixoTutorial } from './QuixoTutorial';
+import { QuixoTutorial } from './QuixoTutorial';
 
 @Component({
     selector: 'app-quixo',
     templateUrl: './quixo.component.html',
-    styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.css'],
 })
-export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSlice> {
+export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMove, QuixoState, Player> {
+
     public static VERBOSE: boolean = false;
 
-    public CASE_SIZE: number = 100;
-
-    public slice: QuixoPartSlice;
+    public state: QuixoState;
 
     public lastMoveCoord: Coord = new Coord(-1, -1);
 
@@ -35,32 +32,30 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
 
     public victoriousCoords: Coord[] = [];
 
-    public encoder: MoveEncoder<QuixoMove> = QuixoMove.encoder;
-
-    public tutorial: TutorialStep[] = quixoTutorial;
-
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = new QuixoRules(QuixoPartSlice);
-        this.slice = this.rules.node.gamePartSlice;
+        this.rules = new QuixoRules(QuixoState);
         this.availableMinimaxes = [
             new QuixoMinimax(this.rules, 'QuixoMinimax'),
         ];
+        this.encoder = QuixoMove.encoder;
+        this.tutorial = new QuixoTutorial().tutorial;
+        this.updateBoard();
     }
     public updateBoard(): void {
-        this.slice = this.rules.node.gamePartSlice;
-        this.board = this.slice.board;
+        this.state = this.rules.node.gameState;
+        this.board = this.state.board;
         const move: QuixoMove = this.rules.node.move;
         if (move) this.lastMoveCoord = move.coord;
         else this.lastMoveCoord = null;
-        this.victoriousCoords = QuixoRules.getVictoriousCoords(this.slice);
+        this.victoriousCoords = QuixoRules.getVictoriousCoords(this.state);
     }
     public cancelMoveAttempt(): void {
         this.chosenCoord = null;
     }
     public getPieceClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
-        const player: Player = Player.of(this.board[y][x]);
+        const player: Player = this.board[y][x];
         const classes: string[] = [];
 
         classes.push(this.getPlayerClass(player));
@@ -79,8 +74,8 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
         if (coordLegality.isFailure()) {
             return this.cancelMove(coordLegality.reason);
         }
-        if (this.board[y][x] === this.slice.getCurrentEnnemy().value) {
-            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
+        if (this.board[y][x] === this.state.getCurrentOpponent()) {
+            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         } else {
             this.chosenCoord = clickedCoord;
             return MGPValidation.SUCCESS;
@@ -107,7 +102,7 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
                                               this.chosenCoord.y,
                                               this.chosenDirection);
         this.cancelMove();
-        return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
+        return this.chooseMove(move, this.rules.node.gameState, null, null);
     }
     public getArrowTransform(coord: Coord, orientation: string): string {
         return GameComponentUtils.getArrowTransform(this.CASE_SIZE,

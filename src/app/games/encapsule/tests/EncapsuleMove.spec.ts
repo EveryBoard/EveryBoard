@@ -1,12 +1,13 @@
 import { EncapsuleRules } from '../EncapsuleRules';
 import { EncapsuleMinimax } from '../EncapsuleMinimax';
-import { EncapsulePartSlice } from '../EncapsulePartSlice';
+import { EncapsuleState } from '../EncapsuleState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { EncapsulePiece } from '../EncapsulePiece';
 import { EncapsuleMove } from '../EncapsuleMove';
 import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 
 describe('EncapsuleMove', () => {
+
     it('should construct valid moves with success', () => {
         expect(EncapsuleMove.fromDrop(EncapsulePiece.SMALL_BLACK, new Coord(2, 1))).toBeTruthy();
         expect(EncapsuleMove.fromMove(new Coord(1, 1), new Coord(2, 1))).toBeTruthy();
@@ -20,7 +21,7 @@ describe('EncapsuleMove', () => {
     });
     describe('encoder', () => {
         it('should be correct for first turn moves', () => {
-            const rules: EncapsuleRules = new EncapsuleRules(EncapsulePartSlice);
+            const rules: EncapsuleRules = new EncapsuleRules(EncapsuleState);
             const minimax: EncapsuleMinimax = new EncapsuleMinimax(rules, 'EncapsuleMinimax');
             const firstTurnMoves: EncapsuleMove[] = minimax.getListMoves(rules.node);
             for (const move of firstTurnMoves) {

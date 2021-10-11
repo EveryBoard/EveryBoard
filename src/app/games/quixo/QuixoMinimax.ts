@@ -1,13 +1,13 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
-import { QuixoPartSlice } from './QuixoPartSlice';
+import { QuixoState } from './QuixoState';
 import { QuixoMove } from './QuixoMove';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { QuixoNode, QuixoRules } from './QuixoRules';
 
-export class QuixoMinimax extends Minimax<QuixoMove, QuixoPartSlice> {
+export class QuixoMinimax extends Minimax<QuixoMove, QuixoState> {
 
     public getListMoves(node: QuixoNode): QuixoMove[] {
         const moves: QuixoMove[] = [];
@@ -24,11 +24,11 @@ export class QuixoMinimax extends Minimax<QuixoMove, QuixoPartSlice> {
         return moves;
     }
     public getBoardValue(node: QuixoNode): NodeUnheritance {
-        const slice: QuixoPartSlice = node.gamePartSlice;
-        const linesSums: { [key: string]: { [key: number]: number[]; }; } = QuixoRules.getLinesSums(slice);
+        const state: QuixoState = node.gameState;
+        const linesSums: { [key: string]: { [key: number]: number[]; }; } = QuixoRules.getLinesSums(state);
         const zerosFullestLine: number = QuixoRules.getFullestLine(linesSums[Player.ZERO.value]);
         const onesFullestLine: number = QuixoRules.getFullestLine(linesSums[Player.ONE.value]);
-        const currentPlayer: Player = slice.getCurrentPlayer();
+        const currentPlayer: Player = state.getCurrentPlayer();
         if (zerosFullestLine === 5) {
             if (currentPlayer === Player.ZERO || onesFullestLine < 5) {
                 return new NodeUnheritance(Player.ZERO.getVictoryValue());

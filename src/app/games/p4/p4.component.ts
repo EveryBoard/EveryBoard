@@ -1,42 +1,37 @@
 import { Component } from '@angular/core';
-import { P4PartSlice } from './P4PartSlice';
+import { P4State } from './P4State';
 import { P4Rules } from './P4Rules';
 import { P4Minimax } from './P4Minimax';
-import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
+import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { P4Move } from 'src/app/games/p4/P4Move';
 import { Player } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
-import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { p4Tutorial } from './P4Tutorial';
+import { P4Tutorial } from './P4Tutorial';
 
 @Component({
     selector: 'app-p4',
     templateUrl: './p4.component.html',
-    styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.css'],
 })
-export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice> {
+export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4State, Player> {
 
     public static VERBOSE: boolean = false;
 
-    public EMPTY_CASE: number = Player.NONE.value;
-    public CASE_SIZE: number = 100;
-    public STROKE_WIDTH: number = 8;
+    public EMPTY_CASE: Player = Player.NONE;
     public last: Coord;
     public victoryCoords: Coord[] = [];
 
-    public encoder: MoveEncoder<P4Move> = P4Move.encoder;
-
-    public tutorial: TutorialStep[] = p4Tutorial;
-
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = new P4Rules(P4PartSlice);
+        this.rules = new P4Rules(P4State);
         this.availableMinimaxes = [
             new P4Minimax(this.rules, 'P4Minimax'),
         ];
+        this.encoder = P4Move.encoder;
+        this.tutorial = new P4Tutorial().tutorial;
+        this.updateBoard();
     }
     public async onClick(x: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x);
@@ -44,18 +39,18 @@ export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice> {
             return this.cancelMove(clickValidity.getReason());
         }
         const chosenMove: P4Move = P4Move.of(x);
-        return await this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
+        return await this.chooseMove(chosenMove, this.rules.node.gameState, null, null);
     }
     public updateBoard(): void {
-        const slice: P4PartSlice = this.rules.node.gamePartSlice;
+        const state: P4State = this.rules.node.gameState;
         const lastMove: P4Move = this.rules.node.move;
 
-        this.victoryCoords = P4Rules.getVictoriousCoords(slice);
-        this.board = slice.board;
+        this.victoryCoords = P4Rules.getVictoriousCoords(state);
+        this.board = state.board;
         if (lastMove == null) {
             this.last = null;
         } else {
-            const y: number = P4Rules.getLowestUnoccupiedCase(slice.board, lastMove.x) + 1;
+            const y: number = P4Rules.getLowestUnoccupiedCase(state.board, lastMove.x) + 1;
             this.last = new Coord(lastMove.x, y);
         }
     }
@@ -70,7 +65,7 @@ export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice> {
         return classes;
     }
     public getCaseFillClass(x: number, y: number): string[] {
-        const content: number = this.board[y][x];
-        return [this.getPlayerClass(Player.of(content))];
+        const content: Player = this.board[y][x];
+        return [this.getPlayerClass(content)];
     }
 }

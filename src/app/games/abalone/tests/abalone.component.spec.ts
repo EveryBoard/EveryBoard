@@ -3,19 +3,19 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { NumberTable } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/utils/ArrayUtils';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { AbaloneComponent } from '../abalone.component';
 import { AbaloneFailure } from '../AbaloneFailure';
-import { AbaloneGameState } from '../AbaloneGameState';
+import { AbaloneState } from '../AbaloneState';
 import { AbaloneMove } from '../AbaloneMove';
 
 describe('AbaloneComponent', () => {
 
-    const _: number = FourStatePiece.EMPTY.value;
-    const N: number = FourStatePiece.NONE.value;
-    const O: number = FourStatePiece.ZERO.value;
-    const X: number = FourStatePiece.ONE.value;
+    const _: FourStatePiece = FourStatePiece.EMPTY;
+    const N: FourStatePiece = FourStatePiece.NONE;
+    const O: FourStatePiece = FourStatePiece.ZERO;
+    const X: FourStatePiece = FourStatePiece.ONE;
     let componentTestUtils: ComponentTestUtils<AbaloneComponent>;
 
     beforeEach(fakeAsync(async() => {
@@ -37,13 +37,12 @@ describe('AbaloneComponent', () => {
             componentTestUtils.expectElementNotToExist('#direction_DOWN');
             componentTestUtils.expectElementNotToExist('#direction_DOWN_LEFT');
         }));
-        it('should cancel move when clicking on enemy piece', fakeAsync(async() => {
+        it('should cancel move when clicking on opponent piece', fakeAsync(async() => {
             // given initial board
 
-            // when clicking on an enemy piece
+            // when clicking on an opponent piece
             // then expect click to be a failure
-            const reason: string = RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE;
-            await componentTestUtils.expectClickFailure('#piece_8_0', reason);
+            await componentTestUtils.expectClickFailure('#piece_8_0', RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         }));
     });
     describe('second piece click', () => {
@@ -104,7 +103,7 @@ describe('AbaloneComponent', () => {
         }));
         it('should change first coord to clicked coord if valid extension side but hole in the extension', fakeAsync(async() => {
             // Given a board with a possible "holed line" selection
-            const board: NumberTable = [
+            const board: Table<FourStatePiece> = [
                 [N, N, N, N, X, X, X, X, X],
                 [N, N, N, X, X, X, X, X, X],
                 [N, N, _, _, X, X, X, _, _],
@@ -115,8 +114,8 @@ describe('AbaloneComponent', () => {
                 [O, O, O, O, O, O, N, N, N],
                 [O, O, O, O, O, N, N, N, N],
             ];
-            const state: AbaloneGameState = new AbaloneGameState(board, 0);
-            componentTestUtils.setupSlice(state);
+            const state: AbaloneState = new AbaloneState(board, 0);
+            componentTestUtils.setupState(state);
             await componentTestUtils.expectClickSuccess('#piece_1_5');
 
             // when choosing the piece that is aligned and at good distance but not making a line
@@ -132,7 +131,7 @@ describe('AbaloneComponent', () => {
             await componentTestUtils.expectClickSuccess('#piece_0_7');
 
             // when clicking 3 case on the right
-            await componentTestUtils.expectClickFailure('#piece_3_7', AbaloneFailure.CANNOT_MOVE_MORE_THAN_THREE_PIECES);
+            await componentTestUtils.expectClickFailure('#piece_3_7', AbaloneFailure.CANNOT_MOVE_MORE_THAN_THREE_PIECES());
 
             // then piece should no longer be selected
             const compo: AbaloneComponent = componentTestUtils.getComponent();
@@ -192,8 +191,7 @@ describe('AbaloneComponent', () => {
             await componentTestUtils.expectClickSuccess('#piece_4_6');
 
             // when clicking on not aligned piece, then expect failure
-            const reason: string = AbaloneFailure.LINE_AND_COORD_NOT_ALIGNED;
-            await componentTestUtils.expectClickFailure('#piece_4_7', reason);
+            await componentTestUtils.expectClickFailure('#piece_4_7', AbaloneFailure.LINE_AND_COORD_NOT_ALIGNED());
         }));
         it('should cancel move then select clicked piece as first piece when it is not aligned with second piece', fakeAsync(async() => {
             // given initial board with a line selected
@@ -201,8 +199,7 @@ describe('AbaloneComponent', () => {
             await componentTestUtils.expectClickSuccess('#piece_4_6');
 
             // when clicking on not aligned piece, then expect failure
-            const reason: string = AbaloneFailure.LINE_AND_COORD_NOT_ALIGNED;
-            await componentTestUtils.expectClickFailure('#piece_2_7', reason);
+            await componentTestUtils.expectClickFailure('#piece_2_7', AbaloneFailure.LINE_AND_COORD_NOT_ALIGNED());
         }));
         it('should recognize line extension and show new directions (1-2-3)', fakeAsync(async() => {
             // given initial board with an extendable two piece line selected
@@ -226,7 +223,7 @@ describe('AbaloneComponent', () => {
             // when clicking third one then moving them
             await componentTestUtils.expectClickSuccess('#piece_4_6');
             const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(4, 6), HexaDirection.LEFT).get();
-            const state: AbaloneGameState = AbaloneGameState.getInitialSlice();
+            const state: AbaloneState = AbaloneState.getInitialState();
             await componentTestUtils.expectMoveSuccess('#direction_LEFT', move, state, 0, 0);
 
             // then three pieces should be selected
@@ -243,7 +240,7 @@ describe('AbaloneComponent', () => {
 
             // when selecting an aligned piece too far
             // then move should be cancel for "too-long-line" reason
-            await componentTestUtils.expectClickFailure('#piece_3_7', AbaloneFailure.CANNOT_MOVE_MORE_THAN_THREE_PIECES);
+            await componentTestUtils.expectClickFailure('#piece_3_7', AbaloneFailure.CANNOT_MOVE_MORE_THAN_THREE_PIECES());
         }));
     });
     describe('direction click', () => {
@@ -254,7 +251,7 @@ describe('AbaloneComponent', () => {
             // when clicking on coord then direction
             // then the move should be done
             const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(0, 7), HexaDirection.UP).get();
-            const state: AbaloneGameState = AbaloneGameState.getInitialSlice();
+            const state: AbaloneState = AbaloneState.getInitialState();
             await componentTestUtils.expectMoveSuccess('#direction_UP', move, state, 0, 0);
         }));
     });
@@ -265,12 +262,12 @@ describe('AbaloneComponent', () => {
         // when clicking on the case marked by the direction instead of it's arrow
         // then the move should have been done
         const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(2, 6), HexaDirection.LEFT).get();
-        const state: AbaloneGameState = AbaloneGameState.getInitialSlice();
+        const state: AbaloneState = AbaloneState.getInitialState();
         await componentTestUtils.expectMoveSuccess('#case_1_6', move, state, 0, 0);
     }));
-    it('should allow clicking on arrow landing coord as if it was bellow an arrow (enemy)', fakeAsync(async() => {
+    it('should allow clicking on arrow landing coord as if it was bellow an arrow (opponent)', fakeAsync(async() => {
         // Given a board with a possible push
-        const board: NumberTable = [
+        const board: Table<FourStatePiece> = [
             [N, N, N, N, X, X, X, X, X],
             [N, N, N, X, X, X, X, X, X],
             [N, N, _, _, _, X, X, _, _],
@@ -281,8 +278,8 @@ describe('AbaloneComponent', () => {
             [O, O, O, O, O, O, N, N, N],
             [O, O, O, O, O, N, N, N, N],
         ];
-        const state: AbaloneGameState = new AbaloneGameState(board, 0);
-        componentTestUtils.setupSlice(state);
+        const state: AbaloneState = new AbaloneState(board, 0);
+        componentTestUtils.setupState(state);
         await componentTestUtils.expectClickSuccess('#piece_2_6');
         await componentTestUtils.expectClickSuccess('#piece_2_7');
 
@@ -308,7 +305,7 @@ describe('AbaloneComponent', () => {
             // then the translation move should be done
             const move: AbaloneMove =
                 AbaloneMove.fromDoubleCoord(new Coord(2, 6), new Coord(3, 6), HexaDirection.UP).get();
-            const state: AbaloneGameState = AbaloneGameState.getInitialSlice();
+            const state: AbaloneState = AbaloneState.getInitialState();
             await componentTestUtils.expectMoveSuccess('#direction_UP', move, state, 0, 0);
         }));
         it('should show last move moved pieces (push)', fakeAsync(async() => {
@@ -316,7 +313,7 @@ describe('AbaloneComponent', () => {
             await componentTestUtils.expectClickSuccess('#piece_0_7');
             await componentTestUtils.expectClickSuccess('#piece_0_8');
             const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(0, 7), HexaDirection.DOWN).get();
-            const state: AbaloneGameState = AbaloneGameState.getInitialSlice();
+            const state: AbaloneState = AbaloneState.getInitialState();
             await componentTestUtils.expectMoveSuccess('#direction_DOWN', move, state, 0, 0);
 
             // when ? then expect to see left and moved case
