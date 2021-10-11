@@ -1,5 +1,5 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { DebugElement } from '@angular/core';
+import { ChangeDetectorRef, DebugElement } from '@angular/core';
 
 import firebase from 'firebase/app';
 
@@ -219,6 +219,12 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             }
             await receiveNewMoves(receivedMoves, remainingMsForZero, remainingMsForOne);
         }
+    }
+    function expectAllChronoToBeIdle(): void {
+        expect(wrapper.chronoZeroGlobal.isIdle()).toBeTrue();
+        expect(wrapper.chronoZeroLocal.isIdle()).toBeTrue();
+        expect(wrapper.chronoZeroGlobal.isIdle()).toBeTrue();
+        expect(wrapper.chronoOneLocal.isIdle()).toBeTrue();
     }
     beforeEach(fakeAsync(async() => {
         componentTestUtils = await ComponentTestUtils.forGame('Quarto');
@@ -874,17 +880,20 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(wrapper.joiner.maximalMoveDuration * 1000);
         }));
         it('should finish the game when opponent accepts our proposed draw', fakeAsync(async() => {
+            // given a gameComponent where draw has been proposed
             await setup();
             await componentTestUtils.clickElement('#proposeDrawButton');
 
+            // when draw is accepted
             spyOn(partDAO, 'update').and.callThrough();
-            await receiveRequest(Request.drawAccepted);
-
-            tick(1);
-            expect(partDAO.update).toHaveBeenCalledWith('joinerId', {
+            await receivePartDAOUpdate({
                 result: MGPResult.DRAW.value,
-                request: null,
+                request: Request.drawAccepted,
             });
+
+            // then game should be over
+            expectAllChronoToBeIdle();
+            expect(partDAO.update).toHaveBeenCalledTimes(1);
         }));
         it('should send refusal when player asks to', fakeAsync(async() => {
             await setup();
@@ -1049,17 +1058,34 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
     });
     describe('Resign', () => {
+        it('should end game after clicking on resign button', fakeAsync(async() => {
+            // Given an online game component
+            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            tick(1);
+            await doMove(FIRST_MOVE, true);
+
+            // when clicking on resign button
+            await componentTestUtils.clickElement('#resignButton');
+
+            // then the game should be ended
+            expectAllChronoToBeIdle();
+        }));
         it('Should not allow player to move after resigning', fakeAsync(async() => {
+            // TODOTODO test isgame ended after resign
+
+            // Given a component where user has resigned
             await prepareStartedGameFor({ pseudo: 'creator', verified: true });
             tick(1);
             await doMove(FIRST_MOVE, true);
             await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 1799999, 1800 * 1000);
             await componentTestUtils.clickElement('#resignButton');
 
+            // when attempting a move
             spyOn(partDAO, 'update').and.callThrough();
             await doMove(SECOND_MOVE, false);
-            expect(partDAO.update).not.toHaveBeenCalled();
 
+            // then it should be refused
+            expect(partDAO.update).not.toHaveBeenCalled();
             tick(wrapper.joiner.maximalMoveDuration * 1000);
         }));
         it('Should display when the opponent resigned', fakeAsync(async() => {
@@ -1067,6 +1093,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(1);
             await doMove(FIRST_MOVE, true);
             await TestBed.inject(GameService).resign('joinerId', CREATOR.pseudo, OPPONENT.pseudo);
+            await receivePartDAOUpdate({
+                lastMoveTime: { seconds: 444, nanoseconds: 444000000 },
+            });
             expect(componentTestUtils.findElement('#resignIndicator'));
         }));
     });

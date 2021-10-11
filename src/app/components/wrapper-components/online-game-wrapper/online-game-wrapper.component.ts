@@ -40,6 +40,8 @@ export class UpdateType {
 
     public static readonly END_GAME: UpdateType = new UpdateType('END_GAME');
 
+    public static readonly END_GAME_WITHOUT_TIME: UpdateType = new UpdateType('END_GAME_WITHOUT_TIME');
+
     public static readonly ACCEPT_TAKE_BACK_WITHOUT_TIME: UpdateType = new UpdateType('ACCEPT_TAKE_BACK_WITHOUT_TIME');
 
     private constructor(public readonly value: string) {}
@@ -179,9 +181,9 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         const updateType: UpdateType = this.getUpdateType(part);
         const turn: number = update.doc.turn;
         if (updateType === UpdateType.REQUEST) {
-            display(OnlineGameWrapperComponent.VERBOSE, 'UpdateType: Request(' + part.doc.request.code + ') (' + turn + ')');
+            display(OnlineGameWrapperComponent.VERBOSE || true, 'UpdateType: Request(' + part.doc.request.code + ') (' + turn + ')');
         } else {
-            display(OnlineGameWrapperComponent.VERBOSE, 'UpdateType: ' + updateType.value + '(' + turn + ')');
+            display(OnlineGameWrapperComponent.VERBOSE || true, 'UpdateType: ' + updateType.value + '(' + turn + ')');
         }
         const oldPart: Part = this.currentPart;
         this.currentPart = part;
@@ -193,6 +195,9 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 this.currentPart = oldPart;
                 return;
             case UpdateType.DUPLICATE:
+                return;
+            case UpdateType.END_GAME_WITHOUT_TIME:
+                this.currentPart = oldPart;
                 return;
             case UpdateType.END_GAME:
                 return this.applyEndGame();
@@ -220,7 +225,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     public getUpdateType(update: Part): UpdateType {
         const currentPartDoc: IPart = this.currentPart ? this.currentPart.doc : null;
         const diff: ObjectDifference = ObjectDifference.from(currentPartDoc, update.doc);
-        display(OnlineGameWrapperComponent.VERBOSE, { diff });
+        display(OnlineGameWrapperComponent.VERBOSE || true, { diff });
         const nbDiffs: number = diff.countChanges();
         if (diff == null || nbDiffs === 0) {
             return UpdateType.DUPLICATE;
@@ -251,7 +256,13 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             return UpdateType.PRE_START_DOC;
         }
         if (update.doc.result !== MGPResult.UNACHIEVED.value) {
-            return UpdateType.END_GAME;
+            const turnModified: boolean = diff.modified['turn'] != null;
+            const lastMoveTimeMissing: boolean = diff.modified['lastMoveTime'] == null;
+            if (turnModified && lastMoveTimeMissing) {
+                return UpdateType.END_GAME_WITHOUT_TIME;
+            } else {
+                return UpdateType.END_GAME;
+            }
         }
         assert(update.doc.beginning != null && update.doc.listMoves.length === 0,
                'Unexpected update: ' + JSON.stringify(diff));
@@ -366,7 +377,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             const resultIsIncluded: boolean =
                 endGameResults.some((result: MGPResult) => result.value === currentPart.doc.result);
             assert(resultIsIncluded === true, 'Unknown type of end game (' + currentPart.doc.result + ')');
-            display(OnlineGameWrapperComponent.VERBOSE, 'endGame est true et winner est ' + currentPart.getWinner());
+            display(OnlineGameWrapperComponent.VERBOSE || true, 'endGame est true et winner est ' + currentPart.getWinner());
         }
         this.stopCountdownsFor(player);
     }
@@ -513,7 +524,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 break;
             default:
                 assert(request.code === 'DrawAccepted', 'there was an error : ' + JSON.stringify(request) + ' had ' + request.code + ' value');
-                this.acceptDraw();
+                this.applyEndGame();
                 break;
         }
     }
@@ -704,7 +715,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
     }
     private stopCountdownsFor(player: Player) {
-        display(OnlineGameWrapperComponent.VERBOSE,
+        display(OnlineGameWrapperComponent.VERBOSE || true,
                 'cdc::stopCountDownsFor(' + player.toString() +
                 ') (turn ' + this.currentPart.doc.turn + ')');
 
