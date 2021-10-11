@@ -8,7 +8,6 @@ import { P4State } from './P4State';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 import { assert, display } from 'src/app/utils/utils';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { P4Move } from './P4Move';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
@@ -183,9 +182,9 @@ export class P4Rules extends Rules<P4Move, P4State> {
     public isLegal(move: P4Move, state: P4State): LegalityStatus {
         display(P4Rules.VERBOSE, { context: 'P4Rules.isLegal', move: move.toString(), state });
         if (state.getPieceAtXY(move.x, 0) !== Player.NONE) {
-            return { legal: MGPValidation.failure(P4Failure.COLUMN_IS_FULL()) };
+            return LegalityStatus.failure(P4Failure.COLUMN_IS_FULL());
         }
-        return { legal: MGPValidation.SUCCESS };
+        return LegalityStatus.SUCCESS;
     }
     public getGameStatus(node: P4Node): GameStatus {
         const state: P4State = node.gameState;

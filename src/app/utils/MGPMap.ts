@@ -4,6 +4,7 @@ import { MGPSet } from './MGPSet';
 import { assert } from './utils';
 
 export class MGPMap<K extends Comparable, V extends Comparable> {
+
     private map: {key: K, value: NonNullable<V>}[] = [];
 
     private isImmutable: boolean = false;
@@ -60,6 +61,15 @@ export class MGPMap<K extends Comparable, V extends Comparable> {
     }
     public getKeySet(): MGPSet<K> {
         return new MGPSet<K>(this.listKeys());
+    }
+    public filter(predicate: (key: K, value: V) => boolean): MGPMap<K, V> {
+        const filtered: MGPMap<K, V> = new MGPMap();
+        for (const keyValue of this.map) {
+            if (predicate(keyValue.key, keyValue.value)) {
+                filtered.set(keyValue.key, keyValue.value);
+            }
+        }
+        return filtered;
     }
     public replace(key: K, newValue: NonNullable<V>): V {
         this.checkImmutability('replace');

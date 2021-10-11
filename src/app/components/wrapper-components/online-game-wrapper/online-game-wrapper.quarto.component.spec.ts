@@ -587,6 +587,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 await acceptTakeBack();
 
                 // Then turn should be changed to 0 and resumeCountDown be called
+                const opponentTurnDiv: DebugElement = componentTestUtils.findElement('#currentPlayerIndicator');
+                expect(opponentTurnDiv.nativeElement.innerText).toBe(`It is creator's turn.`);
                 expect(wrapper.resetChronoFor).toHaveBeenCalledWith(Player.ZERO);
                 expect(wrapper.gameComponent.rules.node.gameState.turn).toBe(0);
                 tick(wrapper.joiner.maximalMoveDuration * 1000);
@@ -648,6 +650,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 await acceptTakeBack();
 
                 // Then turn should be changed to 0 and resumeCountDown be called
+                const opponentTurnDiv: DebugElement = componentTestUtils.findElement('#currentPlayerIndicator');
+                expect(opponentTurnDiv.nativeElement.innerText).toBe(`It is creator's turn.`);
                 expect(wrapper.switchPlayer).toHaveBeenCalled();
                 expect(wrapper.gameComponent.rules.node.gameState.turn).toBe(0);
                 tick(wrapper.joiner.maximalMoveDuration * 1000);
@@ -701,6 +705,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                     ...BASE_TAKE_BACK_REQUEST,
                     remainingMsForOne: 1799999,
                 });
+                const opponentTurnDiv: DebugElement = componentTestUtils.findElement('#currentPlayerIndicator');
+                expect(opponentTurnDiv.nativeElement.innerText).toBe(`It is your turn.`);
 
                 // Then turn should be changed to 0 and resumeCountDown be called
                 expect(wrapper.resetChronoFor).toHaveBeenCalledWith(Player.ZERO);
@@ -771,6 +777,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
                 // when opponent accept user's take back
                 await receivePartDAOUpdate(BASE_TAKE_BACK_REQUEST);
+                const opponentTurnDiv: DebugElement = componentTestUtils.findElement('#currentPlayerIndicator');
+                expect(opponentTurnDiv.nativeElement.innerText).toBe(`It is your turn.`);
 
                 // Then turn should be changed to 0 and resumeCountDown be called
                 expect(wrapper.switchPlayer).toHaveBeenCalled();

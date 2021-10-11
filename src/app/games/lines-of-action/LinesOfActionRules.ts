@@ -7,14 +7,11 @@ import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { LinesOfActionFailure } from './LinesOfActionFailure';
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionState } from './LinesOfActionState';
 
-export class LinesOfActionNode extends MGPNode<LinesOfActionRules,
-                                               LinesOfActionMove,
-                                               LinesOfActionState> {}
+export class LinesOfActionNode extends MGPNode<LinesOfActionRules, LinesOfActionMove, LinesOfActionState> {}
 
 export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionState> {
 
@@ -91,19 +88,19 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
     }
     public static isLegal(move: LinesOfActionMove, state: LinesOfActionState): LegalityStatus {
         if (state.getPieceAt(move.coord) !== state.getCurrentPlayer()) {
-            return { legal: MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE()) };
+            return LegalityStatus.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
         if (move.length() !== this.numberOfPiecesOnLine(state, move.coord, move.direction)) {
-            return { legal: MGPValidation.failure(LinesOfActionFailure.INVALID_MOVE_LENGTH()) };
+            return LegalityStatus.failure(LinesOfActionFailure.INVALID_MOVE_LENGTH());
         }
         if (move.coord.getCoordsToward(move.end).some((c: Coord) =>
             state.getPieceAt(c) === state.getCurrentOpponent())) {
-            return { legal: MGPValidation.failure(LinesOfActionFailure.CANNOT_JUMP_OVER_OPPONENT()) };
+            return LegalityStatus.failure(LinesOfActionFailure.CANNOT_JUMP_OVER_OPPONENT());
         }
         if (state.getPieceAt(move.end) === state.getCurrentPlayer()) {
-            return { legal: MGPValidation.failure(RulesFailure.CANNOT_SELF_CAPTURE()) };
+            return LegalityStatus.failure(RulesFailure.CANNOT_SELF_CAPTURE());
         }
-        return { legal: MGPValidation.SUCCESS };
+        return LegalityStatus.SUCCESS;
     }
     public isLegal(move: LinesOfActionMove, state: LinesOfActionState): LegalityStatus {
         return LinesOfActionRules.isLegal(move, state);

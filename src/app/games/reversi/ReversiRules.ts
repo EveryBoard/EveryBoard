@@ -12,6 +12,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ReversiFailure } from './ReversiFailure';
 
 export class ReversiMoveWithSwitched {
+
     public constructor(public readonly move: ReversiMove,
                        public readonly switched: number) {
     }
@@ -23,6 +24,22 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
 
     public static VERBOSE: boolean = false;
 
+    public static getGameStatus(node: ReversiNode): GameStatus {
+        const state: ReversiState = node.gameState;
+        const gameIsEnded: boolean = ReversiRules.isGameEnded(state);
+        if (gameIsEnded === false) {
+            return GameStatus.ONGOING;
+        }
+        const scores: [number, number] = state.countScore();
+        const diff: number = scores[1] - scores[0];
+        if (diff < 0) {
+            return GameStatus.ZERO_WON;
+        }
+        if (diff > 0) {
+            return GameStatus.ONE_WON;
+        }
+        return GameStatus.DRAW;
+    }
     public applyLegalMove(move: ReversiMove, state: ReversiState, status: ReversiLegalityStatus): ReversiState {
         const turn: number = state.turn;
         const player: Player = state.getCurrentPlayer();
@@ -86,20 +103,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
                this.nextPlayerCantOnlyPass(state);
     }
     public getGameStatus(node: ReversiNode): GameStatus {
-        const state: ReversiState = node.gameState;
-        const gameIsEnded: boolean = ReversiRules.isGameEnded(state);
-        if (gameIsEnded === false) {
-            return GameStatus.ONGOING;
-        }
-        const scores: [number, number] = state.countScore();
-        const diff: number = scores[1] - scores[0];
-        if (diff < 0) {
-            return GameStatus.ZERO_WON;
-        }
-        if (diff > 0) {
-            return GameStatus.ONE_WON;
-        }
-        return GameStatus.DRAW;
+        return ReversiRules.getGameStatus(node);
     }
     public static playerCanOnlyPass(reversiState: ReversiState): boolean {
         const currentPlayerChoices: ReversiMoveWithSwitched[] = this.getListMoves(reversiState);

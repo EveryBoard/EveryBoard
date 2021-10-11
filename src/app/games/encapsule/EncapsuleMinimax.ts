@@ -14,8 +14,8 @@ import { GameStatus } from 'src/app/jscaip/Rules';
 export class EncapsuleMinimax extends Minimax<EncapsuleMove, EncapsuleState, EncapsuleLegalityStatus> {
 
     public getBoardValue(node: EncapsuleNode): NodeUnheritance {
-        const status: GameStatus = EncapsuleRules.getGameStatus(node);
-        return new NodeUnheritance(status.toBoardValue());
+        const gameStatus: GameStatus = EncapsuleRules.getGameStatus(node);
+        return new NodeUnheritance(gameStatus.toBoardValue());
     }
     public getListMoves(n: EncapsuleNode): EncapsuleMove[] {
         const moves: EncapsuleMove[] = [];
