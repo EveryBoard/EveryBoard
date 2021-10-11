@@ -1,4 +1,4 @@
-import { fakeAsync } from '@angular/core/testing';
+import { fakeAsync, tick } from '@angular/core/testing';
 import { Coord } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -266,9 +266,19 @@ describe('YinshComponent', () => {
 
             await testUtils.expectClickFailure('#click_4_2', YinshFailure.MISSING_CAPTURES());
         }));
-        it('should show the number of rings of each player', fakeAsync(async() => {
+        fit('should show the number of rings of each player', fakeAsync(async() => {
+            // TODO FOR REVIEW: Initially, the board is the initial board with 5 rings each
+
+            // TODO FOR REVIEW: We change the number of rings to 2 for player 0, 1 for player 1
             const state: YinshState = new YinshState(YinshState.getInitialState().board, [2, 1], 10);
             testUtils.setupState(state);
+            tick(10000);
+
+            // TODO FOR REVIEW: we expect the rings to be updated, but they are not.
+            // TODO FOR REVIEW: Adding waits (tick, detectChange, whenStable) does *not* change anything
+            // TODO FOR REVIEW: Adding the following simulated click solves it
+            testUtils.clickElement('#click_6_0');
+            tick(3000);
 
             testUtils.expectElementToExist('#player_0_sideRing_1');
             testUtils.expectElementToExist('#player_0_sideRing_2');
