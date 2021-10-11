@@ -35,6 +35,8 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
 
     public captures: Coord[]= [];
 
+    public GoPiece: typeof GoPiece = GoPiece;
+
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.rules = new GoRules(GoState);
