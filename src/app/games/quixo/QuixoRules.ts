@@ -1,4 +1,3 @@
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
@@ -122,9 +121,9 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
     }
     public isLegal(move: QuixoMove, state: QuixoState): LegalityStatus {
         if (state.getPieceAt(move.coord) === state.getCurrentOpponent()) {
-            return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE()) };
+            return LegalityStatus.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         } else {
-            return { legal: MGPValidation.SUCCESS };
+            return LegalityStatus.SUCCESS;
         }
     }
     public getGameStatus(node: QuixoNode): GameStatus {

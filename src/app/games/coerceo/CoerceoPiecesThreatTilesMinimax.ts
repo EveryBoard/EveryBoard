@@ -19,9 +19,9 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
     public static readonly SCORE_BY_SAFE_PIECE: number = 1000 * 1000;
 
     public getBoardValue(node: CoerceoNode): NodeUnheritance {
-        const status: GameStatus = CoerceoRules.getGameStatus(node);
-        if (status.isEndGame) {
-            return NodeUnheritance.fromWinner(status.winner);
+        const gameStatus: GameStatus = CoerceoRules.getGameStatus(node);
+        if (gameStatus.isEndGame) {
+            return NodeUnheritance.fromWinner(gameStatus.winner);
         }
         const state: CoerceoState = node.gameState;
         const pieceMap: MGPMap<Player, MGPSet<Coord>> = this.getPiecesMap(state);

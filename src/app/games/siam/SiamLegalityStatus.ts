@@ -4,8 +4,12 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { SiamPiece } from './SiamPiece';
 
 export class SiamLegalityStatus implements LegalityStatus {
+
     public static failure(reason: string): SiamLegalityStatus {
-        return { legal: MGPValidation.failure(reason), resultingBoard: null, moved: [] };
+        return {
+            legal: MGPValidation.failure(reason),
+            resultingBoard: null, moved: [],
+        };
     }
 
     public legal: MGPValidation;
