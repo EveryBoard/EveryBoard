@@ -510,7 +510,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             // expect navigator to have been called
             expect(compo.gameService.createGameAndRedirectOrShowError).toHaveBeenCalledWith('Quarto');
 
-            tick(1000);
+            tick(3000);
         }));
     });
     describe('TutorialStep awaiting specific moves', () => {

@@ -114,7 +114,7 @@ describe('GameService', () => {
             expect(service.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(GameServiceMessages.USER_OFFLINE());
             expect(service.router.navigate).toHaveBeenCalledOnceWith(['/login']);
 
-            tick(150);
+            tick(3000);
         }));
         it('should show toast and navigate when creator cannot create game', fakeAsync(async() => {
             spyOn(service.router, 'navigate').and.callThrough();
@@ -124,7 +124,7 @@ describe('GameService', () => {
 
             // when calling it
             expect(await service.createGameAndRedirectOrShowError('whatever')).toBeFalse();
-            tick(150);
+            tick(3000);
 
             // it should toast, and navigate
             expect(service.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(GameServiceMessages.ALREADY_INGAME());

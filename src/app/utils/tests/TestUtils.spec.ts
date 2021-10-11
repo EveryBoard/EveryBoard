@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement, Type } from '@angular/core';
+import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement, Type } from '@angular/core';
 import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -212,6 +212,10 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     public detectChanges(): void {
         this.fixture.detectChanges();
     }
+    public forceChangeDetection(): void {
+        this.fixture.debugElement.injector.get<ChangeDetectorRef>(ChangeDetectorRef).markForCheck();
+        this.detectChanges();
+    }
     public setRoute(id: string, value: string): void {
         this.activatedRouteStub.setRoute(id, value);
     }
@@ -227,7 +231,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
             this.gameComponent.rules.node = new MGPNode(null, previousMove || null, state);
         }
         this.gameComponent.updateBoard();
-        this.fixture.detectChanges();
+        this.forceChangeDetection();
     }
     public getComponent(): T {
         return (this.gameComponent as unknown) as T;
