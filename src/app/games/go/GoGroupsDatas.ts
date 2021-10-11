@@ -1,5 +1,6 @@
 import { GroupDatas } from 'src/app/jscaip/BoardDatas';
 import { Coord } from 'src/app/jscaip/Coord';
+import { MGPMap } from 'src/app/utils/MGPMap';
 import { GoPiece } from './GoState';
 
 export class GoGroupDatas extends GroupDatas<GoPiece> {
@@ -51,7 +52,7 @@ export class GoGroupDatas extends GroupDatas<GoPiece> {
             color === GoPiece.WHITE_TERRITORY) {
             this.emptyCoords = GroupDatas.insertAsEntryPoint(this.emptyCoords, coord);
         } else {
-            throw new Error(`This pawn color does not exist for Go: ` + color.value);
+            throw new Error(`This pawn color does not exist for Go: ` + color.toString());
         }
     }
     public isMonoWrapped(): boolean {
@@ -72,16 +73,16 @@ export class GoGroupDatas extends GroupDatas<GoPiece> {
         // empty, [  0(2),     0,     4,         2,         0 ] => WHITE
         // empty, [  0(2),     2,     2,         0,         0 ] => throw
         // empty, [  0(2),     0,     0,         6,         0 ] => WHITE
-        const wrapperSizes: number[] = [];
-        wrapperSizes[GoPiece.EMPTY.value] = this.emptyCoords.length;
-        wrapperSizes[GoPiece.BLACK.value] = this.blackCoords.length + this.deadWhiteCoords.length;
-        wrapperSizes[GoPiece.WHITE.value] = this.whiteCoords.length + this.deadBlackCoords.length;
-        wrapperSizes[this.color.nonTerritory().value] = 0;
+        const wrapperSizes: MGPMap<GoPiece, number> = new MGPMap();
+        wrapperSizes.set(GoPiece.EMPTY, this.emptyCoords.length);
+        wrapperSizes.set(GoPiece.BLACK, this.blackCoords.length + this.deadWhiteCoords.length);
+        wrapperSizes.set(GoPiece.WHITE, this.whiteCoords.length + this.deadBlackCoords.length);
+        wrapperSizes.put(this.color.nonTerritory(), 0);
 
-        const nbWrapper: number = wrapperSizes.filter((wrapperSize: number) => wrapperSize > 0).length;
-        if (nbWrapper === 1) {
-            const wrapper: number = wrapperSizes.findIndex((wrapperSize: number) => wrapperSize > 0);
-            return GoPiece.of(wrapper);
+        const nonEmptyWrapper: MGPMap<GoPiece, number> =
+            wrapperSizes.filter((_key: GoPiece, value: number) => value > 0);
+        if (nonEmptyWrapper.size() === 1) {
+            return nonEmptyWrapper.getByIndex(0).key;
         } else {
             throw new Error(`Can't call getWrapper on non-mono-wrapped group`);
         }
