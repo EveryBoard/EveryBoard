@@ -1,24 +1,27 @@
 import { Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { toast, ToastType } from 'bulma-toast';
 
 @Injectable({
     providedIn: 'root',
 })
 export class MessageDisplayer {
 
-    constructor(private snackBar: MatSnackBar) {
+    constructor() {
     }
     public infoMessage(msg: string): void {
-        this.message(msg, 'snackbar-info');
+        this.message(msg, 'is-info');
     }
     public gameMessage(msg: string): void {
-        this.message(msg, 'snackbar-game');
+        this.message(msg, 'is-warning');
     }
-    private message(msg: string, cssClass: string): void {
-        this.snackBar.open(msg, 'Ok', {
+    private message(msg: string, cssClass: ToastType): void {
+        toast({
+            message: msg,
             duration: 3000,
-            verticalPosition: 'top',
-            panelClass: cssClass,
+            position: 'top-center',
+            closeOnClick: true,
+            type: cssClass,
+            dismissible: true,
         });
     }
 }
