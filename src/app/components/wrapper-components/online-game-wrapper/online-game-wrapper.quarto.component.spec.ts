@@ -1,5 +1,5 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { ChangeDetectorRef, DebugElement } from '@angular/core';
+import { DebugElement } from '@angular/core';
 
 import firebase from 'firebase/app';
 
@@ -22,7 +22,6 @@ import { IJoueur } from 'src/app/domain/iuser';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { QuartoComponent } from 'src/app/games/quarto/quarto.component';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { GameService } from 'src/app/services/GameService';
 import { AuthUser } from 'src/app/services/AuthenticationService';
 import { Time } from 'src/app/domain/Time';
 import { getMillisecondsDifference } from 'src/app/utils/TimeUtils';
@@ -220,11 +219,12 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await receiveNewMoves(receivedMoves, remainingMsForZero, remainingMsForOne);
         }
     }
-    function expectAllChronoToBeIdle(): void {
-        expect(wrapper.chronoZeroGlobal.isIdle()).toBeTrue();
-        expect(wrapper.chronoZeroLocal.isIdle()).toBeTrue();
-        expect(wrapper.chronoZeroGlobal.isIdle()).toBeTrue();
-        expect(wrapper.chronoOneLocal.isIdle()).toBeTrue();
+    function expectGameToBeOver(): void {
+        expect(wrapper.chronoZeroGlobal.isIdle()).withContext('chrono zero global should be idle').toBeTrue();
+        expect(wrapper.chronoZeroLocal.isIdle()).withContext('chrono zero local should be idle').toBeTrue();
+        expect(wrapper.chronoOneGlobal.isIdle()).withContext('chrono one global should be idle').toBeTrue();
+        expect(wrapper.chronoOneLocal.isIdle()).withContext('chrono one local should be idle').toBeTrue();
+        expect(wrapper.endGame).toBeTrue();
     }
     beforeEach(fakeAsync(async() => {
         componentTestUtils = await ComponentTestUtils.forGame('Quarto');
@@ -892,7 +892,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             });
 
             // then game should be over
-            expectAllChronoToBeIdle();
+            expectGameToBeOver();
             expect(partDAO.update).toHaveBeenCalledTimes(1);
         }));
         it('should send refusal when player asks to', fakeAsync(async() => {
@@ -1065,14 +1065,19 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await doMove(FIRST_MOVE, true);
 
             // when clicking on resign button
+            spyOn(partDAO, 'update').and.callThrough();
             await componentTestUtils.clickElement('#resignButton');
 
             // then the game should be ended
-            expectAllChronoToBeIdle();
+            expect(partDAO.update).toHaveBeenCalledOnceWith('joinerId', {
+                winner: 'firstCandidate',
+                loser: 'creator',
+                request: null,
+                result: MGPResult.RESIGN.value,
+            });
+            expectGameToBeOver();
         }));
         it('Should not allow player to move after resigning', fakeAsync(async() => {
-            // TODOTODO test isgame ended after resign
-
             // Given a component where user has resigned
             await prepareStartedGameFor({ pseudo: 'creator', verified: true });
             tick(1);
@@ -1086,17 +1091,27 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // then it should be refused
             expect(partDAO.update).not.toHaveBeenCalled();
-            tick(wrapper.joiner.maximalMoveDuration * 1000);
+            expectGameToBeOver();
         }));
-        it('Should display when the opponent resigned', fakeAsync(async() => {
+        it('should have resigner name written when opponent resign during your turn', fakeAsync(async() => {
+            // Given a board where user has resign
             await prepareStartedGameFor({ pseudo: 'creator', verified: true });
             tick(1);
             await doMove(FIRST_MOVE, true);
-            await TestBed.inject(GameService).resign('joinerId', CREATOR.pseudo, OPPONENT.pseudo);
+            await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 1799999, 1800 * 1000);
             await receivePartDAOUpdate({
-                lastMoveTime: { seconds: 444, nanoseconds: 444000000 },
+                winner: 'creator',
+                loser: 'firstCandidate',
+                result: MGPResult.RESIGN.value,
+                request: null,
             });
-            expect(componentTestUtils.findElement('#resignIndicator'));
+
+            // when checking "victory text"
+            const resignText: string = componentTestUtils.findElement('#resignIndicator').nativeElement.innerText;
+
+            // then we should see "opponent has resign"
+            expect(resignText).toBe(`firstCandidate has resigned.`);
+            expectGameToBeOver();
         }));
     });
     describe('getUpdateType', () => {

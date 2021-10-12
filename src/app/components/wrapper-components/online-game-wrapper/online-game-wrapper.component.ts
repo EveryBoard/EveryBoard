@@ -181,9 +181,9 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         const updateType: UpdateType = this.getUpdateType(part);
         const turn: number = update.doc.turn;
         if (updateType === UpdateType.REQUEST) {
-            display(OnlineGameWrapperComponent.VERBOSE || true, 'UpdateType: Request(' + part.doc.request.code + ') (' + turn + ')');
+            display(OnlineGameWrapperComponent.VERBOSE, 'UpdateType: Request(' + part.doc.request.code + ') (' + turn + ')');
         } else {
-            display(OnlineGameWrapperComponent.VERBOSE || true, 'UpdateType: ' + updateType.value + '(' + turn + ')');
+            display(OnlineGameWrapperComponent.VERBOSE, 'UpdateType: ' + updateType.value + '(' + turn + ')');
         }
         const oldPart: Part = this.currentPart;
         this.currentPart = part;
@@ -225,7 +225,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     public getUpdateType(update: Part): UpdateType {
         const currentPartDoc: IPart = this.currentPart ? this.currentPart.doc : null;
         const diff: ObjectDifference = ObjectDifference.from(currentPartDoc, update.doc);
-        display(OnlineGameWrapperComponent.VERBOSE || true, { diff });
+        display(OnlineGameWrapperComponent.VERBOSE, { diff });
         const nbDiffs: number = diff.countChanges();
         if (diff == null || nbDiffs === 0) {
             return UpdateType.DUPLICATE;
@@ -377,7 +377,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             const resultIsIncluded: boolean =
                 endGameResults.some((result: MGPResult) => result.value === currentPart.doc.result);
             assert(resultIsIncluded === true, 'Unknown type of end game (' + currentPart.doc.result + ')');
-            display(OnlineGameWrapperComponent.VERBOSE || true, 'endGame est true et winner est ' + currentPart.getWinner());
+            display(OnlineGameWrapperComponent.VERBOSE, 'endGame est true et winner est ' + currentPart.getWinner());
         }
         this.stopCountdownsFor(player);
     }
@@ -613,8 +613,9 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
     }
     public resign(): void {
+        const resigner: string = this.players[this.observerRole % 2];
         const victoriousOpponent: string = this.players[(this.observerRole + 1) % 2];
-        this.gameService.resign(this.currentPartId, victoriousOpponent, this.currentPlayer);
+        this.gameService.resign(this.currentPartId, victoriousOpponent, resigner);
     }
     public reachedOutOfTime(player: 0 | 1): void {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.reachedOutOfTime(' + player + ')');
@@ -715,7 +716,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
     }
     private stopCountdownsFor(player: Player) {
-        display(OnlineGameWrapperComponent.VERBOSE || true,
+        display(OnlineGameWrapperComponent.VERBOSE,
                 'cdc::stopCountDownsFor(' + player.toString() +
                 ') (turn ' + this.currentPart.doc.turn + ')');
 

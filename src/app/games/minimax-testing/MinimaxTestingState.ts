@@ -31,6 +31,12 @@ export class MinimaxTestingState extends GameStateWithTable<number> {
         [+m, -1, -1, -1],
         [-1, -1, -1, -1],
     ];
+    public static readonly BOARD_4: NumberTable = [
+        [+0, +1, +m, -1],
+        [+1, +m, -1, -1],
+        [+m, -1, -1, -1],
+        [-1, -1, -1, +1],
+    ];
     public static initialBoard: NumberTable = MinimaxTestingState.BOARD_0;
 
     public constructor(readonly turn: number, readonly location: Coord) {

@@ -147,22 +147,6 @@ export class JoinerService {
             chosenPlayer: player,
         });
     }
-    public setFirstPlayer(firstPlayer: IFirstPlayer): Promise<void> {
-        display(JoinerService.VERBOSE, `JoinerService.setFirstPlayer(${firstPlayer})`);
-        assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
-
-        return this.joinerDao.update(this.observedJoinerId, { firstPlayer });
-    }
-    public setPartType(partType: IPartType, maximalMoveDuration: number, totalPartDuration: number): Promise<void> {
-        display(JoinerService.VERBOSE, `JoinerService.setPartType(${partType}, ${maximalMoveDuration}, ${totalPartDuration})`);
-        assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
-
-        return this.joinerDao.update(this.observedJoinerId, {
-            partType,
-            maximalMoveDuration,
-            totalPartDuration,
-        });
-    }
     public async reviewConfig(): Promise<void> {
         display(JoinerService.VERBOSE, 'JoinerService.reviewConfig');
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
@@ -187,7 +171,7 @@ export class JoinerService {
 
         return this.joinerDao.update(this.observedJoinerId, { partStatus: PartStatus.PART_STARTED.value });
     }
-    public stopObserving(): void {
+    public stopObserving(): void { // TODOTODO: should we be unsubscribinb for joiner at some point ?!
         display(JoinerService.VERBOSE,
                 'JoinerService.stopObserving(); // this.observedJoinerId = ' + this.observedJoinerId);
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
