@@ -105,9 +105,6 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
         }
     }
     public choosePiece(x: number, y: number): MGPValidation {
-        if (this.rules.getGameStatus(this.rules.node).isEndGame) { // TODO: what the hell !!!! should be done upper!
-            return this.cancelMove('You should never see this message');
-        }
         const piece: KamisadoPiece = this.rules.node.gameState.getPieceAtXY(x, y);
         const opponent: Player = this.rules.node.gameState.getCurrentOpponent();
         if (piece.belongsTo(opponent)) {

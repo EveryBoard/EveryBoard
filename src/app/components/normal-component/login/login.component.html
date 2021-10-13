@@ -26,8 +26,8 @@
                 <label class="label" for="password" i18n>Password</label>
             </div>
             <div class="field-body">
-                <div class="field has-addons">
-                    <div class="control is-expanded">
+                <div class="field">
+                    <div class="control has-icons-right is-expanded">
                         <input #password
                                class="input"
                                type="password"
@@ -36,9 +36,9 @@
                                name="password"
                                id="password"
                                required />
-                    </div>
-                    <div class="control">
-                        <a class="button" (click)="togglePasswordVisibility()">Show</a>
+                        <span class="icon is-small is-right">
+                            <fa-icon [icon]="faEye" class="clickable-icon" toggleVisibility></fa-icon>
+                        </span>
                     </div>
                 </div>
             </div>

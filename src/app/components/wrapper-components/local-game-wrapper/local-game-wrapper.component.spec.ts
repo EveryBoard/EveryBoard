@@ -75,7 +75,7 @@ describe('LocalGameWrapperComponent', () => {
 
         componentTestUtils.getComponent().showScore = true;
         componentTestUtils.getComponent()['scores'] = [0, 0];
-        componentTestUtils.detectChanges();
+        componentTestUtils.forceChangeDetection();
 
         componentTestUtils.expectElementToExist('#scoreZero');
         componentTestUtils.expectElementToExist('#scoreOne');

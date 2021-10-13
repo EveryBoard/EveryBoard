@@ -62,9 +62,6 @@
                 <h4 *ngIf="winner" i18n>{{ winner }} won</h4>
                 <h4 id="draw" *ngIf="winner == null" i18n>Draw</h4>
             </div>
-            <div style="visibility: hidden;">
-                <mat-select></mat-select> <!-- removing this makes some async tests fail, wtf? (when removing, add the "block" class to the select div above) -->
-            </div>
         </div>
         <div class="tile is-child box is-vcentered" *ngIf="gameComponent">
             <ng-container *ngIf="gameComponent.rules.node.move">

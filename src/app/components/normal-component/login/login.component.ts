@@ -1,17 +1,17 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl } from '@angular/forms';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { faEye, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',
 })
 export class LoginComponent {
-    @ViewChild('password') passwordInput: ElementRef<HTMLElement>;
 
-    private passwordShown: boolean = false;
+    public faEye: IconDefinition = faEye;
 
     public errorMessage: string;
 
@@ -42,14 +42,4 @@ export class LoginComponent {
     private redirect(): Promise<boolean> {
         return this.router.navigate(['/server']);
     }
-    public togglePasswordVisibility(): void {
-        if (this.passwordShown) {
-            this.passwordShown = false;
-            this.passwordInput.nativeElement.setAttribute('type', 'password');
-        } else {
-            this.passwordShown = true;
-            this.passwordInput.nativeElement.setAttribute('type', 'text');
-        }
-    }
-
 }
