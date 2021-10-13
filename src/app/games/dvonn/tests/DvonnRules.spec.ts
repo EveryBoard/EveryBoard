@@ -84,7 +84,7 @@ describe('DvonnRules:', () => {
             expect(state.getPieceAt(coord).belongsTo(Player.ZERO));
         }
         const moves: DvonnMove[] = minimaxes[0].getListMoves(rules.node);
-        const state2: DvonnState = rules.applyLegalMove(moves[0], state, { legal: MGPValidation.SUCCESS });
+        const state2: DvonnState = rules.applyLegalMove(moves[0], state, LegalityStatus.SUCCESS);
         const movablePieces2: Coord[] = DvonnRules.getMovablePieces(state2);
         for (const coord of movablePieces2) {
             expect(state2.getPieceAt(coord).belongsTo(Player.ONE)).toBeTrue();

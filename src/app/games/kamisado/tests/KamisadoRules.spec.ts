@@ -425,8 +425,8 @@ describe('KamisadoRules:', () => {
         const move: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(3, 5));
         expect(rules.isLegal(move, state).legal.reason).toBe(KamisadoFailure.DIRECTION_NOT_ALLOWED());
     });
-    it('should not allow creating invalid color or pieces', () => {
+    it('should not allow creating invalid color', () => {
         expect(() => KamisadoColor.of(15)).toThrowError();
-        expect(() => KamisadoPiece.of(undefined)).toThrowError();
+        expect(KamisadoColor.of(0)).toBe(KamisadoColor.ANY);
     });
 });

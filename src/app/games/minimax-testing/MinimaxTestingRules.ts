@@ -4,7 +4,6 @@ import { MinimaxTestingState } from './MinimaxTestingState';
 import { MinimaxTestingMove } from './MinimaxTestingMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player } from 'src/app/jscaip/Player';
 
 export abstract class MinimaxTestingNode extends MGPNode<MinimaxTestingRules,
@@ -47,12 +46,12 @@ export class MinimaxTestingRules extends Rules<MinimaxTestingMove, MinimaxTestin
         const coord: Coord = state.location;
         const board: number[][] = state.getCopiedBoard();
         if (coord.x + 1 === board[0].length && move.right === true) {
-            return { legal: MGPValidation.failure('incorrect move') };
+            return LegalityStatus.failure('incorrect move');
         }
         if (coord.y + 1 === board.length && move.right === false) {
-            return { legal: MGPValidation.failure('incorrect move') };
+            return LegalityStatus.failure('incorrect move');
         }
-        return { legal: MGPValidation.SUCCESS };
+        return LegalityStatus.SUCCESS;
     }
     public getGameStatus(node: MinimaxTestingNode): GameStatus {
         return MinimaxTestingRules.getGameStatus(node);
