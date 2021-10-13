@@ -8,10 +8,9 @@ export class ToggleVisibilityDirective {
     private shown: boolean = false;
     private input: HTMLElement;
 
-    constructor(private el: ElementRef) {
-        console.log(this.el.nativeElement);
-        this.input = this.el.nativeElement.parentNode.previousSibling;
-        this.el.nativeElement.addEventListener('click', (_: Event) => {
+    constructor(element: ElementRef) {
+        this.input = element.nativeElement.parentNode.previousSibling;
+        element.nativeElement.addEventListener('click', (_: Event) => {
             this.toggle();
         });
     }

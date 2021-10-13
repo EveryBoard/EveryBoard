@@ -51,7 +51,8 @@
                         <span class="icon is-small is-right">
                             <fa-icon [icon]="faEye" class="clickable-icon" toggleVisibility></fa-icon>
                         </span>
-                        <p class="help" i18n>The password should be at least 6 characters long</p>
+                        <p class="help" [ngClass]="getPasswordHelpClass()"
+                        i18n>The password should be at least 6 characters long</p>
                     </div>
                 </div>
             </div>
@@ -63,7 +64,7 @@
                     <div class="control">
                         <button id="registerButton"
                                 class="button is-primary is-fullwidth"
-                                (click)="tryRegister(registrationForm.value)" i18n>Sign up</button>
+                                (click)="tryRegister()" i18n>Sign up</button>
                     </div>
                 </div>
             </div>

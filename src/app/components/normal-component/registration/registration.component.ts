@@ -15,9 +15,6 @@ export class RegistrationComponent {
 
     public faEye: IconDefinition = faEye;
 
-    constructor(public authService: AuthenticationService,
-                public router: Router) {}
-
     public errorMessage: string;
 
     public registrationForm: FormGroup = new FormGroup({
@@ -25,9 +22,15 @@ export class RegistrationComponent {
         username: new FormControl(),
         password: new FormControl(),
     });
-    public async tryRegister(value: {email: string, username: string, password: string}): Promise<boolean> {
+
+    constructor(public authService: AuthenticationService,
+                public router: Router) {}
+
+    public async tryRegister(): Promise<boolean> {
         const registrationResult: MGPFallible<firebase.User> =
-            await this.authService.doRegister(value.username, value.email, value.password);
+            await this.authService.doRegister(this.registrationForm.value.username,
+                                              this.registrationForm.value.email,
+                                              this.registrationForm.value.password);
         if (registrationResult.isSuccess()) {
             const emailResult: MGPValidation =
                 await this.authService.sendEmailVerification();
@@ -40,5 +43,16 @@ export class RegistrationComponent {
         } else {
             this.errorMessage = registrationResult.getReason();
         }
+    }
+
+    public getPasswordHelpClass(): string {
+        const password: string = this.registrationForm.value.password
+        if (password == null || password === '') {
+            return '';
+        }
+        if (password.length < 6) {
+            return 'is-danger';
+        }
+        return 'is-success';
     }
 }
