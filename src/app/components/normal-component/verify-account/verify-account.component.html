@@ -1,10 +1,12 @@
 <div class="box">
     <div class="message is-info">
         <div class="message-header" i18n>Account verification</div>
+        {{ verificationType }}
 
         <div class="message-body"
              id="verificationEmail"
-             *ngIf="verificationType === 'send-email'">
+             
+             >
             <ng-container i18n>In order to finalize your account, you must click on the link that you should have received on your email address ({{ emailAddress }}). If you have not received the email, click on the following button to send it again.</ng-container><br/>
             <button id="sendEmail"
                     [disabled]="success"
@@ -49,10 +51,10 @@
             </div>
         </ng-container>
     </div>
-    <div class="message is-danger">
+    <div class="message is-danger"
+         *ngIf="errorMessage" >
         <div class="message-body"
              id="errorMessage"
-             *ngIf="errorMessage"
          >{{ errorMessage }}</div>
     </div>
 </div>

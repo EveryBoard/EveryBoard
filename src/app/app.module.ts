@@ -80,6 +80,8 @@ import { LocaleUtils } from './utils/LocaleUtils';
 import { VerifiedAccountGuard } from './guard/verified-account.guard';
 import { VerifyAccountComponent } from './components/normal-component/verify-account/verify-account.component';
 import { ConnectedGuard } from './guard/connected.guard';
+import { AutofocusDirective } from './directives/autofocus.directive';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 
 registerLocaleData(localeFr);
@@ -148,6 +150,7 @@ const routes: Route [] = [
         YinshComponent,
 
         HumanDuration,
+        AutofocusDirective,
     ],
     entryComponents: [
         AbaloneComponent,
@@ -182,6 +185,7 @@ const routes: Route [] = [
         AngularFirestoreModule,
         BrowserAnimationsModule,
         MaterialModule,
+        FontAwesomeModule,
     ],
     providers: [
         { provide: USE_AUTH_EMULATOR, useValue: environment.emulatorConfig.auth },

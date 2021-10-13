@@ -10371,3 +10371,6 @@ html {
 .player1-bg {
   background-color: #ffc34d;
 }
+
+
+ .clickable-icon{ pointer-events: all; cursor:pointer }

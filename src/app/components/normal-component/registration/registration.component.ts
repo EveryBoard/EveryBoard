@@ -1,16 +1,23 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import firebase from 'firebase/app';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { faEye, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-registration',
     templateUrl: './registration.component.html',
 })
 export class RegistrationComponent {
+    public faEye: IconDefinition = faEye;
+
+    @ViewChild('password') passwordInput: ElementRef<HTMLElement>;
+
+    private passwordShown: boolean = false;
+
     constructor(public authService: AuthenticationService,
                 public router: Router) {}
 
@@ -35,6 +42,16 @@ export class RegistrationComponent {
             }
         } else {
             this.errorMessage = registrationResult.getReason();
+        }
+    }
+
+    public togglePasswordVisibility(): void {
+        if (this.passwordShown) {
+            this.passwordShown = false;
+            this.passwordInput.nativeElement.setAttribute('type', 'password');
+        } else {
+            this.passwordShown = true;
+            this.passwordInput.nativeElement.setAttribute('type', 'text');
         }
     }
 }

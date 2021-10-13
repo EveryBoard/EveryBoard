@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl } from '@angular/forms';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
@@ -9,6 +9,10 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
     templateUrl: './login.component.html',
 })
 export class LoginComponent {
+    @ViewChild('password') passwordInput: ElementRef<HTMLElement>;
+
+    private passwordShown: boolean = false;
+
     public errorMessage: string;
 
     public loginForm: FormGroup = new FormGroup({
@@ -38,4 +42,14 @@ export class LoginComponent {
     private redirect(): Promise<boolean> {
         return this.router.navigate(['/server']);
     }
+    public togglePasswordVisibility(): void {
+        if (this.passwordShown) {
+            this.passwordShown = false;
+            this.passwordInput.nativeElement.setAttribute('type', 'password');
+        } else {
+            this.passwordShown = true;
+            this.passwordInput.nativeElement.setAttribute('type', 'text');
+        }
+    }
+
 }

@@ -52,17 +52,25 @@ export class AuthenticationService implements OnDestroy {
         this.joueurRS = new ReplaySubject<AuthUser>(1);
         this.joueurObs = this.joueurRS.asObservable();
         this.authSub = this.afAuth.authState.subscribe(async(user: firebase.User) => {
-            if (user == null) { // user logged out
-                display(AuthenticationService.VERBOSE, '2.B: User is not connected, according to fireAuth');
-                this.currentUser = AuthenticationService.NOT_CONNECTED;
-                this.joueurRS.next(AuthenticationService.NOT_CONNECTED);
-            } else { // user logged in
-                this.updatePresence();
-                const username: string = await userDAO.getUsername(user.uid);
-                display(AuthenticationService.VERBOSE, { userLoggedInAccordingToFireAuth: user });
-                const verified: boolean = user.emailVerified;
-                this.currentUser = { username, verified, email: user.email };
-                this.joueurRS.next(this.currentUser);
+            try {
+                console.log({user})
+                if (user == null) { // user logged out
+                    display(AuthenticationService.VERBOSE, '2.B: User is not connected, according to fireAuth');
+                    this.currentUser = AuthenticationService.NOT_CONNECTED;
+                    this.joueurRS.next(AuthenticationService.NOT_CONNECTED);
+                } else { // user logged in
+                    console.log('updating presence')
+                    this.updatePresence();
+                    console.log('getting username')
+                    const username: string = await userDAO.getUsername(user.uid);
+                    console.log('done, username is: ' + username)
+                    display(AuthenticationService.VERBOSE, { userLoggedInAccordingToFireAuth: user });
+                    const verified: boolean = user.emailVerified;
+                    this.currentUser = { username, verified, email: user.email };
+                    this.joueurRS.next(this.currentUser);
+                }
+            } catch (e) {
+                console.log({error: e})
             }
         });
     }
@@ -98,6 +106,10 @@ export class AuthenticationService implements OnDestroy {
                 return $localize`You have entered an invalid username or password.`;
             case 'auth/invalid-credential':
                 return $localize`The credential is invalid or has expired, please try again.`;
+            case 'auth/weak-password':
+                return $localize`Your password is too weak, please use a stronger password.`;
+            case 'auth/argument-error':
+                return $localize`The form is incorrectly filled in, please check that you filled in all fields.`;
             default:
                 Utils.handleError('Unsupported firebase error: ' + error.code + ' (' + error.message + ')');
                 return error.message;
@@ -162,6 +174,7 @@ export class AuthenticationService implements OnDestroy {
         }
     }
     public async disconnect(): Promise<MGPValidation> {
+        try {
         const user: firebase.User = firebase.auth().currentUser;
         if (user) {
             const uid: string = user.uid;
@@ -175,8 +188,12 @@ export class AuthenticationService implements OnDestroy {
         } else {
             return MGPValidation.failure('Cannot disconnect a non-connected user');
         }
+        } catch (e) {
+            console.log({error2: e})
+        }
     }
     public updatePresence(): void {
+        try {
         const uid: string = firebase.auth().currentUser.uid;
         const userStatusDatabaseRef: firebase.database.Reference = firebase.database().ref('/status/' + uid);
         firebase.database().ref('.info/connected').on('value', function(snapshot: firebase.database.DataSnapshot) {
@@ -195,6 +212,9 @@ export class AuthenticationService implements OnDestroy {
                 userStatusDatabaseRef.set(isOnlineForDatabase);
             });
         });
+        } catch (e) {
+            console.log({error3: e})
+        }
     }
     public getCurrentUser(): AuthUser {
         return this.currentUser;
@@ -216,6 +236,7 @@ export class AuthenticationService implements OnDestroy {
             return MGPValidation.failure(this.mapFirebaseError(e));
         }
     }
+
     public ngOnDestroy(): void {
         if (this.authSub) this.authSub.unsubscribe();
     }
