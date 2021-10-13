@@ -2,8 +2,7 @@ import { fakeAsync } from '@angular/core/testing';
 
 import { JoinerService } from '../JoinerService';
 import { JoinerDAO } from 'src/app/dao/JoinerDAO';
-import { IJoinerId, IJoiner, PartStatus } from 'src/app/domain/ijoiner';
-import { of } from 'rxjs';
+import { IJoiner, PartStatus } from 'src/app/domain/ijoiner';
 import { JoinerDAOMock } from 'src/app/dao/tests/JoinerDAOMock.spec';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 
@@ -20,24 +19,6 @@ describe('JoinerService', () => {
     it('should create', fakeAsync(() => {
         expect(service).toBeTruthy();
     }));
-    describe('startObserving', () => {
-        it('should delegate callback to joinerDao', fakeAsync(() => {
-            const myCallback: (joiner: IJoinerId) => void = (joiner: IJoinerId) => {
-                expect(joiner.id).toBe('myJoinerId');
-            };
-            spyOn(dao, 'getObsById').and.returnValue(of({ id: 'myJoinerId', doc: null }));
-            service.startObserving('myJoinerId', myCallback);
-            expect(dao.getObsById).toHaveBeenCalled();
-        }));
-        it('should throw exception when called while observing ', fakeAsync(() => {
-            service.set('myJoinerId', JoinerMocks.INITIAL.doc);
-            service.startObserving('myJoinerId', () => {});
-
-            expect(() => {
-                service.startObserving('myJoinerId', () => {});
-            }).toThrowError('JoinerService.startObserving should not be called while already observing a joiner');
-        }));
-    });
     it('read should be delegated to JoinerDAO', fakeAsync(async() => {
         spyOn(dao, 'read');
         await service.readJoinerById('myJoinerId');
@@ -103,7 +84,7 @@ describe('JoinerService', () => {
         }));
         it('should delegate update to DAO', fakeAsync(async() => {
             dao.set('joinerId', JoinerMocks.INITIAL.doc);
-            service.startObserving('joinerId', (_iJoiner: IJoinerId) => {});
+            service.observe('joinerId');
             await service.joinGame('joinerId', 'someone totally new');
 
             spyOn(dao, 'update');
@@ -114,16 +95,15 @@ describe('JoinerService', () => {
         }));
         it('should start as new when chosenPlayer leaves', fakeAsync(async() => {
             dao.set('joinerId', JoinerMocks.WITH_CHOSEN_PLAYER.doc);
-            let currentIJoiner: IJoiner;
-            service.startObserving('joinerId', (newJoinerReceived: IJoinerId) => {
-                currentIJoiner = newJoinerReceived.doc;
-            });
+            service.observe('joinerId');
+
             await service.cancelJoining('firstCandidate');
-            expect(currentIJoiner).withContext('should be as new').toEqual(JoinerMocks.INITIAL.doc);
+            const currentJoiner: IJoiner = dao.getStaticDB().get('joinerId').getOrNull().subject.value.doc;
+            expect(currentJoiner).withContext('should be as new').toEqual(JoinerMocks.INITIAL.doc);
         }));
         it('should throw when called by someone who is nor candidate nor chosenPlayer', fakeAsync(async() => {
             dao.set('joinerId', JoinerMocks.INITIAL.doc);
-            service.startObserving('joinerId', (_iJoiner: IJoinerId) => {});
+            service.observe('joinerId');
             await service.joinGame('joinerId', 'whoever');
 
             expectAsync(service.cancelJoining('who is that')).toBeRejectedWith(new Error('someone that was nor candidate nor chosenPlayer just left the chat: who is that'));
@@ -132,7 +112,7 @@ describe('JoinerService', () => {
     describe('updateCandidates', () => {
         it('should delegate to DAO for current joiner', fakeAsync(async() => {
             dao.set('joinerId', JoinerMocks.INITIAL.doc);
-            service.startObserving('joinerId', () => {});
+            service.observe('joinerId');
 
             spyOn(dao, 'update');
 
@@ -146,7 +126,7 @@ describe('JoinerService', () => {
     describe('deleteJoiner', () => {
         it('should delegate deletion to DAO', fakeAsync(async() => {
             dao.set('joinerId', JoinerMocks.INITIAL.doc);
-            service.startObserving('joinerId', () => {});
+            service.observe('joinerId');
 
             spyOn(dao, 'delete');
 
@@ -158,7 +138,7 @@ describe('JoinerService', () => {
     describe('reviewConfig', () => {
         it('should change part status with DAO', fakeAsync(async() => {
             dao.set('joinerId', JoinerMocks.INITIAL.doc);
-            service.startObserving('joinerId', () => {});
+            service.observe('joinerId');
 
             spyOn(dao, 'update');
 
@@ -172,7 +152,7 @@ describe('JoinerService', () => {
     describe('reviewConfigRemoveChosenPlayerAndUpdateCandidates', () => {
         it('should change part status, chosen player and candidates with DAO', fakeAsync(async() => {
             dao.set('joinerId', JoinerMocks.INITIAL.doc);
-            service.startObserving('joinerId', () => {});
+            service.observe('joinerId');
 
             spyOn(dao, 'update');
 
@@ -188,7 +168,7 @@ describe('JoinerService', () => {
     describe('acceptConfig', () => {
         it('should change part status with DAO', fakeAsync(async() => {
             dao.set('joinerId', JoinerMocks.INITIAL.doc);
-            service.startObserving('joinerId', () => {});
+            service.observe('joinerId');
 
             spyOn(dao, 'update');
 

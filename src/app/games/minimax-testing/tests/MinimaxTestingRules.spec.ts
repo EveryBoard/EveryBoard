@@ -8,7 +8,7 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { expectToBeOngoing, expectToBeVictoryFor } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 
-describe('MinimaxTestingRules', () => { // TODOTODO: bump the butt up
+describe('MinimaxTestingRules', () => {
 
     let rules: MinimaxTestingRules;
     let minimax: MinimaxTestingMinimax;
