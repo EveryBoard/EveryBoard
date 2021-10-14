@@ -16,6 +16,7 @@ export class ToggleVisibilityDirective {
     }
 
     private toggle() {
+        console.log('toggle')
         this.shown = !this.shown;
         if (this.shown) {
             this.input.setAttribute('type', 'text');

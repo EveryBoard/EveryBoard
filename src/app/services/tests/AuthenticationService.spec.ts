@@ -213,7 +213,6 @@ describe('AuthenticationService', () => {
             expect(result).toEqual(MGPValidation.failure('Verified users should not ask email verification twice'));
         });
     });
-
     describe('email login', () => {
         it('should succeed when the password is correct', async() => {
             // given a registered user
