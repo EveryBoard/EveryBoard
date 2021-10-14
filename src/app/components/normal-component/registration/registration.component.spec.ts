@@ -86,4 +86,13 @@ describe('RegistrationComponent', () => {
         expect(expectedError).toBe(`c'est caca monsieur.`);
         expect(router.navigate).not.toHaveBeenCalled();
     }));
+    it('should dynamically validate password', fakeAsync(async() => {
+        // given some user
+        // when it fills in a password that is too short
+        testUtils.fillInput('#password', '123');
+        testUtils.detectChanges();
+
+        // then the help indicator is colored red
+        testUtils.expectElementToHaveClass('#passwordHelp', 'is-danger');
+    }));
 });

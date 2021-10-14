@@ -31,6 +31,8 @@ import { LocalGameWrapperComponent }
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { HumanDuration } from '../TimeUtils';
 import { Rules } from 'src/app/jscaip/Rules';
+import { AutofocusDirective } from 'src/app/directives/autofocus.directive';
+import { ToggleVisibilityDirective } from 'src/app/directives/toggle-visibility.directive';
 
 @Component({})
 export class BlankComponent {}
@@ -80,6 +82,8 @@ export class SimpleComponentTestUtils<T> {
             declarations: [
                 componentType,
                 HumanDuration,
+                AutofocusDirective,
+                ToggleVisibilityDirective,
             ],
             schemas: [
                 CUSTOM_ELEMENTS_SCHEMA,
@@ -118,6 +122,9 @@ export class SimpleComponentTestUtils<T> {
     }
     public findElement(elementName: string): DebugElement {
         return this.fixture.debugElement.query(By.css(elementName));
+    }
+    public findElementByDirective(directive: Type<unknown>): DebugElement {
+        return this.fixture.debugElement.query(By.directive(directive));
     }
     public destroy(): void {
         return this.fixture.destroy();
