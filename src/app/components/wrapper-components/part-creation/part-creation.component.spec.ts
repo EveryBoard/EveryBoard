@@ -445,12 +445,12 @@ describe('PartCreationComponent:', () => {
             const joinerDAOMock: JoinerDAO = TestBed.inject(JoinerDAO);
             spyOn(joinerDAOMock, 'read').and.returnValue(Promise.resolve(null));
             const joinerService: JoinerService = TestBed.inject(JoinerService);
-            spyOn(joinerService, 'startObserving');
+            spyOn(joinerService, 'observe');
 
             testUtils.detectChanges();
             await testUtils.whenStable();
 
-            expect(joinerService.startObserving).not.toHaveBeenCalled();
+            expect(joinerService.observe).not.toHaveBeenCalled();
         }));
         it('should not fail if joiner update is null, and should redirect to server', fakeAsync(async() => {
             // given a component with initial joiner present
@@ -488,7 +488,6 @@ describe('PartCreationComponent:', () => {
         tick(3000); // needs to be >2999
         expect(router.navigate).toHaveBeenCalledWith(['server']);
     }));
-
     it('should see candidate disappear and reappear if candidates disconnects and reconnects');
 
     describe('graceful handling of unexpected situations', () => {

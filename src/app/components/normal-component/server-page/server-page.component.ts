@@ -40,6 +40,7 @@ export class ServerPageComponent implements OnInit, OnDestroy {
     public ngOnDestroy(): void {
         display(ServerPageComponent.VERBOSE, 'serverPageComponent.ngOnDestroy');
         this.activesUsersSub.unsubscribe();
+        this.gameService.unSubFromActivesPartsObs();
         this.userService.unSubFromActivesUsersObs();
     }
     public pickGame(pickedGame: string): void {

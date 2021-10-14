@@ -11,7 +11,7 @@
     />
     <g *ngFor="let line of board; index as y">
         <g *ngFor="let content of line; index as x">
-            <circle id="click_{{x}}_{{y}}"
+            <circle id="click_{{ x }}_{{ y }}"
                     (click)="onClick(x, y)"
                     [attr.cx]="50 + 100*x"
                     [attr.cy]="50 + 120*y"
