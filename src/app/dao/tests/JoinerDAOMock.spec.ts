@@ -9,6 +9,7 @@ import { fakeAsync } from '@angular/core/testing';
 type JoinerOS = ObservableSubject<IJoinerId>
 
 export class JoinerDAOMock extends FirebaseFirestoreDAOMock<IJoiner> {
+
     public static VERBOSE: boolean = false;
 
     private static joinerDB: MGPMap<string, JoinerOS>;

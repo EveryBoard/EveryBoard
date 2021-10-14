@@ -12,9 +12,29 @@ export abstract class MinimaxTestingNode extends MGPNode<MinimaxTestingRules,
 
 export class MinimaxTestingRules extends Rules<MinimaxTestingMove, MinimaxTestingState> {
 
+    public static getGameStatus(node: MinimaxTestingNode): GameStatus {
+        const state: MinimaxTestingState = node.gameState;
+        const currentValue: number = state.getPieceAt(state.location);
+        if (currentValue === Player.ZERO.getVictoryValue()) {
+            return GameStatus.ZERO_WON;
+        }
+        if (currentValue === Player.ONE.getVictoryValue()) {
+            return GameStatus.ONE_WON;
+        }
+        if (state.location.equals(new Coord(3, 3))) {
+            if (currentValue === 0) {
+                return GameStatus.DRAW;
+            } else if (currentValue > 0) {
+                return GameStatus.ONE_WON;
+            } else {
+                return GameStatus.ZERO_WON;
+            }
+        }
+        return GameStatus.ONGOING;
+    }
     public applyLegalMove(move: MinimaxTestingMove,
                           state: MinimaxTestingState,
-                          status: LegalityStatus)
+                          _status: LegalityStatus)
     : MinimaxTestingState
     {
         const newX: number = state.location.x + (move.right === true ? 1 : 0);
@@ -34,23 +54,6 @@ export class MinimaxTestingRules extends Rules<MinimaxTestingMove, MinimaxTestin
         return LegalityStatus.SUCCESS;
     }
     public getGameStatus(node: MinimaxTestingNode): GameStatus {
-        const state: MinimaxTestingState = node.gameState;
-        const currentValue: number = state.getPieceAt(state.location);
-        if (currentValue === Player.ZERO.getVictoryValue()) {
-            return GameStatus.ZERO_WON;
-        }
-        if (currentValue === Player.ONE.getVictoryValue()) {
-            return GameStatus.ONE_WON;
-        }
-        if (state.location.equals(new Coord(3, 3))) {
-            if (currentValue === 0) {
-                return GameStatus.DRAW;
-            } else if (currentValue > 0) {
-                return GameStatus.ONE_WON;
-            } else {
-                return GameStatus.ZERO_WON;
-            }
-        }
-        return GameStatus.ONGOING;
+        return MinimaxTestingRules.getGameStatus(node);
     }
 }
