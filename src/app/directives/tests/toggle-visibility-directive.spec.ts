@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { fakeAsync, tick } from '@angular/core/testing';
+import { fakeAsync } from '@angular/core/testing';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 @Component({
@@ -23,10 +23,9 @@ describe('ToggleVisibilityDirective', () => {
         testUtils = await SimpleComponentTestUtils.create(ToggleVisibilityTestComponent);
     }));
 
-    it('should change the type to text when clicked, and back to password when clicked a second time', fakeAsync(async() => {
+    it('should change the type to text when clicked, and back to password when clicked a second time', () => {
         // given an element with the toggleVisibility directive
         expect(testUtils.findElement('#password').nativeElement.getAttribute('type')).toBe('password');
-        tick(3000);
         testUtils.detectChanges();
 
         // when the component is clicked a first time
@@ -42,5 +41,5 @@ describe('ToggleVisibilityDirective', () => {
 
         // then the input is again a password
         expect(testUtils.findElement('#password').nativeElement.getAttribute('type')).toBe('password');
-    }));
+    });
 });
