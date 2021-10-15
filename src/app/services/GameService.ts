@@ -53,7 +53,7 @@ export class GameService implements OnDestroy {
                 private authenticationService: AuthenticationService)
     {
         display(GameService.VERBOSE, 'GameService.constructor');
-        this.userNameSub = this.authenticationService.getJoueurObs()
+        this.userNameSub = this.authenticationService.getUserObs()
             .subscribe((joueur: AuthUser) => {
                 if (joueur == null) this.userName = null;
                 else this.userName = joueur.username;

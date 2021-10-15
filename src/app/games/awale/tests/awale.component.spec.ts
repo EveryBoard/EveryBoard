@@ -44,4 +44,14 @@ describe('AwaleComponent', () => {
                                                    AwaleFailure.MUST_CHOOSE_NONEMPTY_HOUSE(),
                                                    move, undefined, 0, 0);
     }));
+    it(`should tell to user opponent's house cannot be moved`, fakeAsync(async() => {
+        const board: number[][] = [
+            [0, 4, 4, 4, 4, 4],
+            [4, 4, 4, 4, 4, 4],
+        ];
+        const state: AwaleState = new AwaleState(board, 0, [0, 0]);
+        componentTestUtils.setupState(state);
+
+        await componentTestUtils.expectClickFailure('#click_0_1', AwaleFailure.CANNOT_DISTRIBUTE_FROM_OPPONENT_HOME());
+    }));
 });

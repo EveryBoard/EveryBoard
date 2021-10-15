@@ -39,7 +39,7 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
 
         assert(this.chatId != null && this.chatId !== '', 'No chat to join mentionned');
 
-        this.authenticationService.getJoueurObs()
+        this.authenticationService.getUserObs()
             .subscribe((user: AuthUser) => {
                 if (this.isConnectedUser(user)) {
                     display(ChatComponent.VERBOSE, JSON.stringify(user) + ' just connected');

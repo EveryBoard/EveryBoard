@@ -2,11 +2,16 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { MinimaxTestingMove } from './MinimaxTestingMove';
 import { MinimaxTestingState } from './MinimaxTestingState';
-import { MinimaxTestingNode } from './MinimaxTestingRules';
+import { MinimaxTestingNode, MinimaxTestingRules } from './MinimaxTestingRules';
+import { GameStatus } from 'src/app/jscaip/Rules';
 
 export class MinimaxTestingMinimax extends Minimax<MinimaxTestingMove, MinimaxTestingState> {
 
     public getBoardValue(node: MinimaxTestingNode): NodeUnheritance {
+        const gameStatus: GameStatus = MinimaxTestingRules.getGameStatus(node);
+        if (gameStatus.isEndGame) {
+            return new NodeUnheritance(gameStatus.toBoardValue());
+        }
         const state: MinimaxTestingState = node.gameState;
         return new NodeUnheritance(state.getPieceAt(state.location));
     }

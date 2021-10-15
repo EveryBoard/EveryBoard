@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 
@@ -14,7 +15,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
     selector: 'app-verify-account',
     templateUrl: './verify-account.component.html',
 })
-export class VerifyAccountComponent implements OnInit {
+export class VerifyAccountComponent implements OnInit, OnDestroy {
     public verificationType: 'send-email' | 'enter-username';
 
     public success: boolean = false;
@@ -23,6 +24,8 @@ export class VerifyAccountComponent implements OnInit {
 
     public emailAddress: string;
 
+    public userSub: Subscription;
+
     public usernameForm: FormGroup = new FormGroup({
         username: new FormControl(),
     });
@@ -30,19 +33,21 @@ export class VerifyAccountComponent implements OnInit {
     constructor(public authService: AuthenticationService,
                 public router: Router) {}
 
-    public ngOnInit(): void {
-        const currentUser: AuthUser = this.authService.getCurrentUser();
-        this.emailAddress = currentUser.email;
-        // We know that if this page is show, something needs to be done to finalize the account
-        console.log({currentUser});
-        if (currentUser.username == null) {
-            // If the user has no username, it will need to be defined
-            this.verificationType = 'enter-username';
-        } else {
-            // Otherwise, it means the user needs to verify its email
-            this.verificationType = 'send-email';
-        }
-        console.log(this.verificationType)
+    public async ngOnInit(): Promise<void> {
+        this.userSub = this.authService.getUserObs()
+            .subscribe((user: AuthUser) => {
+                this.emailAddress = user.email;
+                // We know that if this page is shown, something needs to be done to finalize the account
+                console.log({user});
+                if (user.username == null) {
+                    // If the user has no username, it will need to be defined
+                    this.verificationType = 'enter-username';
+                } else {
+                    // Otherwise, it means the user needs to verify its email
+                    this.verificationType = 'send-email';
+                }
+                console.log(this.verificationType)
+            });
     }
 
     public async pickUsername(formContent: { username: string }): Promise<void> {
@@ -59,6 +64,12 @@ export class VerifyAccountComponent implements OnInit {
             this.success = true;
         } else {
             this.errorMessage = result.getReason();
+        }
+    }
+
+    public ngOnDestroy(): void {
+        if (this.userSub && this.userSub.unsubscribe) {
+            this.userSub.unsubscribe();
         }
     }
 }

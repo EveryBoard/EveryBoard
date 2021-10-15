@@ -1,6 +1,6 @@
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Injectable, OnDestroy } from '@angular/core';
-import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
+import { AngularFirestore } from '@angular/fire/firestore';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
@@ -8,10 +8,34 @@ import 'firebase/database';
 import { Observable, Subscription, ReplaySubject } from 'rxjs';
 
 import { display, Utils } from 'src/app/utils/utils';
-import { IJoueur } from '../domain/iuser';
 import { MGPValidation } from '../utils/MGPValidation';
 import { MGPFallible } from '../utils/MGPFallible';
 import { JoueursDAO } from '../dao/JoueursDAO';
+
+export class RTDB {
+    public static OFFLINE: ConnectivityStatus = {
+        state: 'offline',
+        last_changed: firebase.database.ServerValue.TIMESTAMP,
+    };
+    public static ONLINE: ConnectivityStatus = {
+        state: 'online',
+        last_changed: firebase.database.ServerValue.TIMESTAMP,
+    }
+    public static setOffline(uid: string): Promise<void> {
+        return firebase.database().ref('/status/' + uid).set(RTDB.OFFLINE);
+    }
+    public static updatePresence(uid: string): void {
+        const userStatusDatabaseRef: firebase.database.Reference = firebase.database().ref('/status/' + uid);
+        firebase.database().ref('.info/connected').on('value', function(snapshot: firebase.database.DataSnapshot) {
+            if (snapshot.val() === false) {
+                return;
+            }
+            userStatusDatabaseRef.onDisconnect().set(RTDB.OFFLINE).then(function() {
+                userStatusDatabaseRef.set(RTDB.ONLINE);
+            });
+        });
+    }
+}
 
 interface ConnectivityStatus {
     state: string,
@@ -36,38 +60,33 @@ export class AuthenticationService implements OnDestroy {
         verified: false,
     };
 
-    private authSub: Subscription;
+    public authSub: Subscription; // public for testing purposes only
 
-    private joueurRS: ReplaySubject<AuthUser>;
+    private userRS: ReplaySubject<AuthUser>;
 
-    private joueurObs: Observable<AuthUser>;
-
-    private currentUser: AuthUser;
+    private userObs: Observable<AuthUser>;
 
     constructor(public afAuth: AngularFireAuth,
-                private afs: AngularFirestore,
                 private userDAO: JoueursDAO) {
         display(AuthenticationService.VERBOSE, '1 authService subscribe to Obs<User>');
 
-        this.joueurRS = new ReplaySubject<AuthUser>(1);
-        this.joueurObs = this.joueurRS.asObservable();
+        this.userRS = new ReplaySubject<AuthUser>(1);
+        this.userObs = this.userRS.asObservable();
         this.authSub = this.afAuth.authState.subscribe(async(user: firebase.User) => {
             try {
                 console.log({user})
                 if (user == null) { // user logged out
                     display(AuthenticationService.VERBOSE, '2.B: User is not connected, according to fireAuth');
-                    this.currentUser = AuthenticationService.NOT_CONNECTED;
-                    this.joueurRS.next(AuthenticationService.NOT_CONNECTED);
+                    this.userRS.next(AuthenticationService.NOT_CONNECTED);
                 } else { // user logged in
                     console.log('updating presence')
-                    this.updatePresence();
+                    RTDB.updatePresence(user.uid);
                     console.log('getting username')
                     const username: string = await userDAO.getUsername(user.uid);
                     console.log('done, username is: ' + username)
                     display(AuthenticationService.VERBOSE, { userLoggedInAccordingToFireAuth: user });
                     const verified: boolean = user.emailVerified;
-                    this.currentUser = { username, verified, email: user.email };
-                    this.joueurRS.next(this.currentUser);
+                    this.userRS.next({ username, verified, email: user.email });
                 }
             } catch (e) {
                 console.log({error: e})
@@ -80,17 +99,26 @@ export class AuthenticationService implements OnDestroy {
      */
     public async doRegister(username: string, email: string, password: string): Promise<MGPFallible<firebase.User>> {
         display(AuthenticationService.VERBOSE, 'AuthenticationService.doRegister(' + email + ')');
+        if (username == null || email == null || password == null) {
+            return MGPFallible.failure($localize`There are missing fields in the registration form, please check that you filled in all fields.`);
+        }
         try {
+            console.log('checking if username is available')
             if (await this.userDAO.usernameIsAvailable(username)) {
+                console.log('it is, creating the user')
                 const userCredential: firebase.auth.UserCredential =
                     await firebase.auth().createUserWithEmailAndPassword(email, password);
+                console.log({userCredential})
                 const user: firebase.User = userCredential.user;
-                await this.updateUserData({ ...user, displayName: username });
+                console.log('updating user data with username: ' + username)
+                await this.createUser(user.uid, username);
+                console.log('done')
                 return MGPFallible.success(userCredential.user);
             } else {
                 return MGPFallible.failure($localize`This username is already in use.`);
             }
         } catch (e) {
+            console.log('error in doRegister')
             return MGPFallible.failure(this.mapFirebaseError(e));
         }
     }
@@ -108,8 +136,6 @@ export class AuthenticationService implements OnDestroy {
                 return $localize`The credential is invalid or has expired, please try again.`;
             case 'auth/weak-password':
                 return $localize`Your password is too weak, please use a stronger password.`;
-            case 'auth/argument-error':
-                return $localize`The form is incorrectly filled in, please check that you filled in all fields.`;
             default:
                 Utils.handleError('Unsupported firebase error: ' + error.code + ' (' + error.message + ')');
                 return error.message;
@@ -137,27 +163,18 @@ export class AuthenticationService implements OnDestroy {
         display(AuthenticationService.VERBOSE, 'AuthenticationService.doEmailLogin(' + email + ')');
         try {
             // Login through firebase. If the login is incorrect or fails for some reason, an error is thrown.
-            const userCredential: firebase.auth.UserCredential =
-                await firebase.auth().signInWithEmailAndPassword(email, password);
-            await this.updateUserData(userCredential.user);
+            await firebase.auth().signInWithEmailAndPassword(email, password);
             return MGPValidation.SUCCESS;
         } catch (e) {
             return MGPValidation.failure(this.mapFirebaseError(e));
         }
     }
-    public updateUserData({ uid, email, displayName, emailVerified }: firebase.User): Promise<void> {
-        display(AuthenticationService.VERBOSE, 'AuthenticationService.updateUserData(' + email + ')');
-        // Sets user data to firestore on login
-        const userRef: AngularFirestoreDocument<Partial<IJoueur>> = this.afs.doc(`joueurs/${uid}`);
-
-        const data: Partial<IJoueur> = {
-            email,
-            displayName,
-            pseudo: displayName || email,
-            emailVerified,
-        };
-
-        return userRef.set(data, { merge: true });
+    /**
+     * Create the user doc in firestore
+     */
+    public async createUser(uid: string, username: string): Promise<void> {
+        console.log('creating user')
+        await this.userDAO.set(uid, { username: username });
     }
     public async doGoogleLogin(): Promise<MGPValidation> {
         try {
@@ -167,64 +184,32 @@ export class AuthenticationService implements OnDestroy {
             provider.addScope('email');
             const userCredential: firebase.auth.UserCredential =
                 await this.afAuth.signInWithPopup(provider);
-            await this.updateUserData(userCredential.user);
+            await this.createUser(userCredential.user.uid, '');
             return MGPValidation.SUCCESS;
         } catch (e) {
             return MGPValidation.failure(this.mapFirebaseError(e));
         }
     }
     public async disconnect(): Promise<MGPValidation> {
-        try {
         const user: firebase.User = firebase.auth().currentUser;
         if (user) {
             const uid: string = user.uid;
-            const isOfflineForDatabase: ConnectivityStatus = {
-                state: 'offline',
-                last_changed: firebase.database.ServerValue.TIMESTAMP,
-            };
-            await firebase.database().ref('/status/' + uid).set(isOfflineForDatabase);
+            RTDB.setOffline(uid);
             await this.afAuth.signOut();
             return MGPValidation.SUCCESS;
         } else {
             return MGPValidation.failure('Cannot disconnect a non-connected user');
         }
-        } catch (e) {
-            console.log({error2: e})
-        }
     }
-    public updatePresence(): void {
-        try {
-        const uid: string = firebase.auth().currentUser.uid;
-        const userStatusDatabaseRef: firebase.database.Reference = firebase.database().ref('/status/' + uid);
-        firebase.database().ref('.info/connected').on('value', function(snapshot: firebase.database.DataSnapshot) {
-            if (snapshot.val() === false) {
-                return;
-            }
-            const isOfflineForDatabase: ConnectivityStatus = {
-                state: 'offline',
-                last_changed: firebase.database.ServerValue.TIMESTAMP,
-            };
-            const isOnlineForDatabase: ConnectivityStatus = {
-                state: 'online',
-                last_changed: firebase.database.ServerValue.TIMESTAMP,
-            };
-            userStatusDatabaseRef.onDisconnect().set(isOfflineForDatabase).then(function() {
-                userStatusDatabaseRef.set(isOnlineForDatabase);
-            });
-        });
-        } catch (e) {
-            console.log({error3: e})
-        }
-    }
-    public getCurrentUser(): AuthUser {
-        return this.currentUser;
-    }
-    public getJoueurObs(): Observable<AuthUser> {
-        return this.joueurObs;
+    public getUserObs(): Observable<AuthUser> {
+        return this.userObs;
     }
     public async setUsername(username: string): Promise<MGPValidation> {
         try {
-            await firebase.auth().currentUser.updateProfile({ displayName: username });
+            const currentUser: firebase.User = firebase.auth().currentUser;
+            await currentUser.updateProfile({ displayName: username });
+            await this.userDAO.setUsername(currentUser.uid, username);
+            return MGPValidation.SUCCESS;
         } catch (e) {
             return MGPValidation.failure(this.mapFirebaseError(e));
         }
@@ -232,13 +217,14 @@ export class AuthenticationService implements OnDestroy {
     public async setPicture(url: string): Promise<MGPValidation> {
         try {
             await firebase.auth().currentUser.updateProfile({ photoURL: url });
+            return MGPValidation.SUCCESS;
         } catch (e) {
             return MGPValidation.failure(this.mapFirebaseError(e));
         }
     }
 
     public ngOnDestroy(): void {
-        if (this.authSub) this.authSub.unsubscribe();
+        this.authSub.unsubscribe();
     }
 
 }

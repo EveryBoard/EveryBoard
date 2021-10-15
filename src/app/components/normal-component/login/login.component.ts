@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl } from '@angular/forms';
-import { AuthenticationService } from 'src/app/services/AuthenticationService';
+import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { faEye, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
@@ -9,7 +9,7 @@ import { faEye, IconDefinition } from '@fortawesome/free-solid-svg-icons';
     selector: 'app-login',
     templateUrl: './login.component.html',
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
 
     public faEye: IconDefinition = faEye;
 
@@ -23,23 +23,29 @@ export class LoginComponent {
     constructor(public router: Router,
                 public authenticationService: AuthenticationService) {
     }
+
+    public ngOnInit(): void {
+        this.authenticationService.getUserObs()
+            .subscribe((user: AuthUser) => {
+                if (user != null) {
+                    this.redirect();
+                }
+            });
+    }
     public async loginWithEmail(value: {email: string, password: string}): Promise<void> {
         const result: MGPValidation = await this.authenticationService.doEmailLogin(value.email, value.password);
-        if (result.isSuccess()) {
-            await this.redirect();
-        } else {
+        if (result.isFailure()) {
             this.errorMessage = result.getReason();
         }
     }
     public async loginWithGoogle(): Promise<void> {
         const result: MGPValidation = await this.authenticationService.doGoogleLogin();
-        if (result.isSuccess()) {
-            await this.redirect();
-        } else {
+        if (result.isFailure()) {
             this.errorMessage = result.getReason();
         }
     }
     private redirect(): Promise<boolean> {
+        // TODO FOR REVIEW: is it better to redirect to / or to /server?
         return this.router.navigate(['/server']);
     }
 }

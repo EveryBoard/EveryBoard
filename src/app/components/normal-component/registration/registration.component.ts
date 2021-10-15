@@ -27,15 +27,18 @@ export class RegistrationComponent {
                 public router: Router) {}
 
     public async tryRegister(): Promise<boolean> {
+        const username: string | null = this.registrationForm.value.username;
+        const email: string | null = this.registrationForm.value.email;
+        const password: string | null = this.registrationForm.value.password;
         const registrationResult: MGPFallible<firebase.User> =
-            await this.authService.doRegister(this.registrationForm.value.username,
-                                              this.registrationForm.value.email,
-                                              this.registrationForm.value.password);
+            await this.authService.doRegister(username, email, password);
         if (registrationResult.isSuccess()) {
+            console.log('sending email')
             const emailResult: MGPValidation =
                 await this.authService.sendEmailVerification();
             console.log(emailResult)
             if (emailResult.isSuccess()) {
+                console.log('navigating')
                 return this.router.navigate(['/verify-account']);
             } else {
                 this.errorMessage = emailResult.getReason();

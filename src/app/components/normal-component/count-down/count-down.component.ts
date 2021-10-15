@@ -59,7 +59,7 @@ export class CountDownComponent implements OnInit, OnDestroy {
         this.remainingMs = ms;
         this.displayedSec = ms % (60 * 1000);
         this.displayedMinute = (ms - this.displayedSec) / (60 * 1000);
-        this.displayedSec = Math.round(this.displayedSec / 1000);
+        this.displayedSec = Math.floor(this.displayedSec / 1000);
     }
     public start(): void {
         // duration is in ms
@@ -101,6 +101,9 @@ export class CountDownComponent implements OnInit, OnDestroy {
         this.timeoutHandleSec = window.setTimeout(() => {
             this.updateShownTime();
         }, 1000);
+    }
+    public isIdle(): boolean {
+        return this.isPaused || (this.started === false);
     }
     public pause(): void {
         display(CountDownComponent.VERBOSE, this.debugName + '.pause(' + this.remainingMs + 'ms)');

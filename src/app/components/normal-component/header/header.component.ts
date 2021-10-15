@@ -23,7 +23,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
     public ngOnInit(): void {
         this.currentLanguage = LocaleUtils.getLocale().toUpperCase();
-        this.joueurSub = this.authenticationService.getJoueurObs()
+        this.joueurSub = this.authenticationService.getUserObs()
             .subscribe((user: AuthUser) => {
                 this.userName = user.username;
             });

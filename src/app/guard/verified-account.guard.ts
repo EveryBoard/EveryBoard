@@ -13,7 +13,7 @@ export class VerifiedAccountGuard implements CanActivate {
     }
     public canActivate(): Promise<boolean | UrlTree > {
         return new Promise((resolve: (value: boolean) => void) => {
-            this.authService.getJoueurObs().subscribe((user: AuthUser): void => {
+            this.authService.getUserObs().subscribe((user: AuthUser): void => {
                 this.evaluateUserPermission(user).then(resolve);
             });
         });

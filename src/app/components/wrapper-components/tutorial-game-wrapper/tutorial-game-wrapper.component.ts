@@ -214,6 +214,6 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
         this.gameService.createGameAndRedirectOrShowError(game);
     }
     public getPlayerName(): string {
-        return ''; // Not important for tutorial?
+        return ''; // Not important for tutorial
     }
 }

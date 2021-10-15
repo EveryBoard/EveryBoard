@@ -3,6 +3,10 @@ import { MinimaxTestingState } from '../MinimaxTestingState';
 import { MinimaxTestingMove } from '../MinimaxTestingMove';
 import { MinimaxTestingMinimax } from '../MinimaxTestingMinimax';
 import { Player } from 'src/app/jscaip/Player';
+import { Coord } from 'src/app/jscaip/Coord';
+import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
+import { expectToBeOngoing, expectToBeVictoryFor } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { MGPNode } from 'src/app/jscaip/MGPNode';
 
 describe('MinimaxTestingRules', () => {
 
@@ -89,6 +93,64 @@ describe('MinimaxTestingRules', () => {
             expect(bestMove).toEqual(minimax.getListMoves(rules.node)[0]);
             expect(rules.node.countDescendants()).toEqual(3);
             expect(minimax.getListMoves).toHaveBeenCalledTimes(3);
+        });
+    });
+    it('should refuse to go right when on the extreme right', () => {
+        // Given a board where you are on the right
+        const state: MinimaxTestingState = new MinimaxTestingState(3, new Coord(3, 0));
+
+        // when attempting to go right
+        const move: MinimaxTestingMove = MinimaxTestingMove.RIGHT;
+        const status: LegalityStatus = rules.isLegal(move, state);
+
+        // should refuse
+        expect(status.legal.reason).toBe('incorrect move');
+    });
+    it('should refuse to go down when on the bottom', () => {
+        // Given a board where you are on the right
+        const state: MinimaxTestingState = new MinimaxTestingState(3, new Coord(0, 3));
+
+        // when attempting to go right
+        const move: MinimaxTestingMove = MinimaxTestingMove.DOWN;
+        const status: LegalityStatus = rules.isLegal(move, state);
+
+        // should refuse
+        expect(status.legal.reason).toBe('incorrect move');
+    });
+    describe('GameStatus', () => {
+        it('should recognize victory when on the player victory value (Player.ONE)', () => {
+            MinimaxTestingState.initialBoard = MinimaxTestingState.BOARD_1;
+            const state: MinimaxTestingState = new MinimaxTestingState(1, new Coord(1, 0));
+
+            const node: MinimaxTestingNode = new MGPNode(null, null, state);
+            expectToBeVictoryFor(rules, node, Player.ONE, [minimax]);
+        });
+        it('should recognize victory when on the player victory value (Player.ZERO)', () => {
+            MinimaxTestingState.initialBoard = MinimaxTestingState.BOARD_1;
+            const state: MinimaxTestingState = new MinimaxTestingState(2, new Coord(0, 2));
+
+            const node: MinimaxTestingNode = new MGPNode(null, null, state);
+            expectToBeVictoryFor(rules, node, Player.ZERO, [minimax]);
+        });
+        it('should recognize ongoing part', () => {
+            const state: MinimaxTestingState = new MinimaxTestingState(2, new Coord(0, 0));
+
+            const node: MinimaxTestingNode = new MGPNode(null, null, state);
+            expectToBeOngoing(rules, node, [minimax]);
+        });
+        it('should recognize victory when part is over and score is positive (Player.ZERO)', () => {
+            MinimaxTestingState.initialBoard = MinimaxTestingState.BOARD_1;
+            const state: MinimaxTestingState = new MinimaxTestingState(6, new Coord(3, 3));
+
+            const node: MinimaxTestingNode = new MGPNode(null, null, state);
+            expectToBeVictoryFor(rules, node, Player.ZERO, [minimax]);
+        });
+        it('should recognize victory when part is over and score is positive (Player.ONE)', () => {
+            MinimaxTestingState.initialBoard = MinimaxTestingState.BOARD_4;
+            const state: MinimaxTestingState = new MinimaxTestingState(6, new Coord(3, 3));
+
+            const node: MinimaxTestingNode = new MGPNode(null, null, state);
+            expectToBeVictoryFor(rules, node, Player.ONE, [minimax]);
         });
     });
 });

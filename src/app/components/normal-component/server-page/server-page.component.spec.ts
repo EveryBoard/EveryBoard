@@ -11,12 +11,14 @@ import { PartMocks } from 'src/app/domain/PartMocks.spec';
 describe('ServerPageComponent', () => {
 
     let testUtils: SimpleComponentTestUtils<ServerPageComponent>;
+    let gameService: GameService;
     let component: ServerPageComponent;
 
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(ServerPageComponent);
         AuthenticationServiceMock.setUser(AuthenticationService.NOT_CONNECTED);
         component = testUtils.getComponent();
+        gameService = TestBed.inject(GameService);
     }));
     it('should create', fakeAsync(async() => {
         expect(component).toBeDefined();
@@ -62,5 +64,16 @@ describe('ServerPageComponent', () => {
         // then router should have navigate
         expect(compo.getActiveParts).toHaveBeenCalled();
         expect(compo.router.navigate).toHaveBeenCalledOnceWith(['/play/Quarto', 'some-part-id']);
+    }));
+    it('should stop watching current part observable when destroying component', fakeAsync(async() => {
+        // given a server page
+        spyOn(gameService, 'unSubFromActivesPartsObs').and.callThrough();
+        testUtils.detectChanges();
+
+        // when destroying the component
+        component.ngOnDestroy();
+
+        // then router should have navigate
+        expect(gameService.unSubFromActivesPartsObs).toHaveBeenCalledOnceWith();
     }));
 });
