@@ -39,10 +39,6 @@ export class QuartoPiece implements ComparableObject {
         QuartoPiece.BBBA,
         QuartoPiece.BBBB,
     ];
-
-    public static toInt(piece: QuartoPiece): number {
-        return piece.value;
-    }
     public static fromInt(piece: number): QuartoPiece {
         if (0 <= piece && piece <= 15) {
             return QuartoPiece.pieces[piece];
@@ -59,5 +55,8 @@ export class QuartoPiece implements ComparableObject {
     }
     public toString(): string {
         return 'QuartoPiece(' + this.value + ')';
+    }
+    public isRectangle(): boolean {
+        return this.value % 4 < 2;
     }
 }

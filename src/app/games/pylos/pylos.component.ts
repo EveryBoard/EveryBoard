@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
+import { GameComponent } from '../../components/game-components/game-component/GameComponent';
 import { PylosMove } from 'src/app/games/pylos/PylosMove';
 import { PylosState } from 'src/app/games/pylos/PylosState';
 import { PylosRules } from 'src/app/games/pylos/PylosRules';
@@ -7,20 +7,18 @@ import { PylosMinimax } from 'src/app/games/pylos/PylosMinimax';
 import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { PylosOrderedMinimax } from './PylosOrderedMinimax';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PylosFailure } from './PylosFailure';
-import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { pylosTutorial } from './PylosTutorial';
+import { PylosTutorial } from './PylosTutorial';
 
 @Component({
     selector: 'app-pylos',
     templateUrl: './pylos.component.html',
-    styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.css'],
 })
-export class PylosComponent extends AbstractGameComponent<PylosMove, PylosState> {
+export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosState> {
 
     public static VERBOSE: boolean = false;
 
@@ -40,18 +38,17 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosState>
 
     private remainingPieces: { [owner: number]: number } = { 0: 15, 1: 15 };
 
-    public encoder: MoveEncoder<PylosMove> = PylosMove.encoder;
-
-    public tutorial: TutorialStep[] = pylosTutorial;
-
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.rules = new PylosRules(PylosState);
-        this.state = this.rules.node.gamePartSlice;
         this.availableMinimaxes = [
             new PylosMinimax(this.rules, 'PylosMinimax'),
             new PylosOrderedMinimax(this.rules, 'PylosOrderedMinimax'),
         ];
+        this.encoder = PylosMove.encoder;
+        this.tutorial = new PylosTutorial().tutorial;
+        this.CASE_SIZE = this.getPieceRadius(0);
+        this.updateBoard();
     }
     public getLevelRange(z: number): number[] {
         switch (z) {
@@ -62,7 +59,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosState>
     }
     public isDrawable(x: number, y: number, z: number): boolean {
         const coord: PylosCoord = new PylosCoord(x, y, z);
-        if (this.state.getBoardAt(coord) === Player.NONE.value) {
+        if (this.state.getPieceAt(coord) === Player.NONE) {
             return this.state.isLandable(coord);
         } else {
             return true;
@@ -74,10 +71,10 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosState>
             return this.cancelMove(clickValidity.getReason());
         }
         const clickedCoord: PylosCoord = new PylosCoord(x, y, z);
-        const clickedPiece: number = this.state.getBoardAt(clickedCoord);
-        const pieceBelongToEnnemy: boolean = clickedPiece === this.state.getCurrentEnnemy().value;
-        if (pieceBelongToEnnemy) {
-            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
+        const clickedPiece: Player = this.state.getPieceAt(clickedCoord);
+        const pieceBelongToOpponent: boolean = clickedPiece === this.state.getCurrentOpponent();
+        if (pieceBelongToOpponent) {
+            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         }
         if (this.chosenLandingCoord == null) {
             // Starting do describe a climbing move
@@ -103,9 +100,9 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosState>
         }
         return this.tryMove(move, this.state);
     }
-    private async tryMove(move: PylosMove, slice: PylosState): Promise<MGPValidation> {
+    private async tryMove(move: PylosMove, state: PylosState): Promise<MGPValidation> {
         this.cancelMove();
-        return this.chooseMove(move, slice, null, null);
+        return this.chooseMove(move, state, null, null);
     }
     public cancelMoveAttempt(): void {
         this.chosenStartingCoord = null;
@@ -126,7 +123,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosState>
                 this.chosenLandingCoord = clickedCoord;
                 return this.concludeMoveWithCapture([]);
             } else {
-                return this.cancelMove(PylosFailure.MUST_MOVE_UPWARD);
+                return this.cancelMove(PylosFailure.MUST_MOVE_UPWARD());
             }
         }
     }
@@ -150,7 +147,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosState>
         }
         return [];
     }
-    public getPieceRay(z: number): number {
+    public getPieceRadius(z: number): number {
         return 90 + (z * 5);
     }
     public getPieceCx(x: number, y: number, z: number): number {
@@ -161,7 +158,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosState>
     }
     public isOccupied(x: number, y: number, z: number): boolean {
         const coord: PylosCoord = new PylosCoord(x, y, z);
-        const reallyOccupied: boolean = this.rules.node.gamePartSlice.getBoardAt(coord) !== Player.NONE.value;
+        const reallyOccupied: boolean = this.rules.node.gameState.getPieceAt(coord) !== Player.NONE;
         const landingCoord: boolean = coord.equals(this.chosenLandingCoord);
         return reallyOccupied || landingCoord;
     }
@@ -183,13 +180,10 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosState>
         if (c.equals(this.chosenLandingCoord)) {
             return this.getPlayerClass(this.state.getCurrentPlayer());
         }
-        return this.getPlayerPieceClass(this.state.getBoardAt(c));
+        return this.getPlayerPieceClass(this.state.getPieceAt(c).value);
     }
     public getPlayerPieceClass(player: number): string {
         return this.getPlayerClass(Player.of(player));
-    }
-    public getPieceSize(): number {
-        return this.getPieceRay(0);
     }
     public getPlayerSidePieces(player: number): number[] {
         const nPieces: number = this.remainingPieces[player];
@@ -200,7 +194,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosState>
         return pieces;
     }
     public updateBoard(): void {
-        this.state = this.rules.node.gamePartSlice;
+        this.state = this.rules.node.gameState;
         this.lastMove = this.rules.node.move;
         const repartition: { [owner: number]: number } = this.state.getPiecesRepartition();
         this.remainingPieces = { 0: 15 - repartition[0], 1: 15 - repartition[1] };

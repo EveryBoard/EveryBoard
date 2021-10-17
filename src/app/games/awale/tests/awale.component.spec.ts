@@ -1,11 +1,12 @@
 import { AwaleComponent } from '../awale.component';
 import { AwaleMove } from 'src/app/games/awale/AwaleMove';
-import { AwalePartSlice } from 'src/app/games/awale/AwalePartSlice';
+import { AwaleState } from 'src/app/games/awale/AwaleState';
 import { fakeAsync } from '@angular/core/testing';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { AwaleFailure } from '../AwaleFailure';
 
 describe('AwaleComponent', () => {
+
     let componentTestUtils: ComponentTestUtils<AwaleComponent>;
 
     beforeEach(fakeAsync(async() => {
@@ -20,8 +21,8 @@ describe('AwaleComponent', () => {
             [4, 4, 4, 4, 4, 2],
             [4, 4, 4, 4, 1, 4],
         ];
-        const slice: AwalePartSlice = new AwalePartSlice(board, 0, [0, 0]);
-        componentTestUtils.setupSlice(slice);
+        const state: AwaleState = new AwaleState(board, 0, [0, 0]);
+        componentTestUtils.setupState(state);
 
         const move: AwaleMove = AwaleMove.FIVE;
         componentTestUtils.expectMoveSuccess('#click_5_0', move, undefined, 0, 0);
@@ -35,12 +36,22 @@ describe('AwaleComponent', () => {
             [0, 4, 4, 4, 4, 4],
             [4, 4, 4, 4, 4, 4],
         ];
-        const slice: AwalePartSlice = new AwalePartSlice(board, 0, [0, 0]);
-        componentTestUtils.setupSlice(slice);
+        const state: AwaleState = new AwaleState(board, 0, [0, 0]);
+        componentTestUtils.setupState(state);
 
         const move: AwaleMove = AwaleMove.ZERO;
         await componentTestUtils.expectMoveFailure('#click_0_0',
-                                                   AwaleFailure.MUST_CHOOSE_NONEMPTY_HOUSE,
+                                                   AwaleFailure.MUST_CHOOSE_NONEMPTY_HOUSE(),
                                                    move, undefined, 0, 0);
+    }));
+    it(`should tell to user opponent's house cannot be moved`, fakeAsync(async() => {
+        const board: number[][] = [
+            [0, 4, 4, 4, 4, 4],
+            [4, 4, 4, 4, 4, 4],
+        ];
+        const state: AwaleState = new AwaleState(board, 0, [0, 0]);
+        componentTestUtils.setupState(state);
+
+        await componentTestUtils.expectClickFailure('#click_0_1', AwaleFailure.CANNOT_DISTRIBUTE_FROM_OPPONENT_HOME());
     }));
 });

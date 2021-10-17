@@ -1,6 +1,7 @@
 import { Dictionary, ObjectDifference } from '../ObjectUtils';
 
 describe('getUpdateType', () => {
+
     it('Should name modified object', () => {
         const before: Dictionary = {
             same: 5,

@@ -15,8 +15,7 @@ function bootstrapApp(): void {
         .catch((err: unknown) => console.error(err));
 }
 
-// Set to false && until we can enable runtime translations
-const runtimeTranslations: boolean = false;
+const runtimeTranslations: boolean = true;
 
 const locale: string = LocaleUtils.getLocale();
 if (runtimeTranslations && locale !== 'en') {

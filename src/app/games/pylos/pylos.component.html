@@ -5,9 +5,9 @@
     <g *ngFor="let player of [0, 1]">
         <g *ngFor="let p of getPlayerSidePieces(player)">
             <circle id="piece_{{ player }}_{{ p }}"
-                    [attr.cx]="(getPieceSize() * 0.5) + (((800 - getPieceSize()) / 14) * p)"
-                    [attr.cy]="850 + 10 + ((getPieceSize() + 10) * player)"
-                    [attr.r]="getPieceSize() * 0.5"
+                    [attr.cx]="(CASE_SIZE * 0.5) + (((800 - CASE_SIZE) / 14) * p)"
+                    [attr.cy]="850 + 10 + ((CASE_SIZE + 10) * player)"
+                    [attr.r]="CASE_SIZE * 0.5"
                     [ngClass]="getPlayerPieceClass(player)"
                     class="base small-stroke"
             />
@@ -25,7 +25,7 @@
                     <circle *ngIf="isOccupied(x, y, z) else onlyRect"
                             id="piece_{{ x }}_{{ y }}_{{ z }}"
                             (click)="onPieceClick(x, y, z)"
-                            [attr.r]="getPieceRay(z) - STROKE_WIDTH"
+                            [attr.r]="getPieceRadius(z) - STROKE_WIDTH"
                             [attr.cx]="getPieceCx(x, y, z)"
                             [attr.cy]="getPieceCy(x, y, z)"
                             [ngClass]="getPieceClasses(x, y, z)"
@@ -34,10 +34,10 @@
                     <ng-template #onlyRect>
                         <rect id="drop_{{ x }}_{{ y }}_{{ z }}"
                               (click)="onDrop(x, y, z)"
-                              [attr.width]="getPieceRay(z) * 2"
-                              [attr.height]="getPieceRay(z) * 2"
-                              [attr.x]="getPieceCx(x, y, z) - getPieceRay(z)"
-                              [attr.y]="getPieceCy(x, y, z) - getPieceRay(z)"
+                              [attr.width]="getPieceRadius(z) * 2"
+                              [attr.height]="getPieceRadius(z) * 2"
+                              [attr.x]="getPieceCx(x, y, z) - getPieceRadius(z)"
+                              [attr.y]="getPieceCy(x, y, z) - getPieceRadius(z)"
                               [ngClass]="getCaseClasses(x, y, z)"
                               class="base"
                         />
@@ -48,10 +48,10 @@
     </g>
     <rect *ngIf="highCapture"
           id="highCapture_{{ highCapture.x }}_{{ highCapture.y }}_{{ highCapture.z }}"
-          [attr.width]="getPieceRay(highCapture.z) * 2"
-          [attr.height]="getPieceRay(highCapture.z) * 2"
-          [attr.x]="getPieceCx(highCapture.x, highCapture.y, highCapture.z) - getPieceRay(highCapture.z)"
-          [attr.y]="getPieceCy(highCapture.x, highCapture.y, highCapture.z) - getPieceRay(highCapture.z)"
+          [attr.width]="getPieceRadius(highCapture.z) * 2"
+          [attr.height]="getPieceRadius(highCapture.z) * 2"
+          [attr.x]="getPieceCx(highCapture.x, highCapture.y, highCapture.z) - getPieceRadius(highCapture.z)"
+          [attr.y]="getPieceCy(highCapture.x, highCapture.y, highCapture.z) - getPieceRadius(highCapture.z)"
           class="base captured"
     />
 </svg>

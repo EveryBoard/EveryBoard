@@ -7,7 +7,7 @@ import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { TablutCase } from './TablutCase';
-import { TablutPartSlice } from './TablutPartSlice';
+import { TablutState } from './TablutState';
 import { TablutPieceAndInfluenceMinimax } from './TablutPieceAndInfluenceMinimax';
 import { PieceThreat } from '../../jscaip/PieceThreat';
 import { TablutNode, TablutRules } from './TablutRules';
@@ -35,9 +35,9 @@ export class TablutPieceAndControlMinimax extends TablutPieceAndInfluenceMinimax
         if (gameStatus.isEndGame) {
             return new NodeUnheritance(gameStatus.toBoardValue());
         }
-        const state: TablutPartSlice = node.gamePartSlice;
+        const state: TablutState = node.gameState;
         const WIDTH: number = TablutRulesConfig.WIDTH;
-        const EMPTY: number = TablutCase.UNOCCUPIED.value;
+        const EMPTY: TablutCase = TablutCase.UNOCCUPIED;
 
         let score: number = 0;
         const pieceMap: MGPMap<Player, MGPSet<Coord>> = this.getPiecesMap(state);
@@ -52,7 +52,9 @@ export class TablutPieceAndControlMinimax extends TablutPieceAndInfluenceMinimax
                     score += owner.getScoreModifier() * TablutPieceAndControlMinimax.SCORE_BY_SAFE_PIECE;
                     for (const dir of Orthogonal.ORTHOGONALS) {
                         let testedCoord: Coord = coord.getNext(dir, 1);
-                        while (testedCoord.isInRange(WIDTH, WIDTH) && state.getBoardAt(testedCoord) === EMPTY) {
+                        while (testedCoord.isInRange(WIDTH, WIDTH) &&
+                               state.getPieceAt(testedCoord) === EMPTY)
+                        {
                             controlleds.add(testedCoord);
                             testedCoord = testedCoord.getNext(dir, 1);
                         }

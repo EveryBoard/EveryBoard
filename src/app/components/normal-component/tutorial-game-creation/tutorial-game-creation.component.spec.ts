@@ -4,6 +4,7 @@ import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { TutorialGameCreationComponent } from './tutorial-game-creation.component';
 
 describe('TutorialGameCreationComponent', () => {
+
     let testUtils: SimpleComponentTestUtils<TutorialGameCreationComponent>;
 
     beforeEach(async() => {

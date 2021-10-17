@@ -2,14 +2,15 @@ import { DvonnComponent } from '../dvonn.component';
 import { Coord } from 'src/app/jscaip/Coord';
 import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
 import { DvonnPieceStack } from 'src/app/games/dvonn/DvonnPieceStack';
-import { DvonnGameState } from 'src/app/games/dvonn/DvonnGameState';
+import { DvonnState } from 'src/app/games/dvonn/DvonnState';
 import { Player } from 'src/app/jscaip/Player';
-import { DvonnBoard } from 'src/app/games/dvonn/DvonnBoard';
 import { fakeAsync } from '@angular/core/testing';
 import { DvonnFailure } from 'src/app/games/dvonn/DvonnFailure';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { Table } from 'src/app/utils/ArrayUtils';
 
 describe('DvonnComponent', () => {
+
     let componentTestUtils: ComponentTestUtils<DvonnComponent>;
 
     const __: DvonnPieceStack = DvonnPieceStack.EMPTY;
@@ -33,32 +34,32 @@ describe('DvonnComponent', () => {
         await componentTestUtils.expectMoveSuccess('#click_2_1', move);
     }));
     it('should allow to pass if stuck position', fakeAsync(async() => {
-        const board: DvonnBoard = new DvonnBoard([
+        const board: Table<DvonnPieceStack> = [
             [__, __, WW, __, __, __, __, __, __, __, __],
             [__, __, D_, __, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
-        ]);
-        const slice: DvonnGameState = new DvonnGameState(board, 0, false);
-        componentTestUtils.setupSlice(slice);
+        ];
+        const state: DvonnState = new DvonnState(board, 0, false);
+        componentTestUtils.setupState(state);
         expect(componentTestUtils.getComponent().canPass).toBeTrue();
         expect((await componentTestUtils.getComponent().pass()).isSuccess()).toBeTrue();
     }));
     it('should forbid choosing an incorrect piece', fakeAsync(async() => {
         // select black piece (but white plays first)
-        await componentTestUtils.expectClickFailure('#click_1_1', DvonnFailure.NOT_PLAYER_PIECE);
+        await componentTestUtils.expectClickFailure('#click_1_1', DvonnFailure.NOT_PLAYER_PIECE());
     }));
     it('should show disconnection/captures precisely', fakeAsync(async() => {
         // given board with ready disconnection
-        const board: DvonnBoard = new DvonnBoard([
+        const board: Table<DvonnPieceStack> = [
             [__, __, WW, __, __, __, __, __, __, __, __],
             [__, __, D_, W_, W_, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
-        ]);
-        componentTestUtils.setupSlice(new DvonnGameState(board, 0, false));
+        ];
+        componentTestUtils.setupState(new DvonnState(board, 0, false));
 
         // When doing that disconnection
         await componentTestUtils.expectClickSuccess('#click_3_1');

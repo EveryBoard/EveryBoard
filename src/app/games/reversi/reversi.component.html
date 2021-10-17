@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="auto"
-     viewBox="0 0 800 800"
+     [attr.viewBox]="'0 -4 ' + (8 * CASE_SIZE) + ' ' + (10 + 8 * CASE_SIZE)"
      preserveAspectRatio="xMidYMid meet">
     <g *ngFor="let line of board; index as y">
         <g *ngFor="let c of line; index as x">
@@ -14,7 +14,6 @@
                   class="base"
             />
             <circle *ngIf="board[y][x] !== NONE"
-                    (click)="onClick(x, y)"
                     [attr.r]="CASE_SIZE/2-STROKE_WIDTH"
                     [attr.cx]="CASE_SIZE*x + CASE_SIZE/2"
                     [attr.cy]="CASE_SIZE*y + CASE_SIZE/2"

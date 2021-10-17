@@ -6,25 +6,25 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { Coord } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { NumberTable } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/Player';
-import { QuixoPartSlice } from 'src/app/games/quixo/QuixoPartSlice';
+import { QuixoState } from 'src/app/games/quixo/QuixoState';
 import { QuixoFailure } from 'src/app/games/quixo/QuixoFailure';
 
 describe('QuixoComponent', () => {
 
     let componentTestUtils: ComponentTestUtils<QuixoComponent>;
 
-    const _: number = Player.NONE.value;
-    const X: number = Player.ONE.value;
-    const O: number = Player.ZERO.value;
+    const _: Player = Player.NONE;
+    const X: Player = Player.ONE;
+    const O: Player = Player.ZERO;
 
     beforeEach(fakeAsync(async() => {
         componentTestUtils = await ComponentTestUtils.forGame<QuixoComponent>('Quixo');
     }));
     it('should create', () => {
-        expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');
-        expect(componentTestUtils.getComponent()).toBeTruthy('Component should be created');
+        expect(componentTestUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
+        expect(componentTestUtils.getComponent()).withContext('Component should be created').toBeTruthy();
     });
     it('should style piece correctly', () => {
         componentTestUtils.getComponent().chosenCoord = new Coord(0, 0);
@@ -40,42 +40,42 @@ describe('QuixoComponent', () => {
         componentTestUtils.getComponent().onBoardClick(4, 4);
         expect(componentTestUtils.getComponent().getPossiblesDirections()).toEqual(['LEFT', 'UP']);
     });
-    it('should cancel move when trying to select ennemy piece', fakeAsync(async() => {
-        const board: NumberTable = [
+    it('should cancel move when trying to select opponent piece', fakeAsync(async() => {
+        const board: Table<Player> = [
             [O, _, _, _, _],
             [_, _, _, _, _],
             [X, _, _, _, X],
             [_, _, _, _, _],
             [_, _, _, _, _],
         ];
-        const state: QuixoPartSlice = new QuixoPartSlice(board, 3);
-        componentTestUtils.setupSlice(state);
+        const state: QuixoState = new QuixoState(board, 3);
+        componentTestUtils.setupState(state);
 
-        await componentTestUtils.expectClickFailure('#click_0_0', RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
+        await componentTestUtils.expectClickFailure('#click_0_0', RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
     }));
     it('should cancel move when trying to select center coord', fakeAsync(async() => {
-        const board: NumberTable = [
+        const board: Table<Player> = [
             [O, _, _, _, _],
             [_, _, _, _, _],
             [X, _, _, _, X],
             [_, _, _, _, _],
             [_, _, _, _, _],
         ];
-        const state: QuixoPartSlice = new QuixoPartSlice(board, 3);
-        componentTestUtils.setupSlice(state);
+        const state: QuixoState = new QuixoState(board, 3);
+        componentTestUtils.setupState(state);
 
-        await componentTestUtils.expectClickFailure('#click_1_1', QuixoFailure.NO_INSIDE_CLICK);
+        await componentTestUtils.expectClickFailure('#click_1_1', QuixoFailure.NO_INSIDE_CLICK());
     }));
     it('should highlight victory', fakeAsync(async() => {
-        const board: NumberTable = [
+        const board: Table<Player> = [
             [O, O, O, O, O],
             [_, _, _, _, _],
             [X, _, _, _, X],
             [_, _, _, _, _],
             [_, _, _, _, _],
         ];
-        const state: QuixoPartSlice = new QuixoPartSlice(board, 3);
-        componentTestUtils.setupSlice(state);
+        const state: QuixoState = new QuixoState(board, 3);
+        componentTestUtils.setupState(state);
 
         expect(componentTestUtils.getComponent().getPieceClasses(0, 0)).toContain('victory-stroke');
         expect(componentTestUtils.getComponent().getPieceClasses(1, 0)).toContain('victory-stroke');

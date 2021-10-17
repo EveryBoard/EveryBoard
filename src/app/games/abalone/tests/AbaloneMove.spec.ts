@@ -3,7 +3,7 @@ import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { AbaloneDummyMinimax } from '../AbaloneDummyMinimax';
-import { AbaloneGameState } from '../AbaloneGameState';
+import { AbaloneState } from '../AbaloneState';
 import { AbaloneMove } from '../AbaloneMove';
 import { AbaloneRules } from '../AbaloneRules';
 
@@ -62,7 +62,7 @@ describe('AbaloneMove', () => {
             .toEqual(MGPFallible.failure('Invalid direction'));
     });
     it('AbaloneMove.encoder should be correct', () => {
-        const rules: AbaloneRules = new AbaloneRules(AbaloneGameState);
+        const rules: AbaloneRules = new AbaloneRules(AbaloneState);
         const minimax: AbaloneDummyMinimax = new AbaloneDummyMinimax(rules, 'dummy');
         const firstTurnMoves: AbaloneMove[] = minimax.getListMoves(rules.node);
         for (const move of firstTurnMoves) {

@@ -9,7 +9,7 @@ export class BoardDatas {
                         readonly groups: ReadonlyArray<GroupInfos>) { }
 
     public static ofBoard<T>(board: Table<T>, groupDatasFactory: GroupDatasFactory<T>): BoardDatas {
-        const groupIndexes: number[][] = ArrayUtils.createBiArray<number>(board[0].length, board.length, -1);
+        const groupIndexes: number[][] = ArrayUtils.createTable<number>(board[0].length, board.length, -1);
         const groupsDatas: GroupDatas<T>[] = [];
         for (let y: number = 0; y < board.length; y++) {
             for (let x: number = 0; x < board[0].length; x++) {

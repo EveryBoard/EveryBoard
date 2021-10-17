@@ -4,6 +4,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { YinshCapture, YinshMove } from '../YinshMove';
 
 describe('YinshCapture', () => {
+
     it('should not allow construction of captures other than with 5 coordinates', () => {
         const coords1: Coord[] = [new Coord(2, 3), new Coord(3, 3), new Coord(4, 3), new Coord(5, 3)];
         const ringTaken: Coord = new Coord(4, 4);

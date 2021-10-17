@@ -1,22 +1,22 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="auto"
-     viewBox="-5 -5 810 1010"
+     [attr.viewBox]="'-5 -5 ' + (CASE_SIZE * 8) + ' ' + (10 + CASE_SIZE * 10)"
      preserveAspectRatio="xMidYMid meet">
     <g *ngFor="let line of board; index as y">
         <g *ngFor="let caseContent of line; index as x"
            id="click_{{x}}_{{y}}"
            (click)="onClick(x, y)"
         >
-            <polyline *ngIf="isPyramid(x, y, caseContent) else emptyCase"
+            <polyline *ngIf="isPyramid(x, y) else emptyCase"
                       [attr.points]="getPyramidCoordinate(x, y)"
-                      [ngClass]="getPyramidClass(caseContent)"
+                      [ngClass]="getPyramidClass(x, y)"
                       class="base mid-stroke"
                       stroke-linecap="round"
             />
             <ng-template #emptyCase>
-                <polyline *ngIf="isEmptyCase(x, y, caseContent)"
+                <polyline *ngIf="isEmptyCase(x, y)"
                           [attr.points]="getTriangleCoordinate(x, y)"
-                          [ngClass]="getEmptyClass(x, y, caseContent)"
+                          [ngClass]="getEmptyClass(x, y)"
                           class="base small-stroke"
                           stroke-linecap="round"
                 />

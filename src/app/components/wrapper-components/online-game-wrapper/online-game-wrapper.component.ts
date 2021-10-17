@@ -40,6 +40,8 @@ export class UpdateType {
 
     public static readonly END_GAME: UpdateType = new UpdateType('END_GAME');
 
+    public static readonly END_GAME_WITHOUT_TIME: UpdateType = new UpdateType('END_GAME_WITHOUT_TIME');
+
     public static readonly ACCEPT_TAKE_BACK_WITHOUT_TIME: UpdateType = new UpdateType('ACCEPT_TAKE_BACK_WITHOUT_TIME');
 
     private constructor(public readonly value: string) {}
@@ -173,7 +175,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             before: this.currentPart,
             then: update.doc,
             before_part_turn: part.doc.turn,
-            before_slice_turn: this.gameComponent.rules.node.gamePartSlice.turn,
+            before_state_turn: this.gameComponent.rules.node.gameState.turn,
             nbPlayedMoves: part.doc.listMoves.length,
         } });
         const updateType: UpdateType = this.getUpdateType(part);
@@ -194,6 +196,9 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 return;
             case UpdateType.DUPLICATE:
                 return;
+            case UpdateType.END_GAME_WITHOUT_TIME:
+                this.currentPart = oldPart;
+                return;
             case UpdateType.END_GAME:
                 return this.applyEndGame();
             case UpdateType.MOVE_WITHOUT_TIME:
@@ -207,7 +212,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                                                            oldPart.doc.beginning == null;
                 const newPartHasBeginningTime: boolean = this.currentPart == null ||
                                                          this.currentPart.doc.beginning != null;
-                assert(oldPartHadNoBeginningTime || newPartHasBeginningTime, 'ils nous chient dans la colle patron!!!');
+                // Assert from ~September 2021, could be removed if it is never encountered
+                assert(oldPartHadNoBeginningTime || newPartHasBeginningTime, 'old part had no beginning time or new part has, we did not expect this!');
                 return;
             default:
                 assert(updateType === UpdateType.STARTING_DOC, 'Unexpected update type ' + updateType);
@@ -250,7 +256,13 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             return UpdateType.PRE_START_DOC;
         }
         if (update.doc.result !== MGPResult.UNACHIEVED.value) {
-            return UpdateType.END_GAME;
+            const turnModified: boolean = diff.modified['turn'] != null;
+            const lastMoveTimeMissing: boolean = diff.modified['lastMoveTime'] == null;
+            if (turnModified && lastMoveTimeMissing) {
+                return UpdateType.END_GAME_WITHOUT_TIME;
+            } else {
+                return UpdateType.END_GAME;
+            }
         }
         assert(update.doc.beginning != null && update.doc.listMoves.length === 0,
                'Unexpected update: ' + JSON.stringify(diff));
@@ -321,21 +333,22 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         this.switchPlayer();
         let currentPartTurn: number;
         const listMoves: JSONValue[] = ArrayUtils.copyImmutableArray(part.doc.listMoves);
-        while (this.gameComponent.rules.node.gamePartSlice.turn < listMoves.length) {
-            currentPartTurn = this.gameComponent.rules.node.gamePartSlice.turn;
+        while (this.gameComponent.rules.node.gameState.turn < listMoves.length) {
+            currentPartTurn = this.gameComponent.rules.node.gameState.turn;
             const chosenMove: Move = this.gameComponent.encoder.decode(listMoves[currentPartTurn]);
             const correctDBMove: boolean = this.gameComponent.rules.choose(chosenMove);
             const message: string = 'We received an incorrect db move: ' + chosenMove.toString() +
                                     ' in ' + listMoves + ' at turn ' + currentPartTurn;
             assert(correctDBMove === true, message);
         }
-        this.currentPlayer = this.players[this.gameComponent.rules.node.gamePartSlice.turn % 2];
+        this.currentPlayer = this.players[this.gameComponent.rules.node.gameState.turn % 2];
         this.gameComponent.updateBoard();
     }
     public switchPlayer(): void {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.switchPlayer');
         const part: Part = this.currentPart;
         const currentPlayer: Player = Player.fromTurn(part.doc.turn);
+        this.currentPlayer = this.players[this.gameComponent.rules.node.gameState.turn % 2];
         const currentOpponent: Player = currentPlayer.getOpponent();
         if (this.didUserPlay(currentOpponent)) {
             this.pauseCountDownsFor(currentOpponent);
@@ -511,13 +524,13 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 break;
             default:
                 assert(request.code === 'DrawAccepted', 'there was an error : ' + JSON.stringify(request) + ' had ' + request.code + ' value');
-                this.acceptDraw();
+                this.applyEndGame();
                 break;
         }
     }
     public takeBackTo(turn: number): void {
         this.gameComponent.rules.node = this.gameComponent.rules.node.mother;
-        if (this.gameComponent.rules.node.gamePartSlice.turn === turn) {
+        if (this.gameComponent.rules.node.gameState.turn === turn) {
             this.switchPlayer();
         } else {
             // Second time to make sure it end up on player's turn
@@ -600,8 +613,9 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
     }
     public resign(): void {
+        const resigner: string = this.players[this.observerRole % 2];
         const victoriousOpponent: string = this.players[(this.observerRole + 1) % 2];
-        this.gameService.resign(this.currentPartId, victoriousOpponent, this.currentPlayer);
+        this.gameService.resign(this.currentPartId, victoriousOpponent, resigner);
     }
     public reachedOutOfTime(player: 0 | 1): void {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.reachedOutOfTime(' + player + ')');
@@ -734,13 +748,17 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
     }
     public getBoardHighlight(): string[] {
+        if (this.endGame) {
+            return ['endgame-bg'];
+        }
         if (this.isUserCurrentPlayer()) {
             return ['player' + this.getPlayer().value + '-bg'];
         }
         return [];
     }
     private isUserCurrentPlayer(): boolean {
-        return this.gameComponent != null && this.observerRole === this.gameComponent.rules.node.gamePartSlice.turn % 2;
+        return this.gameComponent != null &&
+               this.observerRole === this.gameComponent.rules.node.gameState.turn % 2;
     }
     public opponentIsOffline(): boolean {
         return this.opponent != null &&

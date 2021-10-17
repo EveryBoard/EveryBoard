@@ -5,6 +5,7 @@ import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { WelcomeComponent } from './welcome.component';
 
 describe('WelcomeComponent', () => {
+
     let testUtils: SimpleComponentTestUtils<WelcomeComponent>;
 
     beforeEach(fakeAsync(async() => {

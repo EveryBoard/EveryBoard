@@ -1,17 +1,18 @@
 import { ReversiComponent } from '../reversi.component';
 import { ReversiMove } from 'src/app/games/reversi/ReversiMove';
-import { ReversiPartSlice } from 'src/app/games/reversi/ReversiPartSlice';
+import { ReversiState } from 'src/app/games/reversi/ReversiState';
 import { Player } from 'src/app/jscaip/Player';
-import { NumberTable } from 'src/app/utils/ArrayUtils';
+import { Table } from 'src/app/utils/ArrayUtils';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
 
 describe('ReversiComponent', () => {
+
     let componentTestUtils: ComponentTestUtils<ReversiComponent>;
 
-    const _: number = Player.NONE.value;
-    const X: number = Player.ONE.value;
-    const O: number = Player.ZERO.value;
+    const _: Player = Player.NONE;
+    const X: Player = Player.ONE;
+    const O: Player = Player.ZERO;
 
     beforeEach(fakeAsync(async() => {
         componentTestUtils = await ComponentTestUtils.forGame<ReversiComponent>('Reversi');
@@ -21,7 +22,7 @@ describe('ReversiComponent', () => {
         expect(componentTestUtils.getComponent()).toBeTruthy('Component should be created');
     });
     it('should show last move and captures', fakeAsync(async() => {
-        const board: NumberTable = [
+        const board: Table<Player> = [
             [_, _, _, _, X, _, _, _],
             [_, _, _, X, _, _, _, _],
             [_, _, X, _, _, _, _, _],
@@ -31,8 +32,8 @@ describe('ReversiComponent', () => {
             [_, _, X, _, _, _, _, _],
             [_, _, _, O, _, _, _, _],
         ];
-        const initialSlice: ReversiPartSlice = new ReversiPartSlice(board, 0);
-        componentTestUtils.setupSlice(initialSlice);
+        const initialState: ReversiState = new ReversiState(board, 0);
+        componentTestUtils.setupState(initialState);
 
         const move: ReversiMove = new ReversiMove(0, 4);
         await componentTestUtils.expectMoveSuccess('#click_0_4', move, undefined, 2, 7);
@@ -49,5 +50,21 @@ describe('ReversiComponent', () => {
         expect(tablutGameComponent.getRectClasses(2, 6)).toEqual(['captured']);
 
         expect(tablutGameComponent.getRectClasses(0, 4)).toEqual(['moved']);
+    }));
+    it('should fake a click on ReversiMove.PASS.coord to pass', fakeAsync(async() => {
+        // Given a fictitious board on which player can only pass
+        componentTestUtils.setupState(new ReversiState([
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [O, X, _, _, _, _, _, _],
+        ], 1));
+
+        // when passing, it should be legal
+        expect((await componentTestUtils.getComponent().pass()).isSuccess()).toBeTrue();
     }));
 });

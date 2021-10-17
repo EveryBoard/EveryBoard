@@ -10,9 +10,9 @@ import { UserService } from 'src/app/services/UserService';
 import { assert, display } from 'src/app/utils/utils';
 import { TutorialStep } from './TutorialStep';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { TutorialFailure } from './TutorialFailure';
 import { GameService } from 'src/app/services/GameService';
+import { AbstractGameState } from 'src/app/jscaip/GameState';
 
 @Component({
     selector: 'app-tutorial-game-wrapper',
@@ -105,7 +105,7 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
         this.gameComponent.updateBoard();
         this.moveAttemptMade = true;
         if (currentStep.isPredicate()) {
-            const resultingState: GamePartSlice = this.gameComponent.rules.node.gamePartSlice;
+            const resultingState: AbstractGameState = this.gameComponent.rules.node.gameState;
             const moveValidity: MGPValidation = currentStep.predicate(move, resultingState);
             if (moveValidity.isSuccess()) {
                 this.showStepSuccess();
@@ -132,7 +132,7 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
         display(TutorialGameWrapperComponent.VERBOSE, 'tutorialGameWrapper.onUserClick(' + elementName + ')');
         this.currentReason = null;
         if (this.stepFinished[this.stepIndex] || this.moveAttemptMade) {
-            return MGPValidation.failure(TutorialFailure.STEP_FINISHED);
+            return MGPValidation.failure(TutorialFailure.STEP_FINISHED());
         }
         const currentStep: TutorialStep = this.steps[this.stepIndex];
         if (currentStep.isClick()) {
@@ -149,7 +149,7 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
             }, 10);
             return MGPValidation.SUCCESS;
         } else {
-            return MGPValidation.failure(TutorialFailure.INFORMATIONAL_STEP);
+            return MGPValidation.failure(TutorialFailure.INFORMATIONAL_STEP());
         }
     }
     public onCancelMove: (reason?: string) => void = (reason?: string) => {

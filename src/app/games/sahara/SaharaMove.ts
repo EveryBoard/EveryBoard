@@ -1,6 +1,6 @@
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { Coord } from 'src/app/jscaip/Coord';
-import { SaharaPartSlice } from './SaharaPartSlice';
+import { SaharaState } from './SaharaState';
 import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
 import { NumberEncoder } from 'src/app/jscaip/Encoder';
 import { SaharaFailure } from './SaharaFailure';
@@ -8,8 +8,8 @@ import { SaharaFailure } from './SaharaFailure';
 export class SaharaMove extends MoveCoordToCoord {
     public static encoder: NumberEncoder<SaharaMove> = new class extends NumberEncoder<SaharaMove> {
         public maxValue(): number {
-            return (6*11*6*SaharaPartSlice.WIDTH) + (11*6*SaharaPartSlice.HEIGHT) +
-                (6*SaharaPartSlice.WIDTH) + SaharaPartSlice.HEIGHT;
+            return (6*11*6*SaharaState.WIDTH) + (11*6*SaharaState.HEIGHT) +
+                (6*SaharaState.WIDTH) + SaharaState.HEIGHT;
         }
         public encodeNumber(move: SaharaMove): number {
             const ey: number = move.end.y;
@@ -43,7 +43,7 @@ export class SaharaMove extends MoveCoordToCoord {
             }
         } else if (distance === 2) {
             if ((start.x + start.y) % 2 === 0) {
-                throw new Error(SaharaFailure.CAN_ONLY_REBOUND_ON_BLACK);
+                throw new Error(SaharaFailure.CAN_ONLY_REBOUND_ON_BLACK());
             }
             if (start.x === end.x) {
                 throw new Error(start.toString() + ' and ' + end.toString() + ' have no intermediary neighboors.');
@@ -54,10 +54,10 @@ export class SaharaMove extends MoveCoordToCoord {
     }
     constructor(start: Coord, end: Coord) {
         super(start, end);
-        if (!start.isInRange(SaharaPartSlice.WIDTH, SaharaPartSlice.HEIGHT)) {
+        if (!start.isInRange(SaharaState.WIDTH, SaharaState.HEIGHT)) {
             throw new Error('Move must start inside the board not at ' + start.toString() + '.');
         }
-        if (!end.isInRange(SaharaPartSlice.WIDTH, SaharaPartSlice.HEIGHT)) {
+        if (!end.isInRange(SaharaState.WIDTH, SaharaState.HEIGHT)) {
             throw new Error('Move must end inside the board not at ' + end.toString() + '.');
         }
         SaharaMove.checkDistanceAndLocation(start, end);

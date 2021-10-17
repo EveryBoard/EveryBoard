@@ -1,21 +1,23 @@
 import { SiamNode, SiamRules } from '../SiamRules';
 import { SiamMinimax } from '../SiamMinimax';
 import { SiamMove } from '../SiamMove';
-import { SiamPartSlice } from '../SiamPartSlice';
+import { SiamState } from '../SiamState';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { SiamPiece } from '../SiamPiece';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
+import { Table } from 'src/app/utils/ArrayUtils';
 
 describe('SiamMove', () => {
-    const _: number = SiamPiece.EMPTY.value;
-    const M: number = SiamPiece.MOUNTAIN.value;
 
-    const D: number = SiamPiece.WHITE_DOWN.value;
+    const _: SiamPiece = SiamPiece.EMPTY;
+    const M: SiamPiece = SiamPiece.MOUNTAIN;
+
+    const D: SiamPiece = SiamPiece.WHITE_DOWN;
 
     it('SiamMove.encoder should be correct', () => {
-        const board: number[][] = [
+        const board: Table<SiamPiece> = [
             [_, _, D, _, _],
             [_, _, _, _, _],
             [_, M, M, M, _],
@@ -23,9 +25,9 @@ describe('SiamMove', () => {
             [_, _, _, _, _],
         ];
         const move: SiamMove = new SiamMove(0, 0, MGPOptional.of(Orthogonal.DOWN), Orthogonal.UP);
-        const slice: SiamPartSlice = new SiamPartSlice(board, 0);
-        const node: SiamNode = new MGPNode(null, move, slice);
-        const rules: SiamRules = new SiamRules(SiamPartSlice);
+        const state: SiamState = new SiamState(board, 0);
+        const node: SiamNode = new MGPNode(null, move, state);
+        const rules: SiamRules = new SiamRules(SiamState);
         const minimax: SiamMinimax = new SiamMinimax(rules, 'SiamMinimax');
         const moves: SiamMove[] = minimax.getListMoves(node);
         for (const move of moves) {

@@ -21,7 +21,7 @@
             </div>
             <div class="block" *ngIf="players">
                 <p id="playerZeroIndicator" [ngClass]="getPlayerNameClass(0)" class="player0-bg">{{ players[0] }}</p>
-                <p id="scoreZeroIndicator" *ngIf="currentPart && compo && compo.showScore" i18n>{{ compo.scores[0] }} points</p>
+                <p id="scoreZeroIndicator" *ngIf="currentPart && gameComponent && gameComponent.showScore" i18n>{{ gameComponent.scores[0] }} points</p>
                 <app-count-down #chronoZeroGlobal
                                 [dangerTimeLimit]="60*1000"
                                 [active]="(currentPart == null) ? false : currentPart.getTurn() % 2 === 0"
@@ -38,7 +38,7 @@
             <p class="is-size-3" i18n>vs.</p>
             <div class="block" *ngIf="players">
                 <p id="playerOneIndicator" [ngClass]="getPlayerNameClass(1)" class="player1-bg">{{ players[1] }}</p>
-                <p id="scoreOneIndicator" *ngIf="currentPart && compo && compo.showScore" i18n>{{ compo.scores[1] }} points</p>
+                <p id="scoreOneIndicator" *ngIf="currentPart && gameComponent && gameComponent.showScore" i18n>{{ gameComponent.scores[1] }} points</p>
                 <app-count-down #chronoOneGlobal
                                 [dangerTimeLimit]="60*1000"
                                 [active]="(currentPart == null) ? false : currentPart.getTurn() % 2 === 1"
@@ -65,22 +65,22 @@
                     (click)="proposeDraw()"
                     i18n
             >Propose a draw</button>
-            <button class="button is-warning is-fullwidht mb-1"
+            <button class="button is-warning is-fullwidth mb-1"
                     *ngIf="endGame === false && isOpponentWaitingForDrawResponse()"
                     id="acceptDrawButton"
                     (click)="acceptDraw()"
                     i18n
             >Accept draw</button>
-            <button class="button is-warning is-fullwidht mb-1"
+            <button class="button is-warning is-fullwidth mb-1"
                     *ngIf="endGame === false && isOpponentWaitingForDrawResponse()"
                     id="refuseDrawButton"
                     (click)="refuseDraw()"
                     i18n
             >Reject draw</button>
             <button class="button is-fullwidth mb-1"
-                    *ngIf="endGame === false && isPlaying() && compo.canPass && (currentPlayer === userName)"
+                    *ngIf="endGame === false && isPlaying() && gameComponent.canPass && (currentPlayer === userName)"
                     id="passButton"
-                    (click)="compo.pass()"
+                    (click)="gameComponent.pass()"
                     i18n
             >Pass a turn</button>
             <button class="button is-warning is-fullwidth mb-1"
@@ -146,7 +146,7 @@
         </div>
     </div>
     <div id="board-tile"
-         class="tile is-9 is-parent"
+         class="tile is-9 is-parent rounded-div"
          [ngClass]="getBoardHighlight()">
         <div id="board"
              class="tile is-child box">

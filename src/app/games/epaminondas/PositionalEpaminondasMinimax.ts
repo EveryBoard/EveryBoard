@@ -8,19 +8,19 @@ import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { EpaminondasLegalityStatus } from './epaminondaslegalitystatus';
 import { EpaminondasMinimax } from './EpaminondasMinimax';
 import { EpaminondasMove } from './EpaminondasMove';
-import { EpaminondasPartSlice } from './EpaminondasPartSlice';
+import { EpaminondasState } from './EpaminondasState';
 import { EpaminondasNode } from './EpaminondasRules';
 
 export class PositionalEpaminondasMinimax extends Minimax<EpaminondasMove,
-                                                          EpaminondasPartSlice,
+                                                          EpaminondasState,
                                                           EpaminondasLegalityStatus>
 {
 
     public getListMoves(node: EpaminondasNode): EpaminondasMove[] {
         const moves: EpaminondasMove[] = EpaminondasMinimax.getListMoves(node);
-        return this.orderMovesByPhalanxSizeAndFilter(moves, node.gamePartSlice);
+        return this.orderMovesByPhalanxSizeAndFilter(moves, node.gameState);
     }
-    private orderMovesByPhalanxSizeAndFilter(moves: EpaminondasMove[], state: EpaminondasPartSlice): EpaminondasMove[] {
+    private orderMovesByPhalanxSizeAndFilter(moves: EpaminondasMove[], state: EpaminondasState): EpaminondasMove[] {
         ArrayUtils.sortByDescending(moves, (move: EpaminondasMove): number => {
             return move.movedPieces;
         });
@@ -36,18 +36,18 @@ export class PositionalEpaminondasMinimax extends Minimax<EpaminondasMove,
         }
         return moves;
     }
-    private moveIsCapture(move: EpaminondasMove, state: EpaminondasPartSlice): boolean {
+    private moveIsCapture(move: EpaminondasMove, state: EpaminondasState): boolean {
         const landing: Coord = move.coord.getNext(move.direction, move.movedPieces + move.stepSize - 1);
-        return state.board[landing.y][landing.x] === state.getCurrentEnnemy().value;
+        return state.board[landing.y][landing.x] === state.getCurrentOpponent();
     }
     public getBoardValue(node: EpaminondasNode): NodeUnheritance {
         const gameStatus: GameStatus = this.ruler.getGameStatus(node);
         if (gameStatus.isEndGame) {
             return new NodeUnheritance(gameStatus.toBoardValue());
         }
-        return new NodeUnheritance(this.getPieceCountThenSupportThenAdvancement(node.gamePartSlice));
+        return new NodeUnheritance(this.getPieceCountThenSupportThenAdvancement(node.gameState));
     }
-    private getPieceCountThenSupportThenAdvancement(state: EpaminondasPartSlice): number {
+    private getPieceCountThenSupportThenAdvancement(state: EpaminondasState): number {
         const MAX_ADVANCEMENT_SCORE_TOTAL: number = 28 * 12;
         const SCORE_BY_ALIGNEMENT: number = MAX_ADVANCEMENT_SCORE_TOTAL + 1; // OLDLY 13
         const MAX_NUMBER_OF_ALIGNEMENT: number = (24*16) + (4*15);
@@ -56,7 +56,7 @@ export class PositionalEpaminondasMinimax extends Minimax<EpaminondasMove,
         for (let y: number = 0; y < 12; y++) {
             for (let x: number = 0; x < 14; x++) {
                 const coord: Coord = new Coord(x, y);
-                const player: Player = Player.of(state.getBoardAt(coord));
+                const player: Player = state.getPieceAt(coord);
                 if (player !== Player.NONE) {
                     let avancement: number; // entre 0 et 11
                     let dirs: Direction[];
@@ -73,7 +73,7 @@ export class PositionalEpaminondasMinimax extends Minimax<EpaminondasMove,
                     for (const dir of dirs) {
                         let neighboor: Coord = coord.getNext(dir, 1);
                         while (neighboor.isInRange(14, 12) &&
-                               state.getBoardAt(neighboor) === player.value)
+                               state.getPieceAt(neighboor) === player)
                         {
                             total += mod * SCORE_BY_ALIGNEMENT;
                             neighboor = neighboor.getNext(dir, 1);

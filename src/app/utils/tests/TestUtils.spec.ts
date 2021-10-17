@@ -1,14 +1,16 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement, Type } from '@angular/core';
+import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement, Type } from '@angular/core';
 import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
-import { GamePartSlice } from '../../jscaip/GamePartSlice';
-import { LegalityStatus } from '../../jscaip/LegalityStatus';
+import { RouterTestingModule } from '@angular/router/testing';
+import { ActivatedRoute } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
+
+import { GameComponent } from '../../components/game-components/game-component/GameComponent';
+import { AbstractGameState } from '../../jscaip/GameState';
 import { Move } from '../../jscaip/Move';
 import { MGPValidation } from '../MGPValidation';
-import { RouterTestingModule } from '@angular/router/testing';
 import { AppModule } from '../../app.module';
-import { ActivatedRoute } from '@angular/router';
 import { JoueursDAO } from '../../dao/JoueursDAO';
 import { AuthenticationService } from '../../services/AuthenticationService';
 import { MGPNode } from '../../jscaip/MGPNode';
@@ -24,13 +26,11 @@ import { JoinerDAO } from '../../dao/JoinerDAO';
 import { JoueursDAOMock } from '../../dao/tests/JoueursDAOMock.spec';
 import { ChatDAOMock } from '../../dao/tests/ChatDAOMock.spec';
 import { PartDAOMock } from '../../dao/tests/PartDAOMock.spec';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { LocalGameWrapperComponent }
     from '../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { HumanDuration } from '../TimeUtils';
-import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { Rules } from 'src/app/jscaip/Rules';
 
 @Component({})
 export class BlankComponent {}
@@ -61,7 +61,6 @@ export class ActivatedRouteStub {
         this.route[key] = value;
     }
 }
-
 export class SimpleComponentTestUtils<T> {
 
     private fixture: ComponentFixture<T>;
@@ -71,7 +70,6 @@ export class SimpleComponentTestUtils<T> {
     public static async create<T>(componentType: Type<T>): Promise<SimpleComponentTestUtils<T>> {
         await TestBed.configureTestingModule({
             imports: [
-                MatSnackBarModule,
                 RouterTestingModule.withRoutes([
                     { path: '**', component: BlankComponent },
                 ]),
@@ -144,22 +142,23 @@ export class SimpleComponentTestUtils<T> {
         return element;
     }
 }
+type MyGameComponent = GameComponent<Rules<Move, AbstractGameState>,
+                                           Move,
+                                           AbstractGameState>;
 
-type GameComponent = AbstractGameComponent<Move, GamePartSlice, LegalityStatus>;
-
-export class ComponentTestUtils<T extends GameComponent> {
+export class ComponentTestUtils<T extends MyGameComponent> {
     public fixture: ComponentFixture<GameWrapper>;
     public wrapper: GameWrapper;
     private debugElement: DebugElement;
-    private gameComponent: GameComponent;
+    private gameComponent: MyGameComponent;
 
     private canUserPlaySpy: jasmine.Spy;
     private cancelMoveSpy: jasmine.Spy;
     private chooseMoveSpy: jasmine.Spy;
     private onLegalUserMoveSpy: jasmine.Spy;
 
-    public static async forGame<T extends GameComponent>(game: string,
-                                                         wrapperKind: Type<GameWrapper> = LocalGameWrapperComponent)
+    public static async forGame<T extends MyGameComponent>(game: string,
+                                                           wrapperKind: Type<GameWrapper> = LocalGameWrapperComponent)
     : Promise<ComponentTestUtils<T>>
     {
         const testUtils: ComponentTestUtils<T> = await ComponentTestUtils.basic(game);
@@ -171,11 +170,10 @@ export class ComponentTestUtils<T extends GameComponent> {
         testUtils.prepareSpies();
         return testUtils;
     }
-    public static async basic<T extends GameComponent>(game: string): Promise<ComponentTestUtils<T>> {
+    public static async basic<T extends MyGameComponent>(game: string): Promise<ComponentTestUtils<T>> {
         const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub(game, 'joinerId');
         await TestBed.configureTestingModule({
             imports: [
-                MatSnackBarModule,
                 AppModule,
                 RouterTestingModule.withRoutes([
                     { path: 'play', component: OnlineGameWrapperComponent },
@@ -214,18 +212,26 @@ export class ComponentTestUtils<T extends GameComponent> {
     public detectChanges(): void {
         this.fixture.detectChanges();
     }
+    public forceChangeDetection(): void {
+        this.fixture.debugElement.injector.get<ChangeDetectorRef>(ChangeDetectorRef).markForCheck();
+        this.detectChanges();
+    }
     public setRoute(id: string, value: string): void {
         this.activatedRouteStub.setRoute(id, value);
     }
-    public setupSlice(slice: GamePartSlice, previousSlice?: GamePartSlice, previousMove?: Move): void {
-        if (previousSlice !== undefined) {
+    public setupState(state: AbstractGameState,
+                      previousState?: AbstractGameState,
+                      previousMove?: Move)
+    : void
+    {
+        if (previousState !== undefined) {
             this.gameComponent.rules.node =
-                new MGPNode(new MGPNode(null, null, previousSlice), previousMove, slice);
+                new MGPNode(new MGPNode(null, null, previousState), previousMove, state);
         } else {
-            this.gameComponent.rules.node = new MGPNode(null, previousMove || null, slice);
+            this.gameComponent.rules.node = new MGPNode(null, previousMove || null, state);
         }
         this.gameComponent.updateBoard();
-        this.fixture.detectChanges();
+        this.forceChangeDetection();
     }
     public getComponent(): T {
         return (this.gameComponent as unknown) as T;
@@ -259,7 +265,7 @@ export class ComponentTestUtils<T extends GameComponent> {
             expect(this.chooseMoveSpy).not.toHaveBeenCalled();
             expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(reason);
             this.cancelMoveSpy.calls.reset();
-            tick(150);
+            tick(3000); // needs to be >2999
         }
     }
     public async expectClickForbidden(elementName: string, reason: string): Promise<void> {
@@ -278,12 +284,12 @@ export class ComponentTestUtils<T extends GameComponent> {
             this.canUserPlaySpy.calls.reset();
             expect(this.chooseMoveSpy).not.toHaveBeenCalled();
             expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(clickValidity.reason);
-            tick(150);
+            tick(3000); // needs to be >2999
         }
     }
     public async expectMoveSuccess(elementName: string,
                                    move: Move,
-                                   slice?: GamePartSlice,
+                                   state?: AbstractGameState,
                                    scoreZero?: number,
                                    scoreOne?: number)
     : Promise<void>
@@ -293,14 +299,14 @@ export class ComponentTestUtils<T extends GameComponent> {
         if (element == null) {
             return;
         } else {
-            const moveSlice: GamePartSlice = slice || this.gameComponent.rules.node.gamePartSlice;
+            const moveState: AbstractGameState = state || this.gameComponent.rules.node.gameState;
             element.triggerEventHandler('click', null);
             await this.fixture.whenStable();
             this.fixture.detectChanges();
             expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
             this.canUserPlaySpy.calls.reset();
             expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move,
-                                                                moveSlice,
+                                                                moveState,
                                                                 this.getScore(scoreZero),
                                                                 this.getScore(scoreOne));
             this.chooseMoveSpy.calls.reset();
@@ -320,7 +326,7 @@ export class ComponentTestUtils<T extends GameComponent> {
     public async expectMoveFailure(elementName: string,
                                    reason: string,
                                    move: Move,
-                                   slice?: GamePartSlice,
+                                   state?: AbstractGameState,
                                    scoreZero?: number,
                                    scoreOne?: number)
     : Promise<void>
@@ -330,19 +336,19 @@ export class ComponentTestUtils<T extends GameComponent> {
         if (element == null) {
             return;
         } else {
-            const moveSlice: GamePartSlice = slice || this.gameComponent.rules.node.gamePartSlice;
+            const moveState: AbstractGameState = state || this.gameComponent.rules.node.gameState;
             element.triggerEventHandler('click', null);
             await this.fixture.whenStable();
             this.fixture.detectChanges();
             expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
             this.canUserPlaySpy.calls.reset();
             expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(
-                move, moveSlice, this.getScore(scoreZero), this.getScore(scoreOne));
+                move, moveState, this.getScore(scoreZero), this.getScore(scoreOne));
             this.chooseMoveSpy.calls.reset();
             expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(reason);
             this.cancelMoveSpy.calls.reset();
             expect(this.onLegalUserMoveSpy).not.toHaveBeenCalled();
-            tick(150);
+            tick(3000); // needs to be >2999
         }
     }
     public async clickElement(elementName: string): Promise<void> {
@@ -391,23 +397,24 @@ export class ComponentTestUtils<T extends GameComponent> {
     }
 }
 
-export function expectSecondStateToBeBetterThanFirst(weakerState: GamePartSlice,
+export function expectSecondStateToBeBetterThanFirst(weakerState: AbstractGameState,
                                                      weakMove: Move,
-                                                     strongerState: GamePartSlice,
+                                                     strongerState: AbstractGameState,
                                                      strongMove: Move,
-                                                     minimax: Minimax<Move, GamePartSlice>)
+                                                     minimax: Minimax<Move, AbstractGameState>)
 : void
 {
     const weakValue: number = minimax.getBoardValue(new MGPNode(null, weakMove, weakerState)).value;
     const strongValue: number = minimax.getBoardValue(new MGPNode(null, strongMove, strongerState)).value;
     expect(weakValue).toBeLessThan(strongValue);
 }
-export function expectStateToBePreVictory(state: GamePartSlice,
+export function expectStateToBePreVictory(state: AbstractGameState,
                                           previousMove: Move,
                                           player: Player,
-                                          minimax: Minimax<Move, GamePartSlice>)
+                                          minimax: Minimax<Move, AbstractGameState>)
 : void
 {
+    // TODO: replace that and refuse it to reach develop! expectToBeVictoryFor is the way
     const value: number = minimax.getBoardNumericValue(new MGPNode(null, previousMove, state));
     const expectedValue: number = player.getPreVictory();
     expect(value).toBe(expectedValue);

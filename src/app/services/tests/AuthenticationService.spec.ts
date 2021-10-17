@@ -53,6 +53,7 @@ export class AuthenticationServiceUnderTest extends AuthenticationService {
 }
 
 describe('AuthenticationService', () => {
+
     function setupService(afAuth: unknown): AuthenticationService {
         const service: AuthenticationService =
             new AuthenticationServiceUnderTest(afAuth as AngularFireAuth, {} as AngularFirestore);

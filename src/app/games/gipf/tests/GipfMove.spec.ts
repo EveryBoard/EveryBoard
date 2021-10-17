@@ -5,16 +5,21 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GipfCapture, GipfMove, GipfPlacement } from '../GipfMove';
 
 describe('GipfCapture', () => {
-    it('should not allow construction of captures smaller than 4', () => {
+
+    it('should forbid construction of captures smaller than 4', () => {
         const coords: Coord[] = [new Coord(1, -3), new Coord(0, -2), new Coord(-1, -1)];
         expect(() => new GipfCapture(coords)).toThrow();
     });
-    it('should not allow construction of captures with duplicate cases', () => {
+    it('should forbid construction of captures with duplicate spaces', () => {
         const coords: Coord[] = [new Coord(1, -3), new Coord(0, -2), new Coord(-1, -1), new Coord(1, -3)];
         expect(() => new GipfCapture(coords)).toThrow();
     });
-    it('should not allow construction with pieces not on the same line', () => {
+    it('should forbid construction with pieces not on the same line', () => {
         const coords: Coord[] = [new Coord(-1, 0), new Coord(0, 1), new Coord(1, 0), new Coord(2, 0)];
+        expect(() => new GipfCapture(coords)).toThrow();
+    });
+    it('should forbid construction with non-consecutive spaces', () => {
+        const coords: Coord[] = [new Coord(-1, 0), new Coord(1, 0), new Coord(2, 0), new Coord(3, 0)];
         expect(() => new GipfCapture(coords)).toThrow();
     });
     it('should allow construction of valid capture', () => {
@@ -24,7 +29,7 @@ describe('GipfCapture', () => {
         expect(() => new GipfCapture(coords)).not.toThrow();
     });
     describe('toString', () => {
-        it('should contain all captured cases', () => {
+        it('should contain all captured spaces', () => {
             const capture: GipfCapture = new GipfCapture([
                 new Coord(1, -3), new Coord(0, -2), new Coord(-1, -1), new Coord(-2, 0),
             ]);
@@ -105,6 +110,7 @@ describe('GipfCapture', () => {
 });
 
 describe('GipfPlacement', () => {
+
     describe('toString', () => {
         it('should work on placements without direction', () => {
             const placement: GipfPlacement = new GipfPlacement(new Coord(-3, 0), MGPOptional.empty());
@@ -142,6 +148,7 @@ describe('GipfPlacement', () => {
 });
 
 describe('GipfMove', () => {
+
     describe('toString', () => {
         it('should work on a move without capture', () => {
             const placement: GipfPlacement = new GipfPlacement(new Coord(-3, 0),
