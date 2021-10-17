@@ -42,23 +42,29 @@ interface ConnectivityStatus {
     // eslint-disable-next-line camelcase
     last_changed: unknown,
 }
-export interface AuthUser {
-    email: string | null,
-    username: string | null,
-    verified: boolean,
+export class AuthUser {
+    /**
+     * Represents the fact the user is not connected
+     */
+    public static NOT_CONNECTED: AuthUser = new AuthUser(null, null, false);
+
+    constructor(public email: string | null, public username: string | null, public verified: boolean) {
+    }
+
+    public isConnected(): boolean {
+        return this.email != null;
+    }
+    public isVerified(): boolean {
+        // A gmail user has the verified flag set, but needs to define its username to be fully verified
+        console.log({verified: this.verified, username: this.username})
+        return this.verified && this.username != null && this.username !== '';
+    }
 }
+
 @Injectable()
 export class AuthenticationService implements OnDestroy {
     public static VERBOSE: boolean = false;
 
-    /**
-     * Represents the fact the user is not connected
-     */
-    public static NOT_CONNECTED: AuthUser = {
-        username: null,
-        email: null,
-        verified: false,
-    };
 
     public authSub: Subscription; // public for testing purposes only
 
@@ -77,16 +83,15 @@ export class AuthenticationService implements OnDestroy {
                 console.log({user})
                 if (user == null) { // user logged out
                     display(AuthenticationService.VERBOSE, '2.B: User is not connected, according to fireAuth');
-                    this.userRS.next(AuthenticationService.NOT_CONNECTED);
+                    this.userRS.next(AuthUser.NOT_CONNECTED);
                 } else { // user logged in
                     console.log('updating presence')
                     RTDB.updatePresence(user.uid);
-                    console.log('getting username')
+                    console.log('getting username of uid ' + user.uid)
                     const username: string = await userDAO.getUsername(user.uid);
                     console.log('done, username is: ' + username)
                     display(AuthenticationService.VERBOSE, { userLoggedInAccordingToFireAuth: user });
-                    const verified: boolean = user.emailVerified;
-                    this.userRS.next({ username, verified, email: user.email });
+                    this.userRS.next(new AuthUser(user.email, username, user.emailVerified));
                 }
             } catch (e) {
                 console.log({error: e})
@@ -136,6 +141,8 @@ export class AuthenticationService implements OnDestroy {
                 return $localize`The credential is invalid or has expired, please try again.`;
             case 'auth/weak-password':
                 return $localize`Your password is too weak, please use a stronger password.`;
+            case 'auth/too-many-requests':
+                return $localize`There has been too many requests from your device. You are temporarily blocked due to unusual activity. Try again later.`;
             default:
                 Utils.handleError('Unsupported firebase error: ' + error.code + ' (' + error.message + ')');
                 return error.message;
@@ -174,7 +181,9 @@ export class AuthenticationService implements OnDestroy {
      */
     public async createUser(uid: string, username: string): Promise<void> {
         console.log('creating user')
-        await this.userDAO.set(uid, { username: username });
+        if (await this.userDAO.exists(uid) === false) {
+            await this.userDAO.set(uid, { username: username });
+        }
     }
     public async doGoogleLogin(): Promise<MGPValidation> {
         try {

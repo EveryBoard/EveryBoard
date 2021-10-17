@@ -19,11 +19,11 @@ export class ConnectedGuard implements CanActivate {
         });
     }
     private async evaluateUserPermission(user: AuthUser): Promise<boolean | UrlTree> {
-        if (user === AuthenticationService.NOT_CONNECTED) {
+        if (user.isConnected() === false) {
             // Redirects the user to the login page
             return this.router.parseUrl('/login');
-        } else if (user.verified === true) {
-            // Redirects the user to the main page
+        } else if (user.isVerified()) {
+            // Redirects the user to the main page, it is already verified
             return this.router.parseUrl('/');
         } else {
             return true;

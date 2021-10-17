@@ -20,16 +20,16 @@ export class JoueursDAO extends FirebaseFirestoreDAO<IJoueur> {
         return super.create(el);
     }
     public async usernameIsAvailable(username: string): Promise<boolean> {
-        return (await this.afs.collection<IJoueur>('users').ref.where('pseudo', '==', username).limit(1).get()).empty;
+        return (await this.afs.collection<IJoueur>('users').ref.where('username', '==', username).limit(1).get()).empty;
     }
     public async getUsername(uid: string): Promise<string> {
         return (await this.read(uid)).username;
     }
     public async setUsername(uid: string, username: string): Promise<void> {
-        await this.update(uid, { pseudo: username });
+        await this.update(uid, { username: username });
     }
     public observeUserByPseudo(pseudo: string, callback: FirebaseCollectionObserver<IJoueur>): () => void {
-        return this.observingWhere('pseudo', '==', pseudo, callback);
+        return this.observingWhere('username', '==', pseudo, callback);
     }
     public observeActivesUsers(callback: FirebaseCollectionObserver<IJoueur>): () => void {
         return this.observingWhere('state', '==', 'online', callback);

@@ -16,7 +16,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
     templateUrl: './verify-account.component.html',
 })
 export class VerifyAccountComponent implements OnInit, OnDestroy {
-    public verificationType: 'send-email' | 'enter-username';
+    public verificationType: 'send-email' | 'enter-username' = null;
 
     public success: boolean = false;
 
@@ -34,12 +34,13 @@ export class VerifyAccountComponent implements OnInit, OnDestroy {
                 public router: Router) {}
 
     public async ngOnInit(): Promise<void> {
+        console.log('verify account')
         this.userSub = this.authService.getUserObs()
             .subscribe((user: AuthUser) => {
                 this.emailAddress = user.email;
                 // We know that if this page is shown, something needs to be done to finalize the account
-                console.log({user});
-                if (user.username == null) {
+                console.log({username: user.username});
+                if (user.username == null || user.username === '') {
                     // If the user has no username, it will need to be defined
                     this.verificationType = 'enter-username';
                 } else {

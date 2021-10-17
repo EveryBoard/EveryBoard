@@ -125,6 +125,7 @@ const routes: Route [] = [
         LocalGameCreationComponent,
         OnlineGameCreationComponent,
         TutorialGameCreationComponent,
+        VerifyAccountComponent,
 
         AbaloneComponent,
         AwaleComponent,

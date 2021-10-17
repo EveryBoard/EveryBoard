@@ -305,7 +305,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         }
         const destroyDocIfCreatorOffline: (modifiedUsers: IJoueurId[]) => void = (modifiedUsers: IJoueurId[]) => {
             for (const user of modifiedUsers) {
-                assert(user.doc.pseudo === joiner.creator, 'found non creator while observing creator!');
+                assert(user.doc.username === joiner.creator, 'found non creator while observing creator!');
                 if (user.doc.state === 'offline' &&
                     this.allDocDeleted === false &&
                     joiner.partStatus !== PartStatus.PART_STARTED.value)
@@ -327,7 +327,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             for (const user of foundUsers) {
                 if (user.doc.state === 'offline') {
                     this.removeUserFromLobby(user.doc.username);
-                    Utils.handleError('OnlineGameWrapper: ' + user.doc.pseudo + ' is already offline!');
+                    Utils.handleError('OnlineGameWrapper: ' + user.doc.username + ' is already offline!');
                 }
             }
         };
@@ -342,7 +342,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             // This should not happen in practice, but if it does we can safely remove the user from the lobby
             for (const user of deletedUsers) {
                 this.removeUserFromLobby(user.doc.username);
-                Utils.handleError('OnlineGameWrapper: ' + user.doc.pseudo + ' was deleted (' + user.id + ')');
+                Utils.handleError('OnlineGameWrapper: ' + user.doc.username + ' was deleted (' + user.id + ')');
             }
         };
         const callback: FirebaseCollectionObserver<IJoueur> =

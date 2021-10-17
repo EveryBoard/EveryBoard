@@ -100,7 +100,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await partDAO.set('joinerId', PartMocks.INITIAL.doc);
         await joueurDAO.set('firstCandidateDocId', OPPONENT);
         await joueurDAO.set('creatorDocId', CREATOR);
-        await joueurDAO.set(OBSERVER.pseudo, OBSERVER);
+        await joueurDAO.set(OBSERVER.username, OBSERVER);
         await chatDAO.set('joinerId', { messages: [], status: `I don't have a clue` });
         return Promise.resolve();
     }
@@ -1463,7 +1463,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     });
     describe('Non Player Experience', () => {
         it('Should not be able to do anything', fakeAsync(async() => {
-            await prepareStartedGameFor({ username: OBSERVER.pseudo, verified: true, email: 'observer@home' });
+            await prepareStartedGameFor({ username: OBSERVER.username, verified: true, email: 'observer@home' });
             spyOn(componentTestUtils.wrapper as OnlineGameWrapperComponent, 'startCountDownFor').and.callFake(() => null);
 
             const forbiddenFunctionNames: string[] = [

@@ -11,7 +11,7 @@ import { LocaleUtils } from 'src/app/utils/LocaleUtils';
 export class HeaderComponent implements OnInit, OnDestroy {
     public userName: string;
 
-    private joueurSub: Subscription;
+    private userSub: Subscription;
 
     public showMenu: boolean = false;
 
@@ -23,7 +23,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
     public ngOnInit(): void {
         this.currentLanguage = LocaleUtils.getLocale().toUpperCase();
-        this.joueurSub = this.authenticationService.getUserObs()
+        this.userSub = this.authenticationService.getUserObs()
             .subscribe((user: AuthUser) => {
                 this.userName = user.username;
             });
@@ -38,6 +38,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
         window.open(window.location.href, '_self');
     }
     public ngOnDestroy(): void {
-        this.joueurSub.unsubscribe();
+        this.userSub.unsubscribe();
     }
 }

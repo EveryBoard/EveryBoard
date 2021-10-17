@@ -35,9 +35,15 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
         const docRef: DocumentReference = await this.afs.collection<T>(this.collectionName).add({ ...newElement });
         return docRef.id;
     }
+    public async exists(id: string): Promise<boolean> {
+        const docSnapshot: firebase.firestore.DocumentSnapshot<T> =
+            await this.afs.collection<T>(this.collectionName).doc(id).ref.get();
+        return docSnapshot.exists;
+    }
     public async read(id: string): Promise<T> {
-        const docSnapshot = await this.afs.collection<T>(this.collectionName).doc(id).ref.get();
-        return docSnapshot.data() as T;
+        const docSnapshot: firebase.firestore.DocumentSnapshot<T> =
+            await this.afs.collection<T>(this.collectionName).doc(id).ref.get();
+        return docSnapshot.data();
     }
     public async update(id: string, modification: Partial<T>): Promise<void> {
         return this.afs.collection(this.collectionName).doc<T>(id).ref.update(modification);
