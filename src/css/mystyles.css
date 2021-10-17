@@ -10372,5 +10372,13 @@ html {
   background-color: #ffc34d;
 }
 
+.endgame-bg {
+    background-color: #9ea0b3;
+}
 
- .clickable-icon{ pointer-events: all; cursor:pointer }
+.rounded-div {
+    -moz-border-radius: 18px;
+    -webkit-border-radius: 18px;
+    border-radius: 18px;
+}
+

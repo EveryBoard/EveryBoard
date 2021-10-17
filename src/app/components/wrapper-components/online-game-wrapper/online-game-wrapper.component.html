@@ -65,13 +65,13 @@
                     (click)="proposeDraw()"
                     i18n
             >Propose a draw</button>
-            <button class="button is-warning is-fullwidht mb-1"
+            <button class="button is-warning is-fullwidth mb-1"
                     *ngIf="endGame === false && isOpponentWaitingForDrawResponse()"
                     id="acceptDrawButton"
                     (click)="acceptDraw()"
                     i18n
             >Accept draw</button>
-            <button class="button is-warning is-fullwidht mb-1"
+            <button class="button is-warning is-fullwidth mb-1"
                     *ngIf="endGame === false && isOpponentWaitingForDrawResponse()"
                     id="refuseDrawButton"
                     (click)="refuseDraw()"
@@ -146,7 +146,7 @@
         </div>
     </div>
     <div id="board-tile"
-         class="tile is-9 is-parent"
+         class="tile is-9 is-parent rounded-div"
          [ngClass]="getBoardHighlight()">
         <div id="board"
              class="tile is-child box">

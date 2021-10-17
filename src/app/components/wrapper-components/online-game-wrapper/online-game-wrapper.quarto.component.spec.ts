@@ -1483,10 +1483,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it('should highlight each player name in their respective color', fakeAsync(async() => {
             // given a game that has been started
             await prepareStartedGameFor(CREATOR);
-            tick(1);
-            componentTestUtils.detectChanges();
 
             // when the game is displayed
+            tick(1);
+            componentTestUtils.detectChanges();
 
             // then it should highlight the player's names
             componentTestUtils.expectElementToHaveClass('#playerZeroIndicator', 'player0-bg');
@@ -1503,6 +1503,19 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // then it should highlight the board with its color
             componentTestUtils.expectElementToHaveClass('#board-tile', 'player0-bg');
+            tick(wrapper.joiner.maximalMoveDuration * 1000);
+        }));
+        it('should highlight the board in grey when game is over', fakeAsync(async() => {
+            // given a game that has been started
+            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            tick(1);
+            componentTestUtils.detectChanges();
+
+            // when the game is over
+            await componentTestUtils.clickElement('#resignButton');
+
+            // then it should highlight the board with its color
+            componentTestUtils.expectElementToHaveClass('#board-tile', 'endgame-bg');
             tick(wrapper.joiner.maximalMoveDuration * 1000);
         }));
         it('should not highlight the board when it is the turn of the opponent', fakeAsync(async() => {
