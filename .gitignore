@@ -28,6 +28,9 @@
 /.sass-cache
 /connect.lock
 /coverage
+! coverage/branches.csv
+! coverage/functions.csv
+! coverage/statements.csv
 /typings
 *.log
 
