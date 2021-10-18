@@ -14,6 +14,10 @@ def to_missing(x):
     return int(high)-int(low)
 
 
+def load_coverage_data_from_html_tree(tree, dirs, td):
+    data = map(to_missing, tree.xpath('//tr/td[%d]/text()' % td))
+    return dict(sorted(zip(dirs, data), key=lambda x: -x[1]))
+
 def load_coverage_data():
     f = open('coverage/index.html', mode='r')
     page = f.read()
@@ -21,14 +25,11 @@ def load_coverage_data():
     tree = html.fromstring(page)
 
     dirs = tree.xpath('//td/a/text()')
-    statements = map(to_missing, tree.xpath('//tr/td[4]/text()'))
-    branches = map(to_missing, tree.xpath('//tr/td[6]/text()'))
-    functions = map(to_missing, tree.xpath('//tr/td[8]/text()'))
-
     return {
-        'branches': dict(sorted(zip(dirs, branches), key=lambda x: -x[1])),
-        'statements': dict(sorted(zip(dirs, statements), key=lambda x: -x[1])),
-        'functions': dict(sorted(zip(dirs, functions), key=lambda x: -x[1]))
+        'branches': load_coverage_data_from_html_tree(tree, dirs, 4),
+        'statements': load_coverage_data_from_html_tree(tree, dirs, 6),
+        'functions': load_coverage_data_from_html_tree(tree, dirs, 8),
+        'lines': load_coverage_data_from_html_tree(tree, dirs, 10)
     }
 
 def load_stored_coverage_from(path):
@@ -41,7 +42,8 @@ def load_stored_coverage():
     return {
         'statements': load_stored_coverage_from('coverage/statements.csv'),
         'branches': load_stored_coverage_from('coverage/branches.csv'),
-        'functions': load_stored_coverage_from('coverage/functions.csv')
+        'functions': load_stored_coverage_from('coverage/functions.csv'),
+        'lines': load_stored_coverage_from('coverage/lines.csv')
     }
 
 def generate_in_file(data, path):
@@ -55,6 +57,7 @@ def generate():
     generate_in_file(data['statements'], 'coverage/statements.csv')
     generate_in_file(data['branches'], 'coverage/branches.csv')
     generate_in_file(data['functions'], 'coverage/functions.csv')
+    generate_in_file(data['functions'], 'coverage/lines.csv')
     print('CSV files generated with success')
 
 def check():
@@ -62,7 +65,7 @@ def check():
     new = load_coverage_data()
 
     decreased = False
-    for type_ in ['statements', 'branches', 'functions']:
+    for type_ in ['statements', 'branches', 'functions', 'lines']:
         for directory in old[type_]:
             new_missing = new[type_][directory]
             old_missing = old[type_][directory]
