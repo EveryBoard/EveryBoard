@@ -59,9 +59,9 @@ export class AwaleMinimax extends Minimax<AwaleMove, AwaleState, AwaleLegalitySt
         return moves;
     }
     public getBoardValue(node: AwaleNode): NodeUnheritance {
-        const status: GameStatus = AwaleRules.getGameStatus(node);
-        if (status.isEndGame) {
-            return NodeUnheritance.fromWinner(status.winner);
+        const gameStatus: GameStatus = AwaleRules.getGameStatus(node);
+        if (gameStatus.isEndGame) {
+            return NodeUnheritance.fromWinner(gameStatus.winner);
         }
 
         const state: AwaleState = node.gameState;

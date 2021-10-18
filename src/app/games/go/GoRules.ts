@@ -200,16 +200,16 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityStatus> {
 
         const newBoard: GoPiece[][] = state.getCopiedBoard();
         const currentTurn: number = state.turn;
-        const currentPlayer: number = currentTurn%2 === 0 ? GoPiece.BLACK.value : GoPiece.WHITE.value;
+        const currentPlayer: GoPiece = GoPiece.ofPlayer(state.getCurrentPlayer());
         const newTurn: number = currentTurn + 1;
-        newBoard[y][x] = GoPiece.of(currentPlayer);
+        newBoard[y][x] = currentPlayer;
         const capturedCoords: Coord[] = status.capturedCoords;
         for (const capturedCoord of capturedCoords) {
             newBoard[capturedCoord.y][capturedCoord.x] = GoPiece.EMPTY;
         }
         const newKoCoord: MGPOptional<Coord> = GoRules.getNewKo(legalMove, newBoard, capturedCoords);
         const newCaptured: number[] = state.getCapturedCopy();
-        newCaptured[currentPlayer] += capturedCoords.length;
+        newCaptured[currentPlayer.player.value] += capturedCoords.length;
         return new GoState(newBoard, newCaptured, newTurn, newKoCoord, Phase.PLAYING);
     }
     public static resurrectStones(state: GoState): GoState {
@@ -308,10 +308,8 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityStatus> {
         for (let y: number = 0; y < state.board.length; y++) {
             for (let x: number = 0; x < state.board[0].length; x++) {
                 const piece: GoPiece = state.getPieceAtXY(x, y);
-                if (piece === GoPiece.DEAD_BLACK) {
-                    killed[0] = killed[0] + 1;
-                } else if (piece === GoPiece.DEAD_WHITE) {
-                    killed[1] = killed[1] + 1;
+                if (piece.type === 'dead') {
+                    killed[piece.player.value] = killed[piece.player.value] + 1;
                 }
             }
         }
@@ -378,9 +376,8 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityStatus> {
     public static switchAliveness(groupCoord: Coord, switchedState: GoState): GoState {
         const switchedBoard: GoPiece[][] = switchedState.getCopiedBoard();
         const switchedPiece: GoPiece = switchedBoard[groupCoord.y][groupCoord.x];
-        if (switchedPiece.isEmpty()) {
-            throw new Error(`Can't switch emptyness aliveness`);
-        }
+        assert(switchedPiece.isEmpty() === false, `Can't switch emptyness aliveness`);
+
         const goGroupDatasFactory: GoGroupDatasFactory = new GoGroupDatasFactory();
         const group: GoGroupDatas = goGroupDatasFactory.getGroupDatas(groupCoord, switchedBoard) as GoGroupDatas;
         const captured: number[] = switchedState.getCapturedCopy();

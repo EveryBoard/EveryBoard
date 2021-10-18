@@ -51,4 +51,20 @@ describe('ReversiComponent', () => {
 
         expect(tablutGameComponent.getRectClasses(0, 4)).toEqual(['moved']);
     }));
+    it('should fake a click on ReversiMove.PASS.coord to pass', fakeAsync(async() => {
+        // Given a fictitious board on which player can only pass
+        componentTestUtils.setupState(new ReversiState([
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [O, X, _, _, _, _, _, _],
+        ], 1));
+
+        // when passing, it should be legal
+        expect((await componentTestUtils.getComponent().pass()).isSuccess()).toBeTrue();
+    }));
 });

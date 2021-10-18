@@ -97,7 +97,7 @@ describe('GameComponent', () => {
         };
         const refusal: MGPValidation = MGPValidation.failure(GameWrapperMessages.NO_CLONING_FEATURE());
 
-        for (const gameName of gameList) {
+        for (const gameName of gameList.concat('MinimaxTesting')) {
             const game: { [methodName: string]: unknown[] } = clickableMethods[gameName];
             if (game == null) {
                 throw new Error('Please define ' + gameName + ' clickable method in here to test them.');
@@ -114,7 +114,7 @@ describe('GameComponent', () => {
                 expect(clickResult).toEqual(refusal);
             }
         }
-        tick(1000);
+        tick(3000); // needs to be >2999
     }));
     it('Component should have an encoder and a tutorial', fakeAsync(async() =>{
         for (const gameInfo of GameInfo.ALL_GAMES()) {

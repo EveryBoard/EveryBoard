@@ -213,7 +213,7 @@ describe('PartCreationComponent:', () => {
                 testUtils.expectElementToExist('#selected_firstCandidate');
                 await joueursDAOMock.update('opponent', { state: 'offline' });
                 testUtils.detectChanges();
-                tick(3000);
+                tick(3000); // needs to be >2999
 
                 testUtils.expectElementNotToExist('#selected_firstCandidate');
                 expect(component.currentJoiner).toEqual(JoinerMocks.INITIAL.doc);
@@ -230,7 +230,7 @@ describe('PartCreationComponent:', () => {
                 // when the opponent is deleted
                 await joueursDAOMock.delete('opponent');
                 testUtils.detectChanges();
-                tick(3000);
+                tick(3000); // needs to be >2999
 
                 // then handleError has been called as this is an unusual situation
                 expect(Utils.handleError).toHaveBeenCalledOnceWith('OnlineGameWrapper: firstCandidate was deleted (opponent)');
@@ -432,7 +432,7 @@ describe('PartCreationComponent:', () => {
 
             // When arriving on that component
             testUtils.detectChanges();
-            tick(3000);
+            tick(3000); // needs to be >2999
 
             // Then game should be removed and all related data
             expect(gameService.deletePart).toHaveBeenCalledWith('joinerId');
@@ -445,12 +445,12 @@ describe('PartCreationComponent:', () => {
             const joinerDAOMock: JoinerDAO = TestBed.inject(JoinerDAO);
             spyOn(joinerDAOMock, 'read').and.returnValue(Promise.resolve(null));
             const joinerService: JoinerService = TestBed.inject(JoinerService);
-            spyOn(joinerService, 'startObserving');
+            spyOn(joinerService, 'observe');
 
             testUtils.detectChanges();
             await testUtils.whenStable();
 
-            expect(joinerService.startObserving).not.toHaveBeenCalled();
+            expect(joinerService.observe).not.toHaveBeenCalled();
         }));
         it('should not fail if joiner update is null, and should redirect to server', fakeAsync(async() => {
             // given a component with initial joiner present
@@ -476,7 +476,6 @@ describe('PartCreationComponent:', () => {
         await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL.doc);
         testUtils.detectChanges();
         await testUtils.whenStable();
-        tick(3000);
 
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate');
@@ -486,10 +485,9 @@ describe('PartCreationComponent:', () => {
 
         // then the user is rerouted to the server
         testUtils.detectChanges();
-        tick(3000);
+        tick(3000); // needs to be >2999
         expect(router.navigate).toHaveBeenCalledWith(['server']);
     }));
-
     it('should see candidate disappear and reappear if candidates disconnects and reconnects');
 
     describe('graceful handling of unexpected situations', () => {

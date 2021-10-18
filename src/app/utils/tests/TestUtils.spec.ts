@@ -1,10 +1,9 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement, Type } from '@angular/core';
+import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement, Type } from '@angular/core';
 import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';
@@ -71,7 +70,6 @@ export class SimpleComponentTestUtils<T> {
     public static async create<T>(componentType: Type<T>): Promise<SimpleComponentTestUtils<T>> {
         await TestBed.configureTestingModule({
             imports: [
-                MatSnackBarModule,
                 RouterTestingModule.withRoutes([
                     { path: '**', component: BlankComponent },
                 ]),
@@ -176,7 +174,6 @@ export class ComponentTestUtils<T extends MyGameComponent> {
         const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub(game, 'joinerId');
         await TestBed.configureTestingModule({
             imports: [
-                MatSnackBarModule,
                 AppModule,
                 RouterTestingModule.withRoutes([
                     { path: 'play', component: OnlineGameWrapperComponent },
@@ -215,6 +212,10 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     public detectChanges(): void {
         this.fixture.detectChanges();
     }
+    public forceChangeDetection(): void {
+        this.fixture.debugElement.injector.get<ChangeDetectorRef>(ChangeDetectorRef).markForCheck();
+        this.detectChanges();
+    }
     public setRoute(id: string, value: string): void {
         this.activatedRouteStub.setRoute(id, value);
     }
@@ -230,7 +231,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
             this.gameComponent.rules.node = new MGPNode(null, previousMove || null, state);
         }
         this.gameComponent.updateBoard();
-        this.fixture.detectChanges();
+        this.forceChangeDetection();
     }
     public getComponent(): T {
         return (this.gameComponent as unknown) as T;
@@ -264,7 +265,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
             expect(this.chooseMoveSpy).not.toHaveBeenCalled();
             expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(reason);
             this.cancelMoveSpy.calls.reset();
-            tick(150);
+            tick(3000); // needs to be >2999
         }
     }
     public async expectClickForbidden(elementName: string, reason: string): Promise<void> {
@@ -283,7 +284,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
             this.canUserPlaySpy.calls.reset();
             expect(this.chooseMoveSpy).not.toHaveBeenCalled();
             expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(clickValidity.reason);
-            tick(150);
+            tick(3000); // needs to be >2999
         }
     }
     public async expectMoveSuccess(elementName: string,
@@ -347,7 +348,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
             expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(reason);
             this.cancelMoveSpy.calls.reset();
             expect(this.onLegalUserMoveSpy).not.toHaveBeenCalled();
-            tick(150);
+            tick(3000); // needs to be >2999
         }
     }
     public async clickElement(elementName: string): Promise<void> {

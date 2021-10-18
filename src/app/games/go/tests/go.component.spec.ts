@@ -35,7 +35,7 @@ describe('GoComponent', () => {
         expect((await componentTestUtils.getComponent().pass()).isSuccess()).toBeTrue(); // Finished
 
         expect((await componentTestUtils.getComponent().pass()).reason).toBe(RulesFailure.CANNOT_PASS());
-        tick(150);
+        tick(3000); // needs to be >2999
     }));
     it('Should show captures', fakeAsync(async() => {
         const board: Table<GoPiece> = [

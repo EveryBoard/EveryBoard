@@ -14,7 +14,6 @@ import { IJoiner, PartType } from 'src/app/domain/ijoiner';
 import { JoinerDAO } from 'src/app/dao/JoinerDAO';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AuthenticationService } from '../AuthenticationService';
 import { AuthenticationServiceMock } from './AuthenticationService.spec';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
@@ -30,7 +29,6 @@ describe('GameService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
-                MatSnackBarModule,
                 RouterTestingModule.withRoutes([
                     { path: '**', component: BlankComponent },
                 ]),
@@ -111,12 +109,12 @@ describe('GameService', () => {
 
             // when calling it
             expect(await service.createGameAndRedirectOrShowError('whatever')).toBeFalse();
+            tick(3000); // needs to be >2999
 
             // it should toast, and navigate
             expect(service.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(GameServiceMessages.USER_OFFLINE());
             expect(service.router.navigate).toHaveBeenCalledOnceWith(['/login']);
 
-            tick(150);
         }));
         it('should show toast and navigate when creator cannot create game', fakeAsync(async() => {
             spyOn(service.router, 'navigate').and.callThrough();
@@ -126,7 +124,7 @@ describe('GameService', () => {
 
             // when calling it
             expect(await service.createGameAndRedirectOrShowError('whatever')).toBeFalse();
-            tick(150);
+            tick(3000); // needs to be >2999
 
             // it should toast, and navigate
             expect(service.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(GameServiceMessages.ALREADY_INGAME());

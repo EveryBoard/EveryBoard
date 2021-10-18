@@ -1,12 +1,13 @@
 import { GameStateWithTable } from '../../jscaip/GameStateWithTable';
 import { TablutCase } from './TablutCase';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { Player } from 'src/app/jscaip/Player';
 
 export class TablutState extends GameStateWithTable<TablutCase> {
 
     // Statics Fields:
 
-    public static INVADER_START: boolean = true;
+    public static readonly INVADER: Player = Player.ZERO;
 
     // Statics Methods :
 
@@ -18,7 +19,7 @@ export class TablutState extends GameStateWithTable<TablutCase> {
         const DEFENDERS: TablutCase = TablutCase.DEFENDERS;
         const INVADERS: TablutCase = TablutCase.INVADERS;
 
-        board[4][4] = TablutState.INVADER_START ? PLAYER_ONE_KING : PLAYER_ZERO_KING;
+        board[4][4] = TablutState.INVADER === Player.ZERO ? PLAYER_ONE_KING : PLAYER_ZERO_KING;
 
         board[3][4] = DEFENDERS; board[5][4] = DEFENDERS; board[4][3] = DEFENDERS; board[4][5] = DEFENDERS;
         // closer most defenders

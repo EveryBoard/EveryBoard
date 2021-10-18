@@ -1,5 +1,4 @@
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
@@ -11,9 +10,7 @@ import { PylosState } from './PylosState';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PylosFailure } from './PylosFailure';
 
-export class PylosNode extends MGPNode<PylosRules,
-                                       PylosMove,
-                                       PylosState> {}
+export class PylosNode extends MGPNode<PylosRules, PylosMove, PylosState> {}
 
 export class PylosRules extends Rules<PylosMove, PylosState> {
 
@@ -144,7 +141,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
     }
     public isLegal(move: PylosMove, state: PylosState): LegalityStatus {
         if (state.getPieceAt(move.landingCoord) !== Player.NONE) {
-            return { legal: MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE()) };
+            return LegalityStatus.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
 
         const startingCoord: PylosCoord = move.startingCoord.getOrNull();
@@ -153,35 +150,35 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
         if (startingCoord != null) {
             const startingPiece: Player = state.getPieceAt(startingCoord);
             if (startingPiece === OPPONENT) {
-                return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE()) };
+                return LegalityStatus.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
             } else if (startingPiece === Player.NONE) {
-                return { legal: MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY()) };
+                return LegalityStatus.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
             }
 
             const supportedPieces: PylosCoord[] = startingCoord.getHigherPieces()
                 .filter((p: PylosCoord) => state.getPieceAt(p) !== Player.NONE ||
                                            p.equals(move.landingCoord));
             if (supportedPieces.length > 0) {
-                return { legal: MGPValidation.failure(PylosFailure.SHOULD_HAVE_SUPPORTING_PIECES()) };
+                return LegalityStatus.failure(PylosFailure.SHOULD_HAVE_SUPPORTING_PIECES());
             }
         }
         if (!state.isLandable(move.landingCoord)) {
-            return { legal: MGPValidation.failure(PylosFailure.CANNOT_LAND()) };
+            return LegalityStatus.failure(PylosFailure.CANNOT_LAND());
         }
 
         if (move.firstCapture.isPresent()) {
             if (PylosRules.canCapture(state, move.landingCoord) === false) {
-                return { legal: MGPValidation.failure(PylosFailure.CANNOT_CAPTURE()) };
+                return LegalityStatus.failure(PylosFailure.CANNOT_CAPTURE());
             }
 
             if (PylosRules.isValidCapture(state, move, move.firstCapture.get())) {
                 if (move.secondCapture.isPresent() &&
                     !PylosRules.isValidCapture(state, move, move.secondCapture.get())) {
-                    return { legal: MGPValidation.failure(PylosFailure.INVALID_SECOND_CAPTURE()) };
+                    return LegalityStatus.failure(PylosFailure.INVALID_SECOND_CAPTURE());
                 }
-            } else return { legal: MGPValidation.failure(PylosFailure.INVALID_FIRST_CAPTURE()) };
+            } else return LegalityStatus.failure(PylosFailure.INVALID_FIRST_CAPTURE());
         }
-        return { legal: MGPValidation.SUCCESS };
+        return LegalityStatus.SUCCESS;
     }
     public getGameStatus(node: PylosNode): GameStatus {
         return PylosRules.getGameStatus(node);
