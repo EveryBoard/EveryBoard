@@ -1,4 +1,4 @@
-src/app/services,23
+src/app/services,27
 src/app/games/six,6
 src/app/jscaip,6
 src/app/games/quarto,5
@@ -6,14 +6,14 @@ src/app/games/go,3
 src/app/games/tablut,3
 src/app/components/wrapper-components/online-game-wrapper,2
 src/app/games/dvonn,2
-src/app/games/kamisado,2
 src/app/games/pylos,2
+src/app/games/reversi,2
 src/app/components/normal-component/server-page,1
 src/app/components/wrapper-components/part-creation,1
 src/app/games/awale,1
 src/app/games/encapsule,1
+src/app/games/kamisado,1
 src/app/games/pentago,1
-src/app/games/reversi,1
 src/app/utils,1
 src,0
 src/app,0

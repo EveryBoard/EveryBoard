@@ -46,8 +46,8 @@ def load_stored_coverage():
 
 def generate_in_file(data, path):
     f = open(path, mode='w')
-    for (directory, missing) in data:
-        f.write('%s,%d\n' % (directory, missing))
+    for directory in data:
+        f.write('%s,%d\n' % (directory, data[directory]))
     f.close()
 
 def generate():
