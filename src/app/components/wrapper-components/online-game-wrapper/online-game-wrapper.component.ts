@@ -579,7 +579,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                                                onDocumentModified,
                                                onDocumentDeleted);
             this.opponentSubscription =
-                this.userService.observeUserByPseudo(opponentName, callback);
+                this.userService.observeUserByUsername(opponentName, callback);
         }
     }
     public async onLegalUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<void> {

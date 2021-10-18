@@ -1,5 +1,5 @@
 import { fakeAsync, TestBed } from '@angular/core/testing';
-import { AuthenticationService } from 'src/app/services/AuthenticationService';
+import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { VerifyAccountComponent } from './verify-account.component';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
@@ -9,7 +9,6 @@ describe('VerifyAccountComponent', () => {
     let testUtils: SimpleComponentTestUtils<VerifyAccountComponent>;
 
     let authService: AuthenticationService;
-
 
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(VerifyAccountComponent);
@@ -21,7 +20,7 @@ describe('VerifyAccountComponent', () => {
     describe('google user', () => {
         beforeEach(() => {
             // given a user that registered through google
-            AuthenticationServiceMock.setUser({ email: 'jeanjaja@gmail.com', verified: true, username: null });
+            AuthenticationServiceMock.setUser(new AuthUser('jeanjaja@gmail.com', null, true));
             testUtils.detectChanges();
         });
         it('should ask the username if the user has none', fakeAsync(async() => {
@@ -63,7 +62,7 @@ describe('VerifyAccountComponent', () => {
     describe('email user', () => {
         beforeEach(() => {
             // given a user that registered through its email
-            AuthenticationServiceMock.setUser({ email: 'jean@jaja.europe', verified: false, username: 'jeanjaja' });
+            AuthenticationServiceMock.setUser(new AuthUser('jean@jaja.europe', 'jeanjaja', false));
             testUtils.detectChanges();
         });
         it('should resend email verification if asked by the user and show that it succeeded', fakeAsync(async() => {

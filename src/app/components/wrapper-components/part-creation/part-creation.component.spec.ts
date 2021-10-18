@@ -6,7 +6,7 @@ import { JoinerDAO } from 'src/app/dao/JoinerDAO';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { ChatDAO } from 'src/app/dao/ChatDAO';
-import { JoueursDAO } from 'src/app/dao/JoueursDAO';
+import { UserDAO } from 'src/app/dao/UserDAO';
 import { IPart } from 'src/app/domain/icurrentpart';
 import { IJoueur } from 'src/app/domain/iuser';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
@@ -23,7 +23,7 @@ describe('PartCreationComponent:', () => {
 
     let joinerDAOMock: JoinerDAO;
     let partDAOMock: PartDAO;
-    let joueursDAOMock: JoueursDAO;
+    let joueursDAOMock: UserDAO;
 
     async function selectCustomGameAndChangeConfig(): Promise<void> {
         await testUtils.clickElement('#partTypeCustom');
@@ -40,11 +40,11 @@ describe('PartCreationComponent:', () => {
         testUtils.detectChanges();
     }
     const CREATOR: IJoueur = {
-        pseudo: 'creator',
+        username: 'creator',
         state: 'online',
     };
     const OPPONENT: IJoueur = {
-        pseudo: 'firstCandidate',
+        username: 'firstCandidate',
         state: 'online',
     };
     beforeEach(fakeAsync(async() => {
@@ -52,7 +52,7 @@ describe('PartCreationComponent:', () => {
         const chatDAOMock: ChatDAO = TestBed.inject(ChatDAO);
         partDAOMock = TestBed.inject(PartDAO);
         joinerDAOMock = TestBed.inject(JoinerDAO);
-        joueursDAOMock = TestBed.inject(JoueursDAO);
+        joueursDAOMock = TestBed.inject(UserDAO);
         component = testUtils.getComponent();
         component.partId = 'joinerId';
         await chatDAOMock.set('joinerId', { messages: [], status: 'dummy status' });

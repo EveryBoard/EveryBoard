@@ -10,7 +10,7 @@ import { Observable, Subscription, ReplaySubject } from 'rxjs';
 import { display, Utils } from 'src/app/utils/utils';
 import { MGPValidation } from '../utils/MGPValidation';
 import { MGPFallible } from '../utils/MGPFallible';
-import { JoueursDAO } from '../dao/JoueursDAO';
+import { UserDAO } from '../dao/UserDAO';
 
 export class RTDB {
     public static OFFLINE: ConnectivityStatus = {
@@ -42,6 +42,7 @@ interface ConnectivityStatus {
     // eslint-disable-next-line camelcase
     last_changed: unknown,
 }
+
 export class AuthUser {
     /**
      * Represents the fact the user is not connected
@@ -72,8 +73,10 @@ export class AuthenticationService implements OnDestroy {
 
     private userObs: Observable<AuthUser>;
 
+    private registrationInProgress: Promise<MGPFallible<firebase.User>>;
+
     constructor(public afAuth: AngularFireAuth,
-                private userDAO: JoueursDAO) {
+                private userDAO: UserDAO) {
         display(AuthenticationService.VERBOSE, '1 authService subscribe to Obs<User>');
 
         this.userRS = new ReplaySubject<AuthUser>(1);
@@ -85,6 +88,15 @@ export class AuthenticationService implements OnDestroy {
                     display(AuthenticationService.VERBOSE, '2.B: User is not connected, according to fireAuth');
                     this.userRS.next(AuthUser.NOT_CONNECTED);
                 } else { // user logged in
+                    if (this.registrationInProgress) {
+                        console.log('waiting for registration to finish')
+                        /**
+                         * We need to wait for the entire registration process to finish,
+                         * otherwise we risk reading an empty username before the user is fully created
+                         */
+                        await this.registrationInProgress;
+                        this.registrationInProgress = undefined;
+                    }
                     console.log('updating presence')
                     RTDB.updatePresence(user.uid);
                     console.log('getting username of uid ' + user.uid)
@@ -107,24 +119,28 @@ export class AuthenticationService implements OnDestroy {
         if (username == null || email == null || password == null) {
             return MGPFallible.failure($localize`There are missing fields in the registration form, please check that you filled in all fields.`);
         }
-        try {
-            console.log('checking if username is available')
-            if (await this.userDAO.usernameIsAvailable(username)) {
-                console.log('it is, creating the user')
-                const userCredential: firebase.auth.UserCredential =
-                    await firebase.auth().createUserWithEmailAndPassword(email, password);
-                console.log({userCredential})
-                const user: firebase.User = userCredential.user;
-                console.log('updating user data with username: ' + username)
-                await this.createUser(user.uid, username);
-                console.log('done')
-                return MGPFallible.success(userCredential.user);
-            } else {
-                return MGPFallible.failure($localize`This username is already in use.`);
-            }
-        } catch (e) {
-            console.log('error in doRegister')
-            return MGPFallible.failure(this.mapFirebaseError(e));
+        console.log('checking if username is available')
+        if (await this.userDAO.usernameIsAvailable(username)) {
+            console.log('it is, creating the user')
+            this.registrationInProgress = new Promise(async(resolve: (result: MGPFallible<firebase.User>) => void) => {
+                try {
+                    const userCredential: firebase.auth.UserCredential =
+                        await firebase.auth().createUserWithEmailAndPassword(email, password);
+                    console.log({userCredential})
+                    const user: firebase.User = userCredential.user;
+                    console.log('updating user data with username: ' + username)
+                    await this.createUser(user.uid, username);
+                    console.log('done')
+                    // TODO: release lock "user creation"
+                    resolve(MGPFallible.success(userCredential.user));
+                } catch (e) {
+                    console.log('error in doRegister')
+                    resolve(MGPFallible.failure(this.mapFirebaseError(e)));
+                }
+            });
+            return await this.registrationInProgress;
+        } else {
+            return MGPFallible.failure($localize`This username is already in use.`);
         }
     }
     public mapFirebaseError(error: firebase.FirebaseError): string {
@@ -211,13 +227,17 @@ export class AuthenticationService implements OnDestroy {
         }
     }
     public getUserObs(): Observable<AuthUser> {
+        // TODO for review: what would be the best way to unit test this without having a dummy dum-dum test?
         return this.userObs;
     }
     public async setUsername(username: string): Promise<MGPValidation> {
         try {
+            console.log('setting username')
             const currentUser: firebase.User = firebase.auth().currentUser;
             await currentUser.updateProfile({ displayName: username });
             await this.userDAO.setUsername(currentUser.uid, username);
+            // Notify listeners that the user has changed
+            this.userRS.next(new AuthUser(currentUser.email, username, currentUser.emailVerified));
             return MGPValidation.SUCCESS;
         } catch (e) {
             return MGPValidation.failure(this.mapFirebaseError(e));

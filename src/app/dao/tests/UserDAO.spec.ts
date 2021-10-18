@@ -1,21 +1,21 @@
 import { TestBed } from '@angular/core/testing';
 import { IJoueur } from 'src/app/domain/iuser';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
-import { JoueursDAO } from '../JoueursDAO';
+import { UserDAO } from '../UserDAO';
 import { setupFirestoreTestModule } from './FirebaseFirestoreDAO.spec';
 
-describe('JoueursDAO', () => {
+describe('UserDAO', () => {
 
-    let dao: JoueursDAO;
+    let dao: UserDAO;
 
     beforeEach(async() => {
         await setupFirestoreTestModule();
-        dao = TestBed.inject(JoueursDAO);
+        dao = TestBed.inject(UserDAO);
     });
     it('should be created', () => {
         expect(dao).toBeTruthy();
     });
-    describe('observeUserByPseudo', () => {
+    describe('observeUserByUsername', () => {
         it('should call observingWhere with the right condition', () => {
             const callback: FirebaseCollectionObserver<IJoueur> = new FirebaseCollectionObserver<IJoueur>(
                 () => void { },
@@ -23,8 +23,8 @@ describe('JoueursDAO', () => {
                 () => void { },
             );
             spyOn(dao, 'observingWhere');
-            dao.observeUserByPseudo('jeanjaja', callback);
-            expect(dao.observingWhere).toHaveBeenCalledWith('pseudo', '==', 'jeanjaja', callback);
+            dao.observeUserByUsername('jeanjaja', callback);
+            expect(dao.observingWhere).toHaveBeenCalledWith('username', '==', 'jeanjaja', callback);
         });
     });
     describe('observeActivesUsers', () => {

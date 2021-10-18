@@ -1,20 +1,18 @@
 import { UserService } from '../UserService';
 import { ActivesUsersService } from '../ActivesUsersService';
-import { JoueursDAO } from 'src/app/dao/JoueursDAO';
-import { JoueursDAOMock } from 'src/app/dao/tests/JoueursDAOMock.spec';
+import { UserDAO } from 'src/app/dao/UserDAO';
+import { UserDAOMock } from 'src/app/dao/tests/UserDAOMock.spec';
 
-/* TODO 
 describe('UserService', () => {
 
     let service: UserService;
 
     beforeEach(() => {
-        const joueursDAOMock: JoueursDAOMock = new JoueursDAOMock();
-        service = new UserService(new ActivesUsersService(joueursDAOMock as unknown as JoueursDAO),
-                                  joueursDAOMock as unknown as JoueursDAO);
+        const joueursDAOMock: UserDAOMock = new UserDAOMock();
+        service = new UserService(new ActivesUsersService(joueursDAOMock as unknown as UserDAO),
+                                  joueursDAOMock as unknown as UserDAO);
     });
     it('should create', () => {
         expect(service).toBeTruthy();
     });
 });
-*/

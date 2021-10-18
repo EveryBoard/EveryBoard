@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { JoueursDAO } from '../dao/JoueursDAO';
+import { UserDAO } from '../dao/UserDAO';
 import { IJoueur, IJoueurId } from '../domain/iuser';
 import { ActivesUsersService } from './ActivesUsersService';
 import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
@@ -11,7 +11,7 @@ import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
 export class UserService {
 
     constructor(private activesUsersService: ActivesUsersService,
-                private joueursDao: JoueursDAO) {
+                private joueursDao: UserDAO) {
     }
     // On Server Component
 
@@ -24,8 +24,8 @@ export class UserService {
         this.activesUsersService.stopObserving();
     }
     // Delegate
-    public observeUserByPseudo(pseudo: string, callback: FirebaseCollectionObserver<IJoueur>): () => void {
+    public observeUserByUsername(username: string, callback: FirebaseCollectionObserver<IJoueur>): () => void {
         // the callback will be called on the foundUser
-        return this.joueursDao.observeUserByPseudo(pseudo, callback);
+        return this.joueursDao.observeUserByUsername(username, callback);
     }
 }

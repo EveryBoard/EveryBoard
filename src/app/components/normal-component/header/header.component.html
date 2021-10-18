@@ -41,9 +41,9 @@
                 </div>
             </div>
             <div class="navbar-item">
-                <ng-container *ngIf="userName else connect">
+                <ng-container *ngIf="username else connect">
                     <div class="navbar-item has-dropdown is-hoverable">
-                        <a class="navbar-link">{{userName}}</a>
+                        <a class="navbar-link">{{username}}</a>
                         <div class="navbar-dropdown">
                             <a class="navbar-item" id="logout" (click)="logout()" i18n>Log out</a>
                         </div>

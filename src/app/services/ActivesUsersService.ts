@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { IJoueurId, IJoueur } from '../domain/iuser';
-import { JoueursDAO } from '../dao/JoueursDAO';
+import { UserDAO } from '../dao/UserDAO';
 import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
 import { display } from 'src/app/utils/utils';
 
@@ -17,7 +17,7 @@ export class ActivesUsersService {
 
     private unsubscribe: () => void;
 
-    constructor(public joueursDAO: JoueursDAO) {
+    constructor(public joueursDAO: UserDAO) {
         this.activesUsersObs = this.activesUsersBS.asObservable();
     }
     public startObserving(): void {

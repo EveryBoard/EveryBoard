@@ -9,7 +9,7 @@ import { LocaleUtils } from 'src/app/utils/LocaleUtils';
     templateUrl: './header.component.html',
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-    public userName: string;
+    public username: string = 'connecting...';
 
     private userSub: Subscription;
 
@@ -25,7 +25,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.currentLanguage = LocaleUtils.getLocale().toUpperCase();
         this.userSub = this.authenticationService.getUserObs()
             .subscribe((user: AuthUser) => {
-                this.userName = user.username;
+                this.username = user.username || user.email;
             });
     }
     public async logout(): Promise<void> {

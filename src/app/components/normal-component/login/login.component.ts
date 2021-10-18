@@ -26,9 +26,10 @@ export class LoginComponent implements OnInit {
 
     public ngOnInit(): void {
         this.authenticationService.getUserObs()
-            .subscribe((user: AuthUser) => {
+            .subscribe(async(user: AuthUser) => {
+                console.log(user)
                 if (user != null) {
-                    this.redirect();
+                    await this.redirect();
                 }
             });
     }
@@ -44,7 +45,8 @@ export class LoginComponent implements OnInit {
             this.errorMessage = result.getReason();
         }
     }
-    private redirect(): Promise<boolean> {
+    private async redirect(): Promise<boolean> {
+        console.log('redirecting')
         // TODO FOR REVIEW: is it better to redirect to / or to /server?
         return this.router.navigate(['/server']);
     }

@@ -1,4 +1,4 @@
-import { AuthenticationService } from 'src/app/services/AuthenticationService';
+import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
 import { Router } from '@angular/router';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -33,7 +33,7 @@ describe('VerifiedAccountGuard', () => {
         expect(guard).toBeDefined();
     });
     it('should move unconnected user to login page and refuse them', fakeAsync(async() => {
-        AuthenticationServiceMock.setUser(AuthenticationService.NOT_CONNECTED);
+        AuthenticationServiceMock.setUser(AuthUser.NOT_CONNECTED);
         await expectAsync(guard.canActivate()).toBeResolvedTo(router.parseUrl('/login'));
     }));
     it('should move unverified user to verify-account page and refuse them', fakeAsync(async() => {
@@ -41,7 +41,7 @@ describe('VerifiedAccountGuard', () => {
         await expectAsync(guard.canActivate()).toBeResolvedTo(router.parseUrl('/verify-account'));
     }));
     it('should move users without username to verify-account page and refuse them', fakeAsync(async() => {
-        AuthenticationServiceMock.setUser({ email: 'jeanjaja@gmail.com', verified: true, username: null });
+        AuthenticationServiceMock.setUser(new AuthUser('jeanjaja@gmail.com', null, true));
         await expectAsync(guard.canActivate()).toBeResolvedTo(router.parseUrl('/verify-account'));
     }));
     it('should accept verified user', fakeAsync(async() => {

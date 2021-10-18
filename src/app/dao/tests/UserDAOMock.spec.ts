@@ -5,25 +5,25 @@ import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 import { display } from 'src/app/utils/utils';
 import { FirebaseFirestoreDAOMock } from './FirebaseFirestoreDAOMock.spec';
 
-type JoueursOS = ObservableSubject<IJoueurId>
+type UserOS = ObservableSubject<IJoueurId>
 
-export class JoueursDAOMock extends FirebaseFirestoreDAOMock<IJoueur> {
+export class UserDAOMock extends FirebaseFirestoreDAOMock<IJoueur> {
     public static VERBOSE: boolean = false;
 
-    private static joueursDB: MGPMap<string, JoueursOS>;
+    private static joueursDB: MGPMap<string, UserOS>;
 
     public constructor() {
-        super('JoueursDAOMock', JoueursDAOMock.VERBOSE);
-        display(this.VERBOSE, 'JoueursDAOMock.constructor');
+        super('UserDAOMock', UserDAOMock.VERBOSE);
+        display(this.VERBOSE, 'UserDAOMock.constructor');
     }
-    public getStaticDB(): MGPMap<string, JoueursOS> {
-        return JoueursDAOMock.joueursDB;
+    public getStaticDB(): MGPMap<string, UserOS> {
+        return UserDAOMock.joueursDB;
     }
     public resetStaticDB(): void {
-        JoueursDAOMock.joueursDB = new MGPMap();
+        UserDAOMock.joueursDB = new MGPMap();
     }
-    public observeUserByPseudo(pseudo: string, callback: FirebaseCollectionObserver<IJoueur>): () => void {
-        return this.observingWhere('pseudo', '==', pseudo, callback);
+    public observeUserByUsername(username: string, callback: FirebaseCollectionObserver<IJoueur>): () => void {
+        return this.observingWhere('username', '==', username, callback);
     }
     public observeActivesUsers(callback: FirebaseCollectionObserver<IJoueur>): () => void {
         return this.observingWhere('state', '==', 'online', callback);

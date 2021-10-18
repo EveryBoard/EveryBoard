@@ -52,6 +52,7 @@ export class VerifyAccountComponent implements OnInit, OnDestroy {
     }
 
     public async pickUsername(formContent: { username: string }): Promise<void> {
+        console.log('picking username: ' + formContent.username);
         const result: MGPValidation = await this.authService.setUsername(formContent.username);
         if (result.isSuccess()) {
             this.success = true;

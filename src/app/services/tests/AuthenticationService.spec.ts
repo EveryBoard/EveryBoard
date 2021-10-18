@@ -1,6 +1,6 @@
 import { AuthenticationService, AuthUser, RTDB } from '../AuthenticationService';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import firebase from 'firebase/app';
 import 'firebase/auth';
@@ -15,7 +15,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { Utils } from 'src/app/utils/utils';
 import { environment } from 'src/environments/environment';
-import { JoueursDAO } from 'src/app/dao/JoueursDAO';
+import { UserDAO } from 'src/app/dao/UserDAO';
 
 class RTDBSpec {
     // TODO: these are stubs that can be removed after the RTDB functions ticket has been done
@@ -23,11 +23,6 @@ class RTDBSpec {
         // Here we can't clear the DB because it breaks everything, but this is how it should be done:
         //  await firebase.database().ref().set(null);
         return;
-    }
-    public static userIsCreated(uid: string): Promise<void> {
-        // The RTDB functions should create the user in the firestore db when the user is registered
-        // (done through RTBD functions). Here we need to do it manually
-        return TestBed.inject(JoueursDAO).set(uid, { pseudo: null });
     }
     public static setOfflineMock(): void {
         // We mock setOffline as it should trigger an RTDB function in practice
@@ -39,17 +34,9 @@ class RTDBSpec {
 export class AuthenticationServiceMock {
     private static CURRENT_USER: AuthUser = null;
 
-    public static CONNECTED_UNVERIFIED: AuthUser = {
-        email: 'jean@jaja.europe',
-        username: 'Jean Jaja',
-        verified: false,
-    }
+    public static CONNECTED_UNVERIFIED: AuthUser = new AuthUser('jean@jaja.europe', 'Jean Jaja', false);
 
-    public static CONNECTED: AuthUser = {
-        email: 'jean@jaja.europe',
-        username: 'Jean Jaja',
-        verified: true,
-    }
+    public static CONNECTED: AuthUser = new AuthUser('jean@jaja.europe', 'Jean Jaja', true);
 
     public static setUser(user: AuthUser): void {
         AuthenticationServiceMock.CURRENT_USER = user;
@@ -122,7 +109,7 @@ export class AuthenticationServiceUnderTest extends AuthenticationService {
 
 async function createConnectedGoogleUser(): Promise<firebase.auth.UserCredential> {
     const credentials: firebase.auth.UserCredential = await firebase.auth().signInWithCredential(firebase.auth.GoogleAuthProvider.credential('{"sub": "abc123", "email": "foo@example.com", "email_verified": true}'));
-    await RTDBSpec.userIsCreated(credentials.user.uid);
+    await TestBed.inject(UserDAO).set(credentials.user.uid, { username: null });
     return credentials;
 }
 
@@ -148,17 +135,17 @@ describe('AuthenticationService', () => {
         expect(service).toBeTruthy();
     }));
     describe('register', () => {
-        it('should update user data upon successful registration', async() => {
-            spyOn(service, 'updateUserData');
+        it('should create user upon successful registration', async() => {
+            spyOn(service, 'createUser');
 
             // given an user that does not exist
 
             // when the user is registered
             const result: MGPFallible<firebase.User> = await service.doRegister(username, email, password);
 
-            // then the user is successfully registered and its data is updated
+            // then the user is successfully registered and created
             expect(result.isSuccess()).toBeTrue();
-            expect(service.updateUserData).toHaveBeenCalledWith({ ...result.get(), displayName: username });
+            expect(service.createUser).toHaveBeenCalledWith(result.get().uid, username);
         });
         it('should fail when trying to register an user with an email that is already registered', async() => {
             // given an user that already exists
@@ -286,6 +273,22 @@ describe('AuthenticationService', () => {
             expect(result.isSuccess()).toBeTrue();
             expect(firebase.auth().currentUser.email).toBe(email);
         });
+        it('should update userObs when successfully logging in', async() => {
+            // given that a listener is waiting for user updates
+            let updateSeen: boolean = false;
+            const subscription: Subscription = service.getUserObs().subscribe((_: AuthUser): void => {
+                updateSeen = true;
+            });
+            expect(updateSeen).toBeFalse();
+
+            // when a user is logged in
+            await service.doEmailLogin(email, password);
+
+            // then the update has been seen
+            expect(updateSeen).toBeTrue(); // TODO: use promise to do that
+
+            subscription.unsubscribe();
+        });
         it('should fail when the password is incorrect', async() => {
             // given a registered user
             expect((await service.doRegister(username, email, password)).isSuccess()).toBeTrue();
@@ -379,20 +382,36 @@ describe('AuthenticationService', () => {
             // then handleError is called
             expect(Utils.handleError).toHaveBeenCalledWith('Unsupported firebase error: auth/unknown-error (Error message)');
         });
+        it('should map the errors encountered in the wild but that we cannot reproduce in a test environment', async() => {
+            spyOn(Utils, 'handleError').and.returnValue(null);
+            const errorCodes: string[] = [
+                'auth/too-many-requests',
+            ];
+
+            for (const code of errorCodes) {
+                // given an error
+                const error: firebase.FirebaseError = {
+                    name: 'FirebaseError',
+                    code,
+                    message: 'Error message',
+                };
+
+                // when mapping it
+                service.mapFirebaseError(error);
+
+                // then it is properly handled
+                expect(Utils.handleError).not.toHaveBeenCalled();
+            }
+        });
     });
     describe('updatePresence', () => {
         it('should be called and update user presence when user gets connected', async() => {
             spyOn(RTDB, 'updatePresence').and.callThrough();
-            let usernameSeen: string;
-            service.getUserObs().subscribe((user: AuthUser) => {
-                if (user != null) {
-                    usernameSeen = user.username;
-                }
-            });
-
 
             // given a registered user
-            expect((await service.doRegister(username, email, password)).isSuccess()).toBeTrue();
+            const result: MGPFallible<firebase.User> = await service.doRegister(username, email, password);
+            expect(result.isSuccess()).toBeTrue();
+            const user: firebase.User = result.get();
 
             // when the user logs in
             await service.doEmailLogin(email, password);
@@ -401,8 +420,7 @@ describe('AuthenticationService', () => {
             await firebase.auth().signOut();
 
             // Then updatePresence is called
-            expect(RTDB.updatePresence).toHaveBeenCalled();
-            expect(usernameSeen).toBe(username);
+            expect(RTDB.updatePresence).toHaveBeenCalledWith(user.uid);
         });
     });
     describe('setUsername', () => {
@@ -462,7 +480,7 @@ describe('AuthenticationService', () => {
             expect(result.getReason()).toEqual('Error');
         });
     });
-    it('should unsubscribe from authState upon destruction', () => {
+    it('should unsubscribe from auth subscription upon destruction', () => {
         spyOn(service.authSub, 'unsubscribe'); // spying on a private field
 
         // when the service is destroyed

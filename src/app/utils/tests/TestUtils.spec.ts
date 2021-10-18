@@ -4,15 +4,15 @@ import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';
 import { AbstractGameState } from '../../jscaip/GameState';
 import { Move } from '../../jscaip/Move';
 import { MGPValidation } from '../MGPValidation';
 import { AppModule } from '../../app.module';
-import { JoueursDAO } from '../../dao/JoueursDAO';
-import { AuthenticationService } from '../../services/AuthenticationService';
+import { UserDAO } from '../../dao/UserDAO';
+import { AuthenticationService, AuthUser } from '../../services/AuthenticationService';
 import { MGPNode } from '../../jscaip/MGPNode';
 import { GameWrapper } from '../../components/wrapper-components/GameWrapper';
 import { Player } from '../../jscaip/Player';
@@ -23,7 +23,7 @@ import { ChatDAO } from '../../dao/ChatDAO';
 import { JoinerDAOMock } from '../../dao/tests/JoinerDAOMock.spec';
 import { PartDAO } from '../../dao/PartDAO';
 import { JoinerDAO } from '../../dao/JoinerDAO';
-import { JoueursDAOMock } from '../../dao/tests/JoueursDAOMock.spec';
+import { UserDAOMock } from '../../dao/tests/UserDAOMock.spec';
 import { ChatDAOMock } from '../../dao/tests/ChatDAOMock.spec';
 import { PartDAOMock } from '../../dao/tests/PartDAOMock.spec';
 import { LocalGameWrapperComponent }
@@ -93,7 +93,7 @@ export class SimpleComponentTestUtils<T> {
                 { provide: PartDAO, useClass: PartDAOMock },
                 { provide: JoinerDAO, useClass: JoinerDAOMock },
                 { provide: ChatDAO, useClass: ChatDAOMock },
-                { provide: JoueursDAO, useClass: JoueursDAOMock },
+                { provide: UserDAO, useClass: UserDAOMock },
             ],
         }).compileComponents();
         AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
@@ -175,7 +175,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     : Promise<ComponentTestUtils<T>>
     {
         const testUtils: ComponentTestUtils<T> = await ComponentTestUtils.basic(game);
-        AuthenticationServiceMock.setUser(AuthenticationService.NOT_CONNECTED);
+        AuthenticationServiceMock.setUser(AuthUser.NOT_CONNECTED);
         testUtils.prepareFixture(wrapperKind);
         testUtils.detectChanges();
         tick(1);
@@ -196,7 +196,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
                 { provide: ActivatedRoute, useValue: activatedRouteStub },
-                { provide: JoueursDAO, useClass: JoueursDAOMock },
+                { provide: UserDAO, useClass: UserDAOMock },
                 { provide: AuthenticationService, useClass: AuthenticationServiceMock },
                 { provide: ChatDAO, useClass: ChatDAOMock },
                 { provide: JoinerDAO, useClass: JoinerDAOMock },

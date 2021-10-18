@@ -8,28 +8,28 @@ import { display } from 'src/app/utils/utils';
 @Injectable({
     providedIn: 'root',
 })
-export class JoueursDAO extends FirebaseFirestoreDAO<IJoueur> {
+export class UserDAO extends FirebaseFirestoreDAO<IJoueur> {
     public static VERBOSE: boolean = false;
 
+    public static COLLECTION_NAME: string = 'joueurs';
+
     constructor(protected afs: AngularFirestore) {
-        super('users', afs);
-        display(JoueursDAO.VERBOSE, 'JoueursDAO.constructor');
-    }
-    public async create(el: any): Promise<string> {
-        console.log({creating: el})
-        return super.create(el);
+        super(UserDAO.COLLECTION_NAME, afs);
+        display(UserDAO.VERBOSE, 'JoueursDAO.constructor');
     }
     public async usernameIsAvailable(username: string): Promise<boolean> {
-        return (await this.afs.collection<IJoueur>('users').ref.where('username', '==', username).limit(1).get()).empty;
+        return (await this.afs.collection<IJoueur>(UserDAO.COLLECTION_NAME).ref.where('username', '==', username).limit(1).get()).empty;
     }
     public async getUsername(uid: string): Promise<string> {
+        console.log('getting username for ' + uid);
         return (await this.read(uid)).username;
     }
     public async setUsername(uid: string, username: string): Promise<void> {
+        console.log('setting username')
         await this.update(uid, { username: username });
     }
-    public observeUserByPseudo(pseudo: string, callback: FirebaseCollectionObserver<IJoueur>): () => void {
-        return this.observingWhere('username', '==', pseudo, callback);
+    public observeUserByUsername(username: string, callback: FirebaseCollectionObserver<IJoueur>): () => void {
+        return this.observingWhere('username', '==', username, callback);
     }
     public observeActivesUsers(callback: FirebaseCollectionObserver<IJoueur>): () => void {
         return this.observingWhere('state', '==', 'online', callback);

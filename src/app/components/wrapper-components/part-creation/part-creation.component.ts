@@ -319,7 +319,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                                            destroyDocIfCreatorOffline,
                                            destroyDocIfCreatorOffline);
 
-        this.creatorSubscription = this.userService.observeUserByPseudo(joiner.creator, callback);
+        this.creatorSubscription = this.userService.observeUserByUsername(joiner.creator, callback);
     }
     private observeCandidates(joiner: IJoiner): void {
         display(PartCreationComponent.VERBOSE, { PartCreation_observeCandidates: joiner });
@@ -351,7 +351,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             if (this.candidateSubscription.get(candidateName).isAbsent()) {
                 // Subscribe to every new candidate
                 const comparableSubscription: ComparableSubscription = {
-                    subscription: this.userService.observeUserByPseudo(candidateName, callback),
+                    subscription: this.userService.observeUserByUsername(candidateName, callback),
                     equals: () => {
                         throw new Error('ObservableSubscription should not be used');
                     },
@@ -368,26 +368,26 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             }
         }
     }
-    private removeUserFromLobby(userPseudo: string): Promise<void> {
-        const index: number = this.currentJoiner.candidates.indexOf(userPseudo);
+    private removeUserFromLobby(username: string): Promise<void> {
+        const index: number = this.currentJoiner.candidates.indexOf(username);
         if (index === -1) {
-            display(true, userPseudo + ' is not in the lobby!');
+            display(true, username + ' is not in the lobby!');
             // User already not in the lobby (could be caused by two updates to the same offline user)
             return;
         }
         const beforeUser: string[] = this.currentJoiner.candidates.slice(0, index);
         const afterUser: string[] = this.currentJoiner.candidates.slice(index + 1);
         const candidates: string[] = beforeUser.concat(afterUser);
-        if (userPseudo === this.currentJoiner.chosenPlayer) {
+        if (username === this.currentJoiner.chosenPlayer) {
             // The chosen player has been removed, the user will have to review the config
-            this.messageDisplayer.infoMessage($localize`${userPseudo} left the game, please pick another opponent.`);
+            this.messageDisplayer.infoMessage($localize`${username} left the game, please pick another opponent.`);
             return this.joinerService.reviewConfigRemoveChosenPlayerAndUpdateCandidates(candidates);
         } else {
             this.joinerService.updateCandidates(candidates);
         }
     }
-    private unsubscribeFrom(userPseudo: string): void {
-        const subscription: ComparableSubscription = this.candidateSubscription.delete(userPseudo);
+    private unsubscribeFrom(username: string): void {
+        const subscription: ComparableSubscription = this.candidateSubscription.delete(username);
         subscription.subscription();
     }
     public acceptConfig(): Promise<void> {
