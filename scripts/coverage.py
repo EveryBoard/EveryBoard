@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import sys
 from lxml import html
-import pandas as pd
+import pandas
 
 if len(sys.argv) < 2:
     print('Usage: %s [generate|check]' % sys.argv[0])
@@ -33,7 +33,7 @@ def load_coverage_data():
     }
 
 def load_stored_coverage_from(path):
-    data = pd.read_csv(path, header=None)
+    data = pandas.read_csv(path, header=None)
     dirs = data[0]
     values = data[1]
     return dict(sorted(zip(dirs, values), key=lambda x: -x[1]))
