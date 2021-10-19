@@ -57,7 +57,7 @@ def generate():
     generate_in_file(data['statements'], 'coverage/statements.csv')
     generate_in_file(data['branches'], 'coverage/branches.csv')
     generate_in_file(data['functions'], 'coverage/functions.csv')
-    generate_in_file(data['functions'], 'coverage/lines.csv')
+    generate_in_file(data['lines'], 'coverage/lines.csv')
     print('CSV files generated with success')
 
 def check():
