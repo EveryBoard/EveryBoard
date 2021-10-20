@@ -64,10 +64,10 @@ describe('NumberEncoder', () => {
                 return this.field1 === t.field1 && this.field2 === t.field2 && this.field3 === t.field3;
             }
         }
-        const encoder: NumberEncoder<T> = NumberEncoder.ofCombination(
+        const encoder: NumberEncoder<T> = NumberEncoder.ofCombination<T, [boolean, number, Player]>(
             [NumberEncoder.booleanEncoder, NumberEncoder.numberEncoder(5), Player.numberEncoder],
             (t: T): [boolean, number, Player] => [t.field1, t.field2, t.field3],
-            ([field1, field2, field3]: [boolean, number, Player]): T => new T(field1, field2, field3));
+            (fields: [boolean, number, Player]): T => new T(fields[0], fields[1], fields[2]));
         it('should successfully encode and decode', () => {
             NumberEncoderTestUtils.expectToBeCorrect(encoder, new T(true, 3, Player.ONE));
             NumberEncoderTestUtils.expectToBeCorrect(encoder, new T(false, 2, Player.ONE));

@@ -22,3 +22,15 @@ Then, run `npm test`
 Run `./scripts/update-translations.sh` to update the translation files.
 Then, translate in `translations/messages.fr.xlf`.
 Finally, run `./scripts/check-translations.sh` to check that you haven't forgot anything and to generate the final translation files that will be used in deployment.
+
+## PR Merge procedure
+### For the PR submitter
+After the PR has been approved for merging:
+  - Update the global thresholds in `src/karma.conf.js` (`coverageReporter.check.global`) to match with your latest run from `npm test`.
+  - Update `index.html` with the number of tests
+  - Update the coverage data with `scripts/coverage.py generate`
+
+### For the PR merger
+  - Check that `src/karma.conf.js` has been updated
+  - Check that `index.html` has been updated
+  - Check that `coverage/*.csv` have been updated

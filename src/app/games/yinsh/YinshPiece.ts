@@ -9,8 +9,8 @@ export class YinshPiece implements ComparableObject {
         NumberEncoder.ofCombination<YinshPiece, [Player, boolean]>(
             [Player.numberEncoder, NumberEncoder.booleanEncoder],
             (piece: YinshPiece): [Player, boolean] => [piece.player, piece.isRing],
-            ([player, isRing]: [Player, boolean]): YinshPiece => {
-                return YinshPiece.of(player, isRing);
+            (fields: [Player, boolean]): YinshPiece => {
+                return YinshPiece.of(fields[0], fields[1]);
             },
         );
     public static NONE: YinshPiece = new YinshPiece(Player.NONE, false);
