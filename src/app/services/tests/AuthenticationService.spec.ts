@@ -280,13 +280,13 @@ describe('AuthenticationService', () => {
                     resolve();
                 });
             });
-            expectAsync(updateSeen).toBePending();
+            await expectAsync(updateSeen).toBePending();
 
             // when a user is logged in
             await service.doEmailLogin(email, password);
 
             // then the update has been seen
-            expectAsync(updateSeen).toBeResolved();
+            await expectAsync(updateSeen).toBeResolved();
         });
         it('should fail when the password is incorrect', async() => {
             // given a registered user
