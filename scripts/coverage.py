@@ -26,8 +26,8 @@ def load_coverage_data():
 
     dirs = tree.xpath('//td/a/text()')
     return {
-        'branches': load_coverage_data_from_html_tree(tree, dirs, 4),
-        'statements': load_coverage_data_from_html_tree(tree, dirs, 6),
+        'statements': load_coverage_data_from_html_tree(tree, dirs, 4),
+        'branches': load_coverage_data_from_html_tree(tree, dirs, 6),
         'functions': load_coverage_data_from_html_tree(tree, dirs, 8),
         'lines': load_coverage_data_from_html_tree(tree, dirs, 10)
     }
