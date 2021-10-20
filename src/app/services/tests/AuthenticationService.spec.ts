@@ -275,19 +275,18 @@ describe('AuthenticationService', () => {
         });
         it('should update userObs when successfully logging in', async() => {
             // given that a listener is waiting for user updates
-            let updateSeen: boolean = false;
-            const subscription: Subscription = service.getUserObs().subscribe((_: AuthUser): void => {
-                updateSeen = true;
+            const updateSeen: Promise<void> = new Promise((resolve: () => void) => {
+                service.getUserObs().subscribe((_: AuthUser): void => {
+                    resolve();
+                });
             });
-            expect(updateSeen).toBeFalse();
+            expectAsync(updateSeen).toBePending();
 
             // when a user is logged in
             await service.doEmailLogin(email, password);
 
             // then the update has been seen
-            expect(updateSeen).toBeTrue(); // TODO: use promise to do that
-
-            subscription.unsubscribe();
+            expectAsync(updateSeen).toBeResolved();
         });
         it('should fail when the password is incorrect', async() => {
             // given a registered user
@@ -298,7 +297,7 @@ describe('AuthenticationService', () => {
 
             // then the login fails
             expect(result.isFailure()).toBeTrue();
-            expect(result.getReason()).toBe(`You have entered an invalid username or password.`);
+            expect(result.getReason()).toBe(`You have entered an invalid email or password.`);
         });
         it('should fail when the user is not registered', async() => {
             // given that the user does not exist
@@ -308,7 +307,7 @@ describe('AuthenticationService', () => {
 
             // then the login fails
             expect(result.isFailure()).toBeTrue();
-            expect(result.getReason()).toBe(`You have entered an invalid username or password.`);
+            expect(result.getReason()).toBe(`You have entered an invalid email or password.`);
         });
     });
     describe('google login', () => {
