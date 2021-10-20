@@ -71,9 +71,9 @@ def check():
             old_missing = old[type_][directory]
             if new_missing > old_missing:
                 decreased = True
-                print('ERROR: decreased %s coverage in %s, from %d to %d' % (type_, directory, old_missing, new_missing))
+                print('ERROR: increased missing %s in coverage of %s, from %d to %d' % (type_, directory, old_missing, new_missing))
             elif new_missing < old_missing:
-                print('GOOD: increased %s coverage in %s, from %d to %d' % (type_, directory, old_missing, new_missing))
+                print('GOOD: decreased missing %s in coverage of %s, from %d to %d' % (type_, directory, old_missing, new_missing))
     if decreased:
         exit(1) # fail for CI script
 
