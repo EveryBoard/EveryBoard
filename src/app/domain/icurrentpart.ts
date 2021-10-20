@@ -46,7 +46,6 @@ export class Part implements DomainWrapper<IPart> {
         return this.doc.result === MGPResult.RESIGN.value;
     }
     public getWinner(): string {
-        console.log('winner' + this.doc.winner)
         return this.doc.winner;
     }
     public getLoser(): string {

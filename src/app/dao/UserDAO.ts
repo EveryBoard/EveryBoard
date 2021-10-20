@@ -21,11 +21,9 @@ export class UserDAO extends FirebaseFirestoreDAO<IJoueur> {
         return (await this.afs.collection<IJoueur>(UserDAO.COLLECTION_NAME).ref.where('username', '==', username).limit(1).get()).empty;
     }
     public async getUsername(uid: string): Promise<string> {
-        console.log('getting username for ' + uid);
         return (await this.read(uid)).username;
     }
     public async setUsername(uid: string, username: string): Promise<void> {
-        console.log('setting username')
         await this.update(uid, { username: username });
     }
     public observeUserByUsername(username: string, callback: FirebaseCollectionObserver<IJoueur>): () => void {

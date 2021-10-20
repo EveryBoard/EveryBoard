@@ -1,6 +1,6 @@
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { ServerPageComponent } from './server-page.component';
-import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
+import { AuthUser } from 'src/app/services/AuthenticationService';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { Router } from '@angular/router';

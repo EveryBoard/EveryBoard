@@ -33,12 +33,9 @@ export class RegistrationComponent {
         const registrationResult: MGPFallible<firebase.User> =
             await this.authService.doRegister(username, email, password);
         if (registrationResult.isSuccess()) {
-            console.log('sending email')
             const emailResult: MGPValidation =
                 await this.authService.sendEmailVerification();
-            console.log(emailResult)
             if (emailResult.isSuccess()) {
-                console.log('navigating')
                 return this.router.navigate(['/verify-account']);
             } else {
                 this.errorMessage = emailResult.getReason();
@@ -49,7 +46,7 @@ export class RegistrationComponent {
     }
 
     public getPasswordHelpClass(): string {
-        const password: string = this.registrationForm.value.password
+        const password: string = this.registrationForm.value.password;
         if (password == null || password === '') {
             return '';
         }

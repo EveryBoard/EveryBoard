@@ -21,14 +21,11 @@ export class VerifiedAccountGuard implements CanActivate {
     private async evaluateUserPermission(user: AuthUser): Promise<boolean | UrlTree> {
         if (user.isConnected() === false) {
             // Redirects the user to the login page
-            console.log('not connected')
             return this.router.parseUrl('/login');
         } else if (user.isVerified() === false) {
-            console.log('not verified')
             // Redirects the user to the account verification page
             return this.router.parseUrl('/verify-account');
         } else {
-            console.log('verified')
             return true;
         }
     }

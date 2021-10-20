@@ -34,12 +34,10 @@ export class VerifyAccountComponent implements OnInit, OnDestroy {
                 public router: Router) {}
 
     public async ngOnInit(): Promise<void> {
-        console.log('verify account')
         this.userSub = this.authService.getUserObs()
             .subscribe((user: AuthUser) => {
                 this.emailAddress = user.email;
                 // We know that if this page is shown, something needs to be done to finalize the account
-                console.log({username: user.username});
                 if (user.username == null || user.username === '') {
                     // If the user has no username, it will need to be defined
                     this.verificationType = 'enter-username';
@@ -47,12 +45,9 @@ export class VerifyAccountComponent implements OnInit, OnDestroy {
                     // Otherwise, it means the user needs to verify its email
                     this.verificationType = 'send-email';
                 }
-                console.log(this.verificationType)
             });
     }
-
     public async pickUsername(formContent: { username: string }): Promise<void> {
-        console.log('picking username: ' + formContent.username);
         const result: MGPValidation = await this.authService.setUsername(formContent.username);
         if (result.isSuccess()) {
             this.success = true;
@@ -68,7 +63,6 @@ export class VerifyAccountComponent implements OnInit, OnDestroy {
             this.errorMessage = result.getReason();
         }
     }
-
     public ngOnDestroy(): void {
         if (this.userSub && this.userSub.unsubscribe) {
             this.userSub.unsubscribe();
