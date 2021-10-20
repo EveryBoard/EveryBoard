@@ -4,7 +4,7 @@
         <div class="message-body"
              id="verificationEmail"
              *ngIf="verificationType === 'send-email'">
-            <div class="block" i18n>In order to finalize your account, you must click on the link that you should have received on your email address ({{ emailAddress }}). You can then reload this page. If you have not received the email, click on the following button to send it again.</div>
+            <div class="block" i18n>In order to finalize your account, you must click on the link that you should have received on your email address ({{ emailAddress }}). The email could be in your spam folder. You can then reload this page. If you have not received the email, click on the following button to send it again.</div>
             <button id="sendEmail"
                     [disabled]="success"
                     class="button is-primary"

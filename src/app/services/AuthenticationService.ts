@@ -137,7 +137,7 @@ export class AuthenticationService implements OnDestroy {
             case 'auth/user-not-found':
             case 'auth/wrong-password':
                 // In accordance with security best practices, we don't give too much details here
-                return $localize`You have entered an invalid username or password.`;
+                return $localize`You have entered an invalid email or password.`;
             case 'auth/invalid-credential':
                 return $localize`The credential is invalid or has expired, please try again.`;
             case 'auth/weak-password':

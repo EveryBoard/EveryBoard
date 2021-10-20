@@ -30,14 +30,6 @@
         <source><x id="PH" equiv-text="unreadMessages"/> new messages</source>
         <target><x id="PH" equiv-text="unreadMessages"/> nouveaux messages</target>
       </trans-unit>
-      <trans-unit id="2449879448191193445" datatype="html">
-        <source>Successfully signed up</source>
-        <target>Inscription réussie</target>
-      </trans-unit>
-      <trans-unit id="5266968336610741593" datatype="html">
-        <source>An email will be sent to you: click on the link and reconnect yourself. This email could arrive in your spam folder.</source>
-        <target>Un email va vous être envoyé, cliquez sur le lien dans celui-ci et reconnectez-vous ! Attention, cet email pourrait arriver dans vos courriers indésirables.</target>
-      </trans-unit>
       <trans-unit id="2821179408673282599" datatype="html">
         <source>Home</source>
         <target>Accueil</target>
@@ -82,33 +74,21 @@
         <source>Password</source>
         <target>Mot de passe</target>
       </trans-unit>
-      <trans-unit id="9018459935889527317" datatype="html">
-        <source>A confirmation email will be sent to validate your account.</source>
-        <target>Un email de confirmation vous sera envoyé pour valider votre compte.</target>
-      </trans-unit>
-      <trans-unit id="77522255637065336" datatype="html">
-        <source>Connection error</source>
-        <target>Erreur de connexion</target>
-      </trans-unit>
-      <trans-unit id="3119050750831891643" datatype="html">
-        <source>This password is incorrect.</source>
-        <target>Ce mot de passe est incorrect.</target>
-      </trans-unit>
-      <trans-unit id="5113647226865218037" datatype="html">
-        <source>This email address has no account on this website.</source>
-        <target>Cette adresse email n&apos;a pas de compte sur ce site.</target>
-      </trans-unit>
-      <trans-unit id="1988081660757251720" datatype="html">
-        <source>You must click the confirmation link that you should have received by email.</source>
-        <target>Vous devez aller dans vos mail confirmer votre inscription en cliquant sur le lien que nous vous avons envoyé d&apos;abord.</target>
+      <trans-unit id="4917036382252417719" datatype="html">
+        <source>Log in with Google</source>
+        <target>Se connecter avec Google</target>
       </trans-unit>
       <trans-unit id="850080272338290812" datatype="html">
         <source>No account?</source>
         <target>Pas de compte ?</target>
       </trans-unit>
-      <trans-unit id="8999284073934392732" datatype="html">
-        <source>Login with Google</source>
-        <target>Se connecter avec Google</target>
+      <trans-unit id="3301086086650990787" datatype="html">
+        <source>Register</source>
+        <target>Créer un compte</target>
+      </trans-unit>
+      <trans-unit id="77522255637065336" datatype="html">
+        <source>Connection error</source>
+        <target>Erreur de connexion</target>
       </trans-unit>
       <trans-unit id="6005801113696805305" datatype="html">
         <source>The replay game is loading, please wait, it should not take long.</source>
@@ -294,6 +274,34 @@
         <source>Yinsh</source>
         <target>Yinsh</target>
       </trans-unit>
+      <trans-unit id="2218572265318708454" datatype="html">
+        <source>Registering</source>
+        <target>Créer un compte</target>
+      </trans-unit>
+      <trans-unit id="9018459935889527317" datatype="html">
+        <source>A confirmation email will be sent to validate your account.</source>
+        <target>Un email de confirmation vous sera envoyé pour valider votre compte.</target>
+      </trans-unit>
+      <trans-unit id="5248717555542428023" datatype="html">
+        <source>Username</source>
+        <target>Nom d'utilisateur</target>
+      </trans-unit>
+      <trans-unit id="8783355485855708287" datatype="html">
+        <source>The password should be at least 6 characters long</source>
+        <target>Le mot de passe doit faire au moins 6 caractères</target>
+      </trans-unit>
+      <trans-unit id="1517635326922656876" datatype="html">
+        <source>Sign up with Google</source>
+        <target>Créer un compte avec google</target>
+      </trans-unit>
+      <trans-unit id="3412247232926911550" datatype="html">
+        <source>Have an account?</source>
+        <target>Vous avez déjà un compte ?</target>
+      </trans-unit>
+      <trans-unit id="6535780676661833462" datatype="html">
+        <source>Registration error</source>
+        <target>Erreur lors de la création du compte</target>
+      </trans-unit>
       <trans-unit id="7656395805241225659" datatype="html">
         <source>Games</source>
         <target>Parties</target>
@@ -329,6 +337,34 @@
       <trans-unit id="1670632975695309948" datatype="html">
         <source>Connected users:</source>
         <target>Utilisateurs connectés :</target>
+      </trans-unit>
+      <trans-unit id="4027779086550572813" datatype="html">
+        <source>Send verification email</source>
+        <target>Envoyer l'email de vérification</target>
+      </trans-unit>
+      <trans-unit id="8940072639524140983" datatype="html">
+        <source>The email has been sent</source>
+        <target>L'email a été envoyé</target>
+      </trans-unit>
+      <trans-unit id="141258547622133215" datatype="html">
+        <source>In order to finalize your account, you must choose a username.</source>
+        <target>Pour finaliser votre compte, vous devez choisir un nom d'utilisateur.</target>
+      </trans-unit>
+      <trans-unit id="7631774219107043658" datatype="html">
+        <source>Your account has now been finalized, you can go back to the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;[&apos;/server&apos;]&quot;&gt;"/>list of games<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
+        <target>Votre compte est maintenant finalisé, vous pouvez retourner à <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;[&apos;/server&apos;]&quot;&gt;"/>la liste des jeux<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
+      </trans-unit>
+      <trans-unit id="293336831363270094" datatype="html">
+        <source>Pick username</source>
+        <target>Choisir un nom d'utilisateur</target>
+      </trans-unit>
+      <trans-unit id="6996804354508674341" datatype="html">
+        <source>Account verification</source>
+        <target>Vérification du compte</target>
+      </trans-unit>
+      <trans-unit id="2608263319849312365" datatype="html">
+        <source>In order to finalize your account, you must click on the link that you should have received on your email address (<x id="INTERPOLATION" equiv-text="{{ emailAddress }}"/>). The email could be in your spam folder. You can then reload this page. If you have not received the email, click on the following button to send it again.</source>
+        <target>Pour finaliser votre compte, vous devez cliquer sur le lien qui a été envoyé sur votre adresse email (<x id="INTERPOLATION" equiv-text="{{ emailAddress }}"/>). Cet email peut être arrivé dans vos spams. Si vous n'avez pas reçu cet email, cliquez sur le bouton suivant pour l'envoyer à nouveau.</target>
       </trans-unit>
       <trans-unit id="7079545056368231407" datatype="html">
         <source>See the game list</source>
@@ -631,8 +667,8 @@
         <target>La partie a été annulée !</target>
       </trans-unit>
       <trans-unit id="7137133530752645682" datatype="html">
-        <source><x id="PH" equiv-text="userPseudo"/> left the game, please pick another opponent.</source>
-        <target><x id="PH" equiv-text="userPseudo"/> a quitté la partie, veuillez choisir un autre adversaire.</target>
+        <source><x id="PH" equiv-text="username"/> left the game, please pick another opponent.</source>
+        <target><x id="PH" equiv-text="username"/> a quitté la partie, veuillez choisir un autre adversaire.</target>
       </trans-unit>
       <trans-unit id="6594123400599013490" datatype="html">
         <source>Step finished!</source>
@@ -3053,6 +3089,38 @@
       <trans-unit id="5966391152315784819" datatype="html">
         <source>You have selected an empty space, you must select one of your own pieces.</source>
         <target>Vous avez sélectionné une case vide, vous devez sélectionner l&apos;une de vos pièces.</target>
+      </trans-unit>
+      <trans-unit id="4047787446065773376" datatype="html">
+        <source>There are missing fields in the registration form, please check that you filled in all fields.</source>
+        <target>Il manque certains champs dans le formulaire, vérifiez que vous avez complété tous les champs.</target>
+      </trans-unit>
+      <trans-unit id="7065414996126753833" datatype="html">
+        <source>This username is already in use.</source>
+        <target>Ce nom d'utilisateur est déjà utilisé.</target>
+      </trans-unit>
+      <trans-unit id="301565970318735798" datatype="html">
+        <source>This email address is already in use.</source>
+        <target>Cette addresse email est déjà utilisée.</target>
+      </trans-unit>
+      <trans-unit id="3098841477756660384" datatype="html">
+        <source>This email address is invalid.</source>
+        <target>Cette addresse email est invalide.</target>
+      </trans-unit>
+      <trans-unit id="6256195380439544351" datatype="html">
+        <source>You have entered an invalid email or password.</source>
+        <target>Vous avez entré un email ou mot de passe invalide.</target>
+      </trans-unit>
+      <trans-unit id="321667206564180755" datatype="html">
+        <source>The credential is invalid or has expired, please try again.</source>
+        <target>Vos identifiants sont invalides ou ont expiré, essayez à nouveau.</target>
+      </trans-unit>
+      <trans-unit id="2159810188120268887" datatype="html">
+        <source>Your password is too weak, please use a stronger password.</source>
+        <target>Votre mot de passe est trop faible, utilisez un mot de passe plus fort.</target>
+      </trans-unit>
+      <trans-unit id="2368572652596435161" datatype="html">
+        <source>There has been too many requests from your device. You are temporarily blocked due to unusual activity. Try again later.</source>
+        <target>Il y a eu trop de requête depuis votre appareil. Vous êtes temporairement bloquée suite à une activité non habituelle. Essayez à nouveau plus tard.</target>
       </trans-unit>
       <trans-unit id="75196759111440200" datatype="html">
         <source>You&apos;re not allowed to send a message here.</source>
