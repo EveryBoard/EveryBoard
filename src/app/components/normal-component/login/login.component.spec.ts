@@ -48,6 +48,19 @@ describe('LoginComponent', () => {
             // then a redirection happens
             expect(router.navigate).toHaveBeenCalledWith(['/server']);
         }));
+        it('should not redirect if it sees a non logged-in user', fakeAsync(async() => {
+            spyOn(router, 'navigate').and.callFake(async() => true);
+
+            // given that no user is connected
+            const user: AuthUser = AuthUser.NOT_CONNECTED;
+
+            // when a non-connected visitor visits this component
+            userRS.next(user);
+            testUtils.detectChanges();
+
+            // then there is no redirection
+            expect(router.navigate).not.toHaveBeenCalled();
+        }));
     });
     describe('doEmailLogin', () => {
         const email: string = 'jean@jaja.europe';

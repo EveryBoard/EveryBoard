@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit {
     public ngOnInit(): void {
         this.authenticationService.getUserObs()
             .subscribe(async(user: AuthUser) => {
-                if (user != null) {
+                if (user !== AuthUser.NOT_CONNECTED) {
                     await this.redirect();
                 }
             });
