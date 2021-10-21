@@ -1,6 +1,6 @@
 import { AuthenticationService, AuthUser, RTDB } from '../AuthenticationService';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
-import { Observable, of, Subscription } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import firebase from 'firebase/app';
 import 'firebase/auth';
