@@ -47,10 +47,12 @@ export function isComparableObject(value: unknown): value is ComparableObject {
 export function isComparableJSON(value: any): value is ComparableJSON {
     if (typeof value === 'object') {
         for (const key in value) {
-            // TODO FOR REVIEW: can key be any other type than string or number? If so, this needs to be checked
-            if (isComparableValue(value[key]) === false) return false;
+            if (value[key] && isComparableValue(value[key]) === false) {
+                return false;
+            }
         }
-        return true;
+        // A JSON value should directly inherit from Object
+        return value.constructor.prototype === Object.prototype;
     } else {
         return false;
     }
