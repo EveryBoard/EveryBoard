@@ -241,24 +241,39 @@ describe('AuthenticationService', () => {
             expect(result).toBe(MGPValidation.SUCCESS);
             expect(firebase.auth().currentUser.sendEmailVerification).toHaveBeenCalled();
         });
-        it('should fail if there is no connected user', async() => {
+        it('should throw if there is no connected user', async() => {
             // given nothing
 
             // when the email verification is requested
-            const result: MGPValidation = await service.sendEmailVerification();
+            const result: Promise<MGPValidation> = service.sendEmailVerification();
+            // then it throws because this is not a valid user interaction
 
             // then it fails
-            expect(result).toEqual(MGPValidation.failure('Unlogged users cannot request for email verification'));
+            await expectAsync(result).toBeRejectedWithError('Encountered error: Unlogged users cannot request for email verification');
         });
-        it('should fail if the user already verified its email', async() => {
+        it('should throw if the user already verified its email', async() => {
             // given a connected user that is registered and verified, for example through a google account
             await createConnectedGoogleUser();
 
             // when the email verification is requested
+            const result: Promise<MGPValidation> = service.sendEmailVerification();
+            // then it throws because this is not a valid user interaction
+            await expectAsync(result).toBeRejectedWithError('Encountered error: Verified users should not ask email verification twice');
+        });
+        it('should fail if there is a genuine error in the email verification process from firebase', async() => {
+            // given a user that just registered and hence is not verified
+            expect((await service.doRegister(username, email, password)).isSuccess()).toBeTrue();
+            // and that the user is connected
+            expect(await service.doEmailLogin(email, password)).toBe(MGPValidation.SUCCESS);
+
+            // when the email verification is requested but fails
+            const error: firebase.FirebaseError = new Error('Error') as firebase.FirebaseError;
+            error.code = 'auth/too-many-requests';
+            spyOn(firebase.auth().currentUser, 'sendEmailVerification').and.rejectWith(error);
             const result: MGPValidation = await service.sendEmailVerification();
 
-            // then it fails
-            expect(result).toEqual(MGPValidation.failure('Verified users should not ask email verification twice'));
+            // then a failure is returned
+            expect(result.isFailure()).toBeTrue();
         });
     });
     describe('email login', () => {
@@ -442,7 +457,7 @@ describe('AuthenticationService', () => {
             const error: firebase.FirebaseError = new Error('Error') as firebase.FirebaseError;
             error.code = 'unknown/error';
             spyOn(user.user, 'updateProfile').and.rejectWith(error);
-            spyOn(Utils, 'handleError').and.returnValue();
+            spyOn(Utils, 'handleError').and.returnValue(null);
             const result: MGPValidation = await service.setUsername(username);
 
             // then it fails
@@ -471,7 +486,7 @@ describe('AuthenticationService', () => {
             const error: firebase.FirebaseError = new Error('Error') as firebase.FirebaseError;
             error.code = 'unknown/error';
             spyOn(user.user, 'updateProfile').and.rejectWith(error);
-            spyOn(Utils, 'handleError').and.returnValue();
+            spyOn(Utils, 'handleError').and.returnValue(null);
             const result: MGPValidation = await service.setPicture('http://my.pic/foo.png');
 
             // then it fails
@@ -480,7 +495,7 @@ describe('AuthenticationService', () => {
         });
     });
     it('should unsubscribe from auth subscription upon destruction', () => {
-        spyOn(service.authSub, 'unsubscribe'); // spying on a private field
+        spyOn(service.authSub, 'unsubscribe');
 
         // when the service is destroyed
         service.ngOnDestroy();

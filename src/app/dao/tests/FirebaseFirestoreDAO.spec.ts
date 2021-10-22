@@ -118,6 +118,7 @@ describe('FirebaseFirestoreDAO', () => {
             unsubscribe();
         });
         it('should not observe document creation when the condition does not hold', async() => {
+            // This test is flaky: last failure on 22/10/2021
             const callback: FirebaseCollectionObserver<Foo> = new FirebaseCollectionObserver(
                 callbackFunction,
                 () => void { },

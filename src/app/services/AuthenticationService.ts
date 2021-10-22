@@ -64,7 +64,6 @@ export class AuthUser {
 export class AuthenticationService implements OnDestroy {
     public static VERBOSE: boolean = false;
 
-
     public authSub: Subscription; // public for testing purposes only
 
     private userRS: ReplaySubject<AuthUser>;
@@ -79,7 +78,7 @@ export class AuthenticationService implements OnDestroy {
 
         this.userRS = new ReplaySubject<AuthUser>(1);
         this.userObs = this.userRS.asObservable();
-        this.authSub = this.afAuth.authState.subscribe(async(user: firebase.User) => {
+        this.authSub = this.afAuth.user.subscribe(async(user: firebase.User) => {
             if (user == null) { // user logged out
                 display(AuthenticationService.VERBOSE, '2.B: User is not connected, according to fireAuth');
                 this.userRS.next(AuthUser.NOT_CONNECTED);
@@ -154,12 +153,18 @@ export class AuthenticationService implements OnDestroy {
         const user: firebase.User = firebase.auth().currentUser;
         if (user != null) {
             if (user.emailVerified === true) {
-                return MGPValidation.failure('Verified users should not ask email verification twice');
+                // This should not be reachable from a component
+                return Utils.handleError('Verified users should not ask email verification twice');
             }
-            user.sendEmailVerification();
-            return MGPValidation.SUCCESS;
+            try {
+                await user.sendEmailVerification();
+                return MGPValidation.SUCCESS;
+            } catch (e) {
+                return MGPValidation.failure(this.mapFirebaseError(e));
+            }
         } else {
-            return MGPValidation.failure('Unlogged users cannot request for email verification');
+            // This should not be reachable from a component
+            return Utils.handleError('Unlogged users cannot request for email verification');
         }
     }
 
