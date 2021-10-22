@@ -45,7 +45,6 @@ export class LoginComponent implements OnInit {
         }
     }
     private async redirect(): Promise<boolean> {
-        // TODO FOR REVIEW: is it better to redirect to / or to /server?
         return this.router.navigate(['/server']);
     }
 }

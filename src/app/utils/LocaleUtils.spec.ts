@@ -1,12 +1,6 @@
 import { LocaleUtils } from './LocaleUtils';
 
 describe('LocaleUtils', () => {
-
-    describe('getNavigatorLanguage', () => {
-        it('should be english in the test environment', () => {
-            expect(LocaleUtils.getNavigatorLanguage()).toEqual('en-US');
-        });
-    });
     describe('getLocale', () => {
         it('should use locale stored in localStorage', () => {
             // given a localStage that defines a locale

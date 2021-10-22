@@ -8,12 +8,12 @@
             <div class="field-body">
                 <div class="field">
                     <div class="control">
-                        <input class="input"
+                        <input id="email"
+                               class="input"
                                type="text"
                                placeholder-i18n placeholder="Email"
                                formControlName="email"
                                name="email"
-                               id="email"
                                type="email"
                                autofocus
                                required />
@@ -28,12 +28,12 @@
             <div class="field-body">
                 <div class="field">
                     <div class="control has-icons-right is-expanded">
-                        <input class="input"
+                        <input id="password"
+                               class="input"
                                type="password"
                                placeholder-i18n placeholder="Password"
                                formControlName="password"
                                name="password"
-                               id="password"
                                required />
                         <span class="icon is-small is-right">
                             <fa-icon [icon]="faEye" class="clickable-icon" toggleVisibility></fa-icon>
@@ -47,8 +47,8 @@
             <div class="field-body">
                 <div class="field">
                     <div class="control">
-                        <button class="button is-primary is-fullwidth"
-                                id="loginButton"
+                        <button id="loginButton"
+                                class="button is-primary is-fullwidth"
                                 (click)="loginWithEmail(loginForm.value)"
                                 i18n>Log in</button>
                     </div>
@@ -61,9 +61,10 @@
                 <div class="field">
                     <div class="control">
                         <button id="googleButton"
+                                class="button is-fullwidth"
                                 type="submit"
                                 (click)="loginWithGoogle()"
-                                class="button is-fullwidth" i18n>Log in with Google</button>
+                                i18n>Log in with Google</button>
                     </div>
                 </div>
             </div>

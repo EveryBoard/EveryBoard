@@ -16,7 +16,7 @@ describe('LoginComponent', () => {
 
     let userRS: ReplaySubject<AuthUser>;
 
-    function findShownError(): string {
+    function getShownError(): string {
         return testUtils.findElement('#errorMessage').nativeElement.innerHTML;
     }
 
@@ -90,7 +90,7 @@ describe('LoginComponent', () => {
             await login();
 
             // then the error message is shown
-            expect(findShownError()).toEqual('Error message');
+            expect(getShownError()).toEqual('Error message');
         }));
     });
     describe('doGoogleLogin', () => {
@@ -106,7 +106,6 @@ describe('LoginComponent', () => {
 
             // then google login has been performed and the user is redirected
             expect(authenticationService.doGoogleLogin).toHaveBeenCalledWith();
-
         }));
         it('should show an error if login fails', fakeAsync(async() => {
             // given a user that will fail to login
@@ -116,7 +115,7 @@ describe('LoginComponent', () => {
             await login();
 
             // then the error message is shown
-            expect(findShownError()).toEqual('Error message');
+            expect(getShownError()).toEqual('Error message');
         }));
     });
 });

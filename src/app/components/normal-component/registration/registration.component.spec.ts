@@ -43,10 +43,10 @@ describe('RegistrationComponent', () => {
         // given some user
         fillInUserDetails();
 
-        // when the user registers
+        // when the user clicks on the registration button
         await testUtils.clickElement('#registerButton');
 
-        // then the user is registered
+        // then the services are called and the user is registered
         expect(router.navigate).toHaveBeenCalledWith(['/verify-account']);
         expect(authService.sendEmailVerification).toHaveBeenCalledWith();
         expect(authService.doRegister).toHaveBeenCalledWith(username, email, password);
@@ -64,8 +64,9 @@ describe('RegistrationComponent', () => {
         await testUtils.clickElement('#registerButton');
 
         // then an error message is shown
-        const expectedError: string = testUtils.findElement('#errorMessage').nativeElement.innerHTML;
-        expect(expectedError).toBe(`c'est caca monsieur.`);
+        const error: string = testUtils.findElement('#errorMessage').nativeElement.innerHTML;
+        const expectedError: string = `c'est caca monsieur.`
+        expect(error).toBe(expectedError);
         expect(router.navigate).not.toHaveBeenCalled();
     }));
     it('should show a message upon registration failure', fakeAsync(async() => {
@@ -82,8 +83,9 @@ describe('RegistrationComponent', () => {
         testUtils.detectChanges();
 
         // then an error message is shown
-        const expectedError: string = testUtils.findElement('#errorMessage').nativeElement.innerHTML;
-        expect(expectedError).toBe(`c'est caca monsieur.`);
+        const error: string = testUtils.findElement('#errorMessage').nativeElement.innerHTML;
+        const expectedError: string = `c'est caca monsieur.`;
+        expect(error).toBe(expectedError);
         expect(router.navigate).not.toHaveBeenCalled();
     }));
     it('should dynamically validate password', fakeAsync(async() => {
