@@ -46,7 +46,7 @@ interface ViewInfo {
 @Component({
     selector: 'app-yinsh',
     templateUrl: './yinsh.component.html',
-    styleUrls: ['../../components/game-components/game-component/game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 export class YinshComponent extends HexagonalGameComponent<YinshRules, YinshMove, YinshState, YinshLegalityStatus> {
 
