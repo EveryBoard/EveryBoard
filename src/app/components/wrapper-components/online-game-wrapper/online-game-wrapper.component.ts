@@ -196,7 +196,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 
         switch (updateType) {
             case UpdateType.REQUEST:
-                return await this.onRequest(part.doc.request, oldPart, part);
+                return await this.onRequest(part.doc.request, oldPart);
             case UpdateType.ACCEPT_TAKE_BACK_WITHOUT_TIME:
                 this.currentPart = oldPart;
                 return;
@@ -501,7 +501,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             return Player.NONE;
         }
     }
-    protected async onRequest(request: Request, oldPart: Part, _part: Part): Promise<void> {
+    protected async onRequest(request: Request, oldPart: Part): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, { called: 'OnlineGameWrapper.onRequest(', request, oldPart });
         switch (request.code) {
             case 'TakeBackAsked':
