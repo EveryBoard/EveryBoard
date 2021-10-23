@@ -12,7 +12,7 @@
                                class="input"
                                formControlName="email"
                                name="email"
-                               placeholder-i18n placeholder="Email"
+                               i18n-placeholder placeholder="Email"
                                type="email"
                                autofocus
                                required />
@@ -28,7 +28,13 @@
             <div class="field-body">
                 <div class="field">
                     <div class="control">
-                        <input class="input" formControlName="username" name="username" id="username" placeholder-i18n placeholder="Username" type="text" required />
+                        <input id="username"
+                               class="input"
+                               formControlName="username"
+                               name="username"
+                               i18n-placeholder placeholder="Username"
+                               type="text"
+                               required />
                     </div>
                 </div>
             </div>
@@ -44,7 +50,7 @@
                                class="input"
                                formControlName="password"
                                name="password"
-                               placeholder-i18n placeholder="Password"
+                               i18n-placeholder placeholder="Password"
                                type="password"
                                required />
                         <span class="icon is-small is-right">
@@ -88,7 +94,7 @@
         </div>
         <p class="help level-right">
             <ng-container i18n>Have an account?</ng-container> 
-            <a [routerLink]="['/login']">Log in</a>
+            <a [routerLink]="['/login']" i18n>Log in</a>
         </p>
     </form>
 </div>

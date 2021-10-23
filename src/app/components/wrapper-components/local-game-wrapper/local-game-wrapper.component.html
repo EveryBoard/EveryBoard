@@ -38,7 +38,7 @@
                                 (change)="updatePlayer(1)"
                                 [(ngModel)]="players[1]">
                             <option selected
-                                    value="human">Human</option>
+                                    value="human" i18n>Human</option>
                             <option *ngFor="let minimax of gameComponent.availableMinimaxes"
                                     [value]="minimax.name">{{ minimax.name }}</option>
                         </select>

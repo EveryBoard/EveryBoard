@@ -47,7 +47,7 @@
                             type="submit"
                             id="send"
                             (click)="sendMessage()"
-                    >Send</button>
+                            i18n>Send</button>
                 </div>
             </div>
             <div class="content is-small">
@@ -58,6 +58,6 @@
     <div *ngIf="connected === false"
          id="disconnected-chat"
          class="message is-primary is-light">
-        <p>Only connected users can see the chat</p>
+        <p i18n>Only connected users can see the chat</p>
     </div>
 </div>

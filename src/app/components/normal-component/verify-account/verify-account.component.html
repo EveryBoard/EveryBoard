@@ -6,19 +6,19 @@
              *ngIf="verificationType === 'send-email'">
             <div class="block" i18n>In order to finalize your account, you must click on the link that you should have received on your email address ({{ emailAddress }}). The email could be in your spam folder. You can then reload this page. If you have not received the email, click on the following button to send it again.</div>
             <button id="sendEmail"
-                    [disabled]="success"
                     class="button is-primary"
+                    [disabled]="success"
                     (click)="sendEmailVerification()"
             i18n>Send verification email</button>
-            <p class="help is-success"
-               id="success"
+            <p id="success"
+               class="help is-success"
                *ngIf="success"
             i18n>The email has been sent</p>
         </div>
 
         <ng-container *ngIf="verificationType === 'enter-username'">
-            <div class="message-body"
-                 id="success"
+            <div id="success"
+                 class="message-body"
                  *ngIf="success"
                  i18n>Your account has now been finalized, you can go back to the <a [routerLink]="['/server']">list of games</a>.</div>
             <div class="message-body"
@@ -28,10 +28,10 @@
                 <form [formGroup]="usernameForm">
                     <div class="field has-addons">
                         <div class="control">
-                            <input class="input"
+                            <input id="username"
+                                   class="input"
                                    type="text"
-                                   placeholder-i18n placeholder="Username"
-                                   id="username"
+                                   i18n-placeholder placeholder="Username"
                                    name="username"
                                    required
                                    formControlName="username"

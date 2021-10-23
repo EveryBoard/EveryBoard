@@ -65,7 +65,7 @@ describe('RegistrationComponent', () => {
 
         // then an error message is shown
         const error: string = testUtils.findElement('#errorMessage').nativeElement.innerHTML;
-        const expectedError: string = `c'est caca monsieur.`
+        const expectedError: string = `c'est caca monsieur.`;
         expect(error).toBe(expectedError);
         expect(router.navigate).not.toHaveBeenCalled();
     }));
