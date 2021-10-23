@@ -97,7 +97,7 @@ module.exports = {
                     'checkId': false,
                     'checkText': true,
                     'checkAttributes': true,
-                    'ignoreTags': ['title', 'meta'],
+                    'ignoreTags': ['title', 'meta', 'app-chat'],
                     'ignoreAttributes': ['href', ':xlink:href', 'r', 'points', 'preserveAspectRatio', 'pointer-events', 'stroke-linecap', 'x', 'y', 'transform', 'refX', 'refY', 'marker-end', 'markerWidth', 'markerHeight', 'orient', 'dx', 'dy', 'text-anchor', 'rx', 'ry', 'x1', 'x2', 'y1', 'y2', 'fill-opacity', 'role', 'cx', 'stroke-dasharray', 'name', 'for', 'step', 'min', 'max', 'scope', 'routerLink', 'debugName', 'value', 'aria-label', 'data-target', 'maxlength', 'ngClass'],
                 }
             ]
