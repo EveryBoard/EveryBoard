@@ -63,6 +63,9 @@ export class VerifyAccountComponent implements OnInit, OnDestroy {
             this.errorMessage = result.getReason();
         }
     }
+    public async finalizeEmailVerification(): Promise<void> {
+        return this.authService.reloadUser();
+    }
     public ngOnDestroy(): void {
         if (this.userSub && this.userSub.unsubscribe) {
             this.userSub.unsubscribe();

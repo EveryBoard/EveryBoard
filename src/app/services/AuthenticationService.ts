@@ -62,7 +62,7 @@ export class AuthUser {
 
 @Injectable()
 export class AuthenticationService implements OnDestroy {
-    public static VERBOSE: boolean = false;
+    public static VERBOSE: boolean = true;
 
     public authSub: Subscription; // public for testing purposes only
 
@@ -80,7 +80,7 @@ export class AuthenticationService implements OnDestroy {
         this.userObs = this.userRS.asObservable();
         this.authSub = this.afAuth.user.subscribe(async(user: firebase.User) => {
             if (user == null) { // user logged out
-                display(AuthenticationService.VERBOSE, '2.B: User is not connected, according to fireAuth');
+                display(AuthenticationService.VERBOSE, 'User is not connected');
                 this.userRS.next(AuthUser.NOT_CONNECTED);
             } else { // user logged in
                 if (this.registrationInProgress) {
@@ -93,7 +93,7 @@ export class AuthenticationService implements OnDestroy {
                 }
                 RTDB.updatePresence(user.uid);
                 const username: string = await userDAO.getUsername(user.uid);
-                display(AuthenticationService.VERBOSE, { userLoggedInAccordingToFireAuth: user });
+                display(AuthenticationService.VERBOSE, `User ${username} is connected, and the verified status is ${user.emailVerified}`);
                 this.userRS.next(new AuthUser(user.email, username, user.emailVerified));
             }
         });
@@ -143,6 +143,8 @@ export class AuthenticationService implements OnDestroy {
                 return $localize`Your password is too weak, please use a stronger password.`;
             case 'auth/too-many-requests':
                 return $localize`There has been too many requests from your device. You are temporarily blocked due to unusual activity. Try again later.`;
+            case 'auth/popup-closed-by-user':
+                return $localize`You closed the authentication popup without finalizing your log in.`;
             default:
                 Utils.handleError('Unsupported firebase error: ' + error.code + ' (' + error.message + ')');
                 return error.message;
@@ -237,6 +239,10 @@ export class AuthenticationService implements OnDestroy {
         } catch (e) {
             return MGPValidation.failure(this.mapFirebaseError(e));
         }
+    }
+    public async reloadUser(): Promise<void> {
+        await firebase.auth().currentUser.getIdToken(true);
+        return firebase.auth().currentUser.reload();
     }
 
     public ngOnDestroy(): void {

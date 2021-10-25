@@ -1,0 +1,37 @@
+service cloud.firestore {
+    match /databases/{database}/documents {
+       // joueurs will be renamed to users
+        match /joueurs/{userId} {
+        	  allow create: if true;
+            allow update: if isOwner(userId);
+            allow read: if true;
+        }
+        match /users/{userId} {
+        	  allow create: if true;
+            allow update: if isOwner(userId);
+            allow read: if true;
+        }
+        match /{databases}/{docId} {
+        		allow read: if true;
+            allow write: if isAllowed();
+        }
+        function isAllowed() {
+            return userVerified() ||
+                   userIsGoogle();
+        }
+        function userVerified() {
+            return isAuthentified() &&
+                   request.auth.uid != null &&
+                   request.auth.token.email_verified == true;
+        }
+        function userIsGoogle() {
+            return request != null &&
+                   request.auth != null &&
+                   request.auth.token.email.matches('.*google[.]com$') == true;
+        }
+        function isAuthentified() {
+            return request != null &&
+                   request.auth != null;
+        }
+    }
+}

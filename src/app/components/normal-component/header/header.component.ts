@@ -30,7 +30,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
     public async logout(): Promise<void> {
         await this.authenticationService.disconnect();
-        this.router.navigate(['/login']);
+        await this.router.navigate(['/']);
     }
     public changeLanguage(language: string): void {
         localStorage.setItem('locale', language.toLowerCase());

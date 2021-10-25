@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start:emulator": "bash ./scripts/start-in-emulator.sh",
     "build": "ng build --configuration=production",
     "build:dev": "ng build --configuration=production,dev",
     "build:test": "ng build --configuration=test",

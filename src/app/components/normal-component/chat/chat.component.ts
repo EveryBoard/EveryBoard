@@ -11,7 +11,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
     templateUrl: './chat.component.html',
 })
 export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
-    public static VERBOSE: boolean = false;
+    public static VERBOSE: boolean = true;
 
     @Input() public chatId: string;
     @Input() public turn: number;
@@ -35,7 +35,7 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
         display(ChatComponent.VERBOSE, 'ChatComponent constructor');
     }
     public ngOnInit(): void {
-        display(ChatComponent.VERBOSE, 'ChatComponent.ngOnInit');
+        display(ChatComponent.VERBOSE, `ChatComponent.ngOnInit for chat ${this.chatId}`);
 
         assert(this.chatId != null && this.chatId !== '', 'No chat to join mentionned');
 

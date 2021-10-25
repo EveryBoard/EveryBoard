@@ -400,6 +400,7 @@ describe('AuthenticationService', () => {
             spyOn(Utils, 'handleError').and.returnValue(null);
             const errorCodes: string[] = [
                 'auth/too-many-requests',
+                'auth/popup-closed-by-user',
             ];
 
             for (const code of errorCodes) {

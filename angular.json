@@ -88,8 +88,7 @@
                                     "replace": "src/environments/environment.ts",
                                     "with": "src/environments/environment.local.ts"
                                 }
-                            ],
-                            "baseHref": "/board-test/"
+                            ]
                         }
                     }
                 },
@@ -101,6 +100,9 @@
                     "configurations": {
                         "fr": {
                             "browserTarget": "pantheonsgame:build:fr"
+                        },
+                        "local": {
+                            "browserTarget": "pantheonsgame:build:local"
                         }
                     }
                 },

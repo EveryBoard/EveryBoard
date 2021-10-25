@@ -7,6 +7,12 @@
       "**/node_modules/**"
     ]
   },
+  "firestore": {
+      "rules": "rules/firestore.json"
+  },
+  "database": {
+      "rules": "rules/database.json"
+  },
   "emulators": {
     "auth": {
       "port": 9099
