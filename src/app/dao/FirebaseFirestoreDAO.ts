@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
-import { display, FirebaseJSONObject } from 'src/app/utils/utils';
+import { assert, display, FirebaseJSONObject } from 'src/app/utils/utils';
 import { FirebaseCollectionObserver } from './FirebaseCollectionObserver';
 
 export interface IFirebaseFirestoreDAO<T extends FirebaseJSONObject> {
@@ -20,9 +20,9 @@ export interface IFirebaseFirestoreDAO<T extends FirebaseJSONObject> {
 
     getObsById(id: string): Observable<{id: string, doc: T}>;
 
-    observingWhere(field: NonNullable<string>,
-                   condition: NonNullable<firebase.firestore.WhereFilterOp>,
-                   value: NonNullable<unknown>,
+    observingWhere(conditions: [NonNullable<string>,
+                                NonNullable<firebase.firestore.WhereFilterOp>,
+                                NonNullable<unknown>][],
                    callback: FirebaseCollectionObserver<T>): () => void;
 }
 
@@ -66,14 +66,29 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
                 };
             }));
     }
-    public observingWhere(field: NonNullable<string>,
-                          condition: NonNullable<firebase.firestore.WhereFilterOp>,
-                          value: NonNullable<unknown>,
+    /**
+     * Observe the data according to the given conditions, where a condition consists of:
+     * - a field
+     * - a comparison
+     * - a value that is matched against the field using the comparison
+     **/
+    public observingWhere(conditions: [NonNullable<string>,
+                                       NonNullable<firebase.firestore.WhereFilterOp>,
+                                       NonNullable<unknown>][],
                           callback: FirebaseCollectionObserver<T>)
     : () => void
     {
-        return this.afs.collection(this.collectionName).ref
-            .where(field, condition, value)
+        assert(conditions.length >= 1, 'observingWhere called without conditions');
+        let query: firebase.firestore.Query<unknown> = null;
+        for (const condition of conditions) {
+            if (query == null) {
+                query = this.afs.collection(this.collectionName).ref
+                    .where(condition[0], condition[1], condition[2]);
+            } else {
+                query = query.where(condition[0], condition[1], condition[2]);
+            }
+        }
+        return query
             .onSnapshot((snapshot: firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>) => {
                 const createdDocs: {doc: T, id: string}[] = [];
                 const modifiedDocs: {doc: T, id: string}[] = [];

@@ -18,7 +18,7 @@ import { Request } from 'src/app/domain/request';
 import { IPart, MGPResult, Part } from 'src/app/domain/icurrentpart';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player } from 'src/app/jscaip/Player';
-import { IJoueur } from 'src/app/domain/iuser';
+import { IUser } from 'src/app/domain/iuser';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { QuartoComponent } from 'src/app/games/quarto/quarto.component';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
@@ -53,26 +53,29 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     let userDAO: UserDAO;
 
     const USER_CREATOR: AuthUser = new AuthUser('cre@tor', 'creator', true);
-    const PLAYER_CREATOR: IJoueur = {
+    const PLAYER_CREATOR: IUser = {
         username: 'creator',
         state: 'online',
+        verified: true,
     };
     const USER_OPPONENT: AuthUser = new AuthUser('firstCandidate@mgp.team', 'firstCandidate', true);
-    const PLAYER_OPPONENT: IJoueur = {
+    const PLAYER_OPPONENT: IUser = {
         username: 'firstCandidate',
         last_changed: {
             seconds: Date.now() / 1000,
             nanoseconds: Date.now() % 1000,
         },
         state: 'online',
+        verified: true,
     };
-    const OBSERVER: IJoueur = {
+    const OBSERVER: IUser = {
         username: 'jeanJaja',
         last_changed: {
             seconds: Date.now() / 1000,
             nanoseconds: Date.now() % 1000,
         },
         state: 'online',
+        verified: true,
     };
     const FAKE_MOMENT: Time = { seconds: 123, nanoseconds: 456000000 };
 

@@ -8,7 +8,7 @@ import { ChatService } from '../../../services/ChatService';
 import { assert, display, Utils } from 'src/app/utils/utils';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { UserService } from 'src/app/services/UserService';
-import { IJoueur, IJoueurId } from 'src/app/domain/iuser';
+import { IUser, IUserId } from 'src/app/domain/iuser';
 import { FirebaseCollectionObserver } from 'src/app/dao/FirebaseCollectionObserver';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -303,7 +303,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             // We are already observing the creator
             return;
         }
-        const destroyDocIfCreatorOffline: (modifiedUsers: IJoueurId[]) => void = (modifiedUsers: IJoueurId[]) => {
+        const destroyDocIfCreatorOffline: (modifiedUsers: IUserId[]) => void = (modifiedUsers: IUserId[]) => {
             for (const user of modifiedUsers) {
                 assert(user.doc.username === joiner.creator, 'found non creator while observing creator!');
                 if (user.doc.state === 'offline' &&
@@ -314,7 +314,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 }
             }
         };
-        const callback: FirebaseCollectionObserver<IJoueur> =
+        const callback: FirebaseCollectionObserver<IUser> =
             new FirebaseCollectionObserver(destroyDocIfCreatorOffline,
                                            destroyDocIfCreatorOffline,
                                            destroyDocIfCreatorOffline);
@@ -323,7 +323,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     }
     private observeCandidates(joiner: IJoiner): void {
         display(PartCreationComponent.VERBOSE, { PartCreation_observeCandidates: joiner });
-        const onDocumentCreated: (foundUser: IJoueurId[]) => void = (foundUsers: IJoueurId[]) => {
+        const onDocumentCreated: (foundUser: IUserId[]) => void = (foundUsers: IUserId[]) => {
             for (const user of foundUsers) {
                 if (user.doc.state === 'offline') {
                     this.removeUserFromLobby(user.doc.username);
@@ -331,21 +331,21 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 }
             }
         };
-        const onDocumentModified: (modifiedUsers: IJoueurId[]) => void = (modifiedUsers: IJoueurId[]) => {
+        const onDocumentModified: (modifiedUsers: IUserId[]) => void = (modifiedUsers: IUserId[]) => {
             for (const user of modifiedUsers) {
                 if (user.doc.state === 'offline') {
                     this.removeUserFromLobby(user.doc.username);
                 }
             }
         };
-        const onDocumentDeleted: (deletedUsers: IJoueurId[]) => void = (deletedUsers: IJoueurId[]) => {
+        const onDocumentDeleted: (deletedUsers: IUserId[]) => void = (deletedUsers: IUserId[]) => {
             // This should not happen in practice, but if it does we can safely remove the user from the lobby
             for (const user of deletedUsers) {
                 this.removeUserFromLobby(user.doc.username);
                 Utils.handleError('OnlineGameWrapper: ' + user.doc.username + ' was deleted (' + user.id + ')');
             }
         };
-        const callback: FirebaseCollectionObserver<IJoueur> =
+        const callback: FirebaseCollectionObserver<IUser> =
             new FirebaseCollectionObserver(onDocumentCreated, onDocumentModified, onDocumentDeleted);
         for (const candidateName of joiner.candidates) {
             if (this.candidateSubscription.get(candidateName).isAbsent()) {

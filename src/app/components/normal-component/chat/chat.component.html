@@ -55,9 +55,11 @@
             </div>
         </form>
     </div>
-    <div *ngIf="connected === false"
+    <div *ngIf="connected"
          id="disconnected-chat"
          class="message is-primary is-light">
-        <p i18n>Only connected users can see the chat</p>
+        <div class="message-body">
+            <p i18n>Only connected users can see the chat.</p>
+        </div>
     </div>
 </div>

@@ -24,7 +24,7 @@ describe('PartDAO', () => {
             );
             spyOn(dao, 'observingWhere');
             dao.observeActivesParts(callback);
-            expect(dao.observingWhere).toHaveBeenCalledWith('result', '==', MGPResult.UNACHIEVED.value, callback);
+            expect(dao.observingWhere).toHaveBeenCalledWith([['result', '==', MGPResult.UNACHIEVED.value]], callback);
         });
     });
 });

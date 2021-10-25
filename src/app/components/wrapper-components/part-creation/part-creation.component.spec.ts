@@ -8,7 +8,7 @@ import { PartDAO } from 'src/app/dao/PartDAO';
 import { ChatDAO } from 'src/app/dao/ChatDAO';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { IPart } from 'src/app/domain/icurrentpart';
-import { IJoueur } from 'src/app/domain/iuser';
+import { IUser } from 'src/app/domain/iuser';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { FirstPlayer, PartStatus, PartType } from 'src/app/domain/ijoiner';
 import { Router } from '@angular/router';
@@ -39,13 +39,15 @@ describe('PartCreationComponent:', () => {
         await component.selectOpponent('firstCandidate');
         testUtils.detectChanges();
     }
-    const CREATOR: IJoueur = {
+    const CREATOR: IUser = {
         username: 'creator',
         state: 'online',
+        verified: true,
     };
-    const OPPONENT: IJoueur = {
+    const OPPONENT: IUser = {
         username: 'firstCandidate',
         state: 'online',
+        verified: true,
     };
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(PartCreationComponent);

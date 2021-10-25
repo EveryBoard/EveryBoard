@@ -4,27 +4,30 @@
         <div class="message-body"
              id="verificationEmail"
              *ngIf="verificationType === 'send-email'">
-            <p class="block" i18n>In order to finalize your account, you must click on the link that you should have received on your email address ({{ emailAddress }}). The email could be in your spam folder</p>
+            <p class="block" i18n>In order to finalize your account, you must click on the link that you should have received on your email address ({{ emailAddress }}). The email could be in your spam folder.</p>
 
-            <p>Once you have verified your email, click on the following button
-            <button id="sendEmail"
-                    class="button is-primary"
+            <div class="block level-left">
+                <p class="level-item" i18n>Once you have verified your email, click on the following button :</p>
+                    <button id="sendEmail"
+                    class="button is-primary level-item is-small"
                     [disabled]="success"
                     (click)="finalizeEmailVerification()"
                     i18n>Finalize email verification</button>
-            </p>
+            </div>
 
-
-            <p>If you have not received the verification email, click on the following button
-            <button id="sendEmail"
-                    class="button is-warning"
-                    [disabled]="success"
-                    (click)="sendEmailVerification()"
-                    i18n>Send verification email again</button></p>
+            <div class="level-left">
+                <p class="level-item" i18n>If you have not received the verification email, click on the following button :</p>
+                <button id="sendEmail"
+                        class="button is-warning level-item is-small"
+                        [disabled]="success"
+                        (click)="sendEmailVerification()"
+                        i18n>Send verification email again</button>
+            </div>
             <p id="success"
                class="help is-success"
                *ngIf="success"
                i18n>The email has been sent</p>
+        </div>
 
         <ng-container *ngIf="verificationType === 'enter-username'">
             <div id="success"

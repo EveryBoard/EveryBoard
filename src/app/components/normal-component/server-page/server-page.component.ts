@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { IJoueurId } from '../../../domain/iuser';
+import { IUserId } from '../../../domain/iuser';
 import { ICurrentPartId } from '../../../domain/icurrentpart';
 import { UserService } from '../../../services/UserService';
 import { GameService } from '../../../services/GameService';
@@ -17,7 +17,7 @@ type Tab = 'games' | 'create' | 'chat';
 export class ServerPageComponent implements OnInit, OnDestroy {
     public static VERBOSE: boolean = false;
 
-    public activeUsers: IJoueurId[];
+    public activeUsers: IUserId[];
 
     public selectedGame: string;
 
@@ -33,7 +33,7 @@ export class ServerPageComponent implements OnInit, OnDestroy {
     public ngOnInit(): void {
         display(ServerPageComponent.VERBOSE, 'serverPageComponent.ngOnInit');
         this.activesUsersSub = this.userService.getActivesUsersObs()
-            .subscribe((activeUsers: IJoueurId[]) => {
+            .subscribe((activeUsers: IUserId[]) => {
                 this.activeUsers = activeUsers;
             });
     }

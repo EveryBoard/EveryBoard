@@ -112,7 +112,7 @@ describe('FirebaseFirestoreDAO', () => {
                 () => void { },
                 () => void { },
             );
-            const unsubscribe: () => void = dao.observingWhere('value', '==', 'foo', callback);
+            const unsubscribe: () => void = dao.observingWhere([['value', '==', 'foo']], callback);
             await dao.create({ value: 'foo', otherValue: 1 });
             await expectAsync(promise).toBeResolvedTo([{ value: 'foo', otherValue: 1 }]);
             unsubscribe();
@@ -124,7 +124,7 @@ describe('FirebaseFirestoreDAO', () => {
                 () => void { },
                 () => void { },
             );
-            const unsubscribe: () => void = dao.observingWhere('value', '==', 'bar', callback);
+            const unsubscribe: () => void = dao.observingWhere([['value', '==', 'bar']], callback);
             await dao.create({ value: 'foo', otherValue: 1 });
             await expectAsync(promise).toBePending();
             unsubscribe();
@@ -135,7 +135,7 @@ describe('FirebaseFirestoreDAO', () => {
                 callbackFunction,
                 () => void { },
             );
-            const unsubscribe: () => void = dao.observingWhere('value', '==', 'foo', callback);
+            const unsubscribe: () => void = dao.observingWhere([['value', '==', 'foo']], callback);
             const id: string = await dao.create({ value: 'foo', otherValue: 1 });
             await dao.update(id, { otherValue: 42 });
             await expectAsync(promise).toBeResolvedTo([{ value: 'foo', otherValue: 42 }]);
@@ -147,7 +147,7 @@ describe('FirebaseFirestoreDAO', () => {
                 callbackFunction,
                 () => void { },
             );
-            const unsubscribe: () => void = dao.observingWhere('value', '==', 'bar', callback);
+            const unsubscribe: () => void = dao.observingWhere([['value', '==', 'bar']], callback);
             const id: string = await dao.create({ value: 'foo', otherValue: 1 });
             await dao.update(id, { otherValue: 42 });
             await expectAsync(promise).toBePending();
@@ -159,7 +159,7 @@ describe('FirebaseFirestoreDAO', () => {
                 () => void { },
                 callbackFunction,
             );
-            const unsubscribe: () => void = dao.observingWhere('value', '==', 'foo', callback);
+            const unsubscribe: () => void = dao.observingWhere([['value', '==', 'foo']], callback);
             const id: string = await dao.create({ value: 'foo', otherValue: 1 });
             await dao.delete(id);
             await expectAsync(promise).toBeResolvedTo([{ value: 'foo', otherValue: 1 }]);
@@ -171,11 +171,12 @@ describe('FirebaseFirestoreDAO', () => {
                 callbackFunction,
                 () => void { },
             );
-            const unsubscribe: () => void = dao.observingWhere('value', '==', 'foo', callback);
+            const unsubscribe: () => void = dao.observingWhere([['value', '==', 'foo']], callback);
             const id: string = await dao.create({ value: 'foo', otherValue: 1 });
             await dao.delete(id);
             await expectAsync(promise).toBePending();
             unsubscribe();
         });
+        it('should observe according to multiple conditions') // TODO
     });
 });

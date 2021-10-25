@@ -4,10 +4,10 @@ import { fakeAsync, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
-import { ConnectedGuard } from '../connected.guard';
+import { ConnectedButNotVerifiedGuard } from '../connected-but-not-verified.guard';
 
 describe('ConnectedGuard', () => {
-    let guard: ConnectedGuard;
+    let guard: ConnectedButNotVerifiedGuard;
 
     let authService: AuthenticationService;
 
@@ -27,7 +27,7 @@ describe('ConnectedGuard', () => {
         router = TestBed.inject(Router);
         spyOn(router, 'navigate');
         authService = TestBed.inject(AuthenticationService);
-        guard = new ConnectedGuard(authService, router);
+        guard = new ConnectedButNotVerifiedGuard(authService, router);
     });
     it('should create', () => {
         expect(guard).toBeDefined();
