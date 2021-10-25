@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import 'firebase/auth';
 
 /**
  * Component to verify an account.
@@ -20,6 +21,8 @@ export class VerifyAccountComponent implements OnInit, OnDestroy {
 
     public success: boolean = false;
 
+    public triedToFinalize: boolean = false;
+
     public errorMessage: string;
 
     public emailAddress: string;
@@ -30,12 +33,13 @@ export class VerifyAccountComponent implements OnInit, OnDestroy {
         username: new FormControl(),
     });
 
-    constructor(public authService: AuthenticationService,
+    constructor(private authService: AuthenticationService,
                 public router: Router) {}
 
     public async ngOnInit(): Promise<void> {
+        console.log('init')
         this.userSub = this.authService.getUserObs()
-            .subscribe((user: AuthUser) => {
+            .subscribe(async(user: AuthUser) => {
                 this.emailAddress = user.email;
                 // We know that if this page is shown, something needs to be done to finalize the account
                 if (user.username == null || user.username === '') {
@@ -44,7 +48,16 @@ export class VerifyAccountComponent implements OnInit, OnDestroy {
                 } else {
                     // Otherwise, it means the user needs to verify its email
                     this.verificationType = 'send-email';
+                    if (this.triedToFinalize === true && user.verified === false) {
+                        // The user already clicked on the "finalize" button but hasn't verified the email!
+                        this.errorMessage = $localize`You have not verified your email! Click on the link in the verification email.`;
+                    }
+                    if (user.verified === true) {
+                        // The user is now verified
+                        await this.router.navigate(['/server']);
+                    }
                 }
+                console.log(this.verificationType);
             });
     }
     public async pickUsername(formContent: { username: string }): Promise<void> {
@@ -64,7 +77,8 @@ export class VerifyAccountComponent implements OnInit, OnDestroy {
         }
     }
     public async finalizeEmailVerification(): Promise<void> {
-        return this.authService.reloadUser();
+        await this.authService.reloadUser();
+        this.triedToFinalize = true;
     }
     public ngOnDestroy(): void {
         if (this.userSub && this.userSub.unsubscribe) {

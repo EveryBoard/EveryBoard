@@ -1,4 +1,4 @@
-import { fakeAsync, TestBed } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { VerifyAccountComponent } from './verify-account.component';
@@ -71,8 +71,7 @@ describe('VerifyAccountComponent', () => {
             // when the user asks for sending the email
             spyOn(authService, 'sendEmailVerification').and.resolveTo(MGPValidation.SUCCESS);
             testUtils.expectElementToExist('#verificationEmail');
-            testUtils.clickElement('#sendEmail');
-            await testUtils.whenStable();
+            await testUtils.clickElement('#sendEmail');
 
             // then the success message is shown
             testUtils.expectElementToExist('#success');
@@ -83,8 +82,15 @@ describe('VerifyAccountComponent', () => {
 
             // when the user asks for sending the email
             spyOn(authService, 'sendEmailVerification').and.resolveTo(MGPValidation.failure(failure));
-            testUtils.clickElement('#sendEmail');
+            testUtils.detectChanges();
+            await testUtils.clickElement('#sendEmail');
             await testUtils.whenStable();
+            testUtils.detectChanges();
+            tick(5000);
+            await testUtils.whenStable();
+            testUtils.detectChanges();
+            tick(5000);
+
 
             // then the success message is shown
             testUtils.expectElementNotToExist('#success');

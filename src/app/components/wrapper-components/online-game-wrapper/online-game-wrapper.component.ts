@@ -9,7 +9,7 @@ import { Move } from '../../../jscaip/Move';
 import { ICurrentPartId, Part, MGPResult, IPart } from '../../../domain/icurrentpart';
 import { CountDownComponent } from '../../normal-component/count-down/count-down.component';
 import { PartCreationComponent } from '../part-creation/part-creation.component';
-import { IJoueurId, IJoueur } from '../../../domain/iuser';
+import { IUserId, IUser } from '../../../domain/iuser';
 import { Request } from '../../../domain/request';
 import { GameWrapper } from '../GameWrapper';
 import { FirebaseCollectionObserver } from 'src/app/dao/FirebaseCollectionObserver';
@@ -70,7 +70,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     public currentPart: Part;
     public currentPartId: string;
     public gameStarted: boolean = false;
-    public opponent: IJoueurId = null;
+    public opponent: IUserId = null;
     public playerName: string;
     public currentPlayer: string;
 
@@ -564,17 +564,17 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             this.observerRole = Player.NONE.value;
         }
         if (opponentName !== '') {
-            const onDocumentCreated: (foundUser: IJoueurId[]) => void = (foundUser: IJoueurId[]) => {
+            const onDocumentCreated: (foundUser: IUserId[]) => void = (foundUser: IUserId[]) => {
                 this.opponent = foundUser[0];
             };
-            const onDocumentModified: (modifiedUsers: IJoueurId[]) => void = (modifiedUsers: IJoueurId[]) => {
+            const onDocumentModified: (modifiedUsers: IUserId[]) => void = (modifiedUsers: IUserId[]) => {
                 this.opponent = modifiedUsers[0];
             };
-            const onDocumentDeleted: (deletedUsers: IJoueurId[]) => void = (deletedUsers: IJoueurId[]) => {
+            const onDocumentDeleted: (deletedUsers: IUserId[]) => void = (deletedUsers: IUserId[]) => {
                 throw new Error('OnlineGameWrapper: Opponent was deleted, what sorcery is this: ' +
                                 JSON.stringify(deletedUsers));
             };
-            const callback: FirebaseCollectionObserver<IJoueur> =
+            const callback: FirebaseCollectionObserver<IUser> =
                 new FirebaseCollectionObserver(onDocumentCreated,
                                                onDocumentModified,
                                                onDocumentDeleted);

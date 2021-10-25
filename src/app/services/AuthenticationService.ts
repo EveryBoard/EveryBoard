@@ -10,6 +10,7 @@ import { display, Utils } from 'src/app/utils/utils';
 import { MGPValidation } from '../utils/MGPValidation';
 import { MGPFallible } from '../utils/MGPFallible';
 import { UserDAO } from '../dao/UserDAO';
+import { IUser } from '../domain/iuser';
 
 export class RTDB {
     public static OFFLINE: ConnectivityStatus = {
@@ -48,21 +49,25 @@ export class AuthUser {
      */
     public static NOT_CONNECTED: AuthUser = new AuthUser(null, null, false);
 
-    constructor(public email: string | null, public username: string | null, public verified: boolean) {
+    /**
+     * Constructs an AuthUser.
+     * Requires:
+     * - the email of the user, which may be null to represent that no user is connected
+     * - the username of the user, which may be null if the user hasn't chosen a username yet
+     * - a boolean indicating whether the user is verified
+     */
+    constructor(public email: string | null,
+                public username: string | null,
+                public verified: boolean) {
     }
-
     public isConnected(): boolean {
         return this.email != null;
-    }
-    public isVerified(): boolean {
-        // A gmail user has the verified flag set, but needs to define its username to be fully verified
-        return this.verified && this.username != null && this.username !== '';
     }
 }
 
 @Injectable()
 export class AuthenticationService implements OnDestroy {
-    public static VERBOSE: boolean = true;
+    public static VERBOSE: boolean = false;
 
     public authSub: Subscription; // public for testing purposes only
 
@@ -84,17 +89,22 @@ export class AuthenticationService implements OnDestroy {
                 this.userRS.next(AuthUser.NOT_CONNECTED);
             } else { // user logged in
                 if (this.registrationInProgress) {
-                    /**
-                     * We need to wait for the entire registration process to finish,
-                     * otherwise we risk reading an empty username before the user is fully created
-                     */
+                    // We need to wait for the entire registration process to finish,
+                    // otherwise we risk reading an empty username before the user is fully created
                     await this.registrationInProgress;
                     this.registrationInProgress = undefined;
                 }
                 RTDB.updatePresence(user.uid);
-                const username: string = await userDAO.getUsername(user.uid);
-                display(AuthenticationService.VERBOSE, `User ${username} is connected, and the verified status is ${user.emailVerified}`);
-                this.userRS.next(new AuthUser(user.email, username, user.emailVerified));
+                const userInDB: IUser = await userDAO.read(user.uid);
+                display(AuthenticationService.VERBOSE, `User ${userInDB.username} is connected, and the verified status is ${user.emailVerified}`);
+                const userHasFinalizedVerification: boolean = user.emailVerified === true && userInDB.username !== '';
+                if (userHasFinalizedVerification === true && userInDB.verified === false) {
+                    // The user has finalized verification but isn't yet marked as so in the DB, so we mark it.
+                    await userDAO.markVerified(user.uid);
+                }
+                this.userRS.next(new AuthUser(user.email,
+                                              userInDB.username,
+                                              userHasFinalizedVerification));
             }
         });
     }
@@ -109,7 +119,7 @@ export class AuthenticationService implements OnDestroy {
         }
         if (await this.userDAO.usernameIsAvailable(username)) {
             this.registrationInProgress = this.registerAfterUsernameCheck(username, email, password);
-            return await this.registrationInProgress;
+            return this.registrationInProgress;
         } else {
             return MGPFallible.failure($localize`This username is already in use.`);
         }
@@ -189,10 +199,15 @@ export class AuthenticationService implements OnDestroy {
      */
     public async createUser(uid: string, username: string): Promise<void> {
         if (await this.userDAO.exists(uid) === false) {
-            await this.userDAO.set(uid, { username: username });
+            await this.userDAO.set(uid, { username: username, verified: false });
         }
     }
     public async doGoogleLogin(): Promise<MGPValidation> {
+        this.registrationInProgress = this.registerOrLoginWithGoogle();
+        const result: MGPFallible<firebase.User> = await this.registrationInProgress;
+        return result.toValidation();
+    }
+    private async registerOrLoginWithGoogle(): Promise<MGPFallible<firebase.User>> {
         try {
             const provider: firebase.auth.GoogleAuthProvider =
                 new firebase.auth.GoogleAuthProvider();
@@ -201,10 +216,11 @@ export class AuthenticationService implements OnDestroy {
             const userCredential: firebase.auth.UserCredential =
                 await this.afAuth.signInWithPopup(provider);
             await this.createUser(userCredential.user.uid, '');
-            return MGPValidation.SUCCESS;
+            return MGPFallible.success(userCredential.user);
         } catch (e) {
-            return MGPValidation.failure(this.mapFirebaseError(e));
+            return MGPFallible.failure(this.mapFirebaseError(e));
         }
+
     }
     public async disconnect(): Promise<MGPValidation> {
         const user: firebase.User = firebase.auth().currentUser;
@@ -221,12 +237,21 @@ export class AuthenticationService implements OnDestroy {
         return this.userObs;
     }
     public async setUsername(username: string): Promise<MGPValidation> {
+        if (username === '') {
+            return MGPValidation.failure($localize`Your username may not be empty.`);
+        }
         try {
+            const available: boolean = await this.userDAO.usernameIsAvailable(username);
+            if (available === false) {
+                return MGPValidation.failure($localize`This username is already in use, please select a different one.`);
+            }
             const currentUser: firebase.User = firebase.auth().currentUser;
             await currentUser.updateProfile({ displayName: username });
             await this.userDAO.setUsername(currentUser.uid, username);
-            // Notify listeners that the user has changed
-            this.userRS.next(new AuthUser(currentUser.email, username, currentUser.emailVerified));
+            // Only gmail accounts can set their username, and they become finalized once they do
+            await this.userDAO.markVerified(currentUser.uid);
+            // Reload the user to notify listeners that the user has changed
+            await this.reloadUser();
             return MGPValidation.SUCCESS;
         } catch (e) {
             return MGPValidation.failure(this.mapFirebaseError(e));
@@ -242,7 +267,7 @@ export class AuthenticationService implements OnDestroy {
     }
     public async reloadUser(): Promise<void> {
         await firebase.auth().currentUser.getIdToken(true);
-        return firebase.auth().currentUser.reload();
+        await firebase.auth().currentUser.reload();
     }
 
     public ngOnDestroy(): void {

@@ -1,5 +1,5 @@
 import { BehaviorSubject, Observable } from 'rxjs';
-import { ComparableObject } from './Comparable';
+import { ComparableObject } from '../Comparable';
 
 export class ObservableSubject<T> implements ComparableObject {
     public constructor(

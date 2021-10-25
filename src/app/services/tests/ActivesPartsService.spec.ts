@@ -1,7 +1,7 @@
 import { ActivesPartsService } from '../ActivesPartsService';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { fakeAsync, TestBed } from '@angular/core/testing';
-import { setupFirestoreTestModule } from 'src/app/dao/tests/FirebaseFirestoreDAO.spec';
+import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('ActivesPartsService', () => {
 
@@ -10,7 +10,7 @@ describe('ActivesPartsService', () => {
     let dao: PartDAO;
 
     beforeEach(async() => {
-        await setupFirestoreTestModule();
+        await setupEmulators();
         dao = TestBed.inject(PartDAO);
         service = new ActivesPartsService(dao);
     });

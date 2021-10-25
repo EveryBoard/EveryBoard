@@ -1,38 +1,37 @@
 <div class="box">
     <div class="message is-info">
         <div class="message-header" i18n>Account verification</div>
+
         <div class="message-body"
              id="verificationEmail"
              *ngIf="verificationType === 'send-email'">
-            <p class="block" i18n>In order to finalize your account, you must click on the link that you should have received on your email address ({{ emailAddress }}). The email could be in your spam folder</p>
+            <p class="block" i18n>In order to finalize your account, you must click on the link that you should have received on your email address ({{ emailAddress }}). The email could be in your spam folder.</p>
 
-            <p>Once you have verified your email, click on the following button
-            <button id="sendEmail"
-                    class="button is-primary"
-                    [disabled]="success"
-                    (click)="finalizeEmailVerification()"
-                    i18n>Finalize email verification</button>
-            </p>
+            <div class="block level-left">
+                <p class="level-item" i18n>Once you have verified your email, click on the following button :</p>
+                <button id="finalizeEmail"
+                        class="button is-primary level-item is-small"
+                        (click)="finalizeEmailVerification()"
+                        i18n>Finalize email verification</button>
+            </div>
 
+            <div class="level-left">
+                <p class="level-item" i18n>If you have not received the verification email, click on the following button :</p>
+                <button id="sendEmail"
+                        class="button is-warning level-item is-small"
+                        (click)="sendEmailVerification()"
+                        i18n>Send verification email again</button>
+            </div>
 
-            <p>If you have not received the verification email, click on the following button
-            <button id="sendEmail"
-                    class="button is-warning"
-                    [disabled]="success"
-                    (click)="sendEmailVerification()"
-                    i18n>Send verification email again</button></p>
             <p id="success"
                class="help is-success"
                *ngIf="success"
                i18n>The email has been sent</p>
+        </div>
 
         <ng-container *ngIf="verificationType === 'enter-username'">
-            <div id="success"
+            <div id="askUsername"
                  class="message-body"
-                 *ngIf="success"
-                 i18n>Your account has now been finalized, you can go back to the <a [routerLink]="['/server']">list of games</a>.</div>
-            <div class="message-body"
-                 id="askUsername"
                  *ngIf="!success">
                 <div class="block" i18n>In order to finalize your account, you must choose a username.</div>
                 <form [formGroup]="usernameForm">
@@ -56,6 +55,10 @@
                     </div>
                 </form>
             </div>
+            <div id="success"
+                 class="message-body"
+                 *ngIf="success"
+                 i18n>Your account has now been finalized, you can go back to the <a [routerLink]="['/server']">list of games</a>.</div>
         </ng-container>
     </div>
     <div class="message is-danger"

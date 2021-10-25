@@ -78,7 +78,8 @@ import { USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/functions'
 import { LocaleUtils } from './utils/LocaleUtils';
 import { VerifiedAccountGuard } from './guard/verified-account.guard';
 import { VerifyAccountComponent } from './components/normal-component/verify-account/verify-account.component';
-import { ConnectedGuard } from './guard/connected.guard';
+import { ConnectedButNotVerifiedGuard } from './guard/connected-but-not-verified.guard';
+import { NotConnectedGuard } from './guard/not-connected.guard';
 import { AutofocusDirective } from './directives/autofocus.directive';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ToggleVisibilityDirective } from './directives/toggle-visibility.directive';
@@ -89,10 +90,10 @@ registerLocaleData(localeFr);
 const routes: Route [] = [
     { path: 'login', component: LoginComponent },
     { path: 'server', component: ServerPageComponent, canActivate: [VerifiedAccountGuard] },
-    { path: 'registration', component: RegistrationComponent },
+    { path: 'registration', component: RegistrationComponent, canActivate: [NotConnectedGuard] },
     { path: 'notFound', component: NotFoundComponent, canActivate: [VerifiedAccountGuard] },
     { path: 'nextGameLoading', component: NextGameLoadingComponent, canActivate: [VerifiedAccountGuard] },
-    { path: 'verify-account', component: VerifyAccountComponent, canActivate: [ConnectedGuard] },
+    { path: 'verify-account', component: VerifyAccountComponent, canActivate: [ConnectedButNotVerifiedGuard] },
 
     { path: 'play', component: OnlineGameCreationComponent, canActivate: [VerifiedAccountGuard] },
     { path: 'play/:compo/:id', component: OnlineGameWrapperComponent, canActivate: [VerifiedAccountGuard] },

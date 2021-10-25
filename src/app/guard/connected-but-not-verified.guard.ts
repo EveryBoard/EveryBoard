@@ -3,17 +3,16 @@ import { CanActivate, Router, UrlTree } from '@angular/router';
 import { AuthenticationService, AuthUser } from '../services/AuthenticationService';
 
 /**
- * This is a guard that checks that the user's account has been verified
+ * This is a guard that checks that the user is connected but not verified
  */
 @Injectable({
     providedIn: 'root',
 })
-export class VerifiedAccountGuard implements CanActivate {
-    constructor(private authService: AuthenticationService,
-                private router : Router) {
+export class ConnectedButNotVerifiedGuard implements CanActivate {
+    constructor(private authService: AuthenticationService, private router : Router) {
     }
     public canActivate(): Promise<boolean | UrlTree > {
-        return new Promise((resolve: (value: boolean | UrlTree) => void) => {
+        return new Promise((resolve: (value: boolean) => void) => {
             this.authService.getUserObs().subscribe((user: AuthUser): void => {
                 this.evaluateUserPermission(user).then(resolve);
             });
@@ -23,9 +22,9 @@ export class VerifiedAccountGuard implements CanActivate {
         if (user.isConnected() === false) {
             // Redirects the user to the login page
             return this.router.parseUrl('/login');
-        } else if (user.verified === false) {
-            // Redirects the user to the account verification page
-            return this.router.parseUrl('/verify-account');
+        } else if (user.verified) {
+            // Redirects the user to the main page, it is already verified
+            return this.router.parseUrl('/');
         } else {
             return true;
         }

@@ -26,7 +26,7 @@ export class RegistrationComponent {
     constructor(public authService: AuthenticationService,
                 public router: Router) {}
 
-    public async tryRegister(): Promise<boolean> {
+    public async registerWithEmail(): Promise<void> {
         const username: string | null = this.registrationForm.value.username;
         const email: string | null = this.registrationForm.value.email;
         const password: string | null = this.registrationForm.value.password;
@@ -36,7 +36,7 @@ export class RegistrationComponent {
             const emailResult: MGPValidation =
                 await this.authService.sendEmailVerification();
             if (emailResult.isSuccess()) {
-                return this.router.navigate(['/verify-account']);
+                await this.router.navigate(['/verify-account']);
             } else {
                 this.errorMessage = emailResult.getReason();
             }
@@ -44,7 +44,15 @@ export class RegistrationComponent {
             this.errorMessage = registrationResult.getReason();
         }
     }
-
+    public async registerWithGoogle(): Promise<void> {
+        const result: MGPValidation = await this.authService.doGoogleLogin();
+        if (result.isSuccess()) {
+            await this.router.navigate(['/verify-account']);
+        }
+        if (result.isFailure()) {
+            this.errorMessage = result.getReason();
+        }
+    }
     public getPasswordHelpClass(): string {
         const password: string = this.registrationForm.value.password;
         if (password == null || password === '') {

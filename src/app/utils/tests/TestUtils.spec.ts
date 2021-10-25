@@ -5,7 +5,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';
 import { AbstractGameState } from '../../jscaip/GameState';
 import { Move } from '../../jscaip/Move';
@@ -33,6 +32,14 @@ import { HumanDuration } from '../TimeUtils';
 import { Rules } from 'src/app/jscaip/Rules';
 import { AutofocusDirective } from 'src/app/directives/autofocus.directive';
 import { ToggleVisibilityDirective } from 'src/app/directives/toggle-visibility.directive';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { AngularFireModule } from '@angular/fire';
+import { USE_EMULATOR as USE_FIRESTORE_EMULATOR } from '@angular/fire/firestore';
+import { USE_EMULATOR as USE_DATABASE_EMULATOR } from '@angular/fire/database';
+import { USE_EMULATOR as USE_AUTH_EMULATOR } from '@angular/fire/auth';
+import { USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/functions';
+import { environment } from 'src/environments/environment';
 
 @Component({})
 export class BlankComponent {}
@@ -431,4 +438,28 @@ export function expectStateToBePreVictory(state: AbstractGameState,
     const value: number = minimax.getBoardNumericValue(new MGPNode(null, previousMove, state));
     const expectedValue: number = player.getPreVictory();
     expect(value).toBe(expectedValue);
+}
+
+export async function setupEmulators(): Promise<unknown> {
+    TestBed.configureTestingModule({
+        imports: [
+            AngularFirestoreModule,
+            HttpClientModule,
+            AngularFireModule.initializeApp(environment.firebaseConfig),
+        ],
+        providers: [
+            { provide: USE_AUTH_EMULATOR, useValue: environment.emulatorConfig.auth },
+            { provide: USE_DATABASE_EMULATOR, useValue: environment.emulatorConfig.database },
+            { provide: USE_FIRESTORE_EMULATOR, useValue: environment.emulatorConfig.firestore },
+            { provide: USE_FUNCTIONS_EMULATOR, useValue: environment.emulatorConfig.functions },
+            AuthenticationService,
+        ],
+        schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
+    const http: HttpClient = TestBed.inject(HttpClient);
+    // Clear the firestore data before each test
+    await http.delete('http://localhost:8080/emulator/v1/projects/my-project/databases/(default)/documents').toPromise();
+    // Clear the auth data before each test
+    await http.delete('http://localhost:9099/emulator/v1/projects/my-project/accounts').toPromise();
+    return;
 }

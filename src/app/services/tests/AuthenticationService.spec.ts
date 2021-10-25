@@ -1,21 +1,14 @@
 import { AuthenticationService, AuthUser, RTDB } from '../AuthenticationService';
-import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { Observable, of } from 'rxjs';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import { CUSTOM_ELEMENTS_SCHEMA, Injectable } from '@angular/core';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { AngularFireModule } from '@angular/fire';
-import { USE_EMULATOR as USE_FIRESTORE_EMULATOR } from '@angular/fire/firestore';
-import { USE_EMULATOR as USE_DATABASE_EMULATOR } from '@angular/fire/database';
-import { USE_EMULATOR as USE_AUTH_EMULATOR } from '@angular/fire/auth';
-import { USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/functions';
+import { Injectable } from '@angular/core';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { Utils } from 'src/app/utils/utils';
-import { environment } from 'src/environments/environment';
 import { UserDAO } from 'src/app/dao/UserDAO';
+import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 
 class RTDBSpec {
     // TODO: these are stubs that can be removed after the RTDB functions ticket has been done
@@ -73,32 +66,18 @@ export class AuthenticationServiceMock {
     public async setUsername(_username: string): Promise<MGPValidation> {
         return MGPValidation.failure('not mocked');
     }
+    public async setPicture(_url: string): Promise<MGPValidation> {
+        return MGPValidation.failure('not mocked');
+    }
+    public async reloadUser(): Promise<void> {
+        return;
+    }
 }
 
 async function setupAuthTestModule(): Promise<unknown> {
-    TestBed.configureTestingModule({
-        imports: [
-            AngularFirestoreModule,
-            HttpClientModule,
-            AngularFireModule.initializeApp(environment.firebaseConfig),
-        ],
-        providers: [
-            { provide: USE_AUTH_EMULATOR, useValue: environment.emulatorConfig.auth },
-            { provide: USE_DATABASE_EMULATOR, useValue: environment.emulatorConfig.database },
-            { provide: USE_FIRESTORE_EMULATOR, useValue: environment.emulatorConfig.firestore },
-            { provide: USE_FUNCTIONS_EMULATOR, useValue: environment.emulatorConfig.functions },
-            AuthenticationService,
-        ],
-        schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    }).compileComponents();
-    const http: HttpClient = TestBed.inject(HttpClient);
-    // Clear the firestore data before each test
-    await http.delete('http://localhost:8080/emulator/v1/projects/my-project/databases/(default)/documents').toPromise();
-    // Clear the auth data before each test
-    await http.delete('http://localhost:9099/emulator/v1/projects/testing/accounts').toPromise();
+    await setupEmulators();
     // Clear the rtdb data before each test
-    await RTDBSpec.clearDB();
-    return;
+    return RTDBSpec.clearDB();
 }
 
 export class AuthenticationServiceUnderTest extends AuthenticationService {
@@ -109,7 +88,7 @@ export class AuthenticationServiceUnderTest extends AuthenticationService {
 
 async function createConnectedGoogleUser(): Promise<firebase.auth.UserCredential> {
     const credentials: firebase.auth.UserCredential = await firebase.auth().signInWithCredential(firebase.auth.GoogleAuthProvider.credential('{"sub": "abc123", "email": "foo@example.com", "email_verified": true}'));
-    await TestBed.inject(UserDAO).set(credentials.user.uid, { username: null });
+    await TestBed.inject(UserDAO).set(credentials.user.uid, { username: null, verified: true });
     return credentials;
 }
 

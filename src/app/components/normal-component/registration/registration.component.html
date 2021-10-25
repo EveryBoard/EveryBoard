@@ -69,7 +69,8 @@
                     <div class="control">
                         <button id="registerButton"
                                 class="button is-primary is-fullwidth"
-                                (click)="tryRegister()" i18n>Register</button>
+                                (click)="registerWithEmail()"
+                                i18n>Register</button>
                     </div>
                 </div>
             </div>
@@ -89,6 +90,7 @@
                 <button id="googleButton"
                         class="button is-fullwidth"
                         type="submit"
+                        (click)="registerWithGoogle()"
                         i18n>Register with Google</button>
             </div>
         </div>

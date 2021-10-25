@@ -23,7 +23,6 @@ export class LoginComponent implements OnInit {
     constructor(public router: Router,
                 public authenticationService: AuthenticationService) {
     }
-
     public ngOnInit(): void {
         this.authenticationService.getUserObs()
             .subscribe(async(user: AuthUser) => {

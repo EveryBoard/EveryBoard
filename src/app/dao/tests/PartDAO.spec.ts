@@ -1,15 +1,15 @@
 import { TestBed } from '@angular/core/testing';
 import { IPart, MGPResult } from 'src/app/domain/icurrentpart';
+import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 import { PartDAO } from '../PartDAO';
-import { setupFirestoreTestModule } from './FirebaseFirestoreDAO.spec';
 
 describe('PartDAO', () => {
 
     let dao: PartDAO;
 
     beforeEach(async() => {
-        await setupFirestoreTestModule();
+        await setupEmulators();
         dao = TestBed.inject(PartDAO);
     });
     it('should be created', () => {
@@ -24,7 +24,7 @@ describe('PartDAO', () => {
             );
             spyOn(dao, 'observingWhere');
             dao.observeActivesParts(callback);
-            expect(dao.observingWhere).toHaveBeenCalledWith('result', '==', MGPResult.UNACHIEVED.value, callback);
+            expect(dao.observingWhere).toHaveBeenCalledWith([['result', '==', MGPResult.UNACHIEVED.value]], callback);
         });
     });
 });
