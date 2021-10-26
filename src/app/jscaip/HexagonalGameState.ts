@@ -39,7 +39,11 @@ export abstract class HexagonalGameState<P> extends GameStateWithTable<P> {
             throw new Error('Setting coord not on board: ' + coord + '.');
         }
     }
-    public equals(other: HexagonalGameState<P>, equalT: (a: P, b: P) => boolean): boolean {
+    public equals(other: this): boolean {
+        // TODOTODO: tmrrrr
+        return false;
+    }
+    public equalsT(other: HexagonalGameState<P>, equalT: (a: P, b: P) => boolean): boolean {
         if (this === other) {
             return true;
         }
@@ -123,5 +127,8 @@ export abstract class HexagonalGameState<P> extends GameStateWithTable<P> {
             c = c.getNext(dir);
         }
         assert(false, 'could not find a board entrance, board must be invalid');
+    }
+    public toString(): string {
+        return 'TODOTODO';
     }
 }

@@ -9,7 +9,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GoRules } from '../GoRules';
 import { GoMinimax } from '../GoMinimax';
 import { GoFailure } from '../GoFailure';
-import { expectToBeDraw } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Minimax } from 'src/app/jscaip/Minimax';
 
 describe('GoRules:', () => {
@@ -469,6 +469,6 @@ describe('GoRules:', () => {
         expect(rules.choose(new GoMove(4, 2))).toBeTrue();
         expect(rules.choose(GoMove.ACCEPT)).toBeTrue();
         expect(rules.choose(GoMove.ACCEPT)).toBeTrue();
-        expectToBeDraw(rules, rules.node, minimaxes);
+        RulesUtils.expectToBeDraw(rules, rules.node, minimaxes);
     });
 });

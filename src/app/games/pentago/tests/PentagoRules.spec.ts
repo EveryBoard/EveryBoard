@@ -6,7 +6,7 @@ import { PentagoFailure } from '../PentagoFailure';
 import { PentagoMove } from '../PentagoMove';
 import { PentagoNode, PentagoRules } from '../PentagoRules';
 import { PentagoState } from '../PentagoState';
-import { expectToBeDraw, expectToBeOngoing, expectToBeVictoryFor } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { PentagoLegalityStatus } from '../PentagoLegalityStatus';
 import { PentagoMinimax } from '../PentagoMinimax';
@@ -117,7 +117,7 @@ describe('PentagoRules', () => {
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingState: PentagoState = rules.applyLegalMove(move, state, status);
         expect(resultingState).toEqual(expectedState);
-        expectToBeOngoing(rules, new MGPNode(null, move, resultingState), minimaxes);
+        RulesUtils.expectToBeOngoing(rules, new MGPNode(null, move, resultingState), minimaxes);
     });
     it('it should be able to twist any board anti-clockwise', () => {
         const board: Table<Player> = [
@@ -144,7 +144,7 @@ describe('PentagoRules', () => {
         const resultingState: PentagoState = rules.applyLegalMove(move, state, status);
         expect(resultingState).toEqual(expectedState);
         const node: PentagoNode = new MGPNode(null, move, resultingState);
-        expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
     describe('victories', () => {
         it('it should notice victory', () => {
@@ -172,7 +172,7 @@ describe('PentagoRules', () => {
             const expectedState: PentagoState = new PentagoState(expectedBoard, 11);
             expect(resultingState).toEqual(expectedState);
             const node: PentagoNode = new MGPNode(null, move, expectedState);
-            expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
         });
         it('it should notice draw by end game', () => {
             const board: Table<Player> = [
@@ -199,7 +199,7 @@ describe('PentagoRules', () => {
             const expectedState: PentagoState = new PentagoState(expectedBoard, 36);
             expect(resultingState).toEqual(expectedState);
             const node: PentagoNode = new MGPNode(null, move, expectedState);
-            expectToBeDraw(rules, node, minimaxes);
+            RulesUtils.expectToBeDraw(rules, node, minimaxes);
         });
         it('it should notice draw by double-victory', () => {
             const board: Table<Player> = [
@@ -226,7 +226,7 @@ describe('PentagoRules', () => {
             const expectedState: PentagoState = new PentagoState(expectedBoard, 11);
             expect(resultingState).toEqual(expectedState);
             const node: PentagoNode = new MGPNode(null, move, expectedState);
-            expectToBeDraw(rules, node, minimaxes);
+            RulesUtils.expectToBeDraw(rules, node, minimaxes);
         });
     });
 });

@@ -396,26 +396,3 @@ export class ComponentTestUtils<T extends MyGameComponent> {
         return this.debugElement.nativeElement.querySelector(query);
     }
 }
-
-export function expectSecondStateToBeBetterThanFirst(weakerState: AbstractGameState,
-                                                     weakMove: Move,
-                                                     strongerState: AbstractGameState,
-                                                     strongMove: Move,
-                                                     minimax: Minimax<Move, AbstractGameState>)
-: void
-{
-    const weakValue: number = minimax.getBoardValue(new MGPNode(null, weakMove, weakerState)).value;
-    const strongValue: number = minimax.getBoardValue(new MGPNode(null, strongMove, strongerState)).value;
-    expect(weakValue).toBeLessThan(strongValue);
-}
-export function expectStateToBePreVictory(state: AbstractGameState,
-                                          previousMove: Move,
-                                          player: Player,
-                                          minimax: Minimax<Move, AbstractGameState>)
-: void
-{
-    // TODO: replace that and refuse it to reach develop! expectToBeVictoryFor is the way
-    const value: number = minimax.getBoardNumericValue(new MGPNode(null, previousMove, state));
-    const expectedValue: number = player.getPreVictory();
-    expect(value).toBe(expectedValue);
-}

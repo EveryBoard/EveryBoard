@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="100%" height="auto"
+     viewBox="0 0 400 250"
+     preserveAspectRatio="xMidYMid meet"
+>
+    <ng-container *ngFor="let square of board; index as x">
+        <rect id="square_{{ x }}"
+              [attr.x]="x * CASE_SIZE"
+              [attr.y]="(3 - x) * CASE_SIZE * 0.25"
+              width="{{ CASE_SIZE }}"
+              height="{{ CASE_SIZE }}"
+        />
+        <circle id="square_{{ x }}_piece_{{ i }}_out_of_{{ square.containing.get(Player.NONE).get() }}"
+                *ngFor="let i in [].constructor(square.containing.get(Player.NONE).get())"
+                [attr.cx]="getCircleCenter(x, i, square).x"
+                [attr.cy]="getCircleCenter(x, i, square).y"
+        />
+    </ng-container>
+</svg>

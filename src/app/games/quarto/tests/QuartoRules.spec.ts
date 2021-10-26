@@ -7,7 +7,7 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { expectToBeDraw, expectToBeVictoryFor } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { Minimax } from 'src/app/jscaip/Minimax';
 
@@ -51,7 +51,7 @@ describe('QuartoRules', () => {
         const resultingState: QuartoState = rules.node.gameState;
         const expectedState: QuartoState = new QuartoState(expectedBoard, 16, QuartoPiece.NONE);
         expect(resultingState).toEqual(expectedState);
-        expectToBeDraw(rules, rules.node, minimaxes);
+        RulesUtils.expectToBeDraw(rules, rules.node, minimaxes);
     });
     it('Should forbid to give a piece already on the board', () => {
         const board: Table<QuartoPiece> = [
@@ -109,7 +109,7 @@ describe('QuartoRules', () => {
         const expectedState: QuartoState = new QuartoState(expectedBoard, 5, QuartoPiece.AAAB);
         expect(resultingState).toEqual(expectedState);
         const node: QuartoNode = new MGPNode(null, move, expectedState);
-        expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
     it('Should considered player 1 winner when doing a full line', () => {
         const board: Table<QuartoPiece> = [
@@ -132,6 +132,6 @@ describe('QuartoRules', () => {
         const expectedState: QuartoState = new QuartoState(expectedBoard, 10, QuartoPiece.AABA);
         expect(resultingState).toEqual(expectedState);
         const node: QuartoNode = new MGPNode(null, move, expectedState);
-        expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
 });

@@ -1,6 +1,7 @@
+import { ComparableObject } from '../utils/Comparable';
 import { Player } from './Player';
 
-export abstract class GameState<C, P> {
+export abstract class GameState<C, P> implements ComparableObject {
 
     public constructor(public readonly turn: number) {
         if (turn == null) throw new Error('Turn cannot be null.');
@@ -16,6 +17,15 @@ export abstract class GameState<C, P> {
     public abstract isOnBoard(coord: C): boolean
 
     public abstract getNullable(coord: C): P | null;
+
+    public equals(other: this): boolean {
+        // TODOTODO
+        return;
+    }
+    public toString(): string {
+        // TODOTODO
+        return;
+    }
 }
 export abstract class AbstractGameState extends GameState<unknown, unknown> {
 }
