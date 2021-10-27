@@ -52,7 +52,7 @@ describe('UserDAO', () => {
     describe('setUsername', () => {
         it('should change the username of a user', async() => {
             // given a user
-            const credentials: firebase.auth.UserCredential = await firebase.auth().signInWithCredential(firebase.auth.GoogleAuthProvider.credential('{"sub": "abc123", "email": "foo@example.com", "email_verified": true}'));
+            const credentials: firebase.auth.UserCredential = await firebase.auth().signInWithCredential(firebase.auth.GoogleAuthProvider.credential('{"sub": "abc123", "email": "bar@example.com", "email_verified": true}'));
             const uid: string = credentials.user.uid;
             await dao.set(uid, { username: null, verified: true });
 

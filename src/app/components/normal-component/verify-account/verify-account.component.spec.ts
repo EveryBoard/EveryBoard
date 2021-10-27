@@ -1,9 +1,10 @@
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { fakeAsync, TestBed } from '@angular/core/testing';
 import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { VerifyAccountComponent } from './verify-account.component';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { Router } from '@angular/router';
 
 describe('VerifyAccountComponent', () => {
     let testUtils: SimpleComponentTestUtils<VerifyAccountComponent>;
@@ -82,20 +83,36 @@ describe('VerifyAccountComponent', () => {
 
             // when the user asks for sending the email
             spyOn(authService, 'sendEmailVerification').and.resolveTo(MGPValidation.failure(failure));
-            testUtils.detectChanges();
             await testUtils.clickElement('#sendEmail');
-            await testUtils.whenStable();
-            testUtils.detectChanges();
-            tick(5000);
-            await testUtils.whenStable();
-            testUtils.detectChanges();
-            tick(5000);
-
 
             // then the success message is shown
             testUtils.expectElementNotToExist('#success');
             testUtils.expectElementToExist('#errorMessage');
             expect(testUtils.findElement('#errorMessage').nativeElement.innerHTML).toEqual(failure);
         }));
+        it('should not finalize verification if the user did not verify its email', fakeAsync(async() => {
+            // when the user clicks on "finalize" without having verified its account
+            await testUtils.clickElement('#finalizeVerification');
+
+            // then a failure message is shown
+            testUtils.expectElementNotToExist('#success');
+            testUtils.expectElementToExist('#errorMessage');
+            expect(testUtils.findElement('#errorMessage').nativeElement.innerHTML).toEqual(`You have not verified your email! Click on the link in the verification email.`);
+        }));
+        it('should finalize verification after the user has verified its email and clicked on the button', fakeAsync(async() => {
+            const router: Router = TestBed.inject(Router);
+            spyOn(router, 'navigate').and.resolveTo(true);
+
+            // ... and given a user that verified its email
+            AuthenticationServiceMock.setUser(new AuthUser('jean@jaja.europe', 'jeanjaja', true));
+
+            // when the user clicks on "finalize" without having verified its account
+            await testUtils.clickElement('#finalizeVerification');
+
+            // then a failure message is shown
+            testUtils.expectElementNotToExist('#errorMessage');
+            expect(router.navigate).toHaveBeenCalledWith(['/server']);
+        }));
+
     });
 });

@@ -37,7 +37,6 @@ export class VerifyAccountComponent implements OnInit, OnDestroy {
                 public router: Router) {}
 
     public async ngOnInit(): Promise<void> {
-        console.log('init')
         this.userSub = this.authService.getUserObs()
             .subscribe(async(user: AuthUser) => {
                 this.emailAddress = user.email;
@@ -57,7 +56,6 @@ export class VerifyAccountComponent implements OnInit, OnDestroy {
                         await this.router.navigate(['/server']);
                     }
                 }
-                console.log(this.verificationType);
             });
     }
     public async pickUsername(formContent: { username: string }): Promise<void> {
@@ -77,8 +75,8 @@ export class VerifyAccountComponent implements OnInit, OnDestroy {
         }
     }
     public async finalizeEmailVerification(): Promise<void> {
-        await this.authService.reloadUser();
         this.triedToFinalize = true;
+        await this.authService.reloadUser();
     }
     public ngOnDestroy(): void {
         if (this.userSub && this.userSub.unsubscribe) {

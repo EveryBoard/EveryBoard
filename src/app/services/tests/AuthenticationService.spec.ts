@@ -1,5 +1,5 @@
 import { AuthenticationService, AuthUser, RTDB } from '../AuthenticationService';
-import { Observable, of } from 'rxjs';
+import { Observable, of, ReplaySubject } from 'rxjs';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import firebase from 'firebase/app';
 import 'firebase/auth';
@@ -9,6 +9,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { Utils } from 'src/app/utils/utils';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
+import { AngularFireAuth } from '@angular/fire/auth';
 
 class RTDBSpec {
     // TODO: these are stubs that can be removed after the RTDB functions ticket has been done
@@ -25,28 +26,28 @@ class RTDBSpec {
 
 @Injectable()
 export class AuthenticationServiceMock {
-    private static CURRENT_USER: AuthUser = null;
-
     public static CONNECTED_UNVERIFIED: AuthUser = new AuthUser('jean@jaja.europe', 'Jean Jaja', false);
 
     public static CONNECTED: AuthUser = new AuthUser('jean@jaja.europe', 'Jean Jaja', true);
 
     public static setUser(user: AuthUser): void {
-        AuthenticationServiceMock.CURRENT_USER = user;
+        (TestBed.inject(AuthenticationService) as unknown as AuthenticationServiceMock).setUser(user);
     }
 
-    public getCurrentUser(): Promise<AuthUser> {
-        return of(AuthenticationServiceMock.CURRENT_USER).toPromise();
+    private currentUser: AuthUser = null;
+
+    private userRS: ReplaySubject<AuthUser>;
+
+    constructor() {
+        this.userRS = new ReplaySubject<AuthUser>(1);
+    }
+    public setUser(user: AuthUser): void {
+        this.currentUser = user;
+        this.userRS.next(user);
     }
 
     public getUserObs(): Observable<AuthUser> {
-        return of(AuthenticationServiceMock.CURRENT_USER);
-    }
-    public getAuthenticatedUser(): AuthUser {
-        if (AuthenticationServiceMock.CURRENT_USER == null) {
-            throw new Error('MOCK VALUE CURRENT_USER NOT SET BEFORE USE');
-        }
-        return AuthenticationServiceMock.CURRENT_USER;
+        return this.userRS.asObservable();
     }
     public async disconnect(): Promise<MGPValidation> {
         return MGPValidation.failure('not mocked');
@@ -70,7 +71,7 @@ export class AuthenticationServiceMock {
         return MGPValidation.failure('not mocked');
     }
     public async reloadUser(): Promise<void> {
-        return;
+        this.userRS.next(this.currentUser);
     }
 }
 
