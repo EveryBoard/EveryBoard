@@ -37,7 +37,7 @@ import { LocalGameWrapperComponent }
 import { TutorialGameWrapperComponent }
     from './components/wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component';
 import { GameIncluderComponent } from './components/game-components/game-includer/game-includer.component';
-import { RegistrationComponent } from './components/normal-component/registration/registration.component';
+import { RegisterComponent } from './components/normal-component/register/register.component';
 import { LocalGameCreationComponent }
     from './components/normal-component/local-game-creation/local-game-creation.component';
 import { OnlineGameCreationComponent }
@@ -90,7 +90,7 @@ registerLocaleData(localeFr);
 const routes: Route [] = [
     { path: 'login', component: LoginComponent },
     { path: 'server', component: ServerPageComponent, canActivate: [VerifiedAccountGuard] },
-    { path: 'registration', component: RegistrationComponent, canActivate: [NotConnectedGuard] },
+    { path: 'register', component: RegisterComponent, canActivate: [NotConnectedGuard] },
     { path: 'notFound', component: NotFoundComponent, canActivate: [VerifiedAccountGuard] },
     { path: 'nextGameLoading', component: NextGameLoadingComponent, canActivate: [VerifiedAccountGuard] },
     { path: 'verify-account', component: VerifyAccountComponent, canActivate: [ConnectedButNotVerifiedGuard] },
@@ -115,7 +115,7 @@ const routes: Route [] = [
         PickGameComponent,
         ChatComponent,
         PartCreationComponent,
-        RegistrationComponent,
+        RegisterComponent,
         NotFoundComponent,
         NextGameLoadingComponent,
         CountDownComponent,

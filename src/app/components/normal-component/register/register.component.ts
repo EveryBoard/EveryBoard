@@ -8,10 +8,10 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { faEye, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-    selector: 'app-registration',
-    templateUrl: './registration.component.html',
+    selector: 'app-register',
+    templateUrl: './register.component.html',
 })
-export class RegistrationComponent {
+export class RegisterComponent {
 
     public faEye: IconDefinition = faEye;
 
@@ -48,8 +48,8 @@ export class RegistrationComponent {
         const result: MGPValidation = await this.authService.doGoogleLogin();
         if (result.isSuccess()) {
             await this.router.navigate(['/verify-account']);
-        }
-        if (result.isFailure()) {
+        } else {
+            console.log('failed!')
             this.errorMessage = result.getReason();
         }
     }

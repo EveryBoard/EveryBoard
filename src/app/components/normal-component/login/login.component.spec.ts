@@ -104,7 +104,7 @@ describe('LoginComponent', () => {
             // when the user logs in
             await login();
 
-            // then google login has been performed and the user is redirected
+            // then google login has been performed
             expect(authenticationService.doGoogleLogin).toHaveBeenCalledWith();
         }));
         it('should show an error if login fails', fakeAsync(async() => {
