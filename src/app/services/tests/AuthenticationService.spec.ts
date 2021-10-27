@@ -113,6 +113,9 @@ describe('AuthenticationService', () => {
     it('should create', fakeAsync(async() => {
         expect(service).toBeTruthy();
     }));
+    it('should mark user as verified if the user finalized its account but is not yet marked as verified', async() => {
+        // TODO
+    });
     describe('register', () => {
         it('should create user upon successful registration', async() => {
             spyOn(service, 'createUser');
@@ -418,10 +421,12 @@ describe('AuthenticationService', () => {
         });
     });
     describe('setUsername', () => {
-        it('should update the username', async() => {
+        let user: firebase.auth.UserCredential;
+        beforeEach(async() => {
             // given a registered and logged in user
-            await createConnectedGoogleUser();
-
+            user = await createConnectedGoogleUser();
+        });
+        it('should update the username', async() => {
             // when the username is set
             const newUsername: string = 'grandgaga';
             const result: MGPValidation = await service.setUsername(newUsername);
@@ -430,10 +435,7 @@ describe('AuthenticationService', () => {
             expect(result.isSuccess()).toBeTrue();
         });
         it('should not throw upon failure', async() => {
-            // given a registered and logged in user
-            const user: firebase.auth.UserCredential = await createConnectedGoogleUser();
-
-            // when the userame is set but fails
+            // when the username is set but fails
             const error: firebase.FirebaseError = new Error('Error') as firebase.FirebaseError;
             error.code = 'unknown/error';
             spyOn(user.user, 'updateProfile').and.rejectWith(error);
@@ -443,6 +445,24 @@ describe('AuthenticationService', () => {
             // then it fails
             expect(result.isFailure()).toBeTrue();
             expect(result.getReason()).toEqual('Error');
+        });
+        it('should reject empty usernames', async() => {
+            // when the username is set to an empty username
+            const result: MGPValidation = await service.setUsername('');
+
+            // then it fails
+            expect(result.isFailure()).toBeTrue();
+            expect(result.getReason()).toEqual(`Your username may not be empty.`);
+        });
+        it('should reject existing usernames', async() => {
+            const userDAO: UserDAO = TestBed.inject(UserDAO);
+            // when the username is set to an username that is not available
+            spyOn(userDAO, 'usernameIsAvailable').and.resolveTo(false);
+            const result: MGPValidation = await service.setUsername('not-available');
+
+            // then it fails
+            expect(result.isFailure()).toBeTrue();
+            expect(result.getReason()).toEqual(`This username is already in use, please select a different one`);
         });
     });
     describe('setPicture', () => {
