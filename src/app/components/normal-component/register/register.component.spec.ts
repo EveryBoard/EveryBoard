@@ -73,7 +73,7 @@ describe('RegisterComponent', () => {
         expect(getShownError()).toBe(error);
         expect(router.navigate).not.toHaveBeenCalled();
     }));
-    it('should show a message upon registration failure', fakeAsync(async() => {
+    it('should show a message if verification email fails to be sent', fakeAsync(async() => {
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate');
 
@@ -85,6 +85,7 @@ describe('RegisterComponent', () => {
         spyOn(authService, 'doRegister').and.resolveTo(MGPFallible.success(user));
         spyOn(authService, 'sendEmailVerification').and.resolveTo(MGPValidation.failure(error));
         await testUtils.clickElement('#registerButton');
+        testUtils.detectChanges();
 
         // then an error message is shown
         expect(getShownError()).toBe(error);
