@@ -9,6 +9,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { Utils } from 'src/app/utils/utils';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
+import { HttpClient } from '@angular/common/http';
 
 class RTDBSpec {
     // TODO: these are stubs that can be removed after the RTDB functions ticket has been done
@@ -87,9 +88,9 @@ export class AuthenticationServiceUnderTest extends AuthenticationService {
 }
 
 async function createConnectedGoogleUser(): Promise<firebase.auth.UserCredential> {
-    const credentials: firebase.auth.UserCredential = await firebase.auth().signInWithCredential(firebase.auth.GoogleAuthProvider.credential('{"sub": "abc123", "email": "foo@example.com", "email_verified": true}'));
-    await TestBed.inject(UserDAO).set(credentials.user.uid, { username: null, verified: true });
-    return credentials;
+    const credential: firebase.auth.UserCredential = await firebase.auth().signInWithCredential(firebase.auth.GoogleAuthProvider.credential('{"sub": "abc123", "email": "foo@example.com", "email_verified": true}'));
+    await TestBed.inject(UserDAO).set(credential.user.uid, { username: null, verified: true });
+    return credential;
 }
 
 async function createGoogleUser(): Promise<firebase.auth.UserCredential> {
@@ -113,8 +114,22 @@ describe('AuthenticationService', () => {
     it('should create', fakeAsync(async() => {
         expect(service).toBeTruthy();
     }));
-    it('should mark user as verified if the user finalized its account but is not yet marked as verified', async() => {
-        // TODO
+    fit('should mark user as verified if the user finalized its account but is not yet marked as verified', async() => {
+        const userDAO: UserDAO = TestBed.inject(UserDAO);
+        spyOn(userDAO, 'markVerified');
+
+        // given a registered user that has finalized all steps to verify its account
+        const result: MGPFallible<firebase.User> = await service.doRegister(username, email, password);
+        expect(result.isSuccess()).toBeTrue();
+        const uid: string = result.get().uid;
+        await firebase.auth().signOut();
+        // TODO: verify the email
+
+        // when the user appears again
+        await service.doEmailLogin(email, password);
+
+        // then its status is set to verified
+        expect(userDAO.markVerified).toHaveBeenCalledWith(uid);
     });
     describe('register', () => {
         it('should create user upon successful registration', async() => {
@@ -462,7 +477,7 @@ describe('AuthenticationService', () => {
 
             // then it fails
             expect(result.isFailure()).toBeTrue();
-            expect(result.getReason()).toEqual(`This username is already in use, please select a different one`);
+            expect(result.getReason()).toEqual(`This username is already in use, please select a different one.`);
         });
     });
     describe('setPicture', () => {
