@@ -1,5 +1,5 @@
 import { AuthenticationService, AuthUser, RTDB } from '../AuthenticationService';
-import { Observable, ReplaySubject } from 'rxjs';
+import { Observable, ReplaySubject, Subscription } from 'rxjs';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import firebase from 'firebase/app';
 import 'firebase/auth';
@@ -114,7 +114,7 @@ describe('AuthenticationService', () => {
     it('should create', fakeAsync(async() => {
         expect(service).toBeTruthy();
     }));
-    fit('should mark user as verified if the user finalized its account but is not yet marked as verified', async() => {
+    it('should mark user as verified if the user finalized its account but is not yet marked as verified', async() => {
         const userDAO: UserDAO = TestBed.inject(UserDAO);
         spyOn(userDAO, 'markVerified');
 
@@ -123,13 +123,23 @@ describe('AuthenticationService', () => {
         expect(result.isSuccess()).toBeTrue();
         const uid: string = result.get().uid;
         await firebase.auth().signOut();
-        // TODO: verify the email
+        spyOn(service, 'emailVerified').and.returnValue(true);
 
         // when the user appears again
+        let resolvePromise: () => void;
+        const userHasUpdated: Promise<void> = new Promise((resolve: () => void) => {
+            resolvePromise = resolve;
+        });
+        const subscription: Subscription = service.getUserObs().subscribe((_user: AuthUser) => {
+            resolvePromise();
+        });
         await service.doEmailLogin(email, password);
+        await userHasUpdated;
 
         // then its status is set to verified
         expect(userDAO.markVerified).toHaveBeenCalledWith(uid);
+
+        subscription.unsubscribe();
     });
     describe('register', () => {
         it('should create user upon successful registration', async() => {

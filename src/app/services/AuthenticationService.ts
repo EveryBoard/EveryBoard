@@ -88,17 +88,22 @@ export class AuthenticationService implements OnDestroy {
                 display(AuthenticationService.VERBOSE, 'User is not connected');
                 this.userRS.next(AuthUser.NOT_CONNECTED);
             } else { // user logged in
+                console.log(`user with uid ${user.uid}`)
                 if (this.registrationInProgress) {
+                    console.log('registration in progress')
                     // We need to wait for the entire registration process to finish,
                     // otherwise we risk reading an empty username before the user is fully created
                     await this.registrationInProgress;
                     this.registrationInProgress = undefined;
+                    console.log('registration finished')
                 }
                 RTDB.updatePresence(user.uid);
                 const userInDB: IUser = await userDAO.read(user.uid);
-                display(AuthenticationService.VERBOSE, `User ${userInDB.username} is connected, and the verified status is ${user.emailVerified}`);
-                const userHasFinalizedVerification: boolean = user.emailVerified === true && userInDB.username !== '';
+                console.log({userInDB})
+                display(AuthenticationService.VERBOSE || true , `User ${userInDB.username} is connected, and the verified status is ${this.emailVerified(user)}`);
+                const userHasFinalizedVerification: boolean = this.emailVerified(user) === true && userInDB.username !== '';
                 if (userHasFinalizedVerification === true && userInDB.verified === false) {
+                    console.log('marking as verified')
                     // The user has finalized verification but isn't yet marked as so in the DB, so we mark it.
                     await userDAO.markVerified(user.uid);
                 }
@@ -107,6 +112,10 @@ export class AuthenticationService implements OnDestroy {
                                               userHasFinalizedVerification));
             }
         });
+    }
+    public emailVerified(user: firebase.User): boolean {
+        // Only needed for mocking purposes
+        return user.emailVerified;
     }
     /*
      * Registers an user given its username, email, and password.
@@ -164,7 +173,7 @@ export class AuthenticationService implements OnDestroy {
         display(AuthenticationService.VERBOSE, 'AuthenticationService.sendEmailVerification()');
         const user: firebase.User = firebase.auth().currentUser;
         if (user != null) {
-            if (user.emailVerified === true) {
+            if (this.emailVerified(user) === true) {
                 // This should not be reachable from a component
                 return Utils.handleError('Verified users should not ask email verification twice');
             }
