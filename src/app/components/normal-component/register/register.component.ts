@@ -49,7 +49,6 @@ export class RegisterComponent {
         if (result.isSuccess()) {
             await this.router.navigate(['/verify-account']);
         } else {
-            console.log('failed!')
             this.errorMessage = result.getReason();
         }
     }

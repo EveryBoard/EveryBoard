@@ -88,22 +88,17 @@ export class AuthenticationService implements OnDestroy {
                 display(AuthenticationService.VERBOSE, 'User is not connected');
                 this.userRS.next(AuthUser.NOT_CONNECTED);
             } else { // user logged in
-                console.log(`user with uid ${user.uid}`)
                 if (this.registrationInProgress) {
-                    console.log('registration in progress')
                     // We need to wait for the entire registration process to finish,
                     // otherwise we risk reading an empty username before the user is fully created
                     await this.registrationInProgress;
                     this.registrationInProgress = undefined;
-                    console.log('registration finished')
                 }
                 RTDB.updatePresence(user.uid);
                 const userInDB: IUser = await userDAO.read(user.uid);
-                console.log({userInDB})
-                display(AuthenticationService.VERBOSE || true , `User ${userInDB.username} is connected, and the verified status is ${this.emailVerified(user)}`);
+                display(AuthenticationService.VERBOSE, `User ${userInDB.username} is connected, and the verified status is ${this.emailVerified(user)}`);
                 const userHasFinalizedVerification: boolean = this.emailVerified(user) === true && userInDB.username !== '';
                 if (userHasFinalizedVerification === true && userInDB.verified === false) {
-                    console.log('marking as verified')
                     // The user has finalized verification but isn't yet marked as so in the DB, so we mark it.
                     await userDAO.markVerified(user.uid);
                 }

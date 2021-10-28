@@ -9,7 +9,6 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { Utils } from 'src/app/utils/utils';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
-import { HttpClient } from '@angular/common/http';
 
 class RTDBSpec {
     // TODO: these are stubs that can be removed after the RTDB functions ticket has been done
@@ -131,7 +130,8 @@ describe('AuthenticationService', () => {
             resolvePromise = resolve;
         });
         const subscription: Subscription = service.getUserObs().subscribe((_user: AuthUser) => {
-            resolvePromise();
+            // Wait 100ms to ensure that the handler has the time to mark for verification
+            setTimeout(resolvePromise, 100);
         });
         await service.doEmailLogin(email, password);
         await userHasUpdated;
