@@ -46,8 +46,9 @@
                     <button class="button is-primary"
                             type="submit"
                             id="send"
-                            (click)="sendMessage()"
-                            i18n>Send</button>
+                            (click)="sendMessage()">
+                        <fa-icon [icon]="faReply" class="clickable-icon" toggleVisibility></fa-icon>
+                    </button>
                 </div>
             </div>
             <div class="content is-small">

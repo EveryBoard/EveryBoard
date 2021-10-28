@@ -10,6 +10,10 @@
         <source>Be polite</source>
         <target>Soyez courtois</target>
       </trans-unit>
+      <trans-unit id="7206938270697807461" datatype="html">
+        <source>Only connected users can see the chat.</source>
+        <target>Seulement les utilisateurs connectés peuvent voir le chat.</target>
+      </trans-unit>
       <trans-unit id="8447591012079458095" datatype="html">
         <source>Hide chat</source>
         <target>Réduire le chat</target>
@@ -58,10 +62,6 @@
         <source>Log out</source>
         <target>Se déconnecter</target>
       </trans-unit>
-      <trans-unit id="7028204981963450021" datatype="html">
-        <source>Sign up</source>
-        <target>S&apos;inscrire</target>
-      </trans-unit>
       <trans-unit id="2336550011721758066" datatype="html">
         <source>Log in</source>
         <target>Connexion</target>
@@ -105,6 +105,10 @@
       <trans-unit id="2009811124619716606" datatype="html">
         <source>Create an online game</source>
         <target>Créer une partie en ligne</target>
+      </trans-unit>
+      <trans-unit id="7016831866762941443" datatype="html">
+        <source>Pick a game</source>
+        <target>Choisir un jeu</target>
       </trans-unit>
       <trans-unit id="5561648955936795459" datatype="html">
         <source>Use simple mechanics to push 6 of the opponent&apos;s pieces out of the board!</source>
@@ -290,10 +294,6 @@
         <source>The password should be at least 6 characters long</source>
         <target>Le mot de passe doit faire au moins 6 caractères</target>
       </trans-unit>
-      <trans-unit id="1517635326922656876" datatype="html">
-        <source>Sign up with Google</source>
-        <target>Créer un compte avec google</target>
-      </trans-unit>
       <trans-unit id="3412247232926911550" datatype="html">
         <source>Have an account?</source>
         <target>Vous avez déjà un compte ?</target>
@@ -301,6 +301,10 @@
       <trans-unit id="6535780676661833462" datatype="html">
         <source>Registration error</source>
         <target>Erreur lors de la création du compte</target>
+      </trans-unit>
+      <trans-unit id="3204200407244124341" datatype="html">
+        <source>Register with Google</source>
+        <target>Créer un compte avec Google</target>
       </trans-unit>
       <trans-unit id="7656395805241225659" datatype="html">
         <source>Games</source>
@@ -338,10 +342,6 @@
         <source>Connected users:</source>
         <target>Utilisateurs connectés :</target>
       </trans-unit>
-      <trans-unit id="4027779086550572813" datatype="html">
-        <source>Send verification email</source>
-        <target>Envoyer l'email de vérification</target>
-      </trans-unit>
       <trans-unit id="8940072639524140983" datatype="html">
         <source>The email has been sent</source>
         <target>L'email a été envoyé</target>
@@ -362,9 +362,29 @@
         <source>Account verification</source>
         <target>Vérification du compte</target>
       </trans-unit>
-      <trans-unit id="2608263319849312365" datatype="html">
-        <source>In order to finalize your account, you must click on the link that you should have received on your email address (<x id="INTERPOLATION" equiv-text="{{ emailAddress }}"/>). The email could be in your spam folder. You can then reload this page. If you have not received the email, click on the following button to send it again.</source>
-        <target>Pour finaliser votre compte, vous devez cliquer sur le lien qui a été envoyé sur votre adresse email (<x id="INTERPOLATION" equiv-text="{{ emailAddress }}"/>). Cet email peut être arrivé dans vos spams. Si vous n'avez pas reçu cet email, cliquez sur le bouton suivant pour l'envoyer à nouveau.</target>
+      <trans-unit id="2730621369346437278" datatype="html">
+        <source>In order to finalize your account, you must click on the link that you should have received on your email address (<x id="INTERPOLATION" equiv-text="{{ emailAddress }}"/>). The email could be in your spam folder.</source>
+        <target>Pour finaliser votre compte, vous devez cliquer sur le lien qui a été envoyé sur votre adresse email (<x id="INTERPOLATION" equiv-text="{{ emailAddress }}"/>). Cet email peut être arrivé dans vos spams.</target>
+      </trans-unit>
+      <trans-unit id="4295852829952528556" datatype="html">
+        <source>Once you have verified your email, click on the following button:</source>
+        <target>Après avoir vérifié votre email, clickez sur le bouton suivant :</target>
+      </trans-unit>
+      <trans-unit id="881022283381326299" datatype="html">
+        <source>Finalize email verification</source>
+        <target>Finaliser la vérification d'email</target>
+      </trans-unit>
+      <trans-unit id="921630192161780240" datatype="html">
+        <source>If you have not received the verification email, click on the following button:</source>
+        <target>Si vous n'avez pas reçu d'email de vérification, cliquez sur le bouton suivant :</target>
+      </trans-unit>
+      <trans-unit id="4592546836544908536" datatype="html">
+        <source>Send verification email again</source>
+        <target>Ré-envoyer l'email de vérification</target>
+      </trans-unit>
+      <trans-unit id="3862672024084051383" datatype="html">
+        <source>You have not verified your email! Click on the link in the verification email.</source>
+        <target>Vous n'avez pas vérifié votre email! Cliquez sur le lien dans l'email de vérification.</target>
       </trans-unit>
       <trans-unit id="7079545056368231407" datatype="html">
         <source>See the game list</source>
@@ -553,6 +573,10 @@
       <trans-unit id="6102520113052735150" datatype="html">
         <source>The opponent</source>
         <target>L&apos;adversaire</target>
+      </trans-unit>
+      <trans-unit id="4247449258896721566" datatype="html">
+        <source>Opponents</source>
+        <target>Adversaires</target>
       </trans-unit>
       <trans-unit id="5268374384098882347" datatype="html">
         <source>Potential opponents that join the game will appear here.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/>Wait for an opponent to join, so that you can pick one.</source>
@@ -3121,6 +3145,18 @@
       <trans-unit id="2368572652596435161" datatype="html">
         <source>There has been too many requests from your device. You are temporarily blocked due to unusual activity. Try again later.</source>
         <target>Il y a eu trop de requête depuis votre appareil. Vous êtes temporairement bloquée suite à une activité non habituelle. Essayez à nouveau plus tard.</target>
+      </trans-unit>
+      <trans-unit id="8414332856711181199" datatype="html">
+        <source>You closed the authentication popup without finalizing your log in.</source>
+        <target>Vous avez fermer la fenêtre d'authentification sans finaliser votre connexion.</target>
+      </trans-unit>
+      <trans-unit id="4550935601489856530" datatype="html">
+        <source>Your username may not be empty.</source>
+        <target>Votre nom d'utilisateur ne peut pas être vide.</target>
+      </trans-unit>
+      <trans-unit id="3618174181025506941" datatype="html">
+        <source>This username is already in use, please select a different one.</source>
+        <target>Ce nom d'utilisateur est déjà utilisé, veuillez en utiliser un autre.</target>
       </trans-unit>
       <trans-unit id="75196759111440200" datatype="html">
         <source>You&apos;re not allowed to send a message here.</source>
