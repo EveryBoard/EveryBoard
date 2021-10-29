@@ -11,7 +11,14 @@
         "sourceMap": true,
         "declaration": false,
         "alwaysStrict": true,
-        "strict": false,
+        "noImplicitThis": true,
+        "strictBindCallApply": true,
+        // The following options still need to be set to true
+        // For now, we'll use the ts-strict plugin to do that file by file before enabling it globally
+        "strictNullChecks": true, // LOTS of changes needed
+        "noImplicitAny": false, // some fixes to do before enabling this one
+        "strictFunctionTypes": false, // requires improving genericity
+        "strictPropertyInitialization": false, // requires strictNullChecks
         "module": "es2020",
         "moduleResolution": "node",
         "experimentalDecorators": true,
@@ -29,5 +36,5 @@
             ],
             "core-js/es6/*": ["node_modules/core-js/es"]
         }
-    },
+    }
 }

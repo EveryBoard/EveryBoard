@@ -1,5 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
+import { assert } from 'src/app/utils/utils';
 
 export class GameComponentUtils {
     public static getArrowTransform(caseSize: number, coord: Coord, direction: Orthogonal): string {
@@ -22,7 +23,8 @@ export class GameComponentUtils {
                 dy = 0;
                 angle = 180;
                 break;
-            case Orthogonal.RIGHT:
+            default:
+                assert(direction === Orthogonal.RIGHT, 'Direction must be RIGHT');
                 dx = 1;
                 dy = 0;
                 angle = 0;

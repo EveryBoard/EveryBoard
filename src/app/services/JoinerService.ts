@@ -11,16 +11,6 @@ import { ArrayUtils } from '../utils/ArrayUtils';
 export class JoinerService {
     public static VERBOSE: boolean = false;
 
-    public static readonly EMPTY_JOINER: IJoiner = {
-        creator: null,
-        candidates: [],
-        chosenPlayer: '',
-        firstPlayer: FirstPlayer.RANDOM.value,
-        partType: PartType.STANDARD.value,
-        partStatus: PartStatus.PART_CREATED.value,
-        maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
-        totalPartDuration: PartType.NORMAL_PART_DURATION,
-    };
     private observedJoinerId: string;
 
     constructor(private joinerDao: JoinerDAO) {
@@ -34,7 +24,13 @@ export class JoinerService {
         display(JoinerService.VERBOSE, 'JoinerService.createInitialJoiner(' + creatorName + ', ' + joinerId + ')');
 
         const newJoiner: IJoiner = {
-            ...JoinerService.EMPTY_JOINER,
+            candidates: [],
+            chosenPlayer: '',
+            firstPlayer: FirstPlayer.RANDOM.value,
+            partType: PartType.STANDARD.value,
+            partStatus: PartStatus.PART_CREATED.value,
+            maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
+            totalPartDuration: PartType.NORMAL_PART_DURATION,
             creator: creatorName,
         };
         return this.set(joinerId, newJoiner);

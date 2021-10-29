@@ -30,9 +30,9 @@ export class MGPOptional<T extends Comparable> {
         return MGPOptional.of(value as NonNullable<T>);
     }
     public static empty<T extends Comparable>(): MGPOptional<T> {
-        return new MGPOptional(null);
+        return new MGPOptional((null as T | null));
     }
-    private constructor(private readonly value: T) {}
+    private constructor(private readonly value: T | null) {}
 
     public isPresent(): boolean {
         return this.value != null;
@@ -47,7 +47,7 @@ export class MGPOptional<T extends Comparable> {
             throw new Error('Value is absent');
         }
     }
-    public getOrNull(): T {
+    public getOrNull(): T | null {
         return this.value;
     }
     public equals(other: MGPOptional<T>): boolean {
@@ -63,7 +63,7 @@ export class MGPOptional<T extends Comparable> {
         if (this.isAbsent()) {
             return 'MGPOptional.empty()';
         } else {
-            return `MGPOptional.of(${this.value.toString()})`;
+            return `MGPOptional.of(${this.value as T})`;
         }
     }
 }

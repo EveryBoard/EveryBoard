@@ -10,6 +10,7 @@ import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisp
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { AbstractGameState } from 'src/app/jscaip/GameState';
 import { Utils } from 'src/app/utils/utils';
+import { of } from 'rxjs';
 
 
 /**
@@ -99,7 +100,7 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
     }
     public pass(): Promise<MGPValidation> {
         Utils.handleError('pass() called on a game that does not redefine it');
-        return;
+        return of(MGPValidation.failure('pass is not redefined')).toPromise();
     }
 }
 

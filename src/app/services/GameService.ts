@@ -42,7 +42,7 @@ export class GameService implements OnDestroy {
 
     private userNameSub: Subscription;
 
-    private userName: string;
+    private userName: string | null;
 
     constructor(public partDao: PartDAO,
                 public activesPartsService: ActivesPartsService,

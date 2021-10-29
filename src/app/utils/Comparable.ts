@@ -15,7 +15,7 @@ export type ComparableJSON = {
 export type Comparable = JSONPrimitive | ComparableObject | ComparableJSON;
 
 export function comparableEquals<T extends Comparable>(a: T, b: T): boolean {
-    if (typeof a === 'object') {
+    if (a != null && b != null && typeof a === 'object') {
         if (a['equals']) {
             const comparableValue: ComparableObject = a as ComparableObject;
             const otherComparable: ComparableObject = b as ComparableObject;

@@ -14,7 +14,7 @@ export abstract class MGPFallible<T extends Comparable> {
     public abstract isSuccess(): boolean
     public abstract isFailure(): boolean
     public abstract get(): NonNullable<T>
-    public abstract getOrNull(): T
+    public abstract getOrNull(): T | null
     public abstract getReason(): string
     public abstract toOptional(): MGPOptional<T>
     public equals(other: MGPFallible<T>): boolean {
@@ -42,7 +42,7 @@ class MGPFallibleSuccess<T extends Comparable> extends MGPFallible<T> {
     public get(): NonNullable<T> {
         return this.value;
     }
-    public getOrNull(): T {
+    public getOrNull(): T | null {
         return this.value;
     }
     public getReason(): string {
@@ -66,7 +66,7 @@ class MGPFallibleFailure<T extends Comparable> extends MGPFallible<T> {
     public get(): NonNullable<T> {
         throw new Error('Value is absent from failure, with the following reason: ' + this.reason);
     }
-    public getOrNull(): T {
+    public getOrNull(): T | null {
         return null;
     }
     public getReason(): string {

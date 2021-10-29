@@ -2,7 +2,7 @@ import { fakeAsync } from '@angular/core/testing';
 
 import { JoinerService } from '../JoinerService';
 import { JoinerDAO } from 'src/app/dao/JoinerDAO';
-import { IJoiner, PartStatus } from 'src/app/domain/ijoiner';
+import { FirstPlayer, IJoiner, PartStatus, PartType } from 'src/app/domain/ijoiner';
 import { JoinerDAOMock } from 'src/app/dao/tests/JoinerDAOMock.spec';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 
@@ -38,7 +38,13 @@ describe('JoinerService', () => {
         spyOn(dao, 'set');
         await service.createInitialJoiner('creator', 'id');
         expect(dao.set).toHaveBeenCalledWith('id', {
-            ...JoinerService.EMPTY_JOINER,
+            candidates: [],
+            chosenPlayer: '',
+            firstPlayer: FirstPlayer.RANDOM.value,
+            partType: PartType.STANDARD.value,
+            partStatus: PartStatus.PART_CREATED.value,
+            maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
+            totalPartDuration: PartType.NORMAL_PART_DURATION,
             creator: 'creator',
         });
     }));
