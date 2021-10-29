@@ -27,7 +27,6 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
 {
     private state: CoerceoState;
 
-    public scores: { readonly 0: number; readonly 1: number; } = [0, 0];
     public tiles: { readonly 0: number; readonly 1: number; } = [0, 0];
 
     public NONE: FourStatePiece = FourStatePiece.NONE;
@@ -40,6 +39,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
+        this.scores = [0, 0];
         this.rules = new CoerceoRules(CoerceoState);
         this.availableMinimaxes = [
             new CoerceoMinimax(this.rules, 'Normal'),

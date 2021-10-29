@@ -9,11 +9,11 @@
     </defs>
     <ng-container *ngIf="isPlayerTurn()">
         <g *ngFor="let n of [0, 1, 2, 3, 4]">
-            <use *ngFor="let orientation of [['DOWN', n, -1], ['UP', n, 5], ['RIGHT', -1, n], ['LEFT', 5, n]]"
+            <use *ngFor="let orientation of [{ dir: 'DOWN', x: n, y: -1 }, { dir: 'UP', x: n, y: 5}, { dir: 'RIGHT', x: -1, y: n }, { dir: 'LEFT', x: 5, y: n }]"
                  xlink:href="#arrow"
-                 id="insertAt_{{orientation[1]}}_{{orientation[2]}}"
-                 (click)="insertAt(orientation[1], orientation[2])"
-                 [attr.transform]="getInsertionArrowTransform(orientation[1]+1, orientation[2]+1, orientation[0])"
+                 id="insertAt_{{orientation.x}}_{{orientation.y}}"
+                 (click)="insertAt(orientation.y, orientation.y)"
+                 [attr.transform]="getInsertionArrowTransform(orientation.x+1, orientation.y+1, orientation.dir)"
                  class="base mid-stroke"/>
         </g>
     </ng-container>

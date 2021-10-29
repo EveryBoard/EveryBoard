@@ -113,7 +113,7 @@ export class GoState extends GameStateWithTable<GoPiece> {
         const board: Table<GoPiece> = GoState.getStartingBoard();
         return new GoState(board, [0, 0], 0, MGPOptional.empty(), Phase.PLAYING);
     }
-    public getCapturedCopy(): number[] {
+    public getCapturedCopy(): [number, number] {
         return [this.captured[0], this.captured[1]];
     }
     public static getStartingBoard(): Table<GoPiece> {

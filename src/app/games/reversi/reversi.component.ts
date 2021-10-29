@@ -27,12 +27,11 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
     public NONE: Player = Player.NONE;
     public lastMove: Coord = new Coord(-2, -2);
 
-    public scores: number[] = [2, 2];
-
     private captureds: Coord[] = [];
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
+        this.scores = [2, 2];
         this.rules = new ReversiRules(ReversiState);
         this.availableMinimaxes = [
             new ReversiMinimax(this.rules, 'ReversiMinimax'),

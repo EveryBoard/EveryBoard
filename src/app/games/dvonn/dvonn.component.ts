@@ -23,7 +23,6 @@ import { DvonnTutorial } from './DvonnTutorial';
 
 export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove, DvonnState, DvonnPieceStack> {
 
-    public scores: number[] = [0, 0];
     public lastMove: DvonnMove = null;
     public chosen: Coord = null;
     public disconnecteds: { x: number, y: number, caseContent: DvonnPieceStack }[] = [];

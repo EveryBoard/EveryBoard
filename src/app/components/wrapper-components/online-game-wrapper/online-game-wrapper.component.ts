@@ -106,7 +106,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         // url is ["play", "game-name", "part-id"]
         return this.actRoute.snapshot.paramMap.get('compo');
     }
-    private isPlaying(): boolean {
+    public isPlaying(): boolean {
         return this.observerRole === Player.ZERO.value ||
                this.observerRole === Player.ONE.value;
     }

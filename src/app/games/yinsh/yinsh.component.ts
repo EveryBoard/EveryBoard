@@ -56,8 +56,6 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules, YinshMove
     private static MARKER_SIZE: number = YinshComponent.RING_INNER_SIZE;
     private static INDICATOR_SIZE: number = 10;
 
-    public scores: number[] = [0, 0];
-
     private constructedState: YinshState;
 
     private movePhase: 'INITIAL_CAPTURE_SELECT_FIRST' |
@@ -94,6 +92,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules, YinshMove
     };
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
+        this.scores = [0, 0];
         this.rules = new YinshRules(YinshState);
         this.availableMinimaxes = [
             new YinshMinimax(this.rules, 'YinshMinimax'),

@@ -23,8 +23,6 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
 
     public static VERBOSE: boolean = false;
 
-    public scores: number[] = [0, 0];
-
     public boardInfo: GroupDatas<GoPiece>;
 
     public ko: Coord;
@@ -39,6 +37,7 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
+        this.scores = [0, 0];
         this.rules = new GoRules(GoState);
         this.availableMinimaxes = [
             new GoMinimax(this.rules, 'GoMinimax'),

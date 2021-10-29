@@ -27,8 +27,6 @@ import { GipfTutorial } from './GipfTutorial';
 })
 export class GipfComponent extends HexagonalGameComponent<GipfRules, GipfMove, GipfState, GipfLegalityStatus> {
 
-    public scores: number[] = [0, 0];
-
     public inserted: Arrow = null;
     public arrows: Arrow[] = [];
     public captured: Coord[] = [];
@@ -51,6 +49,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules, GipfMove, G
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
+        this.scores = [0, 0];
         this.rules = new GipfRules(GipfState);
         this.availableMinimaxes = [
             new GipfMinimax(this.rules, 'GipfMinimax'),

@@ -58,7 +58,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
         return possibleTargets.filter((c: Coord): boolean =>
             state.isOnBoard(c) && state.getPieceAt(c).isEmpty() === false);
     }
-    public static getScores(state: DvonnState): number[] {
+    public static getScores(state: DvonnState): [number, number] {
         // Board value is the total number of pieces controlled by player 0 - by player 1
         let p0Score: number = 0;
         let p1Score: number = 0;

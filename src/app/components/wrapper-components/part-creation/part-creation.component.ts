@@ -238,7 +238,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                                                 FirstPlayer.of(firstPlayer),
                                                 totalPartDuration);
     }
-    private async cancelGameCreation(): Promise<void> {
+    public async cancelGameCreation(): Promise<void> {
         this.allDocDeleted = true;
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.cancelGameCreation');
 

@@ -67,7 +67,7 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
         this.afterGameIncluderViewInit();
         this.start();
     }
-    private start(): void {
+    public start(): void {
         const tutorial: TutorialStep[] = this.gameComponent.tutorial;
         this.startTutorial(tutorial);
     }
@@ -80,8 +80,9 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
         this.successfulSteps = 0;
         this.showStep(0);
     }
-    public changeStep(stepIndex: string): void {
-        this.showStep(Number.parseInt(stepIndex, 10));
+    public changeStep(event: Event): void {
+        const target: HTMLSelectElement = event.target as HTMLSelectElement;
+        this.showStep(Number.parseInt(target.value, 10));
     }
     private showStep(stepIndex: number): void {
         display(TutorialGameWrapperComponent.VERBOSE, 'tutorialGameWrapperComponent.showStep(' + stepIndex + ')');

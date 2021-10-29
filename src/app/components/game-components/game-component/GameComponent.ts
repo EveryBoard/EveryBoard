@@ -9,6 +9,7 @@ import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { AbstractGameState } from 'src/app/jscaip/GameState';
+import { Utils } from 'src/app/utils/utils';
 
 
 /**
@@ -40,6 +41,8 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
     public canPass: boolean;
 
     public showScore: boolean;
+
+    public scores: [number, number] = [0, 0];
 
     public imagesLocation: string = 'assets/images/';
 
@@ -94,9 +97,14 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
     public getTurn(): number {
         return this.rules.node.gameState.turn;
     }
+    public pass(): Promise<MGPValidation> {
+        Utils.handleError('pass() called on a game that does not redefine it');
+        return;
+    }
 }
 
 export abstract class AbstractGameComponent extends GameComponent<Rules<Move, AbstractGameState>,
                                                                   Move,
                                                                   AbstractGameState> {
 }
+

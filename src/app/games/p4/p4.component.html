@@ -30,8 +30,6 @@
           class="base no-fill last-move mid-stroke"
     />
     <rect *ngFor="let coord of victoryCoords"
-          id="click_{{ x }}"
-          (click)="onClick(x)"
           [attr.x]="CASE_SIZE * coord.x"
           [attr.y]="CASE_SIZE * coord.y"
           [attr.width]="CASE_SIZE"

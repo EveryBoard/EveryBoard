@@ -66,7 +66,7 @@
             [attr.r]="(CASE_SIZE - STROKE_WIDTH) / 2"
             [ngClass]="getCaseClasses(victoryCoord.x, victoryCoord.y)"
             class="base victory-stroke"
-            [stroke-width]="STROKE_WIDTH"
+            [attr.stroke-width]="STROKE_WIDTH"
     />
     <g *ngIf="canSkipRotation"
        id="skipRotation"
