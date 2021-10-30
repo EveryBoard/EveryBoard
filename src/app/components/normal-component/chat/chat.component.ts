@@ -5,6 +5,7 @@ import { AuthenticationService, AuthUser } from 'src/app/services/Authentication
 import { IChatId } from 'src/app/domain/ichat';
 import { assert, display } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-chat',
@@ -28,6 +29,8 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     private isNearBottom: boolean = true;
     private notYetScrolled: boolean = true;
 
+    private userSub: Subscription | null = null;
+
     @ViewChild('chatDiv') chatDiv: ElementRef<HTMLElement>;
 
     constructor(private chatService: ChatService,
@@ -39,7 +42,7 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
 
         assert(this.chatId != null && this.chatId !== '', 'No chat to join mentionned');
 
-        this.authenticationService.getJoueurObs()
+        this.userSub = this.authenticationService.getJoueurObs()
             .subscribe((joueur: AuthUser) => {
                 if (this.isConnectedUser(joueur)) {
                     display(ChatComponent.VERBOSE, JSON.stringify(joueur) + ' just connected');
@@ -57,7 +60,7 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
         this.scrollToBottomIfNeeded();
     }
     public isConnectedUser(joueur: { pseudo: string; verified: boolean;}): boolean {
-        return joueur && joueur.pseudo && joueur.pseudo !== '';
+        return joueur.pseudo !== '';
     }
     public loadChatContent(): void {
         display(ChatComponent.VERBOSE, `User '` + this.userName + `' logged, loading chat content`);
@@ -130,6 +133,9 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     public ngOnDestroy(): void {
         if (this.chatService.isObserving()) {
             this.chatService.stopObserving();
+        }
+        if (this.userSub) {
+            this.userSub.unsubscribe();
         }
     }
     public switchChatVisibility(): void {

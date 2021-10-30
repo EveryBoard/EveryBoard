@@ -12,5 +12,5 @@ export class GoLegalityStatus implements LegalityStatus {
     }
     public legal: MGPValidation;
 
-    public capturedCoords: Coord[];
+    public capturedCoords: Coord[] | null;
 }

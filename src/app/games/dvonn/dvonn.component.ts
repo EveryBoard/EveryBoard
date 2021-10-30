@@ -14,6 +14,7 @@ import { MaxStacksDvonnMinimax } from './MaxStacksDvonnMinimax';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { DvonnTutorial } from './DvonnTutorial';
+import { Utils } from 'src/app/utils/utils';
 
 @Component({
     selector: 'app-dvonn',
@@ -23,8 +24,8 @@ import { DvonnTutorial } from './DvonnTutorial';
 
 export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove, DvonnState, DvonnPieceStack> {
 
-    public lastMove: DvonnMove = null;
-    public chosen: Coord = null;
+    public lastMove: DvonnMove | null = null;
+    public chosen: Coord | null = null;
     public disconnecteds: { x: number, y: number, caseContent: DvonnPieceStack }[] = [];
     public state: DvonnState;
 
@@ -64,13 +65,13 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         this.scores = DvonnRules.getScores(this.state);
     }
     private calculateDisconnecteds(): void {
-        const previousState: DvonnState = this.rules.node.mother.gameState;
+        const previousState: DvonnState = Utils.getNonNullOrFail(this.rules.node.mother).gameState;
         const state: DvonnState = this.rules.node.gameState;
         for (let y: number = 0; y < state.board.length; y++) {
             for (let x: number = 0; x < state.board[y].length; x++) {
                 const coord: Coord = new Coord(x, y);
                 if (state.isOnBoard(coord) === true &&
-                    coord.equals(this.lastMove.coord) === false) {
+                    coord.equals(Utils.getNonNullOrFail(this.lastMove).coord) === false) {
                     const stack: DvonnPieceStack = state.getPieceAt(coord);
                     const previousStack: DvonnPieceStack = previousState.getPieceAt(coord);
                     if (stack.isEmpty() && !previousStack.isEmpty()) {
@@ -118,7 +119,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         }
     }
     private async chooseDestination(x: number, y: number): Promise<MGPValidation> {
-        const chosenPiece: Coord = this.chosen;
+        const chosenPiece: Coord = Utils.getNonNullOrFail(this.chosen);
         const chosenDestination: Coord = new Coord(x, y);
         // By construction, only valid moves can be created
         const move: DvonnMove = DvonnMove.of(chosenPiece, chosenDestination);

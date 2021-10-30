@@ -8,7 +8,7 @@ import { DvonnState } from './DvonnState';
 export class DvonnMinimax extends Minimax<DvonnMove, DvonnState> {
 
     public getListMoves(node: DvonnNode): DvonnMove[] {
-        const lastMove: DvonnMove = node.move;
+        const lastMove: DvonnMove | null = node.move;
         const state: DvonnState = node.gameState;
         const moves: DvonnMove[] = [];
         // For each movable piece, look at its possible targets

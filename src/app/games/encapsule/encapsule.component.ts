@@ -13,6 +13,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { EncapsuleFailure } from './EncapsuleFailure';
 import { EncapsuleTutorial } from './EncapsuleTutorial';
+import { assert } from 'src/app/utils/utils';
 
 @Component({
     selector: 'app-encapsule',
@@ -25,10 +26,10 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
                                                                  EncapsuleCase,
                                                                  EncapsuleLegalityStatus>
 {
-    private lastLandingCoord: Coord;
+    private lastLandingCoord: Coord | null;
     private lastStartingCoord: MGPOptional<Coord> = MGPOptional.empty();
-    private chosenCoord: Coord;
-    private chosenPiece: EncapsulePiece;
+    private chosenCoord: Coord | null;
+    private chosenPiece: EncapsulePiece | null;
     private chosenPieceIndex: number;
 
     public constructor(messageDisplayer: MessageDisplayer) {
@@ -44,7 +45,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     public updateBoard(): void {
         const state: EncapsuleState = this.rules.node.gameState;
         this.board = state.getCopiedBoard();
-        const move: EncapsuleMove = this.rules.node.move;
+        const move: EncapsuleMove | null = this.rules.node.move;
 
         if (move != null) {
             this.lastLandingCoord = move.landingCoord;
@@ -76,6 +77,9 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
                 return this.chooseMove(chosenMove, this.rules.node.gameState, null, null);
             } else if (state.getPieceAt(clickedCoord).belongsTo(state.getCurrentPlayer()) === false) {
                 return this.cancelMove(EncapsuleFailure.INVALID_PIECE_SELECTED());
+            } else {
+                // A coord has been selected for a future move
+                return MGPValidation.SUCCESS;
             }
         } else {
             if (this.chosenCoord.equals(clickedCoord)) {
@@ -140,7 +144,8 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
                 return 40;
             case Size.MEDIUM:
                 return 30;
-            case Size.SMALL:
+            default:
+                assert(piece.getSize() === Size.SMALL, 'piece can only be small');
                 return 20;
         }
     }

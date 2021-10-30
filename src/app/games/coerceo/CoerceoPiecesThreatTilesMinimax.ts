@@ -66,7 +66,7 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
         const threatMap: MGPMap<Coord, PieceThreat> = new MGPMap();
         for (const player of [Player.ZERO, Player.ONE]) {
             for (const piece of pieces.get(player).get().getCopy()) {
-                const threat: PieceThreat = this.getThreat(piece, state);
+                const threat: PieceThreat | null = this.getThreat(piece, state);
                 if (threat != null) {
                     threatMap.set(piece, threat);
                 }
@@ -74,11 +74,10 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
         }
         return threatMap;
     }
-    public getThreat(coord: Coord, state: CoerceoState): PieceThreat { // TODO: check threat by leaving tile
+    public getThreat(coord: Coord, state: CoerceoState): PieceThreat | null { // TODO: check threat by leaving tile
         const threatenerPlayer: Player = Player.of(state.getPieceAt(coord).value);
         const OPPONENT: Player = threatenerPlayer.getOpponent();
-        let freedoms: number = 0;
-        let freedom: Coord;
+        let freedom: Coord | null = null;
         const directThreats: Coord[] = [];
         const neighboors: Coord[] = TriangularCheckerBoard
             .getNeighboors(coord)
@@ -88,11 +87,15 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
             if (threat.is(OPPONENT)) {
                 directThreats.push(directThreat);
             } else if (threat === FourStatePiece.EMPTY) {
-                freedoms++;
-                freedom = directThreat;
+                if (freedom != null) {
+                    // more than one freedom!
+                    return null;
+                } else {
+                    freedom = directThreat;
+                }
             }
         }
-        if (freedoms === 1) {
+        if (freedom != null) {
             const movingThreats: Coord[] = [];
             for (const step of CoerceoStep.STEPS) {
                 const movingThreat: Coord = freedom.getNext(step.direction, 1);
@@ -123,7 +126,7 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
         }));
         for (const threatenedPiece of threatenedPlayerPieces) {
             const oldThreat: PieceThreat = threatMap.get(threatenedPiece).get();
-            let newThreat: PieceThreat;
+            let newThreat: PieceThreat | null = null;
             if (threatenedOpponentPieces.contains(oldThreat.direct.get(0)) === false) {
                 // if the direct threat of this piece is not a false threat
                 const newMover: Coord[] = [];

@@ -9,10 +9,11 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { AbaloneFailure } from './AbaloneFailure';
 import { AbaloneState } from './AbaloneState';
 import { AbaloneMove } from './AbaloneMove';
+import { Utils } from 'src/app/utils/utils';
 
 export interface AbaloneLegalityStatus extends LegalityStatus {
 
-    newBoard: FourStatePiece[][];
+    newBoard: FourStatePiece[][] | null;
 }
 
 export abstract class AbaloneNode extends MGPNode<AbaloneRules, AbaloneMove, AbaloneState, AbaloneLegalityStatus> {}
@@ -129,8 +130,8 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
             return GameStatus.ONGOING;
         }
     }
-    public applyLegalMove(move: AbaloneMove, state: AbaloneState, status: AbaloneLegalityStatus): AbaloneState {
-        return new AbaloneState(status.newBoard, state.turn + 1);
+    public applyLegalMove(_move: AbaloneMove, state: AbaloneState, status: AbaloneLegalityStatus): AbaloneState {
+        return new AbaloneState(Utils.getNonNullOrFail(status.newBoard), state.turn + 1);
     }
     public isLegal(move: AbaloneMove, state: AbaloneState): AbaloneLegalityStatus {
         return AbaloneRules.isLegal(move, state);

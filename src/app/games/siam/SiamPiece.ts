@@ -23,7 +23,7 @@ export class SiamPiece {
 
     public static readonly MOUNTAIN: SiamPiece = new SiamPiece(9);
 
-    public static decode(value: number): SiamPiece {
+    public static decode(value: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9): SiamPiece {
         switch (value) {
             case 0: return SiamPiece.EMPTY;
             case 1: return SiamPiece.WHITE_UP;
@@ -35,7 +35,6 @@ export class SiamPiece {
             case 7: return SiamPiece.BLACK_DOWN;
             case 8: return SiamPiece.BLACK_LEFT;
             case 9: return SiamPiece.MOUNTAIN;
-            default: throw new Error('Unknown value for SiamPiece(' + value + ').');
         }
     }
     public belongTo(player: Player): boolean {
@@ -59,7 +58,7 @@ export class SiamPiece {
         if (5 <= this.value && this.value <= 8) return Player.ONE;
         throw new Error('Player.NONE do not own piece.');
     }
-    public getNullableDirection(): Orthogonal {
+    public getNullableDirection(): Orthogonal | null {
         switch (this.value) {
             case 0: return null;
             case 1: return Orthogonal.UP;
@@ -70,7 +69,9 @@ export class SiamPiece {
             case 7: return Orthogonal.DOWN;
             case 4: return Orthogonal.LEFT;
             case 8: return Orthogonal.LEFT;
-            case 9: return null;
+            default:
+                // must be 9, according to this.value's type
+                return null;
         }
     }
     public static of(orientation: Orthogonal, player: Player): SiamPiece {
@@ -92,7 +93,7 @@ export class SiamPiece {
     private constructor(public readonly value: number) {}
 
     public getDirection(): Orthogonal {
-        const direction: Orthogonal = this.getNullableDirection();
+        const direction: Orthogonal | null = this.getNullableDirection();
         if (direction == null) throw new Error('Piece ' + this.value + ' has no direction.');
         return direction;
     }
@@ -107,7 +108,9 @@ export class SiamPiece {
             case 6: return 'BLACK_RIGHT';
             case 7: return 'BLACK_DOWN';
             case 8: return 'BLACK_LEFT';
-            case 9: return 'MOUNTAIN';
+            default:
+                // must be 9, according to this.value's type
+                return 'MOUNTAIN';
         }
     }
 }

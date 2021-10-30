@@ -4,7 +4,7 @@ import { AwaleState } from './AwaleState';
 import { AwaleMove } from './AwaleMove';
 import { AwaleLegalityStatus } from './AwaleLegalityStatus';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { display } from 'src/app/utils/utils';
+import { display, Utils } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Coord } from 'src/app/jscaip/Coord';
 import { AwaleFailure } from './AwaleFailure';
@@ -20,11 +20,11 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState, AwaleLegalityStatus
         const turn: number = state.turn;
 
         const captured: readonly [number, number] = [
-            state.captured[0] + status.captured[0],
-            state.captured[1] + status.captured[1],
+            state.captured[0] + Utils.getNonNullOrFail(status.captured[0]),
+            state.captured[1] + Utils.getNonNullOrFail(status.captured[1]),
         ];
 
-        return new AwaleState(status.resultingBoard, turn + 1, captured);
+        return new AwaleState(Utils.getNonNullOrFail(status.resultingBoard), turn + 1, captured);
     }
     /**
      * Captures all the seeds of the mansooning player.

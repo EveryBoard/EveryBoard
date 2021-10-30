@@ -1,9 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
-
-import firebase from 'firebase/app';
-
 import { PartDAO } from '../dao/PartDAO';
 import { MGPResult, ICurrentPartId, IPart, Part } from '../domain/icurrentpart';
 import { FirstPlayer, IJoiner, PartStatus } from '../domain/ijoiner';
@@ -14,17 +11,18 @@ import { Request } from '../domain/request';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { assert, display, JSONValueWithoutArray } from 'src/app/utils/utils';
+import { assert, display, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 import { AuthenticationService, AuthUser } from './AuthenticationService';
 import { MessageDisplayer } from './message-displayer/MessageDisplayer';
 import { GameServiceMessages } from './GameServiceMessages';
 import { Time } from '../domain/Time';
+import firebase from 'firebase/app';
 
 export interface StartingPartConfig extends Partial<IPart> {
     playerZero: string,
     playerOne: string,
     turn: number,
-    beginning: firebase.firestore.FieldValue | Time,
+    beginning: firebase.firestore.FieldValue | Time | undefined,
 }
 
 @Injectable({
@@ -34,15 +32,15 @@ export class GameService implements OnDestroy {
 
     public static VERBOSE: boolean = false;
 
-    private followedPartId: string;
+    private followedPartId: string | null;
 
-    private followedPartObs: Observable<ICurrentPartId>;
+    private followedPartObs: Observable<ICurrentPartId> | null;
 
     private followedPartSub: Subscription;
 
     private userNameSub: Subscription;
 
-    private userName: string | null;
+    private userName: string;
 
     constructor(public partDao: PartDAO,
                 public activesPartsService: ActivesPartsService,
@@ -55,8 +53,7 @@ export class GameService implements OnDestroy {
         display(GameService.VERBOSE, 'GameService.constructor');
         this.userNameSub = this.authenticationService.getJoueurObs()
             .subscribe((joueur: AuthUser) => {
-                if (joueur == null) this.userName = null;
-                else this.userName = joueur.pseudo;
+                this.userName = joueur.pseudo;
             });
     }
     public async createGameAndRedirectOrShowError(game: string): Promise<boolean> {
@@ -275,8 +272,8 @@ export class GameService implements OnDestroy {
             listMoves,
             turn: listMoves.length,
             lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
-            remainingMsForZero: part.doc.remainingMsForZero - msToSubstract[0],
-            remainingMsForOne: part.doc.remainingMsForOne - msToSubstract[1],
+            remainingMsForZero: Utils.getDefinedOrFail(part.doc.remainingMsForZero) - msToSubstract[0],
+            remainingMsForOne: Utils.getDefinedOrFail(part.doc.remainingMsForOne) - msToSubstract[1],
         };
         return await this.partDao.update(id, update);
     }
@@ -325,10 +322,16 @@ export class GameService implements OnDestroy {
             lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
         };
         if (msToSubstract[0] > 0) {
-            update = { ...update, remainingMsForZero: part.remainingMsForZero - msToSubstract[0] };
+            update = {
+                ...update,
+                remainingMsForZero: Utils.getDefinedOrFail(part.remainingMsForZero) - msToSubstract[0],
+            };
         }
         if (msToSubstract[1] > 0) {
-            update = { ...update, remainingMsForOne: part.remainingMsForOne - msToSubstract[1] };
+            update = {
+                ...update,
+                remainingMsForOne: Utils.getDefinedOrFail(part.remainingMsForOne) - msToSubstract[1],
+            };
         }
         if (winner != null) {
             update = {

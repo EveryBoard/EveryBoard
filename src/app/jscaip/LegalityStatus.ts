@@ -2,7 +2,7 @@ import { MGPValidation } from '../utils/MGPValidation';
 
 export class LegalityStatus {
 
-    private constructor(public readonly legal: MGPValidation) {}
+    protected constructor(public readonly legal: MGPValidation) {}
 
     public static failure(reason: string): LegalityStatus {
         return new LegalityStatus(MGPValidation.failure(reason));

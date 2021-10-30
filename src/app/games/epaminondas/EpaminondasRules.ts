@@ -8,6 +8,7 @@ import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
 import { EpaminondasFailure } from './EpaminondasFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { Utils } from 'src/app/utils/utils';
 
 export class EpaminondasNode extends MGPNode<EpaminondasRules,
                                              EpaminondasMove,
@@ -19,18 +20,18 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
     public static isLegal(move: EpaminondasMove, state: EpaminondasState): EpaminondasLegalityStatus {
         const phalanxValidity: MGPValidation = this.getPhalanxValidity(state, move);
         if (phalanxValidity.isFailure()) {
-            return EpaminondasLegalityStatus.failure(phalanxValidity.reason);
+            return EpaminondasLegalityStatus.failure(phalanxValidity.getReason());
         }
         const landingStatus: EpaminondasLegalityStatus = this.getLandingStatus(state, move);
         if (landingStatus.legal.isFailure()) {
             return landingStatus;
         }
-        const newBoard: Player[][] = landingStatus.newBoard;
+        const newBoard: Player[][] = Utils.getNonNullOrFail(landingStatus.newBoard);
         const OPPONENT: Player = state.getCurrentOpponent();
         const captureValidity: EpaminondasLegalityStatus =
             EpaminondasRules.getCaptureValidity(state, newBoard, move, OPPONENT);
         if (captureValidity.legal.isFailure()) {
-            return EpaminondasLegalityStatus.failure(captureValidity.legal.reason);
+            return EpaminondasLegalityStatus.failure(captureValidity.legal.getReason());
         }
         return { newBoard, legal: MGPValidation.SUCCESS };
     }
@@ -111,12 +112,13 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
     public isLegal(move: EpaminondasMove, state: EpaminondasState): EpaminondasLegalityStatus {
         return EpaminondasRules.isLegal(move, state);
     }
-    public applyLegalMove(move: EpaminondasMove,
+    public applyLegalMove(_move: EpaminondasMove,
                           state: EpaminondasState,
                           status: EpaminondasLegalityStatus)
     : EpaminondasState
     {
-        const resultingState: EpaminondasState = new EpaminondasState(status.newBoard, state.turn + 1);
+        const resultingState: EpaminondasState =
+            new EpaminondasState(Utils.getNonNullOrFail(status.newBoard), state.turn + 1);
         return resultingState;
     }
     public getGameStatus(node: EpaminondasNode): GameStatus {

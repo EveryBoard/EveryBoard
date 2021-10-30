@@ -5,8 +5,9 @@ import { SiamPiece } from '../SiamPiece';
 describe('SiamPiece:', () => {
 
     it('should give string version of each pieces', () => {
-        const values: number[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-        const pieces: SiamPiece[] = values.map((value: number) => SiamPiece.decode(value));
+        const values: (0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9)[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+        const pieces: SiamPiece[] = values.map((value: (0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9)) =>
+            SiamPiece.decode(value));
         const names: string[] = pieces.map((piece: SiamPiece) => piece.toString());
         const expectedPieces: SiamPiece[] = [
             SiamPiece.EMPTY,
@@ -39,7 +40,6 @@ describe('SiamPiece:', () => {
         expect(() => SiamPiece.of(Orthogonal.UP, null)).toThrowError('Player must be set.');
         expect(() => SiamPiece.of(null, Player.ONE)).toThrowError('Orientation must be set.');
         expect(() => SiamPiece.of(Orthogonal.UP, Player.NONE)).toThrowError(`Player None don't have any pieces.`);
-        expect(() => SiamPiece.decode(10)).toThrowError('Unknown value for SiamPiece(10).');
         expect(() => SiamPiece.WHITE_RIGHT.belongTo(null)).toThrowError('Player must be set (even if Player.NONE).');
     });
     it('Should consider moutains as belonging to no player and know which one do', () => {

@@ -9,7 +9,7 @@ import { AbstractGameState } from './GameState';
 
 export interface BoardInfo {
     status: SCORE,
-    victory: Coord[],
+    victory: Coord[] | null,
     preVictory: MGPOptional<Coord>,
     sum: number
 }

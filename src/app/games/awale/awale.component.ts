@@ -10,6 +10,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { AwaleFailure } from './AwaleFailure';
 import { AwaleTutorial } from './AwaleTutorial';
+import { Utils } from 'src/app/utils/utils';
 
 @Component({
     selector: 'app-awale-component',
@@ -45,7 +46,7 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
         const state: AwaleState = this.rules.node.gameState;
         this.scores = state.getCapturedCopy();
         this.hidePreviousMove();
-        const lastMove: AwaleMove = this.rules.node.move;
+        const lastMove: AwaleMove | null = this.rules.node.move;
 
         this.board = state.getCopiedBoard();
         if (lastMove != null) {
@@ -53,7 +54,7 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
             this.last = new Coord(lastMove.x, lastPlayer);
             this.showPreviousMove();
         } else {
-            this.last = null;
+            this.last = new Coord(-1, -1);
         }
     }
     private hidePreviousMove(): void {
@@ -61,7 +62,7 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
         this.moved = [];
     }
     private showPreviousMove(): void {
-        const previousState: AwaleState = this.rules.node.mother.gameState;
+        const previousState: AwaleState = Utils.getNonNullOrFail(this.rules.node.mother).gameState;
         for (let y: number = 0; y <= 1; y++) {
             for (let x: number = 0; x <= 5; x++) {
                 const coord: Coord = new Coord(x, y);

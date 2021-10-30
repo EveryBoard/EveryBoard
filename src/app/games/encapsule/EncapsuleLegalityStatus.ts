@@ -12,5 +12,5 @@ export class EncapsuleLegalityStatus implements LegalityStatus {
 
     public legal: MGPValidation;
 
-    public newLandingCase: EncapsuleCase;
+    public newLandingCase: EncapsuleCase | null;
 }

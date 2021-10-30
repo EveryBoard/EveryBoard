@@ -43,7 +43,7 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
 
     public showScore: boolean;
 
-    public scores: [number, number] = [0, 0];
+    public scores: [number, number] | null = null;
 
     public imagesLocation: string = 'assets/images/';
 
@@ -53,8 +53,8 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
 
     public chooseMove: (move: M,
                         state: S,
-                        scorePlayerZero: number,
-                        scorePlayerOne: number) => Promise<MGPValidation>;
+                        scorePlayerZero: number | null,
+                        scorePlayerOne: number | null) => Promise<MGPValidation>;
 
     public canUserPlay: (element: string) => MGPValidation;
 

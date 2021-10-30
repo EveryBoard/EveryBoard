@@ -172,7 +172,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
     }
     public getPresentNeighboorTilesRelativeIndexes(tile: Coord): number[] {
         const neighboorsIndexes: number[] = [];
-        let firstIndex: number;
+        let firstIndex: number | null = null;
         for (let i: number = 0; i < 6; i++) {
             const vector: Vector = CoerceoState.NEIGHBOORS_TILES_DIRECTIONS[i];
             const neighboorTile: Coord = tile.getNext(vector, 1);
