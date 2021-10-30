@@ -42,7 +42,7 @@ describe('ChatComponent', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
-    fit('should not observe (load messages) and show disconnected chat for unlogged user', fakeAsync(async() => {
+    it('should not observe (load messages) and show disconnected chat for unlogged user', fakeAsync(async() => {
         spyOn(chatService, 'startObserving');
         spyOn(chatService, 'stopObserving');
         spyOn(component, 'loadChatContent');
