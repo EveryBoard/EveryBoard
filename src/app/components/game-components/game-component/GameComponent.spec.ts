@@ -5,6 +5,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { AppModule } from 'src/app/app.module';
 import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { Direction } from 'src/app/jscaip/Direction';
+import { Player } from 'src/app/jscaip/Player';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -45,6 +46,10 @@ describe('GameComponent', () => {
                 onPieceClick: [0, 0],
                 onCaseClick: [0, 0],
                 chooseDirection: [Direction.UP],
+            },
+            Apagos: {
+                onSquareClick: [0],
+                onArrowClick: [0, Player.ONE],
             },
             Awale: { onClick: [0, 0] },
             Coerceo: { onClick: [0, 0] },

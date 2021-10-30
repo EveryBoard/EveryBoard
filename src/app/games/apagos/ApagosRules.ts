@@ -13,6 +13,8 @@ export class ApagosNode extends MGPNode<Rules<ApagosMove, ApagosState, LegalityS
 
 export class ApagosRules extends Rules<ApagosMove, ApagosState> {
 
+    public static readonly singleton: ApagosRules = new ApagosRules(ApagosState);
+
     public applyLegalMove(move: ApagosMove, state: ApagosState, status: LegalityStatus): ApagosState {
         if (move.isDrop()) {
             return this.applyLegalDrop(move, state);
@@ -46,7 +48,6 @@ export class ApagosRules extends Rules<ApagosMove, ApagosState> {
         return new ApagosState(resultingState.turn + 1, resultingState.board, resultingState.remaining);
     }
     public isLegal(move: ApagosMove, state: ApagosState): LegalityStatus {
-        console.log( { state, move })
         if (state.getPieceAt(move.landing).isFull()) {
             return LegalityStatus.failure(ApagosMessage.CANNOT_LAND_ON_A_FULL_SQUARE());
         }
@@ -65,7 +66,7 @@ export class ApagosRules extends Rules<ApagosMove, ApagosState> {
     public isLegalSlideDown(move: ApagosMove, state: ApagosState): LegalityStatus {
         const currentPlayer: Player = state.getCurrentPlayer();
         const startingSquare: ApagosSquare = state.getPieceAt(move.starting.get());
-        if (startingSquare.containing.get(currentPlayer).get() === 0) {
+        if (startingSquare.count(currentPlayer) === 0) {
             return LegalityStatus.failure(ApagosMessage.NO_PIECE_OF_YOU_IN_CHOSEN_SQUARE());
         }
         return LegalityStatus.SUCCESS;

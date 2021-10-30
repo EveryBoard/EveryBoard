@@ -23,10 +23,10 @@ export class ApagosCoord implements ComparableObject {
     }
     private constructor(public readonly x: number) {}
 
-    public equals(o: ComparableObject): boolean {
-        throw new Error('TODOTODO: ApagosCoord.equals not implemented.');
+    public equals(o: ApagosCoord): boolean {
+        return this.x === o.x;
     }
     public toString(): string {
-        throw new Error('TODOTODO: ApagosCoord.toString not implemented.');
+        return 'ApagosCoord(' + this.x + ')';
     }
 }

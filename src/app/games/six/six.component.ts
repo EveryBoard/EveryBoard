@@ -61,15 +61,15 @@ export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixS
         ];
         this.encoder = SixMove.encoder;
         this.tutorial = new SixTutorial().tutorial;
-        this.CASE_SIZE = 30;
-        this.hexaLayout = new HexaLayout(this.CASE_SIZE * 1.50,
-                                         new Coord(this.CASE_SIZE * 2, 0),
+        this.SQUARE_SIZE = 30;
+        this.hexaLayout = new HexaLayout(this.SQUARE_SIZE * 1.50,
+                                         new Coord(this.SQUARE_SIZE * 2, 0),
                                          FlatHexaOrientation.INSTANCE);
         this.setPieceSize(25);
         this.updateBoard();
     }
     private setPieceSize(rayon: number): void {
-        this.CASE_SIZE = 2 * rayon;
+        this.SQUARE_SIZE = 2 * rayon;
         this.hexaLayout = new HexaLayout(rayon,
                                          new Coord(0, 0),
                                          FlatHexaOrientation.INSTANCE);

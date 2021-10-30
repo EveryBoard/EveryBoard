@@ -78,6 +78,7 @@ import { YinshComponent } from './games/yinsh/yinsh.component';
 import { environment } from 'src/environments/environment';
 import { USE_EMULATOR as USE_FIRESTORE_EMULATOR } from '@angular/fire/firestore';
 import { LocaleUtils } from './utils/LocaleUtils';
+import { ApagosComponent } from './games/apagos/apagos.component';
 
 
 registerLocaleData(localeFr);
@@ -124,6 +125,7 @@ const routes: Route [] = [
         TutorialGameCreationComponent,
 
         AbaloneComponent,
+        ApagosComponent,
         AwaleComponent,
         CoerceoComponent,
         DvonnComponent,
@@ -150,6 +152,7 @@ const routes: Route [] = [
     ],
     entryComponents: [
         AbaloneComponent,
+        ApagosComponent,
         AwaleComponent,
         DvonnComponent,
         EncapsuleComponent,

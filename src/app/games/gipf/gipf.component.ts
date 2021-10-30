@@ -57,11 +57,11 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules, GipfMove, G
         ];
         this.encoder = GipfMove.encoder;
         this.tutorial = new GipfTutorial().tutorial;
-        this.CASE_SIZE = 40;
+        this.SQUARE_SIZE = 40;
         this.showScore = true;
         this.constructedState = this.rules.node.gameState;
-        this.hexaLayout = new HexaLayout(this.CASE_SIZE * 1.50,
-                                         new Coord(this.CASE_SIZE * 2, 0),
+        this.hexaLayout = new HexaLayout(this.SQUARE_SIZE * 1.50,
+                                         new Coord(this.SQUARE_SIZE * 2, 0),
                                          FlatHexaOrientation.INSTANCE);
     }
     public updateBoard(): void {

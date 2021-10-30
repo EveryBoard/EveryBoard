@@ -363,7 +363,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     }
     public expectElementNotToExist(elementName: string): void {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(elementName + ' should not to exist').toBeNull();
+        expect(element).withContext(elementName + ' should not exist').toBeNull();
     }
     public expectElementToExist(elementName: string): DebugElement {
         const element: DebugElement = this.findElement(elementName);
@@ -373,7 +373,9 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     public expectElementToHaveClass(elementName: string, cssClass: string): void {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(elementName + ' should exist').toBeTruthy();
-        const elementClasses: string[] = element.attributes.class.split(' ').sort();
+        const classAttribute: string = element.attributes.class;
+        expect(classAttribute).withContext(elementName + ' should have class attribute').toBeTruthy();
+        const elementClasses: string[] = classAttribute.split(' ').sort();
         expect(elementClasses).toContain(cssClass);
     }
     public expectElementNotToHaveClass(elementName: string, cssClass: string): void {

@@ -5,17 +5,17 @@ import { ApagosMove } from '../ApagosMove';
 import { ApagosRules } from '../ApagosRules';
 import { ApagosState } from '../ApagosState';
 
-fdescribe('ApagosMove', () => {
+describe('ApagosMove', () => {
 
     it('should refuse creating immobile sliding', () => {
         // given a move whose landing coord is lower than starting
-        const invalidMove: MGPFallible<ApagosMove> = ApagosMove.slideDown(ApagosCoord.ZERO, ApagosCoord.ZERO);
+        const invalidMove: MGPFallible<ApagosMove> = ApagosMove.transfer(ApagosCoord.ZERO, ApagosCoord.ZERO);
         // then it should not be legal
         expect(invalidMove).toEqual(MGPFallible.failure(ApagosMessage.PIECE_SHOULD_MOVE_DOWNWARD()));
     });
     it('should refuse creating "climbing" slide', () => {
         // given a move whose landing coord is lower than starting
-        const invalidMove: MGPFallible<ApagosMove> = ApagosMove.slideDown(ApagosCoord.ONE, ApagosCoord.TWO);
+        const invalidMove: MGPFallible<ApagosMove> = ApagosMove.transfer(ApagosCoord.ONE, ApagosCoord.TWO);
         // then it should not be legal
         expect(invalidMove).toEqual(MGPFallible.failure(ApagosMessage.PIECE_SHOULD_MOVE_DOWNWARD()));
     });

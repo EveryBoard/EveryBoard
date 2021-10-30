@@ -15,6 +15,7 @@ type Tab = 'games' | 'create' | 'chat';
     templateUrl: './server-page.component.html',
 })
 export class ServerPageComponent implements OnInit, OnDestroy {
+
     public static VERBOSE: boolean = false;
 
     public activeUsers: IJoueurId[];

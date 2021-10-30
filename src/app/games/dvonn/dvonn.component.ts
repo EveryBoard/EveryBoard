@@ -38,12 +38,12 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         ];
         this.encoder = DvonnMove.encoder;
         this.tutorial = new DvonnTutorial().tutorial;
-        this.CASE_SIZE = 30;
+        this.SQUARE_SIZE = 30;
         this.showScore = true;
         this.canPass = false;
         this.scores = DvonnRules.getScores(this.rules.node.gameState);
-        this.hexaLayout = new HexaLayout(this.CASE_SIZE * 1.50,
-                                         new Coord(-this.CASE_SIZE, this.CASE_SIZE * 2),
+        this.hexaLayout = new HexaLayout(this.SQUARE_SIZE * 1.50,
+                                         new Coord(-this.SQUARE_SIZE, this.SQUARE_SIZE * 2),
                                          PointyHexaOrientation.INSTANCE);
         this.state = this.rules.node.gameState;
         this.hexaBoard = this.rules.node.gameState.board;

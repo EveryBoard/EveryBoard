@@ -10,25 +10,25 @@ import { ApagosMessage } from './ApagosMessage';
 export class ApagosMove extends Move {
 
     public static readonly ALL_MOVES: ApagosMove[] = [
-        ApagosMove.drop(ApagosCoord.ZERO, Player.ZERO).get(),
-        ApagosMove.drop(ApagosCoord.ONE, Player.ZERO).get(),
-        ApagosMove.drop(ApagosCoord.TWO, Player.ZERO).get(),
-        ApagosMove.drop(ApagosCoord.THREE, Player.ZERO).get(),
-        ApagosMove.drop(ApagosCoord.ZERO, Player.ONE).get(),
-        ApagosMove.drop(ApagosCoord.ONE, Player.ONE).get(),
-        ApagosMove.drop(ApagosCoord.TWO, Player.ONE).get(),
-        ApagosMove.drop(ApagosCoord.THREE, Player.ONE).get(),
-        ApagosMove.slideDown(ApagosCoord.THREE, ApagosCoord.TWO).get(),
-        ApagosMove.slideDown(ApagosCoord.THREE, ApagosCoord.ONE).get(),
-        ApagosMove.slideDown(ApagosCoord.THREE, ApagosCoord.ZERO).get(),
-        ApagosMove.slideDown(ApagosCoord.TWO, ApagosCoord.ONE).get(),
-        ApagosMove.slideDown(ApagosCoord.TWO, ApagosCoord.ZERO).get(),
-        ApagosMove.slideDown(ApagosCoord.ONE, ApagosCoord.ZERO).get(),
+        ApagosMove.drop(ApagosCoord.ZERO, Player.ZERO),
+        ApagosMove.drop(ApagosCoord.ONE, Player.ZERO),
+        ApagosMove.drop(ApagosCoord.TWO, Player.ZERO),
+        ApagosMove.drop(ApagosCoord.THREE, Player.ZERO),
+        ApagosMove.drop(ApagosCoord.ZERO, Player.ONE),
+        ApagosMove.drop(ApagosCoord.ONE, Player.ONE),
+        ApagosMove.drop(ApagosCoord.TWO, Player.ONE),
+        ApagosMove.drop(ApagosCoord.THREE, Player.ONE),
+        ApagosMove.transfer(ApagosCoord.THREE, ApagosCoord.TWO).get(),
+        ApagosMove.transfer(ApagosCoord.THREE, ApagosCoord.ONE).get(),
+        ApagosMove.transfer(ApagosCoord.THREE, ApagosCoord.ZERO).get(),
+        ApagosMove.transfer(ApagosCoord.TWO, ApagosCoord.ONE).get(),
+        ApagosMove.transfer(ApagosCoord.TWO, ApagosCoord.ZERO).get(),
+        ApagosMove.transfer(ApagosCoord.ONE, ApagosCoord.ZERO).get(),
     ];
     public static encoder: NumberEncoder<ApagosMove> = new class extends NumberEncoder<ApagosMove> {
 
         public maxValue(): number {
-            return 13;
+            return ApagosMove.ALL_MOVES.length;
         }
         public encodeNumber(move: ApagosMove): number {
             return ApagosMove.ALL_MOVES.indexOf(move);
@@ -37,11 +37,11 @@ export class ApagosMove extends Move {
             return ApagosMove.ALL_MOVES[encodedMove];
         }
     }
-    public static drop(coord: ApagosCoord, piece: Player): MGPFallible<ApagosMove> {
+    public static drop(coord: ApagosCoord, piece: Player): ApagosMove {
         const drop: ApagosMove = new ApagosMove(coord, MGPOptional.of(piece), MGPOptional.empty());
-        return MGPFallible.success(drop);
+        return drop;
     }
-    public static slideDown(start: ApagosCoord, landing: ApagosCoord): MGPFallible<ApagosMove> {
+    public static transfer(start: ApagosCoord, landing: ApagosCoord): MGPFallible<ApagosMove> {
         if (start.x <= landing.x) {
             return MGPFallible.failure(ApagosMessage.PIECE_SHOULD_MOVE_DOWNWARD());
         }
@@ -58,9 +58,15 @@ export class ApagosMove extends Move {
         return this.piece.isPresent();
     }
     public toString(): string {
-        throw new Error('TODOTODO');
+        if (this.isDrop()) {
+            return 'ApagosMove.drop(' + this.piece.get().toString() + ' on ' + this.landing.x + ')';
+        } else {
+            return 'ApagosMove.slideDown(' + this.starting.get().x + ' > ' + this.landing.x + ')';
+        }
     }
-    public equals(o: Move): boolean {
-        throw new Error('TODOTODO');
+    public equals(o: ApagosMove): boolean {
+        if (this.starting.equals(o.starting) === false) return false;
+        if (this.landing.equals(o.landing) === false) return false;
+        return this.piece.equals(o.piece);
     }
 }

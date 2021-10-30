@@ -161,19 +161,19 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
     }
     public getInsertionArrowTransform(x: number, y: number, direction: string): string {
         const orientation: number = Orthogonal.factory.fromString(direction).get().toInt() - 2;
-        const rotation: string = `rotate(${orientation*90} ${this.CASE_SIZE/2} ${this.CASE_SIZE/2})`;
-        const translation: string = 'translate(' + x * this.CASE_SIZE + ', ' + y * this.CASE_SIZE + ')';
+        const rotation: string = `rotate(${orientation*90} ${this.SQUARE_SIZE/2} ${this.SQUARE_SIZE/2})`;
+        const translation: string = 'translate(' + x * this.SQUARE_SIZE + ', ' + y * this.SQUARE_SIZE + ')';
         return [translation, rotation].join(' ');
     }
     public getPieceTransform(x: number, y: number): string {
         const piece: SiamPiece = this.board[y][x];
         const orientation: number = piece.getDirection().toInt()-2;
-        const rotation: string = `rotate(${orientation*90} ${this.CASE_SIZE/2} ${this.CASE_SIZE/2})`;
-        const translation: string = 'translate(' + (x+1) * this.CASE_SIZE + ', ' + (y+1) * this.CASE_SIZE + ')';
+        const rotation: string = `rotate(${orientation*90} ${this.SQUARE_SIZE/2} ${this.SQUARE_SIZE/2})`;
+        const translation: string = 'translate(' + (x+1) * this.SQUARE_SIZE + ', ' + (y+1) * this.SQUARE_SIZE + ')';
         return [translation, rotation].join(' ');
     }
     public getArrowTransform(x: number, y: number, orientation: string): string {
-        return GameComponentUtils.getArrowTransform(this.CASE_SIZE,
+        return GameComponentUtils.getArrowTransform(this.SQUARE_SIZE,
                                                     new Coord(x, y),
                                                     Orthogonal.factory.fromString(orientation).get());
     }

@@ -6,18 +6,18 @@
         <g *ngFor="let caseContent of line; index as x">
             <rect id="click_{{ x }}_{{ y }}"
                   (click)="onBoardClick(x, y)"
-                  [attr.x]="CASE_SIZE*x+STROKE_WIDTH"
-                  [attr.y]="CASE_SIZE*y+STROKE_WIDTH"
-                  [attr.width]="CASE_SIZE"
-                  [attr.height]="CASE_SIZE"
+                  [attr.x]="(SQUARE_SIZE * x) + STROKE_WIDTH"
+                  [attr.y]="(SQUARE_SIZE * y) + STROKE_WIDTH"
+                  [attr.width]="SQUARE_SIZE"
+                  [attr.height]="SQUARE_SIZE"
                   [ngClass]="getRectClasses(x, y)"
                   class="base"
                   />
             <circle *ngFor="let piece of getListPieces(caseContent)"
                     (click)="onBoardClick(x, y)"
                     [attr.r]="getPieceRadius(piece)"
-                    [attr.cx]="CASE_SIZE*x+STROKE_WIDTH + CASE_SIZE/2"
-                    [attr.cy]="CASE_SIZE*y+STROKE_WIDTH + CASE_SIZE/2"
+                    [attr.cx]="(SQUARE_SIZE * x) + STROKE_WIDTH + (SQUARE_SIZE / 2)"
+                    [attr.cy]="(SQUARE_SIZE * y) + STROKE_WIDTH + (SQUARE_SIZE / 2)"
                     [ngClass]="getPieceClasses(piece)"
                     class='base no-fill'
                     />
@@ -25,10 +25,10 @@
     </g>
     <g *ngFor="let coord of getHighlightedCases()">
         <rect (click)="onBoardClick(coord.x, coord.y)"
-              [attr.x]="CASE_SIZE*coord.x+STROKE_WIDTH"
-              [attr.y]="CASE_SIZE*coord.y+STROKE_WIDTH"
-              [attr.width]="CASE_SIZE"
-              [attr.height]="CASE_SIZE"
+              [attr.x]="(SQUARE_SIZE * coord.x) + STROKE_WIDTH"
+              [attr.y]="(SQUARE_SIZE * coord.y) + STROKE_WIDTH"
+              [attr.width]="SQUARE_SIZE"
+              [attr.height]="SQUARE_SIZE"
               class="base no-fill highlighted"
               pointer-events="fill"
               />
@@ -38,8 +38,8 @@
             <circle id="piece_{{ player }}_{{ piece.toString() }}"
                     (click)="onPieceClick(player, piece, pieceIdx)"
                     [attr.r]="getPieceRadius(piece)"
-                    [attr.cx]="CASE_SIZE*4 + CASE_SIZE/2 + CASE_SIZE*pieceIdx"
-                    [attr.cy]="CASE_SIZE/2 + CASE_SIZE*player"
+                    [attr.cx]="(SQUARE_SIZE * 4) + (SQUARE_SIZE / 2) + (SQUARE_SIZE * pieceIdx)"
+                    [attr.cy]="(SQUARE_SIZE / 2) + (SQUARE_SIZE * player)"
                     [ngClass]="getSidePieceClasses(piece, pieceIdx)"
                     class="base no-fill"
                     pointer-events="fill"

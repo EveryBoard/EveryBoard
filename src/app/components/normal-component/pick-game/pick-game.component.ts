@@ -23,6 +23,7 @@ import { TablutComponent } from 'src/app/games/tablut/tablut.component';
 import { YinshComponent } from 'src/app/games/yinsh/yinsh.component';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { Localized } from 'src/app/utils/LocaleUtils';
+import { ApagosComponent } from 'src/app/games/apagos/apagos.component';
 
 class GameDescription {
 
@@ -99,6 +100,7 @@ export class GameInfo {
         new GameInfo($localize`Pentago`, 'Pentago', PentagoComponent, new Date('2021-05-23'), GameDescription.PENTAGO()), // 25 days after Six
         new GameInfo($localize`Abalone`, 'Abalone', AbaloneComponent, new Date('2021-07-13'), GameDescription.ABALONE()), // 71 days after Pentago
         new GameInfo($localize`Yinsh`, 'Yinsh', YinshComponent, new Date('2021-07-31'), GameDescription.YINSH()), // 94 days after LinesOfAction *Quentin
+        new GameInfo($localize`Apagos`, 'Apagos', ApagosComponent, new Date('2021-10-23'), 'TODOTODO'), // TODOTODO fill
     ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
     // After Yinsh: median = 26d; average = 53d
     // 9d 10d 12d 13d 18d - 18d 20d 22d 25d (26d - 26d) 49d 65d 71d 76d - 93d 94j 4m 7m 11m

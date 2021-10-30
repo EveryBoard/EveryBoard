@@ -7,4 +7,6 @@ export class ApagosMessage {
     public static readonly NO_PIECE_OF_YOU_IN_CHOSEN_SQUARE: () => string = () => 'TODOTODO CANNOT_START_SLIDE_FROM_AN_EMPTY_SQUARE';
 
     public static readonly NO_PIECE_REMAINING: () => string = () => 'TODOTODO NO_PIECE_REMAINING';
+
+    public static readonly MUST_END_MOVE_BY_DROP: () => string = () => 'TODOTODO MUST_END_MOVE_BY_DROP';
 }

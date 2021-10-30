@@ -18,19 +18,22 @@ export class ApagosSquare implements ComparableObject {
         const validSquare: ApagosSquare = new ApagosSquare(containing);
         return MGPFallible.success(validSquare);
     }
-    private constructor(public readonly containing: MGPMap<Player, number>)
+    private constructor(private readonly containing: MGPMap<Player, number>)
     { }
     public isFull(): boolean {
-        const nbZero: number = this.containing.get(Player.ZERO).get();
-        const nbOne: number = this.containing.get(Player.ONE).get();
-        const nbTotal: number = this.containing.get(Player.NONE).get();
+        const nbZero: number = this.count(Player.ZERO);
+        const nbOne: number = this.count(Player.ONE);
+        const nbTotal: number = this.count(Player.NONE);
         return (nbZero + nbOne) >= nbTotal;
+    }
+    public count(player: Player): number {
+        return this.containing.get(player).get();
     }
     public addPiece(piece: Player): ApagosSquare {
         assert(piece !== Player.NONE, 'should not call ApagosSquare.addPiece with Player.NONE');
-        let nbZero: number = this.containing.get(Player.ZERO).get();
-        let nbOne: number = this.containing.get(Player.ONE).get();
-        const nbTotal: number = this.containing.get(Player.NONE).get();
+        let nbZero: number = this.count(Player.ZERO);
+        let nbOne: number = this.count(Player.ONE);
+        const nbTotal: number = this.count(Player.NONE);
         if (piece === Player.ZERO) {
             nbZero++;
         } else {
@@ -40,9 +43,9 @@ export class ApagosSquare implements ComparableObject {
     }
     public substractPiece(piece: Player): ApagosSquare {
         assert(piece !== Player.NONE, 'should not call ApagosSquare.addPiece with Player.NONE');
-        let nbZero: number = this.containing.get(Player.ZERO).get();
-        let nbOne: number = this.containing.get(Player.ONE).get();
-        const nbTotal: number = this.containing.get(Player.NONE).get();
+        let nbZero: number = this.count(Player.ZERO);
+        let nbOne: number = this.count(Player.ONE);
+        const nbTotal: number = this.count(Player.NONE);
         if (piece === Player.ZERO) {
             nbZero--;
         } else {
@@ -51,8 +54,8 @@ export class ApagosSquare implements ComparableObject {
         return ApagosSquare.from(nbZero, nbOne, nbTotal).get();
     }
     public getDominatingPlayer(): Player {
-        const nbZero: number = this.containing.get(Player.ZERO).get();
-        const nbOne: number = this.containing.get(Player.ONE).get();
+        const nbZero: number = this.count(Player.ZERO);
+        const nbOne: number = this.count(Player.ONE);
         if (nbZero > nbOne) return Player.ZERO;
         else if (nbOne > nbZero) return Player.ONE;
         return Player.NONE;

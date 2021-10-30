@@ -47,7 +47,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         ];
         this.encoder = CoerceoMove.encoder;
         this.tutorial = new CoerceoTutorial().tutorial;
-        this.CASE_SIZE = 70;
+        this.SQUARE_SIZE = 70;
         this.showScore = true;
         this.updateBoard();
     }
