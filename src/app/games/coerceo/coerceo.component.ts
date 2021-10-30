@@ -56,7 +56,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         this.state = this.rules.node.gameState;
         this.scores = this.state.captures;
         this.tiles = this.state.tiles;
-        const move: CoerceoMove = this.rules.node.move;
+        const move: CoerceoMove | null = this.rules.node.move;
         if (move == null) {
             this.lastStart = MGPOptional.empty();
             this.lastEnd = MGPOptional.empty();
@@ -93,6 +93,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         } else if (clickedPiece.is(this.state.getCurrentPlayer())) {
             this.chosenCoord = MGPOptional.of(coord);
             this.showHighlight();
+            return MGPValidation.SUCCESS;
         } else {
             return this.cancelMove(CoerceoFailure.FIRST_CLICK_SHOULD_NOT_BE_NULL());
         }
@@ -113,7 +114,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         return caseContent.isPlayer() || this.wasOpponent(x, y);
     }
     private wasOpponent(x: number, y: number): boolean {
-        const mother: CoerceoNode = this.rules.node.mother;
+        const mother: CoerceoNode | null = this.rules.node.mother;
         return mother != null &&
                mother.gameState.getPieceAtXY(x, y).is(mother.gameState.getCurrentOpponent());
     }
@@ -134,7 +135,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     }
     private wasRemoved(x: number, y: number): boolean {
         const caseContent: FourStatePiece = this.board[y][x];
-        const mother: CoerceoNode = this.rules.node.mother;
+        const mother: CoerceoNode | null = this.rules.node.mother;
         if (caseContent === FourStatePiece.NONE && mother != null) {
             const previousContent: FourStatePiece = mother.gameState.getPieceAtXY(x, y);
             return previousContent === FourStatePiece.EMPTY ||

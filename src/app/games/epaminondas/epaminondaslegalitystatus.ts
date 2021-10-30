@@ -12,5 +12,5 @@ export class EpaminondasLegalityStatus implements LegalityStatus {
     }
     public legal: MGPValidation;
 
-    public newBoard: Player[][];
+    public newBoard: Player[][] | null;
 }

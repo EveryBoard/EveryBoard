@@ -94,8 +94,8 @@ describe('GameService', () => {
     }));
     it('acceptConfig should delegate to joinerService and call startGameWithConfig', fakeAsync(async() => {
         const joiner: IJoiner = JoinerMocks.WITH_PROPOSED_CONFIG.doc;
-        spyOn(service.joinerService, 'acceptConfig').and.returnValue(null);
-        spyOn(partDao, 'update').and.returnValue(null);
+        spyOn(service.joinerService, 'acceptConfig').and.resolveTo();
+        spyOn(partDao, 'update').and.resolveTo();
 
         await service.acceptConfig('partId', joiner);
 
@@ -177,7 +177,7 @@ describe('GameService', () => {
     });
     describe('rematch', () => {
         it('should send request when proposing a rematch', fakeAsync(async() => {
-            spyOn(service, 'sendRequest').and.callFake(() => null);
+            spyOn(service, 'sendRequest').and.resolveTo();
 
             await service.proposeRematch('partId', Player.ZERO);
 
@@ -211,7 +211,7 @@ describe('GameService', () => {
                 partType: PartType.BLITZ.value,
                 totalPartDuration: 25,
             };
-            spyOn(service, 'sendRequest').and.callFake(() => null);
+            spyOn(service, 'sendRequest').and.resolveTo();
             spyOn(service.joinerService, 'readJoinerById').and.returnValue(Promise.resolve(lastGameJoiner));
             let called: boolean = false;
             spyOn(service.partDao, 'set').and.callFake(async(_id: string, element: IPart) => {
@@ -254,7 +254,7 @@ describe('GameService', () => {
                 partType: PartType.BLITZ.value,
                 totalPartDuration: 25,
             };
-            spyOn(service, 'sendRequest').and.callFake(() => null);
+            spyOn(service, 'sendRequest').and.resolveTo();
             spyOn(service.joinerService, 'readJoinerById').and.returnValue(Promise.resolve(lastGameJoiner));
             let called: boolean = false;
             spyOn(service.partDao, 'set').and.callFake(async(_id: string, element: IPart) => {

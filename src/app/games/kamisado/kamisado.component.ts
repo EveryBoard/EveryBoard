@@ -26,7 +26,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
                                                                 KamisadoPiece>
 {
     public UNOCCUPIED: KamisadoPiece = KamisadoPiece.NONE;
-    public lastMove: KamisadoMove = null;
+    public lastMove: KamisadoMove | null = null;
     public chosen: Coord = new Coord(-1, -1);
     public chosenAutomatically: boolean = false;
 

@@ -309,7 +309,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     }
     private getTimeUsedForLastTurn(oldTime: NonNullable<Time>,
                                    updateTime: NonNullable<Time>,
-                                   type: UpdateType,
+                                   _type: UpdateType,
                                    last: Player)
     : [number, number]
     {
@@ -495,7 +495,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             return Player.NONE;
         }
     }
-    protected async onRequest(request: Request, oldPart: Part, part: Part): Promise<void> {
+    protected async onRequest(request: Request, oldPart: Part, _part: Part): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, { called: 'OnlineGameWrapper.onRequest(', request, oldPart });
         switch (request.code) {
             case 'TakeBackAsked':

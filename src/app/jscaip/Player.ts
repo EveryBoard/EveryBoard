@@ -59,7 +59,9 @@ export class Player implements ComparableObject {
         switch (this) {
             case Player.ZERO: return Player.ONE;
             case Player.ONE: return Player.ZERO;
-            case Player.NONE: return Player.NONE;
+            default:
+                assert(this === Player.NONE, 'Player should be NONE');
+                return Player.NONE;
         }
     }
 }

@@ -39,7 +39,7 @@ export abstract class GameStateWithTable<P> extends GameState<Coord, P> {
             for (let x: number = 0; x < this.board[y].length; x++) {
                 const coord: Coord = new Coord(x, y);
                 if (this.isOnBoard(coord)) {
-                    coordsAndContents.push([coord, this.getNullable(coord)]);
+                    coordsAndContents.push([coord, this.getPieceAt(coord)]);
                 }
             }
         }

@@ -25,7 +25,7 @@ export class AuthenticationService implements OnDestroy {
 
     public static NOT_AUTHENTICATED: { pseudo: string, verified: boolean } = null;
 
-    public static NOT_CONNECTED: { pseudo: string, verified: boolean } = { pseudo: null, verified: null };
+    public static NOT_CONNECTED: { pseudo: string, verified: boolean } = { pseudo: '', verified: null };
 
     private authSub: Subscription;
 

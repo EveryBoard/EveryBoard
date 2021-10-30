@@ -12,7 +12,7 @@
             <use *ngFor="let orientation of [{ dir: 'DOWN', x: n, y: -1 }, { dir: 'UP', x: n, y: 5}, { dir: 'RIGHT', x: -1, y: n }, { dir: 'LEFT', x: 5, y: n }]"
                  xlink:href="#arrow"
                  id="insertAt_{{orientation.x}}_{{orientation.y}}"
-                 (click)="insertAt(orientation.y, orientation.y)"
+                 (click)="insertAt(orientation.x, orientation.y)"
                  [attr.transform]="getInsertionArrowTransform(orientation.x+1, orientation.y+1, orientation.dir)"
                  class="base mid-stroke"/>
         </g>

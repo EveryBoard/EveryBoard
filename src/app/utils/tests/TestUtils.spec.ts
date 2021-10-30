@@ -31,6 +31,7 @@ import { LocalGameWrapperComponent }
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { HumanDuration } from '../TimeUtils';
 import { Rules } from 'src/app/jscaip/Rules';
+import { Utils } from '../utils';
 
 @Component({})
 export class BlankComponent {}
@@ -129,7 +130,7 @@ export class SimpleComponentTestUtils<T> {
     public expectElementToHaveClass(elementName: string, cssClass: string): void {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(elementName + ' should exist').toBeTruthy();
-        const elementClasses: string[] = element.attributes.class.split(' ').sort();
+        const elementClasses: string[] = Utils.getNonNullOrFail(element.attributes).class.split(' ').sort();
         expect(elementClasses).withContext(elementName + ' should contain class ' + cssClass).toContain(cssClass);
     }
     public expectElementNotToExist(elementName: string): void {

@@ -138,11 +138,30 @@ describe('ChatService', () => {
         }));
     });
     describe('sendMessage', () => {
+        it('should not send message if no chat is observed', fakeAsync(async() => {
+            // given that no chat is observed
+            // when sending a message
+            const result: Promise<MGPValidation> = service.sendMessage(null, 2, 'foo');
+            // then the message is rejected
+            await expectAsync(result).toBeResolvedTo(MGPValidation.failure('Cannot send message if not observing chat'));
+        }));
         it('should not send message if the user is not allowed to send a message in the chat', fakeAsync(async() => {
-            await expectAsync(service.sendMessage(null, 2, 'foo')).toBeResolvedTo(MGPValidation.failure(ChatMessages.CANNOT_SEND_MESSAGE()));
+            // given a chat that is observed
+            await chatDAO.set('chatId', EMPTY_CHAT);
+            service.startObserving('chatId', () => {});
+            // when sending a message without a username
+            const result: Promise<MGPValidation> = service.sendMessage('', 2, 'foo');
+            // then the message is rejected
+            await expectAsync(result).toBeResolvedTo(MGPValidation.failure(ChatMessages.CANNOT_SEND_MESSAGE()));
         }));
         it('should not send message if it is empty', fakeAsync(async() => {
-            await expectAsync(service.sendMessage('sender', 2, '')).toBeResolvedTo(MGPValidation.failure(ChatMessages.FORBIDDEN_MESSAGE()));
+            // given a chat that is observed
+            await chatDAO.set('chatId', EMPTY_CHAT);
+            service.startObserving('chatId', () => {});
+            // when sending an empty message
+            const result: Promise<MGPValidation> = service.sendMessage('sender', 2, '');
+            // then the message is rejected
+            await expectAsync(result).toBeResolvedTo(MGPValidation.failure(ChatMessages.FORBIDDEN_MESSAGE()));
         }));
         it('should update the chat with the new message in the DAO', fakeAsync(async() => {
             spyOn(Date, 'now').and.returnValue(42);

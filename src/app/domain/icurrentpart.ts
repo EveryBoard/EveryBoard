@@ -10,7 +10,7 @@ export interface IPart extends FirebaseJSONObject {
     readonly turn: NonNullable<number>, // -1 means the part has not started, 0 is the initial turn
     readonly result: NonNullable<IMGPResult>,
     // TODO: should be ReadonlyArray, but does not compile with it!
-    readonly listMoves: NonNullable<Array<NonNullable<JSONValueWithoutArray>>>,
+    readonly listMoves: NonNullable<Array<JSONValueWithoutArray>>,
 
     readonly playerOne?: string, // the id of the second player
     /* Server time being handled on server by firestore, when we send it, it's a FieldValue
@@ -24,7 +24,7 @@ export interface IPart extends FirebaseJSONObject {
     readonly loser?: string,
     readonly scorePlayerZero?: number,
     readonly scorePlayerOne?: number,
-    readonly request?: Request
+    readonly request?: Request | null, // can be null because we should be able to remove a request
 }
 
 export class Part implements DomainWrapper<IPart> {
@@ -45,10 +45,10 @@ export class Part implements DomainWrapper<IPart> {
     public isResign(): boolean {
         return this.doc.result === MGPResult.RESIGN.value;
     }
-    public getWinner(): string {
+    public getWinner(): string | undefined {
         return this.doc.winner;
     }
-    public getLoser(): string {
+    public getLoser(): string | undefined {
         return this.doc.loser;
     }
     public setWinnerAndLoser(winner: string, loser: string): Part {

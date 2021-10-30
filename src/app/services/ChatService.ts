@@ -19,9 +19,9 @@ export class ChatMessages {
 export class ChatService implements OnDestroy {
     public static VERBOSE: boolean = false;
 
-    private followedChatId: string;
+    private followedChatId: string | null;
 
-    private followedChatObs: Observable<IChatId>;
+    private followedChatObs: Observable<IChatId> | null;
 
     private followedChatSub: Subscription;
 
@@ -68,6 +68,9 @@ export class ChatService implements OnDestroy {
         });
     }
     public async sendMessage(userName: string, currentTurn: number, content: string): Promise<MGPValidation> {
+        if (this.followedChatId == null) {
+            return MGPValidation.failure('Cannot send message if not observing chat');
+        }
         if (this.userCanSendMessage(userName, this.followedChatId) === false) {
             return MGPValidation.failure(ChatMessages.CANNOT_SEND_MESSAGE());
         }
@@ -87,7 +90,7 @@ export class ChatService implements OnDestroy {
         return MGPValidation.SUCCESS;
     }
     private userCanSendMessage(userName: string, _chatId: string): boolean {
-        return userName != null;
+        return userName != '';
     }
     private isForbiddenMessage(message: string): boolean {
         return (message === '');

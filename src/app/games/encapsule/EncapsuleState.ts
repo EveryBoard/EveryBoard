@@ -3,7 +3,7 @@ import { EncapsulePiece, Size } from 'src/app/games/encapsule/EncapsulePiece';
 import { Player } from 'src/app/jscaip/Player';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { assert } from 'src/app/utils/utils';
+import { assert, Utils } from 'src/app/utils/utils';
 import { ComparableObject } from 'src/app/utils/Comparable';
 
 export class EncapsuleState extends GameStateWithTable<EncapsuleCase> {
@@ -122,29 +122,32 @@ export class EncapsuleCase implements ComparableObject {
             throw new Error('Cannot removed piece from empty case');
         }
         let removedCase: EncapsuleCase;
-        switch (removedPiece.getSize()) {
+        const size: Size = removedPiece.getSize();
+        switch (size) {
             case Size.BIG:
                 removedCase = new EncapsuleCase(this.small, this.medium, Player.NONE);
                 break;
             case Size.MEDIUM:
                 removedCase = new EncapsuleCase(this.small, Player.NONE, Player.NONE);
                 break;
-            case Size.SMALL:
+            default:
+                Utils.defaultCase(size, Size.SMALL);
                 removedCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.NONE);
-                break;
         }
         return { removedCase, removedPiece };
     }
     public put(piece: EncapsulePiece): EncapsuleCase {
         if (piece === EncapsulePiece.NONE) throw new Error('Cannot put NONE on case');
         const piecePlayer: Player = piece.getPlayer();
-        switch (piece.getSize()) {
+        const size: Size = piece.getSize();
+        switch (size) {
             case Size.BIG:
                 return new EncapsuleCase(this.small, this.medium, piecePlayer);
             case Size.MEDIUM:
                 assert(this.big === Player.NONE, 'Cannot put a piece on top of a bigger one');
                 return new EncapsuleCase(this.small, piecePlayer, this.big);
-            case Size.SMALL:
+            default:
+                Utils.defaultCase(size, Size.SMALL);
                 assert(this.big === Player.NONE, 'Cannot put a piece on top of a bigger one');
                 assert(this.medium === Player.NONE, 'Cannot put a piece on top of a bigger one');
                 return new EncapsuleCase(piecePlayer, this.medium, this.big);

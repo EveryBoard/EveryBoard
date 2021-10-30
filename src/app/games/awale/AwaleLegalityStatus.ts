@@ -8,7 +8,7 @@ export class AwaleLegalityStatus implements LegalityStatus {
 
     public legal: MGPValidation;
 
-    public captured: number[];
+    public captured: number[] | null;
 
-    public resultingBoard: number[][];
+    public resultingBoard: number[][] | null;
 }

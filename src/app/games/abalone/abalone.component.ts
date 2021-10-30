@@ -19,6 +19,7 @@ import { AbaloneState } from './AbaloneState';
 import { AbaloneMove } from './AbaloneMove';
 import { AbaloneLegalityStatus, AbaloneRules } from './AbaloneRules';
 import { AbaloneTutorial } from './AbaloneTutorial';
+import { Utils } from 'src/app/utils/utils';
 
 export class HexaDirArrow {
     public constructor(public startCenter: Coord,
@@ -68,7 +69,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         this.cancelMoveAttempt();
         this.hidePreviousMove();
         if (this.rules.node.move != null) {
-            this.showPreviousMove();
+            this.showPreviousMove(this.rules.node.move);
         }
         this.hexaBoard = this.rules.node.gameState.getCopiedBoard();
         this.scores = this.rules.node.gameState.getScores();
@@ -80,8 +81,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         this.directions = [];
         this.selecteds = [];
     }
-    private showPreviousMove(): void {
-        const move: AbaloneMove = this.rules.node.move;
+    private showPreviousMove(move: AbaloneMove): void {
         if (move.isSingleCoord()) {
             this.showPushingMove(move);
         } else {
@@ -89,7 +89,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         }
     }
     private showPushingMove(move: AbaloneMove): void {
-        const previousState: AbaloneState = this.rules.node.mother.gameState;
+        const previousState: AbaloneState = Utils.getNonNullOrFail(this.rules.node.mother).gameState;
         let moved: Coord = move.coord;
         this.moveds = [moved];
         moved = moved.getNext(move.dir);
@@ -279,7 +279,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
     }
     private async deselectExtremity(first: boolean): Promise<MGPValidation> {
         const start: number = first ? 1 : 0;
-        const end: number = first ? undefined : -1;
+        const end: number | undefined = first ? undefined : -1;
         this.selecteds = this.selecteds.slice(start, end);
         this.showPossibleDirections();
         return MGPValidation.SUCCESS;
