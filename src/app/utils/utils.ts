@@ -23,6 +23,18 @@ export class Utils {
             throw new Error(`A default switch case did not observe the correct value, expected ${expected}, but got ${value} instead.`);
         }
     }
+    public static defaultCaseMultiple<T>(value: T, expectedValues: T[]): void {
+        let found: boolean = false;
+        for (const expected of expectedValues) {
+            if (value === expected) {
+                found = true;
+                break;
+            }
+        }
+        if (found === false) {
+            throw new Error(`A default switch case did not observe the correct value, expected a value among ${expectedValues}, but got ${value} instead.`);
+        }
+    }
     public static getNonNullOrFail<T>(value : T | null): T {
         if (value === null) {
             throw new Error('Expected value not to be null, but it was');

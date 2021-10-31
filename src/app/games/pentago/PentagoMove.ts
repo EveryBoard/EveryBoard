@@ -52,7 +52,7 @@ export class PentagoMove extends MoveCoord {
     private constructor(x: number,
                         y: number,
                         public readonly blockTurned: MGPOptional<number>,
-                        public readonly turnedClockwise: boolean)
+                        public readonly turnedClockwise: boolean | null)
     {
         super(x, y);
         if (this.coord.isNotInRange(6, 6)) {

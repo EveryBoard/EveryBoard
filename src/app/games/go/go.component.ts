@@ -6,7 +6,7 @@ import { GoMinimax } from 'src/app/games/go/GoMinimax';
 import { GoState, Phase, GoPiece } from 'src/app/games/go/GoState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GoLegalityStatus } from 'src/app/games/go/GoLegalityStatus';
-import { display } from 'src/app/utils/utils';
+import { display, Utils } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GroupDatas } from 'src/app/jscaip/BoardDatas';
@@ -27,13 +27,15 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
 
     public ko: Coord;
 
-    public last: Coord = new Coord(-1, -1);
+    public last: Coord | null = null;
 
     public canPass: boolean;
 
     public captures: Coord[]= [];
 
     public GoPiece: typeof GoPiece = GoPiece;
+
+    public scores: [number, number]; // can't be null
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -62,7 +64,7 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
         display(GoComponent.VERBOSE, 'updateBoard');
 
         const state: GoState = this.rules.node.gameState;
-        const move: GoMove = this.rules.node.move;
+        const move: GoMove | null = this.rules.node.move;
         const koCoord: MGPOptional<Coord> = state.koCoord;
         const phase: Phase = state.phase;
 
@@ -79,7 +81,7 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
         this.canPass = phase !== Phase.FINISHED;
     }
     private showCaptures(): void {
-        const previousState: GoState = this.rules.node.mother.gameState;
+        const previousState: GoState = Utils.getNonNullOrFail(this.rules.node.mother).gameState;
         this.captures = [];
         for (let y: number = 0; y < this.board.length; y++) {
             for (let x: number = 0; x < this.board[0].length; x++) {

@@ -7,6 +7,7 @@ import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Utils } from 'src/app/utils/utils';
 import { LinesOfActionFailure } from './LinesOfActionFailure';
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionState } from './LinesOfActionState';
@@ -58,7 +59,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         const stack: Coord[] = [pos];
         const player: Player = state.getPieceAt(pos);
         while (stack.length > 0) {
-            const coord: Coord = stack.pop();
+            const coord: Coord = Utils.getDefinedOrFail(stack.pop());
             if (groups[coord.y][coord.x] === -1) {
                 const content: Player = state.getPieceAt(coord);
                 if (content === player) {
@@ -136,8 +137,8 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
             case Direction.UP_RIGHT:
             case Direction.DOWN_LEFT:
                 return [new Coord(Math.max(0, (pos.x + pos.y) - 7), Math.min(7, pos.x + pos.y)), Direction.UP_RIGHT];
-            case Direction.UP_LEFT:
-            case Direction.DOWN_RIGHT:
+            default:
+                Utils.defaultCaseMultiple(dir, [Direction.UP_LEFT, Direction.DOWN_RIGHT]);
                 return [
                     new Coord(pos.x - Math.min(pos.x, pos.y), pos.y - Math.min(pos.x, pos.y)),
                     Direction.DOWN_RIGHT,

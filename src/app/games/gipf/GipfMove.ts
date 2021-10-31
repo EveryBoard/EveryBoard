@@ -39,7 +39,7 @@ export class GipfCapture {
                 return coord1.x > coord2.x ? 1 : -1;
             }
         });
-        let prev: Coord = null;
+        let prev: Coord | null = null;
         // Captured cases must be consecutive
         for (const coord of this.capturedCases) {
             if (prev != null) {

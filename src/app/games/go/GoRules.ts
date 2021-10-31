@@ -1,4 +1,3 @@
-
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { GoState, Phase, GoPiece } from './GoState';
 import { Orthogonal } from 'src/app/jscaip/Direction';
@@ -6,7 +5,7 @@ import { GoMove } from './GoMove';
 import { GoLegalityStatus } from './GoLegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 import { GoGroupDatas } from './GoGroupsDatas';
-import { assert, display } from 'src/app/utils/utils';
+import { assert, display, Utils } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -203,7 +202,7 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityStatus> {
         const currentPlayer: GoPiece = GoPiece.ofPlayer(state.getCurrentPlayer());
         const newTurn: number = currentTurn + 1;
         newBoard[y][x] = currentPlayer;
-        const capturedCoords: Coord[] = status.capturedCoords;
+        const capturedCoords: Coord[] = Utils.getNonNullOrFail(status.capturedCoords);
         for (const capturedCoord of capturedCoords) {
             newBoard[capturedCoord.y][capturedCoord.x] = GoPiece.EMPTY;
         }

@@ -20,7 +20,7 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
     public static VERBOSE: boolean = false;
 
     public EMPTY_CASE: Player = Player.NONE;
-    public last: Coord;
+    public last: Coord | null;
     public victoryCoords: Coord[] = [];
 
     public constructor(messageDisplayer: MessageDisplayer) {
@@ -43,7 +43,7 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
     }
     public updateBoard(): void {
         const state: P4State = this.rules.node.gameState;
-        const lastMove: P4Move = this.rules.node.move;
+        const lastMove: P4Move | null = this.rules.node.move;
 
         this.victoryCoords = P4Rules.getVictoriousCoords(state);
         this.board = state.board;

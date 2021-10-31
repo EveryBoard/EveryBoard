@@ -3,11 +3,10 @@ import { Coord } from '../../jscaip/Coord';
 import { GameStatus, Rules } from '../../jscaip/Rules';
 import { SCORE } from '../../jscaip/SCORE';
 import { MGPNode } from '../../jscaip/MGPNode';
-
 import { P4State } from './P4State';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
-import { assert, display } from 'src/app/utils/utils';
+import { assert, display, Utils } from 'src/app/utils/utils';
 import { P4Move } from './P4Move';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
@@ -122,7 +121,9 @@ export class P4Rules extends Rules<P4Move, P4State> {
 
         for (const dir of [Direction.UP, Direction.UP_RIGHT, Direction.RIGHT, Direction.DOWN_RIGHT]) {
             // for each pair of opposite directions
-            const lineAllies: number = alliesByDirs.get(dir) + alliesByDirs.get(dir.getOpposite());
+            const lineAllies: number =
+                Utils.getDefinedOrFail(alliesByDirs.get(dir)) +
+                Utils.getDefinedOrFail(alliesByDirs.get(dir.getOpposite()));
             if (lineAllies > 2) {
                 display(P4Rules.VERBOSE, { text:
                     'there is some kind of victory here (' + c.x + ', ' + c.y + ')' + '\n' +
@@ -132,7 +133,9 @@ export class P4Rules extends Rules<P4Move, P4State> {
                 return ally.getVictoryValue();
             }
 
-            const lineDist: number = distByDirs.get(dir) + distByDirs.get(dir.getOpposite());
+            const lineDist: number =
+                Utils.getDefinedOrFail(distByDirs.get(dir)) +
+                Utils.getDefinedOrFail(distByDirs.get(dir.getOpposite()));
             if (lineDist === 3) {
                 score += 2;
             } else if (lineDist > 3) {

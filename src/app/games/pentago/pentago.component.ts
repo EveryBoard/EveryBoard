@@ -14,6 +14,7 @@ import { PentagoState } from './PentagoState';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { PentagoTutorial } from './PentagoTutorial';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { Utils } from 'src/app/utils/utils';
 
 @Component({
     selector: 'app-pentago',
@@ -33,10 +34,10 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
     public arrows: [string, number, boolean][] = [];
     public victoryCoords: Coord[] = [];
     public canSkipRotation: boolean;
-    public currentDrop: Coord;
+    public currentDrop: Coord | null;
 
-    public movedBlock: number;
-    public lastDrop: Coord;
+    public movedBlock: number | null;
+    public lastDrop: Coord | null;
 
     public ARROWS: [string, number, boolean][];
 
@@ -60,7 +61,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         this.showLastMove();
     }
     public showLastMove(): void {
-        const lastMove: PentagoMove = this.rules.node.move;
+        const lastMove: PentagoMove | null = this.rules.node.move;
         this.cancelMoveAttempt();
         if (lastMove == null) {
             this.hidePreviousMove();
@@ -73,13 +74,13 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
             {
                 let postRotation: Coord;
                 if (lastMove.turnedClockwise) {
-                    postRotation = PentagoState.ROTATION_MAP.find((value: [Coord, Coord]) => {
+                    postRotation = Utils.getDefinedOrFail(PentagoState.ROTATION_MAP.find((value: [Coord, Coord]) => {
                         return value[0].equals(localCoord);
-                    })[1];
+                    }))[1];
                 } else {
-                    postRotation = PentagoState.ROTATION_MAP.find((value: [Coord, Coord]) => {
+                    postRotation = Utils.getDefinedOrFail(PentagoState.ROTATION_MAP.find((value: [Coord, Coord]) => {
                         return value[1].equals(localCoord);
-                    })[0];
+                    }))[0];
                 }
                 const b: number = lastMove.blockTurned.get();
                 const bx: number = b % 2 === 0 ? 1 : 4;
@@ -100,7 +101,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
     public hidePreviousMove(): void {
         this.lastDrop = null;
         this.movedBlock = null;
-        this.victoryCoords = null;
+        this.victoryCoords = [];
     }
     private generateArrowsCoord(): [string, number, boolean][] {
         const B: number = 2 * this.BLOCK_SEPARATION;
@@ -161,12 +162,13 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         if (blockIndex === this.movedBlock) {
             return ['moved'];
         }
+        return [];
     }
     public getCaseClasses(x: number, y: number): string[] {
         const classes: string[] = [];
         const player: string = this.getPlayerClass(this.board[y][x]);
         classes.push(player);
-        if (new Coord(x, y).equals(this.lastDrop)) {
+        if (this.lastDrop && new Coord(x, y).equals(this.lastDrop)) {
             classes.push('last-move');
         }
         return classes;
@@ -177,7 +179,9 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        const move: PentagoMove = PentagoMove.withRotation(this.currentDrop.x, this.currentDrop.y, arrow[1], arrow[2]);
+        const move: PentagoMove = PentagoMove.withRotation(Utils.getNonNullOrFail(this.currentDrop).x,
+                                                           Utils.getNonNullOrFail(this.currentDrop).y,
+                                                           arrow[1], arrow[2]);
         return this.chooseMove(move, this.rules.node.gameState, null, null);
     }
     public async skipRotation(): Promise<MGPValidation> {
@@ -185,7 +189,8 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        const drop: PentagoMove = PentagoMove.rotationless(this.currentDrop.x, this.currentDrop.y);
+        const drop: PentagoMove = PentagoMove.rotationless(Utils.getNonNullOrFail(this.currentDrop).x,
+                                                           Utils.getNonNullOrFail(this.currentDrop).y);
         return this.chooseMove(drop, this.rules.node.gameState, null, null);
     }
 }

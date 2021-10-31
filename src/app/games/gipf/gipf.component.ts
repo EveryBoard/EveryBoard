@@ -19,6 +19,7 @@ import { Arrow } from 'src/app/jscaip/Arrow';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GipfTutorial } from './GipfTutorial';
+import { Utils } from 'src/app/utils/utils';
 
 @Component({
     selector: 'app-gipf',
@@ -27,7 +28,7 @@ import { GipfTutorial } from './GipfTutorial';
 })
 export class GipfComponent extends HexagonalGameComponent<GipfRules, GipfMove, GipfState, GipfLegalityStatus> {
 
-    public inserted: Arrow = null;
+    public inserted: Arrow | null = null;
     public arrows: Arrow[] = [];
     public captured: Coord[] = [];
     public moved: Coord[] = [];
@@ -39,7 +40,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules, GipfMove, G
     private movePhase: number = GipfComponent.PHASE_PLACEMENT_COORD;
 
     // This state contains the board that is actually displayed
-    private constructedState: GipfState = null;
+    private constructedState: GipfState;
 
     public possibleCaptures: ReadonlyArray<GipfCapture> = [];
     private initialCaptures: GipfCapture[] = [];
@@ -70,7 +71,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules, GipfMove, G
     }
     public showLastMove(): void {
         this.inserted = null;
-        const lastMove: GipfMove = this.rules.node.move;
+        const lastMove: GipfMove | null = this.rules.node.move;
         if (lastMove != null && lastMove.placement.direction.isPresent()) {
             this.inserted = this.arrowTowards(lastMove.placement.coord, lastMove.placement.direction.get());
         }
@@ -117,7 +118,8 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules, GipfMove, G
                 return this.selectCapture(coord);
             case GipfComponent.PHASE_PLACEMENT_COORD:
                 return this.selectPlacementCoord(coord);
-            case GipfComponent.PHASE_PLACEMENT_DIRECTION:
+            default:
+                Utils.defaultCase(this.movePhase, GipfComponent.PHASE_PLACEMENT_DIRECTION);
                 const entrance: Coord = this.placementEntrance.get();
                 if (entrance.isAlignedWith(coord) === false) {
                     return this.cancelMove(GipfFailure.INVALID_PLACEMENT_DIRECTION());
@@ -157,7 +159,8 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules, GipfMove, G
                 } else {
                     return MGPValidation.SUCCESS;
                 }
-            case GipfComponent.PHASE_FINAL_CAPTURE:
+            default:
+                Utils.defaultCase(this.movePhase, GipfComponent.PHASE_FINAL_CAPTURE);
                 this.finalCaptures.push(capture);
                 if (this.possibleCaptures.length === 0) {
                     return this.tryMove(this.initialCaptures, this.placement.get(), this.finalCaptures);
@@ -239,9 +242,9 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules, GipfMove, G
         this.captured = [];
         this.moved = [];
 
-        const move: GipfMove = this.rules.node.move;
+        const move: GipfMove | null = this.rules.node.move;
         if (move != null) {
-            const previousState: GipfState = this.rules.node.mother.gameState;
+            const previousState: GipfState = Utils.getNonNullOrFail(this.rules.node.mother).gameState;
             move.initialCaptures.forEach((c: GipfCapture) => this.markCapture(c));
             move.finalCaptures.forEach((c: GipfCapture) => this.markCapture(c));
             this.moved = this.rules.getPiecesMoved(previousState, move.initialCaptures, move.placement);
