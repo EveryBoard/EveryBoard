@@ -5,6 +5,7 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import { assert, display, FirebaseJSONObject } from 'src/app/utils/utils';
 import { FirebaseCollectionObserver } from './FirebaseCollectionObserver';
+import { MGPOptional } from '../utils/MGPOptional';
 
 export interface IFirebaseFirestoreDAO<T extends FirebaseJSONObject> {
 
@@ -35,15 +36,20 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
         const docRef: DocumentReference = await this.afs.collection<T>(this.collectionName).add({ ...newElement });
         return docRef.id;
     }
-    public async exists(id: string): Promise<boolean> {
+    public async readIfExists(id: string): Promise<MGPOptional<T>> {
         const docSnapshot: firebase.firestore.DocumentSnapshot<T> =
             await this.afs.collection<T>(this.collectionName).doc(id).ref.get();
-        return docSnapshot.exists;
+        if (docSnapshot.exists) {
+            return MGPOptional.of(docSnapshot.data() as NonNullable<T>);
+        } else {
+            return MGPOptional.empty();
+        }
+    }
+    public async exists(id: string): Promise<boolean> {
+        return (await this.readIfExists(id)).isPresent();
     }
     public async read(id: string): Promise<T> {
-        const docSnapshot: firebase.firestore.DocumentSnapshot<T> =
-            await this.afs.collection<T>(this.collectionName).doc(id).ref.get();
-        return docSnapshot.data();
+        return (await this.readIfExists(id)).getOrNull();
     }
     public async update(id: string, modification: Partial<T>): Promise<void> {
         return this.afs.collection(this.collectionName).doc<T>(id).ref.update(modification);

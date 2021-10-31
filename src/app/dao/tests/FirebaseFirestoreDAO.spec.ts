@@ -28,7 +28,7 @@ describe('FirebaseFirestoreDAO', () => {
         dao = TestBed.inject(FooDAO);
     });
     it('should not read an object that does not exist', async() => {
-        await expectAsync(dao.read('idonotexist')).toBeResolvedTo(undefined);
+        await expectAsync(dao.read('idonotexist')).toBeResolvedTo(null);
     });
     it('should be able to read back objects that exist', async() => {
         const id: string = await dao.create({ value: 'this is my value', otherValue: 42 });
@@ -46,7 +46,7 @@ describe('FirebaseFirestoreDAO', () => {
     it('should remove an object upon deletion', async() => {
         const id: string = await dao.create({ value: 'foo', otherValue: 1 });
         await dao.delete(id);
-        await expectAsync(dao.read(id)).toBeResolvedTo(undefined);
+        await expectAsync(dao.exists(id)).toBeResolvedTo(false);
     });
     it('should update an object upon set', async() => {
         const id: string = await dao.create({ value: 'foo', otherValue: 1 });
