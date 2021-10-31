@@ -3,7 +3,7 @@ import { Move } from 'src/app/jscaip/Move';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { assert } from 'src/app/utils/utils'; // TODOTODO defensive check in DB
+import { assert } from 'src/app/utils/utils';
 import { ApagosCoord } from './ApagosCoord';
 import { ApagosMessage } from './ApagosMessage';
 
@@ -34,6 +34,8 @@ export class ApagosMove extends Move {
             return ApagosMove.ALL_MOVES.indexOf(move);
         }
         public decodeNumber(encodedMove: number): ApagosMove {
+            const move: ApagosMove = ApagosMove.ALL_MOVES[encodedMove];
+            assert(move != null, encodedMove + ' is not a valid encoded number for ApagosMove decoder');
             return ApagosMove.ALL_MOVES[encodedMove];
         }
     }
@@ -48,6 +50,7 @@ export class ApagosMove extends Move {
         const slideDown: ApagosMove = new ApagosMove(landing, MGPOptional.empty(), MGPOptional.of(start));
         return MGPFallible.success(slideDown);
     }
+
     private constructor(public readonly landing: ApagosCoord,
                         public readonly piece: MGPOptional<Player>,
                         public readonly starting: MGPOptional<ApagosCoord>)

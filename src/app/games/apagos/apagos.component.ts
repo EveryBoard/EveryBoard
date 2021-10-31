@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { last } from 'rxjs/operators';
 import { GameComponent } from 'src/app/components/game-components/game-component/GameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
@@ -11,7 +10,7 @@ import { ApagosCoord } from './ApagosCoord';
 import { ApagosDummyMinimax } from './ApagosDummyMinimax';
 import { ApagosMessage } from './ApagosMessage';
 import { ApagosMove } from './ApagosMove';
-import { ApagosNode, ApagosRules } from './ApagosRules';
+import { ApagosRules } from './ApagosRules';
 import { ApagosSquare } from './ApagosSquare';
 import { ApagosState } from './ApagosState';
 import { ApagosTutorial } from './ApagosTutorial';
@@ -216,8 +215,8 @@ export class ApagosComponent extends GameComponent<ApagosRules,
     }
     public getPieceClasses(x: number, i: number, square: ApagosSquare): string[] {
         const classes: string[] = [];
-        const zero: number = square.count(Player.ZERO);
-        const one: number = square.count(Player.ONE);
+        let zero: number = square.count(Player.ZERO);
+        let one: number = square.count(Player.ONE);
         if (this.droppedPiece.piece === i && this.droppedPiece.square === x) {
             classes.push('last-move');
         } else if (this.leftPiece.square === x) {
@@ -225,7 +224,9 @@ export class ApagosComponent extends GameComponent<ApagosRules,
                 classes.push('captured-stroke');
                 return classes;
             } else {
-                // TODOTODO there some business to be done here
+                const opponent: Player = this.rules.node.gameState.getCurrentOpponent();
+                if (opponent === Player.ZERO) zero++;
+                else one++;
             }
         }
         if (zero >= one) {

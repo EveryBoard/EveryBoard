@@ -33,7 +33,7 @@ export class ApagosTutorial {
                 [7, 5, 3, 1],
             ], 9, 9),
             ApagosMove.transfer(ApagosCoord.TWO, ApagosCoord.ZERO).get(),
-            // TODOTODO: make Move refuse to receive MGPFallible
+
             (move: ApagosMove, _: ApagosState) => {
                 if (move.isDrop()) {
                     return MGPValidation.failure($localize`This move is a drop! Please do a transfer!`);
