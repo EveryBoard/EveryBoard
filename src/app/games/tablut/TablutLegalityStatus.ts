@@ -6,5 +6,5 @@ import { TablutCase } from './TablutCase';
 export class TablutLegalityStatus implements LegalityStatus {
     legal: MGPValidation;
 
-    resultingBoard: Table<TablutCase>;
+    resultingBoard: Table<TablutCase> | null;
 }

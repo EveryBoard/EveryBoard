@@ -6,7 +6,7 @@ import { TablutState } from './TablutState';
 import { TablutRules } from './TablutRules';
 import { TablutMinimax } from './TablutMinimax';
 import { TablutCase } from 'src/app/games/tablut/TablutCase';
-import { display } from 'src/app/utils/utils';
+import { display, Utils } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player } from 'src/app/jscaip/Player';
 import { Orthogonal } from 'src/app/jscaip/Direction';
@@ -47,7 +47,7 @@ export class TablutComponent extends RectangularGameComponent<TablutRules,
 
     public chosen: Coord = new Coord(-1, -1);
 
-    public lastMove: TablutMove;
+    public lastMove: TablutMove | null;
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -69,14 +69,14 @@ export class TablutComponent extends RectangularGameComponent<TablutRules,
 
         this.captureds = [];
         if (this.lastMove) {
-            this.showPreviousMove();
+            this.showPreviousMove(this.lastMove);
         }
     }
-    private showPreviousMove(): void {
-        const previousBoard: Table<TablutCase> = this.rules.node.mother.gameState.board;
+    private showPreviousMove(move: TablutMove): void {
+        const previousBoard: Table<TablutCase> = Utils.getNonNullOrFail(this.rules.node.mother).gameState.board;
         const OPPONENT: Player = this.rules.node.gameState.getCurrentOpponent();
         for (const orthogonal of Orthogonal.ORTHOGONALS) {
-            const captured: Coord = this.lastMove.end.getNext(orthogonal, 1);
+            const captured: Coord = move.end.getNext(orthogonal, 1);
             if (captured.isInRange(TablutRulesConfig.WIDTH, TablutRulesConfig.WIDTH)) {
                 const previously: RelativePlayer = TablutRules.getRelativeOwner(OPPONENT, captured, previousBoard);
                 const wasOpponent: boolean = previously === RelativePlayer.OPPONENT;
@@ -157,8 +157,8 @@ export class TablutComponent extends RectangularGameComponent<TablutRules,
         const classes: string[] = [];
 
         const coord: Coord = new Coord(x, y);
-        const lastStart: Coord = this.lastMove ? this.lastMove.coord : null;
-        const lastEnd: Coord = this.lastMove ? this.lastMove.end : null;
+        const lastStart: Coord | null = this.lastMove ? this.lastMove.coord : null;
+        const lastEnd: Coord | null = this.lastMove ? this.lastMove.end : null;
         if (this.captureds.some((c: Coord) => c.equals(coord))) {
             classes.push('captured');
         } else if (coord.equals(lastStart) || coord.equals(lastEnd)) {

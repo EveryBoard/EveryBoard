@@ -10,7 +10,7 @@ import { SixState } from './SixState';
 import { SixMove } from './SixMove';
 import { SixLegalityStatus } from './SixLegalityStatus';
 import { SixFailure } from './SixFailure';
-import { display } from 'src/app/utils/utils';
+import { display, Utils } from 'src/app/utils/utils';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
@@ -38,7 +38,7 @@ export class SixRules extends Rules<SixMove,
         if (state.turn < 40) {
             return state.applyLegalDrop(move.landing);
         } else {
-            const kept: MGPSet<Coord> = status.kept;
+            const kept: MGPSet<Coord> = Utils.getNonNullOrFail(status.kept);
             return state.applyLegalDeplacement(move, kept);
         }
     }

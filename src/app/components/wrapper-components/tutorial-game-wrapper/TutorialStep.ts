@@ -94,12 +94,13 @@ export class TutorialStep {
     private constructor(public readonly title: string,
                         public readonly instruction: string,
                         public readonly state: AbstractGameState,
-                        public readonly acceptedMoves: ReadonlyArray<Move>,
-                        public readonly solutionMove: Move,
-                        public readonly acceptedClicks: ReadonlyArray<string>,
-                        public readonly predicate: (move: Move, resultingState: AbstractGameState) => MGPValidation,
+                        public readonly acceptedMoves: ReadonlyArray<Move> | null,
+                        public readonly solutionMove: Move | null,
+                        public readonly acceptedClicks: ReadonlyArray<string> | null,
+                        public readonly predicate:
+                          (move: Move, resultingState: AbstractGameState) => MGPValidation | null,
                         public readonly successMessage: string,
-                        public readonly failureMessage: string,
+                        public readonly failureMessage: string | null,
                         public readonly previousMove: Move | null,
     ) { }
     public isMove(): boolean {

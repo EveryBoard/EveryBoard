@@ -8,7 +8,7 @@ import { SixState } from './SixState';
 import { SixMove } from './SixMove';
 import { SixLegalityStatus } from './SixLegalityStatus';
 import { SCORE } from 'src/app/jscaip/SCORE';
-import { assert, display } from 'src/app/utils/utils';
+import { assert, display, Utils } from 'src/app/utils/utils';
 import { AlignementMinimax, BoardInfo } from 'src/app/jscaip/AlignementMinimax';
 import { SixVictorySource, SixNode, SixRules } from './SixRules';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
@@ -66,14 +66,14 @@ export class SixMinimax extends AlignementMinimax<SixMove,
     private createForcedDrop(unheritance: SixNodeUnheritance): SixMove[] {
         display(this.VERBOSE, { called: 'SixMinimax.createForceDrop', unheritance });
         const forcedMove: SixMove[] = [];
-        const move: SixMove = SixMove.fromDrop(unheritance.preVictory);
+        const move: SixMove = SixMove.fromDrop(Utils.getDefinedOrFail(unheritance.preVictory));
         forcedMove.push(move);
         return forcedMove;
     }
     private createForcedDeplacement(node: SixNode, unheritance: SixNodeUnheritance): SixMove[] {
         display(this.VERBOSE, { called: 'SixRules.createForcedDeplacement', node });
         const possiblesStarts: MGPSet<Coord> = this.getSafelyMovablePieceOrFirstOne(node);
-        const legalLandings: Coord[] = [unheritance.preVictory];
+        const legalLandings: Coord[] = [Utils.getDefinedOrFail(unheritance.preVictory)];
         return this.getDeplacementFrom(node.gameState, possiblesStarts, legalLandings);
     }
     private getDeplacementFrom(state: SixState,
@@ -149,7 +149,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         return this.getDeplacementFrom(state, start, legalLandings);
     }
     public getBoardValue(node: SixNode): SixNodeUnheritance {
-        const move: SixMove = node.move;
+        const move: SixMove | null = node.move;
         const state: SixState = node.gameState;
         const LAST_PLAYER: Player = state.getCurrentOpponent();
         const victoryValue: number = LAST_PLAYER.getVictoryValue();
@@ -159,12 +159,12 @@ export class SixMinimax extends AlignementMinimax<SixMove,
             preVictory: MGPOptional.empty(),
             sum: 0,
         };
-        if (move) {
+        if (move != null) {
             shapeInfo = this.calculateBoardValue(move, state);
         }
         let preVictory: Coord | null;
         if (shapeInfo.status === SCORE.DEFAULT) {
-            preVictory = shapeInfo.preVictory.getOrNull();
+            preVictory = Utils.getNonNullOrFail(shapeInfo.preVictory).getOrNull();
         }
         if (shapeInfo.status === SCORE.VICTORY) {
             return new SixNodeUnheritance(victoryValue);

@@ -71,11 +71,11 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         userIsChosenOpponent: false,
         userIsObserver: false,
     }
-    public currentJoiner: IJoiner = null;
+    public currentJoiner: IJoiner | null = null;
 
     // Subscription
     private candidateSubscription: MGPMap<string, ComparableSubscription> = new MGPMap();
-    private creatorSubscription: () => void = null;
+    private creatorSubscription: (() => void) | null = null;
     private ngUnsubscribe: Subject<void> = new Subject<void>();
 
     public configFormGroup: FormGroup;

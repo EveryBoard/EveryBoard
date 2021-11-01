@@ -8,7 +8,7 @@ import { TablutRulesConfig } from './TablutRulesConfig';
 import { Player } from 'src/app/jscaip/Player';
 import { TablutCase } from './TablutCase';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { assert, display } from 'src/app/utils/utils';
+import { assert, display, Utils } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { TablutLegalityStatus } from './TablutLegalityStatus';
@@ -45,7 +45,7 @@ export class TablutRules extends Rules<TablutMove, TablutState, TablutLegalitySt
         // copies
         const turn: number = state.turn;
 
-        return new TablutState(status.resultingBoard, turn + 1);
+        return new TablutState(Utils.getNonNullOrFail(status.resultingBoard), turn + 1);
     }
     public static tryMove(player: Player, move: TablutMove, board: TablutCase[][]): TablutLegalityStatus {
         display(TablutRules.VERBOSE, { TablutRules_tryMove: { player, move, board } });
@@ -103,7 +103,8 @@ export class TablutRules extends Rules<TablutMove, TablutState, TablutLegalitySt
         }
         return MGPValidation.SUCCESS;
     }
-    public static tryCapture(player: Player, landingPawn: Coord, d: Orthogonal, board: Table<TablutCase>): Coord {
+    public static tryCapture(player: Player, landingPawn: Coord, d: Orthogonal, board: Table<TablutCase>)
+    : Coord | null {
         /* landingPawn is the piece that just moved
          * d the direction in witch we look for capture
          * return the captured coord, or null if no capture possible
@@ -129,7 +130,7 @@ export class TablutRules extends Rules<TablutMove, TablutState, TablutLegalitySt
                                landingPiece: Coord,
                                d: Orthogonal,
                                board: Table<TablutCase>)
-    : Coord
+    : Coord | null
     {
         /* the king is the next coord after c (in direction d)
          * the landingPiece partipate in the capture
@@ -201,7 +202,7 @@ export class TablutRules extends Rules<TablutMove, TablutState, TablutLegalitySt
                                              rightCoord: Coord,
                                              kingCoord: Coord,
                                              board: Table<TablutCase>)
-    : Coord
+    : Coord | null
     {
         const LOCAL_VERBOSE: boolean = false;
         let nbInvaders: number = (left === RelativePlayer.PLAYER ? 1 : 0);
@@ -252,7 +253,8 @@ export class TablutRules extends Rules<TablutMove, TablutState, TablutLegalitySt
             rightCoord, right,
         };
     }
-    private static capturePawn(player: Player, c: Coord, d: Orthogonal, board: Table<TablutCase>): Coord {
+    private static capturePawn(player: Player, c: Coord, d: Orthogonal, board: Table<TablutCase>)
+    : Coord | null {
         /* the pawn is the next coord after c (in direction d)
          * c partipate in the capture
          *
@@ -540,7 +542,7 @@ export class TablutRules extends Rules<TablutMove, TablutState, TablutLegalitySt
         display(TablutRules.VERBOSE, { tablutRules_applyLegalMove: { move, state, status } });
         return TablutRules.applyLegalMove(move, state, status);
     }
-    public getListMovesPruned(node: TablutNode): { key: TablutMove, value: TablutState }[] {
+    public getListMovesPruned(node: TablutNode): { key: TablutMove, value: TablutState }[] | null {
         // TODO: prune this method, make it smarter
         const state: TablutState = node.gameState;
         const currentBoard: Table<TablutCase> = state.getCopiedBoard();

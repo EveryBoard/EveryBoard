@@ -4,7 +4,7 @@ import firebase from 'firebase';
 // supported, but arrays containing objects containing arrays are, which is what
 // is encoded in these types.
 
-export type JSONPrimitive = string | number | boolean | null;
+export type JSONPrimitive = string | number | boolean | null | undefined;
 export type JSONValue = JSONPrimitive | JSONObject | Array<JSONValueWithoutArray>;
 export type JSONValueWithoutArray = JSONPrimitive | JSONObject
 export type JSONObject = { [member: string]: JSONValue };

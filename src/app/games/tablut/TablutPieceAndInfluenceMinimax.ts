@@ -138,6 +138,7 @@ export class TablutPieceAndInfluenceMinimax extends TablutMinimax {
                 return state.getPieceAt(coord) === TablutCase.UNOCCUPIED;
             }
         }
+        return false;
     }
     public isThreatReal(coord: Coord, state: TablutState, threats: SandwichThreat[]): boolean {
         if (threats.length === 0) {

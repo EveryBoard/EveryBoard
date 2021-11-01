@@ -68,7 +68,7 @@ export abstract class Rules<M extends Move,
         const status: L = this.isLegal(move, this.node.gameState);
         if (this.node.hasMoves()) { // if calculation has already been done by the AI
             display(LOCAL_VERBOSE, 'Rules.choose: current node has moves');
-            const choice: MGPNode<Rules<M, S, L>, M, S, L> = this.node.getSonByMove(move);
+            const choice: MGPNode<Rules<M, S, L>, M, S, L> | null = this.node.getSonByMove(move);
             // let's not create the node twice
             if (choice != null) {
                 assert(status.legal.isSuccess(), 'Rules.choose: Move is illegal: ' + status.legal.reason);

@@ -16,6 +16,7 @@ import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';
 import { YinshRules } from './YinshRules';
 import { YinshTutorial } from './YinshTutorial';
+import { Utils } from 'src/app/utils/utils';
 
 interface CaseInfo {
     coord: Coord,
@@ -226,7 +227,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules, YinshMove
         this.moveToInitialCaptureOrMovePhase();
     }
     private showLastMove(): void {
-        const move: YinshMove = this.rules.node.move;
+        const move: YinshMove | null = this.rules.node.move;
         if (move != null) {
             if (move.isInitialPlacement()) {
                 this.viewInfo.caseInfo[move.start.y][move.start.x].caseClasses = ['moved'];
@@ -343,7 +344,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules, YinshMove
         } else if (captures.length === 0) {
             return this.cancelMove(YinshFailure.MISSING_CAPTURES());
         } else {
-            this.selectCapture(captures[0]);
+            return this.selectCapture(captures[0]);
         }
     }
     private selectCapture(capture: YinshCapture) {
@@ -405,7 +406,8 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules, YinshMove
                     this.updateViewInfo();
                     return MGPValidation.SUCCESS;
                 }
-            case 'FINAL_CAPTURE_SELECT_RING':
+            default:
+                Utils.defaultCase(this.movePhase, 'FINAL_CAPTURE_SELECT_RING');
                 this.finalCaptures.push(capture);
                 if (this.possibleCaptures.length === 0) {
                     return this.tryMove();
@@ -466,6 +468,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules, YinshMove
         } else {
             this.movePhase = 'FINAL_CAPTURE_SELECT_FIRST';
             this.updateViewInfo();
+            return MGPValidation.SUCCESS;
         }
     }
 }

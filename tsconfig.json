@@ -15,7 +15,7 @@
         "strictBindCallApply": true,
         // The following options still need to be set to true
         // For now, we'll use the ts-strict plugin to do that file by file before enabling it globally
-        "strictNullChecks": false, // LOTS of changes needed
+        "strictNullChecks": true, // LOTS of changes needed
         "noImplicitAny": false, // some fixes to do before enabling this one
         "strictFunctionTypes": false, // requires improving genericity
         "strictPropertyInitialization": false, // requires strictNullChecks

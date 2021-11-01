@@ -10,8 +10,8 @@ import { AbstractGameState } from './GameState';
 export interface BoardInfo {
     status: SCORE,
     victory: Coord[] | null,
-    preVictory: MGPOptional<Coord>,
-    sum: number
+    preVictory: MGPOptional<Coord> | null,
+    sum: number | null,
 }
 export abstract class AlignementMinimax<M extends Move,
                                         S extends AbstractGameState,

@@ -1,7 +1,6 @@
 import { Component, ComponentFactoryResolver, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, Event } from '@angular/router';
 import { Subscription } from 'rxjs';
-
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { GameService } from 'src/app/services/GameService';
 import { UserService } from 'src/app/services/UserService';
@@ -17,7 +16,7 @@ import { IJoiner } from 'src/app/domain/ijoiner';
 import { ChatComponent } from '../../normal-component/chat/chat.component';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { assert, display, JSONValue, JSONValueWithoutArray } from 'src/app/utils/utils';
+import { assert, display, JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 import { ObjectDifference } from 'src/app/utils/ObjectUtils';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
@@ -70,7 +69,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     public currentPart: Part;
     public currentPartId: string;
     public gameStarted: boolean = false;
-    public opponent: IJoueurId = null;
+    public opponent: IJoueurId | null = null;
     public currentPlayer: string;
 
     public rematchProposed: boolean = false;
@@ -100,11 +99,11 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent constructed');
     }
     private extractPartIdFromURL(): string {
-        return this.actRoute.snapshot.paramMap.get('id');
+        return Utils.getNonNullOrFail(this.actRoute.snapshot.paramMap.get('id'));
     }
     private extractGameTypeFromURL(): string {
         // url is ["play", "game-name", "part-id"]
-        return this.actRoute.snapshot.paramMap.get('compo');
+        return Utils.getNonNullOrFail(this.actRoute.snapshot.paramMap.get('compo'));
     }
     public isPlaying(): boolean {
         return this.observerRole === Player.ZERO.value ||
@@ -297,7 +296,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         const last: Player = Player.fromTurn(oldPart.doc.turn);
         return this.getTimeUsedForLastTurn(oldTime, updateTime, type, last);
     }
-    private getMoreRecentTime(part: Part): Time {
+    private getMoreRecentTime(part: Part): Time | null {
         if (part == null) {
             return null;
         }

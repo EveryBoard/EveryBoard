@@ -158,7 +158,7 @@ export class SixState extends GameState<Coord, Player> {
             return Player.NONE;
         }
     }
-    public getNullable(coord: Coord): Player {
+    public getNullable(coord: Coord): Player | null {
         return this.pieces.get(coord).getOrNull();
     }
     public applyLegalDrop(coord: Coord): SixState {
@@ -182,8 +182,8 @@ export class SixState extends GameState<Coord, Player> {
     }
     public countPieces(): [number, number] {
         const pieces: MGPMap<Player, MGPSet<Coord>> = this.pieces.groupByValue();
-        const zeroPieces: MGPSet<Coord> = pieces.get(Player.ZERO).getOrNull();
-        const onePieces: MGPSet<Coord> = pieces.get(Player.ONE).getOrNull();
+        const zeroPieces: MGPSet<Coord> | null = pieces.get(Player.ZERO).getOrNull();
+        const onePieces: MGPSet<Coord> | null = pieces.get(Player.ONE).getOrNull();
         return [
             zeroPieces == null ? 0 : zeroPieces.size(),
             onePieces == null ? 0 : onePieces.size(),

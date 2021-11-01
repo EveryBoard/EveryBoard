@@ -6,7 +6,7 @@ import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
 import { UserService } from 'src/app/services/UserService';
-import { assert, display } from 'src/app/utils/utils';
+import { assert, display, Utils } from 'src/app/utils/utils';
 import { MGPNode, MGPNodeStats } from 'src/app/jscaip/MGPNode';
 import { AbstractGameState } from 'src/app/jscaip/GameState';
 import { Minimax } from 'src/app/jscaip/Minimax';
@@ -24,7 +24,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
 
     public aiDepths: [string, string] = ['0', '0'];
 
-    public winner: string = null;
+    public winner: string | null = null;
 
     public botTimeOut: number = 1000;
 
@@ -86,7 +86,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
             }, this.botTimeOut);
         }
     }
-    private getPlayingAI(): Minimax<Move, AbstractGameState> {
+    private getPlayingAI(): Minimax<Move, AbstractGameState> | null {
         const turn: number = this.gameComponent.rules.node.gameState.turn % 2;
         if (this.gameComponent.rules.getGameStatus(this.gameComponent.rules.node).isEndGame) {
             // No AI is playing when the game is finished
@@ -94,7 +94,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         }
         return this.gameComponent.availableMinimaxes.find((a: Minimax<Move, AbstractGameState>) => {
             return a.name === this.players[turn];
-        });
+        }) || null;
     }
     public doAIMove(playingMinimax: Minimax<Move, AbstractGameState>): void {
         // called only when it's AI's Turn
@@ -116,9 +116,9 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         return this.gameComponent.rules.node.gameState.turn > 0;
     }
     public takeBack(): void {
-        this.gameComponent.rules.node = this.gameComponent.rules.node.mother;
+        this.gameComponent.rules.node = Utils.getNonNullOrFail(this.gameComponent.rules.node.mother);
         if (this.isAITurn()) {
-            this.gameComponent.rules.node = this.gameComponent.rules.node.mother;
+            this.gameComponent.rules.node = Utils.getNonNullOrFail(this.gameComponent.rules.node.mother);
         }
         this.gameComponent.updateBoard();
     }

@@ -7,5 +7,5 @@ export interface SixLegalityStatus extends LegalityStatus {
 
     legal: MGPValidation;
 
-    kept: MGPSet<Coord>;
+    kept: MGPSet<Coord> | null;
 }
