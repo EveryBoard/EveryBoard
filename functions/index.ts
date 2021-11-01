@@ -1,3 +1,12 @@
+/* eslint-disable */
+/**
+ * Since functions are no longer available for free use in firebase
+ * here is the code still running but that cannot be changed.
+ * Considers an user connected when an handshake with a user is made
+ * Consider an unser disconnected when an handshake breaks.
+ * Unfortunately, when a user creates two handshakes (in two browsers)
+ * then break one of those two, he'll become disconnected
+ */
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp();
