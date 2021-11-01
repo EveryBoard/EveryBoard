@@ -1,7 +1,7 @@
 import { JSONPrimitive } from './utils';
 
 export interface ComparableObject {
-    equals(o: ComparableObject): boolean;
+    equals(o: ComparableObject | null): boolean;
 
     toString(): string;
 }

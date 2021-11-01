@@ -168,7 +168,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         const classes: string[] = [];
         const player: string = this.getPlayerClass(this.board[y][x]);
         classes.push(player);
-        if (this.lastDrop && new Coord(x, y).equals(this.lastDrop)) {
+        if (new Coord(x, y).equals(this.lastDrop)) {
             classes.push('last-move');
         }
         return classes;

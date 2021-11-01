@@ -12,6 +12,7 @@ import { Direction } from 'src/app/jscaip/Direction';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { ReversiTutorial } from './ReversiTutorial';
+import { Utils } from 'src/app/utils/utils';
 
 @Component({
     selector: 'app-reversi',
@@ -26,6 +27,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
 {
     public NONE: Player = Player.NONE;
     public lastMove: Coord = new Coord(-2, -2);
+    public scores: [number, number];
 
     private captureds: Coord[] = [];
 
@@ -66,14 +68,14 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
         this.canPass = ReversiRules.playerCanOnlyPass(state);
     }
     private showPreviousMove() {
-        this.lastMove = this.rules.node.move.coord;
+        this.lastMove = Utils.getNonNullOrFail(this.rules.node.move).coord;
         const PLAYER: Player = this.rules.node.gameState.getCurrentPlayer();
         const OPPONENT: Player = this.rules.node.gameState.getCurrentOpponent();
         for (const dir of Direction.DIRECTIONS) {
             let captured: Coord = this.lastMove.getNext(dir, 1);
             while (captured.isInRange(ReversiState.BOARD_WIDTH, ReversiState.BOARD_HEIGHT) &&
                    this.rules.node.gameState.getPieceAt(captured) === OPPONENT &&
-                   this.rules.node.mother.gameState.getPieceAt(captured) === PLAYER)
+                   Utils.getNonNullOrFail(this.rules.node.mother).gameState.getPieceAt(captured) === PLAYER)
             {
                 this.captureds.push(captured);
                 captured = captured.getNext(dir, 1);

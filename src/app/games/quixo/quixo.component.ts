@@ -12,6 +12,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Player } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { QuixoTutorial } from './QuixoTutorial';
+import { Utils } from 'src/app/utils/utils';
 
 @Component({
     selector: 'app-quixo',
@@ -24,9 +25,9 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
 
     public state: QuixoState;
 
-    public lastMoveCoord: Coord = new Coord(-1, -1);
+    public lastMoveCoord: Coord | null = new Coord(-1, -1);
 
-    public chosenCoord: Coord;
+    public chosenCoord: Coord | null;
 
     public chosenDirection: Orthogonal;
 
@@ -45,8 +46,8 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
     public updateBoard(): void {
         this.state = this.rules.node.gameState;
         this.board = this.state.board;
-        const move: QuixoMove = this.rules.node.move;
-        if (move) this.lastMoveCoord = move.coord;
+        const move: QuixoMove | null = this.rules.node.move;
+        if (move != null) this.lastMoveCoord = move.coord;
         else this.lastMoveCoord = null;
         this.victoriousCoords = QuixoRules.getVictoriousCoords(this.state);
     }
@@ -72,7 +73,7 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
         const clickedCoord: Coord = new Coord(x, y);
         const coordLegality: MGPValidation = QuixoMove.isValidCoord(clickedCoord);
         if (coordLegality.isFailure()) {
-            return this.cancelMove(coordLegality.reason);
+            return this.cancelMove(coordLegality.getReason());
         }
         if (this.board[y][x] === this.state.getCurrentOpponent()) {
             return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
@@ -83,10 +84,11 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
     }
     public getPossiblesDirections(): string[] {
         const directions: string[] = [];
-        if (this.chosenCoord.x !== 4) directions.push('RIGHT');
-        if (this.chosenCoord.x !== 0) directions.push('LEFT');
-        if (this.chosenCoord.y !== 4) directions.push('DOWN');
-        if (this.chosenCoord.y !== 0) directions.push('UP');
+        const chosenCoord: Coord = Utils.getNonNullOrFail(this.chosenCoord);
+        if (chosenCoord.x !== 4) directions.push('RIGHT');
+        if (chosenCoord.x !== 0) directions.push('LEFT');
+        if (chosenCoord.y !== 4) directions.push('DOWN');
+        if (chosenCoord.y !== 0) directions.push('UP');
         return directions;
     }
     public async chooseDirection(direction: string): Promise<MGPValidation> {
@@ -98,8 +100,9 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
         return await this.tryMove();
     }
     public async tryMove(): Promise<MGPValidation> {
-        const move: QuixoMove = new QuixoMove(this.chosenCoord.x,
-                                              this.chosenCoord.y,
+        const chosenCoord: Coord = Utils.getNonNullOrFail(this.chosenCoord);
+        const move: QuixoMove = new QuixoMove(chosenCoord.x,
+                                              chosenCoord.y,
                                               this.chosenDirection);
         this.cancelMove();
         return this.chooseMove(move, this.rules.node.gameState, null, null);

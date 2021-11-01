@@ -61,7 +61,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
             const firstNeighboors: MGPOptional<PylosCoord> = landingCoord.getNextValid(vertical);
             if (firstNeighboors.isPresent() && state.getPieceAt(firstNeighboors.get()) === currentPlayer) {
                 for (const horizontal of [Orthogonal.LEFT, Orthogonal.RIGHT]) {
-                    const secondNeighboors: PylosCoord = firstNeighboors
+                    const secondNeighboors: PylosCoord | null = firstNeighboors
                         .get()
                         .getNextValid(horizontal)
                         .getOrNull();
@@ -144,7 +144,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
             return LegalityStatus.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
 
-        const startingCoord: PylosCoord = move.startingCoord.getOrNull();
+        const startingCoord: PylosCoord | null = move.startingCoord.getOrNull();
         const OPPONENT: Player = state.getCurrentOpponent();
 
         if (startingCoord != null) {

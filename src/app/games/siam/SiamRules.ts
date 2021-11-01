@@ -9,7 +9,7 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { SiamLegalityStatus } from './SiamLegalityStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { display } from 'src/app/utils/utils';
+import { display, Utils } from 'src/app/utils/utils';
 import { SiamFailure } from './SiamFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
@@ -80,7 +80,7 @@ export class SiamRules extends _SiamRules {
                     'Illegal push because not straight or not pushing anything or leaving the board');
             return SiamLegalityStatus.failure(SiamFailure.ILLEGAL_PUSH());
         }
-        let currentDirection: Orthogonal = pushingDir;
+        let currentDirection: Orthogonal | null = pushingDir;
         const resistingDir: Orthogonal = pushingDir.getOpposite();
         let totalForce: number = 0;
         const resultingBoard: SiamPiece[][] = state.getCopiedBoard();
@@ -153,7 +153,7 @@ export class SiamRules extends _SiamRules {
                           status: SiamLegalityStatus)
     : SiamState
     {
-        const newBoard: SiamPiece[][] = status.resultingBoard;
+        const newBoard: SiamPiece[][] = Utils.getNonNullOrFail(status.resultingBoard);
         const newTurn: number = state.turn + 1;
         const resultingState: SiamState = new SiamState(newBoard, newTurn);
         return resultingState;
@@ -245,9 +245,9 @@ export class SiamRules extends _SiamRules {
         }
         return { rows, columns, nbMountain };
     }
-    public static getWinner(state: SiamState, move: SiamMove, nbMountain: number): Player {
+    public static getWinner(state: SiamState, move: SiamMove | null, nbMountain: number): Player {
         if (nbMountain === 2) {
-            return SiamRules.getPusher(state, move);
+            return SiamRules.getPusher(state, Utils.getNonNullOrFail(move));
         } else {
             return Player.NONE;
         }
@@ -352,7 +352,7 @@ export class SiamRules extends _SiamRules {
         let currentDistance: number = 1;
         let previousPiece: SiamPiece = state.getPieceAt(fallingCoord);
         let testedCoord: Coord = fallingCoord.getCopy();
-        let almostPusher: Coord;
+        let almostPusher: Coord | null;
         let pusherFound: boolean = false;
         let mountainEncountered: boolean = false;
         let missingForce: number = 0;
@@ -530,7 +530,9 @@ export class SiamRules extends _SiamRules {
         const mountainsInfo: { rows: number[], columns: number[], nbMountain: number } =
             SiamRules.getMountainsRowsAndColumns(node.gameState);
 
-        const winner: Player = SiamRules.getWinner(node.gameState, node.move, mountainsInfo.nbMountain);
+        const winner: Player = SiamRules.getWinner(node.gameState,
+                                                   node.move,
+                                                   mountainsInfo.nbMountain);
         if (winner === Player.NONE) {
             return GameStatus.ONGOING;
         } else {

@@ -17,6 +17,7 @@ import { HexagonalGameComponent }
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { SixTutorial } from './SixTutorial';
+import { Utils } from 'src/app/utils/utils';
 
 interface Scale {
     minX: number;
@@ -42,11 +43,11 @@ export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixS
     public cuttableGroups: Coord[][] = [];
     public victoryCoords: Coord[];
     public neighboors: Coord[];
-    public leftCoord: Coord = null;
-    public lastDrop: Coord = null;
+    public leftCoord: Coord | null = null;
+    public lastDrop: Coord | null = null;
 
-    public selectedPiece: Coord;
-    public chosenLanding: Coord;
+    public selectedPiece: Coord | null = null;
+    public chosenLanding: Coord | null = null;
 
     public viewBox: string;
     public pointScale: Scale;
@@ -83,8 +84,8 @@ export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixS
     public updateBoard(): void {
         const node: SixNode = this.rules.node;
         this.state = node.gameState;
-        const lastMove: SixMove = this.rules.node.move;
-        if (lastMove) {
+        const lastMove: SixMove | null = this.rules.node.move;
+        if (lastMove != null) {
             this.showLastMove();
         } else {
             // For tutorial
@@ -98,7 +99,7 @@ export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixS
         this.viewBox = this.getViewBox();
     }
     public showLastMove(): void {
-        const lastMove: SixMove = this.rules.node.move;
+        const lastMove: SixMove = Utils.getNonNullOrFail(this.rules.node.move);
         this.lastDrop = lastMove.landing.getNext(this.state.offset, 1);
         if (lastMove.isDrop() === false) {
             this.leftCoord = lastMove.start.get().getNext(this.state.offset, 1);
@@ -112,11 +113,11 @@ export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixS
         this.disconnecteds = this.getDisconnected();
     }
     private getDisconnected(): Coord[] {
-        const oldPieces: Coord[] = this.rules.node.mother.gameState.pieces.listKeys();
+        const oldPieces: Coord[] = Utils.getNonNullOrFail(this.rules.node.mother).gameState.pieces.listKeys();
         const newPieces: Coord[] = this.rules.node.gameState.pieces.listKeys();
         const disconnecteds: Coord[] =[];
         for (const oldPiece of oldPieces) {
-            if (oldPiece.equals(this.rules.node.move.start.getOrNull()) === false &&
+            if (oldPiece.equals(Utils.getNonNullOrFail(this.rules.node.move).start.getOrNull()) === false &&
                 newPieces.some((newCoord: Coord) => newCoord.equals(oldPiece.getNext(this.state.offset, 1))) === false)
             {
                 disconnecteds.push(oldPiece.getNext(this.state.offset, 1));
@@ -125,7 +126,7 @@ export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixS
         if (this.pieces.some((coord: Coord) => coord.equals(this.lastDrop)) === false &&
             newPieces.some((coord: Coord) => coord.equals(this.lastDrop)) === false)
         {
-            disconnecteds.push(this.lastDrop); // Dummy captured his own piece
+            disconnecteds.push(Utils.getNonNullOrFail(this.lastDrop)); // Dummy captured his own piece
         }
         return disconnecteds;
     }
@@ -156,8 +157,8 @@ export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixS
     }
     public getAbstractBoardUse(pieces: Coord[], neighboors: Coord[], disconnecteds: Coord[]): Scale {
         const coords: Coord[] = pieces.concat(neighboors).concat(disconnecteds);
-        let upperPiece: Coord;
-        let lefterPiece: Coord;
+        let upperPiece: Coord | null = null;
+        let lefterPiece: Coord | null = null;
         let maxX: number = Number.MIN_SAFE_INTEGER;
         let maxY: number = Number.MIN_SAFE_INTEGER;
         let minX: number = Number.MAX_SAFE_INTEGER;
@@ -176,7 +177,11 @@ export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixS
             maxX = Math.max(maxX, coordX + 1);
             maxY = Math.max(maxY, coordY + 2);
         }
-        return { minX, minY, maxX, maxY, upperPiece, lefterPiece };
+        return {
+            minX, minY, maxX, maxY,
+            upperPiece: Utils.getNonNullOrFail(upperPiece),
+            lefterPiece: Utils.getNonNullOrFail(lefterPiece),
+        };
     }
     public getPieceClass(coord: Coord): string {
         const player: Player = this.rules.node.gameState.getPieceAt(coord);
@@ -196,7 +201,9 @@ export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixS
             this.selectedPiece = piece;
             return MGPValidation.SUCCESS;
         } else {
-            const cuttingMove: SixMove = SixMove.fromCut(this.selectedPiece, this.chosenLanding, piece);
+            const cuttingMove: SixMove = SixMove.fromCut(Utils.getNonNullOrFail(this.selectedPiece),
+                                                         this.chosenLanding,
+                                                         piece);
             return this.chooseMove(cuttingMove, this.state, null, null);
         }
     }
@@ -233,7 +240,8 @@ export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixS
         this.neighboors = this.getEmptyNeighboors();
     }
     private showCuttable(): void {
-        const deplacement: SixMove = SixMove.fromDeplacement(this.selectedPiece, this.chosenLanding);
+        const deplacement: SixMove = SixMove.fromDeplacement(Utils.getNonNullOrFail(this.selectedPiece),
+                                                             Utils.getNonNullOrFail(this.chosenLanding));
         const piecesAfterDeplacement: MGPMap<Coord, Player> = SixState.deplacePiece(this.state, deplacement);
         const groupsAfterMove: MGPSet<MGPSet<Coord>> =
             SixState.getGroups(piecesAfterDeplacement, deplacement.start.get());

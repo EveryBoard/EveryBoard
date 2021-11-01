@@ -4,7 +4,7 @@ import { QuartoState } from './QuartoState';
 import { QuartoMove } from './QuartoMove';
 import { QuartoPiece } from './QuartoPiece';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { assert, display } from 'src/app/utils/utils';
+import { assert, display, Utils } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
@@ -15,7 +15,7 @@ import { QuartoFailure } from './QuartoFailure';
 
 export interface BoardStatus {
     score: SCORE;
-    sensitiveSquares: SensitiveSquare[];
+    sensitiveSquares: SensitiveSquare[] | null;
 }
 class SensitiveSquare {
     /**
@@ -78,7 +78,7 @@ class SensitiveSquare {
  */
 class Criterion {
 
-    readonly subCriterion: boolean[] = [null, null, null, null];
+    readonly subCriterion: (boolean | null)[] = [null, null, null, null];
 
     constructor(bSquare: QuartoPiece) {
         // a criterion is initialized with a square, it takes the square's value
@@ -306,8 +306,8 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
     : BoardStatus
     {
         // we're looking for a victory, pre-victory, or normal score
-        let cs: SensitiveSquare = null; // the first square is empty
-        let commonCrit: Criterion;
+        let cs: SensitiveSquare | null = null; // the first square is empty
+        let commonCrit: Criterion | null = null;
 
         let coord: Coord = line.initialCoord;
         for (let i: number = 0; i < 4; i++) {
@@ -344,7 +344,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
                     boardStatus.score = SCORE.PRE_VICTORY;
                 }
                 cs.addCriterion(commonCrit);
-                boardStatus.sensitiveSquares.push(cs);
+                Utils.getNonNullOrFail(boardStatus.sensitiveSquares).push(cs);
             }
         }
         return boardStatus;

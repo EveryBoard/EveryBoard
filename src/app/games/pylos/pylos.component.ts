@@ -12,6 +12,7 @@ import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisp
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PylosFailure } from './PylosFailure';
 import { PylosTutorial } from './PylosTutorial';
+import { Utils } from 'src/app/utils/utils';
 
 @Component({
     selector: 'app-pylos',
@@ -24,17 +25,17 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
 
     public state: PylosState;
 
-    public lastLandingCoord: PylosCoord = null;
-    public lastStartingCoord: PylosCoord = null;
-    public lastFirstCapture: PylosCoord = null;
-    public lastSecondCapture: PylosCoord = null;
-    public highCapture: PylosCoord = null;
+    public lastLandingCoord: PylosCoord | null = null;
+    public lastStartingCoord: PylosCoord | null = null;
+    public lastFirstCapture: PylosCoord | null = null;
+    public lastSecondCapture: PylosCoord | null= null;
+    public highCapture: PylosCoord | null = null;
 
-    public chosenStartingCoord: PylosCoord = null;
-    public chosenLandingCoord: PylosCoord = null;
-    public chosenFirstCapture: PylosCoord = null;
+    public chosenStartingCoord: PylosCoord | null = null;
+    public chosenLandingCoord: PylosCoord | null = null;
+    public chosenFirstCapture: PylosCoord | null = null;
 
-    public lastMove: PylosMove = null;
+    public lastMove: PylosMove | null = null;
 
     private remainingPieces: { [owner: number]: number } = { 0: 15, 1: 15 };
 
@@ -54,7 +55,9 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         switch (z) {
             case 0: return [0, 1, 2, 3];
             case 1: return [0, 1, 2];
-            case 2: return [0, 1];
+            default:
+                Utils.defaultCase(z, 2);
+                return [0, 1];
         }
     }
     public isDrawable(x: number, y: number, z: number): boolean {
@@ -94,9 +97,10 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     private async concludeMoveWithCapture(captures: PylosCoord[]): Promise<MGPValidation> {
         let move: PylosMove;
         if (this.chosenStartingCoord == null) {
-            move = PylosMove.fromDrop(this.chosenLandingCoord, captures);
+            move = PylosMove.fromDrop(Utils.getNonNullOrFail(this.chosenLandingCoord), captures);
         } else {
-            move = PylosMove.fromClimb(this.chosenStartingCoord, this.chosenLandingCoord, captures);
+            move = PylosMove.fromClimb(this.chosenStartingCoord,
+                                       Utils.getNonNullOrFail(this.chosenLandingCoord), captures);
         }
         return this.tryMove(move, this.state);
     }
@@ -150,10 +154,10 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     public getPieceRadius(z: number): number {
         return 90 + (z * 5);
     }
-    public getPieceCx(x: number, y: number, z: number): number {
+    public getPieceCx(x: number, _y: number, z: number): number {
         return 100 + (z * 100) + (x * 200);
     }
-    public getPieceCy(x: number, y: number, z: number): number {
+    public getPieceCy(_x: number, y: number, z: number): number {
         return 100 + (z * 100) + (y * 200);
     }
     public isOccupied(x: number, y: number, z: number): boolean {
@@ -212,10 +216,11 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         }
     }
     private showLastMove(): void {
-        this.lastLandingCoord = this.lastMove.landingCoord;
-        this.lastStartingCoord = this.lastMove.startingCoord.getOrNull();
-        this.lastFirstCapture = this.lastMove.firstCapture.getOrNull();
-        this.lastSecondCapture = this.lastMove.secondCapture.getOrNull();
+        const lastMove: PylosMove = Utils.getNonNullOrFail(this.lastMove);
+        this.lastLandingCoord = lastMove.landingCoord;
+        this.lastStartingCoord = lastMove.startingCoord.getOrNull();
+        this.lastFirstCapture = lastMove.firstCapture.getOrNull();
+        this.lastSecondCapture = lastMove.secondCapture.getOrNull();
         if (this.lastFirstCapture &&
             this.isDrawableCoord(this.lastFirstCapture) === false)
         {

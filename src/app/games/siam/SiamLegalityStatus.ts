@@ -14,7 +14,7 @@ export class SiamLegalityStatus implements LegalityStatus {
 
     public legal: MGPValidation;
 
-    public resultingBoard: SiamPiece[][];
+    public resultingBoard: SiamPiece[][] | null;
 
     public moved: Coord[];
 }

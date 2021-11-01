@@ -27,9 +27,9 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
 {
     public static VERBOSE: boolean = false;
 
-    public lastCoord: Coord = new Coord(-2, -2);
+    public lastCoord: Coord | null = new Coord(-2, -2);
 
-    public lastMoved: Coord = new Coord(-2, -2);
+    public lastMoved: Coord | null = new Coord(-2, -2);
 
     public chosenCoord: MGPOptional<Coord> = MGPOptional.empty();
 
@@ -50,7 +50,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         const clickedCoord: Coord = new Coord(x, y);
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.reason);
+            return this.cancelMove(clickValidity.getReason());
         }
         if (this.chosenCoord.isAbsent()) { // Must select pyramid
             return this.choosePiece(x, y);
@@ -82,7 +82,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
     }
     public updateBoard(): void {
         this.chosenCoord = MGPOptional.empty();
-        const move: SaharaMove = this.rules.node.move;
+        const move: SaharaMove | null = this.rules.node.move;
         if (move == null) {
             this.lastCoord = null;
             this.lastMoved = null;

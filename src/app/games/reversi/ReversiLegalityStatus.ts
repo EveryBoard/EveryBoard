@@ -5,5 +5,5 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 export class ReversiLegalityStatus implements LegalityStatus {
     public legal: MGPValidation;
 
-    public switched: Coord[];
+    public switched: Coord[] | null;
 }

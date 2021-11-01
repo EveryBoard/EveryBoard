@@ -15,7 +15,7 @@ import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 
 export class SixNodeUnheritance implements NodeUnheritance {
 
-    public equals(o: SixNodeUnheritance): boolean {
+    public equals(_o: SixNodeUnheritance): boolean {
         throw new Error('SixNodeUnheritance.equals not implemented.');
     }
     public toString(): string {
