@@ -1,9 +1,12 @@
 @charset "utf-8";
 
+$primary: #3273dc;
+$danger: #f14668;
+$warning: #ffdd57;
+
 @import "../../node_modules/bulma/bulma.sass";
 @import '~bulma-slider';
 @import "./variables.scss";
-
 
 $gap: 10pt;
 @media screen and (max-width: 768px) {
