@@ -10,8 +10,7 @@
     "test": "bash ./scripts/test.sh",
     "test:ci": "bash ./scripts/test.sh --watch=false --browsers=ChromeHeadlessCustom",
     "lint": "eslint --ext ts ./",
-    "e2e": "ng e2e",
-    "css-build": "sass --no-source-map src/sass/mystyles.scss src/css/mystyles.css"
+    "e2e": "ng e2e"
   },
   "private": true,
   "dependencies": {

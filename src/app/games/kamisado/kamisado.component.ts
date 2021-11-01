@@ -17,7 +17,7 @@ import { KamisadoTutorial } from './KamisadoTutorial';
 @Component({
     selector: 'app-kamisado',
     templateUrl: './kamisado.component.html',
-    styleUrls: ['../../components/game-components/game-component/game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 
 export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,

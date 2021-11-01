@@ -1,98 +1,117 @@
+@import "variables.scss";
+$base-stroke: black;
+$background-fill: lightgrey;
+$alt-background-fill: gray;
+$alt-alt-background-fill: dimgray;
+$nonplayer: #5c0838;
+$nonplayer-light: #8d2660;
+$pre-captured: pink;
+$captured: red;
+$alt-captured: #990000;
+$moved: gray;
+$indicator: green;
+$last-move: orange;
+$capturable: yellow;
+$clickable: yellow;
+$selectable: yellow;
+$selected: blue;
+$victory: yellow;
+
 .base {
-    stroke: black;
+    stroke: $base-stroke;
     stroke-width: 8;
-    fill: lightgrey;
+    fill: $background-fill;
 }
 .base-no-fill {
-    stroke: black;
+    stroke: $base-stroke;
     stroke-width: 8;
 }
 .arrow {
-    stroke: black;
+    stroke: $base-stroke;
     stroke-width: 3;
 }
 .white-background {
     fill: white;
 }
 .background {
-    fill: lightgray;
+    fill: $background-fill;
 }
 .background2 {
-    fill: gray;
+    fill: $alt-background-fill;
 }
 .background3 {
-    fill: dimgray;
+    fill: $alt-alt-background-fill;
 }
 .player0 {
-    fill: #994d00;
+    fill: $player0;
 }
 .player0-stroke {
-    stroke: #994d00;
+    stroke: $player0;
 }
 .player1 {
-    fill: #ffc34d;
+    fill: $player1;
 }
 .player1-stroke {
-    stroke: #ffc34d;
+    stroke: $player1;
 }
 .other-piece {
-    fill: #5c0838;
+    fill: $nonplayer;
 }
 .other-piece-light {
-    fill: #8d2660;
+    fill: $nonplayer-light;
 }
 .other-piece-stroke {
-    stroke: #5c0838;
+    stroke: $nonplayer;
 }
 .dashed-stroke {
     stroke-dasharray: 2;
 }
 .pre-captured {
-    fill: pink;
+    fill: $pre-captured;
 }
 .captured {
-    fill: red;
+    fill: $captured;
 }
 .captured2 {
-    fill: #990000;
+    fill: $alt-captured;
 }
 .captured-stroke {
-    stroke: red;
+    stroke: $captured;
 }
 .moved {
-    fill: gray;
+    fill: $moved;
 }
 .moved-stroke {
-    stroke: gray;
+    stroke: $moved;
 }
 .indicator {
-    fill: green;
+    fill: $indicator;
     stroke: none;
 }
 .highlighted {
-    stroke: #e6e600;
+    stroke: $selectable;
 }
 .last-move {
-    stroke: orange;
+    stroke: $last-move;
 }
 .victory {
-    fill: #e6e600;
+    fill: $victory;
 }
 .victory-stroke {
-    stroke: #e6e600;
+    stroke: $victory;
 }
 .selected {
-    stroke: blue;
+    stroke: $selected;
 }
 .selected-fill {
-    fill: blue;
+    fill: $selected;
 }
 .clickable {
-    stroke: yellow;
+    stroke: $clickable;;
 }
 .capturable {
     stroke-width: 2;
-    stroke: yellow;
+    stroke: $capturable;
 }
 .capturable:hover {
     stroke-width: 8;

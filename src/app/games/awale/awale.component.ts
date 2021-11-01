@@ -14,7 +14,7 @@ import { AwaleTutorial } from './AwaleTutorial';
 @Component({
     selector: 'app-awale-component',
     templateUrl: './awale.component.html',
-    styleUrls: ['../../components/game-components/game-component/game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 export class AwaleComponent extends RectangularGameComponent<AwaleRules,
                                                              AwaleMove,
