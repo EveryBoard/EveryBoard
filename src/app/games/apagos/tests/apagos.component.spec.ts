@@ -7,7 +7,7 @@ import { ApagosMessage } from '../ApagosMessage';
 import { ApagosMove } from '../ApagosMove';
 import { ApagosState } from '../ApagosState';
 
-fdescribe('ApagosComponent', () => {
+describe('ApagosComponent', () => {
 
     let componentTestUtils: ComponentTestUtils<ApagosComponent>;
 

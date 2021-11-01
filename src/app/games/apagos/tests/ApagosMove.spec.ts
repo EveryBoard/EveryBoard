@@ -1,9 +1,9 @@
+import { Player } from 'src/app/jscaip/Player';
+import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { ApagosCoord } from '../ApagosCoord';
 import { ApagosMessage } from '../ApagosMessage';
 import { ApagosMove } from '../ApagosMove';
-import { ApagosRules } from '../ApagosRules';
-import { ApagosState } from '../ApagosState';
 
 describe('ApagosMove', () => {
 
@@ -20,13 +20,14 @@ describe('ApagosMove', () => {
         expect(invalidMove).toEqual(MGPFallible.failure(ApagosMessage.PIECE_SHOULD_MOVE_DOWNWARD()));
     });
     it('ApagosMove.encoder should be correct', () => {
-        // TODOTODO
-        // const rules: ApagosRules = new ApagosRules(ApagosState);
-        // const minimax: ApagosMinimax = new ApagosMinimax(rules, 'ApagosMinimax');
-        // const firstTurnMoves: ApagosMove[] = minimax.getListMoves(rules.node);
-        // for (const move of firstTurnMoves) {
-        //     NumberEncoderTestUtils.expectToBeCorrect(ApagosMove.encoder, move);
-        // }
+        const moves: ApagosMove[] = [
+            ApagosMove.drop(ApagosCoord.THREE, Player.ZERO),
+            ApagosMove.transfer(ApagosCoord.THREE, ApagosCoord.from(1)).get(),
+            ...ApagosMove.ALL_MOVES,
+        ];
+        for (const move of moves) {
+            NumberEncoderTestUtils.expectToBeCorrect(ApagosMove.encoder, move);
+        }
     });
     it('Should override equals correctly', () => {
         // TODOTODO

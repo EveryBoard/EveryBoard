@@ -31,12 +31,14 @@ export class ApagosMove extends Move {
             return ApagosMove.ALL_MOVES.length;
         }
         public encodeNumber(move: ApagosMove): number {
-            return ApagosMove.ALL_MOVES.indexOf(move);
+            const moveIndex: number = ApagosMove.ALL_MOVES.findIndex((m: ApagosMove) => m.equals(move));
+            assert(moveIndex >= 0, move.toString() + ' is not part of possibles moves of Apagos!');
+            return moveIndex;
         }
         public decodeNumber(encodedMove: number): ApagosMove {
             const move: ApagosMove = ApagosMove.ALL_MOVES[encodedMove];
             assert(move != null, encodedMove + ' is not a valid encoded number for ApagosMove decoder');
-            return ApagosMove.ALL_MOVES[encodedMove];
+            return move;
         }
     }
     public static drop(coord: ApagosCoord, piece: Player): ApagosMove {
