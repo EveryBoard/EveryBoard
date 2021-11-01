@@ -10,7 +10,7 @@ const firestore = admin.firestore();
 // Create a new function which is triggered on changes to /status/{uid}
 // Note: This is a Realtime Database trigger, *not* Cloud Firestore.
 exports.onUserStatusChanged = functions.database.ref('/status/{uid}').onUpdate(
-    async (change: any, context: any) => {
+    async(change: any, context: any) => {
         console.log(context.params.uid + " now");
         const eventStatus = change.after.val();
 
@@ -25,4 +25,8 @@ exports.onUserStatusChanged = functions.database.ref('/status/{uid}').onUpdate(
         eventStatus.last_changed = new Date(eventStatus.last_changed);
 
         return joueurFirestoreRef.set(eventStatus, { merge: true });
+    });
+exports.test = functions.database.ref('/test').onUpdate(
+    async(change: any, context: any) => {
+        console.log('saluk');
     });
