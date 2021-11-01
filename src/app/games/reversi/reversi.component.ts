@@ -16,7 +16,7 @@ import { ReversiTutorial } from './ReversiTutorial';
 @Component({
     selector: 'app-reversi',
     templateUrl: './reversi.component.html',
-    styleUrls: ['../../components/game-components/game-component/game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 export class ReversiComponent extends RectangularGameComponent<ReversiRules,
                                                                ReversiMove,

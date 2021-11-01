@@ -18,7 +18,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 @Component({
     selector: 'app-pentago',
     templateUrl: './pentago.component.html',
-    styleUrls: ['../../components/game-components/game-component/game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 export class PentagoComponent extends RectangularGameComponent<PentagoRules,
                                                                PentagoMove,
