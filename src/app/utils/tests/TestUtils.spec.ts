@@ -15,7 +15,6 @@ import { JoueursDAO } from '../../dao/JoueursDAO';
 import { AuthenticationService } from '../../services/AuthenticationService';
 import { MGPNode } from '../../jscaip/MGPNode';
 import { GameWrapper } from '../../components/wrapper-components/GameWrapper';
-import { Player } from '../../jscaip/Player';
 import { AuthenticationServiceMock } from '../../services/tests/AuthenticationService.spec';
 import { OnlineGameWrapperComponent }
     from '../../components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
@@ -28,7 +27,6 @@ import { ChatDAOMock } from '../../dao/tests/ChatDAOMock.spec';
 import { PartDAOMock } from '../../dao/tests/PartDAOMock.spec';
 import { LocalGameWrapperComponent }
     from '../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { HumanDuration } from '../TimeUtils';
 import { Rules } from 'src/app/jscaip/Rules';
 

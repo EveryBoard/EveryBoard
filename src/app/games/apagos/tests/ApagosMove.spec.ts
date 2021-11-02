@@ -5,7 +5,7 @@ import { ApagosCoord } from '../ApagosCoord';
 import { ApagosMessage } from '../ApagosMessage';
 import { ApagosMove } from '../ApagosMove';
 
-describe('ApagosMove', () => {
+fdescribe('ApagosMove', () => {
 
     it('should refuse creating immobile sliding', () => {
         // given a move whose landing coord is lower than starting

@@ -1,10 +1,9 @@
 import { Player } from 'src/app/jscaip/Player';
-import { ComparableObject } from 'src/app/utils/Comparable';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { assert } from 'src/app/utils/utils';
 
-export class ApagosSquare implements ComparableObject {
+export class ApagosSquare {
 
     public static from(nbZero: number, nbOne: number, nbTotal: number): MGPFallible<ApagosSquare> {
         if (nbZero + nbOne > nbTotal) {
@@ -62,8 +61,5 @@ export class ApagosSquare implements ComparableObject {
     }
     public equals(other: ApagosSquare): boolean {
         return this.containing.equals(other.containing);
-    }
-    public toString(): string {
-        throw new Error('TODOTODO: toString not implemented.');
     }
 }

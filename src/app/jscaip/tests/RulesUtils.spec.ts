@@ -17,7 +17,7 @@ export class RulesUtils {
         expect(legality.legal).toBeTruthy();
         if (legality.legal.isSuccess()) {
             const resultingState: AbstractGameState = rules.applyLegalMove(move, state, legality);
-            expect(resultingState.equals(expectedState)).withContext('state should be equals').toBeTrue();
+            expect(resultingState).withContext('state should be equals').toEqual(expectedState);
         } else {
             throw new Error('expected move to be valid but it is not: ' + legality.legal.getReason());
         }

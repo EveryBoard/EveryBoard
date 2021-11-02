@@ -93,19 +93,19 @@ export class ApagosComponent extends GameComponent<ApagosRules,
             this.movedSquare.push(higherIndex);
         }
         const climbingSquare: ApagosSquare = this.board[higherIndex];
-        const landingIndex: number = this.getLowestPlayerPiece(climbingSquare, piece);
+        const totalPieces: number = climbingSquare.count(Player.NONE);
+        const landingIndex: number = this.getLowestPlayerPiece(climbingSquare, piece, totalPieces);
         this.droppedPiece = {
             square: higherIndex,
             piece: landingIndex,
         };
     }
-    private getLowestPlayerPiece(square: ApagosSquare, player: Player): number {
+    private getLowestPlayerPiece(square: ApagosSquare, player: Player, totalPieces: number): number {
         const nbPiecePlayer: number = square.count(player);
-        if (player === square.getDominatingPlayer()) {
+        if (player === Player.ZERO) {
             return nbPiecePlayer - 1;
         } else {
-            const nbPieceOpponent: number = square.count(player.getOpponent());
-            return nbPiecePlayer + nbPieceOpponent - 1;
+            return totalPieces - nbPiecePlayer;
         }
     }
     public showLastTransfer(lastMove: ApagosMove): void {
@@ -113,7 +113,8 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         const previousPlayer: Player = previousState.getCurrentPlayer();
         const leftSquare: number = lastMove.starting.get().x;
         const previousSquare: ApagosSquare = previousState.board[leftSquare];
-        const leftPieceIndex: number = this.getLowestPlayerPiece(previousSquare, previousPlayer);
+        const previousTotal: number = previousSquare.count(Player.NONE);
+        const leftPieceIndex: number = this.getLowestPlayerPiece(previousSquare, previousPlayer, previousTotal);
         this.leftPiece = {
             square: leftSquare,
             piece: leftPieceIndex,
@@ -122,7 +123,8 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         const currentPlayer: Player = this.rules.node.gameState.getCurrentPlayer();
         const landingCoord: number = lastMove.landing.x;
         const landedSquare: ApagosSquare = this.board[landingCoord];
-        const landedPieceIndex: number = this.getLowestPlayerPiece(landedSquare, currentPlayer);
+        const landingTotal: number = landedSquare.count(Player.NONE);
+        const landedPieceIndex: number = this.getLowestPlayerPiece(landedSquare, currentPlayer, landingTotal);
         this.droppedPiece = {
             square: landingCoord,
             piece: landedPieceIndex,
@@ -217,6 +219,7 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         const classes: string[] = [];
         let zero: number = square.count(Player.ZERO);
         let one: number = square.count(Player.ONE);
+        const neutral: number = square.count(Player.NONE) - (one + zero);
         if (this.droppedPiece.piece === i && this.droppedPiece.square === x) {
             classes.push('last-move');
         } else if (this.leftPiece.square === x) {
@@ -229,20 +232,19 @@ export class ApagosComponent extends GameComponent<ApagosRules,
                 else one++;
             }
         }
-        if (zero >= one) {
-            if (i < zero) {
-                classes.push('player0');
-            } else if (i < (zero + one)) {
-                classes.push('player1');
-            }
-        } else if (one > zero) {
-            if (i < one) {
-                classes.push('player1');
-            } else if (i < (zero + one)) {
-                classes.push('player0');
-            }
+        const pieceColor: string | null = this.getPieceColor(i, zero, neutral);
+        if (pieceColor != null) {
+            classes.push(pieceColor);
         }
         return classes;
+    }
+    private getPieceColor(i: number, zero: number, neutral: number): string {
+        if (i < zero) {
+            return 'player0';
+        } else if (i >= (zero + neutral)) {
+            return 'player1';
+        }
+
     }
     public async onSquareClick(x: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#square_' + x);

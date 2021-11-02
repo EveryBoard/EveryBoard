@@ -8,7 +8,7 @@ import { ApagosMove } from '../ApagosMove';
 import { ApagosNode, ApagosRules } from '../ApagosRules';
 import { ApagosState } from '../ApagosState';
 
-describe('ApagosRules', () => {
+fdescribe('ApagosRules', () => {
 
     let rules: ApagosRules;
 

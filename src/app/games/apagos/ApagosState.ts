@@ -78,7 +78,4 @@ export class ApagosState extends GameState<ApagosCoord, ApagosSquare> {
             return this.remaining.equals(other.remaining);
         }
     }
-    public toString(): string {
-        throw new Error('TODOTODO: toString not implemented.');
-    }
 }

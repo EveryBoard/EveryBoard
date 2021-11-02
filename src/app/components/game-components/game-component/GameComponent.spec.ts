@@ -15,7 +15,7 @@ import { GameWrapperMessages } from '../../wrapper-components/GameWrapper';
 import { LocalGameWrapperComponent } from '../../wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { AbstractGameComponent } from './GameComponent';
 
-describe('GameComponent', () => {
+fdescribe('GameComponent', () => {
 
     const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub();
 
