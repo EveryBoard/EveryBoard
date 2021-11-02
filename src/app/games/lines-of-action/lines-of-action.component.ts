@@ -18,7 +18,7 @@ import { Utils } from 'src/app/utils/utils';
 @Component({
     selector: 'app-linesofaction',
     templateUrl: './lines-of-action.component.html',
-    styleUrls: ['../../components/game-components/game-component/game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActionRules,
                                                                      LinesOfActionMove,

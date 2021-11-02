@@ -17,7 +17,7 @@ import { Utils } from 'src/app/utils/utils';
 @Component({
     selector: 'app-pylos',
     templateUrl: './pylos.component.html',
-    styleUrls: ['../../components/game-components/game-component/game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosState> {
 

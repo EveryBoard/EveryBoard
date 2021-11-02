@@ -30,7 +30,7 @@ interface Scale {
 @Component({
     selector: 'app-six',
     templateUrl: './six.component.html',
-    styleUrls: ['../../components/game-components/game-component/game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixState, SixLegalityStatus> {
 

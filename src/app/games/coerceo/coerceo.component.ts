@@ -18,7 +18,7 @@ import { CoerceoTutorial } from './CoerceoTutorial';
 @Component({
     selector: 'app-coerceo',
     templateUrl: './coerceo.component.html',
-    styleUrls: ['../../components/game-components/game-component/game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
                                                               CoerceoMove,

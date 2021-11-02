@@ -20,7 +20,7 @@ import { of } from 'rxjs';
  */
 @Component({
     template: '',
-    styleUrls: ['./game-component.css'],
+    styleUrls: ['./game-component.scss'],
 })
 export abstract class GameComponent<R extends Rules<M, S, L>,
                                     M extends Move,

@@ -33,7 +33,7 @@ export class HexaDirArrow {
 @Component({
     selector: 'app-abalone',
     templateUrl: './abalone.component.html',
-    styleUrls: ['../../components/game-components/game-component/game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
                                                              AbaloneMove,

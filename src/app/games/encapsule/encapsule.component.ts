@@ -18,7 +18,7 @@ import { assert } from 'src/app/utils/utils';
 @Component({
     selector: 'app-encapsule',
     templateUrl: './encapsule.component.html',
-    styleUrls: ['../../components/game-components/game-component/game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
                                                                  EncapsuleMove,

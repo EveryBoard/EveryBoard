@@ -24,7 +24,7 @@ import { TablutTutorial } from './TablutTutorial';
 @Component({
     selector: 'app-tablut',
     templateUrl: './tablut.component.html',
-    styleUrls: ['../../components/game-components/game-component/game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 export class TablutComponent extends RectangularGameComponent<TablutRules,
                                                               TablutMove,

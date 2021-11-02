@@ -24,7 +24,7 @@ import { Utils } from 'src/app/utils/utils';
 @Component({
     selector: 'app-gipf',
     templateUrl: './gipf.component.html',
-    styleUrls: ['../../components/game-components/game-component/game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 export class GipfComponent extends HexagonalGameComponent<GipfRules, GipfMove, GipfState, GipfLegalityStatus> {
 

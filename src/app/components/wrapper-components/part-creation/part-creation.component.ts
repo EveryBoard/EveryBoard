@@ -41,7 +41,6 @@ interface ComparableSubscription {
 @Component({
     selector: 'app-part-creation',
     templateUrl: './part-creation.component.html',
-    styleUrls: ['../../../../../node_modules/bulma-slider/dist/css/bulma-slider.min.css'],
 })
 export class PartCreationComponent implements OnInit, OnDestroy {
     /*

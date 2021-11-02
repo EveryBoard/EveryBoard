@@ -17,7 +17,7 @@ import { GoTutorial } from './GoTutorial';
 @Component({
     selector: 'app-go',
     templateUrl: './go.component.html',
-    styleUrls: ['../../components/game-components/game-component/game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoState, GoPiece, GoLegalityStatus> {
 
