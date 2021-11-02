@@ -79,7 +79,7 @@ describe('JoinerService', () => {
             expect(dao.update).toHaveBeenCalled();
         }));
         it('should return false when joining an invalid joiner', fakeAsync(async() => {
-            spyOn(dao, 'read').and.returnValue(null);
+            spyOn(dao, 'read').and.resolveTo(null);
             expectAsync(service.joinGame('invalidJoinerId', 'creator')).toBeResolvedTo(false);
         }));
     });

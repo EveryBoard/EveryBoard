@@ -141,7 +141,7 @@ describe('ChatService', () => {
         it('should not send message if no chat is observed', fakeAsync(async() => {
             // given that no chat is observed
             // when sending a message
-            const result: Promise<MGPValidation> = service.sendMessage(null, 2, 'foo');
+            const result: Promise<MGPValidation> = service.sendMessage('foo', 2, 'foo');
             // then the message is rejected
             await expectAsync(result).toBeResolvedTo(MGPValidation.failure('Cannot send message if not observing chat'));
         }));

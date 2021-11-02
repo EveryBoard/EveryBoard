@@ -19,6 +19,7 @@ import { AuthenticationServiceMock } from './AuthenticationService.spec';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 import { GameServiceMessages } from '../GameServiceMessages';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Utils } from 'src/app/utils/utils';
 
 describe('GameService', () => {
 
@@ -79,17 +80,8 @@ describe('GameService', () => {
                 request: Request.takeBackAsked(player),
                 result: MGPResult.UNACHIEVED.value,
             });
-            const getError: (player: Player) => Promise<string> = async(player: Player) => {
-                let errorMessage: string;
-                try {
-                    await service.acceptTakeBack('joinerId', part, player, [0, 1]);
-                } catch (error) {
-                    errorMessage = error.message;
-                }
-                return errorMessage;
-            };
-            const error: string = await getError(player);
-            expect(error).toEqual('Assertion failure: Illegal to accept your own request.');
+            const result: Promise<void> = service.acceptTakeBack('joinerId', part, player, [0, 1]);
+            await expectAsync(result).toBeRejectedWithError('Assertion failure: Illegal to accept your own request.');
         }
     }));
     it('acceptConfig should delegate to joinerService and call startGameWithConfig', fakeAsync(async() => {
@@ -215,8 +207,8 @@ describe('GameService', () => {
             spyOn(service.joinerService, 'readJoinerById').and.returnValue(Promise.resolve(lastGameJoiner));
             let called: boolean = false;
             spyOn(service.partDao, 'set').and.callFake(async(_id: string, element: IPart) => {
-                expect(element.playerZero).toEqual(lastPart.doc.playerOne);
-                expect(element.playerOne).toEqual(lastPart.doc.playerZero);
+                expect(element.playerZero).toEqual(Utils.getDefinedOrFail(lastPart.doc.playerOne));
+                expect(element.playerOne).toEqual(Utils.getDefinedOrFail(lastPart.doc.playerZero));
                 called = true;
             });
 
@@ -258,8 +250,8 @@ describe('GameService', () => {
             spyOn(service.joinerService, 'readJoinerById').and.returnValue(Promise.resolve(lastGameJoiner));
             let called: boolean = false;
             spyOn(service.partDao, 'set').and.callFake(async(_id: string, element: IPart) => {
-                expect(element.playerZero).toEqual(lastPart.doc.playerOne);
-                expect(element.playerOne).toEqual(lastPart.doc.playerZero);
+                expect(element.playerZero).toEqual(Utils.getDefinedOrFail(lastPart.doc.playerOne));
+                expect(element.playerOne).toEqual(Utils.getDefinedOrFail(lastPart.doc.playerZero));
                 called = true;
             });
 

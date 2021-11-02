@@ -6,7 +6,6 @@ export abstract class GameStateWithTable<P> extends GameState<Coord, P> {
 
     public constructor(public readonly board: Table<P>, turn: number) {
         super(turn);
-        if (board == null) throw new Error('Board cannot be null.');
     }
     public getPieceAt(coord: Coord): P {
         if (this.isOnBoard(coord)) {

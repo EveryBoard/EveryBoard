@@ -3,20 +3,6 @@ import { MGPOptional } from '../MGPOptional';
 
 describe('MGPMap', () => {
 
-    it('Null key should throw error with every method', () => {
-        const map: MGPMap<string, string> = new MGPMap();
-        expect(() => map.set(null, '')).toThrowError('Key cannot be null!');
-        expect(() => map.put(null, '')).toThrowError('Key cannot be null!');
-        expect(() => map.get(null)).toThrowError('Key cannot be null!');
-        expect(() => map.replace(null, '')).toThrowError('Key cannot be null!');
-        expect(() => map.delete(null)).toThrowError('Key cannot be null!');
-    });
-    it('Null value should throw error', () => {
-        const map: MGPMap<string, string> = new MGPMap();
-        expect(() => map.set('oui', null)).toThrowError('Value cannot be null!');
-        expect(() => map.put('oui', null)).toThrowError('Value cannot be null!');
-        expect(() => map.replace('oui', null)).toThrowError('Value cannot be null, use delete instead!');
-    });
     it('Set should bug if key value was already present', () => {
         const map: MGPMap<string, string> = new MGPMap();
         map.set('oui', 'yes');

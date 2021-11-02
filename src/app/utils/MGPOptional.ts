@@ -21,8 +21,7 @@ export class MGPOptional<T extends Comparable> {
             }
         };
     }
-    public static of<T extends Comparable>(value: NonNullable<T>): MGPOptional<T> {
-        if (value == null) throw new Error('Optional cannot be created with empty value, use MGPOptional.empty instead');
+    public static of<T extends Comparable>(value: T): MGPOptional<T> {
         return new MGPOptional(value);
     }
     public static ofNullable<T extends Comparable>(value: T | null | undefined): MGPOptional<T> {

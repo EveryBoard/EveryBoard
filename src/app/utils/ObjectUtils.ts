@@ -3,7 +3,7 @@ export type Dictionary = { [key: string]: any };
 
 export class ObjectDifference {
 
-    public static from(before: Dictionary, after: Dictionary): ObjectDifference {
+    public static from(before: Dictionary | null, after: Dictionary | null): ObjectDifference {
         const changes: ObjectDifference = new ObjectDifference({}, {}, {});
         if (before == null) {
             changes.added = { ...after };

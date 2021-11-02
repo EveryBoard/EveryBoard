@@ -5,10 +5,6 @@ describe('MGPFallible', () => {
 
     describe('success', () => {
         const value: MGPFallible<number> = MGPFallible.success(42);
-        it('should not accept null values', () => {
-            expect(() => MGPFallible.success(null))
-                .toThrowError('Fallible cannot be created with empty value, use MGPFallible.failure instead');
-        });
         it('should create a success value', () => {
             expect(value.isSuccess()).toBeTrue();
             expect(value.isFailure()).toBeFalse();

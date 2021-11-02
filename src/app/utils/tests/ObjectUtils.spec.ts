@@ -23,7 +23,7 @@ describe('getUpdateType', () => {
         expect(diff).toEqual(expectedDiff);
     });
     it('Should compare json inside a list deeply', () => {
-        const before: unknown = {
+        const before: Dictionary = {
             liste: [
                 {
                     monTruc: {
@@ -34,7 +34,7 @@ describe('getUpdateType', () => {
                     letPet: [],
                 }],
         };
-        const after: unknown = {
+        const after: Dictionary = {
             liste: [
                 {
                     monTruc: {
@@ -50,10 +50,10 @@ describe('getUpdateType', () => {
         expect(diff).toEqual(expectedDiff);
     });
     it('should handle null values', () => {
-        const before: unknown = {
+        const before: Dictionary = {
             someKey: null,
         };
-        const after: unknown = {
+        const after: Dictionary = {
             someKey: null,
         };
         const expectedDiff: ObjectDifference = new ObjectDifference({}, {}, {});
@@ -61,10 +61,10 @@ describe('getUpdateType', () => {
         expect(diff).toEqual(expectedDiff);
     });
     it('should handle a null value being set', () => {
-        const before: unknown = {
+        const before: Dictionary = {
             someKey: null,
         };
-        const after: unknown = {
+        const after: Dictionary = {
             someKey: true,
         };
         const expectedDiff: ObjectDifference = new ObjectDifference({ someKey: true }, {}, {});
@@ -72,19 +72,19 @@ describe('getUpdateType', () => {
         expect(diff).toEqual(expectedDiff);
     });
     it('should handle a null object', () => {
-        const before: unknown = {
+        const before: Dictionary = {
             someKey: 42,
         };
-        const after: unknown = null;
+        const after: Dictionary | null = null;
         const expectedDiff: ObjectDifference = new ObjectDifference({}, {}, { someKey: 42 });
         const diff: ObjectDifference = ObjectDifference.from(before, after);
         expect(diff).toEqual(expectedDiff);
     });
     it('should handle a modified list of objects', () => {
-        const before: unknown = {
+        const before: Dictionary = {
             someKey: [{ num: 1 }],
         };
-        const after: unknown = {
+        const after: Dictionary = {
             someKey: [{ num: 4 }],
         };
         const expectedDiff: ObjectDifference = new ObjectDifference({}, { someKey: [{ num: 4 }] }, {});
@@ -92,10 +92,10 @@ describe('getUpdateType', () => {
         expect(diff).toEqual(expectedDiff);
     });
     it('should fail when a list becomes another type', () => {
-        const before: unknown = {
+        const before: Dictionary = {
             someKey: [],
         };
-        const after: unknown = {
+        const after: Dictionary = {
             someKey: 0,
         };
         expect(() => ObjectDifference.from(before, after)).toThrowError('Thing should not change type');

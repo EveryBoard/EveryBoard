@@ -130,7 +130,8 @@ export class SimpleComponentTestUtils<T> {
     public expectElementToHaveClass(elementName: string, cssClass: string): void {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(elementName + ' should exist').toBeTruthy();
-        const elementClasses: string[] = Utils.getNonNullOrFail(element.attributes).class.split(' ').sort();
+        expect(element.attributes.class).withContext(`${elementName} should have a class attribute`).not.toBeNull();
+        const elementClasses: string[] = Utils.getNonNullOrFail(element.attributes.class).split(' ').sort();
         expect(elementClasses).withContext(elementName + ' should contain class ' + cssClass).toContain(cssClass);
     }
     public expectElementNotToExist(elementName: string): void {
@@ -227,7 +228,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     {
         if (previousState !== undefined) {
             this.gameComponent.rules.node =
-                new MGPNode(new MGPNode(null, null, previousState), previousMove, state);
+                new MGPNode(new MGPNode(null, null, previousState), previousMove || null, state);
         } else {
             this.gameComponent.rules.node = new MGPNode(null, previousMove || null, state);
         }
@@ -317,7 +318,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
             this.onLegalUserMoveSpy.calls.reset();
         }
     }
-    private getScore(score?: number): number {
+    private getScore(score?: number): number | null {
         if (score === undefined) {
             return null;
         } else {
@@ -374,20 +375,23 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     public expectElementToHaveClass(elementName: string, cssClass: string): void {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(elementName + ' should exist').toBeTruthy();
-        const elementClasses: string[] = element.attributes.class.split(' ').sort();
+        expect(element.attributes.class).withContext(`${elementName} should have a class attribute`).not.toBeNull();
+        const elementClasses: string[] = Utils.getNonNullOrFail(element.attributes.class).split(' ').sort();
         expect(elementClasses).toContain(cssClass);
     }
     public expectElementNotToHaveClass(elementName: string, cssClass: string): void {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(elementName + ' should exist').toBeTruthy();
-        const elementClasses: string[] = element.attributes.class.split(' ').sort();
+        expect(element.attributes.class).withContext(`${elementName} should have a class attribute`).not.toBeNull();
+        const elementClasses: string[] = Utils.getNonNullOrFail(element.attributes.class).split(' ').sort();
         expect(elementClasses).not.toContain(cssClass);
     }
     public expectElementToHaveClasses(elementName: string, classes: string[]): void {
         const classesSorted: string[] = [...classes].sort();
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(elementName + ' should exist').toBeTruthy();
-        const elementClasses: string[] = element.attributes.class.split(' ').sort();
+        expect(element.attributes.class).withContext(`${elementName} should have a class attribute`).not.toBeNull();
+        const elementClasses: string[] = Utils.getNonNullOrFail(element.attributes.class).split(' ').sort();
         expect(elementClasses).toEqual(classesSorted);
     }
     public findElement(elementName: string): DebugElement {
