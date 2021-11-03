@@ -16,6 +16,7 @@ import { Rules } from 'src/app/jscaip/Rules';
 import { Direction } from 'src/app/jscaip/Direction';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
+import { Router } from '@angular/router';
 
 import { EpaminondasRules } from 'src/app/games/epaminondas/EpaminondasRules';
 import { EpaminondasState } from 'src/app/games/epaminondas/EpaminondasState';
@@ -471,6 +472,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             expect(wrapper.stepIndex).toEqual(0);
         }));
         it('Should redirect to local game when asking for it when finished', fakeAsync(async() => {
+            const router: Router = TestBed.inject(Router);
             // Given a finish tutorial
             wrapper.startTutorial([
                 TutorialStep.informational(
@@ -483,11 +485,11 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await componentTestUtils.clickElement('#nextButton');
 
             // when clicking play locally
-            spyOn(componentTestUtils.wrapper.router, 'navigate').and.callThrough();
+            spyOn(router, 'navigate').and.callThrough();
             await componentTestUtils.clickElement('#playLocallyButton');
 
             // expect navigator to have been called
-            expect(componentTestUtils.wrapper.router.navigate).toHaveBeenCalledWith(['local/Quarto']);
+            expect(router.navigate).toHaveBeenCalledWith(['local/Quarto']);
         }));
         it('Should redirect to online game when asking for it when finished and user is online', fakeAsync(async() => {
             // Given a finish tutorial

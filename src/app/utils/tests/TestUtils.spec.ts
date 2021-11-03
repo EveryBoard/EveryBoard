@@ -4,15 +4,14 @@ import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
-
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';
 import { AbstractGameState } from '../../jscaip/GameState';
 import { Move } from '../../jscaip/Move';
 import { MGPValidation } from '../MGPValidation';
 import { AppModule } from '../../app.module';
-import { JoueursDAO } from '../../dao/JoueursDAO';
-import { AuthenticationService } from '../../services/AuthenticationService';
+import { UserDAO } from '../../dao/UserDAO';
+import { AuthenticationService, AuthUser } from '../../services/AuthenticationService';
 import { MGPNode } from '../../jscaip/MGPNode';
 import { GameWrapper } from '../../components/wrapper-components/GameWrapper';
 import { Player } from '../../jscaip/Player';
@@ -23,7 +22,7 @@ import { ChatDAO } from '../../dao/ChatDAO';
 import { JoinerDAOMock } from '../../dao/tests/JoinerDAOMock.spec';
 import { PartDAO } from '../../dao/PartDAO';
 import { JoinerDAO } from '../../dao/JoinerDAO';
-import { JoueursDAOMock } from '../../dao/tests/JoueursDAOMock.spec';
+import { UserDAOMock } from '../../dao/tests/UserDAOMock.spec';
 import { ChatDAOMock } from '../../dao/tests/ChatDAOMock.spec';
 import { PartDAOMock } from '../../dao/tests/PartDAOMock.spec';
 import { LocalGameWrapperComponent }
@@ -32,6 +31,16 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 import { HumanDuration } from '../TimeUtils';
 import { Rules } from 'src/app/jscaip/Rules';
 import { Utils } from '../utils';
+import { AutofocusDirective } from 'src/app/directives/autofocus.directive';
+import { ToggleVisibilityDirective } from 'src/app/directives/toggle-visibility.directive';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { AngularFireModule } from '@angular/fire';
+import { USE_EMULATOR as USE_FIRESTORE_EMULATOR } from '@angular/fire/firestore';
+import { USE_EMULATOR as USE_DATABASE_EMULATOR } from '@angular/fire/database';
+import { USE_EMULATOR as USE_AUTH_EMULATOR } from '@angular/fire/auth';
+import { USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/functions';
+import { environment } from 'src/environments/environment';
 
 @Component({})
 export class BlankComponent {}
@@ -76,12 +85,13 @@ export class SimpleComponentTestUtils<T> {
                 ]),
                 FormsModule,
                 ReactiveFormsModule,
-                BrowserAnimationsModule,
                 NoopAnimationsModule,
             ],
             declarations: [
                 componentType,
                 HumanDuration,
+                AutofocusDirective,
+                ToggleVisibilityDirective,
             ],
             schemas: [
                 CUSTOM_ELEMENTS_SCHEMA,
@@ -91,7 +101,7 @@ export class SimpleComponentTestUtils<T> {
                 { provide: PartDAO, useClass: PartDAOMock },
                 { provide: JoinerDAO, useClass: JoinerDAOMock },
                 { provide: ChatDAO, useClass: ChatDAOMock },
-                { provide: JoueursDAO, useClass: JoueursDAOMock },
+                { provide: UserDAO, useClass: UserDAOMock },
             ],
         }).compileComponents();
         AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
@@ -121,6 +131,9 @@ export class SimpleComponentTestUtils<T> {
     public findElement(elementName: string): DebugElement {
         return this.fixture.debugElement.query(By.css(elementName));
     }
+    public findElementByDirective(directive: Type<unknown>): DebugElement {
+        return this.fixture.debugElement.query(By.directive(directive));
+    }
     public destroy(): void {
         return this.fixture.destroy();
     }
@@ -143,6 +156,13 @@ export class SimpleComponentTestUtils<T> {
         expect(element).withContext(elementName + ' should exist').toBeTruthy();
         return element;
     }
+
+    public fillInput(elementName: string, value: string): void {
+        const element: DebugElement = this.findElement(elementName);
+        expect(element).withContext(elementName + ' should exist in order to fill its value').toBeTruthy();
+        element.nativeElement.value = value;
+        element.nativeElement.dispatchEvent(new Event('input'));
+    }
 }
 type MyGameComponent = GameComponent<Rules<Move, AbstractGameState>,
                                            Move,
@@ -164,7 +184,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     : Promise<ComponentTestUtils<T>>
     {
         const testUtils: ComponentTestUtils<T> = await ComponentTestUtils.basic(game);
-        AuthenticationServiceMock.setUser(AuthenticationService.NOT_CONNECTED);
+        AuthenticationServiceMock.setUser(AuthUser.NOT_CONNECTED);
         testUtils.prepareFixture(wrapperKind);
         testUtils.detectChanges();
         tick(1);
@@ -185,7 +205,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
                 { provide: ActivatedRoute, useValue: activatedRouteStub },
-                { provide: JoueursDAO, useClass: JoueursDAOMock },
+                { provide: UserDAO, useClass: UserDAOMock },
                 { provide: AuthenticationService, useClass: AuthenticationServiceMock },
                 { provide: ChatDAO, useClass: ChatDAOMock },
                 { provide: JoinerDAO, useClass: JoinerDAOMock },
@@ -423,4 +443,28 @@ export function expectStateToBePreVictory(state: AbstractGameState,
     const value: number = minimax.getBoardNumericValue(new MGPNode(null, previousMove, state));
     const expectedValue: number = player.getPreVictory();
     expect(value).toBe(expectedValue);
+}
+
+export async function setupEmulators(): Promise<unknown> {
+    TestBed.configureTestingModule({
+        imports: [
+            AngularFirestoreModule,
+            HttpClientModule,
+            AngularFireModule.initializeApp(environment.firebaseConfig),
+        ],
+        providers: [
+            { provide: USE_AUTH_EMULATOR, useValue: environment.emulatorConfig.auth },
+            { provide: USE_DATABASE_EMULATOR, useValue: environment.emulatorConfig.database },
+            { provide: USE_FIRESTORE_EMULATOR, useValue: environment.emulatorConfig.firestore },
+            { provide: USE_FUNCTIONS_EMULATOR, useValue: environment.emulatorConfig.functions },
+            AuthenticationService,
+        ],
+        schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
+    const http: HttpClient = TestBed.inject(HttpClient);
+    // Clear the firestore data before each test
+    await http.delete('http://localhost:8080/emulator/v1/projects/my-project/databases/(default)/documents').toPromise();
+    // Clear the auth data before each test
+    await http.delete('http://localhost:9099/emulator/v1/projects/my-project/accounts').toPromise();
+    return;
 }

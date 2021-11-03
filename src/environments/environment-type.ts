@@ -7,8 +7,12 @@ export type FirebaseConfig = {
     messagingSenderId: string,
 }
 
+// emulators in the form of [address, port]
 export type EmulatorConfig = {
-    firestore: [string, number] | undefined, // [address, port]
+    firestore: [string, number] | undefined,
+    auth: [string, number] | undefined,
+    database: [string, number] | undefined,
+    functions: [string, number] | undefined,
 }
 
 export type Environment = {

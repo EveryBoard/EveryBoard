@@ -1,6 +1,6 @@
 import { ICurrentPartId, IPart, MGPResult } from 'src/app/domain/icurrentpart';
 import { FirebaseFirestoreDAOMock } from './FirebaseFirestoreDAOMock.spec';
-import { ObservableSubject } from 'src/app/utils/ObservableSubject';
+import { ObservableSubject } from 'src/app/utils/tests/ObservableSubject.spec';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 import { display } from 'src/app/utils/utils';
@@ -24,6 +24,6 @@ export class PartDAOMock extends FirebaseFirestoreDAOMock<IPart> {
         PartDAOMock.partDB = new MGPMap();
     }
     public observeActivesParts(callback: FirebaseCollectionObserver<IPart>): () => void {
-        return this.observingWhere('result', '==', MGPResult.UNACHIEVED.value, callback);
+        return this.observingWhere([['result', '==', MGPResult.UNACHIEVED.value]], callback);
     }
 }

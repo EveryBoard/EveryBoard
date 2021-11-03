@@ -1,9 +1,9 @@
 import { Encoder } from 'src/app/jscaip/Encoder';
-import { Comparable, comparableEquals } from './Comparable';
+import { comparableEqualsIfComparable } from './Comparable';
 import { JSONValue } from './utils';
 
-export class MGPOptional<T extends Comparable> {
-    public static encoder<T extends Comparable>(encoderT: Encoder<T>): Encoder<MGPOptional<T>> {
+export class MGPOptional<T> {
+    public static encoder<T>(encoderT: Encoder<T>): Encoder<MGPOptional<T>> {
         return new class extends Encoder<MGPOptional<T>> {
             public encode(opt: MGPOptional<T>): JSONValue {
                 if (opt.isPresent()) {
@@ -21,14 +21,14 @@ export class MGPOptional<T extends Comparable> {
             }
         };
     }
-    public static of<T extends Comparable>(value: T): MGPOptional<T> {
+    public static of<T>(value: T): MGPOptional<T> {
         return new MGPOptional(value);
     }
-    public static ofNullable<T extends Comparable>(value: T | null | undefined): MGPOptional<T> {
+    public static ofNullable<T>(value: T | null | undefined): MGPOptional<T> {
         if (value == null) return MGPOptional.empty();
         return MGPOptional.of(value as NonNullable<T>);
     }
-    public static empty<T extends Comparable>(): MGPOptional<T> {
+    public static empty<T>(): MGPOptional<T> {
         return new MGPOptional((null as T | null));
     }
     private constructor(private readonly value: T | null) {}
@@ -56,7 +56,7 @@ export class MGPOptional<T extends Comparable> {
         if (other.isAbsent()) {
             return false;
         }
-        return comparableEquals(this.value, other.value);
+        return comparableEqualsIfComparable(this.value, other.value);
     }
     public toString(): string {
         if (this.isAbsent()) {

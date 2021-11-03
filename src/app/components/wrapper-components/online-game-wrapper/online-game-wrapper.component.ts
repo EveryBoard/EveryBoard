@@ -1,14 +1,14 @@
 import { Component, ComponentFactoryResolver, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, Event } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { AuthenticationService } from 'src/app/services/AuthenticationService';
+import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
 import { GameService } from 'src/app/services/GameService';
 import { UserService } from 'src/app/services/UserService';
 import { Move } from '../../../jscaip/Move';
 import { ICurrentPartId, Part, MGPResult, IPart } from '../../../domain/icurrentpart';
 import { CountDownComponent } from '../../normal-component/count-down/count-down.component';
 import { PartCreationComponent } from '../part-creation/part-creation.component';
-import { IJoueurId, IJoueur } from '../../../domain/iuser';
+import { IUserId, IUser } from '../../../domain/iuser';
 import { Request } from '../../../domain/request';
 import { GameWrapper } from '../GameWrapper';
 import { FirebaseCollectionObserver } from 'src/app/dao/FirebaseCollectionObserver';
@@ -69,7 +69,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     public currentPart: Part;
     public currentPartId: string;
     public gameStarted: boolean = false;
-    public opponent: IJoueurId | null = null;
+    public opponent: IUserId | null = null;
+    public playerName: string;
     public currentPlayer: string;
 
     public rematchProposed: boolean = false;
@@ -90,12 +91,12 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 
     constructor(componentFactoryResolver: ComponentFactoryResolver,
                 actRoute: ActivatedRoute,
-                router: Router,
-                userService: UserService,
+                private router: Router,
+                private userService: UserService,
                 authenticationService: AuthenticationService,
-                public gameService: GameService)
+                private gameService: GameService)
     {
-        super(componentFactoryResolver, actRoute, router, userService, authenticationService);
+        super(componentFactoryResolver, actRoute, authenticationService);
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent constructed');
     }
     private extractPartIdFromURL(): string {
@@ -111,6 +112,9 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     }
     private getPlayer(): Player {
         return Player.of(this.observerRole);
+    }
+    public getPlayerName(): string {
+        return this.playerName;
     }
     private isPlayer(player: Player): boolean {
         return this.observerRole === player.value;
@@ -141,9 +145,11 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 await this.setCurrentPartIdOrRedirect();
             }
         });
+        this.userSub = this.authenticationService.getUserObs()
+            .subscribe((user: AuthUser) => {
+                this.playerName = user.username;
+            });
         await this.setCurrentPartIdOrRedirect();
-        this.userSub = this.authenticationService.getJoueurObs()
-            .subscribe((user: { pseudo: string, verified: boolean}) => this.userName = user.pseudo);
     }
     public startGame(iJoiner: IJoiner): void {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.startGame');
@@ -189,8 +195,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 
         switch (updateType) {
             case UpdateType.REQUEST:
-                return await this.onRequest(Utils.getNonNullOrFail(Utils.getDefinedOrFail(part.doc.request)),
-                                            oldPart, part);
+                return await this.onRequest(Utils.getNonNullDefinedOrFail(part.doc.request), oldPart);
             case UpdateType.ACCEPT_TAKE_BACK_WITHOUT_TIME:
                 this.currentPart = oldPart;
                 return;
@@ -497,7 +502,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             return Player.NONE;
         }
     }
-    protected async onRequest(request: Request, oldPart: Part, _part: Part): Promise<void> {
+    protected async onRequest(request: Request, oldPart: Part): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, { called: 'OnlineGameWrapper.onRequest(', request, oldPart });
         switch (request.code) {
             case 'TakeBackAsked':
@@ -550,32 +555,32 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         assert(updatedICurrentPart.doc.playerOne != null, 'should not setPlayersDatas when players data is not received');
         this.currentPlayer = this.players[updatedICurrentPart.doc.turn % 2];
         let opponentName: string = '';
-        if (this.players[0] === this.userName) {
+        if (this.players[0] === this.getPlayerName()) {
             this.observerRole = Player.ZERO.value;
             opponentName = this.players[1];
-        } else if (this.players[1] === this.userName) {
+        } else if (this.players[1] === this.getPlayerName()) {
             this.observerRole = Player.ONE.value;
             opponentName = this.players[0];
         } else {
             this.observerRole = Player.NONE.value;
         }
         if (opponentName !== '') {
-            const onDocumentCreated: (foundUser: IJoueurId[]) => void = (foundUser: IJoueurId[]) => {
+            const onDocumentCreated: (foundUser: IUserId[]) => void = (foundUser: IUserId[]) => {
                 this.opponent = foundUser[0];
             };
-            const onDocumentModified: (modifiedUsers: IJoueurId[]) => void = (modifiedUsers: IJoueurId[]) => {
+            const onDocumentModified: (modifiedUsers: IUserId[]) => void = (modifiedUsers: IUserId[]) => {
                 this.opponent = modifiedUsers[0];
             };
-            const onDocumentDeleted: (deletedUsers: IJoueurId[]) => void = (deletedUsers: IJoueurId[]) => {
+            const onDocumentDeleted: (deletedUsers: IUserId[]) => void = (deletedUsers: IUserId[]) => {
                 throw new Error('OnlineGameWrapper: Opponent was deleted, what sorcery is this: ' +
                                 JSON.stringify(deletedUsers));
             };
-            const callback: FirebaseCollectionObserver<IJoueur> =
+            const callback: FirebaseCollectionObserver<IUser> =
                 new FirebaseCollectionObserver(onDocumentCreated,
                                                onDocumentModified,
                                                onDocumentDeleted);
             this.opponentSubscription =
-                this.userService.observeUserByPseudo(opponentName, callback);
+                this.userService.observeUserByUsername(opponentName, callback);
         }
     }
     public async onLegalUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<void> {
@@ -625,12 +630,12 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         const opponent: IJoueurId = Utils.getNonNullOrFail(this.opponent);
         if (player === this.observerRole) {
             // the player has run out of time, he'll notify his own defeat by time
-            this.notifyTimeoutVictory(opponent.doc.pseudo, this.userName);
+            this.notifyTimeoutVictory(opponent.doc.username, this.getPlayerName());
         } else {
             if (this.endGame) {
                 display(true, 'time might be better handled in the future');
             } else if (this.opponentIsOffline()) { // the other player has timed out
-                this.notifyTimeoutVictory(this.userName, opponent.doc.pseudo);
+                this.notifyTimeoutVictory(this.getPlayerName(), opponent.doc.username);
                 this.endGame = true;
             }
         }
