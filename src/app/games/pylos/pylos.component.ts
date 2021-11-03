@@ -141,11 +141,11 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     public getCaseClasses(x: number, y: number, z: number): string[] {
         const coord: PylosCoord = new PylosCoord(x, y, z);
         if (this.lastMove) {
-            if (coord.equals(this.lastMove.firstCapture.getOrNull()) ||
-                coord.equals(this.lastMove.secondCapture.getOrNull())) {
+            if (this.lastMove.firstCapture.isPresent() && coord.equals(this.lastMove.firstCapture.get()) ||
+                this.lastMove.secondCapture.isPresent() && coord.equals(this.lastMove.secondCapture.get())) {
                 return ['captured'];
             } else if (coord.equals(this.lastMove.landingCoord) ||
-                       coord.equals(this.lastMove.startingCoord.getOrNull())) {
+                       this.lastMove.startingCoord.isPresent() && coord.equals(this.lastMove.startingCoord.get())) {
                 return ['moved'];
             }
         }
@@ -163,25 +163,27 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     public isOccupied(x: number, y: number, z: number): boolean {
         const coord: PylosCoord = new PylosCoord(x, y, z);
         const reallyOccupied: boolean = this.rules.node.gameState.getPieceAt(coord) !== Player.NONE;
-        const landingCoord: boolean = coord.equals(this.chosenLandingCoord);
+        const landingCoord: boolean = this.chosenLandingCoord != null && coord.equals(this.chosenLandingCoord);
         return reallyOccupied || landingCoord;
     }
     public getPieceClasses(x: number, y: number, z: number): string[] {
         const c: PylosCoord = new PylosCoord(x, y, z);
         const classes: string[] = [this.getPieceFillClass(c)];
-        if (c.equals(this.lastLandingCoord) || c.equals(this.lastStartingCoord)) {
+        if (this.lastLandingCoord && c.equals(this.lastLandingCoord) ||
+            this.lastStartingCoord && c.equals(this.lastStartingCoord)) {
             classes.push('highlighted');
         }
-        if (c.equals(this.chosenStartingCoord) || c.equals(this.chosenLandingCoord)) {
+        if (this.chosenStartingCoord && c.equals(this.chosenStartingCoord) ||
+            this.chosenLandingCoord && c.equals(this.chosenLandingCoord)) {
             classes.push('selected');
         }
-        if (c.equals(this.chosenFirstCapture)) {
+        if (this.chosenFirstCapture && c.equals(this.chosenFirstCapture)) {
             classes.push('pre-captured');
         }
         return classes;
     }
     private getPieceFillClass(c: PylosCoord): string {
-        if (c.equals(this.chosenLandingCoord)) {
+        if (this.chosenLandingCoord && c.equals(this.chosenLandingCoord)) {
             return this.getPlayerClass(this.state.getCurrentPlayer());
         }
         return this.getPlayerPieceClass(this.state.getPieceAt(c).value);

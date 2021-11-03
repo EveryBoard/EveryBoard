@@ -142,7 +142,7 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityStatus> {
     }
     public static isCapturableGroup(groupDatas: GoGroupDatas, koCoord: MGPOptional<Coord>): boolean {
         if (groupDatas.color.isOccupied() && groupDatas.emptyCoords.length === 1) {
-            return !groupDatas.emptyCoords[0].equals(koCoord.getOrNull()); // Ko Rules Block Capture
+            return koCoord.isPresent() && !groupDatas.emptyCoords[0].equals(koCoord.get()); // Ko Rules Block Capture
         } else {
             return false;
         }

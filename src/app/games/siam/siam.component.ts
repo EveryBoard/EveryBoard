@@ -139,9 +139,9 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
     }
     public choosingOrientation(x: number, y: number): boolean {
         const coord: Coord = new Coord(x, y);
-        if (this.chosenCoord &&
-            this.chosenDirection &&
-            coord.equals(this.landingCoord) &&
+        if (this.chosenCoord != null &&
+            this.chosenDirection != null &&
+            this.landingCoord != null && coord.equals(this.landingCoord) &&
             this.chosenOrientation == null)
         {
             display(SiamComponent.VERBOSE, 'choosing orientation now');
@@ -151,7 +151,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
     }
     public choosingDirection(x: number, y: number): boolean {
         const coord: Coord = new Coord(x, y);
-        if (coord.equals(this.chosenCoord) &&
+        if (this.chosenCoord != null && coord.equals(this.chosenCoord) &&
             this.chosenDirection == null &&
             this.landingCoord == null &&
             this.chosenOrientation == null)

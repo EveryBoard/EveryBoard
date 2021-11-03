@@ -66,7 +66,7 @@ describe('JoinerService', () => {
 
             await service.joinGame('joinerId', JoinerMocks.INITIAL.doc.creator);
 
-            const resultingJoiner: IJoiner = Utils.getDefinedOrFail(await dao.read('joinerId'));
+            const resultingJoiner: IJoiner = Utils.getNonNullOrFail(await dao.read('joinerId'));
 
             expect(dao.update).not.toHaveBeenCalled();
             expect(resultingJoiner).toEqual(JoinerMocks.INITIAL.doc);

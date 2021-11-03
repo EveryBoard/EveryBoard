@@ -18,6 +18,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { SixTutorial } from './SixTutorial';
 import { Utils } from 'src/app/utils/utils';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 interface Scale {
     minX: number;
@@ -117,23 +118,28 @@ export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixS
         const newPieces: Coord[] = this.rules.node.gameState.pieces.listKeys();
         const disconnecteds: Coord[] =[];
         for (const oldPiece of oldPieces) {
-            if (oldPiece.equals(Utils.getNonNullOrFail(this.rules.node.move).start.getOrNull()) === false &&
+            const start: MGPOptional<Coord> = Utils.getNonNullOrFail(this.rules.node.move).start;
+            if (start.isPresent() && oldPiece.equals(start.get()) === false &&
                 newPieces.some((newCoord: Coord) => newCoord.equals(oldPiece.getNext(this.state.offset, 1))) === false)
             {
                 disconnecteds.push(oldPiece.getNext(this.state.offset, 1));
             }
         }
-        if (this.pieces.some((coord: Coord) => coord.equals(this.lastDrop)) === false &&
-            newPieces.some((coord: Coord) => coord.equals(this.lastDrop)) === false)
-        {
-            disconnecteds.push(Utils.getNonNullOrFail(this.lastDrop)); // Dummy captured his own piece
+        if (this.lastDrop != null) {
+            const lastDrop: Coord = this.lastDrop;
+            if (this.pieces.some((coord: Coord) => coord.equals(lastDrop)) === false &&
+                newPieces.some((coord: Coord) => coord.equals(lastDrop)) === false)
+            {
+                disconnecteds.push(lastDrop); // Dummy captured his own piece
+            }
         }
         return disconnecteds;
     }
     public getEmptyNeighboors(): Coord[] {
         let legalLandings: Coord[] = SixRules.getLegalLandings(this.state);
         if (this.chosenLanding) {
-            legalLandings = legalLandings.filter((c: Coord) => c.equals(this.chosenLanding) === false);
+            const chosenLanding: Coord = this.chosenLanding;
+            legalLandings = legalLandings.filter((c: Coord) => c.equals(chosenLanding) === false);
         }
         return legalLandings;
     }
@@ -236,7 +242,10 @@ export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixS
                legality.legal.reason === SixFailure.MUST_CUT();
     }
     private moveVirtuallyPiece(): void {
-        this.pieces = this.pieces.filter((c: Coord) => c.equals(this.selectedPiece) === false);
+        if (this.selectedPiece != null) {
+            const selectedPiece: Coord = this.selectedPiece;
+            this.pieces = this.pieces.filter((c: Coord) => c.equals(selectedPiece) === false);
+        }
         this.neighboors = this.getEmptyNeighboors();
     }
     private showCuttable(): void {

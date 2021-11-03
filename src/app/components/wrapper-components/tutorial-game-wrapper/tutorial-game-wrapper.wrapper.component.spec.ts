@@ -49,6 +49,7 @@ import { DvonnRules } from 'src/app/games/dvonn/DvonnRules';
 import { DvonnTutorial } from 'src/app/games/dvonn/DvonnTutorial';
 import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
 import { DvonnState } from 'src/app/games/dvonn/DvonnState';
+import { Utils } from 'src/app/utils/utils';
 
 describe('TutorialGameWrapperComponent (wrapper)', () => {
 
@@ -1074,7 +1075,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 const status: LegalityStatus = rules.isLegal(move, step.state);
                 expect(status.legal.reason).toBeNull();
                 const state: AbstractGameState = rules.applyLegalMove(move, step.state, status);
-                expect(step.predicate(move, state)).toEqual(validation);
+                expect(Utils.getNonNullOrFail(step.predicate)(move, state)).toEqual(validation);
             }
         }));
         it('Should make sure all solutionMove are legal', fakeAsync(async() => {
@@ -1093,7 +1094,8 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                         if (step.isPredicate()) {
                             const state: AbstractGameState =
                                 rules.applyLegalMove(step.solutionMove, step.state, status);
-                            expect(step.predicate(step.solutionMove, state)).toEqual(MGPValidation.SUCCESS);
+                            expect(Utils.getNonNullOrFail(step.predicate)(step.solutionMove, state))
+                                .toEqual(MGPValidation.SUCCESS);
                         }
                     }
                 }

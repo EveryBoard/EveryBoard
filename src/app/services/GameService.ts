@@ -40,7 +40,7 @@ export class GameService implements OnDestroy {
 
     private userNameSub: Subscription;
 
-    private userName: string | string;
+    private userName: string | null;
 
     constructor(private partDao: PartDAO,
                 private activesPartsService: ActivesPartsService,
@@ -62,7 +62,7 @@ export class GameService implements OnDestroy {
             this.messageDisplayer.infoMessage(GameServiceMessages.USER_OFFLINE());
             this.router.navigate(['/login']);
             return false;
-        } else if (this.canCreateGame() === true) {
+        } else if (this.canCreateGame() === true && this.userName != null) {
             const gameId: string = await this.createPartJoinerAndChat(this.userName, game, '');
             // create Part and Joiner
             this.router.navigate(['/play/' + game, gameId]);
@@ -82,8 +82,8 @@ export class GameService implements OnDestroy {
         }
     }
     public async getPartValidity(partId: string, gameType: string): Promise<MGPValidation> {
-        const part: IPart | undefined = await this.partDao.read(partId);
-        if (part === undefined) {
+        const part: IPart | null = await this.partDao.read(partId);
+        if (part == null) {
             return MGPValidation.failure('NONEXISTENT_PART');
         }
         if (part.typeGame === gameType) {
@@ -311,7 +311,7 @@ export class GameService implements OnDestroy {
         display(GameService.VERBOSE, { gameService_updateDBBoard: {
             partId, encodedMove, scorePlayerZero, scorePlayerOne, msToSubstract, notifyDraw, winner, loser } });
 
-        const part: IPart = Utils.getDefinedOrFail(await this.partDao.read(partId)); // TODO: optimise this
+        const part: IPart = Utils.getNonNullOrFail(await this.partDao.read(partId)); // TODO: optimise this
         const turn: number = part.turn + 1;
         const listMoves: JSONValueWithoutArray[] = ArrayUtils.copyImmutableArray(part.listMoves);
         listMoves[listMoves.length] = encodedMove;

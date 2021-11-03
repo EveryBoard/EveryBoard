@@ -3,13 +3,10 @@ import { ChatService } from '../../../services/ChatService';
 import { IMessage } from '../../../domain/imessage';
 import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
 import { IChatId } from 'src/app/domain/ichat';
-import { assert, display } from 'src/app/utils/utils';
+import { assert, display, Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-<<<<<<< HEAD
 import { Subscription } from 'rxjs';
-=======
 import { faReply, IconDefinition } from '@fortawesome/free-solid-svg-icons';
->>>>>>> 9317922e2cbbabee074637c54470cce668f6de37
 
 @Component({
     selector: 'app-chat',
@@ -21,7 +18,7 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     @Input() public chatId: string;
     @Input() public turn: number;
     public userMessage: string = '';
-    public userName: MGPOptional<string> = MGPOptional.empty();
+    public username: MGPOptional<string> = MGPOptional.empty();
 
     public connected: boolean = false;
     public chat: IMessage[] = [];
@@ -52,12 +49,12 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
             .subscribe((user: AuthUser) => {
                 if (this.isConnectedUser(user)) {
                     display(ChatComponent.VERBOSE, JSON.stringify(user) + ' just connected');
-                    this.userName = MGPOptional.of(user.username);
+                    this.username = MGPOptional.of(Utils.getNonNullOrFail(user.username));
                     this.connected = true;
                     this.loadChatContent();
                 } else {
                     display(ChatComponent.VERBOSE, 'No User Logged');
-                    this.userName = MGPOptional.empty();
+                    this.username = MGPOptional.empty();
                     this.connected = false;
                 }
             });
@@ -69,7 +66,7 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
         return user.username != null && user.username !== '';
     }
     public loadChatContent(): void {
-        display(ChatComponent.VERBOSE, `User '` + this.userName + `' logged, loading chat content`);
+        display(ChatComponent.VERBOSE, `User '${this.username}' logged, loading chat content`);
 
         this.chatService.startObserving(this.chatId, (id: IChatId) => {
             this.updateMessages(id);
@@ -131,10 +128,10 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
         });
     }
     public async sendMessage(): Promise<void> {
-        assert(this.userName.isPresent(), 'disconnected user is not able to send a message');
+        assert(this.username.isPresent(), 'disconnected user is not able to send a message');
         const content: string = this.userMessage;
         this.userMessage = ''; // clears it first to seem more responsive
-        await this.chatService.sendMessage(this.userName.get(), this.turn, content);
+        await this.chatService.sendMessage(this.username.get(), this.turn, content);
     }
     public ngOnDestroy(): void {
         if (this.chatService.isObserving()) {

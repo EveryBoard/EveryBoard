@@ -206,7 +206,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules, YinshMove
         this.viewInfo.caseInfo[coord.y][coord.x].markerClasses = [];
         if (piece !== YinshPiece.EMPTY) {
             const containsMarker: boolean = !piece.isRing ||
-                (piece.isRing && coord.equals(this.moveStart.getOrNull()));
+                (piece.isRing && this.moveStart.isPresent() && coord.equals(this.moveStart.get()));
             if (containsMarker) {
                 const playerClass: string = this.getPlayerClass(piece.player);
                 this.viewInfo.caseInfo[coord.y][coord.x].isMarker = true;

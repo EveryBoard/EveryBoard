@@ -46,10 +46,10 @@ export class SixMove extends Move {
                         public readonly keep: MGPOptional<Coord>)
     {
         super();
-        if (landing.equals(start.getOrNull())) {
+        if (start.isPresent() && landing.equals(start.get())) {
             throw new Error('Deplacement cannot be static!');
         }
-        if (start.isPresent() && start.get().equals(keep.getOrNull())) {
+        if (start.isPresent() && keep.isPresent() && start.get().equals(keep.get())) {
             throw new Error('Cannot keep starting coord, since it will always be empty after move!');
         }
     }

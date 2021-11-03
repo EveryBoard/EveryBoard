@@ -6,7 +6,7 @@ import { expectSecondStateToBeBetterThanFirst } from 'src/app/utils/tests/TestUt
 import { AttackEpaminondasMinimax } from '../AttackEpaminondasMinimax';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasState } from '../EpaminondasState';
-import { EpaminondasRules } from '../EpaminondasRules';
+import { EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
 
 describe('AttackEpaminondasMinimax:', () => {
 
@@ -39,7 +39,7 @@ describe('AttackEpaminondasMinimax:', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 1);
-        rules.node = new MGPNode(null, null, state);
+        rules.node = new EpaminondasNode(null, null, state);
         const expectedMove: EpaminondasMove = new EpaminondasMove(9, 1, 4, 4, Direction.LEFT);
         const bestMove: EpaminondasMove = rules.node.findBestMove(1, minimax);
         expect(bestMove).toEqual(expectedMove);
