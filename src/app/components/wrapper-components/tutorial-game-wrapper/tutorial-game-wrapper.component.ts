@@ -7,7 +7,7 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Move } from 'src/app/jscaip/Move';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { UserService } from 'src/app/services/UserService';
-import { assert, display } from 'src/app/utils/utils';
+import { assert, display, Utils } from 'src/app/utils/utils';
 import { TutorialStep } from './TutorialStep';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { TutorialFailure } from './TutorialFailure';
@@ -28,8 +28,8 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
     public steps: TutorialStep[];
     public successfulSteps: number = 0;
     public stepIndex: number = 0;
-    public currentMessage: string;
-    public currentReason: string;
+    public currentMessage: string | null;
+    public currentReason: string | null;
     public moveAttemptMade: boolean = false;
     public stepFinished: boolean[];
     public tutorialOver: boolean = false;
@@ -107,13 +107,14 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
         this.moveAttemptMade = true;
         if (currentStep.isPredicate()) {
             const resultingState: AbstractGameState = this.gameComponent.rules.node.gameState;
-            const moveValidity: MGPValidation = currentStep.predicate(move, resultingState);
+            const moveValidity: MGPValidation = Utils.getNonNullOrFail(currentStep.predicate)(move, resultingState);
             if (moveValidity.isSuccess()) {
                 this.showStepSuccess();
             } else {
                 this.currentReason = moveValidity.getReason();
             }
-        } else if (currentStep.isAnyMove() || currentStep.acceptedMoves.some((m: Move) => m.equals(move))) {
+        } else if (currentStep.isAnyMove() ||
+            Utils.getNonNullOrFail(currentStep.acceptedMoves).some((m: Move) => m.equals(move))) {
             display(TutorialGameWrapperComponent.VERBOSE,
                     'tutorialGameWrapper.onLegalUserMove: awaited move!');
             this.showStepSuccess();
@@ -138,10 +139,10 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
         const currentStep: TutorialStep = this.steps[this.stepIndex];
         if (currentStep.isClick()) {
             this.gameComponent.updateBoard();
-            if (currentStep.acceptedClicks.some((m: string) => m === elementName)) {
+            if (Utils.getNonNullOrFail(currentStep.acceptedClicks).some((m: string) => m === elementName)) {
                 this.showStepSuccess();
             } else {
-                this.currentMessage = currentStep.failureMessage;
+                this.currentMessage = Utils.getNonNullOrFail(currentStep.failureMessage);
             }
             return MGPValidation.SUCCESS;
         } else if (currentStep.isMove() || currentStep.isPredicate()) {
@@ -157,7 +158,9 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
         display(TutorialGameWrapperComponent.VERBOSE,
                 'tutorialGameWrapperComponent.onCancelMove(' + reason + ')');
         // this.moveAttemptMade = true;
-        this.currentReason = reason;
+        if (reason !== undefined) {
+            this.currentReason = reason;
+        }
         this.cdr.detectChanges();
     }
     private showStepSuccess(): void {
@@ -199,7 +202,7 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
         if (step.acceptedMoves != null && step.acceptedMoves.length > 0) {
             awaitedMove = step.acceptedMoves[0];
         } else {
-            awaitedMove = step.solutionMove;
+            awaitedMove = Utils.getNonNullOrFail(step.solutionMove);
         }
         this.showStep(this.stepIndex);
         this.gameComponent.rules.choose(awaitedMove);
@@ -209,11 +212,11 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
         this.cdr.detectChanges();
     }
     public playLocally(): void {
-        const game: string = this.actRoute.snapshot.paramMap.get('compo');
+        const game: string = Utils.getNonNullOrFail(this.actRoute.snapshot.paramMap.get('compo'));
         this.router.navigate(['local/' + game]);
     }
     public createGame(): void {
-        const game: string = this.actRoute.snapshot.paramMap.get('compo');
+        const game: string = Utils.getNonNullOrFail(this.actRoute.snapshot.paramMap.get('compo'));
         this.gameService.createGameAndRedirectOrShowError(game);
     }
 }

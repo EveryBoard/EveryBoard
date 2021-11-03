@@ -180,7 +180,7 @@ class Line {
         return coords;
     }
 }
-export abstract class QuartoNode extends MGPNode<QuartoRules, QuartoMove, QuartoState> {}
+export class QuartoNode extends MGPNode<QuartoRules, QuartoMove, QuartoState> {}
 
 export class QuartoRules extends Rules<QuartoMove, QuartoState> {
 

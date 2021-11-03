@@ -61,7 +61,7 @@ describe('ReversiRules', () => {
             [_, _, _, _, O, _, _, _],
         ];
         const state: ReversiState = new ReversiState(board, 1);
-        rules.node = new MGPNode(null, null, state);
+        rules.node = new ReversiNode(null, null, state);
         expect(rules.choose(ReversiMove.PASS)).toBeTrue();
     });
     describe('Endgames', () => {

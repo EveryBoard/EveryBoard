@@ -1,5 +1,5 @@
 import { Player } from 'src/app/jscaip/Player';
-import { JSONValue } from 'src/app/utils/utils';
+import { JSONValue, Utils } from 'src/app/utils/utils';
 import { JSONObject } from 'src/app/utils/utils';
 
 export type RequestCode =
@@ -24,6 +24,16 @@ export class Request implements JSONObject {
         return make('RematchAccepted', { typeGame, partId });
     }
 
+    public static getPlayer(request: Request): Player {
+        return Player.of(Utils.getNonNullDefinedOrFail(request.data)['player']);
+    }
+    public static getTypeGame(request: Request): string {
+        return Utils.getNonNullDefinedOrFail(request.data)['typeGame'];
+    }
+    public static getPartId(request: Request): string {
+        return Utils.getNonNullDefinedOrFail(request.data)['partId'];
+    }
+
     public code: RequestCode;
     public data: JSONValue;
 }
@@ -37,4 +47,3 @@ function makeWithPlayer(code: RequestCode): (player: Player) => Request {
         return make(code, { player: player.value });
     };
 }
-

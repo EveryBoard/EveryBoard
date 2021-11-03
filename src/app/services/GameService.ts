@@ -81,9 +81,9 @@ export class GameService implements OnDestroy {
         }
     }
     public async getPartValidity(partId: string, gameType: string): Promise<MGPValidation> {
-        const part: IPart = await this.partDao.read(partId);
-        if (part == null) {
-            return MGPValidation.failure('UNEXISTANT_PART');
+        const part: IPart | undefined = await this.partDao.read(partId);
+        if (part === undefined) {
+            return MGPValidation.failure('NONEXISTENT_PART');
         }
         if (part.typeGame === gameType) {
             return MGPValidation.SUCCESS;
@@ -259,7 +259,8 @@ export class GameService implements OnDestroy {
                                 msToSubstract: [number, number])
     : Promise<void> {
         assert(observerRole !== Player.NONE, 'Illegal for observer to make request');
-        assert(part.doc.request.data['player'] !== observerRole.value, 'Illegal to accept your own request.');
+        assert(Request.getPlayer(Utils.getNonNullDefinedOrFail(part.doc.request)) !== observerRole,
+               'Illegal to accept your own request.');
 
         const request: Request = Request.takeBackAccepted(observerRole);
         let listMoves: JSONValueWithoutArray[] = part.doc.listMoves.slice(0, part.doc.listMoves.length - 1);
@@ -309,7 +310,7 @@ export class GameService implements OnDestroy {
         display(GameService.VERBOSE, { gameService_updateDBBoard: {
             partId, encodedMove, scorePlayerZero, scorePlayerOne, msToSubstract, notifyDraw, winner, loser } });
 
-        const part: IPart = await this.partDao.read(partId); // TODO: optimise this
+        const part: IPart = Utils.getDefinedOrFail(await this.partDao.read(partId)); // TODO: optimise this
         const turn: number = part.turn + 1;
         const listMoves: JSONValueWithoutArray[] = ArrayUtils.copyImmutableArray(part.listMoves);
         listMoves[listMoves.length] = encodedMove;

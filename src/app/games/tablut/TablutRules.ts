@@ -16,7 +16,7 @@ import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { TablutFailure } from './TablutFailure';
 
-export abstract class TablutNode extends MGPNode<TablutRules, TablutMove, TablutState, TablutLegalityStatus> {}
+export class TablutNode extends MGPNode<TablutRules, TablutMove, TablutState, TablutLegalityStatus> {}
 
 export class TablutRules extends Rules<TablutMove, TablutState, TablutLegalityStatus> {
 
@@ -59,9 +59,8 @@ export class TablutRules extends Rules<TablutMove, TablutState, TablutLegalitySt
         const arrival: Coord = move.end;
         board[arrival.y][arrival.x] = board[depart.y][depart.x]; // move the piece to the new position
         board[depart.y][depart.x] = TablutCase.UNOCCUPIED; // remove it from the previous position
-        let captured: Coord;
         for (const d of Orthogonal.ORTHOGONALS) {
-            captured = this.tryCapture(player, move.end, d, board);
+            const captured: Coord | null = this.tryCapture(player, move.end, d, board);
             if (captured != null) {
                 board[captured.y][captured.x] = TablutCase.UNOCCUPIED; // do capture, unless if king
             }

@@ -32,7 +32,7 @@ describe('JoinerDAOMock', () => {
 
     let callCount: number;
 
-    let lastJoiner: IJoiner;
+    let lastJoiner: IJoiner | null;
 
     beforeEach(() => {
         joinerDaoMock = new JoinerDAOMock();

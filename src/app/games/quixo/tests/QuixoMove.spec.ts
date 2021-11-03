@@ -22,9 +22,6 @@ describe('QuixoMove:', () => {
         expect(() => new QuixoMove(1, 1, Orthogonal.UP))
             .toThrowError(QuixoFailure.NO_INSIDE_CLICK());
     });
-    it('Should forbid move creation without direction', () => {
-        expect(() => new QuixoMove(0, 0, null)).toThrowError('Direction cannot be null.');
-    });
     it('Should forbid move creation from board whose side is the same as the direction', () => {
         expect(() => new QuixoMove(0, 2, Orthogonal.LEFT))
             .toThrowError(`Invalid direction: pawn on the left side can't be moved to the left.`);

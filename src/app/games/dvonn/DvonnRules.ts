@@ -12,7 +12,7 @@ import { HexagonalGameState } from 'src/app/jscaip/HexagonalGameState';
 import { DvonnFailure } from './DvonnFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
-export abstract class DvonnNode extends MGPNode<DvonnRules, DvonnMove, DvonnState> { }
+export class DvonnNode extends MGPNode<DvonnRules, DvonnMove, DvonnState> { }
 
 export class DvonnRules extends Rules<DvonnMove, DvonnState> {
 

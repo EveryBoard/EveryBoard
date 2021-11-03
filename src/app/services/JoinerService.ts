@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { FirstPlayer, IJoiner, IJoinerId, PartStatus, PartType } from '../domain/ijoiner';
 import { JoinerDAO } from '../dao/JoinerDAO';
-import { assert, display } from 'src/app/utils/utils';
+import { assert, display, Utils } from 'src/app/utils/utils';
 import { ArrayUtils } from '../utils/ArrayUtils';
 
 @Injectable({
@@ -38,7 +38,7 @@ export class JoinerService {
     public async joinGame(partId: string, userName: string): Promise<boolean> {
         display(JoinerService.VERBOSE, 'JoinerService.joinGame(' + partId + ', ' + userName + ')');
 
-        const joiner: IJoiner = await this.joinerDao.read(partId);
+        const joiner: IJoiner | undefined = await this.joinerDao.read(partId);
         if (joiner == null) {
             return false;
         }
@@ -60,7 +60,7 @@ export class JoinerService {
         if (this.observedJoinerId == null) {
             throw new Error('cannot cancel joining when not observing a joiner');
         }
-        const joiner: IJoiner = await this.joinerDao.read(this.observedJoinerId);
+        const joiner: IJoiner | undefined = await this.joinerDao.read(this.observedJoinerId);
         if (joiner == null) {
             // The part does not exist, so we can consider that we succesfully cancelled joining
             return;
@@ -158,7 +158,7 @@ export class JoinerService {
     public async readJoinerById(partId: string): Promise<IJoiner> {
         display(JoinerService.VERBOSE, 'JoinerService.readJoinerById(' + partId + ')');
 
-        return this.joinerDao.read(partId);
+        return Utils.getDefinedOrFail(await this.joinerDao.read(partId));
     }
     public async set(partId: string, joiner: IJoiner): Promise<void> {
         display(JoinerService.VERBOSE, 'JoinerService.set(' + partId + ', ' + JSON.stringify(joiner) + ')');

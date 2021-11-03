@@ -35,7 +35,7 @@ export class EpaminondasGroupData extends GroupDatas<number> {
         return one.isPresent() && one.get().contains(coord);
     }
     public addPawn(coord: Coord, color: number): void {
-        const set: MGPSet<Coord> = this.values.get(color).getOrNull();
+        const set: MGPSet<Coord> | null = this.values.get(color).getOrNull();
         let newList: Coord[];
         if (set == null) {
             newList = [coord];

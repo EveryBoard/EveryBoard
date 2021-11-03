@@ -25,7 +25,7 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
 
     public boardInfo: GroupDatas<GoPiece>;
 
-    public ko: Coord;
+    public ko: Coord | null;
 
     public last: Coord | null = null;
 
@@ -88,7 +88,7 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
                 const coord: Coord = new Coord(x, y);
                 const wasOccupied: boolean = previousState.getPieceAt(coord).isEmpty() === false;
                 const isEmpty: boolean = this.board[y][x] === GoPiece.EMPTY;
-                const isNotKo: boolean = !coord.equals(this.ko);
+                const isNotKo: boolean = this.ko == null || (coord.equals(this.ko) === false);
                 if (wasOccupied && isEmpty && isNotKo) {
                     this.captures.push(coord);
                 }

@@ -20,8 +20,8 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState, AwaleLegalityStatus
         const turn: number = state.turn;
 
         const captured: readonly [number, number] = [
-            state.captured[0] + Utils.getNonNullOrFail(status.captured[0]),
-            state.captured[1] + Utils.getNonNullOrFail(status.captured[1]),
+            state.captured[0] + Utils.getNonNullOrFail(status.captured)[0],
+            state.captured[1] + Utils.getNonNullOrFail(status.captured)[1],
         ];
 
         return new AwaleState(Utils.getNonNullOrFail(status.resultingBoard), turn + 1, captured);

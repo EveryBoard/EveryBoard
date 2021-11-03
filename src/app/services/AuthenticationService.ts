@@ -23,20 +23,20 @@ export interface AuthUser {
 export class AuthenticationService implements OnDestroy {
     public static VERBOSE: boolean = false;
 
-    public static NOT_AUTHENTICATED: { pseudo: string, verified: boolean } = null;
+    public static NOT_AUTHENTICATED: { pseudo: string, verified: boolean | null } | null = null;
 
-    public static NOT_CONNECTED: { pseudo: string, verified: boolean } = { pseudo: '', verified: null };
+    public static NOT_CONNECTED: { pseudo: string, verified: boolean | null } = { pseudo: '', verified: null };
 
     private authSub: Subscription;
 
-    private joueurBS: BehaviorSubject<AuthUser>;
+    private joueurBS: BehaviorSubject<AuthUser | null>;
 
-    private joueurObs: Observable<AuthUser>;
+    private joueurObs: Observable<AuthUser | null>;
 
     constructor(public afAuth: AngularFireAuth, private afs: AngularFirestore) {
         display(AuthenticationService.VERBOSE, '1 authService subscribe to Obs<User>');
 
-        this.joueurBS = new BehaviorSubject<AuthUser>(AuthenticationService.NOT_AUTHENTICATED);
+        this.joueurBS = new BehaviorSubject<AuthUser | null>(AuthenticationService.NOT_AUTHENTICATED);
         this.joueurObs = this.joueurBS.asObservable();
         this.authSub = this.afAuth.authState.subscribe((user: firebase.User) => {
             if (user == null) { // user logged out

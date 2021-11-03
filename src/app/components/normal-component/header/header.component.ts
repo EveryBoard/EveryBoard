@@ -9,7 +9,7 @@ import { LocaleUtils } from 'src/app/utils/LocaleUtils';
     templateUrl: './header.component.html',
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-    public userName: string;
+    public userName: string | null;
 
     private joueurSub: Subscription;
 

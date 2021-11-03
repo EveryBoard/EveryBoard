@@ -16,7 +16,7 @@ export interface AbaloneLegalityStatus extends LegalityStatus {
     newBoard: FourStatePiece[][] | null;
 }
 
-export abstract class AbaloneNode extends MGPNode<AbaloneRules, AbaloneMove, AbaloneState, AbaloneLegalityStatus> {}
+export class AbaloneNode extends MGPNode<AbaloneRules, AbaloneMove, AbaloneState, AbaloneLegalityStatus> {}
 
 export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegalityStatus> {
 

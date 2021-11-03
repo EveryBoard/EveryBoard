@@ -10,7 +10,7 @@ export interface IFirebaseFirestoreDAO<T extends FirebaseJSONObject> {
 
     create(newElement: T): Promise<string>;
 
-    read(id: string): Promise<T>;
+    read(id: string): Promise<T | undefined>;
 
     update(id: string, modification: Partial<T>): Promise<void>;
 
@@ -35,9 +35,9 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
         const docRef: DocumentReference = await this.afs.collection<T>(this.collectionName).add({ ...newElement });
         return docRef.id;
     }
-    public async read(id: string): Promise<T> {
+    public async read(id: string): Promise<T | undefined> {
         const docSnapshot = await this.afs.collection<T>(this.collectionName).doc(id).ref.get();
-        return docSnapshot.data() as T;
+        return docSnapshot.data() as T | undefined;
     }
     public async update(id: string, modification: Partial<T>): Promise<void> {
         return this.afs.collection(this.collectionName).doc<T>(id).ref.update(modification);

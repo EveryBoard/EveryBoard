@@ -27,8 +27,8 @@ describe('PartCreationComponent:', () => {
 
     async function selectCustomGameAndChangeConfig(): Promise<void> {
         await testUtils.clickElement('#partTypeCustom');
-        component.configFormGroup.get('maximalMoveDuration').setValue(100);
-        component.configFormGroup.get('totalPartDuration').setValue(1000);
+        Utils.getNonNullOrFail(component.configFormGroup.get('maximalMoveDuration')).setValue(100);
+        Utils.getNonNullOrFail(component.configFormGroup.get('totalPartDuration')).setValue(1000);
         testUtils.detectChanges();
     }
     async function mockCandidateArrival(): Promise<void> {
@@ -178,7 +178,7 @@ describe('PartCreationComponent:', () => {
             ...JoinerMocks.WITH_ACCEPTED_CONFIG.doc,
             firstPlayer: FirstPlayer.CREATOR.value,
         });
-        const currentPart: IPart = await partDAOMock.read('joinerId');
+        const currentPart: IPart = Utils.getDefinedOrFail(await partDAOMock.read('joinerId'));
         const expectedPart: IPart = { ...PartMocks.STARTING.doc, beginning: currentPart.beginning };
         expect(currentPart).toEqual(expectedPart);
     }));
@@ -273,7 +273,8 @@ describe('PartCreationComponent:', () => {
         it('should update the form data when changing first player', fakeAsync(async() => {
             testUtils.clickElement('#firstPlayerOpponent');
 
-            expect(component.configFormGroup.get('firstPlayer').value).toEqual(FirstPlayer.CHOSEN_PLAYER.value);
+            expect(Utils.getNonNullOrFail(component.configFormGroup.get('firstPlayer')).value)
+                .toEqual(FirstPlayer.CHOSEN_PLAYER.value);
         }));
         it('should show detailed timing options when choosing a custom part type', fakeAsync(async() => {
             await testUtils.clickElement('#partTypeCustom');
@@ -290,16 +291,20 @@ describe('PartCreationComponent:', () => {
             await testUtils.clickElement('#partTypeBlitz');
             testUtils.detectChanges();
 
-            expect(component.configFormGroup.get('maximalMoveDuration').value).toBe(PartType.BLITZ_MOVE_DURATION);
-            expect(component.configFormGroup.get('totalPartDuration').value).toBe(PartType.BLITZ_PART_DURATION);
+            expect(Utils.getNonNullOrFail(component.configFormGroup.get('maximalMoveDuration').value))
+                .toBe(PartType.BLITZ_MOVE_DURATION);
+            expect(Utils.getNonNullOrFail(component.configFormGroup.get('totalPartDuration').value))
+                .toBe(PartType.BLITZ_PART_DURATION);
         }));
         it('should update the timings when reselecting normal part', fakeAsync(async() => {
             await testUtils.clickElement('#partTypeBlitz');
             await testUtils.clickElement('#partTypeStandard');
             testUtils.detectChanges();
 
-            expect(component.configFormGroup.get('maximalMoveDuration').value).toBe(PartType.NORMAL_MOVE_DURATION);
-            expect(component.configFormGroup.get('totalPartDuration').value).toBe(PartType.NORMAL_PART_DURATION);
+            expect(Utils.getNonNullOrFail(component.configFormGroup.get('maximalMoveDuration').value))
+                .toBe(PartType.NORMAL_MOVE_DURATION);
+            expect(Utils.getNonNullOrFail(component.configFormGroup.get('totalPartDuration').value))
+                .toBe(PartType.NORMAL_PART_DURATION);
         }));
         it('should dispatch to joiner service when clicking on review config button', fakeAsync(async() => {
             await joinerDAOMock.update('joinerId', {
@@ -443,7 +448,7 @@ describe('PartCreationComponent:', () => {
             component.userName = 'creator';
             component.partId = 'does not exist';
             const joinerDAOMock: JoinerDAO = TestBed.inject(JoinerDAO);
-            spyOn(joinerDAOMock, 'read').and.returnValue(Promise.resolve(null));
+            spyOn(joinerDAOMock, 'read').and.resolveTo(undefined);
             const joinerService: JoinerService = TestBed.inject(JoinerService);
             spyOn(joinerService, 'observe');
 
@@ -462,7 +467,8 @@ describe('PartCreationComponent:', () => {
             spyOn(router, 'navigate');
 
             // when joiner is updated and put to null, it means document has been removed
-            await joinerDAOMock.set('joinerId', null);
+            // TODOTODO: was: await joinerDAOMock.set('joinerId', null);
+            await joinerDAOMock.delete('joinerId');
 
             // then user should be moved to server
             testUtils.detectChanges();

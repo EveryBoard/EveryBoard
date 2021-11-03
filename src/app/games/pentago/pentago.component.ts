@@ -141,6 +141,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         this.canSkipRotation = postDropState.neutralBlocks.length > 0 && gameStatus.isEndGame === false;
         this.currentDrop = new Coord(x, y);
         this.displayArrows(postDropState.neutralBlocks);
+        return MGPValidation.SUCCESS;
     }
     public getCenter(xOrY: number): number {
         const block: number = xOrY < 3 ? 0 : this.BLOCK_SEPARATION;
@@ -168,7 +169,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         const classes: string[] = [];
         const player: string = this.getPlayerClass(this.board[y][x]);
         classes.push(player);
-        if (new Coord(x, y).equals(this.lastDrop)) {
+        if (this.lastDrop && new Coord(x, y).equals(this.lastDrop)) {
             classes.push('last-move');
         }
         return classes;

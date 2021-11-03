@@ -12,7 +12,7 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { P4Failure } from './P4Failure';
 
-export abstract class P4Node extends MGPNode<P4Rules, P4Move, P4State> {}
+export class P4Node extends MGPNode<P4Rules, P4Move, P4State> {}
 
 export class P4Rules extends Rules<P4Move, P4State> {
 

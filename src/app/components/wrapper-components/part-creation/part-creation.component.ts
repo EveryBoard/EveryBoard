@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FirstPlayer, IFirstPlayer, IJoiner, IJoinerId, IPartType, PartStatus, PartType } from '../../../domain/ijoiner';
 import { Router } from '@angular/router';
 import { GameService } from '../../../services/GameService';
@@ -130,27 +130,31 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 this.onCurrentJoinerUpdate(joinerId);
             });
     }
+    private getForm(name: string): AbstractControl {
+        return Utils.getNonNullOrFail(this.configFormGroup.get(name));
+    }
     private subscribeToFormElements(): void {
-        this.configFormGroup.get('chosenOpponent').valueChanges
+        this.getForm('chosenOpponent').valueChanges
             .pipe(takeUntil(this.ngUnsubscribe)).subscribe((opponent: string) => {
                 this.viewInfo.chosenOpponent = opponent;
-                this.viewInfo.canProposeConfig = this.currentJoiner.partStatus !== PartStatus.CONFIG_PROPOSED.value &&
-                                                 opponent !== '';
+                this.viewInfo.canProposeConfig =
+                    Utils.getNonNullOrFail(this.currentJoiner).partStatus !== PartStatus.CONFIG_PROPOSED.value &&
+                    opponent !== '';
             });
-        this.configFormGroup.get('partType').valueChanges
+        this.getForm('partType').valueChanges
             .pipe(takeUntil(this.ngUnsubscribe)).subscribe((partType: IPartType) => {
                 this.viewInfo.partType = partType;
                 this.viewInfo.showCustomTime = partType === 'CUSTOM';
             });
-        this.configFormGroup.get('maximalMoveDuration').valueChanges
+        this.getForm('maximalMoveDuration').valueChanges
             .pipe(takeUntil(this.ngUnsubscribe)).subscribe((maximalMoveDuration: number) => {
                 this.viewInfo.maximalMoveDuration = maximalMoveDuration;
             });
-        this.configFormGroup.get('totalPartDuration').valueChanges
+        this.getForm('totalPartDuration').valueChanges
             .pipe(takeUntil(this.ngUnsubscribe)).subscribe((totalPartDuration: number) => {
                 this.viewInfo.totalPartDuration = totalPartDuration;
             });
-        this.configFormGroup.get('firstPlayer').valueChanges
+        this.getForm('firstPlayer').valueChanges
             .pipe(takeUntil(this.ngUnsubscribe)).subscribe((firstPlayer: IFirstPlayer) => {
                 this.viewInfo.firstPlayer = firstPlayer;
             });
@@ -165,7 +169,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.viewInfo.userIsObserver =
                 this.viewInfo.userIsChosenOpponent === false && this.viewInfo.userIsCreator === false;
         this.viewInfo.creatorIsModifyingConfig = joiner.partStatus !== PartStatus.CONFIG_PROPOSED.value;
-        this.viewInfo.showCustomTime = this.configFormGroup.get('partType').value === 'CUSTOM';
+        this.viewInfo.showCustomTime = this.getForm('partType').value === 'CUSTOM';
 
         this.viewInfo.creator = joiner.creator;
         this.viewInfo.candidates = joiner.candidates;
@@ -195,28 +199,28 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.viewInfo.totalPartDuration = this.viewInfo.totalPartDuration || joiner.totalPartDuration;
         this.viewInfo.partType = this.viewInfo.partType || joiner.partType;
         this.viewInfo.firstPlayer = this.viewInfo.firstPlayer || joiner.firstPlayer;
-        let opponent: string = this.viewInfo.chosenOpponent;
+        let opponent: string | undefined = this.viewInfo.chosenOpponent;
         if (opponent) {
-            if (joiner.candidates.indexOf(this.viewInfo.chosenOpponent) === -1) {
+            if (joiner.candidates.indexOf(opponent) === -1) {
                 opponent = ''; // chosenOppoent left
             }
         } else {
             opponent = joiner.chosenPlayer;
         }
-        this.configFormGroup.get('chosenOpponent').setValue(opponent);
+        this.getForm('chosenOpponent').setValue(opponent);
     }
     public selectFirstPlayer(firstPlayer: IFirstPlayer): void {
-        this.configFormGroup.get('firstPlayer').setValue(firstPlayer);
+        this.getForm('firstPlayer').setValue(firstPlayer);
     }
     public selectPartType(partType: IPartType): void {
         if (partType === 'STANDARD') {
-            this.configFormGroup.get('maximalMoveDuration').setValue(PartType.NORMAL_MOVE_DURATION);
-            this.configFormGroup.get('totalPartDuration').setValue(PartType.NORMAL_PART_DURATION);
+            this.getForm('maximalMoveDuration').setValue(PartType.NORMAL_MOVE_DURATION);
+            this.getForm('totalPartDuration').setValue(PartType.NORMAL_PART_DURATION);
         } else if (partType === 'BLITZ') {
-            this.configFormGroup.get('maximalMoveDuration').setValue(PartType.BLITZ_MOVE_DURATION);
-            this.configFormGroup.get('totalPartDuration').setValue(PartType.BLITZ_PART_DURATION);
+            this.getForm('maximalMoveDuration').setValue(PartType.BLITZ_MOVE_DURATION);
+            this.getForm('totalPartDuration').setValue(PartType.BLITZ_PART_DURATION);
         }
-        this.configFormGroup.get('partType').setValue(partType);
+        this.getForm('partType').setValue(partType);
     }
     public async selectOpponent(player: string): Promise<void> {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.setChosenPlayer(' + player + ')');
@@ -226,11 +230,11 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         return this.joinerService.reviewConfig();
     }
     public async proposeConfig(): Promise<void> {
-        const chosenPlayer: string = this.configFormGroup.get('chosenOpponent').value;
-        const partType: string = this.configFormGroup.get('partType').value;
-        const maxMoveDur: number = this.configFormGroup.get('maximalMoveDuration').value;
-        const firstPlayer: string = this.configFormGroup.get('firstPlayer').value;
-        const totalPartDuration: number = this.configFormGroup.get('totalPartDuration').value;
+        const chosenPlayer: string = this.getForm('chosenOpponent').value;
+        const partType: string = this.getForm('partType').value;
+        const maxMoveDur: number = this.getForm('maximalMoveDuration').value;
+        const firstPlayer: string = this.getForm('firstPlayer').value;
+        const totalPartDuration: number = this.getForm('totalPartDuration').value;
         return this.joinerService.proposeConfig(chosenPlayer,
                                                 PartType.of(partType),
                                                 maxMoveDur,
@@ -368,21 +372,22 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         }
     }
     private removeUserFromLobby(userPseudo: string): Promise<void> {
-        const index: number = this.currentJoiner.candidates.indexOf(userPseudo);
+        const joiner: IJoiner = Utils.getNonNullOrFail(this.currentJoiner);
+        const index: number = joiner.candidates.indexOf(userPseudo);
         if (index === -1) {
             display(true, userPseudo + ' is not in the lobby!');
             // User already not in the lobby (could be caused by two updates to the same offline user)
-            return;
+            return Promise.resolve();
         }
-        const beforeUser: string[] = this.currentJoiner.candidates.slice(0, index);
-        const afterUser: string[] = this.currentJoiner.candidates.slice(index + 1);
+        const beforeUser: string[] = joiner.candidates.slice(0, index);
+        const afterUser: string[] = joiner.candidates.slice(index + 1);
         const candidates: string[] = beforeUser.concat(afterUser);
-        if (userPseudo === this.currentJoiner.chosenPlayer) {
+        if (userPseudo === joiner.chosenPlayer) {
             // The chosen player has been removed, the user will have to review the config
             this.messageDisplayer.infoMessage($localize`${userPseudo} left the game, please pick another opponent.`);
             return this.joinerService.reviewConfigRemoveChosenPlayerAndUpdateCandidates(candidates);
         } else {
-            this.joinerService.updateCandidates(candidates);
+            return this.joinerService.updateCandidates(candidates);
         }
     }
     private unsubscribeFrom(userPseudo: string): void {
@@ -393,7 +398,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.acceptConfig');
         // called by the joiner
         // triggers the redirection that will be applied for every subscribed user
-        return this.gameService.acceptConfig(this.partId, this.currentJoiner);
+        return this.gameService.acceptConfig(this.partId, Utils.getNonNullOrFail(this.currentJoiner));
     }
     public async ngOnDestroy(): Promise<void> {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.ngOnDestroy');

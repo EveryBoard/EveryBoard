@@ -85,7 +85,7 @@ describe('SaharaRules', () => {
             [N, N, X, O, _, _, _, X, O, N, N],
         ];
         const state: SaharaState = new SaharaState(board, 4);
-        const node: SaharaNode = new MGPNode(null, null, state);
+        const node: SaharaNode = new SaharaNode(null, null, state);
         expectToBeVictoryFor(rules, node, Player.ONE, [new SaharaMinimax(rules, '')]);
     });
 });

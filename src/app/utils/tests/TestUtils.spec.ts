@@ -403,9 +403,9 @@ export class ComponentTestUtils<T extends MyGameComponent> {
 }
 
 export function expectSecondStateToBeBetterThanFirst(weakerState: AbstractGameState,
-                                                     weakMove: Move,
+                                                     weakMove: Move | null,
                                                      strongerState: AbstractGameState,
-                                                     strongMove: Move,
+                                                     strongMove: Move | null,
                                                      minimax: Minimax<Move, AbstractGameState>)
 : void
 {

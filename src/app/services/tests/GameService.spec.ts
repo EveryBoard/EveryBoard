@@ -52,7 +52,14 @@ describe('GameService', () => {
         const myCallback: (iPart: ICurrentPartId) => void = (iPart: ICurrentPartId) => {
             expect(iPart.id).toBe('partId');
         };
-        spyOn(partDao, 'getObsById').and.returnValue(of({ id: 'partId', doc: null }));
+        spyOn(partDao, 'getObsById').and.returnValue(of({ id: 'partId', doc: {
+            typeGame: 'Quarto',
+            playerZero: 'creator',
+            playerOne: 'joiner',
+            turn: 2,
+            listMoves: [107, 161],
+            result: MGPResult.UNACHIEVED.value,
+        } }));
         service.startObserving('partId', myCallback);
         expect(partDao.getObsById).toHaveBeenCalled();
     });

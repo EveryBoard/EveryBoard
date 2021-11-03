@@ -10,7 +10,7 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class AuthenticationServiceMock {
-    private static CURRENT_USER: AuthUser = null;
+    private static CURRENT_USER: AuthUser | null = null;
 
     public static CONNECTED: AuthUser = {
         pseudo: 'Jean Jaja',
@@ -21,7 +21,7 @@ export class AuthenticationServiceMock {
     }
 
     public getJoueurObs(): Observable<AuthUser> {
-        return of(AuthenticationServiceMock.CURRENT_USER);
+        return of(this.getAuthenticatedUser());
     }
     public getAuthenticatedUser(): AuthUser {
         if (AuthenticationServiceMock.CURRENT_USER == null) {
@@ -33,22 +33,22 @@ export class AuthenticationServiceMock {
         return;
     }
     public async doRegister(): Promise<firebase.auth.UserCredential> {
-        return null;
+        throw new Error('doRegister not mocked');
     }
     public sendEmailVerification(): Promise<void> {
-        return null;
+        throw new Error('sendEmailVerification not mocked');
     }
     public doEmailLogin(): Promise<unknown> {
-        return;
+        throw new Error('doEmailLogin not mocked');
     }
     public doGoogleLogin(): Promise<unknown> {
-        return;
+        throw new Error('doGoogleLogin not mocked');
     }
 }
 
 export class AuthenticationServiceUnderTest extends AuthenticationService {
     public updatePresence(): Promise<void> {
-        return null;
+        throw new Error('updatePresence not mocked');
     }
 }
 

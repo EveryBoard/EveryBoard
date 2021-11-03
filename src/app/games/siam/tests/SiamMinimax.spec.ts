@@ -70,7 +70,7 @@ describe('SiamMinimax:', () => {
             [_, _, _, _, _],
         ];
         const state: SiamState = new SiamState(board, 0);
-        const node: SiamNode = new MGPNode(null, null, state);
+        const node: SiamNode = new SiamNode(null, null, state);
         const chosenMove: SiamMove = node.findBestMove(1, minimax);
         const bestMove: SiamMove = new SiamMove(3, 1, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
         expect(chosenMove).toEqual(bestMove);
@@ -85,7 +85,7 @@ describe('SiamMinimax:', () => {
             [_, _, _, _, _],
         ];
         const state: SiamState = new SiamState(board, 0);
-        const node: SiamNode = new MGPNode(null, null, state);
+        const node: SiamNode = new SiamNode(null, null, state);
         const chosenMove: SiamMove = node.findBestMove(1, minimax);
         const bestMove: SiamMove = new SiamMove(3, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
         expect(chosenMove).toEqual(bestMove);
@@ -99,7 +99,7 @@ describe('SiamMinimax:', () => {
             [_, _, _, U, _],
         ];
         const state: SiamState = new SiamState(board, 0);
-        const node: SiamNode = new MGPNode(null, null, state);
+        const node: SiamNode = new SiamNode(null, null, state);
         const moves: SiamMove[] = minimax.getListMoves(node);
         const moveType: { [moveTYpe: string]: number} = {
             moving: 0,
@@ -134,7 +134,7 @@ describe('SiamMinimax:', () => {
             [_, _, _, M, _],
         ];
         const state: SiamState = new SiamState(board, 1);
-        const node: SiamNode = new MGPNode(null, null, state);
+        const node: SiamNode = new SiamNode(null, null, state);
         const moves: SiamMove[] = minimax.getListMoves(node);
         let isInsertionPossible: boolean = false;
         for (const move of moves) {
@@ -351,7 +351,7 @@ describe('SiamMinimax:', () => {
     it('Should getScoreFromShortestDistances (Player Zero) correctly', () => {
         const currentPlayer: Player = Player.ZERO;
         const T: number = currentPlayer === Player.ZERO ? -1 : 1;
-        const expectedValues: number[][] = [
+        const expectedValues: (number | null)[][] = [
         // 0:  won     1     2     3     4     5  nothing
             [null, null, null, null, null, null, null], // 1 has won
             [null, T, 55, 56, 57, 58, 59], // 1 has 1
@@ -361,7 +361,7 @@ describe('SiamMinimax:', () => {
             [null, -58, -48, -38, -28, T, 19], // 1 has 5
             [null, -59, -49, -39, -29, -19, T], // 1 has nothing
         ];
-        const actualValues: number[][] = [];
+        const actualValues: (number | null)[][] = [];
         for (let oneShortestDistance: number = 0; oneShortestDistance <= 6; oneShortestDistance++) {
             actualValues.push([]);
             for (let zeroShortestDistance: number = 0; zeroShortestDistance <= 6; zeroShortestDistance++) {

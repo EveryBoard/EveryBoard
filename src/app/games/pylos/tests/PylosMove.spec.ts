@@ -7,24 +7,17 @@ describe('PylosMove', () => {
     const coord: PylosCoord = new PylosCoord(0, 0, 0);
     const highCoord: PylosCoord = new PylosCoord(0, 0, 2);
 
-    it('Should forbid invalid move creation', () => {
+    it('Should allow move creation', () => {
         // From Climb
-        expect(() => PylosMove.fromClimb(null, coord, []))
-            .toThrowError(`PylosMove: Starting Coord can't be null if it's when created fromClimb.`);
         expect(() => PylosMove.fromClimb(coord, coord, []))
             .toThrowError('PylosMove: When piece move it must move upward.');
         expect(PylosMove.fromClimb(coord, highCoord, [])).toBeDefined();
 
         // From Drop
-        expect(() => PylosMove.fromDrop(null, [])).toThrowError(`PylosMove: Landing Coord can't be null.`);
         expect(PylosMove.fromDrop(coord, [coord])).toBeDefined();
     });
     it('Should check and change captures correctly', () => {
         // Check capture
-        expect(() => PylosMove.checkCaptures([null]))
-            .toThrowError('PylosMove: first capture cannot be null, use empty list instead.');
-        expect(() => PylosMove.checkCaptures([coord, null]))
-            .toThrowError('PylosMove: second capture cannot be null, use 1 sized list instead.');
         expect(() => PylosMove.checkCaptures([coord, coord]))
             .toThrowError('PylosMove: should not capture twice same piece.');
         expect(() => PylosMove.checkCaptures([coord, highCoord, coord]))

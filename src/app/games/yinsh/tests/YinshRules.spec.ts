@@ -610,19 +610,19 @@ describe('YinshRules', () => {
     describe('getGameStatus', () => {
         it('should consider initial phase as ongoing', () => {
             const state: YinshState = YinshState.getInitialState();
-            expect(rules.getGameStatus(new MGPNode(null, null, state))).toBe(GameStatus.ONGOING);
+            expect(rules.getGameStatus(new YinshNode(null, null, state))).toBe(GameStatus.ONGOING);
         });
         it('should detect part after initial phase as ongoing if victory criterion is not met', () => {
             const state: YinshState = new YinshState(YinshState.getInitialState().board, [0, 0], 20);
-            expect(rules.getGameStatus(new MGPNode(null, null, state))).toBe(GameStatus.ONGOING);
+            expect(rules.getGameStatus(new YinshNode(null, null, state))).toBe(GameStatus.ONGOING);
         });
         it('should detect victory for a player if it obtains more than 3 rings', () => {
             const state1: YinshState = new YinshState(YinshState.getInitialState().board, [3, 0], 20);
-            const node1: YinshNode = new MGPNode(null, null, state1);
+            const node1: YinshNode = new YinshNode(null, null, state1);
             expectToBeVictoryFor(rules, node1, Player.ZERO, minimaxes);
 
             const state2: YinshState = new YinshState(YinshState.getInitialState().board, [0, 3], 20);
-            const node2: YinshNode = new MGPNode(null, null, state2);
+            const node2: YinshNode = new YinshNode(null, null, state2);
             expectToBeVictoryFor(rules, node2, Player.ONE, minimaxes);
 
         });

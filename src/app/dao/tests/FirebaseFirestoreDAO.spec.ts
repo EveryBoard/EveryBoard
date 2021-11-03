@@ -3,7 +3,7 @@ import { AngularFirestore, AngularFirestoreModule } from '@angular/fire/firestor
 import 'firebase/firestore';
 import { CUSTOM_ELEMENTS_SCHEMA, Injectable } from '@angular/core';
 import { FirebaseFirestoreDAO } from '../FirebaseFirestoreDAO';
-import { FirebaseJSONObject } from 'src/app/utils/utils';
+import { FirebaseJSONObject, Utils } from 'src/app/utils/utils';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 import { USE_EMULATOR as USE_FIRESTORE_EMULATOR } from '@angular/fire/firestore';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
@@ -52,14 +52,14 @@ describe('FirebaseFirestoreDAO', () => {
     });
     it('should be able to read back objects that exist', async() => {
         const id: string = await dao.create({ value: 'this is my value', otherValue: 42 });
-        const stored: Foo = await dao.read(id);
+        const stored: Foo = Utils.getDefinedOrFail(await dao.read(id));
         expect(stored.value).toBe('this is my value');
         expect(stored.otherValue).toBe(42);
     });
     it('should support partial updates', async() => {
         const id: string = await dao.create({ value: 'foo', otherValue: 1 });
         await dao.update(id, { otherValue: 2 });
-        const stored: Foo = await dao.read(id);
+        const stored: Foo = Utils.getDefinedOrFail(await dao.read(id));
         expect(stored.value).toBe('foo');
         expect(stored.otherValue).toBe(2);
     });
@@ -71,7 +71,7 @@ describe('FirebaseFirestoreDAO', () => {
     it('should update an object upon set', async() => {
         const id: string = await dao.create({ value: 'foo', otherValue: 1 });
         await dao.set(id, { value: 'bar', otherValue: 2 });
-        const stored: Foo = await dao.read(id);
+        const stored: Foo = Utils.getDefinedOrFail(await dao.read(id));
         expect(stored.value).toBe('bar');
         expect(stored.otherValue).toBe(2);
     });

@@ -17,8 +17,7 @@ class MyGameState extends AbstractGameState {
 }
 
 describe('GameState', () => {
-
-    it('should throw when passed null turn', () => {
-        expect(() => new MyGameState(null)).toThrowError('Turn cannot be null.');
+    it('should successfuly be constructed', () => {
+        expect(new MyGameState(3)).toBeTruthy();
     });
 });

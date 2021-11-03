@@ -49,7 +49,9 @@ export class Utils {
             return value;
         }
     }
-
+    public static getNonNullDefinedOrFail<T>(value : T | undefined | null): T {
+        return Utils.getNonNullOrFail(Utils.getDefinedOrFail(value));
+    }
 }
 
 export function display(verbose: boolean, message: unknown): void {

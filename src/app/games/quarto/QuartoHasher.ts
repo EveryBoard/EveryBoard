@@ -3,6 +3,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { QuartoPiece } from './QuartoPiece';
+import { Utils } from 'src/app/utils/utils';
 
 export interface CoordDir {
     readonly coord: Coord,
@@ -75,9 +76,9 @@ export class QuartoHasher {
     public static get(coordDir: CoordDir, n: number): Coord {
         let coord: Coord = coordDir.coord.getCopy();
         const firstDir: Orthogonal = coordDir.dir;
-        const secondDir: Orthogonal = QuartoHasher.coordDirs.find((coordDir: CoordDir) =>
+        const secondDir: Orthogonal = Utils.getDefinedOrFail(QuartoHasher.coordDirs.find((coordDir: CoordDir) =>
             coordDir.coord.equals(coord) &&
-            coordDir.dir.equals(firstDir) === false).dir;
+            coordDir.dir.equals(firstDir) === false)).dir;
         while (n >= 4) {
             n -= 4;
             coord = coord.getNext(secondDir, 1);

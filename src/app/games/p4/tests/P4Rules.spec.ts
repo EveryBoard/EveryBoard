@@ -2,7 +2,6 @@ import { P4Node, P4Rules } from '../P4Rules';
 import { Player } from 'src/app/jscaip/Player';
 import { P4State } from '../P4State';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { P4Move } from '../P4Move';
 import { P4Minimax } from '../P4Minimax';
 import { P4Failure } from '../P4Failure';
@@ -65,7 +64,7 @@ describe('P4Rules', () => {
             [_, _, _, O, _, _, _],
         ];
         const state: P4State = new P4State(board, 0);
-        rules.node = new MGPNode(null, null, state);
+        rules.node = new P4Node(null, null, state);
         const move: P4Move = P4Move.of(3);
         expect(rules.choose(move)).toBeTrue();
         expect(rules.node.gameState.board).toEqual(expectedBoard);
@@ -90,7 +89,7 @@ describe('P4Rules', () => {
             [_, _, _, X, _, _, _],
         ];
         const state: P4State = new P4State(board, 1);
-        rules.node = new MGPNode(null, null, state);
+        rules.node = new P4Node(null, null, state);
         const move: P4Move = P4Move.of(3);
         expect(rules.choose(move)).toBeTrue();
         expect(rules.node.gameState.board).toEqual(expectedBoard);
@@ -115,7 +114,7 @@ describe('P4Rules', () => {
             [X, X, X, O, X, X, X],
         ];
         const state: P4State = new P4State(board, 41);
-        rules.node = new MGPNode(null, null, state);
+        rules.node = new P4Node(null, null, state);
         const move: P4Move = P4Move.of(3);
         expect(rules.choose(move)).toBeTrue();
         const resultingState: P4State = rules.node.gameState;
@@ -133,7 +132,7 @@ describe('P4Rules', () => {
             [O, O, X, O, X, O, X],
         ];
         const state: P4State = new P4State(board, 12);
-        const node: P4Node = new MGPNode(null, null, state);
+        const node: P4Node = new P4Node(null, null, state);
         expect(minimax.getListMoves(node).length).toBe(6);
     });
     it('should forbid placing a piece on a full column', () => {

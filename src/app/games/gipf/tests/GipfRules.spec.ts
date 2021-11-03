@@ -381,7 +381,7 @@ describe('GipfRules:', () => {
             expect(legality.legal.isSuccess()).toBeTrue();
 
             const resultingState: GipfState =
-                rules.applyLegalMove(move, state, new GipfLegalityStatus(MGPValidation.SUCCESS, null));
+                rules.applyLegalMove(move, state, new GipfLegalityStatus(MGPValidation.SUCCESS));
 
             const expectedBoard: Table<FourStatePiece> = [
                 [N, N, N, _, A, _, _],

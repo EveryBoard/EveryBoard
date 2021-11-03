@@ -45,7 +45,7 @@ describe('QuartoRules', () => {
             [QuartoPiece.AAAA, QuartoPiece.ABAB, QuartoPiece.BABB, QuartoPiece.BAAB],
         ];
         const state: QuartoState = new QuartoState(board, 15, QuartoPiece.BAAB);
-        rules.node = new MGPNode(null, null, state);
+        rules.node = new QuartoNode(null, null, state);
         const move: QuartoMove = new QuartoMove(3, 3, QuartoPiece.NONE);
         expect(rules.choose(move)).toBeTrue();
         const resultingState: QuartoState = rules.node.gameState;

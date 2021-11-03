@@ -170,9 +170,8 @@ export class Coord implements ComparableObject {
     }
     // Override
 
-    public equals(obj: Coord | null): boolean {
+    public equals(obj: Coord): boolean {
         if (this === obj) return true;
-        if (obj == null) return false;
         if (obj.x !== this.x) return false;
         return obj.y === this.y;
     }

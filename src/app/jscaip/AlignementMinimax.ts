@@ -6,6 +6,7 @@ import { Move } from './Move';
 import { NodeUnheritance } from './NodeUnheritance';
 import { SCORE } from './SCORE';
 import { AbstractGameState } from './GameState';
+import { Utils } from '../utils/utils';
 
 export interface BoardInfo {
     status: SCORE,
@@ -44,7 +45,7 @@ export abstract class AlignementMinimax<M extends Move,
                 status: newBoardInfo.status,
                 victory: null,
                 preVictory: newBoardInfo.preVictory,
-                sum: boardInfo.sum + newBoardInfo.sum,
+                sum: Utils.getNonNullOrFail(boardInfo.sum) + Utils.getNonNullOrFail(newBoardInfo.sum),
             };
         }
         return boardInfo;

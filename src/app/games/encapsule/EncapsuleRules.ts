@@ -5,7 +5,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { EncapsuleLegalityStatus } from './EncapsuleLegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { display } from 'src/app/utils/utils';
+import { display, Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { EncapsuleMove } from './EncapsuleMove';
 import { EncapsulePiece } from './EncapsulePiece';
@@ -91,7 +91,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, Encapsu
     {
         const newBoard: EncapsuleCase[][] = state.getCopiedBoard();
 
-        const newLandingCase: EncapsuleCase = legality.newLandingCase;
+        const newLandingCase: EncapsuleCase = Utils.getNonNullOrFail(legality.newLandingCase);
         let newRemainingPiece: EncapsulePiece[] = state.getRemainingPieces();
         const newTurn: number = state.turn + 1;
         newBoard[move.landingCoord.y][move.landingCoord.x] = EncapsuleCase.decode(newLandingCase.encode());

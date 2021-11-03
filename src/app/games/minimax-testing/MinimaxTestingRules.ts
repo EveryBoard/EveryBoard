@@ -6,7 +6,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 
-export abstract class MinimaxTestingNode extends MGPNode<MinimaxTestingRules,
+export class MinimaxTestingNode extends MGPNode<MinimaxTestingRules,
                                                          MinimaxTestingMove,
                                                          MinimaxTestingState> {}
 

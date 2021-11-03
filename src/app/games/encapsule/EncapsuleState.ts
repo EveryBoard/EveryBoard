@@ -12,7 +12,6 @@ export class EncapsuleState extends GameStateWithTable<EncapsuleCase> {
 
     constructor(board: EncapsuleCase[][], turn: number, remainingPieces: EncapsulePiece[]) {
         super(board, turn);
-        if (remainingPieces == null) throw new Error('RemainingPieces cannot be null');
         this.remainingPieces = remainingPieces;
     }
     public static getInitialState(): EncapsuleState {
@@ -73,9 +72,6 @@ export class EncapsuleCase implements ComparableObject {
         return new EncapsuleCase(small, medium, big);
     }
     constructor(small: Player, medium: Player, big: Player) {
-        if (small == null) throw new Error('Small cannot be null');
-        if (medium == null) throw new Error('Medium cannot be null');
-        if (big == null) throw new Error('Big cannot be null');
         this.small = small;
         this.medium = medium;
         this.big = big;

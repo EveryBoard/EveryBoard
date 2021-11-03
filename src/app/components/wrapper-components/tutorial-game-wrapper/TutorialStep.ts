@@ -98,8 +98,8 @@ export class TutorialStep {
                         public readonly solutionMove: Move | null,
                         public readonly acceptedClicks: ReadonlyArray<string> | null,
                         public readonly predicate:
-                          (move: Move, resultingState: AbstractGameState) => MGPValidation | null,
-                        public readonly successMessage: string,
+                          ((move: Move, resultingState: AbstractGameState) => MGPValidation) | null,
+                        public readonly successMessage: string | null,
                         public readonly failureMessage: string | null,
                         public readonly previousMove: Move | null,
     ) { }

@@ -1,4 +1,4 @@
-import { AwaleRules } from '../AwaleRules';
+import { AwaleNode, AwaleRules } from '../AwaleRules';
 import { AwaleMinimax } from '../AwaleMinimax';
 import { AwaleMove } from '../AwaleMove';
 import { AwaleState } from '../AwaleState';
@@ -24,7 +24,7 @@ describe('AwaleMinimax:', () => {
             [4, 4, 4, 4, 4, 1],
         ];
         const state: AwaleState = new AwaleState(board, 0, [0, 0]);
-        const node: MGPNode<AwaleRules, AwaleMove, AwaleState> = new MGPNode(null, null, state);
+        const node: AwaleNode = new AwaleNode(null, null, state);
         const bestMove: AwaleMove = node.findBestMove(1, minimax);
         expect(bestMove).toEqual(AwaleMove.TWO);
     });
@@ -34,7 +34,7 @@ describe('AwaleMinimax:', () => {
             [0, 0, 0, 0, 1, 0],
         ];
         const state: AwaleState = new AwaleState(board, 0, [0, 0]);
-        const node: MGPNode<AwaleRules, AwaleMove, AwaleState> = new MGPNode(null, null, state);
+        const node: AwaleNode = new AwaleNode(null, null, state);
         const bestMove: AwaleMove = node.findBestMove(2, minimax);
         expect(bestMove).toEqual(AwaleMove.FOUR);
     });

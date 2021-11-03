@@ -26,7 +26,7 @@ describe('SiamComponent', () => {
             return componentTestUtils.expectMoveSuccess('#chooseOrientation_' + orientation, move);
         } else {
             await componentTestUtils.expectClickSuccess('#clickPiece_' + move.coord.x + '_' + move.coord.y);
-            const direction: Orthogonal = move.moveDirection.getOrNull();
+            const direction: Orthogonal | null = move.moveDirection.getOrNull();
             const moveDirection: string = direction ? direction.toString() : '';
             await componentTestUtils.expectClickSuccess('#chooseDirection_' + moveDirection);
             const landingOrientation: string = move.landingOrientation.toString();

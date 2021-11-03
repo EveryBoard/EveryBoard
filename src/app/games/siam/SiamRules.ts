@@ -13,11 +13,9 @@ import { display, Utils } from 'src/app/utils/utils';
 import { SiamFailure } from './SiamFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
-abstract class _SiamRules extends Rules<SiamMove, SiamState, SiamLegalityStatus> {}
+export class SiamNode extends MGPNode<SiamRules, SiamMove, SiamState, SiamLegalityStatus> {}
 
-export abstract class SiamNode extends MGPNode<_SiamRules, SiamMove, SiamState, SiamLegalityStatus> {}
-
-export class SiamRules extends _SiamRules {
+export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityStatus> {
 
     public static VERBOSE: boolean = false;
 
@@ -352,7 +350,7 @@ export class SiamRules extends _SiamRules {
         let currentDistance: number = 1;
         let previousPiece: SiamPiece = state.getPieceAt(fallingCoord);
         let testedCoord: Coord = fallingCoord.getCopy();
-        let almostPusher: Coord | null;
+        let almostPusher: Coord | null = null;
         let pusherFound: boolean = false;
         let mountainEncountered: boolean = false;
         let missingForce: number = 0;

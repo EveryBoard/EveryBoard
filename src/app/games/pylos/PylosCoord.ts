@@ -50,9 +50,8 @@ export class PylosCoord extends Coord {
     public toShortString(): string {
         return '(' + this.x + ', ' + this.y + ', ' + this.z + ')';
     }
-    public equals(obj: PylosCoord | null): boolean {
+    public equals(obj: PylosCoord): boolean {
         if (this === obj) return true;
-        if (obj == null) return false;
         if (obj.x !== this.x) return false;
         if (obj.y !== this.y) return false;
         return obj.z === this.z;

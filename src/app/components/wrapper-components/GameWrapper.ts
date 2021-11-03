@@ -9,7 +9,7 @@ import { Move } from '../../jscaip/Move';
 import { AbstractGameState } from 'src/app/jscaip/GameState';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { assert, display } from 'src/app/utils/utils';
+import { assert, display, Utils } from 'src/app/utils/utils';
 import { GameInfo } from '../normal-component/pick-game/pick-game.component';
 import { Player } from 'src/app/jscaip/Player';
 import { Localized } from 'src/app/utils/LocaleUtils';
@@ -32,10 +32,10 @@ export abstract class GameWrapper {
 
     public gameComponent: AbstractGameComponent;
 
-    public userName: string = this.authenticationService.getAuthenticatedUser() != null &&
+    public userName: string | null = this.authenticationService.getAuthenticatedUser() &&
                               this.authenticationService.getAuthenticatedUser().pseudo // TODO, clean that;
 
-    public players: string[] = [null, null];
+    public players: (string | null)[] = [null, null];
 
     public observerRole: number;
 
@@ -53,8 +53,9 @@ export abstract class GameWrapper {
     }
     public getMatchingComponent(compoString: string) : Type<AbstractGameComponent> {
         display(GameWrapper.VERBOSE, 'GameWrapper.getMatchingComponent');
-        const gameInfo: GameInfo = GameInfo.ALL_GAMES().find((gameInfo: GameInfo) => gameInfo.urlName === compoString);
-        if (gameInfo == null) {
+        const gameInfo: GameInfo | undefined =
+            GameInfo.ALL_GAMES().find((gameInfo: GameInfo) => gameInfo.urlName === compoString);
+        if (gameInfo === undefined) {
             throw new Error('Unknown Games are unwrappable');
         }
         return gameInfo.component;
@@ -70,7 +71,7 @@ export abstract class GameWrapper {
         display(GameWrapper.VERBOSE, 'GameWrapper.createGameComponent');
         assert(this.gameIncluder != null, 'GameIncluder should be present');
 
-        const compoString: string = this.actRoute.snapshot.paramMap.get('compo');
+        const compoString: string = Utils.getNonNullOrFail(this.actRoute.snapshot.paramMap.get('compo'));
         const component: Type<AbstractGameComponent> = this.getMatchingComponent(compoString);
         const componentFactory: ComponentFactory<AbstractGameComponent> =
             this.componentFactoryResolver.resolveComponentFactory(component);

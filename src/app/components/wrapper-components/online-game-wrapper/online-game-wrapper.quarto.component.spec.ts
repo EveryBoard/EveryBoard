@@ -27,6 +27,7 @@ import { Time } from 'src/app/domain/Time';
 import { getMillisecondsDifference } from 'src/app/utils/TimeUtils';
 import { GameWrapperMessages } from '../GameWrapper';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { Utils } from 'src/app/utils/utils';
 
 describe('OnlineGameWrapperComponent of Quarto:', () => {
 
@@ -192,8 +193,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             listMoves: moves,
             turn: moves.length,
             request: null,
-            scorePlayerOne: null,
-            scorePlayerZero: null,
             remainingMsForOne,
             remainingMsForZero, // TODO: only send one of the two time updated, since that's what happens
             lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
@@ -277,8 +276,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(wrapper.currentPart.doc.turn).toEqual(1);
 
         // Receive second move
-        const remainingMsForZero: number = wrapper.currentPart.doc.remainingMsForZero;
-        const remainingMsForOne: number = wrapper.currentPart.doc.remainingMsForOne;
+        const remainingMsForZero: number = Utils.getDefinedOrFail(wrapper.currentPart.doc.remainingMsForZero);
+        const remainingMsForOne: number = Utils.getDefinedOrFail(wrapper.currentPart.doc.remainingMsForOne);
         await receiveNewMoves([FIRST_MOVE_ENCODED, 166], remainingMsForZero, remainingMsForOne);
 
         expect(wrapper.currentPart.doc.turn).toEqual(2);
@@ -313,8 +312,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         const expectedUpdate: Partial<IPart> = {
             listMoves: [QuartoMove.encoder.encodeNumber(FIRST_MOVE)],
             turn: 1,
-            scorePlayerZero: null,
-            scorePlayerOne: null,
             // remaining times not updated on first turn of the component
             request: null,
             lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
@@ -353,13 +350,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         const winningMove: QuartoMove = new QuartoMove(3, 3, QuartoPiece.ABAA);
         await doMove(winningMove, true);
 
-        expect(wrapper.gameComponent.rules.node.move.toString()).toBe(winningMove.toString());
+        expect(Utils.getNonNullOrFail(wrapper.gameComponent.rules.node.move).toString()).toBe(winningMove.toString());
         expect(partDAO.update).toHaveBeenCalledTimes(1);
         expect(partDAO.update).toHaveBeenCalledWith('joinerId', {
             listMoves: [move0, move1, move2, move3, winningMove].map(QuartoMove.encoder.encodeNumber),
             turn: 5,
-            scorePlayerZero: null,
-            scorePlayerOne: null,
             // remainingTimes are not present on the first move of a current board
             request: null,
             lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
@@ -394,7 +389,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         // when receiving a move without time
         await receivePartDAOUpdate({
-            lastMoveTime: null,
             listMoves: [FIRST_MOVE_ENCODED],
             turn: 1,
         });
@@ -531,8 +525,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                     listMoves: [FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED, THIRD_MOVE_ENCODED],
                     turn: 3,
                     remainingMsForOne: 1799999,
-                    scorePlayerZero: null,
-                    scorePlayerOne: null, // TODO: why though ?
                     request: null,
                     lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
                 });
@@ -563,7 +555,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                     request: Request.takeBackAccepted(Player.ONE),
                     listMoves: [],
                     turn: 0,
-                    lastMoveTime: null,
                     remainingMsForZero: 179999,
                 });
 
@@ -759,8 +750,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                     listMoves: [ALTERNATIVE_MOVE_ENCODED],
                     request: null,
                     lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
-                    scorePlayerZero: null,
-                    scorePlayerOne: null, // TODO: why though ?
                 });
                 tick(wrapper.joiner.maximalMoveDuration * 1000);
             }));
@@ -823,8 +812,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                     listMoves: [ALTERNATIVE_MOVE_ENCODED],
                     request: null,
                     lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
-                    scorePlayerZero: null,
-                    scorePlayerOne: null, // TODO: why though ?
                 });
                 tick(wrapper.joiner.maximalMoveDuration * 1000);
             }));
@@ -1039,7 +1026,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // then the global chrono of update-player should be updated
             expect(wrapper.chronoZeroGlobal.changeDuration)
                 .withContext(`Chrono.ChangeDuration should have been refreshed with update's datas`)
-                .toHaveBeenCalledWith(wrapper.currentPart.doc.remainingMsForZero);
+                .toHaveBeenCalledWith(Utils.getDefinedOrFail(wrapper.currentPart.doc.remainingMsForZero));
             tick(wrapper.joiner.maximalMoveDuration * 1000);
         }));
         it('when resigning, lastMoveTime must be upToDate then remainingMs');

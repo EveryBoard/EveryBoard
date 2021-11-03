@@ -1,12 +1,10 @@
-
 import { GoMove } from '../GoMove';
 import { Phase, GoState, GoPiece } from '../GoState';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { GoLegalityStatus } from '../GoLegalityStatus';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { GoRules } from '../GoRules';
+import { GoNode, GoRules } from '../GoRules';
 import { GoMinimax } from '../GoMinimax';
 import { GoFailure } from '../GoFailure';
 import { expectToBeDraw } from 'src/app/jscaip/tests/RulesUtils.spec';
@@ -463,7 +461,7 @@ describe('GoRules:', () => {
             [_, O, O, O, _],
         ];
         const state: GoState = new GoState(board, [0, 0], 0, MGPOptional.empty(), Phase.PASSED);
-        rules.node = new MGPNode(null, null, state);
+        rules.node = new GoNode(null, null, state);
         expect(rules.choose(GoMove.PASS)).toBeTrue();
         expect(rules.node.gameState.phase).toBe(Phase.COUNTING);
         expect(rules.choose(new GoMove(4, 2))).toBeTrue();

@@ -78,7 +78,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
     }
     public proposeAIToPlay(): void {
         // check if ai's turn has come, if so, make her start after a delay
-        const playingMinimax: Minimax<Move, AbstractGameState> = this.getPlayingAI();
+        const playingMinimax: Minimax<Move, AbstractGameState> | null = this.getPlayingAI();
         if (playingMinimax != null) {
             // bot's turn
             setTimeout(() => {

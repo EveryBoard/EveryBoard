@@ -92,7 +92,9 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
         switch (player) {
             case Player.ZERO: return 'player0';
             case Player.ONE: return 'player1';
-            case Player.NONE: return '';
+            default:
+                Utils.defaultCase(player, Player.NONE);
+                return '';
         }
     }
     public getTurn(): number {

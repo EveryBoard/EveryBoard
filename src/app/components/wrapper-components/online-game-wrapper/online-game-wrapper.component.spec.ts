@@ -30,9 +30,13 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
     let componentTestUtils: ComponentTestUtils<P4Component>;
     let wrapper: OnlineGameWrapperComponent;
 
-    async function prepareComponent(initialJoiner: IJoiner, initialPart: IPart): Promise<void> {
-        await TestBed.inject(JoinerDAO).set('joinerId', initialJoiner);
-        await TestBed.inject(PartDAO).set('joinerId', initialPart);
+    async function prepareComponent(initialJoiner: IJoiner | null, initialPart: IPart | null): Promise<void> {
+        if (initialJoiner) {
+            await TestBed.inject(JoinerDAO).set('joinerId', initialJoiner);
+        }
+        if (initialPart) {
+            await TestBed.inject(PartDAO).set('joinerId', initialPart);
+        }
         await TestBed.inject(ChatDAO).set('joinerId', { messages: [], status: `I don't have a clue` });
         return Promise.resolve();
     }

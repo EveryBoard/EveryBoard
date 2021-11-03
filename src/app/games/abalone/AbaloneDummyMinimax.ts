@@ -8,6 +8,7 @@ import { AbaloneState } from './AbaloneState';
 import { AbaloneMove } from './AbaloneMove';
 import { AbaloneLegalityStatus, AbaloneNode, AbaloneRules } from './AbaloneRules';
 import { Player } from 'src/app/jscaip/Player';
+import { Utils } from 'src/app/utils/utils';
 
 export class AbaloneDummyMinimax extends Minimax<AbaloneMove, AbaloneState, AbaloneLegalityStatus> {
 
@@ -54,7 +55,7 @@ export class AbaloneDummyMinimax extends Minimax<AbaloneMove, AbaloneState, Abal
         const status: AbaloneLegalityStatus = AbaloneRules.isLegal(move, state);
         if (status.legal.isSuccess()) {
             const OPPONENT: number = state.getCurrentOpponent().value;
-            const newState: AbaloneState = new AbaloneState(status.newBoard, state.turn + 1);
+            const newState: AbaloneState = new AbaloneState(Utils.getNonNullOrFail(status.newBoard), state.turn + 1);
             const newScores: [number, number] = newState.getScores();
             if (newScores[OPPONENT] > scores[OPPONENT]) {
                 return false; // he just pushed himself

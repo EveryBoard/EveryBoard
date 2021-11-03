@@ -14,7 +14,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { GoGroupDatasFactory } from './GoGroupDatasFactory';
 import { GoFailure } from './GoFailure';
 
-export abstract class GoNode extends MGPNode<GoRules, GoMove, GoState, GoLegalityStatus> {}
+export class GoNode extends MGPNode<GoRules, GoMove, GoState, GoLegalityStatus> {}
 
 export class GoRules extends Rules<GoMove, GoState, GoLegalityStatus> {
 

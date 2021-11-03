@@ -73,7 +73,7 @@ export class TablutEscapeThenPieceAndControlMinimax extends TablutPieceAndContro
                                    (threatenedScore * 531) +
                                    controlScore);
     }
-    public getStepForEscape(board: Table<TablutCase>): number | null {
+    public getStepForEscape(board: Table<TablutCase>): number {
         const king: Coord = TablutRules.getKingCoord(board).get();
         return this._getStepForEscape(board, 1, [king], []);
     }
@@ -81,13 +81,13 @@ export class TablutEscapeThenPieceAndControlMinimax extends TablutPieceAndContro
                              step: number,
                              previousGen: Coord[],
                              handledCoords: Coord[])
-    : number | null
+    : number
     {
         const nextGen: Coord[] = this.getNextGen(board, previousGen, handledCoords);
 
         if (nextGen.length === 0) {
             // not found:
-            return null;
+            throw new Error('getStepForEscape did not find escape');
         }
         if (nextGen.some((coord: Coord) => TablutRules.isExternalThrone(coord))) {
             return step;

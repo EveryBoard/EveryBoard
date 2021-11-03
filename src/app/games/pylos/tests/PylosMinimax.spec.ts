@@ -44,7 +44,7 @@ describe('PylosMinimax:', () => {
         ];
 
         const state: PylosState = new PylosState(board, 0);
-        const node: PylosNode = new MGPNode(null, null, state);
+        const node: PylosNode = new PylosNode(null, null, state);
         expect(minimax.getListMoves(node).length).toBe(31);
     });
 

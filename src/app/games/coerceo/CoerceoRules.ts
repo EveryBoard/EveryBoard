@@ -9,7 +9,7 @@ import { CoerceoState } from './CoerceoState';
 import { CoerceoFailure } from './CoerceoFailure';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 
-export abstract class CoerceoNode extends MGPNode<CoerceoRules, CoerceoMove, CoerceoState> {}
+export class CoerceoNode extends MGPNode<CoerceoRules, CoerceoMove, CoerceoState> {}
 
 export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
 

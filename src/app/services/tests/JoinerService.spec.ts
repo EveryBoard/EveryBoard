@@ -5,6 +5,7 @@ import { JoinerDAO } from 'src/app/dao/JoinerDAO';
 import { FirstPlayer, IJoiner, PartStatus, PartType } from 'src/app/domain/ijoiner';
 import { JoinerDAOMock } from 'src/app/dao/tests/JoinerDAOMock.spec';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
+import { Utils } from 'src/app/utils/utils';
 
 describe('JoinerService', () => {
 
@@ -65,7 +66,7 @@ describe('JoinerService', () => {
 
             await service.joinGame('joinerId', JoinerMocks.INITIAL.doc.creator);
 
-            const resultingJoiner: IJoiner = await dao.read('joinerId');
+            const resultingJoiner: IJoiner = Utils.getDefinedOrFail(await dao.read('joinerId'));
 
             expect(dao.update).not.toHaveBeenCalled();
             expect(resultingJoiner).toEqual(JoinerMocks.INITIAL.doc);
@@ -79,7 +80,7 @@ describe('JoinerService', () => {
             expect(dao.update).toHaveBeenCalled();
         }));
         it('should return false when joining an invalid joiner', fakeAsync(async() => {
-            spyOn(dao, 'read').and.resolveTo(null);
+            spyOn(dao, 'read').and.resolveTo(undefined);
             expectAsync(service.joinGame('invalidJoinerId', 'creator')).toBeResolvedTo(false);
         }));
     });
@@ -104,7 +105,7 @@ describe('JoinerService', () => {
             service.observe('joinerId');
 
             await service.cancelJoining('firstCandidate');
-            const currentJoiner: IJoiner = dao.getStaticDB().get('joinerId').getOrNull().subject.value.doc;
+            const currentJoiner: IJoiner = dao.getStaticDB().get('joinerId').get().subject.value.doc;
             expect(currentJoiner).withContext('should be as new').toEqual(JoinerMocks.INITIAL.doc);
         }));
         it('should throw when called by someone who is nor candidate nor chosenPlayer', fakeAsync(async() => {

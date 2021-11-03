@@ -48,12 +48,6 @@ describe('SiamMove', () => {
 
     it('Should throw during invalid SiamMove creation', () => {
         expect(() => {
-            new SiamMove(2, 2, MGPOptional.of(Orthogonal.UP), null);
-        }).toThrowError('Landing orientation must be set.');
-        expect(() => {
-            new SiamMove(2, 2, null, Orthogonal.UP);
-        }).toThrowError('Move Direction must be set (even if optional).');
-        expect(() => {
             new SiamMove(0, 0, MGPOptional.of(Orthogonal.UP), Orthogonal.DOWN);
         }).toThrowError('SiamMove should have moveDirection and landingOrientation matching when a piece goes out of the board: SiamMove(0, 0, UP, DOWN).');
     });

@@ -1,7 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
@@ -30,7 +29,7 @@ describe('AbaloneRules', () => {
     });
     it('should start with an ongoing board status', () => {
         const state: AbaloneState = AbaloneState.getInitialState();
-        const node: AbaloneNode = new MGPNode(null, null, state);
+        const node: AbaloneNode = new AbaloneNode(null, null, state);
         expect(rules.getGameStatus(node)).toBe(GameStatus.ONGOING);
     });
     it('should move simple piece in provided direction', () => {
@@ -242,7 +241,7 @@ describe('AbaloneRules', () => {
             [O, O, O, O, O, N, N, N, N],
         ];
         const winningState: AbaloneState = new AbaloneState(winningBoard, 1);
-        const node: AbaloneNode = new MGPNode(null, null, winningState);
+        const node: AbaloneNode = new AbaloneNode(null, null, winningState);
         expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
     it('should declare player one winner when he push a 6th opponent piece out of the board', () => {
@@ -258,7 +257,7 @@ describe('AbaloneRules', () => {
             [O, O, O, O, O, N, N, N, N],
         ];
         const winningState: AbaloneState = new AbaloneState(winningBoard, 1);
-        const node: AbaloneNode = new MGPNode(null, null, winningState);
+        const node: AbaloneNode = new AbaloneNode(null, null, winningState);
         expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
     it('should allow unblocked translation', () => {

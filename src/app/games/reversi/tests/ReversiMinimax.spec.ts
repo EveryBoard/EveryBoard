@@ -1,4 +1,3 @@
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { ReversiMinimax } from '../ReversiMinimax';
 import { ReversiMove } from '../ReversiMove';
@@ -39,7 +38,7 @@ describe('ReversiMinimax', () => {
             [_, _, _, _, _, _, _, _],
         ];
         const state: ReversiState = new ReversiState(board, 2);
-        rules.node = new MGPNode(null, null, state);
+        rules.node = new ReversiNode(null, null, state);
         const bestMove: ReversiMove = rules.node.findBestMove(2, minimax);
         expect(bestMove.equals(new ReversiMove(0, 0)));
     });
@@ -55,7 +54,7 @@ describe('ReversiMinimax', () => {
             [_, _, _, _, O, _, _, _],
         ];
         const state: ReversiState = new ReversiState(board, 1);
-        rules.node = new MGPNode(null, null, state);
+        rules.node = new ReversiNode(null, null, state);
         const moves: ReversiMove[] = minimax.getListMoves(rules.node);
         expect(moves.length).toBe(1);
         expect(moves[0]).toBe(ReversiMove.PASS);
@@ -73,7 +72,7 @@ describe('ReversiMinimax', () => {
                 [_, _, _, _, _, _, _, X],
             ];
             const state: ReversiState = new ReversiState(board, 1);
-            const node: ReversiNode = new MGPNode(null, null, state);
+            const node: ReversiNode = new ReversiNode(null, null, state);
             const boardValue: number = minimax.getBoardValue(node).value;
             expect(boardValue).toBe(16);
         });
@@ -89,7 +88,7 @@ describe('ReversiMinimax', () => {
                 [_, _, _, _, _, _, _, _],
             ];
             const state: ReversiState = new ReversiState(board, 1);
-            const node: ReversiNode = new MGPNode(null, null, state);
+            const node: ReversiNode = new ReversiNode(null, null, state);
             const boardValue: number = minimax.getBoardValue(node).value;
             expect(boardValue).toBe(4);
         });
@@ -105,7 +104,7 @@ describe('ReversiMinimax', () => {
                 [_, _, _, _, _, _, _, _],
             ];
             const state: ReversiState = new ReversiState(board, 1);
-            const node: ReversiNode = new MGPNode(null, null, state);
+            const node: ReversiNode = new ReversiNode(null, null, state);
             const boardValue: number = minimax.getBoardValue(node).value;
             expect(boardValue).toBe(1);
         });

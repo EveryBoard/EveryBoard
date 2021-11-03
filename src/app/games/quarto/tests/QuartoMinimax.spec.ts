@@ -30,7 +30,7 @@ describe('QuartoMinimax:', () => {
         ];
         const pieceInHand: QuartoPiece = AAAA;
         const state: QuartoState = new QuartoState(board, 3, pieceInHand);
-        const node: QuartoNode = new MGPNode(null, null, state);
+        const node: QuartoNode = new QuartoNode(null, null, state);
         expect(minimax.getBoardValue(node).value).toEqual(Number.MAX_SAFE_INTEGER - 1);
     });
     it('Should only propose one move at last turn', () => {
@@ -41,7 +41,7 @@ describe('QuartoMinimax:', () => {
             [QuartoPiece.AAAA, QuartoPiece.ABAB, QuartoPiece.BABB, QuartoPiece.NONE],
         ];
         const state: QuartoState = new QuartoState(board, 15, QuartoPiece.BAAB);
-        rules.node = new MGPNode(null, null, state);
+        rules.node = new QuartoNode(null, null, state);
         const move: QuartoMove = new QuartoMove(3, 3, QuartoPiece.NONE);
         const possiblesMoves: QuartoMove[] = minimax.getListMoves(rules.node);
         expect(possiblesMoves.length).toBe(1);

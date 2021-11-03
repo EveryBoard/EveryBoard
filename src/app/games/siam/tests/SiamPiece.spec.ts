@@ -36,12 +36,6 @@ describe('SiamPiece:', () => {
         expect(names).toEqual(expectedNames);
         expect(pieces).toEqual(expectedPieces);
     });
-    it('Should throw when static method are called inadequately', () => {
-        expect(() => SiamPiece.of(Orthogonal.UP, null)).toThrowError('Player must be set.');
-        expect(() => SiamPiece.of(null, Player.ONE)).toThrowError('Orientation must be set.');
-        expect(() => SiamPiece.of(Orthogonal.UP, Player.NONE)).toThrowError(`Player None don't have any pieces.`);
-        expect(() => SiamPiece.WHITE_RIGHT.belongTo(null)).toThrowError('Player must be set (even if Player.NONE).');
-    });
     it('Should consider moutains as belonging to no player and know which one do', () => {
         expect(SiamPiece.MOUNTAIN.belongTo(Player.NONE)).toBeFalse();
         expect(SiamPiece.BLACK_DOWN.belongTo(Player.ZERO)).toBeFalse();
