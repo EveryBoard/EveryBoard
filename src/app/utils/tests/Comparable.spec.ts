@@ -68,7 +68,7 @@ describe('Comparable', () => {
         });
     });
     describe('comparableEqualsIfComparable', () => {
-        it('should succeed if both objects with comparable types', () => {
+        it('should succeed if both objects are of comparable types', () => {
             expect(comparableEqualsIfComparable(5, 5)).toBeTrue();
             expect(comparableEqualsIfComparable(5, 6)).toBeFalse();
         });

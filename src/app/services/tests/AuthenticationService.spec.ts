@@ -12,9 +12,12 @@ import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 
 class RTDBSpec {
     // TODO: these are stubs that can be removed after the RTDB functions ticket has been done
-    public static clearDB(): Promise<void> {
-        // Here we can't clear the DB because it breaks everything, but this is how it should be done:
-        //  await firebase.database().ref().set(null);
+    public static async clearDB(): Promise<void> {
+        const useFirebaseDatabase: boolean = false;
+        if (useFirebaseDatabase) {
+            // Here we can't clear the DB because it breaks everything, but this is how it should be done:
+            await firebase.database().ref().set(null);
+        }
         return;
     }
     public static setOfflineMock(): void {
@@ -343,6 +346,10 @@ describe('AuthenticationService', () => {
 
             // then it succeeded
             expect(result.isSuccess()).toBeTrue();
+            const provider: firebase.auth.GoogleAuthProvider = new firebase.auth.GoogleAuthProvider();
+            provider.addScope('profile');
+            provider.addScope('email');
+            expect(service.afAuth.signInWithPopup).toHaveBeenCalledWith(provider);
         });
         it('should fail if google login also fails', async() => {
             // given a google user that will fail to connect
