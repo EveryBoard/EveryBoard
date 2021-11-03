@@ -10,19 +10,19 @@ export class ApagosTutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             $localize`Initial board and goal of the game`,
-            $localize`At Apagos, there is 4 squares, each of them have a fix number of holes to put pieces, each player start with 10 pieces. Dark pieces belong to first player, light pieces belong to the second one. The game ends when no player can do a move, the player owning the most pieces in the righter square wins!`,
+            $localize`At Apagos, there are 4 squares, each of them have a fix number of holes to put pieces. Each player start with 10 pieces. Dark pieces belong to first player, light pieces belong to the second one. The game ends when no one can play. The player owning the most pieces in the righter square wins!`,
             ApagosState.getInitialState(),
         ),
         TutorialStep.anyMove(
             $localize`Drop`,
-            $localize`One of the two kind of move is the drop. To do one, you must click on any visible arrow, being of your color or the opponent's. If the receiving square is one of the 3 lefter ones, it will 'climb' one step right, and the one on its right will slide one step below. You play Light.<br/><br/>Drop a piece on one of thoses three squares.`,
+            $localize`One of the two kind of move is the drop. To do one, you must click on any visible arrow, being of your color or the opponent's. If the receiving square is one of the 3 leftmost ones, it will switch its coord with the square right to it. You play Light.<br/><br/>Drop a piece on one of thoses three squares.`,
             ApagosState.fromRepresentation(1, [
                 [0, 0, 0, 1],
                 [0, 0, 0, 0],
                 [7, 5, 3, 1],
             ], 9, 10),
             ApagosMove.drop(ApagosCoord.ZERO, Player.ZERO),
-            $localize`Bravo!`,
+            $localize`Congratulations!`,
         ),
         TutorialStep.fromPredicate(
             $localize`Transfer`,
@@ -40,7 +40,7 @@ export class ApagosTutorial {
                 }
                 return MGPValidation.SUCCESS;
             },
-            $localize`Bravo!`,
+            $localize`Congratulations!`,
         ),
         // TODOTODO explain victory
     ];

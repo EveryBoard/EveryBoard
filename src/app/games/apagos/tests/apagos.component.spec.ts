@@ -119,6 +119,22 @@ fdescribe('ApagosComponent', () => {
             // Then the third square should be filled on top by Player.ZERO
             componentTestUtils.expectElementToHaveClass('#square_3_piece_0_out_of_1', 'player0');
         }));
+        it('should show last dropped piece (from drop on righmost coord)', fakeAsync(async() => {
+            // Given a board with a previous drop by Player.ZERO
+            const previousState: ApagosState = ApagosState.getInitialState();
+            const previousMove: ApagosMove = ApagosMove.drop(ApagosCoord.THREE, Player.ZERO);
+            const state: ApagosState = ApagosState.fromRepresentation(1, [
+                [0, 0, 0, 1],
+                [0, 0, 0, 0],
+                [7, 5, 3, 1],
+            ], 9, 10);
+
+            // When rendering the board
+            componentTestUtils.setupState(state, previousState, previousMove);
+
+            // Then the third square should be filled on top by Player.ZERO
+            componentTestUtils.expectElementToHaveClass('#square_3_piece_0_out_of_1', 'player0');
+        }));
         it('should show last dropped piece (from transfer by Player.ONE)', fakeAsync(async() => {
             // Given a board with a previous drop by Player.ZERO
             const previousState: ApagosState = ApagosState.fromRepresentation(1, [

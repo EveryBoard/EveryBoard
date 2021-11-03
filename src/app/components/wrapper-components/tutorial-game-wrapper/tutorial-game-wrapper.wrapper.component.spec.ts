@@ -48,6 +48,12 @@ import { DvonnRules } from 'src/app/games/dvonn/DvonnRules';
 import { DvonnTutorial } from 'src/app/games/dvonn/DvonnTutorial';
 import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
 import { DvonnState } from 'src/app/games/dvonn/DvonnState';
+import { ApagosTutorial } from 'src/app/games/apagos/ApagosTutorial';
+import { ApagosRules } from 'src/app/games/apagos/ApagosRules';
+import { ApagosState } from 'src/app/games/apagos/ApagosState';
+import { ApagosMove } from 'src/app/games/apagos/ApagosMove';
+import { ApagosCoord } from 'src/app/games/apagos/ApagosCoord';
+import { Player } from 'src/app/jscaip/Player';
 
 describe('TutorialGameWrapperComponent (wrapper)', () => {
 
@@ -966,7 +972,8 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
         }));
     });
     describe('Tutorials', () => {
-        it('Should make sure that predicate step have healthy behaviors', fakeAsync(async() => {
+        fit('Should make sure that predicate step have healthy behaviors', fakeAsync(async() => {
+            const apagosTutorial: TutorialStep[] = new ApagosTutorial().tutorial;
             const dvonnTutorial: TutorialStep[] = new DvonnTutorial().tutorial;
             const epaminondasTutorial: TutorialStep[] = new EpaminondasTutorial().tutorial;
             const pentagoTutorial: TutorialStep[] = new PentagoTutorial().tutorial;
@@ -975,6 +982,12 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const sixTutorial: TutorialStep[] = new SixTutorial().tutorial;
             const yinshTutorial: TutorialStep[] = new YinshTutorial().tutorial;
             const stepExpectations: [Rules<Move, AbstractGameState>, TutorialStep, Move, MGPValidation][] = [
+                [
+                    new ApagosRules(ApagosState),
+                    apagosTutorial[2],
+                    ApagosMove.drop(ApagosCoord.ZERO, Player.ZERO),
+                    MGPValidation.failure($localize`This move is a drop! Please do a transfer!`),
+                ],
                 [
                     new DvonnRules(DvonnState),
                     dvonnTutorial[1],
@@ -1075,7 +1088,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 expect(step.predicate(move, state)).toEqual(validation);
             }
         }));
-        it('Should make sure all solutionMove are legal', fakeAsync(async() => {
+        fit('Should make sure all solutionMove are legal', fakeAsync(async() => {
             for (const gameInfo of GameInfo.ALL_GAMES()) {
                 if (gameInfo.display === false) {
                     continue;

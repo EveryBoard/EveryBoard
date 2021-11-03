@@ -52,7 +52,6 @@ export class ApagosMove extends Move {
         const slideDown: ApagosMove = new ApagosMove(landing, MGPOptional.empty(), MGPOptional.of(start));
         return MGPFallible.success(slideDown);
     }
-
     private constructor(public readonly landing: ApagosCoord,
                         public readonly piece: MGPOptional<Player>,
                         public readonly starting: MGPOptional<ApagosCoord>)

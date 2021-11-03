@@ -38,6 +38,7 @@
             />
             <ng-container *ngFor="let i of range(square.count(Player.NONE))">
                 <circle id="square_{{ x }}_piece_{{ i }}_out_of_{{ square.count(Player.NONE) }}"
+                        (click)="onSquareClick(x)"
                         [attr.cx]="getCircleCenter(x, i, square).x"
                         [attr.cy]="getCircleCenter(x, i, square).y"
                         r="10"
