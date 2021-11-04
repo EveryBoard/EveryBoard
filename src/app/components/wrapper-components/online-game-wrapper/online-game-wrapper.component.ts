@@ -175,7 +175,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         });
         return Promise.resolve();
     }
-    protected async onCurrentPartUpdate(update: ICurrentPartId): Promise<void> {
+    private async onCurrentPartUpdate(update: ICurrentPartId): Promise<void> {
         const part: Part = new Part(update.doc);
         display(OnlineGameWrapperComponent.VERBOSE, { OnlineGameWrapperComponent_onCurrentPartUpdate: {
             before: this.currentPart,

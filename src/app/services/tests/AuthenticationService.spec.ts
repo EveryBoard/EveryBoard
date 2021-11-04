@@ -11,7 +11,6 @@ import { UserDAO } from 'src/app/dao/UserDAO';
 import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 
 class RTDBSpec {
-    // TODO: these are stubs that can be removed after the RTDB functions ticket has been done
     public static async clearDB(): Promise<void> {
         const useFirebaseDatabase: boolean = false;
         if (useFirebaseDatabase) {
