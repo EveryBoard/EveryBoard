@@ -11,8 +11,8 @@ import { Utils } from '../utils/utils';
 export interface BoardInfo {
     status: SCORE,
     victory: Coord[] | null,
-    preVictory: MGPOptional<Coord> | null,
-    sum: number | null,
+    preVictory: MGPOptional<Coord>,
+    sum: number,
 }
 export abstract class AlignementMinimax<M extends Move,
                                         S extends AbstractGameState,

@@ -88,7 +88,7 @@ export class AuthenticationService implements OnDestroy {
                 display(AuthenticationService.VERBOSE, 'User is not connected');
                 this.userRS.next(AuthUser.NOT_CONNECTED);
             } else { // user logged in
-                if (this.registrationInProgress) {
+                if (this.registrationInProgress != null) {
                     // We need to wait for the entire registration process to finish,
                     // otherwise we risk reading an empty username before the user is fully created
                     await this.registrationInProgress;
@@ -112,7 +112,7 @@ export class AuthenticationService implements OnDestroy {
         // Only needed for mocking purposes
         return user.emailVerified;
     }
-    /*
+    /**
      * Registers an user given its username, email, and password.
      * Returns the firebase user upon success, or a failure otherwise.
      */
@@ -181,7 +181,7 @@ export class AuthenticationService implements OnDestroy {
         }
     }
 
-    /*
+    /**
      * Logs in using an email and a password. Returns a validation to indicate
      * either success, or failure with a specific error.
      */

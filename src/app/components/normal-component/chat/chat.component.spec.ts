@@ -8,6 +8,7 @@ import { IChat } from 'src/app/domain/ichat';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { IMessage } from 'src/app/domain/imessage';
+import { Utils } from 'src/app/utils/utils';
 
 describe('ChatComponent', () => {
 
@@ -220,7 +221,8 @@ describe('ChatComponent', () => {
         await testUtils.whenStable();
 
         // then the message is sent
-        expect(chatService.sendMessage).toHaveBeenCalledWith(AuthenticationServiceMock.CONNECTED.username, 2, 'hello');
+        expect(chatService.sendMessage)
+            .toHaveBeenCalledWith(Utils.getNonNullOrFail(AuthenticationServiceMock.CONNECTED.username), 2, 'hello');
         //  and the form is cleared
         expect(messageInput.nativeElement.value).toBe('');
     }));

@@ -70,7 +70,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     public currentPartId: string;
     public gameStarted: boolean = false;
     public opponent: IUserId | null = null;
-    public playerName: string;
+    public playerName: string | null = null;
     public currentPlayer: string;
 
     public rematchProposed: boolean = false;
@@ -114,7 +114,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         return Player.of(this.observerRole);
     }
     public getPlayerName(): string {
-        return this.playerName;
+        return Utils.getNonNullOrFail(this.playerName);
     }
     private isPlayer(player: Player): boolean {
         return this.observerRole === player.value;
@@ -174,7 +174,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         });
         return Promise.resolve();
     }
-    protected async onCurrentPartUpdate(update: ICurrentPartId): Promise<void> {
+    private async onCurrentPartUpdate(update: ICurrentPartId): Promise<void> {
         const part: Part = new Part(update.doc);
         display(OnlineGameWrapperComponent.VERBOSE, { OnlineGameWrapperComponent_onCurrentPartUpdate: {
             before: this.currentPart,
@@ -348,14 +348,14 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                                     ' in ' + listMoves + ' at turn ' + currentPartTurn;
             assert(correctDBMove === true, message);
         }
-        this.currentPlayer = this.players[this.gameComponent.rules.node.gameState.turn % 2];
+        this.currentPlayer = Utils.getNonNullOrFail(this.players[this.gameComponent.rules.node.gameState.turn % 2]);
         this.gameComponent.updateBoard();
     }
     public switchPlayer(): void {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.switchPlayer');
         const part: Part = this.currentPart;
         const currentPlayer: Player = Player.fromTurn(part.doc.turn);
-        this.currentPlayer = this.players[this.gameComponent.rules.node.gameState.turn % 2];
+        this.currentPlayer = Utils.getNonNullOrFail(this.players[this.gameComponent.rules.node.gameState.turn % 2]);
         const currentOpponent: Player = currentPlayer.getOpponent();
         if (this.didUserPlay(currentOpponent)) {
             this.pauseCountDownsFor(currentOpponent);
@@ -411,10 +411,14 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 
         const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.rules.node);
         if (gameStatus === GameStatus.ONE_WON) {
-            this.currentPart = this.currentPart.setWinnerAndLoser(this.players[1], this.players[0]);
+            this.currentPart = this.currentPart.setWinnerAndLoser(
+                Utils.getNonNullOrFail(this.players[1]),
+                Utils.getNonNullOrFail(this.players[0]));
         } else {
             assert(gameStatus === GameStatus.ZERO_WON, 'impossible to get a victory without winner!');
-            this.currentPart = this.currentPart.setWinnerAndLoser(this.players[0], this.players[1]);
+            this.currentPart = this.currentPart.setWinnerAndLoser(
+                Utils.getNonNullOrFail(this.players[0]),
+                Utils.getNonNullOrFail(this.players[1]));
         }
         this.endGame = true;
 
@@ -553,14 +557,14 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             updatedICurrentPart.doc.playerZero,
             Utils.getDefinedOrFail(updatedICurrentPart.doc.playerOne)];
         assert(updatedICurrentPart.doc.playerOne != null, 'should not setPlayersDatas when players data is not received');
-        this.currentPlayer = this.players[updatedICurrentPart.doc.turn % 2];
+        this.currentPlayer = Utils.getNonNullOrFail(this.players[updatedICurrentPart.doc.turn % 2]);
         let opponentName: string = '';
         if (this.players[0] === this.getPlayerName()) {
             this.observerRole = Player.ZERO.value;
-            opponentName = this.players[1];
+            opponentName = Utils.getNonNullOrFail(this.players[1]);
         } else if (this.players[1] === this.getPlayerName()) {
             this.observerRole = Player.ONE.value;
-            opponentName = this.players[0];
+            opponentName = Utils.getNonNullOrFail(this.players[0]);
         } else {
             this.observerRole = Player.NONE.value;
         }
@@ -620,14 +624,14 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
     }
     public resign(): void {
-        const resigner: string = this.players[this.observerRole % 2];
-        const victoriousOpponent: string = this.players[(this.observerRole + 1) % 2];
+        const resigner: string = Utils.getNonNullOrFail(this.players[this.observerRole % 2]);
+        const victoriousOpponent: string = Utils.getNonNullOrFail(this.players[(this.observerRole + 1) % 2]);
         this.gameService.resign(this.currentPartId, victoriousOpponent, resigner);
     }
     public reachedOutOfTime(player: 0 | 1): void {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.reachedOutOfTime(' + player + ')');
         this.stopCountdownsFor(Player.of(player));
-        const opponent: IJoueurId = Utils.getNonNullOrFail(this.opponent);
+        const opponent: IUserId = Utils.getNonNullOrFail(this.opponent);
         if (player === this.observerRole) {
             // the player has run out of time, he'll notify his own defeat by time
             this.notifyTimeoutVictory(opponent.doc.username, this.getPlayerName());

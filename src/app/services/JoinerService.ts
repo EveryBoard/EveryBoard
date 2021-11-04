@@ -38,7 +38,7 @@ export class JoinerService {
     public async joinGame(partId: string, userName: string): Promise<boolean> {
         display(JoinerService.VERBOSE, 'JoinerService.joinGame(' + partId + ', ' + userName + ')');
 
-        const joiner: IJoiner | undefined = await this.joinerDao.read(partId);
+        const joiner: IJoiner | null = await this.joinerDao.read(partId);
         if (joiner == null) {
             return false;
         }
@@ -60,7 +60,7 @@ export class JoinerService {
         if (this.observedJoinerId == null) {
             throw new Error('cannot cancel joining when not observing a joiner');
         }
-        const joiner: IJoiner | undefined = await this.joinerDao.read(this.observedJoinerId);
+        const joiner: IJoiner | null = await this.joinerDao.read(this.observedJoinerId);
         if (joiner == null) {
             // The part does not exist, so we can consider that we succesfully cancelled joining
             return;
@@ -158,7 +158,7 @@ export class JoinerService {
     public async readJoinerById(partId: string): Promise<IJoiner> {
         display(JoinerService.VERBOSE, 'JoinerService.readJoinerById(' + partId + ')');
 
-        return Utils.getDefinedOrFail(await this.joinerDao.read(partId));
+        return Utils.getNonNullOrFail(await this.joinerDao.read(partId));
     }
     public async set(partId: string, joiner: IJoiner): Promise<void> {
         display(JoinerService.VERBOSE, 'JoinerService.set(' + partId + ', ' + JSON.stringify(joiner) + ')');

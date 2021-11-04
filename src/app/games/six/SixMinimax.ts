@@ -162,9 +162,11 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         if (move != null) {
             shapeInfo = this.calculateBoardValue(move, state);
         }
-        let preVictory: Coord | null;
+        let preVictory: Coord | undefined;
         if (shapeInfo.status === SCORE.DEFAULT) {
-            preVictory = Utils.getNonNullOrFail(shapeInfo.preVictory).getOrNull();
+            if (shapeInfo.preVictory.isPresent()) {
+                preVictory = shapeInfo.preVictory.get();
+            }
         }
         if (shapeInfo.status === SCORE.VICTORY) {
             return new SixNodeUnheritance(victoryValue);
@@ -262,7 +264,9 @@ export class SixMinimax extends AlignementMinimax<SixMove,
             if (testedPiece !== LAST_PLAYER) {
                 return {
                     status: SCORE.PRE_VICTORY,
-                    preVictory: null, sum: null, victory: null,
+                    victory: null,
+                    preVictory: MGPOptional.empty(),
+                    sum: 0,
                 };
             }
             const dirIndex: number = (index + testedCoords.length) % 6;
@@ -273,7 +277,8 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         return {
             status: SCORE.VICTORY,
             victory: testedCoords,
-            preVictory: null, sum: null,
+            preVictory: MGPOptional.empty(),
+            sum: 0,
         };
     }
     public searchVictoryOnlyForLine(index: number, lastDrop: Coord, state: SixState): BoardInfo {
@@ -290,7 +295,9 @@ export class SixMinimax extends AlignementMinimax<SixMove,
                 if (twoDirectionCovered) {
                     return {
                         status: SCORE.PRE_VICTORY,
-                        preVictory: null, sum: null, victory: null,
+                        victory: null,
+                        preVictory: MGPOptional.empty(),
+                        sum: 0,
                     };
                 } else {
                     twoDirectionCovered = true;
@@ -303,7 +310,8 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         return {
             status: SCORE.VICTORY,
             victory,
-            preVictory: null, sum: null,
+            preVictory: MGPOptional.empty(),
+            sum: 0,
         };
     }
     public searchVictoryOnlyForTriangleCorner(index: number, lastDrop: Coord, state: SixState): BoardInfo {
@@ -319,7 +327,9 @@ export class SixMinimax extends AlignementMinimax<SixMove,
             if (testedPiece !== LAST_PLAYER) {
                 return {
                     status: SCORE.PRE_VICTORY,
-                    preVictory: null, sum: null, victory: null,
+                    victory: null,
+                    preVictory: MGPOptional.empty(),
+                    sum: 0,
                 };
             }
             if (testedCoords.length % 2 === 0) {
@@ -333,7 +343,8 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         return {
             status: SCORE.VICTORY,
             victory: testedCoords,
-            preVictory: null, sum: null,
+            preVictory: MGPOptional.empty(),
+            sum: 0,
         };
     }
     public searchVictoryOnlyForTriangleEdge(index: number, lastDrop: Coord, state: SixState): BoardInfo {
@@ -349,7 +360,9 @@ export class SixMinimax extends AlignementMinimax<SixMove,
             if (testedPiece !== LAST_PLAYER) {
                 return {
                     status: SCORE.PRE_VICTORY,
-                    preVictory: null, sum: null, victory: null,
+                    victory: null,
+                    preVictory: MGPOptional.empty(),
+                    sum: 0,
                 };
             }
             testedCoords.push(testCoord);
@@ -363,7 +376,8 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         return {
             status: SCORE.VICTORY,
             victory: testedCoords,
-            preVictory: null, sum: null,
+            preVictory: MGPOptional.empty(),
+            sum: 0,
         };
     }
     public getBoardInfo(victorySource: SixVictorySource,
@@ -394,7 +408,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         const testedCoords: Coord[] = [lastDrop];
         let testCoord: Coord = lastDrop.getNext(initialDirection, 1);
         let subSum: number = 0;
-        let lastEmpty: Coord;
+        let lastEmpty: Coord | null = null;
         while (testedCoords.length < 6) {
             const testedPiece: Player = state.getPieceAt(testCoord);
             if (testedPiece === LAST_OPPONENT) {
@@ -411,7 +425,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
             }
             testCoord = testCoord.getNext(dir, 1);
         }
-        return this.getBoardInfoResult(subSum, lastEmpty, testedCoords, boardInfo);
+        return this.getBoardInfoResult(subSum, Utils.getNonNullOrFail(lastEmpty), testedCoords, boardInfo);
     }
     public getBoardInfoResult(subSum: number,
                               lastEmpty: Coord,
@@ -427,7 +441,9 @@ export class SixMinimax extends AlignementMinimax<SixMove,
                 preVictory.get().equals(lastEmpty) === false) {
                 return {
                     status: SCORE.PRE_VICTORY,
-                    victory: null, preVictory: null, sum: null,
+                    victory: null,
+                    preVictory: MGPOptional.empty(),
+                    sum: 0,
                 };
             } else {
                 preVictory = MGPOptional.of(lastEmpty);
@@ -436,15 +452,15 @@ export class SixMinimax extends AlignementMinimax<SixMove,
             return {
                 status: SCORE.VICTORY,
                 victory: testedCoords,
-                preVictory: null,
-                sum: null,
+                preVictory: MGPOptional.empty(),
+                sum: 0,
             };
         }
         return {
             status: boardInfo.status,
+            victory: null,
             preVictory,
             sum: boardInfo.sum + subSum,
-            victory: null,
         };
     }
     public getBoardInfoForLine(index: number, lastDrop: Coord, state: SixState, boardInfo: BoardInfo): BoardInfo {
@@ -454,9 +470,9 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         let testedCoord: Coord = lastDrop.getPrevious(dir, 5);
         let testedCoords: Coord[] = [];
         let encountered: number[] = [];
-        let lastEmpty: Coord;
+        let lastEmpty: Coord | null = null;
         for (let i: number = 0; i < 6; i++) {
-            const empty: Coord = this.updateEncounterAndReturnLastEmpty(state, testedCoord, encountered);
+            const empty: Coord | null = this.updateEncounterAndReturnLastEmpty(state, testedCoord, encountered);
             if (empty) {
                 lastEmpty = empty;
             }
@@ -473,24 +489,25 @@ export class SixMinimax extends AlignementMinimax<SixMove,
                 return {
                     status: SCORE.VICTORY,
                     victory: testedCoords,
-                    preVictory: null, sum: null,
+                    preVictory: MGPOptional.empty(),
+                    sum: 0,
                 };
             } else if (subSum === 5.16 &&
                 status === SCORE.DEFAULT) {
                 if (preVictory.isPresent()) {
-                    assert(preVictory.get().equals(lastEmpty) === false,
+                    assert(lastEmpty == null || preVictory.get().equals(lastEmpty) === false,
                            'Impossible to have point aligned with differents line to a same point');
                     status = SCORE.PRE_VICTORY;
                 } else {
-                    preVictory = MGPOptional.of(lastEmpty);
+                    preVictory = MGPOptional.of(Utils.getNonNullOrFail(lastEmpty));
                 }
             }
             finalSubSum = Math.max(finalSubSum, subSum);
             testedCoords = testedCoords.slice(1, 6);
             testedCoords.push(testedCoord);
             encountered = encountered.slice(1, 6);
-            const newEmpty: Coord = this.updateEncounterAndReturnLastEmpty(state, testedCoord, encountered);
-            if (newEmpty) {
+            const newEmpty: Coord | null = this.updateEncounterAndReturnLastEmpty(state, testedCoord, encountered);
+            if (newEmpty != null) {
                 lastEmpty = newEmpty;
             }
             nbTested++;
@@ -502,23 +519,23 @@ export class SixMinimax extends AlignementMinimax<SixMove,
             preVictory,
             sum: finalSubSum,
         };
-        return this.getBoardInfoResult(finalSubSum, lastEmpty, testedCoords, newBoardInfo);
+        return this.getBoardInfoResult(finalSubSum, Utils.getNonNullOrFail(lastEmpty), testedCoords, newBoardInfo);
     }
     private updateEncounterAndReturnLastEmpty(state: SixState,
                                               testedCoord: Coord,
-                                              encountered: number[]): Coord {
+                                              encountered: number[]): Coord | null {
         const LAST_OPPONENT: Player = state.getCurrentPlayer();
         switch (state.getPieceAt(testedCoord)) {
             case LAST_OPPONENT:
                 encountered.push(-7);
                 // just enough to make sum negative when opponent encountered
-                break;
+                return null;
             case Player.NONE:
                 encountered.push(0.16);
                 return testedCoord;
             default:
                 encountered.push(1);
-                break;
+                return null;
         }
     }
     public getBoardInfoForTriangleCorner(index: number,
@@ -534,7 +551,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         const testedCoords: Coord[] = [lastDrop];
         let testCoord: Coord = lastDrop.getNext(edgeDirection, 1);
         let subSum: number = 0;
-        let lastEmpty: Coord;
+        let lastEmpty: Coord | null = null;
         while (testedCoords.length < 6) {
             // Testing the corner
             const testedPiece: Player = state.getPieceAt(testCoord);
@@ -555,7 +572,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
             testedCoords.push(testCoord);
             testCoord = testCoord.getNext(edgeDirection, 1);
         }
-        return this.getBoardInfoResult(subSum, lastEmpty, testedCoords, boardInfo);
+        return this.getBoardInfoResult(subSum, Utils.getNonNullOrFail(lastEmpty), testedCoords, boardInfo);
     }
     public getBoardInfoForTriangleEdge(index: number,
                                        lastDrop: Coord,
@@ -568,7 +585,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         const testedCoords: Coord[] = [lastDrop];
         let testCoord: Coord = lastDrop.getNext(edgeDirection, 1);
         let subSum: number = 0;
-        let lastEmpty: Coord;
+        let lastEmpty: Coord | null = null;
         while (testedCoords.length < 6) {
             // Testing the corner
             const testedPiece: Player = state.getPieceAt(testCoord);
@@ -589,6 +606,6 @@ export class SixMinimax extends AlignementMinimax<SixMove,
             }
             testCoord = testCoord.getNext(edgeDirection, 1);
         }
-        return this.getBoardInfoResult(subSum, lastEmpty, testedCoords, boardInfo);
+        return this.getBoardInfoResult(subSum, Utils.getNonNullOrFail(lastEmpty), testedCoords, boardInfo);
     }
 }

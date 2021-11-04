@@ -180,7 +180,7 @@ describe('PartCreationComponent:', () => {
             ...JoinerMocks.WITH_ACCEPTED_CONFIG.doc,
             firstPlayer: FirstPlayer.CREATOR.value,
         });
-        const currentPart: IPart = Utils.getDefinedOrFail(await partDAOMock.read('joinerId'));
+        const currentPart: IPart = Utils.getNonNullOrFail(await partDAOMock.read('joinerId'));
         const expectedPart: IPart = { ...PartMocks.STARTING.doc, beginning: currentPart.beginning };
         expect(currentPart).toEqual(expectedPart);
     }));
@@ -293,9 +293,9 @@ describe('PartCreationComponent:', () => {
             await testUtils.clickElement('#partTypeBlitz');
             testUtils.detectChanges();
 
-            expect(Utils.getNonNullOrFail(component.configFormGroup.get('maximalMoveDuration').value))
+            expect(Utils.getNonNullOrFail(component.configFormGroup.get('maximalMoveDuration')).value)
                 .toBe(PartType.BLITZ_MOVE_DURATION);
-            expect(Utils.getNonNullOrFail(component.configFormGroup.get('totalPartDuration').value))
+            expect(Utils.getNonNullOrFail(component.configFormGroup.get('totalPartDuration')).value)
                 .toBe(PartType.BLITZ_PART_DURATION);
         }));
         it('should update the timings when reselecting normal part', fakeAsync(async() => {
@@ -303,9 +303,9 @@ describe('PartCreationComponent:', () => {
             await testUtils.clickElement('#partTypeStandard');
             testUtils.detectChanges();
 
-            expect(Utils.getNonNullOrFail(component.configFormGroup.get('maximalMoveDuration').value))
+            expect(Utils.getNonNullOrFail(component.configFormGroup.get('maximalMoveDuration')).value)
                 .toBe(PartType.NORMAL_MOVE_DURATION);
-            expect(Utils.getNonNullOrFail(component.configFormGroup.get('totalPartDuration').value))
+            expect(Utils.getNonNullOrFail(component.configFormGroup.get('totalPartDuration')).value)
                 .toBe(PartType.NORMAL_PART_DURATION);
         }));
         it('should dispatch to joiner service when clicking on review config button', fakeAsync(async() => {

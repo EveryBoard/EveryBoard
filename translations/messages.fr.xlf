@@ -280,7 +280,7 @@
       </trans-unit>
       <trans-unit id="2218572265318708454" datatype="html">
         <source>Registering</source>
-        <target>Créer un compte</target>
+        <target>Création de compte</target>
       </trans-unit>
       <trans-unit id="9018459935889527317" datatype="html">
         <source>A confirmation email will be sent to validate your account.</source>
@@ -3144,11 +3144,11 @@
       </trans-unit>
       <trans-unit id="2368572652596435161" datatype="html">
         <source>There has been too many requests from your device. You are temporarily blocked due to unusual activity. Try again later.</source>
-        <target>Il y a eu trop de requête depuis votre appareil. Vous êtes temporairement bloquée suite à une activité non habituelle. Essayez à nouveau plus tard.</target>
+        <target>Il y a eu trop de requêtes depuis votre appareil. Vous êtes temporairement bloqué suite à une activité inhabituelle. Réessayez plus tard.</target>
       </trans-unit>
       <trans-unit id="8414332856711181199" datatype="html">
         <source>You closed the authentication popup without finalizing your log in.</source>
-        <target>Vous avez fermer la fenêtre d'authentification sans finaliser votre connexion.</target>
+        <target>Vous avez fermé la fenêtre d'authentification sans finaliser votre connexion.</target>
       </trans-unit>
       <trans-unit id="4550935601489856530" datatype="html">
         <source>Your username may not be empty.</source>
