@@ -315,6 +315,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             turn: 1,
             // remaining times not updated on first turn of the component
             request: null,
+            scorePlayerZero: null,
+            scorePlayerOne: null,
             lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
         };
         // TODO: should receive somewhere some kind of Timestamp written by DB
@@ -361,6 +363,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
             winner: 'creator',
             loser: 'firstCandidate',
+            scorePlayerZero: null,
+            scorePlayerOne: null,
             result: MGPResult.VICTORY.value,
         });
         componentTestUtils.expectElementToExist('#winnerIndicator');
@@ -526,6 +530,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                     turn: 3,
                     remainingMsForOne: 1799999,
                     request: null,
+                    scorePlayerZero: null,
+                    scorePlayerOne: null,
                     lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
                 });
 
@@ -549,13 +555,14 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
                 await doMove(FIRST_MOVE, true);
 
-                // when opponent accept take back but lastTimeMove is not yet updated
+                // when opponent accepts take back but lastMoveTime is not yet updated
                 spyOn(wrapper, 'takeBackTo').and.callThrough();
                 await receivePartDAOUpdate({
                     request: Request.takeBackAccepted(Player.ONE),
                     listMoves: [],
                     turn: 0,
                     remainingMsForZero: 179999,
+                    lastMoveTime: null,
                 });
 
                 // then 'takeBackFor' should not be called
@@ -749,6 +756,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                     turn: 1,
                     listMoves: [ALTERNATIVE_MOVE_ENCODED],
                     request: null,
+                    scorePlayerZero: null,
+                    scorePlayerOne: null,
                     lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
                 });
                 tick(wrapper.joiner.maximalMoveDuration * 1000);
@@ -811,6 +820,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                     turn: 1,
                     listMoves: [ALTERNATIVE_MOVE_ENCODED],
                     request: null,
+                    scorePlayerZero: null,
+                    scorePlayerOne: null,
                     lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
                 });
                 tick(wrapper.joiner.maximalMoveDuration * 1000);

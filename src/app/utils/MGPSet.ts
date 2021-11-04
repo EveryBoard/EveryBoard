@@ -24,11 +24,12 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
         return true;
     }
     public toString(): string {
-
         let result: string = '';
         for (const element of this.values) {
             if (element != null) {
                 result += element.toString() + ', ';
+            } else {
+                result += 'null, ';
             }
         }
         return '[' + result.slice(0, -2) + ']';

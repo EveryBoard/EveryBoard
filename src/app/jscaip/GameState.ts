@@ -3,7 +3,6 @@ import { Player } from './Player';
 export abstract class GameState<C, P> {
 
     public constructor(public readonly turn: number) {
-        if (turn == null) throw new Error('Turn cannot be null.');
     }
     public getCurrentPlayer(): Player {
         return Player.fromTurn(this.turn);

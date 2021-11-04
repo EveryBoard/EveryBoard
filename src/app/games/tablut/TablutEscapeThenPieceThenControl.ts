@@ -67,13 +67,16 @@ export class TablutEscapeThenPieceAndControlMinimax extends TablutPieceAndContro
                 controlScore += owner.getScoreModifier() * controlledValue;
             }
         }
-        const stepForEscape: number = this.getStepForEscape(state.getCopiedBoard());
+        // TODO FOR REVIEW / TODOTODO: this (|| 0) is ugly but the only way to preserve non-failing behaviour,
+        // because getStepForEscape can return null! (I guess null was coerced into 0).
+        // should we ticket fixing/cleaning this minimax?
+        const stepForEscape: number = this.getStepForEscape(state.getCopiedBoard()) || 0;
         return new NodeUnheritance((stepForEscape * 531 * 17 * 17) +
                                    (safeScore * 531 * 17) +
                                    (threatenedScore * 531) +
                                    controlScore);
     }
-    public getStepForEscape(board: Table<TablutCase>): number {
+    public getStepForEscape(board: Table<TablutCase>): number | null {
         const king: Coord = TablutRules.getKingCoord(board).get();
         return this._getStepForEscape(board, 1, [king], []);
     }
@@ -81,13 +84,13 @@ export class TablutEscapeThenPieceAndControlMinimax extends TablutPieceAndContro
                              step: number,
                              previousGen: Coord[],
                              handledCoords: Coord[])
-    : number
+    : number | null
     {
         const nextGen: Coord[] = this.getNextGen(board, previousGen, handledCoords);
 
         if (nextGen.length === 0) {
             // not found:
-            throw new Error('getStepForEscape did not find escape');
+            return null;
         }
         if (nextGen.some((coord: Coord) => TablutRules.isExternalThrone(coord))) {
             return step;

@@ -142,7 +142,11 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityStatus> {
     }
     public static isCapturableGroup(groupDatas: GoGroupDatas, koCoord: MGPOptional<Coord>): boolean {
         if (groupDatas.color.isOccupied() && groupDatas.emptyCoords.length === 1) {
-            return koCoord.isPresent() && !groupDatas.emptyCoords[0].equals(koCoord.get()); // Ko Rules Block Capture
+            if (koCoord.isPresent()) {
+                return !groupDatas.emptyCoords[0].equals(koCoord.get()); // Ko Rules Block Capture
+            } else {
+                return true;
+            }
         } else {
             return false;
         }
@@ -346,7 +350,7 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityStatus> {
                 coord = new Coord(x, y);
                 currentCase = board[y][x];
                 if (condition(currentCase)) {
-                    if (!groups.some((currentGroup: GoGroupDatas) => currentGroup.selfCountains(coord))) {
+                    if (!groups.some((currentGroup: GoGroupDatas) => currentGroup.selfContains(coord))) {
                         group = goGroupDatasFactory.getGroupDatas(coord, board) as GoGroupDatas;
                         groups.push(group);
                     }

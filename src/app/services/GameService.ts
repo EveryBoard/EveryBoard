@@ -300,8 +300,8 @@ export class GameService implements OnDestroy {
     }
     public async updateDBBoard(partId: string,
                                encodedMove: JSONValueWithoutArray,
-                               scorePlayerZero: number,
-                               scorePlayerOne: number,
+                               scorePlayerZero: number | null,
+                               scorePlayerOne: number | null,
                                msToSubstract: [number, number],
                                notifyDraw?: boolean,
                                winner?: string,

@@ -28,7 +28,7 @@ describe('HeaderComponent', () => {
     it('should have empty username when user is not connected', fakeAsync(async() => {
         AuthenticationServiceMock.setUser(AuthUser.NOT_CONNECTED);
         testUtils.detectChanges();
-        expect(testUtils.getComponent().username).toBeNull();
+        expect(testUtils.getComponent().username).toEqual('');
     }));
     it('should use fr as the default language if the language of the navigator is not set', fakeAsync(async() => {
         // given a navigator where the language is not set

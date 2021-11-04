@@ -37,7 +37,6 @@ export class PylosCoord extends Coord {
     }
     constructor(x: number, y: number, public readonly z: number) {
         super(x, y);
-        if (z == null) throw new Error(`PylosCoord: Z can't be null.`);
         if (x < 0 || x > 3) throw new Error(`PylosCoord: Invalid X: ${x}.`);
         if (y < 0 || y > 3) throw new Error(`PylosCoord: Invalid Y: ${y}.`);
         if (z < 0 || z > 3) throw new Error(`PylosCoord: Invalid Z: ${z}.`);

@@ -425,10 +425,10 @@ export class SixMinimax extends AlignementMinimax<SixMove,
             }
             testCoord = testCoord.getNext(dir, 1);
         }
-        return this.getBoardInfoResult(subSum, Utils.getNonNullOrFail(lastEmpty), testedCoords, boardInfo);
+        return this.getBoardInfoResult(subSum, lastEmpty, testedCoords, boardInfo);
     }
     public getBoardInfoResult(subSum: number,
-                              lastEmpty: Coord,
+                              lastEmpty: Coord | null,
                               testedCoords: Coord[],
                               boardInfo: BoardInfo)
     : BoardInfo
@@ -438,7 +438,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
             display(this.VERBOSE, '5+1 found!');
             // We found 5 pieces aligned and one space, so that space is a preVictory coord
             if (preVictory.isPresent() &&
-                preVictory.get().equals(lastEmpty) === false) {
+                (lastEmpty == null || preVictory.get().equals(lastEmpty) === false)) {
                 return {
                     status: SCORE.PRE_VICTORY,
                     victory: null,
@@ -446,7 +446,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
                     sum: 0,
                 };
             } else {
-                preVictory = MGPOptional.of(lastEmpty);
+                preVictory = MGPOptional.of(Utils.getNonNullOrFail(lastEmpty));
             }
         } else if (subSum === 5) {
             return {
@@ -519,7 +519,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
             preVictory,
             sum: finalSubSum,
         };
-        return this.getBoardInfoResult(finalSubSum, Utils.getNonNullOrFail(lastEmpty), testedCoords, newBoardInfo);
+        return this.getBoardInfoResult(finalSubSum, lastEmpty, testedCoords, newBoardInfo);
     }
     private updateEncounterAndReturnLastEmpty(state: SixState,
                                               testedCoord: Coord,
@@ -572,7 +572,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
             testedCoords.push(testCoord);
             testCoord = testCoord.getNext(edgeDirection, 1);
         }
-        return this.getBoardInfoResult(subSum, Utils.getNonNullOrFail(lastEmpty), testedCoords, boardInfo);
+        return this.getBoardInfoResult(subSum, lastEmpty, testedCoords, boardInfo);
     }
     public getBoardInfoForTriangleEdge(index: number,
                                        lastDrop: Coord,
@@ -606,6 +606,6 @@ export class SixMinimax extends AlignementMinimax<SixMove,
             }
             testCoord = testCoord.getNext(edgeDirection, 1);
         }
-        return this.getBoardInfoResult(subSum, Utils.getNonNullOrFail(lastEmpty), testedCoords, boardInfo);
+        return this.getBoardInfoResult(subSum, lastEmpty, testedCoords, boardInfo);
     }
 }

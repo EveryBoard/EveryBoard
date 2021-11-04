@@ -72,9 +72,6 @@ export class SixMove extends Move {
         }
     }
     public equals(o: SixMove): boolean {
-        if (o == null) {
-            return false;
-        }
         if (this.landing.equals(o.landing) === false) {
             return false;
         }

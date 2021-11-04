@@ -388,7 +388,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
         this.stopCountdownsFor(player);
     }
-    public notifyDraw(encodedMove: JSONValueWithoutArray, scorePlayerZero: number, scorePlayerOne: number): void {
+    public notifyDraw(encodedMove: JSONValueWithoutArray, scorePlayerZero: number | null, scorePlayerOne: number | null)
+    : void {
         this.endGame = true;
         this.gameService.updateDBBoard(this.currentPartId,
                                        encodedMove,
@@ -406,7 +407,10 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 
         this.gameService.notifyTimeout(this.currentPartId, victoriousPlayer, loser);
     }
-    public notifyVictory(encodedMove: JSONValueWithoutArray, scorePlayerZero: number, scorePlayerOne: number): void {
+    public notifyVictory(encodedMove: JSONValueWithoutArray,
+                         scorePlayerZero: number | null,
+                         scorePlayerOne: number | null)
+    : void {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.notifyVictory');
 
         const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.rules.node);
@@ -587,7 +591,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 this.userService.observeUserByUsername(opponentName, callback);
         }
     }
-    public async onLegalUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<void> {
+    public async onLegalUserMove(move: Move, scorePlayerZero: number | null, scorePlayerOne: number | null)
+    : Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'dans OnlineGameWrapperComponent.onLegalUserMove');
         if (this.isOpponentWaitingForTakeBackResponse()) {
             this.gameComponent.message('You must answer to take back request');
@@ -596,13 +601,13 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
     }
     public async updateDBBoard(move: Move,
-                               scorePlayerZero: number,
-                               scorePlayerOne: number,
+                               scorePlayerZero: number | null,
+                               scorePlayerOne: number | null,
                                msToSubstract: [number, number])
     : Promise<void>
     {
         const encodedMove: JSONValueWithoutArray = this.gameComponent.encoder.encodeMove(move);
-        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.updateDBBoard(' + move.toString() +
+        display(OnlineGameWrapperComponent.VERBOSE || true, 'OnlineGameWrapperComponent.updateDBBoard(' + move.toString() +
                                                     ', ' + scorePlayerZero + ', ' + scorePlayerOne + ')');
         this.gameComponent.rules.choose(move);
         const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.rules.node);

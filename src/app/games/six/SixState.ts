@@ -129,11 +129,13 @@ export class SixState extends GameState<Coord, Player> {
     }
     public isIllegalLandingZone(landing: Coord, start: Coord | null): MGPValidation {
         if (this.pieces.containsKey(landing)) {
+            console.log('occupied')
             return MGPValidation.failure('Cannot land on occupied coord!');
         }
         if (this.isCoordConnected(landing, start)) {
             return MGPValidation.SUCCESS;
         } else {
+            console.log('other')
             return MGPValidation.failure(SixFailure.MUST_DROP_NEXT_TO_OTHER_PIECE());
         }
     }
@@ -141,8 +143,7 @@ export class SixState extends GameState<Coord, Player> {
         for (const dir of HexaDirection.factory.all) {
             const neighboor: Coord = coord.getNext(dir, 1);
             if (this.pieces.containsKey(neighboor) &&
-                except != null &&
-                neighboor.equals(except) === false)
+                (except == null || neighboor.equals(except) === false))
             {
                 return true;
             }

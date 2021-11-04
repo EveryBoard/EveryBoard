@@ -86,9 +86,8 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
     {
         const possiblesCapturesSet: PylosCoord[][] = [];
 
-        if (startingCoord.isPresent()) {
-            freeToMoves = freeToMoves.filter((c: PylosCoord) => c.equals(startingCoord.get()) === false);
-        }
+        // TODO: removed because it is useless? it is not reached by tests
+        // freeToMoves = freeToMoves.filter((c: PylosCoord) => c.equals(startingCoord.get()) === false);
 
         const capturables: PylosCoord[] = freeToMoves.concat(landingCoord);
         for (let i: number = 0; i < capturables.length; i++) {

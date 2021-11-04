@@ -5,7 +5,6 @@ import { assert } from './utils';
 
 export abstract class MGPFallible<T> {
     public static success<T>(value: NonNullable<T>): MGPFallible<T> {
-        if (value == null) throw new Error('Fallible cannot be created with empty value, use MGPFallible.failure instead');
         return new MGPFallibleSuccess(value);
     }
     public static failure<T>(reason: NonNullable<string>): MGPFallible<T> {

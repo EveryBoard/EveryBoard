@@ -18,7 +18,7 @@ export class EpaminondasGroupData extends GroupDatas<number> {
     public getCoords(): Coord[] {
         return this.values.get(this.color).get().getCopy();
     }
-    public countains(coord: Coord): boolean {
+    public contains(coord: Coord): boolean {
         const none: MGPOptional<MGPSet<Coord>> = this.values.get(Player.NONE.value);
         if (none.isPresent() &&
             none.get().contains(coord))

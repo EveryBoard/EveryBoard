@@ -32,8 +32,6 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     private isNearBottom: boolean = true;
     private notYetScrolled: boolean = true;
 
-    private userSub: Subscription | null = null;
-
     @ViewChild('chatDiv') chatDiv: ElementRef<HTMLElement>;
 
     constructor(private chatService: ChatService,
@@ -136,9 +134,6 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     public ngOnDestroy(): void {
         if (this.chatService.isObserving()) {
             this.chatService.stopObserving();
-        }
-        if (this.userSub) {
-            this.userSub.unsubscribe();
         }
     }
     public switchChatVisibility(): void {

@@ -25,12 +25,12 @@ describe('SixMinimax', () => {
             let moveSuccess: boolean = rules.choose(SixMove.fromDrop(new Coord(-1, 0)));
             expect(moveSuccess).toBeTrue();
             let unheritance: SixNodeUnheritance = rules.node.getOwnValue(minimax);
-            expect(unheritance.preVictory).toBeNull();
+            expect(unheritance.preVictory).toBeUndefined();
 
             moveSuccess = rules.choose(SixMove.fromDrop(new Coord(-1, 0)));
             expect(moveSuccess).toBeTrue();
             unheritance = rules.node.getOwnValue(minimax);
-            expect(unheritance.preVictory).toBeNull();
+            expect(unheritance.preVictory).toBeUndefined();
         });
     });
     describe('pre-victories', () => {

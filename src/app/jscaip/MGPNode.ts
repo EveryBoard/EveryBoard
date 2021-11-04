@@ -53,7 +53,7 @@ export class MGPNode<R extends Rules<M, S, L>,
     private readonly ownValue: MGPMap<string, U> = new MGPMap();
 
     private readonly possibleMoves: MGPMap<string, MGPSet<M>> = new MGPMap();
-    /* Can countain more move than childs, in case of pruning
+    /* Can contain more move than childs, in case of pruning
      * should be only calculated once
      */
 

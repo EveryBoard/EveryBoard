@@ -459,24 +459,6 @@ describe('PartCreationComponent:', () => {
 
             expect(joinerService.observe).not.toHaveBeenCalled();
         }));
-        it('should not fail if joiner update is null, and should redirect to server', fakeAsync(async() => {
-            // given a component with initial joiner present
-            component.userName = 'creator';
-            await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL.doc);
-            testUtils.detectChanges();
-
-            const router: Router = TestBed.inject(Router);
-            spyOn(router, 'navigate');
-
-            // when joiner is updated and put to null, it means document has been removed
-            // TODOTODO: was: await joinerDAOMock.set('joinerId', null);
-            await joinerDAOMock.delete('joinerId');
-
-            // then user should be moved to server
-            testUtils.detectChanges();
-            tick(3000); // test does not work with a tick(2999) or less
-            expect(router.navigate).toHaveBeenCalledWith(['server']);
-        }));
     });
     it('should reroute to server when game is cancelled', fakeAsync(async() => {
         // given a part creation with the initial joiner

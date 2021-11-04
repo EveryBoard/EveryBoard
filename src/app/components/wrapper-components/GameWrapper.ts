@@ -72,7 +72,7 @@ export abstract class GameWrapper {
         // Shortent by T<S = Truc>
 
         this.gameComponent.chooseMove = // so that when the game component do a move
-            (m: Move, s: AbstractGameState, s0: number, s1: number): Promise<MGPValidation> => {
+            (m: Move, s: AbstractGameState, s0: number | null, s1: number | null): Promise<MGPValidation> => {
                 return this.receiveValidMove(m, s, s0, s1);
             };
         // the game wrapper can then act accordingly to the chosen move.
@@ -96,8 +96,8 @@ export abstract class GameWrapper {
     }
     public async receiveValidMove(move: Move,
                                   state: AbstractGameState,
-                                  scorePlayerZero: number,
-                                  scorePlayerOne: number): Promise<MGPValidation>
+                                  scorePlayerZero: number | null,
+                                  scorePlayerOne: number | null): Promise<MGPValidation>
     {
         const LOCAL_VERBOSE: boolean = false;
         display(GameWrapper.VERBOSE || LOCAL_VERBOSE, {
@@ -124,7 +124,8 @@ export abstract class GameWrapper {
         display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveValidMove says: valid move legal');
         return MGPValidation.SUCCESS;
     }
-    public abstract onLegalUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<void>;
+    public abstract onLegalUserMove(move: Move, scorePlayerZero: number | null, scorePlayerOne: number | null)
+    : Promise<void>;
 
     public onUserClick(_elementName: string): MGPValidation {
         // TODO: Not the same logic to use in Online and Local, make abstract

@@ -17,13 +17,13 @@ export interface IPart extends FirebaseJSONObject {
      * so firebase write the server time and send us back a timestamp in the form of Time
      */
     readonly beginning?: firebase.firestore.FieldValue | Time,
-    readonly lastMoveTime?: firebase.firestore.FieldValue | Time,
+    readonly lastMoveTime?: firebase.firestore.FieldValue | Time | null,
     readonly remainingMsForZero?: number;
     readonly remainingMsForOne?: number;
     readonly winner?: string,
     readonly loser?: string,
-    readonly scorePlayerZero?: number,
-    readonly scorePlayerOne?: number,
+    readonly scorePlayerZero?: number | null,
+    readonly scorePlayerOne?: number | null,
     readonly request?: Request | null, // can be null because we should be able to remove a request
 }
 
