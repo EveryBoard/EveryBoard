@@ -11,14 +11,6 @@ import { UserDAO } from 'src/app/dao/UserDAO';
 import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 
 class RTDBSpec {
-    public static async clearDB(): Promise<void> {
-        const useFirebaseDatabase: boolean = false;
-        if (useFirebaseDatabase) {
-            // Here we can't clear the DB because it breaks everything, but this is how it should be done:
-            await firebase.database().ref().set(null);
-        }
-        return;
-    }
     public static setOfflineMock(): void {
         // We mock setOffline as it should trigger an RTDB function in practice
         spyOn(RTDB, 'setOffline').and.resolveTo();
@@ -79,7 +71,12 @@ export class AuthenticationServiceMock {
 async function setupAuthTestModule(): Promise<unknown> {
     await setupEmulators();
     // Clear the rtdb data before each test
-    return RTDBSpec.clearDB();
+    const useFirebaseDatabase: boolean = false;
+    if (useFirebaseDatabase) {
+        // Here we can't clear the DB because it breaks everything, but this is how it should be done:
+        await firebase.database().ref().set(null);
+    }
+    return Promise.resolve();
 }
 
 export class AuthenticationServiceUnderTest extends AuthenticationService {
