@@ -1,5 +1,5 @@
 import { Encoder } from 'src/app/jscaip/Encoder';
-import { comparableEqualsIfComparable } from './Comparable';
+import { comparableEquals } from './Comparable';
 import { JSONValue } from './utils';
 
 export class MGPOptional<T> {
@@ -57,7 +57,7 @@ export class MGPOptional<T> {
         if (other.isAbsent()) {
             return false;
         }
-        return comparableEqualsIfComparable(this.value, other.value);
+        return comparableEquals(this.value, other.value);
     }
     public toString(): string {
         if (this.isAbsent()) {

@@ -1,4 +1,4 @@
-import { comparableEqualsIfComparable } from './Comparable';
+import { comparableEquals } from './Comparable';
 import { MGPOptional } from './MGPOptional';
 import { MGPValidation } from './MGPValidation';
 import { assert } from './utils';
@@ -26,7 +26,7 @@ export abstract class MGPFallible<T> {
         if (other.isFailure()) {
             return false;
         }
-        return comparableEqualsIfComparable(this.get(), other.get());
+        return comparableEquals(this.get(), other.get());
     }
 
 }
