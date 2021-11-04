@@ -57,6 +57,8 @@ describe('Comparable', () => {
     });
     describe('isComparableJSON', () => {
         it('should return true for comparable JSON only', () => {
+            expect(isComparableJSON(undefined)).toBeFalse();
+            expect(isComparableJSON(null)).toBeFalse();
             expect(isComparableJSON({ 'foo': 5 })).toBeTrue();
             expect(isComparableJSON(new DummyNonComparableObject(5))).toBeFalse();
             expect(isComparableJSON({ 'foo': new DummyNonComparableObject(5) })).toBeFalse();

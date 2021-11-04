@@ -52,7 +52,7 @@ export function isComparableJSON(value: any): value is ComparableJSON {
             }
         }
         // A JSON value should directly inherit from Object
-        return value.constructor.prototype === Object.prototype;
+        return value != null && value.constructor.prototype === Object.prototype;
     } else {
         return false;
     }
