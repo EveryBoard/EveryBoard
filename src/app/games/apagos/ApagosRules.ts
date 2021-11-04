@@ -59,7 +59,7 @@ export class ApagosRules extends Rules<ApagosMove, ApagosState> {
     }
     public isLegalDrop(move: ApagosMove, state: ApagosState): LegalityStatus {
         if (state.getRemaining(move.piece.get()) <= 0) {
-            return LegalityStatus.failure(ApagosMessage.NO_PIECE_REMAINING());
+            return LegalityStatus.failure(ApagosMessage.NO_PIECE_REMAINING_TO_DROP());
         }
         return LegalityStatus.SUCCESS;
     }

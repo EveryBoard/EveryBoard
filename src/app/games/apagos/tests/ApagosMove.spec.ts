@@ -5,7 +5,7 @@ import { ApagosCoord } from '../ApagosCoord';
 import { ApagosMessage } from '../ApagosMessage';
 import { ApagosMove } from '../ApagosMove';
 
-fdescribe('ApagosMove', () => {
+describe('ApagosMove', () => {
 
     it('should refuse creating immobile sliding', () => {
         // given a move whose landing coord is lower than starting
@@ -30,6 +30,10 @@ fdescribe('ApagosMove', () => {
         }
     });
     it('Should override equals correctly', () => {
-        // TODOTODO
+        const move: ApagosMove = ApagosMove.drop(ApagosCoord.ONE, Player.ZERO);
+        const sameMove: ApagosMove = ApagosMove.drop(ApagosCoord.from(1), Player.fromTurn(0));
+        const differentMove: ApagosMove = ApagosMove.transfer(ApagosCoord.THREE, ApagosCoord.ONE).get();
+        expect(move.equals(sameMove)).toBeTrue();
+        expect(move.equals(differentMove)).toBeFalse();
     });
 });

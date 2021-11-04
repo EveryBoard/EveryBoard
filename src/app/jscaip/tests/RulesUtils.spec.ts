@@ -5,6 +5,7 @@ import { Move } from '../Move';
 import { Player } from '../Player';
 import { GameStatus, Rules } from '../Rules';
 import { AbstractGameState } from '../GameState';
+import { comparableEquals, ComparableObject } from 'src/app/utils/Comparable';
 export class RulesUtils {
 
     public static expectMoveSuccess(rules: Rules<Move, AbstractGameState>,
@@ -17,7 +18,13 @@ export class RulesUtils {
         expect(legality.legal).toBeTruthy();
         if (legality.legal.isSuccess()) {
             const resultingState: AbstractGameState = rules.applyLegalMove(move, state, legality);
-            expect(resultingState).withContext('states should be equal').toEqual(expectedState);
+            if (resultingState['equals'] !== null) { // TODOTODO: will be isComparableObject when your branch is merged
+                const equals: boolean = comparableEquals(resultingState as unknown as ComparableObject,
+                                                         expectedState as unknown as ComparableObject);
+                expect(equals).withContext('states should be equal').toBeTrue();
+            } else {
+                expect(resultingState).withContext('states should be equal').toEqual(expectedState);
+            }
         } else {
             throw new Error('expected move to be valid but it is not: ' + legality.legal.getReason());
         }

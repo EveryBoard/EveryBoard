@@ -3,12 +3,13 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { ApagosCoord } from '../ApagosCoord';
+import { ApagosDummyMinimax } from '../ApagosDummyMinimax';
 import { ApagosMessage } from '../ApagosMessage';
 import { ApagosMove } from '../ApagosMove';
 import { ApagosNode, ApagosRules } from '../ApagosRules';
 import { ApagosState } from '../ApagosState';
 
-fdescribe('ApagosRules', () => {
+describe('ApagosRules', () => {
 
     let rules: ApagosRules;
 
@@ -25,7 +26,9 @@ fdescribe('ApagosRules', () => {
     });
     beforeEach(() => {
         rules = new ApagosRules(ApagosState);
-        minimaxes = [];
+        minimaxes = [
+            new ApagosDummyMinimax(rules, 'ApagosDummyMinimax'),
+        ];
     });
     it('should refuse droping on a full square', () => {
         // given a board with one full square
@@ -81,7 +84,7 @@ fdescribe('ApagosRules', () => {
         // when dropping a Player.ZERO piece
         const move: ApagosMove = ApagosMove.drop(ApagosCoord.ONE, Player.ZERO);
         // then move should be illegal
-        const reason: string = ApagosMessage.NO_PIECE_REMAINING();
+        const reason: string = ApagosMessage.NO_PIECE_REMAINING_TO_DROP();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should drop piece when on low square', () => {
@@ -110,7 +113,7 @@ fdescribe('ApagosRules', () => {
         ], ApagosState.PIECE_BY_PLAYER - 1, ApagosState.PIECE_BY_PLAYER);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
-    it('should now who is winning', () => {
+    it('should now who is winning (Player.ZERO)', () => {
         // given a ended part state
         const state: ApagosState = ApagosState.fromRepresentation(20, [
             [7, 0, 0, 1],
@@ -120,5 +123,16 @@ fdescribe('ApagosRules', () => {
         // then we should know who won
         const node: ApagosNode = new MGPNode(null, null, state);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+    });
+    it('should now who is winning (Player.ONE)', () => {
+        // given a ended part state
+        const state: ApagosState = ApagosState.fromRepresentation(20, [
+            [7, 0, 1, 0],
+            [0, 5, 2, 1],
+            [7, 5, 3, 1],
+        ], 0, 0);
+        // then we should know who won
+        const node: ApagosNode = new MGPNode(null, null, state);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
 });

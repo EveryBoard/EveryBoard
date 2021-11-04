@@ -972,7 +972,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
         }));
     });
     describe('Tutorials', () => {
-        fit('Should make sure that predicate step have healthy behaviors', fakeAsync(async() => {
+        it('Should make sure that predicate step have healthy behaviors', fakeAsync(async() => {
             const apagosTutorial: TutorialStep[] = new ApagosTutorial().tutorial;
             const dvonnTutorial: TutorialStep[] = new DvonnTutorial().tutorial;
             const epaminondasTutorial: TutorialStep[] = new EpaminondasTutorial().tutorial;
@@ -987,6 +987,18 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     apagosTutorial[2],
                     ApagosMove.drop(ApagosCoord.ZERO, Player.ZERO),
                     MGPValidation.failure($localize`This move is a drop! Please do a transfer!`),
+                ],
+                [
+                    new ApagosRules(ApagosState),
+                    apagosTutorial[3],
+                    ApagosMove.drop(ApagosCoord.TWO, Player.ZERO),
+                    MGPValidation.failure($localize`You actively made your opponent win!`),
+                ],
+                [
+                    new ApagosRules(ApagosState),
+                    apagosTutorial[3],
+                    ApagosMove.transfer(ApagosCoord.THREE, ApagosCoord.TWO).get(),
+                    MGPValidation.failure($localize`Wrong choice, your opponent will win next turn whatever piece is dropped!`),
                 ],
                 [
                     new DvonnRules(DvonnState),
@@ -1083,12 +1095,15 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 const move: Move = stepExpectation[2];
                 const validation: MGPValidation = stepExpectation[3];
                 const status: LegalityStatus = rules.isLegal(move, step.state);
-                expect(status.legal.reason).toBeNull();
-                const state: AbstractGameState = rules.applyLegalMove(move, step.state, status);
-                expect(step.predicate(move, state)).toEqual(validation);
+                if (status.legal.isSuccess()) {
+                    const state: AbstractGameState = rules.applyLegalMove(move, step.state, status);
+                    expect(step.predicate(move, state)).withContext('Move should lead to incorrect result').toEqual(validation);
+                } else {
+                    expect(status.legal.reason).withContext('Move should be legal to reach predicate but failed').toBeNull();
+                }
             }
         }));
-        fit('Should make sure all solutionMove are legal', fakeAsync(async() => {
+        it('Should make sure all solutionMove are legal', fakeAsync(async() => {
             for (const gameInfo of GameInfo.ALL_GAMES()) {
                 if (gameInfo.display === false) {
                     continue;
@@ -1100,11 +1115,14 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 for (const step of steps) {
                     if (step.solutionMove != null) {
                         const status: LegalityStatus = rules.isLegal(step.solutionMove, step.state);
-                        expect(status.legal.reason).toBeNull();
-                        if (step.isPredicate()) {
-                            const state: AbstractGameState =
-                                rules.applyLegalMove(step.solutionMove, step.state, status);
-                            expect(step.predicate(step.solutionMove, state)).toEqual(MGPValidation.SUCCESS);
+                        if (status.legal.isSuccess()) {
+                            if (step.isPredicate()) {
+                                const state: AbstractGameState =
+                                    rules.applyLegalMove(step.solutionMove, step.state, status);
+                                expect(step.predicate(step.solutionMove, state)).toEqual(MGPValidation.SUCCESS);
+                            }
+                        } else {
+                            expect(status.legal.reason).withContext('Solution move should be legal but failed').toBeNull();
                         }
                     }
                 }

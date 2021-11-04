@@ -130,6 +130,10 @@
         <source>Use simple mechanics to push 6 of the opponent&apos;s pieces out of the board!</source>
         <target>Utilisez des mécaniques simples pour pousser 6 pièces adverses hors du plateau !</target>
       </trans-unit>
+      <trans-unit id="6692821761046788999" datatype="html">
+        <source>Very simple game, but, will you be able to win everytime ?</source>
+        <target>Un jeu très simple, mais, sauvez vous gagner à chaque fois ?</target>
+      </trans-unit>
       <trans-unit id="6262000022886850348" datatype="html">
         <source>The international version of the famous African strategy game!</source>
         <target>La version internationale du fameux jeu de stratégie africain !</target>
@@ -293,6 +297,10 @@
       <trans-unit id="5094417734463136297" datatype="html">
         <source>Yinsh</source>
         <target>Yinsh</target>
+      </trans-unit>
+      <trans-unit id="4497962271113144657" datatype="html">
+        <source>Apagos</source>
+        <target>Apagos</target>
       </trans-unit>
       <trans-unit id="7656395805241225659" datatype="html">
         <source>Games</source>
@@ -749,6 +757,30 @@
       <trans-unit id="8139485336036692612" datatype="html">
         <source>Failed!</source>
         <target>Raté !</target>
+      </trans-unit>
+      <trans-unit id="7542249077466387904" datatype="html">
+        <source>At Apagos, there are 4 squares, each of them have a fix number of holes to put pieces. Each player start with 10 pieces. Dark pieces belong to first player, light pieces belong to the second one. The game ends when no one can play. The player owning the most pieces in the righter square wins!</source>
+        <target>À Apagos, il y a 4 cases, chacune contient un nombre fixe d'emplacements pour mettre les pièces. Chaque joueur commence avec 10 pièces. Les pièces foncées appartiennent au premier joueur, les claires aux deuxième. Le jeu fini quand personne ne sais jouer. Le joueur possédant le plus de pièce dans la case la plus à droite gagne!</target>
+      </trans-unit>
+      <trans-unit id="4304656288372447065" datatype="html">
+        <source>Drop</source>
+        <target>Pose</target>
+      </trans-unit>
+      <trans-unit id="954767511259340209" datatype="html">
+        <source>One of the two kind of move is the drop. To do one, you must click on any visible arrow, being of your color or the opponent&apos;s. If the receiving square is one of the 3 leftmost ones, it will switch its coord with the square right to it. You play Light.&lt;br/&gt;&lt;br/&gt;Drop a piece on one of thoses three squares.</source>
+        <target>Un des deux types de coup est la pose. Pour en faire une, vous devez cliquer sur une flèche, qu'elle soit de votre couleur ou de celle de l'adversaire. Si la case reçevant la pièce est l'une des trois les plus à gauche, elle échangera sa place avec celles juste à sa droite. Vous jouez Clair.&lt;br/&gt;&lt;br/&gt;Posez une pièce sur l'une de ces trois cases.</target>
+      </trans-unit>
+      <trans-unit id="8402696305361715603" datatype="html">
+        <source>Transfer</source>
+        <target>Transfert</target>
+      </trans-unit>
+      <trans-unit id="759585629296293659" datatype="html">
+        <source>The other kind of move is the transfer.&lt;ol&gt;&lt;li&gt;Choose one of your pieces on the board by clicking on the square in which it is.&lt;/li&gt;&lt;li&gt;Choose its landing square by clicking on one of the arrow to finish the transfer.&lt;/li&gt;&lt;/ol&gt;It can only be done with your pieces, from an higher square to a lower one.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a transfer!</source>
+        <target>L'autre type de mouvement est le transfert.&lt;ol&gt;&lt;li&gt;Choisissez une de vos pièces sur le plateau en cliquant sur la case qui la contient.&lt;/li&gt;&lt;li&gt;Choisissez sa case d'atterrissage en cliquant sur la flèche au dessus de celle-ci pour finir le transfert.&lt;/li&gt;&lt;/ol&gt;Cela peut seulement être fait avec une de vos pièces, d'une case à une autre case plus basse.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites un transfert!</target>
+      </trans-unit>
+      <trans-unit id="8336479845838887451" datatype="html">
+        <source>This move is a drop! Please do a transfer!</source>
+        <target>Ce coup est une pose! Veuillez faire un transfert!</target>
       </trans-unit>
       <trans-unit id="8572141978310888290" datatype="html">
         <source>You cannot distribute from the opponent&apos;s home.</source>
@@ -2014,6 +2046,17 @@
       <trans-unit id="1116173898665219180" datatype="html">
         <source>Victory</source>
         <target>Victoire</target>
+      </trans-unit><trans-unit id="7759745104864966912" datatype="html">
+        <source>When you put a last piece into a square, the games end. In this configuration you can win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do the winning move!</source>
+        <target>Quand vous posez une dernière pièce dans une case, le jeu fini. Dans cette configuration vous pouvez gagner.&lt;br/&gt;&lt;br/&gt;Vous jouez Clair, faites le mouvement gagnant !</target>
+      </trans-unit>
+      <trans-unit id="3614265026318366150" datatype="html">
+        <source>You actively made your opponent win!</source>
+        <target>Vous avez activement fait gagner votre adversaire !</target>
+      </trans-unit>
+      <trans-unit id="1392892237268216019" datatype="html">
+        <source>Wrong choice, your opponent will win next turn whatever piece is dropped!</source>
+        <target>Mauvais choix, votre adversaire va gagner au prochain tour quelle que soit la pièce qu'il dépose !</target>
       </trans-unit>
       <trans-unit id="5880375817695791500" datatype="html">
         <source>You&apos;re playing Dark.

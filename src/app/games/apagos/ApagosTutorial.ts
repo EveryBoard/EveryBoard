@@ -42,6 +42,28 @@ export class ApagosTutorial {
             },
             $localize`Congratulations!`,
         ),
-        // TODOTODO explain victory
+        TutorialStep.fromPredicate(
+            $localize`Victory`,
+            $localize`When you put a last piece into a square, the games end. In this configuration you can win.<br/><br/>You're playing Light, do the winning move!`,
+            ApagosState.fromRepresentation(2, [
+                [2, 0, 3, 3],
+                [1, 1, 3, 2],
+                [3, 1, 7, 5],
+            ], 2, 3),
+            ApagosMove.drop(ApagosCoord.TWO, Player.ONE),
+
+            (move: ApagosMove, _: ApagosState) => {
+                if (move.isDrop()) {
+                    if (move.piece.getOrNull() === Player.ONE) {
+                        return MGPValidation.SUCCESS;
+                    } else {
+                        return MGPValidation.failure($localize`You actively made your opponent win!`);
+                    }
+                } else {
+                    return MGPValidation.failure($localize`Wrong choice, your opponent will win next turn whatever piece is dropped!`);
+                }
+            },
+            $localize`Congratulations!`,
+        ),
     ];
 }

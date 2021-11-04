@@ -1,7 +1,6 @@
-import { ComparableObject } from 'src/app/utils/Comparable';
 import { assert } from 'src/app/utils/utils';
 
-export class ApagosCoord implements ComparableObject {
+export class ApagosCoord {
 
     public static ZERO: ApagosCoord = new ApagosCoord(0);
 
@@ -25,8 +24,5 @@ export class ApagosCoord implements ComparableObject {
 
     public equals(o: ApagosCoord): boolean {
         return this.x === o.x;
-    }
-    public toString(): string {
-        return 'ApagosCoord(' + this.x + ')';
     }
 }

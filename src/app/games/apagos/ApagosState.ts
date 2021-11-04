@@ -64,18 +64,17 @@ export class ApagosState extends GameState<ApagosCoord, ApagosSquare> {
         return coord != null;
     }
     public getNullable(coord: ApagosCoord): ApagosSquare {
+        if (coord == null) {
+            return null;
+        }
         return this.board[coord.x];
     }
     public getRemaining(piece: Player): number {
         return this.remaining.get(piece).get();
     }
     public equals(other: ApagosState): boolean {
-        if (this.turn !== other.turn) {
-            return false;
-        } else if (ArrayUtils.compareArray(other.board, this.board) === false) {
-            return false;
-        } else {
-            return this.remaining.equals(other.remaining);
-        }
+        return this.turn === other.turn &&
+               ArrayUtils.compareArray(other.board, this.board) &&
+               this.remaining.equals(other.remaining);
     }
 }
