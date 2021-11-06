@@ -14,7 +14,7 @@ export type ComparableJSON = {
 
 export type Comparable = JSONPrimitive | ComparableObject | ComparableJSON;
 
-export function comparableEquals<T extends Comparable>(a: T, b: T): boolean {
+function comparableEqualsStrict<T extends Comparable>(a: T, b: T): boolean {
     if (a != null && b != null && typeof a === 'object') {
         if (a['equals']) {
             const comparableValue: ComparableObject = a as ComparableObject;
@@ -52,19 +52,19 @@ export function isComparableJSON(value: any): value is ComparableJSON {
             }
         }
         // A JSON value should directly inherit from Object
-        return value.constructor.prototype === Object.prototype;
+        return value != null && value.constructor.prototype === Object.prototype;
     } else {
         return false;
     }
 }
 
 export function isComparableValue(value: unknown): value is ComparableValue {
-    return isComparableObject(value) || isJSONPrimitive(value) || isComparableJSON(value);
+    return value == null || isComparableObject(value) || isJSONPrimitive(value) || isComparableJSON(value);
 }
 
-export function comparableEqualsIfComparable<T>(a: T, b: T): boolean {
+export function comparableEquals<T>(a: T, b: T): boolean {
     if (isComparableValue(a) && isComparableValue(b)) {
-        return comparableEquals(a, b);
+        return comparableEqualsStrict(a, b);
     } else {
         Utils.handleError('Comparing non comparable objects');
         return false;

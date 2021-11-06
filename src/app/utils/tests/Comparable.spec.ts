@@ -1,4 +1,4 @@
-import { comparableEquals, comparableEqualsIfComparable, ComparableJSON, ComparableObject, isComparableJSON, isComparableObject, isComparableValue } from '../Comparable';
+import { comparableEquals, ComparableJSON, ComparableObject, isComparableJSON, isComparableObject, isComparableValue } from '../Comparable';
 import { Utils } from '../utils';
 
 class DummyComparableObject implements ComparableObject {
@@ -42,6 +42,12 @@ describe('Comparable', () => {
             expect(comparableEquals(object1, object2)).toBeFalse();
             expect(comparableEquals(object1, object3)).toBeFalse();
         });
+        it('should fail if objects are not comparable', () => {
+            spyOn(Utils, 'handleError').and.returnValue(null);
+            comparableEquals(new DummyNonComparableObject(5), new DummyNonComparableObject(5));
+            expect(Utils.handleError).toHaveBeenCalledWith('Comparing non comparable objects');
+        });
+
     });
     describe('isComparableObject', () => {
         it('should return true for objects that define an equals method only', () => {
@@ -51,6 +57,8 @@ describe('Comparable', () => {
     });
     describe('isComparableJSON', () => {
         it('should return true for comparable JSON only', () => {
+            expect(isComparableJSON(undefined)).toBeFalse();
+            expect(isComparableJSON(null)).toBeFalse();
             expect(isComparableJSON({ 'foo': 5 })).toBeTrue();
             expect(isComparableJSON(new DummyNonComparableObject(5))).toBeFalse();
             expect(isComparableJSON({ 'foo': new DummyNonComparableObject(5) })).toBeFalse();
@@ -58,24 +66,13 @@ describe('Comparable', () => {
         });
     });
     describe('isComparableValue', () => {
-        it('should return true for all types comparable values', () => {
+        it('should return true for all comparable values', () => {
             expect(isComparableValue(new DummyComparableObject(5))).toBeTrue();
             expect(isComparableValue(new DummyNonComparableObject(5))).toBeFalse();
             expect(isComparableValue(5)).toBeTrue();
-            expect(isComparableValue(undefined)).toBeFalse();
+            expect(isComparableValue(null)).toBeTrue();
             expect(isComparableValue({ 'foo': { 'bar': { 'baz': 5 } } })).toBeTrue();
             expect(isComparableValue({ 'foo': { 'bar': { 'baz': new DummyNonComparableObject(5) } } })).toBeFalse();
-        });
-    });
-    describe('comparableEqualsIfComparable', () => {
-        it('should succeed if both objects are of comparable types', () => {
-            expect(comparableEqualsIfComparable(5, 5)).toBeTrue();
-            expect(comparableEqualsIfComparable(5, 6)).toBeFalse();
-        });
-        it('should fail if objects are not comparable', () => {
-            spyOn(Utils, 'handleError').and.returnValue(null);
-            comparableEqualsIfComparable(new DummyNonComparableObject(5), new DummyNonComparableObject(5));
-            expect(Utils.handleError).toHaveBeenCalledWith('Comparing non comparable objects');
         });
     });
 });
