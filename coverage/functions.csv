@@ -1,7 +1,7 @@
 src/app/services,10
-src/app/games/six,6
-src/app/jscaip,6
+src/app/jscaip,5
 src/app/games/quarto,3
+src/app/games/six,3
 src/app/games/tablut,3
 src/app/components/wrapper-components/online-game-wrapper,2
 src/app/games/dvonn,2
@@ -37,7 +37,6 @@ src/app/domain,0
 src/app/games/abalone,0
 src/app/games/awale,0
 src/app/games/coerceo,0
-src/app/games/diam,0
 src/app/games/epaminondas,0
 src/app/games/gipf,0
 src/app/games/go,0

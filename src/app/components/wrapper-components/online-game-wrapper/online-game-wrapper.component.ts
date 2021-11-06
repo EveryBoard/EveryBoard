@@ -607,7 +607,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     : Promise<void>
     {
         const encodedMove: JSONValueWithoutArray = this.gameComponent.encoder.encodeMove(move);
-        display(OnlineGameWrapperComponent.VERBOSE || true, 'OnlineGameWrapperComponent.updateDBBoard(' + move.toString() +
+        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.updateDBBoard(' + move.toString() +
                                                     ', ' + scorePlayerZero + ', ' + scorePlayerOne + ')');
         this.gameComponent.rules.choose(move);
         const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.rules.node);

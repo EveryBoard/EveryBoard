@@ -53,8 +53,7 @@ export class GameService implements OnDestroy {
         display(GameService.VERBOSE, 'GameService.constructor');
         this.userNameSub = this.authenticationService.getUserObs()
             .subscribe((joueur: AuthUser) => {
-                if (joueur == null) this.userName = null;
-                else this.userName = joueur.username;
+                this.userName = joueur.username;
             });
     }
     public async createGameAndRedirectOrShowError(game: string): Promise<boolean> {
@@ -77,9 +76,7 @@ export class GameService implements OnDestroy {
         return this.userName == null;
     }
     public ngOnDestroy(): void {
-        if (this.userNameSub != null) {
-            this.userNameSub.unsubscribe();
-        }
+        this.userNameSub.unsubscribe();
     }
     public async getPartValidity(partId: string, gameType: string): Promise<MGPValidation> {
         const part: IPart | null = await this.partDao.read(partId);
