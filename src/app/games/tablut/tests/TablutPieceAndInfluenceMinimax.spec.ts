@@ -1,5 +1,4 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPMap } from 'src/app/utils/MGPMap';
@@ -11,7 +10,6 @@ import { TablutState } from '../TablutState';
 import { TablutPieceAndInfluenceMinimax } from '../TablutPieceAndInfluenceMinimax';
 import { SandwichThreat } from '../../../jscaip/PieceThreat';
 import { TablutNode, TablutRules } from '../TablutRules';
-import { Move } from 'src/app/jscaip/Move';
 
 describe('TablutPieceAndInfluenceMinimax', () => {
 

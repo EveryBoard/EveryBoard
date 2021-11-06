@@ -1,7 +1,6 @@
 import { QuartoPiece } from '../QuartoPiece';
 import { QuartoState } from '../QuartoState';
 import { QuartoMinimax } from '../QuartoMinimax';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { QuartoNode, QuartoRules } from '../QuartoRules';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { QuartoMove } from '../QuartoMove';

@@ -1,5 +1,4 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { TablutMove } from '../TablutMove';
 import { TablutState } from '../TablutState';
 import { TablutCase } from '../TablutCase';

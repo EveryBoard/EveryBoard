@@ -82,9 +82,6 @@ describe('FirebaseFirestoreDAO', () => {
                 createdResolve = resolve;
             });
             callbackFunction = (created: {doc: Foo, id: string}[]) => {
-                for (const c of created) {
-                    console.log('observe: value ' + c.doc.value + ' and other value ' + c.doc.otherValue) 
-                }
                 createdResolve(created.map((c: {doc: Foo, id: string}): Foo => c.doc));
             };
         });

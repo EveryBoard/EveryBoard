@@ -2,7 +2,6 @@ import { AwaleNode, AwaleRules } from '../AwaleRules';
 import { AwaleMinimax } from '../AwaleMinimax';
 import { AwaleMove } from '../AwaleMove';
 import { AwaleState } from '../AwaleState';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 
 describe('AwaleMinimax:', () => {
 

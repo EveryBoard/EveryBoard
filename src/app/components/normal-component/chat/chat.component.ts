@@ -5,7 +5,6 @@ import { AuthenticationService, AuthUser } from 'src/app/services/Authentication
 import { IChatId } from 'src/app/domain/ichat';
 import { assert, display, Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Subscription } from 'rxjs';
 import { faReply, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
