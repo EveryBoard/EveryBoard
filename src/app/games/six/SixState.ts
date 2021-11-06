@@ -160,9 +160,6 @@ export class SixState extends GameState<Coord, Player> {
             return Player.NONE;
         }
     }
-    public getNullable(coord: Coord): Player | null {
-        return this.pieces.get(coord).getOrNull();
-    }
     public applyLegalDrop(coord: Coord): SixState {
         const pieces: MGPMap<Coord, Player> = this.pieces.getCopy();
         pieces.put(coord, this.getCurrentPlayer());

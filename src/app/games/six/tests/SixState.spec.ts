@@ -114,4 +114,5 @@ describe('SixState', () => {
             expect(groups.equals(expectedGroups)).toBeTrue();
         });
     });
+    describe('get
 });

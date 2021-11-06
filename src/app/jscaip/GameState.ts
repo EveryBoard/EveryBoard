@@ -14,7 +14,9 @@ export abstract class GameState<C, P> {
 
     public abstract isOnBoard(coord: C): boolean
 
-    public abstract getNullable(coord: C): P | null;
+    // TODO FOR REVIEW: removed because it is actually not needed
+    // TODO FOR REVIEW: the games that want to define it can, but it is not necessary to force its definition
+    // public abstract getNullable(coord: C): P | null;
 }
 export abstract class AbstractGameState extends GameState<unknown, unknown> {
 }

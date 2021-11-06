@@ -80,10 +80,4 @@ export class SixMove extends Move {
         }
         return this.keep.equals(o.keep);
     }
-    public encode(): JSONValue {
-        return SixMove.encoder.encode(this);
-    }
-    public decode(encodedMove: JSONValue): SixMove {
-        return SixMove.encoder.decode(encodedMove);
-    }
 }

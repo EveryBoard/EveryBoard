@@ -1,5 +1,6 @@
 import { Player } from 'src/app/jscaip/Player';
 import { Orthogonal } from 'src/app/jscaip/Direction';
+import { Utils } from 'src/app/utils/utils';
 
 export class SiamPiece {
 
@@ -38,7 +39,6 @@ export class SiamPiece {
         }
     }
     public belongTo(player: Player): boolean {
-        if (player == null) throw new Error('Player must be set (even if Player.NONE).');
         if (player === Player.ZERO) {
             return (1 <= this.value && this.value <= 4);
         } else if (player === Player.ONE) {
@@ -75,8 +75,6 @@ export class SiamPiece {
         }
     }
     public static of(orientation: Orthogonal, player: Player): SiamPiece {
-        if (orientation == null) throw new Error('Orientation must be set.');
-        if (player == null) throw new Error('Player must be set.');
         if (player === Player.NONE) throw new Error(`Player None don't have any pieces.`);
         if (player === Player.ZERO) {
             if (orientation === Orthogonal.UP) return SiamPiece.WHITE_UP;
@@ -94,8 +92,7 @@ export class SiamPiece {
 
     public getDirection(): Orthogonal {
         const direction: Orthogonal | null = this.getNullableDirection();
-        if (direction == null) throw new Error('Piece ' + this.value + ' has no direction.');
-        return direction;
+        return Utils.getNonNullOrFail(direction);
     }
     public toString(): string {
         switch (this.value) {

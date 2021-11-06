@@ -91,6 +91,54 @@ describe('RegisterComponent', () => {
         expect(getShownError()).toBe(error);
         expect(router.navigate).not.toHaveBeenCalled();
     }));
+    it('should fail if the email is not given', fakeAsync(async() => {
+        const router: Router = TestBed.inject(Router);
+        spyOn(router, 'navigate');
+
+        // given some user that does not provide an email address
+        testUtils.fillInput('#username', username);
+        testUtils.fillInput('#password', password);
+        testUtils.detectChanges();
+
+        // when the user clicks on the registration button
+        await testUtils.clickElement('#registerButton');
+
+        // then an error message is shown
+        expect(getShownError()).toBe(`There are missing fields in the registration form, please check that you filled in all fields.`);
+        expect(router.navigate).not.toHaveBeenCalled();
+    }));
+    it('should fail if the email is not given', fakeAsync(async() => {
+        const router: Router = TestBed.inject(Router);
+        spyOn(router, 'navigate');
+
+        // given some user that does not provide a username
+        testUtils.fillInput('#email', email);
+        testUtils.fillInput('#password', password);
+        testUtils.detectChanges();
+
+        // when the user clicks on the registration button
+        await testUtils.clickElement('#registerButton');
+
+        // then an error message is shown
+        expect(getShownError()).toBe(`There are missing fields in the registration form, please check that you filled in all fields.`);
+        expect(router.navigate).not.toHaveBeenCalled();
+    }));
+    it('should fail if the email is not given', fakeAsync(async() => {
+        const router: Router = TestBed.inject(Router);
+        spyOn(router, 'navigate');
+
+        // given some user that does not provide a password
+        testUtils.fillInput('#email', email);
+        testUtils.fillInput('#username', username);
+        testUtils.detectChanges();
+
+        // when the user clicks on the registration button
+        await testUtils.clickElement('#registerButton');
+
+        // then an error message is shown
+        expect(getShownError()).toBe(`There are missing fields in the registration form, please check that you filled in all fields.`);
+        expect(router.navigate).not.toHaveBeenCalled();
+    }));
     it('should dynamically validate password', fakeAsync(async() => {
         // given some user
         // when it fills in a password that is too short
