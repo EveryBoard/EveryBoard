@@ -668,6 +668,25 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             expect(componentTestUtils.getComponent().canUserPlay('#chooseCoord_0_0').isSuccess()).toBeTrue();
             tick(10);
         }));
+        it('should not show error if cancelMove is called with no specified reason', fakeAsync(async() => {
+            // given a tutorial awaiting a move
+            const tutorial: TutorialStep[] = [
+                TutorialStep.anyMove(
+                    'title',
+                    'instruction',
+                    QuartoState.getInitialState(),
+                    new QuartoMove(0, 0, QuartoPiece.BABA),
+                    'Bravo !',
+                ),
+            ];
+            wrapper.startTutorial(tutorial);
+
+            // when cancelMove is called with no specified reason
+            wrapper.gameComponent.cancelMove();
+
+            // then no error is shown
+            componentTestUtils.expectElementNotToExist('#currentReason');
+        }));
         it('Should propose to see the solution when move attempt done', fakeAsync(async() => {
             // Given a tutorial on which a non-awaited move has been done
             const awaitedMove: QuartoMove = new QuartoMove(3, 3, QuartoPiece.BBAA);

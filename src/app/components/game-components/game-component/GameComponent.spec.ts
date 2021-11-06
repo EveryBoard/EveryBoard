@@ -21,6 +21,7 @@ import { GameInfo, PickGameComponent } from '../../normal-component/pick-game/pi
 import { GameWrapperMessages } from '../../wrapper-components/GameWrapper';
 import { LocalGameWrapperComponent } from '../../wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { AbstractGameComponent } from './GameComponent';
+import { Utils } from 'src/app/utils/utils';
 
 describe('GameComponent', () => {
 
@@ -53,6 +54,26 @@ describe('GameComponent', () => {
             ],
         }).compileComponents();
         AuthenticationServiceMock.setUser(AuthUser.NOT_CONNECTED);
+    }));
+    it('should fail is pass() is called on a game that does not support it', fakeAsync(async() => {
+        spyOn(Utils, 'handleError').and.returnValue(null);
+        // given such a game, like Abalone
+        activatedRouteStub.setRoute('compo', 'Abalone');
+
+        component = fixture.debugElement.componentInstance;
+        component.observerRole = 2;
+        fixture.detectChanges();
+        tick(1);
+        expect(component.gameComponent).toBeDefined();
+
+        // when we try to pass
+        const result: MGPValidation = await component.gameComponent.pass();
+
+        // then it gives an error and handleError is called
+        const error: string = 'pass() called on a game that does not redefine it';
+        expect(result.isFailure()).toBeTrue();
+        expect(result.getReason()).toEqual(error);
+        expect(Utils.handleError).toHaveBeenCalledWith(error);
     }));
     it('Clicks method should refuse when observer click', fakeAsync(async() => {
         const clickableMethods: { [gameName: string]: { [methodName: string]: unknown[] } } = {

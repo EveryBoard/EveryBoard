@@ -125,13 +125,11 @@ export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixS
                 disconnecteds.push(oldPiece.getNext(this.state.offset, 1));
             }
         }
-        if (this.lastDrop != null) {
-            const lastDrop: Coord = this.lastDrop;
-            if (this.pieces.some((coord: Coord) => coord.equals(lastDrop)) === false &&
-                newPieces.some((coord: Coord) => coord.equals(lastDrop)) === false)
-            {
-                disconnecteds.push(lastDrop); // Dummy captured his own piece
-            }
+        const lastDrop: Coord = Utils.getNonNullOrFail(this.lastDrop);
+        if (this.pieces.some((coord: Coord) => coord.equals(lastDrop)) === false &&
+            newPieces.some((coord: Coord) => coord.equals(lastDrop)) === false)
+        {
+            disconnecteds.push(lastDrop); // Dummy captured his own piece
         }
         return disconnecteds;
     }
@@ -242,10 +240,8 @@ export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixS
                legality.legal.reason === SixFailure.MUST_CUT();
     }
     private moveVirtuallyPiece(): void {
-        if (this.selectedPiece != null) {
-            const selectedPiece: Coord = this.selectedPiece;
-            this.pieces = this.pieces.filter((c: Coord) => c.equals(selectedPiece) === false);
-        }
+        const selectedPiece: Coord = Utils.getNonNullOrFail(this.selectedPiece);
+        this.pieces = this.pieces.filter((c: Coord) => c.equals(selectedPiece) === false);
         this.neighboors = this.getEmptyNeighboors();
     }
     private showCuttable(): void {
