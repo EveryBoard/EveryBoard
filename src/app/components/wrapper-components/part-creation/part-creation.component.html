@@ -9,17 +9,17 @@
                     <div class="buttons has-addons">
                         <button class="button"
                                 id="firstPlayerRandom"
-                                [ngClass]="(viewInfo.firstPlayer === 'RANDOM') && ['is-primary', 'is-selected']"
+                                [ngClass]="(viewInfo.firstPlayer === 'RANDOM' && ['is-primary', 'is-selected']) || ''"
                                 (click)="selectFirstPlayer('RANDOM')"
                                 i18n>Random</button>
                         <button class="button"
                                 id="firstPlayerCreator"
-                                [ngClass]="(viewInfo.firstPlayer === 'CREATOR') && ['is-primary', 'is-selected']"
+                                [ngClass]="(viewInfo.firstPlayer === 'CREATOR' && ['is-primary', 'is-selected']) || ''"
                                 (click)="selectFirstPlayer('CREATOR')"
                                 i18n>You</button>
                         <button class="button"
                                 id="firstPlayerOpponent"
-                                [ngClass]="(viewInfo.firstPlayer === 'CHOSEN_PLAYER') && ['is-primary', 'is-selected']"
+                                [ngClass]="(viewInfo.firstPlayer === 'CHOSEN_PLAYER' && ['is-primary', 'is-selected']) || ''"
                                 (click)="selectFirstPlayer('CHOSEN_PLAYER')"
                                 >
                             <ng-container *ngIf="viewInfo.chosenOpponent else opponentWithoutName">{{ viewInfo.chosenOpponent }}</ng-container>
@@ -32,7 +32,7 @@
                     <div class="buttons has-addons">
                         <div class="button dropdown is-hoverable"
                              id="partTypeStandard"
-                             [ngClass]="(viewInfo.partType === 'STANDARD') && ['is-primary', 'is-selected']"
+                             [ngClass]="(viewInfo.partType === 'STANDARD' && ['is-primary', 'is-selected']) || ''"
                              (click)="selectPartType('STANDARD')"
                              >
                             <div class="dropdown-trigger">
@@ -53,7 +53,7 @@
                         </div>
                         <div class="button dropdown is-hoverable"
                              id="partTypeBlitz"
-                             [ngClass]="(viewInfo.partType === 'BLITZ') && ['is-primary', 'is-selected']"
+                             [ngClass]="(viewInfo.partType === 'BLITZ' && ['is-primary', 'is-selected']) || ''"
                              (click)="selectPartType('BLITZ')">
                             <div class="dropdown-trigger">
                                 <span i18n>Blitz</span>
@@ -73,7 +73,7 @@
                         </div>
                         <button class="button"
                                 id="partTypeCustom"
-                                [ngClass]="(viewInfo.partType === 'CUSTOM') && ['is-primary', 'is-selected']"
+                                [ngClass]="(viewInfo.partType === 'CUSTOM' && ['is-primary', 'is-selected']) || ''"
                                 (click)="selectPartType('CUSTOM')"
                                 i18n>Custom</button>
                     </div>
@@ -84,7 +84,7 @@
                     <div class="field">
                         <label class="label" for="maximalMoveDuration">
                             <ng-container i18n>Maximal turn duration: </ng-container>
-                            <output>{{ viewInfo.maximalMoveDuration | humanDuration }}</output>
+                            <output>{{ (viewInfo.maximalMoveDuration || 0) | humanDuration }}</output>
                         </label>
                         <div class="control">
                             <input class="slider is-circle is-primary"
@@ -95,7 +95,7 @@
                         </div>
                     </div>
                     <div class="field">
-                        <label class="label" for="totalPartDuration" i18n>Maximal game duration: <output>{{ viewInfo.totalPartDuration | humanDuration }} per player</output></label>
+                        <label class="label" for="totalPartDuration" i18n>Maximal game duration: <output>{{ (viewInfo.totalPartDuration || 0) | humanDuration }} per player</output></label>
                         <div class="control">
                             <input class="slider is-circle is-primary"
                                    step="10"
@@ -109,7 +109,7 @@
                 <div class="field">
                     <label class="label" i18n>Opponents</label>
                     <div class="control">
-                        <div *ngIf="viewInfo.candidates.length === 0 else chooseCandidate" i18n>Potential opponents that join the game will appear here.<br/>Wait for an opponent to join, so that you can pick one.</div>
+                        <div *ngIf="viewInfo.candidates && viewInfo.candidates.length === 0 else chooseCandidate" i18n>Potential opponents that join the game will appear here.<br/>Wait for an opponent to join, so that you can pick one.</div>
                         <ng-template #chooseCandidate>
                             <ng-container i18n>Click on the opponent against which you would like to play.</ng-container>
                             <div class="table-container"
@@ -124,7 +124,7 @@
                                     <tbody>
                                         <tr *ngFor="let candidate of viewInfo.candidates"
                                             (click)="selectOpponent(candidate)"
-                                            [ngClass]="viewInfo.chosenOpponent === candidate && 'is-selected'"
+                                            [ngClass]="(viewInfo.chosenOpponent === candidate && 'is-selected') || ''"
                                             id="presenceOf_{{ candidate }}">
                                             <td class="td"
                                                 [id]="viewInfo.chosenOpponent === candidate && ('selected_' + candidate) || 'candidate_' + candidate"
@@ -189,8 +189,8 @@
                                 <span *ngIf="viewInfo.firstPlayer === 'RANDOM'" i18n
                                 >the first player is selected randomly</span>
                             </li>
-                            <li i18n>a turn lasts at most <strong>{{ viewInfo.maximalMoveDuration | humanDuration }} </strong></li>
-                            <li i18n>the game lasts at most <strong>{{ viewInfo.totalPartDuration | humanDuration }} per player</strong></li>
+                            <li i18n>a turn lasts at most <strong>{{ (viewInfo.maximalMoveDuration || 0) | humanDuration }} </strong></li>
+                            <li i18n>the game lasts at most <strong>{{ (viewInfo.totalPartDuration || 0) | humanDuration }} per player</strong></li>
                         </ul>
                         <button class="button is-primary"
                                 (click)="acceptConfig()"

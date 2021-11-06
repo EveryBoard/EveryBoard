@@ -121,9 +121,6 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
             return x === this.last.x && y === this.last.y;
         }
     }
-    public isThereAKo(): boolean {
-        return this.ko != null;
-    }
     public isDead(x: number, y: number): boolean {
         return this.rules.node.gameState.isDead(new Coord(x, y));
     }

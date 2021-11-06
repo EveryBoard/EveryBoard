@@ -15,7 +15,7 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     public static VERBOSE: boolean = false;
 
     @Input() public chatId: string;
-    @Input() public turn: number;
+    @Input() public turn: number | undefined;
     public userMessage: string = '';
     public username: MGPOptional<string> = MGPOptional.empty();
 

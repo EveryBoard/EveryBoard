@@ -67,7 +67,8 @@ export class ChatService implements OnDestroy {
             messages: [],
         });
     }
-    public async sendMessage(userName: string, currentTurn: number, content: string): Promise<MGPValidation> {
+    public async sendMessage(userName: string, currentTurn: number | undefined, content: string)
+    : Promise<MGPValidation> {
         if (this.followedChatId == null) {
             return MGPValidation.failure('Cannot send message if not observing chat');
         }

@@ -63,8 +63,10 @@
             <p i18n>Connected users:</p>
             <ul>
                 <li *ngFor="let user of activeUsers">
-                    {{ user.doc.username }}:
-                    {{ (1000*user.doc.last_changed.seconds) | date:'HH:mm:ss':'+0100'}}
+                    <ng-container *ngIf="user.doc.last_changed">
+                        {{ user.doc.username }}:
+                        {{ (1000*user.doc.last_changed.seconds) | date:'HH:mm:ss':'+0100'}}
+                    </ng-container>
                 </li>
             </ul>
         </div>
