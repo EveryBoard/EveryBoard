@@ -48,6 +48,7 @@ describe('GameComponent', () => {
             },
             Awale: { onClick: [0, 0] },
             Coerceo: { onClick: [0, 0] },
+            Diam: { onClick: [0, 0] },
             Dvonn: { onClick: [0, 0] },
             Encapsule: {
                 onBoardClick: [0, 0],

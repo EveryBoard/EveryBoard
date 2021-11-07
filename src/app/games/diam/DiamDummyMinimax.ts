@@ -8,6 +8,11 @@ import { DiamState } from './DiamState';
 
 export class DiamDummyMinimax extends Minimax<DiamMove, DiamState, LegalityStatus> {
     public getListMoves(node: DiamNode): DiamMove[] {
+        // for any type of remaining piece of the current player
+        // it can be dropped on any first empty spot in a stack (where there is space)
+
+        // for any piece owned by the player on the board
+        // it can be moved on any first empty spot in a stack (where there is space)
         throw new Error('NYI');
     }
     public getBoardValue(node: DiamNode): NodeUnheritance {

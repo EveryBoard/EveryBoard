@@ -21,6 +21,9 @@ $victory: yellow;
     stroke: $base-stroke;
     stroke-width: 8;
     fill: $background-fill;
+    stroke-linecap: butt;
+    stroke-linejoin: round;
+
 }
 .base-no-fill {
     stroke: $base-stroke;

@@ -78,6 +78,7 @@ import { YinshComponent } from './games/yinsh/yinsh.component';
 import { environment } from 'src/environments/environment';
 import { USE_EMULATOR as USE_FIRESTORE_EMULATOR } from '@angular/fire/firestore';
 import { LocaleUtils } from './utils/LocaleUtils';
+import { DiamComponent } from './games/diam/diam.component';
 
 
 registerLocaleData(localeFr);
@@ -126,6 +127,7 @@ const routes: Route [] = [
         AbaloneComponent,
         AwaleComponent,
         CoerceoComponent,
+        DiamComponent,
         DvonnComponent,
         EncapsuleComponent,
         EpaminondasComponent,
@@ -151,6 +153,7 @@ const routes: Route [] = [
     entryComponents: [
         AbaloneComponent,
         AwaleComponent,
+        DiamComponent,
         DvonnComponent,
         EncapsuleComponent,
         EpaminondasComponent,

@@ -17,8 +17,8 @@ export class DiamMoveDrop extends Move {
     public isDrop(): this is DiamMoveDrop {
         return true;
     }
-    public isShift(): this is DiamMoveShift {
-        return false;
+    public getTarget(): DiamXValue {
+        return this.target;
     }
     public equals(other: DiamMoveDrop): boolean {
         if (this.target !== other.target) return false;
@@ -37,9 +37,6 @@ export class DiamMoveShift extends Move {
     }
     public isDrop(): this is DiamMoveDrop {
         return false;
-    }
-    public isShift(): this is DiamMoveShift {
-        return true;
     }
     public getTarget(): DiamXValue {
         if (this.moveDirection === 'right') {

@@ -23,6 +23,7 @@ import { TablutComponent } from 'src/app/games/tablut/tablut.component';
 import { YinshComponent } from 'src/app/games/yinsh/yinsh.component';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { Localized } from 'src/app/utils/LocaleUtils';
+import { DiamComponent } from 'src/app/games/diam/diam.component';
 
 class GameDescription {
 
@@ -31,6 +32,8 @@ class GameDescription {
     public static readonly AWALE: Localized = () => $localize`The international version of the famous African strategy game!`;
 
     public static readonly COERCEO: Localized = () => $localize`Get rid of all of your opponent's pieces on a board that shrinks little by little!`;
+
+    public static readonly DIAM: Localized = () => $localize`Drop your pieces and move them around to to align two pieces of the same color across the board to win!`;
 
     public static readonly DVONN: Localized = () => $localize`Stack your pieces and control as many stacks as you can to win!`;
 
@@ -96,6 +99,7 @@ export class GameInfo {
         new GameInfo($localize`Pentago`, 'Pentago', PentagoComponent, new Date('2021-05-23'), GameDescription.PENTAGO()), // 25 days after Six
         new GameInfo($localize`Abalone`, 'Abalone', AbaloneComponent, new Date('2021-07-13'), GameDescription.ABALONE()),
         new GameInfo($localize`Yinsh`, 'Yinsh', YinshComponent, new Date('2021-07-31'), GameDescription.YINSH()),
+        new GameInfo($localize`Diam`, 'Diam', DiamComponent, new Date('2021-11-07'), GameDescription.DIAM()),
     ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
     // After Gipf: median = 26d; average = 34d
     // 9d 10d 12d 13d 18d - 18d 20d 22d (25d 26d) 26d 49d 65d - 76d 93d 4m 7m 11m
