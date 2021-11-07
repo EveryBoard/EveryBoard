@@ -395,3 +395,11 @@ export class ComponentTestUtils<T extends MyGameComponent> {
         return this.debugElement.nativeElement.querySelector(query);
     }
 }
+
+export class TestUtils {
+
+    public static expectValidationSuccess(validation: MGPValidation, context?: string): void {
+        const reason: string = validation.reason;
+        expect(validation.isSuccess()).withContext(context + ': ' + reason).toBeTrue();
+    }
+}

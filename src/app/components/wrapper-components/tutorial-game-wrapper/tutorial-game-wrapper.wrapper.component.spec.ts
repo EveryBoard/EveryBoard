@@ -3,7 +3,7 @@ import { TutorialStep } from './TutorialStep';
 import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
 import { QuartoState } from 'src/app/games/quarto/QuartoState';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { ComponentTestUtils, TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { QuartoComponent } from '../../../games/quarto/quarto.component';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -986,7 +986,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     new ApagosRules(ApagosState),
                     apagosTutorial[2],
                     ApagosMove.drop(ApagosCoord.ZERO, Player.ZERO),
-                    MGPValidation.failure($localize`This move is a drop! Please do a transfer!`),
+                    MGPValidation.failure($localize`This move is a drop, please do a transfer!`),
                 ],
                 [
                     new ApagosRules(ApagosState),
@@ -1099,7 +1099,8 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     const state: AbstractGameState = rules.applyLegalMove(move, step.state, status);
                     expect(step.predicate(move, state)).withContext('Move should lead to incorrect result').toEqual(validation);
                 } else {
-                    expect(status.legal.reason).withContext('Move should be legal to reach predicate but failed').toBeNull();
+                    const context: string = 'Move should be legal to reach predicate but failed because';
+                    TestUtils.expectValidationSuccess(status.legal, context);
                 }
             }
         }));

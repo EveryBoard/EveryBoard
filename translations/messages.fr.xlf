@@ -184,7 +184,7 @@
       </trans-unit>
       <trans-unit id="3383193846061013912" datatype="html">
         <source>Create a winning alignment. The problem: you don&apos;t pick the piece that you&apos;re placing on the board!</source>
-        <target>Faites un alignement gagnant. La difficulté : vous ne choisissez pas la pièce que vous placez !</target>
+        <target>Faites un alignement gagnant. La difficulté : vous ne choisissez pas la pièce que vous placez !</target>
       </trans-unit>
       <trans-unit id="3529667957993318888" datatype="html">
         <source>Align 5 of your pieces on a board where pieces slide!</source>
@@ -192,7 +192,7 @@
       </trans-unit>
       <trans-unit id="6046365494353024298" datatype="html">
         <source>Sandwich your opponent&apos;s pieces to dominate the board!</source>
-        <target>Prenez en sandwich les pièces adverses pour dominer le plateau !</target>
+        <target>Prenez en sandwich les pièces adverses pour dominer le plateau !</target>
       </trans-unit>
       <trans-unit id="1827371853303540301" datatype="html">
         <source>Immobilize one of your opponent&apos;s pyramids before your opponent does!</source>
@@ -760,35 +760,35 @@
       </trans-unit>
       <trans-unit id="4382056880714150954" datatype="html">
         <source>Pieces should only move downward!</source>
-        <target>Les pièces ne peuvent se déplacer que vers le bas!</target>
+        <target>Les pièces ne peuvent se déplacer que vers le bas !</target>
       </trans-unit>
       <trans-unit id="6303549979055320494" datatype="html">
         <source>That square is already full, you cannot put a piece in it!</source>
-        <target>Cette case est déjà complète, vous ne pouvez pas ajouter une pièce</target>
+        <target>Cette case est déjà complète, vous ne pouvez pas y ajouter une pièce !</target>
       </trans-unit>
       <trans-unit id="1678133786475979640" datatype="html">
         <source>You have no remaining piece in that square, select one that contains at least one of your pieces!</source>
-        <target>Vous n'avez plus de pièces dans cette case, choisissez-en une qui contient au moins une de vos pièces !</target>
+        <target>Vous n'avez plus de pièces dans cette case, choisissez-en une qui contient au moins une de vos pièces !</target>
       </trans-unit>
       <trans-unit id="4898172887294669505" datatype="html">
-        <source>There is no remaining piece of that color to drop!</source>
-        <target>Il ne reste plus de pièce de cette couleur à poser !</target>
+        <source>There are no remaining piece of that color to drop!</source>
+        <target>Il ne reste plus de pièces de cette couleur à poser !</target>
       </trans-unit>
       <trans-unit id="4332432292713485444" datatype="html">
-        <source>Move must end by a drop, please select an arrow to drop or to finish a transfer!</source>
-        <target>Un mouvement doit terminer par une pose, veuillez cliquer sur une flèche pour poser une pièce ou finir un transfert !</target>
+        <source>Move must end by clicking an arrow (either to drop or to finish a transfer)!</source>
+        <target>Un mouvement doit terminer par un clic sur une flèche (que ce soit pour faire une pause ou terminer un transfert) !</target>
       </trans-unit>
       <trans-unit id="3254509849691133260" datatype="html">
-        <source>At Apagos, there are 4 squares, each of them have a fixed number of holes to put pieces. Each player starts with 10 pieces. Dark pieces belong to the first player, light pieces belong to the second one. The game ends when no one can play. The player owning the most pieces in the rightmost square wins!</source>
-        <target>À Apagos, il y a 4 cases, chacune contient un nombre fixe d'emplacements pour mettre les pièces. Chaque joueur commence avec 10 pièces. Les pièces foncées appartiennent au premier joueur, les claires aux deuxième. Le jeu fini quand personne ne sais jouer. Le joueur possédant le plus de pièce dans la case la plus à droite gagne!</target>
+        <source>At Apagos, there are 4 squares, each of them has a fixed number of holes to put pieces. Each player starts with 10 pieces. Dark pieces belong to the first player, light pieces belong to the second one. The game ends when no one can play. The player owning the most pieces in the rightmost square wins!</source>
+        <target>À Apagos, il y a 4 cases, chacune contient un nombre fixe d'emplacements pour mettre les pièces. Chaque joueur commence avec 10 pièces. Les pièces foncées appartiennent au premier joueur, les claires aux deuxième. Le jeu fini quand personne ne sais jouer. Le joueur possédant le plus de pièce dans la case la plus à droite gagne !</target>
       </trans-unit>
       <trans-unit id="4304656288372447065" datatype="html">
         <source>Drop</source>
         <target>Pose</target>
       </trans-unit>
       <trans-unit id="2426699055874855766" datatype="html">
-        <source>There are two kind of moves. One is the drop. To do one, you must click on a visible arrow, being of your color or the opponent&apos;s. If the receiving square is one of the 3 leftmost ones, it will exchange position with the square on its right. You play Light.&lt;br/&gt;&lt;br/&gt;Drop a piece on one of thoses three squares.</source>
-        <target>Un des deux types de coup est la pose. Pour en faire une, vous devez cliquer sur une flèche, qu'elle soit de votre couleur ou de celle de l'adversaire. Si la case reçevant la pièce est l'une des trois les plus à gauche, elle échangera sa place avec celles juste à sa droite. Vous jouez Clair.&lt;br/&gt;&lt;br/&gt;Posez une pièce sur l'une de ces trois cases.</target>
+        <source>There are two kind of moves. One is the drop. To do one, you must click on a visible arrow, being of your color or the opponent&apos;s. If the chosen square is one of the 3 leftmost ones, it will exchange position with the square on its right. You play Light.&lt;br/&gt;&lt;br/&gt;Drop a piece on one of thoses three squares.</source>
+        <target>Un des deux types de coup est la pose. Pour en faire une, vous devez cliquer sur une flèche, qu'elle soit de votre couleur ou de celle de l'adversaire. Si la case choisie est l'une des trois les plus à gauche, elle échangera sa place avec celles juste à sa droite. Vous jouez Clair.&lt;br/&gt;&lt;br/&gt;Posez une pièce sur l'une de ces trois cases.</target>
       </trans-unit>
       <trans-unit id="8402696305361715603" datatype="html">
         <source>Transfer</source>
@@ -799,7 +799,7 @@
         <target>L'autre type de mouvement est le transfert.&lt;ol&gt;&lt;li&gt;Choisissez une de vos pièces sur le plateau en cliquant sur la case qui la contient.&lt;/li&gt;&lt;li&gt;Choisissez sa case d'atterrissage en cliquant sur la flèche au dessus de celle-ci pour finir le transfert.&lt;/li&gt;&lt;/ol&gt;Cela peut seulement être fait avec une de vos pièces, d'une case à une autre case plus basse.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites un transfert!</target>
       </trans-unit>
       <trans-unit id="8336479845838887451" datatype="html">
-        <source>This move is a drop! Please do a transfer!</source>
+        <source>This move is a drop, please do a transfer!</source>
         <target>Ce coup est une pose! Veuillez faire un transfert!</target>
       </trans-unit>
       <trans-unit id="8572141978310888290" datatype="html">
@@ -2068,15 +2068,15 @@
         <target>Victoire</target>
       </trans-unit><trans-unit id="7759745104864966912" datatype="html">
         <source>When you put a last piece into a square, the games end. In this configuration you can win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do the winning move!</source>
-        <target>Quand vous posez une dernière pièce dans une case, le jeu fini. Dans cette configuration vous pouvez gagner.&lt;br/&gt;&lt;br/&gt;Vous jouez Clair, faites le mouvement gagnant !</target>
+        <target>Quand vous posez une dernière pièce dans une case, le jeu fini. Dans cette configuration vous pouvez gagner.&lt;br/&gt;&lt;br/&gt;Vous jouez Clair, faites le mouvement gagnant !</target>
       </trans-unit>
       <trans-unit id="3614265026318366150" datatype="html">
         <source>You actively made your opponent win!</source>
-        <target>Vous avez activement fait gagner votre adversaire !</target>
+        <target>Vous avez activement fait gagner votre adversaire !</target>
       </trans-unit>
       <trans-unit id="1392892237268216019" datatype="html">
         <source>Wrong choice, your opponent will win next turn whatever piece is dropped!</source>
-        <target>Mauvais choix, votre adversaire va gagner au prochain tour quelle que soit la pièce qu'il dépose !</target>
+        <target>Mauvais choix, votre adversaire va gagner au prochain tour quelle que soit la pièce qu'il dépose !</target>
       </trans-unit>
       <trans-unit id="5880375817695791500" datatype="html">
         <source>You&apos;re playing Dark.
@@ -2733,7 +2733,7 @@
       </trans-unit>
       <trans-unit id="7208567678509553256" datatype="html">
         <source>This move does not disconnect your opponent&apos;s pieces. Try again with another piece.</source>
-        <target>Ce mouvement ne déconnecte pas du jeu de pièces adverses ! Réessayez avec une autre pièce !</target>
+        <target>Ce mouvement ne déconnecte pas du jeu de pièces adverses ! Réessayez avec une autre pièce !</target>
       </trans-unit>
       <trans-unit id="6058377963019501239" datatype="html">
         <source>You lost one of your pieces during this move. There is a way to disconnect an opponent&apos;s piece without losing any of yours, try again!</source>
@@ -3001,11 +3001,11 @@
       </trans-unit>
       <trans-unit id="7525019515401716113" datatype="html">
         <source>Failed! You need to align 5 markers of your color in order to get them, and to get a ring at the same time.</source>
-        <target>Raté ! Vous devez aligner 5 marqueurs de votre couleur pour pouvoir les capturer, ainsi que pour récupérer un anneau.</target>
+        <target>Raté ! Vous devez aligner 5 marqueurs de votre couleur pour pouvoir les capturer, ainsi que pour récupérer un anneau.</target>
       </trans-unit>
       <trans-unit id="4464967427027571359" datatype="html">
         <source>Failed! You can capture two rings in total, by capturing two times 5 of your markers. Try again.</source>
-        <target>Raté ! Vous pouvez capturer deux anneaux en tout, en procédant à deux captures de 5 de vos marqueurs. Réessayez.</target>
+        <target>Raté ! Vous pouvez capturer deux anneaux en tout, en procédant à deux captures de 5 de vos marqueurs. Réessayez.</target>
       </trans-unit>
       <trans-unit id="2051808586522733055" datatype="html">
         <source>The goal at Yinsh is to capture three rings in total.
@@ -3081,9 +3081,9 @@
         During the capture selection, if you see that the marker you clicked belongs to two captures, you have to click on a second marker to avoid any ambiguity.&lt;br/&gt;&lt;br/&gt;
         Here, you can capture two rings, do it!</source>
         <target>Il est possible que lors d'un tour, vous ayez la possibilité de choisir entre plusieurs captures,
-        ou même d'effectuer plusieurs captures !
+        ou même d'effectuer plusieurs captures !
         Lorsque, lors de la sélection d'une capture, le marqueur sur lequel vous avez cliqué appartient à deux captures, il vous faudra cliquer sur un second marqueur pour lever toute ambiguité.&lt;br/&gt;&lt;br/&gt;
-        Ici, vous pouvez récupérer deux anneaux, faites-le !</target>
+        Ici, vous pouvez récupérer deux anneaux, faites-le !</target>
       </trans-unit>
       <trans-unit id="6079681718244869210" datatype="html">
         <source>You cannot pick a piece of the opponent.</source>

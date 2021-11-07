@@ -10,12 +10,12 @@ export class ApagosTutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             $localize`Initial board and goal of the game`,
-            $localize`At Apagos, there are 4 squares, each of them have a fixed number of holes to put pieces. Each player starts with 10 pieces. Dark pieces belong to the first player, light pieces belong to the second one. The game ends when no one can play. The player owning the most pieces in the rightmost square wins!`,
+            $localize`At Apagos, there are 4 squares, each of them has a fixed number of holes to put pieces. Each player starts with 10 pieces. Dark pieces belong to the first player, light pieces belong to the second one. The game ends when no one can play. The player owning the most pieces in the rightmost square wins!`,
             ApagosState.getInitialState(),
         ),
         TutorialStep.anyMove(
             $localize`Drop`,
-            $localize`There are two kind of moves. One is the drop. To do one, you must click on a visible arrow, being of your color or the opponent's. If the receiving square is one of the 3 leftmost ones, it will exchange position with the square on its right. You play Light.<br/><br/>Drop a piece on one of thoses three squares.`,
+            $localize`There are two kind of moves. One is the drop. To do one, you must click on a visible arrow, being of your color or the opponent's. If the chosen square is one of the 3 leftmost ones, it will exchange position with the square on its right. You play Light.<br/><br/>Drop a piece on one of thoses three squares.`,
             ApagosState.fromRepresentation(1, [
                 [0, 0, 0, 1],
                 [0, 0, 0, 0],
@@ -36,7 +36,7 @@ export class ApagosTutorial {
 
             (move: ApagosMove, _: ApagosState) => {
                 if (move.isDrop()) {
-                    return MGPValidation.failure($localize`This move is a drop! Please do a transfer!`);
+                    return MGPValidation.failure($localize`This move is a drop, please do a transfer!`);
                 }
                 return MGPValidation.SUCCESS;
             },

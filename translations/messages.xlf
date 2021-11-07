@@ -574,20 +574,20 @@
       <trans-unit id="1678133786475979640" datatype="html">
         <source>You have no remaining piece in that square, select one that contains at least one of your pieces!</source>
       </trans-unit>
-      <trans-unit id="4898172887294669505" datatype="html">
-        <source>There is no remaining piece of that color to drop!</source>
+      <trans-unit id="7600176980952401646" datatype="html">
+        <source>There are no remaining piece of that color to drop!</source>
       </trans-unit>
-      <trans-unit id="4332432292713485444" datatype="html">
-        <source>Move must end by a drop, please select an arrow to drop or to finish a transfer!</source>
+      <trans-unit id="6173784595305686432" datatype="html">
+        <source>Move must end by clicking an arrow (either to drop or to finish a transfer)!</source>
       </trans-unit>
       <trans-unit id="3254509849691133260" datatype="html">
-        <source>At Apagos, there are 4 squares, each of them have a fixed number of holes to put pieces. Each player starts with 10 pieces. Dark pieces belong to the first player, light pieces belong to the second one. The game ends when no one can play. The player owning the most pieces in the rightmost square wins!</source>
+        <source>At Apagos, there are 4 squares, each of them has a fixed number of holes to put pieces. Each player starts with 10 pieces. Dark pieces belong to the first player, light pieces belong to the second one. The game ends when no one can play. The player owning the most pieces in the rightmost square wins!</source>
       </trans-unit>
       <trans-unit id="4304656288372447065" datatype="html">
         <source>Drop</source>
       </trans-unit>
-      <trans-unit id="2426699055874855766" datatype="html">
-        <source>There are two kind of moves. One is the drop. To do one, you must click on a visible arrow, being of your color or the opponent&apos;s. If the receiving square is one of the 3 leftmost ones, it will exchange position with the square on its right. You play Light.&lt;br/&gt;&lt;br/&gt;Drop a piece on one of thoses three squares.</source>
+      <trans-unit id="6297839182321652830" datatype="html">
+        <source>There are two kind of moves. One is the drop. To do one, you must click on a visible arrow, being of your color or the opponent&apos;s. If the chosen square is one of the 3 leftmost ones, it will exchange position with the square on its right. You play Light.&lt;br/&gt;&lt;br/&gt;Drop a piece on one of thoses three squares.</source>
       </trans-unit>
       <trans-unit id="8402696305361715603" datatype="html">
         <source>Transfer</source>
@@ -595,8 +595,8 @@
       <trans-unit id="759585629296293659" datatype="html">
         <source>The other kind of move is the transfer.&lt;ol&gt;&lt;li&gt;Choose one of your pieces on the board by clicking on the square in which it is.&lt;/li&gt;&lt;li&gt;Choose its landing square by clicking on one of the arrow to finish the transfer.&lt;/li&gt;&lt;/ol&gt;It can only be done with your pieces, from an higher square to a lower one.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a transfer!</source>
       </trans-unit>
-      <trans-unit id="8336479845838887451" datatype="html">
-        <source>This move is a drop! Please do a transfer!</source>
+      <trans-unit id="2553091915151695430" datatype="html">
+        <source>This move is a drop, please do a transfer!</source>
       </trans-unit>
       <trans-unit id="1116173898665219180" datatype="html">
         <source>Victory</source>
