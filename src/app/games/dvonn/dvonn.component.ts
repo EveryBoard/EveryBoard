@@ -18,7 +18,7 @@ import { DvonnTutorial } from './DvonnTutorial';
 @Component({
     selector: 'app-dvonn',
     templateUrl: './dvonn.component.html',
-    styleUrls: ['../../components/game-components/game-component/game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 
 export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove, DvonnState, DvonnPieceStack> {
