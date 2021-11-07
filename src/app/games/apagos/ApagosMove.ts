@@ -5,25 +5,25 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/utils';
 import { ApagosCoord } from './ApagosCoord';
-import { ApagosMessage } from './ApagosMessage';
+import { ApagosFailure } from './ApagosFailure';
 
 export class ApagosMove extends Move {
 
     public static readonly ALL_MOVES: ApagosMove[] = [
-        ApagosMove.drop(ApagosCoord.ZERO, Player.ZERO),
-        ApagosMove.drop(ApagosCoord.ONE, Player.ZERO),
-        ApagosMove.drop(ApagosCoord.TWO, Player.ZERO),
-        ApagosMove.drop(ApagosCoord.THREE, Player.ZERO),
-        ApagosMove.drop(ApagosCoord.ZERO, Player.ONE),
-        ApagosMove.drop(ApagosCoord.ONE, Player.ONE),
-        ApagosMove.drop(ApagosCoord.TWO, Player.ONE),
-        ApagosMove.drop(ApagosCoord.THREE, Player.ONE),
-        ApagosMove.transfer(ApagosCoord.THREE, ApagosCoord.TWO).get(),
-        ApagosMove.transfer(ApagosCoord.THREE, ApagosCoord.ONE).get(),
-        ApagosMove.transfer(ApagosCoord.THREE, ApagosCoord.ZERO).get(),
-        ApagosMove.transfer(ApagosCoord.TWO, ApagosCoord.ONE).get(),
-        ApagosMove.transfer(ApagosCoord.TWO, ApagosCoord.ZERO).get(),
-        ApagosMove.transfer(ApagosCoord.ONE, ApagosCoord.ZERO).get(),
+        new ApagosMove(ApagosCoord.ZERO, MGPOptional.of(Player.ZERO), MGPOptional.empty()),
+        new ApagosMove(ApagosCoord.ONE, MGPOptional.of(Player.ZERO), MGPOptional.empty()),
+        new ApagosMove(ApagosCoord.TWO, MGPOptional.of(Player.ZERO), MGPOptional.empty()),
+        new ApagosMove(ApagosCoord.THREE, MGPOptional.of(Player.ZERO), MGPOptional.empty()),
+        new ApagosMove(ApagosCoord.ZERO, MGPOptional.of(Player.ONE), MGPOptional.empty()),
+        new ApagosMove(ApagosCoord.ONE, MGPOptional.of(Player.ONE), MGPOptional.empty()),
+        new ApagosMove(ApagosCoord.TWO, MGPOptional.of(Player.ONE), MGPOptional.empty()),
+        new ApagosMove(ApagosCoord.THREE, MGPOptional.of(Player.ONE), MGPOptional.empty()),
+        new ApagosMove(ApagosCoord.TWO, MGPOptional.empty(), MGPOptional.of(ApagosCoord.THREE)),
+        new ApagosMove(ApagosCoord.ONE, MGPOptional.empty(), MGPOptional.of(ApagosCoord.THREE)),
+        new ApagosMove(ApagosCoord.ZERO, MGPOptional.empty(), MGPOptional.of(ApagosCoord.THREE)),
+        new ApagosMove(ApagosCoord.ONE, MGPOptional.empty(), MGPOptional.of(ApagosCoord.TWO)),
+        new ApagosMove(ApagosCoord.ZERO, MGPOptional.empty(), MGPOptional.of(ApagosCoord.TWO)),
+        new ApagosMove(ApagosCoord.ZERO, MGPOptional.empty(), MGPOptional.of(ApagosCoord.ONE)),
     ];
     public static encoder: NumberEncoder<ApagosMove> = new class extends NumberEncoder<ApagosMove> {
 
@@ -42,14 +42,22 @@ export class ApagosMove extends Move {
         }
     }
     public static drop(coord: ApagosCoord, piece: Player): ApagosMove {
-        const drop: ApagosMove = new ApagosMove(coord, MGPOptional.of(piece), MGPOptional.empty());
+        const drop: ApagosMove = ApagosMove.ALL_MOVES.find((move: ApagosMove) => {
+            return move.landing.equals(coord) &&
+                   move.piece.equals(MGPOptional.of(piece)) &&
+                   move.starting.equals(MGPOptional.empty());
+        });
         return drop;
     }
     public static transfer(start: ApagosCoord, landing: ApagosCoord): MGPFallible<ApagosMove> {
         if (start.x <= landing.x) {
-            return MGPFallible.failure(ApagosMessage.PIECE_SHOULD_MOVE_DOWNWARD());
+            return MGPFallible.failure(ApagosFailure.PIECE_SHOULD_MOVE_DOWNWARD());
         }
-        const slideDown: ApagosMove = new ApagosMove(landing, MGPOptional.empty(), MGPOptional.of(start));
+        const slideDown: ApagosMove = ApagosMove.ALL_MOVES.find((move: ApagosMove) => {
+            return move.landing.equals(landing) &&
+                   move.piece.equals(MGPOptional.empty()) &&
+                   move.starting.equals(MGPOptional.of(start));
+        });
         return MGPFallible.success(slideDown);
     }
     private constructor(public readonly landing: ApagosCoord,

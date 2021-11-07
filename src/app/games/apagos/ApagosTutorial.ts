@@ -10,12 +10,12 @@ export class ApagosTutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             $localize`Initial board and goal of the game`,
-            $localize`At Apagos, there are 4 squares, each of them have a fix number of holes to put pieces. Each player start with 10 pieces. Dark pieces belong to first player, light pieces belong to the second one. The game ends when no one can play. The player owning the most pieces in the righter square wins!`,
+            $localize`At Apagos, there are 4 squares, each of them have a fixed number of holes to put pieces. Each player starts with 10 pieces. Dark pieces belong to the first player, light pieces belong to the second one. The game ends when no one can play. The player owning the most pieces in the rightmost square wins!`,
             ApagosState.getInitialState(),
         ),
         TutorialStep.anyMove(
             $localize`Drop`,
-            $localize`One of the two kind of move is the drop. To do one, you must click on any visible arrow, being of your color or the opponent's. If the receiving square is one of the 3 leftmost ones, it will switch its coord with the square right to it. You play Light.<br/><br/>Drop a piece on one of thoses three squares.`,
+            $localize`There are two kind of moves. One is the drop. To do one, you must click on a visible arrow, being of your color or the opponent's. If the receiving square is one of the 3 leftmost ones, it will exchange position with the square on its right. You play Light.<br/><br/>Drop a piece on one of thoses three squares.`,
             ApagosState.fromRepresentation(1, [
                 [0, 0, 0, 1],
                 [0, 0, 0, 0],
@@ -46,8 +46,8 @@ export class ApagosTutorial {
             $localize`Victory`,
             $localize`When you put a last piece into a square, the games end. In this configuration you can win.<br/><br/>You're playing Light, do the winning move!`,
             ApagosState.fromRepresentation(2, [
-                [2, 0, 3, 3],
-                [1, 1, 3, 2],
+                [1, 0, 3, 4],
+                [2, 1, 3, 1],
                 [3, 1, 7, 5],
             ], 2, 3),
             ApagosMove.drop(ApagosCoord.TWO, Player.ONE),

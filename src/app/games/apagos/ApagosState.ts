@@ -7,14 +7,14 @@ import { ApagosSquare } from './ApagosSquare';
 
 export class ApagosState extends GameState<ApagosCoord, ApagosSquare> {
 
-    public static PIECE_BY_PLAYER: number = 10;
+    public static PIECES_PER_PLAYER: number = 10;
 
     public static getInitialState(): ApagosState {
         return ApagosState.fromRepresentation(0, [
             [0, 0, 0, 0],
             [0, 0, 0, 0],
             [7, 5, 3, 1],
-        ], this.PIECE_BY_PLAYER, this.PIECE_BY_PLAYER);
+        ], this.PIECES_PER_PLAYER, this.PIECES_PER_PLAYER);
     }
     public static fromRepresentation(turn: number, board: NumberTable, nbZero: number, nbOne: number): ApagosState {
         const squares: ApagosSquare[] = [];
@@ -53,12 +53,7 @@ export class ApagosState extends GameState<ApagosCoord, ApagosSquare> {
         return new ApagosState(this.turn, newBoard, remaining);
     }
     public getRemainingCopy(): MGPMap<Player, number> {
-        const nbZero: number = this.getRemaining(Player.ZERO);
-        const nbOne: number = this.getRemaining(Player.ONE);
-        const remaining: MGPMap<Player, number> = new MGPMap();
-        remaining.set(Player.ZERO, nbZero);
-        remaining.set(Player.ONE, nbOne);
-        return remaining;
+        return this.remaining.getCopy();
     }
     public isOnBoard(coord: ApagosCoord): boolean {
         return coord != null;

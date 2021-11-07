@@ -8,7 +8,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ApagosCoord } from './ApagosCoord';
 import { ApagosDummyMinimax } from './ApagosDummyMinimax';
-import { ApagosMessage } from './ApagosMessage';
+import { ApagosFailure } from './ApagosFailure';
 import { ApagosMove } from './ApagosMove';
 import { ApagosRules } from './ApagosRules';
 import { ApagosSquare } from './ApagosSquare';
@@ -36,7 +36,7 @@ export class ApagosComponent extends GameComponent<ApagosRules,
 
     public ARROW_COORD: string = ApagosComponent.getArrowCoord();
 
-    public PIECE_BY_PLAYER: number = ApagosState.PIECE_BY_PLAYER;
+    public PIECES_PER_PLAYER: number = ApagosState.PIECES_PER_PLAYER;
 
     public PIECE_RADIUS: number;
 
@@ -54,7 +54,7 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         ];
         this.encoder = ApagosMove.encoder;
         this.tutorial = new ApagosTutorial().tutorial;
-        this.PIECE_RADIUS = 200 / (this.PIECE_BY_PLAYER + 1);
+        this.PIECE_RADIUS = 200 / (this.PIECES_PER_PLAYER + 1);
         this.updateBoard();
     }
     public cancelMoveAttempt(): void {
@@ -120,11 +120,10 @@ export class ApagosComponent extends GameComponent<ApagosRules,
             piece: leftPieceIndex,
         };
 
-        const currentPlayer: Player = this.rules.node.gameState.getCurrentPlayer();
         const landingCoord: number = lastMove.landing.x;
         const landedSquare: ApagosSquare = this.board[landingCoord];
         const landingTotal: number = landedSquare.count(Player.NONE);
-        const landedPieceIndex: number = this.getLowestPlayerPiece(landedSquare, currentPlayer, landingTotal);
+        const landedPieceIndex: number = this.getLowestPlayerPiece(landedSquare, previousPlayer, landingTotal);
         this.droppedPiece = {
             square: landingCoord,
             piece: landedPieceIndex,
@@ -164,7 +163,7 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         return isLegal.legal.isSuccess();
     }
     private static getArrowCoord(): string {
-        // Coordonées calculées pour matcher avec SQUARE_SIZE = 100
+        // Coordinates calculated to match with a SQUARE_SIZE = 100
         const upLeft: string = 12.5 + ',' + 0;
         const upRight: string = 37.5 + ',' + 0;
         const middleMiddleRight: string = 37.5 + ',' + 25;
@@ -219,7 +218,6 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         const classes: string[] = [];
         let zero: number = square.count(Player.ZERO);
         let one: number = square.count(Player.ONE);
-        const neutral: number = square.count(Player.NONE) - (one + zero);
         if (this.droppedPiece.piece === i && this.droppedPiece.square === x) {
             classes.push('last-move');
         } else if (this.leftPiece.square === x) {
@@ -232,6 +230,7 @@ export class ApagosComponent extends GameComponent<ApagosRules,
                 else one++;
             }
         }
+        const neutral: number = square.count(Player.NONE) - (one + zero);
         const pieceColor: string | null = this.getPieceColor(i, zero, neutral);
         if (pieceColor != null) {
             classes.push(pieceColor);
@@ -258,9 +257,9 @@ export class ApagosComponent extends GameComponent<ApagosRules,
                 this.selectedSquare = x;
                 return MGPValidation.SUCCESS;
             } else {
-                return this.cancelMove(ApagosMessage.NO_PIECE_OF_YOU_IN_CHOSEN_SQUARE());
+                return this.cancelMove(ApagosFailure.NO_PIECE_OF_YOU_IN_CHOSEN_SQUARE());
             }
         }
-        return this.cancelMove(ApagosMessage.MUST_END_MOVE_BY_DROP());
+        return this.cancelMove(ApagosFailure.MUST_END_MOVE_BY_DROP());
     }
 }

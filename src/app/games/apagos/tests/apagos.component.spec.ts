@@ -3,7 +3,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { ApagosComponent } from '../apagos.component';
 import { ApagosCoord } from '../ApagosCoord';
-import { ApagosMessage } from '../ApagosMessage';
+import { ApagosFailure } from '../ApagosFailure';
 import { ApagosMove } from '../ApagosMove';
 import { ApagosState } from '../ApagosState';
 
@@ -62,24 +62,26 @@ describe('ApagosComponent', () => {
         it('should show from where the last transfer came from Player.ZERO', fakeAsync(async() => {
             // Given a board with a previous move being a transfer
             const previousState: ApagosState = ApagosState.fromRepresentation(2, [
-                [0, 0, 0, 2],
-                [1, 0, 0, 1],
+                [0, 0, 0, 3],
+                [1, 0, 0, 2],
                 [7, 3, 1, 5],
             ], 6, 5);
             const previousMove: ApagosMove = ApagosMove.transfer(ApagosCoord.THREE, ApagosCoord.ZERO).get();
-            const state: ApagosState = ApagosState.fromRepresentation(2, [
-                [1, 0, 0, 1],
-                [1, 0, 0, 1],
+            const state: ApagosState = ApagosState.fromRepresentation(3, [
+                [1, 0, 0, 2],
+                [1, 0, 0, 2],
                 [7, 3, 1, 5],
             ], 6, 5);
 
             // When rendering the board
             componentTestUtils.setupState(state, previousState, previousMove);
 
-            // Then piece 1 should be "captured" as a left piece, belonging to no one
-            componentTestUtils.expectElementNotToHaveClass('#square_3_piece_1_out_of_5', 'player0');
-            componentTestUtils.expectElementNotToHaveClass('#square_3_piece_1_out_of_5', 'player1');
-            componentTestUtils.expectElementToHaveClass('#square_3_piece_1_out_of_5', 'captured-stroke');
+            // Then piece 2 should be "captured" as a left piece, belonging to no one
+            componentTestUtils.expectElementNotToHaveClass('#square_3_piece_2_out_of_5', 'player0');
+            componentTestUtils.expectElementNotToHaveClass('#square_3_piece_2_out_of_5', 'player1');
+            componentTestUtils.expectElementToHaveClass('#square_3_piece_2_out_of_5', 'captured-stroke');
+            // and piece 3 should be untouched
+            componentTestUtils.expectElementToHaveClass('#square_3_piece_3_out_of_5', 'player1');
         }));
         it('should show from where the last transfer came from Player.ONE', fakeAsync(async() => {
             // Given a board with a previous move being a transfer
@@ -142,7 +144,7 @@ describe('ApagosComponent', () => {
                 [0, 0, 0, 1],
                 [7, 5, 3, 1],
             ], 9, 10);
-            const previousMove: ApagosMove = ApagosMove.drop(ApagosCoord.ONE, Player.ONE);
+            const previousMove: ApagosMove = ApagosMove.transfer(ApagosCoord.THREE, ApagosCoord.ONE).get();
             const state: ApagosState = ApagosState.fromRepresentation(2, [
                 [0, 0, 0, 0],
                 [0, 1, 0, 0],
@@ -154,6 +156,7 @@ describe('ApagosComponent', () => {
 
             // Then the second square should be filled on last case by Player.ONE
             componentTestUtils.expectElementToHaveClass('#square_1_piece_4_out_of_5', 'player1');
+            componentTestUtils.expectElementToHaveClass('#square_1_piece_4_out_of_5', 'last-move');
         }));
     });
     it('should cancel move when starting move attempt by clicking a square without pieces of player', fakeAsync(async() => {
@@ -167,7 +170,7 @@ describe('ApagosComponent', () => {
 
         // When clicking on that square
         // Then move should fail
-        const reason: string = ApagosMessage.NO_PIECE_OF_YOU_IN_CHOSEN_SQUARE();
+        const reason: string = ApagosFailure.NO_PIECE_OF_YOU_IN_CHOSEN_SQUARE();
         componentTestUtils.expectClickFailure('#square_2', reason);
     }));
     it('should drop when clicking on arrow above square', fakeAsync(async() => {
@@ -229,7 +232,7 @@ describe('ApagosComponent', () => {
 
         // When clicking another square
         // Then the move should have been "cancel/restarted"
-        const reason: string = ApagosMessage.MUST_END_MOVE_BY_DROP();
+        const reason: string = ApagosFailure.MUST_END_MOVE_BY_DROP();
         await componentTestUtils.expectClickFailure('#square_3', reason);
     }));
 });
