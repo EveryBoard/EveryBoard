@@ -7,7 +7,7 @@ describe('ApagosState', () => {
         const state: ApagosState = ApagosState.getInitialState();
         expect(state.isOnBoard(null)).toBeFalse();
         expect(state.isOnBoard(ApagosCoord.ZERO)).toBeTrue();
-        expect(state.getNullable(null)).toBeNull();
-        expect(state.getNullable(ApagosCoord.ONE)).not.toBeNull();
+        expect(state.getNullable(null)).toBeNull(); // TODOTODO: delete when strictness is merged
+        expect(state.getNullable(ApagosCoord.ONE)).not.toBeNull(); // TODOTODO: delete when strictness is merged
     });
 });

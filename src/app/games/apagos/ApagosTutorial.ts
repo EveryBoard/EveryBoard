@@ -10,7 +10,7 @@ export class ApagosTutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             $localize`Initial board and goal of the game`,
-            $localize`At Apagos, there are 4 squares, each of them has a fixed number of holes to put pieces. Each player starts with 10 pieces. Dark pieces belong to the first player, light pieces belong to the second one. The game ends when no one can play. The player owning the most pieces in the rightmost square wins!`,
+            $localize`At Apagos, there are 4 squares, each of them has a fixed number of holes for pieces. Each player starts with 10 pieces. Dark pieces belong to the first player, light pieces belong to the second one. The game ends when no one can play. The player owning the most pieces in the rightmost square wins!`,
             ApagosState.getInitialState(),
         ),
         TutorialStep.anyMove(
@@ -60,7 +60,7 @@ export class ApagosTutorial {
                         return MGPValidation.failure($localize`You actively made your opponent win!`);
                     }
                 } else {
-                    return MGPValidation.failure($localize`Wrong choice, your opponent will win next turn whatever piece is dropped!`);
+                    return MGPValidation.failure($localize`Wrong choice, your opponent will win next turn no matter which piece is dropped!`);
                 }
             },
             $localize`Congratulations!`,

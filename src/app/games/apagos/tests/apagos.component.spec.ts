@@ -204,6 +204,9 @@ describe('ApagosComponent', () => {
         componentTestUtils.expectElementNotToExist('#dropArrow_one_2');
         componentTestUtils.expectElementNotToExist('#dropArrow_zero_3');
         componentTestUtils.expectElementNotToExist('#dropArrow_one_3');
+        // and square 2 should be selected
+        componentTestUtils.expectElementToHaveClass('#square_2', 'selected');
+        componentTestUtils.expectElementToHaveClass('#square_2_piece_1_out_of_3', 'selected');
     }));
     it('should confirm slide down by clicking on a dropping arrow', fakeAsync(async() => {
         // Given a board where a square has been selected

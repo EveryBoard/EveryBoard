@@ -18,18 +18,15 @@ import { ApagosTutorial } from './ApagosTutorial';
 @Component({
     selector: 'app-apagos',
     templateUrl: './apagos.component.html',
-    styleUrls: ['../../components/game-components/game-component/game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 export class ApagosComponent extends GameComponent<ApagosRules,
                                                    ApagosMove,
                                                    ApagosState>
 {
-
     public Player: typeof Player = Player;
 
     public board: readonly ApagosSquare[];
-
-    public selectedSquare: number;
 
     public remainingZero: number;
     public remainingOne: number;
@@ -41,6 +38,8 @@ export class ApagosComponent extends GameComponent<ApagosRules,
     public PIECE_RADIUS: number;
 
     public movedSquare: number[];
+
+    public selectedSquare: { square: number, piece: number } = { square: null, piece: null };
 
     public leftPiece: { square: number, piece: number } = { square: null, piece: null };
 
@@ -58,7 +57,10 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         this.updateBoard();
     }
     public cancelMoveAttempt(): void {
-        this.selectedSquare = null;
+        this.selectedSquare = {
+            square: null,
+            piece: null,
+        };
     }
     public updateBoard(): void {
         const state: ApagosState = this.rules.node.gameState;
@@ -93,18 +95,18 @@ export class ApagosComponent extends GameComponent<ApagosRules,
             this.movedSquare.push(higherIndex);
         }
         const climbingSquare: ApagosSquare = this.board[higherIndex];
-        const totalPieces: number = climbingSquare.count(Player.NONE);
-        const landingIndex: number = this.getLowestPlayerPiece(climbingSquare, piece, totalPieces);
+        const landingIndex: number = this.getLowestPlayerPiece(climbingSquare, piece);
         this.droppedPiece = {
             square: higherIndex,
             piece: landingIndex,
         };
     }
-    private getLowestPlayerPiece(square: ApagosSquare, player: Player, totalPieces: number): number {
+    private getLowestPlayerPiece(square: ApagosSquare, player: Player): number {
         const nbPiecePlayer: number = square.count(player);
         if (player === Player.ZERO) {
             return nbPiecePlayer - 1;
         } else {
+            const totalPieces: number = square.count(Player.NONE);
             return totalPieces - nbPiecePlayer;
         }
     }
@@ -113,8 +115,7 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         const previousPlayer: Player = previousState.getCurrentPlayer();
         const leftSquare: number = lastMove.starting.get().x;
         const previousSquare: ApagosSquare = previousState.board[leftSquare];
-        const previousTotal: number = previousSquare.count(Player.NONE);
-        const leftPieceIndex: number = this.getLowestPlayerPiece(previousSquare, previousPlayer, previousTotal);
+        const leftPieceIndex: number = this.getLowestPlayerPiece(previousSquare, previousPlayer);
         this.leftPiece = {
             square: leftSquare,
             piece: leftPieceIndex,
@@ -122,8 +123,7 @@ export class ApagosComponent extends GameComponent<ApagosRules,
 
         const landingCoord: number = lastMove.landing.x;
         const landedSquare: ApagosSquare = this.board[landingCoord];
-        const landingTotal: number = landedSquare.count(Player.NONE);
-        const landedPieceIndex: number = this.getLowestPlayerPiece(landedSquare, previousPlayer, landingTotal);
+        const landedPieceIndex: number = this.getLowestPlayerPiece(landedSquare, previousPlayer);
         this.droppedPiece = {
             square: landingCoord,
             piece: landedPieceIndex,
@@ -145,11 +145,11 @@ export class ApagosComponent extends GameComponent<ApagosRules,
     public canDisplayArrow(x: number, player: Player): boolean {
         const clicked: ApagosCoord = ApagosCoord.from(x);
         let move: ApagosMove;
-        if (this.selectedSquare == null) {
+        if (this.selectedSquare.square == null) {
             move = ApagosMove.drop(clicked, player);
         } else {
             const fallibleMove: MGPFallible<ApagosMove> =
-                ApagosMove.transfer(ApagosCoord.from(this.selectedSquare), clicked);
+                ApagosMove.transfer(ApagosCoord.from(this.selectedSquare.square), clicked);
             if (fallibleMove.isFailure()) {
                 return false;
             }
@@ -193,6 +193,9 @@ export class ApagosComponent extends GameComponent<ApagosRules,
     }
     public getSquareClasses(x: number): string[] {
         const classes: string[] = ['base'];
+        if (this.selectedSquare.square === x) {
+            classes.push('selected');
+        } else
         if (this.movedSquare.includes(x)) {
             classes.push('last-move');
         }
@@ -206,10 +209,10 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         }
         const clicked: ApagosCoord = ApagosCoord.from(x);
         let move: ApagosMove;
-        if (this.selectedSquare == null) {
+        if (this.selectedSquare.square == null) {
             move = ApagosMove.drop(clicked, player);
         } else {
-            move = ApagosMove.transfer(ApagosCoord.from(this.selectedSquare), clicked).get();
+            move = ApagosMove.transfer(ApagosCoord.from(this.selectedSquare.square), clicked).get();
         }
         const state: ApagosState = this.rules.node.gameState;
         return this.chooseMove(move, state, null, null);
@@ -218,7 +221,9 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         const classes: string[] = [];
         let zero: number = square.count(Player.ZERO);
         let one: number = square.count(Player.ONE);
-        if (this.droppedPiece.piece === i && this.droppedPiece.square === x) {
+        if (this.selectedSquare.square === x && this.selectedSquare.piece === i) {
+            classes.push('selected');
+        } else if (this.droppedPiece.square === x && this.droppedPiece.piece === i) {
             classes.push('last-move');
         } else if (this.leftPiece.square === x) {
             if (this.leftPiece.piece === i) {
@@ -250,11 +255,15 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        if (this.selectedSquare == null) {
+        if (this.selectedSquare.square == null) {
             const currentPlayer: Player = this.rules.node.gameState.getCurrentPlayer();
-            const nbPiecePresent: number = this.board[x].count(currentPlayer);
+            const square: ApagosSquare = this.board[x];
+            const nbPiecePresent: number = square.count(currentPlayer);
             if (nbPiecePresent > 0) {
-                this.selectedSquare = x;
+                this.selectedSquare = {
+                    square: x,
+                    piece: this.getLowestPlayerPiece(square, currentPlayer),
+                };
                 return MGPValidation.SUCCESS;
             } else {
                 return this.cancelMove(ApagosFailure.NO_PIECE_OF_YOU_IN_CHOSEN_SQUARE());

@@ -571,17 +571,17 @@
       <trans-unit id="6303549979055320494" datatype="html">
         <source>That square is already full, you cannot put a piece in it!</source>
       </trans-unit>
-      <trans-unit id="1678133786475979640" datatype="html">
-        <source>You have no remaining piece in that square, select one that contains at least one of your pieces!</source>
+      <trans-unit id="4038709557650879610" datatype="html">
+        <source>You have no pieces in that square, select one that contains at least one of your pieces!</source>
       </trans-unit>
-      <trans-unit id="7600176980952401646" datatype="html">
-        <source>There are no remaining piece of that color to drop!</source>
+      <trans-unit id="7840393692836937676" datatype="html">
+        <source>There are no remaining pieces of that color to drop!</source>
       </trans-unit>
-      <trans-unit id="6173784595305686432" datatype="html">
-        <source>Move must end by clicking an arrow (either to drop or to finish a transfer)!</source>
+      <trans-unit id="1023115453837214228" datatype="html">
+        <source>Your move must end by clicking an arrow (either to drop or to finish a transfer)!</source>
       </trans-unit>
-      <trans-unit id="3254509849691133260" datatype="html">
-        <source>At Apagos, there are 4 squares, each of them has a fixed number of holes to put pieces. Each player starts with 10 pieces. Dark pieces belong to the first player, light pieces belong to the second one. The game ends when no one can play. The player owning the most pieces in the rightmost square wins!</source>
+      <trans-unit id="8322338146903087210" datatype="html">
+        <source>At Apagos, there are 4 squares, each of them has a fixed number of holes for pieces. Each player starts with 10 pieces. Dark pieces belong to the first player, light pieces belong to the second one. The game ends when no one can play. The player owning the most pieces in the rightmost square wins!</source>
       </trans-unit>
       <trans-unit id="4304656288372447065" datatype="html">
         <source>Drop</source>
@@ -607,8 +607,8 @@
       <trans-unit id="3614265026318366150" datatype="html">
         <source>You actively made your opponent win!</source>
       </trans-unit>
-      <trans-unit id="1392892237268216019" datatype="html">
-        <source>Wrong choice, your opponent will win next turn whatever piece is dropped!</source>
+      <trans-unit id="6820998210290920267" datatype="html">
+        <source>Wrong choice, your opponent will win next turn no matter which piece is dropped!</source>
       </trans-unit>
       <trans-unit id="8572141978310888290" datatype="html">
         <source>You cannot distribute from the opponent&apos;s home.</source>

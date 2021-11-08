@@ -131,8 +131,8 @@
         <target>Utilisez des mécaniques simples pour pousser 6 pièces adverses hors du plateau !</target>
       </trans-unit>
       <trans-unit id="6692821761046788999" datatype="html">
-        <source>Very simple game, but, will you be able to win everytime ?</source>
-        <target>Un jeu très simple, mais, sauvez vous gagner à chaque fois ?</target>
+        <source>Very simple game, but, will you be able to win everytime?</source>
+        <target>Un jeu très simple, mais, saurez-vous gagner à chaque fois ?</target>
       </trans-unit>
       <trans-unit id="6262000022886850348" datatype="html">
         <source>The international version of the famous African strategy game!</source>
@@ -766,29 +766,29 @@
         <source>That square is already full, you cannot put a piece in it!</source>
         <target>Cette case est déjà complète, vous ne pouvez pas y ajouter une pièce !</target>
       </trans-unit>
-      <trans-unit id="1678133786475979640" datatype="html">
-        <source>You have no remaining piece in that square, select one that contains at least one of your pieces!</source>
+      <trans-unit id="4038709557650879610" datatype="html">
+        <source>You have no pieces in that square, select one that contains at least one of your pieces!</source>
         <target>Vous n'avez plus de pièces dans cette case, choisissez-en une qui contient au moins une de vos pièces !</target>
       </trans-unit>
-      <trans-unit id="4898172887294669505" datatype="html">
-        <source>There are no remaining piece of that color to drop!</source>
+      <trans-unit id="7840393692836937676" datatype="html">
+        <source>There are no remaining pieces of that color to drop!</source>
         <target>Il ne reste plus de pièces de cette couleur à poser !</target>
       </trans-unit>
-      <trans-unit id="4332432292713485444" datatype="html">
-        <source>Move must end by clicking an arrow (either to drop or to finish a transfer)!</source>
-        <target>Un mouvement doit terminer par un clic sur une flèche (que ce soit pour faire une pause ou terminer un transfert) !</target>
+      <trans-unit id="1023115453837214228" datatype="html">
+        <source>Your move must end by clicking an arrow (either to drop or to finish a transfer)!</source>
+        <target>Un mouvement doit terminer par un clic sur une flèche (que ce soit pour faire une pose ou terminer un transfert) !</target>
       </trans-unit>
-      <trans-unit id="3254509849691133260" datatype="html">
-        <source>At Apagos, there are 4 squares, each of them has a fixed number of holes to put pieces. Each player starts with 10 pieces. Dark pieces belong to the first player, light pieces belong to the second one. The game ends when no one can play. The player owning the most pieces in the rightmost square wins!</source>
-        <target>À Apagos, il y a 4 cases, chacune contient un nombre fixe d'emplacements pour mettre les pièces. Chaque joueur commence avec 10 pièces. Les pièces foncées appartiennent au premier joueur, les claires aux deuxième. Le jeu fini quand personne ne sais jouer. Le joueur possédant le plus de pièce dans la case la plus à droite gagne !</target>
+      <trans-unit id="8322338146903087210" datatype="html">
+        <source>At Apagos, there are 4 squares, each of them has a fixed number of holes for pieces. Each player starts with 10 pieces. Dark pieces belong to the first player, light pieces belong to the second one. The game ends when no one can play. The player owning the most pieces in the rightmost square wins!</source>
+        <target>À Apagos, il y a 4 cases, chacune contient un nombre fixe d'emplacements pouvant contenir des pièces. Chaque joueur commence avec 10 pièces. Les pièces foncées appartiennent au premier joueur, les claires aux deuxième. Le jeu fini quand personne ne sais jouer. Le joueur possédant le plus de pièce dans la case la plus à droite gagne !</target>
       </trans-unit>
       <trans-unit id="4304656288372447065" datatype="html">
         <source>Drop</source>
         <target>Pose</target>
       </trans-unit>
-      <trans-unit id="2426699055874855766" datatype="html">
-        <source>There are two kind of moves. One is the drop. To do one, you must click on a visible arrow, being of your color or the opponent&apos;s. If the chosen square is one of the 3 leftmost ones, it will exchange position with the square on its right. You play Light.&lt;br/&gt;&lt;br/&gt;Drop a piece on one of thoses three squares.</source>
-        <target>Un des deux types de coup est la pose. Pour en faire une, vous devez cliquer sur une flèche, qu'elle soit de votre couleur ou de celle de l'adversaire. Si la case choisie est l'une des trois les plus à gauche, elle échangera sa place avec celles juste à sa droite. Vous jouez Clair.&lt;br/&gt;&lt;br/&gt;Posez une pièce sur l'une de ces trois cases.</target>
+      <trans-unit id="6297839182321652830" datatype="html">
+        <source>There are two kind of moves. One is the drop. To do one, you must click on a visible arrow, being of your color or the opponent's. If the chosen square is one of the 3 leftmost ones, it will exchange position with the square on its right. You play Light.&lt;br/&gt;&lt;br/&gt;Drop a piece on one of thoses three squares.</source>
+        <target>Un des deux types de coup est la pose. Pour en faire une, vous devez cliquer sur une flèche, qu'elle soit de votre couleur ou de celle de l'adversaire. Si la case choisie est l'une des trois les plus à gauche, elle échangera sa place avec celle juste à sa droite. Vous jouez Clair.&lt;br/&gt;&lt;br/&gt;Posez une pièce sur l'une de ces trois cases.</target>
       </trans-unit>
       <trans-unit id="8402696305361715603" datatype="html">
         <source>Transfer</source>
@@ -798,7 +798,7 @@
         <source>The other kind of move is the transfer.&lt;ol&gt;&lt;li&gt;Choose one of your pieces on the board by clicking on the square in which it is.&lt;/li&gt;&lt;li&gt;Choose its landing square by clicking on one of the arrow to finish the transfer.&lt;/li&gt;&lt;/ol&gt;It can only be done with your pieces, from an higher square to a lower one.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a transfer!</source>
         <target>L'autre type de mouvement est le transfert.&lt;ol&gt;&lt;li&gt;Choisissez une de vos pièces sur le plateau en cliquant sur la case qui la contient.&lt;/li&gt;&lt;li&gt;Choisissez sa case d'atterrissage en cliquant sur la flèche au dessus de celle-ci pour finir le transfert.&lt;/li&gt;&lt;/ol&gt;Cela peut seulement être fait avec une de vos pièces, d'une case à une autre case plus basse.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites un transfert!</target>
       </trans-unit>
-      <trans-unit id="8336479845838887451" datatype="html">
+      <trans-unit id="2553091915151695430" datatype="html">
         <source>This move is a drop, please do a transfer!</source>
         <target>Ce coup est une pose! Veuillez faire un transfert!</target>
       </trans-unit>
@@ -1255,7 +1255,7 @@
         <target>Veuillez choisir une de vos pièces parmi les pièces restantes.</target>
       </trans-unit>
       <trans-unit id="6944709858503579555" datatype="html">
-        <source>You must pick one of your remaining piece or one piece on the board that is the biggest of its square.</source>
+        <source>You must pick one of your remaining pieces or one piece on the board that is the biggest of its square.</source>
         <target>Veuillez sélectionner une de vos pièces restantes, ou une case sur le plateau où vous avez la pièce la plus grande.</target>
       </trans-unit>
       <trans-unit id="7341165560842722107" datatype="html">
@@ -2074,9 +2074,9 @@
         <source>You actively made your opponent win!</source>
         <target>Vous avez activement fait gagner votre adversaire !</target>
       </trans-unit>
-      <trans-unit id="1392892237268216019" datatype="html">
-        <source>Wrong choice, your opponent will win next turn whatever piece is dropped!</source>
-        <target>Mauvais choix, votre adversaire va gagner au prochain tour quelle que soit la pièce qu'il dépose !</target>
+      <trans-unit id="6820998210290920267" datatype="html">
+        <source>Wrong choice, your opponent will win next turn no matter which piece is dropped!</source>
+        <target>Mauvais choix, votre adversaire va gagner au prochain tour quelle que soit la pièce déposée !</target>
       </trans-unit>
       <trans-unit id="5880375817695791500" datatype="html">
         <source>You&apos;re playing Dark.

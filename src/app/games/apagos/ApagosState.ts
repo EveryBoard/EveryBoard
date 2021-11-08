@@ -59,6 +59,7 @@ export class ApagosState extends GameState<ApagosCoord, ApagosSquare> {
         return coord != null;
     }
     public getNullable(coord: ApagosCoord): ApagosSquare {
+        // TODOTODO: delete when strictness is merged
         if (coord == null) {
             return null;
         }
