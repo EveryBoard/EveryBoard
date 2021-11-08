@@ -40,7 +40,7 @@ function comparableEqualsStrict<T extends Comparable>(a: T, b: T): boolean {
 }
 
 export function isComparableObject(value: unknown): value is ComparableObject {
-    return typeof value === 'object' && value != null && value['equals'] != null;
+    return typeof value === 'object' && value != null && value['equals'] != null && value['toString'] != null;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
