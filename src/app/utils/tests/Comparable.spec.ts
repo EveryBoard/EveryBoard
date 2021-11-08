@@ -50,7 +50,7 @@ describe('Comparable', () => {
 
     });
     describe('isComparableObject', () => {
-        it('should return true for objects that define an equals method only', () => {
+        it('should return true only for objects that implement the Comparable interface ', () => {
             expect(isComparableObject(new DummyComparableObject(5))).toBeTrue();
             expect(isComparableObject(new DummyNonComparableObject(5))).toBeFalse();
         });
