@@ -101,7 +101,7 @@ export class JoinerService {
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
         return this.joinerDao.delete(this.observedJoinerId);
     }
-    public async proposeConfig(chosenPlayerPseudo: string,
+    public async proposeConfig(chosenPlayer: string,
                                partType: PartType,
                                maximalMoveDuration: number,
                                firstPlayer: FirstPlayer,
@@ -115,7 +115,7 @@ export class JoinerService {
 
         return this.joinerDao.update(this.observedJoinerId, {
             partStatus: PartStatus.CONFIG_PROPOSED.value,
-            chosenPlayer: chosenPlayerPseudo,
+            chosenPlayer,
             partType: partType.value,
             maximalMoveDuration,
             totalPartDuration,

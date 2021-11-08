@@ -43,3 +43,8 @@ html {
 .player1-bg {
     background-color: $player1;
 }
+
+.clickable-icon {
+    pointer-events: all;
+    cursor:pointer
+}

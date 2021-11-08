@@ -1,11 +1,9 @@
 import { Component, ComponentFactoryResolver, AfterViewInit,
     ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-
+import { ActivatedRoute } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
-import { UserService } from 'src/app/services/UserService';
 import { assert, display } from 'src/app/utils/utils';
 import { MGPNode, MGPNodeStats } from 'src/app/jscaip/MGPNode';
 import { AbstractGameState } from 'src/app/jscaip/GameState';
@@ -30,13 +28,11 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
 
     constructor(componentFactoryResolver: ComponentFactoryResolver,
                 actRoute: ActivatedRoute,
-                router: Router,
-                userService: UserService,
                 authenticationService: AuthenticationService,
                 public cdr: ChangeDetectorRef)
     {
-        super(componentFactoryResolver, actRoute, router, userService, authenticationService);
-        this.players = ['humain', 'humain'];
+        super(componentFactoryResolver, actRoute, authenticationService);
+        this.players = ['human', 'human'];
         display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapper.constructor');
     }
     public getCreatedNodes(): number {
@@ -55,7 +51,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         }, 1);
     }
     public updatePlayer(player: 0|1): void {
-        if (this.players[player] !== 'humain' && this.aiDepths[player] !== '0') {
+        if (this.players[player] !== 'human' && this.aiDepths[player] !== '0') {
             this.proposeAIToPlay();
         }
     }
@@ -131,8 +127,11 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         this.gameComponent.updateBoard();
         this.endGame = false;
         this.winner = null;
-        if (this.players[Player.ZERO.value] !== 'humain' && this.aiDepths[Player.ZERO.value] !== '0') {
+        if (this.players[Player.ZERO.value] !== 'human' && this.aiDepths[Player.ZERO.value] !== '0') {
             this.proposeAIToPlay();
         }
+    }
+    public getPlayerName(): string {
+        return 'human';
     }
 }

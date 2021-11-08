@@ -1,4 +1,4 @@
-src/app/services,23
+src/app/services,10
 src/app/games/six,6
 src/app/jscaip,6
 src/app/games/quarto,3
@@ -9,7 +9,6 @@ src/app/games/pylos,2
 src/app/components/normal-component/server-page,1
 src/app/components/wrapper-components/part-creation,1
 src/app/games/encapsule,1
-src/app/utils,1
 src,0
 src/app,0
 src/app/components/game-components,0
@@ -17,22 +16,23 @@ src/app/components/game-components/game-component,0
 src/app/components/game-components/game-includer,0
 src/app/components/game-components/rectangular-game-component,0
 src/app/components/normal-component/chat,0
-src/app/components/normal-component/confirm-inscription,0
 src/app/components/normal-component/count-down,0
 src/app/components/normal-component/header,0
-src/app/components/normal-component/inscription,0
 src/app/components/normal-component/local-game-creation,0
 src/app/components/normal-component/login,0
 src/app/components/normal-component/next-game-loading,0
 src/app/components/normal-component/not-found,0
 src/app/components/normal-component/online-game-creation,0
 src/app/components/normal-component/pick-game,0
+src/app/components/normal-component/register,0
 src/app/components/normal-component/tutorial-game-creation,0
+src/app/components/normal-component/verify-account,0
 src/app/components/normal-component/welcome,0
 src/app/components/wrapper-components,0
 src/app/components/wrapper-components/local-game-wrapper,0
 src/app/components/wrapper-components/tutorial-game-wrapper,0
 src/app/dao,0
+src/app/directives,0
 src/app/domain,0
 src/app/games/abalone,0
 src/app/games/awale,0
@@ -52,4 +52,5 @@ src/app/games/siam,0
 src/app/games/yinsh,0
 src/app/guard,0
 src/app/services/message-displayer,0
+src/app/utils,0
 src/environments,0

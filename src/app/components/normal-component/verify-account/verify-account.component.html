@@ -1,0 +1,70 @@
+<div class="box">
+    <div class="message is-info">
+        <div class="message-header" i18n>Account verification</div>
+
+        <div class="message-body"
+             id="verificationEmail"
+             *ngIf="verificationType === 'send-email'">
+            <p class="block" i18n>In order to finalize your account, you must click on the link that you should have received on your email address ({{ emailAddress }}). The email could be in your spam folder.</p>
+
+            <div class="block level-left">
+                <p class="level-item" i18n>Once you have verified your email, click on the following button:</p>
+                <button id="finalizeVerification"
+                        class="button is-primary level-item is-small"
+                        (click)="finalizeEmailVerification()"
+                        i18n>Finalize email verification</button>
+            </div>
+
+            <div class="level-left">
+                <p class="level-item" i18n>If you have not received the verification email, click on the following button:</p>
+                <button id="sendEmail"
+                        class="button is-warning level-item is-small"
+                        (click)="sendEmailVerification()"
+                        i18n>Send verification email again</button>
+            </div>
+
+            <p id="success"
+               class="help is-success"
+               *ngIf="success"
+               i18n>The email has been sent</p>
+        </div>
+
+        <ng-container *ngIf="verificationType === 'enter-username'">
+            <div id="askUsername"
+                 class="message-body"
+                 *ngIf="!success">
+                <div class="block" i18n>In order to finalize your account, you must choose a username.</div>
+                <form [formGroup]="usernameForm">
+                    <div class="field has-addons">
+                        <div class="control">
+                            <input id="username"
+                                   class="input"
+                                   type="text"
+                                   i18n-placeholder placeholder="Username"
+                                   name="username"
+                                   required
+                                   formControlName="username"
+                             />
+                        </div>
+                        <div class="control">
+                            <button class="button is-info"
+                                    id="pickUsername"
+                                    (click)="pickUsername(usernameForm.value)"
+                                    i18n>Pick username</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div id="success"
+                 class="message-body"
+                 *ngIf="success"
+                 i18n>Your account has now been finalized, you can go back to the <a [routerLink]="['/server']">list of games</a>.</div>
+        </ng-container>
+    </div>
+    <div class="message is-danger"
+         *ngIf="errorMessage" >
+        <div class="message-body"
+             id="errorMessage"
+         >{{ errorMessage }}</div>
+    </div>
+</div>

@@ -6,9 +6,9 @@ import { JoinerDAO } from 'src/app/dao/JoinerDAO';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { ChatDAO } from 'src/app/dao/ChatDAO';
-import { JoueursDAO } from 'src/app/dao/JoueursDAO';
+import { UserDAO } from 'src/app/dao/UserDAO';
 import { IPart } from 'src/app/domain/icurrentpart';
-import { IJoueur } from 'src/app/domain/iuser';
+import { IUser } from 'src/app/domain/iuser';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { FirstPlayer, PartStatus, PartType } from 'src/app/domain/ijoiner';
 import { Router } from '@angular/router';
@@ -23,7 +23,7 @@ describe('PartCreationComponent:', () => {
 
     let joinerDAOMock: JoinerDAO;
     let partDAOMock: PartDAO;
-    let joueursDAOMock: JoueursDAO;
+    let joueursDAOMock: UserDAO;
 
     async function selectCustomGameAndChangeConfig(): Promise<void> {
         await testUtils.clickElement('#partTypeCustom');
@@ -39,20 +39,22 @@ describe('PartCreationComponent:', () => {
         await component.selectOpponent('firstCandidate');
         testUtils.detectChanges();
     }
-    const CREATOR: IJoueur = {
-        pseudo: 'creator',
+    const CREATOR: IUser = {
+        username: 'creator',
         state: 'online',
+        verified: true,
     };
-    const OPPONENT: IJoueur = {
-        pseudo: 'firstCandidate',
+    const OPPONENT: IUser = {
+        username: 'firstCandidate',
         state: 'online',
+        verified: true,
     };
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(PartCreationComponent);
         const chatDAOMock: ChatDAO = TestBed.inject(ChatDAO);
         partDAOMock = TestBed.inject(PartDAO);
         joinerDAOMock = TestBed.inject(JoinerDAO);
-        joueursDAOMock = TestBed.inject(JoueursDAO);
+        joueursDAOMock = TestBed.inject(UserDAO);
         component = testUtils.getComponent();
         component.partId = 'joinerId';
         await chatDAOMock.set('joinerId', { messages: [], status: 'dummy status' });

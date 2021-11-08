@@ -1,103 +1,121 @@
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { fakeAsync, TestBed } from '@angular/core/testing';
 import { LoginComponent } from './login.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { RouterTestingModule } from '@angular/router/testing';
-import { AuthenticationService } from 'src/app/services/AuthenticationService';
-import { By } from '@angular/platform-browser';
+import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
+import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { Router } from '@angular/router';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { Observable, ReplaySubject } from 'rxjs';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 
 describe('LoginComponent', () => {
+    let testUtils: SimpleComponentTestUtils<LoginComponent>;
 
-    let component: LoginComponent;
+    let router: Router;
 
-    let fixture: ComponentFixture<LoginComponent>;
+    let authenticationService: AuthenticationService;
 
-    let emailLoginSpy: jasmine.Spy;
+    let userRS: ReplaySubject<AuthUser>;
 
-    let googleLoginSpy: jasmine.Spy;
+    function getShownError(): string {
+        return testUtils.findElement('#errorMessage').nativeElement.innerHTML;
+    }
 
-    const expectErrorToInduceMessage: (error: string, message: string) => Promise<void> =
-    async(error: string, message: string) => {
-        const promise: Promise<void> = new Promise((resolve: () => void, reject: (error: Error) => void) => {
-            reject(new Error(error));
-        });
-        emailLoginSpy.and.returnValue(promise);
-        component.loginWithEmail({ email: 'mgp@board.eu', password: '123' });
-        tick();
-        fixture.detectChanges();
-        const expectedError: string = fixture.debugElement.query(By.css('#errorSpan')).nativeElement.innerHTML;
-        expect(expectedError).toBe(message);
-        return;
-    };
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            imports: [
-                ReactiveFormsModule,
-                RouterTestingModule,
-            ],
-            declarations: [LoginComponent],
-            providers: [
-                { provide: AuthenticationService, useClass: AuthenticationServiceMock },
-            ],
-        }).compileComponents();
-        fixture = TestBed.createComponent(LoginComponent);
-        component = fixture.componentInstance;
-        emailLoginSpy = spyOn(component.authenticationService, 'doEmailLogin');
-        googleLoginSpy = spyOn(component.authenticationService, 'doGoogleLogin');
-        fixture.detectChanges();
-    });
+    beforeEach(fakeAsync(async() => {
+        testUtils = await SimpleComponentTestUtils.create(LoginComponent);
+        router = TestBed.inject(Router);
+        authenticationService = TestBed.inject(AuthenticationService);
+
+        userRS = new ReplaySubject<AuthUser>(1);
+        const userObs: Observable<AuthUser> = userRS.asObservable();
+        spyOn(authenticationService, 'getUserObs').and.returnValue(userObs);
+
+        testUtils.detectChanges();
+    }));
     it('should create', () => {
-        expect(component).toBeTruthy();
+        expect(testUtils.getComponent()).toBeTruthy();
+    });
+    describe('redirections', () => {
+        it('should redirect upon logged-in user change', fakeAsync(async() => {
+            spyOn(router, 'navigate').and.callFake(async() => true);
+
+            // given an existing user
+            const user: AuthUser = AuthenticationServiceMock.CONNECTED;
+
+            // when the user gets connected
+            userRS.next(user);
+            testUtils.detectChanges();
+
+            // then a redirection happens
+            expect(router.navigate).toHaveBeenCalledWith(['/server']);
+        }));
+        it('should not redirect if it sees a non logged-in user', fakeAsync(async() => {
+            spyOn(router, 'navigate').and.callFake(async() => true);
+
+            // given that no user is connected
+            const user: AuthUser = AuthUser.NOT_CONNECTED;
+
+            // when a non-connected visitor visits this component
+            userRS.next(user);
+            testUtils.detectChanges();
+
+            // then there is no redirection
+            expect(router.navigate).not.toHaveBeenCalled();
+        }));
     });
     describe('doEmailLogin', () => {
-        it('should redirect when email connection work', fakeAsync(async() => {
-            spyOn(component.router, 'navigate').and.callFake(async() => true);
-            const promise: Promise<void> = new Promise((resolve: () => void) => {
-                resolve();
-            });
-            emailLoginSpy.and.returnValue(promise);
-            component.loginWithEmail({ email: 'mgp@board.eu', password: '123' });
-            tick();
-            fixture.detectChanges();
-            expect(component.router.navigate).toHaveBeenCalledWith(['/server']);
+        const email: string = 'jean@jaja.europe';
+        const password: string = 'hunter2';
+        async function login(): Promise<void> {
+            testUtils.fillInput('#email', email);
+            testUtils.fillInput('#password', password);
+            await testUtils.clickElement('#loginButton');
+            testUtils.detectChanges();
+        }
+
+        it('should dispatch email login to authentication service', fakeAsync(async() => {
+            // given an existing user
+            spyOn(authenticationService, 'doEmailLogin').and.resolveTo(MGPValidation.SUCCESS);
+
+            // when the user logs in
+            await login();
+
+            // then email login has been performed
+            expect(authenticationService.doEmailLogin).toHaveBeenCalledWith(email, password);
         }));
-        it('should map error message nicely', fakeAsync(async() => {
-            expectErrorToInduceMessage(
-                'The password is invalid or the user does not have a password.',
-                'This password is incorrect.');
-            expectErrorToInduceMessage(
-                'There is no user record corresponding to this identifier. The user may have been deleted.',
-                `This email address has no account on this website.`);
-            expectErrorToInduceMessage(
-                'Missing or insufficient permissions.',
-                'You must click the confirmation link that you should have received by email.');
-            expectErrorToInduceMessage(
-                'Anything else will just be written, our job is to make that more user-friendly.',
-                'Anything else will just be written, our job is to make that more user-friendly.');
+        it('should show an error if login fails', fakeAsync(async() => {
+            // given a user that will fail to login
+            spyOn(authenticationService, 'doEmailLogin').and.resolveTo(MGPValidation.failure('Error message'));
+
+            // when the user logs in
+            await login();
+
+            // then the error message is shown
+            expect(getShownError()).toEqual('Error message');
         }));
     });
     describe('doGoogleLogin', () => {
-        it('should redirect when email connection work', fakeAsync(async() => {
-            spyOn(component.router, 'navigate').and.callFake(async() => true);
-            const promise: Promise<void> = new Promise((resolve: () => void) => {
-                resolve();
-            });
-            googleLoginSpy.and.returnValue(promise);
-            component.loginWithGoogle();
-            tick();
-            fixture.detectChanges();
-            expect(component.router.navigate).toHaveBeenCalledWith(['/server']);
+        async function login(): Promise<void> {
+            return testUtils.clickElement('#googleButton');
+        }
+        it('should dispatch google login to authentication service', fakeAsync(async() => {
+            // given a google user
+            spyOn(authenticationService, 'doGoogleLogin').and.resolveTo(MGPValidation.SUCCESS);
+
+            // when the user logs in
+            await login();
+
+            // then google login has been performed
+            expect(authenticationService.doGoogleLogin).toHaveBeenCalledWith();
         }));
-        it('should map error message nicely', fakeAsync(async() => {
-            const promise: Promise<void> = new Promise((resolve: () => void, reject: (error: Error) => void) => {
-                reject(new Error('whatever.'));
-            });
-            googleLoginSpy.and.returnValue(promise);
-            component.loginWithGoogle();
-            tick();
-            fixture.detectChanges();
-            const expectedError: string = fixture.debugElement.query(By.css('#errorSpan')).nativeElement.innerHTML;
-            expect(expectedError).toBe('whatever.');
+        it('should show an error if login fails', fakeAsync(async() => {
+            // given a user that will fail to login
+            spyOn(authenticationService, 'doGoogleLogin').and.resolveTo(MGPValidation.failure('Error message'));
+
+            // when the user logs in
+            await login();
+
+            // then the error message is shown
+            expect(getShownError()).toEqual('Error message');
         }));
     });
 });

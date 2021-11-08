@@ -8,7 +8,15 @@
             <div class="field-body">
                 <div class="field">
                     <div class="control">
-                        <input class="input" type="text" placeholder-i18n placeholder="Email" formControlName="email" name="email" required />
+                        <input id="email"
+                               class="input"
+                               type="text"
+                               i18n-placeholder placeholder="Email"
+                               formControlName="email"
+                               name="email"
+                               type="email"
+                               autofocus
+                               required />
                     </div>
                 </div>
             </div>
@@ -19,8 +27,17 @@
             </div>
             <div class="field-body">
                 <div class="field">
-                    <div class="control">
-                        <input class="input" type="password" placeholder-i18n placeholder="password" formControlName="password" name="password" required />
+                    <div class="control has-icons-right is-expanded">
+                        <input id="password"
+                               class="input"
+                               type="password"
+                               i18n-placeholder placeholder="Password"
+                               formControlName="password"
+                               name="password"
+                               required />
+                        <span class="icon is-small is-right">
+                            <fa-icon [icon]="faEye" class="clickable-icon" toggleVisibility></fa-icon>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -30,25 +47,36 @@
             <div class="field-body">
                 <div class="field">
                     <div class="control">
-                        <button class="button is-primary"
-                                id="login-button"
+                        <button id="loginButton"
+                                class="button is-primary is-fullwidth"
                                 (click)="loginWithEmail(loginForm.value)"
-                                >Connexion</button>
+                                i18n>Log in</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="field is-horizontal">
+            <div class="field-label"></div>
+            <div class="field-body">
+                <div class="field">
+                    <div class="control">
+                        <button id="googleButton"
+                                class="button is-fullwidth"
+                                type="submit"
+                                (click)="loginWithGoogle()"
+                                i18n>Log in with Google</button>
                     </div>
                 </div>
             </div>
         </div>
         <div *ngIf="errorMessage" class="message is-danger" role="alert">
             <div class="message-header" i18n>Connection error</div>
-            <div class="message-body" id="errorSpan">{{ errorMessage }}</div>
+            <div class="message-body" id="errorMessage">{{ errorMessage }}</div>
         </div>
+        <p class="help level-right">
+            <ng-container i18n>No account?</ng-container> 
+            <a [routerLink]="['/register']" i18n>Register</a>
+        </p>
+
     </form>
-</div>
-<div class="box">
-    <p class="title" i18n>No account?</p>
-    <button id="googleButton"
-            type="submit"
-            (click)="loginWithGoogle()"
-            class="button" i18n>Login with Google</button>
-    <button class="button" [routerLink]="['/inscription']" i18n>Sign up</button>
 </div>

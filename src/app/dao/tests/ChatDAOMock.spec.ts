@@ -1,5 +1,5 @@
 import { MGPMap } from 'src/app/utils/MGPMap';
-import { ObservableSubject } from 'src/app/utils/ObservableSubject';
+import { ObservableSubject } from 'src/app/utils/tests/ObservableSubject.spec';
 import { FirebaseFirestoreDAOMock } from './FirebaseFirestoreDAOMock.spec';
 import { IChat, IChatId } from 'src/app/domain/ichat';
 import { display } from 'src/app/utils/utils';

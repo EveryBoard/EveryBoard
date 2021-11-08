@@ -17,6 +17,6 @@ export class PartDAO extends FirebaseFirestoreDAO<IPart> {
         display(PartDAO.VERBOSE, 'PartDAO.constructor');
     }
     public observeActivesParts(callback: FirebaseCollectionObserver<IPart>): () => void {
-        return this.observingWhere('result', '==', MGPResult.UNACHIEVED.value, callback);
+        return this.observingWhere([['result', '==', MGPResult.UNACHIEVED.value]], callback);
     }
 }
