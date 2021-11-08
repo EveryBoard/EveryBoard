@@ -21,7 +21,7 @@ import { SiamFailure } from './SiamFailure';
 @Component({
     selector: 'app-siam',
     templateUrl: './siam.component.html',
-    styleUrls: ['../../components/game-components/game-component/game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 export class SiamComponent extends RectangularGameComponent<SiamRules,
                                                             SiamMove,
