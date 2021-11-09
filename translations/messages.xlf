@@ -653,7 +653,7 @@
         <source>You actively made your opponent win!</source>
       </trans-unit>
       <trans-unit id="6820998210290920267" datatype="html">
-        <source>Wrong choice, your opponent will win next turn no matter which piece is dropped!</source>
+        <source>Wrong choice, your opponent will win in the next turn no matter which piece is dropped!</source>
       </trans-unit>
       <trans-unit id="8572141978310888290" datatype="html">
         <source>You cannot distribute from the opponent&apos;s home.</source>

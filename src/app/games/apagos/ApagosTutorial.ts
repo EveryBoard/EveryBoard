@@ -60,7 +60,7 @@ export class ApagosTutorial {
                         return MGPValidation.failure($localize`You actively made your opponent win!`);
                     }
                 } else {
-                    return MGPValidation.failure($localize`Wrong choice, your opponent will win next turn no matter which piece is dropped!`);
+                    return MGPValidation.failure($localize`Wrong choice, your opponent will win in the next turn no matter which piece is dropped!`);
                 }
             },
             $localize`Congratulations!`,

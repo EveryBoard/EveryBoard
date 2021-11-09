@@ -1000,7 +1000,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     new ApagosRules(ApagosState),
                     apagosTutorial[3],
                     ApagosMove.transfer(ApagosCoord.THREE, ApagosCoord.TWO).get(),
-                    MGPValidation.failure($localize`Wrong choice, your opponent will win next turn no matter which piece is dropped!`),
+                    MGPValidation.failure($localize`Wrong choice, your opponent will win in the next turn no matter which piece is dropped!`),
                 ],
                 [
                     new DvonnRules(DvonnState),
