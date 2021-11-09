@@ -20,9 +20,6 @@ import { AuthenticationService } from './services/AuthenticationService';
 import { GameService } from './services/GameService';
 import { JoinerService } from './services/JoinerService';
 
-import { EmailVerified } from './guard/EmailVerified';
-import { MustVerifyEmail } from './guard/MustVerifyEmail';
-
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/normal-component/header/header.component';
 import { WelcomeComponent } from './components/normal-component/welcome/welcome.component';
@@ -40,9 +37,7 @@ import { LocalGameWrapperComponent }
 import { TutorialGameWrapperComponent }
     from './components/wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component';
 import { GameIncluderComponent } from './components/game-components/game-includer/game-includer.component';
-import { InscriptionComponent } from './components/normal-component/inscription/inscription.component';
-import { ConfirmInscriptionComponent }
-    from './components/normal-component/confirm-inscription/confirm-inscription.component';
+import { RegisterComponent } from './components/normal-component/register/register.component';
 import { LocalGameCreationComponent }
     from './components/normal-component/local-game-creation/local-game-creation.component';
 import { OnlineGameCreationComponent }
@@ -53,6 +48,7 @@ import { HumanDuration } from './utils/TimeUtils';
 import { NextGameLoadingComponent } from './components/normal-component/next-game-loading/next-game-loading.component';
 
 import { AbaloneComponent } from './games/abalone/abalone.component';
+import { ApagosComponent } from './games/apagos/apagos.component';
 import { AwaleComponent } from './games/awale/awale.component';
 import { CoerceoComponent } from './games/coerceo/coerceo.component';
 import { DvonnComponent } from './games/dvonn/dvonn.component';
@@ -77,22 +73,31 @@ import { YinshComponent } from './games/yinsh/yinsh.component';
 
 import { environment } from 'src/environments/environment';
 import { USE_EMULATOR as USE_FIRESTORE_EMULATOR } from '@angular/fire/firestore';
+import { USE_EMULATOR as USE_DATABASE_EMULATOR } from '@angular/fire/database';
+import { USE_EMULATOR as USE_AUTH_EMULATOR } from '@angular/fire/auth';
+import { USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/functions';
 import { LocaleUtils } from './utils/LocaleUtils';
-import { ApagosComponent } from './games/apagos/apagos.component';
+import { VerifiedAccountGuard } from './guard/verified-account.guard';
+import { VerifyAccountComponent } from './components/normal-component/verify-account/verify-account.component';
+import { ConnectedButNotVerifiedGuard } from './guard/connected-but-not-verified.guard';
+import { NotConnectedGuard } from './guard/not-connected.guard';
+import { AutofocusDirective } from './directives/autofocus.directive';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { ToggleVisibilityDirective } from './directives/toggle-visibility.directive';
 
 
 registerLocaleData(localeFr);
 
 const routes: Route [] = [
     { path: 'login', component: LoginComponent },
-    { path: 'server', component: ServerPageComponent, canActivate: [EmailVerified] },
-    { path: 'inscription', component: InscriptionComponent },
-    { path: 'confirm-inscription', component: ConfirmInscriptionComponent, canActivate: [MustVerifyEmail] },
-    { path: 'notFound', component: NotFoundComponent, canActivate: [EmailVerified] },
-    { path: 'nextGameLoading', component: NextGameLoadingComponent, canActivate: [EmailVerified] },
+    { path: 'server', component: ServerPageComponent, canActivate: [VerifiedAccountGuard] },
+    { path: 'register', component: RegisterComponent, canActivate: [NotConnectedGuard] },
+    { path: 'notFound', component: NotFoundComponent, canActivate: [VerifiedAccountGuard] },
+    { path: 'nextGameLoading', component: NextGameLoadingComponent, canActivate: [VerifiedAccountGuard] },
+    { path: 'verify-account', component: VerifyAccountComponent, canActivate: [ConnectedButNotVerifiedGuard] },
 
-    { path: 'play', component: OnlineGameCreationComponent, canActivate: [EmailVerified] },
-    { path: 'play/:compo/:id', component: OnlineGameWrapperComponent, canActivate: [EmailVerified] },
+    { path: 'play', component: OnlineGameCreationComponent, canActivate: [VerifiedAccountGuard] },
+    { path: 'play/:compo/:id', component: OnlineGameWrapperComponent, canActivate: [VerifiedAccountGuard] },
     { path: 'local', component: LocalGameCreationComponent },
     { path: 'local/:compo', component: LocalGameWrapperComponent },
     { path: 'tutorial', component: TutorialGameCreationComponent },
@@ -111,7 +116,7 @@ const routes: Route [] = [
         PickGameComponent,
         ChatComponent,
         PartCreationComponent,
-        InscriptionComponent,
+        RegisterComponent,
         NotFoundComponent,
         NextGameLoadingComponent,
         CountDownComponent,
@@ -119,10 +124,10 @@ const routes: Route [] = [
         LocalGameWrapperComponent,
         TutorialGameWrapperComponent,
         GameIncluderComponent,
-        ConfirmInscriptionComponent,
         LocalGameCreationComponent,
         OnlineGameCreationComponent,
         TutorialGameCreationComponent,
+        VerifyAccountComponent,
 
         AbaloneComponent,
         ApagosComponent,
@@ -149,6 +154,8 @@ const routes: Route [] = [
         YinshComponent,
 
         HumanDuration,
+        AutofocusDirective,
+        ToggleVisibilityDirective,
     ],
     entryComponents: [
         AbaloneComponent,
@@ -183,9 +190,13 @@ const routes: Route [] = [
         AngularFireModule.initializeApp(environment.firebaseConfig),
         AngularFirestoreModule,
         BrowserAnimationsModule,
+        FontAwesomeModule,
     ],
     providers: [
+        { provide: USE_AUTH_EMULATOR, useValue: environment.emulatorConfig.auth },
+        { provide: USE_DATABASE_EMULATOR, useValue: environment.emulatorConfig.database },
         { provide: USE_FIRESTORE_EMULATOR, useValue: environment.emulatorConfig.firestore },
+        { provide: USE_FUNCTIONS_EMULATOR, useValue: environment.emulatorConfig.functions },
         AuthenticationService,
         GameService,
         JoinerService,

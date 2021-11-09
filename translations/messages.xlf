@@ -14,6 +14,9 @@
       <trans-unit id="2187377168518132372" datatype="html">
         <source>Be polite</source>
       </trans-unit>
+      <trans-unit id="7206938270697807461" datatype="html">
+        <source>Only connected users can see the chat.</source>
+      </trans-unit>
       <trans-unit id="5112659486997490676" datatype="html">
         <source>no new message</source>
       </trans-unit>
@@ -22,12 +25,6 @@
       </trans-unit>
       <trans-unit id="5075342719298110640" datatype="html">
         <source><x id="PH" equiv-text="unreadMessages"/> new messages</source>
-      </trans-unit>
-      <trans-unit id="2449879448191193445" datatype="html">
-        <source>Successfully signed up</source>
-      </trans-unit>
-      <trans-unit id="5266968336610741593" datatype="html">
-        <source>An email will be sent to you: click on the link and reconnect yourself. This email could arrive in your spam folder.</source>
       </trans-unit>
       <trans-unit id="2821179408673282599" datatype="html">
         <source>Home</source>
@@ -50,8 +47,8 @@
       <trans-unit id="7507948636555938109" datatype="html">
         <source>Log out</source>
       </trans-unit>
-      <trans-unit id="7028204981963450021" datatype="html">
-        <source>Sign up</source>
+      <trans-unit id="3301086086650990787" datatype="html">
+        <source>Register</source>
       </trans-unit>
       <trans-unit id="2336550011721758066" datatype="html">
         <source>Log in</source>
@@ -62,26 +59,14 @@
       <trans-unit id="1431416938026210429" datatype="html">
         <source>Password</source>
       </trans-unit>
-      <trans-unit id="9018459935889527317" datatype="html">
-        <source>A confirmation email will be sent to validate your account.</source>
+      <trans-unit id="4917036382252417719" datatype="html">
+        <source>Log in with Google</source>
       </trans-unit>
       <trans-unit id="77522255637065336" datatype="html">
         <source>Connection error</source>
       </trans-unit>
       <trans-unit id="850080272338290812" datatype="html">
         <source>No account?</source>
-      </trans-unit>
-      <trans-unit id="8999284073934392732" datatype="html">
-        <source>Login with Google</source>
-      </trans-unit>
-      <trans-unit id="3119050750831891643" datatype="html">
-        <source>This password is incorrect.</source>
-      </trans-unit>
-      <trans-unit id="5113647226865218037" datatype="html">
-        <source>This email address has no account on this website.</source>
-      </trans-unit>
-      <trans-unit id="1988081660757251720" datatype="html">
-        <source>You must click the confirmation link that you should have received by email.</source>
       </trans-unit>
       <trans-unit id="6005801113696805305" datatype="html">
         <source>The replay game is loading, please wait, it should not take long.</source>
@@ -95,11 +80,14 @@
       <trans-unit id="2009811124619716606" datatype="html">
         <source>Create an online game</source>
       </trans-unit>
+      <trans-unit id="7016831866762941443" datatype="html">
+        <source>Pick a game</source>
+      </trans-unit>
       <trans-unit id="5561648955936795459" datatype="html">
         <source>Use simple mechanics to push 6 of the opponent&apos;s pieces out of the board!</source>
       </trans-unit>
-      <trans-unit id="6692821761046788999" datatype="html">
-        <source>Very simple game, but, will you be able to win everytime ?</source>
+      <trans-unit id="6379805581447060110" datatype="html">
+        <source>Very simple game, but, will you be able to win everytime?</source>
       </trans-unit>
       <trans-unit id="6262000022886850348" datatype="html">
         <source>The international version of the famous African strategy game!</source>
@@ -227,6 +215,27 @@
       <trans-unit id="4497962271113144657" datatype="html">
         <source>Apagos</source>
       </trans-unit>
+      <trans-unit id="2218572265318708454" datatype="html">
+        <source>Registering</source>
+      </trans-unit>
+      <trans-unit id="9018459935889527317" datatype="html">
+        <source>A confirmation email will be sent to validate your account.</source>
+      </trans-unit>
+      <trans-unit id="5248717555542428023" datatype="html">
+        <source>Username</source>
+      </trans-unit>
+      <trans-unit id="8783355485855708287" datatype="html">
+        <source>The password should be at least 6 characters long</source>
+      </trans-unit>
+      <trans-unit id="6535780676661833462" datatype="html">
+        <source>Registration error</source>
+      </trans-unit>
+      <trans-unit id="3204200407244124341" datatype="html">
+        <source>Register with Google</source>
+      </trans-unit>
+      <trans-unit id="3412247232926911550" datatype="html">
+        <source>Have an account?</source>
+      </trans-unit>
       <trans-unit id="7656395805241225659" datatype="html">
         <source>Games</source>
       </trans-unit>
@@ -253,6 +262,39 @@
       </trans-unit>
       <trans-unit id="1670632975695309948" datatype="html">
         <source>Connected users:</source>
+      </trans-unit>
+      <trans-unit id="6996804354508674341" datatype="html">
+        <source>Account verification</source>
+      </trans-unit>
+      <trans-unit id="2730621369346437278" datatype="html">
+        <source>In order to finalize your account, you must click on the link that you should have received on your email address (<x id="INTERPOLATION" equiv-text="{{ emailAddress }}"/>). The email could be in your spam folder.</source>
+      </trans-unit>
+      <trans-unit id="4295852829952528556" datatype="html">
+        <source>Once you have verified your email, click on the following button:</source>
+      </trans-unit>
+      <trans-unit id="881022283381326299" datatype="html">
+        <source>Finalize email verification</source>
+      </trans-unit>
+      <trans-unit id="921630192161780240" datatype="html">
+        <source>If you have not received the verification email, click on the following button:</source>
+      </trans-unit>
+      <trans-unit id="4592546836544908536" datatype="html">
+        <source>Send verification email again</source>
+      </trans-unit>
+      <trans-unit id="8940072639524140983" datatype="html">
+        <source>The email has been sent</source>
+      </trans-unit>
+      <trans-unit id="141258547622133215" datatype="html">
+        <source>In order to finalize your account, you must choose a username.</source>
+      </trans-unit>
+      <trans-unit id="293336831363270094" datatype="html">
+        <source>Pick username</source>
+      </trans-unit>
+      <trans-unit id="7631774219107043658" datatype="html">
+        <source>Your account has now been finalized, you can go back to the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;[&apos;/server&apos;]&quot;&gt;"/>list of games<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
+      </trans-unit>
+      <trans-unit id="3862672024084051383" datatype="html">
+        <source>You have not verified your email! Click on the link in the verification email.</source>
       </trans-unit>
       <trans-unit id="3318133641595899163" datatype="html">
         <source>AwesomBoard</source>
@@ -407,6 +449,9 @@
       <trans-unit id="594218318757354614" datatype="html">
         <source>Maximal game duration: <x id="START_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;output&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.totalPartDuration | humanDuration }}"/> per player<x id="CLOSE_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;/output&gt;"/></source>
       </trans-unit>
+      <trans-unit id="4247449258896721566" datatype="html">
+        <source>Opponents</source>
+      </trans-unit>
       <trans-unit id="5268374384098882347" datatype="html">
         <source>Potential opponents that join the game will appear here.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/>Wait for an opponent to join, so that you can pick one.</source>
       </trans-unit>
@@ -480,7 +525,7 @@
         <source>The game has been canceled!</source>
       </trans-unit>
       <trans-unit id="7137133530752645682" datatype="html">
-        <source><x id="PH" equiv-text="userPseudo"/> left the game, please pick another opponent.</source>
+        <source><x id="PH" equiv-text="username"/> left the game, please pick another opponent.</source>
       </trans-unit>
       <trans-unit id="6594123400599013490" datatype="html">
         <source>Step finished!</source>
@@ -917,8 +962,8 @@
       <trans-unit id="5649666705061470825" datatype="html">
         <source>You must pick your piece among the remaining ones.</source>
       </trans-unit>
-      <trans-unit id="6944709858503579555" datatype="html">
-        <source>You must pick one of your remaining piece or one piece on the board that is the biggest of its square.</source>
+      <trans-unit id="5001561383056924621" datatype="html">
+        <source>You must pick one of your remaining pieces or one piece on the board that is the biggest of its square.</source>
       </trans-unit>
       <trans-unit id="7341165560842722107" datatype="html">
         <source>You must select a different landing square than the square where the move originates from.</source>
@@ -2129,6 +2174,39 @@
       </trans-unit>
       <trans-unit id="5966391152315784819" datatype="html">
         <source>You have selected an empty space, you must select one of your own pieces.</source>
+      </trans-unit>
+      <trans-unit id="4047787446065773376" datatype="html">
+        <source>There are missing fields in the registration form, please check that you filled in all fields.</source>
+      </trans-unit>
+      <trans-unit id="7065414996126753833" datatype="html">
+        <source>This username is already in use.</source>
+      </trans-unit>
+      <trans-unit id="301565970318735798" datatype="html">
+        <source>This email address is already in use.</source>
+      </trans-unit>
+      <trans-unit id="3098841477756660384" datatype="html">
+        <source>This email address is invalid.</source>
+      </trans-unit>
+      <trans-unit id="6256195380439544351" datatype="html">
+        <source>You have entered an invalid email or password.</source>
+      </trans-unit>
+      <trans-unit id="321667206564180755" datatype="html">
+        <source>The credential is invalid or has expired, please try again.</source>
+      </trans-unit>
+      <trans-unit id="2159810188120268887" datatype="html">
+        <source>Your password is too weak, please use a stronger password.</source>
+      </trans-unit>
+      <trans-unit id="2368572652596435161" datatype="html">
+        <source>There has been too many requests from your device. You are temporarily blocked due to unusual activity. Try again later.</source>
+      </trans-unit>
+      <trans-unit id="8414332856711181199" datatype="html">
+        <source>You closed the authentication popup without finalizing your log in.</source>
+      </trans-unit>
+      <trans-unit id="4550935601489856530" datatype="html">
+        <source>Your username may not be empty.</source>
+      </trans-unit>
+      <trans-unit id="3618174181025506941" datatype="html">
+        <source>This username is already in use, please select a different one.</source>
       </trans-unit>
       <trans-unit id="75196759111440200" datatype="html">
         <source>You&apos;re not allowed to send a message here.</source>

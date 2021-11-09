@@ -1,29 +1,31 @@
-import { Comparable, comparableEquals } from './Comparable';
+import { comparableEquals } from './Comparable';
 import { MGPOptional } from './MGPOptional';
+import { MGPValidation } from './MGPValidation';
 import { assert } from './utils';
 
-export abstract class MGPFallible<T extends Comparable> {
+export abstract class MGPFallible<T> {
 
-    public static success<T extends Comparable>(value: NonNullable<T>): MGPFallible<T> {
+    public static success<T>(value: NonNullable<T>): MGPFallible<T> {
         if (value == null) throw new Error('Fallible cannot be created with empty value, use MGPFallible.failure instead');
         return new MGPFallibleSuccess(value);
     }
-    public static failure<T extends Comparable>(reason: NonNullable<string>): MGPFallible<T> {
+    public static failure<T>(reason: NonNullable<string>): MGPFallible<T> {
         assert(reason != null, 'reason cannot be null');
         return new MGPFallibleFailure(reason);
     }
+    public abstract isSuccess(): boolean
 
-    public abstract isSuccess(): boolean;
+    public abstract isFailure(): boolean
 
-    public abstract isFailure(): boolean;
+    public abstract get(): NonNullable<T>
 
-    public abstract get(): NonNullable<T>;
+    public abstract getOrNull(): T
 
-    public abstract getOrNull(): T;
+    public abstract getReason(): string
 
-    public abstract getReason(): string;
+    public abstract toOptional(): MGPOptional<T>
 
-    public abstract toOptional(): MGPOptional<T>;
+    public abstract toValidation(): MGPValidation
 
     public equals(other: MGPFallible<T>): boolean {
         if (this.isFailure()) {
@@ -36,7 +38,7 @@ export abstract class MGPFallible<T extends Comparable> {
     }
 }
 
-class MGPFallibleSuccess<T extends Comparable> extends MGPFallible<T> {
+class MGPFallibleSuccess<T> extends MGPFallible<T> {
 
     private __nominal: void; // For strict typing
 
@@ -61,9 +63,12 @@ class MGPFallibleSuccess<T extends Comparable> extends MGPFallible<T> {
     public toOptional(): MGPOptional<T> {
         return MGPOptional.of(this.value);
     }
+    public toValidation(): MGPValidation {
+        return MGPValidation.SUCCESS;
+    }
 }
 
-class MGPFallibleFailure<T extends Comparable> extends MGPFallible<T> {
+class MGPFallibleFailure<T> extends MGPFallible<T> {
 
     private __nominal: void; // For strict typing
 
@@ -87,5 +92,8 @@ class MGPFallibleFailure<T extends Comparable> extends MGPFallible<T> {
     }
     public toOptional(): MGPOptional<T> {
         return MGPOptional.empty();
+    }
+    public toValidation(): MGPValidation {
+        return MGPValidation.failure(this.reason);
     }
 }

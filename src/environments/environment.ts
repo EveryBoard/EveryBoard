@@ -8,5 +8,8 @@ export const environment : Environment = {
     firebaseConfig: firebaseConfig,
     emulatorConfig: {
         firestore: undefined,
+        auth: undefined,
+        database: undefined,
+        functions: undefined,
     },
 };

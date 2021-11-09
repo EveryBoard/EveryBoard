@@ -1,0 +1,102 @@
+<div class="box">
+    <p class="title" i18n>Registering</p>
+    <form [formGroup]="registrationForm">
+        <div class="field is-horizontal">
+            <div class="field-label">
+                <label class="label" for="email" i18n>Email</label>
+            </div>
+            <div class="field-body">
+                <div class="field">
+                    <div class="control">
+                        <input id="email"
+                               class="input"
+                               formControlName="email"
+                               name="email"
+                               i18n-placeholder placeholder="Email"
+                               type="email"
+                               autofocus
+                               required />
+                        <p class="help" i18n>A confirmation email will be sent to validate your account.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="field is-horizontal">
+            <div class="field-label">
+                <label class="label" for="username" i18n>Username</label>
+            </div>
+            <div class="field-body">
+                <div class="field">
+                    <div class="control">
+                        <input id="username"
+                               class="input"
+                               formControlName="username"
+                               name="username"
+                               i18n-placeholder placeholder="Username"
+                               type="text"
+                               required />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="field is-horizontal">
+            <div class="field-label">
+                <label class="label" for="password" i18n>Password</label>
+            </div>
+            <div class="field-body">
+                <div class="field">
+                    <div class="control has-icons-right is-expanded">
+                        <input id="password"
+                               class="input"
+                               formControlName="password"
+                               name="password"
+                               i18n-placeholder placeholder="Password"
+                               type="password"
+                               required />
+                        <span class="icon is-small is-right">
+                            <fa-icon [icon]="faEye" class="clickable-icon" toggleVisibility></fa-icon>
+                        </span>
+                        <p id="passwordHelp" class="help"[ngClass]="getPasswordHelpClass()"
+                        i18n>The password should be at least 6 characters long</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="field is-horizontal">
+            <div class="field-label"></div>
+            <div class="field-body">
+                <div class="field">
+                    <div class="control">
+                        <button id="registerButton"
+                                class="button is-primary is-fullwidth"
+                                (click)="registerWithEmail()"
+                                i18n>Register</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="field is-horizontal">
+            <div class="field-label"></div>
+            <div class="field-body is-fullwidth">
+                <div *ngIf="errorMessage" class="message is-danger is-fullwidth" role="alert">
+                    <div class="message-header" i18n>Registration error</div>
+                    <div id="errorMessage" class="message-body">{{ errorMessage }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="field is-horizontal">
+            <div class="field-label"></div>
+            <div class="field-body">
+                <button id="googleButton"
+                        class="button is-fullwidth"
+                        type="submit"
+                        (click)="registerWithGoogle()"
+                        i18n>Register with Google</button>
+            </div>
+        </div>
+        <p class="help level-right">
+            <ng-container i18n>Have an account?</ng-container> 
+            <a [routerLink]="['/login']" i18n>Log in</a>
+        </p>
+    </form>
+</div>

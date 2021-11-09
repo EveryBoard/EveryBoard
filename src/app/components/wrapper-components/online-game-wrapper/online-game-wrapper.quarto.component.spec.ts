@@ -9,7 +9,7 @@ import { IJoiner, PartStatus } from 'src/app/domain/ijoiner';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
-import { JoueursDAO } from 'src/app/dao/JoueursDAO';
+import { UserDAO } from 'src/app/dao/UserDAO';
 import { ChatDAO } from 'src/app/dao/ChatDAO';
 import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
 import { QuartoState } from 'src/app/games/quarto/QuartoState';
@@ -18,15 +18,17 @@ import { Request } from 'src/app/domain/request';
 import { IPart, MGPResult, Part } from 'src/app/domain/icurrentpart';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player } from 'src/app/jscaip/Player';
-import { IJoueur } from 'src/app/domain/iuser';
+import { IUser } from 'src/app/domain/iuser';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { QuartoComponent } from 'src/app/games/quarto/quarto.component';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { AuthUser } from 'src/app/services/AuthenticationService';
 import { Time } from 'src/app/domain/Time';
 import { getMillisecondsDifference } from 'src/app/utils/TimeUtils';
+import { Router } from '@angular/router';
 import { GameWrapperMessages } from '../GameWrapper';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { GameService } from 'src/app/services/GameService';
 
 describe('OnlineGameWrapperComponent of Quarto:', () => {
 
@@ -48,33 +50,32 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
     let joinerDAO: JoinerDAO;
     let partDAO: PartDAO;
-    let joueurDAO: JoueursDAO;
+    let userDAO: UserDAO;
 
-    const CREATOR: IJoueur = {
-        pseudo: 'creator',
+    const USER_CREATOR: AuthUser = new AuthUser('cre@tor', 'creator', true);
+    const PLAYER_CREATOR: IUser = {
+        username: 'creator',
         state: 'online',
+        verified: true,
     };
-    const OPPONENT: IJoueur = {
-        pseudo: 'firstCandidate',
-        displayName: 'firstCandidate',
-        email: 'firstCandidate@mgp.team',
-        emailVerified: true,
+    const USER_OPPONENT: AuthUser = new AuthUser('firstCandidate@mgp.team', 'firstCandidate', true);
+    const PLAYER_OPPONENT: IUser = {
+        username: 'firstCandidate',
         last_changed: {
             seconds: Date.now() / 1000,
             nanoseconds: Date.now() % 1000,
         },
         state: 'online',
+        verified: true,
     };
-    const OBSERVER: IJoueur = {
-        pseudo: 'jeanJaja',
-        displayName: 'JeanJaja',
-        email: 'jeanJaja@mgp.team',
-        emailVerified: true,
+    const OBSERVER: IUser = {
+        username: 'jeanJaja',
         last_changed: {
             seconds: Date.now() / 1000,
             nanoseconds: Date.now() % 1000,
         },
         state: 'online',
+        verified: true,
     };
     const FAKE_MOMENT: Time = { seconds: 123, nanoseconds: 456000000 };
 
@@ -87,13 +88,13 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     async function prepareComponent(initialJoiner: IJoiner): Promise<void> {
         partDAO = TestBed.inject(PartDAO);
         joinerDAO = TestBed.inject(JoinerDAO);
-        joueurDAO = TestBed.inject(JoueursDAO);
+        userDAO = TestBed.inject(UserDAO);
         const chatDAO: ChatDAO = TestBed.inject(ChatDAO);
         await joinerDAO.set('joinerId', initialJoiner);
         await partDAO.set('joinerId', PartMocks.INITIAL.doc);
-        await joueurDAO.set('firstCandidateDocId', OPPONENT);
-        await joueurDAO.set('creatorDocId', CREATOR);
-        await joueurDAO.set(OBSERVER.pseudo, OBSERVER);
+        await userDAO.set('firstCandidateDocId', PLAYER_OPPONENT);
+        await userDAO.set('creatorDocId', PLAYER_CREATOR);
+        await userDAO.set(OBSERVER.username, OBSERVER);
         await chatDAO.set('joinerId', { messages: [], status: `I don't have a clue` });
         return Promise.resolve();
     }
@@ -200,7 +201,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         });
     }
     async function prepareBoard(moves: QuartoMove[]): Promise<void> {
-        await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+        await prepareStartedGameFor(USER_CREATOR);
         tick(1);
         const receivedMoves: number[] = [];
         let remainingMsForZero: number = 1800 * 1000;
@@ -230,7 +231,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         componentTestUtils = await ComponentTestUtils.forGame('Quarto');
     }));
     it('Should be able to prepare a started game for creator', fakeAsync(async() => {
-        await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+        await prepareStartedGameFor(USER_CREATOR);
         spyOn(wrapper, 'reachedOutOfTime').and.callFake(() => {});
         // Should not even been called but:
         // reachedOutOfTime is called (in test) after tick(1) even though there is still remainingTime
@@ -241,7 +242,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         wrapper.pauseCountDownsFor(Player.ZERO);
     }));
     it('Should no longer have PartCreationComponent and QuartoComponent instead', fakeAsync(async() => {
-        await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+        await prepareStartedGameFor(USER_CREATOR);
         const partCreationId: DebugElement = componentTestUtils.findElement('#partCreation');
         let quartoTag: DebugElement = componentTestUtils.querySelector('app-quarto');
         expect(partCreationId)
@@ -268,7 +269,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         tick(wrapper.joiner.maximalMoveDuration * 1000);
     }));
     it('Should allow simple move', fakeAsync(async() => {
-        await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+        await prepareStartedGameFor(USER_CREATOR);
         tick(1);
 
         await doMove(FIRST_MOVE, true);
@@ -286,7 +287,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         tick(wrapper.joiner.maximalMoveDuration * 1000);
     }));
     it('Prepared Game for joiner should allow simple move', fakeAsync(async() => {
-        await prepareStartedGameFor({ pseudo: 'firstCandidate', verified: true });
+        await prepareStartedGameFor(USER_OPPONENT);
         tick(1);
 
         // Receive first move
@@ -305,7 +306,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         tick(wrapper.joiner.maximalMoveDuration * 1000);
     }));
     it('Move should trigger db change', fakeAsync(async() => {
-        await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+        await prepareStartedGameFor(USER_CREATOR);
         tick(1);
         spyOn(partDAO, 'update').and.callThrough();
         await doMove(FIRST_MOVE, true);
@@ -328,7 +329,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
 
         // given a game
-        await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+        await prepareStartedGameFor(USER_CREATOR);
         spyOn(messageDisplayer, 'gameMessage');
         tick(1);
 
@@ -367,12 +368,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             loser: 'firstCandidate',
             result: MGPResult.VICTORY.value,
         });
-        expect(componentTestUtils.findElement('#youWonIndicator'))
-            .withContext('Component should show who is the winner.')
-            .toBeTruthy();
+        componentTestUtils.expectElementToExist('#winnerIndicator');
+        componentTestUtils.expectElementToExist('#youWonIndicator');
     }));
     it('Should allow player to pass when gameComponent allows it', fakeAsync(async() => {
-        await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+        await prepareStartedGameFor(USER_CREATOR);
         tick(1);
         componentTestUtils.expectElementNotToExist('#passButton');
 
@@ -388,7 +388,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     }));
     it('Should not update currentPart when receiving MOVE_WITHOUT_TIME update', fakeAsync(async() => {
         // Given a board where its the opponent's (first) turn
-        await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+        await prepareStartedGameFor(USER_CREATOR);
         tick(1);
         const CURRENT_PART: Part = wrapper.currentPart;
 
@@ -405,7 +405,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     }));
     it('Should not do anything when receiving duplicate', fakeAsync(async() => {
         // Given a board where its the opponent's (first) turn
-        await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+        await prepareStartedGameFor(USER_CREATOR);
         tick(1);
         const CURRENT_PART: Part = wrapper.currentPart;
 
@@ -422,7 +422,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         describe('sending/receiving', () => {
             it('Should send take back request when player ask to', fakeAsync(async() => {
                 // Given a board where its the opponent's (first) turn
-                await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+                await prepareStartedGameFor(USER_CREATOR);
                 tick(1);
                 await doMove(FIRST_MOVE, true);
 
@@ -437,7 +437,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 tick(wrapper.joiner.maximalMoveDuration * 1000);
             }));
             it('Should forbid to propose to take back while take back request is waiting', fakeAsync(async() => {
-                await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+                await prepareStartedGameFor(USER_CREATOR);
                 tick(1);
                 componentTestUtils.expectElementNotToExist('#askTakeBackButton');
                 await doMove(FIRST_MOVE, true);
@@ -449,7 +449,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             }));
             it('Should not propose to Player.ONE to take back before his first move', fakeAsync(async() => {
                 // Given a board where nobody already played
-                await prepareStartedGameFor({ pseudo: 'firstCandidate', verified: true });
+                await prepareStartedGameFor(USER_OPPONENT);
                 tick(1);
 
                 // when asking take back, the button should not be here
@@ -468,7 +468,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             }));
             it('Should only propose to accept take back when opponent asked', fakeAsync(async() => {
                 // given a board where opponent did not ask to take back and where both player could have ask
-                await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+                await prepareStartedGameFor(USER_CREATOR);
                 tick(1);
                 await doMove(FIRST_MOVE, true);
                 await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 1799999, 1800 * 1000);
@@ -486,7 +486,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 tick(wrapper.joiner.maximalMoveDuration * 1000);
             }));
             it('Should only propose player to refuse take back when opponent asked', fakeAsync(async() => {
-                await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+                await prepareStartedGameFor(USER_CREATOR);
                 tick(1);
                 await doMove(FIRST_MOVE, true);
                 await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 1799999, 1800 * 1000);
@@ -502,7 +502,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 tick(wrapper.joiner.maximalMoveDuration * 1000);
             }));
             it('Should not allow player to play while take back request is waiting for him', fakeAsync(async() => {
-                await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+                await prepareStartedGameFor(USER_CREATOR);
                 tick(1);
                 await doMove(FIRST_MOVE, true);
                 await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 1799999, 1800 * 1000);
@@ -516,7 +516,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             }));
             it('Should cancel take back request when take back requester do a move', fakeAsync(async() => {
                 // given an initial board where a take back request has been done by user
-                await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+                await prepareStartedGameFor(USER_CREATOR);
                 tick(1);
                 await doMove(FIRST_MOVE, true);
                 await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 1799999, 1800 * 1000);
@@ -540,7 +540,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 tick(wrapper.joiner.maximalMoveDuration * 1000);
             }));
             it('Should forbid player to ask take back again after refusal', fakeAsync(async() => {
-                await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+                await prepareStartedGameFor(USER_CREATOR);
                 tick(1);
                 await doMove(FIRST_MOVE, true);
                 await askTakeBack();
@@ -552,7 +552,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             }));
             it('should ignore take back accepted request before they have time included', fakeAsync(async() => {
                 // Given an initial board where it's opponent's turn
-                await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+                await prepareStartedGameFor(USER_CREATOR);
                 tick(1);
 
                 await doMove(FIRST_MOVE, true);
@@ -575,7 +575,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         describe('Opponent given take back during his turn', () => {
             it('should move board back two turn and call restartCountDown', fakeAsync(async() => {
                 // Given an initial board where it's opponent second turn, and opponent asked for take back
-                await prepareStartedGameFor({ pseudo: 'firstCandidate', verified: true });
+                await prepareStartedGameFor(USER_OPPONENT);
                 tick(1);
 
                 await receiveNewMoves([FIRST_MOVE_ENCODED], 1800 * 1000, 1800 * 1000);
@@ -596,7 +596,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             }));
             it(`should reset opponents chronos to what it was at pre-take-back turn beginning`, fakeAsync(async() => {
                 // Given an initial board where it's opponent second turn, and opponent asked for take back
-                await prepareStartedGameFor({ pseudo: 'firstCandidate', verified: true });
+                await prepareStartedGameFor(USER_OPPONENT);
                 tick(1);
 
                 await receiveNewMoves([FIRST_MOVE_ENCODED], 1800 * 1000, 1800 * 1000);
@@ -613,7 +613,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             }));
             it(`Should send reduce opponent's remainingTime, since opponent just played`, fakeAsync(async() => {
                 // Given an initial board where it's opponent second turn, and opponent asked for take back
-                await prepareStartedGameFor({ pseudo: 'firstCandidate', verified: true });
+                await prepareStartedGameFor(USER_OPPONENT);
                 tick(1);
 
                 await receiveNewMoves([FIRST_MOVE_ENCODED], 1800 * 1000, 1800 * 1000);
@@ -639,7 +639,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         describe('Opponent given take back during user turn', () => {
             it('should move board back one turn and call switchPlayer', fakeAsync(async() => {
                 // Given an initial board where it's user's (first) turn, and opponent asked for take back
-                await prepareStartedGameFor({ pseudo: 'firstCandidate', verified: true });
+                await prepareStartedGameFor(USER_OPPONENT);
                 tick(1);
 
                 await receiveNewMoves([FIRST_MOVE_ENCODED], 1800 * 1000, 1800 * 1000);
@@ -659,7 +659,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             }));
             it(`Should resumeCountDown for opponent and reset user's time`, fakeAsync(async() => {
                 // Given an initial board where it's user's (first) turn, and opponent asked for take back
-                await prepareStartedGameFor({ pseudo: 'firstCandidate', verified: true });
+                await prepareStartedGameFor(USER_OPPONENT);
                 tick(1);
 
                 await receiveNewMoves([FIRST_MOVE_ENCODED], 1800 * 1000, 1800 * 1000);
@@ -692,7 +692,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         describe('User given take back during his turn', () => {
             it('should move board back two turn and call resetChronoFor', fakeAsync(async() => {
                 // Given an initial board where it's user (second) turn, and user just asked for take back
-                await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+                await prepareStartedGameFor(USER_CREATOR);
                 tick(1);
 
                 await doMove(FIRST_MOVE, true);
@@ -716,7 +716,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             }));
             it('should reset user chronos to what it was at pre-take-back turn beginning', fakeAsync(async() => {
                 // Given an initial board where it's user second turn, and user just asked for take back
-                await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+                await prepareStartedGameFor(USER_CREATOR);
                 tick(1);
 
                 await doMove(FIRST_MOVE, true);
@@ -737,7 +737,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             }));
             it('should do alternative move afterwards without taking back move time off', fakeAsync(async() => {
                 // Given an initial board where user was autorised to take back
-                await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+                await prepareStartedGameFor(USER_CREATOR);
                 tick(1);
                 await doMove(FIRST_MOVE, true);
                 await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 1799999, 1800 * 1000);
@@ -768,7 +768,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         describe('User given take back during opponent turn', () => {
             it('should move board back one turn and call switchPlayer', fakeAsync(async() => {
                 // Given an initial board where it's opponent's [second] turn, and user just asked for take back
-                await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+                await prepareStartedGameFor(USER_CREATOR);
                 tick(1);
 
                 await doMove(FIRST_MOVE, true);
@@ -788,7 +788,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             }));
             it(`should resumeCountDown for user without removing time of opponent`, fakeAsync(async() => {
                 // Given an initial board where it's opponent's [second] turn, and user just asked for take back
-                await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+                await prepareStartedGameFor(USER_CREATOR);
                 tick(1);
 
                 await doMove(FIRST_MOVE, true);
@@ -805,7 +805,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             }));
             it('should do alternative move afterwards without taking back move time off', fakeAsync(async() => {
                 // Given an initial board where opponent just took back the a move
-                await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+                await prepareStartedGameFor(USER_CREATOR);
                 tick(1);
                 await doMove(FIRST_MOVE, true);
                 await askTakeBack();
@@ -832,7 +832,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     });
     describe('Draw', () => {
         async function setup() {
-            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            await prepareStartedGameFor(USER_CREATOR);
             tick(1);
             componentTestUtils.detectChanges();
         }
@@ -922,7 +922,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     });
     describe('Time Management', () => {
         it(`should stop player's global chrono when local reach end`, fakeAsync(async() => {
-            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            await prepareStartedGameFor(USER_CREATOR);
             tick(1);
             spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
             spyOn(wrapper.chronoZeroGlobal, 'stop').and.callThrough();
@@ -931,7 +931,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(wrapper.chronoZeroGlobal.stop).toHaveBeenCalled();
         }));
         it(`should stop player's local chrono when global chrono reach end`, fakeAsync(async() => {
-            await prepareStartedGameFor({ pseudo: 'creator', verified: true }, true);
+            await prepareStartedGameFor(USER_CREATOR, true);
             tick(1);
             spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
             spyOn(wrapper.chronoZeroLocal, 'stop').and.callThrough();
@@ -941,7 +941,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
         it(`should stop offline opponent's global chrono when local reach end`, fakeAsync(async() => {
             // given an online game where it's the opponent's turn
-            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            await prepareStartedGameFor(USER_CREATOR);
             tick(1);
             await doMove(FIRST_MOVE, true);
             spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
@@ -956,7 +956,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
         it(`should stop offline opponent's local chrono when global chrono reach end`, fakeAsync(async() => {
             // given an online game where it's the opponent's turn
-            await prepareStartedGameFor({ pseudo: 'creator', verified: true }, true);
+            await prepareStartedGameFor(USER_CREATOR, true);
             tick(1);
             await doMove(FIRST_MOVE, true);
             spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
@@ -971,7 +971,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
         it(`should not notifyTimeout for online opponent`, fakeAsync(async() => {
             // given an online game where it's the opponent's; opponent is online
-            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            await prepareStartedGameFor(USER_CREATOR);
             tick(1);
             await doMove(FIRST_MOVE, true);
             spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
@@ -988,7 +988,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
         it(`should notifyTimeout for offline opponent`, fakeAsync(async() => {
             // given an online game where it's the opponent's; opponent is online
-            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            await prepareStartedGameFor(USER_CREATOR);
             tick(1);
             await doMove(FIRST_MOVE, true);
             spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
@@ -1006,7 +1006,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
         it(`should send opponent his remainingTime after first move`, fakeAsync(async() => {
             // given a board where a first move has been made
-            await prepareStartedGameFor({ pseudo: 'firstCandidate', verified: true });
+            await prepareStartedGameFor(USER_OPPONENT);
             tick(1);
             await receiveNewMoves([FIRST_MOVE_ENCODED], 1800 * 1000, 1800 * 1000);
             const beginning: Time = wrapper.currentPart.doc.beginning as Time;
@@ -1027,7 +1027,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
         it('should update chrono when receiving your remainingTime in the update', fakeAsync(async() => {
             // given a board where a first move has been made
-            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            await prepareStartedGameFor(USER_CREATOR);
             tick(1);
             spyOn(wrapper.chronoZeroGlobal, 'changeDuration').and.callThrough();
             await doMove(FIRST_MOVE, true);
@@ -1047,10 +1047,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     });
     describe('User "handshake"', () => {
         it(`Should make opponent's name lightgrey when he is absent`, fakeAsync(async() => {
-            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            await prepareStartedGameFor(USER_CREATOR);
             tick(1);
             expect(wrapper.getPlayerNameClass(1)).toEqual('has-text-black');
-            joueurDAO.update('firstCandidateDocId', { state: 'offline' });
+            userDAO.update('firstCandidateDocId', { state: 'offline' });
             componentTestUtils.detectChanges();
             tick();
             expect(wrapper.getPlayerNameClass(1)).toBe('has-text-grey-light');
@@ -1060,7 +1060,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     describe('Resign', () => {
         it('should end game after clicking on resign button', fakeAsync(async() => {
             // Given an online game component
-            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            await prepareStartedGameFor(USER_CREATOR);
             tick(1);
             await doMove(FIRST_MOVE, true);
 
@@ -1079,7 +1079,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
         it('Should not allow player to move after resigning', fakeAsync(async() => {
             // Given a component where user has resigned
-            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            await prepareStartedGameFor(USER_CREATOR);
             tick(1);
             await doMove(FIRST_MOVE, true);
             await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 1799999, 1800 * 1000);
@@ -1093,9 +1093,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(partDAO.update).not.toHaveBeenCalled();
             expectGameToBeOver();
         }));
-        it('should have resigner name written when opponent resign during your turn', fakeAsync(async() => {
+        it('Should display when the opponent resigned', fakeAsync(async() => {
             // Given a board where user has resign
-            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            await prepareStartedGameFor(USER_CREATOR);
             tick(1);
             await doMove(FIRST_MOVE, true);
             await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 1799999, 1800 * 1000);
@@ -1116,7 +1116,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     });
     describe('getUpdateType', () => {
         it('Move + Time_updated + Request_removed = UpdateType.MOVE', fakeAsync(async() => {
-            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            await prepareStartedGameFor(USER_CREATOR);
             wrapper.currentPart = new Part({
                 typeGame: 'P4',
                 playerZero: 'who is it from who cares',
@@ -1147,7 +1147,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(wrapper.joiner.maximalMoveDuration * 1000 + 1);
         }));
         it('First Move + Time_added + Score_added = UpdateType.MOVE', fakeAsync(async() => {
-            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            await prepareStartedGameFor(USER_CREATOR);
             wrapper.currentPart = new Part({
                 typeGame: 'P4',
                 playerZero: 'who is it from who cares',
@@ -1178,7 +1178,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(wrapper.joiner.maximalMoveDuration * 1000 + 1);
         }));
         it('First Move After Tack Back + Time_modified = UpdateType.MOVE', fakeAsync(async() => {
-            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            await prepareStartedGameFor(USER_CREATOR);
             wrapper.currentPart = new Part({
                 typeGame: 'P4',
                 playerZero: 'who is it from who cares',
@@ -1208,7 +1208,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(wrapper.joiner.maximalMoveDuration * 1000 + 1);
         }));
         it('Move + Time_modified + Score_modified = UpdateType.MOVE', fakeAsync(async() => {
-            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            await prepareStartedGameFor(USER_CREATOR);
             wrapper.currentPart = new Part({
                 typeGame: 'P4',
                 playerZero: 'who is it from who cares',
@@ -1242,7 +1242,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(wrapper.joiner.maximalMoveDuration * 1000 + 1);
         }));
         it('Move + Time_removed + Score_added = UpdateType.MOVE_WITHOUT_TIME', fakeAsync(async() => {
-            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            await prepareStartedGameFor(USER_CREATOR);
             wrapper.currentPart = new Part({
                 typeGame: 'P4',
                 playerZero: 'who is it from who cares',
@@ -1274,7 +1274,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(wrapper.joiner.maximalMoveDuration * 1000 + 1);
         }));
         it('Move + Time_removed + Score_modified = UpdateType.MOVE_WITHOUT_TIME', fakeAsync(async() => {
-            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            await prepareStartedGameFor(USER_CREATOR);
             wrapper.currentPart = new Part({
                 typeGame: 'P4',
                 playerZero: 'who is it from who cares',
@@ -1307,7 +1307,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(wrapper.joiner.maximalMoveDuration * 1000 + 1);
         }));
         it('AcceptTakeBack + Time_removed = UpdateType.ACCEPT_TAKE_BACK_WITHOUT_TIME', fakeAsync(async() => {
-            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            await prepareStartedGameFor(USER_CREATOR);
             wrapper.currentPart = new Part({
                 typeGame: 'P4',
                 playerZero: 'who is it from who cares',
@@ -1339,7 +1339,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(wrapper.joiner.maximalMoveDuration * 1000 + 1);
         }));
         it('AcceptTakeBack + Time_updated = UpdateType.REQUEST', fakeAsync(async() => {
-            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            await prepareStartedGameFor(USER_CREATOR);
             wrapper.currentPart = new Part({
                 typeGame: 'P4',
                 playerZero: 'who is it from who cares',
@@ -1374,7 +1374,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     describe('rematch', () => {
         it('should show propose button only when game is ended', fakeAsync(async() => {
             // given a game that is not finished
-            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            await prepareStartedGameFor(USER_CREATOR);
             tick(1);
             componentTestUtils.detectChanges();
             componentTestUtils.expectElementNotToExist('#proposeRematchButton');
@@ -1387,23 +1387,24 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             componentTestUtils.expectElementToExist('#proposeRematchButton');
         }));
         it('should sent proposal request when proposing', fakeAsync(async() => {
+            const gameService: GameService = TestBed.inject(GameService);
             // given an ended game
-            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            await prepareStartedGameFor(USER_CREATOR);
             tick(1);
             componentTestUtils.detectChanges();
             await componentTestUtils.expectInterfaceClickSuccess('#resignButton');
             tick(1);
 
             // when the propose rematch button is clicked
-            spyOn(wrapper.gameService, 'proposeRematch').and.callThrough();
+            spyOn(gameService, 'proposeRematch').and.callThrough();
             await componentTestUtils.expectInterfaceClickSuccess('#proposeRematchButton');
 
             // then the gameService must be called
-            expect(wrapper.gameService.proposeRematch).toHaveBeenCalledOnceWith('joinerId', Player.ZERO);
+            expect(gameService.proposeRematch).toHaveBeenCalledOnceWith('joinerId', Player.ZERO);
         }));
         it('should show accept/refuse button when proposition has been sent', fakeAsync(async() => {
             // given an ended game
-            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            await prepareStartedGameFor(USER_CREATOR);
             tick(1);
             componentTestUtils.detectChanges();
             await componentTestUtils.expectInterfaceClickSuccess('#resignButton');
@@ -1417,8 +1418,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             componentTestUtils.expectElementToExist('#acceptRematchButton');
         }));
         it('should sent accepting request when user accept rematch', fakeAsync(async() => {
+            const gameService: GameService = TestBed.inject(GameService);
             // give a part with rematch request send by opponent
-            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            await prepareStartedGameFor(USER_CREATOR);
             tick(1);
             componentTestUtils.detectChanges();
             await componentTestUtils.expectInterfaceClickSuccess('#resignButton');
@@ -1426,15 +1428,16 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await receiveRequest(Request.rematchProposed(Player.ONE));
 
             // when accepting it
-            spyOn(wrapper.gameService, 'acceptRematch').and.callThrough();
+            spyOn(gameService, 'acceptRematch').and.callThrough();
             await componentTestUtils.expectInterfaceClickSuccess('#acceptRematchButton');
 
             // then it should have called acceptRematch
-            expect(wrapper.gameService.acceptRematch).toHaveBeenCalledTimes(1);
+            expect(gameService.acceptRematch).toHaveBeenCalledTimes(1);
         }));
         it('should redirect to new part when rematch is accepted', fakeAsync(async() => {
+            const router: Router = TestBed.inject(Router);
             // given a part lost with rematch request send by user
-            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            await prepareStartedGameFor(USER_CREATOR);
             tick(1);
             componentTestUtils.detectChanges();
             await componentTestUtils.expectInterfaceClickSuccess('#resignButton');
@@ -1442,20 +1445,20 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await componentTestUtils.expectInterfaceClickSuccess('#proposeRematchButton');
 
             // when opponent accept it
-            spyOn(wrapper.router, 'navigate');
+            spyOn(router, 'navigate');
             await receiveRequest(Request.rematchAccepted('Quarto', 'nextPartId'));
 
             // then it should redirect to new part
             const first: string = '/nextGameLoading';
             const second: string = '/play/Quarto/nextPartId';
-            expect(wrapper.router.navigate).toHaveBeenCalledWith([first]);
-            expect(wrapper.router.navigate).toHaveBeenCalledWith([second]);
+            expect(router.navigate).toHaveBeenCalledWith([first]);
+            expect(router.navigate).toHaveBeenCalledWith([second]);
         }));
     });
     describe('Non Player Experience', () => {
         it('Should not be able to do anything', fakeAsync(async() => {
-            await prepareStartedGameFor({ pseudo: OBSERVER.pseudo, verified: true });
-            spyOn(wrapper, 'startCountDownFor').and.callFake(() => null);
+            await prepareStartedGameFor(new AuthUser(OBSERVER.username, 'observer@home', true));
+            spyOn(componentTestUtils.wrapper as OnlineGameWrapperComponent, 'startCountDownFor').and.callFake(() => null);
 
             const forbiddenFunctionNames: string[] = [
                 'canProposeDraw',
@@ -1473,7 +1476,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     describe('Visuals', () => {
         it('should highlight each player name in their respective color', fakeAsync(async() => {
             // given a game that has been started
-            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            await prepareStartedGameFor(USER_CREATOR);
 
             // when the game is displayed
             tick(1);
@@ -1486,7 +1489,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
         it('should highlight the board with the color of the player when it is their turn', fakeAsync(async() => {
             // given a game that has been started
-            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            await prepareStartedGameFor(USER_CREATOR);
             tick(1);
             componentTestUtils.detectChanges();
 
@@ -1498,7 +1501,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
         it('should highlight the board in grey when game is over', fakeAsync(async() => {
             // given a game that has been started
-            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            await prepareStartedGameFor(USER_CREATOR);
             tick(1);
             componentTestUtils.detectChanges();
 
@@ -1511,7 +1514,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
         it('should not highlight the board when it is the turn of the opponent', fakeAsync(async() => {
             // given a game that has been started
-            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            await prepareStartedGameFor(USER_CREATOR);
             tick(1);
 
             // when it is not the current player's turn

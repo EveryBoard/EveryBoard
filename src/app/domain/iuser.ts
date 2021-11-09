@@ -1,17 +1,15 @@
 import { JSONObject } from '../utils/utils';
 import { Time } from './Time';
 
-export interface IJoueur extends JSONObject {
-    pseudo: string;
-    email?: string;
-    displayName?: string;
+export interface IUser extends JSONObject {
+    username: string;
     // eslint-disable-next-line camelcase
     last_changed?: Time;
-    emailVerified?: boolean;
-    state?: string;
+    state?: 'online' | 'offline';
+    verified: boolean,
 }
 
-export interface IJoueurId extends JSONObject {
+export interface IUserId extends JSONObject {
     id: string;
-    doc: IJoueur;
+    doc: IUser;
 }

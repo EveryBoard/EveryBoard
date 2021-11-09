@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthenticationService } from 'src/app/services/AuthenticationService';
+import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
 import { Subscription } from 'rxjs';
 import { LocaleUtils } from 'src/app/utils/LocaleUtils';
 
@@ -9,9 +9,9 @@ import { LocaleUtils } from 'src/app/utils/LocaleUtils';
     templateUrl: './header.component.html',
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-    public userName: string;
+    public username: string = 'connecting...';
 
-    private joueurSub: Subscription;
+    private userSub: Subscription;
 
     public showMenu: boolean = false;
 
@@ -23,18 +23,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
     public ngOnInit(): void {
         this.currentLanguage = LocaleUtils.getLocale().toUpperCase();
-        this.joueurSub = this.authenticationService.getJoueurObs()
-            .subscribe((joueur: { pseudo: string, verified: boolean}) => {
-                if (joueur != null) {
-                    this.userName = joueur.pseudo;
-                } else {
-                    this.userName = null;
-                }
+        this.userSub = this.authenticationService.getUserObs()
+            .subscribe((user: AuthUser) => {
+                this.username = user.username || user.email;
             });
     }
     public async logout(): Promise<void> {
         await this.authenticationService.disconnect();
-        this.router.navigate(['/login']);
+        await this.router.navigate(['/']);
     }
     public changeLanguage(language: string): void {
         localStorage.setItem('locale', language.toLowerCase());
@@ -42,6 +38,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
         window.open(window.location.href, '_self');
     }
     public ngOnDestroy(): void {
-        this.joueurSub.unsubscribe();
+        this.userSub.unsubscribe();
     }
 }

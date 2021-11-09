@@ -29,7 +29,7 @@ class GameDescription {
 
     public static readonly ABALONE: Localized = () => $localize`Use simple mechanics to push 6 of the opponent's pieces out of the board!`;
 
-    public static readonly APAGOS: Localized = () => $localize`Very simple game, but, will you be able to win everytime ?`;
+    public static readonly APAGOS: Localized = () => $localize`Very simple game, but, will you be able to win everytime?`;
 
     public static readonly AWALE: Localized = () => $localize`The international version of the famous African strategy game!`;
 

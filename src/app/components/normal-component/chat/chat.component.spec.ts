@@ -1,6 +1,6 @@
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { ChatComponent } from './chat.component';
-import { AuthenticationService } from 'src/app/services/AuthenticationService';
+import { AuthUser } from 'src/app/services/AuthenticationService';
 import { ChatService } from 'src/app/services/ChatService';
 import { ChatDAO } from 'src/app/dao/ChatDAO';
 import { DebugElement } from '@angular/core';
@@ -47,7 +47,7 @@ describe('ChatComponent', () => {
         spyOn(chatService, 'stopObserving');
         spyOn(component, 'loadChatContent');
         // given a user that is not connected
-        AuthenticationServiceMock.setUser(AuthenticationService.NOT_CONNECTED);
+        AuthenticationServiceMock.setUser(AuthUser.NOT_CONNECTED);
 
         // when the component is initialized
         component.ngOnInit();
@@ -220,7 +220,7 @@ describe('ChatComponent', () => {
         await testUtils.whenStable();
 
         // then the message is sent
-        expect(chatService.sendMessage).toHaveBeenCalledWith(AuthenticationServiceMock.CONNECTED.pseudo, 2, 'hello');
+        expect(chatService.sendMessage).toHaveBeenCalledWith(AuthenticationServiceMock.CONNECTED.username, 2, 'hello');
         //  and the form is cleared
         expect(messageInput.nativeElement.value).toBe('');
     }));
