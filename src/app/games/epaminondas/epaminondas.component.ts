@@ -74,7 +74,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
             moved = moved.getNext(move.direction, 1);
             this.moveds.push(moved);
         }
-        const previousNode: EpaminondasNode = Utils.getNonNullOrFail(this.rules.node.mother);
+        const previousNode: EpaminondasNode = Utils.getNonNullable(this.rules.node.mother);
         const PREVIOUS_OPPONENT: Player = previousNode.gameState.getCurrentOpponent();
         while (moved.isInRange(14, 12) &&
                previousNode.gameState.getPieceAt(moved) === PREVIOUS_OPPONENT) {
@@ -317,7 +317,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         }
     }
     private async moveFirstPiece(PLAYER: Player): Promise<MGPValidation> {
-        this.firstPiece = this.firstPiece.getNext(Utils.getNonNullOrFail(this.phalanxDirection), 1);
+        this.firstPiece = this.firstPiece.getNext(Utils.getNonNullable(this.phalanxDirection), 1);
         if (this.firstPiece.equals(this.lastPiece)) {
             this.lastPiece = new Coord(-15, -1);
             this.validExtensions = this.getFirstPieceExtensions(PLAYER);
@@ -332,7 +332,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         return MGPValidation.SUCCESS;
     }
     private async moveLastPiece(PLAYER: Player): Promise<MGPValidation> {
-        this.lastPiece = this.lastPiece.getPrevious(Utils.getNonNullOrFail(this.phalanxDirection), 1);
+        this.lastPiece = this.lastPiece.getPrevious(Utils.getNonNullable(this.phalanxDirection), 1);
         if (this.firstPiece.equals(this.lastPiece)) {
             this.lastPiece = new Coord(-15, -1);
             this.validExtensions = this.getFirstPieceExtensions(PLAYER);

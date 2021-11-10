@@ -84,7 +84,7 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
     }
     public getPossiblesDirections(): string[] {
         const directions: string[] = [];
-        const chosenCoord: Coord = Utils.getNonNullOrFail(this.chosenCoord);
+        const chosenCoord: Coord = Utils.getNonNullable(this.chosenCoord);
         if (chosenCoord.x !== 4) directions.push('RIGHT');
         if (chosenCoord.x !== 0) directions.push('LEFT');
         if (chosenCoord.y !== 4) directions.push('DOWN');
@@ -100,7 +100,7 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
         return await this.tryMove();
     }
     public async tryMove(): Promise<MGPValidation> {
-        const chosenCoord: Coord = Utils.getNonNullOrFail(this.chosenCoord);
+        const chosenCoord: Coord = Utils.getNonNullable(this.chosenCoord);
         const move: QuixoMove = new QuixoMove(chosenCoord.x,
                                               chosenCoord.y,
                                               this.chosenDirection);

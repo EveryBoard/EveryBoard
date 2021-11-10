@@ -112,9 +112,9 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         return this.gameComponent.rules.node.gameState.turn > 0;
     }
     public takeBack(): void {
-        this.gameComponent.rules.node = Utils.getNonNullOrFail(this.gameComponent.rules.node.mother);
+        this.gameComponent.rules.node = Utils.getNonNullable(this.gameComponent.rules.node.mother);
         if (this.isAITurn()) {
-            this.gameComponent.rules.node = Utils.getNonNullOrFail(this.gameComponent.rules.node.mother);
+            this.gameComponent.rules.node = Utils.getNonNullable(this.gameComponent.rules.node.mother);
         }
         this.gameComponent.updateBoard();
     }

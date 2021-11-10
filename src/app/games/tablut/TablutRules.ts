@@ -45,7 +45,7 @@ export class TablutRules extends Rules<TablutMove, TablutState, TablutLegalitySt
         // copies
         const turn: number = state.turn;
 
-        return new TablutState(Utils.getNonNullOrFail(status.resultingBoard), turn + 1);
+        return new TablutState(Utils.getNonNullable(status.resultingBoard), turn + 1);
     }
     public static tryMove(player: Player, move: TablutMove, board: TablutCase[][]): TablutLegalityStatus {
         display(TablutRules.VERBOSE, { TablutRules_tryMove: { player, move, board } });

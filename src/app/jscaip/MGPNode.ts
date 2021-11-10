@@ -122,11 +122,11 @@ export class MGPNode<R extends Rules<M, S, L>,
                                                                     minimax,
                                                                     random);
         while (bestDescendant.gameState.turn > this.gameState.turn + 1) {
-            bestDescendant = Utils.getNonNullOrFail(bestDescendant.mother);
+            bestDescendant = Utils.getNonNullable(bestDescendant.mother);
             readingDepth--;
         }
         MGPNodeStats.minimaxTime += new Date().getTime() - startTime;
-        return Utils.getNonNullOrFail(bestDescendant.move);
+        return Utils.getNonNullable(bestDescendant.move);
     }
     public alphaBeta(depth: number,
                      alpha: number,
@@ -206,13 +206,13 @@ export class MGPNode<R extends Rules<M, S, L>,
             }
             const state: S = minimax.ruler.applyLegalMove(move, this.gameState, status);
             child = new MGPNode(this, move, state, minimax);
-            Utils.getNonNullOrFail(this.childs).push(child);
+            Utils.getNonNullable(this.childs).push(child);
         }
         return child;
     }
     public getSonByMove(move: M): MGPNode<R, M, S, L, U> | null {
         assert(this.childs != null, 'Cannot get son of uncalculated node');
-        for (const node of Utils.getNonNullOrFail(this.childs)) {
+        for (const node of Utils.getNonNullable(this.childs)) {
             if (node.move != null && node.move.equals(move)) {
                 return node;
             }

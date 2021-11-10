@@ -90,7 +90,7 @@ export class AuthenticationServiceUnderTest extends AuthenticationService {
 
 export async function createConnectedGoogleUser(): Promise<firebase.auth.UserCredential> {
     const credential: firebase.auth.UserCredential = await firebase.auth().signInWithCredential(firebase.auth.GoogleAuthProvider.credential('{"sub": "abc123", "email": "foo@example.com", "email_verified": true}'));
-    await TestBed.inject(UserDAO).set(Utils.getNonNullOrFail(credential.user).uid, { username: '', verified: true });
+    await TestBed.inject(UserDAO).set(Utils.getNonNullable(credential.user).uid, { username: '', verified: true });
     return credential;
 }
 
@@ -207,7 +207,7 @@ describe('AuthenticationService', () => {
             expect((await service.doRegister(username, email, password)).isSuccess()).toBeTrue();
             // and that the user is connected
             expect(await service.doEmailLogin(email, password)).toBe(MGPValidation.SUCCESS);
-            const user: firebase.User = Utils.getNonNullOrFail(firebase.auth().currentUser);
+            const user: firebase.User = Utils.getNonNullable(firebase.auth().currentUser);
 
             spyOn(user, 'sendEmailVerification');
 
@@ -242,7 +242,7 @@ describe('AuthenticationService', () => {
             expect((await service.doRegister(username, email, password)).isSuccess()).toBeTrue();
             // and that the user is connected
             expect(await service.doEmailLogin(email, password)).toBe(MGPValidation.SUCCESS);
-            const user: firebase.User = Utils.getNonNullOrFail(firebase.auth().currentUser);
+            const user: firebase.User = Utils.getNonNullable(firebase.auth().currentUser);
 
             // when the email verification is requested but fails
             const error: firebase.FirebaseError = new Error('Error') as firebase.FirebaseError;
@@ -264,7 +264,7 @@ describe('AuthenticationService', () => {
 
             // then the login succeeds and the current user is set
             expect(result.isSuccess()).toBeTrue();
-            expect(Utils.getNonNullOrFail(firebase.auth().currentUser).email).toBe(email);
+            expect(Utils.getNonNullable(firebase.auth().currentUser).email).toBe(email);
         });
         it('should update userObs when successfully logging in', async() => {
             // given that a listener is waiting for user updates
@@ -426,7 +426,7 @@ describe('AuthenticationService', () => {
         beforeEach(async() => {
             // given a registered and logged in user
             credential = await createConnectedGoogleUser();
-            user = Utils.getNonNullOrFail(credential.user);
+            user = Utils.getNonNullable(credential.user);
         });
         it('should update the username', async() => {
             // when the username is set
@@ -478,12 +478,12 @@ describe('AuthenticationService', () => {
 
             // then the picture is updated
             expect(result.isSuccess()).toBeTrue();
-            expect(Utils.getNonNullOrFail(firebase.auth().currentUser).photoURL).toEqual(photoURL);
+            expect(Utils.getNonNullable(firebase.auth().currentUser).photoURL).toEqual(photoURL);
         });
         it('should not throw upon failure', async() => {
             // given a registered and logged in user
             const credential: firebase.auth.UserCredential = await createConnectedGoogleUser();
-            const user: firebase.User = Utils.getNonNullOrFail(credential.user);
+            const user: firebase.User = Utils.getNonNullable(credential.user);
 
             // when the picture is set but fails
             const error: firebase.FirebaseError = new Error('Error') as firebase.FirebaseError;

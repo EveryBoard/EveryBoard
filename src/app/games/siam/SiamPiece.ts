@@ -92,7 +92,7 @@ export class SiamPiece {
 
     public getDirection(): Orthogonal {
         const direction: Orthogonal | null = this.getNullableDirection();
-        return Utils.getNonNullOrFail(direction);
+        return Utils.getNonNullable(direction);
     }
     public toString(): string {
         switch (this.value) {

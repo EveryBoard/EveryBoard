@@ -344,7 +344,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
                     boardStatus.score = SCORE.PRE_VICTORY;
                 }
                 cs.addCriterion(commonCrit);
-                Utils.getNonNullOrFail(boardStatus.sensitiveSquares).push(cs);
+                Utils.getNonNullable(boardStatus.sensitiveSquares).push(cs);
             }
         }
         return boardStatus;

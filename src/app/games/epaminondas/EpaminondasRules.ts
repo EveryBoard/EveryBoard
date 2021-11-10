@@ -26,7 +26,7 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
         if (landingStatus.legal.isFailure()) {
             return landingStatus;
         }
-        const newBoard: Player[][] = Utils.getNonNullOrFail(landingStatus.newBoard);
+        const newBoard: Player[][] = Utils.getNonNullable(landingStatus.newBoard);
         const OPPONENT: Player = state.getCurrentOpponent();
         const captureValidity: EpaminondasLegalityStatus =
             EpaminondasRules.getCaptureValidity(state, newBoard, move, OPPONENT);
@@ -118,7 +118,7 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
     : EpaminondasState
     {
         const resultingState: EpaminondasState =
-            new EpaminondasState(Utils.getNonNullOrFail(status.newBoard), state.turn + 1);
+            new EpaminondasState(Utils.getNonNullable(status.newBoard), state.turn + 1);
         return resultingState;
     }
     public getGameStatus(node: EpaminondasNode): GameStatus {

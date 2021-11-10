@@ -49,7 +49,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
                 new ReversiState(board, turn + 1);
             return sameBoardDifferentTurn;
         }
-        for (const s of Utils.getNonNullOrFail(status.switched)) {
+        for (const s of Utils.getNonNullable(status.switched)) {
             board[s.y][s.x] = player;
         }
         board[move.coord.y][move.coord.x] = player;

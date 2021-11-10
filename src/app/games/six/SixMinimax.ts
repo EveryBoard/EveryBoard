@@ -66,14 +66,14 @@ export class SixMinimax extends AlignementMinimax<SixMove,
     private createForcedDrop(unheritance: SixNodeUnheritance): SixMove[] {
         display(this.VERBOSE, { called: 'SixMinimax.createForceDrop', unheritance });
         const forcedMove: SixMove[] = [];
-        const move: SixMove = SixMove.fromDrop(Utils.getDefinedOrFail(unheritance.preVictory));
+        const move: SixMove = SixMove.fromDrop(Utils.getNonNullable(unheritance.preVictory));
         forcedMove.push(move);
         return forcedMove;
     }
     private createForcedDeplacement(node: SixNode, unheritance: SixNodeUnheritance): SixMove[] {
         display(this.VERBOSE, { called: 'SixRules.createForcedDeplacement', node });
         const possiblesStarts: MGPSet<Coord> = this.getSafelyMovablePieceOrFirstOne(node);
-        const legalLandings: Coord[] = [Utils.getDefinedOrFail(unheritance.preVictory)];
+        const legalLandings: Coord[] = [Utils.getNonNullable(unheritance.preVictory)];
         return this.getDeplacementFrom(node.gameState, possiblesStarts, legalLandings);
     }
     private getDeplacementFrom(state: SixState,
@@ -446,7 +446,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
                     sum: 0,
                 };
             } else {
-                preVictory = MGPOptional.of(Utils.getNonNullOrFail(lastEmpty));
+                preVictory = MGPOptional.of(Utils.getNonNullable(lastEmpty));
             }
         } else if (subSum === 5) {
             return {
@@ -499,7 +499,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
                            'Impossible to have point aligned with differents line to a same point');
                     status = SCORE.PRE_VICTORY;
                 } else {
-                    preVictory = MGPOptional.of(Utils.getNonNullOrFail(lastEmpty));
+                    preVictory = MGPOptional.of(Utils.getNonNullable(lastEmpty));
                 }
             }
             finalSubSum = Math.max(finalSubSum, subSum);

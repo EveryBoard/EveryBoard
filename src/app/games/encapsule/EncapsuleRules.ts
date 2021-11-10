@@ -91,7 +91,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, Encapsu
     {
         const newBoard: EncapsuleCase[][] = state.getCopiedBoard();
 
-        const newLandingCase: EncapsuleCase = Utils.getNonNullOrFail(legality.newLandingCase);
+        const newLandingCase: EncapsuleCase = Utils.getNonNullable(legality.newLandingCase);
         let newRemainingPiece: EncapsulePiece[] = state.getRemainingPieces();
         const newTurn: number = state.turn + 1;
         newBoard[move.landingCoord.y][move.landingCoord.x] = EncapsuleCase.decode(newLandingCase.encode());

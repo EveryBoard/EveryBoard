@@ -206,7 +206,7 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityStatus> {
         const currentPlayer: GoPiece = GoPiece.ofPlayer(state.getCurrentPlayer());
         const newTurn: number = currentTurn + 1;
         newBoard[y][x] = currentPlayer;
-        const capturedCoords: Coord[] = Utils.getNonNullOrFail(status.capturedCoords);
+        const capturedCoords: Coord[] = Utils.getNonNullable(status.capturedCoords);
         for (const capturedCoord of capturedCoords) {
             newBoard[capturedCoord.y][capturedCoord.x] = GoPiece.EMPTY;
         }

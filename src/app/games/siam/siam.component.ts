@@ -55,7 +55,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         this.lastMove = this.rules.node.move;
         if (this.lastMove) {
             this.movedPieces = this.rules.isLegal(this.lastMove,
-                                                  Utils.getNonNullOrFail(this.rules.node.mother).gameState).moved;
+                                                  Utils.getNonNullable(this.rules.node.mother).gameState).moved;
         } else {
             this.movedPieces = [];
         }
@@ -91,7 +91,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         } else {
             const dir: Orthogonal = Orthogonal.factory.fromString(direction).get();
             this.chosenDirection = MGPOptional.of(dir);
-            this.landingCoord = Utils.getNonNullOrFail(this.chosenCoord).getNext(dir);
+            this.landingCoord = Utils.getNonNullable(this.chosenCoord).getNext(dir);
             if (this.landingCoord.isNotInRange(5, 5)) {
                 display(SiamComponent.VERBOSE, 'orientation and direction should be the same: ' + dir);
                 this.chosenOrientation = dir;
@@ -126,11 +126,11 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         }
     }
     public async tryMove(): Promise<MGPValidation> {
-        const chosenCoord: Coord = Utils.getNonNullOrFail(this.chosenCoord);
+        const chosenCoord: Coord = Utils.getNonNullable(this.chosenCoord);
         const move: SiamMove = new SiamMove(chosenCoord.x,
                                             chosenCoord.y,
-                                            Utils.getNonNullOrFail(this.chosenDirection),
-                                            Utils.getNonNullOrFail(this.chosenOrientation));
+                                            Utils.getNonNullable(this.chosenDirection),
+                                            Utils.getNonNullable(this.chosenOrientation));
         this.cancelMove();
         return await this.chooseMove(move, this.rules.node.gameState);
     }

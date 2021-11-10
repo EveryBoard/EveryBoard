@@ -94,7 +94,7 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
                 query = query.where(condition[0], condition[1], condition[2]);
             }
         }
-        return Utils.getNonNullOrFail(query)
+        return Utils.getNonNullable(query)
             .onSnapshot((snapshot: firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>) => {
                 const createdDocs: {doc: T, id: string}[] = [];
                 const modifiedDocs: {doc: T, id: string}[] = [];

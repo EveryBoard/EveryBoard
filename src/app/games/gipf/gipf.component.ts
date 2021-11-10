@@ -243,7 +243,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules, GipfMove, G
 
         const move: GipfMove | null = this.rules.node.move;
         if (move != null) {
-            const previousState: GipfState = Utils.getNonNullOrFail(this.rules.node.mother).gameState;
+            const previousState: GipfState = Utils.getNonNullable(this.rules.node.mother).gameState;
             move.initialCaptures.forEach((c: GipfCapture) => this.markCapture(c));
             move.finalCaptures.forEach((c: GipfCapture) => this.markCapture(c));
             this.moved = this.rules.getPiecesMoved(previousState, move.initialCaptures, move.placement);

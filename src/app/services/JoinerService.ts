@@ -158,7 +158,7 @@ export class JoinerService {
     public async readJoinerById(partId: string): Promise<IJoiner> {
         display(JoinerService.VERBOSE, 'JoinerService.readJoinerById(' + partId + ')');
 
-        return Utils.getNonNullOrFail(await this.joinerDao.read(partId));
+        return Utils.getNonNullable(await this.joinerDao.read(partId));
     }
     public async set(partId: string, joiner: IJoiner): Promise<void> {
         display(JoinerService.VERBOSE, 'JoinerService.set(' + partId + ', ' + JSON.stringify(joiner) + ')');

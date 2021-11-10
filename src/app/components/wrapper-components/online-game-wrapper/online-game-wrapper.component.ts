@@ -100,11 +100,11 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent constructed');
     }
     private extractPartIdFromURL(): string {
-        return Utils.getNonNullOrFail(this.actRoute.snapshot.paramMap.get('id'));
+        return Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('id'));
     }
     private extractGameTypeFromURL(): string {
         // url is ["play", "game-name", "part-id"]
-        return Utils.getNonNullOrFail(this.actRoute.snapshot.paramMap.get('compo'));
+        return Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));
     }
     public isPlaying(): boolean {
         return this.observerRole === Player.ZERO.value ||
@@ -114,7 +114,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         return Player.of(this.observerRole);
     }
     public getPlayerName(): string {
-        return Utils.getNonNullOrFail(this.playerName);
+        return Utils.getNonNullable(this.playerName);
     }
     private isPlayer(player: Player): boolean {
         return this.observerRole === player.value;
@@ -186,7 +186,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         const updateType: UpdateType = this.getUpdateType(part);
         const turn: number = update.doc.turn;
         if (updateType === UpdateType.REQUEST) {
-            display(OnlineGameWrapperComponent.VERBOSE, 'UpdateType: Request(' + Utils.getNonNullOrFail(Utils.getDefinedOrFail(part.doc.request)).code + ') (' + turn + ')');
+            display(OnlineGameWrapperComponent.VERBOSE, 'UpdateType: Request(' + Utils.getNonNullable(Utils.getNonNullable(part.doc.request)).code + ') (' + turn + ')');
         } else {
             display(OnlineGameWrapperComponent.VERBOSE, 'UpdateType: ' + updateType.value + '(' + turn + ')');
         }
@@ -195,7 +195,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 
         switch (updateType) {
             case UpdateType.REQUEST:
-                return await this.onRequest(Utils.getNonNullDefinedOrFail(part.doc.request), oldPart);
+                return await this.onRequest(Utils.getNonNullable(part.doc.request), oldPart);
             case UpdateType.ACCEPT_TAKE_BACK_WITHOUT_TIME:
                 this.currentPart = oldPart;
                 return;
@@ -300,8 +300,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         assert(oldTime != null, 'TODO: OLD_TIME WAS NULL, UNDO COMMENT AND TEST!');
         assert(updateTime != null, 'TODO UPDATE_TIME WAS NULL, UNDO COMMENT AND TEST!');
         const last: Player = Player.fromTurn(oldPart.doc.turn);
-        return this.getTimeUsedForLastTurn(Utils.getNonNullOrFail(oldTime),
-                                           Utils.getNonNullOrFail(updateTime),
+        return this.getTimeUsedForLastTurn(Utils.getNonNullable(oldTime),
+                                           Utils.getNonNullable(updateTime),
                                            type, last);
     }
     private getMoreRecentTime(part: Part): Time | null {
@@ -348,14 +348,14 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                                     ' in ' + listMoves + ' at turn ' + currentPartTurn;
             assert(correctDBMove === true, message);
         }
-        this.currentPlayer = Utils.getNonNullOrFail(this.players[this.gameComponent.rules.node.gameState.turn % 2]);
+        this.currentPlayer = Utils.getNonNullable(this.players[this.gameComponent.rules.node.gameState.turn % 2]);
         this.gameComponent.updateBoard();
     }
     public switchPlayer(): void {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.switchPlayer');
         const part: Part = this.currentPart;
         const currentPlayer: Player = Player.fromTurn(part.doc.turn);
-        this.currentPlayer = Utils.getNonNullOrFail(this.players[this.gameComponent.rules.node.gameState.turn % 2]);
+        this.currentPlayer = Utils.getNonNullable(this.players[this.gameComponent.rules.node.gameState.turn % 2]);
         const currentOpponent: Player = currentPlayer.getOpponent();
         if (this.didUserPlay(currentOpponent)) {
             this.pauseCountDownsFor(currentOpponent);
@@ -413,13 +413,13 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.rules.node);
         if (gameStatus === GameStatus.ONE_WON) {
             this.currentPart = this.currentPart.setWinnerAndLoser(
-                Utils.getNonNullOrFail(this.players[1]),
-                Utils.getNonNullOrFail(this.players[0]));
+                Utils.getNonNullable(this.players[1]),
+                Utils.getNonNullable(this.players[0]));
         } else {
             assert(gameStatus === GameStatus.ZERO_WON, 'impossible to get a victory without winner!');
             this.currentPart = this.currentPart.setWinnerAndLoser(
-                Utils.getNonNullOrFail(this.players[0]),
-                Utils.getNonNullOrFail(this.players[1]));
+                Utils.getNonNullable(this.players[0]),
+                Utils.getNonNullable(this.players[1]));
         }
         this.endGame = true;
 
@@ -540,12 +540,12 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
     }
     public takeBackTo(turn: number): void {
-        this.gameComponent.rules.node = Utils.getNonNullOrFail(this.gameComponent.rules.node.mother);
+        this.gameComponent.rules.node = Utils.getNonNullable(this.gameComponent.rules.node.mother);
         if (this.gameComponent.rules.node.gameState.turn === turn) {
             this.switchPlayer();
         } else {
             // Second time to make sure it end up on player's turn
-            this.gameComponent.rules.node = Utils.getNonNullOrFail(this.gameComponent.rules.node.mother);
+            this.gameComponent.rules.node = Utils.getNonNullable(this.gameComponent.rules.node.mother);
             const player: Player = Player.fromTurn(turn);
             this.resetChronoFor(player);
         }
@@ -555,16 +555,16 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         display(OnlineGameWrapperComponent.VERBOSE, { OnlineGameWrapper_setPlayersDatas: updatedICurrentPart });
         this.players = [
             updatedICurrentPart.doc.playerZero,
-            Utils.getDefinedOrFail(updatedICurrentPart.doc.playerOne)];
+            Utils.getNonNullable(updatedICurrentPart.doc.playerOne)];
         assert(updatedICurrentPart.doc.playerOne != null, 'should not setPlayersDatas when players data is not received');
-        this.currentPlayer = Utils.getNonNullOrFail(this.players[updatedICurrentPart.doc.turn % 2]);
+        this.currentPlayer = Utils.getNonNullable(this.players[updatedICurrentPart.doc.turn % 2]);
         let opponentName: string = '';
         if (this.players[0] === this.getPlayerName()) {
             this.observerRole = Player.ZERO.value;
-            opponentName = Utils.getNonNullOrFail(this.players[1]);
+            opponentName = Utils.getNonNullable(this.players[1]);
         } else if (this.players[1] === this.getPlayerName()) {
             this.observerRole = Player.ONE.value;
-            opponentName = Utils.getNonNullOrFail(this.players[0]);
+            opponentName = Utils.getNonNullable(this.players[0]);
         } else {
             this.observerRole = Player.NONE.value;
         }
@@ -623,14 +623,14 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
     }
     public resign(): void {
-        const resigner: string = Utils.getNonNullOrFail(this.players[this.observerRole % 2]);
-        const victoriousOpponent: string = Utils.getNonNullOrFail(this.players[(this.observerRole + 1) % 2]);
+        const resigner: string = Utils.getNonNullable(this.players[this.observerRole % 2]);
+        const victoriousOpponent: string = Utils.getNonNullable(this.players[(this.observerRole + 1) % 2]);
         this.gameService.resign(this.currentPartId, victoriousOpponent, resigner);
     }
     public reachedOutOfTime(player: 0 | 1): void {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.reachedOutOfTime(' + player + ')');
         this.stopCountdownsFor(Player.of(player));
-        const opponent: IUserId = Utils.getNonNullOrFail(this.opponent);
+        const opponent: IUserId = Utils.getNonNullable(this.opponent);
         if (player === this.observerRole) {
             // the player has run out of time, he'll notify his own defeat by time
             this.notifyTimeoutVictory(opponent.doc.username, this.getPlayerName());
@@ -703,12 +703,12 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 ') (turn ' + this.currentPart.doc.turn + ')');
 
         if (player === Player.ZERO) {
-            this.chronoZeroGlobal.changeDuration(Utils.getDefinedOrFail(this.currentPart.doc.remainingMsForZero));
+            this.chronoZeroGlobal.changeDuration(Utils.getNonNullable(this.currentPart.doc.remainingMsForZero));
             this.chronoZeroGlobal.resume();
             this.chronoZeroLocal.setDuration(this.joiner.maximalMoveDuration * 1000);
             this.chronoZeroLocal.start();
         } else {
-            this.chronoOneGlobal.changeDuration(Utils.getDefinedOrFail(this.currentPart.doc.remainingMsForOne));
+            this.chronoOneGlobal.changeDuration(Utils.getNonNullable(this.currentPart.doc.remainingMsForOne));
             this.chronoOneGlobal.resume();
             this.chronoOneLocal.setDuration(this.joiner.maximalMoveDuration * 1000);
             this.chronoOneLocal.start();

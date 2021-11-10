@@ -228,8 +228,8 @@ describe('GameService', () => {
             spyOn(joinerService, 'readJoinerById').and.returnValue(Promise.resolve(lastGameJoiner));
             let called: boolean = false;
             spyOn(partDao, 'set').and.callFake(async(_id: string, element: IPart) => {
-                expect(element.playerZero).toEqual(Utils.getDefinedOrFail(lastPart.doc.playerOne));
-                expect(element.playerOne).toEqual(Utils.getDefinedOrFail(lastPart.doc.playerZero));
+                expect(element.playerZero).toEqual(Utils.getNonNullable(lastPart.doc.playerOne));
+                expect(element.playerOne).toEqual(Utils.getNonNullable(lastPart.doc.playerZero));
                 called = true;
             });
 
@@ -271,8 +271,8 @@ describe('GameService', () => {
             spyOn(joinerService, 'readJoinerById').and.returnValue(Promise.resolve(lastGameJoiner));
             let called: boolean = false;
             spyOn(partDao, 'set').and.callFake(async(_id: string, element: IPart) => {
-                expect(element.playerZero).toEqual(Utils.getDefinedOrFail(lastPart.doc.playerOne));
-                expect(element.playerOne).toEqual(Utils.getDefinedOrFail(lastPart.doc.playerZero));
+                expect(element.playerZero).toEqual(Utils.getNonNullable(lastPart.doc.playerOne));
+                expect(element.playerOne).toEqual(Utils.getNonNullable(lastPart.doc.playerZero));
                 called = true;
             });
 

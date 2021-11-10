@@ -59,7 +59,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         const stack: Coord[] = [pos];
         const player: Player = state.getPieceAt(pos);
         while (stack.length > 0) {
-            const coord: Coord = Utils.getDefinedOrFail(stack.pop());
+            const coord: Coord = Utils.getNonNullable(stack.pop());
             if (groups[coord.y][coord.x] === -1) {
                 const content: Player = state.getPieceAt(coord);
                 if (content === player) {

@@ -95,7 +95,7 @@ export class AuthenticationService implements OnDestroy {
                     this.registrationInProgress = undefined;
                 }
                 RTDB.updatePresence(user.uid);
-                const userInDB: IUser = Utils.getNonNullOrFail(await userDAO.read(user.uid));
+                const userInDB: IUser = Utils.getNonNullable(await userDAO.read(user.uid));
                 display(AuthenticationService.VERBOSE, `User ${userInDB.username} is connected, and the verified status is ${this.emailVerified(user)}`);
                 const userHasFinalizedVerification: boolean = this.emailVerified(user) === true && userInDB.username !== '';
                 if (userHasFinalizedVerification === true && userInDB.verified === false) {
@@ -131,7 +131,7 @@ export class AuthenticationService implements OnDestroy {
         try {
             const userCredential: firebase.auth.UserCredential =
                 await firebase.auth().createUserWithEmailAndPassword(email, password);
-            const user: firebase.User = Utils.getNonNullOrFail(userCredential.user);
+            const user: firebase.User = Utils.getNonNullable(userCredential.user);
             await this.createUser(user.uid, username);
             return MGPFallible.success(user);
         } catch (e) {
@@ -216,7 +216,7 @@ export class AuthenticationService implements OnDestroy {
             provider.addScope('email');
             const userCredential: firebase.auth.UserCredential =
                 await this.afAuth.signInWithPopup(provider);
-            const user: firebase.User = Utils.getNonNullOrFail(userCredential.user);
+            const user: firebase.User = Utils.getNonNullable(userCredential.user);
             await this.createUser(user.uid, '');
             return MGPFallible.success(user);
         } catch (e) {
@@ -247,7 +247,7 @@ export class AuthenticationService implements OnDestroy {
             if (available === false) {
                 return MGPValidation.failure($localize`This username is already in use, please select a different one.`);
             }
-            const currentUser: firebase.User = Utils.getNonNullOrFail(firebase.auth().currentUser);
+            const currentUser: firebase.User = Utils.getNonNullable(firebase.auth().currentUser);
             await currentUser.updateProfile({ displayName: username });
             await this.userDAO.setUsername(currentUser.uid, username);
             // Only gmail accounts can set their username, and they become finalized once they do
@@ -261,14 +261,14 @@ export class AuthenticationService implements OnDestroy {
     }
     public async setPicture(url: string): Promise<MGPValidation> {
         try {
-            await Utils.getNonNullOrFail(firebase.auth().currentUser).updateProfile({ photoURL: url });
+            await Utils.getNonNullable(firebase.auth().currentUser).updateProfile({ photoURL: url });
             return MGPValidation.SUCCESS;
         } catch (e) {
             return MGPValidation.failure(this.mapFirebaseError(e));
         }
     }
     public async reloadUser(): Promise<void> {
-        const currentUser: firebase.User = Utils.getNonNullOrFail(firebase.auth().currentUser);
+        const currentUser: firebase.User = Utils.getNonNullable(firebase.auth().currentUser);
         await currentUser.getIdToken(true);
         await currentUser.reload();
     }

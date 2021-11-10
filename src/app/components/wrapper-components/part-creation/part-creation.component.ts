@@ -131,14 +131,14 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             });
     }
     private getForm(name: string): AbstractControl {
-        return Utils.getNonNullOrFail(this.configFormGroup.get(name));
+        return Utils.getNonNullable(this.configFormGroup.get(name));
     }
     private subscribeToFormElements(): void {
         this.getForm('chosenOpponent').valueChanges
             .pipe(takeUntil(this.ngUnsubscribe)).subscribe((opponent: string) => {
                 this.viewInfo.chosenOpponent = opponent;
                 this.viewInfo.canProposeConfig =
-                    Utils.getNonNullOrFail(this.currentJoiner).partStatus !== PartStatus.CONFIG_PROPOSED.value &&
+                    Utils.getNonNullable(this.currentJoiner).partStatus !== PartStatus.CONFIG_PROPOSED.value &&
                     opponent !== '';
             });
         this.getForm('partType').valueChanges
@@ -372,7 +372,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         }
     }
     private removeUserFromLobby(username: string): Promise<void> {
-        const joiner: IJoiner = Utils.getNonNullOrFail(this.currentJoiner);
+        const joiner: IJoiner = Utils.getNonNullable(this.currentJoiner);
         const index: number = joiner.candidates.indexOf(username);
         if (index === -1) {
             display(true, username + ' is not in the lobby!');
@@ -398,7 +398,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.acceptConfig');
         // called by the joiner
         // triggers the redirection that will be applied for every subscribed user
-        return this.gameService.acceptConfig(this.partId, Utils.getNonNullOrFail(this.currentJoiner));
+        return this.gameService.acceptConfig(this.partId, Utils.getNonNullable(this.currentJoiner));
     }
     public async ngOnDestroy(): Promise<void> {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.ngOnDestroy');

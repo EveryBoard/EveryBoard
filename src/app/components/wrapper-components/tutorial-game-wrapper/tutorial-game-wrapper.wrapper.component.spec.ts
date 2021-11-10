@@ -1094,7 +1094,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 const status: LegalityStatus = rules.isLegal(move, step.state);
                 expect(status.legal.reason).toBeNull();
                 const state: AbstractGameState = rules.applyLegalMove(move, step.state, status);
-                expect(Utils.getNonNullOrFail(step.predicate)(move, state)).toEqual(validation);
+                expect(Utils.getNonNullable(step.predicate)(move, state)).toEqual(validation);
             }
         }));
         it('Should make sure all solutionMove are legal', fakeAsync(async() => {
@@ -1113,7 +1113,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                         if (step.isPredicate()) {
                             const state: AbstractGameState =
                                 rules.applyLegalMove(step.solutionMove, step.state, status);
-                            expect(Utils.getNonNullOrFail(step.predicate)(step.solutionMove, state))
+                            expect(Utils.getNonNullable(step.predicate)(step.solutionMove, state))
                                 .toEqual(MGPValidation.SUCCESS);
                         }
                     }

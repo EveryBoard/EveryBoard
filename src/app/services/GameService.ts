@@ -257,7 +257,7 @@ export class GameService implements OnDestroy {
                                 msToSubstract: [number, number])
     : Promise<void> {
         assert(observerRole !== Player.NONE, 'Illegal for observer to make request');
-        assert(Request.getPlayer(Utils.getNonNullDefinedOrFail(part.doc.request)) !== observerRole,
+        assert(Request.getPlayer(Utils.getNonNullable(part.doc.request)) !== observerRole,
                'Illegal to accept your own request.');
 
         const request: Request = Request.takeBackAccepted(observerRole);
@@ -271,8 +271,8 @@ export class GameService implements OnDestroy {
             listMoves,
             turn: listMoves.length,
             lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
-            remainingMsForZero: Utils.getDefinedOrFail(part.doc.remainingMsForZero) - msToSubstract[0],
-            remainingMsForOne: Utils.getDefinedOrFail(part.doc.remainingMsForOne) - msToSubstract[1],
+            remainingMsForZero: Utils.getNonNullable(part.doc.remainingMsForZero) - msToSubstract[0],
+            remainingMsForOne: Utils.getNonNullable(part.doc.remainingMsForOne) - msToSubstract[1],
         };
         return await this.partDao.update(id, update);
     }
@@ -307,7 +307,7 @@ export class GameService implements OnDestroy {
         display(GameService.VERBOSE, { gameService_updateDBBoard: {
             partId, encodedMove, scores, msToSubstract, notifyDraw, winner, loser } });
 
-        const part: IPart = Utils.getNonNullOrFail(await this.partDao.read(partId)); // TODO: optimise this
+        const part: IPart = Utils.getNonNullable(await this.partDao.read(partId)); // TODO: optimise this
         const turn: number = part.turn + 1;
         const listMoves: JSONValueWithoutArray[] = ArrayUtils.copyImmutableArray(part.listMoves);
         listMoves[listMoves.length] = encodedMove;
@@ -327,13 +327,13 @@ export class GameService implements OnDestroy {
         if (msToSubstract[0] > 0) {
             update = {
                 ...update,
-                remainingMsForZero: Utils.getDefinedOrFail(part.remainingMsForZero) - msToSubstract[0],
+                remainingMsForZero: Utils.getNonNullable(part.remainingMsForZero) - msToSubstract[0],
             };
         }
         if (msToSubstract[1] > 0) {
             update = {
                 ...update,
-                remainingMsForOne: Utils.getDefinedOrFail(part.remainingMsForOne) - msToSubstract[1],
+                remainingMsForOne: Utils.getNonNullable(part.remainingMsForOne) - msToSubstract[1],
             };
         }
         if (winner != null) {

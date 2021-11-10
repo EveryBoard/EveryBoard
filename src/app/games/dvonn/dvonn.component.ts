@@ -65,13 +65,13 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         this.scores = MGPOptional.of(DvonnRules.getScores(this.state));
     }
     private calculateDisconnecteds(): void {
-        const previousState: DvonnState = Utils.getNonNullOrFail(this.rules.node.mother).gameState;
+        const previousState: DvonnState = Utils.getNonNullable(this.rules.node.mother).gameState;
         const state: DvonnState = this.rules.node.gameState;
         for (let y: number = 0; y < state.board.length; y++) {
             for (let x: number = 0; x < state.board[y].length; x++) {
                 const coord: Coord = new Coord(x, y);
                 if (state.isOnBoard(coord) === true &&
-                    coord.equals(Utils.getNonNullOrFail(this.lastMove).coord) === false) {
+                    coord.equals(Utils.getNonNullable(this.lastMove).coord) === false) {
                     const stack: DvonnPieceStack = state.getPieceAt(coord);
                     const previousStack: DvonnPieceStack = previousState.getPieceAt(coord);
                     if (stack.isEmpty() && !previousStack.isEmpty()) {
@@ -119,7 +119,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         }
     }
     private async chooseDestination(x: number, y: number): Promise<MGPValidation> {
-        const chosenPiece: Coord = Utils.getNonNullOrFail(this.chosen);
+        const chosenPiece: Coord = Utils.getNonNullable(this.chosen);
         const chosenDestination: Coord = new Coord(x, y);
         // By construction, only valid moves can be created
         const move: DvonnMove = DvonnMove.of(chosenPiece, chosenDestination);

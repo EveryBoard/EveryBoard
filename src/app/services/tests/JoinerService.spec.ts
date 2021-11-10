@@ -21,6 +21,7 @@ describe('JoinerService', () => {
         expect(service).toBeTruthy();
     }));
     it('read should be delegated to JoinerDAO', fakeAsync(async() => {
+        await dao.set('myJoinerId', JoinerMocks.WITH_FIRST_CANDIDATE.doc);
         spyOn(dao, 'read');
         await service.readJoinerById('myJoinerId');
         expect(dao.read).toHaveBeenCalled();
@@ -54,7 +55,7 @@ describe('JoinerService', () => {
             // This was considered as "should throw an error", but this is wrong:
             // if the candidate opens two tabs to the same part,
             // its JS console should not be filled with errors, he should see the same page!
-            dao.set('joinerId', JoinerMocks.WITH_FIRST_CANDIDATE.doc);
+            await dao.set('joinerId', JoinerMocks.WITH_FIRST_CANDIDATE.doc);
             const candidateName: string = JoinerMocks.WITH_FIRST_CANDIDATE.doc.candidates[0];
             const expectedError: Error = new Error('JoinerService.joinGame was called by a user already in the game');
             await expectAsync(service.joinGame('joinerId', candidateName)).toBeRejectedWith(expectedError);
@@ -66,7 +67,7 @@ describe('JoinerService', () => {
 
             await service.joinGame('joinerId', JoinerMocks.INITIAL.doc.creator);
 
-            const resultingJoiner: IJoiner = Utils.getNonNullOrFail(await dao.read('joinerId'));
+            const resultingJoiner: IJoiner = Utils.getNonNullable(await dao.read('joinerId'));
 
             expect(dao.update).not.toHaveBeenCalled();
             expect(resultingJoiner).toEqual(JoinerMocks.INITIAL.doc);

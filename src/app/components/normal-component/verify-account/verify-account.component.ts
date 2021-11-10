@@ -40,7 +40,7 @@ export class VerifyAccountComponent implements OnInit, OnDestroy {
     public async ngOnInit(): Promise<void> {
         this.userSub = this.authService.getUserObs()
             .subscribe(async(user: AuthUser) => {
-                this.emailAddress = Utils.getNonNullOrFail(user.email);
+                this.emailAddress = Utils.getNonNullable(user.email);
                 // We know that if this page is shown, something needs to be done to finalize the account
                 if (user.username == null || user.username === '') {
                     // If the user has no username, it will need to be defined

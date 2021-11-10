@@ -63,7 +63,7 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
         this.moved = [];
     }
     private showPreviousMove(): void {
-        const previousState: AwaleState = Utils.getNonNullOrFail(this.rules.node.mother).gameState;
+        const previousState: AwaleState = Utils.getNonNullable(this.rules.node.mother).gameState;
         for (let y: number = 0; y <= 1; y++) {
             for (let x: number = 0; x <= 5; x++) {
                 const coord: Coord = new Coord(x, y);

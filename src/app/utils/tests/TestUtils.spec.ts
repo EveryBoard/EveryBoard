@@ -144,7 +144,7 @@ export class SimpleComponentTestUtils<T> {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(elementName + ' should exist').toBeTruthy();
         expect(element.attributes.class).withContext(`${elementName} should have a class attribute`).not.toBeNull();
-        const elementClasses: string[] = Utils.getNonNullOrFail(element.attributes.class).split(' ').sort();
+        const elementClasses: string[] = Utils.getNonNullable(element.attributes.class).split(' ').sort();
         expect(elementClasses).withContext(elementName + ' should contain class ' + cssClass).toContain(cssClass);
     }
     public expectElementNotToExist(elementName: string): void {
@@ -389,14 +389,14 @@ export class ComponentTestUtils<T extends MyGameComponent> {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(elementName + ' should exist').toBeTruthy();
         expect(element.attributes.class).withContext(`${elementName} should have a class attribute`).not.toBeNull();
-        const elementClasses: string[] = Utils.getNonNullOrFail(element.attributes.class).split(' ').sort();
+        const elementClasses: string[] = Utils.getNonNullable(element.attributes.class).split(' ').sort();
         expect(elementClasses).toContain(cssClass);
     }
     public expectElementNotToHaveClass(elementName: string, cssClass: string): void {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(elementName + ' should exist').toBeTruthy();
         expect(element.attributes.class).withContext(`${elementName} should have a class attribute`).not.toBeNull();
-        const elementClasses: string[] = Utils.getNonNullOrFail(element.attributes.class).split(' ').sort();
+        const elementClasses: string[] = Utils.getNonNullable(element.attributes.class).split(' ').sort();
         expect(elementClasses).not.toContain(cssClass);
     }
     public expectElementToHaveClasses(elementName: string, classes: string[]): void {
@@ -404,7 +404,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(elementName + ' should exist').toBeTruthy();
         expect(element.attributes.class).withContext(`${elementName} should have a class attribute`).not.toBeNull();
-        const elementClasses: string[] = Utils.getNonNullOrFail(element.attributes.class).split(' ').sort();
+        const elementClasses: string[] = Utils.getNonNullable(element.attributes.class).split(' ').sort();
         expect(elementClasses).toEqual(classesSorted);
     }
     public findElement(elementName: string): DebugElement {

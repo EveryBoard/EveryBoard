@@ -48,29 +48,16 @@ describe('utils', () => {
             }).toThrowError(`A default switch case did not observe the correct value, expected a value among 0,1, but got 2 instead.`);
         });
     });
-    describe('getNonNullOrFail', () => {
-        it('should fail if the value is null', () => {
-            expect(() => Utils.getNonNullOrFail(null)).toThrowError('Expected value not to be null, but it was');
+    describe('getNonNullable', () => {
+        it('should fail if the value is null or undefined', () => {
+            expect(() => Utils.getNonNullable(null)).toThrowError('Expected value not to be null or undefined, but it was.');
+            expect(() => Utils.getNonNullable(undefined)).toThrowError('Expected value not to be null or undefined, but it was.');
         });
         it('should return the value if it is not null', () => {
-            expect(Utils.getNonNullOrFail(42)).toBe(42);
+            expect(Utils.getNonNullable(42)).toBe(42);
         });
     });
-    describe('getDefinedOrFail', () => {
-        it('should fail if the value is undefined', () => {
-            expect(() => Utils.getDefinedOrFail(undefined)).toThrowError('Expected value not to be undefined, but it was');
-        });
-        it('should return the value if it is defined', () => {
-            expect(Utils.getDefinedOrFail(42)).toBe(42);
-        });
-    });
-    describe('getNonNullDefinedOrFail', () => {
-        it('should combine the behavior of getDefinedOrFail and getNonNullOrFail as expected', () => {
-            expect(() => Utils.getNonNullDefinedOrFail(undefined)).toThrowError('Expected value not to be undefined, but it was');
-            expect(() => Utils.getNonNullDefinedOrFail(null)).toThrowError('Expected value not to be null, but it was');
-            expect(Utils.getNonNullDefinedOrFail(42)).toBe(42);
-        });
-    });
+
     describe('display', () => {
         it('should log if verbose is true', () => {
             spyOn(console, 'log');

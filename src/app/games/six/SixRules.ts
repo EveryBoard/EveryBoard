@@ -38,7 +38,7 @@ export class SixRules extends Rules<SixMove,
         if (state.turn < 40) {
             return state.applyLegalDrop(move.landing);
         } else {
-            const kept: MGPSet<Coord> = Utils.getNonNullOrFail(status.kept);
+            const kept: MGPSet<Coord> = Utils.getNonNullable(status.kept);
             return state.applyLegalDeplacement(move, kept);
         }
     }

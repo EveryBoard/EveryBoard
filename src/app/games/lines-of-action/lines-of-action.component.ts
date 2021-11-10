@@ -81,7 +81,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
         return this.rules.node.gameState;
     }
     public getPreviousState(): LinesOfActionState {
-        return Utils.getNonNullOrFail(this.rules.node.mother).gameState;
+        return Utils.getNonNullable(this.rules.node.mother).gameState;
     }
     public updateBoard(): void {
         this.cancelMoveAttempt();

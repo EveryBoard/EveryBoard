@@ -277,8 +277,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(wrapper.currentPart.doc.turn).toEqual(1);
 
         // Receive second move
-        const remainingMsForZero: number = Utils.getDefinedOrFail(wrapper.currentPart.doc.remainingMsForZero);
-        const remainingMsForOne: number = Utils.getDefinedOrFail(wrapper.currentPart.doc.remainingMsForOne);
+        const remainingMsForZero: number = Utils.getNonNullable(wrapper.currentPart.doc.remainingMsForZero);
+        const remainingMsForOne: number = Utils.getNonNullable(wrapper.currentPart.doc.remainingMsForOne);
         await receiveNewMoves([FIRST_MOVE_ENCODED, 166], remainingMsForZero, remainingMsForOne);
 
         expect(wrapper.currentPart.doc.turn).toEqual(2);
@@ -351,7 +351,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         const winningMove: QuartoMove = new QuartoMove(3, 3, QuartoPiece.ABAA);
         await doMove(winningMove, true);
 
-        expect(Utils.getNonNullOrFail(wrapper.gameComponent.rules.node.move).toString()).toBe(winningMove.toString());
+        expect(Utils.getNonNullable(wrapper.gameComponent.rules.node.move).toString()).toBe(winningMove.toString());
         expect(partDAO.update).toHaveBeenCalledTimes(1);
         expect(partDAO.update).toHaveBeenCalledWith('joinerId', {
             listMoves: [move0, move1, move2, move3, winningMove].map(QuartoMove.encoder.encodeNumber),
@@ -1027,7 +1027,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // then the global chrono of update-player should be updated
             expect(wrapper.chronoZeroGlobal.changeDuration)
                 .withContext(`Chrono.ChangeDuration should have been refreshed with update's datas`)
-                .toHaveBeenCalledWith(Utils.getDefinedOrFail(wrapper.currentPart.doc.remainingMsForZero));
+                .toHaveBeenCalledWith(Utils.getNonNullable(wrapper.currentPart.doc.remainingMsForZero));
             tick(wrapper.joiner.maximalMoveDuration * 1000);
         }));
         it('when resigning, lastMoveTime must be upToDate then remainingMs');

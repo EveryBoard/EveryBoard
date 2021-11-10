@@ -97,10 +97,10 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     private async concludeMoveWithCapture(captures: PylosCoord[]): Promise<MGPValidation> {
         let move: PylosMove;
         if (this.chosenStartingCoord == null) {
-            move = PylosMove.fromDrop(Utils.getNonNullOrFail(this.chosenLandingCoord), captures);
+            move = PylosMove.fromDrop(Utils.getNonNullable(this.chosenLandingCoord), captures);
         } else {
             move = PylosMove.fromClimb(this.chosenStartingCoord,
-                                       Utils.getNonNullOrFail(this.chosenLandingCoord), captures);
+                                       Utils.getNonNullable(this.chosenLandingCoord), captures);
         }
         return this.tryMove(move, this.state);
     }
@@ -218,7 +218,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         }
     }
     private showLastMove(): void {
-        const lastMove: PylosMove = Utils.getNonNullOrFail(this.lastMove);
+        const lastMove: PylosMove = Utils.getNonNullable(this.lastMove);
         this.lastLandingCoord = lastMove.landingCoord;
         this.lastStartingCoord = lastMove.startingCoord.getOrNull();
         this.lastFirstCapture = lastMove.firstCapture.getOrNull();

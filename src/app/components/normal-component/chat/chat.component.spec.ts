@@ -221,8 +221,9 @@ describe('ChatComponent', () => {
         await testUtils.whenStable();
 
         // then the message is sent
+        const username: string = Utils.getNonNullable(AuthenticationServiceMock.CONNECTED.username);
         expect(chatService.sendMessage)
-            .toHaveBeenCalledWith(Utils.getNonNullOrFail(AuthenticationServiceMock.CONNECTED.username), 2, 'hello');
+            .toHaveBeenCalledWith(username, 2, 'hello');
         //  and the form is cleared
         expect(messageInput.nativeElement.value).toBe('');
     }));

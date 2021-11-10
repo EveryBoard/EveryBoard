@@ -49,7 +49,7 @@ export abstract class GameWrapper {
         const gameInfo: GameInfo | undefined =
             GameInfo.ALL_GAMES().find((gameInfo: GameInfo) => gameInfo.urlName === compoString);
         assert(gameInfo != null, 'Unknown Games are unwrappable');
-        return Utils.getDefinedOrFail(gameInfo).component;
+        return Utils.getNonNullable(gameInfo).component;
     }
     protected afterGameIncluderViewInit(): void {
         display(GameWrapper.VERBOSE, 'GameWrapper.afterGameIncluderViewInit');
@@ -62,7 +62,7 @@ export abstract class GameWrapper {
         display(GameWrapper.VERBOSE, 'GameWrapper.createGameComponent');
         assert(this.gameIncluder != null, 'GameIncluder should be present');
 
-        const compoString: string = Utils.getNonNullOrFail(this.actRoute.snapshot.paramMap.get('compo'));
+        const compoString: string = Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));
         const component: Type<AbstractGameComponent> = this.getMatchingComponent(compoString);
         const componentFactory: ComponentFactory<AbstractGameComponent> =
             this.componentFactoryResolver.resolveComponentFactory(component);

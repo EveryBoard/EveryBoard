@@ -76,7 +76,7 @@ export class QuartoHasher {
     public static get(coordDir: CoordDir, n: number): Coord {
         let coord: Coord = coordDir.coord.getCopy();
         const firstDir: Orthogonal = coordDir.dir;
-        const secondDir: Orthogonal = Utils.getDefinedOrFail(QuartoHasher.coordDirs.find((coordDir: CoordDir) =>
+        const secondDir: Orthogonal = Utils.getNonNullable(QuartoHasher.coordDirs.find((coordDir: CoordDir) =>
             coordDir.coord.equals(coord) &&
             coordDir.dir.equals(firstDir) === false)).dir;
         while (n >= 4) {

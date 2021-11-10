@@ -105,14 +105,14 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
         this.moveAttemptMade = true;
         if (currentStep.isPredicate()) {
             const resultingState: AbstractGameState = this.gameComponent.rules.node.gameState;
-            const moveValidity: MGPValidation = Utils.getNonNullOrFail(currentStep.predicate)(move, resultingState);
+            const moveValidity: MGPValidation = Utils.getNonNullable(currentStep.predicate)(move, resultingState);
             if (moveValidity.isSuccess()) {
                 this.showStepSuccess();
             } else {
                 this.currentReason = moveValidity.getReason();
             }
         } else if (currentStep.isAnyMove() ||
-            Utils.getNonNullOrFail(currentStep.acceptedMoves).some((m: Move) => m.equals(move))) {
+            Utils.getNonNullable(currentStep.acceptedMoves).some((m: Move) => m.equals(move))) {
             display(TutorialGameWrapperComponent.VERBOSE,
                     'tutorialGameWrapper.onLegalUserMove: awaited move!');
             this.showStepSuccess();
@@ -137,10 +137,10 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
         const currentStep: TutorialStep = this.steps[this.stepIndex];
         if (currentStep.isClick()) {
             this.gameComponent.updateBoard();
-            if (Utils.getNonNullOrFail(currentStep.acceptedClicks).some((m: string) => m === elementName)) {
+            if (Utils.getNonNullable(currentStep.acceptedClicks).some((m: string) => m === elementName)) {
                 this.showStepSuccess();
             } else {
-                this.currentMessage = Utils.getNonNullOrFail(currentStep.failureMessage);
+                this.currentMessage = Utils.getNonNullable(currentStep.failureMessage);
             }
             return MGPValidation.SUCCESS;
         } else if (currentStep.isMove() || currentStep.isPredicate()) {
@@ -200,7 +200,7 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
         if (step.acceptedMoves != null && step.acceptedMoves.length > 0) {
             awaitedMove = step.acceptedMoves[0];
         } else {
-            awaitedMove = Utils.getNonNullOrFail(step.solutionMove);
+            awaitedMove = Utils.getNonNullable(step.solutionMove);
         }
         this.showStep(this.stepIndex);
         this.gameComponent.rules.choose(awaitedMove);
@@ -210,11 +210,11 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
         this.cdr.detectChanges();
     }
     public playLocally(): void {
-        const game: string = Utils.getNonNullOrFail(this.actRoute.snapshot.paramMap.get('compo'));
+        const game: string = Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));
         this.router.navigate(['local/' + game]);
     }
     public createGame(): void {
-        const game: string = Utils.getNonNullOrFail(this.actRoute.snapshot.paramMap.get('compo'));
+        const game: string = Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));
         this.gameService.createGameAndRedirectOrShowError(game);
     }
     public getPlayerName(): string {

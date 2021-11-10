@@ -74,11 +74,11 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
             {
                 let postRotation: Coord;
                 if (lastMove.turnedClockwise) {
-                    postRotation = Utils.getDefinedOrFail(PentagoState.ROTATION_MAP.find((value: [Coord, Coord]) => {
+                    postRotation = Utils.getNonNullable(PentagoState.ROTATION_MAP.find((value: [Coord, Coord]) => {
                         return value[0].equals(localCoord);
                     }))[1];
                 } else {
-                    postRotation = Utils.getDefinedOrFail(PentagoState.ROTATION_MAP.find((value: [Coord, Coord]) => {
+                    postRotation = Utils.getNonNullable(PentagoState.ROTATION_MAP.find((value: [Coord, Coord]) => {
                         return value[1].equals(localCoord);
                     }))[0];
                 }
@@ -180,8 +180,8 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        const move: PentagoMove = PentagoMove.withRotation(Utils.getNonNullOrFail(this.currentDrop).x,
-                                                           Utils.getNonNullOrFail(this.currentDrop).y,
+        const move: PentagoMove = PentagoMove.withRotation(Utils.getNonNullable(this.currentDrop).x,
+                                                           Utils.getNonNullable(this.currentDrop).y,
                                                            arrow[1], arrow[2]);
         return this.chooseMove(move, this.rules.node.gameState);
     }
@@ -190,8 +190,8 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        const drop: PentagoMove = PentagoMove.rotationless(Utils.getNonNullOrFail(this.currentDrop).x,
-                                                           Utils.getNonNullOrFail(this.currentDrop).y);
+        const drop: PentagoMove = PentagoMove.rotationless(Utils.getNonNullable(this.currentDrop).x,
+                                                           Utils.getNonNullable(this.currentDrop).y);
         return this.chooseMove(drop, this.rules.node.gameState);
     }
 }

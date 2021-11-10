@@ -50,7 +50,7 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
     }
     public async create(elementWithFieldValue: T): Promise<string> {
         const elemName: string = this.collectionName + this.getStaticDB().size();
-        const elementWithTime: T = Utils.getNonNullOrFail(this.getServerTimestampedObject(elementWithFieldValue));
+        const elementWithTime: T = Utils.getNonNullable(this.getServerTimestampedObject(elementWithFieldValue));
         await this.set(elemName, elementWithTime);
         return elemName;
     }
@@ -82,7 +82,7 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
         display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE,
                 this.collectionName + '.set(' + id + ', ' + JSON.stringify(doc) + ')');
 
-        const mappedDoc: T = Utils.getNonNullOrFail(this.getServerTimestampedObject(doc));
+        const mappedDoc: T = Utils.getNonNullable(this.getServerTimestampedObject(doc));
         const optionalOS: MGPOptional<ObservableSubject<{id: string, doc: T}>> = this.getStaticDB().get(id);
         const tid: {id: string, doc: T} = { id, doc: mappedDoc };
         if (optionalOS.isPresent()) {
@@ -102,7 +102,7 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
         if (optionalOS.isPresent()) {
             const observableSubject: ObservableSubject<{id: string, doc: T}> = optionalOS.get();
             const oldDoc: T = observableSubject.subject.getValue().doc;
-            const mappedUpdate: Partial<T> = Utils.getNonNullOrFail(this.getServerTimestampedObject(update));
+            const mappedUpdate: Partial<T> = Utils.getNonNullable(this.getServerTimestampedObject(update));
             const newDoc: T = { ...oldDoc, ...mappedUpdate };
             observableSubject.subject.next({ id, doc: newDoc });
             return Promise.resolve();

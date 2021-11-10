@@ -46,7 +46,7 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
             .subscribe((user: AuthUser) => {
                 if (this.isConnectedUser(user)) {
                     display(ChatComponent.VERBOSE, JSON.stringify(user) + ' just connected');
-                    this.username = MGPOptional.of(Utils.getNonNullOrFail(user.username));
+                    this.username = MGPOptional.of(Utils.getNonNullable(user.username));
                     this.connected = true;
                     this.loadChatContent();
                 } else {

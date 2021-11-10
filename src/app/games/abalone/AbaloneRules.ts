@@ -131,7 +131,7 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
         }
     }
     public applyLegalMove(_move: AbaloneMove, state: AbaloneState, status: AbaloneLegalityStatus): AbaloneState {
-        return new AbaloneState(Utils.getNonNullOrFail(status.newBoard), state.turn + 1);
+        return new AbaloneState(Utils.getNonNullable(status.newBoard), state.turn + 1);
     }
     public isLegal(move: AbaloneMove, state: AbaloneState): AbaloneLegalityStatus {
         return AbaloneRules.isLegal(move, state);

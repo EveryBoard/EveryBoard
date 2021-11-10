@@ -122,8 +122,8 @@ export class P4Rules extends Rules<P4Move, P4State> {
         for (const dir of [Direction.UP, Direction.UP_RIGHT, Direction.RIGHT, Direction.DOWN_RIGHT]) {
             // for each pair of opposite directions
             const lineAllies: number =
-                Utils.getDefinedOrFail(alliesByDirs.get(dir)) +
-                Utils.getDefinedOrFail(alliesByDirs.get(dir.getOpposite()));
+                Utils.getNonNullable(alliesByDirs.get(dir)) +
+                Utils.getNonNullable(alliesByDirs.get(dir.getOpposite()));
             if (lineAllies > 2) {
                 display(P4Rules.VERBOSE, { text:
                     'there is some kind of victory here (' + c.x + ', ' + c.y + ')' + '\n' +
@@ -134,8 +134,8 @@ export class P4Rules extends Rules<P4Move, P4State> {
             }
 
             const lineDist: number =
-                Utils.getDefinedOrFail(distByDirs.get(dir)) +
-                Utils.getDefinedOrFail(distByDirs.get(dir.getOpposite()));
+                Utils.getNonNullable(distByDirs.get(dir)) +
+                Utils.getNonNullable(distByDirs.get(dir.getOpposite()));
             if (lineDist === 3) {
                 score += 2;
             } else if (lineDist > 3) {

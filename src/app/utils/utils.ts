@@ -28,8 +28,11 @@ export class Utils {
     public static handleError(message: string): any {
         throw new Error('Encountered error: ' + message);
     }
-    public static defaultCase<T>(value: T, expected: T): void {
+    public static defaultCase<T>(value: T, expected: T, message?: string): void {
         if (value !== expected) {
+            if (message !== undefined) {
+                throw new Error(message);
+            }
             throw new Error(`A default switch case did not observe the correct value, expected ${expected}, but got ${value} instead.`);
         }
     }
@@ -45,22 +48,12 @@ export class Utils {
             throw new Error(`A default switch case did not observe the correct value, expected a value among ${expectedValues}, but got ${value} instead.`);
         }
     }
-    public static getNonNullOrFail<T>(value : T | null): T {
-        if (value === null) {
-            throw new Error('Expected value not to be null, but it was');
+    public static getNonNullable<T>(value : T | null | undefined): T {
+        if (value == null) {
+            throw new Error(`Expected value not to be null or undefined, but it was.`);
         } else {
             return value;
         }
-    }
-    public static getDefinedOrFail<T>(value : T | undefined): T {
-        if (value === undefined) {
-            throw new Error('Expected value not to be undefined, but it was');
-        } else {
-            return value;
-        }
-    }
-    public static getNonNullDefinedOrFail<T>(value : T | undefined | null): T {
-        return Utils.getNonNullOrFail(Utils.getDefinedOrFail(value));
     }
 }
 

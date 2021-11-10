@@ -25,13 +25,13 @@ export class Request implements JSONObject {
     }
 
     public static getPlayer(request: Request): Player {
-        return Player.of(Utils.getNonNullDefinedOrFail(request.data)['player']);
+        return Player.of(Utils.getNonNullable(request.data)['player']);
     }
     public static getTypeGame(request: Request): string {
-        return Utils.getNonNullDefinedOrFail(request.data)['typeGame'];
+        return Utils.getNonNullable(request.data)['typeGame'];
     }
     public static getPartId(request: Request): string {
-        return Utils.getNonNullDefinedOrFail(request.data)['partId'];
+        return Utils.getNonNullable(request.data)['partId'];
     }
 
     public code: RequestCode;

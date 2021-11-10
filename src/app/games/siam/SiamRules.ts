@@ -151,7 +151,7 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityStatus> {
                           status: SiamLegalityStatus)
     : SiamState
     {
-        const newBoard: SiamPiece[][] = Utils.getNonNullOrFail(status.resultingBoard);
+        const newBoard: SiamPiece[][] = Utils.getNonNullable(status.resultingBoard);
         const newTurn: number = state.turn + 1;
         const resultingState: SiamState = new SiamState(newBoard, newTurn);
         return resultingState;
@@ -245,7 +245,7 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityStatus> {
     }
     public static getWinner(state: SiamState, move: SiamMove | null, nbMountain: number): Player {
         if (nbMountain === 2) {
-            return SiamRules.getPusher(state, Utils.getNonNullOrFail(move));
+            return SiamRules.getPusher(state, Utils.getNonNullable(move));
         } else {
             return Player.NONE;
         }

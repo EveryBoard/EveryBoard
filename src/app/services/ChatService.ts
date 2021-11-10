@@ -78,7 +78,7 @@ export class ChatService implements OnDestroy {
         if (this.isForbiddenMessage(content)) {
             return MGPValidation.failure(ChatMessages.FORBIDDEN_MESSAGE());
         }
-        const chat: IChat = Utils.getNonNullOrFail(await this.chatDao.read(this.followedChatId));
+        const chat: IChat = Utils.getNonNullable(await this.chatDao.read(this.followedChatId));
         const messages: IMessage[] = ArrayUtils.copyImmutableArray(chat.messages);
         const newMessage: IMessage = {
             content,
