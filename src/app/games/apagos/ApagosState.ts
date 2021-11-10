@@ -56,6 +56,7 @@ export class ApagosState extends GameState<ApagosCoord, ApagosSquare> {
         return this.remaining.getCopy();
     }
     public isOnBoard(coord: ApagosCoord): boolean {
+        // TODOTODO: delete when strictness is merged
         return coord != null;
     }
     public getNullable(coord: ApagosCoord): ApagosSquare {

@@ -130,14 +130,14 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         };
     }
     public getCircleCenter(x: number, i: number, square: ApagosSquare): Coord {
-        const bx: number = (x * this.SQUARE_SIZE) + (0.5 * this.SQUARE_SIZE);
-        const by: number = ((5 - x) * this.SQUARE_SIZE * 0.25) + (0.5 * this.SQUARE_SIZE);
+        const bx: number = (x * this.SPACE_SIZE) + (0.5 * this.SPACE_SIZE);
+        const by: number = ((5 - x) * this.SPACE_SIZE * 0.25) + (0.5 * this.SPACE_SIZE);
         if (square.count(Player.NONE) === 1) {
             return new Coord(bx, by);
         }
         const nbCircle: number = square.count(Player.NONE);
         const angle: number = (i * 2 * Math.PI / nbCircle) - (Math.PI / 2);
-        const radius: number = this.SQUARE_SIZE * 0.30;
+        const radius: number = this.SPACE_SIZE * 0.30;
         const deltaX: number = radius * Math.cos(angle);
         const deltaY: number = radius * Math.sin(angle);
         return new Coord(bx + deltaX, by + deltaY);
@@ -163,7 +163,7 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         return isLegal.legal.isSuccess();
     }
     private static getArrowCoord(): string {
-        // Coordinates calculated to match with a SQUARE_SIZE = 100
+        // Coordinates calculated to match with a SPACE_SIZE = 100
         const upLeft: string = 12.5 + ',' + 0;
         const upRight: string = 37.5 + ',' + 0;
         const middleMiddleRight: string = 37.5 + ',' + 25;
@@ -179,9 +179,9 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         return classes;
     }
     public getArrowTransform(x: number, player: Player): string {
-        const yOffset: number = (3 - x) * this.SQUARE_SIZE * 0.25;
-        let xOffset: number = player === Player.ZERO ? 0 : (this.SQUARE_SIZE * 0.5);
-        xOffset += (x * this.SQUARE_SIZE);
+        const yOffset: number = (3 - x) * this.SPACE_SIZE * 0.25;
+        let xOffset: number = player === Player.ZERO ? 0 : (this.SPACE_SIZE * 0.5);
+        xOffset += (x * this.SPACE_SIZE);
         return 'translate(' + xOffset + ', ' + yOffset + ')';
     }
     public range(n: number): number[] {

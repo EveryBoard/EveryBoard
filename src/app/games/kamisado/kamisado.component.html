@@ -1,6 +1,6 @@
 <svg  xmlns="http://www.w3.org/2000/svg"
       width="100%" height="auto"
-      [attr.viewBox]="'-4 -4 ' + (8 * SQUARE_SIZE) + ' ' + (8 + 8 * SQUARE_SIZE)"
+      [attr.viewBox]="'-4 -4 ' + (8 * SPACE_SIZE) + ' ' + (8 + 8 * SPACE_SIZE)"
       preserveAspectRatio="xMidYMid meet"
 >
     <g *ngFor="let line of board; index as y">
@@ -8,29 +8,29 @@
             <g id="click_{{ x }}_{{ y }}"
                (click)="onClick(x, y)">
                 <!-- Background -->
-                <rect [attr.x]="x * SQUARE_SIZE"
-                      [attr.y]="y * SQUARE_SIZE"
-                      [attr.width]="SQUARE_SIZE"
-                      [attr.height]="SQUARE_SIZE"
+                <rect [attr.x]="x * SPACE_SIZE"
+                      [attr.y]="y * SPACE_SIZE"
+                      [attr.width]="SPACE_SIZE"
+                      [attr.height]="SPACE_SIZE"
                       class="base-no-fill"
                       [attr.fill]="backgroundColor(x, y)"
                       fill-opacity="0.7"
                 />
                 <!-- Piece -->
                 <circle *ngIf="caseContent !== UNOCCUPIED"
-                        [attr.cx]="SQUARE_SIZE/2 + (x * SQUARE_SIZE)"
-                        [attr.cy]="SQUARE_SIZE/2 + (y * SQUARE_SIZE)"
+                        [attr.cx]="SPACE_SIZE/2 + (x * SPACE_SIZE)"
+                        [attr.cy]="SPACE_SIZE/2 + (y * SPACE_SIZE)"
                         [attr.fill]="pieceColor(caseContent)"
-                        [attr.r]="SQUARE_SIZE/3"
+                        [attr.r]="SPACE_SIZE/3"
                         class="base-no-fill"
                 />
                 <rect *ngIf="caseContent !== UNOCCUPIED"
-                      [attr.x]="SQUARE_SIZE/2 + (x * SQUARE_SIZE) - SQUARE_SIZE/8"
-                      [attr.y]="SQUARE_SIZE/2 + (y * SQUARE_SIZE) - SQUARE_SIZE/8"
-                      [attr.rx]="isPlayerZero(caseContent) ? SQUARE_SIZE : 0"
-                      [attr.ry]="isPlayerZero(caseContent) ? SQUARE_SIZE : 0"
-                      [attr.width]="SQUARE_SIZE/4"
-                      [attr.height]="SQUARE_SIZE/4"
+                      [attr.x]="SPACE_SIZE/2 + (x * SPACE_SIZE) - SPACE_SIZE/8"
+                      [attr.y]="SPACE_SIZE/2 + (y * SPACE_SIZE) - SPACE_SIZE/8"
+                      [attr.rx]="isPlayerZero(caseContent) ? SPACE_SIZE : 0"
+                      [attr.ry]="isPlayerZero(caseContent) ? SPACE_SIZE : 0"
+                      [attr.width]="SPACE_SIZE/4"
+                      [attr.height]="SPACE_SIZE/4"
                       [ngClass]="piecePlayerClass(caseContent)"
                       class="no-stroke"
                 />
@@ -39,21 +39,21 @@
     </g>
     <!-- Highlight last move -->
     <g *ngIf="lastMove != null">
-        <rect [attr.x]="lastMove.coord.x * SQUARE_SIZE"
-              [attr.y]="lastMove.coord.y * SQUARE_SIZE"
-              [attr.width]="SQUARE_SIZE"
-              [attr.height]="SQUARE_SIZE"
+        <rect [attr.x]="lastMove.coord.x * SPACE_SIZE"
+              [attr.y]="lastMove.coord.y * SPACE_SIZE"
+              [attr.width]="SPACE_SIZE"
+              [attr.height]="SPACE_SIZE"
               class="base no-fill mid-stroke highlighted"/>
-        <rect [attr.x]="lastMove.end.x * SQUARE_SIZE"
-              [attr.y]="lastMove.end.y * SQUARE_SIZE"
-              [attr.width]="SQUARE_SIZE"
-              [attr.height]="SQUARE_SIZE"
+        <rect [attr.x]="lastMove.end.x * SPACE_SIZE"
+              [attr.y]="lastMove.end.y * SPACE_SIZE"
+              [attr.width]="SPACE_SIZE"
+              [attr.height]="SPACE_SIZE"
               class="base no-fill mid-stroke highlighted"/>
     </g>
     <!-- Highlight selected piece -->
     <circle *ngIf="chosen != null"
-            [attr.cx]="SQUARE_SIZE/2 + (chosen.x * SQUARE_SIZE)"
-            [attr.cy]="SQUARE_SIZE/2 + (chosen.y * SQUARE_SIZE)"
+            [attr.cx]="SPACE_SIZE/2 + (chosen.x * SPACE_SIZE)"
+            [attr.cy]="SPACE_SIZE/2 + (chosen.y * SPACE_SIZE)"
             r="30"
             class="base mid-stroke no-fill highlighted"/>
 </svg>

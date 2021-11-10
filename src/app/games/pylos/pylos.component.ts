@@ -47,7 +47,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         ];
         this.encoder = PylosMove.encoder;
         this.tutorial = new PylosTutorial().tutorial;
-        this.SQUARE_SIZE = this.getPieceRadius(0);
+        this.SPACE_SIZE = this.getPieceRadius(0);
         this.updateBoard();
     }
     public getLevelRange(z: number): number[] {

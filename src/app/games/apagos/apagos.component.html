@@ -29,10 +29,10 @@
             />
             <rect id="square_{{ x }}"
                   (click)="onSquareClick(x)"
-                  [attr.x]="x * SQUARE_SIZE"
-                  [attr.y]="(5 - x) * SQUARE_SIZE * 0.25"
-                  [attr.width]="SQUARE_SIZE"
-                  [attr.height]="SQUARE_SIZE"
+                  [attr.x]="x * SPACE_SIZE"
+                  [attr.y]="(5 - x) * SPACE_SIZE * 0.25"
+                  [attr.width]="SPACE_SIZE"
+                  [attr.height]="SPACE_SIZE"
                   [ngClass]="getSquareClasses(x)"
                   class="base mid-stroke"
             />
@@ -49,8 +49,8 @@
         </ng-container>
     </g>
     <circle *ngFor="let x of range(remainingOne)"
-            [attr.cx]="(4 * SQUARE_SIZE) - ((x + 1) * PIECE_RADIUS)"
-            [attr.cy]="(2.25 * SQUARE_SIZE) + (3 * PIECE_RADIUS)"
+            [attr.cx]="(4 * SPACE_SIZE) - ((x + 1) * PIECE_RADIUS)"
+            [attr.cy]="(2.25 * SPACE_SIZE) + (3 * PIECE_RADIUS)"
             [attr.r]="PIECE_RADIUS - 5"
             class="base mid-stroke player1"
     />
