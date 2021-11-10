@@ -5,6 +5,7 @@ import { TablutCase } from '../TablutCase';
 import { TablutNode, TablutRules } from '../TablutRules';
 import { TablutMinimax } from '../TablutMinimax';
 import { Table } from 'src/app/utils/ArrayUtils';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('TablutMinimax:', () => {
 
@@ -30,7 +31,7 @@ describe('TablutMinimax:', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const state: TablutState = new TablutState(board, 1);
-        rules.node = new TablutNode(null, null, state);
+        rules.node = new TablutNode(MGPOptional.empty(), null, state);
         const winnerMove: TablutMove = new TablutMove(new Coord(3, 0), new Coord(8, 0));
 
         const minimax: TablutMinimax = new TablutMinimax(rules, 'TablutMinimax');

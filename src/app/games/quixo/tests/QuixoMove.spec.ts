@@ -8,6 +8,7 @@ import { QuixoMove } from '../QuixoMove';
 import { QuixoFailure } from '../QuixoFailure';
 import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('QuixoMove:', () => {
 
@@ -42,7 +43,7 @@ describe('QuixoMove:', () => {
         ];
         const move: QuixoMove = new QuixoMove(0, 0, Orthogonal.DOWN);
         const state: QuixoState = new QuixoState(board, 0);
-        const node: QuixoNode = new MGPNode(null, move, state);
+        const node: QuixoNode = new MGPNode(MGPOptional.empty(), move, state);
         const rules: QuixoRules = new QuixoRules(QuixoState);
         const minimax: QuixoMinimax = new QuixoMinimax(rules, 'QuixoMinimax');
         const moves: QuixoMove[] = minimax.getListMoves(node);

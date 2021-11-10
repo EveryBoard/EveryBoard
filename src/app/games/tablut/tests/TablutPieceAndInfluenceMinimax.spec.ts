@@ -10,6 +10,7 @@ import { TablutState } from '../TablutState';
 import { TablutPieceAndInfluenceMinimax } from '../TablutPieceAndInfluenceMinimax';
 import { SandwichThreat } from '../../../jscaip/PieceThreat';
 import { TablutNode, TablutRules } from '../TablutRules';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('TablutPieceAndInfluenceMinimax', () => {
 
@@ -288,7 +289,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
                 [_, _, _, _, _, _, _, _, _],
             ];
             const state: TablutState = new TablutState(board, 1);
-            const node: TablutNode = new TablutNode(null, null, state);
+            const node: TablutNode = new TablutNode(MGPOptional.empty(), null, state);
             const expectedMove: TablutMove = new TablutMove(new Coord(1, 0), new Coord(0, 0));
             for (let depth: number = 1; depth < 4; depth++) {
                 const chosenMove: TablutMove = node.findBestMove(depth, minimax);

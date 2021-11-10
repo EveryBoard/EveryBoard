@@ -13,6 +13,7 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { expectToBeVictoryFor } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Minimax } from 'src/app/jscaip/Minimax';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('SixRules', () => {
 
@@ -250,7 +251,7 @@ describe('SixRules', () => {
                 const expectedState: SixState =
                     SixState.fromRepresentation(expectedBoard, 11, new Vector(-1, 0));
                 expect(resultingState.pieces.equals(expectedState.pieces)).toBeTrue();
-                const node: SixNode = new MGPNode(null, move, resultingState);
+                const node: SixNode = new MGPNode(MGPOptional.empty(), move, resultingState);
                 expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
             });
             it('Should consider winner player who align 6 pieces (playing in the middle)', () => {
@@ -277,7 +278,7 @@ describe('SixRules', () => {
                 const resultingState: SixState = rules.applyLegalMove(move, state, status);
                 const expectedState: SixState = SixState.fromRepresentation(expectedBoard, 11);
                 expect(resultingState.pieces.equals(expectedState.pieces)).toBeTrue();
-                const node: SixNode = new MGPNode(null, move, resultingState);
+                const node: SixNode = new MGPNode(MGPOptional.empty(), move, resultingState);
                 expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
             });
             it('Should consider winner player who draw a circle/hexagon of his pieces', () => {
@@ -304,7 +305,7 @@ describe('SixRules', () => {
                 const resultingState: SixState = rules.applyLegalMove(move, state, status);
                 const expectedState: SixState = SixState.fromRepresentation(expectedBoard, 10);
                 expect(resultingState.pieces.equals(expectedState.pieces)).toBeTrue();
-                const node: SixNode = new MGPNode(null, move, resultingState);
+                const node: SixNode = new MGPNode(MGPOptional.empty(), move, resultingState);
                 expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
             });
             it('Should consider winner player who draw a triangle of his pieces (corner drop)', () => {
@@ -329,7 +330,7 @@ describe('SixRules', () => {
                 const resultingState: SixState = rules.applyLegalMove(move, state, status);
                 const expectedState: SixState = SixState.fromRepresentation(expectedBoard, 12);
                 expect(resultingState.pieces.equals(expectedState.pieces)).toBeTrue();
-                const node: SixNode = new MGPNode(null, move, resultingState);
+                const node: SixNode = new MGPNode(MGPOptional.empty(), move, resultingState);
                 expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
             });
             it('Should consider winner player who draw a triangle of his pieces (edge drop)', () => {
@@ -354,7 +355,7 @@ describe('SixRules', () => {
                 const resultingState: SixState = rules.applyLegalMove(move, state, status);
                 const expectedState: SixState = SixState.fromRepresentation(expectedBoard, 12);
                 expect(resultingState.pieces.equals(expectedState.pieces)).toBeTrue();
-                const node: SixNode = new MGPNode(null, move, resultingState);
+                const node: SixNode = new MGPNode(MGPOptional.empty(), move, resultingState);
                 expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
             });
             it('Should consider winner player who draw a circle/hexagon of his pieces (coverage remix)', () => {
@@ -379,7 +380,7 @@ describe('SixRules', () => {
                 const resultingState: SixState = rules.applyLegalMove(move, state, status);
                 const expectedState: SixState = SixState.fromRepresentation(expectedBoard, 10);
                 expect(resultingState.pieces.equals(expectedState.pieces)).toBeTrue();
-                const node: SixNode = new MGPNode(null, move, resultingState);
+                const node: SixNode = new MGPNode(MGPOptional.empty(), move, resultingState);
                 expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
             });
         });
@@ -407,7 +408,7 @@ describe('SixRules', () => {
                 const expectedState: SixState =
                     SixState.fromRepresentation(expectedBoard, 44);
                 expect(resultingState.pieces.equals(expectedState.pieces)).toBeTrue();
-                const node: SixNode = new MGPNode(null, move, resultingState);
+                const node: SixNode = new MGPNode(MGPOptional.empty(), move, resultingState);
                 expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
             });
             it('Should consider looser PLAYER.ONE when he drop bellow 6 pieces on phase two', () => {
@@ -433,7 +434,7 @@ describe('SixRules', () => {
                 const expectedState: SixState =
                     SixState.fromRepresentation(expectedBoard, 43);
                 expect(resultingState.pieces.equals(expectedState.pieces)).toBeTrue();
-                const node: SixNode = new MGPNode(null, move, resultingState);
+                const node: SixNode = new MGPNode(MGPOptional.empty(), move, resultingState);
                 expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
             });
             it('Should consider winner Player who has more pieces than opponent and both have less than 6', () => {
@@ -453,7 +454,7 @@ describe('SixRules', () => {
                 const resultingState: SixState = rules.applyLegalMove(move, state, status);
                 const expectedState: SixState = SixState.fromRepresentation(expectedBoard, 41);
                 expect(resultingState.pieces.equals(expectedState.pieces)).toBeTrue();
-                const node: SixNode = new MGPNode(null, move, resultingState);
+                const node: SixNode = new MGPNode(MGPOptional.empty(), move, resultingState);
                 expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
             });
             it('Should consider looser Player who has less pieces than opponent and both have less than 6', () => {
@@ -474,7 +475,7 @@ describe('SixRules', () => {
                 const resultingState: SixState = rules.applyLegalMove(move, state, status);
                 const expectedState: SixState = SixState.fromRepresentation(expectedBoard, 43);
                 expect(resultingState.pieces.equals(expectedState.pieces)).toBeTrue();
-                const node: SixNode = new MGPNode(null, move, resultingState);
+                const node: SixNode = new MGPNode(MGPOptional.empty(), move, resultingState);
                 expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
             });
         });

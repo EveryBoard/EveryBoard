@@ -12,6 +12,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { TutorialFailure } from './TutorialFailure';
 import { GameService } from 'src/app/services/GameService';
 import { AbstractGameState } from 'src/app/jscaip/GameState';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 @Component({
     selector: 'app-tutorial-game-wrapper',
@@ -91,7 +92,7 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
         const currentStep: TutorialStep = this.steps[this.stepIndex];
         this.currentMessage = currentStep.instruction;
         this.currentReason = null;
-        this.gameComponent.rules.node = new MGPNode(null, currentStep.previousMove, currentStep.state);
+        this.gameComponent.rules.node = new MGPNode(MGPOptional.empty(), currentStep.previousMove, currentStep.state);
         this.gameComponent.updateBoard();
         this.cdr.detectChanges();
     }

@@ -4,6 +4,7 @@ import { PylosMove } from '../PylosMove';
 import { PylosOrderedMinimax } from '../PylosOrderedMinimax';
 import { PylosState } from '../PylosState';
 import { PylosNode, PylosRules } from '../PylosRules';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('PylosOrderedMinimax', () => {
 
@@ -19,7 +20,7 @@ describe('PylosOrderedMinimax', () => {
     it('should delegate getListMoves to PylosMinimax', () => {
         spyOn(PylosMinimax, 'getListMoves').and.callThrough();
 
-        minimax.getListMoves(new PylosNode(null, null, PylosState.getInitialState()));
+        minimax.getListMoves(new PylosNode(MGPOptional.empty(), null, PylosState.getInitialState()));
 
         expect(PylosMinimax.getListMoves).toHaveBeenCalledTimes(1);
     });

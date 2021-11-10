@@ -114,7 +114,7 @@ export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixS
         this.disconnecteds = this.getDisconnected();
     }
     private getDisconnected(): Coord[] {
-        const oldPieces: Coord[] = Utils.getNonNullable(this.rules.node.mother).gameState.pieces.listKeys();
+        const oldPieces: Coord[] = this.rules.node.mother.get().gameState.pieces.listKeys();
         const newPieces: Coord[] = this.rules.node.gameState.pieces.listKeys();
         const disconnecteds: Coord[] =[];
         for (const oldPiece of oldPieces) {

@@ -113,9 +113,9 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         return caseContent.isPlayer() || this.wasOpponent(x, y);
     }
     private wasOpponent(x: number, y: number): boolean {
-        const mother: CoerceoNode | null = this.rules.node.mother;
-        return mother != null &&
-               mother.gameState.getPieceAtXY(x, y).is(mother.gameState.getCurrentOpponent());
+        const mother: MGPOptional<CoerceoNode> = this.rules.node.mother;
+        return mother.isPresent() &&
+               mother.get().gameState.getPieceAtXY(x, y).is(mother.get().gameState.getCurrentOpponent());
     }
     public getPyramidClass(x: number, y: number): string {
         const caseContent: FourStatePiece = this.board[y][x];
@@ -134,11 +134,11 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     }
     private wasRemoved(x: number, y: number): boolean {
         const caseContent: FourStatePiece = this.board[y][x];
-        const mother: CoerceoNode | null = this.rules.node.mother;
-        if (caseContent === FourStatePiece.NONE && mother != null) {
-            const previousContent: FourStatePiece = mother.gameState.getPieceAtXY(x, y);
+        const mother: MGPOptional<CoerceoNode> = this.rules.node.mother;
+        if (caseContent === FourStatePiece.NONE && mother.isPresent()) {
+            const previousContent: FourStatePiece = mother.get().gameState.getPieceAtXY(x, y);
             return previousContent === FourStatePiece.EMPTY ||
-                   previousContent.is(mother.gameState.getCurrentPlayer());
+                   previousContent.is(mother.get().gameState.getCurrentPlayer());
         } else {
             return false;
         }
@@ -189,10 +189,10 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         }
     }
     public lastTurnWasTilesExchange(player: number): boolean {
-        if (this.rules.node.mother == null) {
+        if (this.rules.node.mother.isAbsent()) {
             return false;
         }
-        const previousTiles: number = this.rules.node.mother.gameState.tiles[player];
+        const previousTiles: number = this.rules.node.mother.get().gameState.tiles[player];
         return previousTiles > this.tiles[player];
     }
 }

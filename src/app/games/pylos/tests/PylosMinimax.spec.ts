@@ -5,6 +5,7 @@ import { PylosMove } from '../PylosMove';
 import { PylosState } from '../PylosState';
 import { PylosNode, PylosRules } from '../PylosRules';
 import { PylosMinimax } from '../PylosMinimax';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('PylosMinimax:', () => {
 
@@ -44,7 +45,7 @@ describe('PylosMinimax:', () => {
         ];
 
         const state: PylosState = new PylosState(board, 0);
-        const node: PylosNode = new PylosNode(null, null, state);
+        const node: PylosNode = new PylosNode(MGPOptional.empty(), null, state);
         expect(minimax.getListMoves(node).length).toBe(31);
     });
 
@@ -69,6 +70,6 @@ describe('PylosMinimax:', () => {
 
         const state: PylosState = new PylosState(board, 0);
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(2, 2, 1), []);
-        expect(minimax.getBoardValue(new MGPNode(null, move, state)).value).toBe(0);
+        expect(minimax.getBoardValue(new MGPNode(MGPOptional.empty(), move, state)).value).toBe(0);
     });
 });

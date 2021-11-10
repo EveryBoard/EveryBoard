@@ -78,7 +78,7 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
         this.canPass = phase !== Phase.FINISHED;
     }
     private showCaptures(): void {
-        const previousState: GoState = Utils.getNonNullable(this.rules.node.mother).gameState;
+        const previousState: GoState = this.rules.node.mother.get().gameState;
         this.captures = [];
         for (let y: number = 0; y < this.board.length; y++) {
             for (let x: number = 0; x < this.board[0].length; x++) {

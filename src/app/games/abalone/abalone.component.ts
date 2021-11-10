@@ -89,7 +89,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         }
     }
     private showPushingMove(move: AbaloneMove): void {
-        const previousState: AbaloneState = Utils.getNonNullable(this.rules.node.mother).gameState;
+        const previousState: AbaloneState = this.rules.node.mother.get().gameState;
         let moved: Coord = move.coord;
         this.moveds = [moved];
         moved = moved.getNext(move.dir);

@@ -3,6 +3,7 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { AbaloneDummyMinimax } from '../AbaloneDummyMinimax';
 import { AbaloneState } from '../AbaloneState';
 import { AbaloneNode, AbaloneRules } from '../AbaloneRules';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('AbaloneDummyMinimax', () => {
 
@@ -18,7 +19,7 @@ describe('AbaloneDummyMinimax', () => {
     it('should propose all non-suicidal moved at first turn, there is 42', () => {
         // given initial node
         const initialState: AbaloneState = AbaloneState.getInitialState();
-        const initialNode: AbaloneNode = new AbaloneNode(null, null, initialState);
+        const initialNode: AbaloneNode = new AbaloneNode(MGPOptional.empty(), null, initialState);
 
         // then we should have 42 moves
         expect(minimax.getListMoves(initialNode).length).toEqual(44);
@@ -37,7 +38,7 @@ describe('AbaloneDummyMinimax', () => {
             [_, _, _, _, _, N, N, N, N],
         ];
         const initialState: AbaloneState = new AbaloneState(board, 0);
-        const initialNode: AbaloneNode = new AbaloneNode(null, null, initialState);
+        const initialNode: AbaloneNode = new AbaloneNode(MGPOptional.empty(), null, initialState);
 
         // then we should have 42 moves
         expect(minimax.getListMoves(initialNode).length).toEqual(15);

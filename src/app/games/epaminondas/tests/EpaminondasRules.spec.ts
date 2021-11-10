@@ -13,6 +13,7 @@ import { expectToBeOngoing, expectToBeVictoryFor } from 'src/app/jscaip/tests/Ru
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { AttackEpaminondasMinimax } from '../AttackEpaminondasMinimax';
 import { PositionalEpaminondasMinimax } from '../PositionalEpaminondasMinimax';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('EpaminondasRules:', () => {
 
@@ -303,7 +304,7 @@ describe('EpaminondasRules:', () => {
             const resultingState: EpaminondasState = rules.applyLegalMove(move, state, status);
             const expectedState: EpaminondasState = new EpaminondasState(expectedBoard, 2);
             expect(resultingState).toEqual(expectedState);
-            const node: EpaminondasNode = new MGPNode(null, move, expectedState);
+            const node: EpaminondasNode = new MGPNode(MGPOptional.empty(), move, expectedState);
             expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
         });
         it('Should declare second player winner if his pawn survive one turn on first line', () => {
@@ -342,7 +343,7 @@ describe('EpaminondasRules:', () => {
             const resultingState: EpaminondasState = rules.applyLegalMove(move, state, status);
             const expectedState: EpaminondasState = new EpaminondasState(expectedBoard, 1);
             expect(resultingState).toEqual(expectedState);
-            const node: EpaminondasNode = new MGPNode(null, move, expectedState);
+            const node: EpaminondasNode = new MGPNode(MGPOptional.empty(), move, expectedState);
             expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
         });
         it('Should not consider first player winner if both player have one piece on their landing line', () => {
@@ -381,7 +382,7 @@ describe('EpaminondasRules:', () => {
             const resultingState: EpaminondasState = rules.applyLegalMove(move, state, status);
             const expectedState: EpaminondasState = new EpaminondasState(expectedBoard, 2);
             expect(resultingState).toEqual(expectedState);
-            const node: EpaminondasNode = new MGPNode(null, move, expectedState);
+            const node: EpaminondasNode = new MGPNode(MGPOptional.empty(), move, expectedState);
             expectToBeOngoing(rules, node, minimaxes);
         });
         it('Should declare player zero winner when last soldier of opponent has been captured', () => {
@@ -420,7 +421,7 @@ describe('EpaminondasRules:', () => {
             const resultingState: EpaminondasState = rules.applyLegalMove(move, state, status);
             const expectedState: EpaminondasState = new EpaminondasState(expectedBoard, 1);
             expect(resultingState).toEqual(expectedState);
-            const node: EpaminondasNode = new MGPNode(null, move, expectedState);
+            const node: EpaminondasNode = new MGPNode(MGPOptional.empty(), move, expectedState);
             expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
         });
         it('Should declare player one winner when last soldier of opponent has been captured', () => {
@@ -459,7 +460,7 @@ describe('EpaminondasRules:', () => {
             const resultingState: EpaminondasState = rules.applyLegalMove(move, state, status);
             const expectedState: EpaminondasState = new EpaminondasState(expectedBoard, 2);
             expect(resultingState).toEqual(expectedState);
-            const node: EpaminondasNode = new MGPNode(null, move, expectedState);
+            const node: EpaminondasNode = new MGPNode(MGPOptional.empty(), move, expectedState);
             expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
         });
     });

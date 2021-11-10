@@ -4,6 +4,7 @@ import { ReversiMove } from '../ReversiMove';
 import { ReversiState } from '../ReversiState';
 import { ReversiNode, ReversiRules } from '../ReversiRules';
 import { Table } from 'src/app/utils/ArrayUtils';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('ReversiMinimax', () => {
 
@@ -38,7 +39,7 @@ describe('ReversiMinimax', () => {
             [_, _, _, _, _, _, _, _],
         ];
         const state: ReversiState = new ReversiState(board, 2);
-        rules.node = new ReversiNode(null, null, state);
+        rules.node = new ReversiNode(MGPOptional.empty(), null, state);
         const bestMove: ReversiMove = rules.node.findBestMove(2, minimax);
         expect(bestMove.equals(new ReversiMove(0, 0)));
     });
@@ -54,7 +55,7 @@ describe('ReversiMinimax', () => {
             [_, _, _, _, O, _, _, _],
         ];
         const state: ReversiState = new ReversiState(board, 1);
-        rules.node = new ReversiNode(null, null, state);
+        rules.node = new ReversiNode(MGPOptional.empty(), null, state);
         const moves: ReversiMove[] = minimax.getListMoves(rules.node);
         expect(moves.length).toBe(1);
         expect(moves[0]).toBe(ReversiMove.PASS);
@@ -72,7 +73,7 @@ describe('ReversiMinimax', () => {
                 [_, _, _, _, _, _, _, X],
             ];
             const state: ReversiState = new ReversiState(board, 1);
-            const node: ReversiNode = new ReversiNode(null, null, state);
+            const node: ReversiNode = new ReversiNode(MGPOptional.empty(), null, state);
             const boardValue: number = minimax.getBoardValue(node).value;
             expect(boardValue).toBe(16);
         });
@@ -88,7 +89,7 @@ describe('ReversiMinimax', () => {
                 [_, _, _, _, _, _, _, _],
             ];
             const state: ReversiState = new ReversiState(board, 1);
-            const node: ReversiNode = new ReversiNode(null, null, state);
+            const node: ReversiNode = new ReversiNode(MGPOptional.empty(), null, state);
             const boardValue: number = minimax.getBoardValue(node).value;
             expect(boardValue).toBe(4);
         });
@@ -104,7 +105,7 @@ describe('ReversiMinimax', () => {
                 [_, _, _, _, _, _, _, _],
             ];
             const state: ReversiState = new ReversiState(board, 1);
-            const node: ReversiNode = new ReversiNode(null, null, state);
+            const node: ReversiNode = new ReversiNode(MGPOptional.empty(), null, state);
             const boardValue: number = minimax.getBoardValue(node).value;
             expect(boardValue).toBe(1);
         });

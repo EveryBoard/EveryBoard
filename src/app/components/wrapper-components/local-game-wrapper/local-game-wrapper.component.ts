@@ -114,9 +114,9 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         return this.gameComponent.rules.node.gameState.turn > 0;
     }
     public takeBack(): void {
-        this.gameComponent.rules.node = Utils.getNonNullable(this.gameComponent.rules.node.mother);
+        this.gameComponent.rules.node = this.gameComponent.rules.node.mother.get();
         if (this.isAITurn()) {
-            this.gameComponent.rules.node = Utils.getNonNullable(this.gameComponent.rules.node.mother);
+            this.gameComponent.rules.node = this.gameComponent.rules.node.mother.get();
         }
         this.gameComponent.updateBoard();
     }
@@ -125,7 +125,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
     }
     public restartGame(): void {
         const state: AbstractGameState = this.gameComponent.rules.stateType['getInitialState']();
-        this.gameComponent.rules.node = new MGPNode(null, null, state);
+        this.gameComponent.rules.node = new MGPNode(MGPOptional.empty(), null, state);
         this.gameComponent.updateBoard();
         this.endGame = false;
         this.winner = null;

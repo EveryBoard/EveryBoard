@@ -461,7 +461,7 @@ describe('GoRules:', () => {
             [_, O, O, O, _],
         ];
         const state: GoState = new GoState(board, [0, 0], 0, MGPOptional.empty(), Phase.PASSED);
-        rules.node = new GoNode(null, null, state);
+        rules.node = new GoNode(MGPOptional.empty(), null, state);
         expect(rules.choose(GoMove.PASS)).toBeTrue();
         expect(rules.node.gameState.phase).toBe(Phase.COUNTING);
         expect(rules.choose(new GoMove(4, 2))).toBeTrue();

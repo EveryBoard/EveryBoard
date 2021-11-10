@@ -41,6 +41,7 @@ import { USE_EMULATOR as USE_DATABASE_EMULATOR } from '@angular/fire/database';
 import { USE_EMULATOR as USE_AUTH_EMULATOR } from '@angular/fire/auth';
 import { USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/functions';
 import { environment } from 'src/environments/environment';
+import { MGPOptional } from '../MGPOptional';
 
 @Component({})
 export class BlankComponent {}
@@ -248,9 +249,10 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     {
         if (previousState !== undefined) {
             this.gameComponent.rules.node =
-                new MGPNode(new MGPNode(null, null, previousState), previousMove || null, state);
+                new MGPNode(MGPOptional.of(new MGPNode(MGPOptional.empty(), null, previousState)),
+                            previousMove || null, state);
         } else {
-            this.gameComponent.rules.node = new MGPNode(null, previousMove || null, state);
+            this.gameComponent.rules.node = new MGPNode(MGPOptional.empty(), previousMove || null, state);
         }
         this.gameComponent.updateBoard();
         this.forceChangeDetection();
@@ -422,8 +424,10 @@ export function expectSecondStateToBeBetterThanFirst(weakerState: AbstractGameSt
                                                      minimax: Minimax<Move, AbstractGameState>)
 : void
 {
-    const weakValue: number = minimax.getBoardValue(new MGPNode(null, weakMove, weakerState)).value;
-    const strongValue: number = minimax.getBoardValue(new MGPNode(null, strongMove, strongerState)).value;
+    const weakValue: number =
+        minimax.getBoardValue(new MGPNode(MGPOptional.empty(), weakMove, weakerState)).value;
+    const strongValue: number =
+        minimax.getBoardValue(new MGPNode(MGPOptional.empty(), strongMove, strongerState)).value;
     expect(weakValue).toBeLessThan(strongValue);
 }
 export function expectStateToBePreVictory(state: AbstractGameState,
@@ -433,7 +437,7 @@ export function expectStateToBePreVictory(state: AbstractGameState,
 : void
 {
     // TODO: replace that and refuse it to reach develop! expectToBeVictoryFor is the way
-    const value: number = minimax.getBoardNumericValue(new MGPNode(null, previousMove, state));
+    const value: number = minimax.getBoardNumericValue(new MGPNode(MGPOptional.empty(), previousMove, state));
     const expectedValue: number = player.getPreVictory();
     expect(value).toBe(expectedValue);
 }

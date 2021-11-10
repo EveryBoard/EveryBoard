@@ -1,6 +1,7 @@
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { PentagoMinimax } from '../PentagoMinimax';
 import { PentagoMove } from '../PentagoMove';
 import { PentagoRules } from '../PentagoRules';
@@ -32,7 +33,7 @@ describe('PentagoMinimax', () => {
             [_, _, _, _, _, _],
         ];
         const state: PentagoState = new PentagoState(board, 1);
-        rules.node = new MGPNode(rules.node, PentagoMove.rotationless(0, 0), state, minimax);
+        rules.node = new MGPNode(MGPOptional.of(rules.node), PentagoMove.rotationless(0, 0), state, minimax);
 
         /*
          * when calculating the list of moves, then there should be 105
@@ -57,7 +58,7 @@ describe('PentagoMinimax', () => {
             [_, _, X, _, _, _],
         ];
         const state: PentagoState = new PentagoState(board, 8);
-        rules.node = new MGPNode(rules.node, null, state, minimax);
+        rules.node = new MGPNode(MGPOptional.of(rules.node), null, state, minimax);
 
         /*
          * when calculating the list of moves
@@ -80,7 +81,7 @@ describe('PentagoMinimax', () => {
             [_, _, O, _, _, _],
         ];
         const state: PentagoState = new PentagoState(board, 4);
-        rules.node = new MGPNode(rules.node, null, state, minimax);
+        rules.node = new MGPNode(MGPOptional.of(rules.node), null, state, minimax);
 
         /*
          * when calculating the list of moves

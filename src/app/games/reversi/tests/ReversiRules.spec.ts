@@ -8,6 +8,7 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { ReversiLegalityStatus } from '../ReversiLegalityStatus';
 import { expectToBeDraw, expectToBeVictoryFor } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Minimax } from 'src/app/jscaip/Minimax';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('ReversiRules', () => {
 
@@ -61,7 +62,7 @@ describe('ReversiRules', () => {
             [_, _, _, _, O, _, _, _],
         ];
         const state: ReversiState = new ReversiState(board, 1);
-        rules.node = new ReversiNode(null, null, state);
+        rules.node = new ReversiNode(MGPOptional.empty(), null, state);
         expect(rules.choose(ReversiMove.PASS)).toBeTrue();
     });
     describe('Endgames', () => {
@@ -93,7 +94,7 @@ describe('ReversiRules', () => {
             const resultingState: ReversiState = rules.applyLegalMove(move, state, status);
             const expectedState: ReversiState = new ReversiState(expectedBoard, 60);
             expect(resultingState).toEqual(expectedState);
-            expectToBeVictoryFor(rules, new MGPNode(null, move, expectedState), Player.ONE, minimaxes);
+            expectToBeVictoryFor(rules, new MGPNode(MGPOptional.empty(), move, expectedState), Player.ONE, minimaxes);
         });
         it('Should consider the player with the more point the winner at the end (Player.ZERO remix)', () => {
             const board: Table<Player> = [
@@ -123,7 +124,7 @@ describe('ReversiRules', () => {
             const resultingState: ReversiState = rules.applyLegalMove(move, state, status);
             const expectedState: ReversiState = new ReversiState(expectedBoard, 61);
             expect(resultingState).toEqual(expectedState);
-            expectToBeVictoryFor(rules, new MGPNode(null, move, expectedState), Player.ZERO, minimaxes);
+            expectToBeVictoryFor(rules, new MGPNode(MGPOptional.empty(), move, expectedState), Player.ZERO, minimaxes);
         });
         it('Should recognize draws', () => {
             const board: Table<Player> = [
@@ -153,7 +154,7 @@ describe('ReversiRules', () => {
             const resultingState: ReversiState = rules.applyLegalMove(move, state, status);
             const expectedState: ReversiState = new ReversiState(expectedBoard, 61);
             expect(resultingState).toEqual(expectedState);
-            const node: ReversiNode = new MGPNode(null, move, resultingState);
+            const node: ReversiNode = new MGPNode(MGPOptional.empty(), move, resultingState);
             expectToBeDraw(rules, node, minimaxes);
         });
     });

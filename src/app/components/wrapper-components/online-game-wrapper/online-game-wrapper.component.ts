@@ -540,12 +540,12 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
     }
     public takeBackTo(turn: number): void {
-        this.gameComponent.rules.node = Utils.getNonNullable(this.gameComponent.rules.node.mother);
+        this.gameComponent.rules.node = this.gameComponent.rules.node.mother.get();
         if (this.gameComponent.rules.node.gameState.turn === turn) {
             this.switchPlayer();
         } else {
             // Second time to make sure it end up on player's turn
-            this.gameComponent.rules.node = Utils.getNonNullable(this.gameComponent.rules.node.mother);
+            this.gameComponent.rules.node = this.gameComponent.rules.node.mother.get();
             const player: Player = Player.fromTurn(turn);
             this.resetChronoFor(player);
         }

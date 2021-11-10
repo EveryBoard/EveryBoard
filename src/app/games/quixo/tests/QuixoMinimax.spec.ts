@@ -6,6 +6,7 @@ import { QuixoMinimax } from '../QuixoMinimax';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { QuixoRules } from '../QuixoRules';
 import { Table } from 'src/app/utils/ArrayUtils';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('QuixoMinimax:', () => {
 
@@ -29,6 +30,6 @@ describe('QuixoMinimax:', () => {
         ];
         const state: QuixoState = new QuixoState(board, 0);
         const move: QuixoMove = new QuixoMove(0, 2, Orthogonal.RIGHT);
-        expect(minimax.getBoardValue(new MGPNode(null, move, state)).value).toEqual(-1);
+        expect(minimax.getBoardValue(new MGPNode(MGPOptional.empty(), move, state)).value).toEqual(-1);
     });
 });

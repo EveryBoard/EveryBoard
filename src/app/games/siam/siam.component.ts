@@ -55,7 +55,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         this.lastMove = this.rules.node.move;
         if (this.lastMove) {
             this.movedPieces = this.rules.isLegal(this.lastMove,
-                                                  Utils.getNonNullable(this.rules.node.mother).gameState).moved;
+                                                  this.rules.node.mother.get().gameState).moved;
         } else {
             this.movedPieces = [];
         }

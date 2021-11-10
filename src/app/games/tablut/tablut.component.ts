@@ -73,7 +73,7 @@ export class TablutComponent extends RectangularGameComponent<TablutRules,
         }
     }
     private showPreviousMove(move: TablutMove): void {
-        const previousBoard: Table<TablutCase> = Utils.getNonNullable(this.rules.node.mother).gameState.board;
+        const previousBoard: Table<TablutCase> = this.rules.node.mother.get().gameState.board;
         const OPPONENT: Player = this.rules.node.gameState.getCurrentOpponent();
         for (const orthogonal of Orthogonal.ORTHOGONALS) {
             const captured: Coord = move.end.getNext(orthogonal, 1);

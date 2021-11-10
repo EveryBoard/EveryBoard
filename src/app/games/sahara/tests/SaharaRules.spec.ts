@@ -10,6 +10,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { expectToBeVictoryFor } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('SaharaRules', () => {
 
@@ -84,7 +85,7 @@ describe('SaharaRules', () => {
             [N, N, X, O, _, _, _, X, O, N, N],
         ];
         const state: SaharaState = new SaharaState(board, 4);
-        const node: SaharaNode = new SaharaNode(null, null, state);
+        const node: SaharaNode = new SaharaNode(MGPOptional.empty(), null, state);
         expectToBeVictoryFor(rules, node, Player.ONE, [new SaharaMinimax(rules, '')]);
     });
 });

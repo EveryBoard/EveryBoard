@@ -6,6 +6,7 @@ import { EpaminondasState } from '../EpaminondasState';
 import { EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
 import { PositionalEpaminondasMinimax } from '../PositionalEpaminondasMinimax';
 import { expectSecondStateToBeBetterThanFirst } from 'src/app/utils/tests/TestUtils.spec';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('PositionalEpaminondasMinimax:', () => {
 
@@ -38,7 +39,7 @@ describe('PositionalEpaminondasMinimax:', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 1);
-        rules.node = new EpaminondasNode(null, null, state);
+        rules.node = new EpaminondasNode(MGPOptional.empty(), null, state);
         const expectedMove: EpaminondasMove = new EpaminondasMove(9, 1, 4, 4, Direction.LEFT);
         const bestMove: EpaminondasMove = rules.node.findBestMove(1, minimax);
 

@@ -91,11 +91,11 @@ export class MGPNode<R extends Rules<M, S, L>,
     : MGPNode<R, M, S, L, U>
     {
         MGPNode.ruler = gameRuler; // for all nodes, gameRuler is the ruler
-        return new MGPNode<R, M, S, L, U>(null, null, initialBoard);
+        return new MGPNode<R, M, S, L, U>(MGPOptional.empty(), null, initialBoard);
     }
     // instance methods:
 
-    constructor(public readonly mother: MGPNode<R, M, S, L, U> | null,
+    constructor(public readonly mother: MGPOptional<MGPNode<R, M, S, L, U>>,
                 public readonly move: M | null,
                 public readonly gameState: S,
                 public minimaxCreator?: Minimax<M, S, L, U>)
@@ -122,7 +122,7 @@ export class MGPNode<R extends Rules<M, S, L>,
                                                                     minimax,
                                                                     random);
         while (bestDescendant.gameState.turn > this.gameState.turn + 1) {
-            bestDescendant = Utils.getNonNullable(bestDescendant.mother);
+            bestDescendant = bestDescendant.mother.get();
             readingDepth--;
         }
         MGPNodeStats.minimaxTime += new Date().getTime() - startTime;
@@ -205,7 +205,7 @@ export class MGPNode<R extends Rules<M, S, L>,
                 Utils.handleError(`The minimax has accepted an illegal move, this should not happen.`);
             }
             const state: S = minimax.ruler.applyLegalMove(move, this.gameState, status);
-            child = new MGPNode(this, move, state, minimax);
+            child = new MGPNode(MGPOptional.of(this), move, state, minimax);
             Utils.getNonNullable(this.childs).push(child);
         }
         return child;
@@ -221,8 +221,8 @@ export class MGPNode<R extends Rules<M, S, L>,
     }
     public getInitialNode(): MGPNode<R, M, S, L, U> {
         let almightyMom: MGPNode<R, M, S, L, U> = this;
-        while (almightyMom.mother != null) {
-            almightyMom = almightyMom.mother;
+        while (almightyMom.mother.isPresent()) {
+            almightyMom = almightyMom.mother.get();
         }
         return almightyMom;
     }
@@ -241,17 +241,17 @@ export class MGPNode<R extends Rules<M, S, L>,
     }
     public myToString(): string {
         let genealogy: string = '';
-        let node: MGPNode<R, M, S, L, U> | null = this;
-        if (node.mother == null) {
+        let node: MGPNode<R, M, S, L, U> = this;
+        if (node.mother.isPresent() === false) {
             const turn: number = node.gameState.turn;
             return 'NodeInitial: ' + turn;
         }
-        do {
+        while (node.mother.isPresent()) {
             const move: string = node.move == null ? ' ' : ' > ' + node.move.toString() + '> ';
             const turn: number = node.gameState.turn;
             genealogy = move + turn + ' ' + genealogy;
-            node = node.mother;
-        } while (node != null);
+            node = node.mother.get();
+        }
         return 'Node: ' + genealogy;
     }
     public hasMoves(): boolean {

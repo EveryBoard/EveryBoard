@@ -65,7 +65,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         this.scores = MGPOptional.of(DvonnRules.getScores(this.state));
     }
     private calculateDisconnecteds(): void {
-        const previousState: DvonnState = Utils.getNonNullable(this.rules.node.mother).gameState;
+        const previousState: DvonnState = this.rules.node.mother.get().gameState;
         const state: DvonnState = this.rules.node.gameState;
         for (let y: number = 0; y < state.board.length; y++) {
             for (let x: number = 0; x < state.board[y].length; x++) {

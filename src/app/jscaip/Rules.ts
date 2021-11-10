@@ -5,6 +5,7 @@ import { Type } from '@angular/core';
 import { assert, display } from '../utils/utils';
 import { Player } from './Player';
 import { AbstractGameState } from './GameState';
+import { MGPOptional } from '../utils/MGPOptional';
 
 export class GameStatus {
 
@@ -86,7 +87,7 @@ export abstract class Rules<M extends Move,
         }
 
         const resultingState: AbstractGameState = this.applyLegalMove(move, this.node.gameState, status);
-        const son: MGPNode<Rules<M, S, L>, M, S, L> = new MGPNode(this.node,
+        const son: MGPNode<Rules<M, S, L>, M, S, L> = new MGPNode(MGPOptional.of(this.node),
                                                                   move,
                                                                   resultingState as S);
         this.node = son;
