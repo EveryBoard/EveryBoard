@@ -10,6 +10,7 @@ import { AbstractGameState } from 'src/app/jscaip/GameState';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { Player } from 'src/app/jscaip/Player';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 @Component({
     selector: 'app-local-game-wrapper',
@@ -74,23 +75,24 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
     }
     public proposeAIToPlay(): void {
         // check if ai's turn has come, if so, make her start after a delay
-        const playingMinimax: Minimax<Move, AbstractGameState> | null = this.getPlayingAI();
-        if (playingMinimax != null) {
+        const playingMinimax: MGPOptional<Minimax<Move, AbstractGameState>> = this.getPlayingAI();
+        if (playingMinimax.isPresent()) {
             // bot's turn
             setTimeout(() => {
-                this.doAIMove(playingMinimax);
+                this.doAIMove(playingMinimax.get());
             }, this.botTimeOut);
         }
     }
-    private getPlayingAI(): Minimax<Move, AbstractGameState> | null {
+    private getPlayingAI(): MGPOptional<Minimax<Move, AbstractGameState>> {
         const turn: number = this.gameComponent.rules.node.gameState.turn % 2;
         if (this.gameComponent.rules.getGameStatus(this.gameComponent.rules.node).isEndGame) {
             // No AI is playing when the game is finished
-            return null;
+            return MGPOptional.empty();
         }
-        return this.gameComponent.availableMinimaxes.find((a: Minimax<Move, AbstractGameState>) => {
-            return a.name === this.players[turn];
-        }) || null;
+        return MGPOptional.ofNullable(
+            this.gameComponent.availableMinimaxes.find((a: Minimax<Move, AbstractGameState>) => {
+                return a.name === this.players[turn];
+            }));
     }
     public doAIMove(playingMinimax: Minimax<Move, AbstractGameState>): void {
         // called only when it's AI's Turn
