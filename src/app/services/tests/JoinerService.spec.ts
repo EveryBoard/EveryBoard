@@ -21,10 +21,9 @@ describe('JoinerService', () => {
         expect(service).toBeTruthy();
     }));
     it('read should be delegated to JoinerDAO', fakeAsync(async() => {
-        await dao.set('myJoinerId', JoinerMocks.WITH_FIRST_CANDIDATE.doc);
-        spyOn(dao, 'read');
+        spyOn(dao, 'read').and.resolveTo(JoinerMocks.WITH_FIRST_CANDIDATE.doc);
         await service.readJoinerById('myJoinerId');
-        expect(dao.read).toHaveBeenCalled();
+        expect(dao.read).toHaveBeenCalledWith('myJoinerId');
     }));
     it('set should be delegated to JoinerDAO', fakeAsync(async() => {
         spyOn(dao, 'set');
