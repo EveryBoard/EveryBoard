@@ -50,7 +50,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules, GipfMove, G
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.scores = [0, 0];
+        this.scores = MGPOptional.of([0, 0]);
         this.rules = new GipfRules(GipfState);
         this.availableMinimaxes = [
             new GipfMinimax(this.rules, 'GipfMinimax'),
@@ -58,7 +58,6 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules, GipfMove, G
         this.encoder = GipfMove.encoder;
         this.tutorial = new GipfTutorial().tutorial;
         this.CASE_SIZE = 40;
-        this.showScore = true;
         this.constructedState = this.rules.node.gameState;
         this.hexaLayout = new HexaLayout(this.CASE_SIZE * 1.50,
                                          new Coord(this.CASE_SIZE * 2, 0),
@@ -234,7 +233,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules, GipfMove, G
                           placement: GipfPlacement,
                           finalCaptures: ReadonlyArray<GipfCapture>): Promise<MGPValidation> {
         const move: GipfMove = new GipfMove(placement, initialCaptures, finalCaptures);
-        const validity: MGPValidation = await this.chooseMove(move, this.rules.node.gameState, null, null);
+        const validity: MGPValidation = await this.chooseMove(move, this.rules.node.gameState, this.scores.get());
         return validity;
     }
     public cancelMoveAttempt(): void {

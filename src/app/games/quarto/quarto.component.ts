@@ -70,13 +70,13 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
                 // on last turn user won't be able to click on a piece to give
                 // thereby we must put his piece in hand right
                 const chosenMove: QuartoMove = new QuartoMove(x, y, QuartoPiece.NONE);
-                return this.chooseMove(chosenMove, this.rules.node.gameState, null, null);
+                return this.chooseMove(chosenMove, this.rules.node.gameState);
             } else if (this.pieceToGive === QuartoPiece.NONE) {
                 return MGPValidation.SUCCESS; // the user has just chosen his coord
             } else {
                 // the user has already chosen his piece before his coord
                 const chosenMove: QuartoMove = new QuartoMove(x, y, this.pieceToGive);
-                return this.chooseMove(chosenMove, this.rules.node.gameState, null, null);
+                return this.chooseMove(chosenMove, this.rules.node.gameState);
             }
         } else {
             // the user chose an occupied place of the board, so an illegal move, so we cancel all
@@ -97,7 +97,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         } else {
             // the user has chosen the coord before the piece
             const chosenMove: QuartoMove = new QuartoMove(this.chosen.x, this.chosen.y, this.pieceToGive);
-            return this.chooseMove(chosenMove, this.rules.node.gameState, null, null);
+            return this.chooseMove(chosenMove, this.rules.node.gameState);
         }
     }
     private hideLastMove(): void {

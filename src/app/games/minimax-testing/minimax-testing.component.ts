@@ -35,7 +35,7 @@ export class MinimaxTestingComponent extends RectangularGameComponent<MinimaxTes
         }
 
         const chosenMove: MinimaxTestingMove = MinimaxTestingMove.RIGHT;
-        return this.chooseMove(chosenMove, this.rules.node.gameState, null, null);
+        return this.chooseMove(chosenMove, this.rules.node.gameState);
     }
     public async chooseDown(): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#click_down');
@@ -44,7 +44,7 @@ export class MinimaxTestingComponent extends RectangularGameComponent<MinimaxTes
         }
 
         const chosenMove: MinimaxTestingMove = MinimaxTestingMove.DOWN;
-        return this.chooseMove(chosenMove, this.rules.node.gameState, null, null);
+        return this.chooseMove(chosenMove, this.rules.node.gameState);
     }
     public updateBoard(): void {
         const state: MinimaxTestingState = this.rules.node.gameState;

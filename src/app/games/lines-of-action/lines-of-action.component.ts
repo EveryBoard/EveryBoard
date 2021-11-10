@@ -57,7 +57,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
                 const move: MGPFallible<LinesOfActionMove> =
                     LinesOfActionMove.of(this.selected.get(), new Coord(x, y));
                 if (move.isSuccess()) {
-                    return this.chooseMove(move.get(), this.rules.node.gameState, null, null);
+                    return this.chooseMove(move.get(), this.rules.node.gameState);
                 } else {
                     return this.cancelMove(LinesOfActionFailure.INVALID_DIRECTION());
                 }

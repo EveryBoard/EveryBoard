@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+ import { Component } from '@angular/core';
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';
 import { PylosMove } from 'src/app/games/pylos/PylosMove';
 import { PylosState } from 'src/app/games/pylos/PylosState';
@@ -106,7 +106,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     }
     private async tryMove(move: PylosMove, state: PylosState): Promise<MGPValidation> {
         this.cancelMove();
-        return this.chooseMove(move, state, null, null);
+        return this.chooseMove(move, state);
     }
     public cancelMoveAttempt(): void {
         this.chosenStartingCoord = null;

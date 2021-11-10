@@ -15,6 +15,7 @@ import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisp
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { DvonnTutorial } from './DvonnTutorial';
 import { Utils } from 'src/app/utils/utils';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 @Component({
     selector: 'app-dvonn',
@@ -39,9 +40,8 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         this.encoder = DvonnMove.encoder;
         this.tutorial = new DvonnTutorial().tutorial;
         this.CASE_SIZE = 30;
-        this.showScore = true;
         this.canPass = false;
-        this.scores = DvonnRules.getScores(this.rules.node.gameState);
+        this.scores = MGPOptional.of(DvonnRules.getScores(this.rules.node.gameState));
         this.hexaLayout = new HexaLayout(this.CASE_SIZE * 1.50,
                                          new Coord(-this.CASE_SIZE, this.CASE_SIZE * 2),
                                          PointyHexaOrientation.INSTANCE);
@@ -62,7 +62,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
             this.hideLastMove();
         }
         this.canPass = this.rules.canOnlyPass(this.state);
-        this.scores = DvonnRules.getScores(this.state);
+        this.scores = MGPOptional.of(DvonnRules.getScores(this.state));
     }
     private calculateDisconnecteds(): void {
         const previousState: DvonnState = Utils.getNonNullOrFail(this.rules.node.mother).gameState;
@@ -88,7 +88,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
     }
     public async pass(): Promise<MGPValidation> {
         if (this.canPass) {
-            return await this.chooseMove(DvonnMove.PASS, this.rules.node.gameState, null, null);
+            return await this.chooseMove(DvonnMove.PASS, this.rules.node.gameState);
         } else {
             return MGPValidation.failure(RulesFailure.CANNOT_PASS());
         }
@@ -123,7 +123,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         const chosenDestination: Coord = new Coord(x, y);
         // By construction, only valid moves can be created
         const move: DvonnMove = DvonnMove.of(chosenPiece, chosenDestination);
-        return this.chooseMove(move, this.rules.node.gameState, null, null);
+        return this.chooseMove(move, this.rules.node.gameState);
     }
     public getPieceClasses(stack: DvonnPieceStack): string[] {
         if (stack.containsSource() && stack.getSize() === 1) {

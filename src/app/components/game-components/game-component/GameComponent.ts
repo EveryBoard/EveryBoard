@@ -11,6 +11,7 @@ import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/Tut
 import { AbstractGameState } from 'src/app/jscaip/GameState';
 import { Utils } from 'src/app/utils/utils';
 import { of } from 'rxjs';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 
 /**
@@ -41,9 +42,7 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
 
     public canPass: boolean;
 
-    public showScore: boolean;
-
-    public scores: [number, number] | null = null;
+    public scores: MGPOptional<[number, number]> = MGPOptional.empty();
 
     public imagesLocation: string = 'assets/images/';
 
@@ -53,8 +52,7 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
 
     public chooseMove: (move: M,
                         state: S,
-                        scorePlayerZero: number | null,
-                        scorePlayerOne: number | null) => Promise<MGPValidation>;
+                        scores?: [number, number]) => Promise<MGPValidation>;
 
     public canUserPlay: (element: string) => MGPValidation;
 

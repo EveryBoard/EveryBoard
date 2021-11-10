@@ -297,16 +297,15 @@ export class GameService implements OnDestroy {
     }
     public async updateDBBoard(partId: string,
                                encodedMove: JSONValueWithoutArray,
-                               scorePlayerZero: number | null,
-                               scorePlayerOne: number | null,
                                msToSubstract: [number, number],
+                               scores?: [number, number],
                                notifyDraw?: boolean,
                                winner?: string,
                                loser?: string)
     : Promise<void>
     {
         display(GameService.VERBOSE, { gameService_updateDBBoard: {
-            partId, encodedMove, scorePlayerZero, scorePlayerOne, msToSubstract, notifyDraw, winner, loser } });
+            partId, encodedMove, scores, msToSubstract, notifyDraw, winner, loser } });
 
         const part: IPart = Utils.getNonNullOrFail(await this.partDao.read(partId)); // TODO: optimise this
         const turn: number = part.turn + 1;
@@ -315,11 +314,16 @@ export class GameService implements OnDestroy {
         let update: Partial<IPart> = {
             listMoves,
             turn,
-            scorePlayerZero,
-            scorePlayerOne,
             request: null,
             lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
         };
+        if (scores !== undefined) {
+            update = {
+                ...update,
+                scorePlayerZero: scores[0],
+                scorePlayerOne: scores[1],
+            };
+        }
         if (msToSubstract[0] > 0) {
             update = {
                 ...update,

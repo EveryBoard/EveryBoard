@@ -74,7 +74,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
             if (this.chosenPiece != null) {
                 const chosenMove: EncapsuleMove =
                     EncapsuleMove.fromDrop(this.chosenPiece, clickedCoord);
-                return this.chooseMove(chosenMove, this.rules.node.gameState, null, null);
+                return this.chooseMove(chosenMove, this.rules.node.gameState);
             } else if (state.getPieceAt(clickedCoord).belongsTo(state.getCurrentPlayer()) === false) {
                 return this.cancelMove(EncapsuleFailure.INVALID_PIECE_SELECTED());
             } else {
@@ -87,7 +87,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
             } else {
                 const chosenMove: EncapsuleMove =
                     EncapsuleMove.fromMove(this.chosenCoord, clickedCoord);
-                return this.chooseMove(chosenMove, this.rules.node.gameState, null, null);
+                return this.chooseMove(chosenMove, this.rules.node.gameState);
             }
         }
     }

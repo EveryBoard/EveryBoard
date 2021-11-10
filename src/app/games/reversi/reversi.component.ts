@@ -13,6 +13,7 @@ import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisp
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { ReversiTutorial } from './ReversiTutorial';
 import { Utils } from 'src/app/utils/utils';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 @Component({
     selector: 'app-reversi',
@@ -27,20 +28,18 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
 {
     public NONE: Player = Player.NONE;
     public lastMove: Coord = new Coord(-2, -2);
-    public scores: [number, number];
 
     private captureds: Coord[] = [];
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.scores = [2, 2];
+        this.scores = MGPOptional.of([2, 2]);
         this.rules = new ReversiRules(ReversiState);
         this.availableMinimaxes = [
             new ReversiMinimax(this.rules, 'ReversiMinimax'),
         ];
         this.encoder = ReversiMove.encoder;
         this.tutorial = new ReversiTutorial().tutorial;
-        this.showScore = true;
         this.canPass = false;
         this.updateBoard();
     }
@@ -50,7 +49,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
             return this.cancelMove(clickValidity.getReason());
         }
         const chosenMove: ReversiMove = new ReversiMove(x, y);
-        return await this.chooseMove(chosenMove, this.rules.node.gameState, this.scores[0], this.scores [1]);
+        return await this.chooseMove(chosenMove, this.rules.node.gameState, this.scores.get());
     }
     public updateBoard(): void {
         const state: ReversiState = this.rules.node.gameState;
@@ -64,7 +63,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
             this.lastMove = new Coord(-2, -2);
         }
 
-        this.scores = state.countScore();
+        this.scores = MGPOptional.of(state.countScore());
         this.canPass = ReversiRules.playerCanOnlyPass(state);
     }
     private showPreviousMove() {

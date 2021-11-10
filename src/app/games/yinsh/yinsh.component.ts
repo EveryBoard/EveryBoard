@@ -93,7 +93,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules, YinshMove
     };
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.scores = [0, 0];
+        this.scores = MGPOptional.of([0, 0]);
         this.rules = new YinshRules(YinshState);
         this.availableMinimaxes = [
             new YinshMinimax(this.rules, 'YinshMinimax'),
@@ -103,7 +103,6 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules, YinshMove
         this.hexaLayout = new HexaLayout(YinshComponent.RING_OUTER_SIZE * 1.50,
                                          new Coord(YinshComponent.RING_OUTER_SIZE * 2, 0),
                                          FlatHexaOrientation.INSTANCE);
-        this.showScore = true;
         this.constructedState = this.rules.node.gameState;
         this.constructedState.allCoords().forEach((coord: Coord): void => {
             if (this.viewInfo.caseInfo[coord.y] == null) {
@@ -428,7 +427,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules, YinshMove
                                               this.moveStart.get(),
                                               this.moveEnd,
                                               this.finalCaptures);
-        const validity: MGPValidation = await this.chooseMove(move, this.rules.node.gameState, null, null);
+        const validity: MGPValidation = await this.chooseMove(move, this.rules.node.gameState, this.scores.get());
         return validity;
     }
     private async selectMoveStart(coord: Coord): Promise<MGPValidation> {

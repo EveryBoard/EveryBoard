@@ -72,8 +72,8 @@ export abstract class GameWrapper {
         // Shortent by T<S = Truc>
 
         this.gameComponent.chooseMove = // so that when the game component do a move
-            (m: Move, s: AbstractGameState, s0: number | null, s1: number | null): Promise<MGPValidation> => {
-                return this.receiveValidMove(m, s, s0, s1);
+            (m: Move, s: AbstractGameState, scores?: [number, number]): Promise<MGPValidation> => {
+                return this.receiveValidMove(m, s, scores);
             };
         // the game wrapper can then act accordingly to the chosen move.
         this.gameComponent.canUserPlay =
@@ -96,16 +96,14 @@ export abstract class GameWrapper {
     }
     public async receiveValidMove(move: Move,
                                   state: AbstractGameState,
-                                  scorePlayerZero: number | null,
-                                  scorePlayerOne: number | null): Promise<MGPValidation>
+                                  scores?: [number, number]): Promise<MGPValidation>
     {
         const LOCAL_VERBOSE: boolean = false;
         display(GameWrapper.VERBOSE || LOCAL_VERBOSE, {
             gameWrapper_receiveValidMove_AKA_chooseMove: {
                 move,
                 state,
-                scorePlayerZero,
-                scorePlayerOne,
+                scores,
             },
         });
         if (!this.isPlayerTurn()) {
@@ -120,11 +118,11 @@ export abstract class GameWrapper {
             return legality.legal;
         }
         this.gameComponent.cancelMoveAttempt();
-        await this.onLegalUserMove(move, scorePlayerZero, scorePlayerOne);
+        await this.onLegalUserMove(move, scores);
         display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveValidMove says: valid move legal');
         return MGPValidation.SUCCESS;
     }
-    public abstract onLegalUserMove(move: Move, scorePlayerZero: number | null, scorePlayerOne: number | null)
+    public abstract onLegalUserMove(move: Move, scores?: [number, number])
     : Promise<void>;
 
     public onUserClick(_elementName: string): MGPValidation {

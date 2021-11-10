@@ -388,14 +388,13 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
         this.stopCountdownsFor(player);
     }
-    public notifyDraw(encodedMove: JSONValueWithoutArray, scorePlayerZero: number | null, scorePlayerOne: number | null)
+    public notifyDraw(encodedMove: JSONValueWithoutArray, scores?: [number, number])
     : void {
         this.endGame = true;
         this.gameService.updateDBBoard(this.currentPartId,
                                        encodedMove,
-                                       scorePlayerZero,
-                                       scorePlayerOne,
                                        [0, 0],
+                                       scores,
                                        true);
     }
     public notifyTimeoutVictory(victoriousPlayer: string, loser: string): void {
@@ -407,9 +406,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 
         this.gameService.notifyTimeout(this.currentPartId, victoriousPlayer, loser);
     }
-    public notifyVictory(encodedMove: JSONValueWithoutArray,
-                         scorePlayerZero: number | null,
-                         scorePlayerOne: number | null)
+    public notifyVictory(encodedMove: JSONValueWithoutArray, scores?: [number, number])
     : void {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.notifyVictory');
 
@@ -428,9 +425,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 
         this.gameService.updateDBBoard(this.currentPartId,
                                        encodedMove,
-                                       scorePlayerZero,
-                                       scorePlayerOne,
                                        [0, 0],
+                                       scores,
                                        false,
                                        this.currentPart.getWinner(),
                                        this.currentPart.getLoser());
@@ -591,31 +587,30 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 this.userService.observeUserByUsername(opponentName, callback);
         }
     }
-    public async onLegalUserMove(move: Move, scorePlayerZero: number | null, scorePlayerOne: number | null)
+    public async onLegalUserMove(move: Move, scores?: [number, number])
     : Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'dans OnlineGameWrapperComponent.onLegalUserMove');
         if (this.isOpponentWaitingForTakeBackResponse()) {
             this.gameComponent.message('You must answer to take back request');
         } else {
-            return this.updateDBBoard(move, scorePlayerZero, scorePlayerOne, this.msToSubstract);
+            return this.updateDBBoard(move, this.msToSubstract, scores);
         }
     }
     public async updateDBBoard(move: Move,
-                               scorePlayerZero: number | null,
-                               scorePlayerOne: number | null,
-                               msToSubstract: [number, number])
+                               msToSubstract: [number, number],
+                               scores?: [number, number])
     : Promise<void>
     {
         const encodedMove: JSONValueWithoutArray = this.gameComponent.encoder.encodeMove(move);
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.updateDBBoard(' + move.toString() +
-                                                    ', ' + scorePlayerZero + ', ' + scorePlayerOne + ')');
+                                                    ', ' + scores + ')');
         this.gameComponent.rules.choose(move);
         const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.rules.node);
         if (gameStatus.isEndGame) {
             if (gameStatus === GameStatus.DRAW) {
-                this.notifyDraw(encodedMove, scorePlayerZero, scorePlayerOne);
+                this.notifyDraw(encodedMove, scores);
             } else {
-                this.notifyVictory(encodedMove, scorePlayerZero, scorePlayerOne);
+                this.notifyVictory(encodedMove, scores);
             }
         } else {
             if (this.previousUpdateWasATakeBack === true) {
@@ -623,9 +618,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             }
             return this.gameService.updateDBBoard(this.currentPartId,
                                                   encodedMove,
-                                                  scorePlayerZero,
-                                                  scorePlayerOne,
-                                                  msToSubstract);
+                                                  msToSubstract,
+                                                  scores);
         }
     }
     public resign(): void {

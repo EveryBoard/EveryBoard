@@ -312,8 +312,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     public async expectMoveSuccess(elementName: string,
                                    move: Move,
                                    state?: AbstractGameState,
-                                   scoreZero?: number,
-                                   scoreOne?: number)
+                                   scores?: [number, number])
     : Promise<void>
     {
         const element: DebugElement = this.findElement(elementName);
@@ -327,30 +326,21 @@ export class ComponentTestUtils<T extends MyGameComponent> {
             this.fixture.detectChanges();
             expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
             this.canUserPlaySpy.calls.reset();
-            expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move,
-                                                                moveState,
-                                                                this.getScore(scoreZero),
-                                                                this.getScore(scoreOne));
+            if (scores) {
+                expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move, moveState, scores);
+            } else {
+                expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move, moveState);
+            }
             this.chooseMoveSpy.calls.reset();
-            expect(this.onLegalUserMoveSpy).toHaveBeenCalledOnceWith(move,
-                                                                     this.getScore(scoreZero),
-                                                                     this.getScore(scoreOne));
+            expect(this.onLegalUserMoveSpy).toHaveBeenCalledOnceWith(move, scores);
             this.onLegalUserMoveSpy.calls.reset();
-        }
-    }
-    private getScore(score?: number): number | null {
-        if (score === undefined) {
-            return null;
-        } else {
-            return score;
         }
     }
     public async expectMoveFailure(elementName: string,
                                    reason: string,
                                    move: Move,
                                    state?: AbstractGameState,
-                                   scoreZero?: number,
-                                   scoreOne?: number)
+                                   scores?: [number, number])
     : Promise<void>
     {
         const element: DebugElement = this.findElement(elementName);
@@ -364,8 +354,11 @@ export class ComponentTestUtils<T extends MyGameComponent> {
             this.fixture.detectChanges();
             expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
             this.canUserPlaySpy.calls.reset();
-            expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(
-                move, moveState, this.getScore(scoreZero), this.getScore(scoreOne));
+            if (scores) {
+                expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move, moveState, scores);
+            } else {
+                expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move, moveState);
+            }
             this.chooseMoveSpy.calls.reset();
             expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(reason);
             this.cancelMoveSpy.calls.reset();
@@ -385,7 +378,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     }
     public expectElementNotToExist(elementName: string): void {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(elementName + ' should not to exist').toBeNull();
+        expect(element).withContext(elementName + ' should not exist').toBeNull();
     }
     public expectElementToExist(elementName: string): DebugElement {
         const element: DebugElement = this.findElement(elementName);

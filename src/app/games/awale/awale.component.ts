@@ -11,6 +11,7 @@ import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisp
 import { AwaleFailure } from './AwaleFailure';
 import { AwaleTutorial } from './AwaleTutorial';
 import { Utils } from 'src/app/utils/utils';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 @Component({
     selector: 'app-awale-component',
@@ -29,24 +30,22 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
 
     private moved: Coord[] = [];
 
-    public scores: [number, number];
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.scores = [0, 0];
+        this.scores = MGPOptional.of([0, 0]);
         this.rules = new AwaleRules(AwaleState);
         this.availableMinimaxes = [
             new AwaleMinimax(this.rules, 'AwaleMinimax'),
         ];
         this.encoder = AwaleMove.encoder;
         this.tutorial = new AwaleTutorial().tutorial;
-        this.showScore = true;
 
         this.updateBoard();
     }
     public updateBoard(): void {
         const state: AwaleState = this.rules.node.gameState;
-        this.scores = state.getCapturedCopy();
+        this.scores = MGPOptional.of(state.getCapturedCopy());
         this.hidePreviousMove();
         const lastMove: AwaleMove | null = this.rules.node.move;
 
@@ -92,7 +91,7 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
         // we stop showing him the last move
         const chosenMove: AwaleMove = AwaleMove.from(x);
         // let's confirm on java-server-side that the move is legal
-        return this.chooseMove(chosenMove, this.rules.node.gameState, this.scores[0], this.scores[1]);
+        return this.chooseMove(chosenMove, this.rules.node.gameState, this.scores.get());
     }
     public getCaseClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);

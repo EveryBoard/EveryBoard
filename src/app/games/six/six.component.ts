@@ -208,7 +208,7 @@ export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixS
             const cuttingMove: SixMove = SixMove.fromCut(Utils.getNonNullOrFail(this.selectedPiece),
                                                          this.chosenLanding,
                                                          piece);
-            return this.chooseMove(cuttingMove, this.state, null, null);
+            return this.chooseMove(cuttingMove, this.state);
         }
     }
     public async onNeighboorClick(neighboor: Coord): Promise<MGPValidation> {
@@ -217,7 +217,7 @@ export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixS
             return this.cancelMove(clickValidity.getReason());
         }
         if (this.state.turn < 40) {
-            return this.chooseMove(SixMove.fromDrop(neighboor), this.state, null, null);
+            return this.chooseMove(SixMove.fromDrop(neighboor), this.state);
         } else {
             if (this.selectedPiece == null) {
                 return this.cancelMove(SixFailure.CAN_NO_LONGER_DROP());
@@ -230,7 +230,7 @@ export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixS
                     this.showCuttable();
                     return MGPValidation.SUCCESS;
                 } else {
-                    return this.chooseMove(deplacement, this.state, null, null);
+                    return this.chooseMove(deplacement, this.state);
                 }
             }
         }

@@ -29,8 +29,8 @@
                         </select>
                     </div>
                     <p id="scoreOne"
-                       *ngIf="gameComponent.scores"
-                       class="block" i18n>{{ gameComponent.scores[0] }} points</p>
+                       *ngIf="gameComponent.scores.isPresent()"
+                       class="block" i18n>{{ gameComponent.scores.get()[0] }} points</p>
                 </div>
                 <div class="column is-6">
                     <div class="select">
@@ -54,8 +54,8 @@
                         </select>
                     </div>
                     <p id="scoreZero"
-                       *ngIf="gameComponent.scores"
-                       class="block" i18n>{{ gameComponent.scores[1] }} points</p>
+                       *ngIf="gameComponent.scores.isPresent()"
+                       class="block" i18n>{{ gameComponent.scores.get()[1] }} points</p>
                 </div>
             </div>
             <div class="block" id="gameResult" *ngIf="endGame">

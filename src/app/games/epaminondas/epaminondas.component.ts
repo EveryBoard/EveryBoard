@@ -349,7 +349,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     public tryMove(move: EpaminondasMove): Promise<MGPValidation> {
         const state: EpaminondasState = this.rules.node.gameState;
         this.cancelMove();
-        return this.chooseMove(move, state, null, null);
+        return this.chooseMove(move, state);
     }
     public getPieceClasses(x: number, y: number): string[] {
         const player: string = this.getPlayerClass(this.board[y][x]);

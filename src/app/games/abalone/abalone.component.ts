@@ -20,6 +20,7 @@ import { AbaloneMove } from './AbaloneMove';
 import { AbaloneLegalityStatus, AbaloneRules } from './AbaloneRules';
 import { AbaloneTutorial } from './AbaloneTutorial';
 import { Utils } from 'src/app/utils/utils';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class HexaDirArrow {
     public constructor(public startCenter: Coord,
@@ -47,7 +48,6 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
 
     public selecteds: Coord[] = [];
 
-    public scores: [number, number] = [0, 0];
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -57,7 +57,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         ];
         this.encoder = AbaloneMove.encoder;
         this.tutorial = new AbaloneTutorial().tutorial;
-        this.showScore = true;
+        this.scores = MGPOptional.of([0, 0]);
         this.CASE_SIZE = 30;
         this.hexaLayout = new HexaLayout(this.CASE_SIZE,
                                          new Coord(- 8 * this.CASE_SIZE, 2 * this.CASE_SIZE),
@@ -72,7 +72,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
             this.showPreviousMove(this.rules.node.move);
         }
         this.hexaBoard = this.rules.node.gameState.getCopiedBoard();
-        this.scores = this.rules.node.gameState.getScores();
+        this.scores = MGPOptional.of(this.rules.node.gameState.getScores());
     }
     private hidePreviousMove(): void {
         this.moveds = [];
@@ -301,7 +301,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
             const lastPiece: Coord = this.selecteds[this.selecteds.length - 1];
             move = AbaloneMove.fromDoubleCoord(firstPiece, lastPiece, dir).get();
         }
-        return this.chooseMove(move, state, this.scores[0], this.scores[1]);
+        return this.chooseMove(move, state, this.scores.get());
     }
     public async onCaseClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#case_' + x + '_' + y);

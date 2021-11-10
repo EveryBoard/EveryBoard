@@ -35,11 +35,9 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
 
     public GoPiece: typeof GoPiece = GoPiece;
 
-    public scores: [number, number]; // can't be null
-
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.scores = [0, 0];
+        this.scores = MGPOptional.of([0, 0]);
         this.rules = new GoRules(GoState);
         this.availableMinimaxes = [
             new GoMinimax(this.rules, 'GoMinimax'),
@@ -47,7 +45,6 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
         this.encoder = GoMove.encoder;
         this.tutorial = new GoTutorial().tutorial;
         this.canPass = true;
-        this.showScore = true;
         this.updateBoard();
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
@@ -58,7 +55,7 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
         this.last = new Coord(-1, -1); // now the user stop try to do a move
         // we stop showing him the last move
         const resultlessMove: GoMove = new GoMove(x, y);
-        return this.chooseMove(resultlessMove, this.rules.node.gameState, this.scores[0], this.scores[1]);
+        return this.chooseMove(resultlessMove, this.rules.node.gameState, this.scores.get());
     }
     public updateBoard(): void {
         display(GoComponent.VERBOSE, 'updateBoard');
@@ -69,7 +66,7 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
         const phase: Phase = state.phase;
 
         this.board = state.getCopiedBoard();
-        this.scores = state.getCapturedCopy();
+        this.scores = MGPOptional.of(state.getCapturedCopy());
 
         this.last = move ? move.coord : null;
         this.ko = koCoord.getOrNull();

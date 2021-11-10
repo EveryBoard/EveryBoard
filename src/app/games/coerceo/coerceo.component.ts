@@ -39,7 +39,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.scores = [0, 0];
+        this.scores = MGPOptional.of([0, 0]);
         this.rules = new CoerceoRules(CoerceoState);
         this.availableMinimaxes = [
             new CoerceoMinimax(this.rules, 'Normal'),
@@ -48,13 +48,12 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         this.encoder = CoerceoMove.encoder;
         this.tutorial = new CoerceoTutorial().tutorial;
         this.CASE_SIZE = 70;
-        this.showScore = true;
         this.updateBoard();
     }
     public updateBoard(): void {
         this.chosenCoord = MGPOptional.empty();
         this.state = this.rules.node.gameState;
-        this.scores = this.state.captures;
+        this.scores = MGPOptional.of(this.state.captures);
         this.tiles = this.state.tiles;
         const move: CoerceoMove | null = this.rules.node.move;
         if (move == null) {
@@ -89,7 +88,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         const clickedPiece: FourStatePiece = this.state.getPieceAt(coord);
         if (clickedPiece.is(this.state.getCurrentOpponent())) {
             const move: CoerceoMove = CoerceoMove.fromTilesExchange(coord);
-            return this.chooseMove(move, this.state, this.state.captures[0], this.state.captures[1]);
+            return this.chooseMove(move, this.state, this.state.captures);
         } else if (clickedPiece.is(this.state.getCurrentPlayer())) {
             this.chosenCoord = MGPOptional.of(coord);
             this.showHighlight();
@@ -104,7 +103,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
             return MGPValidation.SUCCESS;
         } else if (this.highlights.some((c: Coord) => c.equals(coord))) {
             const move: CoerceoMove = CoerceoMove.fromCoordToCoord(this.chosenCoord.get(), coord);
-            return this.chooseMove(move, this.state, this.state.captures[0], this.state.captures[1]);
+            return this.chooseMove(move, this.state, this.state.captures);
         } else {
             return this.cancelMove(CoerceoFailure.INVALID_DISTANCE());
         }

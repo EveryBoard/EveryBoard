@@ -112,7 +112,7 @@ export class TablutComponent extends RectangularGameComponent<TablutRules,
             return this.cancelMove(error.message);
         }
         this.cancelMove();
-        return await this.chooseMove(move, this.rules.node.gameState, null, null);
+        return await this.chooseMove(move, this.rules.node.gameState);
     }
     public choosePiece(x: number, y: number): MGPValidation {
         display(TablutComponent.VERBOSE, 'TablutComponent.choosePiece');

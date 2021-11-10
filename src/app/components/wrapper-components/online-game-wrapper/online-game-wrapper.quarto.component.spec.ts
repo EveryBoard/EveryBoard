@@ -160,7 +160,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
     async function doMove(move: QuartoMove, legal: boolean): Promise<MGPValidation> {
         const state: QuartoState = wrapper.gameComponent.rules.node.gameState as QuartoState;
-        const result: MGPValidation = await wrapper.gameComponent.chooseMove(move, state, null, null);
+        const result: MGPValidation = await wrapper.gameComponent.chooseMove(move, state);
         expect(result.isSuccess())
             .withContext('move should be legal but here: ' + result.reason)
             .toEqual(legal);
@@ -315,8 +315,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             turn: 1,
             // remaining times not updated on first turn of the component
             request: null,
-            scorePlayerZero: null,
-            scorePlayerOne: null,
             lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
         };
         // TODO: should receive somewhere some kind of Timestamp written by DB
@@ -363,8 +361,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
             winner: 'creator',
             loser: 'firstCandidate',
-            scorePlayerZero: null,
-            scorePlayerOne: null,
             result: MGPResult.VICTORY.value,
         });
         componentTestUtils.expectElementToExist('#winnerIndicator');
@@ -530,8 +526,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                     turn: 3,
                     remainingMsForOne: 1799999,
                     request: null,
-                    scorePlayerZero: null,
-                    scorePlayerOne: null,
                     lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
                 });
 
@@ -756,8 +750,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                     turn: 1,
                     listMoves: [ALTERNATIVE_MOVE_ENCODED],
                     request: null,
-                    scorePlayerZero: null,
-                    scorePlayerOne: null,
                     lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
                 });
                 tick(wrapper.joiner.maximalMoveDuration * 1000);
@@ -820,8 +812,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                     turn: 1,
                     listMoves: [ALTERNATIVE_MOVE_ENCODED],
                     request: null,
-                    scorePlayerZero: null,
-                    scorePlayerOne: null,
                     lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
                 });
                 tick(wrapper.joiner.maximalMoveDuration * 1000);

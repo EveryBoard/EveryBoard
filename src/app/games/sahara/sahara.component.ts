@@ -67,7 +67,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
             } catch (error) {
                 return this.cancelMove(error.message);
             }
-            return await this.chooseMove(newMove, this.rules.node.gameState, null, null);
+            return await this.chooseMove(newMove, this.rules.node.gameState);
         }
     }
     private choosePiece(x: number, y: number): MGPValidation {

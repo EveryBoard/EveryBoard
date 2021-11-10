@@ -10,6 +10,7 @@ import { DebugElement } from '@angular/core';
 import { P4Minimax } from 'src/app/games/p4/P4Minimax';
 import { P4Rules } from 'src/app/games/p4/P4Rules';
 import { GameStatus } from 'src/app/jscaip/Rules';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('LocalGameWrapperComponent', () => {
 
@@ -69,12 +70,11 @@ describe('LocalGameWrapperComponent', () => {
         expect(componentTestUtils.findElement('#draw')).withContext('Draw indicator should be present').toBeTruthy();
     }));
     it('should show score if needed', fakeAsync(async() => {
-        componentTestUtils.getComponent().showScore = false;
+        componentTestUtils.getComponent().scores = MGPOptional.empty();
         componentTestUtils.expectElementNotToExist('#scoreZero');
         componentTestUtils.expectElementNotToExist('#scoreOne');
 
-        componentTestUtils.getComponent().showScore = true;
-        componentTestUtils.getComponent()['scores'] = [0, 0];
+        componentTestUtils.getComponent().scores = MGPOptional.of([0, 0]);
         componentTestUtils.forceChangeDetection();
 
         componentTestUtils.expectElementToExist('#scoreZero');

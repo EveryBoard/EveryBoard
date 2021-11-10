@@ -132,7 +132,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
                                             Utils.getNonNullOrFail(this.chosenDirection),
                                             Utils.getNonNullOrFail(this.chosenOrientation));
         this.cancelMove();
-        return await this.chooseMove(move, this.rules.node.gameState, null, null);
+        return await this.chooseMove(move, this.rules.node.gameState);
     }
     public isMountain(piece: SiamPiece): boolean {
         return piece === SiamPiece.MOUNTAIN;
