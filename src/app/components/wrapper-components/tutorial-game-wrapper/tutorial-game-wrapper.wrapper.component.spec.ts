@@ -1094,7 +1094,11 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 const status: LegalityStatus = rules.isLegal(move, step.state);
                 expect(status.legal.reason).toBeNull();
                 const state: AbstractGameState = rules.applyLegalMove(move, step.state, status);
-                expect(Utils.getNonNullable(step.predicate)(move, state)).toEqual(validation);
+                if (step.isPredicate()) {
+                    expect(Utils.getNonNullable(step.predicate)(move, state)).toEqual(validation);
+                } else {
+                    throw new Error('This test expects only predicate steps');
+                }
             }
         }));
         it('Should make sure all solutionMove are legal', fakeAsync(async() => {
@@ -1107,13 +1111,13 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 const rules: Rules<Move, AbstractGameState> = gameComponent.rules;
                 const steps: TutorialStep[] = gameComponent.tutorial;
                 for (const step of steps) {
-                    if (step.solutionMove != null) {
-                        const status: LegalityStatus = rules.isLegal(step.solutionMove, step.state);
+                    if (step.hasSolution()) {
+                        const status: LegalityStatus = rules.isLegal(step.getSolution(), step.state);
                         expect(status.legal.reason).toBeNull();
                         if (step.isPredicate()) {
                             const state: AbstractGameState =
-                                rules.applyLegalMove(step.solutionMove, step.state, status);
-                            expect(Utils.getNonNullable(step.predicate)(step.solutionMove, state))
+                                rules.applyLegalMove(step.getSolution(), step.state, status);
+                            expect(Utils.getNonNullable(step.predicate)(step.getSolution(), state))
                                 .toEqual(MGPValidation.SUCCESS);
                         }
                     }

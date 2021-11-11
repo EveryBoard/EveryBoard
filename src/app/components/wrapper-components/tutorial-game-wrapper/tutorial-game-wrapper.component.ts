@@ -25,9 +25,9 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
 
     public COMPLETED_TUTORIAL_MESSAGE: string = $localize`Congratulations, you completed the tutorial.`;
 
-    public steps: TutorialStep[];
+    public steps: TutorialStep[] = [];
     public successfulSteps: number = 0;
-    public stepIndex: number = 0;
+    public stepIndex: number = -1;
     public currentMessage: string | null;
     public currentReason: string | null;
     public moveAttemptMade: boolean = false;
@@ -44,22 +44,15 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
         super(componentFactoryResolver, actRoute, authenticationService);
         display(TutorialGameWrapperComponent.VERBOSE, 'TutorialGameWrapperComponent.constructor');
     }
-    private getCompletionArray(): boolean[] {
-        return this.steps.map(() => {
-            return false;
-        });
-    }
     public getNumberOfSteps(): number {
-        if (this.steps == null) {
-            return 0;
-        }
         return this.steps.length;
     }
     public getCurrentStepTitle(): string {
-        if (this.steps == null) {
+        if (this.steps.length > 0) {
+            return this.steps[this.stepIndex].title;
+        } else {
             return '';
         }
-        return this.steps[this.stepIndex].title;
     }
     public ngAfterViewInit(): void {
         display(TutorialGameWrapperComponent.VERBOSE, 'TutorialGameWrapperComponent.ngAfterViewInit');
@@ -79,6 +72,11 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
         this.successfulSteps = 0;
         this.showStep(0);
     }
+    private getCompletionArray(): boolean[] {
+        return this.steps.map(() => {
+            return false;
+        });
+    }
     public changeStep(event: Event): void {
         const target: HTMLSelectElement = event.target as HTMLSelectElement;
         this.showStep(Number.parseInt(target.value, 10));
@@ -92,7 +90,8 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
         const currentStep: TutorialStep = this.steps[this.stepIndex];
         this.currentMessage = currentStep.instruction;
         this.currentReason = null;
-        this.gameComponent.rules.node = new MGPNode(MGPOptional.empty(), currentStep.previousMove, currentStep.state);
+        this.gameComponent.rules.node =
+            new MGPNode(MGPOptional.empty(), currentStep.previousMove.getOrNull(), currentStep.state);
         this.gameComponent.updateBoard();
         this.cdr.detectChanges();
     }
@@ -112,15 +111,16 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
             } else {
                 this.currentReason = moveValidity.getReason();
             }
-        } else if (currentStep.isAnyMove() ||
-            Utils.getNonNullable(currentStep.acceptedMoves).some((m: Move) => m.equals(move))) {
-            display(TutorialGameWrapperComponent.VERBOSE,
-                    'tutorialGameWrapper.onLegalUserMove: awaited move!');
+        } else if (currentStep.isAnyMove()) {
+            display(TutorialGameWrapperComponent.VERBOSE, 'tutorialGameWrapper.onLegalUserMove: awaited move!');
+            this.showStepSuccess();
+        } else if (currentStep.isMove() && currentStep.acceptedMoves.some((m: Move) => m.equals(move))) {
+            display(TutorialGameWrapperComponent.VERBOSE, 'tutorialGameWrapper.onLegalUserMove: awaited move!');
             this.showStepSuccess();
         } else {
             display(TutorialGameWrapperComponent.VERBOSE,
                     'tutorialGameWrapper.onLegalUserMove: not the move that was awaited.');
-            this.currentReason = currentStep.failureMessage;
+            this.currentReason = currentStep.getFailureMessage();
         }
         this.cdr.detectChanges();
     }
@@ -144,7 +144,7 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
                 this.currentMessage = Utils.getNonNullable(currentStep.failureMessage);
             }
             return MGPValidation.SUCCESS;
-        } else if (currentStep.isMove() || currentStep.isPredicate()) {
+        } else if (currentStep.isMove() || currentStep.isPredicate() || currentStep.isAnyMove()) {
             setTimeout(() => {
                 this.cdr.detectChanges();
             }, 10);
@@ -165,7 +165,7 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
     private showStepSuccess(): void {
         display(TutorialGameWrapperComponent.VERBOSE, 'tutorialGameWrapperComponent.showStepSuccess()');
         const currentStep: TutorialStep = this.steps[this.stepIndex];
-        this.currentMessage = currentStep.successMessage;
+        this.currentMessage = currentStep.getSuccessMessage();
         this.stepFinished[this.stepIndex] = true;
         this.updateSuccessCount();
     }
@@ -197,18 +197,16 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
     public async showSolution(): Promise<void> {
         display(TutorialGameWrapperComponent.VERBOSE, 'tutorialGameWrapper.showSolution()');
         const step: TutorialStep = this.steps[this.stepIndex];
-        let awaitedMove: Move;
-        if (step.acceptedMoves != null && step.acceptedMoves.length > 0) {
-            awaitedMove = step.acceptedMoves[0];
-        } else {
-            awaitedMove = Utils.getNonNullable(step.solutionMove);
+        if (step.hasSolution()) {
+            const awaitedMove: Move = step.getSolution();
+            this.showStep(this.stepIndex);
+            this.gameComponent.rules.choose(awaitedMove);
+            this.gameComponent.updateBoard();
+            this.moveAttemptMade = true;
+            this.currentMessage = step.getSuccessMessage();
+            this.cdr.detectChanges();
         }
-        this.showStep(this.stepIndex);
-        this.gameComponent.rules.choose(awaitedMove);
-        this.gameComponent.updateBoard();
-        this.moveAttemptMade = true;
-        this.currentMessage = step.successMessage;
-        this.cdr.detectChanges();
+        // TODO FOR REVIEW: else, throw error or do nothing? 
     }
     public playLocally(): void {
         const game: string = Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));

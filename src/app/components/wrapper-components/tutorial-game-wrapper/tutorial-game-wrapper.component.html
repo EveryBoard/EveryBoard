@@ -22,7 +22,7 @@
                         *ngIf="tutorialOver === false"
                         (click)="next()"
                         >
-                    <ng-container *ngIf="steps && steps[stepIndex].isInformation() else notInfo" i18n>Ok</ng-container>
+                    <ng-container *ngIf="steps[stepIndex] && steps[stepIndex].isInformation() else notInfo" i18n>Ok</ng-container>
                     <ng-template #notInfo>
                         <ng-container *ngIf="stepFinished && stepFinished[stepIndex] else notFinished" i18n>Continue</ng-container>
                     </ng-template>
