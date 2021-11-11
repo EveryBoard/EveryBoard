@@ -5,12 +5,12 @@ import { DomainWrapper } from './DomainWrapper';
 import { Time } from './Time';
 
 export interface IPart extends FirebaseJSONObject {
-    readonly typeGame: NonNullable<string>, // the type of game
-    readonly playerZero: NonNullable<string>, // the id of the first player
-    readonly turn: NonNullable<number>, // -1 means the part has not started, 0 is the initial turn
-    readonly result: NonNullable<IMGPResult>,
+    readonly typeGame: string, // the type of game
+    readonly playerZero: string, // the id of the first player
+    readonly turn: number, // -1 means the part has not started, 0 is the initial turn
+    readonly result: IMGPResult,
     // TODO: should be ReadonlyArray, but does not compile with it!
-    readonly listMoves: NonNullable<Array<JSONValueWithoutArray>>,
+    readonly listMoves: Array<JSONValueWithoutArray>,
 
     readonly playerOne?: string, // the id of the second player
     /* Server time being handled on server by firestore, when we send it, it's a FieldValue

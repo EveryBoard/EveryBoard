@@ -21,9 +21,9 @@ export interface IFirebaseFirestoreDAO<T extends FirebaseJSONObject> {
 
     getObsById(id: string): Observable<{id: string, doc: T}>;
 
-    observingWhere(conditions: [NonNullable<string>,
-                                NonNullable<firebase.firestore.WhereFilterOp>,
-                                NonNullable<unknown>][],
+    observingWhere(conditions: [string,
+                                firebase.firestore.WhereFilterOp,
+                                unknown][],
                    callback: FirebaseCollectionObserver<T>): () => void;
 }
 
@@ -40,7 +40,7 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
         const docSnapshot: firebase.firestore.DocumentSnapshot<T> =
             await this.afs.collection<T>(this.collectionName).doc(id).ref.get();
         if (docSnapshot.exists) {
-            return MGPOptional.of(docSnapshot.data() as NonNullable<T>);
+            return MGPOptional.of(docSnapshot.data() as T);
         } else {
             return MGPOptional.empty();
         }
@@ -78,9 +78,9 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
      * - a comparison
      * - a value that is matched against the field using the comparison
      **/
-    public observingWhere(conditions: [NonNullable<string>,
-                                       NonNullable<firebase.firestore.WhereFilterOp>,
-                                       NonNullable<unknown>][],
+    public observingWhere(conditions: [string,
+                                       firebase.firestore.WhereFilterOp,
+                                       unknown][],
                           callback: FirebaseCollectionObserver<T>)
     : () => void
     {

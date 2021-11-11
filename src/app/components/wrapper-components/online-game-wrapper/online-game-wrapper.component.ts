@@ -314,8 +314,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             return part.doc.lastMoveTime as Time;
         }
     }
-    private getTimeUsedForLastTurn(oldTime: NonNullable<Time>,
-                                   updateTime: NonNullable<Time>,
+    private getTimeUsedForLastTurn(oldTime: Time,
+                                   updateTime: Time,
                                    _type: UpdateType,
                                    last: Player)
     : [number, number]

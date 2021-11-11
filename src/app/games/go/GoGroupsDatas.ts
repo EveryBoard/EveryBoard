@@ -54,7 +54,7 @@ export class GoGroupDatas extends GroupDatas<GoPiece> {
                 this.deadWhiteCoords = GroupDatas.insertAsEntryPoint(this.deadWhiteCoords, coord);
                 break;
             default:
-                Utils.defaultCaseMultiple(color, [GoPiece.EMPTY, GoPiece.BLACK_TERRITORY, GoPiece.WHITE_TERRITORY]);
+                Utils.expectToBeMultiple(color, [GoPiece.EMPTY, GoPiece.BLACK_TERRITORY, GoPiece.WHITE_TERRITORY]);
                 this.emptyCoords = GroupDatas.insertAsEntryPoint(this.emptyCoords, coord);
         }
     }

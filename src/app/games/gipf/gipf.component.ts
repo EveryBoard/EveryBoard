@@ -118,7 +118,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules, GipfMove, G
             case GipfComponent.PHASE_PLACEMENT_COORD:
                 return this.selectPlacementCoord(coord);
             default:
-                Utils.defaultCase(this.movePhase, GipfComponent.PHASE_PLACEMENT_DIRECTION);
+                Utils.expectToBe(this.movePhase, GipfComponent.PHASE_PLACEMENT_DIRECTION);
                 const entrance: Coord = this.placementEntrance.get();
                 if (entrance.isAlignedWith(coord) === false) {
                     return this.cancelMove(GipfFailure.INVALID_PLACEMENT_DIRECTION());
@@ -159,7 +159,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules, GipfMove, G
                     return MGPValidation.SUCCESS;
                 }
             default:
-                Utils.defaultCase(this.movePhase, GipfComponent.PHASE_FINAL_CAPTURE);
+                Utils.expectToBe(this.movePhase, GipfComponent.PHASE_FINAL_CAPTURE);
                 this.finalCaptures.push(capture);
                 if (this.possibleCaptures.length === 0) {
                     return this.tryMove(this.initialCaptures, this.placement.get(), this.finalCaptures);

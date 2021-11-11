@@ -406,7 +406,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules, YinshMove
                     return MGPValidation.SUCCESS;
                 }
             default:
-                Utils.defaultCase(this.movePhase, 'FINAL_CAPTURE_SELECT_RING');
+                Utils.expectToBe(this.movePhase, 'FINAL_CAPTURE_SELECT_RING');
                 this.finalCaptures.push(capture);
                 if (this.possibleCaptures.length === 0) {
                     return this.tryMove();

@@ -24,7 +24,7 @@ export class GameComponentUtils {
                 angle = 180;
                 break;
             default:
-                Utils.defaultCase(direction, Orthogonal.RIGHT);
+                Utils.expectToBe(direction, Orthogonal.RIGHT);
                 dx = 1;
                 dy = 0;
                 angle = 0;

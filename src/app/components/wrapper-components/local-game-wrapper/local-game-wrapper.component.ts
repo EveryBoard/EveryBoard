@@ -121,7 +121,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         this.gameComponent.updateBoard();
     }
     private isAITurn(): boolean {
-        return this.getPlayingAI() != null;
+        return this.getPlayingAI().isPresent();
     }
     public restartGame(): void {
         const state: AbstractGameState = this.gameComponent.rules.stateType['getInitialState']();

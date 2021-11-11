@@ -56,7 +56,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
             case 0: return [0, 1, 2, 3];
             case 1: return [0, 1, 2];
             default:
-                Utils.defaultCase(z, 2);
+                Utils.expectToBe(z, 2);
                 return [0, 1];
         }
     }

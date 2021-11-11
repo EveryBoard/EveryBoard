@@ -55,7 +55,7 @@ export class YinshPiece implements ComparableObject {
             case YinshPiece.MARKER_ONE: return 'MARKER_ONE';
             case YinshPiece.RING_ZERO: return 'RING_ZERO';
             default:
-                Utils.defaultCase(this, YinshPiece.RING_ONE);
+                Utils.expectToBe(this, YinshPiece.RING_ONE);
                 return 'RING_ONE';
         }
     }

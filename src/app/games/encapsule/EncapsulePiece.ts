@@ -69,7 +69,7 @@ export class EncapsulePiece implements ComparableObject {
             case EncapsulePiece.SMALL_WHITE:
                 return Size.SMALL;
             default:
-                Utils.defaultCase(this, EncapsulePiece.NONE);
+                Utils.expectToBe(this, EncapsulePiece.NONE);
                 return Size.NONE;
         }
     }
@@ -88,7 +88,7 @@ export class EncapsulePiece implements ComparableObject {
             case EncapsulePiece.SMALL_BLACK: return 'SMALL_BLACK';
             case EncapsulePiece.SMALL_WHITE: return 'SMALL_WHITE';
             default:
-                Utils.defaultCase(this, EncapsulePiece.NONE);
+                Utils.expectToBe(this, EncapsulePiece.NONE);
                 return 'NONE';
         }
     }

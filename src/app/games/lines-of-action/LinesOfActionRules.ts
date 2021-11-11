@@ -138,7 +138,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
             case Direction.DOWN_LEFT:
                 return [new Coord(Math.max(0, (pos.x + pos.y) - 7), Math.min(7, pos.x + pos.y)), Direction.UP_RIGHT];
             default:
-                Utils.defaultCaseMultiple(dir, [Direction.UP_LEFT, Direction.DOWN_RIGHT]);
+                Utils.expectToBeMultiple(dir, [Direction.UP_LEFT, Direction.DOWN_RIGHT]);
                 return [
                     new Coord(pos.x - Math.min(pos.x, pos.y), pos.y - Math.min(pos.x, pos.y)),
                     Direction.DOWN_RIGHT,

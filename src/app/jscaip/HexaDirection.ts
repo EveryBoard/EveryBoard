@@ -59,7 +59,7 @@ export class HexaDirection extends BaseDirection {
             case HexaDirection.DOWN: return 180;
             case HexaDirection.DOWN_LEFT: return 240;
             default:
-                Utils.defaultCase(direction, HexaDirection.LEFT);
+                Utils.expectToBe(direction, HexaDirection.LEFT);
                 return 300;
         }
     }

@@ -127,7 +127,7 @@ export class EncapsuleCase implements ComparableObject {
                 removedCase = new EncapsuleCase(this.small, Player.NONE, Player.NONE);
                 break;
             default:
-                Utils.defaultCase(size, Size.SMALL);
+                Utils.expectToBe(size, Size.SMALL);
                 removedCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.NONE);
         }
         return { removedCase, removedPiece };
@@ -143,7 +143,7 @@ export class EncapsuleCase implements ComparableObject {
                 assert(this.big === Player.NONE, 'Cannot put a piece on top of a bigger one');
                 return new EncapsuleCase(this.small, piecePlayer, this.big);
             default:
-                Utils.defaultCase(size, Size.SMALL);
+                Utils.expectToBe(size, Size.SMALL);
                 assert(this.big === Player.NONE, 'Cannot put a piece on top of a bigger one');
                 assert(this.medium === Player.NONE, 'Cannot put a piece on top of a bigger one');
                 return new EncapsuleCase(piecePlayer, this.medium, this.big);

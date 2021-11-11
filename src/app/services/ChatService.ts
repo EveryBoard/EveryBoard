@@ -56,7 +56,7 @@ export class ChatService implements OnDestroy {
     public isObserving(): boolean {
         return this.followedChatId != null;
     }
-    public async deleteChat(chatId: NonNullable<string>): Promise<void> {
+    public async deleteChat(chatId: string): Promise<void> {
         display(ChatService.VERBOSE, 'ChatService.deleteChat ' + chatId);
 
         assert(chatId != null, 'cannot delete chat of null id');

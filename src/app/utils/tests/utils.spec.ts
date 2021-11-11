@@ -20,7 +20,7 @@ describe('utils', () => {
             expect(() => Utils.handleError('error')).toThrowError('Encountered error: error');
         });
     });
-    describe('defaultCase', () => {
+    describe('expectToBe', () => {
         it('should fail when the default case has a different value than expected', () => {
             const value: number = 2;
             expect(() => {
@@ -29,20 +29,20 @@ describe('utils', () => {
                         break;
                     default:
                         // we expect that value can only be 0 or 1
-                        Utils.defaultCase(value, 1);
+                        Utils.expectToBe(value, 1);
                         break;
                 }
             }).toThrowError(`A default switch case did not observe the correct value, expected 1, but got 2 instead.`);
         });
     });
-    describe('defaultCaseMultiple', () => {
+    describe('expectToBeMultiple', () => {
         it('should fail when the default case has a different value than one of the expected values', () => {
             const value: number = 2;
             expect(() => {
                 switch (value) {
                     default:
                         // we expect that value can only be 0 or 1
-                        Utils.defaultCaseMultiple(value, [0, 1]);
+                        Utils.expectToBeMultiple(value, [0, 1]);
                         break;
                 }
             }).toThrowError(`A default switch case did not observe the correct value, expected a value among 0,1, but got 2 instead.`);

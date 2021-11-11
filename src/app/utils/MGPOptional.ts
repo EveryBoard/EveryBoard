@@ -16,7 +16,7 @@ export class MGPOptional<T> {
                 if (encoded === null) {
                     return MGPOptional.empty();
                 } else {
-                    return MGPOptional.of(encoderT.decode(encoded) as NonNullable<T>);
+                    return MGPOptional.of(encoderT.decode(encoded) as T);
                 }
             }
         };
@@ -26,7 +26,7 @@ export class MGPOptional<T> {
     }
     public static ofNullable<T>(value: T | null | undefined): MGPOptional<T> {
         if (value == null) return MGPOptional.empty();
-        return MGPOptional.of(value as NonNullable<T>);
+        return MGPOptional.of(value as T);
     }
     public static empty<T>(): MGPOptional<T> {
         return new MGPOptional((null as T | null));
@@ -39,9 +39,9 @@ export class MGPOptional<T> {
     public isAbsent(): boolean {
         return this.value == null;
     }
-    public get(): NonNullable<T> {
+    public get(): T {
         if (this.isPresent()) {
-            return this.value as NonNullable<T>;
+            return this.value as T;
         } else {
             throw new Error('Value is absent');
         }

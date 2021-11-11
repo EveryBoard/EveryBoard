@@ -58,8 +58,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
     public partType: typeof PartType = PartType;
 
-    @Input() partId: NonNullable<string>;
-    @Input() userName: NonNullable<string>;
+    @Input() partId: string;
+    @Input() userName: string;
 
     @Output('gameStartNotification') gameStartNotification: EventEmitter<IJoiner> = new EventEmitter<IJoiner>();
     public gameStarted: boolean = false;

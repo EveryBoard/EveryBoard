@@ -108,7 +108,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
             case OPPONENT:
                 return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
             default:
-                Utils.defaultCase(this.board[y][x], Player.NONE);
+                Utils.expectToBe(this.board[y][x], Player.NONE);
                 return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }
     }
@@ -243,7 +243,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
             case OPPONENT:
                 return this.cancelMove(EpaminondasFailure.SINGLE_PIECE_CANNOT_CAPTURE());
             default:
-                Utils.defaultCase(this.board[y][x], PLAYER);
+                Utils.expectToBe(this.board[y][x], PLAYER);
                 const incompleteMove: EpaminondasMove = new EpaminondasMove(this.firstPiece.x,
                                                                             this.firstPiece.y,
                                                                             distance,

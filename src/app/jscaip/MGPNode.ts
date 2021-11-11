@@ -108,7 +108,7 @@ export class MGPNode<R extends Rules<M, S, L>,
         this.ownValue = new MGPMap<string, U>();
         if (minimaxCreator != null) {
             const firstValue: U = minimaxCreator.getBoardValue(this);
-            this.ownValue.set(minimaxCreator.name, firstValue as NonNullable<U>);
+            this.ownValue.set(minimaxCreator.name, firstValue);
             this.hopedValue.set(minimaxCreator.name, firstValue.value);
         }
         MGPNodeStats.createdNodes++;
@@ -235,7 +235,7 @@ export class MGPNode<R extends Rules<M, S, L>,
         let ownValue: U | null = this.ownValue.get(minimax.name).getOrNull();
         if (ownValue == null) {
             ownValue = minimax.getBoardValue(this);
-            this.ownValue.set(minimax.name, ownValue as NonNullable<U>);
+            this.ownValue.set(minimax.name, ownValue);
         }
         return ownValue;
     }

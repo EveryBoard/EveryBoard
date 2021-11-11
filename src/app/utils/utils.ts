@@ -28,7 +28,7 @@ export class Utils {
     public static handleError(message: string): any {
         throw new Error('Encountered error: ' + message);
     }
-    public static defaultCase<T>(value: T, expected: T, message?: string): void {
+    public static expectToBe<T>(value: T, expected: T, message?: string): void {
         if (value !== expected) {
             if (message !== undefined) {
                 throw new Error(message);
@@ -36,7 +36,7 @@ export class Utils {
             throw new Error(`A default switch case did not observe the correct value, expected ${expected}, but got ${value} instead.`);
         }
     }
-    public static defaultCaseMultiple<T>(value: T, expectedValues: T[]): void {
+    public static expectToBeMultiple<T>(value: T, expectedValues: T[]): void {
         let found: boolean = false;
         for (const expected of expectedValues) {
             if (value === expected) {

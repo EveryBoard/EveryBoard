@@ -4,16 +4,16 @@ import { MGPValidation } from './MGPValidation';
 import { assert } from './utils';
 
 export abstract class MGPFallible<T> {
-    public static success<T>(value: NonNullable<T>): MGPFallible<T> {
+    public static success<T>(value: T): MGPFallible<T> {
         return new MGPFallibleSuccess(value);
     }
-    public static failure<T>(reason: NonNullable<string>): MGPFallible<T> {
+    public static failure<T>(reason: string): MGPFallible<T> {
         assert(reason != null, 'reason cannot be null');
         return new MGPFallibleFailure(reason);
     }
     public abstract isSuccess(): boolean
     public abstract isFailure(): boolean
-    public abstract get(): NonNullable<T>
+    public abstract get(): T
     public abstract getOrNull(): T | null
     public abstract getReason(): string
     public abstract toOptional(): MGPOptional<T>
@@ -31,7 +31,7 @@ export abstract class MGPFallible<T> {
 }
 
 class MGPFallibleSuccess<T> extends MGPFallible<T> {
-    public constructor(private readonly value: NonNullable<T>) {
+    public constructor(private readonly value: T) {
         super();
     }
     public isSuccess(): boolean {
@@ -40,7 +40,7 @@ class MGPFallibleSuccess<T> extends MGPFallible<T> {
     public isFailure(): boolean {
         return false;
     }
-    public get(): NonNullable<T> {
+    public get(): T {
         return this.value;
     }
     public getOrNull(): T | null {
@@ -67,7 +67,7 @@ class MGPFallibleFailure<T> extends MGPFallible<T> {
     public isFailure(): boolean {
         return true;
     }
-    public get(): NonNullable<T> {
+    public get(): T {
         throw new Error('Value is absent from failure, with the following reason: ' + this.reason);
     }
     public getOrNull(): T | null {

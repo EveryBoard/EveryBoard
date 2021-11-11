@@ -121,9 +121,9 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
             throw new Error('Cannot delete element ' + id + ' absent from ' + this.collectionName);
         }
     }
-    public observingWhere(conditions: [NonNullable<string>,
-                                       NonNullable<firebase.firestore.WhereFilterOp>,
-                                       NonNullable<unknown>][],
+    public observingWhere(conditions: [string,
+                                       firebase.firestore.WhereFilterOp,
+                                       unknown][],
                           callback: FirebaseCollectionObserver<T>): () => void
     {
         display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE,
@@ -138,9 +138,9 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
             return () => subscription.unsubscribe();
         }
     }
-    private subscribeToMatchers(conditions: [NonNullable<string>,
-                                            NonNullable<firebase.firestore.WhereFilterOp>,
-                                            NonNullable<unknown>][],
+    private subscribeToMatchers(conditions: [string,
+                                             firebase.firestore.WhereFilterOp,
+                                             unknown][],
                                 callback: FirebaseCollectionObserver<T>): Subscription | null
     {
         const db: MGPMap<string, ObservableSubject<{id: string, doc: T}>> = this.getStaticDB();
