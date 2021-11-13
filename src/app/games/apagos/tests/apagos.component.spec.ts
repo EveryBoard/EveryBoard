@@ -233,9 +233,57 @@ describe('ApagosComponent', () => {
         componentTestUtils.setupState(state);
         await componentTestUtils.expectClickSuccess('#square_2');
 
-        // When clicking another square
+        // When clicking on the same square
         // Then the move should have been "cancel/restarted"
-        const reason: string = ApagosFailure.MUST_END_MOVE_BY_DROP();
-        await componentTestUtils.expectClickFailure('#square_3', reason);
+        await componentTestUtils.expectClickSuccess('#square_3');
+    }));
+    it('should change selected square when clicking on a square with one already selected', fakeAsync(async() => {
+        // Given a board with a selected square
+        const state: ApagosState = ApagosState.fromRepresentation(2, [
+            [1, 1, 2, 1],
+            [5, 1, 0, 0],
+            [7, 5, 3, 1],
+        ], 5, 5);
+        componentTestUtils.setupState(state);
+        await componentTestUtils.expectClickSuccess('#square_2');
+
+        // When clicking another VALID square
+        // Then the move should not have been cancelled
+        await componentTestUtils.expectClickSuccess('#square_1');
+    }));
+    it('should not allow to select leftmost space for transfer', fakeAsync(async() => {
+        // Given a board with leftmost space not empty
+        const state: ApagosState = ApagosState.fromRepresentation(2, [
+            [2, 2, 2, 1],
+            [5, 3, 0, 0],
+            [7, 5, 3, 1],
+        ], 5, 5);
+        componentTestUtils.setupState(state);
+
+        // when clicking on leftmost case
+        // then move should be cancelled
+        const reason: string = ApagosFailure.NO_POSSIBLE_TRANSFER_REMAINS();
+        await componentTestUtils.expectClickFailure('#square_1', reason);
+    }));
+    it('should not show arrow when player has no longer pieces', fakeAsync(async() => {
+        // Given a board where all piece could receive a drop but no piece are remaining
+        const state: ApagosState = ApagosState.fromRepresentation(2, [
+            [3, 2, 1, 1],
+            [3, 2, 1, 0],
+            [7, 5, 3, 1],
+        ], 0, 0);
+
+        // when rendering it
+        componentTestUtils.setupState(state);
+
+        // then no arrow should be displayed
+        componentTestUtils.expectElementNotToExist('#dropArrow_zero_0');
+        componentTestUtils.expectElementNotToExist('#dropArrow_one_0');
+        componentTestUtils.expectElementNotToExist('#dropArrow_zero_1');
+        componentTestUtils.expectElementNotToExist('#dropArrow_one_1');
+        componentTestUtils.expectElementNotToExist('#dropArrow_zero_2');
+        componentTestUtils.expectElementNotToExist('#dropArrow_one_2');
+        componentTestUtils.expectElementNotToExist('#dropArrow_zero_3');
+        componentTestUtils.expectElementNotToExist('#dropArrow_one_3');
     }));
 });

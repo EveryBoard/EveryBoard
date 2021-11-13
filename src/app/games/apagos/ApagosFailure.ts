@@ -8,5 +8,5 @@ export class ApagosFailure {
 
     public static readonly NO_PIECE_REMAINING_TO_DROP: () => string = () => $localize`There are no remaining pieces of that color to drop!`;
 
-    public static readonly MUST_END_MOVE_BY_DROP: () => string = () => $localize`Your move must end by clicking an arrow (either to drop or to finish a transfer)!`;
+    public static readonly NO_POSSIBLE_TRANSFER_REMAINS: () => string = () => $localize`There is no possible transfer from that square!`;
 }

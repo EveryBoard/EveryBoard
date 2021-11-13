@@ -59,6 +59,10 @@ export class MGPOptional<T> {
         }
         return comparableEquals(this.value, other.value);
     }
+    public equalsValue(other: T | null): boolean {
+        const optional: MGPOptional<T> = MGPOptional.ofNullable(other);
+        return this.equals(optional);
+    }
     public toString(): string {
         if (this.isAbsent()) {
             return 'MGPOptional.empty()';
