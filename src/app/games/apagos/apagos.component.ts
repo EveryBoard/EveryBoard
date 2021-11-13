@@ -268,7 +268,8 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         }
         if (this.selectedPiece.isPresent() && this.selectedPiece.get().square === x) {
             // TODO FOR REVIEW: for "reset move without toasting error" what should we do in tests ?
-            return this.cancelMove();
+            this.cancelMoveAttempt();
+            return MGPValidation.SUCCESS;
         }
         const currentPlayer: Player = this.rules.node.gameState.getCurrentPlayer();
         const square: ApagosSquare = this.board[x];

@@ -232,10 +232,13 @@ describe('ApagosComponent', () => {
         ], 5, 5);
         componentTestUtils.setupState(state);
         await componentTestUtils.expectClickSuccess('#square_2');
+        componentTestUtils.expectElementToHaveClass('#square_2', 'selected');
 
         // When clicking on the same square
-        // Then the move should have been "cancel/restarted"
-        await componentTestUtils.expectClickFailure('#square_2', undefined);
+        await componentTestUtils.expectClickSuccess('#square_2');
+
+        // Then the piece should have lost its selected style
+        componentTestUtils.expectElementNotToHaveClass('#square_2', 'selected');
     }));
     it('should change selected square when clicking on a square with one already selected', fakeAsync(async() => {
         // Given a board with a selected square
