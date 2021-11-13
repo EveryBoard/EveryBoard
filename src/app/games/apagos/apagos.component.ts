@@ -267,7 +267,7 @@ export class ApagosComponent extends GameComponent<ApagosRules,
             return this.cancelMove(clickValidity.getReason());
         }
         if (this.selectedPiece.isPresent() && this.selectedPiece.get().square === x) {
-            // TODO FOR REVIE>: for "reset move without toasting error" what should we do in tests ?
+            // TODO FOR REVIEW: for "reset move without toasting error" what should we do in tests ?
             return this.cancelMove();
         }
         const currentPlayer: Player = this.rules.node.gameState.getCurrentPlayer();
