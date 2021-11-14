@@ -3,12 +3,12 @@ import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 
-import { display, FirebaseJSONObject } from 'src/app/utils/utils';
+import { assert, display, FirebaseJSONObject } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 import { IFirebaseFirestoreDAO } from '../FirebaseFirestoreDAO';
 import { MGPMap } from 'src/app/utils/MGPMap';
-import { ObservableSubject } from 'src/app/utils/ObservableSubject';
+import { ObservableSubject } from 'src/app/utils/tests/ObservableSubject.spec';
 import { Time } from 'src/app/domain/Time';
 
 export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> implements IFirebaseFirestoreDAO<T> {
@@ -121,37 +121,39 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
             throw new Error('Cannot delete element ' + id + ' absent from ' + this.collectionName);
         }
     }
-    public observingWhere(field: string,
-                          condition: firebase.firestore.WhereFilterOp,
-                          value: unknown,
+    public observingWhere(conditions: [NonNullable<string>,
+                                       NonNullable<firebase.firestore.WhereFilterOp>,
+                                       NonNullable<unknown>][],
                           callback: FirebaseCollectionObserver<T>): () => void
     {
+        display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE,
+                { 'FirebaseFirestoreDAOMock_observingWhere': {
+                    collection: this.collectionName,
+                    conditions } });
         // Note, for now, only check first match field/condition/value at creation, not the added document matching it!
-        display(FirebaseFirestoreDAOMock.VERBOSE,
-                'FirebaseFirestoreDAOMock.observingWhere(' + field + condition + value);
-        if (condition === '==') {
-            display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE,
-                    { 'FirebaseFirestoreDAOMock_observingWhere': {
-                        collection: this.collectionName, field, condition, value, callback } });
-
-            const subscription: Subscription = this.subscribeToMatcher(field, value, callback);
-            if (subscription == null) {
-                return () => {};
-            } else {
-                return () => subscription.unsubscribe();
-            }
+        const subscription: Subscription = this.subscribeToMatchers(conditions, callback);
+        if (subscription == null) {
+            return () => {};
         } else {
-            throw new Error('FirebaseFirestoreDAOMock.observingWhere for non ==');
+            return () => subscription.unsubscribe();
         }
     }
-    private subscribeToMatcher(field: string,
-                               value: unknown,
-                               callback: FirebaseCollectionObserver<T>): Subscription
+    private subscribeToMatchers(conditions: [NonNullable<string>,
+                                            NonNullable<firebase.firestore.WhereFilterOp>,
+                                            NonNullable<unknown>][],
+                                callback: FirebaseCollectionObserver<T>): Subscription
     {
         const db: MGPMap<string, ObservableSubject<{id: string, doc: T}>> = this.getStaticDB();
         for (let entryId: number = 0; entryId < db.size(); entryId++) {
             const entry: ObservableSubject<{id: string, doc: T}> = db.getByIndex(entryId).value;
-            if (entry.subject.value.doc[field] === value) {
+            let matches: boolean = true;
+            for (const condition of conditions) {
+                assert(condition[1] === '==', 'FirebaseFirestoreDAOMock currently only supports == as a condition');
+                if (entry.subject.value.doc[condition[0]] !== condition[2]) {
+                    matches = false;
+                }
+            }
+            if (matches) {
                 const ID: string = entry.subject.value.id;
                 const OBJECT: T = { ...entry.subject.value.doc };
                 callback.onDocumentCreated([entry.subject.value]);

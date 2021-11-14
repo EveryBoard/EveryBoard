@@ -1,6 +1,6 @@
 <svg  xmlns="http://www.w3.org/2000/svg"
       width="100%" height="auto"
-      [attr.viewBox]="'-4 -4 ' + (8 * CASE_SIZE) + ' ' + (8 + 8 * CASE_SIZE)"
+      [attr.viewBox]="'-4 -4 ' + (8 * SPACE_SIZE) + ' ' + (8 + 8 * SPACE_SIZE)"
       preserveAspectRatio="xMidYMid meet"
 >
     <g *ngFor="let line of board; index as y">
@@ -8,29 +8,29 @@
             <g id="click_{{ x }}_{{ y }}"
                (click)="onClick(x, y)">
                 <!-- Background -->
-                <rect [attr.x]="x * CASE_SIZE"
-                      [attr.y]="y * CASE_SIZE"
-                      [attr.width]="CASE_SIZE"
-                      [attr.height]="CASE_SIZE"
+                <rect [attr.x]="x * SPACE_SIZE"
+                      [attr.y]="y * SPACE_SIZE"
+                      [attr.width]="SPACE_SIZE"
+                      [attr.height]="SPACE_SIZE"
                       class="base-no-fill"
                       [attr.fill]="backgroundColor(x, y)"
                       fill-opacity="0.7"
                 />
                 <!-- Piece -->
                 <circle *ngIf="caseContent !== UNOCCUPIED"
-                        [attr.cx]="CASE_SIZE/2 + (x * CASE_SIZE)"
-                        [attr.cy]="CASE_SIZE/2 + (y * CASE_SIZE)"
+                        [attr.cx]="SPACE_SIZE/2 + (x * SPACE_SIZE)"
+                        [attr.cy]="SPACE_SIZE/2 + (y * SPACE_SIZE)"
                         [attr.fill]="pieceColor(caseContent)"
-                        [attr.r]="CASE_SIZE/3"
+                        [attr.r]="SPACE_SIZE/3"
                         class="base-no-fill"
                 />
                 <rect *ngIf="caseContent !== UNOCCUPIED"
-                      [attr.x]="CASE_SIZE/2 + (x * CASE_SIZE) - CASE_SIZE/8"
-                      [attr.y]="CASE_SIZE/2 + (y * CASE_SIZE) - CASE_SIZE/8"
-                      [attr.rx]="isPlayerZero(caseContent) ? CASE_SIZE : 0"
-                      [attr.ry]="isPlayerZero(caseContent) ? CASE_SIZE : 0"
-                      [attr.width]="CASE_SIZE/4"
-                      [attr.height]="CASE_SIZE/4"
+                      [attr.x]="SPACE_SIZE/2 + (x * SPACE_SIZE) - SPACE_SIZE/8"
+                      [attr.y]="SPACE_SIZE/2 + (y * SPACE_SIZE) - SPACE_SIZE/8"
+                      [attr.rx]="isPlayerZero(caseContent) ? SPACE_SIZE : 0"
+                      [attr.ry]="isPlayerZero(caseContent) ? SPACE_SIZE : 0"
+                      [attr.width]="SPACE_SIZE/4"
+                      [attr.height]="SPACE_SIZE/4"
                       [ngClass]="piecePlayerClass(caseContent)"
                       class="no-stroke"
                 />
@@ -39,21 +39,21 @@
     </g>
     <!-- Highlight last move -->
     <g *ngIf="lastMove != null">
-        <rect [attr.x]="lastMove.coord.x * CASE_SIZE"
-              [attr.y]="lastMove.coord.y * CASE_SIZE"
-              [attr.width]="CASE_SIZE"
-              [attr.height]="CASE_SIZE"
+        <rect [attr.x]="lastMove.coord.x * SPACE_SIZE"
+              [attr.y]="lastMove.coord.y * SPACE_SIZE"
+              [attr.width]="SPACE_SIZE"
+              [attr.height]="SPACE_SIZE"
               class="base no-fill mid-stroke highlighted"/>
-        <rect [attr.x]="lastMove.end.x * CASE_SIZE"
-              [attr.y]="lastMove.end.y * CASE_SIZE"
-              [attr.width]="CASE_SIZE"
-              [attr.height]="CASE_SIZE"
+        <rect [attr.x]="lastMove.end.x * SPACE_SIZE"
+              [attr.y]="lastMove.end.y * SPACE_SIZE"
+              [attr.width]="SPACE_SIZE"
+              [attr.height]="SPACE_SIZE"
               class="base no-fill mid-stroke highlighted"/>
     </g>
     <!-- Highlight selected piece -->
     <circle *ngIf="chosen != null"
-            [attr.cx]="CASE_SIZE/2 + (chosen.x * CASE_SIZE)"
-            [attr.cy]="CASE_SIZE/2 + (chosen.y * CASE_SIZE)"
+            [attr.cx]="SPACE_SIZE/2 + (chosen.x * SPACE_SIZE)"
+            [attr.cy]="SPACE_SIZE/2 + (chosen.y * SPACE_SIZE)"
             r="30"
             class="base mid-stroke no-fill highlighted"/>
 </svg>

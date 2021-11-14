@@ -16,7 +16,7 @@ import { QuixoTutorial } from './QuixoTutorial';
 @Component({
     selector: 'app-quixo',
     templateUrl: './quixo.component.html',
-    styleUrls: ['../../components/game-components/game-component/game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMove, QuixoState, Player> {
 
@@ -105,7 +105,7 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
         return this.chooseMove(move, this.rules.node.gameState, null, null);
     }
     public getArrowTransform(coord: Coord, orientation: string): string {
-        return GameComponentUtils.getArrowTransform(this.CASE_SIZE,
+        return GameComponentUtils.getArrowTransform(this.SPACE_SIZE,
                                                     coord,
                                                     Orthogonal.factory.fromString(orientation).get());
     }

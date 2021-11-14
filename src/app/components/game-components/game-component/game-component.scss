@@ -1,0 +1,161 @@
+@import "variables.scss";
+$base-stroke: black;
+$background-fill: lightgrey;
+$alt-background-fill: gray;
+$alt-alt-background-fill: dimgray;
+$nonplayer: #5c0838;
+$nonplayer-light: #8d2660;
+$pre-captured: pink;
+$captured: red;
+$alt-captured: #990000;
+$moved: gray;
+$indicator: green;
+$last-move: orange;
+$capturable: yellow;
+$clickable: yellow;
+$selectable: yellow;
+$selected: blue;
+$victory: yellow;
+
+.base {
+    stroke: $base-stroke;
+    stroke-width: 8;
+    fill: $background-fill;
+}
+.base-no-fill {
+    stroke: $base-stroke;
+    stroke-width: 8;
+}
+.arrow {
+    stroke: $base-stroke;
+    stroke-width: 3;
+}
+.white-background {
+    fill: white;
+}
+.background {
+    fill: $background-fill;
+}
+.background2 {
+    fill: $alt-background-fill;
+}
+.background3 {
+    fill: $alt-alt-background-fill;
+}
+.player0 {
+    fill: $player0;
+}
+.player0-stroke {
+    stroke: $player0;
+}
+.player1 {
+    fill: $player1;
+}
+.player1-stroke {
+    stroke: $player1;
+}
+.other-piece {
+    fill: $nonplayer;
+}
+.other-piece-light {
+    fill: $nonplayer-light;
+}
+.other-piece-stroke {
+    stroke: $nonplayer;
+}
+.dashed-stroke {
+    stroke-dasharray: 2;
+}
+.pre-captured {
+    fill: $pre-captured;
+}
+.captured {
+    fill: $captured;
+}
+.captured2 {
+    fill: $alt-captured;
+}
+.captured-stroke {
+    stroke: $captured;
+}
+.moved {
+    fill: $moved;
+}
+.moved-stroke {
+    stroke: $moved;
+}
+.indicator {
+    fill: $indicator;
+    stroke: none;
+}
+.highlighted {
+    stroke: $selectable;
+}
+.last-move {
+    stroke: $last-move;
+}
+.victory {
+    fill: $victory;
+}
+.victory-stroke {
+    stroke: $victory;
+}
+.selected {
+    stroke: $selected;
+}
+.selected-fill {
+    fill: $selected;
+}
+.clickable {
+    stroke: $clickable;;
+}
+.capturable {
+    stroke-width: 2;
+    stroke: $capturable;
+}
+.capturable:hover {
+    stroke-width: 8;
+}
+.no-fill {
+    fill: none;
+}
+.no-stroke {
+    stroke: none;
+}
+.small-stroke {
+    stroke-width: 2;
+}
+.mid-stroke {
+    stroke-width: 5;
+}
+.normal-stroke {
+    stroke-width: 8;
+}
+.transparent {
+    fill-opacity: 0.5;
+    stroke-opacity: 0.5;
+}
+.round {
+    stroke-linecap: round;
+}
+.text-big {
+    font: 50px sans-serif;
+}
+.text-bold {
+    font-weight: bold;
+}
+.text-big-vcenter {
+    dy: 17;
+}
+.text-medium {
+    font: 35px sans-serif;
+}
+.text-small {
+    font: 20 sans-serif;
+}
+.text-center {
+    text-anchor: middle;
+}
+svg {
+    max-height: calc(100vh - 10rem); /* Full height minus the navbar */
+}

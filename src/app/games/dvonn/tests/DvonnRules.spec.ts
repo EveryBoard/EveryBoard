@@ -12,7 +12,7 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { MaxStacksDvonnMinimax } from '../MaxStacksDvonnMinimax';
-import { expectToBeDraw, expectToBeVictoryFor } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
 
 describe('DvonnRules:', () => {
@@ -299,7 +299,7 @@ describe('DvonnRules:', () => {
             ];
             const state: DvonnState = new DvonnState(board, 0, false);
             const node: DvonnNode = new MGPNode(null, null, state);
-            expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
         });
         it('should recognize victory for player one', () => {
             const board: Table<DvonnPieceStack> = [
@@ -311,7 +311,7 @@ describe('DvonnRules:', () => {
             ];
             const state: DvonnState = new DvonnState(board, 0, false);
             const node: DvonnNode = new MGPNode(null, null, state);
-            expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
         });
         it('should recognize draw', () => {
             const board: Table<DvonnPieceStack> = [
@@ -323,7 +323,7 @@ describe('DvonnRules:', () => {
             ];
             const state: DvonnState = new DvonnState(board, 0, false);
             const node: DvonnNode = new MGPNode(null, null, state);
-            expectToBeDraw(rules, node, minimaxes);
+            RulesUtils.expectToBeDraw(rules, node, minimaxes);
         });
     });
 });

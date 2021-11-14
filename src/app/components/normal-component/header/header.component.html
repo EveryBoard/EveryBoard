@@ -41,9 +41,9 @@
                 </div>
             </div>
             <div class="navbar-item">
-                <ng-container *ngIf="userName else connect">
+                <ng-container *ngIf="username else connect">
                     <div class="navbar-item has-dropdown is-hoverable">
-                        <a class="navbar-link">{{userName}}</a>
+                        <a class="navbar-link">{{username}}</a>
                         <div class="navbar-dropdown">
                             <a class="navbar-item" id="logout" (click)="logout()" i18n>Log out</a>
                         </div>
@@ -51,8 +51,8 @@
                 </ng-container>
                 <ng-template #connect>
                     <div class="buttons">
-                        <a class="button is-primary" [routerLink]="['/inscription']">
-                            <strong i18n>Sign up</strong>
+                        <a class="button is-primary" [routerLink]="['/register']">
+                            <strong i18n>Register</strong>
                         </a>
                         <a class="button is-light" [routerLink]="['/login']" i18n>Log in</a>
                     </div>

@@ -23,10 +23,13 @@ import { TablutComponent } from 'src/app/games/tablut/tablut.component';
 import { YinshComponent } from 'src/app/games/yinsh/yinsh.component';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { Localized } from 'src/app/utils/LocaleUtils';
+import { ApagosComponent } from 'src/app/games/apagos/apagos.component';
 
 class GameDescription {
 
     public static readonly ABALONE: Localized = () => $localize`Use simple mechanics to push 6 of the opponent's pieces out of the board!`;
+
+    public static readonly APAGOS: Localized = () => $localize`Very simple game, but, will you be able to win everytime?`;
 
     public static readonly AWALE: Localized = () => $localize`The international version of the famous African strategy game!`;
 
@@ -79,26 +82,30 @@ export class GameInfo {
         new GameInfo($localize`Awalé`, 'Awale', AwaleComponent, new Date('2018-11-29'), GameDescription.AWALE()), // 93 days after P4
         new GameInfo($localize`Quarto`, 'Quarto', QuartoComponent, new Date('2018-12-09'), GameDescription.QUARTO()), // 10 days after Awale
         new GameInfo($localize`Tablut`, 'Tablut', TablutComponent, new Date('2018-12-27'), GameDescription.TABLUT()), // 26 days after Quarto
+
         new GameInfo($localize`Reversi`, 'Reversi', ReversiComponent, new Date('2019-01-16'), GameDescription.REVERSI()), // 20 days after Tablut
         new GameInfo($localize`Go`, 'Go', GoComponent, new Date('2019-12-21'), GameDescription.GO()), // 11 months after Reversi
         new GameInfo($localize`Encapsule`, 'Encapsule', EncapsuleComponent, new Date('2019-12-30'), GameDescription.ENCAPSULE()), // 9 days after Go
+
         new GameInfo($localize`Siam`, 'Siam', SiamComponent, new Date('2020-01-11'), GameDescription.SIAM()), // 12 days after Encapsule
         new GameInfo($localize`Sahara`, 'Sahara', SaharaComponent, new Date('2020-02-29'), GameDescription.SAHARA()), // 49 days after Siam
         new GameInfo($localize`Pylos`, 'Pylos', PylosComponent, new Date('2020-10-02'), GameDescription.PYLOS()), // 7 months after Sahara
         new GameInfo($localize`Kamisado`, 'Kamisado', KamisadoComponent, new Date('2020-10-03'), GameDescription.KAMISADO()), // 26 days after joining *Quentin
         new GameInfo($localize`Quixo`, 'Quixo', QuixoComponent, new Date('2020-10-15'), GameDescription.QUIXO()), // 13 days after Pylos
         new GameInfo($localize`Dvonn`, 'Dvonn', DvonnComponent, new Date('2020-10-21'), GameDescription.DVONN()), // 18 days after Kamisado *Quentin
+
         new GameInfo($localize`Epaminondas`, 'Epaminondas', EpaminondasComponent, new Date('2021-01-16'), GameDescription.EPAMINONDAS()), // 22 days after Quixo
         new GameInfo($localize`Gipf`, 'Gipf', GipfComponent, new Date('2021-02-22'), GameDescription.GIPF()), // 4 months after Dvonn *Quentin
         new GameInfo($localize`Coerceo`, 'Coerceo', CoerceoComponent, new Date('2021-03-21'), GameDescription.COERCEO()), // 76 days after Epaminondas
         new GameInfo($localize`Six`, 'Six', SixComponent, new Date('2021-04-08'), GameDescription.SIX()), // 18 days after Coerceo
-        new GameInfo($localize`Lines of Action`, 'LinesOfAction', LinesOfActionComponent, new Date('2020-04-28'), GameDescription.LINES_OF_ACTION()), // 65 days after Gipf *Quentin
+        new GameInfo($localize`Lines of Action`, 'LinesOfAction', LinesOfActionComponent, new Date('2021-04-28'), GameDescription.LINES_OF_ACTION()), // 65 days after Gipf *Quentin
         new GameInfo($localize`Pentago`, 'Pentago', PentagoComponent, new Date('2021-05-23'), GameDescription.PENTAGO()), // 25 days after Six
-        new GameInfo($localize`Abalone`, 'Abalone', AbaloneComponent, new Date('2021-07-13'), GameDescription.ABALONE()),
-        new GameInfo($localize`Yinsh`, 'Yinsh', YinshComponent, new Date('2021-07-31'), GameDescription.YINSH()),
+        new GameInfo($localize`Abalone`, 'Abalone', AbaloneComponent, new Date('2021-07-13'), GameDescription.ABALONE()), // 71 days after Pentago
+        new GameInfo($localize`Yinsh`, 'Yinsh', YinshComponent, new Date('2021-07-31'), GameDescription.YINSH()), // 94 days after LinesOfAction *Quentin
+        new GameInfo($localize`Apagos`, 'Apagos', ApagosComponent, new Date('2021-11-04'), GameDescription.APAGOS()), // 4 month after Apagos
     ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
-    // After Gipf: median = 26d; average = 34d
-    // 9d 10d 12d 13d 18d - 18d 20d 22d (25d 26d) 26d 49d 65d - 76d 93d 4m 7m 11m
+    // After Apagos: median = 26d; average = 53d
+    // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m
 
     public constructor(public readonly name: string,
                        public readonly urlName: string,

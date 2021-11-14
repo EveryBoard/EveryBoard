@@ -16,7 +16,7 @@ import { PylosTutorial } from './PylosTutorial';
 @Component({
     selector: 'app-pylos',
     templateUrl: './pylos.component.html',
-    styleUrls: ['../../components/game-components/game-component/game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosState> {
 
@@ -47,7 +47,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         ];
         this.encoder = PylosMove.encoder;
         this.tutorial = new PylosTutorial().tutorial;
-        this.CASE_SIZE = this.getPieceRadius(0);
+        this.SPACE_SIZE = this.getPieceRadius(0);
         this.updateBoard();
     }
     public getLevelRange(z: number): number[] {

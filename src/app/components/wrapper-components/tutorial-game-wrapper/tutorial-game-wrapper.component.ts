@@ -6,7 +6,6 @@ import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Move } from 'src/app/jscaip/Move';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
-import { UserService } from 'src/app/services/UserService';
 import { assert, display } from 'src/app/utils/utils';
 import { TutorialStep } from './TutorialStep';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -36,13 +35,12 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
 
     constructor(componentFactoryResolver: ComponentFactoryResolver,
                 actRoute: ActivatedRoute,
-                router: Router,
-                userService: UserService,
+                public router: Router,
                 authenticationService: AuthenticationService,
                 public cdr: ChangeDetectorRef,
                 public gameService: GameService)
     {
-        super(componentFactoryResolver, actRoute, router, userService, authenticationService);
+        super(componentFactoryResolver, actRoute, authenticationService);
         display(TutorialGameWrapperComponent.VERBOSE, 'TutorialGameWrapperComponent.constructor');
     }
     private getCompletionArray(): boolean[] {
@@ -128,7 +126,7 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
         this.moveAttemptMade = false;
         this.showStep(this.stepIndex);
     }
-    public onUserClick: (elementName: string) => MGPValidation = (elementName: string) => {
+    public onUserClick(elementName: string): MGPValidation {
         display(TutorialGameWrapperComponent.VERBOSE, 'tutorialGameWrapper.onUserClick(' + elementName + ')');
         this.currentReason = null;
         if (this.stepFinished[this.stepIndex] || this.moveAttemptMade) {
@@ -152,7 +150,7 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
             return MGPValidation.failure(TutorialFailure.INFORMATIONAL_STEP());
         }
     }
-    public onCancelMove: (reason?: string) => void = (reason?: string) => {
+    public onCancelMove(reason?: string): void {
         display(TutorialGameWrapperComponent.VERBOSE,
                 'tutorialGameWrapperComponent.onCancelMove(' + reason + ')');
         // this.moveAttemptMade = true;
@@ -214,5 +212,8 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
     public createGame(): void {
         const game: string = this.actRoute.snapshot.paramMap.get('compo');
         this.gameService.createGameAndRedirectOrShowError(game);
+    }
+    public getPlayerName(): string {
+        return ''; // Not important for tutorial
     }
 }

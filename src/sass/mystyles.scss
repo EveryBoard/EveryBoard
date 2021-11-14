@@ -1,27 +1,24 @@
 @charset "utf-8";
 
-@import url('https://fonts.googleapis.com/css?family=Nunito:400,700');
-
 $primary: #3273dc;
 $danger: #f14668;
 $warning: #ffdd57;
 
 @import "../../node_modules/bulma/bulma.sass";
+@import '~bulma-slider';
+@import "./variables.scss";
 
 $gap: 10pt;
-
 @media screen and (max-width: 768px) {
     .masonry {
         column-count: 1;
     }
 }
-
 @media screen and (min-width: 769px), print {
     .masonry {
         column-count: 3;
     }
 }
-
 .masonry {
     margin: $gap;
     column-gap: $gap;
@@ -41,8 +38,13 @@ html {
 }
 
 .player0-bg {
-    background-color: #994d00;
+    background-color: $player0;
 }
 .player1-bg {
-    background-color: #ffc34d;
+    background-color: $player1;
+}
+
+.clickable-icon {
+    pointer-events: all;
+    cursor:pointer
 }

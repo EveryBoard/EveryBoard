@@ -32,7 +32,7 @@ export class HexaDirArrow {
 @Component({
     selector: 'app-abalone',
     templateUrl: './abalone.component.html',
-    styleUrls: ['../../components/game-components/game-component/game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
                                                              AbaloneMove,
@@ -57,9 +57,9 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         this.encoder = AbaloneMove.encoder;
         this.tutorial = new AbaloneTutorial().tutorial;
         this.showScore = true;
-        this.CASE_SIZE = 30;
-        this.hexaLayout = new HexaLayout(this.CASE_SIZE,
-                                         new Coord(- 8 * this.CASE_SIZE, 2 * this.CASE_SIZE),
+        this.SPACE_SIZE = 30;
+        this.hexaLayout = new HexaLayout(this.SPACE_SIZE,
+                                         new Coord(- 8 * this.SPACE_SIZE, 2 * this.SPACE_SIZE),
                                          PointyHexaOrientation.INSTANCE);
 
         this.updateBoard();

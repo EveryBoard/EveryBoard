@@ -18,7 +18,7 @@ import { CoerceoTutorial } from './CoerceoTutorial';
 @Component({
     selector: 'app-coerceo',
     templateUrl: './coerceo.component.html',
-    styleUrls: ['../../components/game-components/game-component/game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
                                                               CoerceoMove,
@@ -47,7 +47,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         ];
         this.encoder = CoerceoMove.encoder;
         this.tutorial = new CoerceoTutorial().tutorial;
-        this.CASE_SIZE = 70;
+        this.SPACE_SIZE = 70;
         this.showScore = true;
         this.updateBoard();
     }

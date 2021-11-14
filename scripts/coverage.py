@@ -66,14 +66,24 @@ def check():
 
     decreased = False
     for type_ in ['statements', 'branches', 'functions', 'lines']:
-        for directory in old[type_]:
-            new_missing = new[type_][directory]
-            old_missing = old[type_][directory]
-            if new_missing > old_missing:
-                decreased = True
-                print('ERROR: increased missing %s in coverage of %s, from %d to %d' % (type_, directory, old_missing, new_missing))
-            elif new_missing < old_missing:
-                print('GOOD: decreased missing %s in coverage of %s, from %d to %d' % (type_, directory, old_missing, new_missing))
+        for directory in set.union(set(old[type_]), set(new[type_])):
+            if directory in old[type_] and directory in new[type_]:
+                new_missing = new[type_][directory]
+                old_missing = old[type_][directory]
+                if new_missing > old_missing:
+                    decreased = True
+                    print('ERROR: increased missing %s in coverage of %s, from %d to %d' % (type_, directory, old_missing, new_missing))
+                elif new_missing < old_missing:
+                    print('GOOD: decreased missing %s in coverage of %s, from %d to %d' % (type_, directory, old_missing, new_missing))
+            elif not (directory in new[type_]):
+                # directory was removed, everything is fine
+                continue
+            elif not (directory in old[type_]):
+                # new directory, we require 100% coverage
+                new_missing = new[type_][directory]
+                if new_missing > 0:
+                    decreased = True
+                    print('ERROR: increased missing %s in coverage of %s due to a new directory with missing coverage of %d %s' % (type_, directory, new_missing, type_))
     if decreased:
         exit(1) # fail for CI script
 

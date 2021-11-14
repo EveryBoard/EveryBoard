@@ -1,14 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-
-import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { FormGroup, FormControl } from '@angular/forms';
+import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { faEye, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
+
+    public faEye: IconDefinition = faEye;
+
     public errorMessage: string;
 
     public loginForm: FormGroup = new FormGroup({
@@ -19,37 +23,27 @@ export class LoginComponent {
     constructor(public router: Router,
                 public authenticationService: AuthenticationService) {
     }
-    public loginWithEmail(value: {email: string, password: string}): void {
-        this.authenticationService
-            .doEmailLogin(value.email, value.password)
-            .then(() => this.redirect())
-            .catch((err: { message: string }) => {
-                const message: string = err.message;
-                switch (message) {
-                    case 'The password is invalid or the user does not have a password.':
-                        this.errorMessage = $localize`This password is incorrect.`;
-                        break;
-                    case 'There is no user record corresponding to this identifier. The user may have been deleted.':
-                        this.errorMessage = $localize`This email address has no account on this website.`;
-                        break;
-                    case 'Missing or insufficient permissions.':
-                        this.errorMessage = $localize`You must click the confirmation link that you should have received by email.`;
-                        break;
-                    default:
-                        this.errorMessage = message;
-                        break;
+    public ngOnInit(): void {
+        this.authenticationService.getUserObs()
+            .subscribe(async(user: AuthUser) => {
+                if (user !== AuthUser.NOT_CONNECTED) {
+                    await this.redirect();
                 }
             });
     }
-    public loginWithGoogle(): void {
-        this.authenticationService
-            .doGoogleLogin()
-            .then(() => this.redirect())
-            .catch((err: { message: string }) => {
-                this.errorMessage = err.message;
-            });
+    public async loginWithEmail(value: {email: string, password: string}): Promise<void> {
+        const result: MGPValidation = await this.authenticationService.doEmailLogin(value.email, value.password);
+        if (result.isFailure()) {
+            this.errorMessage = result.getReason();
+        }
     }
-    private redirect(): void {
-        this.router.navigate(['/server']);
+    public async loginWithGoogle(): Promise<void> {
+        const result: MGPValidation = await this.authenticationService.doGoogleLogin();
+        if (result.isFailure()) {
+            this.errorMessage = result.getReason();
+        }
+    }
+    private async redirect(): Promise<boolean> {
+        return this.router.navigate(['/server']);
     }
 }

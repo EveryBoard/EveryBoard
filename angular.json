@@ -23,8 +23,13 @@
                             "src/assets"
                         ],
                         "styles": [
-                            "src/css/mystyles.css"
+                            "src/sass/mystyles.scss"
                         ],
+                        "stylePreprocessorOptions": {
+                            "includePaths": [
+                                "src/sass"
+                            ]
+                        },
                         "scripts": [
                             "./node_modules/jquery/dist/jquery.js",
                             "./node_modules/popper.js/dist/umd/popper.js"
@@ -55,7 +60,6 @@
                             "optimization": true,
                             "outputHashing": "all",
                             "sourceMap": false,
-                            "extractCss": true,
                             "namedChunks": false,
                             "extractLicenses": true,
                             "vendorChunk": false,
@@ -88,8 +92,7 @@
                                     "replace": "src/environments/environment.ts",
                                     "with": "src/environments/environment.local.ts"
                                 }
-                            ],
-                            "baseHref": "/board-test/"
+                            ]
                         }
                     }
                 },
@@ -101,6 +104,9 @@
                     "configurations": {
                         "fr": {
                             "browserTarget": "pantheonsgame:build:fr"
+                        },
+                        "local": {
+                            "browserTarget": "pantheonsgame:build:local"
                         }
                     }
                 },
@@ -118,8 +124,13 @@
                         "tsConfig": "src/tsconfig.spec.json",
                         "karmaConfig": "src/karma.conf.js",
                         "styles": [
-                            "src/css/mystyles.css"
+                            "src/sass/mystyles.scss"
                         ],
+                        "stylePreprocessorOptions": {
+                            "includePaths": [
+                                "src/sass"
+                            ]
+                        },
                         "scripts": [],
                         "assets": [
                             "src/favicon.ico",

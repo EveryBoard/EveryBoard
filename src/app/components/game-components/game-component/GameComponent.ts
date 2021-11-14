@@ -18,7 +18,7 @@ import { AbstractGameState } from 'src/app/jscaip/GameState';
  */
 @Component({
     template: '',
-    styleUrls: ['./game-component.css'],
+    styleUrls: ['./game-component.scss'],
 })
 export abstract class GameComponent<R extends Rules<M, S, L>,
                                     M extends Move,
@@ -27,7 +27,7 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
 {
     public encoder: MoveEncoder<M>;
 
-    public CASE_SIZE: number = 100;
+    public SPACE_SIZE: number = 100;
 
     public readonly STROKE_WIDTH: number = 8;
 

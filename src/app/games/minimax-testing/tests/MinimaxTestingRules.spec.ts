@@ -5,7 +5,7 @@ import { MinimaxTestingMinimax } from '../MinimaxTestingMinimax';
 import { Player } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { expectToBeOngoing, expectToBeVictoryFor } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 
 describe('MinimaxTestingRules', () => {
@@ -123,34 +123,34 @@ describe('MinimaxTestingRules', () => {
             const state: MinimaxTestingState = new MinimaxTestingState(1, new Coord(1, 0));
 
             const node: MinimaxTestingNode = new MGPNode(null, null, state);
-            expectToBeVictoryFor(rules, node, Player.ONE, [minimax]);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, [minimax]);
         });
         it('should recognize victory when on the player victory value (Player.ZERO)', () => {
             MinimaxTestingState.initialBoard = MinimaxTestingState.BOARD_1;
             const state: MinimaxTestingState = new MinimaxTestingState(2, new Coord(0, 2));
 
             const node: MinimaxTestingNode = new MGPNode(null, null, state);
-            expectToBeVictoryFor(rules, node, Player.ZERO, [minimax]);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, [minimax]);
         });
         it('should recognize ongoing part', () => {
             const state: MinimaxTestingState = new MinimaxTestingState(2, new Coord(0, 0));
 
             const node: MinimaxTestingNode = new MGPNode(null, null, state);
-            expectToBeOngoing(rules, node, [minimax]);
+            RulesUtils.expectToBeOngoing(rules, node, [minimax]);
         });
         it('should recognize victory when part is over and score is positive (Player.ZERO)', () => {
             MinimaxTestingState.initialBoard = MinimaxTestingState.BOARD_1;
             const state: MinimaxTestingState = new MinimaxTestingState(6, new Coord(3, 3));
 
             const node: MinimaxTestingNode = new MGPNode(null, null, state);
-            expectToBeVictoryFor(rules, node, Player.ZERO, [minimax]);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, [minimax]);
         });
         it('should recognize victory when part is over and score is positive (Player.ONE)', () => {
             MinimaxTestingState.initialBoard = MinimaxTestingState.BOARD_4;
             const state: MinimaxTestingState = new MinimaxTestingState(6, new Coord(3, 3));
 
             const node: MinimaxTestingNode = new MGPNode(null, null, state);
-            expectToBeVictoryFor(rules, node, Player.ONE, [minimax]);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, [minimax]);
         });
     });
 });

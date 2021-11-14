@@ -3,9 +3,18 @@ import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testin
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppModule } from 'src/app/app.module';
+import { ChatDAO } from 'src/app/dao/ChatDAO';
+import { JoinerDAO } from 'src/app/dao/JoinerDAO';
+import { UserDAO } from 'src/app/dao/UserDAO';
+import { PartDAO } from 'src/app/dao/PartDAO';
+import { ChatDAOMock } from 'src/app/dao/tests/ChatDAOMock.spec';
+import { JoinerDAOMock } from 'src/app/dao/tests/JoinerDAOMock.spec';
+import { UserDAOMock } from 'src/app/dao/tests/UserDAOMock.spec';
+import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
 import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { Direction } from 'src/app/jscaip/Direction';
-import { AuthenticationService } from 'src/app/services/AuthenticationService';
+import { Player } from 'src/app/jscaip/Player';
+import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ActivatedRouteStub } from 'src/app/utils/tests/TestUtils.spec';
@@ -31,13 +40,20 @@ describe('GameComponent', () => {
                 RouterTestingModule.withRoutes([
                     { path: 'local', component: LocalGameWrapperComponent }]),
             ],
+            declarations: [
+                LocalGameWrapperComponent,
+            ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
-                { provide: ActivatedRoute, useValue: activatedRouteStub },
                 { provide: AuthenticationService, useClass: AuthenticationServiceMock },
+                { provide: PartDAO, useClass: PartDAOMock },
+                { provide: JoinerDAO, useClass: JoinerDAOMock },
+                { provide: ChatDAO, useClass: ChatDAOMock },
+                { provide: UserDAO, useClass: UserDAOMock },
+                { provide: ActivatedRoute, useValue: activatedRouteStub },
             ],
         }).compileComponents();
-        AuthenticationServiceMock.setUser(AuthenticationService.NOT_CONNECTED);
+        AuthenticationServiceMock.setUser(AuthUser.NOT_CONNECTED);
     }));
     it('Clicks method should refuse when observer click', fakeAsync(async() => {
         const clickableMethods: { [gameName: string]: { [methodName: string]: unknown[] } } = {
@@ -45,6 +61,10 @@ describe('GameComponent', () => {
                 onPieceClick: [0, 0],
                 onCaseClick: [0, 0],
                 chooseDirection: [Direction.UP],
+            },
+            Apagos: {
+                onSquareClick: [0],
+                onArrowClick: [0, Player.ONE],
             },
             Awale: { onClick: [0, 0] },
             Coerceo: { onClick: [0, 0] },

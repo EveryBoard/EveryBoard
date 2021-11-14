@@ -56,7 +56,7 @@ export class JoinerServiceMock {
             });
         });
     }
-    public async setChosenPlayer(pseudo: string): Promise<void> {
+    public async setChosenPlayer(username: string): Promise<void> {
         display(JoinerServiceMock.VERBOSE, 'JoinerServiceMock.setChosenPlayer');
         return new Promise((resolve: () => void) => {
             resolve();

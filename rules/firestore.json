@@ -1,0 +1,53 @@
+rules_version = "2";
+service cloud.firestore {
+    match /databases/{database}/documents {
+        match /foo/{document=**} {
+            // only used for testing purposes, do not push to production 
+            allow read, write: if true;
+        }
+       // joueurs will be renamed to users
+        match /joueurs/{userId} {
+            // Anybody can create a user
+            allow create: if true;
+            // Only a user can update its own fields
+            allow update: if isOwner(userId);
+            // Anybody can read the fields of a user
+            allow read: if true;
+        }
+        match /users/{userId} {
+            // Anybody can create a user
+            allow create: if true;
+            // Only a user can update its own fields
+            allow update: if isOwner(userId);
+            // Anybody can read the fields of a user
+            allow read: if true;
+        }
+        match /{databases}/{docId} {
+            allow read: if true;
+            allow write: if isAllowed();
+        }
+        function isAllowed() {
+            return userVerified() ||
+                   userIsGoogle();
+        }
+        function userVerified() {
+            return isAuthentified() &&
+                   request.auth.uid != null &&
+                   request.auth.token.email_verified == true;
+        }
+        function userIsGoogle() {
+            return request != null &&
+                   request.auth != null &&
+                   request.auth.token.email.matches('.*google[.]com$') == true;
+        }
+        function isAuthentified() {
+            return request != null &&
+                   request.auth != null;
+        }
+        function isOwner(userId) {
+            return request != null &&
+                request.auth != null &&
+                request.auth.uid == userId;
+        }
+    }
+}

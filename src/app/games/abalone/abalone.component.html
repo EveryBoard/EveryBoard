@@ -18,7 +18,7 @@
                         (click)="onPieceClick(x, y)"
                         [attr.cx]="getCenterBy(x, y).x"
                         [attr.cy]="getCenterBy(x, y).y"
-                        [attr.r]="CASE_SIZE * 0.5"
+                        [attr.r]="SPACE_SIZE * 0.5"
                         [ngClass]="getPieceClasses(x, y)"
                         class="base"
                 />

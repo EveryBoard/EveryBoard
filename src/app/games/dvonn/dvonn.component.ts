@@ -18,7 +18,7 @@ import { DvonnTutorial } from './DvonnTutorial';
 @Component({
     selector: 'app-dvonn',
     templateUrl: './dvonn.component.html',
-    styleUrls: ['../../components/game-components/game-component/game-component.css'],
+    styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 
 export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove, DvonnState, DvonnPieceStack> {
@@ -38,12 +38,12 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         ];
         this.encoder = DvonnMove.encoder;
         this.tutorial = new DvonnTutorial().tutorial;
-        this.CASE_SIZE = 30;
+        this.SPACE_SIZE = 30;
         this.showScore = true;
         this.canPass = false;
         this.scores = DvonnRules.getScores(this.rules.node.gameState);
-        this.hexaLayout = new HexaLayout(this.CASE_SIZE * 1.50,
-                                         new Coord(-this.CASE_SIZE, this.CASE_SIZE * 2),
+        this.hexaLayout = new HexaLayout(this.SPACE_SIZE * 1.50,
+                                         new Coord(-this.SPACE_SIZE, this.SPACE_SIZE * 2),
                                          PointyHexaOrientation.INSTANCE);
         this.state = this.rules.node.gameState;
         this.hexaBoard = this.rules.node.gameState.board;

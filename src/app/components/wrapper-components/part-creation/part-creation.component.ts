@@ -8,7 +8,7 @@ import { ChatService } from '../../../services/ChatService';
 import { assert, display, Utils } from 'src/app/utils/utils';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { UserService } from 'src/app/services/UserService';
-import { IJoueur, IJoueurId } from 'src/app/domain/iuser';
+import { IUser, IUserId } from 'src/app/domain/iuser';
 import { FirebaseCollectionObserver } from 'src/app/dao/FirebaseCollectionObserver';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -41,7 +41,6 @@ interface ComparableSubscription {
 @Component({
     selector: 'app-part-creation',
     templateUrl: './part-creation.component.html',
-    styleUrls: ['../../../../../node_modules/bulma-slider/dist/css/bulma-slider.min.css'],
 })
 export class PartCreationComponent implements OnInit, OnDestroy {
     /*
@@ -303,9 +302,9 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             // We are already observing the creator
             return;
         }
-        const destroyDocIfCreatorOffline: (modifiedUsers: IJoueurId[]) => void = (modifiedUsers: IJoueurId[]) => {
+        const destroyDocIfCreatorOffline: (modifiedUsers: IUserId[]) => void = (modifiedUsers: IUserId[]) => {
             for (const user of modifiedUsers) {
-                assert(user.doc.pseudo === joiner.creator, 'found non creator while observing creator!');
+                assert(user.doc.username === joiner.creator, 'found non creator while observing creator!');
                 if (user.doc.state === 'offline' &&
                     this.allDocDeleted === false &&
                     joiner.partStatus !== PartStatus.PART_STARTED.value)
@@ -314,44 +313,44 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 }
             }
         };
-        const callback: FirebaseCollectionObserver<IJoueur> =
+        const callback: FirebaseCollectionObserver<IUser> =
             new FirebaseCollectionObserver(destroyDocIfCreatorOffline,
                                            destroyDocIfCreatorOffline,
                                            destroyDocIfCreatorOffline);
 
-        this.creatorSubscription = this.userService.observeUserByPseudo(joiner.creator, callback);
+        this.creatorSubscription = this.userService.observeUserByUsername(joiner.creator, callback);
     }
     private observeCandidates(joiner: IJoiner): void {
         display(PartCreationComponent.VERBOSE, { PartCreation_observeCandidates: joiner });
-        const onDocumentCreated: (foundUser: IJoueurId[]) => void = (foundUsers: IJoueurId[]) => {
+        const onDocumentCreated: (foundUser: IUserId[]) => void = (foundUsers: IUserId[]) => {
             for (const user of foundUsers) {
                 if (user.doc.state === 'offline') {
-                    this.removeUserFromLobby(user.doc.pseudo);
-                    Utils.handleError('OnlineGameWrapper: ' + user.doc.pseudo + ' is already offline!');
+                    this.removeUserFromLobby(user.doc.username);
+                    Utils.handleError('OnlineGameWrapper: ' + user.doc.username + ' is already offline!');
                 }
             }
         };
-        const onDocumentModified: (modifiedUsers: IJoueurId[]) => void = (modifiedUsers: IJoueurId[]) => {
+        const onDocumentModified: (modifiedUsers: IUserId[]) => void = (modifiedUsers: IUserId[]) => {
             for (const user of modifiedUsers) {
                 if (user.doc.state === 'offline') {
-                    this.removeUserFromLobby(user.doc.pseudo);
+                    this.removeUserFromLobby(user.doc.username);
                 }
             }
         };
-        const onDocumentDeleted: (deletedUsers: IJoueurId[]) => void = (deletedUsers: IJoueurId[]) => {
+        const onDocumentDeleted: (deletedUsers: IUserId[]) => void = (deletedUsers: IUserId[]) => {
             // This should not happen in practice, but if it does we can safely remove the user from the lobby
             for (const user of deletedUsers) {
-                this.removeUserFromLobby(user.doc.pseudo);
-                Utils.handleError('OnlineGameWrapper: ' + user.doc.pseudo + ' was deleted (' + user.id + ')');
+                this.removeUserFromLobby(user.doc.username);
+                Utils.handleError('OnlineGameWrapper: ' + user.doc.username + ' was deleted (' + user.id + ')');
             }
         };
-        const callback: FirebaseCollectionObserver<IJoueur> =
+        const callback: FirebaseCollectionObserver<IUser> =
             new FirebaseCollectionObserver(onDocumentCreated, onDocumentModified, onDocumentDeleted);
         for (const candidateName of joiner.candidates) {
             if (this.candidateSubscription.get(candidateName).isAbsent()) {
                 // Subscribe to every new candidate
                 const comparableSubscription: ComparableSubscription = {
-                    subscription: this.userService.observeUserByPseudo(candidateName, callback),
+                    subscription: this.userService.observeUserByUsername(candidateName, callback),
                     equals: () => {
                         throw new Error('ObservableSubscription should not be used');
                     },
@@ -368,26 +367,26 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             }
         }
     }
-    private removeUserFromLobby(userPseudo: string): Promise<void> {
-        const index: number = this.currentJoiner.candidates.indexOf(userPseudo);
+    private removeUserFromLobby(username: string): Promise<void> {
+        const index: number = this.currentJoiner.candidates.indexOf(username);
         if (index === -1) {
-            display(true, userPseudo + ' is not in the lobby!');
+            display(true, username + ' is not in the lobby!');
             // User already not in the lobby (could be caused by two updates to the same offline user)
             return;
         }
         const beforeUser: string[] = this.currentJoiner.candidates.slice(0, index);
         const afterUser: string[] = this.currentJoiner.candidates.slice(index + 1);
         const candidates: string[] = beforeUser.concat(afterUser);
-        if (userPseudo === this.currentJoiner.chosenPlayer) {
+        if (username === this.currentJoiner.chosenPlayer) {
             // The chosen player has been removed, the user will have to review the config
-            this.messageDisplayer.infoMessage($localize`${userPseudo} left the game, please pick another opponent.`);
+            this.messageDisplayer.infoMessage($localize`${username} left the game, please pick another opponent.`);
             return this.joinerService.reviewConfigRemoveChosenPlayerAndUpdateCandidates(candidates);
         } else {
             this.joinerService.updateCandidates(candidates);
         }
     }
-    private unsubscribeFrom(userPseudo: string): void {
-        const subscription: ComparableSubscription = this.candidateSubscription.delete(userPseudo);
+    private unsubscribeFrom(username: string): void {
+        const subscription: ComparableSubscription = this.candidateSubscription.delete(username);
         subscription.subscription();
     }
     public acceptConfig(): Promise<void> {

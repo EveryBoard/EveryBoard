@@ -5,6 +5,7 @@ import { AuthenticationService, AuthUser } from 'src/app/services/Authentication
 import { IChatId } from 'src/app/domain/ichat';
 import { assert, display } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { faReply, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-chat',
@@ -25,6 +26,8 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     public showUnreadMessagesButton: boolean = false;
     public visible: boolean = true;
 
+    public faReply: IconDefinition = faReply;
+
     private isNearBottom: boolean = true;
     private notYetScrolled: boolean = true;
 
@@ -35,15 +38,15 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
         display(ChatComponent.VERBOSE, 'ChatComponent constructor');
     }
     public ngOnInit(): void {
-        display(ChatComponent.VERBOSE, 'ChatComponent.ngOnInit');
+        display(ChatComponent.VERBOSE, `ChatComponent.ngOnInit for chat ${this.chatId}`);
 
         assert(this.chatId != null && this.chatId !== '', 'No chat to join mentionned');
 
-        this.authenticationService.getJoueurObs()
-            .subscribe((joueur: AuthUser) => {
-                if (this.isConnectedUser(joueur)) {
-                    display(ChatComponent.VERBOSE, JSON.stringify(joueur) + ' just connected');
-                    this.userName = MGPOptional.of(joueur.pseudo);
+        this.authenticationService.getUserObs()
+            .subscribe((user: AuthUser) => {
+                if (this.isConnectedUser(user)) {
+                    display(ChatComponent.VERBOSE, JSON.stringify(user) + ' just connected');
+                    this.userName = MGPOptional.of(user.username);
                     this.connected = true;
                     this.loadChatContent();
                 } else {
@@ -56,8 +59,8 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     public ngAfterViewChecked(): void {
         this.scrollToBottomIfNeeded();
     }
-    public isConnectedUser(joueur: { pseudo: string; verified: boolean;}): boolean {
-        return joueur && joueur.pseudo && joueur.pseudo !== '';
+    public isConnectedUser(user: AuthUser): boolean {
+        return user && user.username && user.username !== '';
     }
     public loadChatContent(): void {
         display(ChatComponent.VERBOSE, `User '` + this.userName + `' logged, loading chat content`);
