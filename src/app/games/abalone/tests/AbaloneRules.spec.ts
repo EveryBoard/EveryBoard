@@ -6,7 +6,7 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { expectToBeVictoryFor } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { AbaloneDummyMinimax } from '../AbaloneDummyMinimax';
 import { AbaloneFailure } from '../AbaloneFailure';
 import { AbaloneState } from '../AbaloneState';
@@ -30,7 +30,7 @@ describe('AbaloneRules', () => {
     });
     it('should start with an ongoing board status', () => {
         const state: AbaloneState = AbaloneState.getInitialState();
-        const node: AbaloneNode = new MGPNode(null, null, state);
+        const node: AbaloneNode = new MGPNode(state);
         expect(rules.getGameStatus(node)).toBe(GameStatus.ONGOING);
     });
     it('should move simple piece in provided direction', () => {
@@ -242,8 +242,8 @@ describe('AbaloneRules', () => {
             [O, O, O, O, O, N, N, N, N],
         ];
         const winningState: AbaloneState = new AbaloneState(winningBoard, 1);
-        const node: AbaloneNode = new MGPNode(null, null, winningState);
-        expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+        const node: AbaloneNode = new MGPNode(winningState);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
     it('should declare player one winner when he push a 6th opponent piece out of the board', () => {
         const winningBoard: FourStatePiece[][] = [
@@ -258,8 +258,8 @@ describe('AbaloneRules', () => {
             [O, O, O, O, O, N, N, N, N],
         ];
         const winningState: AbaloneState = new AbaloneState(winningBoard, 1);
-        const node: AbaloneNode = new MGPNode(null, null, winningState);
-        expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+        const node: AbaloneNode = new MGPNode(winningState);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
     it('should allow unblocked translation', () => {
         // Given an initial board (for simplicity)

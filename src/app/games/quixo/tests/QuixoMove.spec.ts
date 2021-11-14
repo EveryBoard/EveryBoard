@@ -45,7 +45,7 @@ describe('QuixoMove:', () => {
         ];
         const move: QuixoMove = new QuixoMove(0, 0, Orthogonal.DOWN);
         const state: QuixoState = new QuixoState(board, 0);
-        const node: QuixoNode = new MGPNode(null, move, state);
+        const node: QuixoNode = new MGPNode(state, null, move);
         const rules: QuixoRules = new QuixoRules(QuixoState);
         const minimax: QuixoMinimax = new QuixoMinimax(rules, 'QuixoMinimax');
         const moves: QuixoMove[] = minimax.getListMoves(node);

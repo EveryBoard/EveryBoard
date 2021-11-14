@@ -44,7 +44,7 @@ describe('PylosMinimax:', () => {
         ];
 
         const state: PylosState = new PylosState(board, 0);
-        const node: PylosNode = new MGPNode(null, null, state);
+        const node: PylosNode = new MGPNode(state);
         expect(minimax.getListMoves(node).length).toBe(31);
     });
 
@@ -69,6 +69,6 @@ describe('PylosMinimax:', () => {
 
         const state: PylosState = new PylosState(board, 0);
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(2, 2, 1), []);
-        expect(minimax.getBoardValue(new MGPNode(null, move, state)).value).toBe(0);
+        expect(minimax.getBoardValue(new MGPNode(state, null, move)).value).toBe(0);
     });
 });

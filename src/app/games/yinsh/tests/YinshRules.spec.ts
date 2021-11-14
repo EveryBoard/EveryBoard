@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
-import { expectToBeVictoryFor } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { YinshFailure } from '../YinshFailure';
 import { YinshState } from '../YinshState';
@@ -610,21 +610,21 @@ describe('YinshRules', () => {
     describe('getGameStatus', () => {
         it('should consider initial phase as ongoing', () => {
             const state: YinshState = YinshState.getInitialState();
-            expect(rules.getGameStatus(new MGPNode(null, null, state))).toBe(GameStatus.ONGOING);
+            expect(rules.getGameStatus(new MGPNode(state))).toBe(GameStatus.ONGOING);
         });
         it('should detect part after initial phase as ongoing if victory criterion is not met', () => {
             const state: YinshState = new YinshState(YinshState.getInitialState().board, [0, 0], 20);
-            expect(rules.getGameStatus(new MGPNode(null, null, state))).toBe(GameStatus.ONGOING);
+            expect(rules.getGameStatus(new MGPNode(state))).toBe(GameStatus.ONGOING);
         });
-        it('should detect victory for a player if it obtains more than 3 rings', () => {
-            const state1: YinshState = new YinshState(YinshState.getInitialState().board, [3, 0], 20);
-            const node1: YinshNode = new MGPNode(null, null, state1);
-            expectToBeVictoryFor(rules, node1, Player.ZERO, minimaxes);
-
-            const state2: YinshState = new YinshState(YinshState.getInitialState().board, [0, 3], 20);
-            const node2: YinshNode = new MGPNode(null, null, state2);
-            expectToBeVictoryFor(rules, node2, Player.ONE, minimaxes);
-
+        it('should detect victory for a player if it obtains more than 3 rings (Player.ZERO)', () => {
+            const state: YinshState = new YinshState(YinshState.getInitialState().board, [3, 0], 20);
+            const node: YinshNode = new MGPNode(state);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+        });
+        it('should detect victory for a player if it obtains more than 3 rings (Player.ONE)', () => {
+            const state: YinshState = new YinshState(YinshState.getInitialState().board, [0, 3], 20);
+            const node: YinshNode = new MGPNode(state);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
         });
     });
 });

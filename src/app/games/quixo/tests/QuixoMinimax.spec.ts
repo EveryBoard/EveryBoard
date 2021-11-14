@@ -29,6 +29,6 @@ describe('QuixoMinimax:', () => {
         ];
         const state: QuixoState = new QuixoState(board, 0);
         const move: QuixoMove = new QuixoMove(0, 2, Orthogonal.RIGHT);
-        expect(minimax.getBoardValue(new MGPNode(null, move, state)).value).toEqual(-1);
+        expect(minimax.getBoardValue(new MGPNode(state, null, move)).value).toEqual(-1);
     });
 });

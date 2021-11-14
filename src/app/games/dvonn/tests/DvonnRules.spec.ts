@@ -12,7 +12,7 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { MaxStacksDvonnMinimax } from '../MaxStacksDvonnMinimax';
-import { expectToBeDraw, expectToBeVictoryFor } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
 
 describe('DvonnRules:', () => {
@@ -164,7 +164,7 @@ describe('DvonnRules:', () => {
             [O, S, O, X, X, O, O, O, X, N, N],
         ];
         const state: DvonnState = new DvonnState(board, 0, false);
-        const moves: DvonnMove[] = minimaxes[0].getListMoves(new MGPNode(null, null, state));
+        const moves: DvonnMove[] = minimaxes[0].getListMoves(new MGPNode(state));
         for (const move of moves) {
             expect(state.getPieceAt(move.end).isEmpty()).toBeFalse();
         }
@@ -180,7 +180,7 @@ describe('DvonnRules:', () => {
             [O, S, O, X, X, O, _, _, _, N, N],
         ];
         const state: DvonnState = new DvonnState(board, 0, false);
-        const moves: DvonnMove[] = minimaxes[0].getListMoves(new MGPNode(null, null, state));
+        const moves: DvonnMove[] = minimaxes[0].getListMoves(new MGPNode(state));
         for (const move of moves) {
             expect(move.length()).toEqual(state.getPieceAt(move.coord).getSize());
         }
@@ -197,7 +197,7 @@ describe('DvonnRules:', () => {
             [O, S, O, X, X, O, _, _, _, N, N],
         ];
         const state: DvonnState = new DvonnState(board, 0, false);
-        const moves: DvonnMove[] = minimaxes[0].getListMoves(new MGPNode(null, null, state));
+        const moves: DvonnMove[] = minimaxes[0].getListMoves(new MGPNode(state));
         for (const move of moves) {
             expect(state.getPieceAt(move.end).isEmpty()).toBeFalse();
         }
@@ -211,7 +211,7 @@ describe('DvonnRules:', () => {
             [O, S, O, X, X, O, _, _, _, N, N],
         ];
         const state: DvonnState = new DvonnState(board, 0, false);
-        const moves: DvonnMove[] = minimaxes[0].getListMoves(new MGPNode(null, null, state));
+        const moves: DvonnMove[] = minimaxes[0].getListMoves(new MGPNode(state));
         for (const move of moves) {
             const stack: DvonnPieceStack = state.getPieceAt(move.coord);
             // every movable piece should belong to the current player
@@ -235,7 +235,7 @@ describe('DvonnRules:', () => {
             [_, _, _, _, _, _, _, _, _, N, N],
         ];
         const state: DvonnState = new DvonnState(board, 0, false);
-        const moves: DvonnMove[] = minimaxes[0].getListMoves(new MGPNode(null, null, state));
+        const moves: DvonnMove[] = minimaxes[0].getListMoves(new MGPNode(state));
         expect(moves.length).toEqual(1);
         expect(moves[0]).toEqual(DvonnMove.PASS);
         expect(rules.isLegal(DvonnMove.PASS, state).legal.isSuccess()).toBeTrue();
@@ -273,7 +273,7 @@ describe('DvonnRules:', () => {
             [_, _, _, _, _, _, _, _, _, N, N],
         ];
         const state: DvonnState = new DvonnState(board, 10, true);
-        expect(minimaxes[0].getListMoves(new MGPNode(null, DvonnMove.PASS, state)).length).toEqual(0);
+        expect(minimaxes[0].getListMoves(new MGPNode(state, null, DvonnMove.PASS)).length).toEqual(0);
     });
     it('should not end if moves can be done', () => {
         const board: Table<DvonnPieceStack> = [
@@ -284,7 +284,8 @@ describe('DvonnRules:', () => {
             [_, OS6, _, _, _, _, _, _, _, N, N],
         ];
         const state: DvonnState = new DvonnState(board, 11, true);
-        const node: DvonnNode = new MGPNode(null, DvonnMove.of(new Coord(1, 3), new Coord(1, 4)), state);
+        const move: DvonnMove = DvonnMove.of(new Coord(1, 3), new Coord(1, 4));
+        const node: DvonnNode = new MGPNode(state, null, move);
         expect(minimaxes[0].getListMoves(node).length)
             .toEqual(1);
     });
@@ -298,8 +299,8 @@ describe('DvonnRules:', () => {
                 [_, _, _, _, _, _, _, _, _, N, N],
             ];
             const state: DvonnState = new DvonnState(board, 0, false);
-            const node: DvonnNode = new MGPNode(null, null, state);
-            expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+            const node: DvonnNode = new MGPNode(state);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
         });
         it('should recognize victory for player one', () => {
             const board: Table<DvonnPieceStack> = [
@@ -310,8 +311,8 @@ describe('DvonnRules:', () => {
                 [_, _, _, _, _, _, _, _, _, N, N],
             ];
             const state: DvonnState = new DvonnState(board, 0, false);
-            const node: DvonnNode = new MGPNode(null, null, state);
-            expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+            const node: DvonnNode = new MGPNode(state);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
         });
         it('should recognize draw', () => {
             const board: Table<DvonnPieceStack> = [
@@ -322,8 +323,8 @@ describe('DvonnRules:', () => {
                 [_, _, _, _, _, _, _, _, _, N, N],
             ];
             const state: DvonnState = new DvonnState(board, 0, false);
-            const node: DvonnNode = new MGPNode(null, null, state);
-            expectToBeDraw(rules, node, minimaxes);
+            const node: DvonnNode = new MGPNode(state);
+            RulesUtils.expectToBeDraw(rules, node, minimaxes);
         });
     });
 });

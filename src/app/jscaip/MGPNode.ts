@@ -86,18 +86,18 @@ export class MGPNode<R extends Rules<M, S, L>,
     public static getFirstNode<R extends Rules<M, S, L>,
                                M extends Move,
                                S extends AbstractGameState,
-                               L extends LegalityStatus,
-                               U extends NodeUnheritance>(initialBoard: S, gameRuler: R)
+                               L extends LegalityStatus = LegalityStatus,
+                               U extends NodeUnheritance = NodeUnheritance>(initialBoard: S, gameRuler: R)
     : MGPNode<R, M, S, L, U>
     {
         MGPNode.ruler = gameRuler; // for all nodes, gameRuler is the ruler
-        return new MGPNode(null, null, initialBoard);
+        return new MGPNode(initialBoard);
     }
     // instance methods:
 
-    constructor(public readonly mother: MGPNode<R, M, S, L, U> | null,
-                public readonly move: M | null,
-                public readonly gameState: S,
+    constructor(public readonly gameState: S,
+                public readonly mother?: MGPNode<R, M, S, L, U>,
+                public readonly move?: M,
                 public minimaxCreator?: Minimax<M, S, L, U>)
     {
         /* Initialisation condition:
@@ -205,7 +205,7 @@ export class MGPNode<R extends Rules<M, S, L>,
                 Utils.handleError(`The minimax has accepted an illegal move, this should not happen.`);
             }
             const state: S = minimax.ruler.applyLegalMove(move, this.gameState, status);
-            child = new MGPNode(this, move, state, minimax);
+            child = new MGPNode(state, this, move, minimax);
             this.childs.push(child);
         }
         return child;

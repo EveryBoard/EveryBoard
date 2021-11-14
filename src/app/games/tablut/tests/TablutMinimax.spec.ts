@@ -31,7 +31,7 @@ describe('TablutMinimax:', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const state: TablutState = new TablutState(board, 1);
-        rules.node = new MGPNode(null, null, state);
+        rules.node = new MGPNode(state);
         const winnerMove: TablutMove = new TablutMove(new Coord(3, 0), new Coord(8, 0));
 
         const minimax: TablutMinimax = new TablutMinimax(rules, 'TablutMinimax');

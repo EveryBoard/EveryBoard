@@ -15,7 +15,7 @@ describe('P4Minimax', () => {
     xit('First choice should be center at all IA depths', () => {
         const initialState: P4State = P4State.getInitialState();
         for (let depth: number = 1; depth < 6; depth ++) {
-            const node: MGPNode<P4Rules, P4Move, P4State> = new MGPNode(null, null, initialState);
+            const node: MGPNode<P4Rules, P4Move, P4State> = new MGPNode(initialState);
             expect(node.findBestMove(depth, minimax)).toEqual(P4Move.THREE);
         }
     });

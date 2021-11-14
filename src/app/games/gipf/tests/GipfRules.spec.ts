@@ -10,7 +10,7 @@ import { GipfNode, GipfRules } from '../GipfRules';
 import { GipfMinimax } from '../GipfMinimax';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { GipfFailure } from '../GipfFailure';
-import { expectToBeOngoing, expectToBeVictoryFor } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { Minimax } from 'src/app/jscaip/Minimax';
@@ -408,7 +408,7 @@ describe('GipfRules:', () => {
         const placement: GipfPlacement = new GipfPlacement(new Coord(1, 6),
                                                            MGPOptional.of(HexaDirection.UP_RIGHT));
         const dummyMove: GipfMove = new GipfMove(placement, [], []);
-        it('should declare victory when one player does not have any piece left', () => {
+        it('should declare victory when one player does not have any piece left (Player.ZERO)', () => {
             const board: Table<FourStatePiece> = [
                 [N, N, N, _, A, _, _],
                 [N, N, _, _, A, _, _],
@@ -418,12 +418,23 @@ describe('GipfRules:', () => {
                 [B, _, B, _, _, N, N],
                 [_, B, _, _, N, N, N],
             ];
-            const state1: GipfState = new GipfState(board, P0Turn, [0, 5], [0, 0]);
-            const node1: GipfNode = new MGPNode(null, dummyMove, state1);
-            expectToBeVictoryFor(rules, node1, Player.ONE, minimaxes);
-            const state2: GipfState = new GipfState(board, P1Turn, [5, 0], [0, 0]);
-            const node2: GipfNode = new MGPNode(null, dummyMove, state2);
-            expectToBeVictoryFor(rules, node2, Player.ZERO, minimaxes);
+            const state: GipfState = new GipfState(board, P1Turn, [5, 0], [0, 0]);
+            const node: GipfNode = new MGPNode(state, null, dummyMove);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+        });
+        it('should declare victory when one player does not have any piece left (Player.ZERO)', () => {
+            const board: Table<FourStatePiece> = [
+                [N, N, N, _, A, _, _],
+                [N, N, _, _, A, _, _],
+                [N, _, _, _, _, A, _],
+                [A, B, A, _, B, _, _],
+                [A, _, _, A, B, B, N],
+                [B, _, B, _, _, N, N],
+                [_, B, _, _, N, N, N],
+            ];
+            const state: GipfState = new GipfState(board, P0Turn, [0, 5], [0, 0]);
+            const node: GipfNode = new MGPNode(state, null, dummyMove);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
         });
         it('should not declare victory when one player does not have pieces left but still has an initial capture', () => {
             const board: Table<FourStatePiece> = [
@@ -436,7 +447,7 @@ describe('GipfRules:', () => {
                 [_, _, _, _, N, N, N],
             ];
             const state: GipfState = new GipfState(board, P0Turn, [0, 5], [0, 0]);
-            expectToBeOngoing(rules, new MGPNode(null, dummyMove, state), minimaxes);
+            RulesUtils.expectToBeOngoing(rules, new MGPNode(state, null, dummyMove), minimaxes);
         });
     });
     describe('getAllDirectionsForEntrance', () => {

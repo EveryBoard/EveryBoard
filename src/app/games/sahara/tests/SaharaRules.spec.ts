@@ -7,7 +7,7 @@ import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { expectToBeVictoryFor } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
@@ -85,7 +85,7 @@ describe('SaharaRules', () => {
             [N, N, X, O, _, _, _, X, O, N, N],
         ];
         const state: SaharaState = new SaharaState(board, 4);
-        const node: SaharaNode = new MGPNode(null, null, state);
-        expectToBeVictoryFor(rules, node, Player.ONE, [new SaharaMinimax(rules, '')]);
+        const node: SaharaNode = new MGPNode(state);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, [new SaharaMinimax(rules, '')]);
     });
 });

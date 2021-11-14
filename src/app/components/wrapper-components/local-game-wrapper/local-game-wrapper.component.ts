@@ -123,7 +123,9 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
     }
     public restartGame(): void {
         const state: AbstractGameState = this.gameComponent.rules.stateType['getInitialState']();
-        this.gameComponent.rules.node = new MGPNode(null, null, state);
+        const ruler: Rules<Move, AbstractGameState> = this.gameComponent.rules;
+        this.gameComponent.rules.node =
+            MGPNode.getFirstNode<Rules<Move, AbstractGameState>, Move, AbstractGameState>(state, ruler);
         this.gameComponent.updateBoard();
         this.endGame = false;
         this.winner = null;

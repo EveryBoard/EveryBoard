@@ -246,9 +246,9 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     {
         if (previousState !== undefined) {
             this.gameComponent.rules.node =
-                new MGPNode(new MGPNode(null, null, previousState), previousMove, state);
+                new MGPNode(state, new MGPNode(previousState), previousMove);
         } else {
-            this.gameComponent.rules.node = new MGPNode(null, previousMove || null, state);
+            this.gameComponent.rules.node = new MGPNode(state, null, previousMove || null);
         }
         this.gameComponent.updateBoard();
         this.forceChangeDetection();
@@ -304,7 +304,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
             this.canUserPlaySpy.calls.reset();
             expect(this.chooseMoveSpy).not.toHaveBeenCalled();
             expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(clickValidity.reason);
-            tick(3000); // needs to be >2999
+            tick(3000); // needs to be > 2999
         }
     }
     public async expectMoveSuccess(elementName: string,
@@ -424,8 +424,8 @@ export function expectSecondStateToBeBetterThanFirst(weakerState: AbstractGameSt
                                                      minimax: Minimax<Move, AbstractGameState>)
 : void
 {
-    const weakValue: number = minimax.getBoardValue(new MGPNode(null, weakMove, weakerState)).value;
-    const strongValue: number = minimax.getBoardValue(new MGPNode(null, strongMove, strongerState)).value;
+    const weakValue: number = minimax.getBoardValue(new MGPNode(weakerState, null, weakMove)).value;
+    const strongValue: number = minimax.getBoardValue(new MGPNode(strongerState, null, strongMove)).value;
     expect(weakValue).toBeLessThan(strongValue);
 }
 export function expectStateToBePreVictory(state: AbstractGameState,
@@ -434,8 +434,8 @@ export function expectStateToBePreVictory(state: AbstractGameState,
                                           minimax: Minimax<Move, AbstractGameState>)
 : void
 {
-    // TODO: replace that and refuse it to reach develop! expectToBeVictoryFor is the way
-    const value: number = minimax.getBoardNumericValue(new MGPNode(null, previousMove, state));
+    // TODOTODO: replace that and refuse it to reach develop! expectToBeVictoryFor is the way
+    const value: number = minimax.getBoardNumericValue(new MGPNode(state, null, previousMove));
     const expectedValue: number = player.getPreVictory();
     expect(value).toBe(expectedValue);
 }

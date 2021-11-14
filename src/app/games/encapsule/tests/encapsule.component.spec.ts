@@ -9,6 +9,7 @@ import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { EncapsuleFailure } from '../EncapsuleFailure';
+import { EncapsuleNode } from '../EncapsuleRules';
 
 describe('EncapsuleComponent', () => {
 
@@ -147,7 +148,8 @@ describe('EncapsuleComponent', () => {
         const component: EncapsuleComponent = componentTestUtils.getComponent();
         const minimax: EncapsuleMinimax = new EncapsuleMinimax(component.rules, 'EncapsuleMinimax');
 
-        expect(minimax.getBoardValue(new MGPNode(null, move, component.rules.node.gameState)).value)
+        const node: EncapsuleNode = new MGPNode(component.rules.node.gameState, null, move);
+        expect(minimax.getBoardValue(node).value)
             .toBe(Number.MIN_SAFE_INTEGER);
     }));
     it('should forbid selecting the same coord for destination and origin', fakeAsync(async() => {

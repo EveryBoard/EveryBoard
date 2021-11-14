@@ -90,7 +90,7 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
         const currentStep: TutorialStep = this.steps[this.stepIndex];
         this.currentMessage = currentStep.instruction;
         this.currentReason = null;
-        this.gameComponent.rules.node = new MGPNode(null, currentStep.previousMove, currentStep.state);
+        this.gameComponent.rules.node = new MGPNode(currentStep.state, null, currentStep.previousMove);
         this.gameComponent.updateBoard();
         this.cdr.detectChanges();
     }

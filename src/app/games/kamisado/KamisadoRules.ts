@@ -43,12 +43,8 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
                 for (const dir of this.playerDirections(state.getCurrentPlayer())) {
                     const endCoord: Coord = startCoord.getNext(dir);
                     if (state.isOnBoard(endCoord) && KamisadoBoard.isEmptyAt(state.board, endCoord)) {
-                        // Move is valid, check legality
-                        const move: KamisadoMove = KamisadoMove.of(startCoord, endCoord);
-                        if (this.isLegal(move, state)) {
-                            // Move is legal
-                            return true;
-                        }
+                        // Move is legal
+                        return true;
                     }
                 }
                 return false;
@@ -139,40 +135,6 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
         });
         return [furthest0, furthest1];
     }
-    // Returns the next coord that plays
-    public nextCoordToPlay(state: KamisadoState, colorToPlay: KamisadoColor): MGPOptional<Coord> {
-        return MGPOptional.ofNullable(KamisadoBoard.allPieceCoords(state.board).find((c: Coord): boolean => {
-            const piece: KamisadoPiece = state.getPieceAt(c);
-            return piece.player === state.getCurrentOpponent() && piece.color === colorToPlay;
-        }));
-    }
-    // Apply the move by only relying on tryMove
-    public applyLegalMove(move: KamisadoMove, state: KamisadoState, _status: LegalityStatus)
-    : KamisadoState
-    {
-        if (move === KamisadoMove.PASS) {
-            const nextCoord: MGPOptional<Coord> = this.nextCoordToPlay(state, state.colorToPlay);
-            const resultingState: KamisadoState =
-                new KamisadoState(state.turn + 1, state.colorToPlay, nextCoord, true, state.board);
-            return resultingState;
-        }
-        const start: Coord = move.coord;
-        const end: Coord = move.end;
-
-        const newBoard: KamisadoPiece[][] = state.getCopiedBoard();
-        newBoard[end.y][end.x] = newBoard[start.y][start.x]; // actual move
-        newBoard[start.y][start.x] = KamisadoPiece.NONE; // becomes unoccupied
-        const newColorToPlay: KamisadoColor = KamisadoBoard.getColorAt(end.x, end.y);
-
-        // Get the next piece that can move
-        const nextCoord: MGPOptional<Coord> = this.nextCoordToPlay(state, newColorToPlay);
-
-        // Construct the next state
-        const resultingState: KamisadoState =
-            new KamisadoState(state.turn + 1, newColorToPlay, nextCoord, false, newBoard);
-
-        return resultingState;
-    }
     public static isLegal(move: KamisadoMove, state: KamisadoState): LegalityStatus {
         const start: Coord = move.coord;
         const end: Coord = move.end;
@@ -224,12 +186,44 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
         }
         return LegalityStatus.SUCCESS;
     }
-    public isLegal(move: KamisadoMove, state: KamisadoState): LegalityStatus {
-        return KamisadoRules.isLegal(move, state);
-    }
     private static isVictory(state: KamisadoState): boolean {
         const [furthest0, furthest1]: [number, number] = this.getFurthestPiecePositions(state);
         return furthest0 === 0 || furthest1 === 7;
+    }
+    // Returns the next coord that plays
+    public nextCoordToPlay(state: KamisadoState, colorToPlay: KamisadoColor): MGPOptional<Coord> {
+        return MGPOptional.ofNullable(KamisadoBoard.allPieceCoords(state.board).find((c: Coord): boolean => {
+            const piece: KamisadoPiece = state.getPieceAt(c);
+            return piece.player === state.getCurrentOpponent() && piece.color === colorToPlay;
+        }));
+    }
+    // Apply the move by only relying on tryMove
+    public applyLegalMove(move: KamisadoMove, state: KamisadoState, _status: LegalityStatus): KamisadoState {
+        if (move === KamisadoMove.PASS) {
+            const nextCoord: MGPOptional<Coord> = this.nextCoordToPlay(state, state.colorToPlay);
+            const resultingState: KamisadoState =
+                new KamisadoState(state.turn + 1, state.colorToPlay, nextCoord, true, state.board);
+            return resultingState;
+        }
+        const start: Coord = move.coord;
+        const end: Coord = move.end;
+
+        const newBoard: KamisadoPiece[][] = state.getCopiedBoard();
+        newBoard[end.y][end.x] = newBoard[start.y][start.x]; // actual move
+        newBoard[start.y][start.x] = KamisadoPiece.NONE; // becomes unoccupied
+        const newColorToPlay: KamisadoColor = KamisadoBoard.getColorAt(end.x, end.y);
+
+        // Get the next piece that can move
+        const nextCoord: MGPOptional<Coord> = this.nextCoordToPlay(state, newColorToPlay);
+
+        // Construct the next state
+        const resultingState: KamisadoState =
+            new KamisadoState(state.turn + 1, newColorToPlay, nextCoord, false, newBoard);
+
+        return resultingState;
+    }
+    public isLegal(move: KamisadoMove, state: KamisadoState): LegalityStatus {
+        return KamisadoRules.isLegal(move, state);
     }
     public getGameStatus(node: KamisadoNode): GameStatus {
         const state: KamisadoState = node.gameState;

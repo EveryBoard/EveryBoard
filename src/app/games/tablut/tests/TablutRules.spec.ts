@@ -11,7 +11,7 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { TablutFailure } from '../TablutFailure';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { expectToBeOngoing, expectToBeVictoryFor } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 
 describe('TablutRules', () => {
 
@@ -113,8 +113,8 @@ describe('TablutRules', () => {
         const resultingState: TablutState = rules.applyLegalMove(move, state, status);
         const expectedState: TablutState = new TablutState(expectedBoard, 24);
         expect(resultingState).toEqual(expectedState);
-        const node: TablutNode = new MGPNode(null, move, expectedState);
-        expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+        const node: TablutNode = new MGPNode(expectedState, null, move);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
     it('Capturing against empty throne should work', () => {
         const board: Table<TablutCase> = [
@@ -177,8 +177,8 @@ describe('TablutRules', () => {
         const resultingState: TablutState = rules.applyLegalMove(move, state, status);
         const expectedState: TablutState = new TablutState(expectedBoard, 1);
         expect(resultingState).toEqual(expectedState);
-        const node: TablutNode = new MGPNode(null, move, expectedState);
-        expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+        const node: TablutNode = new MGPNode(expectedState, null, move);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
     it('Capturing king should require three invader and an edge lead to victory', () => {
         const board: Table<TablutCase> = [
@@ -210,8 +210,8 @@ describe('TablutRules', () => {
         const resultingState: TablutState = rules.applyLegalMove(move, state, status);
         const expectedState: TablutState = new TablutState(expectedBoard, 1);
         expect(resultingState).toEqual(expectedState);
-        const node: TablutNode = new MGPNode(null, move, expectedState);
-        expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+        const node: TablutNode = new MGPNode(expectedState, null, move);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
     it('Capturing king with two soldier, one throne, and one edge should not work be a victory', () => {
         const board: Table<TablutCase> = [
@@ -243,8 +243,8 @@ describe('TablutRules', () => {
         const resultingState: TablutState = rules.applyLegalMove(move, state, status);
         const expectedState: TablutState = new TablutState(expectedBoard, 3);
         expect(resultingState).toEqual(expectedState);
-        const node: TablutNode = new MGPNode(null, move, expectedState);
-        expectToBeOngoing(rules, node, minimaxes);
+        const node: TablutNode = new MGPNode(expectedState, null, move);
+        RulesUtils.expectToBeOngoing(rules, node, minimaxes);
     });
     it('Capturing king against a throne should not work', () => {
         const board: Table<TablutCase> = [
@@ -276,8 +276,8 @@ describe('TablutRules', () => {
         const resultingState: TablutState = rules.applyLegalMove(move, state, status);
         const expectedState: TablutState = new TablutState(expectedBoard, 1);
         expect(resultingState).toEqual(expectedState);
-        const node: TablutNode = new MGPNode(null, move, expectedState);
-        expectToBeOngoing(rules, node, minimaxes);
+        const node: TablutNode = new MGPNode(expectedState, null, move);
+        RulesUtils.expectToBeOngoing(rules, node, minimaxes);
     });
     it('Capturing king against a throne with 3 soldier should not work', () => {
         const board: Table<TablutCase> = [
@@ -309,8 +309,8 @@ describe('TablutRules', () => {
         const resultingState: TablutState = rules.applyLegalMove(move, state, status);
         const expectedState: TablutState = new TablutState(expectedBoard, 13);
         expect(resultingState).toEqual(expectedState);
-        const node: TablutNode = new MGPNode(null, move, expectedState);
-        expectToBeOngoing(rules, node, minimaxes);
+        const node: TablutNode = new MGPNode(expectedState, null, move);
+        RulesUtils.expectToBeOngoing(rules, node, minimaxes);
     });
     it('King should be authorised to come back on the throne', () => {
         const move: TablutMove = new TablutMove(new Coord(4, 3), new Coord(4, 4));
@@ -375,7 +375,7 @@ describe('TablutRules', () => {
         const resultingState: TablutState = rules.applyLegalMove(move, state, status);
         const expectedState: TablutState = new TablutState(expectedBoard, 25);
         expect(resultingState).toEqual(expectedState);
-        const node: TablutNode = new MGPNode(null, move, expectedState);
-        expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+        const node: TablutNode = new MGPNode(expectedState, null, move);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
 });

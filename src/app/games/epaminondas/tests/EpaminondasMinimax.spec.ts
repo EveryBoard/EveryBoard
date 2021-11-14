@@ -39,7 +39,7 @@ describe('EpaminondasMinimax:', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 0);
-        rules.node = new MGPNode(null, null, state);
+        rules.node = new MGPNode(state);
         const capture: EpaminondasMove = new EpaminondasMove(4, 9, 2, 1, Direction.UP);
         const bestMove: EpaminondasMove = rules.node.findBestMove(1, minimax);
         expect(bestMove).toEqual(capture);

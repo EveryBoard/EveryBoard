@@ -272,7 +272,7 @@ describe('LinesOfActionRules', () => {
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
         expect(LinesOfActionRules.getVictory(state)).toEqual(MGPOptional.of(Player.ONE));
-        expect(minimax.getBoardValue(new MGPNode(null, null, state)).value).toBe(Player.ONE.getVictoryValue());
+        expect(minimax.getBoardValue(new MGPNode(state)).value).toBe(Player.ONE.getVictoryValue());
     });
     it(`should win when all the player's pieces are connected, in any direction`, () => {
         const board: Table<Player> = [
@@ -287,7 +287,7 @@ describe('LinesOfActionRules', () => {
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
         expect(LinesOfActionRules.getVictory(state)).toEqual(MGPOptional.of(Player.ZERO));
-        expect(minimax.getBoardValue(new MGPNode(null, null, state)).value).toBe(Player.ZERO.getVictoryValue());
+        expect(minimax.getBoardValue(new MGPNode(state)).value).toBe(Player.ZERO.getVictoryValue());
     });
     it('should draw on simultaneous connections', () => {
         const board: Table<Player> = [
@@ -333,7 +333,7 @@ describe('LinesOfActionRules', () => {
     });
     it('should have 36 moves on the initial state', () => {
         const state: LinesOfActionState = LinesOfActionState.getInitialState();
-        const node: LinesOfActionNode = new LinesOfActionNode(null, null, state);
+        const node: LinesOfActionNode = new LinesOfActionNode(state);
         expect(minimax.getListMoves(node).length).toBe(6 * 3 * 2);
     });
     it('should have 0 moves on a victory state', () => {
@@ -348,7 +348,7 @@ describe('LinesOfActionRules', () => {
             [_, _, _, _, _, _, _, _],
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
-        const node: LinesOfActionNode = new LinesOfActionNode(null, null, state);
+        const node: LinesOfActionNode = new LinesOfActionNode(state);
         expect(minimax.getListMoves(node).length).toBe(0);
     });
 });

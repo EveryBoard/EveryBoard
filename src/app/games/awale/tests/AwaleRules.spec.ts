@@ -2,7 +2,7 @@ import { AwaleNode, AwaleRules } from '../AwaleRules';
 import { AwaleMove } from '../AwaleMove';
 import { AwaleState } from '../AwaleState';
 import { AwaleLegalityStatus } from '../AwaleLegalityStatus';
-import { expectToBeDraw, expectToBeVictoryFor } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { AwaleMinimax } from '../AwaleMinimax';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
@@ -58,8 +58,8 @@ describe('AwaleRules', () => {
         const expectedState: AwaleState = new AwaleState(expectedBoard, 1, [23, 25]);
         expect(status.legal.isSuccess()).toBeTrue();
         expect(resultingState).toEqual(expectedState);
-        const node: AwaleNode = new MGPNode(null, move, resultingState);
-        expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+        const node: AwaleNode = new MGPNode(resultingState, null, move);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
     it('should forbid non-feeding move', () => {
         // given a board in which the player could and should feed his opponent
@@ -105,8 +105,8 @@ describe('AwaleRules', () => {
                 [0, 0, 0, 0, 0, 0],
             ];
             const state: AwaleState = new AwaleState(board, 5, [26, 22]);
-            const node: AwaleNode = new AwaleNode(null, null, state);
-            expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+            const node: AwaleNode = new AwaleNode(state);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
         });
         it('should identify victory for player 1', () => {
             const board: number[][] = [
@@ -114,8 +114,8 @@ describe('AwaleRules', () => {
                 [0, 0, 0, 0, 0, 0],
             ];
             const state: AwaleState = new AwaleState(board, 5, [22, 26]);
-            const node: AwaleNode = new AwaleNode(null, null, state);
-            expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+            const node: AwaleNode = new AwaleNode(state);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
         });
         it('should identify draw', () => {
             const board: number[][] = [
@@ -123,8 +123,8 @@ describe('AwaleRules', () => {
                 [0, 0, 0, 0, 0, 0],
             ];
             const state: AwaleState = new AwaleState(board, 5, [24, 24]);
-            const node: AwaleNode = new AwaleNode(null, null, state);
-            expectToBeDraw(rules, node, minimaxes);
+            const node: AwaleNode = new AwaleNode(state);
+            RulesUtils.expectToBeDraw(rules, node, minimaxes);
         });
     });
 });
