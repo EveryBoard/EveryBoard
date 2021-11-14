@@ -2,10 +2,10 @@ src/app/games/tablut,54
 src/app/jscaip,25
 src/app/components/wrapper-components/online-game-wrapper,13
 src/app/games/go,11
-src/app/services,9
+src/app/services,10
 src/app/games/six,8
+src/app/games/kamisado,7
 src/app/games/quarto,7
-src/app/games/kamisado,5
 src/app/games/p4,5
 src/app/games/awale,4
 src/app/components/wrapper-components/part-creation,3

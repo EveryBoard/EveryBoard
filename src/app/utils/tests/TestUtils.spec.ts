@@ -14,7 +14,6 @@ import { UserDAO } from '../../dao/UserDAO';
 import { AuthenticationService, AuthUser } from '../../services/AuthenticationService';
 import { MGPNode } from '../../jscaip/MGPNode';
 import { GameWrapper } from '../../components/wrapper-components/GameWrapper';
-import { Player } from '../../jscaip/Player';
 import { AuthenticationServiceMock } from '../../services/tests/AuthenticationService.spec';
 import { OnlineGameWrapperComponent }
     from '../../components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
@@ -27,7 +26,6 @@ import { ChatDAOMock } from '../../dao/tests/ChatDAOMock.spec';
 import { PartDAOMock } from '../../dao/tests/PartDAOMock.spec';
 import { LocalGameWrapperComponent }
     from '../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { HumanDuration } from '../TimeUtils';
 import { Rules } from 'src/app/jscaip/Rules';
 import { AutofocusDirective } from 'src/app/directives/autofocus.directive';
@@ -163,8 +161,8 @@ export class SimpleComponentTestUtils<T> {
     }
 }
 type MyGameComponent = GameComponent<Rules<Move, AbstractGameState>,
-                                           Move,
-                                           AbstractGameState>;
+                                     Move,
+                                     AbstractGameState>;
 
 export class ComponentTestUtils<T extends MyGameComponent> {
     public fixture: ComponentFixture<GameWrapper>;
@@ -212,7 +210,6 @@ export class ComponentTestUtils<T extends MyGameComponent> {
         }).compileComponents();
         return new ComponentTestUtils<T>(activatedRouteStub);
     }
-
     private constructor(private readonly activatedRouteStub: ActivatedRouteStub) {}
 
     public prepareFixture(wrapperKind: Type<GameWrapper>): void {
@@ -383,7 +380,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     }
     public expectElementNotToExist(elementName: string): void {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(elementName + ' should not to exist').toBeNull();
+        expect(element).withContext(elementName + ' should not exist').toBeNull();
     }
     public expectElementToExist(elementName: string): DebugElement {
         const element: DebugElement = this.findElement(elementName);
@@ -393,14 +390,16 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     public expectElementToHaveClass(elementName: string, cssClass: string): void {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(elementName + ' should exist').toBeTruthy();
-        const elementClasses: string[] = element.attributes.class.split(' ').sort();
-        expect(elementClasses).toContain(cssClass);
+        const classAttribute: string = element.attributes.class;
+        expect(classAttribute).withContext(elementName + ' should have class attribute').toBeTruthy();
+        const elementClasses: string[] = classAttribute.split(' ').sort();
+        expect(elementClasses).withContext(elementName + ' should contain ' + cssClass).toContain(cssClass);
     }
     public expectElementNotToHaveClass(elementName: string, cssClass: string): void {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(elementName + ' should exist').toBeTruthy();
         const elementClasses: string[] = element.attributes.class.split(' ').sort();
-        expect(elementClasses).not.toContain(cssClass);
+        expect(elementClasses).withContext(elementName + ' should not contain ' + cssClass).not.toContain(cssClass);
     }
     public expectElementToHaveClasses(elementName: string, classes: string[]): void {
         const classesSorted: string[] = [...classes].sort();
@@ -417,27 +416,12 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     }
 }
 
-export function expectSecondStateToBeBetterThanFirst(weakerState: AbstractGameState,
-                                                     weakMove: Move,
-                                                     strongerState: AbstractGameState,
-                                                     strongMove: Move,
-                                                     minimax: Minimax<Move, AbstractGameState>)
-: void
-{
-    const weakValue: number = minimax.getBoardValue(new MGPNode(null, weakMove, weakerState)).value;
-    const strongValue: number = minimax.getBoardValue(new MGPNode(null, strongMove, strongerState)).value;
-    expect(weakValue).toBeLessThan(strongValue);
-}
-export function expectStateToBePreVictory(state: AbstractGameState,
-                                          previousMove: Move,
-                                          player: Player,
-                                          minimax: Minimax<Move, AbstractGameState>)
-: void
-{
-    // TODO: replace that and refuse it to reach develop! expectToBeVictoryFor is the way
-    const value: number = minimax.getBoardNumericValue(new MGPNode(null, previousMove, state));
-    const expectedValue: number = player.getPreVictory();
-    expect(value).toBe(expectedValue);
+export class TestUtils {
+
+    public static expectValidationSuccess(validation: MGPValidation, context?: string): void {
+        const reason: string = validation.reason;
+        expect(validation.isSuccess()).withContext(context + ': ' + reason).toBeTrue();
+    }
 }
 
 export async function setupEmulators(): Promise<unknown> {

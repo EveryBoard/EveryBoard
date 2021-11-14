@@ -65,13 +65,16 @@ export class TestingHexagonalState extends HexagonalGameState<number> {
         }
         return this.board[coord.y][coord.x] !== TestingHexagonalState.NONE;
     }
+    public numCompare(x: number, y: number): boolean {
+        return x === y;
+    }
+    public equals(other: TestingHexagonalState): boolean {
+        return this.equalsT(other, this.numCompare);
+    }
 }
 
 describe('HexagonalGameState', () => {
 
-    function numCompare(x: number, y: number): boolean {
-        return x === y;
-    }
     let state: TestingHexagonalState;
 
     beforeEach(() => {
@@ -79,28 +82,26 @@ describe('HexagonalGameState', () => {
     });
     describe('equals', () => {
         it('should consider a board equal to itself', () => {
-            expect(state.equals(state, (x: number, y: number) => {
-                return x === y;
-            })).toBeTrue();
+            expect(state.equals(state)).toBeTrue();
         });
         it('should distinguish different boards due to different contents', () => {
             const otherState: TestingHexagonalState = state.setAt(new Coord(4, 4), 73);
-            expect(state.equals(otherState, numCompare)).toBeFalse();
+            expect(state.equals(otherState)).toBeFalse();
         });
         it('should distinguish different boards due to different width', () => {
             const board1: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1], 0);
             const board2: TestingHexagonalState = TestingHexagonalState.empty(5, 3, [1], 0);
-            expect(board1.equals(board2, numCompare)).toBeFalse();
+            expect(board1.equals(board2)).toBeFalse();
         });
         it('should distinguish different boards due to different width', () => {
             const board1: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1], 0);
             const board2: TestingHexagonalState = TestingHexagonalState.empty(3, 5, [1], 0);
-            expect(board1.equals(board2, numCompare)).toBeFalse();
+            expect(board1.equals(board2)).toBeFalse();
         });
         it('should distinguish different boards due to different empty coords', () => {
             const board1: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1], 0);
             const board2: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1], 1);
-            expect(board1.equals(board2, numCompare)).toBeFalse();
+            expect(board1.equals(board2)).toBeFalse();
         });
     });
     describe('getPieceAt', () => {

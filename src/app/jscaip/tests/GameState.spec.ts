@@ -1,17 +1,15 @@
+import { Comparable } from 'src/app/utils/Comparable';
 import { AbstractGameState } from '../GameState';
 
 class MyGameState extends AbstractGameState {
 
-    public isOnBoard(coord: unknown): boolean {
+    public getPieceAt(coord: Comparable): Comparable {
         throw new Error('Method not implemented.');
     }
-    public getNullable(coord: unknown): unknown {
+    public isOnBoard(coord: Comparable): boolean {
         throw new Error('Method not implemented.');
     }
-    public getPieceAt(coord: unknown): unknown {
-        throw new Error('Method not implemented.');
-    }
-    public setAtUnsafe(coord: unknown, v: unknown): this {
+    public getNullable(coord: Comparable): Comparable {
         throw new Error('Method not implemented.');
     }
 }

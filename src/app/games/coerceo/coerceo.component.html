@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="auto"
-     [attr.viewBox]="'-5 -5 ' + (CASE_SIZE * 8) + ' ' + (10 + CASE_SIZE * 10)"
+     [attr.viewBox]="'-5 -5 ' + (SPACE_SIZE * 8) + ' ' + (10 + SPACE_SIZE * 10)"
      preserveAspectRatio="xMidYMid meet">
     <g *ngFor="let line of board; index as y">
         <g *ngFor="let caseContent of line; index as x"
@@ -57,11 +57,11 @@
                   stroke-linecap="round"
         />
         <text id="playerZeroTilesCount"
-              [attr.x]="(CASE_SIZE / 2) + CASE_SIZE * 0"
-              [attr.y]="16 + (CASE_SIZE / 2) + CASE_SIZE * 0"
+              [attr.x]="(SPACE_SIZE / 2) + SPACE_SIZE * 0"
+              [attr.y]="16 + (SPACE_SIZE / 2) + SPACE_SIZE * 0"
               text-anchor="middle"
               stroke="black"
-              [attr.font-size]="CASE_SIZE / 2"
+              [attr.font-size]="SPACE_SIZE / 2"
         >{{ tiles[0] }}</text>
     </g>
     <g *ngIf="mustShowTilesOf(1)"
@@ -73,11 +73,11 @@
                   stroke-linecap="round"
         />
         <text id="playerOneTilesCount"
-              [attr.x]="(CASE_SIZE / 2) + CASE_SIZE * 0"
-              [attr.y]="16 + (CASE_SIZE / 2) + CASE_SIZE * 9"
+              [attr.x]="(SPACE_SIZE / 2) + SPACE_SIZE * 0"
+              [attr.y]="16 + (SPACE_SIZE / 2) + SPACE_SIZE * 9"
               text-anchor="middle"
               stroke="black"
-              [attr.font-size]="CASE_SIZE / 2"
+              [attr.font-size]="SPACE_SIZE / 2"
         >{{ tiles[1] }}</text>
     </g>
 </svg>
