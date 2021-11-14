@@ -1,6 +1,6 @@
 src/app/games/tablut,46
 src/app/jscaip,31
-src/app/services,25
+src/app/services,26
 src/app/games/six,16
 src/app/games/quarto,14
 src/app/components/wrapper-components/online-game-wrapper,11
@@ -45,6 +45,7 @@ src/app/dao,0
 src/app/directives,0
 src/app/domain,0
 src/app/games/abalone,0
+src/app/games/apagos,0
 src/app/games/gipf,0
 src/app/games/kamisado,0
 src/app/games/pentago,0
