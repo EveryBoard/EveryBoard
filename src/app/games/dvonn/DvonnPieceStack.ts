@@ -5,7 +5,7 @@ export class DvonnPieceStack {
 
     public static sizeEncoder: NumberEncoder<number> = NumberEncoder.numberEncoder(49);
 
-    public static encoder: NumberEncoder<DvonnPieceStack> = NumberEncoder.ofCombination(
+    public static encoder: NumberEncoder<DvonnPieceStack> = NumberEncoder.tuple(
         [NumberEncoder.booleanEncoder, Player.numberEncoder, DvonnPieceStack.sizeEncoder],
         (stack: DvonnPieceStack): [boolean, Player, number] => [stack.source, stack.owner, stack.size],
         (fields: [boolean, Player, number]): DvonnPieceStack => {

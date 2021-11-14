@@ -1,13 +1,15 @@
 import { Coord } from 'src/app/jscaip/Coord';
+import { NumberEncoder } from 'src/app/jscaip/Encoder';
 import { Move } from 'src/app/jscaip/Move';
 import { DiamPiece } from './DiamPiece';
 
-export type DiamXValue = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
-
-export type DiamMove = DiamMoveDrop | DiamMoveShift
-
 export class DiamMoveDrop extends Move {
-    constructor(public readonly target: DiamXValue,
+    public static encoder: NumberEncoder<DiamMoveDrop> = NumberEncoder.tuple(
+        [NumberEncoder.numberEncoder(7), DiamPiece.encoder],
+        (drop: DiamMoveDrop): [number, DiamPiece] => [drop.target, drop.piece],
+        (fields: [number, DiamPiece]): DiamMoveDrop => new DiamMoveDrop(fields[0], fields[1]),
+    );
+    constructor(public readonly target: number,
                 public readonly piece: DiamPiece) {
         super();
         if (piece === DiamPiece.EMPTY) {
@@ -17,7 +19,7 @@ export class DiamMoveDrop extends Move {
     public isDrop(): this is DiamMoveDrop {
         return true;
     }
-    public getTarget(): DiamXValue {
+    public getTarget(): number {
         return this.target;
     }
     public equals(other: DiamMoveDrop): boolean {
@@ -31,6 +33,11 @@ export class DiamMoveDrop extends Move {
 }
 
 export class DiamMoveShift extends Move {
+    public static encoder: NumberEncoder<DiamMoveShift> = NumberEncoder.tuple(
+        [Coord.numberEncoder(8, 4), NumberEncoder.booleanEncoder],
+        (shift: DiamMoveShift): [Coord, boolean] => [shift.start, shift.moveDirection === 'right'],
+        (fields: [Coord, boolean]): DiamMoveShift => new DiamMoveShift(fields[0], fields[1] ? 'right' : 'left'),
+    );
     constructor(public readonly start: Coord,
                 public readonly moveDirection: 'right' | 'left') {
         super();
@@ -38,11 +45,11 @@ export class DiamMoveShift extends Move {
     public isDrop(): this is DiamMoveDrop {
         return false;
     }
-    public getTarget(): DiamXValue {
+    public getTarget(): number {
         if (this.moveDirection === 'right') {
-            return (this.start.x + 1) % 8 as DiamXValue;
+            return (this.start.x + 1) % 8;
         } else {
-            return (this.start.x + 7) % 8 as DiamXValue;
+            return (this.start.x + 7) % 8;
         }
     }
     public equals(other: DiamMoveShift): boolean {
@@ -54,3 +61,11 @@ export class DiamMoveShift extends Move {
         return `DiamMoveShift(${this.start}, ${this.moveDirection})`;
     }
 }
+
+export type DiamMove = DiamMoveDrop | DiamMoveShift
+
+export const DiamMoveEncoder: NumberEncoder<DiamMove> =
+    NumberEncoder.disjunction(DiamMoveDrop.encoder, DiamMoveShift.encoder,
+                              (value: DiamMove): value is DiamMoveDrop => {
+                                  return value.isDrop();
+                              });

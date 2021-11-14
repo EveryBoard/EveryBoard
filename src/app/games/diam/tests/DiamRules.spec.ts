@@ -41,7 +41,7 @@ function expectMoveFailure(rules: Rules<Move, AbstractGameState>,
     expect(legality.legal.reason).toBe(reason);
 }
 
-describe('DiamRules', () => {
+fdescribe('DiamRules', () => {
     const __: DiamPiece = DiamPiece.EMPTY;
     const A1: DiamPiece = DiamPiece.ZERO_FIRST;
     const A2: DiamPiece = DiamPiece.ZERO_SECOND;

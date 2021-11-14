@@ -1,36 +1,39 @@
 import { Component } from '@angular/core';
 import { GameComponent } from 'src/app/components/game-components/game-component/GameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
+import { Vector } from 'src/app/jscaip/Direction';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { DiamDummyMinimax } from './DiamDummyMinimax';
-import { DiamMove, DiamMoveDrop, DiamMoveShift, DiamXValue } from './DiamMove';
+import { DiamFailure } from './DiamFailure';
+import { DiamMove, DiamMoveDrop, DiamMoveEncoder, DiamMoveShift } from './DiamMove';
 import { DiamPiece } from './DiamPiece';
 import { DiamRules } from './DiamRules';
 import { DiamState } from './DiamState';
+import { DiamTutorial } from './DiamTutorial';
 
 interface ViewInfo {
     boardInfo: CaseInfo[],
-    sidePieces: PieceInfo[],
+    remainingPieces: PieceInfo[],
 }
 
 interface CaseInfo {
     x: number,
     caseClasses: string[],
     pieces: PieceInfo[],
-    center: Coord,
 }
 
 interface PieceInfo {
     classes: string[],
+    y: number,
+    drawPosition: Coord,
+    actualPiece: DiamPiece,
 }
 
 type Selected = { type: 'pieceFromReserve', piece: DiamPiece }
     | { type: 'pieceFromBoard', position: Coord }
-
 
 @Component({
     selector: 'app-diam',
@@ -39,15 +42,16 @@ type Selected = { type: 'pieceFromReserve', piece: DiamPiece }
 })
 export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState, LegalityStatus> {
     public static CENTER: Coord[] = [
-        new Coord(2, 277),
-        new Coord(170, 148),
-        new Coord(195, 2),
-        new Coord(348, 96),
-        new Coord(424, 148),
-        new Coord(431, -75),
-        new Coord(356, 79),
-        new Coord(241, 166),
+        new Coord(40, 160),
+        new Coord(100, 50),
+        new Coord(250, 2),
+        new Coord(400, 50),
+        new Coord(460, 160),
+        new Coord(400, 270),
+        new Coord(250, 320),
+        new Coord(100, 270),
     ];
+    public static PIECE_HEIGHT: number = 37;
     public BOARD_PATHS: string[] = [
         'M 2.8324855,277.57643 164.46619,228.81694 170.57257,148.42756 32.571357,104.19835 Z',
         'M 170.57257,148.42237 246.4213,96.276913 195.13813,2.0233391 32.571357,104.19315 Z',
@@ -68,23 +72,26 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
         'm 166.97969,426.86815 v 40.08638 l 268.28379,-0.0433 v -40.08031 z',
         'm 2.8324855,277.57297 v 40.08636 L 166.97969,466.94782 v -40.08636 z',
     ];
-    public PIECE_HEIGHT: number = 20;
-    public selected: Selected | null = null;
-    public viewInfo: ViewInfo;
+    public selected: Selected | null = null; // TODO: use MGPOptional after strictness merge
+    public viewInfo: ViewInfo = {
+        boardInfo: [],
+        remainingPieces: [],
+    };
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.rules = new DiamRules(DiamState);
         this.availableMinimaxes = [
             new DiamDummyMinimax(this.rules, 'DiamDummyMinimax'),
         ];
-        // this.encoder = TODO;
-        // this.tutorial = TODO;
+        this.encoder = DiamMoveEncoder;
+        this.tutorial = new DiamTutorial().tutorial;
         this.updateBoard();
     }
-    public onCaseClick(x: DiamXValue): void {
+    public async onCaseClick(x: number): Promise<MGPValidation> {
         if (this.selected != null) {
             let move: DiamMove;
             if (this.selected.type === 'pieceFromReserve') {
+                console.log(`dropping to ${x}`)
                 move = new DiamMoveDrop(x, this.selected.piece);
             } else {
                 if (this.selected.position.x + 1 % 8 === x) {
@@ -92,32 +99,65 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
                 } else if (this.selected.position.x + 7 % 8 === x) {
                     move = new DiamMoveShift(this.selected.position, 'left');
                 } else {
-                    this.cancelMove(DiamFailure.MUST_SHIFT_LEFT_OR_RIGHT());
+                    return this.cancelMove(DiamFailure.MUST_SHIFT_LEFT_OR_RIGHT());
                 }
             }
             const validity: MGPValidation = await this.chooseMove(move, this.rules.node.gameState, null, null);
             if (validity.isFailure()) {
-                this.cancelMove(validity.getReason());
+                return this.cancelMove(validity.getReason());
             }
         } else {
-            this.cancelMove(DiamFailure.MUST_SELECT_PIECE_FIRST());
+            return this.cancelMove(DiamFailure.MUST_SELECT_PIECE_FIRST());
         }
+        console.log('move success')
+        return MGPValidation.SUCCESS;
     }
-    public onPieceInGameClick(x: number, y: number): void {
+    public onPieceInGameClick(x: number, y: number): Promise<MGPValidation> {
+        if (this.selected != null) {
+            return this.onCaseClick(x);
+        }
+        this.selected = { type: 'pieceFromBoard', position: new Coord(x, y) };
     }
-    public onRemainingPieceClick(owner: number, otherPiece: boolean): void {
-        this.selected = { type: 'pieceFromReserve', piece: DiamPiece.of(Player.of(owner), otherPiece) };
+    public onRemainingPieceClick(piece: DiamPiece): void {
+        this.selected = { type: 'pieceFromReserve', piece };
     }
     public updateBoard(): void {
-        this.cancelMoveAttempt();
         for (let x: number = 0; x < DiamState.WIDTH; x++) {
             this.viewInfo.boardInfo[x] = {
                 x,
                 caseClasses: this.getCaseClasses(x),
                 pieces: this.getPieces(x),
-                center: DiamComponent.CENTER[x],
             };
         }
+        this.viewInfo.remainingPieces = [];
+        for (const piece of DiamPiece.PLAYER_PIECES) {
+            for (let y: number = 0; y < this.rules.node.gameState.getRemainingPiecesOf(piece); y++) {
+                this.viewInfo.remainingPieces.push({
+                    classes: [
+                        'player' + piece.owner.value,
+                        piece.otherPieceType ? 'color-variant' : '',
+                    ],
+                    y,
+                    drawPosition: this.getDrawPosition(piece).getNext(new Vector(0, -y*DiamComponent.PIECE_HEIGHT)),
+                    actualPiece: piece,
+                });
+            }
+        }
+    }
+    private getDrawPosition(piece: DiamPiece): Coord {
+        let x: number;
+        if (piece.owner === Player.ZERO) {
+            x = -100;
+        } else {
+            x = 600;
+        }
+        let y: number;
+        if (piece.otherPieceType) {
+            y = 100;
+        } else {
+            y = 450;
+        }
+        return new Coord(x, y);
     }
     private getCaseClasses(x: number): string[] {
         const lastMove: DiamMove | null = this.rules.node.move;
@@ -129,27 +169,27 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
     private getPieces(x: number): PieceInfo[] {
         const infos: PieceInfo[] = [];
         for (let y: number = DiamState.HEIGHT-1; y >= 0; y--) {
-            const piece: DiamPiece = this.state.getPieceAtXY(x, y);
+            const piece: DiamPiece = this.rules.node.gameState.getPieceAtXY(x, y);
             if (piece !== DiamPiece.EMPTY) {
-                let brightness: string;
-
+                const classes: string[] = ['player' + piece.owner.value];
+                if (piece.otherPieceType) classes.push('color-variant');
+                if (this.selected != null &&
+                    this.selected.type === 'pieceFromReserve' &&
+                    this.selected.piece === piece) {
+                    classes.push('highlighted');
+                }
                 infos.push({
-                    classes: [
-                        'player' + piece.owner.value,
-                        this.getBrightness(piece),
+                    classes,
+                    y,
+                    drawPosition: DiamComponent.CENTER[x].getNext(new Vector(0, (y-3)*DiamComponent.PIECE_HEIGHT)),
+                    actualPiece: piece,
                 });
             }
         }
-        }
-        getBrightness:                 if (piece.otherPieceType) {
-                    if (piece.owner.value === Player.ZERO) {
-                        return 'low-brightness';
-                    } else {
-                        return 'high-brightness';
-                    }
-                }
+        return infos;
+    }
     public cancelMoveAttempt(): void {
-        this.selectedPiece = null;
+        this.selected = null;
         this.updateBoard();
     }
 }

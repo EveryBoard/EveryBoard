@@ -1,5 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { DiamMoveDrop, DiamMoveShift } from '../DiamMove';
+import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
+import { DiamMoveDrop, DiamMoveEncoder, DiamMoveShift } from '../DiamMove';
 import { DiamPiece } from '../DiamPiece';
 
 fdescribe('DiamMove', () => {
@@ -41,5 +42,12 @@ fdescribe('DiamMove', () => {
             const move: DiamMoveShift = new DiamMoveShift(new Coord(0, 0), 'right');
             expect(move.toString()).toEqual('DiamMoveShift((0, 0), right)');
         });
+    });
+    describe('encoder', () => {
+        it('should correctly encode and decode all moves', () => {
+            NumberEncoderTestUtils.expectToBeCorrect(DiamMoveEncoder, new DiamMoveDrop(3, DiamPiece.ZERO_FIRST));
+            NumberEncoderTestUtils.expectToBeCorrect(DiamMoveEncoder, new DiamMoveShift(new Coord(3, 3), 'right'));
+        });
+
     });
 });

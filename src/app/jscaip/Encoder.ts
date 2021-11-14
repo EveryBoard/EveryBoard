@@ -62,9 +62,13 @@ export abstract class NumberEncoder<T> extends MoveEncoder<T> {
         }
     };
 
-    public static ofCombination<T, Fields>(encoders: NumberEncoderArray<Fields>,
-                                           encode: (t: T) => Fields,
-                                           decode: (fields: Fields) => T): NumberEncoder<T> {
+    /**
+     *  This creates a "product" encoder that encodes a type T as all of its fields
+     *  i.e., if T = (a, b), then it does encode(a) << shiftForA + encode(b)
+     */
+    public static tuple<T, Fields>(encoders: NumberEncoderArray<Fields>,
+                                   encode: (t: T) => Fields,
+                                   decode: (fields: Fields) => T): NumberEncoder<T> {
         return new class extends NumberEncoder<T> {
             public maxValue(): number {
                 let max: number = 0;
@@ -90,6 +94,37 @@ export abstract class NumberEncoder<T> extends MoveEncoder<T> {
                     fields[key] = encoders[key].decode(fieldN);
                 });
                 return decode(fields as Fields);
+            }
+        };
+    }
+    /**
+     * This creates a "sum" encoder, i.e., it encodes values of either type T1 and T2
+     */
+    public static disjunction<T1, T2>(encoder1: NumberEncoder<T1>,
+                                      encoder2: NumberEncoder<T2>,
+                                      isT1: (v: T1 | T2) => v is T1)
+    : NumberEncoder<T1 | T2> {
+        return new class extends NumberEncoder<T1 | T2> {
+            public maxValue(): number {
+                return Math.max(encoder1.maxValue() << 1,
+                                (encoder2.maxValue() << 1) + 1);
+            }
+            public encodeNumber(value: T1 | T2): number {
+                console.log(`encoding $move`)
+                if (isT1(value)) {
+                    console.log('encoding with T1')
+                    return encoder1.encodeNumber(value) << 1;
+                } else {
+                    console.log('encoding with T2')
+                    return (encoder2.encodeNumber(value) << 1) + 1;
+                }
+            }
+            public decodeNumber(encoded: number): T1 | T2 {
+                if ((encoded & 0x1) === 0) {
+                    return encoder1.decodeNumber(encoded >> 1);
+                } else {
+                    return encoder2.decodeNumber((encoded - 1) >> 1);
+                }
             }
         };
     }

@@ -6,7 +6,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { DiamFailure } from './DiamFailure';
-import { DiamMove, DiamMoveDrop, DiamMoveShift, DiamXValue } from './DiamMove';
+import { DiamMove, DiamMoveDrop, DiamMoveShift } from './DiamMove';
 import { DiamPiece } from './DiamPiece';
 import { DiamState } from './DiamState';
 
@@ -33,7 +33,7 @@ export class DiamRules extends Rules<DiamMove, DiamState, LegalityStatus> {
     }
     private applyLegalShift(shift: DiamMoveShift, state: DiamState): DiamState {
         const newBoard: DiamPiece[][] = ArrayUtils.copyBiArray(state.board);
-        const targetX: DiamXValue = shift.getTarget();
+        const targetX: number = shift.getTarget();
         let targetY: number = state.getStackHeight(targetX)-1;
         let sourceY: number = shift.start.y;
         while (sourceY > 0 && state.getPieceAtXY(shift.start.x, sourceY) !== DiamPiece.EMPTY) {
@@ -70,7 +70,7 @@ export class DiamRules extends Rules<DiamMove, DiamState, LegalityStatus> {
         }
         const resultingHeight: number =
             // the height of the stack we move
-            state.getStackHeight(shift.start.x as DiamXValue) - (3 - shift.start.y) +
+            state.getStackHeight(shift.start.x - (3 - shift.start.y)) +
             // the hegiht of the target
             state.getStackHeight(shift.getTarget());
         if (resultingHeight > 4) {
@@ -88,7 +88,7 @@ export class DiamRules extends Rules<DiamMove, DiamState, LegalityStatus> {
         }
     }
     private findHighestAlignment(state: DiamState): MGPOptional<Coord> {
-        for (let x: DiamXValue = 0; x < 4; x++) {
+        for (let x: number = 0; x < 4; x++) {
             for (let y: number = 0; y < 3; y++) { // skip y = 3 because ground alignment isn't a win
                 const pieceHere: DiamPiece = state.getPieceAtXY(x, y);
                 const pieceThere: DiamPiece = state.getPieceAtXY(x+4, y);

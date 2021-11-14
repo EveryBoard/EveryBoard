@@ -18,7 +18,11 @@ export class Coord implements ComparableObject {
         }
     }
     public static numberEncoder(width: number, height: number): NumberEncoder<Coord> {
-        throw new Error('NYI');
+        return NumberEncoder.tuple(
+            [NumberEncoder.numberEncoder(width), NumberEncoder.numberEncoder(height)],
+            (coord: Coord): [number, number] => [coord.x, coord.y],
+            (fields: [number, number]): Coord => new Coord(fields[0], fields[1]),
+        );
     }
     constructor(public readonly x: number,
                 public readonly y: number)

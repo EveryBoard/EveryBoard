@@ -1,12 +1,8 @@
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { DiamXValue } from './DiamMove';
 import { DiamPiece } from './DiamPiece';
 
 export class DiamState extends GameStateWithTable<DiamPiece> {
-    static getPieceIndex(piece: DiamPiece) {
-        throw new Error('Method not implemented.');
-    }
     public static WIDTH: number = 8;
 
     public static HEIGHT: number = 4;
@@ -39,7 +35,7 @@ export class DiamState extends GameStateWithTable<DiamPiece> {
     public getRemainingPiecesOf(piece: DiamPiece): number {
         return this.remainingPieces[DiamState.pieceIndex(piece)];
     }
-    public getStackHeight(x: DiamXValue): number {
+    public getStackHeight(x: number): number {
         let size: number = 0;
         for (let y: number = 3; y >= 0; y--) {
             if (this.getPieceAtXY(x, y) === DiamPiece.EMPTY) {

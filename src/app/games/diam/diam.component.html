@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="auto"
-     viewBox="-100 0 700 500"
+     viewBox="-100 -50 800 600"
      preserveAspectRatio="xMidYMid meet">
     <defs>
         <g id="piece">
@@ -15,17 +15,30 @@
     <g *ngFor="let x of [0, 1, 2, 3, 4, 5, 6, 7]">
         <path id="click_{{ x }}"
               class="base mid-stroke"
-              (click)="onClick(x)"
+              (click)="onCaseClick(x)"
               [attr.d]="BOARD_PATHS[x]" />
         <path class="base mid-stroke"
-              (click)="onClick(x)"
+              (click)="onCaseClick(x)"
               [attr.d]="DECORATION_PATHS[x]"
               style="filter: brightness(1.1);"/>
-
+    </g>
+    <g *ngFor="let x of [0, 1, 2, 3, 4, 5, 6, 7]">
+        <use *ngFor="let piece of viewInfo.boardInfo[x].pieces"
+             id="click_{{ x }}_{{ piece.y }}"
+             (click)="onPieceInGameClick(x, piece.y)"
+             [attr.x]="piece.drawPosition.x"
+             [attr.y]="piece.drawPosition.y"
+             xlink:href="#piece"
+             class="base mid-stroke"
+             [ngClass]="piece.classes" />
     </g>
 
-    <use x="-80" y="20" xlink:href="#piece" class="base player0 mid-stroke" style="filter: hue-rotate(20deg)"/>
-    <use x="-80" y="100" xlink:href="#piece" class="base player0 mid-stroke" />
-    <use x="-80" y="180" xlink:href="#piece" class="base player1 mid-stroke" style="filter: hue-rotate(20deg)"/>
-    <use x="-80" y="260" xlink:href="#piece" class="base player1 mid-stroke" />
+    <use *ngFor="let piece of viewInfo.remainingPieces"
+         (click)="onRemainingPieceClick(piece.actualPiece)"
+         id="piece_{{ piece.actualPiece.owner.value }}_{{ piece.actualPiece.otherPieceType ? 1 : 0 }}"
+         [attr.x]="piece.drawPosition.x"
+         [attr.y]="piece.drawPosition.y"
+         xlink:href="#piece"
+         class="base mid-stroke"
+         [ngClass]="piece.classes" />
 </svg>

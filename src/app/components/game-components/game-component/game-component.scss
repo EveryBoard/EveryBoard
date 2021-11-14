@@ -159,6 +159,9 @@ $victory: yellow;
 .text-center {
     text-anchor: middle;
 }
+.color-variant {
+    filter: hue-rotate(20deg);
+}
 svg {
     max-height: calc(100vh - 10rem); /* Full height minus the navbar */
 }
