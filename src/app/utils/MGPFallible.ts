@@ -12,12 +12,19 @@ export abstract class MGPFallible<T> {
         return new MGPFallibleFailure(reason);
     }
     public abstract isSuccess(): boolean
+
     public abstract isFailure(): boolean
+
     public abstract get(): T
+
     public abstract getOrNull(): T | null
+
     public abstract getReason(): string
+
     public abstract toOptional(): MGPOptional<T>
+
     public abstract toValidation(): MGPValidation
+
     public equals(other: MGPFallible<T>): boolean {
         if (this.isFailure()) {
             return other.isFailure() && this.getReason() === other.getReason();
@@ -27,10 +34,12 @@ export abstract class MGPFallible<T> {
         }
         return comparableEquals(this.get(), other.get());
     }
-
 }
 
 class MGPFallibleSuccess<T> extends MGPFallible<T> {
+
+    private __nominal: void; // For strict typing
+
     public constructor(private readonly value: T) {
         super();
     }
@@ -58,6 +67,9 @@ class MGPFallibleSuccess<T> extends MGPFallible<T> {
 }
 
 class MGPFallibleFailure<T> extends MGPFallible<T> {
+
+    private __nominal: void; // For strict typing
+
     public constructor(private readonly reason: string) {
         super();
     }

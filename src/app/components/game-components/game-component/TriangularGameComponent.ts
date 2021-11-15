@@ -15,7 +15,7 @@ export abstract class TriangularGameComponent<R extends Rules<M, S, L>,
                                               L extends LegalityStatus = LegalityStatus>
     extends GameComponent<R, M, S, L>
 {
-    public CASE_SIZE: number = 50;
+    public SPACE_SIZE: number = 50;
 
     public board: Table<P>;
 
@@ -29,22 +29,22 @@ export abstract class TriangularGameComponent<R extends Rules<M, S, L>,
         return strings.reduce((sum: string, last: string) => sum + ',' + last);
     }
     public getDownwardCoordinate(x: number, y: number): Coord[] {
-        const left: number = this.CASE_SIZE * 0.5 * x;
-        const middle: number = this.CASE_SIZE * 0.5 * (x + 1);
-        const right: number = this.CASE_SIZE * 0.5 * (x + 2);
-        const top: number = this.CASE_SIZE * y;
-        const bottom: number = this.CASE_SIZE * (y + 1);
+        const left: number = this.SPACE_SIZE * 0.5 * x;
+        const middle: number = this.SPACE_SIZE * 0.5 * (x + 1);
+        const right: number = this.SPACE_SIZE * 0.5 * (x + 2);
+        const top: number = this.SPACE_SIZE * y;
+        const bottom: number = this.SPACE_SIZE * (y + 1);
         const leftCorner: Coord = new Coord(left, top);
         const middleCorner: Coord = new Coord(middle, bottom);
         const rightCorner: Coord = new Coord(right, top);
         return [leftCorner, middleCorner, rightCorner, leftCorner];
     }
     public getUpwardCoordinate(x: number, y: number): Coord[] {
-        const left: number = this.CASE_SIZE * 0.5 * x;
-        const middle: number = this.CASE_SIZE * 0.5 * (x + 1);
-        const right: number = this.CASE_SIZE * 0.5 * (x + 2);
-        const top: number = this.CASE_SIZE * y;
-        const bottom: number = this.CASE_SIZE * (y + 1);
+        const left: number = this.SPACE_SIZE * 0.5 * x;
+        const middle: number = this.SPACE_SIZE * 0.5 * (x + 1);
+        const right: number = this.SPACE_SIZE * 0.5 * (x + 2);
+        const top: number = this.SPACE_SIZE * y;
+        const bottom: number = this.SPACE_SIZE * (y + 1);
         const leftCorner: Coord = new Coord(left, bottom);
         const middleCorner: Coord = new Coord(middle, top);
         const rightCorner: Coord = new Coord(right, bottom);
@@ -55,12 +55,12 @@ export abstract class TriangularGameComponent<R extends Rules<M, S, L>,
         else return this.getUpwardPyramidCoordinate(x, y);
     }
     public getDownwardPyramidCoordinate(x: number, y: number): string {
-        const zx: number = this.CASE_SIZE * x / 2;
-        const zy: number = this.CASE_SIZE * y;
+        const zx: number = this.SPACE_SIZE * x / 2;
+        const zy: number = this.SPACE_SIZE * y;
         const UP_LEFT: string = zx + ', ' + zy;
-        const UP_RIGHT: string = (zx+this.CASE_SIZE) + ', ' + zy;
-        const DOWN_CENTER: string = (zx+(this.CASE_SIZE/2)) + ', ' + (zy+this.CASE_SIZE);
-        const CENTER: string = (zx+(this.CASE_SIZE / 2)) + ', ' + (zy+(this.CASE_SIZE / 2));
+        const UP_RIGHT: string = (zx+this.SPACE_SIZE) + ', ' + zy;
+        const DOWN_CENTER: string = (zx+(this.SPACE_SIZE/2)) + ', ' + (zy+this.SPACE_SIZE);
+        const CENTER: string = (zx+(this.SPACE_SIZE / 2)) + ', ' + (zy+(this.SPACE_SIZE / 2));
         return UP_LEFT + ',' +
                DOWN_CENTER + ',' +
                CENTER + ',' +
@@ -74,12 +74,12 @@ export abstract class TriangularGameComponent<R extends Rules<M, S, L>,
                UP_RIGHT;
     }
     public getUpwardPyramidCoordinate(x: number, y: number): string {
-        const zx: number = this.CASE_SIZE * x / 2;
-        const zy: number = (y + 1) * this.CASE_SIZE;
+        const zx: number = this.SPACE_SIZE * x / 2;
+        const zy: number = (y + 1) * this.SPACE_SIZE;
         const DOWN_LEFT: string = zx + ', ' + zy;
-        const DOWN_RIGHT: string = (zx + this.CASE_SIZE) + ', ' + zy;
-        const UP_CENTER: string = (zx + (this.CASE_SIZE / 2)) + ', ' + (zy - this.CASE_SIZE);
-        const CENTER: string = (zx + (this.CASE_SIZE / 2)) + ', ' + (zy- (this.CASE_SIZE / 2));
+        const DOWN_RIGHT: string = (zx + this.SPACE_SIZE) + ', ' + zy;
+        const UP_CENTER: string = (zx + (this.SPACE_SIZE / 2)) + ', ' + (zy - this.SPACE_SIZE);
+        const CENTER: string = (zx + (this.SPACE_SIZE / 2)) + ', ' + (zy- (this.SPACE_SIZE / 2));
         return DOWN_LEFT + ',' +
                UP_CENTER + ',' +
                CENTER + ',' +

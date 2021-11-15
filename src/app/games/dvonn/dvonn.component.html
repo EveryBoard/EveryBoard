@@ -13,7 +13,7 @@
             <circle *ngIf="caseContent.getSize() > 0"
                     [attr.cx]="getCenterAt(coord).x"
                     [attr.cy]="getCenterAt(coord).y"
-                    [attr.r]="CASE_SIZE"
+                    [attr.r]="SPACE_SIZE"
                     [ngClass]="getPieceClasses(caseContent)"
                     class="base mid-stroke"/>
             <polygon *ngIf="caseContent.containsSource()"
@@ -34,9 +34,9 @@
         <polyline [attr.points]="getHexaCoordsBy(disconnected.x, disconnected.y)"
                   class="base mid-stroke captured"/>
         <circle id="captured_{{ disconnected.x }}_{{ disconnected.y }}"
-                [attr.cx]="getCenterBy(disconnected.x, disconnected.y).x"
-                [attr.cy]="getCenterBy(disconnected.x, disconnected.y).y"
-                [attr.r]="CASE_SIZE"
+                [attr.cx]="getCenterAt(disconnected).x"
+                [attr.cy]="getCenterAt(disconnected).y"
+                [attr.r]="SPACE_SIZE"
                 class="base mid-stroke transparent"
                 [ngClass]="getPieceClasses(disconnected.caseContent)"/>
         <text *ngIf="disconnected.caseContent.getSize() > 1"

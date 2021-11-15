@@ -1,11 +1,10 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
-import { expectToBeVictoryFor } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { YinshFailure } from '../YinshFailure';
 import { YinshState } from '../YinshState';
-import { YinshLegalityStatus } from '../YinshLegalityStatus';
 import { YinshMinimax } from '../YinshMinimax';
 import { YinshCapture, YinshMove } from '../YinshMove';
 import { YinshPiece } from '../YinshPiece';
@@ -23,22 +22,8 @@ describe('YinshRules', () => {
 
     let rules: YinshRules;
 
-    let minimaxes: YinshMinimax[];
+    let minimaxes: YinshMinimax[]; // TODO: Minimax<Yinsh Things>
 
-    function expectMoveSuccess(state: YinshState, move: YinshMove, expectedState: YinshState): void {
-        const legality: YinshLegalityStatus = rules.isLegal(move, state);
-        expect(legality.legal).toBeTruthy();
-        if (legality.legal.isSuccess()) {
-            const resultingState: YinshState = rules.applyLegalMove(move, state, legality);
-            expect(resultingState.equals(expectedState)).withContext('state should be equals').toBeTrue();
-        } else {
-            throw new Error('expected move to be valid but it not: ' + legality.legal.getReason());
-        }
-    }
-    function expectMoveFailure(state: YinshState, move: YinshMove, reason: string): void {
-        const legality: YinshLegalityStatus = rules.isLegal(move, state);
-        expect(legality.legal.reason).toBe(reason);
-    }
     beforeEach(() => {
         rules = new YinshRules(YinshState);
         minimaxes = [new YinshMinimax(rules, 'YinshMinimax')];
@@ -67,17 +52,17 @@ describe('YinshRules', () => {
             ];
             const expectedState: YinshState = new YinshState(expectedBoard, [4, 5], 1);
 
-            expectMoveSuccess(state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it('should initially forbid placing markers', () => {
             const state: YinshState = rules.node.gameState;
             const move: YinshMove = new YinshMove([], new Coord(3, 3), MGPOptional.of(new Coord(3, 4)), []);
-            expectMoveFailure(state, move, YinshFailure.NO_MARKERS_IN_INITIAL_PHASE());
+            RulesUtils.expectMoveFailure(rules, state, move, YinshFailure.NO_MARKERS_IN_INITIAL_PHASE());
         });
         it('should forbid placing rings without moving after turn 10', () => {
             const state: YinshState = new YinshState(YinshState.getInitialState().board, [0, 0], 10);
             const move: YinshMove = new YinshMove([], new Coord(3, 3), MGPOptional.empty(), []);
-            expectMoveFailure(state, move, YinshFailure.PLACEMENT_AFTER_INITIAL_PHASE());
+            RulesUtils.expectMoveFailure(rules, state, move, YinshFailure.PLACEMENT_AFTER_INITIAL_PHASE());
         });
         it('should allow placing marker in a ring and then moving the ring after turn 10', () => {
             const board: Table<YinshPiece> = [
@@ -111,7 +96,7 @@ describe('YinshRules', () => {
             ];
             const expectedState: YinshState = new YinshState(expectedBoard, [0, 0], 11);
 
-            expectMoveSuccess(state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it('should forbid a move in an invalid direction', () => {
             const board: Table<YinshPiece> = [
@@ -130,7 +115,7 @@ describe('YinshRules', () => {
             const state: YinshState = new YinshState(board, [0, 0], 10);
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(5, 8)), []);
 
-            expectMoveFailure(state, move, YinshFailure.MOVE_DIRECTION_INVALID());
+            RulesUtils.expectMoveFailure(rules, state, move, YinshFailure.MOVE_DIRECTION_INVALID());
         });
         it('should forbid a move that starts from an non-ring', () => {
             const board: Table<YinshPiece> = [
@@ -149,7 +134,7 @@ describe('YinshRules', () => {
             const state: YinshState = new YinshState(board, [0, 0], 10);
             const move: YinshMove = new YinshMove([], new Coord(5, 5), MGPOptional.of(new Coord(3, 3)), []);
 
-            expectMoveFailure(state, move, YinshFailure.SHOULD_SELECT_PLAYER_RING());
+            RulesUtils.expectMoveFailure(rules, state, move, YinshFailure.SHOULD_SELECT_PLAYER_RING());
         });
         it('should flip all markers on the path of the moved ring, but not the one that was placed in the ring', () => {
             const board: Table<YinshPiece> = [
@@ -183,7 +168,7 @@ describe('YinshRules', () => {
             ];
             const expectedState: YinshState = new YinshState(expectedBoard, [0, 0], 11);
 
-            expectMoveSuccess(state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it('should allow moving above empty spaces as long as it lands after the first empty space following a marker', () => {
             const board: Table<YinshPiece> = [
@@ -217,7 +202,7 @@ describe('YinshRules', () => {
             ];
             const expectedState: YinshState = new YinshState(expectedBoard, [0, 0], 11);
 
-            expectMoveSuccess(state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it('should forbid moving more than one space beyond the last marker of the group jumped', () => {
             const board: Table<YinshPiece> = [
@@ -235,8 +220,9 @@ describe('YinshRules', () => {
             ];
             const state: YinshState = new YinshState(board, [0, 0], 10);
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(3, 7)), []);
+            const reason: string = YinshFailure.MOVE_SHOULD_END_AT_FIRST_EMPTY_CASE_AFTER_MARKERS();
 
-            expectMoveFailure(state, move, YinshFailure.MOVE_SHOULD_END_AT_FIRST_EMPTY_CASE_AFTER_MARKERS());
+            RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should forbid moving over two sets of markers', () => {
             const board: Table<YinshPiece> = [
@@ -254,8 +240,9 @@ describe('YinshRules', () => {
             ];
             const state: YinshState = new YinshState(board, [0, 0], 10);
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(3, 8)), []);
+            const reason: string = YinshFailure.MOVE_SHOULD_END_AT_FIRST_EMPTY_CASE_AFTER_MARKERS();
 
-            expectMoveFailure(state, move, YinshFailure.MOVE_SHOULD_END_AT_FIRST_EMPTY_CASE_AFTER_MARKERS());
+            RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should forbid moving over rings', () => {
             const board: Table<YinshPiece> = [
@@ -274,7 +261,7 @@ describe('YinshRules', () => {
             const state: YinshState = new YinshState(board, [0, 0], 10);
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(3, 6)), []);
 
-            expectMoveFailure(state, move, YinshFailure.MOVE_SHOULD_NOT_PASS_ABOVE_RING());
+            RulesUtils.expectMoveFailure(rules, state, move, YinshFailure.MOVE_SHOULD_NOT_PASS_ABOVE_RING());
         });
         it('should forbid captures that do not take a ring', () => {
             const board: Table<YinshPiece> = [
@@ -295,7 +282,7 @@ describe('YinshRules', () => {
                                                   new Coord(3, 2), MGPOptional.of(new Coord(3, 7)),
                                                   [YinshCapture.of(new Coord(3, 2), new Coord(3, 6),
                                                                    new Coord(6, 3))]);
-            expectMoveFailure(state, move, YinshFailure.CAPTURE_SHOULD_TAKE_RING());
+            RulesUtils.expectMoveFailure(rules, state, move, YinshFailure.CAPTURE_SHOULD_TAKE_RING());
 
         });
         it(`should allow captures, and should increase the capturing player's side rings by one when capturing`, () => {
@@ -333,7 +320,7 @@ describe('YinshRules', () => {
             ];
             const expectedState: YinshState = new YinshState(expectedBoard, [1, 0], 11);
 
-            expectMoveSuccess(state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it('should support multiple captures', () => {
             const board: Table<YinshPiece> = [
@@ -371,7 +358,7 @@ describe('YinshRules', () => {
             ];
             const expectedState: YinshState = new YinshState(expectedBoard, [2, 0], 11);
 
-            expectMoveSuccess(state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it('should forbid not making initial captures when it is possible', () => {
             const board: Table<YinshPiece> = [
@@ -390,7 +377,7 @@ describe('YinshRules', () => {
             const state: YinshState = new YinshState(board, [0, 0], 10);
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(4, 2)), []);
 
-            expectMoveFailure(state, move, YinshFailure.MISSING_CAPTURES());
+            RulesUtils.expectMoveFailure(rules, state, move, YinshFailure.MISSING_CAPTURES());
         });
         it('should forbid not making final captures when it is possible', () => {
             const board: Table<YinshPiece> = [
@@ -409,7 +396,7 @@ describe('YinshRules', () => {
             const state: YinshState = new YinshState(board, [0, 0], 20);
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(3, 7)), []);
 
-            expectMoveFailure(state, move, YinshFailure.MISSING_CAPTURES());
+            RulesUtils.expectMoveFailure(rules, state, move, YinshFailure.MISSING_CAPTURES());
         });
         it(`should forbid capturing the opponent's markers`, () => {
             const board: Table<YinshPiece> = [
@@ -430,7 +417,7 @@ describe('YinshRules', () => {
                                                   new Coord(3, 2), MGPOptional.of(new Coord(3, 3)),
                                                   []);
 
-            expectMoveFailure(state, move, YinshFailure.CAN_ONLY_CAPTURE_YOUR_MARKERS());
+            RulesUtils.expectMoveFailure(rules, state, move, YinshFailure.CAN_ONLY_CAPTURE_YOUR_MARKERS());
         });
         it('should forbid capturing empty cases', () => {
             const board: Table<YinshPiece> = [
@@ -451,7 +438,7 @@ describe('YinshRules', () => {
                                                   new Coord(3, 2), MGPOptional.of(new Coord(4, 2)),
                                                   []);
 
-            expectMoveFailure(state, move, YinshFailure.CAN_ONLY_CAPTURE_YOUR_MARKERS());
+            RulesUtils.expectMoveFailure(rules, state, move, YinshFailure.CAN_ONLY_CAPTURE_YOUR_MARKERS());
         });
         it('should not allow making moves once victory has been reached', () => {
         });
@@ -490,7 +477,7 @@ describe('YinshRules', () => {
                 [N, _, _, _, _, N, N, N, N, N, N],
             ];
             const expectedState: YinshState = new YinshState(expectedBoard, [0, 0], 11);
-            expectMoveSuccess(state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
     });
     describe('getPossibleCaptures', () => {
@@ -618,11 +605,11 @@ describe('YinshRules', () => {
         it('should detect victory for a player if it obtains more than 3 rings', () => {
             const state1: YinshState = new YinshState(YinshState.getInitialState().board, [3, 0], 20);
             const node1: YinshNode = new YinshNode(MGPOptional.empty(), null, state1);
-            expectToBeVictoryFor(rules, node1, Player.ZERO, minimaxes);
+            RulesUtils.expectToBeVictoryFor(rules, node1, Player.ZERO, minimaxes);
 
             const state2: YinshState = new YinshState(YinshState.getInitialState().board, [0, 3], 20);
             const node2: YinshNode = new YinshNode(MGPOptional.empty(), null, state2);
-            expectToBeVictoryFor(rules, node2, Player.ONE, minimaxes);
+            RulesUtils.expectToBeVictoryFor(rules, node2, Player.ONE, minimaxes);
 
         });
     });

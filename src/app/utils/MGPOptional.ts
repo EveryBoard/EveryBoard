@@ -58,6 +58,9 @@ export class MGPOptional<T> {
         }
         return comparableEquals(this.value, other.value);
     }
+    public equalsValue(other: T): boolean {
+        return this.equals(MGPOptional.of(other));
+    }
     public toString(): string {
         if (this.isAbsent()) {
             return 'MGPOptional.empty()';
