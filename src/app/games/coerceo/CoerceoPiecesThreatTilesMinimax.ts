@@ -11,6 +11,7 @@ import { CoerceoMinimax } from './CoerceoMinimax';
 import { CoerceoStep } from './CoerceoMove';
 import { CoerceoState } from './CoerceoState';
 import { CoerceoNode, CoerceoRules } from './CoerceoRules';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
 
@@ -74,10 +75,11 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
         }
         return threatMap;
     }
-    public getThreat(coord: Coord, state: CoerceoState): PieceThreat | null { // TODO: check threat by leaving tile
+    // TODO: check threat by leaving tile
+    public getThreat(coord: Coord, state: CoerceoState): MGPOptional<PieceThreat> {
         const threatenerPlayer: Player = Player.of(state.getPieceAt(coord).value);
         const OPPONENT: Player = threatenerPlayer.getOpponent();
-        let freedom: Coord | null = null;
+        let freedom: MGPOptional<Coord> = MGPOptional.empty();
         const directThreats: Coord[] = [];
         const neighboors: Coord[] = TriangularCheckerBoard
             .getNeighboors(coord)
@@ -87,18 +89,18 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
             if (threat.is(OPPONENT)) {
                 directThreats.push(directThreat);
             } else if (threat === FourStatePiece.EMPTY) {
-                if (freedom != null) {
+                if (freedom.isPresent()) {
                     // more than one freedom!
-                    return null;
+                    return MGPOptional.empty();
                 } else {
-                    freedom = directThreat;
+                    freedom = MGPOptional.of(directThreat);
                 }
             }
         }
-        if (freedom != null) {
+        if (freedom.isPresent()) {
             const movingThreats: Coord[] = [];
             for (const step of CoerceoStep.STEPS) {
-                const movingThreat: Coord = freedom.getNext(step.direction, 1);
+                const movingThreat: Coord = freedom.get().getNext(step.direction, 1);
                 if (movingThreat.isInRange(15, 10) &&
                     state.getPieceAt(movingThreat).is(OPPONENT) &&
                     directThreats.every((coord: Coord) => coord.equals(movingThreat) === false))
@@ -107,10 +109,10 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
                 }
             }
             if (movingThreats.length > 0) {
-                return new PieceThreat(new MGPSet(directThreats), new MGPSet(movingThreats));
+                return MGPOptional.of(new PieceThreat(new MGPSet(directThreats), new MGPSet(movingThreats)));
             }
         }
-        return null;
+        return MGPOptional.empty();
     }
     public filterThreatMap(threatMap: MGPMap<Coord, PieceThreat>,
                            state: CoerceoState)
@@ -126,7 +128,7 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
         }));
         for (const threatenedPiece of threatenedPlayerPieces) {
             const oldThreat: PieceThreat = threatMap.get(threatenedPiece).get();
-            let newThreat: PieceThreat | null = null;
+            let newThreat: MGPOptional<PieceThreat> = MGPOptional.empty();
             if (threatenedOpponentPieces.contains(oldThreat.direct.get(0)) === false) {
                 // if the direct threat of this piece is not a false threat
                 const newMover: Coord[] = [];
@@ -137,11 +139,11 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
                     }
                 }
                 if (newMover.length > 0) {
-                    newThreat = new PieceThreat(oldThreat.direct, new MGPSet(newMover));
+                    newThreat = MGPOptional.of(new PieceThreat(oldThreat.direct, new MGPSet(newMover)));
                 }
             }
-            if (newThreat != null) {
-                filteredThreatMap.set(threatenedPiece, newThreat);
+            if (newThreat.isPresent()) {
+                filteredThreatMap.set(threatenedPiece, newThreat.get());
             }
         }
         for (const threatenedOpponentPiece of threatenedOpponentPieces.getCopy()) {
