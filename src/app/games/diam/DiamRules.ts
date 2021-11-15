@@ -34,8 +34,9 @@ export class DiamRules extends Rules<DiamMove, DiamState, LegalityStatus> {
     private applyLegalShift(shift: DiamMoveShift, state: DiamState): DiamState {
         const newBoard: DiamPiece[][] = ArrayUtils.copyBiArray(state.board);
         const targetX: number = shift.getTarget();
-        let targetY: number = state.getStackHeight(targetX)-1;
+        let targetY: number = 3 - state.getStackHeight(targetX);
         let sourceY: number = shift.start.y;
+        console.log({sourceX: shift.start.x, sourceY, targetY, targetX})
         while (sourceY > 0 && state.getPieceAtXY(shift.start.x, sourceY) !== DiamPiece.EMPTY) {
             newBoard[targetY][targetX] = state.getPieceAtXY(shift.start.x, sourceY);
             newBoard[sourceY][shift.start.x] = DiamPiece.EMPTY;

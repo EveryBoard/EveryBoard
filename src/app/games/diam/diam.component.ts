@@ -4,6 +4,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Direction';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { DiamDummyMinimax } from './DiamDummyMinimax';
@@ -44,11 +45,11 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
     public static CENTER: Coord[] = [
         new Coord(40, 160),
         new Coord(100, 50),
-        new Coord(250, 2),
+        new Coord(255, 2),
         new Coord(400, 50),
         new Coord(460, 160),
         new Coord(400, 270),
-        new Coord(250, 320),
+        new Coord(255, 320),
         new Coord(100, 270),
     ];
     public static PIECE_HEIGHT: number = 37;
@@ -88,15 +89,21 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
         this.updateBoard();
     }
     public async onCaseClick(x: number): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x);
+        if (clickValidity.isFailure()) {
+            return this.cancelMove(clickValidity.getReason());
+        }
+
         if (this.selected != null) {
             let move: DiamMove;
             if (this.selected.type === 'pieceFromReserve') {
                 console.log(`dropping to ${x}`)
                 move = new DiamMoveDrop(x, this.selected.piece);
             } else {
-                if (this.selected.position.x + 1 % 8 === x) {
+                console.log(`shifting from ${this.selected.position.x} to ${x}`)
+                if ((this.selected.position.x + 1) % 8 === x) {
                     move = new DiamMoveShift(this.selected.position, 'right');
-                } else if (this.selected.position.x + 7 % 8 === x) {
+                } else if ((this.selected.position.x + 7) % 8 === x) {
                     move = new DiamMoveShift(this.selected.position, 'left');
                 } else {
                     return this.cancelMove(DiamFailure.MUST_SHIFT_LEFT_OR_RIGHT());
@@ -112,14 +119,34 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
         console.log('move success')
         return MGPValidation.SUCCESS;
     }
-    public onPieceInGameClick(x: number, y: number): Promise<MGPValidation> {
+    public async onPieceInGameClick(x: number, y: number): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        if (clickValidity.isFailure()) {
+            return this.cancelMove(clickValidity.getReason());
+        }
+
         if (this.selected != null) {
             return this.onCaseClick(x);
         }
-        this.selected = { type: 'pieceFromBoard', position: new Coord(x, y) };
+        if (this.rules.node.gameState.getPieceAtXY(x, y).owner === this.rules.node.gameState.getCurrentPlayer()) {
+            this.selected = { type: 'pieceFromBoard', position: new Coord(x, y) };
+            return MGPValidation.SUCCESS;
+        } else {
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+        }
     }
-    public onRemainingPieceClick(piece: DiamPiece): void {
-        this.selected = { type: 'pieceFromReserve', piece };
+    public async onRemainingPieceClick(piece: DiamPiece): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = this.canUserPlay('#piece_' + piece.owner.value + '_' + (piece.otherPieceType ? 1 : 0));
+        if (clickValidity.isFailure()) {
+            return this.cancelMove(clickValidity.getReason());
+        }
+
+        if (piece.owner === this.rules.node.gameState.getCurrentPlayer()) {
+            this.selected = { type: 'pieceFromReserve', piece };
+            return MGPValidation.SUCCESS;
+        } else {
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+        }
     }
     public updateBoard(): void {
         for (let x: number = 0; x < DiamState.WIDTH; x++) {

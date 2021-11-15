@@ -33,7 +33,7 @@ fdescribe('DiamComponent', () => {
         const move: DiamMove = new DiamMoveDrop(2, DiamPiece.ZERO_FIRST);
         await testUtils.expectMoveSuccess('#click_2', move);
     }));
-    it('should forbid dropping on a full stack', fakeAsync(async() => {
+    fit('should forbid dropping on a full stack', fakeAsync(async() => {
         // given a state where one stack is already full
         const state: DiamState = new DiamState([
             [B1, __, __, __, __, __, __, __],

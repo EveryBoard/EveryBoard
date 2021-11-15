@@ -34,7 +34,7 @@
     </g>
 
     <use *ngFor="let piece of viewInfo.remainingPieces"
-         (click)="onRemainingPieceClick(piece.actualPiece)"
+         (click)="onRemainingPieceClick(piece.actualPiece, )"
          id="piece_{{ piece.actualPiece.owner.value }}_{{ piece.actualPiece.otherPieceType ? 1 : 0 }}"
          [attr.x]="piece.drawPosition.x"
          [attr.y]="piece.drawPosition.y"
