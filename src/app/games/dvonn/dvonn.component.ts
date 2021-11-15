@@ -27,7 +27,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
 
     public lastMove: DvonnMove | null = null;
     public chosen: Coord | null = null;
-    public disconnecteds: { x: number, y: number, caseContent: DvonnPieceStack }[] = [];
+    public disconnecteds: { coord: Coord, caseContent: DvonnPieceStack }[] = [];
     public state: DvonnState;
 
     constructor(messageDisplayer: MessageDisplayer) {
@@ -39,11 +39,11 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         ];
         this.encoder = DvonnMove.encoder;
         this.tutorial = new DvonnTutorial().tutorial;
-        this.CASE_SIZE = 30;
+        this.SPACE_SIZE = 30;
         this.canPass = false;
         this.scores = MGPOptional.of(DvonnRules.getScores(this.rules.node.gameState));
-        this.hexaLayout = new HexaLayout(this.CASE_SIZE * 1.50,
-                                         new Coord(-this.CASE_SIZE, this.CASE_SIZE * 2),
+        this.hexaLayout = new HexaLayout(this.SPACE_SIZE * 1.50,
+                                         new Coord(-this.SPACE_SIZE, this.SPACE_SIZE * 2),
                                          PointyHexaOrientation.INSTANCE);
         this.state = this.rules.node.gameState;
         this.hexaBoard = this.rules.node.gameState.board;
@@ -75,8 +75,9 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
                     const stack: DvonnPieceStack = state.getPieceAt(coord);
                     const previousStack: DvonnPieceStack = previousState.getPieceAt(coord);
                     if (stack.isEmpty() && !previousStack.isEmpty()) {
-                        const disconnected: { x: number, y: number, caseContent: DvonnPieceStack } =
-                            { x, y, caseContent: previousStack };
+                        const coord: Coord = new Coord(x, y);
+                        const disconnected: { coord: Coord, caseContent: DvonnPieceStack } =
+                            { coord, caseContent: previousStack };
                         this.disconnecteds.push(disconnected);
                     }
                 }

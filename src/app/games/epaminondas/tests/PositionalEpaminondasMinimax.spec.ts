@@ -5,8 +5,8 @@ import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasState } from '../EpaminondasState';
 import { EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
 import { PositionalEpaminondasMinimax } from '../PositionalEpaminondasMinimax';
-import { expectSecondStateToBeBetterThanFirst } from 'src/app/utils/tests/TestUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 
 describe('PositionalEpaminondasMinimax:', () => {
 
@@ -76,7 +76,7 @@ describe('PositionalEpaminondasMinimax:', () => {
             [O, O, O, O, O, O, O, O, O, O, O, O, _, _],
         ];
         const lesserState: EpaminondasState = new EpaminondasState(lesserBoard, 0);
-        expectSecondStateToBeBetterThanFirst(lesserState, null, greaterState, null, minimax);
+        RulesUtils.expectSecondStateToBeBetterThanFirst(lesserState, null, greaterState, null, minimax);
     });
     it('Should prefer to have aligned piece than higher piece', () => {
         const greaterBoard: Table<Player> = [
@@ -109,6 +109,6 @@ describe('PositionalEpaminondasMinimax:', () => {
             [O, O, O, O, O, O, O, _, O, O, O, O, O, O],
         ];
         const lesserState: EpaminondasState = new EpaminondasState(lesserBoard, 0);
-        expectSecondStateToBeBetterThanFirst(lesserState, null, greaterState, null, minimax);
+        RulesUtils.expectSecondStateToBeBetterThanFirst(lesserState, null, greaterState, null, minimax);
     });
 });

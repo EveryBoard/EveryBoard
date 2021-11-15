@@ -3,7 +3,7 @@ import { TutorialStep } from './TutorialStep';
 import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
 import { QuartoState } from 'src/app/games/quarto/QuartoState';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { ComponentTestUtils, TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { QuartoComponent } from '../../../games/quarto/quarto.component';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -50,6 +50,12 @@ import { DvonnTutorial } from 'src/app/games/dvonn/DvonnTutorial';
 import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
 import { DvonnState } from 'src/app/games/dvonn/DvonnState';
 import { Utils } from 'src/app/utils/utils';
+import { ApagosTutorial } from 'src/app/games/apagos/ApagosTutorial';
+import { ApagosRules } from 'src/app/games/apagos/ApagosRules';
+import { ApagosState } from 'src/app/games/apagos/ApagosState';
+import { ApagosMove } from 'src/app/games/apagos/ApagosMove';
+import { ApagosCoord } from 'src/app/games/apagos/ApagosCoord';
+import { Player } from 'src/app/jscaip/Player';
 
 describe('TutorialGameWrapperComponent (wrapper)', () => {
 
@@ -989,6 +995,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
     });
     describe('Tutorials', () => {
         it('Should make sure that predicate step have healthy behaviors', fakeAsync(async() => {
+            const apagosTutorial: TutorialStep[] = new ApagosTutorial().tutorial;
             const dvonnTutorial: TutorialStep[] = new DvonnTutorial().tutorial;
             const epaminondasTutorial: TutorialStep[] = new EpaminondasTutorial().tutorial;
             const pentagoTutorial: TutorialStep[] = new PentagoTutorial().tutorial;
@@ -997,6 +1004,24 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const sixTutorial: TutorialStep[] = new SixTutorial().tutorial;
             const yinshTutorial: TutorialStep[] = new YinshTutorial().tutorial;
             const stepExpectations: [Rules<Move, AbstractGameState>, TutorialStep, Move, MGPValidation][] = [
+                [
+                    new ApagosRules(ApagosState),
+                    apagosTutorial[2],
+                    ApagosMove.drop(ApagosCoord.ZERO, Player.ZERO),
+                    MGPValidation.failure($localize`This move is a drop, please do a transfer!`),
+                ],
+                [
+                    new ApagosRules(ApagosState),
+                    apagosTutorial[3],
+                    ApagosMove.drop(ApagosCoord.TWO, Player.ZERO),
+                    MGPValidation.failure($localize`You actively made your opponent win!`),
+                ],
+                [
+                    new ApagosRules(ApagosState),
+                    apagosTutorial[3],
+                    ApagosMove.transfer(ApagosCoord.THREE, ApagosCoord.TWO).get(),
+                    MGPValidation.failure($localize`Wrong choice, your opponent will win in the next turn no matter which piece is dropped!`),
+                ],
                 [
                     new DvonnRules(DvonnState),
                     dvonnTutorial[1],
@@ -1092,12 +1117,16 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 const move: Move = stepExpectation[2];
                 const validation: MGPValidation = stepExpectation[3];
                 const status: LegalityStatus = rules.isLegal(move, step.state);
-                expect(status.legal.reason).toBeNull();
-                const state: AbstractGameState = rules.applyLegalMove(move, step.state, status);
-                if (step.isPredicate()) {
-                    expect(Utils.getNonNullable(step.predicate)(move, state)).toEqual(validation);
+                if (status.legal.isSuccess()) {
+                    const state: AbstractGameState = rules.applyLegalMove(move, step.state, status);
+                    if (step.isPredicate()) {
+                        expect(Utils.getNonNullable(step.predicate)(move, state)).toEqual(validation);
+                    } else {
+                        throw new Error('This test expects only predicate steps');
+                    }
                 } else {
-                    throw new Error('This test expects only predicate steps');
+                    const context: string = 'Move should be legal to reach predicate but failed because';
+                    TestUtils.expectValidationSuccess(status.legal, context);
                 }
             }
         }));
@@ -1113,12 +1142,15 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 for (const step of steps) {
                     if (step.hasSolution()) {
                         const status: LegalityStatus = rules.isLegal(step.getSolution(), step.state);
-                        expect(status.legal.reason).toBeNull();
-                        if (step.isPredicate()) {
-                            const state: AbstractGameState =
-                                rules.applyLegalMove(step.getSolution(), step.state, status);
-                            expect(Utils.getNonNullable(step.predicate)(step.getSolution(), state))
-                                .toEqual(MGPValidation.SUCCESS);
+                        if (status.legal.isSuccess()) {
+                            if (step.isPredicate()) {
+                                const state: AbstractGameState =
+                                    rules.applyLegalMove(step.getSolution(), step.state, status);
+                                expect(Utils.getNonNullable(step.predicate)(step.getSolution(), state))
+                                    .toEqual(MGPValidation.SUCCESS);
+                            }
+                        } else {
+                            expect(status.legal.reason).withContext('Solution move should be legal but failed').toBeNull();
                         }
                     }
                 }

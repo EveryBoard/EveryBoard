@@ -6,18 +6,18 @@
         <g *ngFor="let c of line; index as x">
             <rect id="click_{{ x }}_{{ y }}"
                   (click)="onClick(x, y)"
-                  [attr.x] = "CASE_SIZE*x+STROKE_WIDTH"
-                  [attr.y] = "CASE_SIZE*y+STROKE_WIDTH"
-                  [attr.width]="CASE_SIZE"
-                  [attr.height]="CASE_SIZE"
+                  [attr.x] = "(SPACE_SIZE * x) + STROKE_WIDTH"
+                  [attr.y] = "(SPACE_SIZE * y) + STROKE_WIDTH"
+                  [attr.width]="SPACE_SIZE"
+                  [attr.height]="SPACE_SIZE"
                   [ngClass]="getRectClasses(x, y)"
                   class="base"
             />
             <circle *ngIf="board[y][x] !== NONE"
                     (click)="onClick(x, y)"
-                    [attr.r]="(CASE_SIZE-2*STROKE_WIDTH)/2"
-                    [attr.cx]="CASE_SIZE*x+STROKE_WIDTH + CASE_SIZE/2"
-                    [attr.cy]="CASE_SIZE*y+STROKE_WIDTH + CASE_SIZE/2"
+                    [attr.r]="(SPACE_SIZE - (2 * STROKE_WIDTH)) * 0.5"
+                    [attr.cx]="(SPACE_SIZE * x) + STROKE_WIDTH + (SPACE_SIZE / 2)"
+                    [attr.cy]="(SPACE_SIZE * y) + STROKE_WIDTH + (SPACE_SIZE / 2)"
                     [ngClass]="getPieceClasses(x, y)"
                     class="base"
             />
@@ -25,10 +25,10 @@
     </g>
     <g *ngFor="let coord of getHighlightedCoords()">
         <rect (click)="onClick(coord.x, coord.y)"
-              [attr.x] = "CASE_SIZE*coord.x+STROKE_WIDTH"
-              [attr.y] = "CASE_SIZE*coord.y+STROKE_WIDTH"
-              [attr.width]="CASE_SIZE"
-              [attr.height]="CASE_SIZE"
+              [attr.x] = "(SPACE_SIZE * coord.x) + STROKE_WIDTH"
+              [attr.y] = "(SPACE_SIZE * coord.y) + STROKE_WIDTH"
+              [attr.width]="SPACE_SIZE"
+              [attr.height]="SPACE_SIZE"
               class="no-fill mid-stroke clickable"
         />
     </g>

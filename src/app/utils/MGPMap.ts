@@ -26,7 +26,7 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<Com
     public putAll(m: MGPMap<K, V>): void {
         this.checkImmutability('putAll');
         for (const entry of m.map) {
-            this.put(entry.key as K, entry.value);
+            this.put(entry.key, entry.value);
         }
     }
     public checkImmutability(methodCalled: string): void {

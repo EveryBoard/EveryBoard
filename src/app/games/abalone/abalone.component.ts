@@ -58,9 +58,9 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         this.encoder = AbaloneMove.encoder;
         this.tutorial = new AbaloneTutorial().tutorial;
         this.scores = MGPOptional.of([0, 0]);
-        this.CASE_SIZE = 30;
-        this.hexaLayout = new HexaLayout(this.CASE_SIZE,
-                                         new Coord(- 8 * this.CASE_SIZE, 2 * this.CASE_SIZE),
+        this.SPACE_SIZE = 30;
+        this.hexaLayout = new HexaLayout(this.SPACE_SIZE,
+                                         new Coord(- 8 * this.SPACE_SIZE, 2 * this.SPACE_SIZE),
                                          PointyHexaOrientation.INSTANCE);
 
         this.updateBoard();

@@ -48,6 +48,7 @@ import { HumanDuration } from './utils/TimeUtils';
 import { NextGameLoadingComponent } from './components/normal-component/next-game-loading/next-game-loading.component';
 
 import { AbaloneComponent } from './games/abalone/abalone.component';
+import { ApagosComponent } from './games/apagos/apagos.component';
 import { AwaleComponent } from './games/awale/awale.component';
 import { CoerceoComponent } from './games/coerceo/coerceo.component';
 import { DvonnComponent } from './games/dvonn/dvonn.component';
@@ -129,6 +130,7 @@ const routes: Route [] = [
         VerifyAccountComponent,
 
         AbaloneComponent,
+        ApagosComponent,
         AwaleComponent,
         CoerceoComponent,
         DvonnComponent,
@@ -157,6 +159,7 @@ const routes: Route [] = [
     ],
     entryComponents: [
         AbaloneComponent,
+        ApagosComponent,
         AwaleComponent,
         DvonnComponent,
         EncapsuleComponent,

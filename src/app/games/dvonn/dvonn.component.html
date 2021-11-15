@@ -13,7 +13,7 @@
             <circle *ngIf="caseContent.getSize() > 0"
                     [attr.cx]="getCenterAt(coord).x"
                     [attr.cy]="getCenterAt(coord).y"
-                    [attr.r]="CASE_SIZE"
+                    [attr.r]="SPACE_SIZE"
                     [ngClass]="getPieceClasses(caseContent)"
                     class="base mid-stroke"/>
             <polygon *ngIf="caseContent.containsSource()"
@@ -31,17 +31,17 @@
     </g>
     <!-- Show disconnecteds -->
     <g *ngFor="let disconnected of disconnecteds">
-        <polyline [attr.points]="getHexaCoordsBy(disconnected.x, disconnected.y)"
+        <polyline [attr.points]="getHexaCoordsAt(disconnected.coord)"
                   class="base mid-stroke captured"/>
-        <circle id="captured_{{ disconnected.x }}_{{ disconnected.y }}"
-                [attr.cx]="getCenterBy(disconnected.x, disconnected.y).x"
-                [attr.cy]="getCenterBy(disconnected.x, disconnected.y).y"
-                [attr.r]="CASE_SIZE"
+        <circle id="captured_{{ disconnected.coord.x }}_{{ disconnected.coord.y }}"
+                [attr.cx]="getCenterAt(disconnected.coord).x"
+                [attr.cy]="getCenterAt(disconnected.coord).y"
+                [attr.r]="SPACE_SIZE"
                 class="base mid-stroke transparent"
                 [ngClass]="getPieceClasses(disconnected.caseContent)"/>
         <text *ngIf="disconnected.caseContent.getSize() > 1"
-              [attr.x]="getCenterBy(disconnected.x, disconnected.y).x"
-              [attr.y]="getCenterBy(disconnected.x, disconnected.y).y"
+              [attr.x]="getCenterAt(disconnected.coord).x"
+              [attr.y]="getCenterAt(disconnected.coord).y"
               class="text-center text-big"
               dy="17">{{disconnected.caseContent.getSize()}}</text>
     </g>

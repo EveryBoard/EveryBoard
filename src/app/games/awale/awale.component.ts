@@ -24,7 +24,7 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
                                                              number,
                                                              AwaleLegalityStatus>
 {
-    public last: Coord = new Coord(-1, -1);
+    public last: MGPOptional<Coord> = MGPOptional.empty();
 
     private captured: Coord[] = [];
 
@@ -52,10 +52,10 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
         this.board = state.getCopiedBoard();
         if (lastMove != null) {
             const lastPlayer: number = state.getCurrentOpponent().value;
-            this.last = new Coord(lastMove.x, lastPlayer);
+            this.last = MGPOptional.of(new Coord(lastMove.x, lastPlayer));
             this.showPreviousMove();
         } else {
-            this.last = new Coord(-1, -1);
+            this.last = MGPOptional.empty();
         }
     }
     private hidePreviousMove(): void {
@@ -69,7 +69,7 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
                 const coord: Coord = new Coord(x, y);
                 const currentValue: number = this.board[y][x];
                 const oldValue: number = previousState.getPieceAt(coord);
-                if (!coord.equals(this.last)) {
+                if (!this.last.equalsValue(coord)) {
                     if (currentValue < oldValue) {
                         this.captured.push(coord);
                     } else if (currentValue > oldValue) {
@@ -87,7 +87,7 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
         if (y !== this.rules.node.gameState.getCurrentPlayer().value) {
             return this.cancelMove(AwaleFailure.CANNOT_DISTRIBUTE_FROM_OPPONENT_HOME());
         }
-        this.last = new Coord(-1, -1); // now the user stop try to do a move
+        this.last = MGPOptional.empty(); // now the user stop try to do a move
         // we stop showing him the last move
         const chosenMove: AwaleMove = AwaleMove.from(x);
         // let's confirm on java-server-side that the move is legal
@@ -97,7 +97,7 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
         const coord: Coord = new Coord(x, y);
         if (this.captured.some((c: Coord) => c.equals(coord))) {
             return ['captured'];
-        } else if (coord.equals(this.last)) {
+        } else if (this.last.equalsValue(coord)) {
             return ['moved', 'highlighted'];
         } else if (this.moved.some((c: Coord) => c.equals(coord))) {
             return ['moved'];

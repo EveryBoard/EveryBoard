@@ -26,10 +26,10 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
     public toString(): string {
         let result: string = '';
         for (const element of this.values) {
-            if (element != null) {
-                result += element.toString() + ', ';
-            } else {
+            if (element == null) {
                 result += 'null, ';
+            } else {
+                result += element.toString() + ', ';
             }
         }
         return '[' + result.slice(0, -2) + ']';

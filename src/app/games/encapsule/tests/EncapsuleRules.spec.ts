@@ -6,8 +6,8 @@ import { EncapsuleCase, EncapsuleState } from '../EncapsuleState';
 import { Player } from 'src/app/jscaip/Player';
 import { EncapsulePiece } from '../EncapsulePiece';
 import { EncapsuleLegalityStatus } from '../EncapsuleLegalityStatus';
-import { expectToBeVictoryFor } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 
 describe('EncapsuleRules', () => {
 
@@ -103,7 +103,7 @@ describe('EncapsuleRules', () => {
         expect(status.legal.isSuccess()).toBeTrue();
         expect(resultingState).toEqual(expectedState);
         const node: EncapsuleNode = new EncapsuleNode(MGPOptional.empty(), move, expectedState);
-        expectToBeVictoryFor(rules, node, Player.ONE, [minimax]);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, [minimax]);
     });
     it('should allow simplest victory for player zero', () => {
         expect(drop(EncapsulePiece.SMALL_BLACK, new Coord(0, 0))).toBeTrue();
