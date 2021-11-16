@@ -51,9 +51,9 @@
               class="base no-fill mid-stroke highlighted"/>
     </g>
     <!-- Highlight selected piece -->
-    <circle *ngIf="chosen != null"
-            [attr.cx]="SPACE_SIZE/2 + (chosen.x * SPACE_SIZE)"
-            [attr.cy]="SPACE_SIZE/2 + (chosen.y * SPACE_SIZE)"
+    <circle *ngIf="chosen.isPresent()"
+            [attr.cx]="SPACE_SIZE/2 + (chosen.get().x * SPACE_SIZE)"
+            [attr.cy]="SPACE_SIZE/2 + (chosen.get().y * SPACE_SIZE)"
             r="30"
             class="base mid-stroke no-fill highlighted"/>
 </svg>

@@ -36,8 +36,8 @@ export class ApagosMove extends Move {
             return moveIndex;
         }
         public decodeNumber(encodedMove: number): ApagosMove {
+            assert(encodedMove < ApagosMove.ALL_MOVES.length, encodedMove + ' is not a valid encoded number for ApagosMove decoder');
             const move: ApagosMove = ApagosMove.ALL_MOVES[encodedMove];
-            assert(move != null, encodedMove + ' is not a valid encoded number for ApagosMove decoder');
             return move;
         }
     }

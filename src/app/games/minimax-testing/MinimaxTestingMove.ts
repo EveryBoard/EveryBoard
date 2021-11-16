@@ -27,9 +27,6 @@ export class MinimaxTestingMove extends Move {
         if (this === obj) {
             return true;
         }
-        if (obj === null) {
-            return false;
-        }
         return this.right === obj.right;
     }
     public toString(): string {

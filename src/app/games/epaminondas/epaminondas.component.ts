@@ -16,6 +16,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { EpaminondasFailure } from './EpaminondasFailure';
 import { EpaminondasTutorial } from './EpaminondasTutorial';
 import { Utils } from 'src/app/utils/utils';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 @Component({
     selector: 'app-epaminondas',
@@ -38,7 +39,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
 
     public lastPiece: Coord = new Coord(-15, -1);
 
-    private phalanxDirection: Direction | null;
+    private phalanxDirection: MGPOptional<Direction>;
 
     private phalanxMiddles: Coord[] = [];
 
@@ -258,7 +259,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
                     this.validExtensions = this.getValidExtensions(PLAYER);
                     this.phalanxValidLandings = this.getPhalanxValidLandings();
                     this.phalanxMiddles = this.firstPiece.getCoordsToward(this.lastPiece);
-                    this.phalanxDirection = direction;
+                    this.phalanxDirection = MGPOptional.of(direction);
                     return MGPValidation.SUCCESS;
                 }
         }
@@ -316,33 +317,35 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
             return this.tryMove(move);
         }
     }
-    private async moveFirstPiece(PLAYER: Player): Promise<MGPValidation> {
-        this.firstPiece = this.firstPiece.getNext(Utils.getNonNullable(this.phalanxDirection), 1);
+    private async moveFirstPiece(player: Player): Promise<MGPValidation> {
+        this.firstPiece = this.firstPiece.getNext(this.phalanxDirection.get(), 1);
         if (this.firstPiece.equals(this.lastPiece)) {
-            this.lastPiece = new Coord(-15, -1);
-            this.validExtensions = this.getFirstPieceExtensions(PLAYER);
-            this.phalanxDirection = null;
-            this.phalanxMiddles = [];
+            this.moveOnlyPiece(player);
         } else {
             this.phalanxMiddles = this.phalanxMiddles.slice(1);
-            this.validExtensions = this.getPhalanxValidExtensions(PLAYER);
+            this.validExtensions = this.getPhalanxValidExtensions(player);
         }
 
         this.phalanxValidLandings = this.getPhalanxValidLandings();
         return MGPValidation.SUCCESS;
     }
-    private async moveLastPiece(PLAYER: Player): Promise<MGPValidation> {
-        this.lastPiece = this.lastPiece.getPrevious(Utils.getNonNullable(this.phalanxDirection), 1);
+    private async moveLastPiece(player: Player): Promise<MGPValidation> {
+        this.lastPiece = this.lastPiece.getPrevious(this.phalanxDirection.get(), 1);
         if (this.firstPiece.equals(this.lastPiece)) {
-            this.lastPiece = new Coord(-15, -1);
-            this.validExtensions = this.getFirstPieceExtensions(PLAYER);
-            this.phalanxDirection = null;
-            this.phalanxMiddles = [];
+            return this.moveOnlyPiece(player);
         } else {
             this.phalanxMiddles = this.firstPiece.getCoordsToward(this.lastPiece);
-            this.validExtensions = this.getPhalanxValidExtensions(PLAYER);
+            this.validExtensions = this.getPhalanxValidExtensions(player);
         }
 
+        this.phalanxValidLandings = this.getPhalanxValidLandings();
+        return MGPValidation.SUCCESS;
+    }
+    private async moveOnlyPiece(player: Player): Promise<MGPValidation> {
+        this.lastPiece = new Coord(-15, -1);
+        this.validExtensions = this.getFirstPieceExtensions(player);
+        this.phalanxDirection = MGPOptional.empty();
+        this.phalanxMiddles = [];
         this.phalanxValidLandings = this.getPhalanxValidLandings();
         return MGPValidation.SUCCESS;
     }

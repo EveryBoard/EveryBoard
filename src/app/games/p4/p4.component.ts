@@ -21,7 +21,7 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
     public static VERBOSE: boolean = false;
 
     public EMPTY_CASE: Player = Player.NONE;
-    public last: Coord | null;
+    public last: MGPOptional<Coord>;
     public victoryCoords: Coord[] = [];
 
     public constructor(messageDisplayer: MessageDisplayer) {
@@ -48,19 +48,17 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
 
         this.victoryCoords = P4Rules.getVictoriousCoords(state);
         this.board = state.board;
-        if (lastMove.isAbsent()) {
-            this.last = null;
-        } else {
-            const y: number = P4Rules.getLowestUnoccupiedCase(state.board, lastMove.get().x) + 1;
-            this.last = new Coord(lastMove.get().x, y);
-        }
+        this.last = lastMove.map((move: P4Move) => {
+            const y: number = P4Rules.getLowestUnoccupiedCase(state.board, move.x) + 1;
+            return new Coord(move.x, y);
+        });
     }
     public getCaseClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
         const classes: string[] = [];
         if (this.victoryCoords.some((c: Coord): boolean => c.equals(coord))) {
             classes.push('victory-stroke');
-        } else if (this.last && this.last.equals(coord)) {
+        } else if (this.last.equalsValue(coord)) {
             classes.push('last-move');
         }
         return classes;

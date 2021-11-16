@@ -46,12 +46,12 @@
             </g>
         </g>
     </g>
-    <rect *ngIf="highCapture"
-          id="highCapture_{{ highCapture.x }}_{{ highCapture.y }}_{{ highCapture.z }}"
-          [attr.width]="getPieceRadius(highCapture.z) * 2"
-          [attr.height]="getPieceRadius(highCapture.z) * 2"
-          [attr.x]="getPieceCx(highCapture.x, highCapture.y, highCapture.z) - getPieceRadius(highCapture.z)"
-          [attr.y]="getPieceCy(highCapture.x, highCapture.y, highCapture.z) - getPieceRadius(highCapture.z)"
+    <rect *ngIf="highCapture.isPresent()"
+          id="highCapture_{{ highCapture.get().x }}_{{ highCapture.get().y }}_{{ highCapture.get().z }}"
+          [attr.width]="getPieceRadius(highCapture.get().z) * 2"
+          [attr.height]="getPieceRadius(highCapture.get().z) * 2"
+          [attr.x]="getPieceCx(highCapture.get().x, highCapture.get().y, highCapture.get().z) - getPieceRadius(highCapture.get().z)"
+          [attr.y]="getPieceCy(highCapture.get().x, highCapture.get().y, highCapture.get().z) - getPieceRadius(highCapture.get().z)"
           class="base captured"
     />
 </svg>

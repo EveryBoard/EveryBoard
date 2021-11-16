@@ -388,8 +388,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
         this.stopCountdownsFor(player);
     }
-    public notifyDraw(encodedMove: JSONValueWithoutArray, scores?: [number, number])
-    : void {
+    public notifyDraw(encodedMove: JSONValueWithoutArray, scores?: [number, number]): void {
         this.endGame = true;
         this.gameService.updateDBBoard(this.currentPartId,
                                        encodedMove,
@@ -406,8 +405,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 
         this.gameService.notifyTimeout(this.currentPartId, victoriousPlayer, loser);
     }
-    public notifyVictory(encodedMove: JSONValueWithoutArray, scores?: [number, number])
-    : void {
+    public notifyVictory(encodedMove: JSONValueWithoutArray, scores?: [number, number]): void {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.notifyVictory');
 
         const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.rules.node);
@@ -587,8 +585,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 this.userService.observeUserByUsername(opponentName, callback);
         }
     }
-    public async onLegalUserMove(move: Move, scores?: [number, number])
-    : Promise<void> {
+    public async onLegalUserMove(move: Move, scores?: [number, number]): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'dans OnlineGameWrapperComponent.onLegalUserMove');
         if (this.isOpponentWaitingForTakeBackResponse()) {
             this.gameComponent.message('You must answer to take back request');

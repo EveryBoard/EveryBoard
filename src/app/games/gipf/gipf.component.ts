@@ -28,7 +28,7 @@ import { Utils } from 'src/app/utils/utils';
 })
 export class GipfComponent extends HexagonalGameComponent<GipfRules, GipfMove, GipfState, GipfLegalityStatus> {
 
-    public inserted: Arrow | null = null;
+    public inserted: MGPOptional<Arrow> = MGPOptional.empty();
     public arrows: Arrow[] = [];
     public captured: Coord[] = [];
     public moved: Coord[] = [];
@@ -69,10 +69,11 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules, GipfMove, G
         this.moveToInitialCaptureOrPlacementPhase();
     }
     public showLastMove(): void {
-        this.inserted = null;
+        this.inserted = MGPOptional.empty();
         const lastMove: MGPOptional<GipfMove> = this.rules.node.move;
         if (lastMove.isPresent() && lastMove.get().placement.direction.isPresent()) {
-            this.inserted = this.arrowTowards(lastMove.get().placement.coord, lastMove.get().placement.direction.get());
+            this.inserted = MGPOptional.of(
+                this.arrowTowards(lastMove.get().placement.coord, lastMove.get().placement.direction.get()));
         }
         this.cancelMoveAttempt();
     }

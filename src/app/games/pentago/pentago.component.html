@@ -41,10 +41,10 @@
             </ng-container>
         </ng-container>
     </ng-container>
-    <circle *ngIf="currentDrop"
-            id="currentDrop_{{ currentDrop.x }}_{{ currentDrop.y }}"
-            [attr.cx]="getCenter(currentDrop.x)"
-            [attr.cy]="getCenter(currentDrop.y)"
+    <circle *ngIf="currentDrop.isPresent()"
+            id="currentDrop_{{ currentDrop.get().x }}_{{ currentDrop.get().y }}"
+            [attr.cx]="getCenter(currentDrop.get().x)"
+            [attr.cy]="getCenter(currentDrop.get().y)"
             [attr.r]="(SPACE_SIZE - STROKE_WIDTH) / 2"
             [ngClass]="getPlayerClass(rules.node.gameState.getCurrentPlayer())"
             class="base"

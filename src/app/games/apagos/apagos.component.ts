@@ -5,7 +5,6 @@ import { Player } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { Utils } from 'src/app/utils/utils';
 import { ApagosCoord } from './ApagosCoord';
 import { ApagosDummyMinimax } from './ApagosDummyMinimax';
 import { ApagosFailure } from './ApagosFailure';
@@ -247,8 +246,8 @@ export class ApagosComponent extends GameComponent<ApagosRules,
             }
         }
         const neutral: number = square.count(Player.NONE) - (one + zero);
-        const pieceColor: string | null = this.getPieceColor(i, zero, neutral);
-        if (pieceColor != null) {
+        const pieceColor: string = this.getPieceColor(i, zero, neutral);
+        if (pieceColor !== '') {
             classes.push(pieceColor);
         }
         return classes;
