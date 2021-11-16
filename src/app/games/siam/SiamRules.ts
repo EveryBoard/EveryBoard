@@ -156,7 +156,7 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityStatus> {
         const resultingState: SiamState = new SiamState(newBoard, newTurn);
         return resultingState;
     }
-    public static getBoardValueInfo(move: SiamMove,
+    public static getBoardValueInfo(move: MGPOptional<SiamMove>,
                                     state: SiamState)
     : { shortestZero: number, shortestOne: number, boardValue: number }
     {
@@ -243,9 +243,9 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityStatus> {
         }
         return { rows, columns, nbMountain };
     }
-    public static getWinner(state: SiamState, move: SiamMove | null, nbMountain: number): Player {
+    public static getWinner(state: SiamState, move: MGPOptional<SiamMove>, nbMountain: number): Player {
         if (nbMountain === 2) {
-            return SiamRules.getPusher(state, Utils.getNonNullable(move));
+            return SiamRules.getPusher(state, move.get());
         } else {
             return Player.NONE;
         }

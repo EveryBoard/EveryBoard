@@ -41,7 +41,7 @@ describe('GipfMinimax', () => {
                 [_, B, _, _, N, N, N],
             ];
             const state: GipfState = new GipfState(board, P0Turn, [0, 5], [0, 0]);
-            const node: GipfNode = new GipfNode(MGPOptional.empty(), null, state);
+            const node: GipfNode = new GipfNode(state);
             expect(minimax.getListMoves(node).length).toBe(0);
         });
         it('should have 19 moves on an example state with non-intersecting capture', () => {
@@ -55,7 +55,7 @@ describe('GipfMinimax', () => {
                 [_, _, _, _, N, N, N],
             ];
             const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
-            const node: GipfNode = new GipfNode(MGPOptional.empty(), null, state);
+            const node: GipfNode = new GipfNode(state);
             expect(minimax.getListMoves(node).length).toBe(19);
         });
         it('should have 20 moves on an example state with a complete line', () => {
@@ -70,7 +70,7 @@ describe('GipfMinimax', () => {
                 [_, _, _, A, N, N, N],
             ];
             const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
-            const node: GipfNode = new GipfNode(MGPOptional.empty(), null, state);
+            const node: GipfNode = new GipfNode(state);
             expect(minimax.getListMoves(node).length).toBe(20);
         });
         it('should have 30 moves on an example state with all borders occupied', () => {
@@ -85,7 +85,7 @@ describe('GipfMinimax', () => {
                 [A, B, A, B, N, N, N],
             ];
             const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
-            const node: GipfNode = new GipfNode(MGPOptional.empty(), null, state);
+            const node: GipfNode = new GipfNode(state);
             expect(minimax.getListMoves(node).length).toBe(30);
         });
         it('should have 38 moves on an example state with intersecting captures', () => {
@@ -100,7 +100,7 @@ describe('GipfMinimax', () => {
                 [_, _, _, _, N, N, N],
             ];
             const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 0]);
-            const node: GipfNode = new GipfNode(MGPOptional.empty(), null, state);
+            const node: GipfNode = new GipfNode(state);
             expect(minimax.getListMoves(node).length).toBe(38);
         });
     });
@@ -120,7 +120,8 @@ describe('GipfMinimax', () => {
                 [_, B, _, _, N, N, N],
             ];
             const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 7]);
-            expect(minimax.getBoardValue(new MGPNode(MGPOptional.empty(), dummyMove, state))).toBeLessThan(0);
+            expect(minimax.getBoardValue(
+                new MGPNode(state, MGPOptional.empty(), MGPOptional.of(dummyMove)))).toBeLessThan(0);
         });
         it('should favor having pieces to play pieces', () => {
             const board: Table<FourStatePiece> = [
@@ -133,7 +134,8 @@ describe('GipfMinimax', () => {
                 [_, B, _, _, N, N, N],
             ];
             const state: GipfState = new GipfState(board, P0Turn, [5, 7], [0, 0]);
-            expect(minimax.getBoardValue(new MGPNode(MGPOptional.empty(), dummyMove, state))).toBeLessThan(0);
+            expect(minimax.getBoardValue(
+                new MGPNode(state, MGPOptional.empty(), MGPOptional.of(dummyMove)))).toBeLessThan(0);
         });
     });
 });

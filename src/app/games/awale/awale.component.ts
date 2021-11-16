@@ -10,7 +10,6 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { AwaleFailure } from './AwaleFailure';
 import { AwaleTutorial } from './AwaleTutorial';
-import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 @Component({
@@ -47,12 +46,12 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
         const state: AwaleState = this.rules.node.gameState;
         this.scores = MGPOptional.of(state.getCapturedCopy());
         this.hidePreviousMove();
-        const lastMove: AwaleMove | null = this.rules.node.move;
+        const lastMove: MGPOptional<AwaleMove> = this.rules.node.move;
 
         this.board = state.getCopiedBoard();
-        if (lastMove != null) {
+        if (lastMove.isPresent()) {
             const lastPlayer: number = state.getCurrentOpponent().value;
-            this.last = MGPOptional.of(new Coord(lastMove.x, lastPlayer));
+            this.last = MGPOptional.of(new Coord(lastMove.get().x, lastPlayer));
             this.showPreviousMove();
         } else {
             this.last = MGPOptional.empty();

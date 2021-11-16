@@ -118,7 +118,9 @@ describe('PentagoRules', () => {
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingState: PentagoState = rules.applyLegalMove(move, state, status);
         expect(resultingState).toEqual(expectedState);
-        RulesUtils.expectToBeOngoing(rules, new MGPNode(MGPOptional.empty(), move, resultingState), minimaxes);
+        RulesUtils.expectToBeOngoing(rules,
+                                     new MGPNode(resultingState, MGPOptional.empty(), MGPOptional.of(move)),
+                                     minimaxes);
     });
     it('it should be able to twist any board anti-clockwise', () => {
         const board: Table<Player> = [
@@ -144,7 +146,7 @@ describe('PentagoRules', () => {
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingState: PentagoState = rules.applyLegalMove(move, state, status);
         expect(resultingState).toEqual(expectedState);
-        const node: PentagoNode = new MGPNode(MGPOptional.empty(), move, resultingState);
+        const node: PentagoNode = new MGPNode(resultingState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
     describe('victories', () => {
@@ -172,7 +174,7 @@ describe('PentagoRules', () => {
             const resultingState: PentagoState = rules.applyLegalMove(move, state, status);
             const expectedState: PentagoState = new PentagoState(expectedBoard, 11);
             expect(resultingState).toEqual(expectedState);
-            const node: PentagoNode = new MGPNode(MGPOptional.empty(), move, expectedState);
+            const node: PentagoNode = new MGPNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
         });
         it('it should notice draw by end game', () => {
@@ -199,7 +201,7 @@ describe('PentagoRules', () => {
             const resultingState: PentagoState = rules.applyLegalMove(move, state, status);
             const expectedState: PentagoState = new PentagoState(expectedBoard, 36);
             expect(resultingState).toEqual(expectedState);
-            const node: PentagoNode = new MGPNode(MGPOptional.empty(), move, expectedState);
+            const node: PentagoNode = new MGPNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
             RulesUtils.expectToBeDraw(rules, node, minimaxes);
         });
         it('it should notice draw by double-victory', () => {
@@ -226,7 +228,7 @@ describe('PentagoRules', () => {
             const resultingState: PentagoState = rules.applyLegalMove(move, state, status);
             const expectedState: PentagoState = new PentagoState(expectedBoard, 11);
             expect(resultingState).toEqual(expectedState);
-            const node: PentagoNode = new MGPNode(MGPOptional.empty(), move, expectedState);
+            const node: PentagoNode = new MGPNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
             RulesUtils.expectToBeDraw(rules, node, minimaxes);
         });
     });

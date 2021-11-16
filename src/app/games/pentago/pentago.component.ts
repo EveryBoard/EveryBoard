@@ -15,6 +15,7 @@ import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisp
 import { PentagoTutorial } from './PentagoTutorial';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Utils } from 'src/app/utils/utils';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 @Component({
     selector: 'app-pentago',
@@ -61,11 +62,12 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         this.showLastMove();
     }
     public showLastMove(): void {
-        const lastMove: PentagoMove | null = this.rules.node.move;
+        const lastMoveOptional: MGPOptional<PentagoMove> = this.rules.node.move;
         this.cancelMoveAttempt();
-        if (lastMove == null) {
+        if (lastMoveOptional.isAbsent()) {
             this.hidePreviousMove();
         } else {
+            const lastMove: PentagoMove = lastMoveOptional.get();
             this.movedBlock = lastMove.blockTurned.getOrNull();
             const localCoord: Coord = new Coord(lastMove.coord.x % 3 - 1, lastMove.coord.y % 3 - 1);
             if (lastMove.blockTurned.isPresent() &&

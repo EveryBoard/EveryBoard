@@ -121,7 +121,7 @@ describe('ApagosRules', () => {
             [7, 5, 3, 1],
         ], 0, 0);
         // then we should know who won
-        const node: ApagosNode = new ApagosNode(MGPOptional.empty(), null, state);
+        const node: ApagosNode = new ApagosNode(state);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
     it('should know who is winning (Player.ONE)', () => {
@@ -132,7 +132,7 @@ describe('ApagosRules', () => {
             [7, 5, 3, 1],
         ], 0, 0);
         // then we should know who won
-        const node: ApagosNode = new ApagosNode(MGPOptional.empty(), null, state);
+        const node: ApagosNode = new ApagosNode(state);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
 });

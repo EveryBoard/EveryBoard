@@ -67,9 +67,9 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
         const threatMap: MGPMap<Coord, PieceThreat> = new MGPMap();
         for (const player of [Player.ZERO, Player.ONE]) {
             for (const piece of pieces.get(player).get().getCopy()) {
-                const threat: PieceThreat | null = this.getThreat(piece, state);
-                if (threat != null) {
-                    threatMap.set(piece, threat);
+                const threat: MGPOptional<PieceThreat> = this.getThreat(piece, state);
+                if (threat.isPresent()) {
+                    threatMap.set(piece, threat.get());
                 }
             }
         }

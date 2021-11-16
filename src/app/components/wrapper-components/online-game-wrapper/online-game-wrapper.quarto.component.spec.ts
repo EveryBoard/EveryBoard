@@ -30,6 +30,7 @@ import { GameWrapperMessages } from '../GameWrapper';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { Utils } from 'src/app/utils/utils';
 import { GameService } from 'src/app/services/GameService';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('OnlineGameWrapperComponent of Quarto:', () => {
 
@@ -351,7 +352,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         const winningMove: QuartoMove = new QuartoMove(3, 3, QuartoPiece.ABAA);
         await doMove(winningMove, true);
 
-        expect(Utils.getNonNullable(wrapper.gameComponent.rules.node.move).toString()).toBe(winningMove.toString());
+        expect(wrapper.gameComponent.rules.node.move).toEqual(MGPOptional.of(winningMove));
         expect(partDAO.update).toHaveBeenCalledTimes(1);
         expect(partDAO.update).toHaveBeenCalledWith('joinerId', {
             listMoves: [move0, move1, move2, move3, winningMove].map(QuartoMove.encoder.encodeNumber),

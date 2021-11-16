@@ -46,7 +46,7 @@ describe('QuartoRules', () => {
             [QuartoPiece.AAAA, QuartoPiece.ABAB, QuartoPiece.BABB, QuartoPiece.BAAB],
         ];
         const state: QuartoState = new QuartoState(board, 15, QuartoPiece.BAAB);
-        rules.node = new QuartoNode(MGPOptional.empty(), null, state);
+        rules.node = new QuartoNode(state);
         const move: QuartoMove = new QuartoMove(3, 3, QuartoPiece.NONE);
         expect(rules.choose(move)).toBeTrue();
         const resultingState: QuartoState = rules.node.gameState;
@@ -109,7 +109,7 @@ describe('QuartoRules', () => {
         const resultingState: QuartoState = rules.applyLegalMove(move, state);
         const expectedState: QuartoState = new QuartoState(expectedBoard, 5, QuartoPiece.AAAB);
         expect(resultingState).toEqual(expectedState);
-        const node: QuartoNode = new MGPNode(MGPOptional.empty(), move, expectedState);
+        const node: QuartoNode = new MGPNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
     it('Should considered player 1 winner when doing a full line', () => {
@@ -132,7 +132,7 @@ describe('QuartoRules', () => {
         const resultingState: QuartoState = rules.applyLegalMove(move, state);
         const expectedState: QuartoState = new QuartoState(expectedBoard, 10, QuartoPiece.AABA);
         expect(resultingState).toEqual(expectedState);
-        const node: QuartoNode = new MGPNode(MGPOptional.empty(), move, expectedState);
+        const node: QuartoNode = new MGPNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
 });

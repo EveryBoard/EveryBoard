@@ -13,6 +13,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { QuixoTutorial } from './QuixoTutorial';
 import { Utils } from 'src/app/utils/utils';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 @Component({
     selector: 'app-quixo',
@@ -46,8 +47,8 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
     public updateBoard(): void {
         this.state = this.rules.node.gameState;
         this.board = this.state.board;
-        const move: QuixoMove | null = this.rules.node.move;
-        if (move != null) this.lastMoveCoord = move.coord;
+        const move: MGPOptional<QuixoMove> = this.rules.node.move;
+        if (move.isPresent()) this.lastMoveCoord = move.get().coord;
         else this.lastMoveCoord = null;
         this.victoriousCoords = QuixoRules.getVictoriousCoords(this.state);
     }

@@ -93,8 +93,8 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         this.remainingOne = state.remaining.get(Player.ONE).get();
 
         this.hideLastMove();
-        if (this.rules.node.move != null) {
-            this.showLastMove();
+        if (this.rules.node.move.isPresent()) {
+            this.showLastMove(this.rules.node.move.get());
         }
         this.showPossibleDrops();
     }
@@ -104,8 +104,7 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         this.leftPiece = MGPOptional.empty();
         this.selectedPiece = MGPOptional.empty();
     }
-    public showLastMove(): void {
-        const lastMove: ApagosMove = Utils.getNonNullable(this.rules.node.move);
+    private showLastMove(lastMove: ApagosMove): void {
         if (lastMove.isDrop()) {
             this.showLastDrop(lastMove);
         } else {

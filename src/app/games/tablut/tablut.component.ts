@@ -6,7 +6,7 @@ import { TablutState } from './TablutState';
 import { TablutRules } from './TablutRules';
 import { TablutMinimax } from './TablutMinimax';
 import { TablutCase } from 'src/app/games/tablut/TablutCase';
-import { display, Utils } from 'src/app/utils/utils';
+import { display } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player } from 'src/app/jscaip/Player';
 import { Orthogonal } from 'src/app/jscaip/Direction';
@@ -20,6 +20,7 @@ import { TablutEscapeThenPieceAndControlMinimax } from './TablutEscapeThenPieceT
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { TablutTutorial } from './TablutTutorial';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 @Component({
     selector: 'app-tablut',
@@ -47,7 +48,7 @@ export class TablutComponent extends RectangularGameComponent<TablutRules,
 
     public chosen: Coord = new Coord(-1, -1);
 
-    public lastMove: TablutMove | null;
+    public lastMove: MGPOptional<TablutMove>;
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -68,8 +69,8 @@ export class TablutComponent extends RectangularGameComponent<TablutRules,
         this.board = this.rules.node.gameState.getCopiedBoard();
 
         this.captureds = [];
-        if (this.lastMove) {
-            this.showPreviousMove(this.lastMove);
+        if (this.lastMove.isPresent()) {
+            this.showPreviousMove(this.lastMove.get());
         }
     }
     private showPreviousMove(move: TablutMove): void {
@@ -157,12 +158,12 @@ export class TablutComponent extends RectangularGameComponent<TablutRules,
         const classes: string[] = [];
 
         const coord: Coord = new Coord(x, y);
-        const lastStart: Coord | null = this.lastMove ? this.lastMove.coord : null;
-        const lastEnd: Coord | null = this.lastMove ? this.lastMove.end : null;
+        const lastStart: MGPOptional<Coord> = this.lastMove.map((move: TablutMove) => move.coord);
+        const lastEnd: MGPOptional<Coord> = this.lastMove.map((move: TablutMove) => move.end);
         if (this.captureds.some((c: Coord) => c.equals(coord))) {
             classes.push('captured');
-        } else if (lastStart != null && coord.equals(lastStart) ||
-                   lastEnd != null && coord.equals(lastEnd)) {
+        } else if (lastStart.equalsValue(coord) ||
+                   lastEnd.equalsValue(coord)) {
             classes.push('moved');
         }
 

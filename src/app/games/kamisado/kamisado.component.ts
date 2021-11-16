@@ -13,6 +13,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { KamisadoTutorial } from './KamisadoTutorial';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 @Component({
     selector: 'app-kamisado',
@@ -26,7 +27,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
                                                                 KamisadoPiece>
 {
     public UNOCCUPIED: KamisadoPiece = KamisadoPiece.NONE;
-    public lastMove: KamisadoMove | null = null;
+    public lastMove: MGPOptional<KamisadoMove> = MGPOptional.empty();
     public chosen: Coord = new Coord(-1, -1);
     public chosenAutomatically: boolean = false;
 

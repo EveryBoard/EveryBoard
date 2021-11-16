@@ -39,7 +39,7 @@ describe('EpaminondasMinimax:', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 0);
-        rules.node = new EpaminondasNode(MGPOptional.empty(), null, state);
+        rules.node = new EpaminondasNode(state);
         const capture: EpaminondasMove = new EpaminondasMove(4, 9, 2, 1, Direction.UP);
         const bestMove: EpaminondasMove = rules.node.findBestMove(1, minimax);
         expect(bestMove).toEqual(capture);
@@ -73,6 +73,7 @@ describe('EpaminondasMinimax:', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, O, O, _, _, _, _, _, _, _, _, _, _, _],
         ], 0);
-        RulesUtils.expectSecondStateToBeBetterThanFirst(weakerState, null, strongerState, null, minimax);
+        RulesUtils.expectSecondStateToBeBetterThanFirst(weakerState, MGPOptional.empty(),
+                                                        strongerState, MGPOptional.empty(), minimax);
     });
 });

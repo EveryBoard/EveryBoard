@@ -26,7 +26,7 @@ describe('SiamMove', () => {
         ];
         const move: SiamMove = new SiamMove(0, 0, MGPOptional.of(Orthogonal.DOWN), Orthogonal.UP);
         const state: SiamState = new SiamState(board, 0);
-        const node: SiamNode = new MGPNode(MGPOptional.empty(), move, state);
+        const node: SiamNode = new MGPNode(state, MGPOptional.empty(), MGPOptional.of(move));
         const rules: SiamRules = new SiamRules(SiamState);
         const minimax: SiamMinimax = new SiamMinimax(rules, 'SiamMinimax');
         const moves: SiamMove[] = minimax.getListMoves(node);

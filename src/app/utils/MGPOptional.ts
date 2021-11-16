@@ -68,4 +68,18 @@ export class MGPOptional<T> {
             return `MGPOptional.of(${this.value as T})`;
         }
     }
+    public map<U>(f: (value: T) => U): MGPOptional<U> {
+        if (this.isPresent()) {
+            return MGPOptional.of(f(this.get()));
+        } else {
+            return MGPOptional.empty();
+        }
+    }
+    public flatMap<U>(f: (value: T) => MGPOptional<U>): MGPOptional<U> {
+        if (this.isPresent()) {
+            return f(this.get());
+        } else {
+            return MGPOptional.empty();
+        }
+    }
 }

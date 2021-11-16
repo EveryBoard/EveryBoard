@@ -87,9 +87,9 @@ export abstract class Rules<M extends Move,
         }
 
         const resultingState: AbstractGameState = this.applyLegalMove(move, this.node.gameState, status);
-        const son: MGPNode<Rules<M, S, L>, M, S, L> = new MGPNode(MGPOptional.of(this.node),
-                                                                  move,
-                                                                  resultingState as S);
+        const son: MGPNode<Rules<M, S, L>, M, S, L> = new MGPNode(resultingState as S,
+                                                                  MGPOptional.of(this.node),
+                                                                  MGPOptional.of(move));
         this.node = son;
         return true;
     }

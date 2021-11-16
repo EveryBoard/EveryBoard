@@ -244,13 +244,11 @@ export class ComponentTestUtils<T extends MyGameComponent> {
                       previousMove?: Move)
     : void
     {
-        if (previousState !== undefined) {
-            this.gameComponent.rules.node =
-                new MGPNode(MGPOptional.of(new MGPNode(MGPOptional.empty(), null, previousState)),
-                            previousMove || null, state);
-        } else {
-            this.gameComponent.rules.node = new MGPNode(MGPOptional.empty(), previousMove || null, state);
-        }
+        this.gameComponent.rules.node = new MGPNode(
+            state,
+            MGPOptional.ofNullable(previousState).map((previousState: AbstractGameState) =>
+                new MGPNode(previousState)),
+            MGPOptional.ofNullable(previousMove));
         this.gameComponent.updateBoard();
         this.forceChangeDetection();
     }

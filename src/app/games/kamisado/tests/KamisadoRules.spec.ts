@@ -89,7 +89,7 @@ describe('KamisadoRules:', () => {
         const expectedState2: KamisadoState =
             new KamisadoState(7, KamisadoColor.ORANGE, MGPOptional.of(new Coord(1, 0)), false, expectedBoard2);
         expect(resultingState2).toEqual(expectedState2);
-        const node: KamisadoNode = new KamisadoNode(MGPOptional.empty(), move2, expectedState2);
+        const node: KamisadoNode = new KamisadoNode(expectedState2, MGPOptional.empty(), MGPOptional.of(move2));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
     it('should not allow moves landing on occupied case', () => {
@@ -105,7 +105,7 @@ describe('KamisadoRules:', () => {
         ];
         const state: KamisadoState =
             new KamisadoState(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board1);
-        rules.node = new KamisadoNode(MGPOptional.empty(), null, state);
+        rules.node = new KamisadoNode(state);
         const move: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(0, 6));
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.reason).toBe(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
@@ -123,7 +123,7 @@ describe('KamisadoRules:', () => {
         ];
         const state: KamisadoState =
             new KamisadoState(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
-        rules.node = new KamisadoNode(MGPOptional.empty(), null, state);
+        rules.node = new KamisadoNode(state);
         const move: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(0, 5));
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.reason).toBe(KamisadoFailure.MOVE_BLOCKED());
@@ -141,7 +141,7 @@ describe('KamisadoRules:', () => {
         ];
         const state: KamisadoState =
             new KamisadoState(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 6)), false, board);
-        rules.node = new KamisadoNode(MGPOptional.empty(), null, state);
+        rules.node = new KamisadoNode(state);
         const move1: KamisadoMove = KamisadoMove.of(new Coord(0, 6), new Coord(0, 7));
         const status1: LegalityStatus = rules.isLegal(move1, state);
         expect(status1.legal.reason).toBe(KamisadoFailure.DIRECTION_NOT_ALLOWED());
@@ -196,7 +196,7 @@ describe('KamisadoRules:', () => {
         const expectedState2: KamisadoState =
             new KamisadoState(7, KamisadoColor.BROWN, MGPOptional.of(new Coord(1, 0)), false, expectedBoard2);
         expect(resultingState2).toEqual(expectedState2);
-        const node: KamisadoNode = new KamisadoNode(MGPOptional.empty(), move2, expectedState2);
+        const node: KamisadoNode = new KamisadoNode(expectedState2, MGPOptional.empty(), MGPOptional.of(move2));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
     it('should not allow diagonal moves with obstacles', () => {
@@ -212,7 +212,7 @@ describe('KamisadoRules:', () => {
         ];
         const state: KamisadoState =
             new KamisadoState(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
-        rules.node = new KamisadoNode(MGPOptional.empty(), null, state);
+        rules.node = new KamisadoNode(state);
         const move1: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(1, 6));
         const status1: LegalityStatus = rules.isLegal(move1, state);
         expect(status1.legal.reason).toBe(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
@@ -256,7 +256,7 @@ describe('KamisadoRules:', () => {
         ];
         const state: KamisadoState =
             new KamisadoState(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
-        rules.node = new KamisadoNode(MGPOptional.empty(), null, state);
+        rules.node = new KamisadoNode(state);
         const move: KamisadoMove = KamisadoMove.PASS;
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.reason).toBe(RulesFailure.CANNOT_PASS());
@@ -293,7 +293,7 @@ describe('KamisadoRules:', () => {
         const expectedState: KamisadoState =
             new KamisadoState(8, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, expectedBoard);
         expect(finalState).toEqual(expectedState);
-        const node: KamisadoNode = new KamisadoNode(MGPOptional.empty(), move, finalState);
+        const node: KamisadoNode = new KamisadoNode(finalState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
     it('should declare blocking player as loser', () => {
@@ -321,7 +321,7 @@ describe('KamisadoRules:', () => {
         expect(resultingState).toEqual(expectedState);
         const nextMoves: KamisadoMove[] = KamisadoRules.getListMovesFromState(resultingState);
         expect(nextMoves.length).toEqual(0);
-        const node: KamisadoNode = new KamisadoNode(MGPOptional.empty(), onlyMove, resultingState);
+        const node: KamisadoNode = new KamisadoNode(resultingState, MGPOptional.empty(), MGPOptional.of(onlyMove));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
     it('should not have allowed directions for other players than 0 and 1', () => {
@@ -341,7 +341,7 @@ describe('KamisadoRules:', () => {
         ];
         const state1: KamisadoState =
             new KamisadoState(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 0)), false, win1);
-        const node1: KamisadoNode = new KamisadoNode(MGPOptional.empty(), KamisadoMove.PASS, state1);
+        const node1: KamisadoNode = new KamisadoNode(state1, MGPOptional.empty(), MGPOptional.of(KamisadoMove.PASS));
         RulesUtils.expectToBeVictoryFor(rules, node1, Player.ZERO, minimaxes);
         const win2: Table<KamisadoPiece> = [
             [_, _, _, _, _, _, _, _],
@@ -355,7 +355,7 @@ describe('KamisadoRules:', () => {
         ];
         const state2: KamisadoState =
             new KamisadoState(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 0)), false, win2);
-        const node2: KamisadoNode = new KamisadoNode(MGPOptional.empty(), KamisadoMove.PASS, state2);
+        const node2: KamisadoNode = new KamisadoNode(state2, MGPOptional.empty(), MGPOptional.of(KamisadoMove.PASS));
         RulesUtils.expectToBeVictoryFor(rules, node2, Player.ONE, minimaxes);
         const winEach: Table<KamisadoPiece> = [
             [r, o, _, _, _, _, _, _],
@@ -369,11 +369,11 @@ describe('KamisadoRules:', () => {
         ];
         const state3: KamisadoState =
             new KamisadoState(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 0)), true, winEach);
-        const node3: KamisadoNode = new KamisadoNode(MGPOptional.empty(), KamisadoMove.PASS, state3);
+        const node3: KamisadoNode = new KamisadoNode(state3, MGPOptional.empty(), MGPOptional.of(KamisadoMove.PASS));
         RulesUtils.expectToBeVictoryFor(rules, node3, Player.ONE, minimaxes);
         const state4: KamisadoState =
             new KamisadoState(7, KamisadoColor.RED, MGPOptional.of(new Coord(0, 0)), true, winEach);
-        const node4: KamisadoNode = new KamisadoNode(MGPOptional.empty(), KamisadoMove.PASS, state4);
+        const node4: KamisadoNode = new KamisadoNode(state4, MGPOptional.empty(), MGPOptional.of(KamisadoMove.PASS));
         RulesUtils.expectToBeVictoryFor(rules, node4, Player.ZERO, minimaxes);
     });
     it('should forbid moving opponent pieces', () => {

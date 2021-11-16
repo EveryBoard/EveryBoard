@@ -52,12 +52,6 @@ export class EncapsuleCase implements ComparableObject {
 
     public static readonly EMPTY: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.NONE);
 
-    public readonly small: Player;
-
-    public readonly medium: Player;
-
-    public readonly big: Player;
-
     public static decode(encapsuleCase: number): EncapsuleCase {
         assert(encapsuleCase % 1 === 0, 'EncapsuleCase must be encoded as integer: ' + encapsuleCase);
         assert(encapsuleCase >= 0, 'To small representation for EncapsuleCase: ' + encapsuleCase);
@@ -71,10 +65,9 @@ export class EncapsuleCase implements ComparableObject {
         const big: Player = Player.of(encapsuleCase);
         return new EncapsuleCase(small, medium, big);
     }
-    constructor(small: Player, medium: Player, big: Player) {
-        this.small = small;
-        this.medium = medium;
-        this.big = big;
+    constructor(public readonly small: Player,
+                public readonly medium: Player,
+                public readonly big: Player) {
     }
     public isEmpty(): boolean {
         return this.small === Player.NONE && this.medium === Player.NONE && this.big === Player.NONE;

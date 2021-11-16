@@ -91,13 +91,13 @@ export class MGPNode<R extends Rules<M, S, L>,
     : MGPNode<R, M, S, L, U>
     {
         MGPNode.ruler = gameRuler; // for all nodes, gameRuler is the ruler
-        return new MGPNode<R, M, S, L, U>(MGPOptional.empty(), null, initialBoard);
+        return new MGPNode<R, M, S, L, U>(initialBoard);
     }
     // instance methods:
 
-    constructor(public readonly mother: MGPOptional<MGPNode<R, M, S, L, U>>,
-                public readonly move: M | null,
-                public readonly gameState: S,
+    constructor(public readonly gameState: S,
+                public readonly mother: MGPOptional<MGPNode<R, M, S, L, U>> = MGPOptional.empty(),
+                public readonly move: MGPOptional<M> = MGPOptional.empty(),
                 public minimaxCreator?: Minimax<M, S, L, U>)
     {
         /* Initialisation condition:
@@ -126,7 +126,7 @@ export class MGPNode<R extends Rules<M, S, L>,
             readingDepth--;
         }
         MGPNodeStats.minimaxTime += new Date().getTime() - startTime;
-        return Utils.getNonNullable(bestDescendant.move);
+        return bestDescendant.move.get();
     }
     public alphaBeta(depth: number,
                      alpha: number,
@@ -205,7 +205,7 @@ export class MGPNode<R extends Rules<M, S, L>,
                 Utils.handleError(`The minimax has accepted an illegal move, this should not happen.`);
             }
             const state: S = minimax.ruler.applyLegalMove(move, this.gameState, status);
-            child = new MGPNode(MGPOptional.of(this), move, state, minimax);
+            child = new MGPNode(state, MGPOptional.of(this), MGPOptional.of(move), minimax);
             Utils.getNonNullable(this.childs).push(child);
         }
         return child;
@@ -213,7 +213,7 @@ export class MGPNode<R extends Rules<M, S, L>,
     public getSonByMove(move: M): MGPNode<R, M, S, L, U> | null {
         assert(this.childs != null, 'Cannot get son of uncalculated node');
         for (const node of Utils.getNonNullable(this.childs)) {
-            if (node.move != null && node.move.equals(move)) {
+            if (node.move.isPresent() && node.move.equalsValue(move)) {
                 return node;
             }
         }

@@ -149,7 +149,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         return this.getDeplacementFrom(state, start, legalLandings);
     }
     public getBoardValue(node: SixNode): SixNodeUnheritance {
-        const move: SixMove | null = node.move;
+        const move: MGPOptional<SixMove> = node.move;
         const state: SixState = node.gameState;
         const LAST_PLAYER: Player = state.getCurrentOpponent();
         const victoryValue: number = LAST_PLAYER.getVictoryValue();
@@ -159,8 +159,8 @@ export class SixMinimax extends AlignementMinimax<SixMove,
             preVictory: MGPOptional.empty(),
             sum: 0,
         };
-        if (move != null) {
-            shapeInfo = this.calculateBoardValue(move, state);
+        if (move.isPresent()) {
+            shapeInfo = this.calculateBoardValue(move.get(), state);
         }
         let preVictory: Coord | undefined;
         if (shapeInfo.status === SCORE.DEFAULT) {

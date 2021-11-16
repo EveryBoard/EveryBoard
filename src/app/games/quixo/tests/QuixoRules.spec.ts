@@ -85,7 +85,7 @@ describe('QuixoRules:', () => {
         const resultingState: QuixoState = rules.applyLegalMove(move, state, status);
         const expectedState: QuixoState = new QuixoState(expectedBoard, 1);
         expect(resultingState).toEqual(expectedState);
-        const node: QuixoNode = new MGPNode(MGPOptional.empty(), move, expectedState);
+        const node: QuixoNode = new MGPNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
     it('Should declare winner player one when he create a line of his symbol', () => {
@@ -110,7 +110,7 @@ describe('QuixoRules:', () => {
         const resultingState: QuixoState = rules.applyLegalMove(move, state, status);
         const expectedState: QuixoState = new QuixoState(expectedBoard, 2);
         expect(resultingState).toEqual(expectedState);
-        const node: QuixoNode = new MGPNode(MGPOptional.empty(), move, expectedState);
+        const node: QuixoNode = new MGPNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
     it('Should declare looser player zero who create a line of his opponent symbol, even if creating a line of his symbol too', () => {
@@ -135,7 +135,7 @@ describe('QuixoRules:', () => {
         const resultingState: QuixoState = rules.applyLegalMove(move, state, status);
         const expectedState: QuixoState = new QuixoState(expectedBoard, 1);
         expect(resultingState).toEqual(expectedState);
-        const node: QuixoNode = new MGPNode(MGPOptional.empty(), move, expectedState);
+        const node: QuixoNode = new MGPNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
     it('Should declare looser player one who create a line of his opponent symbol, even if creating a line of his symbol too', () => {
@@ -160,7 +160,7 @@ describe('QuixoRules:', () => {
         const resultingState: QuixoState = rules.applyLegalMove(move, state, status);
         const expectedState: QuixoState = new QuixoState(expectedBoard, 2);
         expect(resultingState).toEqual(expectedState);
-        const node: QuixoNode = new MGPNode(MGPOptional.empty(), move, expectedState);
+        const node: QuixoNode = new MGPNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
     describe('getVictoriousCoords', () => {

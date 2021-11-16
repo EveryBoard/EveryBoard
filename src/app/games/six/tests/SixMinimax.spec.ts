@@ -47,7 +47,7 @@ describe('SixMinimax', () => {
             ];
             const state: SixState = SixState.fromRepresentation(board, 10);
             const move: SixMove = SixMove.fromDrop(new Coord(0, 5));
-            rules.node = new SixNode(MGPOptional.empty(), null, state);
+            rules.node = new SixNode(state);
             expect(rules.choose(move)).toBeTrue();
             const chosenMove: SixMove = rules.node.findBestMove(1, minimax);
             expect(chosenMove).toEqual(SixMove.fromDrop(new Coord(0, 6)));
@@ -82,9 +82,9 @@ describe('SixMinimax', () => {
             ];
             const state: SixState = SixState.fromRepresentation(board, 9);
             const move: SixMove = SixMove.fromDrop(new Coord(2, 3));
-            rules.node = new SixNode(MGPOptional.empty(), null, state);
+            rules.node = new SixNode(state);
             const boardValue: { value: number, preVictory?: Coord } =
-                minimax.getBoardValue(new MGPNode(MGPOptional.empty(), move, state));
+                minimax.getBoardValue(new MGPNode(state, MGPOptional.empty(), MGPOptional.of(move)));
             expect(boardValue.preVictory).toBeUndefined();
             expect(boardValue.value).toBe(Player.ZERO.getPreVictory());
         });
@@ -96,9 +96,9 @@ describe('SixMinimax', () => {
             ];
             const state: SixState = SixState.fromRepresentation(board, 9);
             const move: SixMove = SixMove.fromDrop(new Coord(1, 0));
-            rules.node = new SixNode(MGPOptional.empty(), null, state);
+            rules.node = new SixNode(state);
             const boardValue: { value: number, preVictory?: Coord } =
-                minimax.getBoardValue(new MGPNode(MGPOptional.empty(), move, state));
+                minimax.getBoardValue(new MGPNode(state, MGPOptional.empty(), MGPOptional.of(move)));
             expect(boardValue.preVictory).toEqual(new Coord(2, 0));
         });
     });
@@ -115,7 +115,9 @@ describe('SixMinimax', () => {
                 [O, X, X, X, X, _],
                 [O, O, O, O, O, O],
             ], 4);
-            RulesUtils.expectSecondStateToBeBetterThanFirst(weakerState, move, strongerState, move, minimax);
+            RulesUtils.expectSecondStateToBeBetterThanFirst(weakerState, MGPOptional.of(move),
+                                                            strongerState, MGPOptional.of(move),
+                                                            minimax);
         });
         it('should be true with triangle', () => {
             const move: SixMove = SixMove.fromDrop(new Coord(1, 3));
@@ -133,7 +135,9 @@ describe('SixMinimax', () => {
                 [O, X, O, O, _],
                 [O, O, O, _, _],
             ], 4);
-            RulesUtils.expectSecondStateToBeBetterThanFirst(weakerState, move, strongerState, move, minimax);
+            RulesUtils.expectSecondStateToBeBetterThanFirst(weakerState, MGPOptional.of(move),
+                                                            strongerState, MGPOptional.of(move),
+                                                            minimax);
         });
         it('should be true with circle', () => {
             const move: SixMove = SixMove.fromDrop(new Coord(2, 1));
@@ -151,7 +155,9 @@ describe('SixMinimax', () => {
                 [O, _, X, O, O],
                 [O, O, O, O, _],
             ], 4);
-            RulesUtils.expectSecondStateToBeBetterThanFirst(weakerState, move, strongerState, move, minimax);
+            RulesUtils.expectSecondStateToBeBetterThanFirst(weakerState, MGPOptional.of(move),
+                                                            strongerState, MGPOptional.of(move),
+                                                            minimax);
         });
     });
     describe('4 pieces aligned with two spaces should be better than 4 aligned with two opponents', () => {
@@ -167,7 +173,9 @@ describe('SixMinimax', () => {
                 [_, X, X, X, X, _],
                 [O, O, O, O, O, O],
             ], 6);
-            RulesUtils.expectSecondStateToBeBetterThanFirst(weakerState, move, strongerState, move, minimax);
+            RulesUtils.expectSecondStateToBeBetterThanFirst(weakerState, MGPOptional.of(move),
+                                                            strongerState, MGPOptional.of(move),
+                                                            minimax);
         });
     });
     describe('Phase 2', () => {
@@ -182,7 +190,7 @@ describe('SixMinimax', () => {
             ];
             const state: SixState = SixState.fromRepresentation(board, 39);
             const move: SixMove = SixMove.fromDrop(new Coord(0, 5));
-            rules.node = new SixNode(MGPOptional.empty(), null, state);
+            rules.node = new SixNode(state);
             expect(rules.choose(move)).toBeTrue();
             const bestMove: SixMove = rules.node.findBestMove(1, minimax);
             const expectedMove: SixMove = SixMove.fromDeplacement(new Coord(1, 0), new Coord(0, 6));
@@ -200,7 +208,7 @@ describe('SixMinimax', () => {
                 [_, X, _, _, _, _, _],
             ];
             const state: SixState = SixState.fromRepresentation(board, 39);
-            rules.node = new SixNode(MGPOptional.empty(), null, state);
+            rules.node = new SixNode(state);
             const move: SixMove = SixMove.fromDrop(new Coord(0, 5));
             expect(rules.choose(move)).toBeTrue();
 
@@ -218,7 +226,10 @@ describe('SixMinimax', () => {
                 [X, X, X, X, O, O, O, O, O],
                 [X, X, X, X, O, O, O, O, O],
             ], 40);
-            expect(minimax.getBoardNumericValue(new MGPNode(MGPOptional.empty(), SixMove.fromDrop(new Coord(1, 1)), state))).toBe(2);
+            expect(minimax.getBoardNumericValue(new MGPNode(state,
+                                                            MGPOptional.empty(),
+                                                            MGPOptional.of(SixMove.fromDrop(new Coord(1, 1))))))
+                .toBe(2);
         });
     });
 });

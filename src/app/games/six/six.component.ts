@@ -85,8 +85,8 @@ export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixS
     public updateBoard(): void {
         const node: SixNode = this.rules.node;
         this.state = node.gameState;
-        const lastMove: SixMove | null = this.rules.node.move;
-        if (lastMove != null) {
+        const lastMove: MGPOptional<SixMove> = this.rules.node.move;
+        if (lastMove.isPresent()) {
             this.showLastMove();
         } else {
             // For tutorial
@@ -100,7 +100,7 @@ export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixS
         this.viewBox = this.getViewBox();
     }
     public showLastMove(): void {
-        const lastMove: SixMove = Utils.getNonNullable(this.rules.node.move);
+        const lastMove: SixMove = this.rules.node.move.get();
         this.lastDrop = lastMove.landing.getNext(this.state.offset, 1);
         if (lastMove.isDrop() === false) {
             this.leftCoord = lastMove.start.get().getNext(this.state.offset, 1);
@@ -118,7 +118,7 @@ export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixS
         const newPieces: Coord[] = this.rules.node.gameState.pieces.listKeys();
         const disconnecteds: Coord[] =[];
         for (const oldPiece of oldPieces) {
-            const start: MGPOptional<Coord> = Utils.getNonNullable(this.rules.node.move).start;
+            const start: MGPOptional<Coord> = this.rules.node.move.get().start;
             if (start.isPresent() && oldPiece.equals(start.get()) === false &&
                 newPieces.some((newCoord: Coord) => newCoord.equals(oldPiece.getNext(this.state.offset, 1))) === false)
             {

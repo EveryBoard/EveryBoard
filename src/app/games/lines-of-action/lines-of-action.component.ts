@@ -13,7 +13,6 @@ import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisp
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { LinesOfActionTutorial } from './LinesOfActionTutorial';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Utils } from 'src/app/utils/utils';
 
 @Component({
     selector: 'app-linesofaction',
@@ -86,7 +85,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
     public updateBoard(): void {
         this.cancelMoveAttempt();
         this.board = this.getState().board;
-        this.lastMove = MGPOptional.ofNullable(this.rules.node.move);
+        this.lastMove = this.rules.node.move;
         if (this.lastMove.isPresent()) {
             const lastMove: LinesOfActionMove = this.lastMove.get();
             if (this.getPreviousState().getPieceAt(lastMove.end) !== Player.NONE) {

@@ -7,6 +7,7 @@ import { assert, display } from 'src/app/utils/utils';
 import { CoerceoMove, CoerceoStep } from './CoerceoMove';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Player } from 'src/app/jscaip/Player';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class CoerceoState extends TriangularGameState<FourStatePiece> {
 
@@ -172,17 +173,17 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
     }
     public getPresentNeighboorTilesRelativeIndexes(tile: Coord): number[] {
         const neighboorsIndexes: number[] = [];
-        let firstIndex: number | null = null;
+        let firstIndex: MGPOptional<number> = MGPOptional.empty();
         for (let i: number = 0; i < 6; i++) {
             const vector: Vector = CoerceoState.NEIGHBOORS_TILES_DIRECTIONS[i];
             const neighboorTile: Coord = tile.getNext(vector, 1);
             if (neighboorTile.isInRange(15, 10) &&
                 this.getPieceAt(neighboorTile) !== FourStatePiece.NONE)
             {
-                if (firstIndex == null) {
-                    firstIndex = i;
+                if (firstIndex.isAbsent()) {
+                    firstIndex = MGPOptional.of(i);
                 }
-                neighboorsIndexes.push(i - firstIndex);
+                neighboorsIndexes.push(i - firstIndex.get());
             }
         }
         return neighboorsIndexes;

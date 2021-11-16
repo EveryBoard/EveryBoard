@@ -296,7 +296,7 @@ describe('PylosRules:', () => {
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingState: PylosState = rules.applyLegalMove(move, state, status);
-        expect(minimax.getBoardValue(new MGPNode(MGPOptional.empty(), move, resultingState)).value)
+        expect(minimax.getBoardValue(new MGPNode(resultingState, MGPOptional.empty(), MGPOptional.of(move))).value)
             .toBe(Number.MAX_SAFE_INTEGER);
     });
     it('should declare looser Player.ONE when he put his 15th ball', () => {
@@ -323,7 +323,7 @@ describe('PylosRules:', () => {
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingState: PylosState = rules.applyLegalMove(move, state, status);
-        expect(minimax.getBoardValue(new MGPNode(MGPOptional.empty(), move, resultingState)).value)
+        expect(minimax.getBoardValue(new MGPNode(resultingState, MGPOptional.empty(), MGPOptional.of(move))).value)
             .toBe(Number.MIN_SAFE_INTEGER);
     });
 });

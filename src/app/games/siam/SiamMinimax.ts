@@ -6,7 +6,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { SiamLegalityStatus } from './SiamLegalityStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { display, Utils } from 'src/app/utils/utils';
+import { display } from 'src/app/utils/utils';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { SiamRules, SiamNode } from './SiamRules';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
@@ -14,9 +14,7 @@ import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 export class SiamMinimax extends Minimax<SiamMove, SiamState, SiamLegalityStatus> {
 
     public getBoardValue(node: SiamNode): NodeUnheritance {
-        const move: SiamMove = Utils.getNonNullable(node.move);
-        const state: SiamState = node.gameState;
-        return new NodeUnheritance(SiamRules.getBoardValueInfo(move, state).boardValue);
+        return new NodeUnheritance(SiamRules.getBoardValueInfo(node.move, node.gameState).boardValue);
     }
     public getListMoves(node: SiamNode): SiamMove[] {
         let moves: SiamMove[] = [];

@@ -226,8 +226,9 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules, YinshMove
         this.moveToInitialCaptureOrMovePhase();
     }
     private showLastMove(): void {
-        const move: YinshMove | null = this.rules.node.move;
-        if (move != null) {
+        const moveOptional: MGPOptional<YinshMove> = this.rules.node.move;
+        if (moveOptional.isPresent()) {
+            const move: YinshMove = moveOptional.get();
             if (move.isInitialPlacement()) {
                 this.viewInfo.caseInfo[move.start.y][move.start.x].caseClasses = ['moved'];
             } else {

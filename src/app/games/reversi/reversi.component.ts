@@ -12,7 +12,6 @@ import { Direction } from 'src/app/jscaip/Direction';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { ReversiTutorial } from './ReversiTutorial';
-import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 @Component({
@@ -57,7 +56,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
         this.board = state.getCopiedBoard();
         this.captureds = [];
 
-        if (this.rules.node.move) {
+        if (this.rules.node.move.isPresent()) {
             this.showPreviousMove();
         } else {
             this.lastMove = new Coord(-2, -2);
@@ -67,7 +66,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
         this.canPass = ReversiRules.playerCanOnlyPass(state);
     }
     private showPreviousMove() {
-        this.lastMove = Utils.getNonNullable(this.rules.node.move).coord;
+        this.lastMove = this.rules.node.move.get().coord;
         const PLAYER: Player = this.rules.node.gameState.getCurrentPlayer();
         const OPPONENT: Player = this.rules.node.gameState.getCurrentOpponent();
         for (const dir of Direction.DIRECTIONS) {

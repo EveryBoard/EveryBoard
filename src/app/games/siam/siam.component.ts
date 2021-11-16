@@ -31,7 +31,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
 {
     public static VERBOSE: boolean = false;
 
-    public lastMove: SiamMove | null;
+    public lastMove: MGPOptional<SiamMove>;
     public chosenCoord: Coord | null;
     public landingCoord: Coord | null;
     public chosenDirection: MGPOptional<Orthogonal> | null;
@@ -53,8 +53,8 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         const state: SiamState = this.rules.node.gameState;
         this.board = state.board;
         this.lastMove = this.rules.node.move;
-        if (this.lastMove) {
-            this.movedPieces = this.rules.isLegal(this.lastMove,
+        if (this.lastMove.isPresent()) {
+            this.movedPieces = this.rules.isLegal(this.lastMove.get(),
                                                   this.rules.node.mother.get().gameState).moved;
         } else {
             this.movedPieces = [];

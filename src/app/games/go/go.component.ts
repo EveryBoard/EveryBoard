@@ -6,7 +6,7 @@ import { GoMinimax } from 'src/app/games/go/GoMinimax';
 import { GoState, Phase, GoPiece } from 'src/app/games/go/GoState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GoLegalityStatus } from 'src/app/games/go/GoLegalityStatus';
-import { display, Utils } from 'src/app/utils/utils';
+import { display } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GroupDatas } from 'src/app/jscaip/BoardDatas';
@@ -61,19 +61,20 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
         display(GoComponent.VERBOSE, 'updateBoard');
 
         const state: GoState = this.rules.node.gameState;
-        const move: GoMove | null = this.rules.node.move;
+        const move: MGPOptional<GoMove> = this.rules.node.move;
         const koCoord: MGPOptional<Coord> = state.koCoord;
         const phase: Phase = state.phase;
 
         this.board = state.getCopiedBoard();
         this.scores = MGPOptional.of(state.getCapturedCopy());
 
-        this.last = move ? move.coord : null;
         this.ko = koCoord.getOrNull();
-        if (move == null) {
-            this.captures = [];
-        } else {
+        if (move.isPresent()) {
             this.showCaptures();
+            this.last = move.get().coord;
+        } else {
+            this.captures = [];
+            this.last = null;
         }
         this.canPass = phase !== Phase.FINISHED;
     }

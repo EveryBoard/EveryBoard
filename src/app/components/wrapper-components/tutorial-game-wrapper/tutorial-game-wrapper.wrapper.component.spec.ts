@@ -125,7 +125,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             wrapper.startTutorial(tutorial);
 
             // expect to see setted previous move
-            const actualMove: QuartoMove = wrapper.gameComponent.rules.node.move as QuartoMove;
+            const actualMove: QuartoMove = wrapper.gameComponent.rules.node.move.get() as QuartoMove;
             expect(expectedPreviousMove).toEqual(actualMove);
         }));
         it('Should show title of the steps, the selected one in bold', fakeAsync(async() => {
@@ -726,7 +726,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await componentTestUtils.clickElement('#showSolutionButton');
 
             // Expect the first awaited move to have been done
-            expect(componentTestUtils.getComponent().rules.node.move).toEqual(awaitedMove);
+            expect(componentTestUtils.getComponent().rules.node.move.get()).toEqual(awaitedMove);
             expect(componentTestUtils.getComponent().rules.node.gameState.turn).toEqual(stepInitialTurn + 1);
             // expect 'solution' message to be shown
             const currentMessage: string =
@@ -983,7 +983,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await componentTestUtils.clickElement('#showSolutionButton');
 
             // Expect the step proposed move to have been done
-            expect(componentTestUtils.getComponent().rules.node.move).toEqual(solutionMove);
+            expect(componentTestUtils.getComponent().rules.node.move.get()).toEqual(solutionMove);
             expect(componentTestUtils.getComponent().rules.node.gameState.turn).toEqual(1);
             // expect 'solution' message to be shown
             const currentMessage: string =

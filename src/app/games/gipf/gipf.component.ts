@@ -70,9 +70,9 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules, GipfMove, G
     }
     public showLastMove(): void {
         this.inserted = null;
-        const lastMove: GipfMove | null = this.rules.node.move;
-        if (lastMove != null && lastMove.placement.direction.isPresent()) {
-            this.inserted = this.arrowTowards(lastMove.placement.coord, lastMove.placement.direction.get());
+        const lastMove: MGPOptional<GipfMove> = this.rules.node.move;
+        if (lastMove.isPresent() && lastMove.get().placement.direction.isPresent()) {
+            this.inserted = this.arrowTowards(lastMove.get().placement.coord, lastMove.get().placement.direction.get());
         }
         this.cancelMoveAttempt();
     }
@@ -241,8 +241,9 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules, GipfMove, G
         this.captured = [];
         this.moved = [];
 
-        const move: GipfMove | null = this.rules.node.move;
-        if (move != null) {
+        const moveOptional: MGPOptional<GipfMove> = this.rules.node.move;
+        if (moveOptional.isPresent()) {
+            const move: GipfMove = moveOptional.get();
             const previousState: GipfState = this.rules.node.mother.get().gameState;
             move.initialCaptures.forEach((c: GipfCapture) => this.markCapture(c));
             move.finalCaptures.forEach((c: GipfCapture) => this.markCapture(c));

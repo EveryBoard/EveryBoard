@@ -27,9 +27,9 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
 {
     public static VERBOSE: boolean = false;
 
-    public lastCoord: Coord | null = new Coord(-2, -2);
+    public lastCoord: MGPOptional<Coord> = MGPOptional.empty();
 
-    public lastMoved: Coord | null = new Coord(-2, -2);
+    public lastMoved: MGPOptional<Coord> = MGPOptional.empty();
 
     public chosenCoord: MGPOptional<Coord> = MGPOptional.empty();
 
@@ -82,14 +82,9 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
     }
     public updateBoard(): void {
         this.chosenCoord = MGPOptional.empty();
-        const move: SaharaMove | null = this.rules.node.move;
-        if (move == null) {
-            this.lastCoord = null;
-            this.lastMoved = null;
-        } else {
-            this.lastCoord = move.coord;
-            this.lastMoved = move.end;
-        }
+        const move: MGPOptional<SaharaMove> = this.rules.node.move;
+        this.lastCoord = move.map((move: SaharaMove) => move.coord);
+        this.lastMoved = move.map((move: SaharaMove) => move.end);
         this.board = this.rules.node.gameState.board;
     }
     public getPlayerClassFor(x: number, y: number): string {

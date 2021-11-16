@@ -30,7 +30,7 @@ describe('AbaloneRules', () => {
     });
     it('should start with an ongoing board status', () => {
         const state: AbaloneState = AbaloneState.getInitialState();
-        const node: AbaloneNode = new AbaloneNode(MGPOptional.empty(), null, state);
+        const node: AbaloneNode = new AbaloneNode(state);
         expect(rules.getGameStatus(node)).toBe(GameStatus.ONGOING);
     });
     it('should move simple piece in provided direction', () => {
@@ -242,7 +242,7 @@ describe('AbaloneRules', () => {
             [O, O, O, O, O, N, N, N, N],
         ];
         const winningState: AbaloneState = new AbaloneState(winningBoard, 1);
-        const node: AbaloneNode = new AbaloneNode(MGPOptional.empty(), null, winningState);
+        const node: AbaloneNode = new AbaloneNode(winningState);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
     it('should declare player one winner when he push a 6th opponent piece out of the board', () => {
@@ -258,7 +258,7 @@ describe('AbaloneRules', () => {
             [O, O, O, O, O, N, N, N, N],
         ];
         const winningState: AbaloneState = new AbaloneState(winningBoard, 1);
-        const node: AbaloneNode = new AbaloneNode(MGPOptional.empty(), null, winningState);
+        const node: AbaloneNode = new AbaloneNode(winningState);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
     it('should allow unblocked translation', () => {

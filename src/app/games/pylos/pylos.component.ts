@@ -13,6 +13,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PylosFailure } from './PylosFailure';
 import { PylosTutorial } from './PylosTutorial';
 import { Utils } from 'src/app/utils/utils';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 @Component({
     selector: 'app-pylos',
@@ -35,7 +36,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     public chosenLandingCoord: PylosCoord | null = null;
     public chosenFirstCapture: PylosCoord | null = null;
 
-    public lastMove: PylosMove | null = null;
+    public lastMove: MGPOptional<PylosMove> = MGPOptional.empty();
 
     private remainingPieces: { [owner: number]: number } = { 0: 15, 1: 15 };
 
@@ -140,12 +141,15 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     }
     public getCaseClasses(x: number, y: number, z: number): string[] {
         const coord: PylosCoord = new PylosCoord(x, y, z);
-        if (this.lastMove) {
-            if (this.lastMove.firstCapture.isPresent() && coord.equals(this.lastMove.firstCapture.get()) ||
-                this.lastMove.secondCapture.isPresent() && coord.equals(this.lastMove.secondCapture.get())) {
+        if (this.lastMove.isPresent()) {
+            if (this.lastMove.get().firstCapture.isPresent() &&
+                coord.equals(this.lastMove.get().firstCapture.get()) ||
+                this.lastMove.get().secondCapture.isPresent() &&
+                coord.equals(this.lastMove.get().secondCapture.get())) {
                 return ['captured'];
-            } else if (coord.equals(this.lastMove.landingCoord) ||
-                       this.lastMove.startingCoord.isPresent() && coord.equals(this.lastMove.startingCoord.get())) {
+            } else if (coord.equals(this.lastMove.get().landingCoord) ||
+                       this.lastMove.get().startingCoord.isPresent() &&
+                       coord.equals(this.lastMove.get().startingCoord.get())) {
                 return ['moved'];
             }
         }
@@ -205,7 +209,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         const repartition: { [owner: number]: number } = this.state.getPiecesRepartition();
         this.remainingPieces = { 0: 15 - repartition[0], 1: 15 - repartition[1] };
         this.highCapture = null;
-        if (this.lastMove) {
+        if (this.lastMove.isPresent()) {
             this.showLastMove();
         } else {
             this.lastLandingCoord = null;
@@ -218,7 +222,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         }
     }
     private showLastMove(): void {
-        const lastMove: PylosMove = Utils.getNonNullable(this.lastMove);
+        const lastMove: PylosMove = this.lastMove.get();
         this.lastLandingCoord = lastMove.landingCoord;
         this.lastStartingCoord = lastMove.startingCoord.getOrNull();
         this.lastFirstCapture = lastMove.firstCapture.getOrNull();

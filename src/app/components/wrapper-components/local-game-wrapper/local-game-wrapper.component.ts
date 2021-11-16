@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
-import { assert, display, Utils } from 'src/app/utils/utils';
+import { assert, display } from 'src/app/utils/utils';
 import { MGPNode, MGPNodeStats } from 'src/app/jscaip/MGPNode';
 import { AbstractGameState } from 'src/app/jscaip/GameState';
 import { Minimax } from 'src/app/jscaip/Minimax';
@@ -125,7 +125,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
     }
     public restartGame(): void {
         const state: AbstractGameState = this.gameComponent.rules.stateType['getInitialState']();
-        this.gameComponent.rules.node = new MGPNode(MGPOptional.empty(), null, state);
+        this.gameComponent.rules.node = new MGPNode(state);
         this.gameComponent.updateBoard();
         this.endGame = false;
         this.winner = null;

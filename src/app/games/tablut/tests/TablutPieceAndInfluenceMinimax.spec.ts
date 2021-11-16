@@ -49,7 +49,9 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const strongState: TablutState = new TablutState(strongBoard, 0);
-        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, null, strongState, null, minimax);
+        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, MGPOptional.empty(),
+                                                        strongState, MGPOptional.empty(),
+                                                        minimax);
     });
     it('Should be better of with more influence (at piece number equal)', () => {
         const weakBoard: Table<TablutCase> = [
@@ -76,7 +78,9 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const strongState: TablutState = new TablutState(strongBoard, 0);
-        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, null, strongState, null, minimax);
+        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, MGPOptional.empty(),
+                                                        strongState, MGPOptional.empty(),
+                                                        minimax);
     });
     it('Should be better of with non threatened piece (at piece number equal)', () => {
         const weakBoard: Table<TablutCase> = [
@@ -103,7 +107,9 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const strongState: TablutState = new TablutState(strongBoard, 0);
-        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, null, strongState, null, minimax);
+        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, MGPOptional.empty(),
+                                                        strongState, MGPOptional.empty(),
+                                                        minimax);
     });
     it('Should be better of with non threatened piece (at piece number equal) (opposite one)', () => {
         const weakBoard: Table<TablutCase> = [
@@ -130,7 +136,9 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const strongState: TablutState = new TablutState(strongBoard, 0);
-        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, null, strongState, null, minimax);
+        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, MGPOptional.empty(),
+                                                        strongState, MGPOptional.empty(),
+                                                        minimax);
     });
     it('Should be better of with more kill than influence', () => {
         const weakBoard: Table<TablutCase> = [
@@ -157,7 +165,8 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const strongState: TablutState = new TablutState(strongBoard, 0);
-        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, null, strongState, null, minimax);
+        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, MGPOptional.empty(),
+                                                        strongState, MGPOptional.empty(), minimax);
     });
     describe('isThreatened', () => {
         it('should now that empty thrones are threats', () => {
@@ -289,7 +298,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
                 [_, _, _, _, _, _, _, _, _],
             ];
             const state: TablutState = new TablutState(board, 1);
-            const node: TablutNode = new TablutNode(MGPOptional.empty(), null, state);
+            const node: TablutNode = new TablutNode(state);
             const expectedMove: TablutMove = new TablutMove(new Coord(1, 0), new Coord(0, 0));
             for (let depth: number = 1; depth < 4; depth++) {
                 const chosenMove: TablutMove = node.findBestMove(depth, minimax);

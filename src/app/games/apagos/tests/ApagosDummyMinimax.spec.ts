@@ -15,7 +15,7 @@ describe('ApagosDummyMinimax', () => {
     it('Should have all 8 drop as possible move at first turn', () => {
         // given initial node
         const initialState: ApagosState = ApagosState.getInitialState();
-        const node: ApagosNode = new ApagosNode(MGPOptional.empty(), null, initialState);
+        const node: ApagosNode = new ApagosNode(initialState);
 
         // when calling getListMoves
         const moves: ApagosMove[] = minimax.getListMoves(node);

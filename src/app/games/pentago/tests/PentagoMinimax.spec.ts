@@ -33,7 +33,10 @@ describe('PentagoMinimax', () => {
             [_, _, _, _, _, _],
         ];
         const state: PentagoState = new PentagoState(board, 1);
-        rules.node = new MGPNode(MGPOptional.of(rules.node), PentagoMove.rotationless(0, 0), state, minimax);
+        rules.node = new MGPNode(state,
+                                 MGPOptional.of(rules.node),
+                                 MGPOptional.of(PentagoMove.rotationless(0, 0)),
+                                 minimax);
 
         /*
          * when calculating the list of moves, then there should be 105
@@ -58,7 +61,7 @@ describe('PentagoMinimax', () => {
             [_, _, X, _, _, _],
         ];
         const state: PentagoState = new PentagoState(board, 8);
-        rules.node = new MGPNode(MGPOptional.of(rules.node), null, state, minimax);
+        rules.node = new MGPNode(state, MGPOptional.of(rules.node), MGPOptional.empty(), minimax);
 
         /*
          * when calculating the list of moves
@@ -81,7 +84,7 @@ describe('PentagoMinimax', () => {
             [_, _, O, _, _, _],
         ];
         const state: PentagoState = new PentagoState(board, 4);
-        rules.node = new MGPNode(MGPOptional.of(rules.node), null, state, minimax);
+        rules.node = new MGPNode(state, MGPOptional.of(rules.node), MGPOptional.empty(), minimax);
 
         /*
          * when calculating the list of moves

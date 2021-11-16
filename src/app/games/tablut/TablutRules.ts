@@ -45,13 +45,13 @@ export class TablutRules extends Rules<TablutMove, TablutState, TablutLegalitySt
         // copies
         const turn: number = state.turn;
 
-        return new TablutState(Utils.getNonNullable(status.resultingBoard), turn + 1);
+        return new TablutState(status.resultingBoard.get(), turn + 1);
     }
     public static tryMove(player: Player, move: TablutMove, board: TablutCase[][]): TablutLegalityStatus {
         display(TablutRules.VERBOSE, { TablutRules_tryMove: { player, move, board } });
         const validity: MGPValidation = this.getMoveValidity(player, move, board);
         if (validity.isFailure()) {
-            return { legal: validity, resultingBoard: null };
+            return { legal: validity, resultingBoard: MGPOptional.empty() };
         }
 
         // move is legal here
@@ -65,7 +65,7 @@ export class TablutRules extends Rules<TablutMove, TablutState, TablutLegalitySt
                 board[captured.y][captured.x] = TablutCase.UNOCCUPIED; // do capture, unless if king
             }
         }
-        return { legal: MGPValidation.SUCCESS, resultingBoard: board };
+        return { legal: MGPValidation.SUCCESS, resultingBoard: MGPOptional.of(board) };
     }
     private static getMoveValidity(player: Player, move: TablutMove, board: Table<TablutCase>): MGPValidation {
         const cOwner: RelativePlayer = this.getRelativeOwner(player, move.coord, board);

@@ -14,7 +14,6 @@ import { MaxStacksDvonnMinimax } from './MaxStacksDvonnMinimax';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { DvonnTutorial } from './DvonnTutorial';
-import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 @Component({
@@ -25,8 +24,8 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove, DvonnState, DvonnPieceStack> {
 
-    public lastMove: DvonnMove | null = null;
-    public chosen: Coord | null = null;
+    public lastMove: MGPOptional<DvonnMove> = MGPOptional.empty();
+    public chosen: MGPOptional<Coord> = MGPOptional.empty();
     public disconnecteds: { coord: Coord, caseContent: DvonnPieceStack }[] = [];
     public state: DvonnState;
 
@@ -49,14 +48,14 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         this.hexaBoard = this.rules.node.gameState.board;
     }
     public hideLastMove(): void {
-        this.lastMove = null;
+        this.lastMove = MGPOptional.empty();
     }
     public updateBoard(): void {
         this.cancelMoveAttempt();
         this.state = this.rules.node.gameState;
         this.lastMove = this.rules.node.move;
         this.disconnecteds = [];
-        if (this.lastMove) {
+        if (this.lastMove.isPresent()) {
             this.calculateDisconnecteds();
         } else {
             this.hideLastMove();
@@ -71,7 +70,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
             for (let x: number = 0; x < state.board[y].length; x++) {
                 const coord: Coord = new Coord(x, y);
                 if (state.isOnBoard(coord) === true &&
-                    coord.equals(Utils.getNonNullable(this.lastMove).coord) === false) {
+                    coord.equals(this.lastMove.get().coord) === false) {
                     const stack: DvonnPieceStack = state.getPieceAt(coord);
                     const previousStack: DvonnPieceStack = previousState.getPieceAt(coord);
                     if (stack.isEmpty() && !previousStack.isEmpty()) {
@@ -85,7 +84,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         }
     }
     public cancelMoveAttempt(): void {
-        this.chosen = null;
+        this.chosen = MGPOptional.empty();
     }
     public async pass(): Promise<MGPValidation> {
         if (this.canPass) {
@@ -99,9 +98,9 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        if (this.chosen === null) {
+        if (this.chosen.isAbsent()) {
             return this.choosePiece(x, y);
-        } else if (this.chosen.equals(new Coord(x, y))) {
+        } else if (this.chosen.equalsValue(new Coord(x, y))) {
             // Deselects the piece
             this.cancelMoveAttempt();
             return MGPValidation.SUCCESS;
@@ -113,14 +112,14 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         const coord: Coord = new Coord(x, y);
         const legal: MGPValidation = this.rules.isMovablePiece(this.rules.node.gameState, coord);
         if (legal.isSuccess()) {
-            this.chosen = coord;
+            this.chosen = MGPOptional.of(coord);
             return MGPValidation.SUCCESS;
         } else {
             return this.cancelMove(legal.getReason());
         }
     }
     private async chooseDestination(x: number, y: number): Promise<MGPValidation> {
-        const chosenPiece: Coord = Utils.getNonNullable(this.chosen);
+        const chosenPiece: Coord = this.chosen.get();
         const chosenDestination: Coord = new Coord(x, y);
         // By construction, only valid moves can be created
         const move: DvonnMove = DvonnMove.of(chosenPiece, chosenDestination);

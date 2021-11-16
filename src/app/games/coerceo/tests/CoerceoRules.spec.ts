@@ -9,7 +9,6 @@ import { CoerceoMinimax } from '../CoerceoMinimax';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('CoerceoRules', () => {
 
@@ -377,7 +376,7 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             ];
             const state: CoerceoState = new CoerceoState(board, 0, [2, 0], [0, 0]);
-            const node: CoerceoNode = new CoerceoNode(MGPOptional.empty(), null, state);
+            const node: CoerceoNode = new CoerceoNode(state);
             expect(minimax.getListMoves(node).length).toBe(3);
         });
     });
@@ -396,7 +395,7 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             ];
             const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [18, 17]);
-            const node: CoerceoNode = new CoerceoNode(MGPOptional.empty(), null, state);
+            const node: CoerceoNode = new CoerceoNode(state);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, [minimax]);
         });
         it('Should set minimal value to victory of Player.ONE', () => {
@@ -413,7 +412,7 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             ];
             const state: CoerceoState = new CoerceoState(board, 0, [0, 0], [17, 18]);
-            const node: CoerceoNode = new CoerceoNode(MGPOptional.empty(), null, state);
+            const node: CoerceoNode = new CoerceoNode(state);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, [minimax]);
         });
     });

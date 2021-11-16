@@ -157,8 +157,8 @@ export class SixRules extends Rules<SixMove,
         const state: SixState = node.gameState;
         const LAST_PLAYER: Player = state.getCurrentOpponent();
         let shapeVictory: Coord[] = [];
-        if (node.move) {
-            shapeVictory = this.getShapeVictory(node.move, state);
+        if (node.move.isPresent()) {
+            shapeVictory = this.getShapeVictory(node.move.get(), state);
         }
         if (shapeVictory.length === 6) {
             return GameStatus.getVictory(LAST_PLAYER);

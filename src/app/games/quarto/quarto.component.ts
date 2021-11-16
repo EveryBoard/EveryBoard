@@ -10,6 +10,7 @@ import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisp
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { QuartoTutorial } from './QuartoTutorial';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 @Component({
     selector: 'app-quarto',
@@ -43,15 +44,15 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
     }
     public updateBoard(): void {
         const state: QuartoState = this.rules.node.gameState;
-        const move: QuartoMove | null = this.rules.node.move;
+        const move: MGPOptional<QuartoMove> = this.rules.node.move;
         this.board = state.getCopiedBoard();
         this.pieceInHand = state.pieceInHand;
         this.victoriousCoords = this.rules.getVictoriousCoords(state);
 
-        if (move == null) {
+        if (move.isAbsent()) {
             this.lastMove = new Coord(-1, -1);
         } else {
-            this.lastMove = move.coord;
+            this.lastMove = move.get().coord;
         }
     }
     public async chooseCoord(x: number, y: number): Promise<MGPValidation> {

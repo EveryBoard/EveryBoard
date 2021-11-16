@@ -59,7 +59,7 @@ describe('AwaleRules', () => {
         const expectedState: AwaleState = new AwaleState(expectedBoard, 1, [23, 25]);
         expect(status.legal.isSuccess()).toBeTrue();
         expect(resultingState).toEqual(expectedState);
-        const node: AwaleNode = new MGPNode(MGPOptional.empty(), move, resultingState);
+        const node: AwaleNode = new MGPNode(resultingState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
     it('should forbid non-feeding move', () => {
@@ -106,7 +106,7 @@ describe('AwaleRules', () => {
                 [0, 0, 0, 0, 0, 0],
             ];
             const state: AwaleState = new AwaleState(board, 5, [26, 22]);
-            const node: AwaleNode = new AwaleNode(MGPOptional.empty(), null, state);
+            const node: AwaleNode = new AwaleNode(state);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
         });
         it('should identify victory for player 1', () => {
@@ -115,7 +115,7 @@ describe('AwaleRules', () => {
                 [0, 0, 0, 0, 0, 0],
             ];
             const state: AwaleState = new AwaleState(board, 5, [22, 26]);
-            const node: AwaleNode = new AwaleNode(MGPOptional.empty(), null, state);
+            const node: AwaleNode = new AwaleNode(state);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
         });
         it('should identify draw', () => {
@@ -124,7 +124,7 @@ describe('AwaleRules', () => {
                 [0, 0, 0, 0, 0, 0],
             ];
             const state: AwaleState = new AwaleState(board, 5, [24, 24]);
-            const node: AwaleNode = new AwaleNode(MGPOptional.empty(), null, state);
+            const node: AwaleNode = new AwaleNode(state);
             RulesUtils.expectToBeDraw(rules, node, minimaxes);
         });
     });

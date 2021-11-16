@@ -3,6 +3,7 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { SaharaMinimax } from '../SaharaMinimax';
 import { SaharaState } from '../SaharaState';
 import { SaharaRules } from '../SaharaRules';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('SaharaMinimax', () => {
 
@@ -37,6 +38,8 @@ describe('SaharaMinimax', () => {
             [N, N, X, O, _, _, _, X, O, N, N],
         ];
         const strongState: SaharaState = new SaharaState(strongBoard, 0);
-        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, null, strongState, null, minimax);
+        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, MGPOptional.empty(),
+                                                        strongState, MGPOptional.empty(),
+                                                        minimax);
     });
 });

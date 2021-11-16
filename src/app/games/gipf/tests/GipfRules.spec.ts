@@ -419,10 +419,10 @@ describe('GipfRules:', () => {
                 [_, B, _, _, N, N, N],
             ];
             const state1: GipfState = new GipfState(board, P0Turn, [0, 5], [0, 0]);
-            const node1: GipfNode = new MGPNode(MGPOptional.empty(), dummyMove, state1);
+            const node1: GipfNode = new MGPNode(state1, MGPOptional.empty(), MGPOptional.of(dummyMove));
             RulesUtils.expectToBeVictoryFor(rules, node1, Player.ONE, minimaxes);
             const state2: GipfState = new GipfState(board, P1Turn, [5, 0], [0, 0]);
-            const node2: GipfNode = new MGPNode(MGPOptional.empty(), dummyMove, state2);
+            const node2: GipfNode = new MGPNode(state2, MGPOptional.empty(), MGPOptional.of(dummyMove));
             RulesUtils.expectToBeVictoryFor(rules, node2, Player.ZERO, minimaxes);
         });
         it('should not declare victory when one player does not have pieces left but still has an initial capture', () => {
@@ -436,7 +436,9 @@ describe('GipfRules:', () => {
                 [_, _, _, _, N, N, N],
             ];
             const state: GipfState = new GipfState(board, P0Turn, [0, 5], [0, 0]);
-            RulesUtils.expectToBeOngoing(rules, new MGPNode(MGPOptional.empty(), dummyMove, state), minimaxes);
+            RulesUtils.expectToBeOngoing(rules,
+                                         new MGPNode(state, MGPOptional.empty(), MGPOptional.of(dummyMove)),
+                                         minimaxes);
         });
     });
     describe('getAllDirectionsForEntrance', () => {

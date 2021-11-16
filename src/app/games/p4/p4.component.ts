@@ -9,6 +9,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { P4Tutorial } from './P4Tutorial';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 @Component({
     selector: 'app-p4',
@@ -43,15 +44,15 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
     }
     public updateBoard(): void {
         const state: P4State = this.rules.node.gameState;
-        const lastMove: P4Move | null = this.rules.node.move;
+        const lastMove: MGPOptional<P4Move> = this.rules.node.move;
 
         this.victoryCoords = P4Rules.getVictoriousCoords(state);
         this.board = state.board;
-        if (lastMove == null) {
+        if (lastMove.isAbsent()) {
             this.last = null;
         } else {
-            const y: number = P4Rules.getLowestUnoccupiedCase(state.board, lastMove.x) + 1;
-            this.last = new Coord(lastMove.x, y);
+            const y: number = P4Rules.getLowestUnoccupiedCase(state.board, lastMove.get().x) + 1;
+            this.last = new Coord(lastMove.get().x, y);
         }
     }
     public getCaseClasses(x: number, y: number): string[] {

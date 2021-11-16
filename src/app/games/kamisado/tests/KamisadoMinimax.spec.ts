@@ -41,7 +41,7 @@ describe('KamisadoMinimax', () => {
         ];
         const state: KamisadoState =
             new KamisadoState(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
-        const node: KamisadoNode = new KamisadoNode(MGPOptional.empty(), null, state);
+        const node: KamisadoNode = new KamisadoNode(state);
         expect(minimax.getBoardValue(node).value).toEqual(2);
     });
 });

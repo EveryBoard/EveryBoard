@@ -46,14 +46,14 @@
               dy="17">{{disconnected.caseContent.getSize()}}</text>
     </g>
     <!-- Highlight last move -->
-    <ng-container *ngIf="lastMove != null">
-        <polyline [attr.points]="getHexaCoordsAt(lastMove.coord)"
+    <ng-container *ngIf="lastMove.isPresent()">
+        <polyline [attr.points]="getHexaCoordsAt(lastMove.get().coord)"
                   class="base no-fill highlighted"/>
-        <polyline [attr.points]="getHexaCoordsAt(lastMove.end)"
+        <polyline [attr.points]="getHexaCoordsAt(lastMove.get().end)"
                   class="base no-fill highlighted"/>
     </ng-container>
     <!-- Highlight selected piece -->
-    <polyline *ngIf="chosen != null"
-              [attr.points]="getHexaCoordsAt(chosen)"
+    <polyline *ngIf="chosen.isPresent()"
+              [attr.points]="getHexaCoordsAt(chosen.get())"
               class="base no-fill selected"/>
 </svg>

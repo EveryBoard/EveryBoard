@@ -62,8 +62,8 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         this.firstPiece = new Coord(-15, -1);
         this.lastPiece = new Coord(-15, -1);
         this.hidePreviousMove();
-        if (this.rules.node.move != null) {
-            this.showPreviousMove(this.rules.node.move);
+        if (this.rules.node.move.isPresent()) {
+            this.showPreviousMove(this.rules.node.move.get());
         }
         this.board = this.rules.node.gameState.getCopiedBoard();
     }

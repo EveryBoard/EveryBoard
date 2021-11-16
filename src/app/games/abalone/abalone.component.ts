@@ -19,7 +19,6 @@ import { AbaloneState } from './AbaloneState';
 import { AbaloneMove } from './AbaloneMove';
 import { AbaloneLegalityStatus, AbaloneRules } from './AbaloneRules';
 import { AbaloneTutorial } from './AbaloneTutorial';
-import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class HexaDirArrow {
@@ -68,8 +67,8 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
     public updateBoard(): void {
         this.cancelMoveAttempt();
         this.hidePreviousMove();
-        if (this.rules.node.move != null) {
-            this.showPreviousMove(this.rules.node.move);
+        if (this.rules.node.move.isPresent()) {
+            this.showPreviousMove(this.rules.node.move.get());
         }
         this.hexaBoard = this.rules.node.gameState.getCopiedBoard();
         this.scores = MGPOptional.of(this.rules.node.gameState.getScores());
