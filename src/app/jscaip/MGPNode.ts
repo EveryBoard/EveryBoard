@@ -83,16 +83,6 @@ export class MGPNode<R extends Rules<M, S, L>,
         display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'DEFAULT');
         return SCORE.DEFAULT;
     }
-    public static getFirstNode<R extends Rules<M, S, L>,
-                               M extends Move,
-                               S extends AbstractGameState,
-                               L extends LegalityStatus = LegalityStatus,
-                               U extends NodeUnheritance = NodeUnheritance>(initialBoard: S, gameRuler: R)
-    : MGPNode<R, M, S, L, U>
-    {
-        MGPNode.ruler = gameRuler; // for all nodes, gameRuler is the ruler
-        return new MGPNode(initialBoard);
-    }
     // instance methods:
 
     constructor(public readonly gameState: S,
@@ -128,11 +118,7 @@ export class MGPNode<R extends Rules<M, S, L>,
         MGPNodeStats.minimaxTime += new Date().getTime() - startTime;
         return bestDescendant.move;
     }
-    public alphaBeta(depth: number,
-                     alpha: number,
-                     beta: number,
-                     minimax: Minimax<M, S, L, U>,
-                     random: boolean)
+    public alphaBeta(depth: number, alpha: number, beta: number, minimax: Minimax<M, S, L, U>, random: boolean)
     : MGPNode<R, M, S, L, U>
     {
         const LOCAL_VERBOSE: boolean = false;

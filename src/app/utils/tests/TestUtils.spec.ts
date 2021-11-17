@@ -14,7 +14,6 @@ import { UserDAO } from '../../dao/UserDAO';
 import { AuthenticationService, AuthUser } from '../../services/AuthenticationService';
 import { MGPNode } from '../../jscaip/MGPNode';
 import { GameWrapper } from '../../components/wrapper-components/GameWrapper';
-import { Player } from '../../jscaip/Player';
 import { AuthenticationServiceMock } from '../../services/tests/AuthenticationService.spec';
 import { OnlineGameWrapperComponent }
     from '../../components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
@@ -27,7 +26,6 @@ import { ChatDAOMock } from '../../dao/tests/ChatDAOMock.spec';
 import { PartDAOMock } from '../../dao/tests/PartDAOMock.spec';
 import { LocalGameWrapperComponent }
     from '../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { HumanDuration } from '../TimeUtils';
 import { Rules } from 'src/app/jscaip/Rules';
 import { AutofocusDirective } from 'src/app/directives/autofocus.directive';
@@ -415,29 +413,6 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     public querySelector(query: string): DebugElement {
         return this.debugElement.nativeElement.querySelector(query);
     }
-}
-
-export function expectSecondStateToBeBetterThanFirst(weakerState: AbstractGameState,
-                                                     weakMove: Move,
-                                                     strongerState: AbstractGameState,
-                                                     strongMove: Move,
-                                                     minimax: Minimax<Move, AbstractGameState>)
-: void
-{
-    const weakValue: number = minimax.getBoardValue(new MGPNode(weakerState, null, weakMove)).value;
-    const strongValue: number = minimax.getBoardValue(new MGPNode(strongerState, null, strongMove)).value;
-    expect(weakValue).toBeLessThan(strongValue);
-}
-export function expectStateToBePreVictory(state: AbstractGameState,
-                                          previousMove: Move,
-                                          player: Player,
-                                          minimax: Minimax<Move, AbstractGameState>)
-: void
-{
-    // TODOTODO: replace that and refuse it to reach develop! expectToBeVictoryFor is the way
-    const value: number = minimax.getBoardNumericValue(new MGPNode(state, null, previousMove));
-    const expectedValue: number = player.getPreVictory();
-    expect(value).toBe(expectedValue);
 }
 
 export async function setupEmulators(): Promise<unknown> {

@@ -4,9 +4,35 @@ import { Move } from '../Move';
 import { Player } from '../Player';
 import { GameStatus, Rules } from '../Rules';
 import { AbstractGameState } from '../GameState';
+import { LegalityStatus } from '../LegalityStatus';
 
 export class RulesUtils {
 
+    public static expectMoveSuccess(rules: Rules<Move, AbstractGameState>,
+                                    state: AbstractGameState,
+                                    move: Move, expectedState: AbstractGameState)
+    : void
+    {
+        const legality: LegalityStatus = rules.isLegal(move, state);
+        expect(legality.legal).toBeTruthy();
+        if (legality.legal.isSuccess()) {
+            const resultingState: AbstractGameState = rules.applyLegalMove(move, state, legality);
+            expect(resultingState)
+                .withContext('state should be equals')
+                .toEqual(expectedState);
+        } else {
+            throw new Error('expected move to be valid but it not: ' + legality.legal.getReason());
+        }
+    }
+    public static expectMoveFailure(rules: Rules<Move, AbstractGameState>,
+                                    state: AbstractGameState,
+                                    move: Move,
+                                    reason: string)
+    : void
+    {
+        const legality: LegalityStatus = rules.isLegal(move, state);
+        expect(legality.legal.reason).toBe(reason);
+    }
     public static expectToBeVictoryFor(rules: Rules<Move, AbstractGameState>,
                                        node: MGPNode<Rules<Move, AbstractGameState>, Move, AbstractGameState>,
                                        player: Player,
@@ -47,5 +73,26 @@ export class RulesUtils {
                 .withContext(minimax.name + ' should consider it a draw')
                 .toBe(0);
         }
+    }
+    public static expectStateToBePreVictory(state: AbstractGameState,
+                                            previousMove: Move,
+                                            player: Player,
+                                            minimax: Minimax<Move, AbstractGameState>)
+    : void
+    {
+        const value: number = minimax.getBoardNumericValue(new MGPNode(state, null, previousMove));
+        const expectedValue: number = player.getPreVictory();
+        expect(value).toBe(expectedValue);
+    }
+    public static expectSecondStateToBeBetterThanFirst(weakerState: AbstractGameState,
+                                                       weakMove: Move,
+                                                       strongerState: AbstractGameState,
+                                                       strongMove: Move,
+                                                       minimax: Minimax<Move, AbstractGameState>)
+    : void
+    {
+        const weakValue: number = minimax.getBoardValue(new MGPNode(weakerState, null, weakMove)).value;
+        const strongValue: number = minimax.getBoardValue(new MGPNode(strongerState, null, strongMove)).value;
+        expect(weakValue).toBeLessThan(strongValue);
     }
 }

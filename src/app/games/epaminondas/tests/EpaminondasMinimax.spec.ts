@@ -6,7 +6,7 @@ import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasState } from '../EpaminondasState';
 import { EpaminondasRules } from '../EpaminondasRules';
 import { EpaminondasMinimax } from '../EpaminondasMinimax';
-import { expectSecondStateToBeBetterThanFirst } from 'src/app/utils/tests/TestUtils.spec';
+import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 
 describe('EpaminondasMinimax:', () => {
 
@@ -73,6 +73,6 @@ describe('EpaminondasMinimax:', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, O, O, _, _, _, _, _, _, _, _, _, _, _],
         ], 0);
-        expectSecondStateToBeBetterThanFirst(weakerState, null, strongerState, null, minimax);
+        RulesUtils.expectSecondStateToBeBetterThanFirst(weakerState, null, strongerState, null, minimax);
     });
 });

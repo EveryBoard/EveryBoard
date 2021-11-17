@@ -17,4 +17,9 @@ describe('GoMove', () => {
             NumberEncoderTestUtils.expectToBeCorrect(GoMove.encoder, move);
         }
     });
+    it('Should stringify nicely', () => {
+        expect(GoMove.PASS.toString()).toBe('GoMove.PASS');
+        expect(GoMove.ACCEPT.toString()).toBe('GoMove.ACCEPT');
+        expect(new GoMove(0, 1).toString()).toBe('GoMove(0, 1)');
+    });
 });

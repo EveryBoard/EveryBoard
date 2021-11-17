@@ -2,7 +2,7 @@ import { Direction } from 'src/app/jscaip/Direction';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { expectSecondStateToBeBetterThanFirst } from 'src/app/utils/tests/TestUtils.spec';
+import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { AttackEpaminondasMinimax } from '../AttackEpaminondasMinimax';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasState } from '../EpaminondasState';
@@ -75,6 +75,6 @@ describe('AttackEpaminondasMinimax:', () => {
             [O, O, O, O, O, O, O, O, O, O, O, _, O, _],
         ];
         const lesserState: EpaminondasState = new EpaminondasState(lesserBoard, 0);
-        expectSecondStateToBeBetterThanFirst(lesserState, null, greaterState, null, minimax);
+        RulesUtils.expectSecondStateToBeBetterThanFirst(lesserState, null, greaterState, null, minimax);
     });
 });

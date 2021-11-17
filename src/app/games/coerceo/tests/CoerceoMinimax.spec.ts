@@ -1,5 +1,5 @@
 import { Table } from 'src/app/utils/ArrayUtils';
-import { expectSecondStateToBeBetterThanFirst } from 'src/app/utils/tests/TestUtils.spec';
+import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { CoerceoState } from '../CoerceoState';
 import { CoerceoMinimax } from '../CoerceoMinimax';
 import { CoerceoRules } from '../CoerceoRules';
@@ -45,6 +45,6 @@ describe('CoerceoMinimax', () => {
             [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
         ];
         const strongState: CoerceoState = new CoerceoState(strongBoard, 0, [0, 0], [0, 0]);
-        expectSecondStateToBeBetterThanFirst(weakState, null, strongState, null, minimax);
+        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, null, strongState, null, minimax);
     });
 });

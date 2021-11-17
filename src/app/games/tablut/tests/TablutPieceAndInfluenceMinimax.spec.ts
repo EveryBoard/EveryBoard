@@ -4,7 +4,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
-import { expectSecondStateToBeBetterThanFirst } from 'src/app/utils/tests/TestUtils.spec';
+import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { TablutCase } from '../TablutCase';
 import { TablutMove } from '../TablutMove';
 import { TablutState } from '../TablutState';
@@ -49,7 +49,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const strongState: TablutState = new TablutState(strongBoard, 0);
-        expectSecondStateToBeBetterThanFirst(weakState, null, strongState, null, minimax);
+        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, null, strongState, null, minimax);
     });
     it('Should be better of with more influence (at piece number equal)', () => {
         const weakBoard: Table<TablutCase> = [
@@ -76,7 +76,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const strongState: TablutState = new TablutState(strongBoard, 0);
-        expectSecondStateToBeBetterThanFirst(weakState, null, strongState, null, minimax);
+        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, null, strongState, null, minimax);
     });
     it('Should be better of with non threatened piece (at piece number equal)', () => {
         const weakBoard: Table<TablutCase> = [
@@ -103,7 +103,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const strongState: TablutState = new TablutState(strongBoard, 0);
-        expectSecondStateToBeBetterThanFirst(weakState, null, strongState, null, minimax);
+        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, null, strongState, null, minimax);
     });
     it('Should be better of with non threatened piece (at piece number equal) (opposite one)', () => {
         const weakBoard: Table<TablutCase> = [
@@ -130,7 +130,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const strongState: TablutState = new TablutState(strongBoard, 0);
-        expectSecondStateToBeBetterThanFirst(weakState, null, strongState, null, minimax);
+        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, null, strongState, null, minimax);
     });
     it('Should be better of with more kill than influence', () => {
         const weakBoard: Table<TablutCase> = [
@@ -157,7 +157,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const strongState: TablutState = new TablutState(strongBoard, 0);
-        expectSecondStateToBeBetterThanFirst(weakState, null, strongState, null, minimax);
+        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, null, strongState, null, minimax);
     });
     describe('isThreatened', () => {
         it('should now that empty thrones are threats', () => {

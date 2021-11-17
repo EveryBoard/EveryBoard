@@ -29,7 +29,6 @@ export class GoMove extends MoveCoord {
     }
     public equals(o: GoMove): boolean {
         if (this === o) return true;
-        if (o == null) return false;
         return this.coord.equals(o.coord);
     }
     public toString(): string {
