@@ -1,8 +1,11 @@
+import { Orthogonal } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
 import { SiamPiece } from '../SiamPiece';
 
 describe('SiamPiece:', () => {
-
+    it('Should throw when static method are called inadequately', () => {
+        expect(() => SiamPiece.of(Orthogonal.UP, Player.NONE)).toThrowError(`Player None does not have any pieces.`);
+    });
     it('should give string version of each pieces', () => {
         const values: (0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9)[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
         const pieces: SiamPiece[] = values.map((value: (0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9)) =>

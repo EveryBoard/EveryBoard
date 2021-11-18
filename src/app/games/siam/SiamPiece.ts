@@ -1,6 +1,7 @@
 import { Player } from 'src/app/jscaip/Player';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { Utils } from 'src/app/utils/utils';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class SiamPiece {
 
@@ -58,24 +59,25 @@ export class SiamPiece {
         if (5 <= this.value && this.value <= 8) return Player.ONE;
         throw new Error('Player.NONE do not own piece.');
     }
-    public getNullableDirection(): Orthogonal | null {
+    public getOptionalDirection(): MGPOptional<Orthogonal> {
         switch (this.value) {
-            case 0: return null;
-            case 1: return Orthogonal.UP;
-            case 5: return Orthogonal.UP;
-            case 2: return Orthogonal.RIGHT;
-            case 6: return Orthogonal.RIGHT;
-            case 3: return Orthogonal.DOWN;
-            case 7: return Orthogonal.DOWN;
-            case 4: return Orthogonal.LEFT;
-            case 8: return Orthogonal.LEFT;
+            case 0: return MGPOptional.empty();
+            case 1: return MGPOptional.of(Orthogonal.UP);
+            case 5: return MGPOptional.of(Orthogonal.UP);
+            case 2: return MGPOptional.of(Orthogonal.RIGHT);
+            case 6: return MGPOptional.of(Orthogonal.RIGHT);
+            case 3: return MGPOptional.of(Orthogonal.DOWN);
+            case 7: return MGPOptional.of(Orthogonal.DOWN);
+            case 4: return MGPOptional.of(Orthogonal.LEFT);
+            case 8: return MGPOptional.of(Orthogonal.LEFT);
             default:
                 // must be 9, according to this.value's type
-                return null;
+                Utils.expectToBe(this.value, 9);
+                return MGPOptional.empty();
         }
     }
     public static of(orientation: Orthogonal, player: Player): SiamPiece {
-        if (player === Player.NONE) throw new Error(`Player None don't have any pieces.`);
+        if (player === Player.NONE) throw new Error('Player None does not have any pieces.');
         if (player === Player.ZERO) {
             if (orientation === Orthogonal.UP) return SiamPiece.WHITE_UP;
             if (orientation === Orthogonal.RIGHT) return SiamPiece.WHITE_RIGHT;
@@ -91,8 +93,7 @@ export class SiamPiece {
     private constructor(public readonly value: number) {}
 
     public getDirection(): Orthogonal {
-        const direction: Orthogonal | null = this.getNullableDirection();
-        return Utils.getNonNullable(direction);
+        return this.getOptionalDirection().get();
     }
     public toString(): string {
         switch (this.value) {
@@ -107,6 +108,7 @@ export class SiamPiece {
             case 8: return 'BLACK_LEFT';
             default:
                 // must be 9, according to this.value's type
+                Utils.expectToBe(this.value, 9);
                 return 'MOUNTAIN';
         }
     }

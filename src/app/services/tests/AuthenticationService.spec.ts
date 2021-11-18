@@ -66,7 +66,7 @@ export class AuthenticationServiceMock {
         if (this.currentUser != null) {
             this.userRS.next(this.currentUser);
         } else {
-            throw new Error('AuthenticationServiceMock: reloading user without setting a user first');
+            throw new Error('AuthenticationServiceMock: cannot reload user without setting a user first');
         }
     }
 }

@@ -163,8 +163,7 @@ export class TablutComponent extends RectangularGameComponent<TablutRules,
         const lastEnd: MGPOptional<Coord> = this.lastMove.map((move: TablutMove) => move.end);
         if (this.captureds.some((c: Coord) => c.equals(coord))) {
             classes.push('captured');
-        } else if (lastStart.equalsValue(coord) ||
-                   lastEnd.equalsValue(coord)) {
+        } else if (lastStart.equalsValue(coord) || lastEnd.equalsValue(coord)) {
             classes.push('moved');
         }
 

@@ -8,7 +8,7 @@ import { QuixoState } from './QuixoState';
 import { QuixoMove } from './QuixoMove';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
-export abstract class QuixoNode extends MGPNode<QuixoRules, QuixoMove, QuixoState> {}
+export class QuixoNode extends MGPNode<QuixoRules, QuixoMove, QuixoState> {}
 
 export class QuixoRules extends Rules<QuixoMove, QuixoState> {
 

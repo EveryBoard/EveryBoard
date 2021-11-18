@@ -95,7 +95,7 @@ describe('ReversiRules', () => {
             const expectedState: ReversiState = new ReversiState(expectedBoard, 60);
             expect(resultingState).toEqual(expectedState);
             RulesUtils.expectToBeVictoryFor(rules,
-                                            new MGPNode(expectedState, MGPOptional.empty(), MGPOptional.of(move)),
+                                            new ReversiNode(expectedState, MGPOptional.empty(), MGPOptional.of(move)),
                                             Player.ONE, minimaxes);
         });
         it('Should consider the player with the more point the winner at the end (Player.ZERO remix)', () => {
@@ -127,7 +127,7 @@ describe('ReversiRules', () => {
             const expectedState: ReversiState = new ReversiState(expectedBoard, 61);
             expect(resultingState).toEqual(expectedState);
             RulesUtils.expectToBeVictoryFor(rules,
-                                            new MGPNode(expectedState, MGPOptional.empty(), MGPOptional.of(move)),
+                                            new ReversiNode(expectedState, MGPOptional.empty(), MGPOptional.of(move)),
                                             Player.ZERO,
                                             minimaxes);
         });
@@ -159,9 +159,9 @@ describe('ReversiRules', () => {
             const resultingState: ReversiState = rules.applyLegalMove(move, state, status);
             const expectedState: ReversiState = new ReversiState(expectedBoard, 61);
             expect(resultingState).toEqual(expectedState);
-            const node: ReversiNode = new MGPNode(resultingState,
-                                                  MGPOptional.empty(),
-                                                  MGPOptional.of(move));
+            const node: ReversiNode = new ReversiNode(resultingState,
+                                                      MGPOptional.empty(),
+                                                      MGPOptional.of(move));
             RulesUtils.expectToBeDraw(rules, node, minimaxes);
         });
     });

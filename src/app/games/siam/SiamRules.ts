@@ -104,7 +104,7 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityStatus> {
             movedPieces.push(landingCoord);
             movingPiece = tmpPiece;
             landingCoord = landingCoord.getNext(pushingDir);
-            currentDirection = movingPiece.getNullableDirection();
+            currentDirection = movingPiece.getOptionalDirection().getOrNull();
             pushingPossible = landingCoord.isInRange(5, 5) &&
                               movingPiece !== SiamPiece.EMPTY &&
                               totalForce > 0;
