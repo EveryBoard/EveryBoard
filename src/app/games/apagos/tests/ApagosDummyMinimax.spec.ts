@@ -1,4 +1,3 @@
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ApagosDummyMinimax } from '../ApagosDummyMinimax';
 import { ApagosMove } from '../ApagosMove';
 import { ApagosNode, ApagosRules } from '../ApagosRules';

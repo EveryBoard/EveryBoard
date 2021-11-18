@@ -10,7 +10,6 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('SaharaRules', () => {
 

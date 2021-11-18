@@ -22,9 +22,9 @@
             />
         </g>
     </g>
-    <rect *ngIf="last"
-          [attr.x]="SPACE_SIZE * last.x"
-          [attr.y]="SPACE_SIZE * last.y"
+    <rect *ngIf="last.isPresent()"
+          [attr.x]="SPACE_SIZE * last.get().x"
+          [attr.y]="SPACE_SIZE * last.get().y"
           [attr.width]="SPACE_SIZE"
           [attr.height]="SPACE_SIZE"
           class="base no-fill last-move mid-stroke"

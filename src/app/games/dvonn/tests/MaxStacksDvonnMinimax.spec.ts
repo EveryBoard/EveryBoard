@@ -5,7 +5,6 @@ import { DvonnPieceStack } from '../DvonnPieceStack';
 import { DvonnNode, DvonnRules } from '../DvonnRules';
 import { MaxStacksDvonnMinimax } from '../MaxStacksDvonnMinimax';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('MaxStacksDvonnMinimax', () => {
 

@@ -2,7 +2,6 @@ import { AwaleNode, AwaleRules } from '../AwaleRules';
 import { AwaleMinimax } from '../AwaleMinimax';
 import { AwaleMove } from '../AwaleMove';
 import { AwaleState } from '../AwaleState';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('AwaleMinimax:', () => {
 

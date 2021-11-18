@@ -5,7 +5,6 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { P4Move } from '../P4Move';
 import { P4Minimax } from '../P4Minimax';
 import { P4Failure } from '../P4Failure';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('P4Rules', () => {
 

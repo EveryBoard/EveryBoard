@@ -2,22 +2,22 @@
      width="100%" height="auto"
      [attr.viewBox]="viewBox"
      preserveAspectRatio="xMidYMid meet">
-    <!-- PIECES AND NEIGHBOORS -->
+    <!-- PIECES AND NEIGHBORS -->
     <polyline *ngFor="let piece of pieces"
               id="piece_{{ piece.x }}_{{ piece.y }}"
               (click)="onPieceClick(piece)"
               [attr.points]="getHexaCoordsAt(piece)"
               [ngClass]="getPieceClass(piece)"
               class="base round" />
-    <polyline *ngFor="let neighboor of neighboors"
-              id="neighboor_{{ neighboor.x }}_{{ neighboor.y }}"
-              (click)="onNeighboorClick(neighboor)"
-              [attr.points]="getHexaCoordsAt(neighboor)"
+    <polyline *ngFor="let neighbor of neighbors"
+              id="neighbor_{{ neighbor.x }}_{{ neighbor.y }}"
+              (click)="onNeighborClick(neighbor)"
+              [attr.points]="getHexaCoordsAt(neighbor)"
               class="base round" />
-    <polyline *ngIf="chosenLanding"
-              id="chosenLanding_{{ chosenLanding.x }}_{{ chosenLanding.y }}"
-              (click)="onPieceClick(chosenLanding)"
-              [attr.points]="getHexaCoordsAt(chosenLanding)"
+    <polyline *ngIf="chosenLanding.isPresent()"
+              id="chosenLanding_{{ chosenLanding.get().x }}_{{ chosenLanding.get().y }}"
+              (click)="onPieceClick(chosenLanding.get())"
+              [attr.points]="getHexaCoordsAt(chosenLanding.get())"
               [ngClass]="getPlayerClass(state.getCurrentPlayer())"
               class="base round" />
     <!-- LAST MOVE -->
@@ -25,21 +25,21 @@
               id="disconnected_{{ disconnected.x }}_{{ disconnected.y }}"
               [attr.points]="getHexaCoordsAt(disconnected)"
               class="base round captured"/>
-    <polyline *ngIf="leftCoord != null"
-              id="leftCoord_{{ leftCoord.x }}_{{ leftCoord.y }}"
-              (click)="onNeighboorClick(leftCoord)"
-              [attr.points]="getHexaCoordsAt(leftCoord)"
+    <polyline *ngIf="leftCoord.isPresent()"
+              id="leftCoord_{{ leftCoord.get().x }}_{{ leftCoord.get().y }}"
+              (click)="onNeighborClick(leftCoord.get())"
+              [attr.points]="getHexaCoordsAt(leftCoord.get())"
               class="base round moved mid-stroke"/>
-    <polyline *ngIf="lastDrop != null"
-              id="lastDrop_{{ lastDrop.x }}_{{ lastDrop.y }}"
-              (click)="onPieceClick(lastDrop)"
-              [attr.points]="getHexaCoordsAt(lastDrop)"
+    <polyline *ngIf="lastDrop.isPresent()"
+              id="lastDrop_{{ lastDrop.get().x }}_{{ lastDrop.get().y }}"
+              (click)="onPieceClick(lastDrop.get())"
+              [attr.points]="getHexaCoordsAt(lastDrop.get())"
               class="base no-fill round last-move mid-stroke" />
     <!-- HIGHLIGHTS -->
-    <polyline *ngIf="selectedPiece != null"
-              id="selectedPiece_{{ selectedPiece.x }}_{{ selectedPiece.y }}"
-              (click)="onPieceClick(selectedPiece)"
-              [attr.points]="getHexaCoordsAt(selectedPiece)"
+    <polyline *ngIf="selectedPiece.isPresent()"
+              id="selectedPiece_{{ selectedPiece.get().x }}_{{ selectedPiece.get().y }}"
+              (click)="onPieceClick(selectedPiece.get())"
+              [attr.points]="getHexaCoordsAt(selectedPiece.get())"
               [ngClass]="getSelectedPieceClass()"
               class="base no-fill round"/>
     <polyline *ngFor="let victoryCoord of victoryCoords"

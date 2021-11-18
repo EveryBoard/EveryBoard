@@ -70,10 +70,11 @@ export class TablutComponent extends RectangularGameComponent<TablutRules,
 
         this.captureds = [];
         if (this.lastMove.isPresent()) {
-            this.showPreviousMove(this.lastMove.get());
+            this.showPreviousMove();
         }
     }
-    private showPreviousMove(move: TablutMove): void {
+    private showPreviousMove(): void {
+        const move: TablutMove = this.lastMove.get();
         const previousBoard: Table<TablutCase> = this.rules.node.mother.get().gameState.board;
         const OPPONENT: Player = this.rules.node.gameState.getCurrentOpponent();
         for (const orthogonal of Orthogonal.ORTHOGONALS) {

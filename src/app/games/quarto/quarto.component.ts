@@ -24,8 +24,8 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
 {
     public EMPTY: QuartoPiece = QuartoPiece.NONE;
 
-    public chosen: Coord = new Coord(-1, -1);
-    public lastMove: Coord = new Coord(-1, -1);
+    public chosen: MGPOptional<Coord> = MGPOptional.empty();
+    public lastMove: MGPOptional<Coord> = MGPOptional.empty();
     public pieceInHand: QuartoPiece;
     // the piece that the current user must place on the board
     public pieceToGive: QuartoPiece = QuartoPiece.NONE; // the piece that the user wants to give to the opponent
@@ -48,12 +48,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         this.board = state.getCopiedBoard();
         this.pieceInHand = state.pieceInHand;
         this.victoriousCoords = this.rules.getVictoriousCoords(state);
-
-        if (move.isAbsent()) {
-            this.lastMove = new Coord(-1, -1);
-        } else {
-            this.lastMove = move.get().coord;
-        }
+        this.lastMove = move.map((move: QuartoMove) => move.coord);
     }
     public async chooseCoord(x: number, y: number): Promise<MGPValidation> {
         // called when the user click on the quarto board
@@ -93,30 +88,31 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         // so I guess he don't need to see what's the last move of the opponent
 
         this.pieceToGive = QuartoPiece.fromInt(givenPiece);
-        if (this.chosen.x === -1) {
+        if (this.chosen.isAbsent()) {
             return MGPValidation.SUCCESS; // the user has just chosen his piece
         } else {
             // the user has chosen the coord before the piece
-            const chosenMove: QuartoMove = new QuartoMove(this.chosen.x, this.chosen.y, this.pieceToGive);
+            const chosen: Coord = this.chosen.get();
+            const chosenMove: QuartoMove = new QuartoMove(chosen.x, chosen.y, this.pieceToGive);
             return this.chooseMove(chosenMove, this.rules.node.gameState);
         }
     }
     private hideLastMove(): void {
-        this.lastMove = new Coord(-1, -1);
+        this.lastMove = MGPOptional.empty();
     }
     public cancelMoveAttempt(): void {
-        this.chosen = new Coord(-1, -1);
+        this.hideLastMove();
         this.pieceToGive = QuartoPiece.NONE;
     }
     private showPieceInHandOnBoard(x: number, y: number): void {
-        this.chosen = new Coord(x, y);
+        this.chosen = MGPOptional.of(new Coord(x, y));
     }
     public isRemaining(pawn: number): boolean {
         return QuartoState.isGivable(QuartoPiece.fromInt(pawn), this.board, this.pieceInHand);
     }
     public getCaseClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
-        if (this.lastMove.equals(coord)) {
+        if (this.lastMove.equalsValue(coord)) {
             return ['moved'];
         }
         return [];

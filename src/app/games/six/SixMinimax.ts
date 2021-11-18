@@ -49,7 +49,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
     public getListMoves(node: SixNode): SixMove[] {
         const minimax: SixMinimax = SixMinimax.getInstance();
         const unheritance: SixNodeUnheritance = node.getOwnValue(minimax);
-        if (unheritance && unheritance.preVictory) {
+        if (unheritance != null && unheritance.preVictory != null) {
             if (node.gameState.turn < 40) {
                 return this.createForcedDrop(unheritance);
             } else {

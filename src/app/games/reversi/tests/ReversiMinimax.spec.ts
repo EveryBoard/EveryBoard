@@ -4,7 +4,6 @@ import { ReversiMove } from '../ReversiMove';
 import { ReversiState } from '../ReversiState';
 import { ReversiNode, ReversiRules } from '../ReversiRules';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('ReversiMinimax', () => {
 

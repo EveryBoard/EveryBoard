@@ -46,6 +46,13 @@ export class MGPOptional<T> {
             throw new Error('Value is absent');
         }
     }
+    public getOrElse(defaultValue: T): T {
+        if (this.isPresent()) {
+            return this.value as T;
+        } else {
+            return defaultValue;
+        }
+    }
     public getOrNull(): T | null {
         return this.value;
     }

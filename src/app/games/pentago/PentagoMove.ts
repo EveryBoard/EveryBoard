@@ -22,7 +22,7 @@ export class PentagoMove extends MoveCoord {
             const casted: JSONObject = encoded as JSONObject;
 
             const coord: Coord = Coord.encoder.decode(casted['coord']);
-            const nullableBlockTurned: number = casted['blockTurned'] as number;
+            const nullableBlockTurned: number | null = casted['blockTurned'] as number | null;
             if (nullableBlockTurned != null) {
                 const turnedClockwise: boolean = casted['turnedClockwise'] as boolean;
                 return PentagoMove.withRotation(coord.x,
@@ -47,12 +47,12 @@ export class PentagoMove extends MoveCoord {
         return new PentagoMove(x, y, MGPOptional.of(blockTurned), turnedClockwise);
     }
     public static rotationless(x: number, y: number): PentagoMove {
-        return new PentagoMove(x, y, MGPOptional.empty(), null);
+        return new PentagoMove(x, y, MGPOptional.empty());
     }
     private constructor(x: number,
                         y: number,
                         public readonly blockTurned: MGPOptional<number>,
-                        public readonly turnedClockwise: boolean | null)
+                        public readonly turnedClockwise?: boolean)
     {
         super(x, y);
         if (this.coord.isNotInRange(6, 6)) {
@@ -62,7 +62,7 @@ export class PentagoMove extends MoveCoord {
     public toString(): string {
         if (this.blockTurned.isPresent()) {
             return 'PentagoMove(' + this.coord.toString() + ', ' + this.blockTurned.get() + ', ' +
-                   (this.turnedClockwise ? 'CLOCKWISE' : 'ANTI-CLOCKWISE') + ')';
+                   (this.turnedClockwise != null && this.turnedClockwise ? 'CLOCKWISE' : 'ANTI-CLOCKWISE') + ')';
         } else {
             return 'PentagoMove' + this.coord.toString();
         }

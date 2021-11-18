@@ -5,7 +5,6 @@ import { TablutCase } from '../TablutCase';
 import { TablutNode, TablutRules } from '../TablutRules';
 import { TablutMinimax } from '../TablutMinimax';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('TablutMinimax:', () => {
 

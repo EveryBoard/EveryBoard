@@ -1,6 +1,5 @@
 import { GameStateWithTable } from '../../jscaip/GameStateWithTable';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { assert } from 'src/app/utils/utils';
 
 export class AwaleState extends GameStateWithTable<number> {
 

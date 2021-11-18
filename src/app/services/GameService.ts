@@ -343,7 +343,7 @@ export class GameService implements OnDestroy {
                 loser,
                 result: MGPResult.VICTORY.value,
             };
-        } else if (notifyDraw) {
+        } else if (notifyDraw != null && notifyDraw) {
             update = {
                 ...update,
                 result: MGPResult.DRAW.value,

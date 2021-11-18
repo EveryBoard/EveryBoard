@@ -6,7 +6,6 @@ import { YinshCapture } from '../YinshMove';
 import { YinshPiece } from '../YinshPiece';
 import { YinshNode, YinshRules } from '../YinshRules';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('YinshMinimax', () => {
 

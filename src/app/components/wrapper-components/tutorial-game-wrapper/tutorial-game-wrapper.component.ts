@@ -206,7 +206,7 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
             this.currentMessage = step.getSuccessMessage();
             this.cdr.detectChanges();
         }
-        // TODO FOR REVIEW: else, throw error or do nothing? 
+        // TODO FOR REVIEW: else, throw error or do nothing?
     }
     public playLocally(): void {
         const game: string = Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));

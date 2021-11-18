@@ -4,7 +4,6 @@ import { PylosMove } from '../PylosMove';
 import { PylosOrderedMinimax } from '../PylosOrderedMinimax';
 import { PylosState } from '../PylosState';
 import { PylosNode, PylosRules } from '../PylosRules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('PylosOrderedMinimax', () => {
 

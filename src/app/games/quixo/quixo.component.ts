@@ -12,7 +12,6 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Player } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { QuixoTutorial } from './QuixoTutorial';
-import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 @Component({
@@ -26,9 +25,9 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
 
     public state: QuixoState;
 
-    public lastMoveCoord: Coord | null = new Coord(-1, -1);
+    public lastMoveCoord: MGPOptional<Coord> = MGPOptional.empty();
 
-    public chosenCoord: Coord | null;
+    public chosenCoord: MGPOptional<Coord> = MGPOptional.empty();
 
     public chosenDirection: Orthogonal;
 
@@ -47,13 +46,11 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
     public updateBoard(): void {
         this.state = this.rules.node.gameState;
         this.board = this.state.board;
-        const move: MGPOptional<QuixoMove> = this.rules.node.move;
-        if (move.isPresent()) this.lastMoveCoord = move.get().coord;
-        else this.lastMoveCoord = null;
+        this.lastMoveCoord = this.rules.node.move.map((move: QuixoMove) => move.coord);
         this.victoriousCoords = QuixoRules.getVictoriousCoords(this.state);
     }
     public cancelMoveAttempt(): void {
-        this.chosenCoord = null;
+        this.chosenCoord = MGPOptional.empty();
     }
     public getPieceClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
@@ -61,8 +58,8 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
         const classes: string[] = [];
 
         classes.push(this.getPlayerClass(player));
-        if (this.chosenCoord != null && coord.equals(this.chosenCoord)) classes.push('selected');
-        else if (this.lastMoveCoord != null && coord.equals(this.lastMoveCoord)) classes.push('last-move');
+        if (this.chosenCoord.equalsValue(coord)) classes.push('selected');
+        else if (this.lastMoveCoord.equalsValue(coord)) classes.push('last-move');
         if (this.victoriousCoords.some((c: Coord): boolean => c.equals(coord))) classes.push('victory-stroke');
         return classes;
     }
@@ -79,13 +76,13 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
         if (this.board[y][x] === this.state.getCurrentOpponent()) {
             return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         } else {
-            this.chosenCoord = clickedCoord;
+            this.chosenCoord = MGPOptional.of(clickedCoord);
             return MGPValidation.SUCCESS;
         }
     }
     public getPossiblesDirections(): string[] {
         const directions: string[] = [];
-        const chosenCoord: Coord = Utils.getNonNullable(this.chosenCoord);
+        const chosenCoord: Coord = this.chosenCoord.get();
         if (chosenCoord.x !== 4) directions.push('RIGHT');
         if (chosenCoord.x !== 0) directions.push('LEFT');
         if (chosenCoord.y !== 4) directions.push('DOWN');
@@ -101,7 +98,7 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
         return await this.tryMove();
     }
     public async tryMove(): Promise<MGPValidation> {
-        const chosenCoord: Coord = Utils.getNonNullable(this.chosenCoord);
+        const chosenCoord: Coord = this.chosenCoord.get();
         const move: QuixoMove = new QuixoMove(chosenCoord.x,
                                               chosenCoord.y,
                                               this.chosenDirection);

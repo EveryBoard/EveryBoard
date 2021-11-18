@@ -131,7 +131,7 @@ describe('GameComponent', () => {
             },
             Six: {
                 onPieceClick: [0, 0],
-                onNeighboorClick: [0, 0],
+                onNeighborClick: [0, 0],
             },
             Tablut: { onClick: [0, 0] },
             Yinsh: { onClick: [0, 0] },
@@ -151,6 +151,7 @@ describe('GameComponent', () => {
             tick(1);
             expect(component.gameComponent).toBeDefined();
             for (const methodName of Object.keys(game)) {
+                expect(component.gameComponent[methodName]).withContext(`click method ${methodName} should be defined for game ${gameName}`).toBeDefined();
                 const clickResult: MGPValidation = await component.gameComponent[methodName](...game[methodName]);
                 expect(clickResult).toEqual(refusal);
             }
@@ -166,7 +167,7 @@ describe('GameComponent', () => {
                 TestBed.createComponent(gameInfo.component).debugElement.componentInstance;
             expect(gameComponent.encoder).withContext('Encoder missing for ' + gameInfo.urlName).toBeTruthy();
             expect(gameComponent.tutorial).withContext('tutorial missing for ' + gameInfo.urlName).toBeTruthy();
-            if (gameComponent.tutorial) {
+            if (gameComponent.tutorial != null) {
                 expect(gameComponent.tutorial.length).withContext('tutorial empty for ' + gameInfo.urlName).toBeGreaterThan(0);
             }
         }

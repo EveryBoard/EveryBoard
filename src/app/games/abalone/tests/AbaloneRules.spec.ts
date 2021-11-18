@@ -11,7 +11,6 @@ import { AbaloneFailure } from '../AbaloneFailure';
 import { AbaloneState } from '../AbaloneState';
 import { AbaloneMove } from '../AbaloneMove';
 import { AbaloneLegalityStatus, AbaloneNode, AbaloneRules } from '../AbaloneRules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('AbaloneRules', () => {
 

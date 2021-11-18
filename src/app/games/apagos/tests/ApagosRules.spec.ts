@@ -1,7 +1,6 @@
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ApagosCoord } from '../ApagosCoord';
 import { ApagosDummyMinimax } from '../ApagosDummyMinimax';
 import { ApagosFailure } from '../ApagosFailure';

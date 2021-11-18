@@ -2,7 +2,6 @@ import { P4Minimax } from '../P4Minimax';
 import { P4Move } from '../P4Move';
 import { P4State } from '../P4State';
 import { P4Node, P4Rules } from '../P4Rules';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('P4Minimax', () => {
 
