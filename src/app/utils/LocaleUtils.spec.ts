@@ -1,7 +1,6 @@
 import { LocaleUtils } from './LocaleUtils';
 
 describe('LocaleUtils', () => {
-
     describe('getLocale', () => {
         it('should use locale stored in localStorage', () => {
             // given a localStage that defines a locale

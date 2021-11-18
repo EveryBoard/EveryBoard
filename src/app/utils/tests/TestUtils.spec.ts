@@ -4,18 +4,16 @@ import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
-
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';
 import { AbstractGameState } from '../../jscaip/GameState';
 import { Move } from '../../jscaip/Move';
 import { MGPValidation } from '../MGPValidation';
 import { AppModule } from '../../app.module';
-import { JoueursDAO } from '../../dao/JoueursDAO';
-import { AuthenticationService } from '../../services/AuthenticationService';
+import { UserDAO } from '../../dao/UserDAO';
+import { AuthenticationService, AuthUser } from '../../services/AuthenticationService';
 import { MGPNode } from '../../jscaip/MGPNode';
 import { GameWrapper } from '../../components/wrapper-components/GameWrapper';
-import { Player } from '../../jscaip/Player';
 import { AuthenticationServiceMock } from '../../services/tests/AuthenticationService.spec';
 import { OnlineGameWrapperComponent }
     from '../../components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
@@ -23,14 +21,23 @@ import { ChatDAO } from '../../dao/ChatDAO';
 import { JoinerDAOMock } from '../../dao/tests/JoinerDAOMock.spec';
 import { PartDAO } from '../../dao/PartDAO';
 import { JoinerDAO } from '../../dao/JoinerDAO';
-import { JoueursDAOMock } from '../../dao/tests/JoueursDAOMock.spec';
+import { UserDAOMock } from '../../dao/tests/UserDAOMock.spec';
 import { ChatDAOMock } from '../../dao/tests/ChatDAOMock.spec';
 import { PartDAOMock } from '../../dao/tests/PartDAOMock.spec';
 import { LocalGameWrapperComponent }
     from '../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { HumanDuration } from '../TimeUtils';
 import { Rules } from 'src/app/jscaip/Rules';
+import { AutofocusDirective } from 'src/app/directives/autofocus.directive';
+import { ToggleVisibilityDirective } from 'src/app/directives/toggle-visibility.directive';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { AngularFireModule } from '@angular/fire';
+import { USE_EMULATOR as USE_FIRESTORE_EMULATOR } from '@angular/fire/firestore';
+import { USE_EMULATOR as USE_DATABASE_EMULATOR } from '@angular/fire/database';
+import { USE_EMULATOR as USE_AUTH_EMULATOR } from '@angular/fire/auth';
+import { USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/functions';
+import { environment } from 'src/environments/environment';
 
 @Component({})
 export class BlankComponent {}
@@ -75,12 +82,13 @@ export class SimpleComponentTestUtils<T> {
                 ]),
                 FormsModule,
                 ReactiveFormsModule,
-                BrowserAnimationsModule,
                 NoopAnimationsModule,
             ],
             declarations: [
                 componentType,
                 HumanDuration,
+                AutofocusDirective,
+                ToggleVisibilityDirective,
             ],
             schemas: [
                 CUSTOM_ELEMENTS_SCHEMA,
@@ -90,7 +98,7 @@ export class SimpleComponentTestUtils<T> {
                 { provide: PartDAO, useClass: PartDAOMock },
                 { provide: JoinerDAO, useClass: JoinerDAOMock },
                 { provide: ChatDAO, useClass: ChatDAOMock },
-                { provide: JoueursDAO, useClass: JoueursDAOMock },
+                { provide: UserDAO, useClass: UserDAOMock },
             ],
         }).compileComponents();
         AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
@@ -120,6 +128,9 @@ export class SimpleComponentTestUtils<T> {
     public findElement(elementName: string): DebugElement {
         return this.fixture.debugElement.query(By.css(elementName));
     }
+    public findElementByDirective(directive: Type<unknown>): DebugElement {
+        return this.fixture.debugElement.query(By.directive(directive));
+    }
     public destroy(): void {
         return this.fixture.destroy();
     }
@@ -141,10 +152,17 @@ export class SimpleComponentTestUtils<T> {
         expect(element).withContext(elementName + ' should exist').toBeTruthy();
         return element;
     }
+
+    public fillInput(elementName: string, value: string): void {
+        const element: DebugElement = this.findElement(elementName);
+        expect(element).withContext(elementName + ' should exist in order to fill its value').toBeTruthy();
+        element.nativeElement.value = value;
+        element.nativeElement.dispatchEvent(new Event('input'));
+    }
 }
 type MyGameComponent = GameComponent<Rules<Move, AbstractGameState>,
-                                           Move,
-                                           AbstractGameState>;
+                                     Move,
+                                     AbstractGameState>;
 
 export class ComponentTestUtils<T extends MyGameComponent> {
     public fixture: ComponentFixture<GameWrapper>;
@@ -162,7 +180,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     : Promise<ComponentTestUtils<T>>
     {
         const testUtils: ComponentTestUtils<T> = await ComponentTestUtils.basic(game);
-        AuthenticationServiceMock.setUser(AuthenticationService.NOT_CONNECTED);
+        AuthenticationServiceMock.setUser(AuthUser.NOT_CONNECTED);
         testUtils.prepareFixture(wrapperKind);
         testUtils.detectChanges();
         tick(1);
@@ -183,7 +201,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
                 { provide: ActivatedRoute, useValue: activatedRouteStub },
-                { provide: JoueursDAO, useClass: JoueursDAOMock },
+                { provide: UserDAO, useClass: UserDAOMock },
                 { provide: AuthenticationService, useClass: AuthenticationServiceMock },
                 { provide: ChatDAO, useClass: ChatDAOMock },
                 { provide: JoinerDAO, useClass: JoinerDAOMock },
@@ -192,7 +210,6 @@ export class ComponentTestUtils<T extends MyGameComponent> {
         }).compileComponents();
         return new ComponentTestUtils<T>(activatedRouteStub);
     }
-
     private constructor(private readonly activatedRouteStub: ActivatedRouteStub) {}
 
     public prepareFixture(wrapperKind: Type<GameWrapper>): void {
@@ -363,7 +380,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     }
     public expectElementNotToExist(elementName: string): void {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(elementName + ' should not to exist').toBeNull();
+        expect(element).withContext(elementName + ' should not exist').toBeNull();
     }
     public expectElementToExist(elementName: string): DebugElement {
         const element: DebugElement = this.findElement(elementName);
@@ -373,14 +390,16 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     public expectElementToHaveClass(elementName: string, cssClass: string): void {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(elementName + ' should exist').toBeTruthy();
-        const elementClasses: string[] = element.attributes.class.split(' ').sort();
-        expect(elementClasses).toContain(cssClass);
+        const classAttribute: string = element.attributes.class;
+        expect(classAttribute).withContext(elementName + ' should have class attribute').toBeTruthy();
+        const elementClasses: string[] = classAttribute.split(' ').sort();
+        expect(elementClasses).withContext(elementName + ' should contain ' + cssClass).toContain(cssClass);
     }
     public expectElementNotToHaveClass(elementName: string, cssClass: string): void {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(elementName + ' should exist').toBeTruthy();
         const elementClasses: string[] = element.attributes.class.split(' ').sort();
-        expect(elementClasses).not.toContain(cssClass);
+        expect(elementClasses).withContext(elementName + ' should not contain ' + cssClass).not.toContain(cssClass);
     }
     public expectElementToHaveClasses(elementName: string, classes: string[]): void {
         const classesSorted: string[] = [...classes].sort();
@@ -397,25 +416,34 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     }
 }
 
-export function expectSecondStateToBeBetterThanFirst(weakerState: AbstractGameState,
-                                                     weakMove: Move,
-                                                     strongerState: AbstractGameState,
-                                                     strongMove: Move,
-                                                     minimax: Minimax<Move, AbstractGameState>)
-: void
-{
-    const weakValue: number = minimax.getBoardValue(new MGPNode(null, weakMove, weakerState)).value;
-    const strongValue: number = minimax.getBoardValue(new MGPNode(null, strongMove, strongerState)).value;
-    expect(weakValue).toBeLessThan(strongValue);
+export class TestUtils {
+
+    public static expectValidationSuccess(validation: MGPValidation, context?: string): void {
+        const reason: string = validation.reason;
+        expect(validation.isSuccess()).withContext(context + ': ' + reason).toBeTrue();
+    }
 }
-export function expectStateToBePreVictory(state: AbstractGameState,
-                                          previousMove: Move,
-                                          player: Player,
-                                          minimax: Minimax<Move, AbstractGameState>)
-: void
-{
-    // TODO: replace that and refuse it to reach develop! expectToBeVictoryFor is the way
-    const value: number = minimax.getBoardNumericValue(new MGPNode(null, previousMove, state));
-    const expectedValue: number = player.getPreVictory();
-    expect(value).toBe(expectedValue);
+
+export async function setupEmulators(): Promise<unknown> {
+    TestBed.configureTestingModule({
+        imports: [
+            AngularFirestoreModule,
+            HttpClientModule,
+            AngularFireModule.initializeApp(environment.firebaseConfig),
+        ],
+        providers: [
+            { provide: USE_AUTH_EMULATOR, useValue: environment.emulatorConfig.auth },
+            { provide: USE_DATABASE_EMULATOR, useValue: environment.emulatorConfig.database },
+            { provide: USE_FIRESTORE_EMULATOR, useValue: environment.emulatorConfig.firestore },
+            { provide: USE_FUNCTIONS_EMULATOR, useValue: environment.emulatorConfig.functions },
+            AuthenticationService,
+        ],
+        schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    }).compileComponents();
+    const http: HttpClient = TestBed.inject(HttpClient);
+    // Clear the firestore data before each test
+    await http.delete('http://localhost:8080/emulator/v1/projects/my-project/databases/(default)/documents').toPromise();
+    // Clear the auth data before each test
+    await http.delete('http://localhost:9099/emulator/v1/projects/my-project/accounts').toPromise();
+    return;
 }

@@ -1,13 +1,19 @@
-import { comparableEquals, ComparableJSON, ComparableObject } from '../Comparable';
+import { comparableEquals, ComparableJSON, ComparableObject, isComparableJSON, isComparableObject, isComparableValue } from '../Comparable';
+import { Utils } from '../utils';
 
-class DummyObject implements ComparableObject {
+class DummyComparableObject implements ComparableObject {
     public constructor(readonly value: number) {}
-    public equals(o: DummyObject): boolean {
+    public equals(o: DummyComparableObject): boolean {
         return this.value === o.value;
     }
     public toString(): string {
         return 'dummy';
     }
+}
+
+class DummyNonComparableObject {
+    public constructor(readonly value: number) {}
+    public someMethod(): void {}
 }
 
 describe('Comparable', () => {
@@ -23,8 +29,8 @@ describe('Comparable', () => {
             expect(comparableEquals(true, null)).toBeFalse();
         });
         it('should support objects that have an equal method', () => {
-            expect(comparableEquals(new DummyObject(5), new DummyObject(5))).toBeTrue();
-            expect(comparableEquals(new DummyObject(5), new DummyObject(6))).toBeFalse();
+            expect(comparableEquals(new DummyComparableObject(5), new DummyComparableObject(5))).toBeTrue();
+            expect(comparableEquals(new DummyComparableObject(5), new DummyComparableObject(6))).toBeFalse();
         });
         it('should support primitive JSON values', () => {
             const object1: ComparableJSON = { 'foo': 1 };
@@ -35,6 +41,38 @@ describe('Comparable', () => {
             expect(comparableEquals(object1, object1)).toBeTrue();
             expect(comparableEquals(object1, object2)).toBeFalse();
             expect(comparableEquals(object1, object3)).toBeFalse();
+        });
+        it('should fail if objects are not comparable', () => {
+            spyOn(Utils, 'handleError').and.returnValue(null);
+            comparableEquals(new DummyNonComparableObject(5), new DummyNonComparableObject(5));
+            expect(Utils.handleError).toHaveBeenCalledWith('Comparing non comparable objects');
+        });
+
+    });
+    describe('isComparableObject', () => {
+        it('should return true only for objects that implement the Comparable interface ', () => {
+            expect(isComparableObject(new DummyComparableObject(5))).toBeTrue();
+            expect(isComparableObject(new DummyNonComparableObject(5))).toBeFalse();
+        });
+    });
+    describe('isComparableJSON', () => {
+        it('should return true for comparable JSON only', () => {
+            expect(isComparableJSON(undefined)).toBeFalse();
+            expect(isComparableJSON(null)).toBeFalse();
+            expect(isComparableJSON({ 'foo': 5 })).toBeTrue();
+            expect(isComparableJSON(new DummyNonComparableObject(5))).toBeFalse();
+            expect(isComparableJSON({ 'foo': new DummyNonComparableObject(5) })).toBeFalse();
+            expect(isComparableJSON({ 1: 'foo' })).toBeTrue();
+        });
+    });
+    describe('isComparableValue', () => {
+        it('should return true for all comparable values', () => {
+            expect(isComparableValue(new DummyComparableObject(5))).toBeTrue();
+            expect(isComparableValue(new DummyNonComparableObject(5))).toBeFalse();
+            expect(isComparableValue(5)).toBeTrue();
+            expect(isComparableValue(null)).toBeTrue();
+            expect(isComparableValue({ 'foo': { 'bar': { 'baz': 5 } } })).toBeTrue();
+            expect(isComparableValue({ 'foo': { 'bar': { 'baz': new DummyNonComparableObject(5) } } })).toBeFalse();
         });
     });
 });

@@ -8,38 +8,11 @@ import { DiamMove, DiamMoveDrop, DiamMoveShift } from '../DiamMove';
 import { DiamPiece } from '../DiamPiece';
 import { DiamNode, DiamRules } from '../DiamRules';
 import { DiamState } from '../DiamState';
-
-// TODOTODO will be RulesUtils after apagos is merged
-import { expectToBeOngoing, expectToBeVictoryFor } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { DiamDummyMinimax } from '../DiamDummyMinimax';
 import { DiamFailure } from '../DiamFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-function expectMoveSuccess(rules: Rules<Move, AbstractGameState>,
-                           state: AbstractGameState,
-                           move: Move,
-                           expectedState: AbstractGameState)
-: void
-{
-    const legality: LegalityStatus = rules.isLegal(move, state);
-    expect(legality.legal).toBeTruthy();
-    if (legality.legal.isSuccess()) {
-        const resultingState: AbstractGameState = rules.applyLegalMove(move, state, legality);
-        expect(resultingState).withContext('states should be equal').toEqual(expectedState);
-    } else {
-        throw new Error('expected move to be valid but it is not: ' + legality.legal.getReason());
-    }
-}
-
-function expectMoveFailure(rules: Rules<Move, AbstractGameState>,
-                           state: AbstractGameState,
-                           move: Move,
-                           reason: string)
-: void
-{
-    const legality: LegalityStatus = rules.isLegal(move, state);
-    expect(legality.legal.reason).toBe(reason);
-}
+import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 
 describe('DiamRules', () => {
     const __: DiamPiece = DiamPiece.EMPTY;
@@ -73,7 +46,7 @@ describe('DiamRules', () => {
                 [__, __, __, __, __, __, __, __],
                 [A1, __, __, __, __, __, __, __],
             ], [3, 4, 4, 4], 1);
-            expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it('should forbid dropping a piece from the opponent', () => {
             // given the initial state
@@ -81,7 +54,7 @@ describe('DiamRules', () => {
             // when dropping a Player.ONE piece in a valid space
             const move: DiamMove = new DiamMoveDrop(0, B1);
             // then the move is illegal
-            expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         });
         it('should forbid dropping on a space that is full', () => {
             // given a state where one space is already full
@@ -94,7 +67,7 @@ describe('DiamRules', () => {
             // when dropping a piece in a full space
             const move: DiamMove = new DiamMoveDrop(0, A2);
             // then the move is illegal
-            expectMoveFailure(rules, state, move, DiamFailure.STACK_IS_FULL());
+            RulesUtils.expectMoveFailure(rules, state, move, DiamFailure.STACK_IS_FULL());
         });
         it('should forbid dropping a piece that is not remaining', () => {
             // given a state where the player is out of one of its pieces
@@ -107,7 +80,7 @@ describe('DiamRules', () => {
             // when dropping a piece that is not remaining
             const move: DiamMove = new DiamMoveDrop(1, A1);
             // then the move is illegal
-            expectMoveFailure(rules, state, move, DiamFailure.NO_MORE_PIECES_OF_THIS_TYPE());
+            RulesUtils.expectMoveFailure(rules, state, move, DiamFailure.NO_MORE_PIECES_OF_THIS_TYPE());
         });
     });
     describe('shift moves', () => {
@@ -128,7 +101,7 @@ describe('DiamRules', () => {
                 [B1, __, __, __, __, __, __, __],
                 [A1, __, __, __, __, __, __, __],
             ], [3, 3, 3, 3], 5);
-            expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it('should allow moving from the middle of a stack', () => {
             // given a state where a shift can be made
@@ -147,7 +120,7 @@ describe('DiamRules', () => {
                 [__, __, __, __, __, __, __, B2],
                 [B1, __, __, __, __, __, __, A2],
             ], [3, 3, 3, 3], 5);
-            expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it('should allow moving a full stack', () => {
             // given a state where a shift can be made
@@ -166,7 +139,7 @@ describe('DiamRules', () => {
                 [__, __, __, __, __, __, __, B1],
                 [__, __, __, __, __, __, __, A1],
             ], [3, 3, 3, 3], 5);
-            expectMoveSuccess(rules, state, move, expectedState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it('should forbid moving a stack if the first piece is not owned by the player', () => {
             const state: DiamState = new DiamState([
@@ -178,7 +151,7 @@ describe('DiamRules', () => {
             // when moving the stack starting at B2 to the right
             const move: DiamMove = new DiamMoveShift(new Coord(7, 2), 'right');
             // then the move is not legal
-            expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         });
         it('should forbid moving a stack if the receiving space will become too high', () => {
             // given a state where a shift would result in a too high stack
@@ -191,7 +164,7 @@ describe('DiamRules', () => {
             // when moving the stack starting at A2 to the right
             const move: DiamMove = new DiamMoveShift(new Coord(7, 3), 'right');
             // then the move is not legal
-            expectMoveFailure(rules, state, move, DiamFailure.TARGET_STACK_TOO_HIGH());
+            RulesUtils.expectMoveFailure(rules, state, move, DiamFailure.TARGET_STACK_TOO_HIGH());
         });
         it('should forbid moving a stack if it does not exist', () => {
             // given a state where no shifts are possible
@@ -199,7 +172,7 @@ describe('DiamRules', () => {
             // when moving a non-existing stack
             const move: DiamMove = new DiamMoveShift(new Coord(0, 1), 'right');
             // then the move is not legal
-            expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+            RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         });
     });
     describe('winning configurations', () => {
@@ -213,7 +186,7 @@ describe('DiamRules', () => {
             ], [3, 4, 2, 4], 3);
             const node: DiamNode = new DiamNode(null, null, state);
             // then the game is still ongoing
-            expectToBeOngoing(rules, node, minimaxes);
+            RulesUtils.expectToBeOngoing(rules, node, minimaxes);
         });
         it('should not consider non-facing alignment as win', () => {
             // given a state where there is an alignment but not face-to-face
@@ -225,7 +198,7 @@ describe('DiamRules', () => {
             ], [2, 4, 3, 3], 4);
             const node: DiamNode = new DiamNode(null, null, state);
             // then the game is still ongoing
-            expectToBeOngoing(rules, node, minimaxes);
+            RulesUtils.expectToBeOngoing(rules, node, minimaxes);
         });
         it('should detect player 0 win with face-to-face alignment', () => {
             // given a state where player zero has a face-to-face alignment
@@ -237,7 +210,7 @@ describe('DiamRules', () => {
             ], [2, 4, 3, 3], 4);
             const node: DiamNode = new DiamNode(null, null, state);
             // then it is detected as a v ictory for player zero
-            expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
         });
         it('should detect win when two alignments happen in the same turn', () => {
             // given a board where two alignment exist, but player one has a higher alignment
@@ -249,7 +222,7 @@ describe('DiamRules', () => {
             ], [2, 4, 3, 1], 4);
             const node: DiamNode = new DiamNode(null, null, state);
             // then the winner is the one with the highest alignment
-            expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
         });
     });
 });

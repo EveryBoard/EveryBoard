@@ -27,13 +27,13 @@ if (runtimeTranslations && locale !== 'en') {
                 return { 'locale': 'en', 'translations': {} };
             }
         })
-        .then((json: any) => {
+        .then((json: { locale: string, translations: Record<string, string> }) => {
             loadTranslations(json.translations);
             $localize.locale = json.locale;
 
             bootstrapApp();
         })
-        .catch(function(err) {
+        .catch(function(err: Error) {
             console.log(err);
         });
 } else {

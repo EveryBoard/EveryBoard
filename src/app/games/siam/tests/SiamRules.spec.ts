@@ -12,7 +12,7 @@ import { SiamFailure } from '../SiamFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { expectToBeVictoryFor } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 
 describe('SiamRules:', () => {
 
@@ -377,7 +377,7 @@ describe('SiamRules:', () => {
         const expectedState: SiamState = new SiamState(expectedBoard, 1);
         expect(resultingState).toEqual(expectedState);
         const node: SiamNode = new MGPNode(null, move, expectedState);
-        expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
     it('Player 1 pushing player 0 pushing mountain should be a victory for player 0', () => {
         const board: Table<SiamPiece> = [
@@ -402,7 +402,7 @@ describe('SiamRules:', () => {
         const expectedState: SiamState = new SiamState(expectedBoard, 1);
         expect(resultingState).toEqual(expectedState);
         const node: SiamNode = new MGPNode(null, move, expectedState);
-        expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
     it('Player 0 pushing player 1 on his side pushing mountain should be a victory for player 0', () => {
         const board: Table<SiamPiece> = [
@@ -427,6 +427,6 @@ describe('SiamRules:', () => {
         const expectedState: SiamState = new SiamState(expectedBoard, 1);
         expect(resultingState).toEqual(expectedState);
         const node: SiamNode = new MGPNode(null, move, expectedState);
-        expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
 });

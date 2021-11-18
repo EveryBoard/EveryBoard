@@ -27,7 +27,7 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
 {
     public encoder: MoveEncoder<M>;
 
-    public CASE_SIZE: number = 100;
+    public SPACE_SIZE: number = 100;
 
     public readonly STROKE_WIDTH: number = 8;
 

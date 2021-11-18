@@ -46,8 +46,9 @@
                     <button class="button is-primary"
                             type="submit"
                             id="send"
-                            (click)="sendMessage()"
-                    >Send</button>
+                            (click)="sendMessage()">
+                        <fa-icon [icon]="faReply" class="clickable-icon" toggleVisibility></fa-icon>
+                    </button>
                 </div>
             </div>
             <div class="content is-small">
@@ -58,6 +59,8 @@
     <div *ngIf="connected === false"
          id="disconnected-chat"
          class="message is-primary is-light">
-        <p>Only connected users can see the chat</p>
+        <div class="message-body">
+            <p i18n>Only connected users can see the chat.</p>
+        </div>
     </div>
 </div>

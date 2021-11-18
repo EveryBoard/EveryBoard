@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="100%" height="auto"
+     viewBox="-8 -8 416 350"
+     preserveAspectRatio="xMidYMid meet"
+>
+    <circle *ngFor="let x of range(remainingZero)"
+            [attr.cx]="(x + 1) * PIECE_RADIUS"
+            [attr.cy]="PIECE_RADIUS"
+            [attr.r]="PIECE_RADIUS - 5"
+            class="base mid-stroke player0"
+    />
+    <g id="board" [attr.transform]="'translate(0, ' + (2 * PIECE_RADIUS) + ')'">
+        <ng-container *ngFor="let square of board; index as x">
+            <polygon id="dropArrow_zero_{{ x }}"
+                     (click)="onArrowClick(x, Player.ZERO)"
+                     *ngIf="canDisplayArrow(x, Player.ZERO)"
+                     [attr.points]="ARROW_COORD"
+                     [ngClass]="getArrowClasses(x, Player.ZERO)"
+                     [attr.transform]="getArrowTransform(x, Player.ZERO)"
+                     class="base mid-stroke"
+            />
+            <polygon id="dropArrow_one_{{ x }}"
+                     (click)="onArrowClick(x, Player.ONE)"
+                     *ngIf="canDisplayArrow(x, Player.ONE)"
+                     [attr.points]="ARROW_COORD"
+                     [ngClass]="getArrowClasses(x, Player.ONE)"
+                     [attr.transform]="getArrowTransform(x, Player.ONE)"
+                     class="base mid-stroke"
+            />
+            <rect id="square_{{ x }}"
+                  (click)="onSquareClick(x)"
+                  [attr.x]="x * SPACE_SIZE"
+                  [attr.y]="(5 - x) * SPACE_SIZE * 0.25"
+                  [attr.width]="SPACE_SIZE"
+                  [attr.height]="SPACE_SIZE"
+                  [ngClass]="getSquareClasses(x)"
+                  class="base mid-stroke"
+            />
+            <ng-container *ngFor="let i of range(square.count(Player.NONE))">
+                <circle id="square_{{ x }}_piece_{{ i }}_out_of_{{ square.count(Player.NONE) }}"
+                        (click)="onSquareClick(x)"
+                        [attr.cx]="getCircleCenter(x, i, square).x"
+                        [attr.cy]="getCircleCenter(x, i, square).y"
+                        r="10"
+                        [ngClass]="getPieceClasses(x, i, square)"
+                        class="base mid-stroke"
+                />
+            </ng-container>
+        </ng-container>
+    </g>
+    <circle *ngFor="let x of range(remainingOne)"
+            [attr.cx]="(4 * SPACE_SIZE) - ((x + 1) * PIECE_RADIUS)"
+            [attr.cy]="(2.25 * SPACE_SIZE) + (3 * PIECE_RADIUS)"
+            [attr.r]="PIECE_RADIUS - 5"
+            class="base mid-stroke player1"
+    />
+</svg>

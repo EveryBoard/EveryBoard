@@ -24,7 +24,7 @@
             <circle *ngIf="isPiece(case)"
                     [attr.cx]="getCenterAt(case).x"
                     [attr.cy]="getCenterAt(case).y"
-                    [attr.r]="CASE_SIZE"
+                    [attr.r]="SPACE_SIZE"
                     [ngClass]="getPieceClass(case)"
                     class="base"/>
         </g>
@@ -53,9 +53,9 @@
     <g *ngFor="let player of [0, 1]">
         <g *ngFor="let p of getPlayerSidePieces(player)">
             <circle id="piece_{{ player }}_{{ p }}"
-                    [attr.cx]="10 + (p * CASE_SIZE * 0.5)"
-                    [attr.cy]="10 + (CASE_SIZE + 10) * player"
-                    [attr.r]="CASE_SIZE * 0.5"
+                    [attr.cx]="10 + (p * SPACE_SIZE * 0.5)"
+                    [attr.cy]="10 + (SPACE_SIZE + 10) * player"
+                    [attr.r]="SPACE_SIZE * 0.5"
                     [ngClass]="getSidePieceClass(player)"
                     class="base small-stroke"
             />

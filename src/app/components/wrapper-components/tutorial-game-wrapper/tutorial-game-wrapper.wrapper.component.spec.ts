@@ -3,7 +3,7 @@ import { TutorialStep } from './TutorialStep';
 import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
 import { QuartoState } from 'src/app/games/quarto/QuartoState';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { ComponentTestUtils, TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { QuartoComponent } from '../../../games/quarto/quarto.component';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -16,6 +16,7 @@ import { Rules } from 'src/app/jscaip/Rules';
 import { Direction } from 'src/app/jscaip/Direction';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
+import { Router } from '@angular/router';
 
 import { EpaminondasRules } from 'src/app/games/epaminondas/EpaminondasRules';
 import { EpaminondasState } from 'src/app/games/epaminondas/EpaminondasState';
@@ -48,6 +49,12 @@ import { DvonnRules } from 'src/app/games/dvonn/DvonnRules';
 import { DvonnTutorial } from 'src/app/games/dvonn/DvonnTutorial';
 import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
 import { DvonnState } from 'src/app/games/dvonn/DvonnState';
+import { ApagosTutorial } from 'src/app/games/apagos/ApagosTutorial';
+import { ApagosRules } from 'src/app/games/apagos/ApagosRules';
+import { ApagosState } from 'src/app/games/apagos/ApagosState';
+import { ApagosMove } from 'src/app/games/apagos/ApagosMove';
+import { ApagosCoord } from 'src/app/games/apagos/ApagosCoord';
+import { Player } from 'src/app/jscaip/Player';
 
 describe('TutorialGameWrapperComponent (wrapper)', () => {
 
@@ -471,6 +478,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             expect(wrapper.stepIndex).toEqual(0);
         }));
         it('Should redirect to local game when asking for it when finished', fakeAsync(async() => {
+            const router: Router = TestBed.inject(Router);
             // Given a finish tutorial
             wrapper.startTutorial([
                 TutorialStep.informational(
@@ -483,11 +491,11 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await componentTestUtils.clickElement('#nextButton');
 
             // when clicking play locally
-            spyOn(componentTestUtils.wrapper.router, 'navigate').and.callThrough();
+            spyOn(router, 'navigate').and.callThrough();
             await componentTestUtils.clickElement('#playLocallyButton');
 
             // expect navigator to have been called
-            expect(componentTestUtils.wrapper.router.navigate).toHaveBeenCalledWith(['local/Quarto']);
+            expect(router.navigate).toHaveBeenCalledWith(['local/Quarto']);
         }));
         it('Should redirect to online game when asking for it when finished and user is online', fakeAsync(async() => {
             // Given a finish tutorial
@@ -967,6 +975,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
     });
     describe('Tutorials', () => {
         it('Should make sure that predicate step have healthy behaviors', fakeAsync(async() => {
+            const apagosTutorial: TutorialStep[] = new ApagosTutorial().tutorial;
             const dvonnTutorial: TutorialStep[] = new DvonnTutorial().tutorial;
             const epaminondasTutorial: TutorialStep[] = new EpaminondasTutorial().tutorial;
             const pentagoTutorial: TutorialStep[] = new PentagoTutorial().tutorial;
@@ -975,6 +984,24 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const sixTutorial: TutorialStep[] = new SixTutorial().tutorial;
             const yinshTutorial: TutorialStep[] = new YinshTutorial().tutorial;
             const stepExpectations: [Rules<Move, AbstractGameState>, TutorialStep, Move, MGPValidation][] = [
+                [
+                    new ApagosRules(ApagosState),
+                    apagosTutorial[2],
+                    ApagosMove.drop(ApagosCoord.ZERO, Player.ZERO),
+                    MGPValidation.failure($localize`This move is a drop, please do a transfer!`),
+                ],
+                [
+                    new ApagosRules(ApagosState),
+                    apagosTutorial[3],
+                    ApagosMove.drop(ApagosCoord.TWO, Player.ZERO),
+                    MGPValidation.failure($localize`You actively made your opponent win!`),
+                ],
+                [
+                    new ApagosRules(ApagosState),
+                    apagosTutorial[3],
+                    ApagosMove.transfer(ApagosCoord.THREE, ApagosCoord.TWO).get(),
+                    MGPValidation.failure($localize`Wrong choice, your opponent will win in the next turn no matter which piece is dropped!`),
+                ],
                 [
                     new DvonnRules(DvonnState),
                     dvonnTutorial[1],
@@ -1070,9 +1097,13 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 const move: Move = stepExpectation[2];
                 const validation: MGPValidation = stepExpectation[3];
                 const status: LegalityStatus = rules.isLegal(move, step.state);
-                expect(status.legal.reason).toBeNull();
-                const state: AbstractGameState = rules.applyLegalMove(move, step.state, status);
-                expect(step.predicate(move, state)).toEqual(validation);
+                if (status.legal.isSuccess()) {
+                    const state: AbstractGameState = rules.applyLegalMove(move, step.state, status);
+                    expect(step.predicate(move, state)).withContext('Move should lead to incorrect result').toEqual(validation);
+                } else {
+                    const context: string = 'Move should be legal to reach predicate but failed because';
+                    TestUtils.expectValidationSuccess(status.legal, context);
+                }
             }
         }));
         it('Should make sure all solutionMove are legal', fakeAsync(async() => {
@@ -1087,11 +1118,14 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 for (const step of steps) {
                     if (step.solutionMove != null) {
                         const status: LegalityStatus = rules.isLegal(step.solutionMove, step.state);
-                        expect(status.legal.reason).toBeNull();
-                        if (step.isPredicate()) {
-                            const state: AbstractGameState =
-                                rules.applyLegalMove(step.solutionMove, step.state, status);
-                            expect(step.predicate(step.solutionMove, state)).toEqual(MGPValidation.SUCCESS);
+                        if (status.legal.isSuccess()) {
+                            if (step.isPredicate()) {
+                                const state: AbstractGameState =
+                                    rules.applyLegalMove(step.solutionMove, step.state, status);
+                                expect(step.predicate(step.solutionMove, state)).toEqual(MGPValidation.SUCCESS);
+                            }
+                        } else {
+                            expect(status.legal.reason).withContext('Solution move should be legal but failed').toBeNull();
                         }
                     }
                 }

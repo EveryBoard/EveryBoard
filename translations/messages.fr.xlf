@@ -10,6 +10,10 @@
         <source>Be polite</source>
         <target>Soyez courtois</target>
       </trans-unit>
+      <trans-unit id="7206938270697807461" datatype="html">
+        <source>Only connected users can see the chat.</source>
+        <target>Seulement les utilisateurs connectés peuvent voir le chat.</target>
+      </trans-unit>
       <trans-unit id="8447591012079458095" datatype="html">
         <source>Hide chat</source>
         <target>Réduire le chat</target>
@@ -29,14 +33,6 @@
       <trans-unit id="5075342719298110640" datatype="html">
         <source><x id="PH" equiv-text="unreadMessages"/> new messages</source>
         <target><x id="PH" equiv-text="unreadMessages"/> nouveaux messages</target>
-      </trans-unit>
-      <trans-unit id="2449879448191193445" datatype="html">
-        <source>Successfully signed up</source>
-        <target>Inscription réussie</target>
-      </trans-unit>
-      <trans-unit id="5266968336610741593" datatype="html">
-        <source>An email will be sent to you: click on the link and reconnect yourself. This email could arrive in your spam folder.</source>
-        <target>Un email va vous être envoyé, cliquez sur le lien dans celui-ci et reconnectez-vous ! Attention, cet email pourrait arriver dans vos courriers indésirables.</target>
       </trans-unit>
       <trans-unit id="2821179408673282599" datatype="html">
         <source>Home</source>
@@ -66,10 +62,6 @@
         <source>Log out</source>
         <target>Se déconnecter</target>
       </trans-unit>
-      <trans-unit id="7028204981963450021" datatype="html">
-        <source>Sign up</source>
-        <target>S&apos;inscrire</target>
-      </trans-unit>
       <trans-unit id="2336550011721758066" datatype="html">
         <source>Log in</source>
         <target>Connexion</target>
@@ -82,33 +74,21 @@
         <source>Password</source>
         <target>Mot de passe</target>
       </trans-unit>
-      <trans-unit id="9018459935889527317" datatype="html">
-        <source>A confirmation email will be sent to validate your account.</source>
-        <target>Un email de confirmation vous sera envoyé pour valider votre compte.</target>
-      </trans-unit>
-      <trans-unit id="77522255637065336" datatype="html">
-        <source>Connection error</source>
-        <target>Erreur de connexion</target>
-      </trans-unit>
-      <trans-unit id="3119050750831891643" datatype="html">
-        <source>This password is incorrect.</source>
-        <target>Ce mot de passe est incorrect.</target>
-      </trans-unit>
-      <trans-unit id="5113647226865218037" datatype="html">
-        <source>This email address has no account on this website.</source>
-        <target>Cette adresse email n&apos;a pas de compte sur ce site.</target>
-      </trans-unit>
-      <trans-unit id="1988081660757251720" datatype="html">
-        <source>You must click the confirmation link that you should have received by email.</source>
-        <target>Vous devez aller dans vos mail confirmer votre inscription en cliquant sur le lien que nous vous avons envoyé d&apos;abord.</target>
+      <trans-unit id="4917036382252417719" datatype="html">
+        <source>Log in with Google</source>
+        <target>Se connecter avec Google</target>
       </trans-unit>
       <trans-unit id="850080272338290812" datatype="html">
         <source>No account?</source>
         <target>Pas de compte ?</target>
       </trans-unit>
-      <trans-unit id="8999284073934392732" datatype="html">
-        <source>Login with Google</source>
-        <target>Se connecter avec Google</target>
+      <trans-unit id="3301086086650990787" datatype="html">
+        <source>Register</source>
+        <target>Créer un compte</target>
+      </trans-unit>
+      <trans-unit id="77522255637065336" datatype="html">
+        <source>Connection error</source>
+        <target>Erreur de connexion</target>
       </trans-unit>
       <trans-unit id="6005801113696805305" datatype="html">
         <source>The replay game is loading, please wait, it should not take long.</source>
@@ -126,9 +106,17 @@
         <source>Create an online game</source>
         <target>Créer une partie en ligne</target>
       </trans-unit>
+      <trans-unit id="7016831866762941443" datatype="html">
+        <source>Pick a game</source>
+        <target>Choisissez un jeu</target>
+      </trans-unit>
       <trans-unit id="5561648955936795459" datatype="html">
         <source>Use simple mechanics to push 6 of the opponent&apos;s pieces out of the board!</source>
         <target>Utilisez des mécaniques simples pour pousser 6 pièces adverses hors du plateau !</target>
+      </trans-unit>
+      <trans-unit id="6379805581447060110" datatype="html">
+        <source>Very simple game, but, will you be able to win everytime?</source>
+        <target>Un jeu très simple, mais, saurez-vous gagner à chaque fois ?</target>
       </trans-unit>
       <trans-unit id="6262000022886850348" datatype="html">
         <source>The international version of the famous African strategy game!</source>
@@ -180,7 +168,7 @@
       </trans-unit>
       <trans-unit id="3383193846061013912" datatype="html">
         <source>Create a winning alignment. The problem: you don&apos;t pick the piece that you&apos;re placing on the board!</source>
-        <target>Faites un alignement gagnant. La difficulté : vous ne choisissez pas la pièce que vous placez !</target>
+        <target>Faites un alignement gagnant. La difficulté : vous ne choisissez pas la pièce que vous placez !</target>
       </trans-unit>
       <trans-unit id="3529667957993318888" datatype="html">
         <source>Align 5 of your pieces on a board where pieces slide!</source>
@@ -188,7 +176,7 @@
       </trans-unit>
       <trans-unit id="6046365494353024298" datatype="html">
         <source>Sandwich your opponent&apos;s pieces to dominate the board!</source>
-        <target>Prenez en sandwich les pièces adverses pour dominer le plateau !</target>
+        <target>Prenez en sandwich les pièces adverses pour dominer le plateau !</target>
       </trans-unit>
       <trans-unit id="1827371853303540301" datatype="html">
         <source>Immobilize one of your opponent&apos;s pyramids before your opponent does!</source>
@@ -294,6 +282,38 @@
         <source>Yinsh</source>
         <target>Yinsh</target>
       </trans-unit>
+      <trans-unit id="4497962271113144657" datatype="html">
+        <source>Apagos</source>
+        <target>Apagos</target>
+      </trans-unit>
+      <trans-unit id="2218572265318708454" datatype="html">
+        <source>Registering</source>
+        <target>Création de compte</target>
+      </trans-unit>
+      <trans-unit id="9018459935889527317" datatype="html">
+        <source>A confirmation email will be sent to validate your account.</source>
+        <target>Un email de confirmation vous sera envoyé pour valider votre compte.</target>
+      </trans-unit>
+      <trans-unit id="5248717555542428023" datatype="html">
+        <source>Username</source>
+        <target>Nom d'utilisateur</target>
+      </trans-unit>
+      <trans-unit id="8783355485855708287" datatype="html">
+        <source>The password should be at least 6 characters long</source>
+        <target>Le mot de passe doit faire au moins 6 caractères</target>
+      </trans-unit>
+      <trans-unit id="3412247232926911550" datatype="html">
+        <source>Have an account?</source>
+        <target>Vous avez déjà un compte ?</target>
+      </trans-unit>
+      <trans-unit id="6535780676661833462" datatype="html">
+        <source>Registration error</source>
+        <target>Erreur lors de la création du compte</target>
+      </trans-unit>
+      <trans-unit id="3204200407244124341" datatype="html">
+        <source>Register with Google</source>
+        <target>Créer un compte avec Google</target>
+      </trans-unit>
       <trans-unit id="7656395805241225659" datatype="html">
         <source>Games</source>
         <target>Parties</target>
@@ -329,6 +349,50 @@
       <trans-unit id="1670632975695309948" datatype="html">
         <source>Connected users:</source>
         <target>Utilisateurs connectés :</target>
+      </trans-unit>
+      <trans-unit id="8940072639524140983" datatype="html">
+        <source>The email has been sent</source>
+        <target>L'email a été envoyé</target>
+      </trans-unit>
+      <trans-unit id="141258547622133215" datatype="html">
+        <source>In order to finalize your account, you must choose a username.</source>
+        <target>Pour finaliser votre compte, vous devez choisir un nom d'utilisateur.</target>
+      </trans-unit>
+      <trans-unit id="7631774219107043658" datatype="html">
+        <source>Your account has now been finalized, you can go back to the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;[&apos;/server&apos;]&quot;&gt;"/>list of games<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
+        <target>Votre compte est maintenant finalisé, vous pouvez retourner à <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;[&apos;/server&apos;]&quot;&gt;"/>la liste des jeux<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
+      </trans-unit>
+      <trans-unit id="293336831363270094" datatype="html">
+        <source>Pick username</source>
+        <target>Choisir un nom d'utilisateur</target>
+      </trans-unit>
+      <trans-unit id="6996804354508674341" datatype="html">
+        <source>Account verification</source>
+        <target>Vérification du compte</target>
+      </trans-unit>
+      <trans-unit id="2730621369346437278" datatype="html">
+        <source>In order to finalize your account, you must click on the link that you should have received on your email address (<x id="INTERPOLATION" equiv-text="{{ emailAddress }}"/>). The email could be in your spam folder.</source>
+        <target>Pour finaliser votre compte, vous devez cliquer sur le lien qui a été envoyé sur votre adresse email (<x id="INTERPOLATION" equiv-text="{{ emailAddress }}"/>). Cet email peut être arrivé dans vos spams.</target>
+      </trans-unit>
+      <trans-unit id="4295852829952528556" datatype="html">
+        <source>Once you have verified your email, click on the following button:</source>
+        <target>Après avoir vérifié votre email, clickez sur le bouton suivant :</target>
+      </trans-unit>
+      <trans-unit id="881022283381326299" datatype="html">
+        <source>Finalize email verification</source>
+        <target>Finaliser la vérification d'email</target>
+      </trans-unit>
+      <trans-unit id="921630192161780240" datatype="html">
+        <source>If you have not received the verification email, click on the following button:</source>
+        <target>Si vous n'avez pas reçu d'email de vérification, cliquez sur le bouton suivant :</target>
+      </trans-unit>
+      <trans-unit id="4592546836544908536" datatype="html">
+        <source>Send verification email again</source>
+        <target>Ré-envoyer l'email de vérification</target>
+      </trans-unit>
+      <trans-unit id="3862672024084051383" datatype="html">
+        <source>You have not verified your email! Click on the link in the verification email.</source>
+        <target>Vous n'avez pas vérifié votre email! Cliquez sur le lien dans l'email de vérification.</target>
       </trans-unit>
       <trans-unit id="7079545056368231407" datatype="html">
         <source>See the game list</source>
@@ -518,6 +582,10 @@
         <source>The opponent</source>
         <target>L&apos;adversaire</target>
       </trans-unit>
+      <trans-unit id="4247449258896721566" datatype="html">
+        <source>Opponents</source>
+        <target>Adversaires</target>
+      </trans-unit>
       <trans-unit id="5268374384098882347" datatype="html">
         <source>Potential opponents that join the game will appear here.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/>Wait for an opponent to join, so that you can pick one.</source>
         <target>Les adversaires potentiels qui rejoignent la partie apparaîtront ici.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Attendez qu&apos;un adversaire vous rejoigne pour pouvoir en choisir un.</target>
@@ -631,8 +699,8 @@
         <target>La partie a été annulée !</target>
       </trans-unit>
       <trans-unit id="7137133530752645682" datatype="html">
-        <source><x id="PH" equiv-text="userPseudo"/> left the game, please pick another opponent.</source>
-        <target><x id="PH" equiv-text="userPseudo"/> a quitté la partie, veuillez choisir un autre adversaire.</target>
+        <source><x id="PH" equiv-text="username"/> left the game, please pick another opponent.</source>
+        <target><x id="PH" equiv-text="username"/> a quitté la partie, veuillez choisir un autre adversaire.</target>
       </trans-unit>
       <trans-unit id="6594123400599013490" datatype="html">
         <source>Step finished!</source>
@@ -749,6 +817,50 @@
       <trans-unit id="8139485336036692612" datatype="html">
         <source>Failed!</source>
         <target>Raté !</target>
+      </trans-unit>
+      <trans-unit id="4382056880714150954" datatype="html">
+        <source>Pieces should only move downward!</source>
+        <target>Les pièces ne peuvent se déplacer que vers le bas !</target>
+      </trans-unit>
+      <trans-unit id="6303549979055320494" datatype="html">
+        <source>That square is already full, you cannot put a piece in it!</source>
+        <target>Cette case est déjà complète, vous ne pouvez pas y ajouter une pièce !</target>
+      </trans-unit>
+      <trans-unit id="4038709557650879610" datatype="html">
+        <source>You have no pieces in that square, select one that contains at least one of your pieces!</source>
+        <target>Vous n'avez plus de pièces dans cette case, choisissez-en une qui contient au moins une de vos pièces !</target>
+      </trans-unit>
+      <trans-unit id="7840393692836937676" datatype="html">
+        <source>There are no remaining pieces of that color to drop!</source>
+        <target>Il ne reste plus de pièces de cette couleur à poser !</target>
+      </trans-unit>
+      <trans-unit id="139135108801629927" datatype="html">
+        <source>There is no possible transfer from that square!</source>
+        <target>Il n'y a pas de transfert possible pour cette case !</target>
+      </trans-unit>
+      <trans-unit id="8322338146903087210" datatype="html">
+        <source>At Apagos, there are 4 squares, each of them has a fixed number of holes for pieces. Each player starts with 10 pieces. Dark pieces belong to the first player, light pieces belong to the second one. The game ends when no one can play. The player owning the most pieces in the rightmost square wins!</source>
+        <target>À Apagos, il y a 4 cases, chacune contient un nombre fixe d'emplacements pouvant contenir des pièces. Chaque joueur commence avec 10 pièces. Les pièces foncées appartiennent au premier joueur, les claires aux deuxième. Le jeu fini quand personne ne sais jouer. Le joueur possédant le plus de pièce dans la case la plus à droite gagne !</target>
+      </trans-unit>
+      <trans-unit id="4304656288372447065" datatype="html">
+        <source>Drop</source>
+        <target>Pose</target>
+      </trans-unit>
+      <trans-unit id="6297839182321652830" datatype="html">
+        <source>There are two kind of moves. One is the drop. To do one, you must click on a visible arrow, being of your color or the opponent's. If the chosen square is one of the 3 leftmost ones, it will exchange position with the square on its right. You play Light.&lt;br/&gt;&lt;br/&gt;Drop a piece on one of thoses three squares.</source>
+        <target>Un des deux types de coup est la pose. Pour en faire une, vous devez cliquer sur une flèche, qu'elle soit de votre couleur ou de celle de l'adversaire. Si la case choisie est l'une des trois les plus à gauche, elle échangera sa place avec celle juste à sa droite. Vous jouez Clair.&lt;br/&gt;&lt;br/&gt;Posez une pièce sur l'une de ces trois cases.</target>
+      </trans-unit>
+      <trans-unit id="8402696305361715603" datatype="html">
+        <source>Transfer</source>
+        <target>Transfert</target>
+      </trans-unit>
+      <trans-unit id="759585629296293659" datatype="html">
+        <source>The other kind of move is the transfer.&lt;ol&gt;&lt;li&gt;Choose one of your pieces on the board by clicking on the square in which it is.&lt;/li&gt;&lt;li&gt;Choose its landing square by clicking on one of the arrow to finish the transfer.&lt;/li&gt;&lt;/ol&gt;It can only be done with your pieces, from an higher square to a lower one.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a transfer!</source>
+        <target>L'autre type de mouvement est le transfert.&lt;ol&gt;&lt;li&gt;Choisissez une de vos pièces sur le plateau en cliquant sur la case qui la contient.&lt;/li&gt;&lt;li&gt;Choisissez sa case d'atterrissage en cliquant sur la flèche au dessus de celle-ci pour finir le transfert.&lt;/li&gt;&lt;/ol&gt;Cela peut seulement être fait avec une de vos pièces, d'une case à une autre case plus basse.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites un transfert!</target>
+      </trans-unit>
+      <trans-unit id="2553091915151695430" datatype="html">
+        <source>This move is a drop, please do a transfer!</source>
+        <target>Ce coup est une pose! Veuillez faire un transfert!</target>
       </trans-unit>
       <trans-unit id="8572141978310888290" datatype="html">
         <source>You cannot distribute from the opponent&apos;s home.</source>
@@ -1202,8 +1314,8 @@
         <source>You must pick your piece among the remaining ones.</source>
         <target>Veuillez choisir une de vos pièces parmi les pièces restantes.</target>
       </trans-unit>
-      <trans-unit id="6944709858503579555" datatype="html">
-        <source>You must pick one of your remaining piece or one piece on the board that is the biggest of its square.</source>
+      <trans-unit id="5001561383056924621" datatype="html">
+        <source>You must pick one of your remaining pieces or one piece on the board that is the biggest of its square.</source>
         <target>Veuillez sélectionner une de vos pièces restantes, ou une case sur le plateau où vous avez la pièce la plus grande.</target>
       </trans-unit>
       <trans-unit id="7341165560842722107" datatype="html">
@@ -2014,6 +2126,17 @@
       <trans-unit id="1116173898665219180" datatype="html">
         <source>Victory</source>
         <target>Victoire</target>
+      </trans-unit><trans-unit id="7759745104864966912" datatype="html">
+        <source>When you put a last piece into a square, the games end. In this configuration you can win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do the winning move!</source>
+        <target>Quand vous posez une dernière pièce dans une case, le jeu fini. Dans cette configuration vous pouvez gagner.&lt;br/&gt;&lt;br/&gt;Vous jouez Clair, faites le mouvement gagnant !</target>
+      </trans-unit>
+      <trans-unit id="3614265026318366150" datatype="html">
+        <source>You actively made your opponent win!</source>
+        <target>Vous avez activement fait gagner votre adversaire !</target>
+      </trans-unit>
+      <trans-unit id="6535908388530528403" datatype="html">
+        <source>Wrong choice, your opponent will win in the next turn no matter which piece is dropped!</source>
+        <target>Mauvais choix, votre adversaire va gagner au prochain tour quelle que soit la pièce déposée !</target>
       </trans-unit>
       <trans-unit id="5880375817695791500" datatype="html">
         <source>You&apos;re playing Dark.
@@ -2670,7 +2793,7 @@
       </trans-unit>
       <trans-unit id="7208567678509553256" datatype="html">
         <source>This move does not disconnect your opponent&apos;s pieces. Try again with another piece.</source>
-        <target>Ce mouvement ne déconnecte pas du jeu de pièces adverses ! Réessayez avec une autre pièce !</target>
+        <target>Ce mouvement ne déconnecte pas du jeu de pièces adverses ! Réessayez avec une autre pièce !</target>
       </trans-unit>
       <trans-unit id="6058377963019501239" datatype="html">
         <source>You lost one of your pieces during this move. There is a way to disconnect an opponent&apos;s piece without losing any of yours, try again!</source>
@@ -2938,11 +3061,11 @@
       </trans-unit>
       <trans-unit id="7525019515401716113" datatype="html">
         <source>Failed! You need to align 5 markers of your color in order to get them, and to get a ring at the same time.</source>
-        <target>Raté ! Vous devez aligner 5 marqueurs de votre couleur pour pouvoir les capturer, ainsi que pour récupérer un anneau.</target>
+        <target>Raté ! Vous devez aligner 5 marqueurs de votre couleur pour pouvoir les capturer, ainsi que pour récupérer un anneau.</target>
       </trans-unit>
       <trans-unit id="4464967427027571359" datatype="html">
         <source>Failed! You can capture two rings in total, by capturing two times 5 of your markers. Try again.</source>
-        <target>Raté ! Vous pouvez capturer deux anneaux en tout, en procédant à deux captures de 5 de vos marqueurs. Réessayez.</target>
+        <target>Raté ! Vous pouvez capturer deux anneaux en tout, en procédant à deux captures de 5 de vos marqueurs. Réessayez.</target>
       </trans-unit>
       <trans-unit id="2051808586522733055" datatype="html">
         <source>The goal at Yinsh is to capture three rings in total.
@@ -3018,9 +3141,9 @@
         During the capture selection, if you see that the marker you clicked belongs to two captures, you have to click on a second marker to avoid any ambiguity.&lt;br/&gt;&lt;br/&gt;
         Here, you can capture two rings, do it!</source>
         <target>Il est possible que lors d'un tour, vous ayez la possibilité de choisir entre plusieurs captures,
-        ou même d'effectuer plusieurs captures !
+        ou même d'effectuer plusieurs captures !
         Lorsque, lors de la sélection d'une capture, le marqueur sur lequel vous avez cliqué appartient à deux captures, il vous faudra cliquer sur un second marqueur pour lever toute ambiguité.&lt;br/&gt;&lt;br/&gt;
-        Ici, vous pouvez récupérer deux anneaux, faites-le !</target>
+        Ici, vous pouvez récupérer deux anneaux, faites-le !</target>
       </trans-unit>
       <trans-unit id="6079681718244869210" datatype="html">
         <source>You cannot pick a piece of the opponent.</source>
@@ -3053,6 +3176,50 @@
       <trans-unit id="5966391152315784819" datatype="html">
         <source>You have selected an empty space, you must select one of your own pieces.</source>
         <target>Vous avez sélectionné une case vide, vous devez sélectionner l&apos;une de vos pièces.</target>
+      </trans-unit>
+      <trans-unit id="4047787446065773376" datatype="html">
+        <source>There are missing fields in the registration form, please check that you filled in all fields.</source>
+        <target>Il manque certains champs dans le formulaire, vérifiez que vous avez complété tous les champs.</target>
+      </trans-unit>
+      <trans-unit id="7065414996126753833" datatype="html">
+        <source>This username is already in use.</source>
+        <target>Ce nom d'utilisateur est déjà utilisé.</target>
+      </trans-unit>
+      <trans-unit id="301565970318735798" datatype="html">
+        <source>This email address is already in use.</source>
+        <target>Cette addresse email est déjà utilisée.</target>
+      </trans-unit>
+      <trans-unit id="3098841477756660384" datatype="html">
+        <source>This email address is invalid.</source>
+        <target>Cette addresse email est invalide.</target>
+      </trans-unit>
+      <trans-unit id="6256195380439544351" datatype="html">
+        <source>You have entered an invalid email or password.</source>
+        <target>Vous avez entré un email ou mot de passe invalide.</target>
+      </trans-unit>
+      <trans-unit id="321667206564180755" datatype="html">
+        <source>The credential is invalid or has expired, please try again.</source>
+        <target>Vos identifiants sont invalides ou ont expiré, essayez à nouveau.</target>
+      </trans-unit>
+      <trans-unit id="2159810188120268887" datatype="html">
+        <source>Your password is too weak, please use a stronger password.</source>
+        <target>Votre mot de passe est trop faible, utilisez un mot de passe plus fort.</target>
+      </trans-unit>
+      <trans-unit id="2368572652596435161" datatype="html">
+        <source>There has been too many requests from your device. You are temporarily blocked due to unusual activity. Try again later.</source>
+        <target>Il y a eu trop de requêtes depuis votre appareil. Vous êtes temporairement bloqué suite à une activité inhabituelle. Réessayez plus tard.</target>
+      </trans-unit>
+      <trans-unit id="8414332856711181199" datatype="html">
+        <source>You closed the authentication popup without finalizing your log in.</source>
+        <target>Vous avez fermé la fenêtre d'authentification sans finaliser votre connexion.</target>
+      </trans-unit>
+      <trans-unit id="4550935601489856530" datatype="html">
+        <source>Your username may not be empty.</source>
+        <target>Votre nom d'utilisateur ne peut pas être vide.</target>
+      </trans-unit>
+      <trans-unit id="3618174181025506941" datatype="html">
+        <source>This username is already in use, please select a different one.</source>
+        <target>Ce nom d'utilisateur est déjà utilisé, veuillez en utiliser un autre.</target>
       </trans-unit>
       <trans-unit id="75196759111440200" datatype="html">
         <source>You&apos;re not allowed to send a message here.</source>

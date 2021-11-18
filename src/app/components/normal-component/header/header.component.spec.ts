@@ -1,5 +1,5 @@
 import { fakeAsync } from '@angular/core/testing';
-import { AuthenticationService } from 'src/app/services/AuthenticationService';
+import { AuthUser } from 'src/app/services/AuthenticationService';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { LocaleUtils } from 'src/app/utils/LocaleUtils';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
@@ -25,15 +25,10 @@ describe('HeaderComponent', () => {
         await testUtils.clickElement('#logout');
         expect(testUtils.getComponent().authenticationService.disconnect).toHaveBeenCalledTimes(1);
     }));
-    it('should have empty username when user is not authenticated', fakeAsync(async() => {
-        AuthenticationServiceMock.setUser(AuthenticationService.NOT_AUTHENTICATED);
-        testUtils.detectChanges();
-        expect(testUtils.getComponent().userName).toBeNull();
-    }));
     it('should have empty username when user is not connected', fakeAsync(async() => {
-        AuthenticationServiceMock.setUser(AuthenticationService.NOT_CONNECTED);
+        AuthenticationServiceMock.setUser(AuthUser.NOT_CONNECTED);
         testUtils.detectChanges();
-        expect(testUtils.getComponent().userName).toBeNull();
+        expect(testUtils.getComponent().username).toBeNull();
     }));
     it('should use fr as the default language if the language of the navigator is not set', fakeAsync(async() => {
         // given a navigator where the language is not set

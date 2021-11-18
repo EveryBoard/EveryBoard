@@ -6,7 +6,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { ReversiLegalityStatus } from '../ReversiLegalityStatus';
-import { expectToBeDraw, expectToBeVictoryFor } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Minimax } from 'src/app/jscaip/Minimax';
 
 describe('ReversiRules', () => {
@@ -93,7 +93,7 @@ describe('ReversiRules', () => {
             const resultingState: ReversiState = rules.applyLegalMove(move, state, status);
             const expectedState: ReversiState = new ReversiState(expectedBoard, 60);
             expect(resultingState).toEqual(expectedState);
-            expectToBeVictoryFor(rules, new MGPNode(null, move, expectedState), Player.ONE, minimaxes);
+            RulesUtils.expectToBeVictoryFor(rules, new MGPNode(null, move, expectedState), Player.ONE, minimaxes);
         });
         it('Should consider the player with the more point the winner at the end (Player.ZERO remix)', () => {
             const board: Table<Player> = [
@@ -123,7 +123,7 @@ describe('ReversiRules', () => {
             const resultingState: ReversiState = rules.applyLegalMove(move, state, status);
             const expectedState: ReversiState = new ReversiState(expectedBoard, 61);
             expect(resultingState).toEqual(expectedState);
-            expectToBeVictoryFor(rules, new MGPNode(null, move, expectedState), Player.ZERO, minimaxes);
+            RulesUtils.expectToBeVictoryFor(rules, new MGPNode(null, move, expectedState), Player.ZERO, minimaxes);
         });
         it('Should recognize draws', () => {
             const board: Table<Player> = [
@@ -154,7 +154,7 @@ describe('ReversiRules', () => {
             const expectedState: ReversiState = new ReversiState(expectedBoard, 61);
             expect(resultingState).toEqual(expectedState);
             const node: ReversiNode = new MGPNode(null, move, resultingState);
-            expectToBeDraw(rules, node, minimaxes);
+            RulesUtils.expectToBeDraw(rules, node, minimaxes);
         });
     });
 });

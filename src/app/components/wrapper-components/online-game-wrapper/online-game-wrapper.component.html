@@ -1,7 +1,7 @@
 <app-part-creation id="partCreation" #partCreation
                    *ngIf="gameStarted === false"
                    [partId]="currentPartId"
-                   [userName]="userName"
+                   [userName]="getPlayerName()"
                    (gameStartNotification)="startGame($event)">
 </app-part-creation>
 
@@ -13,7 +13,7 @@
             <div class="block" id="turnIndicator" *ngIf="currentPart">
                 <p class="subtitle" i18n>Turn n°{{ currentPart.getTurn() + 1 }}</p>
                 <p class="subtitle" id="currentPlayerIndicator" *ngIf="endGame === false">
-                    <ng-container *ngIf="currentPlayer === userName else opponentsTurn" i18n
+                    <ng-container *ngIf="currentPlayer === getPlayerName() else opponentsTurn" i18n
                     >It is your turn.</ng-container>
                     <ng-template #opponentsTurn i18n
                     >It is {{ currentPlayer }}'s turn.</ng-template>
@@ -78,7 +78,7 @@
                     i18n
             >Reject draw</button>
             <button class="button is-fullwidth mb-1"
-                    *ngIf="endGame === false && isPlaying() && gameComponent.canPass && (currentPlayer === userName)"
+                    *ngIf="endGame === false && isPlaying() && gameComponent.canPass && (currentPlayer === getPlayerName())"
                     id="passButton"
                     (click)="gameComponent.pass()"
                     i18n
@@ -108,20 +108,20 @@
                     <p class="title" *ngIf="currentPart.getWinner() == null" i18n>Draw</p>
                 </div>
                 <div *ngIf="currentPart.isWin()">
-                    <p class="title" id="youWonIndicator" *ngIf="currentPart.getWinner() === userName" i18n>You won.</p>
-                    <p class="title" *ngIf="(currentPart.getWinner() !== userName) && isPlaying()" i18n>You lost.</p>
+                    <p class="title" id="youWonIndicator" *ngIf="currentPart.getWinner() === getPlayerName()" i18n>You won.</p>
+                    <p class="title" *ngIf="(currentPart.getWinner() !== getPlayerName()) && isPlaying()" i18n>You lost.</p>
                     <p class="title" *ngIf="observerRole === 2" i18n>{{ currentPart.getWinner() }} won.</p>
                 </div>
                 <div *ngIf="currentPart.isTimeout()">
-                    <p class="title" id="youWonIndicator" *ngIf="(currentPart.getWinner() === userName)" i18n>{{ currentPart.getLoser() }} has reached their time limit. You won.</p>
-                    <p class="title" *ngIf="(currentPart.getWinner() !== userName) && isPlaying()" i18n>You reached your time limit.</p>
+                    <p class="title" id="youWonIndicator" *ngIf="(currentPart.getWinner() === getPlayerName())" i18n>{{ currentPart.getLoser() }} has reached their time limit. You won.</p>
+                    <p class="title" *ngIf="(currentPart.getWinner() !== getPlayerName()) && isPlaying()" i18n>You reached your time limit.</p>
                     <p class="title" *ngIf="observerRole === 2" i18n>{{ currentPart.getLoser() }} has reached their time limit.</p>
                 </div>
                 <div *ngIf="currentPart.isResign()">
                     <p class="title" id="resignIndicator"
-                       *ngIf="(currentPart.getWinner() !== userName) && isPlaying()" i18n>You resigned.</p>
+                       *ngIf="(currentPart.getWinner() !== getPlayerName()) && isPlaying()" i18n>You resigned.</p>
                     <p class="title" id="resignIndicator"
-                       *ngIf="observerRole === 2 || currentPart.getWinner() === userName" i18n>{{ currentPart.getLoser() }} has resigned.</p>
+                       *ngIf="observerRole === 2 || currentPart.getWinner() === getPlayerName()" i18n>{{ currentPart.getLoser() }} has resigned.</p>
                 </div>
 
             </div>
