@@ -77,12 +77,14 @@ export class RulesUtils {
     public static expectStateToBePreVictory(state: AbstractGameState,
                                             previousMove: Move,
                                             player: Player,
-                                            minimax: Minimax<Move, AbstractGameState>)
+                                            minimaxes: Minimax<Move, AbstractGameState>[])
     : void
     {
-        const value: number = minimax.getBoardNumericValue(new MGPNode(state, null, previousMove));
-        const expectedValue: number = player.getPreVictory();
-        expect(value).toBe(expectedValue);
+        for (const minimax of minimaxes) {
+            const value: number = minimax.getBoardNumericValue(new MGPNode(state, null, previousMove));
+            const expectedValue: number = player.getPreVictory();
+            expect(value).toBe(expectedValue);
+        }
     }
     public static expectSecondStateToBeBetterThanFirst(weakerState: AbstractGameState,
                                                        weakMove: Move,

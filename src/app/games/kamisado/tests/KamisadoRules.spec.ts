@@ -201,6 +201,28 @@ describe('KamisadoRules:', () => {
             RulesUtils.expectMoveFailure(rules, state, verticalBackwardMove, reason);
             RulesUtils.expectMoveFailure(rules, state, diagonalyBackwardMove, reason);
         });
+        it('should forbid horizontal moves', () => {
+            // Given any board
+            const board: Table<KamisadoPiece> = [
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _],
+                [r, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _],
+            ];
+            const state: KamisadoState =
+                new KamisadoState(7, KamisadoColor.RED, MGPOptional.of(new Coord(0, 6)), false, board);
+
+            // When moving backward
+            const move: KamisadoMove = KamisadoMove.of(new Coord(0, 6), new Coord(7, 6));
+
+            // Then the move should be illegal
+            const reason: string = KamisadoFailure.DIRECTION_NOT_ALLOWED();
+            RulesUtils.expectMoveFailure(rules, state, move, reason);
+        });
         it('should forbid diagonal moves with obstacles', () => {
             // Given any board where passing over a piece is possible
             const board: Table<KamisadoPiece> = [

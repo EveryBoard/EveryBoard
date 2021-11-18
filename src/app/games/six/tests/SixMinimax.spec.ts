@@ -57,7 +57,7 @@ describe('SixMinimax', () => {
                 [X, X, X, X, X],
             ], 2);
             const previousMove: SixMove = SixMove.fromDrop(new Coord(0, 0));
-            RulesUtils.expectStateToBePreVictory(state, previousMove, Player.ONE, minimax);
+            RulesUtils.expectStateToBePreVictory(state, previousMove, Player.ONE, [minimax]);
         });
         it('should know that full-bowtie aligned with two empty extension mean PRE_VICTORY', () => {
             const state: SixState = SixState.fromRepresentation([
@@ -68,7 +68,7 @@ describe('SixMinimax', () => {
 
             ], 2);
             const previousMove: SixMove = SixMove.fromDrop(new Coord(2, 2));
-            RulesUtils.expectStateToBePreVictory(state, previousMove, Player.ONE, minimax);
+            RulesUtils.expectStateToBePreVictory(state, previousMove, Player.ONE, [minimax]);
         });
         it('shound only count one preVictory when one coord is a forcing move for two lines', () => {
             const board: number[][] = [

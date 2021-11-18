@@ -54,17 +54,7 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
             this.last = new Coord(lastMove.x, y);
         }
     }
-    public getCaseClasses(x: number, y: number): string[] {
-        const coord: Coord = new Coord(x, y);
-        const classes: string[] = [];
-        if (this.victoryCoords.some((c: Coord): boolean => c.equals(coord))) {
-            classes.push('victory-stroke');
-        } else if (this.last && this.last.equals(coord)) {
-            classes.push('last-move');
-        }
-        return classes;
-    }
-    public getCaseFillClass(x: number, y: number): string[] {
+    public getSquareFillClass(x: number, y: number): string[] {
         const content: Player = this.board[y][x];
         return [this.getPlayerClass(content)];
     }

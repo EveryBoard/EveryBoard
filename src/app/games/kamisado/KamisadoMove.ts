@@ -5,7 +5,7 @@ import { KamisadoBoard } from './KamisadoBoard';
 
 export class KamisadoMove extends MoveCoordToCoord {
     // The PASS move is encoded as a MoveCoordToCoord that is out of the board
-    public static PASS: KamisadoMove = new KamisadoMove(new Coord(-1, -1), new Coord(-2, -2));
+    public static PASS: KamisadoMove = new KamisadoMove(new Coord(-2, -2), new Coord(-3, -3));
     public static encoder: NumberEncoder<KamisadoMove> = new class extends NumberEncoder<KamisadoMove> {
         public maxValue(): number {
             return 8 * 4096 + 8 * 256 + 8 * 16 + 8;

@@ -16,7 +16,7 @@
                     [attr.cx]="(CASE_SIZE * x) + (CASE_SIZE / 2)"
                     [attr.cy]="(CASE_SIZE * y) + (CASE_SIZE / 2)"
                     [attr.r]="(CASE_SIZE / 2) - STROKE_WIDTH"
-                    [ngClass]="getCaseFillClass(x, y)"
+                    [ngClass]="getSquareFillClass(x, y)"
                     class="base"
                     pointer-events="fill"
             />
@@ -30,7 +30,7 @@
           class="base no-fill last-move mid-stroke"
     />
     <rect *ngFor="let coord of victoryCoords"
-          id="click_{{ x }}"
+          id="victory_coord_{{ coord.x }}_{{ coord.y }}"
           (click)="onClick(x)"
           [attr.x]="CASE_SIZE * coord.x"
           [attr.y]="CASE_SIZE * coord.y"
