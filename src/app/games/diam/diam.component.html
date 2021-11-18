@@ -1,40 +1,38 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="auto"
-     viewBox="-100 -50 800 600"
+     viewBox="-110 -120 800 710"
      preserveAspectRatio="xMidYMid meet">
     <defs>
         <g id="piece">
-            <path
-                  d="m 1.5479196,18.241506 v 35.02576 h 0.05435 a 42.677371,15.279491 0 0 0 42.6320364,14.78333 42.677371,15.279491 0 0 0 42.632005,-14.78333 h 0.0745 v -35.02576 z" />
-            <ellipse
-                     style="filter: brightness(0.8);"
-                     cx="44.23785" cy="16.517565" rx="42.970371" ry="15.250085" />
+            <path d="m 1.5479196,18.241506 v 35.02576 h 0.05435 a 42.677371,15.279491 0 0 0 42.6320364,14.78333 42.677371,15.279491 0 0 0 42.632005,-14.78333 h 0.0745 v -35.02576 z" />
+            <ellipse class="low-brightness" cx="44.23785" cy="16.517565" rx="42.970371" ry="15.250085" />
         />
         </g>
     </defs>
     <g *ngFor="let x of [0, 1, 2, 3, 4, 5, 6, 7]">
         <path id="click_{{ x }}"
               class="base mid-stroke"
+              [ngClass]="viewInfo.boardInfo[x].caseClasses"
               (click)="onCaseClick(x)"
               [attr.d]="BOARD_PATHS[x]" />
-        <path class="base mid-stroke"
+        <path class="base mid-stroke high-brightness"
+              [ngClass]="viewInfo.boardInfo[x].caseClasses"
               (click)="onCaseClick(x)"
-              [attr.d]="DECORATION_PATHS[x]"
-              style="filter: brightness(1.1);"/>
+              [attr.d]="DECORATION_PATHS[x]"/>
     </g>
-    <g *ngFor="let x of [0, 1, 2, 3, 4, 5, 6, 7]">
+    <g *ngFor="let x of [1, 2, 3, 4, 5, 6, 7, 0]"> <!-- This is the required order for drawing the piece because they could overlap otherwise -->
         <use *ngFor="let piece of viewInfo.boardInfo[x].pieces"
              id="click_{{ x }}_{{ piece.y }}"
+             class="base mid-stroke"
+             [ngClass]="piece.classes"
              (click)="onPieceInGameClick(x, piece.y)"
              [attr.x]="piece.drawPosition.x"
              [attr.y]="piece.drawPosition.y"
-             xlink:href="#piece"
-             class="base mid-stroke"
-             [ngClass]="piece.classes" />
+             xlink:href="#piece" />
     </g>
 
     <use *ngFor="let piece of viewInfo.remainingPieces"
-         (click)="onRemainingPieceClick(piece.actualPiece, )"
+         (click)="onRemainingPieceClick(piece.actualPiece)"
          id="piece_{{ piece.actualPiece.owner.value }}_{{ piece.actualPiece.otherPieceType ? 1 : 0 }}"
          [attr.x]="piece.drawPosition.x"
          [attr.y]="piece.drawPosition.y"

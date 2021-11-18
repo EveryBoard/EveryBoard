@@ -3,7 +3,7 @@ import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 import { DiamMoveDrop, DiamMoveEncoder, DiamMoveShift } from '../DiamMove';
 import { DiamPiece } from '../DiamPiece';
 
-fdescribe('DiamMove', () => {
+describe('DiamMove', () => {
     describe('drop', () => {
         it('should forbid a drop of an empty piece', () => {
             expect(() => new DiamMoveDrop(3, DiamPiece.EMPTY)).toThrowError('Cannot drop an empty piece');

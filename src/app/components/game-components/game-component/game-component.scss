@@ -162,6 +162,12 @@ $victory: yellow;
 .color-variant {
     filter: hue-rotate(20deg);
 }
+.low-brightness {
+    filter: brightness(0.8);
+}
+.high-brightness {
+    filter: brightness(1.1);
+}
 svg {
     max-height: calc(100vh - 10rem); /* Full height minus the navbar */
 }

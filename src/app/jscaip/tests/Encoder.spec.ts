@@ -20,7 +20,7 @@ export class NumberEncoderTestUtils {
     }
 }
 
-fdescribe('NumberEncoder', () => {
+describe('NumberEncoder', () => {
 
     describe('booleanEncoder', () => {
         const encoder: NumberEncoder<boolean> = NumberEncoder.booleanEncoder;

@@ -3,6 +3,7 @@ import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testin
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppModule } from 'src/app/app.module';
+import { DiamPiece } from 'src/app/games/diam/DiamPiece';
 import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { Direction } from 'src/app/jscaip/Direction';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
@@ -48,7 +49,11 @@ describe('GameComponent', () => {
             },
             Awale: { onClick: [0, 0] },
             Coerceo: { onClick: [0, 0] },
-            Diam: { onClick: [0, 0] },
+            Diam: {
+                onCaseClick: [0],
+                onPieceInGameClick: [0, 0],
+                onRemainingPieceClick: [DiamPiece.ZERO_FIRST],
+            },
             Dvonn: { onClick: [0, 0] },
             Encapsule: {
                 onBoardClick: [0, 0],

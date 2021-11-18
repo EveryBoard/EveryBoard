@@ -36,8 +36,7 @@ export class DiamRules extends Rules<DiamMove, DiamState, LegalityStatus> {
         const targetX: number = shift.getTarget();
         let targetY: number = 3 - state.getStackHeight(targetX);
         let sourceY: number = shift.start.y;
-        console.log({sourceX: shift.start.x, sourceY, targetY, targetX})
-        while (sourceY > 0 && state.getPieceAtXY(shift.start.x, sourceY) !== DiamPiece.EMPTY) {
+        while (sourceY >= 0 && state.getPieceAtXY(shift.start.x, sourceY) !== DiamPiece.EMPTY) {
             newBoard[targetY][targetX] = state.getPieceAtXY(shift.start.x, sourceY);
             newBoard[sourceY][shift.start.x] = DiamPiece.EMPTY;
             targetY--;
@@ -71,7 +70,7 @@ export class DiamRules extends Rules<DiamMove, DiamState, LegalityStatus> {
         }
         const resultingHeight: number =
             // the height of the stack we move
-            state.getStackHeight(shift.start.x - (3 - shift.start.y)) +
+            state.getStackHeight(shift.start.x) - (3 - shift.start.y) +
             // the hegiht of the target
             state.getStackHeight(shift.getTarget());
         if (resultingHeight > 4) {
@@ -88,7 +87,7 @@ export class DiamRules extends Rules<DiamMove, DiamState, LegalityStatus> {
             return GameStatus.ONGOING;
         }
     }
-    private findHighestAlignment(state: DiamState): MGPOptional<Coord> {
+    public findHighestAlignment(state: DiamState): MGPOptional<Coord> {
         for (let x: number = 0; x < 4; x++) {
             for (let y: number = 0; y < 3; y++) { // skip y = 3 because ground alignment isn't a win
                 const pieceHere: DiamPiece = state.getPieceAtXY(x, y);

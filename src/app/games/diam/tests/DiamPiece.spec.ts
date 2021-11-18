@@ -1,7 +1,7 @@
 import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 import { DiamPiece } from '../DiamPiece';
 
-fdescribe('DiamPiece', () => {
+describe('DiamPiece', () => {
     it('should correctly encode and decode all pieces', () => {
         for (const piece of [
             DiamPiece.EMPTY,

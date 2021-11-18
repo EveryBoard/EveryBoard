@@ -3,7 +3,7 @@ import { DiamPiece } from '../DiamPiece';
 import { DiamNode, DiamRules } from '../DiamRules';
 import { DiamState } from '../DiamState';
 
-fdescribe('DiamMinimax', () => {
+describe('DiamMinimax', () => {
 
     let rules: DiamRules;
     let minimax: DiamDummyMinimax;

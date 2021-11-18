@@ -41,7 +41,7 @@ function expectMoveFailure(rules: Rules<Move, AbstractGameState>,
     expect(legality.legal.reason).toBe(reason);
 }
 
-fdescribe('DiamRules', () => {
+describe('DiamRules', () => {
     const __: DiamPiece = DiamPiece.EMPTY;
     const A1: DiamPiece = DiamPiece.ZERO_FIRST;
     const A2: DiamPiece = DiamPiece.ZERO_SECOND;
@@ -127,6 +127,44 @@ fdescribe('DiamRules', () => {
                 [A2, __, __, __, __, __, __, __],
                 [B1, __, __, __, __, __, __, __],
                 [A1, __, __, __, __, __, __, __],
+            ], [3, 3, 3, 3], 5);
+            expectMoveSuccess(rules, state, move, expectedState);
+        });
+        it('should allow moving from the middle of a stack', () => {
+            // given a state where a shift can be made
+            const state: DiamState = new DiamState([
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __],
+                [A1, __, __, __, __, __, __, B2],
+                [B1, __, __, __, __, __, __, A2],
+            ], [3, 3, 3, 3], 4);
+            // when moving the stack starting at A1 to the left
+            const move: DiamMove = new DiamMoveShift(new Coord(0, 2), 'left');
+            // then the move is legal
+            const expectedState: DiamState = new DiamState([
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __, A1],
+                [__, __, __, __, __, __, __, B2],
+                [B1, __, __, __, __, __, __, A2],
+            ], [3, 3, 3, 3], 5);
+            expectMoveSuccess(rules, state, move, expectedState);
+        });
+        it('should allow moving a full stack', () => {
+            // given a state where a shift can be made
+            const state: DiamState = new DiamState([
+                [B2, __, __, __, __, __, __, __],
+                [A2, __, __, __, __, __, __, __],
+                [B1, __, __, __, __, __, __, __],
+                [A1, __, __, __, __, __, __, __],
+            ], [3, 3, 3, 3], 4);
+            // when moving the stack starting at A1 to the left
+            const move: DiamMove = new DiamMoveShift(new Coord(0, 3), 'left');
+            // then the move is legal
+            const expectedState: DiamState = new DiamState([
+                [__, __, __, __, __, __, __, B2],
+                [__, __, __, __, __, __, __, A2],
+                [__, __, __, __, __, __, __, B1],
+                [__, __, __, __, __, __, __, A1],
             ], [3, 3, 3, 3], 5);
             expectMoveSuccess(rules, state, move, expectedState);
         });

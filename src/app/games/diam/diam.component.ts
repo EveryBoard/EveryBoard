@@ -6,6 +6,7 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { DiamDummyMinimax } from './DiamDummyMinimax';
 import { DiamFailure } from './DiamFailure';
@@ -94,13 +95,14 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
             return this.cancelMove(clickValidity.getReason());
         }
 
+        return this.onCaseClickAfterCheck(x);
+    }
+    private async onCaseClickAfterCheck(x: number): Promise<MGPValidation> {
         if (this.selected != null) {
             let move: DiamMove;
             if (this.selected.type === 'pieceFromReserve') {
-                console.log(`dropping to ${x}`)
                 move = new DiamMoveDrop(x, this.selected.piece);
             } else {
-                console.log(`shifting from ${this.selected.position.x} to ${x}`)
                 if ((this.selected.position.x + 1) % 8 === x) {
                     move = new DiamMoveShift(this.selected.position, 'right');
                 } else if ((this.selected.position.x + 7) % 8 === x) {
@@ -109,27 +111,22 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
                     return this.cancelMove(DiamFailure.MUST_SHIFT_LEFT_OR_RIGHT());
                 }
             }
-            const validity: MGPValidation = await this.chooseMove(move, this.rules.node.gameState, null, null);
-            if (validity.isFailure()) {
-                return this.cancelMove(validity.getReason());
-            }
+            return this.chooseMove(move, this.rules.node.gameState, null, null);
         } else {
             return this.cancelMove(DiamFailure.MUST_SELECT_PIECE_FIRST());
         }
-        console.log('move success')
-        return MGPValidation.SUCCESS;
     }
     public async onPieceInGameClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-
         if (this.selected != null) {
-            return this.onCaseClick(x);
+            return this.onCaseClickAfterCheck(x);
         }
         if (this.rules.node.gameState.getPieceAtXY(x, y).owner === this.rules.node.gameState.getCurrentPlayer()) {
             this.selected = { type: 'pieceFromBoard', position: new Coord(x, y) };
+            this.updateViewInfo();
             return MGPValidation.SUCCESS;
         } else {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
@@ -143,12 +140,16 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
 
         if (piece.owner === this.rules.node.gameState.getCurrentPlayer()) {
             this.selected = { type: 'pieceFromReserve', piece };
+            this.updateViewInfo();
             return MGPValidation.SUCCESS;
         } else {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
     }
     public updateBoard(): void {
+        this.updateViewInfo();
+    }
+    private updateViewInfo(): void {
         for (let x: number = 0; x < DiamState.WIDTH; x++) {
             this.viewInfo.boardInfo[x] = {
                 x,
@@ -158,12 +159,21 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
         }
         this.viewInfo.remainingPieces = [];
         for (const piece of DiamPiece.PLAYER_PIECES) {
-            for (let y: number = 0; y < this.rules.node.gameState.getRemainingPiecesOf(piece); y++) {
+            const remaining: number = this.rules.node.gameState.getRemainingPiecesOf(piece);
+            for (let y: number = 0; y < remaining; y++) {
+                const classes: string[] = ['player' + piece.owner.value];
+                if (piece.otherPieceType) {
+                    classes.push('color-variant');
+                }
+                if (this.selected != null &&
+                    this.selected.type === 'pieceFromReserve' &&
+                    this.selected.piece === piece &&
+                    y === remaining-1) {
+                    // highlight the top piece of the remaining pieces stack if it is selected
+                    classes.push('highlighted');
+                }
                 this.viewInfo.remainingPieces.push({
-                    classes: [
-                        'player' + piece.owner.value,
-                        piece.otherPieceType ? 'color-variant' : '',
-                    ],
+                    classes,
                     y,
                     drawPosition: this.getDrawPosition(piece).getNext(new Vector(0, -y*DiamComponent.PIECE_HEIGHT)),
                     actualPiece: piece,
@@ -194,6 +204,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
         return [];
     }
     private getPieces(x: number): PieceInfo[] {
+        const highestAlignment: MGPOptional<Coord> = this.rules.findHighestAlignment(this.rules.node.gameState);
         const infos: PieceInfo[] = [];
         for (let y: number = DiamState.HEIGHT-1; y >= 0; y--) {
             const piece: DiamPiece = this.rules.node.gameState.getPieceAtXY(x, y);
@@ -201,9 +212,15 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
                 const classes: string[] = ['player' + piece.owner.value];
                 if (piece.otherPieceType) classes.push('color-variant');
                 if (this.selected != null &&
-                    this.selected.type === 'pieceFromReserve' &&
-                    this.selected.piece === piece) {
+                    this.selected.type === 'pieceFromBoard' &&
+                    this.selected.position.x === x &&
+                    this.selected.position.y === y) {
                     classes.push('highlighted');
+                }
+                if (highestAlignment.isPresent() &&
+                    (highestAlignment.get().x % 4) === (x % 4) &&
+                    highestAlignment.get().y === y) {
+                    classes.push('victory-stroke');
                 }
                 infos.push({
                     classes,
