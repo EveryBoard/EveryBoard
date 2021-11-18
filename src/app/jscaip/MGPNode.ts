@@ -2,7 +2,6 @@ import { Move } from './Move';
 import { SCORE } from './SCORE';
 import { Rules } from './Rules';
 import { MGPMap } from '../utils/MGPMap';
-import { LegalityStatus } from './LegalityStatus';
 import { assert, display, Utils } from 'src/app/utils/utils';
 import { NodeUnheritance } from './NodeUnheritance';
 import { Minimax } from './Minimax';
@@ -10,16 +9,17 @@ import { MGPSet } from '../utils/MGPSet';
 import { MGPOptional } from '../utils/MGPOptional';
 import { Player } from './Player';
 import { AbstractGameState } from './GameState';
+import { MGPFallible } from '../utils/MGPFallible';
 
 export class MGPNodeStats {
     public static createdNodes: number = 0;
     public static minimaxTime: number = 0;
 }
 
-export class MGPNode<R extends Rules<M, S, L>,
+export class MGPNode<R extends Rules<M, S, L>, // TODO FOR REVIEW: why not remove R and use Rules<M, S, L> instead of R?
                      M extends Move,
                      S extends AbstractGameState,
-                     L extends LegalityStatus = LegalityStatus,
+                     L = void,
                      U extends NodeUnheritance = NodeUnheritance> {
     // TODO: calculate a board - value by the information of the mother.boardValue + this.move to ease the calculation
     // TODO: check for the proper use of LinkedList to optimise the stuff
@@ -28,7 +28,7 @@ export class MGPNode<R extends Rules<M, S, L>,
     public static VERBOSE: boolean = false;
 
     // Contains data related to the game and not to the minimax, ruler is the only instance of a set of rules
-    public static ruler: Rules<Move, AbstractGameState, LegalityStatus>;
+    public static ruler: Rules<Move, AbstractGameState, unknown>;
 
     public static minimaxes: MGPMap<string, Minimax<Move, AbstractGameState>> = new MGPMap();
 
@@ -80,7 +80,7 @@ export class MGPNode<R extends Rules<M, S, L>,
     public static getFirstNode<R extends Rules<M, S, L>,
                                M extends Move,
                                S extends AbstractGameState,
-                               L extends LegalityStatus,
+                               L,
                                U extends NodeUnheritance>(initialBoard: S, gameRuler: R)
     : MGPNode<R, M, S, L, U>
     {
@@ -196,11 +196,11 @@ export class MGPNode<R extends Rules<M, S, L>,
     private getOrCreateChild(move: M, minimax: Minimax<M, S, L, U>): MGPNode<R, M, S, L, U> {
         let child: MGPOptional<MGPNode<R, M, S, L, U>> = this.getSonByMove(move);
         if (child.isAbsent()) {
-            const status: L = minimax.ruler.isLegal(move, this.gameState);
-            if (status.legal.isFailure()) {
+            const legality: MGPFallible<L> = minimax.ruler.isLegal(move, this.gameState);
+            if (legality.isFailure()) {
                 Utils.handleError(`The minimax has accepted an illegal move, this should not happen.`);
             }
-            const state: S = minimax.ruler.applyLegalMove(move, this.gameState, status);
+            const state: S = minimax.ruler.applyLegalMove(move, this.gameState, legality.get());
             child = MGPOptional.of(new MGPNode(state, MGPOptional.of(this), MGPOptional.of(move), minimax));
             this.childs.get().push(child.get());
         }

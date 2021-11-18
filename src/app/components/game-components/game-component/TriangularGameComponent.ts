@@ -12,7 +12,7 @@ export abstract class TriangularGameComponent<R extends Rules<M, S, L>,
                                               M extends Move,
                                               S extends GameState<Coord, P>,
                                               P,
-                                              L extends LegalityStatus = LegalityStatus>
+                                              L = void>
     extends GameComponent<R, M, S, L>
 {
     public SPACE_SIZE: number = 50;

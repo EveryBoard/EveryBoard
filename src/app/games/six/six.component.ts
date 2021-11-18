@@ -2,9 +2,8 @@ import { Component } from '@angular/core';
 import { SixState } from 'src/app/games/six/SixState';
 import { SixMove } from 'src/app/games/six/SixMove';
 import { SixFailure } from 'src/app/games/six/SixFailure';
-import { SixNode, SixRules } from 'src/app/games/six/SixRules';
+import { SixLegalityInformation, SixNode, SixRules } from 'src/app/games/six/SixRules';
 import { SixMinimax } from 'src/app/games/six/SixMinimax';
-import { SixLegalityStatus } from 'src/app/games/six/SixLegalityStatus';
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
@@ -18,6 +17,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { SixTutorial } from './SixTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 interface Scale {
     minX: number;
@@ -32,7 +32,8 @@ interface Scale {
     templateUrl: './six.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixState, SixLegalityStatus> {
+export class SixComponent
+    extends HexagonalGameComponent<SixRules, SixMove, SixState, Player, SixLegalityInformation> {
 
     public readonly CONCRETE_WIDTH: number = 1000;
     public readonly CONCRETE_HEIGHT: number = 800;
@@ -222,7 +223,8 @@ export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixS
                 return this.cancelMove(SixFailure.CAN_NO_LONGER_DROP());
             } else {
                 const deplacement: SixMove = SixMove.fromDeplacement(this.selectedPiece.get(), neighbor);
-                const legality: SixLegalityStatus = SixRules.isLegalPhaseTwoMove(deplacement, this.state);
+                const legality: MGPFallible<SixLegalityInformation> =
+                    SixRules.isLegalPhaseTwoMove(deplacement, this.state);
                 if (this.neededCutting(legality)) {
                     this.chosenLanding = MGPOptional.of(neighbor);
                     this.moveVirtuallyPiece();
@@ -234,9 +236,8 @@ export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixS
             }
         }
     }
-    private neededCutting(legality: SixLegalityStatus): boolean {
-        return legality.legal.isFailure() &&
-               legality.legal.reason === SixFailure.MUST_CUT();
+    private neededCutting(legality: MGPFallible<SixLegalityInformation>): boolean {
+        return legality.isFailure() && legality.getReason() === SixFailure.MUST_CUT();
     }
     private moveVirtuallyPiece(): void {
         const selectedPiece: Coord = this.selectedPiece.get();

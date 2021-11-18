@@ -3,7 +3,7 @@ import { RectangularGameComponent } from '../../components/game-components/recta
 import { Coord } from '../../jscaip/Coord';
 import { TablutMove } from 'src/app/games/tablut/TablutMove';
 import { TablutState } from './TablutState';
-import { TablutRules } from './TablutRules';
+import { TablutLegalityInformation, TablutRules } from './TablutRules';
 import { TablutMinimax } from './TablutMinimax';
 import { TablutCase } from 'src/app/games/tablut/TablutCase';
 import { display } from 'src/app/utils/utils';
@@ -14,7 +14,6 @@ import { TablutRulesConfig } from 'src/app/games/tablut/TablutRulesConfig';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
 import { TablutPieceAndInfluenceMinimax } from './TablutPieceAndInfluenceMinimax';
-import { TablutLegalityStatus } from './TablutLegalityStatus';
 import { TablutPieceAndControlMinimax } from './TablutPieceAndControlMinimax';
 import { TablutEscapeThenPieceAndControlMinimax } from './TablutEscapeThenPieceThenControl';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
@@ -31,7 +30,7 @@ export class TablutComponent extends RectangularGameComponent<TablutRules,
                                                               TablutMove,
                                                               TablutState,
                                                               TablutCase,
-                                                              TablutLegalityStatus>
+                                                              TablutLegalityInformation>
 {
     public static VERBOSE: boolean = false;
 

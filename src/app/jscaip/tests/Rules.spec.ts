@@ -4,6 +4,7 @@ import { MGPNode } from '../MGPNode';
 import { GameStatus, Rules } from '../Rules';
 import { GameStateWithTable } from '../GameStateWithTable';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 
 class MyAbstractState extends GameStateWithTable<number> {
@@ -17,12 +18,12 @@ class AbstractNode extends MGPNode<Rules<P4Move, MyAbstractState>, P4Move, MyAbs
 
 class AbstractRules extends Rules<P4Move, MyAbstractState> {
 
-    public applyLegalMove(move: P4Move, state: MyAbstractState, status: LegalityStatus): MyAbstractState {
+    public applyLegalMove(move: P4Move, state: MyAbstractState, _legality: void): MyAbstractState {
         const board: readonly number[] = state.board[0];
         return new MyAbstractState([board.concat([move.x])], state.turn + 1);
     }
-    public isLegal(move: P4Move, state: MyAbstractState): LegalityStatus {
-        return LegalityStatus.SUCCESS;
+    public isLegal(move: P4Move, state: MyAbstractState): MGPFallible<void> {
+        return MGPFallible.success(undefined);
     }
     public getGameStatus(node: AbstractNode): GameStatus {
         return GameStatus.ONGOING;

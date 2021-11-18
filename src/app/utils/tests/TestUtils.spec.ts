@@ -163,9 +163,7 @@ export class SimpleComponentTestUtils<T> {
         element.nativeElement.dispatchEvent(new Event('input'));
     }
 }
-type MyGameComponent = GameComponent<Rules<Move, AbstractGameState>,
-                                     Move,
-                                     AbstractGameState>;
+type MyGameComponent = GameComponent<Rules<Move, AbstractGameState, unknown>, Move, AbstractGameState, unknown>;
 
 export class ComponentTestUtils<T extends MyGameComponent> {
     public fixture: ComponentFixture<GameWrapper>;

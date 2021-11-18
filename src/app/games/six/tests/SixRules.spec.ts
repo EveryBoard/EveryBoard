@@ -1,12 +1,10 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { SixState } from '../SixState';
 import { SixMove } from '../SixMove';
-import { SixLegalityStatus } from '../SixLegalityStatus';
 import { SixFailure } from '../SixFailure';
-import { SixNode, SixRules } from '../SixRules';
+import { SixLegalityInformation, SixNode, SixRules } from '../SixRules';
 import { SixMinimax } from '../SixMinimax';
 import { Vector } from 'src/app/jscaip/Direction';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
@@ -14,11 +12,12 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 describe('SixRules', () => {
 
     let rules: SixRules;
-    let minimaxes: Minimax<SixMove, SixState>[];
+    let minimaxes: Minimax<SixMove, SixState, SixLegalityInformation>[];
 
     const _: number = Player.NONE.value;
     const O: number = Player.ZERO.value;
@@ -39,8 +38,8 @@ describe('SixRules', () => {
             ];
             const state: SixState = SixState.fromRepresentation(board, 4);
             const move: SixMove = SixMove.fromDrop(new Coord(1, 1));
-            const status: LegalityStatus = rules.isLegal(move, state);
-            expect(status.legal.getReason()).toBe('Cannot land on occupied coord!');
+            const status: MGPFallible<SixLegalityInformation> = rules.isLegal(move, state);
+            expect(status.getReason()).toBe('Cannot land on occupied coord!');
         });
         it('Should forbid landing/dropping on existing piece (deplacement)', () => {
             const board: NumberTable = [
@@ -50,8 +49,8 @@ describe('SixRules', () => {
             ];
             const state: SixState = SixState.fromRepresentation(board, 44);
             const move: SixMove = SixMove.fromDeplacement(new Coord(1, 2), new Coord(1, 1));
-            const status: LegalityStatus = rules.isLegal(move, state);
-            expect(status.legal.getReason()).toBe('Cannot land on occupied coord!');
+            const status: MGPFallible<SixLegalityInformation> = rules.isLegal(move, state);
+            expect(status.getReason()).toBe('Cannot land on occupied coord!');
         });
         it('Should forbid drop after 40th turn', () => {
             const board: NumberTable = [
@@ -61,8 +60,8 @@ describe('SixRules', () => {
             ]; // Fake 40th turn, since there is not 42 stone on the board
             const state: SixState = SixState.fromRepresentation(board, 40);
             const move: SixMove = SixMove.fromDrop(new Coord(0, 1));
-            const status: LegalityStatus = rules.isLegal(move, state);
-            expect(status.legal.getReason()).toBe('Can no longer drop after 40th turn!');
+            const status: MGPFallible<SixLegalityInformation> = rules.isLegal(move, state);
+            expect(status.getReason()).toBe('Can no longer drop after 40th turn!');
         });
         it('Should allow drop outside the current range', () => {
             const board: NumberTable = [
@@ -82,9 +81,9 @@ describe('SixRules', () => {
             ];
             const state: SixState = SixState.fromRepresentation(board, 0);
             const move: SixMove = SixMove.fromDrop(new Coord(5, -1));
-            const status: SixLegalityStatus = rules.isLegal(move, state);
-            expect(status.legal.isSuccess()).toBeTrue();
-            const resultingState: SixState = rules.applyLegalMove(move, state, status);
+            const status: MGPFallible<SixLegalityInformation> = rules.isLegal(move, state);
+            expect(status.isSuccess()).toBeTrue();
+            const resultingState: SixState = rules.applyLegalMove(move, state, status.get());
             const expectedState: SixState =
                 SixState.fromRepresentation(expectedBoard, 1);
             expect(resultingState.pieces.equals(expectedState.pieces)).toBeTrue();
@@ -97,8 +96,8 @@ describe('SixRules', () => {
             ];
             const state: SixState = SixState.fromRepresentation(board, 5);
             const move: SixMove = SixMove.fromDrop(new Coord(0, 0));
-            const status: LegalityStatus = rules.isLegal(move, state);
-            expect(status.legal.getReason()).toBe(SixFailure.MUST_DROP_NEXT_TO_OTHER_PIECE());
+            const status: MGPFallible<SixLegalityInformation> = rules.isLegal(move, state);
+            expect(status.getReason()).toBe(SixFailure.MUST_DROP_NEXT_TO_OTHER_PIECE());
         });
     });
     describe('Deplacement', () => {
@@ -110,8 +109,8 @@ describe('SixRules', () => {
             ];
             const state: SixState = SixState.fromRepresentation(board, 0);
             const move: SixMove = SixMove.fromDeplacement(new Coord(1, 2), new Coord(3, 0));
-            const status: LegalityStatus = rules.isLegal(move, state);
-            expect(status.legal.getReason()).toBe('Cannot do deplacement before 42th turn!');
+            const status: MGPFallible<SixLegalityInformation> = rules.isLegal(move, state);
+            expect(status.getReason()).toBe('Cannot do deplacement before 42th turn!');
         });
         it('Should forbid moving opponent piece', () => {
             const board: NumberTable = [
@@ -121,8 +120,8 @@ describe('SixRules', () => {
             ];
             const state: SixState = SixState.fromRepresentation(board, 42);
             const move: SixMove = SixMove.fromDeplacement(new Coord(0, 2), new Coord(2, 1));
-            const status: LegalityStatus = rules.isLegal(move, state);
-            expect(status.legal.getReason()).toBe(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            const status: MGPFallible<SixLegalityInformation> = rules.isLegal(move, state);
+            expect(status.getReason()).toBe(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         });
         it('Should forbid moving empty piece', () => {
             const board: NumberTable = [
@@ -132,8 +131,8 @@ describe('SixRules', () => {
             ];
             const state: SixState = SixState.fromRepresentation(board, 42);
             const move: SixMove = SixMove.fromDeplacement(new Coord(0, 0), new Coord(2, 1));
-            const status: LegalityStatus = rules.isLegal(move, state);
-            expect(status.legal.getReason()).toBe('Cannot move empty coord!');
+            const status: MGPFallible<SixLegalityInformation> = rules.isLegal(move, state);
+            expect(status.getReason()).toBe('Cannot move empty coord!');
         });
         it('Should refuse dropping piece where its only neighboor is herself last turn', () => {
             const board: NumberTable = [
@@ -143,8 +142,8 @@ describe('SixRules', () => {
             ];
             const state: SixState = SixState.fromRepresentation(board, 42);
             const move: SixMove = SixMove.fromDeplacement(new Coord(1, 2), new Coord(2, 2));
-            const status: LegalityStatus = rules.isLegal(move, state);
-            expect(status.legal.getReason()).toBe(SixFailure.MUST_DROP_NEXT_TO_OTHER_PIECE());
+            const status: MGPFallible<SixLegalityInformation> = rules.isLegal(move, state);
+            expect(status.getReason()).toBe(SixFailure.MUST_DROP_NEXT_TO_OTHER_PIECE());
         });
     });
     describe('Deconnection', () => {
@@ -165,9 +164,9 @@ describe('SixRules', () => {
             ];
             const state: SixState = SixState.fromRepresentation(board, 42);
             const move: SixMove = SixMove.fromDeplacement(new Coord(3, 4), new Coord(3, 0));
-            const status: SixLegalityStatus = rules.isLegal(move, state);
-            expect(status.legal.isSuccess()).toBeTrue();
-            const resultingState: SixState = rules.applyLegalMove(move, state, status);
+            const status: MGPFallible<SixLegalityInformation> = rules.isLegal(move, state);
+            expect(status.isSuccess()).toBeTrue();
+            const resultingState: SixState = rules.applyLegalMove(move, state, status.get());
             const expectedState: SixState = SixState.fromRepresentation(expectedBoard, 43);
             expect(resultingState.pieces.equals(expectedState.pieces)).toBeTrue();
         });
@@ -181,8 +180,8 @@ describe('SixRules', () => {
             ];
             const state: SixState = SixState.fromRepresentation(board, 42);
             const move: SixMove = SixMove.fromDeplacement(new Coord(2, 2), new Coord(4, 3));
-            const status: LegalityStatus = rules.isLegal(move, state);
-            expect(status.legal.getReason()).toBe(SixFailure.MUST_CUT());
+            const status: MGPFallible<SixLegalityInformation> = rules.isLegal(move, state);
+            expect(status.getReason()).toBe(SixFailure.MUST_CUT());
         });
         it('Should refuse deconnection of different sized group with group mentionned in move', () => {
             const board: NumberTable = [
@@ -194,8 +193,8 @@ describe('SixRules', () => {
             ];
             const state: SixState = SixState.fromRepresentation(board, 42);
             const move: SixMove = SixMove.fromCut(new Coord(2, 2), new Coord(4, 3), new Coord(0, 0));
-            const status: LegalityStatus = rules.isLegal(move, state);
-            expect(status.legal.getReason()).toBe(SixFailure.CANNOT_CHOOSE_TO_KEEP());
+            const status: MGPFallible<SixLegalityInformation> = rules.isLegal(move, state);
+            expect(status.getReason()).toBe(SixFailure.CANNOT_CHOOSE_TO_KEEP());
         });
         it('Should refuse deconnection where captured coord is empty', () => {
             const board: NumberTable = [
@@ -207,8 +206,8 @@ describe('SixRules', () => {
             ];
             const state: SixState = SixState.fromRepresentation(board, 42);
             const move: SixMove = SixMove.fromCut(new Coord(2, 2), new Coord(4, 4), new Coord(4, 0));
-            const status: LegalityStatus = rules.isLegal(move, state);
-            expect(status.legal.getReason()).toBe(SixFailure.CANNOT_KEEP_EMPTY_COORD());
+            const status: MGPFallible<SixLegalityInformation> = rules.isLegal(move, state);
+            expect(status.getReason()).toBe(SixFailure.CANNOT_KEEP_EMPTY_COORD());
         });
         it('Should refuse deconnection where captured coord is in a smaller group', () => {
             const board: NumberTable = [
@@ -220,8 +219,8 @@ describe('SixRules', () => {
             ];
             const state: SixState = SixState.fromRepresentation(board, 42);
             const move: SixMove = SixMove.fromCut(new Coord(2, 2), new Coord(4, 2), new Coord(4, 2));
-            const status: LegalityStatus = rules.isLegal(move, state);
-            expect(status.legal.getReason()).toBe(SixFailure.MUST_CAPTURE_BIGGEST_GROUPS());
+            const status: MGPFallible<SixLegalityInformation> = rules.isLegal(move, state);
+            expect(status.getReason()).toBe(SixFailure.MUST_CAPTURE_BIGGEST_GROUPS());
         });
     });
     describe('victories', () => {
@@ -245,9 +244,9 @@ describe('SixRules', () => {
                 ];
                 const state: SixState = SixState.fromRepresentation(board, 10);
                 const move: SixMove = SixMove.fromDrop(new Coord(0, 5));
-                const status: SixLegalityStatus = rules.isLegal(move, state);
-                expect(status.legal.isSuccess()).toBeTrue();
-                const resultingState: SixState = rules.applyLegalMove(move, state, status);
+                const status: MGPFallible<SixLegalityInformation> = rules.isLegal(move, state);
+                expect(status.isSuccess()).toBeTrue();
+                const resultingState: SixState = rules.applyLegalMove(move, state, status.get());
                 const expectedState: SixState =
                     SixState.fromRepresentation(expectedBoard, 11, new Vector(-1, 0));
                 expect(resultingState.pieces.equals(expectedState.pieces)).toBeTrue();
@@ -273,9 +272,9 @@ describe('SixRules', () => {
                 ];
                 const state: SixState = SixState.fromRepresentation(board, 10);
                 const move: SixMove = SixMove.fromDrop(new Coord(2, 3));
-                const status: SixLegalityStatus = rules.isLegal(move, state);
-                expect(status.legal.isSuccess()).toBeTrue();
-                const resultingState: SixState = rules.applyLegalMove(move, state, status);
+                const status: MGPFallible<SixLegalityInformation> = rules.isLegal(move, state);
+                expect(status.isSuccess()).toBeTrue();
+                const resultingState: SixState = rules.applyLegalMove(move, state, status.get());
                 const expectedState: SixState = SixState.fromRepresentation(expectedBoard, 11);
                 expect(resultingState.pieces.equals(expectedState.pieces)).toBeTrue();
                 const node: SixNode = new MGPNode(resultingState, MGPOptional.empty(), MGPOptional.of(move));
@@ -300,9 +299,9 @@ describe('SixRules', () => {
                 ];
                 const state: SixState = SixState.fromRepresentation(board, 9);
                 const move: SixMove = SixMove.fromDrop(new Coord(2, 2));
-                const status: SixLegalityStatus = rules.isLegal(move, state);
-                expect(status.legal.isSuccess()).toBeTrue();
-                const resultingState: SixState = rules.applyLegalMove(move, state, status);
+                const status: MGPFallible<SixLegalityInformation> = rules.isLegal(move, state);
+                expect(status.isSuccess()).toBeTrue();
+                const resultingState: SixState = rules.applyLegalMove(move, state, status.get());
                 const expectedState: SixState = SixState.fromRepresentation(expectedBoard, 10);
                 expect(resultingState.pieces.equals(expectedState.pieces)).toBeTrue();
                 const node: SixNode = new MGPNode(resultingState, MGPOptional.empty(), MGPOptional.of(move));
@@ -325,9 +324,9 @@ describe('SixRules', () => {
                 ];
                 const state: SixState = SixState.fromRepresentation(board, 11);
                 const move: SixMove = SixMove.fromDrop(new Coord(3, 1));
-                const status: SixLegalityStatus = rules.isLegal(move, state);
-                expect(status.legal.isSuccess()).toBeTrue();
-                const resultingState: SixState = rules.applyLegalMove(move, state, status);
+                const status: MGPFallible<SixLegalityInformation> = rules.isLegal(move, state);
+                expect(status.isSuccess()).toBeTrue();
+                const resultingState: SixState = rules.applyLegalMove(move, state, status.get());
                 const expectedState: SixState = SixState.fromRepresentation(expectedBoard, 12);
                 expect(resultingState.pieces.equals(expectedState.pieces)).toBeTrue();
                 const node: SixNode = new MGPNode(resultingState, MGPOptional.empty(), MGPOptional.of(move));
@@ -350,9 +349,9 @@ describe('SixRules', () => {
                 ];
                 const state: SixState = SixState.fromRepresentation(board, 11);
                 const move: SixMove = SixMove.fromDrop(new Coord(2, 2));
-                const status: SixLegalityStatus = rules.isLegal(move, state);
-                expect(status.legal.isSuccess()).toBeTrue();
-                const resultingState: SixState = rules.applyLegalMove(move, state, status);
+                const status: MGPFallible<SixLegalityInformation> = rules.isLegal(move, state);
+                expect(status.isSuccess()).toBeTrue();
+                const resultingState: SixState = rules.applyLegalMove(move, state, status.get());
                 const expectedState: SixState = SixState.fromRepresentation(expectedBoard, 12);
                 expect(resultingState.pieces.equals(expectedState.pieces)).toBeTrue();
                 const node: SixNode = new MGPNode(resultingState, MGPOptional.empty(), MGPOptional.of(move));
@@ -375,9 +374,9 @@ describe('SixRules', () => {
                 ];
                 const state: SixState = SixState.fromRepresentation(board, 9);
                 const move: SixMove = SixMove.fromDrop(new Coord(2, 1));
-                const status: SixLegalityStatus = rules.isLegal(move, state);
-                expect(status.legal.isSuccess()).toBeTrue();
-                const resultingState: SixState = rules.applyLegalMove(move, state, status);
+                const status: MGPFallible<SixLegalityInformation> = rules.isLegal(move, state);
+                expect(status.isSuccess()).toBeTrue();
+                const resultingState: SixState = rules.applyLegalMove(move, state, status.get());
                 const expectedState: SixState = SixState.fromRepresentation(expectedBoard, 10);
                 expect(resultingState.pieces.equals(expectedState.pieces)).toBeTrue();
                 const node: SixNode = new MGPNode(resultingState, MGPOptional.empty(), MGPOptional.of(move));
@@ -402,9 +401,9 @@ describe('SixRules', () => {
                 ];
                 const state: SixState = SixState.fromRepresentation(board, 43);
                 const move: SixMove = SixMove.fromDeplacement(new Coord(3, 4), new Coord(3, 0));
-                const status: SixLegalityStatus = rules.isLegal(move, state);
-                expect(status.legal.isSuccess()).toBeTrue();
-                const resultingState: SixState = rules.applyLegalMove(move, state, status);
+                const status: MGPFallible<SixLegalityInformation> = rules.isLegal(move, state);
+                expect(status.isSuccess()).toBeTrue();
+                const resultingState: SixState = rules.applyLegalMove(move, state, status.get());
                 const expectedState: SixState =
                     SixState.fromRepresentation(expectedBoard, 44);
                 expect(resultingState.pieces.equals(expectedState.pieces)).toBeTrue();
@@ -428,9 +427,9 @@ describe('SixRules', () => {
                 ];
                 const state: SixState = SixState.fromRepresentation(board, 42);
                 const move: SixMove = SixMove.fromDeplacement(new Coord(3, 4), new Coord(3, 0));
-                const status: SixLegalityStatus = rules.isLegal(move, state);
-                expect(status.legal.isSuccess()).toBeTrue();
-                const resultingState: SixState = rules.applyLegalMove(move, state, status);
+                const status: MGPFallible<SixLegalityInformation> = rules.isLegal(move, state);
+                expect(status.isSuccess()).toBeTrue();
+                const resultingState: SixState = rules.applyLegalMove(move, state, status.get());
                 const expectedState: SixState =
                     SixState.fromRepresentation(expectedBoard, 43);
                 expect(resultingState.pieces.equals(expectedState.pieces)).toBeTrue();
@@ -449,9 +448,9 @@ describe('SixRules', () => {
                 ];
                 const state: SixState = SixState.fromRepresentation(board, 40);
                 const move: SixMove = SixMove.fromDeplacement(new Coord(4, 1), new Coord(-1, 1));
-                const status: SixLegalityStatus = rules.isLegal(move, state);
-                expect(status.legal.isSuccess()).toBeTrue();
-                const resultingState: SixState = rules.applyLegalMove(move, state, status);
+                const status: MGPFallible<SixLegalityInformation> = rules.isLegal(move, state);
+                expect(status.isSuccess()).toBeTrue();
+                const resultingState: SixState = rules.applyLegalMove(move, state, status.get());
                 const expectedState: SixState = SixState.fromRepresentation(expectedBoard, 41);
                 expect(resultingState.pieces.equals(expectedState.pieces)).toBeTrue();
                 const node: SixNode = new MGPNode(resultingState, MGPOptional.empty(), MGPOptional.of(move));
@@ -470,9 +469,9 @@ describe('SixRules', () => {
                 ];
                 const state: SixState = SixState.fromRepresentation(board, 42);
                 const move: SixMove = SixMove.fromDeplacement(new Coord(4, 1), new Coord(6, 1));
-                const status: SixLegalityStatus = rules.isLegal(move, state);
-                expect(status.legal.isSuccess()).toBeTrue();
-                const resultingState: SixState = rules.applyLegalMove(move, state, status);
+                const status: MGPFallible<SixLegalityInformation> = rules.isLegal(move, state);
+                expect(status.isSuccess()).toBeTrue();
+                const resultingState: SixState = rules.applyLegalMove(move, state, status.get());
                 const expectedState: SixState = SixState.fromRepresentation(expectedBoard, 43);
                 expect(resultingState.pieces.equals(expectedState.pieces)).toBeTrue();
                 const node: SixNode = new MGPNode(resultingState, MGPOptional.empty(), MGPOptional.of(move));

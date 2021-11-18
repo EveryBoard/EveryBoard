@@ -8,13 +8,15 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { SixState } from './SixState';
 import { SixMove } from './SixMove';
-import { SixLegalityStatus } from './SixLegalityStatus';
 import { SixFailure } from './SixFailure';
-import { display, Utils } from 'src/app/utils/utils';
+import { display } from 'src/app/utils/utils';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
-export class SixNode extends MGPNode<SixRules, SixMove, SixState, SixLegalityStatus> {
+export type SixLegalityInformation = MGPSet<Coord>;
+
+export class SixNode extends MGPNode<SixRules, SixMove, SixState, SixLegalityInformation> {
 }
 export interface SixVictorySource {
     typeSource: 'LINE' | 'TRIANGLE_CORNER' | 'TRIANGLE_EDGE' | 'CIRCLE',
@@ -23,7 +25,7 @@ export interface SixVictorySource {
 
 export class SixRules extends Rules<SixMove,
                                     SixState,
-                                    SixLegalityStatus>
+                                    SixLegalityInformation>
 {
 
     public VERBOSE: boolean = false;
@@ -32,21 +34,20 @@ export class SixRules extends Rules<SixMove,
 
     public applyLegalMove(move: SixMove,
                           state: SixState,
-                          status: SixLegalityStatus)
+                          kept: SixLegalityInformation)
     : SixState
     {
         if (state.turn < 40) {
             return state.applyLegalDrop(move.landing);
         } else {
-            const kept: MGPSet<Coord> = Utils.getNonNullable(status.kept);
             return state.applyLegalDeplacement(move, kept);
         }
     }
-    public isLegal(move: SixMove, state: SixState): SixLegalityStatus {
+    public isLegal(move: SixMove, state: SixState): MGPFallible<SixLegalityInformation> {
         display(this.VERBOSE, { called: 'SixRules.isLegal', move, state });
         const landingLegality: MGPValidation = state.isIllegalLandingZone(move.landing, move.start.getOrNull());
         if (landingLegality.isFailure()) {
-            return { legal: landingLegality, kept: null };
+            return landingLegality.toFailedFallible();
         }
         if (state.turn < 40) {
             return this.isLegalDrop(move, state);
@@ -66,24 +67,21 @@ export class SixRules extends Rules<SixMove,
         }
         return neighboors.getCopy();
     }
-    public isLegalDrop(move: SixMove, state: SixState): SixLegalityStatus {
+    public isLegalDrop(move: SixMove, state: SixState): MGPFallible<SixLegalityInformation> {
         if (move.isDrop() === false) {
-            return { legal: MGPValidation.failure('Cannot do deplacement before 42th turn!'), kept: null };
+            return MGPFallible.failure('Cannot do deplacement before 42th turn!');
         }
-        return {
-            legal: MGPValidation.SUCCESS,
-            kept: state.pieces.getKeySet(),
-        };
+        return MGPFallible.success(state.pieces.getKeySet());
     }
-    public static isLegalPhaseTwoMove(move: SixMove, state: SixState): SixLegalityStatus {
+    public static isLegalPhaseTwoMove(move: SixMove, state: SixState): MGPFallible<SixLegalityInformation> {
         if (move.isDrop()) {
-            return { legal: MGPValidation.failure('Can no longer drop after 40th turn!'), kept: null };
+            return MGPFallible.failure('Can no longer drop after 40th turn!');
         }
         switch (state.getPieceAt(move.start.get())) {
             case Player.NONE:
-                return { legal: MGPValidation.failure('Cannot move empty coord!'), kept: null };
+                return MGPFallible.failure('Cannot move empty coord!');
             case state.getCurrentOpponent():
-                return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE()), kept: null };
+                return MGPFallible.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         }
         const piecesAfterDeplacement: MGPMap<Coord, Player> = SixState.deplacePiece(state, move);
         const groupsAfterMove: MGPSet<MGPSet<Coord>> =
@@ -92,21 +90,15 @@ export class SixRules extends Rules<SixMove,
             const biggerGroups: MGPSet<MGPSet<Coord>> = this.getBiggerGroups(groupsAfterMove);
             if (biggerGroups.size() === 1) {
                 if (move.keep.isPresent()) {
-                    return {
-                        legal: MGPValidation.failure(SixFailure.CANNOT_CHOOSE_TO_KEEP()),
-                        kept: null,
-                    };
+                    return MGPFallible.failure(SixFailure.CANNOT_CHOOSE_TO_KEEP());
                 } else {
-                    return { legal: MGPValidation.SUCCESS, kept: biggerGroups.get(0) };
+                    return MGPFallible.success(biggerGroups.get(0));
                 }
             } else {
                 return this.moveKeepBiggerGroup(move.keep, biggerGroups, piecesAfterDeplacement);
             }
         } else {
-            return {
-                legal: MGPValidation.SUCCESS,
-                kept: new MGPSet(),
-            };
+            return MGPFallible.success(new MGPSet());
         }
     }
     public static isSplit(groups: MGPSet<MGPSet<Coord>>): boolean {
@@ -130,28 +122,22 @@ export class SixRules extends Rules<SixMove,
     public static moveKeepBiggerGroup(keep: MGPOptional<Coord>,
                                       biggerGroups: MGPSet<MGPSet<Coord>>,
                                       pieces: MGPMap<Coord, Player>)
-    : SixLegalityStatus
+    : MGPFallible<SixLegalityInformation>
     {
         if (keep.isAbsent()) {
-            return {
-                legal: MGPValidation.failure(SixFailure.MUST_CUT()),
-                kept: null,
-            };
+            return MGPFallible.failure(SixFailure.MUST_CUT());
         }
         if (pieces.get(keep.get()).isAbsent()) {
-            return { legal: MGPValidation.failure(SixFailure.CANNOT_KEEP_EMPTY_COORD()), kept: null };
+            return MGPFallible.failure(SixFailure.CANNOT_KEEP_EMPTY_COORD());
         }
         const keptCoord: Coord = keep.get();
         for (let i: number = 0; i < biggerGroups.size(); i++) {
             const subGroup: MGPSet<Coord> = biggerGroups.get(i);
             if (subGroup.contains(keptCoord)) {
-                return { legal: MGPValidation.SUCCESS, kept: subGroup };
+                return MGPFallible.success(subGroup);
             }
         }
-        return {
-            legal: MGPValidation.failure(SixFailure.MUST_CAPTURE_BIGGEST_GROUPS()),
-            kept: null,
-        };
+        return MGPFallible.failure(SixFailure.MUST_CAPTURE_BIGGEST_GROUPS());
     }
     public getGameStatus(node: SixNode): GameStatus {
         const state: SixState = node.gameState;

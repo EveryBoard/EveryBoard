@@ -1,11 +1,11 @@
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Move } from './Move';
-import { LegalityStatus } from './LegalityStatus';
 import { Type } from '@angular/core';
 import { assert, display } from '../utils/utils';
 import { Player } from './Player';
 import { AbstractGameState } from './GameState';
 import { MGPOptional } from '../utils/MGPOptional';
+import { MGPFallible } from '../utils/MGPFallible';
 
 export class GameStatus {
 
@@ -43,9 +43,10 @@ export class GameStatus {
         }
     }
 }
+
 export abstract class Rules<M extends Move,
                             S extends AbstractGameState,
-                            L extends LegalityStatus = LegalityStatus>
+                            L = void>
 {
 
     public constructor(public readonly stateType: Type<S>) {
@@ -66,39 +67,43 @@ export abstract class Rules<M extends Move,
          */
         const LOCAL_VERBOSE: boolean = false;
         display(LOCAL_VERBOSE, 'Rules.choose: ' + move.toString() + ' was proposed');
-        const status: L = this.isLegal(move, this.node.gameState);
+        const legality: MGPFallible<L> = this.isLegal(move, this.node.gameState);
         if (this.node.hasMoves()) { // if calculation has already been done by the AI
             display(LOCAL_VERBOSE, 'Rules.choose: current node has moves');
             const choice: MGPOptional<MGPNode<Rules<M, S, L>, M, S, L>> = this.node.getSonByMove(move);
             // let's not create the node twice
             if (choice.isPresent()) {
-                assert(status.legal.isSuccess(), 'Rules.choose: Move is illegal: ' + status.legal.reason);
+                assert(legality.isSuccess(), 'Rules.choose: Move is illegal: ' + legality.getReasonOr(''));
                 display(LOCAL_VERBOSE, 'Rules.choose: and this proposed move is found in the list, so it is legal');
                 this.node = choice.get(); // which becomes the current node
                 return true;
             }
         }
         display(LOCAL_VERBOSE, `Rules.choose: current node has no moves or is pruned, let's verify ourselves`);
-        if (status.legal.isFailure()) {
-            display(LOCAL_VERBOSE, 'Rules.choose: Move is illegal: ' + status.legal.getReason());
+        if (legality.isFailure()) {
+            display(LOCAL_VERBOSE, 'Rules.choose: Move is illegal: ' + legality.getReason());
             return false;
         } else {
             display(LOCAL_VERBOSE, `Rules.choose: Move is legal, let's apply it`);
         }
 
-        const resultingState: AbstractGameState = this.applyLegalMove(move, this.node.gameState, status);
+        const resultingState: AbstractGameState = this.applyLegalMove(move, this.node.gameState, legality.get());
         const son: MGPNode<Rules<M, S, L>, M, S, L> = new MGPNode(resultingState as S,
                                                                   MGPOptional.of(this.node),
                                                                   MGPOptional.of(move));
         this.node = son;
         return true;
     }
-    public abstract applyLegalMove(move: M, state: S, status: L): S;
-
-    public abstract isLegal(move: M, state: S): L;
-    /* return a legality status about the move, allowing to return already calculated info
-     * don't do any modification to the board
+    /**
+     * Applies a legal move, given the precomputed information `info`
      */
+    public abstract applyLegalMove(move: M, state: S, info: L): S;
+    /**
+     * Returns success if the move is legal, with some potentially precomputed data.
+     * If the move is illegal, returns a failure with information on why it is illegal
+     */
+    public abstract isLegal(move: M, state: S): MGPFallible<L>;
+
     public setInitialBoard(): void {
         if (this.node == null) {
             const initialState: S = this.stateType['getInitialState']();
@@ -111,11 +116,11 @@ export abstract class Rules<M extends Move,
         let i: number = 0;
         for (const encodedMove of encodedMoves) {
             const move: M = moveDecoder(encodedMove);
-            const status: L = this.isLegal(move, state);
-            if (status.legal.isFailure()) {
-                throw new Error(`Can't create state from invalid moves (` + i + '): ' + status.legal.reason + '.');
+            const legality: MGPFallible<L> = this.isLegal(move, state);
+            if (legality.isFailure()) {
+                throw new Error(`Can't create state from invalid moves (` + i + '): ' + legality.getReason() + '.');
             }
-            state = this.applyLegalMove(move, state, status);
+            state = this.applyLegalMove(move, state, legality.get());
             i++;
         }
         return state;

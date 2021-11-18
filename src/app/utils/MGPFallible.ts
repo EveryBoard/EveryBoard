@@ -21,6 +21,8 @@ export abstract class MGPFallible<T> {
 
     public abstract getReason(): string
 
+    public abstract getReasonOr(value: string): string
+
     public abstract toOptional(): MGPOptional<T>
 
     public abstract toValidation(): MGPValidation
@@ -58,6 +60,9 @@ class MGPFallibleSuccess<T> extends MGPFallible<T> {
     public getReason(): string {
         throw new Error('Cannot get failure reason from a success');
     }
+    public getReasonOr(value: string): string {
+        return value;
+    }
     public toOptional(): MGPOptional<T> {
         return MGPOptional.of(this.value);
     }
@@ -87,6 +92,9 @@ class MGPFallibleFailure<T> extends MGPFallible<T> {
     }
     public getReason(): string {
         return this.reason;
+    }
+    public getReasonOr(_value: string): string {
+        return this.getReason();
     }
     public toOptional(): MGPOptional<T> {
         return MGPOptional.empty();

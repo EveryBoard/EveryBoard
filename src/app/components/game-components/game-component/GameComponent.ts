@@ -1,6 +1,5 @@
 import { Move } from '../../../jscaip/Move';
 import { Rules } from '../../../jscaip/Rules';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Component } from '@angular/core';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player } from 'src/app/jscaip/Player';
@@ -26,7 +25,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 export abstract class GameComponent<R extends Rules<M, S, L>,
                                     M extends Move,
                                     S extends AbstractGameState,
-                                    L extends LegalityStatus = LegalityStatus>
+                                    L = void>
 {
     public encoder: MoveEncoder<M>;
 
@@ -38,7 +37,7 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
 
     public rules: R;
 
-    public availableMinimaxes: Minimax<M, S>[];
+    public availableMinimaxes: Minimax<M, S, L>[];
 
     public canPass: boolean;
 

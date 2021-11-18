@@ -49,7 +49,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const strongState: TablutState = new TablutState(strongBoard, 0);
-        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, MGPOptional.empty(),
+        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, MGPOptional.empty<TablutMove>(),
                                                         strongState, MGPOptional.empty(),
                                                         minimax);
     });
@@ -78,7 +78,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const strongState: TablutState = new TablutState(strongBoard, 0);
-        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, MGPOptional.empty(),
+        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, MGPOptional.empty<TablutMove>(),
                                                         strongState, MGPOptional.empty(),
                                                         minimax);
     });
@@ -107,7 +107,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const strongState: TablutState = new TablutState(strongBoard, 0);
-        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, MGPOptional.empty(),
+        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, MGPOptional.empty<TablutMove>(),
                                                         strongState, MGPOptional.empty(),
                                                         minimax);
     });
@@ -136,7 +136,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const strongState: TablutState = new TablutState(strongBoard, 0);
-        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, MGPOptional.empty(),
+        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, MGPOptional.empty<TablutMove>(),
                                                         strongState, MGPOptional.empty(),
                                                         minimax);
     });
@@ -165,8 +165,9 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const strongState: TablutState = new TablutState(strongBoard, 0);
-        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, MGPOptional.empty(),
-                                                        strongState, MGPOptional.empty(), minimax);
+        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, MGPOptional.empty<TablutMove>(),
+                                                        strongState, MGPOptional.empty(),
+                                                        minimax);
     });
     describe('isThreatened', () => {
         it('should now that empty thrones are threats', () => {

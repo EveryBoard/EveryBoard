@@ -11,14 +11,16 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert, display } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { TablutLegalityStatus } from './TablutLegalityStatus';
 import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { TablutFailure } from './TablutFailure';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
-export class TablutNode extends MGPNode<TablutRules, TablutMove, TablutState, TablutLegalityStatus> {}
+export type TablutLegalityInformation = Table<TablutCase>;
 
-export class TablutRules extends Rules<TablutMove, TablutState, TablutLegalityStatus> {
+export class TablutNode extends MGPNode<TablutRules, TablutMove, TablutState, TablutLegalityInformation> {}
+
+export class TablutRules extends Rules<TablutMove, TablutState, TablutLegalityInformation> {
 
     public static VERBOSE: boolean = false;
 
@@ -38,20 +40,21 @@ export class TablutRules extends Rules<TablutMove, TablutState, TablutLegalitySt
     // statics methods :
     private static applyLegalMove(move: TablutMove,
                                   state: TablutState,
-                                  status: TablutLegalityStatus)
+                                  resultingBoard: TablutLegalityInformation)
     : TablutState
     {
-        display(TablutRules.VERBOSE, { TablutRules_applyLegalMove: { move, state, status } });
+        display(TablutRules.VERBOSE, { TablutRules_applyLegalMove: { move, state, resultingBoard } });
         // copies
         const turn: number = state.turn;
 
-        return new TablutState(status.resultingBoard.get(), turn + 1);
+        return new TablutState(resultingBoard, turn + 1);
     }
-    public static tryMove(player: Player, move: TablutMove, board: TablutCase[][]): TablutLegalityStatus {
+    public static tryMove(player: Player, move: TablutMove, board: TablutCase[][])
+    : MGPFallible<TablutLegalityInformation> {
         display(TablutRules.VERBOSE, { TablutRules_tryMove: { player, move, board } });
         const validity: MGPValidation = this.getMoveValidity(player, move, board);
         if (validity.isFailure()) {
-            return { legal: validity, resultingBoard: MGPOptional.empty() };
+            return validity.toFailedFallible();
         }
 
         // move is legal here
@@ -65,7 +68,7 @@ export class TablutRules extends Rules<TablutMove, TablutState, TablutLegalitySt
                 board[captured.get().y][captured.get().x] = TablutCase.UNOCCUPIED; // do capture, unless it is a king
             }
         }
-        return { legal: MGPValidation.SUCCESS, resultingBoard: MGPOptional.of(board) };
+        return MGPFallible.success(board);
     }
     private static getMoveValidity(player: Player, move: TablutMove, board: Table<TablutCase>): MGPValidation {
         const cOwner: RelativePlayer = this.getRelativeOwner(player, move.coord, board);
@@ -538,13 +541,13 @@ export class TablutRules extends Rules<TablutMove, TablutState, TablutLegalitySt
 
     public applyLegalMove(move: TablutMove,
                           state: TablutState,
-                          status: TablutLegalityStatus)
+                          resultingBoard: TablutLegalityInformation)
     : TablutState
     {
-        display(TablutRules.VERBOSE, { tablutRules_applyLegalMove: { move, state, status } });
-        return TablutRules.applyLegalMove(move, state, status);
+        display(TablutRules.VERBOSE, { tablutRules_applyLegalMove: { move, state, resultingBoard } });
+        return TablutRules.applyLegalMove(move, state, resultingBoard);
     }
-    public isLegal(move: TablutMove, state: TablutState): TablutLegalityStatus {
+    public isLegal(move: TablutMove, state: TablutState): MGPFallible<TablutLegalityInformation> {
         display(TablutRules.VERBOSE, { tablutRules_isLegal: { move, state } });
         // copies
         const board: TablutCase[][] = state.getCopiedBoard();

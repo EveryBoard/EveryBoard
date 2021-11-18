@@ -2,8 +2,7 @@ import { Component } from '@angular/core';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { SiamMove } from 'src/app/games/siam/SiamMove';
 import { SiamState } from 'src/app/games/siam/SiamState';
-import { SiamLegalityStatus } from 'src/app/games/siam/SiamLegalityStatus';
-import { SiamRules } from 'src/app/games/siam/SiamRules';
+import { SiamLegalityInformation, SiamRules } from 'src/app/games/siam/SiamRules';
 import { SiamMinimax } from 'src/app/games/siam/SiamMinimax';
 import { SiamPiece } from 'src/app/games/siam/SiamPiece';
 import { SiamTutorial } from './SiamTutorial';
@@ -27,7 +26,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
                                                             SiamMove,
                                                             SiamState,
                                                             SiamPiece,
-                                                            SiamLegalityStatus>
+                                                            SiamLegalityInformation>
 {
     public static VERBOSE: boolean = false;
 
@@ -55,7 +54,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         this.lastMove = this.rules.node.move;
         if (this.lastMove.isPresent()) {
             const previousGameState: SiamState = this.rules.node.mother.get().gameState;
-            this.movedPieces = this.rules.isLegal(this.lastMove.get(), previousGameState).moved;
+            this.movedPieces = this.rules.isLegal(this.lastMove.get(), previousGameState).get().moved;
         } else {
             this.movedPieces = [];
         }

@@ -13,7 +13,7 @@ export abstract class RectangularGameComponent<R extends Rules<M, S, L>,
                                                M extends Move,
                                                S extends GameStateWithTable<P>,
                                                P,
-                                               L extends LegalityStatus = LegalityStatus>
+                                               L = void>
     extends GameComponent<R, M, S, L>
 {
 

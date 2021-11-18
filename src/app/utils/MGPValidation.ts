@@ -1,3 +1,5 @@
+import { MGPFallible } from './MGPFallible';
+
 export class MGPValidation {
     public static readonly SUCCESS: MGPValidation = new MGPValidation(null);
 
@@ -20,6 +22,13 @@ export class MGPValidation {
             throw new Error('MGPValidation: Cannot extract failure reason from success.');
         } else {
             return this.reason as string; // always a string here
+        }
+    }
+    public toFailedFallible<T>(): MGPFallible<T> {
+        if (this.isSuccess()) {
+            throw new Error('MGPValidation: cannot convert into failed fallible.');
+        } else {
+            return MGPFallible.failure(this.getReason());
         }
     }
 }

@@ -10,11 +10,10 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { YinshFailure } from './YinshFailure';
 import { YinshState } from './YinshState';
-import { YinshLegalityStatus } from './YinshLegalityStatus';
 import { YinshMinimax } from './YinshMinimax';
 import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';
-import { YinshRules } from './YinshRules';
+import { YinshLegalityInformation, YinshRules } from './YinshRules';
 import { YinshTutorial } from './YinshTutorial';
 import { Utils } from 'src/app/utils/utils';
 
@@ -49,7 +48,8 @@ interface ViewInfo {
     templateUrl: './yinsh.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class YinshComponent extends HexagonalGameComponent<YinshRules, YinshMove, YinshState, YinshLegalityStatus> {
+export class YinshComponent
+    extends HexagonalGameComponent<YinshRules, YinshMove, YinshState, YinshPiece, YinshLegalityInformation> {
 
     private static RING_OUTER_SIZE: number = 40;
     private static RING_MID_SIZE: number = 34;
@@ -105,7 +105,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules, YinshMove
                                          FlatHexaOrientation.INSTANCE);
         this.constructedState = this.rules.node.gameState;
         this.constructedState.allCoords().forEach((coord: Coord): void => {
-            if (this.viewInfo.caseInfo[coord.y] == null) {
+            if (this.viewInfo.caseInfo[coord.y] == null ) {
                 this.viewInfo.caseInfo[coord.y] = [];
             }
             this.viewInfo.caseInfo[coord.y][coord.x] = {

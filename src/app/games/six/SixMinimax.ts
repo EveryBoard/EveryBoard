@@ -6,12 +6,12 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { SixState } from './SixState';
 import { SixMove } from './SixMove';
-import { SixLegalityStatus } from './SixLegalityStatus';
 import { SCORE } from 'src/app/jscaip/SCORE';
 import { assert, display, Utils } from 'src/app/utils/utils';
 import { AlignementMinimax, BoardInfo } from 'src/app/jscaip/AlignementMinimax';
-import { SixVictorySource, SixNode, SixRules } from './SixRules';
+import { SixVictorySource, SixNode, SixRules, SixLegalityInformation } from './SixRules';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 export class SixNodeUnheritance implements NodeUnheritance {
 
@@ -29,7 +29,7 @@ export class SixNodeUnheritance implements NodeUnheritance {
 
 export class SixMinimax extends AlignementMinimax<SixMove,
                                                   SixState,
-                                                  SixLegalityStatus,
+                                                  SixLegalityInformation,
                                                   SixVictorySource>
 {
 
@@ -87,8 +87,8 @@ export class SixMinimax extends AlignementMinimax<SixMove,
             for (const landing of landings) {
                 const move: SixMove = SixMove.fromDeplacement(start, landing);
                 if (state.isCoordConnected(landing, start)) {
-                    const legality: SixLegalityStatus = SixRules.isLegalPhaseTwoMove(move, state);
-                    if (legality.legal.isSuccess()) { // TODO: cuttingMove
+                    const legality: MGPFallible<SixLegalityInformation> = SixRules.isLegalPhaseTwoMove(move, state);
+                    if (legality.isSuccess()) { // TODO: cuttingMove
                         deplacements.push(move);
                     }
                 }
