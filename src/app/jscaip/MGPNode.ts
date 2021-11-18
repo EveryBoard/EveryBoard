@@ -22,11 +22,8 @@ export class MGPNode<R extends Rules<M, S, L>,
                      L extends LegalityStatus = LegalityStatus,
                      U extends NodeUnheritance = NodeUnheritance> {
     // TODO: calculate a board - value by the information of the mother.boardValue + this.move to ease the calculation
-    // TODO: choose ONE commenting langage, for fuck's sake.
     // TODO: check for the proper use of LinkedList to optimise the stuff
     // TODO: when AI has all choice at bestHopedValue equality, she must split by average?
-
-    // static fields
 
     public static VERBOSE: boolean = false;
 
@@ -34,10 +31,9 @@ export class MGPNode<R extends Rules<M, S, L>,
     public static ruler: Rules<Move, AbstractGameState, LegalityStatus>;
 
     public static minimaxes: MGPMap<string, Minimax<Move, AbstractGameState>> = new MGPMap();
-    // instance fields:
 
-    private childs: (MGPNode<R, M, S, L, U>[]) | null = null;
-    /* null if we did not create potential children of a node, hence also if it is a leaf (depth = 0)
+    private childs: MGPOptional<MGPNode<R, M, S, L, U>[]> = MGPOptional.empty();
+    /* empty if we did not create potential children of a node, hence also if it is a leaf (depth = 0)
     *
     * an empty ArrayList if it is the end of the game (and then a leaf)
     *
@@ -56,8 +52,6 @@ export class MGPNode<R extends Rules<M, S, L>,
     /* Can contain more move than childs, in case of pruning
      * should be only calculated once
      */
-
-    // statics methods:
 
     public static getScoreStatus(score: number): SCORE {
         /* the score status is VICTORY if the score is minValue or MaxValue,
@@ -145,7 +139,9 @@ export class MGPNode<R extends Rules<M, S, L>,
         }
         const possibleMoves: M[] = this.getPossibleMoves(minimax);
         assert(possibleMoves.length > 0, 'Minimax ' + minimax.name + ' should give move, received nones!');
-        this.childs = this.childs || [];
+        if (this.childs.isAbsent()) {
+            this.childs = MGPOptional.of([]);
+        }
         let bestChilds: MGPNode<R, M, S, L, U>[] = [];
         const currentPlayer: Player = this.gameState.getCurrentPlayer();
         let extremumExpected: number =
@@ -198,26 +194,26 @@ export class MGPNode<R extends Rules<M, S, L>,
         }
     }
     private getOrCreateChild(move: M, minimax: Minimax<M, S, L, U>): MGPNode<R, M, S, L, U> {
-        let child: MGPNode<R, M, S, L, U> | null = this.getSonByMove(move);
-        if (child == null) {
+        let child: MGPOptional<MGPNode<R, M, S, L, U>> = this.getSonByMove(move);
+        if (child.isAbsent()) {
             const status: L = minimax.ruler.isLegal(move, this.gameState);
             if (status.legal.isFailure()) {
                 Utils.handleError(`The minimax has accepted an illegal move, this should not happen.`);
             }
             const state: S = minimax.ruler.applyLegalMove(move, this.gameState, status);
-            child = new MGPNode(state, MGPOptional.of(this), MGPOptional.of(move), minimax);
-            Utils.getNonNullable(this.childs).push(child);
+            child = MGPOptional.of(new MGPNode(state, MGPOptional.of(this), MGPOptional.of(move), minimax));
+            this.childs.get().push(child.get());
         }
-        return child;
+        return child.get();
     }
-    public getSonByMove(move: M): MGPNode<R, M, S, L, U> | null {
-        assert(this.childs != null, 'Cannot get son of uncalculated node');
-        for (const node of Utils.getNonNullable(this.childs)) {
+    public getSonByMove(move: M): MGPOptional<MGPNode<R, M, S, L, U>> {
+        assert(this.childs.isPresent(), 'Cannot get son of uncalculated node');
+        for (const node of this.childs.get()) {
             if (node.move.isPresent() && node.move.equalsValue(move)) {
-                return node;
+                return MGPOptional.of(node);
             }
         }
-        return null;
+        return MGPOptional.empty();
     }
     public getInitialNode(): MGPNode<R, M, S, L, U> {
         let almightyMom: MGPNode<R, M, S, L, U> = this;
@@ -230,19 +226,19 @@ export class MGPNode<R extends Rules<M, S, L>,
         return this.hopedValue.get(minimax.name).get();
     }
     public getOwnValue(minimax: Minimax<M, S, L, U>): U {
-        assert(minimax != null, 'Cannot got game value without minimax provided');
-
-        let ownValue: U | null = this.ownValue.get(minimax.name).getOrNull();
-        if (ownValue == null) {
-            ownValue = minimax.getBoardValue(this);
+        const ownValueOptional: MGPOptional<U> = this.ownValue.get(minimax.name);
+        if (ownValueOptional.isAbsent()) {
+            const ownValue: U = minimax.getBoardValue(this);
             this.ownValue.set(minimax.name, ownValue);
+            return ownValue;
+        } else {
+            return ownValueOptional.get();
         }
-        return ownValue;
     }
     public myToString(): string {
         let genealogy: string = '';
         let node: MGPNode<R, M, S, L, U> = this;
-        if (node.mother.isPresent() === false) {
+        if (node.mother.isAbsent()) {
             const turn: number = node.gameState.turn;
             return 'NodeInitial: ' + turn;
         }
@@ -255,18 +251,18 @@ export class MGPNode<R extends Rules<M, S, L>,
         return 'Node: ' + genealogy;
     }
     public hasMoves(): boolean {
-        return this.childs != null;
+        return this.childs.isPresent();
     }
     // debug
     public countDescendants(): number {
-        if (this.childs === null) {
+        if (this.childs.isAbsent()) {
             return 0;
         }
-        let nbDescendants: number = this.childs.length;
+        let nbDescendants: number = this.childs.get().length;
         if (nbDescendants === 0) {
             return 0;
         }
-        for (const son of this.childs) {
+        for (const son of this.childs.get()) {
             nbDescendants += son.countDescendants();
         }
         return nbDescendants;

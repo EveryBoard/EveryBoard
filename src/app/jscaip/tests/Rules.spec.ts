@@ -3,6 +3,7 @@ import { LegalityStatus } from '../LegalityStatus';
 import { MGPNode } from '../MGPNode';
 import { GameStatus, Rules } from '../Rules';
 import { GameStateWithTable } from '../GameStateWithTable';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 
 class MyAbstractState extends GameStateWithTable<number> {
@@ -38,7 +39,7 @@ describe('Rules', () => {
     it('should create child to already calculated node which did not include this legal child yet', () => {
         // Given a node with sons
         spyOn(rules.node, 'hasMoves').and.returnValue(true);
-        spyOn(rules.node, 'getSonByMove').and.returnValue(null);
+        spyOn(rules.node, 'getSonByMove').and.returnValue(MGPOptional.empty());
 
         // when choosing another one
         const wasLegal: boolean = rules.choose(P4Move.ZERO);
