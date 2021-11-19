@@ -3,7 +3,7 @@ import { Observable, Subscription } from 'rxjs';
 import { IChat, IChatId } from '../domain/ichat';
 import { ChatDAO } from '../dao/ChatDAO';
 import { IMessage } from '../domain/imessage';
-import { assert, display, Utils } from 'src/app/utils/utils';
+import { display, Utils } from 'src/app/utils/utils';
 import { MGPValidation } from '../utils/MGPValidation';
 import { ArrayUtils } from '../utils/ArrayUtils';
 import { Localized } from '../utils/LocaleUtils';
@@ -78,7 +78,7 @@ export class ChatService implements OnDestroy {
         if (this.isForbiddenMessage(content)) {
             return MGPValidation.failure(ChatMessages.FORBIDDEN_MESSAGE());
         }
-        const chat: IChat = Utils.getNonNullable(await this.chatDao.read(chatId));
+        const chat: IChat = (await this.chatDao.tryToRead(chatId)).get();
         const messages: IMessage[] = ArrayUtils.copyImmutableArray(chat.messages);
         const newMessage: IMessage = {
             content,

@@ -15,6 +15,7 @@ import { Router } from '@angular/router';
 import { GameService } from 'src/app/services/GameService';
 import { ChatService } from 'src/app/services/ChatService';
 import { Utils } from 'src/app/utils/utils';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('PartCreationComponent:', () => {
 
@@ -180,7 +181,7 @@ describe('PartCreationComponent:', () => {
             ...JoinerMocks.WITH_ACCEPTED_CONFIG.doc,
             firstPlayer: FirstPlayer.CREATOR.value,
         });
-        const currentPart: IPart = Utils.getNonNullable(await partDAOMock.read('joinerId'));
+        const currentPart: IPart = (await partDAOMock.tryToRead('joinerId')).get();
         const expectedPart: IPart = { ...PartMocks.STARTING.doc, beginning: currentPart.beginning };
         expect(currentPart).toEqual(expectedPart);
     }));
@@ -450,7 +451,7 @@ describe('PartCreationComponent:', () => {
             component.userName = 'creator';
             component.partId = 'does not exist';
             const joinerDAOMock: JoinerDAO = TestBed.inject(JoinerDAO);
-            spyOn(joinerDAOMock, 'read').and.resolveTo(undefined);
+            spyOn(joinerDAOMock, 'tryToRead').and.resolveTo(MGPOptional.empty());
             const joinerService: JoinerService = TestBed.inject(JoinerService);
             spyOn(joinerService, 'observe');
 

@@ -96,7 +96,7 @@ export class AuthenticationService implements OnDestroy {
                     this.registrationInProgress = MGPOptional.empty();
                 }
                 RTDB.updatePresence(user.uid);
-                const userInDB: IUser = Utils.getNonNullable(await userDAO.read(user.uid));
+                const userInDB: IUser = (await userDAO.tryToRead(user.uid)).get();
                 display(AuthenticationService.VERBOSE, `User ${userInDB.username} is connected, and the verified status is ${this.emailVerified(user)}`);
                 const userHasFinalizedVerification: boolean = this.emailVerified(user) === true && userInDB.username !== '';
                 if (userHasFinalizedVerification === true && userInDB.verified === false) {

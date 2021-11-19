@@ -11,8 +11,6 @@ export interface IFirebaseFirestoreDAO<T extends FirebaseJSONObject> {
 
     create(newElement: T): Promise<string>;
 
-    read(id: string): Promise<T | null>;
-
     update(id: string, modification: Partial<T>): Promise<void>;
 
     delete(messageId: string): Promise<void>;
@@ -47,9 +45,6 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
     }
     public async exists(id: string): Promise<boolean> {
         return (await this.tryToRead(id)).isPresent();
-    }
-    public async read(id: string): Promise<T | null> {
-        return (await this.tryToRead(id)).getOrNull();
     }
     public async update(id: string, modification: Partial<T>): Promise<void> {
         return this.afs.collection(this.collectionName).doc<T>(id).ref.update(modification);

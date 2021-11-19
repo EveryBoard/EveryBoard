@@ -4,6 +4,7 @@ import { FirstPlayer, IJoiner, IJoinerId, PartStatus, PartType } from '../domain
 import { JoinerDAO } from '../dao/JoinerDAO';
 import { assert, display, Utils } from 'src/app/utils/utils';
 import { ArrayUtils } from '../utils/ArrayUtils';
+import { MGPOptional } from '../utils/MGPOptional';
 
 @Injectable({
     providedIn: 'root',
@@ -38,10 +39,11 @@ export class JoinerService {
     public async joinGame(partId: string, userName: string): Promise<boolean> {
         display(JoinerService.VERBOSE, 'JoinerService.joinGame(' + partId + ', ' + userName + ')');
 
-        const joiner: IJoiner | null = await this.joinerDao.read(partId);
-        if (joiner == null) {
+        const joinerOpt: MGPOptional<IJoiner> = await this.joinerDao.tryToRead(partId);
+        if (joinerOpt.isAbsent()) {
             return false;
         }
+        const joiner: IJoiner = joinerOpt.get();
         const joinerList: string[] = ArrayUtils.copyImmutableArray(joiner.candidates);
         if (joinerList.includes(userName)) {
             throw new Error('JoinerService.joinGame was called by a user already in the game');
@@ -60,11 +62,12 @@ export class JoinerService {
         if (this.observedJoinerId == null) {
             throw new Error('cannot cancel joining when not observing a joiner');
         }
-        const joiner: IJoiner | null = await this.joinerDao.read(this.observedJoinerId);
-        if (joiner == null) {
+        const joinerOpt: MGPOptional<IJoiner> = await this.joinerDao.tryToRead(this.observedJoinerId);
+        if (joinerOpt.isAbsent()) {
             // The part does not exist, so we can consider that we succesfully cancelled joining
             return;
         } else {
+            const joiner: IJoiner = joinerOpt.get();
             const candidates: string[] = ArrayUtils.copyImmutableArray(joiner.candidates);
             const indexLeaver: number = candidates.indexOf(userName);
             let chosenPlayer: string | null = joiner.chosenPlayer;
@@ -158,7 +161,7 @@ export class JoinerService {
     public async readJoinerById(partId: string): Promise<IJoiner> {
         display(JoinerService.VERBOSE, 'JoinerService.readJoinerById(' + partId + ')');
 
-        return Utils.getNonNullable(await this.joinerDao.read(partId));
+        return (await this.joinerDao.tryToRead(partId)).get();
     }
     public async set(partId: string, joiner: IJoiner): Promise<void> {
         display(JoinerService.VERBOSE, 'JoinerService.set(' + partId + ', ' + JSON.stringify(joiner) + ')');
