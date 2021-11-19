@@ -5,7 +5,6 @@ import { KamisadoColor } from './KamisadoColor';
 import { KamisadoMove } from './KamisadoMove';
 import { KamisadoState } from './KamisadoState';
 import { KamisadoPiece } from './KamisadoPiece';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
@@ -180,7 +179,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
 
         if (move === KamisadoMove.PASS) {
             if (this.mustPass(state) && !state.alreadyPassed) {
-                return MGPFallible.SUCCESS;
+                return MGPFallible.success(undefined);
             } else {
                 return MGPFallible.failure(RulesFailure.CANNOT_PASS());
             }
@@ -222,7 +221,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
                 return MGPFallible.failure(KamisadoFailure.MOVE_BLOCKED());
             }
         }
-        return MGPFallible.SUCCESS;
+        return MGPFallible.success(undefined);
     }
     public isLegal(move: KamisadoMove, state: KamisadoState): MGPFallible<void> {
         return KamisadoRules.isLegal(move, state);

@@ -7,7 +7,7 @@ import { Move } from 'src/app/jscaip/Move';
 import { assert, display } from 'src/app/utils/utils';
 import { MGPNode, MGPNodeStats } from 'src/app/jscaip/MGPNode';
 import { AbstractGameState } from 'src/app/jscaip/GameState';
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { AbstractMinimax, Minimax } from 'src/app/jscaip/Minimax';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -75,7 +75,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
     }
     public proposeAIToPlay(): void {
         // check if ai's turn has come, if so, make her start after a delay
-        const playingMinimax: MGPOptional<Minimax<Move, AbstractGameState>> = this.getPlayingAI();
+        const playingMinimax: MGPOptional<AbstractMinimax> = this.getPlayingAI();
         if (playingMinimax.isPresent()) {
             // bot's turn
             setTimeout(() => {
@@ -83,20 +83,20 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
             }, this.botTimeOut);
         }
     }
-    private getPlayingAI(): MGPOptional<Minimax<Move, AbstractGameState>> {
+    private getPlayingAI(): MGPOptional<AbstractMinimax> {
         const turn: number = this.gameComponent.rules.node.gameState.turn % 2;
         if (this.gameComponent.rules.getGameStatus(this.gameComponent.rules.node).isEndGame) {
             // No AI is playing when the game is finished
             return MGPOptional.empty();
         }
         return MGPOptional.ofNullable(
-            this.gameComponent.availableMinimaxes.find((a: Minimax<Move, AbstractGameState>) => {
+            this.gameComponent.availableMinimaxes.find((a: AbstractMinimax) => {
                 return a.name === this.players[turn];
             }));
     }
-    public doAIMove(playingMinimax: Minimax<Move, AbstractGameState>): void {
+    public doAIMove(playingMinimax: AbstractMinimax): void {
         // called only when it's AI's Turn
-        const ruler: Rules<Move, AbstractGameState> = this.gameComponent.rules;
+        const ruler: Rules<Move, AbstractGameState, unknown> = this.gameComponent.rules;
         const gameStatus: GameStatus = ruler.getGameStatus(ruler.node);
         assert(gameStatus === GameStatus.ONGOING, 'IA should not try to play when game is over!');
         const turn: number = ruler.node.gameState.turn % 2;

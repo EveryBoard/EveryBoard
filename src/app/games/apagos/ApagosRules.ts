@@ -1,4 +1,3 @@
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
@@ -62,7 +61,7 @@ export class ApagosRules extends Rules<ApagosMove, ApagosState> {
         if (state.getRemaining(move.piece.get()) <= 0) {
             return MGPFallible.failure(ApagosFailure.NO_PIECE_REMAINING_TO_DROP());
         }
-        return MGPFallible.SUCCESS;
+        return MGPFallible.success(undefined);
     }
     private isLegalSlideDown(move: ApagosMove, state: ApagosState): MGPFallible<void> {
         const currentPlayer: Player = state.getCurrentPlayer();
@@ -70,7 +69,7 @@ export class ApagosRules extends Rules<ApagosMove, ApagosState> {
         if (startingSquare.count(currentPlayer) === 0) {
             return MGPFallible.failure(ApagosFailure.NO_PIECE_OF_YOU_IN_CHOSEN_SQUARE());
         }
-        return MGPFallible.SUCCESS;
+        return MGPFallible.success(undefined);
     }
     public getGameStatus(node: ApagosNode): GameStatus {
         const state: ApagosState = node.gameState;

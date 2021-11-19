@@ -1,6 +1,5 @@
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
@@ -180,7 +179,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
                 }
             } else return MGPFallible.failure(PylosFailure.INVALID_FIRST_CAPTURE());
         }
-        return MGPFallible.SUCCESS;
+        return MGPFallible.success(undefined);
     }
     public getGameStatus(node: PylosNode): GameStatus {
         return PylosRules.getGameStatus(node);

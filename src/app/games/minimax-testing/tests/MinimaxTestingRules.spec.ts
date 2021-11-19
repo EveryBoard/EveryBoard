@@ -4,7 +4,6 @@ import { MinimaxTestingMove } from '../MinimaxTestingMove';
 import { MinimaxTestingMinimax } from '../MinimaxTestingMinimax';
 import { Player } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 
 describe('MinimaxTestingRules', () => {

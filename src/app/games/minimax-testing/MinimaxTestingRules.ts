@@ -3,7 +3,6 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { MinimaxTestingState } from './MinimaxTestingState';
 import { MinimaxTestingMove } from './MinimaxTestingMove';
 import { Coord } from 'src/app/jscaip/Coord';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 
@@ -52,7 +51,7 @@ export class MinimaxTestingRules extends Rules<MinimaxTestingMove, MinimaxTestin
         if (coord.y + 1 === board.length && move.right === false) {
             return MGPFallible.failure('incorrect move');
         }
-        return MGPFallible.SUCCESS;
+        return MGPFallible.success(undefined);
     }
     public getGameStatus(node: MinimaxTestingNode): GameStatus {
         return MinimaxTestingRules.getGameStatus(node);

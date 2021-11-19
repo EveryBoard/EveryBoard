@@ -2,9 +2,7 @@ import { Component, ComponentFactory, ComponentFactoryResolver, ComponentRef, Ty
 import { ActivatedRoute } from '@angular/router';
 import { GameIncluderComponent } from '../game-components/game-includer/game-includer.component';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
-
 import { Move } from '../../jscaip/Move';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { assert, display, Utils } from 'src/app/utils/utils';
 import { GameInfo } from '../normal-component/pick-game/pick-game.component';
@@ -12,6 +10,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { AbstractGameComponent } from '../game-components/game-component/GameComponent';
 import { AbstractGameState } from 'src/app/jscaip/GameState';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 export class GameWrapperMessages {
 
@@ -112,10 +111,10 @@ export abstract class GameWrapper {
         if (this.endGame) {
             return MGPValidation.failure($localize`The game has ended.`);
         }
-        const legality: LegalityStatus = this.gameComponent.rules.isLegal(move, state);
-        if (legality.legal.isFailure()) {
-            this.gameComponent.cancelMove(legality.legal.getReason());
-            return legality.legal;
+        const legality: MGPFallible<unknown> = this.gameComponent.rules.isLegal(move, state);
+        if (legality.isFailure()) {
+            this.gameComponent.cancelMove(legality.getReason());
+            return MGPValidation.ofFallible(legality);
         }
         this.gameComponent.cancelMoveAttempt();
         await this.onLegalUserMove(move, scores);

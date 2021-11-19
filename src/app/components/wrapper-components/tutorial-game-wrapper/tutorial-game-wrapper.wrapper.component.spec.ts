@@ -10,7 +10,6 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { TutorialFailure } from './TutorialFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Move } from 'src/app/jscaip/Move';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Rules } from 'src/app/jscaip/Rules';
 import { Direction } from 'src/app/jscaip/Direction';
@@ -56,6 +55,7 @@ import { ApagosState } from 'src/app/games/apagos/ApagosState';
 import { ApagosMove } from 'src/app/games/apagos/ApagosMove';
 import { ApagosCoord } from 'src/app/games/apagos/ApagosCoord';
 import { Player } from 'src/app/jscaip/Player';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 describe('TutorialGameWrapperComponent (wrapper)', () => {
 
@@ -628,7 +628,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
 
             // when doing a (virtually) illegal move
             const error: string = 'some error message...';
-            spyOn(wrapper.gameComponent.rules, 'isLegal').and.returnValue(LegalityStatus.failure(error));
+            spyOn(wrapper.gameComponent.rules, 'isLegal').and.returnValue(MGPFallible.failure(error));
             await componentTestUtils.expectClickSuccess('#chooseCoord_0_0');
             tick(10);
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
@@ -1003,7 +1003,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const saharaTutorial: TutorialStep[] = new SaharaTutorial().tutorial;
             const sixTutorial: TutorialStep[] = new SixTutorial().tutorial;
             const yinshTutorial: TutorialStep[] = new YinshTutorial().tutorial;
-            const stepExpectations: [Rules<Move, AbstractGameState>, TutorialStep, Move, MGPValidation][] = [
+            const stepExpectations: [Rules<Move, AbstractGameState, unknown>, TutorialStep, Move, MGPValidation][] = [
                 [
                     new ApagosRules(ApagosState),
                     apagosTutorial[2],
@@ -1112,12 +1112,12 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 ],
             ];
             for (const stepExpectation of stepExpectations) {
-                const rules: Rules<Move, AbstractGameState> = stepExpectation[0];
+                const rules: Rules<Move, AbstractGameState, unknown> = stepExpectation[0];
                 const step: TutorialStep = stepExpectation[1];
                 const move: Move = stepExpectation[2];
                 const validation: MGPValidation = stepExpectation[3];
-                const status: LegalityStatus = rules.isLegal(move, step.state);
-                if (status.legal.isSuccess()) {
+                const status: MGPFallible<unknown> = rules.isLegal(move, step.state);
+                if (status.isSuccess()) {
                     const state: AbstractGameState = rules.applyLegalMove(move, step.state, status);
                     if (step.isPredicate()) {
                         expect(Utils.getNonNullable(step.predicate)(move, state)).toEqual(validation);
@@ -1126,7 +1126,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     }
                 } else {
                     const context: string = 'Move should be legal to reach predicate but failed because';
-                    TestUtils.expectValidationSuccess(status.legal, context);
+                    TestUtils.expectValidationSuccess(MGPValidation.ofFallible(status), context);
                 }
             }
         }));
@@ -1137,20 +1137,20 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 }
                 const gameComponent: AbstractGameComponent =
                     TestBed.createComponent(gameInfo.component).debugElement.componentInstance;
-                const rules: Rules<Move, AbstractGameState> = gameComponent.rules;
+                const rules: Rules<Move, AbstractGameState, unknown> = gameComponent.rules;
                 const steps: TutorialStep[] = gameComponent.tutorial;
                 for (const step of steps) {
                     if (step.hasSolution()) {
-                        const status: LegalityStatus = rules.isLegal(step.getSolution(), step.state);
-                        if (status.legal.isSuccess()) {
+                        const status: MGPFallible<unknown> = rules.isLegal(step.getSolution(), step.state);
+                        if (status.isSuccess()) {
                             if (step.isPredicate()) {
                                 const state: AbstractGameState =
-                                    rules.applyLegalMove(step.getSolution(), step.state, status);
+                                    rules.applyLegalMove(step.getSolution(), step.state, status.get());
                                 expect(Utils.getNonNullable(step.predicate)(step.getSolution(), state))
                                     .toEqual(MGPValidation.SUCCESS);
                             }
                         } else {
-                            expect(status.legal.reason).withContext('Solution move should be legal but failed').toBeNull();
+                            expect(status.getReason()).withContext('Solution move should be legal but failed').toBeNull();
                         }
                     }
                 }

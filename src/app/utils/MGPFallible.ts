@@ -1,17 +1,14 @@
 import { comparableEquals } from './Comparable';
 import { MGPOptional } from './MGPOptional';
-import { MGPValidation } from './MGPValidation';
-import { assert } from './utils';
 
 export abstract class MGPFallible<T> {
-    public static SUCCESS: MGPFallible<void> = MGPFallible.success(undefined);
     public static success<T>(value: T): MGPFallible<T> {
         return new MGPFallibleSuccess(value);
     }
     public static failure<T>(reason: string): MGPFallible<T> {
-        assert(reason != null, 'reason cannot be null');
         return new MGPFallibleFailure(reason);
     }
+
     public abstract isSuccess(): boolean
 
     public abstract isFailure(): boolean
@@ -25,8 +22,6 @@ export abstract class MGPFallible<T> {
     public abstract getReasonOr(value: string): string
 
     public abstract toOptional(): MGPOptional<T>
-
-    public abstract toValidation(): MGPValidation
 
     public equals(other: MGPFallible<T>): boolean {
         if (this.isFailure()) {
@@ -67,9 +62,6 @@ class MGPFallibleSuccess<T> extends MGPFallible<T> {
     public toOptional(): MGPOptional<T> {
         return MGPOptional.of(this.value);
     }
-    public toValidation(): MGPValidation {
-        return MGPValidation.SUCCESS;
-    }
 }
 
 class MGPFallibleFailure<T> extends MGPFallible<T> {
@@ -99,8 +91,5 @@ class MGPFallibleFailure<T> extends MGPFallible<T> {
     }
     public toOptional(): MGPOptional<T> {
         return MGPOptional.empty();
-    }
-    public toValidation(): MGPValidation {
-        return MGPValidation.failure(this.reason);
     }
 }

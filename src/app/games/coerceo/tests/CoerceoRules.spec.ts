@@ -1,5 +1,4 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { CoerceoMove, CoerceoStep } from '../CoerceoMove';
 import { CoerceoState } from '../CoerceoState';

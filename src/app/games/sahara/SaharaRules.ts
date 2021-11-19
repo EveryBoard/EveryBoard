@@ -67,12 +67,12 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         const commonNeighboor: MGPOptional<Coord> = TriangularCheckerBoard.getCommonNeighboor(move.coord, move.end);
         if (commonNeighboor.isPresent()) {
             if (state.getPieceAt(commonNeighboor.get()) === FourStatePiece.EMPTY) {
-                return MGPFallible.SUCCESS;
+                return MGPFallible.success(undefined);
             } else {
                 return MGPFallible.failure(SaharaFailure.CAN_ONLY_REBOUND_ON_EMPTY_SPACE());
             }
         } else {
-            return MGPFallible.SUCCESS;
+            return MGPFallible.success(undefined);
         }
     }
     public getGameStatus(node: SaharaNode): GameStatus {

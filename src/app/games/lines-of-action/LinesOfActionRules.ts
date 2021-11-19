@@ -1,6 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
@@ -102,7 +101,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         if (state.getPieceAt(move.end) === state.getCurrentPlayer()) {
             return MGPFallible.failure(RulesFailure.CANNOT_SELF_CAPTURE());
         }
-        return MGPFallible.SUCCESS;
+        return MGPFallible.success(undefined);
     }
     public isLegal(move: LinesOfActionMove, state: LinesOfActionState): MGPFallible<void> {
         return LinesOfActionRules.isLegal(move, state);

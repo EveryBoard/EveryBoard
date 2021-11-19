@@ -1,6 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
@@ -124,7 +123,7 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
         if (state.getPieceAt(move.coord) === state.getCurrentOpponent()) {
             return MGPFallible.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         } else {
-            return MGPFallible.SUCCESS;
+            return MGPFallible.success(undefined);
         }
     }
     public getGameStatus(node: QuixoNode): GameStatus {

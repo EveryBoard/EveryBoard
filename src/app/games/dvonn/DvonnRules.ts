@@ -150,7 +150,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
             // If no pieces are movable, the player can pass
             // but only if the previous move was not a pass itself
             if (move === DvonnMove.PASS && !state.alreadyPassed) {
-                return MGPFallible.SUCCESS;
+                return MGPFallible.success(undefined);
             } else {
                 return MGPFallible.failure(RulesFailure.MUST_PASS());
             }
@@ -173,7 +173,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
         if (targetStack.isEmpty()) {
             return MGPFallible.failure(DvonnFailure.EMPTY_TARGET_STACK());
         }
-        return MGPFallible.SUCCESS;
+        return MGPFallible.success(undefined);
     }
     public getGameStatus(node: DvonnNode): GameStatus {
         return DvonnRules.getGameStatus(node);

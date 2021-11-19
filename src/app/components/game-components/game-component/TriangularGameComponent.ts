@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Coord } from 'src/app/jscaip/Coord';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Move } from 'src/app/jscaip/Move';
 import { GameComponent } from './GameComponent';
 import { GameState } from 'src/app/jscaip/GameState';

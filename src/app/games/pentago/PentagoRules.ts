@@ -60,7 +60,7 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState> {
                 }
             }
         }
-        return MGPFallible.SUCCESS;
+        return MGPFallible.success(undefined);
     }
     public getVictoryCoords(state: PentagoState): Coord[] {
         let victoryCoords: Coord[] = [];

@@ -40,3 +40,6 @@ export abstract class Minimax<M extends Move,
         return this.name;
     }
 }
+
+export abstract class AbstractMinimax extends Minimax<Move, AbstractGameState, unknown> {
+}

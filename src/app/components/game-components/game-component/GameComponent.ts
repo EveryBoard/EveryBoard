@@ -103,8 +103,8 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
     }
 }
 
-export abstract class AbstractGameComponent extends GameComponent<Rules<Move, AbstractGameState>,
+export abstract class AbstractGameComponent extends GameComponent<Rules<Move, AbstractGameState, unknown>,
                                                                   Move,
-                                                                  AbstractGameState> {
+AbstractGameState, unknown> {
 }
 

@@ -2,6 +2,13 @@ import { MGPFallible } from './MGPFallible';
 
 export class MGPValidation {
     public static readonly SUCCESS: MGPValidation = new MGPValidation(null);
+    public static ofFallible<T>(fallible: MGPFallible<T>): MGPValidation {
+        if (fallible.isSuccess()) {
+            return MGPValidation.SUCCESS;
+        } else {
+            return MGPValidation.failure(fallible.getReason());
+        }
+    }
 
     private constructor(public readonly reason: string | null) {
     }

@@ -206,7 +206,7 @@ export class AuthenticationService implements OnDestroy {
     public async doGoogleLogin(): Promise<MGPValidation> {
         this.registrationInProgress = this.registerOrLoginWithGoogle();
         const result: MGPFallible<firebase.User> = await this.registrationInProgress;
-        return result.toValidation();
+        return MGPValidation.ofFallible(result);
     }
     private async registerOrLoginWithGoogle(): Promise<MGPFallible<firebase.User>> {
         try {

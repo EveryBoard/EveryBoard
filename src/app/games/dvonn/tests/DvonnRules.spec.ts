@@ -3,7 +3,6 @@ import { DvonnState } from '../DvonnState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { DvonnMove } from '../DvonnMove';
 import { Player } from 'src/app/jscaip/Player';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { DvonnNode, DvonnRules } from '../DvonnRules';
 import { DvonnFailure } from '../DvonnFailure';
 import { DvonnMinimax } from '../DvonnMinimax';

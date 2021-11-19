@@ -93,7 +93,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
         if (captured.is(state.getCurrentPlayer())) {
             return MGPFallible.failure(CoerceoFailure.CANNOT_CAPTURE_OWN_PIECES());
         }
-        return MGPFallible.SUCCESS;
+        return MGPFallible.success(undefined);
     }
     public isLegalDeplacement(move: CoerceoMove, state: CoerceoState): MGPFallible<void> {
         if (state.getPieceAt(move.start.get()) === FourStatePiece.NONE) {
@@ -116,7 +116,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
         if (lander.is(state.getCurrentPlayer())) {
             return MGPFallible.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
-        return MGPFallible.SUCCESS;
+        return MGPFallible.success(undefined);
     }
     public static getGameStatus(node: CoerceoNode): GameStatus {
         const state: CoerceoState = node.gameState;

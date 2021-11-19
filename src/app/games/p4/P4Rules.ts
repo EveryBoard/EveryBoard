@@ -4,7 +4,6 @@ import { GameStatus, Rules } from '../../jscaip/Rules';
 import { SCORE } from '../../jscaip/SCORE';
 import { MGPNode } from '../../jscaip/MGPNode';
 import { P4State } from './P4State';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 import { assert, display, Utils } from 'src/app/utils/utils';
 import { P4Move } from './P4Move';
@@ -188,7 +187,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
         if (state.getPieceAtXY(move.x, 0) !== Player.NONE) {
             return MGPFallible.failure(P4Failure.COLUMN_IS_FULL());
         }
-        return MGPFallible.SUCCESS;
+        return MGPFallible.success(undefined);
     }
     public getGameStatus(node: P4Node): GameStatus {
         const state: P4State = node.gameState;
