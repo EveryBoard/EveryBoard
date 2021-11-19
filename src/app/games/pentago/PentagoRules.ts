@@ -9,7 +9,7 @@ import { PentagoFailure } from './PentagoFailure';
 import { PentagoMove } from './PentagoMove';
 import { PentagoState } from './PentagoState';
 
-export abstract class PentagoNode extends MGPNode<PentagoRules,
+export class PentagoNode extends MGPNode<PentagoRules,
                                                   PentagoMove,
                                                   PentagoState> {}
 export class PentagoRules extends Rules<PentagoMove, PentagoState> {

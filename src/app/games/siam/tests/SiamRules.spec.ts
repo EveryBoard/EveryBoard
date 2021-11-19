@@ -6,7 +6,6 @@ import { SiamState } from '../SiamState';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { SiamFailure } from '../SiamFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Table } from 'src/app/utils/ArrayUtils';
@@ -376,7 +375,7 @@ describe('SiamRules:', () => {
         const resultingState: SiamState = rules.applyLegalMove(move, state, status.get());
         const expectedState: SiamState = new SiamState(expectedBoard, 1);
         expect(resultingState).toEqual(expectedState);
-        const node: SiamNode = new MGPNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+        const node: SiamNode = new SiamNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
     it('Player 1 pushing player 0 pushing mountain should be a victory for player 0', () => {
@@ -401,7 +400,7 @@ describe('SiamRules:', () => {
         const resultingState: SiamState = rules.applyLegalMove(move, state, status.get());
         const expectedState: SiamState = new SiamState(expectedBoard, 1);
         expect(resultingState).toEqual(expectedState);
-        const node: SiamNode = new MGPNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+        const node: SiamNode = new SiamNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
     it('Player 0 pushing player 1 on his side pushing mountain should be a victory for player 0', () => {
@@ -426,7 +425,7 @@ describe('SiamRules:', () => {
         const resultingState: SiamState = rules.applyLegalMove(move, state, status.get());
         const expectedState: SiamState = new SiamState(expectedBoard, 1);
         expect(resultingState).toEqual(expectedState);
-        const node: SiamNode = new MGPNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+        const node: SiamNode = new SiamNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
 });

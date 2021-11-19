@@ -4,7 +4,6 @@ import { AwaleState } from '../AwaleState';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { AwaleMinimax } from '../AwaleMinimax';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { AwaleFailure } from '../AwaleFailure';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
@@ -51,7 +50,7 @@ describe('AwaleRules', () => {
         ];
         const expectedState: AwaleState = new AwaleState(expectedBoard, 1, [23, 25]);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        const node: AwaleNode = new MGPNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+        const node: AwaleNode = new AwaleNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
     it('should forbid non-feeding move', () => {

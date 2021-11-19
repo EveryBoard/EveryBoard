@@ -4,7 +4,6 @@ import { SiamMove } from '../SiamMove';
 import { SiamState } from '../SiamState';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { SiamPiece } from '../SiamPiece';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
@@ -26,7 +25,7 @@ describe('SiamMove', () => {
         ];
         const move: SiamMove = new SiamMove(0, 0, MGPOptional.of(Orthogonal.DOWN), Orthogonal.UP);
         const state: SiamState = new SiamState(board, 0);
-        const node: SiamNode = new MGPNode(state, MGPOptional.empty(), MGPOptional.of(move));
+        const node: SiamNode = new SiamNode(state, MGPOptional.empty(), MGPOptional.of(move));
         const rules: SiamRules = new SiamRules(SiamState);
         const minimax: SiamMinimax = new SiamMinimax(rules, 'SiamMinimax');
         const moves: SiamMove[] = minimax.getListMoves(node);

@@ -3,7 +3,6 @@ import { QuartoMinimax } from '../QuartoMinimax';
 import { QuartoMove } from '../QuartoMove';
 import { QuartoPiece } from '../QuartoPiece';
 import { QuartoState } from '../QuartoState';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
@@ -101,7 +100,7 @@ describe('QuartoRules', () => {
         const move: QuartoMove = new QuartoMove(3, 0, QuartoPiece.AAAB);
         const expectedState: QuartoState = new QuartoState(expectedBoard, 5, QuartoPiece.AAAB);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        const node: QuartoNode = new MGPNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+        const node: QuartoNode = new QuartoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
     it('Should considered player 1 winner when doing a full line', () => {
@@ -121,7 +120,7 @@ describe('QuartoRules', () => {
         const move: QuartoMove = new QuartoMove(3, 3, QuartoPiece.AABA);
         const expectedState: QuartoState = new QuartoState(expectedBoard, 10, QuartoPiece.AABA);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        const node: QuartoNode = new MGPNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+        const node: QuartoNode = new QuartoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
 });

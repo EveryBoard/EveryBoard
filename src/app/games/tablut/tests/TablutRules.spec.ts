@@ -6,7 +6,6 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { TablutState } from '../TablutState';
 import { TablutCase } from '../TablutCase';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { TablutFailure } from '../TablutFailure';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { Minimax } from 'src/app/jscaip/Minimax';
@@ -108,7 +107,7 @@ describe('TablutRules', () => {
         const move: TablutMove = new TablutMove(new Coord(3, 0), new Coord(2, 0));
         const expectedState: TablutState = new TablutState(expectedBoard, 24);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        const node: TablutNode = new MGPNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+        const node: TablutNode = new TablutNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
     it('Capturing against empty throne should work', () => {
@@ -166,7 +165,7 @@ describe('TablutRules', () => {
         const move: TablutMove = new TablutMove(new Coord(2, 0), new Coord(3, 0));
         const expectedState: TablutState = new TablutState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        const node: TablutNode = new MGPNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+        const node: TablutNode = new TablutNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
     it('Capturing king should require three invader and an edge lead to victory', () => {
@@ -196,7 +195,7 @@ describe('TablutRules', () => {
         const move: TablutMove = new TablutMove(new Coord(2, 1), new Coord(3, 1));
         const expectedState: TablutState = new TablutState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        const node: TablutNode = new MGPNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+        const node: TablutNode = new TablutNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
     it('Capturing king with two soldier, one throne, and one edge should not work be a victory', () => {
@@ -226,7 +225,7 @@ describe('TablutRules', () => {
         const move: TablutMove = new TablutMove(new Coord(2, 1), new Coord(1, 1));
         const expectedState: TablutState = new TablutState(expectedBoard, 3);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        const node: TablutNode = new MGPNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+        const node: TablutNode = new TablutNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeOngoing(rules, node, minimaxes);
     });
     it('Capturing king against a throne should not work', () => {
@@ -256,7 +255,7 @@ describe('TablutRules', () => {
         const move: TablutMove = new TablutMove(new Coord(2, 2), new Coord(4, 2));
         const expectedState: TablutState = new TablutState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        const node: TablutNode = new MGPNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+        const node: TablutNode = new TablutNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeOngoing(rules, node, minimaxes);
     });
     it('Capturing king against a throne with 3 soldier should not work', () => {
@@ -286,7 +285,7 @@ describe('TablutRules', () => {
         const move: TablutMove = new TablutMove(new Coord(2, 2), new Coord(4, 2));
         const expectedState: TablutState = new TablutState(expectedBoard, 13);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        const node: TablutNode = new MGPNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+        const node: TablutNode = new TablutNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeOngoing(rules, node, minimaxes);
     });
     it('King should be authorised to come back on the throne', () => {
@@ -349,7 +348,7 @@ describe('TablutRules', () => {
         const move: TablutMove = new TablutMove(new Coord(8, 4), new Coord(1, 4));
         const expectedState: TablutState = new TablutState(expectedBoard, 25);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        const node: TablutNode = new MGPNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+        const node: TablutNode = new TablutNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
 });

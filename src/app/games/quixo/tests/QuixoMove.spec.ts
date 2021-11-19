@@ -1,5 +1,4 @@
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { QuixoState } from '../QuixoState';
 import { QuixoNode, QuixoRules } from '../QuixoRules';
@@ -43,7 +42,7 @@ describe('QuixoMove:', () => {
         ];
         const move: QuixoMove = new QuixoMove(0, 0, Orthogonal.DOWN);
         const state: QuixoState = new QuixoState(board, 0);
-        const node: QuixoNode = new MGPNode(state, MGPOptional.empty(), MGPOptional.of(move));
+        const node: QuixoNode = new QuixoNode(state, MGPOptional.empty(), MGPOptional.of(move));
         const rules: QuixoRules = new QuixoRules(QuixoState);
         const minimax: QuixoMinimax = new QuixoMinimax(rules, 'QuixoMinimax');
         const moves: QuixoMove[] = minimax.getListMoves(node);

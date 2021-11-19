@@ -1,6 +1,5 @@
 import { SiamRules, SiamNode } from '../SiamRules';
 import { SiamPiece } from '../SiamPiece';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { SiamState } from '../SiamState';
 import { SiamMove } from '../SiamMove';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -45,7 +44,7 @@ describe('SiamMinimax:', () => {
         ];
         const state: SiamState = new SiamState(board, 0);
         const move: SiamMove = new SiamMove(3, 3, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
-        expect(minimax.getBoardValue(new MGPNode(state, MGPOptional.empty(), MGPOptional.of(move))).value)
+        expect(minimax.getBoardValue(new SiamNode(state, MGPOptional.empty(), MGPOptional.of(move))).value)
             .toBeLessThan(0, 'First player should be considered as closer to victory');
     });
     it('Board value test: Should know who is closer to win (2)', () => {
@@ -58,7 +57,7 @@ describe('SiamMinimax:', () => {
         ];
         const state: SiamState = new SiamState(board, 0);
         const move: SiamMove = new SiamMove(2, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
-        expect(minimax.getBoardValue(new MGPNode(state, MGPOptional.empty(), MGPOptional.of(move))).value)
+        expect(minimax.getBoardValue(new SiamNode(state, MGPOptional.empty(), MGPOptional.of(move))).value)
             .toBeLessThan(0, 'First player should be considered as closer to victory');
     });
     xit('Best choice test: Should choose victory immediately', () => {
@@ -156,7 +155,7 @@ describe('SiamMinimax:', () => {
         const state: SiamState = new SiamState(board, 0);
         const move: SiamMove = new SiamMove(1, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT);
         const boardValue: number = minimax.getBoardValue(
-            new MGPNode(state, MGPOptional.empty(), MGPOptional.of(move))).value;
+            new SiamNode(state, MGPOptional.empty(), MGPOptional.of(move))).value;
         expect(boardValue).toBeLessThan(0);
     });
     it('Board value test: Symetry test', () => {
@@ -170,11 +169,11 @@ describe('SiamMinimax:', () => {
         const state: SiamState = new SiamState(board, 0);
         const move: SiamMove = new SiamMove(1, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT);
         const boardValue: number = minimax.getBoardValue(
-            new MGPNode(state, MGPOptional.empty(), MGPOptional.of(move))).value;
+            new SiamNode(state, MGPOptional.empty(), MGPOptional.of(move))).value;
 
         const symetryState: SiamState = new SiamState(board, 1);
         const symetryBoardValue: number = minimax.getBoardValue(
-            new MGPNode(symetryState, MGPOptional.empty(), MGPOptional.of(move))).value;
+            new SiamNode(symetryState, MGPOptional.empty(), MGPOptional.of(move))).value;
         expect(boardValue).toEqual(-1 * symetryBoardValue, 'Both board value should have same absolute value');
     });
     it('Logical test: Should get option for first turn', () => {
