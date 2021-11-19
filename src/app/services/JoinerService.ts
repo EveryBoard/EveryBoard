@@ -25,7 +25,7 @@ export class JoinerService {
 
         const newJoiner: IJoiner = {
             candidates: [],
-            chosenPlayer: '',
+            chosenPlayer: null,
             firstPlayer: FirstPlayer.RANDOM.value,
             partType: PartType.STANDARD.value,
             partStatus: PartStatus.PART_CREATED.value,
@@ -67,12 +67,12 @@ export class JoinerService {
         } else {
             const candidates: string[] = ArrayUtils.copyImmutableArray(joiner.candidates);
             const indexLeaver: number = candidates.indexOf(userName);
-            let chosenPlayer: string = joiner.chosenPlayer;
+            let chosenPlayer: string | null = joiner.chosenPlayer;
             let partStatus: number = joiner.partStatus;
             candidates.splice(indexLeaver, 1); // remove player from candidates list
             if (chosenPlayer === userName) {
                 // if the chosenPlayer leave, we're back to initial part creation
-                chosenPlayer = '';
+                chosenPlayer = null;
                 partStatus = PartStatus.PART_CREATED.value;
             } else if (indexLeaver === -1) {
                 throw new Error('someone that was nor candidate nor chosenPlayer just left the chat: ' + userName);
@@ -140,7 +140,7 @@ export class JoinerService {
 
         return this.joinerDao.update(this.observedJoinerId, {
             partStatus: PartStatus.PART_CREATED.value,
-            chosenPlayer: '',
+            chosenPlayer: null,
             candidates,
         });
     }

@@ -200,7 +200,7 @@ describe('PartCreationComponent:', () => {
                 testUtils.expectElementToExist('#selected_firstCandidate');
                 await joinerDAOMock.update('joinerId', {
                     partStatus: PartStatus.PART_CREATED.value,
-                    chosenPlayer: '',
+                    chosenPlayer: null,
                     candidates: [],
                 });
                 testUtils.detectChanges();

@@ -195,7 +195,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             this.viewInfo.maximalMoveDuration = joiner.maximalMoveDuration;
             this.viewInfo.totalPartDuration = joiner.totalPartDuration;
             this.viewInfo.partType = joiner.partType;
-            this.viewInfo.chosenOpponent = joiner.chosenPlayer;
+            this.viewInfo.chosenOpponent = joiner.chosenPlayer || undefined;
             this.viewInfo.firstPlayer = joiner.firstPlayer;
         }
         switch (joiner.partType) {
@@ -221,7 +221,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 opponent = ''; // chosenOppoent left
             }
         } else {
-            opponent = joiner.chosenPlayer;
+            opponent = joiner.chosenPlayer || '';
         }
         this.getForm('chosenOpponent').setValue(opponent);
     }
