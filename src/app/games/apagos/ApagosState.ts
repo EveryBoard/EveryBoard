@@ -58,9 +58,6 @@ export class ApagosState extends GameState<ApagosCoord, ApagosSquare> {
     public isOnBoard(_coord: ApagosCoord): boolean {
         return true;
     }
-    public getNullable(coord: ApagosCoord): ApagosSquare {
-        return this.board[coord.x];
-    }
     public getRemaining(piece: Player): number {
         return this.remaining.get(piece).get();
     }

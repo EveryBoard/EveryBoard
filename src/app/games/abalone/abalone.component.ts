@@ -155,12 +155,12 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         const lastPiece: Coord = this.selecteds[this.selecteds.length - 1];
         for (const dir of HexaDirection.factory.all) {
             let pointed: Coord = firstPiece.getNext(dir, 1);
-            if (state.getNullable(pointed) === PLAYER) {
+            if (state.isOnBoard(pointed) && state.getPieceAt(pointed) === PLAYER) {
                 if (single) {
                     continue;
                 } else {
                     pointed = lastPiece.getNext(dir, 1);
-                    if (state.getNullable(pointed) === PLAYER) {
+                    if (state.isOnBoard(pointed) && state.getPieceAt(pointed) === PLAYER) {
                         continue;
                     }
                 }

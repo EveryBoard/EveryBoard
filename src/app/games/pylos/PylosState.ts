@@ -25,9 +25,6 @@ export class PylosState extends GameState<PylosCoord, Player> {
     public getPieceAt(coord: PylosCoord): Player {
         return this.boards[coord.z][coord.y][coord.x];
     }
-    public getNullable(coord: PylosCoord): Player {
-        return this.getPieceAt(coord);
-    }
     public applyLegalMove(move: PylosMove): PylosState {
         const updateValues: { coord: PylosCoord, value: Player }[] = [];
         updateValues.push({ coord: move.landingCoord, value: this.getCurrentPlayer() });

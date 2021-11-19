@@ -17,13 +17,6 @@ export abstract class GameStateWithTable<P> extends GameState<Coord, P> {
     public isOnBoard(coord: Coord): boolean {
         return coord.isInRange(this.board[0].length, this.board.length);
     }
-    public getNullable(coord: Coord): P | null {
-        if (this.isOnBoard(coord)) {
-            return this.board[coord.y][coord.x];
-        } else {
-            return null;
-        }
-    }
     public getPieceAtXY(x: number, y: number): P {
         return this.getPieceAt(new Coord(x, y));
     }

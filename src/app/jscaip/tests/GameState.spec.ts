@@ -9,9 +9,6 @@ class MyGameState extends AbstractGameState {
     public isOnBoard(coord: Comparable): boolean {
         throw new Error('Method not implemented.');
     }
-    public getNullable(coord: Comparable): Comparable {
-        throw new Error('Method not implemented.');
-    }
 }
 
 describe('GameState', () => {

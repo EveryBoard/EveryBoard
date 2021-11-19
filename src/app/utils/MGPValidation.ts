@@ -12,10 +12,7 @@ export class MGPValidation {
 
     private constructor(public readonly reason: string | null) {
     }
-    public static failure(reason: string | null): MGPValidation {
-        if (reason == null) {
-            throw new Error('MGPValidation.failure cannot be called with null.');
-        }
+    public static failure(reason: string): MGPValidation {
         return new MGPValidation(reason);
     }
     public isFailure(): boolean {
