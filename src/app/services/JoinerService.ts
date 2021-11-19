@@ -4,6 +4,7 @@ import { FirstPlayer, IJoiner, IJoinerId, PartStatus, PartType } from '../domain
 import { JoinerDAO } from '../dao/JoinerDAO';
 import { assert, display, Utils } from 'src/app/utils/utils';
 import { ArrayUtils } from '../utils/ArrayUtils';
+import { MGPOptional } from '../utils/MGPOptional';
 
 @Injectable({
     providedIn: 'root',
@@ -25,7 +26,7 @@ export class JoinerService {
 
         const newJoiner: IJoiner = {
             candidates: [],
-            chosenPlayer: '',
+            chosenPlayer: null,
             firstPlayer: FirstPlayer.RANDOM.value,
             partType: PartType.STANDARD.value,
             partStatus: PartStatus.PART_CREATED.value,
@@ -67,21 +68,23 @@ export class JoinerService {
         } else {
             const candidates: string[] = ArrayUtils.copyImmutableArray(joiner.candidates);
             const indexLeaver: number = candidates.indexOf(userName);
-            let chosenPlayer: string = joiner.chosenPlayer;
-            let partStatus: number = joiner.partStatus;
+            const chosenPlayer: MGPOptional<string> = MGPOptional.ofNullable(joiner.chosenPlayer);
             candidates.splice(indexLeaver, 1); // remove player from candidates list
-            if (chosenPlayer === userName) {
+            let modification: Partial<IJoiner>;
+            if (chosenPlayer.equalsValue(userName)) {
                 // if the chosenPlayer leave, we're back to initial part creation
-                chosenPlayer = '';
-                partStatus = PartStatus.PART_CREATED.value;
+                modification = {
+                    chosenPlayer: null, // remove the chosen player
+                    partStatus: PartStatus.PART_CREATED.value,
+                    candidates,
+                };
             } else if (indexLeaver === -1) {
                 throw new Error('someone that was nor candidate nor chosenPlayer just left the chat: ' + userName);
+            } else {
+                modification = {
+                    candidates,
+                };
             }
-            const modification: Partial<IJoiner> = {
-                chosenPlayer,
-                partStatus,
-                candidates,
-            };
             return this.joinerDao.update(this.observedJoinerId, modification);
         }
     }
@@ -140,7 +143,6 @@ export class JoinerService {
 
         return this.joinerDao.update(this.observedJoinerId, {
             partStatus: PartStatus.PART_CREATED.value,
-            chosenPlayer: '',
             candidates,
         });
     }

@@ -3,9 +3,8 @@ import { DomainWrapper } from './DomainWrapper';
 
 export interface IJoiner extends JSONObject {
     readonly creator: string;
-    readonly candidates: Array<string>; // TODO: give default empty value
-    readonly chosenPlayer: string;
-    // TODO: make optional, since first value set is '', a non-null way to say null
+    readonly candidates: Array<string>;
+    readonly chosenPlayer: string | null; // can be set to null to remove the chosen player
     readonly partStatus: IPartStatus;
 
     readonly firstPlayer: IFirstPlayer;
