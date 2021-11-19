@@ -134,7 +134,7 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
     }
     public static isStraight(piece: SiamPiece, move: SiamMove): boolean {
         const pieceDirection: Orthogonal = piece.getDirection();
-        return (pieceDirection === move.moveDirection.getOrNull() &&
+        return (move.moveDirection.equalsValue(pieceDirection) &&
                 pieceDirection === move.landingOrientation);
     }
     public isLegalRotation(rotation: SiamMove, state: SiamState): MGPFallible<SiamLegalityInformation> {

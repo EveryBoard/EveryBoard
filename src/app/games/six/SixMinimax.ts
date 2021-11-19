@@ -86,7 +86,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
             const start: Coord = starts.get(i);
             for (const landing of landings) {
                 const move: SixMove = SixMove.fromDeplacement(start, landing);
-                if (state.isCoordConnected(landing, start)) {
+                if (state.isCoordConnected(landing, MGPOptional.of(start))) {
                     const legality: MGPFallible<SixLegalityInformation> = SixRules.isLegalPhaseTwoMove(move, state);
                     if (legality.isSuccess()) { // TODO: cuttingMove
                         deplacements.push(move);

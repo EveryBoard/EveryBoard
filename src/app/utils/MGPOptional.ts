@@ -53,9 +53,6 @@ export class MGPOptional<T> {
             return defaultValue;
         }
     }
-    public getOrNull(): T | null {
-        return this.value;
-    }
     public equals(other: MGPOptional<T>): boolean {
         if (this.isAbsent()) {
             return other.isAbsent();

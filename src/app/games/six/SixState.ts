@@ -9,6 +9,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { SixFailure } from './SixFailure';
 import { SixMove } from './SixMove';
 import { GameState } from 'src/app/jscaip/GameState';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class SixState extends GameState<Coord, Player> {
 
@@ -127,7 +128,7 @@ export class SixState extends GameState<Coord, Player> {
         }
         return board;
     }
-    public isIllegalLandingZone(landing: Coord, start: Coord | null): MGPValidation {
+    public isIllegalLandingZone(landing: Coord, start: MGPOptional<Coord>): MGPValidation {
         if (this.pieces.containsKey(landing)) {
             return MGPValidation.failure('Cannot land on occupied coord!');
         }
@@ -137,11 +138,11 @@ export class SixState extends GameState<Coord, Player> {
             return MGPValidation.failure(SixFailure.MUST_DROP_NEXT_TO_OTHER_PIECE());
         }
     }
-    public isCoordConnected(coord: Coord, except: Coord | null): boolean {
+    public isCoordConnected(coord: Coord, except: MGPOptional<Coord>): boolean {
         for (const dir of HexaDirection.factory.all) {
             const neighboor: Coord = coord.getNext(dir, 1);
             if (this.pieces.containsKey(neighboor) &&
-                (except == null || neighboor.equals(except) === false))
+                (except.equalsValue(neighboor) === false))
             {
                 return true;
             }
@@ -179,11 +180,9 @@ export class SixState extends GameState<Coord, Player> {
     }
     public countPieces(): [number, number] {
         const pieces: MGPMap<Player, MGPSet<Coord>> = this.pieces.groupByValue();
-        const zeroPieces: MGPSet<Coord> | null = pieces.get(Player.ZERO).getOrNull();
-        const onePieces: MGPSet<Coord> | null = pieces.get(Player.ONE).getOrNull();
-        return [
-            zeroPieces == null ? 0 : zeroPieces.size(),
-            onePieces == null ? 0 : onePieces.size(),
+        const zeroPieces: MGPSet<Coord> = pieces.get(Player.ZERO).getOrElse(new MGPSet());
+        const onePieces: MGPSet<Coord> = pieces.get(Player.ONE).getOrElse(new MGPSet());
+        return [zeroPieces.size(), onePieces.size(),
         ];
     }
     public switchPiece(coord: Coord): SixState {

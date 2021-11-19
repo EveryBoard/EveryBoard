@@ -15,8 +15,6 @@ export abstract class MGPFallible<T> {
 
     public abstract get(): T
 
-    public abstract getOrNull(): T | null
-
     public abstract getReason(): string
 
     public abstract getReasonOr(value: string): string
@@ -50,9 +48,6 @@ class MGPFallibleSuccess<T> extends MGPFallible<T> {
     public get(): T {
         return this.value;
     }
-    public getOrNull(): T | null {
-        return this.value;
-    }
     public getReason(): string {
         throw new Error('Cannot get failure reason from a success');
     }
@@ -79,9 +74,6 @@ class MGPFallibleFailure<T> extends MGPFallible<T> {
     }
     public get(): T {
         throw new Error('Value is absent from failure, with the following reason: ' + this.reason);
-    }
-    public getOrNull(): T | null {
-        return null;
     }
     public getReason(): string {
         return this.reason;

@@ -9,9 +9,8 @@ describe('MGPFallible', () => {
             expect(value.isSuccess()).toBeTrue();
             expect(value.isFailure()).toBeFalse();
         });
-        it('should have value accessible with get and getOrNull', () => {
+        it('should have value accessible with get', () => {
             expect(value.get()).toBe(42);
-            expect(value.getOrNull()).toBe(42);
         });
         it('should throw when accessing the failure reason', () => {
             expect(() => value.getReason())
@@ -32,9 +31,8 @@ describe('MGPFallible', () => {
             expect(value.isSuccess()).toBeFalse();
             expect(value.isFailure()).toBeTrue();
         });
-        it('should throw when accessing value with get, and return null with getOrNull', () => {
+        it('should throw when accessing value with get', () => {
             expect(() => value.get()).toThrowError('Value is absent from failure, with the following reason: reason');
-            expect(value.getOrNull()).toBe(null);
         });
         it('should contain the failure reason', () => {
             expect(value.getReason()).toBe('reason');
