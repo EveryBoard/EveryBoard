@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { EncapsuleRules } from 'src/app/games/encapsule/EncapsuleRules';
+import { EncapsuleLegalityInformation, EncapsuleRules } from 'src/app/games/encapsule/EncapsuleRules';
 import { EncapsuleMinimax } from 'src/app/games/encapsule/EncapsuleMinimax';
 import { EncapsuleState, EncapsuleCase } from 'src/app/games/encapsule/EncapsuleState';
 import { EncapsuleMove } from 'src/app/games/encapsule/EncapsuleMove';
 import { EncapsulePiece, Size } from 'src/app/games/encapsule/EncapsulePiece';
 import { Coord } from 'src/app/jscaip/Coord';
-import { EncapsuleLegalityStatus } from 'src/app/games/encapsule/EncapsuleLegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -24,7 +23,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
                                                                  EncapsuleMove,
                                                                  EncapsuleState,
                                                                  EncapsuleCase,
-                                                                 EncapsuleLegalityStatus>
+                                                                 EncapsuleLegalityInformation>
 {
     private lastLandingCoord: MGPOptional<Coord> = MGPOptional.empty();
     private lastStartingCoord: MGPOptional<Coord> = MGPOptional.empty();

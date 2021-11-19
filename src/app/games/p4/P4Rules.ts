@@ -11,6 +11,7 @@ import { P4Move } from './P4Move';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { P4Failure } from './P4Failure';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 export class P4Node extends MGPNode<P4Rules, P4Move, P4State> {}
 
@@ -168,7 +169,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
     }
     public applyLegalMove(move: P4Move,
                           state: P4State,
-                          _status: LegalityStatus)
+                          _status: void)
     : P4State
     {
         const x: number = move.x;
@@ -182,12 +183,12 @@ export class P4Rules extends Rules<P4Move, P4State> {
         const resultingState: P4State = new P4State(board, turn+1);
         return resultingState;
     }
-    public isLegal(move: P4Move, state: P4State): LegalityStatus {
+    public isLegal(move: P4Move, state: P4State): MGPFallible<void> {
         display(P4Rules.VERBOSE, { context: 'P4Rules.isLegal', move: move.toString(), state });
         if (state.getPieceAtXY(move.x, 0) !== Player.NONE) {
-            return LegalityStatus.failure(P4Failure.COLUMN_IS_FULL());
+            return MGPFallible.failure(P4Failure.COLUMN_IS_FULL());
         }
-        return LegalityStatus.SUCCESS;
+        return MGPFallible.SUCCESS;
     }
     public getGameStatus(node: P4Node): GameStatus {
         const state: P4State = node.gameState;

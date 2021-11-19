@@ -2,29 +2,34 @@ import { GameStatus, Rules } from '../../jscaip/Rules';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { AwaleState } from './AwaleState';
 import { AwaleMove } from './AwaleMove';
-import { AwaleLegalityStatus } from './AwaleLegalityStatus';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { display, Utils } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Coord } from 'src/app/jscaip/Coord';
 import { AwaleFailure } from './AwaleFailure';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
-export class AwaleNode extends MGPNode<AwaleRules, AwaleMove, AwaleState, AwaleLegalityStatus> {}
+export type AwaleLegalityInformation = {
+    captured: ReadonlyArray<number>,
+    resultingBoard: Table<number>,
+}
 
-export class AwaleRules extends Rules<AwaleMove, AwaleState, AwaleLegalityStatus> {
+export class AwaleNode extends MGPNode<AwaleRules, AwaleMove, AwaleState, AwaleLegalityInformation> {}
+
+export class AwaleRules extends Rules<AwaleMove, AwaleState, AwaleLegalityInformation> {
 
     public static VERBOSE: boolean = false;
 
-    public applyLegalMove(move: AwaleMove, state: AwaleState, status: AwaleLegalityStatus): AwaleState {
+    public applyLegalMove(move: AwaleMove, state: AwaleState, infos: AwaleLegalityInformation): AwaleState {
         display(AwaleRules.VERBOSE, { called: 'AwaleRules.applyLegalMove', move, state, status });
         const turn: number = state.turn;
 
         const captured: readonly [number, number] = [
-            state.captured[0] + Utils.getNonNullable(status.captured)[0],
-            state.captured[1] + Utils.getNonNullable(status.captured)[1],
+            state.captured[0] + infos.captured[0],
+            state.captured[1] + infos.captured[1],
         ];
 
-        return new AwaleState(Utils.getNonNullable(status.resultingBoard), turn + 1, captured);
+        return new AwaleState(ArrayUtils.copyBiArray(infos.resultingBoard), turn + 1, captured);
     }
     /**
      * Captures all the seeds of the mansooning player.
@@ -47,7 +52,7 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState, AwaleLegalityStatus
      * Returns -1 if it is not legal, if so, the board should not be affected
      * Returns the number captured otherwise
      */
-    public static isLegal(move: AwaleMove, state: AwaleState): AwaleLegalityStatus {
+    public static isLegal(move: AwaleMove, state: AwaleState): MGPFallible<AwaleLegalityInformation> {
         const turn: number = state.turn;
         let resultingBoard: number[][] = state.getCopiedBoard();
 
@@ -58,11 +63,11 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState, AwaleLegalityStatus
 
         const x: number = move.x;
         if (resultingBoard[player][x] === 0) {
-            return AwaleLegalityStatus.failure(AwaleFailure.MUST_CHOOSE_NONEMPTY_HOUSE());
+            return MGPFallible.failure(AwaleFailure.MUST_CHOOSE_NONEMPTY_HOUSE());
         }
 
         if (!AwaleRules.doesDistribute(x, player, resultingBoard) && AwaleRules.isStarving(opponent, resultingBoard) ) {
-            return AwaleLegalityStatus.failure(AwaleFailure.SHOULD_DISTRIBUTE());
+            return MGPFallible.failure(AwaleFailure.SHOULD_DISTRIBUTE());
         }
         // arrived here you can distribute this house but we'll have to check if you can capture
         const lastSpace: Coord = AwaleRules.distribute(x, player, resultingBoard);
@@ -70,7 +75,7 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState, AwaleLegalityStatus
         const landingCamp: number = lastSpace.y;
         if (landingCamp === player) {
             // we finish sowing on our own side, nothing else to check
-            return { legal: MGPValidation.SUCCESS, captured: [0, 0], resultingBoard };
+            return MGPFallible.success({ captured: [0, 0], resultingBoard });
         }
         // we finish sowing on the opponent's side, we therefore check the captures
         const boardBeforeCapture: number[][] = ArrayUtils.copyBiArray(resultingBoard);
@@ -89,9 +94,9 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState, AwaleLegalityStatus
             // if the player distributed his last seeds and the opponent could not give him seeds
             captured[opponent] += AwaleRules.mansoon(opponent, resultingBoard);
         }
-        return { legal: MGPValidation.SUCCESS, captured, resultingBoard };
+        return MGPFallible.success({ captured, resultingBoard });
     }
-    public isLegal(move: AwaleMove, state: AwaleState): AwaleLegalityStatus {
+    public isLegal(move: AwaleMove, state: AwaleState): MGPFallible<AwaleLegalityInformation> {
         return AwaleRules.isLegal(move, state);
     }
     public static doesDistribute(x: number, y: number, board: number[][]): boolean {

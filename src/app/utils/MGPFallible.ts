@@ -4,6 +4,7 @@ import { MGPValidation } from './MGPValidation';
 import { assert } from './utils';
 
 export abstract class MGPFallible<T> {
+    public static SUCCESS: MGPFallible<void> = MGPFallible.success(undefined);
     public static success<T>(value: T): MGPFallible<T> {
         return new MGPFallibleSuccess(value);
     }

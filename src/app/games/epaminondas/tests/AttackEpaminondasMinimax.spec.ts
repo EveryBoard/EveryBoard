@@ -75,7 +75,7 @@ describe('AttackEpaminondasMinimax:', () => {
             [O, O, O, O, O, O, O, O, O, O, O, _, O, _],
         ];
         const lesserState: EpaminondasState = new EpaminondasState(lesserBoard, 0);
-        RulesUtils.expectSecondStateToBeBetterThanFirst(lesserState, MGPOptional.empty(),
+        RulesUtils.expectSecondStateToBeBetterThanFirst(lesserState, MGPOptional.empty<EpaminondasMove>(),
                                                         greaterState, MGPOptional.empty(),
                                                         minimax);
     });

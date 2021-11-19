@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
 
-import { ReversiRules } from './ReversiRules';
+import { ReversiLegalityInformation, ReversiRules } from './ReversiRules';
 import { ReversiMinimax } from './ReversiMinimax';
 import { ReversiState } from './ReversiState';
 import { ReversiMove } from 'src/app/games/reversi/ReversiMove';
-import { ReversiLegalityStatus } from 'src/app/games/reversi/ReversiLegalityStatus';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player } from 'src/app/jscaip/Player';
@@ -23,7 +22,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
                                                                ReversiMove,
                                                                ReversiState,
                                                                Player,
-                                                               ReversiLegalityStatus>
+                                                               ReversiLegalityInformation>
 {
     public NONE: Player = Player.NONE;
     public lastMove: Coord = new Coord(-2, -2);

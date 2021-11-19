@@ -24,7 +24,7 @@ describe('ReversiMinimax', () => {
     });
     it('should not throw at first choice', () => {
         const bestMove: ReversiMove = rules.node.findBestMove(2, minimax);
-        expect(rules.isLegal(bestMove, rules.node.gameState).legal.isSuccess()).toBeTrue();
+        expect(rules.isLegal(bestMove, rules.node.gameState).isSuccess()).toBeTrue();
     });
     it('should prioritize taking control of the corners', () => {
         const board: Table<Player> = [

@@ -2,6 +2,7 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { ApagosCoord } from './ApagosCoord';
 import { ApagosFailure } from './ApagosFailure';
@@ -9,13 +10,13 @@ import { ApagosMove } from './ApagosMove';
 import { ApagosSquare } from './ApagosSquare';
 import { ApagosState } from './ApagosState';
 
-export class ApagosNode extends MGPNode<Rules<ApagosMove, ApagosState, LegalityStatus>, ApagosMove, ApagosState> {}
+export class ApagosNode extends MGPNode<ApagosRules, ApagosMove, ApagosState> {}
 
 export class ApagosRules extends Rules<ApagosMove, ApagosState> {
 
     public static readonly singleton: ApagosRules = new ApagosRules(ApagosState);
 
-    public applyLegalMove(move: ApagosMove, state: ApagosState, status: LegalityStatus): ApagosState {
+    public applyLegalMove(move: ApagosMove, state: ApagosState, _info: void): ApagosState {
         if (move.isDrop()) {
             return this.applyLegalDrop(move, state);
         } else {
@@ -47,9 +48,9 @@ export class ApagosRules extends Rules<ApagosMove, ApagosState> {
         resultingState = resultingState.updateAt(move.landing, newLandingSquare);
         return new ApagosState(resultingState.turn + 1, resultingState.board, resultingState.remaining);
     }
-    public isLegal(move: ApagosMove, state: ApagosState): LegalityStatus {
+    public isLegal(move: ApagosMove, state: ApagosState): MGPFallible<void> {
         if (state.getPieceAt(move.landing).isFull()) {
-            return LegalityStatus.failure(ApagosFailure.CANNOT_LAND_ON_A_FULL_SQUARE());
+            return MGPFallible.failure(ApagosFailure.CANNOT_LAND_ON_A_FULL_SQUARE());
         }
         if (move.isDrop()) {
             return this.isLegalDrop(move, state);
@@ -57,19 +58,19 @@ export class ApagosRules extends Rules<ApagosMove, ApagosState> {
             return this.isLegalSlideDown(move, state);
         }
     }
-    private isLegalDrop(move: ApagosMove, state: ApagosState): LegalityStatus {
+    private isLegalDrop(move: ApagosMove, state: ApagosState): MGPFallible<void> {
         if (state.getRemaining(move.piece.get()) <= 0) {
-            return LegalityStatus.failure(ApagosFailure.NO_PIECE_REMAINING_TO_DROP());
+            return MGPFallible.failure(ApagosFailure.NO_PIECE_REMAINING_TO_DROP());
         }
-        return LegalityStatus.SUCCESS;
+        return MGPFallible.SUCCESS;
     }
-    private isLegalSlideDown(move: ApagosMove, state: ApagosState): LegalityStatus {
+    private isLegalSlideDown(move: ApagosMove, state: ApagosState): MGPFallible<void> {
         const currentPlayer: Player = state.getCurrentPlayer();
         const startingSquare: ApagosSquare = state.getPieceAt(move.starting.get());
         if (startingSquare.count(currentPlayer) === 0) {
-            return LegalityStatus.failure(ApagosFailure.NO_PIECE_OF_YOU_IN_CHOSEN_SQUARE());
+            return MGPFallible.failure(ApagosFailure.NO_PIECE_OF_YOU_IN_CHOSEN_SQUARE());
         }
-        return LegalityStatus.SUCCESS;
+        return MGPFallible.SUCCESS;
     }
     public getGameStatus(node: ApagosNode): GameStatus {
         const state: ApagosState = node.gameState;

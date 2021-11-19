@@ -3,7 +3,6 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { QuartoState } from './QuartoState';
 import { QuartoMove } from './QuartoMove';
 import { QuartoPiece } from './QuartoPiece';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { assert, display, Utils } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -12,6 +11,7 @@ import { SCORE } from 'src/app/jscaip/SCORE';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { QuartoFailure } from './QuartoFailure';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 export interface BoardStatus {
     score: SCORE;
@@ -212,8 +212,6 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         new Line(new Coord(0, 3), Direction.UP_RIGHT),
     ];
 
-    public node: MGPNode<QuartoRules, QuartoMove, QuartoState>;
-
     private static isOccupied(square: QuartoPiece): boolean {
         return (square !== QuartoPiece.NONE);
     }
@@ -257,8 +255,8 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
     }
     // Overrides :
 
-    public isLegal(move: QuartoMove, state: QuartoState): LegalityStatus {
-        return { legal: QuartoRules.isLegal(move, state) };
+    public isLegal(move: QuartoMove, state: QuartoState): MGPFallible<void> {
+        return QuartoRules.isLegal(move, state).toFallible(undefined);
     }
     public static updateBoardStatus(line: Line, state: QuartoState, boardStatus: BoardStatus): BoardStatus {
         if (boardStatus.score === SCORE.PRE_VICTORY) {

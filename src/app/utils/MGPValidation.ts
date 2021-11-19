@@ -24,6 +24,13 @@ export class MGPValidation {
             return this.reason as string; // always a string here
         }
     }
+    public toFallible<T>(successValue: T): MGPFallible<T> {
+        if (this.isSuccess()) {
+            return MGPFallible.success(successValue);
+        } else {
+            return MGPFallible.failure(this.getReason());
+        }
+    }
     public toFailedFallible<T>(): MGPFallible<T> {
         if (this.isSuccess()) {
             throw new Error('MGPValidation: cannot convert into failed fallible.');

@@ -1,7 +1,6 @@
 import { AwaleNode, AwaleRules } from '../AwaleRules';
 import { AwaleMove } from '../AwaleMove';
 import { AwaleState } from '../AwaleState';
-import { AwaleLegalityStatus } from '../AwaleLegalityStatus';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { AwaleMinimax } from '../AwaleMinimax';
@@ -31,12 +30,8 @@ describe('AwaleRules', () => {
         ];
         const state: AwaleState = new AwaleState(board, 0, [1, 2]);
         const move: AwaleMove = AwaleMove.FIVE;
-        const status: AwaleLegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.isSuccess()).toBeTrue();
-        const resultingState: AwaleState = rules.applyLegalMove(move, state, status);
-        const expectedState: AwaleState =
-            new AwaleState(expectedBoard, 1, [3, 2]);
-        expect(resultingState).toEqual(expectedState);
+        const expectedState: AwaleState = new AwaleState(expectedBoard, 1, [3, 2]);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
     it('should do mansoon when impossible distribution', () => {
         // given a board where a player is about to give his last stone to opponent
@@ -48,8 +43,6 @@ describe('AwaleRules', () => {
 
         // when player give his last stone
         const move: AwaleMove = AwaleMove.FIVE;
-        const status: AwaleLegalityStatus = rules.isLegal(move, state);
-        const resultingState: AwaleState = rules.applyLegalMove(move, state, status);
 
         // then, since other player can't distribute, he mansoon all his pieces
         const expectedBoard: number[][] = [
@@ -57,9 +50,8 @@ describe('AwaleRules', () => {
             [0, 0, 0, 0, 0, 0],
         ];
         const expectedState: AwaleState = new AwaleState(expectedBoard, 1, [23, 25]);
-        expect(status.legal.isSuccess()).toBeTrue();
-        expect(resultingState).toEqual(expectedState);
-        const node: AwaleNode = new MGPNode(resultingState, MGPOptional.empty(), MGPOptional.of(move));
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        const node: AwaleNode = new MGPNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
     it('should forbid non-feeding move', () => {
@@ -72,10 +64,9 @@ describe('AwaleRules', () => {
 
         // when he does not
         const move: AwaleMove = AwaleMove.ZERO;
-        const status: AwaleLegalityStatus = rules.isLegal(move, state);
 
         // then the move is illegal
-        expect(status.legal.reason).toBe(AwaleFailure.SHOULD_DISTRIBUTE());
+        RulesUtils.expectMoveFailure(rules, state, move, AwaleFailure.SHOULD_DISTRIBUTE());
     });
     it('shoud distribute but not capture in case of would-starve move', () => {
         // given a board in which the player could capture all opponents seeds
@@ -87,8 +78,6 @@ describe('AwaleRules', () => {
 
         // when player does a would-starve move
         const move: AwaleMove = AwaleMove.FIVE;
-        const status: AwaleLegalityStatus = rules.isLegal(move, state);
-        const resultingState: AwaleState = rules.applyLegalMove(move, state, status);
 
         // then, the distribution should be done but not the capture
         const expectedBoard: number[][] = [
@@ -96,8 +85,7 @@ describe('AwaleRules', () => {
             [0, 0, 0, 0, 2, 2],
         ];
         const expectedState: AwaleState = new AwaleState(expectedBoard, 1, [0, 0]);
-        expect(status.legal.isSuccess()).toBeTrue();
-        expect(resultingState).toEqual(expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
     describe('getGameStatus', () => {
         it('should identify victory for player 0', () => {

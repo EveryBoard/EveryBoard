@@ -5,6 +5,7 @@ import { CoerceoMinimax } from '../CoerceoMinimax';
 import { CoerceoRules } from '../CoerceoRules';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { CoerceoMove } from '../CoerceoMove';
 
 describe('CoerceoMinimax', () => {
 
@@ -46,7 +47,7 @@ describe('CoerceoMinimax', () => {
             [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
         ];
         const strongState: CoerceoState = new CoerceoState(strongBoard, 0, [0, 0], [0, 0]);
-        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, MGPOptional.empty(),
+        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, MGPOptional.empty<CoerceoMove>(),
                                                         strongState, MGPOptional.empty(),
                                                         minimax);
     });

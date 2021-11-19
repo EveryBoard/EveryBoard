@@ -4,6 +4,7 @@ import { SaharaMinimax } from '../SaharaMinimax';
 import { SaharaState } from '../SaharaState';
 import { SaharaRules } from '../SaharaRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { SaharaMove } from '../SaharaMove';
 
 describe('SaharaMinimax', () => {
 
@@ -38,7 +39,7 @@ describe('SaharaMinimax', () => {
             [N, N, X, O, _, _, _, X, O, N, N],
         ];
         const strongState: SaharaState = new SaharaState(strongBoard, 0);
-        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, MGPOptional.empty(),
+        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, MGPOptional.empty<SaharaMove>(),
                                                         strongState, MGPOptional.empty(),
                                                         minimax);
     });

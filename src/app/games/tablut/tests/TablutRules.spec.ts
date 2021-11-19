@@ -348,7 +348,7 @@ describe('TablutRules', () => {
         const state: TablutState = new TablutState(board, 24);
         const move: TablutMove = new TablutMove(new Coord(8, 4), new Coord(1, 4));
         const expectedState: TablutState = new TablutState(expectedBoard, 25);
-_        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: TablutNode = new MGPNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });

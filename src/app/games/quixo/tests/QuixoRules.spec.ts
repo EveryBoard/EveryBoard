@@ -37,8 +37,7 @@ describe('QuixoRules:', () => {
         ];
         const state: QuixoState = new QuixoState(board, 0);
         const move: QuixoMove = new QuixoMove(4, 2, Orthogonal.LEFT);
-        const status: LegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.reason).toBe(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+        RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
     });
     it('Should always put moved piece to currentPlayer symbol', () => {
         const board: Table<Player> = [
@@ -57,11 +56,8 @@ describe('QuixoRules:', () => {
         ];
         const state: QuixoState = new QuixoState(board, 0);
         const move: QuixoMove = new QuixoMove(0, 2, Orthogonal.RIGHT);
-        const status: LegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.isSuccess()).toBeTrue();
-        const resultingState: QuixoState = rules.applyLegalMove(move, state, status);
         const expectedState: QuixoState = new QuixoState(expectedBoard, 1);
-        expect(resultingState).toEqual(expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
     it('Should declare winner player zero when he create a line of his symbol', () => {
         const board: Table<Player> = [
@@ -80,11 +76,8 @@ describe('QuixoRules:', () => {
         ];
         const state: QuixoState = new QuixoState(board, 0);
         const move: QuixoMove = new QuixoMove(0, 2, Orthogonal.RIGHT);
-        const status: LegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.isSuccess()).toBeTrue();
-        const resultingState: QuixoState = rules.applyLegalMove(move, state, status);
         const expectedState: QuixoState = new QuixoState(expectedBoard, 1);
-        expect(resultingState).toEqual(expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: QuixoNode = new MGPNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
@@ -105,11 +98,8 @@ describe('QuixoRules:', () => {
         ];
         const state: QuixoState = new QuixoState(board, 1);
         const move: QuixoMove = new QuixoMove(0, 2, Orthogonal.RIGHT);
-        const status: LegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.isSuccess()).toBeTrue();
-        const resultingState: QuixoState = rules.applyLegalMove(move, state, status);
         const expectedState: QuixoState = new QuixoState(expectedBoard, 2);
-        expect(resultingState).toEqual(expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: QuixoNode = new MGPNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
@@ -130,11 +120,8 @@ describe('QuixoRules:', () => {
         ];
         const state: QuixoState = new QuixoState(board, 0);
         const move: QuixoMove = new QuixoMove(0, 2, Orthogonal.RIGHT);
-        const status: LegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.isSuccess()).toBeTrue();
-        const resultingState: QuixoState = rules.applyLegalMove(move, state, status);
         const expectedState: QuixoState = new QuixoState(expectedBoard, 1);
-        expect(resultingState).toEqual(expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: QuixoNode = new MGPNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
@@ -155,11 +142,8 @@ describe('QuixoRules:', () => {
         ];
         const state: QuixoState = new QuixoState(board, 1);
         const move: QuixoMove = new QuixoMove(0, 2, Orthogonal.RIGHT);
-        const status: LegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.isSuccess()).toBeTrue();
-        const resultingState: QuixoState = rules.applyLegalMove(move, state, status);
         const expectedState: QuixoState = new QuixoState(expectedBoard, 2);
-        expect(resultingState).toEqual(expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: QuixoNode = new MGPNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });

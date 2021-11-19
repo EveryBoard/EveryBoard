@@ -5,7 +5,6 @@ import { MinimaxTestingMinimax } from '../MinimaxTestingMinimax';
 import { Player } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 
 describe('MinimaxTestingRules', () => {
@@ -101,10 +100,9 @@ describe('MinimaxTestingRules', () => {
 
         // when attempting to go right
         const move: MinimaxTestingMove = MinimaxTestingMove.RIGHT;
-        const status: LegalityStatus = rules.isLegal(move, state);
 
         // should refuse
-        expect(status.legal.reason).toBe('incorrect move');
+        RulesUtils.expectMoveFailure(rules, state, move, 'incorrect move');
     });
     it('should refuse to go down when on the bottom', () => {
         // Given a board where you are on the right
@@ -112,10 +110,9 @@ describe('MinimaxTestingRules', () => {
 
         // when attempting to go right
         const move: MinimaxTestingMove = MinimaxTestingMove.DOWN;
-        const status: LegalityStatus = rules.isLegal(move, state);
 
         // should refuse
-        expect(status.legal.reason).toBe('incorrect move');
+        RulesUtils.expectMoveFailure(rules, state, move, 'incorrect move');
     });
     describe('GameStatus', () => {
         it('should recognize victory when on the player victory value (Player.ONE)', () => {

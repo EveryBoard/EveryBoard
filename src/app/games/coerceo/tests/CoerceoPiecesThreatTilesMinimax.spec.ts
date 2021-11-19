@@ -10,6 +10,7 @@ import { CoerceoState } from '../CoerceoState';
 import { CoerceoPiecesThreatTilesMinimax } from '../CoerceoPiecesThreatTilesMinimax';
 import { CoerceoRules } from '../CoerceoRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { CoerceoMove } from '../CoerceoMove';
 
 describe('CoerceoPiecesThreatTilesMinimax', () => {
 
@@ -51,7 +52,7 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
             [N, N, N, N, N, N, _, O, _, N, N, N, N, N, N],
         ];
         const strongState: CoerceoState = new CoerceoState(strongBoard, 0, [0, 0], [0, 1]);
-        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, MGPOptional.empty(),
+        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, MGPOptional.empty<CoerceoMove>(),
                                                         strongState, MGPOptional.empty(),
                                                         minimax);
     });
@@ -82,7 +83,7 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
             [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
         ];
         const strongState: CoerceoState = new CoerceoState(strongBoard, 1, [0, 0], [0, 0]);
-        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, MGPOptional.empty(),
+        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, MGPOptional.empty<CoerceoMove>(),
                                                         strongState, MGPOptional.empty(),
                                                         minimax);
     });
@@ -113,7 +114,7 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
             [N, N, N, N, N, N, _, O, _, N, N, N, N, N, N],
         ];
         const strongState: CoerceoState = new CoerceoState(strongBoard, 0, [0, 0], [0, 0]);
-        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, MGPOptional.empty(),
+        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, MGPOptional.empty<CoerceoMove>(),
                                                         strongState, MGPOptional.empty(),
                                                         minimax);
     });
@@ -144,7 +145,7 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
             [N, N, N, N, N, N, _, O, _, N, N, N, N, N, N],
         ];
         const strongState: CoerceoState = new CoerceoState(strongBoard, 0, [0, 1], [0, 0]);
-        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, MGPOptional.empty(),
+        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, MGPOptional.empty<CoerceoMove>(),
                                                         strongState, MGPOptional.empty(),
                                                         minimax);
     });

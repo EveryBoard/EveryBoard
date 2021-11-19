@@ -1,5 +1,4 @@
 import { MGPNode } from 'src/app/jscaip/MGPNode';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { DvonnState } from './DvonnState';
 import { DvonnPieceStack } from './DvonnPieceStack';
 import { DvonnMove } from './DvonnMove';
@@ -11,6 +10,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { HexagonalGameState } from 'src/app/jscaip/HexagonalGameState';
 import { DvonnFailure } from './DvonnFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 export class DvonnNode extends MGPNode<DvonnRules, DvonnMove, DvonnState> { }
 
@@ -127,7 +127,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
     }
     public applyLegalMove(move: DvonnMove,
                           state: DvonnState,
-                          _status: LegalityStatus)
+                          _status: void)
     : DvonnState
     {
         if (move === DvonnMove.PASS) {
@@ -145,32 +145,35 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
             return resultingState;
         }
     }
-    public isLegal(move: DvonnMove, state: DvonnState): LegalityStatus {
+    public isLegal(move: DvonnMove, state: DvonnState): MGPFallible<void> {
         if (DvonnRules.getMovablePieces(state).length === 0) {
             // If no pieces are movable, the player can pass
             // but only if the previous move was not a pass itself
             if (move === DvonnMove.PASS && !state.alreadyPassed) {
-                return LegalityStatus.SUCCESS;
+                return MGPFallible.SUCCESS;
             } else {
-                return LegalityStatus.failure(RulesFailure.MUST_PASS());
+                return MGPFallible.failure(RulesFailure.MUST_PASS());
             }
+        } else if (move === DvonnMove.PASS) {
+            return MGPFallible.failure(RulesFailure.CANNOT_PASS());
         }
+
 
         const pieceMovable: MGPValidation = this.isMovablePiece(state, move.coord);
         if (pieceMovable.isFailure()) {
-            return { legal: pieceMovable };
+            return pieceMovable.toFailedFallible();
         }
 
         const stack: DvonnPieceStack = state.getPieceAt(move.coord);
         if (move.length() !== stack.getSize()) {
-            return LegalityStatus.failure(DvonnFailure.INVALID_MOVE_LENGTH());
+            return MGPFallible.failure(DvonnFailure.INVALID_MOVE_LENGTH());
         }
 
         const targetStack: DvonnPieceStack = state.getPieceAt(move.end);
         if (targetStack.isEmpty()) {
-            return LegalityStatus.failure(DvonnFailure.EMPTY_TARGET_STACK());
+            return MGPFallible.failure(DvonnFailure.EMPTY_TARGET_STACK());
         }
-        return LegalityStatus.SUCCESS;
+        return MGPFallible.SUCCESS;
     }
     public getGameStatus(node: DvonnNode): GameStatus {
         return DvonnRules.getGameStatus(node);

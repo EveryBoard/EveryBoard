@@ -1,7 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -10,20 +9,19 @@ import { AbaloneFailure } from './AbaloneFailure';
 import { AbaloneState } from './AbaloneState';
 import { AbaloneMove } from './AbaloneMove';
 import { Utils } from 'src/app/utils/utils';
+import { Table } from 'src/app/utils/ArrayUtils';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
-export interface AbaloneLegalityStatus extends LegalityStatus {
+export type AbaloneLegalityInformation = Table<FourStatePiece>
 
-    newBoard: FourStatePiece[][] | null;
-}
+export class AbaloneNode extends MGPNode<AbaloneRules, AbaloneMove, AbaloneState, AbaloneLegalityInformation> {}
 
-export class AbaloneNode extends MGPNode<AbaloneRules, AbaloneMove, AbaloneState, AbaloneLegalityStatus> {}
+export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegalityInformation> {
 
-export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegalityStatus> {
-
-    public static isLegal(move: AbaloneMove, state: AbaloneState): AbaloneLegalityStatus {
+    public static isLegal(move: AbaloneMove, state: AbaloneState): MGPFallible<AbaloneLegalityInformation> {
         const firstPieceValidity: MGPValidation = this.getFirstPieceValidity(move, state);
         if (firstPieceValidity.isFailure()) {
-            return { legal: firstPieceValidity, newBoard: null };
+            return firstPieceValidity.toFailedFallible();
         }
         if (move.isSingleCoord()) {
             return AbaloneRules.isLegalPush(move, state);
@@ -41,7 +39,7 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
             return MGPValidation.SUCCESS;
         }
     }
-    private static isLegalPush(move: AbaloneMove, state: AbaloneState): AbaloneLegalityStatus {
+    private static isLegalPush(move: AbaloneMove, state: AbaloneState): MGPFallible<AbaloneLegalityInformation> {
         let pieces: number = 1;
         let tested: Coord = move.coord.getNext(move.dir);
         const PLAYER: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentPlayer());
@@ -53,13 +51,13 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
             tested = tested.getNext(move.dir);
         }
         if (pieces > 3) {
-            return { legal: MGPValidation.failure(AbaloneFailure.CANNOT_MOVE_MORE_THAN_THREE_PIECES()), newBoard };
+            return MGPFallible.failure(AbaloneFailure.CANNOT_MOVE_MORE_THAN_THREE_PIECES());
         } else if (state.isInBoard(tested) === false) {
-            return { legal: MGPValidation.SUCCESS, newBoard };
+            return MGPFallible.success(newBoard);
         }
         newBoard[tested.y][tested.x] = PLAYER;
         if (state.getPieceAt(tested) === EMPTY) {
-            return { legal: MGPValidation.SUCCESS, newBoard };
+            return MGPFallible.success(newBoard);
         }
         return AbaloneRules.isLegalRealPush(tested, move, state, pieces, newBoard);
     }
@@ -68,7 +66,7 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
                                    state: AbaloneState,
                                    pushingPieces: number,
                                    newBoard: FourStatePiece[][])
-    : AbaloneLegalityStatus
+    : MGPFallible<AbaloneLegalityInformation>
     {
         let opponentPieces: number = 0;
         const OPPONENT: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentOpponent());
@@ -78,18 +76,18 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
             firstOpponent = firstOpponent.getNext(move.dir);
         }
         if (opponentPieces >= pushingPieces) {
-            return { legal: MGPValidation.failure(AbaloneFailure.NOT_ENOUGH_PIECE_TO_PUSH()), newBoard };
+            return MGPFallible.failure(AbaloneFailure.NOT_ENOUGH_PIECE_TO_PUSH());
         } else if (firstOpponent.isInRange(9, 9)) {
             if (state.getPieceAt(firstOpponent) === FourStatePiece.EMPTY) {
                 newBoard[firstOpponent.y][firstOpponent.x] = OPPONENT;
             }
             if (state.getPieceAt(firstOpponent) === PLAYER) {
-                return { legal: MGPValidation.failure(AbaloneFailure.CANNOT_PUSH_YOUR_OWN_PIECES()), newBoard };
+                return MGPFallible.failure(AbaloneFailure.CANNOT_PUSH_YOUR_OWN_PIECES());
             }
         }
-        return { legal: MGPValidation.SUCCESS, newBoard };
+        return MGPFallible.success(newBoard);
     }
-    private static isLegalSideStep(move: AbaloneMove, state: AbaloneState): AbaloneLegalityStatus {
+    private static isLegalSideStep(move: AbaloneMove, state: AbaloneState): MGPFallible<AbaloneLegalityInformation> {
         let last: Coord = move.lastPiece.get();
         const alignement: Direction = move.coord.getDirectionToward(last).get();
         last = last.getNext(alignement); // to include lastPiece as well
@@ -98,19 +96,13 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
         const newBoard: FourStatePiece[][] = state.getCopiedBoard();
         while (tested.equals(last) === false && tested.isInRange(9, 9)) {
             if (state.getPieceAt(tested) !== PLAYER) {
-                return {
-                    legal: MGPValidation.failure(AbaloneFailure.MUST_ONLY_TRANSLATE_YOUR_PIECES()),
-                    newBoard: null,
-                };
+                return MGPFallible.failure(AbaloneFailure.MUST_ONLY_TRANSLATE_YOUR_PIECES());
             }
             const landing: Coord = tested.getNext(move.dir);
             newBoard[tested.y][tested.x] = FourStatePiece.EMPTY;
             if (landing.isInRange(9, 9)) {
                 if (state.isPiece(landing)) {
-                    return {
-                        legal: MGPValidation.failure(AbaloneFailure.TRANSLATION_IMPOSSIBLE()),
-                        newBoard: null,
-                    };
+                    return MGPFallible.failure(AbaloneFailure.TRANSLATION_IMPOSSIBLE());
                 }
                 if (state.getPieceAt(landing) === FourStatePiece.EMPTY) {
                     newBoard[landing.y][landing.x] = PLAYER;
@@ -118,7 +110,7 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
             }
             tested = tested.getNext(alignement);
         }
-        return { legal: MGPValidation.SUCCESS, newBoard };
+        return MGPFallible.success(newBoard);
     }
     public static getGameStatus(node: AbaloneNode): GameStatus {
         const scores: [number, number] = node.gameState.getScores();
@@ -130,10 +122,10 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
             return GameStatus.ONGOING;
         }
     }
-    public applyLegalMove(_move: AbaloneMove, state: AbaloneState, status: AbaloneLegalityStatus): AbaloneState {
-        return new AbaloneState(Utils.getNonNullable(status.newBoard), state.turn + 1);
+    public applyLegalMove(_move: AbaloneMove, state: AbaloneState, newBoard: AbaloneLegalityInformation): AbaloneState {
+        return new AbaloneState(newBoard, state.turn + 1);
     }
-    public isLegal(move: AbaloneMove, state: AbaloneState): AbaloneLegalityStatus {
+    public isLegal(move: AbaloneMove, state: AbaloneState): MGPFallible<AbaloneLegalityInformation> {
         return AbaloneRules.isLegal(move, state);
     }
     public getGameStatus(node: AbaloneNode): GameStatus {

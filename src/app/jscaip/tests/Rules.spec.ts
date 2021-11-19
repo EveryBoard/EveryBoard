@@ -23,7 +23,7 @@ class AbstractRules extends Rules<P4Move, MyAbstractState> {
         return new MyAbstractState([board.concat([move.x])], state.turn + 1);
     }
     public isLegal(move: P4Move, state: MyAbstractState): MGPFallible<void> {
-        return MGPFallible.success(undefined);
+        return MGPFallible.SUCCESS;
     }
     public getGameStatus(node: AbstractNode): GameStatus {
         return GameStatus.ONGOING;

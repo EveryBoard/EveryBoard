@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { EpaminondasLegalityStatus } from 'src/app/games/epaminondas/epaminondaslegalitystatus';
 import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
 import { EpaminondasState } from 'src/app/games/epaminondas/EpaminondasState';
-import { EpaminondasNode, EpaminondasRules } from 'src/app/games/epaminondas/EpaminondasRules';
+import { EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from 'src/app/games/epaminondas/EpaminondasRules';
 import { EpaminondasMinimax } from 'src/app/games/epaminondas/EpaminondasMinimax';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
@@ -27,7 +26,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
                                                                    EpaminondasMove,
                                                                    EpaminondasState,
                                                                    Player,
-                                                                   EpaminondasLegalityStatus>
+                                                                   EpaminondasLegalityInformation>
 {
     public NONE: Player = Player.NONE;
 

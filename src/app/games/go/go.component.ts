@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { GoMove } from 'src/app/games/go/GoMove';
-import { GoRules } from 'src/app/games/go/GoRules';
+import { GoLegalityInformation, GoRules } from 'src/app/games/go/GoRules';
 import { GoMinimax } from 'src/app/games/go/GoMinimax';
 import { GoState, Phase, GoPiece } from 'src/app/games/go/GoState';
 import { Coord } from 'src/app/jscaip/Coord';
-import { GoLegalityStatus } from 'src/app/games/go/GoLegalityStatus';
 import { display } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -19,7 +18,7 @@ import { GoTutorial } from './GoTutorial';
     templateUrl: './go.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoState, GoPiece, GoLegalityStatus> {
+export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoState, GoPiece, GoLegalityInformation> {
 
     public static VERBOSE: boolean = false;
 

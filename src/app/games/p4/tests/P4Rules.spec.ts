@@ -1,10 +1,11 @@
 import { P4Node, P4Rules } from '../P4Rules';
 import { Player } from 'src/app/jscaip/Player';
 import { P4State } from '../P4State';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { P4Move } from '../P4Move';
 import { P4Minimax } from '../P4Minimax';
 import { P4Failure } from '../P4Failure';
+import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('P4Rules', () => {
 
@@ -41,10 +42,8 @@ describe('P4Rules', () => {
         ];
         const state: P4State = new P4State(board, 0);
         const move: P4Move = P4Move.of(3);
-        const status: LegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.isSuccess()).toBeTrue();
-        const resultingState: P4State = rules.applyLegalMove(move, state, status);
-        expect(resultingState.board).toEqual(expectedBoard);
+        const expectedState: P4State = new P4State(expectedBoard, 1);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
     it('First player should win vertically', () => {
         const board: Player[][] = [
@@ -146,8 +145,7 @@ describe('P4Rules', () => {
         ];
         const state: P4State = new P4State(board, 12);
         const move: P4Move = P4Move.of(0);
-        const status: LegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.reason).toBe(P4Failure.COLUMN_IS_FULL());
+        RulesUtils.expectMoveFailure(rules, state, move, P4Failure.COLUMN_IS_FULL());
     });
     it('should assign greater score to center column', () => {
         const board1: Player[][] = [
@@ -156,7 +154,7 @@ describe('P4Rules', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
-            [_, _, _, O, _, _, _],
+            [_, _, _, _, _, _, O],
         ];
         const state1: P4State = new P4State(board1, 12);
         const board2: Player[][] = [
@@ -165,10 +163,13 @@ describe('P4Rules', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
-            [_, _, _, _, _, _, O],
+            [_, _, _, O, _, _, _],
         ];
         const state2: P4State = new P4State(board2, 12);
 
+        RulesUtils.expectSecondStateToBeBetterThanFirst(state1, MGPOptional.empty<P4Move>(),
+                                                        state2, MGPOptional.empty(),
+                                                        minimax);
         expect(P4Rules.getBoardValue(state1).value).toBeLessThan(P4Rules.getBoardValue(state2).value);
     });
     it('should know where the lowest case is', () => {

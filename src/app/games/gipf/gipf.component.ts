@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { GipfRules } from 'src/app/games/gipf/GipfRules';
+import { GipfLegalityInformation, GipfRules } from 'src/app/games/gipf/GipfRules';
 import { GipfMinimax } from 'src/app/games/gipf/GipfMinimax';
 import { GipfFailure } from 'src/app/games/gipf/GipfFailure';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -13,7 +13,6 @@ import { HexagonalGameComponent }
     from '../../components/game-components/game-component/HexagonalGameComponent';
 import { GipfCapture, GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMove';
 import { GipfState } from 'src/app/games/gipf/GipfState';
-import { GipfLegalityStatus } from 'src/app/games/gipf/GipfLegalityStatus';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Arrow } from 'src/app/jscaip/Arrow';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
@@ -26,7 +25,8 @@ import { Utils } from 'src/app/utils/utils';
     templateUrl: './gipf.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class GipfComponent extends HexagonalGameComponent<GipfRules, GipfMove, GipfState, GipfLegalityStatus> {
+export class GipfComponent
+    extends HexagonalGameComponent<GipfRules, GipfMove, GipfState, FourStatePiece, GipfLegalityInformation> {
 
     public inserted: MGPOptional<Arrow> = MGPOptional.empty();
     public arrows: Arrow[] = [];

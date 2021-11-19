@@ -1,14 +1,14 @@
 import { GoState, GoPiece, Phase } from './GoState';
 import { GoMove } from './GoMove';
-import { GoLegalityStatus } from './GoLegalityStatus';
 import { display } from 'src/app/utils/utils';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
-import { GoNode, GoRules } from './GoRules';
+import { GoLegalityInformation, GoNode, GoRules } from './GoRules';
 import { GoGroupDatas } from './GoGroupsDatas';
 import { Coord } from 'src/app/jscaip/Coord';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
-export class GoMinimax extends Minimax<GoMove, GoState, GoLegalityStatus> {
+export class GoMinimax extends Minimax<GoMove, GoState, GoLegalityInformation> {
 
     public getListMoves(node: GoNode): GoMove[] {
         const LOCAL_VERBOSE: boolean = false;
@@ -38,8 +38,8 @@ export class GoMinimax extends Minimax<GoMove, GoState, GoLegalityStatus> {
             for (let x: number = 0; x < state.board[0].length; x++) {
                 newMove = new GoMove(x, y);
                 if (state.getPieceAt(newMove.coord) === GoPiece.EMPTY) {
-                    const legality: GoLegalityStatus = GoRules.isLegal(newMove, state);
-                    if (legality.legal.isSuccess()) {
+                    const legality: MGPFallible<GoLegalityInformation> = GoRules.isLegal(newMove, state);
+                    if (legality.isSuccess()) {
                         choices.push(newMove);
                     }
                 }

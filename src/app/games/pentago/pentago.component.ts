@@ -6,7 +6,6 @@ import { Vector } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { PentagoLegalityStatus } from './PentagoLegalityStatus';
 import { PentagoMinimax } from './PentagoMinimax';
 import { PentagoMove } from './PentagoMove';
 import { PentagoRules } from './PentagoRules';
@@ -25,8 +24,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 export class PentagoComponent extends RectangularGameComponent<PentagoRules,
                                                                PentagoMove,
                                                                PentagoState,
-                                                               Player,
-                                                               PentagoLegalityStatus>
+                                                               Player>
 {
     public readonly BLOCK_WIDTH: number;
     public readonly BLOCK_SEPARATION: number;

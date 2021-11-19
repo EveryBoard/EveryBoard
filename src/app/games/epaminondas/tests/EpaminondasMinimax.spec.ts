@@ -73,7 +73,7 @@ describe('EpaminondasMinimax:', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, O, O, _, _, _, _, _, _, _, _, _, _, _],
         ], 0);
-        RulesUtils.expectSecondStateToBeBetterThanFirst(weakerState, MGPOptional.empty(),
+        RulesUtils.expectSecondStateToBeBetterThanFirst(weakerState, MGPOptional.empty<EpaminondasMove>(),
                                                         strongerState, MGPOptional.empty(), minimax);
     });
 });

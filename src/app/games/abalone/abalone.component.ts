@@ -17,7 +17,7 @@ import { AbaloneDummyMinimax } from './AbaloneDummyMinimax';
 import { AbaloneFailure } from './AbaloneFailure';
 import { AbaloneState } from './AbaloneState';
 import { AbaloneMove } from './AbaloneMove';
-import { AbaloneLegalityStatus, AbaloneRules } from './AbaloneRules';
+import { AbaloneLegalityInformation, AbaloneRules } from './AbaloneRules';
 import { AbaloneTutorial } from './AbaloneTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
@@ -39,7 +39,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
                                                              AbaloneMove,
                                                              AbaloneState,
                                                              FourStatePiece,
-                                                             AbaloneLegalityStatus>
+                                                             AbaloneLegalityInformation>
 {
     public moveds: Coord[] = [];
 
@@ -172,8 +172,8 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
             } else {
                 theoritical = AbaloneMove.fromDoubleCoord(firstPiece, lastPiece, dir).get();
             }
-            const isLegal: LegalityStatus = this.rules.isLegal(theoritical, state);
-            if (isLegal.legal.isSuccess()) {
+            const isLegal: MGPFallible<AbaloneLegalityInformation> = this.rules.isLegal(theoritical, state);
+            if (isLegal.isSuccess()) {
                 const firstPieceCenter: Coord = this.getCenterAt(firstPiece);
                 const pointedCenter: Coord = this.getCenterAt(pointed);
                 const middle: Coord = this.getMiddleOfArrow(dir, pointed, pointedCenter);
