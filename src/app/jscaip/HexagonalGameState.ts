@@ -1,5 +1,5 @@
 import { Table } from '../utils/ArrayUtils';
-import { assert } from '../utils/utils';
+import { assert, Utils } from '../utils/utils';
 import { Coord } from './Coord';
 import { GameStateWithTable } from './GameStateWithTable';
 import { HexaDirection } from './HexaDirection';
@@ -122,7 +122,7 @@ export abstract class HexagonalGameState<P> extends GameStateWithTable<P> {
             }
             c = c.getNext(dir);
         }
-        assert(false, 'could not find a board entrance, board must be invalid');
+        Utils.handleError('could not find a board entrance, board must be invalid');
         return new Coord(-1, -1);
     }
 }

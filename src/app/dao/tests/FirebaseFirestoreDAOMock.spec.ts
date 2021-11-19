@@ -78,6 +78,9 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
             return null; // should return null if a document does not exist. This is behaviour relied upon!
         }
     }
+    public async tryToRead(id: string): Promise<MGPOptional<T>> {
+        return MGPOptional.ofNullable(await this.read(id));
+    }
     public async set(id: string, doc: T): Promise<void> {
         display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE,
                 this.collectionName + '.set(' + id + ', ' + JSON.stringify(doc) + ')');

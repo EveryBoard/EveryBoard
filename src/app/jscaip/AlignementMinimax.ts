@@ -8,7 +8,7 @@ import { AbstractGameState } from './GameState';
 
 export interface BoardInfo {
     status: SCORE,
-    victory: Coord[] | null,
+    victory: MGPOptional<Coord[]>,
     preVictory: MGPOptional<Coord>,
     sum: number,
 }
@@ -24,7 +24,7 @@ export abstract class AlignementMinimax<M extends Move,
         this.startSearchingVictorySources();
         let boardInfo: BoardInfo = {
             status: SCORE.DEFAULT,
-            victory: null,
+            victory: MGPOptional.empty(),
             preVictory: MGPOptional.empty(),
             sum: 0,
         };
@@ -41,7 +41,7 @@ export abstract class AlignementMinimax<M extends Move,
             }
             boardInfo = {
                 status: newBoardInfo.status,
-                victory: null,
+                victory: MGPOptional.empty(),
                 preVictory: newBoardInfo.preVictory,
                 sum: boardInfo.sum + newBoardInfo.sum,
             };

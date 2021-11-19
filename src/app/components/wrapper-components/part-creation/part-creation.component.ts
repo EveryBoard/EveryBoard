@@ -283,7 +283,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         return;
     }
     private onCurrentJoinerUpdate(iJoinerId: IJoinerId) {
-        display(PartCreationComponent.VERBOSE || true,
+        display(PartCreationComponent.VERBOSE,
                 { PartCreationComponent_onCurrentJoinerUpdate: {
                     before: JSON.stringify(this.currentJoiner),
                     then: JSON.stringify(iJoinerId) } });
@@ -355,7 +355,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         const onDocumentCreated: (foundUser: IUserId[]) => void = (foundUsers: IUserId[]) => {
             for (const user of foundUsers) {
                 if (user.doc.state === 'offline') {
-                    this.removeUserFromLobby(user.doc.username);
+                    this.removeUserFromLobby(Utils.getNonNullable(user.doc.username));
                     Utils.handleError('OnlineGameWrapper: ' + user.doc.username + ' is already offline!');
                 }
             }
@@ -363,14 +363,14 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         const onDocumentModified: (modifiedUsers: IUserId[]) => void = (modifiedUsers: IUserId[]) => {
             for (const user of modifiedUsers) {
                 if (user.doc.state === 'offline') {
-                    this.removeUserFromLobby(user.doc.username);
+                    this.removeUserFromLobby(Utils.getNonNullable(user.doc.username));
                 }
             }
         };
         const onDocumentDeleted: (deletedUsers: IUserId[]) => void = (deletedUsers: IUserId[]) => {
             // This should not happen in practice, but if it does we can safely remove the user from the lobby
             for (const user of deletedUsers) {
-                this.removeUserFromLobby(user.doc.username);
+                this.removeUserFromLobby(Utils.getNonNullable(user.doc.username));
                 Utils.handleError('OnlineGameWrapper: ' + user.doc.username + ' was deleted (' + user.id + ')');
             }
         };

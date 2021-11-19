@@ -54,13 +54,13 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     let partDAO: PartDAO;
     let userDAO: UserDAO;
 
-    const USER_CREATOR: AuthUser = new AuthUser('cre@tor', 'creator', true);
+    const USER_CREATOR: AuthUser = new AuthUser(MGPOptional.of('cre@tor'), MGPOptional.of('creator'), true);
     const PLAYER_CREATOR: IUser = {
         username: 'creator',
         state: 'online',
         verified: true,
     };
-    const USER_OPPONENT: AuthUser = new AuthUser('firstCandidate@mgp.team', 'firstCandidate', true);
+    const USER_OPPONENT: AuthUser = new AuthUser(MGPOptional.of('firstCandidate@mgp.team'), MGPOptional.of('firstCandidate'), true);
     const PLAYER_OPPONENT: IUser = {
         username: 'firstCandidate',
         last_changed: {
@@ -96,7 +96,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await partDAO.set('joinerId', PartMocks.INITIAL.doc);
         await userDAO.set('firstCandidateDocId', PLAYER_OPPONENT);
         await userDAO.set('creatorDocId', PLAYER_CREATOR);
-        await userDAO.set(OBSERVER.username, OBSERVER);
+        await userDAO.set(Utils.getNonNullable(OBSERVER.username), OBSERVER);
         await chatDAO.set('joinerId', { messages: [], status: `I don't have a clue` });
         return Promise.resolve();
     }
@@ -1446,7 +1446,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     });
     describe('Non Player Experience', () => {
         it('Should not be able to do anything', fakeAsync(async() => {
-            await prepareStartedGameFor(new AuthUser(OBSERVER.username, 'observer@home', true));
+            await prepareStartedGameFor(new AuthUser(MGPOptional.ofNullable(OBSERVER.username),
+                                                     MGPOptional.of('observer@home'),
+                                                     true));
             spyOn(componentTestUtils.wrapper as OnlineGameWrapperComponent, 'startCountDownFor').and.callFake(() => null);
 
             const forbiddenFunctionNames: string[] = [

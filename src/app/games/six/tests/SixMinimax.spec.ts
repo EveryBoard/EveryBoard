@@ -95,9 +95,8 @@ describe('SixMinimax', () => {
             ];
             const state: SixState = SixState.fromRepresentation(board, 9);
             const move: SixMove = SixMove.fromDrop(new Coord(1, 0));
-            rules.node = new SixNode(state);
-            const boardValue: { value: number, preVictory?: Coord } =
-                minimax.getBoardValue(new SixNode(state, MGPOptional.empty(), MGPOptional.of(move)));
+            const node: SixNode = new SixNode(state, MGPOptional.empty(), MGPOptional.of(move));
+            const boardValue: { value: number, preVictory?: Coord } = minimax.getBoardValue(node);
             expect(boardValue.preVictory).toEqual(new Coord(2, 0));
         });
     });
@@ -225,10 +224,10 @@ describe('SixMinimax', () => {
                 [X, X, X, X, O, O, O, O, O],
                 [X, X, X, X, O, O, O, O, O],
             ], 40);
-            expect(minimax.getBoardNumericValue(new SixNode(state,
-                                                            MGPOptional.empty(),
-                                                            MGPOptional.of(SixMove.fromDrop(new Coord(1, 1))))))
-                .toBe(2);
+            const node: SixNode = new SixNode(state,
+                                              MGPOptional.empty(),
+                                              MGPOptional.of(SixMove.fromDrop(new Coord(1, 1))))
+            expect(minimax.getBoardNumericValue(node)).toBe(2);
         });
     });
 });

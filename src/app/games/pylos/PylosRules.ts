@@ -61,15 +61,12 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
             const firstNeighboors: MGPOptional<PylosCoord> = landingCoord.getNextValid(vertical);
             if (firstNeighboors.isPresent() && state.getPieceAt(firstNeighboors.get()) === currentPlayer) {
                 for (const horizontal of [Orthogonal.LEFT, Orthogonal.RIGHT]) {
-                    const secondNeighboors: PylosCoord | null = firstNeighboors
-                        .get()
-                        .getNextValid(horizontal)
-                        .getOrNull();
-                    if (secondNeighboors != null &&
-                        state.getPieceAt(secondNeighboors) === currentPlayer)
+                    const secondNeighboors: MGPOptional<PylosCoord> = firstNeighboors.get().getNextValid(horizontal);
+                    if (secondNeighboors.isPresent() &&
+                        state.getPieceAt(secondNeighboors.get()) === currentPlayer)
                     {
                         const thirdDirection: Orthogonal = vertical.getOpposite();
-                        const thirdNeighboors: PylosCoord = secondNeighboors.getNextValid(thirdDirection).get();
+                        const thirdNeighboors: PylosCoord = secondNeighboors.get().getNextValid(thirdDirection).get();
                         if (state.getPieceAt(thirdNeighboors) === currentPlayer) {
                             return true;
                         }
@@ -86,8 +83,8 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
     {
         const possiblesCapturesSet: PylosCoord[][] = [];
 
-        // TODO: removed because it is useless? it is not reached by tests
-        // freeToMoves = freeToMoves.filter((c: PylosCoord) => c.equals(startingCoord.get()) === false);
+        // TODO this must be covered by a test (currently, commenting the line does not break anything)
+        freeToMoves = freeToMoves.filter((c: PylosCoord) => startingCoord.equalsValue(c) === false);
 
         const capturables: PylosCoord[] = freeToMoves.concat(landingCoord);
         for (let i: number = 0; i < capturables.length; i++) {
@@ -145,10 +142,10 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
             return MGPFallible.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
 
-        const startingCoord: PylosCoord | null = move.startingCoord.getOrNull();
         const OPPONENT: Player = state.getCurrentOpponent();
 
-        if (startingCoord != null) {
+        if (move.startingCoord.isPresent()) {
+            const startingCoord: PylosCoord = move.startingCoord.get();
             const startingPiece: Player = state.getPieceAt(startingCoord);
             if (startingPiece === OPPONENT) {
                 return MGPFallible.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());

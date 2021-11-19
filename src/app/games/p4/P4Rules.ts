@@ -11,6 +11,7 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { P4Failure } from './P4Failure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPMap } from 'src/app/utils/MGPMap';
 
 export class P4Node extends MGPNode<P4Rules, P4Move, P4State> {}
 
@@ -110,8 +111,8 @@ export class P4Rules extends Rules<P4Move, P4State> {
         const opponent: Player = P4Rules.getOpponent(board, c);
         const ally: Player = board[c.y][c.x];
 
-        const distByDirs: Map<Direction, number> = new Map();
-        const alliesByDirs: Map<Direction, number> = new Map();
+        const distByDirs: MGPMap<Direction, number> = new MGPMap();
+        const alliesByDirs: MGPMap<Direction, number> = new MGPMap();
 
         for (const dir of Direction.DIRECTIONS) {
             const tmpData: [number, number] = P4Rules.getNumberOfFreeSpacesAndAllies(board, c, dir, opponent, ally);
@@ -121,9 +122,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
 
         for (const dir of [Direction.UP, Direction.UP_RIGHT, Direction.RIGHT, Direction.DOWN_RIGHT]) {
             // for each pair of opposite directions
-            const lineAllies: number =
-                Utils.getNonNullable(alliesByDirs.get(dir)) +
-                Utils.getNonNullable(alliesByDirs.get(dir.getOpposite()));
+            const lineAllies: number = alliesByDirs.get(dir).get() + alliesByDirs.get(dir.getOpposite()).get();
             if (lineAllies > 2) {
                 display(P4Rules.VERBOSE, { text:
                     'there is some kind of victory here (' + c.x + ', ' + c.y + ')' + '\n' +
@@ -133,9 +132,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
                 return ally.getVictoryValue();
             }
 
-            const lineDist: number =
-                Utils.getNonNullable(distByDirs.get(dir)) +
-                Utils.getNonNullable(distByDirs.get(dir.getOpposite()));
+            const lineDist: number = distByDirs.get(dir).get() + distByDirs.get(dir.getOpposite()).get();
             if (lineDist === 3) {
                 score += 2;
             } else if (lineDist > 3) {

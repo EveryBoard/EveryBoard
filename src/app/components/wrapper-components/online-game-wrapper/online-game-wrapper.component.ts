@@ -147,7 +147,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         });
         this.userSub = this.authenticationService.getUserObs()
             .subscribe((user: AuthUser) => {
-                this.playerName = user.username;
+                this.playerName = user.username.getOrNull();
             });
         await this.setCurrentPartIdOrRedirect();
     }
@@ -630,12 +630,12 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         const opponent: IUserId = Utils.getNonNullable(this.opponent);
         if (player === this.observerRole) {
             // the player has run out of time, he'll notify his own defeat by time
-            this.notifyTimeoutVictory(opponent.doc.username, this.getPlayerName());
+            this.notifyTimeoutVictory(Utils.getNonNullable(opponent.doc.username), this.getPlayerName());
         } else {
             if (this.endGame) {
                 display(true, 'time might be better handled in the future');
             } else if (this.opponentIsOffline()) { // the other player has timed out
-                this.notifyTimeoutVictory(this.getPlayerName(), opponent.doc.username);
+                this.notifyTimeoutVictory(this.getPlayerName(), Utils.getNonNullable(opponent.doc.username));
                 this.endGame = true;
             }
         }

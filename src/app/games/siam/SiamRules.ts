@@ -86,7 +86,7 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
                     'Illegal push because not straight or not pushing anything or leaving the board');
             return MGPFallible.failure(SiamFailure.ILLEGAL_PUSH());
         }
-        let currentDirection: Orthogonal | null = pushingDir;
+        let currentDirection: MGPOptional<Orthogonal> = MGPOptional.of(pushingDir);
         const resistingDir: Orthogonal = pushingDir.getOpposite();
         let totalForce: number = 0;
         const resultingBoard: SiamPiece[][] = state.getCopiedBoard();
@@ -98,12 +98,10 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
                                        movingPiece !== SiamPiece.EMPTY;
 
         while (pushingPossible) {
-            if (currentDirection != null) {
-                if (pushingDir.equals(currentDirection)) {
-                    totalForce++;
-                } else if (resistingDir.equals(currentDirection)) {
-                    totalForce--;
-                }
+            if (currentDirection.equalsValue(pushingDir)) {
+                totalForce++;
+            } else if (currentDirection.equalsValue(resistingDir)) {
+                totalForce--;
             }
             display(SiamRules.VERBOSE, { totalForce, movingPiece, landingCoord });
             const tmpPiece: SiamPiece = resultingBoard[landingCoord.y][landingCoord.x];
@@ -112,7 +110,7 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
             movedPieces.push(landingCoord);
             movingPiece = tmpPiece;
             landingCoord = landingCoord.getNext(pushingDir);
-            currentDirection = movingPiece.getOptionalDirection().getOrNull();
+            currentDirection = movingPiece.getOptionalDirection();
             pushingPossible = landingCoord.isInRange(5, 5) &&
                               movingPiece !== SiamPiece.EMPTY &&
                               totalForce > 0;
@@ -120,12 +118,10 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         if (landingCoord.isNotInRange(5, 5)) {
             display(SiamRules.VERBOSE, 'This movement would push ' + movingPiece + ' outside the board');
 
-            if (currentDirection != null) {
-                if (pushingDir.equals(currentDirection)) {
-                    totalForce++;
-                } else if (resistingDir.equals(currentDirection)) {
-                    totalForce--;
-                }
+            if (currentDirection.equalsValue(pushingDir)) {
+                totalForce++;
+            } else if (currentDirection.equalsValue(resistingDir)) {
+                totalForce--;
             }
         }
         if (totalForce <= 0) {
@@ -358,7 +354,7 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         let currentDistance: number = 1;
         let previousPiece: SiamPiece = state.getPieceAt(fallingCoord);
         let testedCoord: Coord = fallingCoord.getCopy();
-        let almostPusher: Coord | null = null;
+        let almostPusher: MGPOptional<Coord> = MGPOptional.empty();
         let pusherFound: boolean = false;
         let mountainEncountered: boolean = false;
         let missingForce: number = 0;
@@ -402,7 +398,7 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
                 } else {
                     display(SiamRules.VERBOSE, 'found a sideway almost-pusher');
                     if (mountainEncountered) {
-                        almostPusher = testedCoord.getCopy();
+                        almostPusher = MGPOptional.of(testedCoord.getCopy());
                         if (previousPiece !== SiamPiece.EMPTY) {
                             display(SiamRules.VERBOSE, 'his orientation will slow him down');
                             currentDistance++;
@@ -418,11 +414,11 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
             testedCoord = testedCoord.getPrevious(direction);
         }
         display(SiamRules.VERBOSE, { testedCoord: testedCoord.toString(), loopResultingDistance: currentDistance });
-        if (pusherFound === false && almostPusher != null) {
+        if (pusherFound === false && almostPusher.isPresent()) {
             currentDistance++;
             missingForce -= 1;
             display(SiamRules.VERBOSE, 'no pusher found but found one sideway guy');
-            while (testedCoord.equals(almostPusher) === false) {
+            while (testedCoord.equals(almostPusher.get()) === false) {
                 display(SiamRules.VERBOSE, 'he was one piece backward');
                 testedCoord = testedCoord.getNext(direction);
                 currentDistance--;

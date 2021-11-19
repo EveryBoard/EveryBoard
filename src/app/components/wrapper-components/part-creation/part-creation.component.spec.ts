@@ -193,7 +193,7 @@ describe('PartCreationComponent:', () => {
             tick();
             testUtils.detectChanges();
         }));
-        fdescribe('Handshake end', () => {
+        describe('Handshake end', () => {
             it('when chosenPlayer leaves lobby, part creation should go back from start', fakeAsync(async() => {
                 await mockCandidateArrival();
                 await chooseOpponent();

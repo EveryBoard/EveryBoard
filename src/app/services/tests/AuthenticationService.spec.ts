@@ -9,6 +9,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { Utils } from 'src/app/utils/utils';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 class RTDBSpec {
     public static setOfflineMock(): void {
@@ -19,9 +20,13 @@ class RTDBSpec {
 
 @Injectable()
 export class AuthenticationServiceMock {
-    public static CONNECTED_UNVERIFIED: AuthUser = new AuthUser('jean@jaja.europe', 'Jean Jaja', false);
+    public static CONNECTED_UNVERIFIED: AuthUser = new AuthUser(MGPOptional.of('jean@jaja.europe'),
+                                                                MGPOptional.of('Jean Jaja'),
+                                                                false);
 
-    public static CONNECTED: AuthUser = new AuthUser('jean@jaja.europe', 'Jean Jaja', true);
+    public static CONNECTED: AuthUser = new AuthUser(MGPOptional.of('jean@jaja.europe'),
+                                                     MGPOptional.of('Jean Jaja'),
+                                                     true);
 
     public static setUser(user: AuthUser): void {
         (TestBed.inject(AuthenticationService) as unknown as AuthenticationServiceMock).setUser(user);

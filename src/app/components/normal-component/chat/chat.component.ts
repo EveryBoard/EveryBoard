@@ -3,7 +3,7 @@ import { ChatService } from '../../../services/ChatService';
 import { IMessage } from '../../../domain/imessage';
 import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
 import { IChatId } from 'src/app/domain/ichat';
-import { assert, display, Utils } from 'src/app/utils/utils';
+import { assert, display } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { faReply, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
@@ -46,7 +46,7 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
             .subscribe((user: AuthUser) => {
                 if (this.isConnectedUser(user)) {
                     display(ChatComponent.VERBOSE, JSON.stringify(user) + ' just connected');
-                    this.username = MGPOptional.of(Utils.getNonNullable(user.username));
+                    this.username = user.username;
                     this.connected = true;
                     this.loadChatContent();
                 } else {
@@ -60,7 +60,7 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
         this.scrollToBottomIfNeeded();
     }
     public isConnectedUser(user: AuthUser): boolean {
-        return user.username != null && user.username !== '';
+        return user.username.isPresent() && user.username.get() !== '';
     }
     public loadChatContent(): void {
         display(ChatComponent.VERBOSE, `User '${this.username}' logged, loading chat content`);
