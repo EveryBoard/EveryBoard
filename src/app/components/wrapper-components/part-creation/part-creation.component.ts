@@ -13,29 +13,28 @@ import { FirebaseCollectionObserver } from 'src/app/dao/FirebaseCollectionObserv
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 interface PartCreationViewInfo {
     userIsCreator: boolean;
-    showCustomTime: boolean;
-    canEditConfig: boolean;
-    canProposeConfig: boolean;
-    canReviewConfig: boolean;
+    showCustomTime?: boolean;
+    canEditConfig?: boolean;
+    canProposeConfig?: boolean;
+    canReviewConfig?: boolean;
 
     userIsChosenOpponent: boolean;
     creatorIsModifyingConfig?: boolean;
     userIsObserver: boolean;
 
-    creator: MGPOptional<string>;
+    creator?: string;
     firstPlayer: IFirstPlayer;
     firstPlayerClasses: { [key: string]: string[] },
     partType: IPartType;
     partTypeClasses: { [key: string]: string[] },
-    partTypeName: string,
-    maximalMoveDuration: MGPOptional<number>;
-    totalPartDuration: MGPOptional<number>;
-    candidates: string[];
-    chosenOpponent: MGPOptional<string>;
+    partTypeName?: string,
+    maximalMoveDuration?: number;
+    totalPartDuration?: number;
+    candidates?: string[];
+    chosenOpponent?: string;
     candidateClasses: { [key: string]: string[] },
 }
 interface ComparableSubscription {
@@ -73,21 +72,11 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         userIsCreator: false,
         userIsChosenOpponent: false,
         userIsObserver: false,
-        showCustomTime: false,
-        canEditConfig: false,
-        canProposeConfig: false,
-        canReviewConfig: false,
         partType: 'STANDARD',
         partTypeClasses: { 'STANDARD': ['is-selected', 'is-primary'], 'BLITZ': [], 'CUSTOM': [] },
         firstPlayer: 'RANDOM',
         firstPlayerClasses: { 'CREATOR': [], 'RANDOM': ['is-selected', 'is-primary'], 'CHOSEN_PLAYER': [] },
         candidateClasses: {},
-        chosenOpponent: MGPOptional.empty(),
-        creator: MGPOptional.empty(),
-        partTypeName: $localize`standard`,
-        maximalMoveDuration: MGPOptional.empty(),
-        totalPartDuration: MGPOptional.empty(),
-        candidates: [],
     }
     public currentJoiner: IJoiner | null = null;
 
@@ -155,11 +144,11 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     private subscribeToFormElements(): void {
         this.getForm('chosenOpponent').valueChanges
             .pipe(takeUntil(this.ngUnsubscribe)).subscribe((opponent: string) => {
-                if (this.viewInfo.chosenOpponent.isPresent()) {
-                    this.viewInfo.candidateClasses[this.viewInfo.chosenOpponent.get()] = [];
+                if (this.viewInfo.chosenOpponent !== undefined) {
+                    this.viewInfo.candidateClasses[this.viewInfo.chosenOpponent] = [];
                 }
                 this.viewInfo.candidateClasses[opponent] = ['is-selected'];
-                this.viewInfo.chosenOpponent = opponent === '' ? MGPOptional.empty() : MGPOptional.of(opponent);
+                this.viewInfo.chosenOpponent = opponent;
                 this.viewInfo.canProposeConfig =
                     Utils.getNonNullable(this.currentJoiner).partStatus !== PartStatus.CONFIG_PROPOSED.value &&
                     opponent !== '';
@@ -173,11 +162,11 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             });
         this.getForm('maximalMoveDuration').valueChanges
             .pipe(takeUntil(this.ngUnsubscribe)).subscribe((maximalMoveDuration: number) => {
-                this.viewInfo.maximalMoveDuration = MGPOptional.of(maximalMoveDuration);
+                this.viewInfo.maximalMoveDuration = maximalMoveDuration;
             });
         this.getForm('totalPartDuration').valueChanges
             .pipe(takeUntil(this.ngUnsubscribe)).subscribe((totalPartDuration: number) => {
-                this.viewInfo.totalPartDuration = MGPOptional.of(totalPartDuration);
+                this.viewInfo.totalPartDuration = totalPartDuration;
             });
         this.getForm('firstPlayer').valueChanges
             .pipe(takeUntil(this.ngUnsubscribe)).subscribe((firstPlayer: IFirstPlayer) => {
@@ -198,15 +187,15 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.viewInfo.creatorIsModifyingConfig = joiner.partStatus !== PartStatus.CONFIG_PROPOSED.value;
         this.viewInfo.showCustomTime = this.getForm('partType').value === 'CUSTOM';
 
-        this.viewInfo.creator = MGPOptional.of(joiner.creator);
+        this.viewInfo.creator = joiner.creator;
         this.viewInfo.candidates = joiner.candidates;
         if (this.userName === joiner.creator) {
             this.setDataForCreator(joiner);
         } else {
-            this.viewInfo.maximalMoveDuration = MGPOptional.of(joiner.maximalMoveDuration);
-            this.viewInfo.totalPartDuration = MGPOptional.of(joiner.totalPartDuration);
+            this.viewInfo.maximalMoveDuration = joiner.maximalMoveDuration;
+            this.viewInfo.totalPartDuration = joiner.totalPartDuration;
             this.viewInfo.partType = joiner.partType;
-            this.viewInfo.chosenOpponent = MGPOptional.ofNullable(joiner.chosenPlayer);
+            this.viewInfo.chosenOpponent = joiner.chosenPlayer;
             this.viewInfo.firstPlayer = joiner.firstPlayer;
         }
         switch (joiner.partType) {
@@ -226,12 +215,13 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.viewInfo.totalPartDuration = this.viewInfo.totalPartDuration || joiner.totalPartDuration;
         this.viewInfo.partType = this.viewInfo.partType || joiner.partType;
         this.viewInfo.firstPlayer = this.viewInfo.firstPlayer || joiner.firstPlayer;
-        let opponent: string = this.viewInfo.chosenOpponent.getOrElse('');
-        if (joiner.chosenPlayer != null) {
+        let opponent: string | undefined = this.viewInfo.chosenOpponent;
+        if (opponent) {
+            if (joiner.candidates.indexOf(opponent) === -1) {
+                opponent = ''; // chosenOppoent left
+            }
+        } else {
             opponent = joiner.chosenPlayer;
-        } else if (joiner.candidates.indexOf(opponent) === -1) {
-            // chosen opponent left
-            opponent = '';
         }
         this.getForm('chosenOpponent').setValue(opponent);
     }

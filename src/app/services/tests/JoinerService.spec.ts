@@ -40,7 +40,7 @@ describe('JoinerService', () => {
         await service.createInitialJoiner('creator', 'id');
         expect(dao.set).toHaveBeenCalledWith('id', {
             candidates: [],
-            chosenPlayer: null,
+            chosenPlayer: '',
             firstPlayer: FirstPlayer.RANDOM.value,
             partType: PartType.STANDARD.value,
             partStatus: PartStatus.PART_CREATED.value,
@@ -167,6 +167,7 @@ describe('JoinerService', () => {
 
             expect(dao.update).toHaveBeenCalledWith('joinerId', {
                 partStatus: PartStatus.PART_CREATED.value,
+                chosenPlayer: '',
                 candidates: ['candidate1'],
             });
         }));

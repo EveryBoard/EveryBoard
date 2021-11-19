@@ -146,9 +146,9 @@ export class GameService implements OnDestroy {
         let playerOne: string;
         if (whoStarts === FirstPlayer.CREATOR) {
             playerZero = joiner.creator;
-            playerOne = Utils.getNonNullable(joiner.chosenPlayer);
+            playerOne = joiner.chosenPlayer;
         } else {
-            playerZero = Utils.getNonNullable(joiner.chosenPlayer);
+            playerZero = joiner.chosenPlayer;
             playerOne = joiner.creator;
         }
         return {

@@ -15,7 +15,6 @@ import { Router } from '@angular/router';
 import { GameService } from 'src/app/services/GameService';
 import { ChatService } from 'src/app/services/ChatService';
 import { Utils } from 'src/app/utils/utils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('PartCreationComponent:', () => {
 
@@ -106,8 +105,8 @@ describe('PartCreationComponent:', () => {
         await mockCandidateArrival();
 
         // then viewInfo should not be changed
-        expect(component.viewInfo.maximalMoveDuration).toEqual(MGPOptional.of(100));
-        expect(component.viewInfo.totalPartDuration).toEqual(MGPOptional.of(1000));
+        expect(component.viewInfo.maximalMoveDuration).toBe(100);
+        expect(component.viewInfo.totalPartDuration).toBe(1000);
     }));
     it('Config proposal should send viewInfo, not current joiner', fakeAsync(async() => {
         // Given a component where creator has changed the maximalMoveDuration and totalPartDuration
@@ -199,9 +198,9 @@ describe('PartCreationComponent:', () => {
                 await chooseOpponent();
 
                 testUtils.expectElementToExist('#selected_firstCandidate');
-                console.log('disconnecting')
                 await joinerDAOMock.update('joinerId', {
                     partStatus: PartStatus.PART_CREATED.value,
+                    chosenPlayer: '',
                     candidates: [],
                 });
                 testUtils.detectChanges();
