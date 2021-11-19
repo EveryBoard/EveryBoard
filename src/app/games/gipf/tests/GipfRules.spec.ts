@@ -38,7 +38,7 @@ describe('GipfRules:', () => {
         expect(rules.node.gameState.turn).withContext('Game should start at turn 0').toBe(0);
     });
     it('should start with the expected board for the basic variant', () => {
-        const state: GipfState = rules.node.gameState;
+        const state: GipfState = GipfState.getInitialState();
         const expectedState: GipfState = new GipfState([
             [N, N, N, B, _, _, A],
             [N, N, _, _, _, _, _],
@@ -54,21 +54,21 @@ describe('GipfRules:', () => {
     });
     describe('isLegal and applyLegalMove', () => {
         it('should forbid placements on non-border cases', () => {
-            const state: GipfState = rules.node.gameState;
+            const state: GipfState = GipfState.getInitialState();
             const placement: GipfPlacement = new GipfPlacement(new Coord(3, 3), MGPOptional.empty());
             const move: GipfMove = new GipfMove(placement, [], []);
 
             RulesUtils.expectMoveFailure(rules, state, move, GipfFailure.PLACEMENT_NOT_ON_BORDER());
         });
         it('should require a direction when placing a piece on an occupied case', () => {
-            const state: GipfState = rules.node.gameState;
+            const state: GipfState = GipfState.getInitialState();
             const placement: GipfPlacement = new GipfPlacement(new Coord(3, 0), MGPOptional.empty());
             const move: GipfMove = new GipfMove(placement, [], []);
 
             RulesUtils.expectMoveFailure(rules, state, move, GipfFailure.PLACEMENT_WITHOUT_DIRECTION());
         });
         it('should allow simple move without direction when target coord is empty', () => {
-            const state: GipfState = rules.node.gameState;
+            const state: GipfState = GipfState.getInitialState();
             const placement: GipfPlacement = new GipfPlacement(new Coord(6, 1), MGPOptional.empty());
             const move: GipfMove = new GipfMove(placement, [], []);
 
@@ -81,7 +81,7 @@ describe('GipfRules:', () => {
                 [_, _, _, _, _, _, N],
                 [_, _, _, _, _, N, N],
                 [B, _, _, A, N, N, N],
-            ], state.turn, state.sidePieces, state.capturedPieces);
+            ], state.turn+1, [11, 12], state.capturedPieces);
 
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
@@ -371,7 +371,7 @@ describe('GipfRules:', () => {
     });
     describe('applyPlacement', () => {
         it('should not allow applying placements where a piece already is no direction is given', () => {
-            const state: GipfState = rules.node.gameState;
+            const state: GipfState = GipfState.getInitialState();
             const placement: GipfPlacement = new GipfPlacement(new Coord(6, 3), MGPOptional.empty());
             expect(() => GipfRules.applyPlacement(state, placement)).toThrow();
         });
@@ -415,7 +415,7 @@ describe('GipfRules:', () => {
     });
     describe('getAllDirectionsForEntrance', () => {
         it('should fail on non-entrances', () => {
-            expect(() => GipfRules.getAllDirectionsForEntrance(rules.node.gameState, new Coord(3, 3))).toThrow();
+            expect(() => GipfRules.getAllDirectionsForEntrance(GipfState.getInitialState(), new Coord(3, 3))).toThrow();
         });
     });
 });

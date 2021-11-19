@@ -78,7 +78,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
     }
     public isLegal(move: YinshMove, state: YinshState): MGPFallible<YinshLegalityInformation> {
         if (move.isInitialPlacement()) {
-            return this.initialPlacementValidity(state, move.start).toFailedFallible();
+            return this.initialPlacementValidity(state, move.start);
         }
         if (state.isInitialPlacementPhase()) {
             return MGPFallible.failure(YinshFailure.NO_MARKERS_IN_INITIAL_PHASE());
@@ -111,14 +111,19 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
 
         return MGPFallible.success(stateAfterFinalCaptures);
     }
-    public initialPlacementValidity(state: YinshState, coord: Coord): MGPValidation {
+    public initialPlacementValidity(state: YinshState, coord: Coord): MGPFallible<YinshLegalityInformation> {
         if (state.isInitialPlacementPhase() !== true) {
-            return MGPValidation.failure(YinshFailure.PLACEMENT_AFTER_INITIAL_PHASE());
+            return MGPFallible.failure(YinshFailure.PLACEMENT_AFTER_INITIAL_PHASE());
         }
         if (state.getPieceAt(coord) !== YinshPiece.EMPTY) {
-            return MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
+            return MGPFallible.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
         }
-        return MGPValidation.SUCCESS;
+        const player: Player = state.getCurrentPlayer();
+        const sideRings: [number, number] = [state.sideRings[0], state.sideRings[1]];
+        sideRings[player.value] -= 1;
+        return MGPFallible.success(new YinshState(state.setAt(coord, YinshPiece.of(player, true)).board,
+                                                  sideRings,
+                                                  state.turn));
     }
     public moveStartValidity(state: YinshState, start: Coord): MGPValidation {
         const player: number = state.getCurrentPlayer().value;

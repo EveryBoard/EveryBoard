@@ -1118,7 +1118,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 const validation: MGPValidation = stepExpectation[3];
                 const status: MGPFallible<unknown> = rules.isLegal(move, step.state);
                 if (status.isSuccess()) {
-                    const state: AbstractGameState = rules.applyLegalMove(move, step.state, status);
+                    const state: AbstractGameState = rules.applyLegalMove(move, step.state, status.get());
                     if (step.isPredicate()) {
                         expect(Utils.getNonNullable(step.predicate)(move, state)).toEqual(validation);
                     } else {

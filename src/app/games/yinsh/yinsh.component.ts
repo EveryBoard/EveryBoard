@@ -16,6 +16,7 @@ import { YinshPiece } from './YinshPiece';
 import { YinshLegalityInformation, YinshRules } from './YinshRules';
 import { YinshTutorial } from './YinshTutorial';
 import { Utils } from 'src/app/utils/utils';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 interface CaseInfo {
     coord: Coord,
@@ -432,7 +433,8 @@ export class YinshComponent
     }
     private async selectMoveStart(coord: Coord): Promise<MGPValidation> {
         if (this.constructedState.isInitialPlacementPhase()) {
-            const validity: MGPValidation = this.rules.initialPlacementValidity(this.constructedState, coord);
+            const validity: MGPFallible<YinshLegalityInformation> =
+                this.rules.initialPlacementValidity(this.constructedState, coord);
             if (validity.isFailure()) {
                 return this.cancelMove(validity.getReason());
             }
