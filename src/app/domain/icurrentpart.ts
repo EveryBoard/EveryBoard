@@ -3,6 +3,7 @@ import { FirebaseJSONObject, JSONValueWithoutArray } from 'src/app/utils/utils';
 import { Request } from './request';
 import { DomainWrapper } from './DomainWrapper';
 import { Time } from './Time';
+import { MGPOptional } from '../utils/MGPOptional';
 
 export interface IPart extends FirebaseJSONObject {
     readonly typeGame: string, // the type of game
@@ -17,13 +18,13 @@ export interface IPart extends FirebaseJSONObject {
      * so firebase write the server time and send us back a timestamp in the form of Time
      */
     readonly beginning?: firebase.firestore.FieldValue | Time,
-    readonly lastMoveTime?: firebase.firestore.FieldValue | Time | null,
+    readonly lastMoveTime?: firebase.firestore.FieldValue | Time | null, // TODO FOR REVIEW: when is it null? null in a firebase json object should only be used to remove a field
     readonly remainingMsForZero?: number;
     readonly remainingMsForOne?: number;
     readonly winner?: string,
     readonly loser?: string,
-    readonly scorePlayerZero?: number | null,
-    readonly scorePlayerOne?: number | null,
+    readonly scorePlayerZero?: number,
+    readonly scorePlayerOne?: number,
     readonly request?: Request | null, // can be null because we should be able to remove a request
 }
 
@@ -45,11 +46,11 @@ export class Part implements DomainWrapper<IPart> {
     public isResign(): boolean {
         return this.doc.result === MGPResult.RESIGN.value;
     }
-    public getWinner(): string | undefined {
-        return this.doc.winner;
+    public getWinner(): MGPOptional<string> {
+        return MGPOptional.ofNullable(this.doc.winner);
     }
-    public getLoser(): string | undefined {
-        return this.doc.loser;
+    public getLoser(): MGPOptional<string> {
+        return MGPOptional.ofNullable(this.doc.loser);
     }
     public setWinnerAndLoser(winner: string, loser: string): Part {
         return new Part({ ...this.doc, winner, loser });

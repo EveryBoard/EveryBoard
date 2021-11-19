@@ -9,17 +9,17 @@
                     <div class="buttons has-addons">
                         <button class="button"
                                 id="firstPlayerRandom"
-                                [ngClass]="(viewInfo.firstPlayer === 'RANDOM' && ['is-primary', 'is-selected']) || ''"
+                                [ngClass]="viewInfo.firstPlayerClasses['RANDOM']"
                                 (click)="selectFirstPlayer('RANDOM')"
                                 i18n>Random</button>
                         <button class="button"
                                 id="firstPlayerCreator"
-                                [ngClass]="(viewInfo.firstPlayer === 'CREATOR' && ['is-primary', 'is-selected']) || ''"
+                                [ngClass]="viewInfo.firstPlayerClasses['CREATOR']"
                                 (click)="selectFirstPlayer('CREATOR')"
                                 i18n>You</button>
                         <button class="button"
                                 id="firstPlayerOpponent"
-                                [ngClass]="(viewInfo.firstPlayer === 'CHOSEN_PLAYER' && ['is-primary', 'is-selected']) || ''"
+                                [ngClass]="viewInfo.firstPlayerClasses['CHOSEN_PLAYER']"
                                 (click)="selectFirstPlayer('CHOSEN_PLAYER')"
                                 >
                             <ng-container *ngIf="viewInfo.chosenOpponent else opponentWithoutName">{{ viewInfo.chosenOpponent }}</ng-container>
@@ -32,7 +32,7 @@
                     <div class="buttons has-addons">
                         <div class="button dropdown is-hoverable"
                              id="partTypeStandard"
-                             [ngClass]="(viewInfo.partType === 'STANDARD' && ['is-primary', 'is-selected']) || ''"
+                             [ngClass]="viewInfo.partTypeClasses['STANDARD']"
                              (click)="selectPartType('STANDARD')"
                              >
                             <div class="dropdown-trigger">
@@ -53,7 +53,7 @@
                         </div>
                         <div class="button dropdown is-hoverable"
                              id="partTypeBlitz"
-                             [ngClass]="(viewInfo.partType === 'BLITZ' && ['is-primary', 'is-selected']) || ''"
+                             [ngClass]="viewInfo.partTypeClasses['BLITZ']"
                              (click)="selectPartType('BLITZ')">
                             <div class="dropdown-trigger">
                                 <span i18n>Blitz</span>
@@ -73,7 +73,7 @@
                         </div>
                         <button class="button"
                                 id="partTypeCustom"
-                                [ngClass]="(viewInfo.partType === 'CUSTOM' && ['is-primary', 'is-selected']) || ''"
+                                [ngClass]="viewInfo.partTypeClasses['CUSTOM']"
                                 (click)="selectPartType('CUSTOM')"
                                 i18n>Custom</button>
                     </div>
@@ -124,7 +124,7 @@
                                     <tbody>
                                         <tr *ngFor="let candidate of viewInfo.candidates"
                                             (click)="selectOpponent(candidate)"
-                                            [ngClass]="(viewInfo.chosenOpponent === candidate && 'is-selected') || ''"
+                                            [ngClass]="viewInfo.candidateClasses[candidate]"
                                             id="presenceOf_{{ candidate }}">
                                             <td class="td"
                                                 [id]="viewInfo.chosenOpponent === candidate && ('selected_' + candidate) || 'candidate_' + candidate"

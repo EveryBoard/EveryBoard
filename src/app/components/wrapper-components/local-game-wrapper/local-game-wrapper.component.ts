@@ -7,7 +7,7 @@ import { Move } from 'src/app/jscaip/Move';
 import { assert, display } from 'src/app/utils/utils';
 import { MGPNode, MGPNodeStats } from 'src/app/jscaip/MGPNode';
 import { AbstractGameState } from 'src/app/jscaip/GameState';
-import { AbstractMinima } from 'src/app/jscaip/Minimax';
+import { AbstractMinimax } from 'src/app/jscaip/Minimax';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';

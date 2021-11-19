@@ -29,9 +29,9 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
     public successfulSteps: number = 0;
     public stepIndex: number = -1;
     public currentMessage: string = ''; // Initially empty, will always be set once tutorial has started
-    public currentReason: MGPOptional<string>;
+    public currentReason: MGPOptional<string> = MGPOptional.empty();
     public moveAttemptMade: boolean = false;
-    public stepFinished: boolean[];
+    public stepFinished: boolean[] = [];
     public tutorialOver: boolean = false;
 
     constructor(componentFactoryResolver: ComponentFactoryResolver,

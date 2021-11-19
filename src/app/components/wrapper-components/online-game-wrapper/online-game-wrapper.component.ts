@@ -426,8 +426,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                                        [0, 0],
                                        scores,
                                        false,
-                                       this.currentPart.getWinner(),
-                                       this.currentPart.getLoser());
+                                       this.currentPart.getWinner().get(),
+                                       this.currentPart.getLoser().get());
     }
     public canAskTakeBack(): boolean {
         if (this.isPlaying() === false) {

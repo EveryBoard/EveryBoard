@@ -26,13 +26,16 @@ interface PartCreationViewInfo {
     userIsObserver: boolean;
 
     creator?: string;
-    firstPlayer?: IFirstPlayer;
-    partType?: IPartType;
+    firstPlayer: IFirstPlayer;
+    firstPlayerClasses: { [key: string]: string[] },
+    partType: IPartType;
+    partTypeClasses: { [key: string]: string[] },
     partTypeName?: string,
     maximalMoveDuration?: number;
     totalPartDuration?: number;
     candidates?: string[];
     chosenOpponent?: string;
+    candidateClasses: { [key: string]: string[] },
 }
 interface ComparableSubscription {
     subscription: () => void,
@@ -69,6 +72,11 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         userIsCreator: false,
         userIsChosenOpponent: false,
         userIsObserver: false,
+        partType: 'STANDARD',
+        partTypeClasses: { 'STANDARD': ['is-selected', 'is-primary'], 'BLITZ': [], 'CUSTOM': [] },
+        firstPlayer: 'RANDOM',
+        firstPlayerClasses: { 'CREATOR': [], 'RANDOM': ['is-selected', 'is-primary'], 'CHOSEN_PLAYER': [] },
+        candidateClasses: {},
     }
     public currentJoiner: IJoiner | null = null;
 
@@ -136,6 +144,10 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     private subscribeToFormElements(): void {
         this.getForm('chosenOpponent').valueChanges
             .pipe(takeUntil(this.ngUnsubscribe)).subscribe((opponent: string) => {
+                if (this.viewInfo.chosenOpponent !== undefined) {
+                    this.viewInfo.candidateClasses[this.viewInfo.chosenOpponent] = [];
+                }
+                this.viewInfo.candidateClasses[opponent] = ['is-selected'];
                 this.viewInfo.chosenOpponent = opponent;
                 this.viewInfo.canProposeConfig =
                     Utils.getNonNullable(this.currentJoiner).partStatus !== PartStatus.CONFIG_PROPOSED.value &&
@@ -143,6 +155,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             });
         this.getForm('partType').valueChanges
             .pipe(takeUntil(this.ngUnsubscribe)).subscribe((partType: IPartType) => {
+                this.viewInfo.partTypeClasses[this.viewInfo.partType] = [];
+                this.viewInfo.partTypeClasses[partType] = ['is-primary', 'is-selected'];
                 this.viewInfo.partType = partType;
                 this.viewInfo.showCustomTime = partType === 'CUSTOM';
             });
@@ -156,6 +170,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             });
         this.getForm('firstPlayer').valueChanges
             .pipe(takeUntil(this.ngUnsubscribe)).subscribe((firstPlayer: IFirstPlayer) => {
+                this.viewInfo.firstPlayerClasses[this.viewInfo.firstPlayer] = [];
+                this.viewInfo.firstPlayerClasses[firstPlayer] = ['is-primary', 'is-selected'];
                 this.viewInfo.firstPlayer = firstPlayer;
             });
     }

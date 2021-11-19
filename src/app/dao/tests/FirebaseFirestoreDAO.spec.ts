@@ -75,6 +75,7 @@ describe('FirebaseFirestoreDAO', () => {
         let promise: Promise<Foo[]>; // This promise will be resolved when the callback function is called
 
         let callbackFunction: (created: {doc: Foo, id: string}[]) => void;
+        let callbackFunctionLog: (created: {doc: Foo, id: string}[]) => void;
 
         beforeEach(() => {
             let createdResolve: (value: Foo[]) => void;
@@ -82,6 +83,10 @@ describe('FirebaseFirestoreDAO', () => {
                 createdResolve = resolve;
             });
             callbackFunction = (created: {doc: Foo, id: string}[]) => {
+                createdResolve(created.map((c: {doc: Foo, id: string}): Foo => c.doc));
+            };
+            callbackFunctionLog = (created: {doc: Foo, id: string}[]) => {
+                console.log({created});
                 createdResolve(created.map((c: {doc: Foo, id: string}): Foo => c.doc));
             };
         });
@@ -108,9 +113,9 @@ describe('FirebaseFirestoreDAO', () => {
             unsubscribe();
         });
         it('should not observe document creation when the condition does not hold', async() => {
-            // This test is flaky: last failure on 22/10/2021
+            // This test is flaky: it fails from time to time. Check the output log when it fails.
             const callback: FirebaseCollectionObserver<Foo> = new FirebaseCollectionObserver(
-                callbackFunction,
+                callbackFunctionLog,
                 () => void { },
                 () => void { },
             );

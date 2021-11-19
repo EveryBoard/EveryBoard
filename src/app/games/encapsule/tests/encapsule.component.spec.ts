@@ -9,6 +9,7 @@ import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
 import { EncapsuleFailure } from '../EncapsuleFailure';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { EncapsuleNode } from '../EncapsuleRules';
 
 describe('EncapsuleComponent', () => {
 
