@@ -11,6 +11,7 @@ import { Localized } from 'src/app/utils/LocaleUtils';
 import { AbstractGameComponent } from '../game-components/game-component/GameComponent';
 import { AbstractGameState } from 'src/app/jscaip/GameState';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class GameWrapperMessages {
 
@@ -30,7 +31,7 @@ export abstract class GameWrapper {
 
     public gameComponent: AbstractGameComponent;
 
-    public players: (string | null)[] = [null, null];
+    public players: MGPOptional<string>[] = [MGPOptional.empty(), MGPOptional.empty()];
 
     public observerRole: number;
 
@@ -41,7 +42,7 @@ export abstract class GameWrapper {
     constructor(protected componentFactoryResolver: ComponentFactoryResolver,
                 protected actRoute: ActivatedRoute,
                 protected authenticationService: AuthenticationService) {
-        display(GameWrapper.VERBOSE, 'GameWrapper.constructed: ' + (this.gameIncluder!=null));
+        display(GameWrapper.VERBOSE, 'GameWrapper.constructed: ' + (this.gameIncluder != null));
     }
     public getMatchingComponent(compoString: string) : Type<AbstractGameComponent> {
         display(GameWrapper.VERBOSE, 'GameWrapper.getMatchingComponent');
@@ -151,11 +152,11 @@ export abstract class GameWrapper {
             players: this.players,
             username,
             observer: this.observerRole,
-            areYouPlayer: (this.players[indexPlayer] && this.players[indexPlayer] === username),
+            areYouPlayer: (this.players[indexPlayer].equalsValue(username)),
             isThereAPlayer: this.players[indexPlayer],
         } });
-        if (this.players[indexPlayer]) {
-            return this.players[indexPlayer] === username;
+        if (this.players[indexPlayer].isPresent()) {
+            return this.players[indexPlayer].equalsValue(username);
         } else {
             return true;
         }

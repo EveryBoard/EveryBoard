@@ -63,7 +63,7 @@ export class GameService implements OnDestroy {
             this.router.navigate(['/login']);
             return false;
         } else if (this.canCreateGame() === true && this.userName.isPresent()) {
-            const gameId: string = await this.createPartJoinerAndChat(this.userName.get(), game, '');
+            const gameId: string = await this.createPartJoinerAndChat(this.userName.get(), game);
             // create Part and Joiner
             this.router.navigate(['/play/' + game, gameId]);
             return true;
@@ -90,14 +90,13 @@ export class GameService implements OnDestroy {
             return MGPValidation.failure('WRONG_GAME_TYPE');
         }
     }
-    protected createUnstartedPart(creatorName: string, typeGame: string, chosenPlayer: string): Promise<string> {
+    protected createUnstartedPart(creatorName: string, typeGame: string): Promise<string> {
         display(GameService.VERBOSE,
-                'GameService.createPart(' + creatorName + ', ' + typeGame + ', ' + chosenPlayer + ')');
+                'GameService.createPart(' + creatorName + ', ' + typeGame + ')');
 
         const newPart: IPart = {
             typeGame,
             playerZero: creatorName,
-            playerOne: chosenPlayer,
             turn: -1,
             result: MGPResult.UNACHIEVED.value,
             listMoves: [],
@@ -109,10 +108,10 @@ export class GameService implements OnDestroy {
 
         return this.chatService.createNewChat(chatId);
     }
-    public async createPartJoinerAndChat(creatorName: string, typeGame: string, chosenPlayer: string): Promise<string> {
+    public async createPartJoinerAndChat(creatorName: string, typeGame: string): Promise<string> {
         display(GameService.VERBOSE, 'GameService.createGame(' + creatorName + ', ' + typeGame + ')');
 
-        const gameId: string = await this.createUnstartedPart(creatorName, typeGame, chosenPlayer);
+        const gameId: string = await this.createUnstartedPart(creatorName, typeGame);
         await this.joinerService.createInitialJoiner(creatorName, gameId);
         await this.createChat(gameId);
         return gameId;

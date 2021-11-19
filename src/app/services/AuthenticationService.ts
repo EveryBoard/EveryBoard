@@ -226,7 +226,7 @@ export class AuthenticationService implements OnDestroy {
             const userCredential: firebase.auth.UserCredential =
                 await this.afAuth.signInWithPopup(provider);
             const user: firebase.User = Utils.getNonNullable(userCredential.user);
-            await this.createUser(user.uid, '');
+            await this.createUserWithoutUsername(user.uid);
             return MGPFallible.success(user);
         } catch (e) {
             return MGPFallible.failure(this.mapFirebaseError(e));

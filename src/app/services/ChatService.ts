@@ -91,7 +91,7 @@ export class ChatService implements OnDestroy {
         return MGPValidation.SUCCESS;
     }
     private userCanSendMessage(userName: string, _chatId: string): boolean {
-        return userName !== '';
+        return userName !== ''; // In practice, no user can have this username. This may be extended to other reasons in the future.
     }
     private isForbiddenMessage(message: string): boolean {
         return (message === '');

@@ -95,7 +95,9 @@ export class AuthenticationServiceUnderTest extends AuthenticationService {
 
 export async function createConnectedGoogleUser(): Promise<firebase.auth.UserCredential> {
     const credential: firebase.auth.UserCredential = await firebase.auth().signInWithCredential(firebase.auth.GoogleAuthProvider.credential('{"sub": "abc123", "email": "foo@example.com", "email_verified": true}'));
-    await TestBed.inject(UserDAO).set(Utils.getNonNullable(credential.user).uid, { username: '', verified: true });
+    await TestBed.inject(UserDAO).set(Utils.getNonNullable(credential.user).uid,
+                                      // no username for google users initially!
+                                      { verified: true });
     return credential;
 }
 

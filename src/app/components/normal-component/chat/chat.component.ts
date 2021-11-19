@@ -40,7 +40,7 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     public ngOnInit(): void {
         display(ChatComponent.VERBOSE, `ChatComponent.ngOnInit for chat ${this.chatId}`);
 
-        assert(this.chatId != null && this.chatId !== '', 'No chat to join mentionned');
+        assert(this.chatId != null, 'No chat to join mentionned');
 
         this.authenticationService.getUserObs()
             .subscribe((user: AuthUser) => {
