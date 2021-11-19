@@ -8,7 +8,6 @@ import { AbaloneState } from './AbaloneState';
 import { AbaloneMove } from './AbaloneMove';
 import { AbaloneLegalityInformation, AbaloneNode, AbaloneRules } from './AbaloneRules';
 import { Player } from 'src/app/jscaip/Player';
-import { Utils } from 'src/app/utils/utils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 export class AbaloneDummyMinimax extends Minimax<AbaloneMove, AbaloneState, AbaloneLegalityInformation> {

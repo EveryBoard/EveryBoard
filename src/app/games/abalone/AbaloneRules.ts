@@ -8,7 +8,6 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { AbaloneFailure } from './AbaloneFailure';
 import { AbaloneState } from './AbaloneState';
 import { AbaloneMove } from './AbaloneMove';
-import { Utils } from 'src/app/utils/utils';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 

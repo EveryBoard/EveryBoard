@@ -4,7 +4,6 @@ import { QuartoMinimax } from '../QuartoMinimax';
 import { QuartoNode, QuartoRules } from '../QuartoRules';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { QuartoMove } from '../QuartoMove';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('QuartoMinimax:', () => {
 

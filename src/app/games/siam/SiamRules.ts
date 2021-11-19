@@ -8,7 +8,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { display, Utils } from 'src/app/utils/utils';
+import { display } from 'src/app/utils/utils';
 import { SiamFailure } from './SiamFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';

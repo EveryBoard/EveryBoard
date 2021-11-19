@@ -28,8 +28,8 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
     public steps: TutorialStep[] = [];
     public successfulSteps: number = 0;
     public stepIndex: number = -1;
-    public currentMessage: string | null;
-    public currentReason: string | null;
+    public currentMessage: string = ''; // Initially empty, will always be set once tutorial has started
+    public currentReason: MGPOptional<string>;
     public moveAttemptMade: boolean = false;
     public stepFinished: boolean[];
     public tutorialOver: boolean = false;
@@ -89,7 +89,7 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
         this.stepIndex = stepIndex;
         const currentStep: TutorialStep = this.steps[this.stepIndex];
         this.currentMessage = currentStep.instruction;
-        this.currentReason = null;
+        this.currentReason = MGPOptional.empty();
         this.gameComponent.rules.node =
             new MGPNode(currentStep.state, MGPOptional.empty(), currentStep.previousMove);
         this.gameComponent.updateBoard();
@@ -109,7 +109,7 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
             if (moveValidity.isSuccess()) {
                 this.showStepSuccess();
             } else {
-                this.currentReason = moveValidity.getReason();
+                this.currentReason = MGPOptional.of(moveValidity.getReason());
             }
         } else if (currentStep.isAnyMove()) {
             display(TutorialGameWrapperComponent.VERBOSE, 'tutorialGameWrapper.onLegalUserMove: awaited move!');
@@ -120,7 +120,7 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
         } else {
             display(TutorialGameWrapperComponent.VERBOSE,
                     'tutorialGameWrapper.onLegalUserMove: not the move that was awaited.');
-            this.currentReason = currentStep.getFailureMessage();
+            this.currentReason = MGPOptional.of(currentStep.getFailureMessage());
         }
         this.cdr.detectChanges();
     }
@@ -131,7 +131,7 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
     }
     public onUserClick(elementName: string): MGPValidation {
         display(TutorialGameWrapperComponent.VERBOSE, 'tutorialGameWrapper.onUserClick(' + elementName + ')');
-        this.currentReason = null;
+        this.currentReason = MGPOptional.empty();
         if (this.stepFinished[this.stepIndex] || this.moveAttemptMade) {
             return MGPValidation.failure(TutorialFailure.STEP_FINISHED());
         }
@@ -141,7 +141,7 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
             if (Utils.getNonNullable(currentStep.acceptedClicks).some((m: string) => m === elementName)) {
                 this.showStepSuccess();
             } else {
-                this.currentMessage = Utils.getNonNullable(currentStep.failureMessage);
+                this.currentMessage = currentStep.failureMessage;
             }
             return MGPValidation.SUCCESS;
         } else if (currentStep.isMove() || currentStep.isPredicate() || currentStep.isAnyMove()) {
@@ -156,9 +156,8 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
     public onCancelMove(reason?: string): void {
         display(TutorialGameWrapperComponent.VERBOSE,
                 'tutorialGameWrapperComponent.onCancelMove(' + reason + ')');
-        // this.moveAttemptMade = true;
         if (reason !== undefined) {
-            this.currentReason = reason;
+            this.currentReason = MGPOptional.of(reason);
         }
         this.cdr.detectChanges();
     }
