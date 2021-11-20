@@ -103,7 +103,6 @@ export class GameInfo {
         new GameInfo($localize`Six`, 'Six', SixComponent, new Date('2021-04-08'), GameDescription.SIX()), // 18 days after Coerceo
         new GameInfo($localize`Lines of Action`, 'LinesOfAction', LinesOfActionComponent, new Date('2021-04-28'), GameDescription.LINES_OF_ACTION()), // 65 days after Gipf *Quentin
         new GameInfo($localize`Pentago`, 'Pentago', PentagoComponent, new Date('2021-05-23'), GameDescription.PENTAGO()), // 25 days after Six
-        new GameInfo($localize`Abalone`, 'Abalone', AbaloneComponent, new Date('2021-07-13'), GameDescription.ABALONE()),
         new GameInfo($localize`Abalone`, 'Abalone', AbaloneComponent, new Date('2021-07-13'), GameDescription.ABALONE()), // 71 days after Pentago
         new GameInfo($localize`Yinsh`, 'Yinsh', YinshComponent, new Date('2021-07-31'), GameDescription.YINSH()), // 94 days after LinesOfAction *Quentin
         new GameInfo($localize`Apagos`, 'Apagos', ApagosComponent, new Date('2021-11-04'), GameDescription.APAGOS()), // 4 month after Apagos

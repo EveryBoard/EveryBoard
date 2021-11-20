@@ -110,12 +110,9 @@ export abstract class NumberEncoder<T> extends MoveEncoder<T> {
                                 (encoder2.maxValue() << 1) + 1);
             }
             public encodeNumber(value: T1 | T2): number {
-                console.log(`encoding $move`)
                 if (isT1(value)) {
-                    console.log('encoding with T1')
                     return encoder1.encodeNumber(value) << 1;
                 } else {
-                    console.log('encoding with T2')
                     return (encoder2.encodeNumber(value) << 1) + 1;
                 }
             }

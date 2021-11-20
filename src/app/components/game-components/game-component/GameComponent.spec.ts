@@ -3,7 +3,6 @@ import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testin
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppModule } from 'src/app/app.module';
-import { DiamPiece } from 'src/app/games/diam/DiamPiece';
 import { ChatDAO } from 'src/app/dao/ChatDAO';
 import { JoinerDAO } from 'src/app/dao/JoinerDAO';
 import { UserDAO } from 'src/app/dao/UserDAO';
@@ -13,6 +12,7 @@ import { JoinerDAOMock } from 'src/app/dao/tests/JoinerDAOMock.spec';
 import { UserDAOMock } from 'src/app/dao/tests/UserDAOMock.spec';
 import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
 import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
+import { DiamPiece } from 'src/app/games/diam/DiamPiece';
 import { Direction } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
 import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
