@@ -3,13 +3,13 @@ import { Minimax } from '../Minimax';
 import { Move } from '../Move';
 import { Player } from '../Player';
 import { GameStatus, Rules } from '../Rules';
-import { AbstractGameState } from '../GameState';
+import { GameState } from '../GameState';
 import { comparableEquals, isComparableObject } from 'src/app/utils/Comparable';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 export class RulesUtils {
 
-    public static expectMoveSuccess<R extends Rules<M, S, L>, M extends Move, S extends AbstractGameState, L>(
+    public static expectMoveSuccess<R extends Rules<M, S, L>, M extends Move, S extends GameState, L>(
         rules: R,
         state: S,
         move: M,
@@ -29,7 +29,7 @@ export class RulesUtils {
             throw new Error('expected move to be valid but it is not: ' + legality.getReason());
         }
     }
-    public static expectMoveFailure<R extends Rules<M, S, L>, M extends Move, S extends AbstractGameState, L>(
+    public static expectMoveFailure<R extends Rules<M, S, L>, M extends Move, S extends GameState, L>(
         rules: R,
         state: S,
         move: M,
@@ -40,7 +40,7 @@ export class RulesUtils {
         expect(legality.isFailure()).withContext('move should have failed but it succeeded').toBeTrue();
         expect(legality.getReason()).toBe(reason);
     }
-    public static expectToBeVictoryFor<R extends Rules<M, S, L>, M extends Move, S extends AbstractGameState, L>(
+    public static expectToBeVictoryFor<R extends Rules<M, S, L>, M extends Move, S extends GameState, L>(
         rules: R,
         node: MGPNode<R, M, S, L>,
         player: Player,
@@ -54,7 +54,7 @@ export class RulesUtils {
                 .toEqual(player.getVictoryValue());
         }
     }
-    public static expectToBeOngoing<R extends Rules<M, S, L>, M extends Move, S extends AbstractGameState, L>(
+    public static expectToBeOngoing<R extends Rules<M, S, L>, M extends Move, S extends GameState, L>(
         rules: R,
         node: MGPNode<R, M, S, L>,
         minimaxes: Minimax<M, S, L>[])
@@ -71,7 +71,7 @@ export class RulesUtils {
                 .not.toEqual(Player.ONE.getVictoryValue());
         }
     }
-    public static expectToBeDraw<R extends Rules<M, S, L>, M extends Move, S extends AbstractGameState, L>(
+    public static expectToBeDraw<R extends Rules<M, S, L>, M extends Move, S extends GameState, L>(
         rules: R,
         node: MGPNode<R, M, S, L>,
         minimaxes: Minimax<M, S, L>[])
@@ -83,7 +83,7 @@ export class RulesUtils {
                 .withContext(minimax.name + ' should consider it a draw').toBe(0);
         }
     }
-    public static expectSecondStateToBeBetterThanFirst<M extends Move, S extends AbstractGameState, L>(
+    public static expectSecondStateToBeBetterThanFirst<M extends Move, S extends GameState, L>(
         weakerState: S,
         weakMove: MGPOptional<M>,
         strongerState: S,
@@ -97,7 +97,7 @@ export class RulesUtils {
             minimax.getBoardValue(new MGPNode(strongerState, MGPOptional.empty(), strongMove)).value;
         expect(weakValue).toBeLessThan(strongValue);
     }
-    public static expectStateToBePreVictory<M extends Move, S extends AbstractGameState, L>(
+    public static expectStateToBePreVictory<M extends Move, S extends GameState, L>(
         state: S,
         previousMove: M,
         player: Player,

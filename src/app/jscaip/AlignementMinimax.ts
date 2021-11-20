@@ -4,7 +4,7 @@ import { Minimax } from './Minimax';
 import { Move } from './Move';
 import { NodeUnheritance } from './NodeUnheritance';
 import { SCORE } from './SCORE';
-import { AbstractGameState } from './GameState';
+import { GameState } from './GameState';
 
 export interface BoardInfo {
     status: SCORE,
@@ -13,7 +13,7 @@ export interface BoardInfo {
     sum: number,
 }
 export abstract class AlignementMinimax<M extends Move,
-                                        S extends AbstractGameState,
+                                        S extends GameState,
                                         L,
                                         V,
                                         U extends NodeUnheritance = NodeUnheritance>

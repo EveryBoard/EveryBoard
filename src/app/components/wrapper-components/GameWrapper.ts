@@ -9,7 +9,7 @@ import { GameInfo } from '../normal-component/pick-game/pick-game.component';
 import { Player } from 'src/app/jscaip/Player';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { AbstractGameComponent } from '../game-components/game-component/GameComponent';
-import { AbstractGameState } from 'src/app/jscaip/GameState';
+import { GameState } from 'src/app/jscaip/GameState';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
@@ -72,7 +72,7 @@ export abstract class GameWrapper {
         // Shortent by T<S = Truc>
 
         this.gameComponent.chooseMove = // so that when the game component do a move
-            (m: Move, s: AbstractGameState, scores?: [number, number]): Promise<MGPValidation> => {
+            (m: Move, s: GameState, scores?: [number, number]): Promise<MGPValidation> => {
                 return this.receiveValidMove(m, s, scores);
             };
         // the game wrapper can then act accordingly to the chosen move.
@@ -95,7 +95,7 @@ export abstract class GameWrapper {
         this.canPass = this.gameComponent.canPass;
     }
     public async receiveValidMove(move: Move,
-                                  state: AbstractGameState,
+                                  state: GameState,
                                   scores?: [number, number]): Promise<MGPValidation>
     {
         const LOCAL_VERBOSE: boolean = false;

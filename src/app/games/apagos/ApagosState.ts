@@ -5,7 +5,7 @@ import { MGPMap } from 'src/app/utils/MGPMap';
 import { ApagosCoord } from './ApagosCoord';
 import { ApagosSquare } from './ApagosSquare';
 
-export class ApagosState extends GameState<ApagosCoord, ApagosSquare> {
+export class ApagosState extends GameState {
 
     public static PIECES_PER_PLAYER: number = 10;
 

@@ -34,6 +34,9 @@ describe('utils', () => {
                 }
             }).toThrowError(`A default switch case did not observe the correct value, expected 1, but got 2 instead.`);
         });
+        it('should use the message if it is passed', () => {
+            expect(() => Utils.expectToBe(1, 2, 'message')).toThrowError('message');
+        });
     });
     describe('expectToBeMultiple', () => {
         it('should fail when the default case has a different value than one of the expected values', () => {

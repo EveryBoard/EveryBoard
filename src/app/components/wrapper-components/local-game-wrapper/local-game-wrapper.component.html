@@ -10,7 +10,7 @@
                     <div class="select">
                         <select id="playerZeroSelect"
                                 (change)="updatePlayer(0)"
-                                [(ngModel)]="players[0].value">
+                                [(ngModel)]="playerSelection[0]">
                             <option selected
                                     value="human" i18n>Human</option>
                             <option *ngFor="let minimax of gameComponent.availableMinimaxes"
@@ -36,7 +36,7 @@
                     <div class="select">
                         <select id="playerOneSelect"
                                 (change)="updatePlayer(1)"
-                                [(ngModel)]="players[1].value">
+                                [(ngModel)]="playerSelection[1]">
                             <option selected
                                     value="human" i18n>Human</option>
                             <option *ngFor="let minimax of gameComponent.availableMinimaxes"

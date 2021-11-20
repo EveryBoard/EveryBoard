@@ -6,7 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';
-import { AbstractGameState } from '../../jscaip/GameState';
+import { GameState } from '../../jscaip/GameState';
 import { Move } from '../../jscaip/Move';
 import { MGPValidation } from '../MGPValidation';
 import { AppModule } from '../../app.module';
@@ -163,7 +163,7 @@ export class SimpleComponentTestUtils<T> {
         element.nativeElement.dispatchEvent(new Event('input'));
     }
 }
-type MyGameComponent = GameComponent<Rules<Move, AbstractGameState, unknown>, Move, AbstractGameState, unknown>;
+type MyGameComponent = GameComponent<Rules<Move, GameState, unknown>, Move, GameState, unknown>;
 
 export class ComponentTestUtils<T extends MyGameComponent> {
     public fixture: ComponentFixture<GameWrapper>;
@@ -237,14 +237,14 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     public setRoute(id: string, value: string): void {
         this.activatedRouteStub.setRoute(id, value);
     }
-    public setupState(state: AbstractGameState,
-                      previousState?: AbstractGameState,
+    public setupState(state: GameState,
+                      previousState?: GameState,
                       previousMove?: Move)
     : void
     {
         this.gameComponent.rules.node = new MGPNode(
             state,
-            MGPOptional.ofNullable(previousState).map((previousState: AbstractGameState) =>
+            MGPOptional.ofNullable(previousState).map((previousState: GameState) =>
                 new MGPNode(previousState)),
             MGPOptional.ofNullable(previousMove));
         this.gameComponent.updateBoard();
@@ -306,7 +306,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     }
     public async expectMoveSuccess(elementName: string,
                                    move: Move,
-                                   state?: AbstractGameState,
+                                   state?: GameState,
                                    scores?: [number, number])
     : Promise<void>
     {
@@ -315,7 +315,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
         if (element == null) {
             return;
         } else {
-            const moveState: AbstractGameState = state || this.gameComponent.rules.node.gameState;
+            const moveState: GameState = state || this.gameComponent.rules.node.gameState;
             element.triggerEventHandler('click', null);
             await this.fixture.whenStable();
             this.fixture.detectChanges();
@@ -334,7 +334,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     public async expectMoveFailure(elementName: string,
                                    reason: string,
                                    move: Move,
-                                   state?: AbstractGameState,
+                                   state?: GameState,
                                    scores?: [number, number])
     : Promise<void>
     {
@@ -343,7 +343,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
         if (element == null) {
             return;
         } else {
-            const moveState: AbstractGameState = state || this.gameComponent.rules.node.gameState;
+            const moveState: GameState = state || this.gameComponent.rules.node.gameState;
             element.triggerEventHandler('click', null);
             await this.fixture.whenStable();
             this.fixture.detectChanges();

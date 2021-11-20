@@ -12,6 +12,7 @@ import { MaxStacksDvonnMinimax } from '../MaxStacksDvonnMinimax';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 
 describe('DvonnRules:', () => {
 
@@ -315,6 +316,13 @@ describe('DvonnRules:', () => {
             const state: DvonnState = new DvonnState(board, 0, false);
             const node: DvonnNode = new DvonnNode(state);
             RulesUtils.expectToBeDraw(rules, node, minimaxes);
+        });
+    });
+    describe('isMovablePiece', () => {
+        it('should fail if the coord is not on the board', () => {
+            // TODO FOR REVIEW: we don't have a generic failure for this, should it not be checked by each game?
+            expect(rules.isMovablePiece(DvonnState.getInitialState(), new Coord(-1, -1)))
+                .toEqual(MGPValidation.failure(DvonnFailure.INVALID_COORD()));
         });
     });
 });

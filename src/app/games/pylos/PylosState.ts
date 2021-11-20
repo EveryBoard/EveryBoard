@@ -4,7 +4,7 @@ import { PylosCoord } from './PylosCoord';
 import { PylosMove } from './PylosMove';
 import { GameState } from 'src/app/jscaip/GameState';
 
-export class PylosState extends GameState<PylosCoord, Player> {
+export class PylosState extends GameState {
 
     public static getInitialState(): PylosState {
         const board0: Player[][] = ArrayUtils.createTable(4, 4, Player.NONE);

@@ -11,7 +11,7 @@ import { SixMove } from './SixMove';
 import { GameState } from 'src/app/jscaip/GameState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-export class SixState extends GameState<Coord, Player> {
+export class SixState extends GameState {
 
     public readonly width: number;
 

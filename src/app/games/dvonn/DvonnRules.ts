@@ -158,7 +158,6 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
             return MGPFallible.failure(RulesFailure.CANNOT_PASS());
         }
 
-
         const pieceMovable: MGPValidation = this.isMovablePiece(state, move.coord);
         if (pieceMovable.isFailure()) {
             return pieceMovable.toFailedFallible();

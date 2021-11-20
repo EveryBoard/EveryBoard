@@ -20,14 +20,6 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<Com
         }
         return MGPOptional.empty();
     }
-    public getOrElse(key: K, defaultValue: V): V {
-        const value: MGPOptional<V> = this.get(key);
-        if (value.isPresent()) {
-            return value.get();
-        } else {
-            return defaultValue;
-        }
-    }
     public getByIndex(index: number): {key: K, value: V} {
         return this.map[index];
     }

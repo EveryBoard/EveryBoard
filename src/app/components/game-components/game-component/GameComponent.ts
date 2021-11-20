@@ -7,7 +7,7 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { AbstractGameState } from 'src/app/jscaip/GameState';
+import { GameState } from 'src/app/jscaip/GameState';
 import { Utils } from 'src/app/utils/utils';
 import { of } from 'rxjs';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -24,7 +24,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 })
 export abstract class GameComponent<R extends Rules<M, S, L>,
                                     M extends Move,
-                                    S extends AbstractGameState,
+                                    S extends GameState,
                                     L = void>
 {
     public encoder: MoveEncoder<M>;
@@ -103,8 +103,8 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
     }
 }
 
-export abstract class AbstractGameComponent extends GameComponent<Rules<Move, AbstractGameState, unknown>,
+export abstract class AbstractGameComponent extends GameComponent<Rules<Move, GameState, unknown>,
                                                                   Move,
-AbstractGameState, unknown> {
+                                                                  GameState, unknown> {
 }
 

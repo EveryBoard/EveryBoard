@@ -8,7 +8,7 @@ import { Minimax } from './Minimax';
 import { MGPSet } from '../utils/MGPSet';
 import { MGPOptional } from '../utils/MGPOptional';
 import { Player } from './Player';
-import { AbstractGameState } from './GameState';
+import { GameState } from './GameState';
 import { MGPFallible } from '../utils/MGPFallible';
 
 export class MGPNodeStats {
@@ -18,7 +18,7 @@ export class MGPNodeStats {
 
 export class MGPNode<R extends Rules<M, S, L>, // TODO FOR REVIEW: why not remove R and use Rules<M, S, L> instead of R?
                      M extends Move,
-                     S extends AbstractGameState,
+                     S extends GameState,
                      L = void,
                      U extends NodeUnheritance = NodeUnheritance> {
     // TODO: calculate a board - value by the information of the mother.boardValue + this.move to ease the calculation
@@ -28,9 +28,9 @@ export class MGPNode<R extends Rules<M, S, L>, // TODO FOR REVIEW: why not remov
     public static VERBOSE: boolean = false;
 
     // Contains data related to the game and not to the minimax, ruler is the only instance of a set of rules
-    public static ruler: Rules<Move, AbstractGameState, unknown>;
+    public static ruler: Rules<Move, GameState, unknown>;
 
-    public static minimaxes: MGPMap<string, Minimax<Move, AbstractGameState>> = new MGPMap();
+    public static minimaxes: MGPMap<string, Minimax<Move, GameState>> = new MGPMap();
 
     private childs: MGPOptional<MGPNode<R, M, S, L, U>[]> = MGPOptional.empty();
     /* empty if we did not create potential children of a node, hence also if it is a leaf (depth = 0)
@@ -79,7 +79,7 @@ export class MGPNode<R extends Rules<M, S, L>, // TODO FOR REVIEW: why not remov
     }
     public static getFirstNode<R extends Rules<M, S, L>,
                                M extends Move,
-                               S extends AbstractGameState,
+                               S extends GameState,
                                L,
                                U extends NodeUnheritance>(initialBoard: S, gameRuler: R)
     : MGPNode<R, M, S, L, U>

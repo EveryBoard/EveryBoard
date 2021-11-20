@@ -19,6 +19,9 @@ describe('MGPFallible', () => {
         it('should convert to an optional with the same value', () => {
             expect(value.toOptional()).toEqual(MGPOptional.of(42));
         });
+        it('should extract the passed value with getReasonOr', () => {
+            expect(value.getReasonOr('foo')).toBe('foo');
+        });
         it('should have a well-defined equality', () => {
             expect(value.equals(value)).toBeTrue();
             expect(value.equals(MGPFallible.success(41))).toBeFalse();
@@ -39,6 +42,9 @@ describe('MGPFallible', () => {
         });
         it('should convert to an empty optional', () => {
             expect(value.toOptional()).toEqual(MGPOptional.empty());
+        });
+        it('should extract the reason with getReasonOr', () => {
+            expect(value.getReasonOr('foo')).toBe('reason');
         });
         it('should have a well-defined equality', () => {
             expect(value.equals(value)).toBeTrue();

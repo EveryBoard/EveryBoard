@@ -1,12 +1,12 @@
 import { Move } from 'src/app/jscaip/Move';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { AbstractGameState } from 'src/app/jscaip/GameState';
+import { GameState } from 'src/app/jscaip/GameState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export abstract class TutorialStep {
     public static fromMove(title: string,
                            instruction: string,
-                           state: AbstractGameState,
+                           state: GameState,
                            acceptedMoves: ReadonlyArray<Move>,
                            successMessage: string,
                            failureMessage: string)
@@ -15,7 +15,7 @@ export abstract class TutorialStep {
     }
     public static forClick(title: string,
                            instruction: string,
-                           state: AbstractGameState,
+                           state: GameState,
                            acceptedClicks: ReadonlyArray<string>,
                            successMessage: string,
                            failureMessage: string)
@@ -24,7 +24,7 @@ export abstract class TutorialStep {
     }
     public static anyMove(title: string,
                           instruction: string,
-                          state: AbstractGameState,
+                          state: GameState,
                           solutionMove: Move,
                           successMessage: string)
     : TutorialStep {
@@ -32,16 +32,16 @@ export abstract class TutorialStep {
     }
     public static fromPredicate(title: string,
                                 instruction: string,
-                                state: AbstractGameState,
+                                state: GameState,
                                 solutionMove: Move,
-                                predicate: (move: Move, resultingState: AbstractGameState) => MGPValidation,
+                                predicate: (move: Move, resultingState: GameState) => MGPValidation,
                                 successMessage: string)
     : TutorialStep {
         return new TutorialStepPredicate(title, instruction, state, solutionMove, predicate, successMessage);
     }
     public static informational(title: string,
                                 instruction: string,
-                                state: AbstractGameState)
+                                state: GameState)
     : TutorialStep {
         return new TutorialStepInformational(title, instruction, state);
     }
@@ -49,7 +49,7 @@ export abstract class TutorialStep {
     public previousMove: MGPOptional<Move> = MGPOptional.empty()
     protected constructor(public title: string,
                           public instruction: string,
-                          public state: AbstractGameState) {
+                          public state: GameState) {
     }
     public isMove(): this is TutorialStepMove {
         return false;
@@ -81,7 +81,7 @@ export abstract class TutorialStep {
 abstract class TutorialStepWithSolution extends TutorialStep {
     public constructor(title: string,
                        instruction: string,
-                       state: AbstractGameState,
+                       state: GameState,
                        private readonly solution: Move,
                        private readonly successMessage: string,
                        private readonly failureMessage?: string) {
@@ -109,7 +109,7 @@ abstract class TutorialStepWithSolution extends TutorialStep {
 export class TutorialStepMove extends TutorialStepWithSolution {
     public constructor(title: string,
                        instruction: string,
-                       state: AbstractGameState,
+                       state: GameState,
                        public readonly acceptedMoves: ReadonlyArray<Move>,
                        successMessage: string,
                        failureMessage: string) {
@@ -127,7 +127,7 @@ export class TutorialStepMove extends TutorialStepWithSolution {
 export class TutorialStepAnyMove extends TutorialStepWithSolution {
     public constructor(title: string,
                        instruction: string,
-                       state: AbstractGameState,
+                       state: GameState,
                        solutionMove: Move,
                        successMessage: string) {
         super(title, instruction, state, solutionMove, successMessage);
@@ -140,7 +140,7 @@ export class TutorialStepAnyMove extends TutorialStepWithSolution {
 export class TutorialStepClick extends TutorialStep {
     public constructor(title: string,
                        instruction: string,
-                       state: AbstractGameState,
+                       state: GameState,
                        public readonly acceptedClicks: ReadonlyArray<string>,
                        public readonly successMessage: string,
                        public readonly failureMessage: string) {
@@ -160,9 +160,9 @@ export class TutorialStepClick extends TutorialStep {
 export class TutorialStepPredicate extends TutorialStepWithSolution {
     public constructor(title: string,
                        instruction: string,
-                       state: AbstractGameState,
+                       state: GameState,
                        solutionMove: Move,
-                       public readonly predicate: (move: Move, resultingState: AbstractGameState) => MGPValidation,
+                       public readonly predicate: (move: Move, resultingState: GameState) => MGPValidation,
                        successMessage: string) {
         super(title, instruction, state, solutionMove, successMessage);
     }

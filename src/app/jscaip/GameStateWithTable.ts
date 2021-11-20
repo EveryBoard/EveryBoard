@@ -2,7 +2,7 @@ import { ArrayUtils, Table } from '../utils/ArrayUtils';
 import { Coord } from './Coord';
 import { GameState } from './GameState';
 
-export abstract class GameStateWithTable<P> extends GameState<Coord, P> {
+export abstract class GameStateWithTable<P> extends GameState {
 
     public constructor(public readonly board: Table<P>, turn: number) {
         super(turn);

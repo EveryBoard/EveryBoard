@@ -9,7 +9,7 @@ import { Rules } from 'src/app/jscaip/Rules';
 @Component({ template: '' })
 export abstract class TriangularGameComponent<R extends Rules<M, S, L>,
                                               M extends Move,
-                                              S extends GameState<Coord, P>,
+                                              S extends GameState,
                                               P,
                                               L = void>
     extends GameComponent<R, M, S, L>

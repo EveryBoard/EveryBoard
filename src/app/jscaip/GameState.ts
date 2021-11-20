@@ -1,6 +1,6 @@
 import { Player } from './Player';
 
-export abstract class GameState<C, P> {
+export abstract class GameState {
 
     public constructor(public readonly turn: number) {
     }
@@ -10,9 +10,4 @@ export abstract class GameState<C, P> {
     public getCurrentOpponent(): Player {
         return this.turn % 2 === 1 ? Player.ZERO : Player.ONE;
     }
-    public abstract getPieceAt(coord: C): P;
-
-    public abstract isOnBoard(coord: C): boolean
-}
-export abstract class AbstractGameState extends GameState<unknown, unknown> {
 }

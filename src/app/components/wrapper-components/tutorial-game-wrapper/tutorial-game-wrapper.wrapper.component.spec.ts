@@ -43,7 +43,7 @@ import { PylosState } from 'src/app/games/pylos/PylosState';
 import { PylosTutorial } from 'src/app/games/pylos/PylosTutorial';
 import { PylosMove } from 'src/app/games/pylos/PylosMove';
 import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
-import { AbstractGameState } from 'src/app/jscaip/GameState';
+import { GameState } from 'src/app/jscaip/GameState';
 import { DvonnRules } from 'src/app/games/dvonn/DvonnRules';
 import { DvonnTutorial } from 'src/app/games/dvonn/DvonnTutorial';
 import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
@@ -1003,7 +1003,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const saharaTutorial: TutorialStep[] = new SaharaTutorial().tutorial;
             const sixTutorial: TutorialStep[] = new SixTutorial().tutorial;
             const yinshTutorial: TutorialStep[] = new YinshTutorial().tutorial;
-            const stepExpectations: [Rules<Move, AbstractGameState, unknown>, TutorialStep, Move, MGPValidation][] = [
+            const stepExpectations: [Rules<Move, GameState, unknown>, TutorialStep, Move, MGPValidation][] = [
                 [
                     new ApagosRules(ApagosState),
                     apagosTutorial[2],
@@ -1112,13 +1112,13 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 ],
             ];
             for (const stepExpectation of stepExpectations) {
-                const rules: Rules<Move, AbstractGameState, unknown> = stepExpectation[0];
+                const rules: Rules<Move, GameState, unknown> = stepExpectation[0];
                 const step: TutorialStep = stepExpectation[1];
                 const move: Move = stepExpectation[2];
                 const validation: MGPValidation = stepExpectation[3];
                 const status: MGPFallible<unknown> = rules.isLegal(move, step.state);
                 if (status.isSuccess()) {
-                    const state: AbstractGameState = rules.applyLegalMove(move, step.state, status.get());
+                    const state: GameState = rules.applyLegalMove(move, step.state, status.get());
                     if (step.isPredicate()) {
                         expect(Utils.getNonNullable(step.predicate)(move, state)).toEqual(validation);
                     } else {
@@ -1137,14 +1137,14 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 }
                 const gameComponent: AbstractGameComponent =
                     TestBed.createComponent(gameInfo.component).debugElement.componentInstance;
-                const rules: Rules<Move, AbstractGameState, unknown> = gameComponent.rules;
+                const rules: Rules<Move, GameState, unknown> = gameComponent.rules;
                 const steps: TutorialStep[] = gameComponent.tutorial;
                 for (const step of steps) {
                     if (step.hasSolution()) {
                         const status: MGPFallible<unknown> = rules.isLegal(step.getSolution(), step.state);
                         if (status.isSuccess()) {
                             if (step.isPredicate()) {
-                                const state: AbstractGameState =
+                                const state: GameState =
                                     rules.applyLegalMove(step.getSolution(), step.state, status.get());
                                 expect(Utils.getNonNullable(step.predicate)(step.getSolution(), state))
                                     .toEqual(MGPValidation.SUCCESS);

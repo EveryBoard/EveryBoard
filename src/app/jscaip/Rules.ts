@@ -3,7 +3,7 @@ import { Move } from './Move';
 import { Type } from '@angular/core';
 import { assert, display } from '../utils/utils';
 import { Player } from './Player';
-import { AbstractGameState } from './GameState';
+import { GameState } from './GameState';
 import { MGPOptional } from '../utils/MGPOptional';
 import { MGPFallible } from '../utils/MGPFallible';
 
@@ -45,7 +45,7 @@ export class GameStatus {
 }
 
 export abstract class Rules<M extends Move,
-                            S extends AbstractGameState,
+                            S extends GameState,
                             L = void>
 {
 
@@ -87,7 +87,7 @@ export abstract class Rules<M extends Move,
             display(LOCAL_VERBOSE, `Rules.choose: Move is legal, let's apply it`);
         }
 
-        const resultingState: AbstractGameState = this.applyLegalMove(move, this.node.gameState, legality.get());
+        const resultingState: GameState = this.applyLegalMove(move, this.node.gameState, legality.get());
         const son: MGPNode<Rules<M, S, L>, M, S, L> = new MGPNode(resultingState as S,
                                                                   MGPOptional.of(this.node),
                                                                   MGPOptional.of(move));
