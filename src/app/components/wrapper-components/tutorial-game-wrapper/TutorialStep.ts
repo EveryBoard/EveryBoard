@@ -2,6 +2,7 @@ import { Move } from 'src/app/jscaip/Move';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { GameState } from 'src/app/jscaip/GameState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { assert } from 'src/app/utils/utils';
 
 export abstract class TutorialStep {
     public static fromMove(title: string,
@@ -73,9 +74,6 @@ export abstract class TutorialStep {
         this.previousMove = MGPOptional.of(previousMove);
         return this;
     }
-    public abstract getSuccessMessage(): string;
-    public abstract getFailureMessage(): string;
-
 }
 
 abstract class TutorialStepWithSolution extends TutorialStep {
@@ -83,8 +81,7 @@ abstract class TutorialStepWithSolution extends TutorialStep {
                        instruction: string,
                        state: GameState,
                        private readonly solution: Move,
-                       private readonly successMessage: string,
-                       private readonly failureMessage?: string) {
+                       private readonly successMessage: string) {
         super(title, instruction, state);
     }
     public hasSolution(): this is TutorialStepWithSolution {
@@ -96,14 +93,6 @@ abstract class TutorialStepWithSolution extends TutorialStep {
     public getSuccessMessage(): string {
         return this.successMessage;
     }
-    public getFailureMessage(): string {
-        if (this.failureMessage !== undefined) {
-            return this.failureMessage;
-        } else {
-            throw new Error('This step has no failure message');
-        }
-    }
-
 }
 
 export class TutorialStepMove extends TutorialStepWithSolution {
@@ -112,15 +101,15 @@ export class TutorialStepMove extends TutorialStepWithSolution {
                        state: GameState,
                        public readonly acceptedMoves: ReadonlyArray<Move>,
                        successMessage: string,
-                       failureMessage: string) {
-        super(title, instruction, state, acceptedMoves[0], successMessage, failureMessage);
-        if (acceptedMoves.length === 0) {
-            throw new Error('TutorialStepMove: At least one accepted move should be provided, otherwise use TutorialStepInformational');
-        }
-
+                       public readonly failureMessage: string) {
+        super(title, instruction, state, acceptedMoves[0], successMessage);
+        assert(acceptedMoves.length > 0, 'TutorialStepMove: At least one accepted move should be provided, otherwise use TutorialStepInformational');
     }
     public isMove(): this is TutorialStepMove {
         return true;
+    }
+    public getFailureMessage(): string {
+        return this.failureMessage;
     }
 }
 
@@ -174,11 +163,5 @@ export class TutorialStepPredicate extends TutorialStepWithSolution {
 export class TutorialStepInformational extends TutorialStep {
     public isInformation(): this is TutorialStepInformational {
         return true;
-    }
-    public getSuccessMessage(): string {
-        throw new Error('TutorialStepInformational has no success message');
-    }
-    public getFailureMessage(): string {
-        throw new Error('TutorialStepInformational has no failure message');
     }
 }

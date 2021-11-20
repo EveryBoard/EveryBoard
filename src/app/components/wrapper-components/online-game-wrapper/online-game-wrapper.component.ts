@@ -307,9 +307,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                                            type, last);
     }
     private getMoreRecentTime(part: Part): Time | null {
-        if (part == null) {
-            return null;
-        }
         if (part.doc.lastMoveTime == null) {
             return part.doc.beginning as Time;
         } else {
@@ -791,7 +788,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             this.userSub.unsubscribe();
         }
         if (this.gameStarted === true) {
-            if (this.observedPartSubscription) {
+            if (this.observedPartSubscription != null) {
                 this.observedPartSubscription.unsubscribe();
             }
             if (this.opponentSubscription) {

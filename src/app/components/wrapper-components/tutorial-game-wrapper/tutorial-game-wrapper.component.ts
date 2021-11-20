@@ -107,17 +107,24 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
             const resultingState: GameState = this.gameComponent.rules.node.gameState;
             const moveValidity: MGPValidation = Utils.getNonNullable(currentStep.predicate)(move, resultingState);
             if (moveValidity.isSuccess()) {
-                this.showStepSuccess();
+                this.showStepSuccess(currentStep.getSuccessMessage());
             } else {
                 this.currentReason = MGPOptional.of(moveValidity.getReason());
             }
         } else if (currentStep.isAnyMove()) {
             display(TutorialGameWrapperComponent.VERBOSE, 'tutorialGameWrapper.onLegalUserMove: awaited move!');
-            this.showStepSuccess();
-        } else if (currentStep.isMove() && currentStep.acceptedMoves.some((m: Move) => m.equals(move))) {
-            display(TutorialGameWrapperComponent.VERBOSE, 'tutorialGameWrapper.onLegalUserMove: awaited move!');
-            this.showStepSuccess();
-        } else {
+            this.showStepSuccess(currentStep.getSuccessMessage());
+        } else if (currentStep.isMove()) {
+            if (currentStep.acceptedMoves.some((m: Move) => m.equals(move))) {
+                display(TutorialGameWrapperComponent.VERBOSE, 'tutorialGameWrapper.onLegalUserMove: awaited move!');
+                this.showStepSuccess(currentStep.getSuccessMessage());
+            } else {
+                display(TutorialGameWrapperComponent.VERBOSE,
+                        'tutorialGameWrapper.onLegalUserMove: not the move that was awaited.');
+                this.currentReason = MGPOptional.of(currentStep.getFailureMessage());
+            }
+        } else if (currentStep.isClick()) {
+            // we don't expect a move on a click step
             display(TutorialGameWrapperComponent.VERBOSE,
                     'tutorialGameWrapper.onLegalUserMove: not the move that was awaited.');
             this.currentReason = MGPOptional.of(currentStep.getFailureMessage());
@@ -139,7 +146,7 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
         if (currentStep.isClick()) {
             this.gameComponent.updateBoard();
             if (Utils.getNonNullable(currentStep.acceptedClicks).some((m: string) => m === elementName)) {
-                this.showStepSuccess();
+                this.showStepSuccess(currentStep.getSuccessMessage());
             } else {
                 this.currentMessage = currentStep.failureMessage;
             }
@@ -161,10 +168,9 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
         }
         this.cdr.detectChanges();
     }
-    private showStepSuccess(): void {
+    private showStepSuccess(successMessage: string): void {
         display(TutorialGameWrapperComponent.VERBOSE, 'tutorialGameWrapperComponent.showStepSuccess()');
-        const currentStep: TutorialStep = this.steps[this.stepIndex];
-        this.currentMessage = currentStep.getSuccessMessage();
+        this.currentMessage = successMessage;
         this.stepFinished[this.stepIndex] = true;
         this.updateSuccessCount();
     }
