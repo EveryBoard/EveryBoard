@@ -20,7 +20,7 @@
               (click)="onCaseClick(x)"
               [attr.d]="DECORATION_PATHS[x]"/>
     </g>
-    <g *ngFor="let x of [1, 2, 3, 4, 5, 6, 7, 0]"> <!-- This is the required order for drawing the piece because they could overlap otherwise -->
+    <g *ngFor="let x of [2, 1, 3, 0, 4, 7, 5, 6]"> <!-- This is the required order for drawing the piece because they could overlap otherwise -->
         <use *ngFor="let piece of viewInfo.boardInfo[x].pieces"
              id="click_{{ x }}_{{ piece.y }}"
              class="base mid-stroke"
