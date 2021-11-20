@@ -98,7 +98,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
     }
     private getSafelyMovablePieceOrFirstOne(node: SixNode): MGPSet<Coord> {
         const state: SixState = node.gameState;
-        const allPieces: MGPMap<Player, MGPSet<Coord>> = state.pieces.groupByValue();
+        const allPieces: MGPMap<Player, MGPSet<Coord>> = MGPMap.groupByValue(state.pieces);
         const currentPlayer: Player = state.getCurrentPlayer();
         const playerPieces: MGPSet<Coord> = allPieces.get(currentPlayer).get();
         const firstPiece: Coord = playerPieces.get(0);
@@ -145,7 +145,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         // multiply list with legalLandings
         // check for each if a cut is needed
         const CURRENT_PLAYER: Player = state.getCurrentPlayer();
-        const start: MGPSet<Coord> = state.pieces.groupByValue().get(CURRENT_PLAYER).get();
+        const start: MGPSet<Coord> = MGPMap.groupByValue(state.pieces).get(CURRENT_PLAYER).get();
         return this.getDeplacementFrom(state, start, legalLandings);
     }
     public getBoardValue(node: SixNode): SixNodeUnheritance {

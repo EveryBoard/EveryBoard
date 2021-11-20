@@ -48,7 +48,7 @@ export class SixState extends GameState {
             coordsGroup = SixState.putCoordInGroup(pieces, groupEntry, coordsGroup, '' + nbGroup);
             nbGroup++;
         }
-        const reversed: MGPMap<string, MGPSet<Coord>> = coordsGroup.groupByValue();
+        const reversed: MGPMap<string, MGPSet<Coord>> = MGPMap.groupByValue(coordsGroup);
         const groups: MGPSet<MGPSet<Coord>> = new MGPSet();
         for (let i: number = 0; i < reversed.size(); i++) {
             groups.add(reversed.getByIndex(i).value);
@@ -179,7 +179,7 @@ export class SixState extends GameState {
         return new SixState(newPieces, this.turn + 1);
     }
     public countPieces(): [number, number] {
-        const pieces: MGPMap<Player, MGPSet<Coord>> = this.pieces.groupByValue();
+        const pieces: MGPMap<Player, MGPSet<Coord>> = MGPMap.groupByValue(this.pieces);
         const zeroPieces: MGPSet<Coord> = pieces.get(Player.ZERO).getOrElse(new MGPSet());
         const onePieces: MGPSet<Coord> = pieces.get(Player.ONE).getOrElse(new MGPSet());
         return [zeroPieces.size(), onePieces.size(),

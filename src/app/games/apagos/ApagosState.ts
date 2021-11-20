@@ -55,9 +55,6 @@ export class ApagosState extends GameState {
     public getRemainingCopy(): MGPMap<Player, number> {
         return this.remaining.getCopy();
     }
-    public isOnBoard(_coord: ApagosCoord): boolean {
-        return true;
-    }
     public getRemaining(piece: Player): number {
         return this.remaining.get(piece).get();
     }

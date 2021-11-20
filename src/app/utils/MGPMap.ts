@@ -3,7 +3,22 @@ import { Comparable, comparableEquals } from './Comparable';
 import { MGPSet } from './MGPSet';
 import { assert } from './utils';
 
-export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<Comparable>> {
+export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unknown>> {
+    public static groupByValue<K extends NonNullable<Comparable>, V extends NonNullable<Comparable>>(map: MGPMap<K, V>)
+    : MGPMap<V, MGPSet<K>> {
+        const reversedMap: MGPMap<V, MGPSet<K>> = new MGPMap<V, MGPSet<K>>();
+        for (const key of map.listKeys()) {
+            const value: V = map.get(key).get();
+            if (reversedMap.containsKey(value)) {
+                reversedMap.get(value).get().add(key);
+            } else {
+                const newSet: MGPSet<K> = new MGPSet<K>();
+                newSet.add(key);
+                reversedMap.set(value, newSet);
+            }
+        }
+        return reversedMap;
+    }
 
     private map: {key: K, value: V}[] = [];
 
@@ -125,19 +140,5 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<Com
             }
         }
         return true;
-    }
-    public groupByValue(): MGPMap<V, MGPSet<K>> {
-        const reversedMap: MGPMap<V, MGPSet<K>> = new MGPMap<V, MGPSet<K>>();
-        for (const key of this.listKeys()) {
-            const value: V = this.get(key).get();
-            if (reversedMap.containsKey(value)) {
-                reversedMap.get(value).get().add(key);
-            } else {
-                const newSet: MGPSet<K> = new MGPSet<K>();
-                newSet.add(key);
-                reversedMap.set(value, newSet);
-            }
-        }
-        return reversedMap;
     }
 }

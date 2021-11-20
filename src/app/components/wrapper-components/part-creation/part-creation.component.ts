@@ -37,10 +37,6 @@ interface PartCreationViewInfo {
     chosenOpponent?: string;
     candidateClasses: { [key: string]: string[] },
 }
-interface ComparableSubscription {
-    subscription: () => void,
-    equals: () => boolean,
-}
 @Component({
     selector: 'app-part-creation',
     templateUrl: './part-creation.component.html',
@@ -81,7 +77,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     public currentJoiner: IJoiner | null = null;
 
     // Subscription
-    private candidateSubscription: MGPMap<string, ComparableSubscription> = new MGPMap();
+    private candidateSubscription: MGPMap<string, () => void> = new MGPMap();
     private creatorSubscription: (() => void) | null = null;
     private ngUnsubscribe: Subject<void> = new Subject<void>();
 
@@ -368,14 +364,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             new FirebaseCollectionObserver(onDocumentCreated, onDocumentModified, onDocumentDeleted);
         for (const candidateName of joiner.candidates) {
             if (this.candidateSubscription.get(candidateName).isAbsent()) {
-                // Subscribe to every new candidate
-                const comparableSubscription: ComparableSubscription = {
-                    subscription: this.userService.observeUserByUsername(candidateName, callback),
-                    equals: () => {
-                        throw new Error('ObservableSubscription should not be used');
-                    },
-                };
-                this.candidateSubscription.set(candidateName, comparableSubscription);
+                const subscription: () => void = this.userService.observeUserByUsername(candidateName, callback);
+                this.candidateSubscription.set(candidateName, subscription);
             }
         }
         for (const oldCandidate of this.candidateSubscription.listKeys()) {
@@ -407,8 +397,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         }
     }
     private unsubscribeFrom(username: string): void {
-        const subscription: ComparableSubscription = this.candidateSubscription.delete(username);
-        subscription.subscription();
+        const subscription: () => void = this.candidateSubscription.delete(username);
+        subscription();
     }
     public acceptConfig(): Promise<void> {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.acceptConfig');

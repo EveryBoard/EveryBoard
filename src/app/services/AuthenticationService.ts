@@ -89,7 +89,7 @@ export class AuthenticationService implements OnDestroy {
                 display(AuthenticationService.VERBOSE, 'User is not connected');
                 this.userRS.next(AuthUser.NOT_CONNECTED);
             } else { // user logged in
-                if (this.registrationInProgress != null) {
+                if (this.registrationInProgress.isPresent()) {
                     // We need to wait for the entire registration process to finish,
                     // otherwise we risk reading an empty username before the user is fully created
                     await this.registrationInProgress.get();
@@ -98,7 +98,8 @@ export class AuthenticationService implements OnDestroy {
                 RTDB.updatePresence(user.uid);
                 const userInDB: IUser = (await userDAO.tryToRead(user.uid)).get();
                 display(AuthenticationService.VERBOSE, `User ${userInDB.username} is connected, and the verified status is ${this.emailVerified(user)}`);
-                const userHasFinalizedVerification: boolean = this.emailVerified(user) === true && userInDB.username !== '';
+                const userHasFinalizedVerification: boolean =
+                    this.emailVerified(user) === true && userInDB.username !== null;
                 if (userHasFinalizedVerification === true && userInDB.verified === false) {
                     // The user has finalized verification but isn't yet marked as so in the DB, so we mark it.
                     await userDAO.markVerified(user.uid);
@@ -197,19 +198,15 @@ export class AuthenticationService implements OnDestroy {
         }
     }
     /**
-     * Create the user doc in firestore
+     * Create the user doc in firestore. Google accounts initially have no username.
      */
-    public async createUser(uid: string, username: string ): Promise<void> {
+    public async createUser(uid: string, username?: string): Promise<void> {
         if (await this.userDAO.exists(uid) === false) {
-            await this.userDAO.set(uid, { username, verified: false });
-        }
-    }
-    /**
-     * Create a user doc in firestore without the username. Only for google users.
-     */
-    public async createUserWithoutUsername(uid: string): Promise<void> {
-        if (await this.userDAO.exists(uid) === false) {
-            await this.userDAO.set(uid, { verified: false });
+            if (username != null) {
+                await this.userDAO.set(uid, { username, verified: false });
+            } else {
+                await this.userDAO.set(uid, { verified: false });
+            }
         }
     }
     public async doGoogleLogin(): Promise<MGPValidation> {
@@ -226,7 +223,7 @@ export class AuthenticationService implements OnDestroy {
             const userCredential: firebase.auth.UserCredential =
                 await this.afAuth.signInWithPopup(provider);
             const user: firebase.User = Utils.getNonNullable(userCredential.user);
-            await this.createUserWithoutUsername(user.uid);
+            await this.createUser(user.uid);
             return MGPFallible.success(user);
         } catch (e) {
             return MGPFallible.failure(this.mapFirebaseError(e));
