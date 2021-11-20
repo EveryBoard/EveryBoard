@@ -93,16 +93,18 @@ export class AuthenticationServiceUnderTest extends AuthenticationService {
     }
 }
 
-export async function createConnectedGoogleUser(): Promise<firebase.auth.UserCredential> {
+export async function createConnectedGoogleUser(createInDB: boolean): Promise<firebase.auth.UserCredential> {
     const credential: firebase.auth.UserCredential = await firebase.auth().signInWithCredential(firebase.auth.GoogleAuthProvider.credential('{"sub": "abc123", "email": "foo@example.com", "email_verified": true}'));
-    await TestBed.inject(UserDAO).set(Utils.getNonNullable(credential.user).uid,
-                                      // no username for google users initially!
-                                      { verified: true });
+    if (createInDB) {
+        await TestBed.inject(UserDAO).set(Utils.getNonNullable(credential.user).uid,
+                                          // no username for google users initially!
+                                          { verified: true });
+    }
     return credential;
 }
 
-async function createGoogleUser(): Promise<firebase.auth.UserCredential> {
-    const credential: firebase.auth.UserCredential = await createConnectedGoogleUser();
+async function createGoogleUser(createInDB: boolean): Promise<firebase.auth.UserCredential> {
+    const credential: firebase.auth.UserCredential = await createConnectedGoogleUser(createInDB);
     await firebase.auth().signOut();
     return credential;
 }
@@ -237,7 +239,7 @@ describe('AuthenticationService', () => {
         });
         it('should throw if the user already verified its email', async() => {
             // given a connected user that is registered and verified, for example through a google account
-            await createConnectedGoogleUser();
+            await createConnectedGoogleUser(true);
 
             // when the email verification is requested
             const result: Promise<MGPValidation> = service.sendEmailVerification();
@@ -313,7 +315,7 @@ describe('AuthenticationService', () => {
     describe('google login', () => {
         it('should delegate to signInPopup', async() => {
             // given a google user
-            const user: firebase.auth.UserCredential = await createGoogleUser();
+            const user: firebase.auth.UserCredential = await createGoogleUser(false);
             spyOn(service.afAuth, 'signInWithPopup').and.resolveTo(user);
 
             // when the user connects with google
@@ -432,7 +434,7 @@ describe('AuthenticationService', () => {
         let user: firebase.User;
         beforeEach(async() => {
             // given a registered and logged in user
-            credential = await createConnectedGoogleUser();
+            credential = await createConnectedGoogleUser(true);
             user = Utils.getNonNullable(credential.user);
         });
         it('should update the username', async() => {
@@ -477,7 +479,7 @@ describe('AuthenticationService', () => {
     describe('setPicture', () => {
         it('should update the picture', async() => {
             // given a registered and logged in user
-            await createConnectedGoogleUser();
+            await createConnectedGoogleUser(true);
 
             // when the picture is set
             const photoURL: string = 'http://my.pic/foo.png';
@@ -489,7 +491,7 @@ describe('AuthenticationService', () => {
         });
         it('should not throw upon failure', async() => {
             // given a registered and logged in user
-            const credential: firebase.auth.UserCredential = await createConnectedGoogleUser();
+            const credential: firebase.auth.UserCredential = await createConnectedGoogleUser(true);
             const user: firebase.User = Utils.getNonNullable(credential.user);
 
             // when the picture is set but fails

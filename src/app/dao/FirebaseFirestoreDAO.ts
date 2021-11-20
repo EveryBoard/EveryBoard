@@ -38,6 +38,7 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
         const docSnapshot: firebase.firestore.DocumentSnapshot<T> =
             await this.afs.collection<T>(this.collectionName).doc(id).ref.get();
         if (docSnapshot.exists) {
+            console.log({data: docSnapshot.data()})
             return MGPOptional.of(docSnapshot.data() as T);
         } else {
             return MGPOptional.empty();

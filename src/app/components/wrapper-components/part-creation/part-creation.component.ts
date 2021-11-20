@@ -209,8 +209,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     private setDataForCreator(joiner: IJoiner): void {
         this.viewInfo.maximalMoveDuration = this.viewInfo.maximalMoveDuration || joiner.maximalMoveDuration;
         this.viewInfo.totalPartDuration = this.viewInfo.totalPartDuration || joiner.totalPartDuration;
-        this.viewInfo.partType = this.viewInfo.partType || joiner.partType;
-        this.viewInfo.firstPlayer = this.viewInfo.firstPlayer || joiner.firstPlayer;
         let opponent: string | undefined = this.viewInfo.chosenOpponent;
         if (opponent) {
             if (joiner.candidates.indexOf(opponent) === -1) {

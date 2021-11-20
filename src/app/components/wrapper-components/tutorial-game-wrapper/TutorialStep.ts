@@ -76,7 +76,7 @@ export abstract class TutorialStep {
     }
 }
 
-abstract class TutorialStepWithSolution extends TutorialStep {
+export abstract class TutorialStepWithSolution extends TutorialStep {
     public constructor(title: string,
                        instruction: string,
                        state: GameState,

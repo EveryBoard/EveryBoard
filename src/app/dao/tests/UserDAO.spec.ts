@@ -53,7 +53,7 @@ describe('UserDAO', () => {
         xit('should change the username of a user', async() => {
             // Test disabled due to being flaky, resulting in "invalid API key" errors randomly
             // given a google user
-            const uid: string = Utils.getNonNullable((await createConnectedGoogleUser()).user).uid;
+            const uid: string = Utils.getNonNullable((await createConnectedGoogleUser(true)).user).uid;
 
             // when its username is set
             await dao.setUsername(uid, 'foo');

@@ -6,7 +6,7 @@ import 'firebase/firestore';
 import 'firebase/database';
 import { Observable, Subscription, ReplaySubject } from 'rxjs';
 
-import { display, Utils } from 'src/app/utils/utils';
+import { assert, display, Utils } from 'src/app/utils/utils';
 import { MGPValidation } from '../utils/MGPValidation';
 import { MGPFallible } from '../utils/MGPFallible';
 import { UserDAO } from '../dao/UserDAO';
@@ -201,12 +201,11 @@ export class AuthenticationService implements OnDestroy {
      * Create the user doc in firestore. Google accounts initially have no username.
      */
     public async createUser(uid: string, username?: string): Promise<void> {
-        if (await this.userDAO.exists(uid) === false) {
-            if (username != null) {
-                await this.userDAO.set(uid, { username, verified: false });
-            } else {
-                await this.userDAO.set(uid, { verified: false });
-            }
+        assert(await this.userDAO.exists(uid) === false, 'createUser should only be called for new users');
+        if (username != null) {
+            await this.userDAO.set(uid, { username, verified: false });
+        } else {
+            await this.userDAO.set(uid, { verified: false });
         }
     }
     public async doGoogleLogin(): Promise<MGPValidation> {
@@ -220,8 +219,7 @@ export class AuthenticationService implements OnDestroy {
                 new firebase.auth.GoogleAuthProvider();
             provider.addScope('profile');
             provider.addScope('email');
-            const userCredential: firebase.auth.UserCredential =
-                await this.afAuth.signInWithPopup(provider);
+            const userCredential: firebase.auth.UserCredential = await this.afAuth.signInWithPopup(provider);
             const user: firebase.User = Utils.getNonNullable(userCredential.user);
             await this.createUser(user.uid);
             return MGPFallible.success(user);

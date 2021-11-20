@@ -7,7 +7,7 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Move } from 'src/app/jscaip/Move';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { assert, display, Utils } from 'src/app/utils/utils';
-import { TutorialStep } from './TutorialStep';
+import { TutorialStep, TutorialStepMove, TutorialStepWithSolution } from './TutorialStep';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { TutorialFailure } from './TutorialFailure';
 import { GameService } from 'src/app/services/GameService';
@@ -114,21 +114,19 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
         } else if (currentStep.isAnyMove()) {
             display(TutorialGameWrapperComponent.VERBOSE, 'tutorialGameWrapper.onLegalUserMove: awaited move!');
             this.showStepSuccess(currentStep.getSuccessMessage());
-        } else if (currentStep.isMove()) {
-            if (currentStep.acceptedMoves.some((m: Move) => m.equals(move))) {
+        } else {
+            assert(currentStep.isMove(), 'cannot reach here with a click step');
+            const currentStepMove: TutorialStepMove = currentStep as TutorialStepMove;
+            if (currentStepMove.acceptedMoves.some((m: Move) => m.equals(move))) {
                 display(TutorialGameWrapperComponent.VERBOSE, 'tutorialGameWrapper.onLegalUserMove: awaited move!');
-                this.showStepSuccess(currentStep.getSuccessMessage());
+                this.showStepSuccess(currentStepMove.getSuccessMessage());
             } else {
                 display(TutorialGameWrapperComponent.VERBOSE,
                         'tutorialGameWrapper.onLegalUserMove: not the move that was awaited.');
-                this.currentReason = MGPOptional.of(currentStep.getFailureMessage());
+                this.currentReason = MGPOptional.of(currentStepMove.getFailureMessage());
             }
-        } else if (currentStep.isClick()) {
-            // we don't expect a move on a click step
-            display(TutorialGameWrapperComponent.VERBOSE,
-                    'tutorialGameWrapper.onLegalUserMove: not the move that was awaited.');
-            this.currentReason = MGPOptional.of(currentStep.getFailureMessage());
         }
+        // We don't cover the click case here, it is covered in onUserClick
         this.cdr.detectChanges();
     }
     public retry(): void {
@@ -148,7 +146,7 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
             if (Utils.getNonNullable(currentStep.acceptedClicks).some((m: string) => m === elementName)) {
                 this.showStepSuccess(currentStep.getSuccessMessage());
             } else {
-                this.currentMessage = currentStep.failureMessage;
+                this.currentMessage = currentStep.getFailureMessage();
             }
             return MGPValidation.SUCCESS;
         } else if (currentStep.isMove() || currentStep.isPredicate() || currentStep.isAnyMove()) {
@@ -202,16 +200,15 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
     public async showSolution(): Promise<void> {
         display(TutorialGameWrapperComponent.VERBOSE, 'tutorialGameWrapper.showSolution()');
         const step: TutorialStep = this.steps[this.stepIndex];
-        if (step.hasSolution()) {
-            const awaitedMove: Move = step.getSolution();
-            this.showStep(this.stepIndex);
-            this.gameComponent.rules.choose(awaitedMove);
-            this.gameComponent.updateBoard();
-            this.moveAttemptMade = true;
-            this.currentMessage = step.getSuccessMessage();
-            this.cdr.detectChanges();
-        }
-        // TODO FOR REVIEW: else, throw error or do nothing?
+        assert(step.hasSolution(), 'showSolution called on a step with no solution, this should not be reachable');
+        const solutionStep: TutorialStepWithSolution = step as TutorialStepWithSolution;
+        const awaitedMove: Move = solutionStep.getSolution();
+        this.showStep(this.stepIndex);
+        this.gameComponent.rules.choose(awaitedMove);
+        this.gameComponent.updateBoard();
+        this.moveAttemptMade = true;
+        this.currentMessage = solutionStep.getSuccessMessage();
+        this.cdr.detectChanges();
     }
     public playLocally(): void {
         const game: string = Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));
