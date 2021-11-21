@@ -28,7 +28,8 @@ interface CaseInfo {
 }
 
 interface PieceInfo {
-    classes: string[],
+    bgClasses: string[],
+    fgClasses: string[],
     y: number,
     drawPosition: Coord,
     actualPiece: DiamPiece,
@@ -53,7 +54,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
         new Coord(255, 320),
         new Coord(100, 270),
     ];
-    public static PIECE_HEIGHT: number = 37;
+    public static PIECE_HEIGHT: number = 38;
     public BOARD_PATHS: string[] = [
         'M 2.8324855,277.57643 164.46619,228.81694 170.57257,148.42756 32.571357,104.19835 Z',
         'M 170.57257,148.42237 246.4213,96.276913 195.13813,2.0233391 32.571357,104.19315 Z',
@@ -161,19 +162,17 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
         for (const piece of DiamPiece.PLAYER_PIECES) {
             const remaining: number = this.rules.node.gameState.getRemainingPiecesOf(piece);
             for (let y: number = 0; y < remaining; y++) {
-                const classes: string[] = ['player' + piece.owner.value];
-                if (piece.otherPieceType) {
-                    classes.push('color-variant');
-                }
+                const fgClasses: string[] = [];
                 if (this.selected != null &&
                     this.selected.type === 'pieceFromReserve' &&
                     this.selected.piece === piece &&
                     y === remaining-1) {
                     // highlight the top piece of the remaining pieces stack if it is selected
-                    classes.push('highlighted');
+                    fgClasses.push('highlighted');
                 }
                 this.viewInfo.remainingPieces.push({
-                    classes,
+                    bgClasses: ['player' + piece.owner.value + (piece.otherPieceType ? '-alternate' : '')],
+                    fgClasses,
                     y,
                     drawPosition: this.getDrawPosition(piece).getNext(new Vector(0, -y*DiamComponent.PIECE_HEIGHT)),
                     actualPiece: piece,
@@ -209,21 +208,21 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
         for (let y: number = DiamState.HEIGHT-1; y >= 0; y--) {
             const piece: DiamPiece = this.rules.node.gameState.getPieceAtXY(x, y);
             if (piece !== DiamPiece.EMPTY) {
-                const classes: string[] = ['player' + piece.owner.value];
-                if (piece.otherPieceType) classes.push('color-variant');
+                const fgClasses: string[] = [];
                 if (this.selected != null &&
                     this.selected.type === 'pieceFromBoard' &&
                     this.selected.position.x === x &&
                     this.selected.position.y === y) {
-                    classes.push('highlighted');
+                    fgClasses.push('highlighted');
                 }
                 if (highestAlignment.isPresent() &&
                     (highestAlignment.get().x % 4) === (x % 4) &&
                     highestAlignment.get().y === y) {
-                    classes.push('victory-stroke');
+                    fgClasses.push('victory-stroke');
                 }
                 infos.push({
-                    classes,
+                    bgClasses: ['player' + piece.owner.value + (piece.otherPieceType ? '-alternate' : '')],
+                    fgClasses,
                     y,
                     drawPosition: DiamComponent.CENTER[x].getNext(new Vector(0, (y-3)*DiamComponent.PIECE_HEIGHT)),
                     actualPiece: piece,

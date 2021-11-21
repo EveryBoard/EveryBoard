@@ -47,11 +47,17 @@ $victory: yellow;
 .player0 {
     fill: $player0;
 }
+.player0-alternate {
+    fill: $player0-alternate;
+}
 .player0-stroke {
     stroke: $player0;
 }
 .player1 {
     fill: $player1;
+}
+.player1-alternate {
+    fill: $player1-alternate;
 }
 .player1-stroke {
     stroke: $player1;
