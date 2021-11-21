@@ -6,12 +6,11 @@ import { GameStatus } from 'src/app/jscaip/Rules';
 import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
-import { TablutCase } from './TablutCase';
-import { TablutState } from './TablutState';
+import { TaflPawn } from './TaflPawn';
+import { TablutState } from './tablut/TablutState';
 import { TablutPieceAndInfluenceMinimax } from './TablutPieceAndInfluenceMinimax';
 import { PieceThreat } from '../../jscaip/PieceThreat';
-import { TablutNode, TablutRules } from './TablutRules';
-import { TablutRulesConfig } from './TablutRulesConfig';
+import { TablutNode, TablutRules } from './tablut/TablutRules';
 
 export class TablutPieceAndControlMinimax extends TablutPieceAndInfluenceMinimax {
 
@@ -31,13 +30,13 @@ export class TablutPieceAndControlMinimax extends TablutPieceAndInfluenceMinimax
         [64, 8, 8, 8, 8, 8, 8, 8, 64],
     ];
     public getBoardValue(node: TablutNode): NodeUnheritance {
-        const gameStatus: GameStatus = TablutRules.getGameStatus(node);
+        const gameStatus: GameStatus = TablutRules.get().getGameStatus(node);
         if (gameStatus.isEndGame) {
             return new NodeUnheritance(gameStatus.toBoardValue());
         }
         const state: TablutState = node.gameState;
-        const WIDTH: number = TablutRulesConfig.WIDTH;
-        const EMPTY: TablutCase = TablutCase.UNOCCUPIED;
+        const WIDTH: number = TablutRules.get().config.WIDTH;
+        const EMPTY: TaflPawn = TaflPawn.UNOCCUPIED;
 
         let score: number = 0;
         const pieceMap: MGPMap<Player, MGPSet<Coord>> = this.getPiecesMap(state);

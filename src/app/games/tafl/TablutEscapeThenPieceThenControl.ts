@@ -7,11 +7,10 @@ import { GameStatus } from 'src/app/jscaip/Rules';
 import { NumberTable, Table } from 'src/app/utils/ArrayUtils';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
-import { TablutCase } from './TablutCase';
-import { TablutState } from './TablutState';
+import { TaflPawn } from './TaflPawn';
+import { TablutState } from './tablut/TablutState';
 import { TablutPieceAndControlMinimax } from './TablutPieceAndControlMinimax';
-import { TablutNode, TablutRules } from './TablutRules';
-import { TablutRulesConfig } from './TablutRulesConfig';
+import { TablutNode, TablutRules } from './tablut/TablutRules';
 
 export class TablutEscapeThenPieceAndControlMinimax extends TablutPieceAndControlMinimax {
 
@@ -31,13 +30,13 @@ export class TablutEscapeThenPieceAndControlMinimax extends TablutPieceAndContro
         [64, 8, 8, 8, 8, 8, 8, 8, 64],
     ];
     public getBoardValue(node: TablutNode): NodeUnheritance {
-        const gameStatus: GameStatus = TablutRules.getGameStatus(node);
+        const gameStatus: GameStatus = TablutRules.get().getGameStatus(node);
         if (gameStatus.isEndGame) {
             return new NodeUnheritance(gameStatus.toBoardValue());
         }
         const state: TablutState = node.gameState;
-        const WIDTH: number = TablutRulesConfig.WIDTH;
-        const EMPTY: TablutCase = TablutCase.UNOCCUPIED;
+        const WIDTH: number = TablutRules.get().config.WIDTH;
+        const EMPTY: TaflPawn = TaflPawn.UNOCCUPIED;
 
         let safeScore: number = 0;
         let threatenedScore: number = 0;
@@ -73,11 +72,11 @@ export class TablutEscapeThenPieceAndControlMinimax extends TablutPieceAndContro
                                    (threatenedScore * 531) +
                                    controlScore);
     }
-    public getStepForEscape(board: Table<TablutCase>): number {
-        const king: Coord = TablutRules.getKingCoord(board).get();
+    public getStepForEscape(board: Table<TaflPawn>): number {
+        const king: Coord = TablutRules.get().getKingCoord(board).get();
         return this._getStepForEscape(board, 1, [king], []);
     }
-    public _getStepForEscape(board: Table<TablutCase>,
+    public _getStepForEscape(board: Table<TaflPawn>,
                              step: number,
                              previousGen: Coord[],
                              handledCoords: Coord[])
@@ -89,7 +88,7 @@ export class TablutEscapeThenPieceAndControlMinimax extends TablutPieceAndContro
             // not found:
             return null;
         }
-        if (nextGen.some((coord: Coord) => TablutRules.isExternalThrone(coord))) {
+        if (nextGen.some((coord: Coord) => TablutRules.get().isExternalThrone(coord))) {
             return step;
         } else {
             step++;
@@ -97,13 +96,13 @@ export class TablutEscapeThenPieceAndControlMinimax extends TablutPieceAndContro
             return this._getStepForEscape(board, step, nextGen, handledCoords);
         }
     }
-    public getNextGen(board: Table<TablutCase>, previousGen: Coord[], handledCoords: Coord[]): Coord[] {
+    public getNextGen(board: Table<TaflPawn>, previousGen: Coord[], handledCoords: Coord[]): Coord[] {
         const newGen: Coord[] = [];
         for (const piece of previousGen) {
             for (const dir of Orthogonal.ORTHOGONALS) {
                 let landing: Coord = piece.getNext(dir, 1);
-                while (landing.isInRange(TablutRulesConfig.WIDTH, TablutRulesConfig.WIDTH) &&
-                       board[landing.y][landing.x] === TablutCase.UNOCCUPIED)
+                while (landing.isInRange(TablutRules.get().config.WIDTH, TablutRules.get().config.WIDTH) &&
+                       board[landing.y][landing.x] === TaflPawn.UNOCCUPIED)
                 {
                     if (handledCoords.every((coord: Coord) => coord.equals(landing) === false)) {
                         // coord is new

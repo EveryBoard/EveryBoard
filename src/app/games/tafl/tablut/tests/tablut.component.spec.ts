@@ -1,8 +1,8 @@
 import { TablutComponent } from '../tablut.component';
-import { TablutMove } from 'src/app/games/tablut/TablutMove';
+import { TablutMove } from 'src/app/games/tafl/tablut/TablutMove';
 import { Coord } from 'src/app/jscaip/Coord';
-import { TablutCase } from 'src/app/games/tablut/TablutCase';
-import { TablutState } from 'src/app/games/tablut/TablutState';
+import { TaflPawn } from 'src/app/games/tafl/TaflPawn';
+import { TablutState } from 'src/app/games/tafl/tablut/TablutState';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -12,10 +12,10 @@ describe('TablutComponent', () => {
 
     let componentTestUtils: ComponentTestUtils<TablutComponent>;
 
-    const _: TablutCase = TablutCase.UNOCCUPIED;
-    const x: TablutCase = TablutCase.INVADERS;
-    const i: TablutCase = TablutCase.DEFENDERS;
-    const A: TablutCase = TablutCase.PLAYER_ONE_KING;
+    const _: TaflPawn = TaflPawn.UNOCCUPIED;
+    const x: TaflPawn = TaflPawn.INVADERS;
+    const i: TaflPawn = TaflPawn.DEFENDERS;
+    const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
 
     beforeEach(fakeAsync(async() => {
         componentTestUtils = await ComponentTestUtils.forGame<TablutComponent>('Tablut');
@@ -37,11 +37,11 @@ describe('TablutComponent', () => {
     }));
     it('Diagonal move attempt should not throw', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_3_0');
-        const message: string = 'TablutMove cannot be diagonal.';
+        const message: string = 'TaflMove cannot be diagonal.';
         expect(async() => await componentTestUtils.expectClickFailure('#click_4_1', message)).not.toThrow();
     }));
     it('Should show captured piece and left cases', fakeAsync(async() => {
-        const board: Table<TablutCase> = [
+        const board: Table<TaflPawn> = [
             [_, A, _, _, _, _, _, _, _],
             [_, x, x, _, _, _, _, _, _],
             [_, _, i, _, _, _, _, _, _],

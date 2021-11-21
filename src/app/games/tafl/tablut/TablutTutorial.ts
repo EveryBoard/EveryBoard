@@ -1,13 +1,13 @@
-import { TablutMove } from 'src/app/games/tablut/TablutMove';
-import { TablutCase } from 'src/app/games/tablut/TablutCase';
-import { TablutState } from 'src/app/games/tablut/TablutState';
+import { TablutMove } from 'src/app/games/tafl/tablut/TablutMove';
+import { TaflPawn } from 'src/app/games/tafl/TaflPawn';
+import { TablutState } from 'src/app/games/tafl/tablut/TablutState';
 import { Coord } from 'src/app/jscaip/Coord';
-import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
-const _: TablutCase = TablutCase.UNOCCUPIED;
-const x: TablutCase = TablutCase.INVADERS;
-const i: TablutCase = TablutCase.DEFENDERS;
-const A: TablutCase = TablutCase.PLAYER_ONE_KING;
+const _: TaflPawn = TaflPawn.UNOCCUPIED;
+const x: TaflPawn = TaflPawn.INVADERS;
+const i: TaflPawn = TaflPawn.DEFENDERS;
+const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
 
 export class TablutTutorial {
     public tutorial: TutorialStep[] = [

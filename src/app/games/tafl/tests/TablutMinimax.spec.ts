@@ -1,25 +1,26 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
-import { TablutMove } from '../TablutMove';
-import { TablutState } from '../TablutState';
-import { TablutCase } from '../TablutCase';
-import { TablutRules } from '../TablutRules';
+import { TablutState } from '../tablut/TablutState';
+import { TaflPawn } from '../TaflPawn';
+import { TablutRules } from '../tablut/TablutRules';
 import { TablutMinimax } from '../TablutMinimax';
 import { Table } from 'src/app/utils/ArrayUtils';
+import { TablutMove } from '../tablut/TablutMove';
 
 describe('TablutMinimax:', () => {
 
     let rules: TablutRules;
-    const _: TablutCase = TablutCase.UNOCCUPIED;
-    const x: TablutCase = TablutCase.INVADERS;
-    const i: TablutCase = TablutCase.DEFENDERS;
-    const A: TablutCase = TablutCase.PLAYER_ONE_KING;
+    const _: TaflPawn = TaflPawn.UNOCCUPIED;
+    const x: TaflPawn = TaflPawn.INVADERS;
+    const i: TaflPawn = TaflPawn.DEFENDERS;
+    const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
 
     beforeEach(() => {
-        rules = new TablutRules(TablutState);
+        rules = TablutRules.get();
+        rules.node = rules.node.getInitialNode();
     });
     it('Should try to make the king escape when it can', () => {
-        const board: Table<TablutCase> = [
+        const board: Table<TaflPawn> = [
             [_, _, x, A, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],

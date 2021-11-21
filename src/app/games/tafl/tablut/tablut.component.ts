@@ -1,22 +1,21 @@
 import { Component } from '@angular/core';
-import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Coord } from '../../jscaip/Coord';
-import { TablutMove } from 'src/app/games/tablut/TablutMove';
+import { RectangularGameComponent } from '../../../components/game-components/rectangular-game-component/RectangularGameComponent';
+import { Coord } from '../../../jscaip/Coord';
+import { TablutMove } from 'src/app/games/tafl/tablut/TablutMove';
 import { TablutState } from './TablutState';
 import { TablutRules } from './TablutRules';
-import { TablutMinimax } from './TablutMinimax';
-import { TablutCase } from 'src/app/games/tablut/TablutCase';
+import { TablutMinimax } from '../TablutMinimax';
+import { TaflPawn } from 'src/app/games/tafl/TaflPawn';
 import { display } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player } from 'src/app/jscaip/Player';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { TablutRulesConfig } from 'src/app/games/tablut/TablutRulesConfig';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
-import { TablutPieceAndInfluenceMinimax } from './TablutPieceAndInfluenceMinimax';
-import { TablutLegalityStatus } from './TablutLegalityStatus';
-import { TablutPieceAndControlMinimax } from './TablutPieceAndControlMinimax';
-import { TablutEscapeThenPieceAndControlMinimax } from './TablutEscapeThenPieceThenControl';
+import { TablutPieceAndInfluenceMinimax } from '../TablutPieceAndInfluenceMinimax';
+import { TaflLegalityStatus } from '../TaflLegalityStatus';
+import { TablutPieceAndControlMinimax } from '../TablutPieceAndControlMinimax';
+import { TablutEscapeThenPieceAndControlMinimax } from '../TablutEscapeThenPieceThenControl';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { TablutTutorial } from './TablutTutorial';
@@ -24,17 +23,17 @@ import { TablutTutorial } from './TablutTutorial';
 @Component({
     selector: 'app-tablut',
     templateUrl: './tablut.component.html',
-    styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
 })
 export class TablutComponent extends RectangularGameComponent<TablutRules,
                                                               TablutMove,
                                                               TablutState,
-                                                              TablutCase,
-                                                              TablutLegalityStatus>
+                                                              TaflPawn,
+                                                              TaflLegalityStatus>
 {
     public static VERBOSE: boolean = false;
 
-    public NONE: TablutCase = TablutCase.UNOCCUPIED;
+    public NONE: TaflPawn = TaflPawn.UNOCCUPIED;
 
     public throneCoords: Coord[] = [
         new Coord(0, 0),
@@ -51,7 +50,7 @@ export class TablutComponent extends RectangularGameComponent<TablutRules,
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = new TablutRules(TablutState);
+        this.rules = TablutRules.get();
         this.availableMinimaxes = [
             new TablutMinimax(this.rules, 'DummyBot'),
             new TablutPieceAndInfluenceMinimax(this.rules, 'Piece > Influence'),
@@ -73,15 +72,15 @@ export class TablutComponent extends RectangularGameComponent<TablutRules,
         }
     }
     private showPreviousMove(): void {
-        const previousBoard: Table<TablutCase> = this.rules.node.mother.gameState.board;
+        const previousBoard: Table<TaflPawn> = this.rules.node.mother.gameState.board;
         const OPPONENT: Player = this.rules.node.gameState.getCurrentOpponent();
         for (const orthogonal of Orthogonal.ORTHOGONALS) {
             const captured: Coord = this.lastMove.end.getNext(orthogonal, 1);
-            if (captured.isInRange(TablutRulesConfig.WIDTH, TablutRulesConfig.WIDTH)) {
-                const previously: RelativePlayer = TablutRules.getRelativeOwner(OPPONENT, captured, previousBoard);
+            if (captured.isInRange(this.rules.config.WIDTH, this.rules.config.WIDTH)) {
+                const previously: RelativePlayer = this.rules.getRelativeOwner(OPPONENT, captured, previousBoard);
                 const wasOpponent: boolean = previously === RelativePlayer.OPPONENT;
-                const currently: TablutCase = this.rules.node.gameState.getPieceAt(captured);
-                const isEmpty: boolean = currently === TablutCase.UNOCCUPIED;
+                const currently: TaflPawn = this.rules.node.gameState.getPieceAt(captured);
+                const isEmpty: boolean = currently === TaflPawn.UNOCCUPIED;
                 if (wasOpponent && isEmpty) {
                     this.captureds.push(captured);
                 }
@@ -117,7 +116,7 @@ export class TablutComponent extends RectangularGameComponent<TablutRules,
     public choosePiece(x: number, y: number): MGPValidation {
         display(TablutComponent.VERBOSE, 'TablutComponent.choosePiece');
 
-        if (this.board[y][x] === TablutCase.UNOCCUPIED) {
+        if (this.board[y][x] === TaflPawn.UNOCCUPIED) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
         if (!this.pieceBelongToCurrentPlayer(x, y)) {
@@ -132,19 +131,20 @@ export class TablutComponent extends RectangularGameComponent<TablutRules,
         // TODO: see that verification is done and refactor this shit
         const player: Player = this.rules.node.gameState.getCurrentPlayer();
         const coord: Coord = new Coord(x, y);
-        return TablutRules.getRelativeOwner(player, coord, this.board) === RelativePlayer.PLAYER;
+        return this.rules.getRelativeOwner(player, coord, this.board) === RelativePlayer.PLAYER;
     }
     public cancelMoveAttempt(): void {
         this.chosen = new Coord(-1, -1);
     }
     public isThrone(x: number, y: number): boolean {
-        return TablutRules.isThrone(new Coord(x, y));
+        const state: TablutState = this.rules.node.gameState;
+        return this.rules.isThrone(state, new Coord(x, y));
     }
     public getPieceClasses(x: number, y: number): string[] {
         const classes: string[] = [];
         const coord: Coord = new Coord(x, y);
 
-        const owner: Player = TablutRules.getAbsoluteOwner(coord, this.board);
+        const owner: Player = this.rules.getAbsoluteOwner(coord, this.board);
         classes.push(this.getPlayerClass(owner));
 
         if (this.chosen.equals(coord)) {
@@ -183,7 +183,7 @@ export class TablutComponent extends RectangularGameComponent<TablutRules,
         return this.pieceBelongToCurrentPlayer(x, y);
     }
     public isInvader(x: number, y: number): boolean {
-        return this.board[y][x] === TablutCase.INVADERS;
+        return this.board[y][x] === TaflPawn.INVADERS;
     }
     public isKing(x: number, y: number): boolean {
         return this.board[y][x].isKing();
