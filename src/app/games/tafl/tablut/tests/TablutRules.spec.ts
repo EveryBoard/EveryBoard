@@ -13,6 +13,7 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { TablutPieceAndInfluenceMinimax } from '../../TablutPieceAndInfluenceMinimax';
 import { TablutEscapeThenPieceAndControlMinimax } from '../../TablutEscapeThenPieceThenControl';
 import { TaflFailure } from '../../TaflFailure';
+import { TablutPieceAndControlMinimax } from '../../TablutPieceAndControlMinimax';
 
 describe('TablutRules', () => {
 
@@ -25,11 +26,11 @@ describe('TablutRules', () => {
 
     beforeEach(() => {
         rules = TablutRules.get();
-        rules.node = rules.node.getInitialNode();
         minimaxes = [
-            new TablutMinimax(rules, 'TablutMinimax'),
-            new TablutPieceAndInfluenceMinimax(rules, 'Piece and Influence'),
-            new TablutEscapeThenPieceAndControlMinimax(rules, 'Escape then Piece and Control'),
+            new TablutMinimax(rules, 'DummyBot'),
+            new TablutPieceAndInfluenceMinimax(rules, 'Piece > Influence'),
+            new TablutPieceAndControlMinimax(rules, 'Piece > Control'),
+            new TablutEscapeThenPieceAndControlMinimax(rules, 'Escape > Piece > Control'),
         ];
     });
     it('Should be created', () => {

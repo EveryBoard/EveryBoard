@@ -21,7 +21,7 @@ export class BrandhubState extends TaflState {
         ];
         return new BrandhubState(board, 0);
     }
-    public from(board: Table<TaflPawn>, turn: number): this { // TODOTODO stonkey poop
+    public from(board: Table<TaflPawn>, turn: number): this {
         return new BrandhubState(board, turn) as this;
     }
     public isCentralThrone(c: Coord): boolean {

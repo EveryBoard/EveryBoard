@@ -67,6 +67,7 @@ describe('GameComponent', () => {
                 onArrowClick: [0, Player.ONE],
             },
             Awale: { onClick: [0, 0] },
+            Brandhub: { onClick: [0, 0] },
             Coerceo: { onClick: [0, 0] },
             Dvonn: { onClick: [0, 0] },
             Encapsule: {

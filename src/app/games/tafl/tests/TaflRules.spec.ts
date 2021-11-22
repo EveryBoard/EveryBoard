@@ -5,14 +5,24 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { tablutConfig } from '../tablut/tablutConfig';
-import { TablutNode } from '../tablut/TablutRules';
+import { TaflConfig } from '../TaflConfig';
 import { TaflLegalityStatus } from '../TaflLegalityStatus';
 import { TaflMove } from '../TaflMove';
 import { TaflPawn } from '../TaflPawn';
 import { TaflRules, TaflState } from '../TaflRules';
 import { MyTaflMove } from './MyTaflMove.spec';
 import { MyTaflState } from './MyTaflState.spec';
+
+const myTaflConfig: TaflConfig = {
+    CAPTURE_KING_AGAINST_THRONE_RULES: true,
+    CAPTURE_PAWN_AGAINST_THRONE_RULES: true,
+    CASTLE_IS_LEFT_FOR_GOOD: true,
+    INVADER: Player.ZERO,
+    KING_FAR_FROM_CENTRAL_THRONE_CAN_BE_CAPTURED_NORMALLY: true,
+    NORMAL_CAPTURE_WORK_ON_THE_KING: true,
+    THREE_INVADERS_AND_A_BORDER_CAN_CAPTURE_KING: true,
+    WIDTH: 7,
+};
 
 class MyTaflRules extends TaflRules<MyTaflMove, MyTaflState> {
 
@@ -25,9 +35,11 @@ class MyTaflRules extends TaflRules<MyTaflMove, MyTaflState> {
         return MyTaflRules.singleton;
     }
     private constructor() {
-        super(MyTaflState, tablutConfig, MyTaflMove.from); // TODOTODO clean that poop
+        super(MyTaflState, myTaflConfig, MyTaflMove.from);
     }
 }
+
+class MyTaflNode extends MGPNode<MyTaflRules, MyTaflMove, MyTaflState> {}
 
 describe('TaflRules', () => {
 
@@ -94,7 +106,7 @@ describe('TaflRules', () => {
         const resultingState: MyTaflState = rules.applyLegalMove(move, state, status);
         const expectedState: MyTaflState = new MyTaflState(expectedBoard, 24);
         expect(resultingState).toEqual(expectedState);
-        const node: TablutNode = new MGPNode(null, move, expectedState);
+        const node: MyTaflNode = new MGPNode(null, move, expectedState);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
     it('Should consider invader winner when all defender are immobilized', () => {
@@ -127,7 +139,7 @@ describe('TaflRules', () => {
         const resultingState: MyTaflState = rules.applyLegalMove(move, state, status);
         const expectedState: MyTaflState = new MyTaflState(expectedBoard, 25);
         expect(resultingState).toEqual(expectedState);
-        const node: TablutNode = new MGPNode(null, move, expectedState);
+        const node: MyTaflNode = new MGPNode(null, move, expectedState);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
 });

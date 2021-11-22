@@ -14,6 +14,7 @@ export class BrandhubRules extends TaflRules<BrandhubMove, BrandhubState> {
         if (BrandhubRules.singleton == null) {
             BrandhubRules.singleton = new BrandhubRules();
         }
+        MGPNode.ruler = this.singleton;
         return BrandhubRules.singleton;
     }
     private constructor() {

@@ -19,7 +19,6 @@ export class RulesUtils {
         expect(legality.legal).toBeTruthy();
         if (legality.legal.isSuccess()) {
             const resultingState: AbstractGameState = rules.applyLegalMove(move, state, legality);
-            console.table(ArrayUtils.mapBiArray(expectedState['board'], (a) => a['value']))
             if (resultingState['equals'] == null) { // TODOTODO: will be isComparableObject when your branch is merged
                 expect(resultingState).withContext('states should be equal').toEqual(expectedState);
             } else {

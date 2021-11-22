@@ -15,6 +15,7 @@ export class TablutRules extends TaflRules<TablutMove, TablutState> {
         if (TablutRules.singleton == null) {
             TablutRules.singleton = new TablutRules();
         }
+        MGPNode.ruler = this.singleton;
         return TablutRules.singleton;
     }
     private constructor() {

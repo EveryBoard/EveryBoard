@@ -24,6 +24,7 @@ import { YinshComponent } from 'src/app/games/yinsh/yinsh.component';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { ApagosComponent } from 'src/app/games/apagos/apagos.component';
+import { BrandhubComponent } from 'src/app/games/tafl/brandhub/brandhub.component';
 
 class GameDescription {
 
@@ -32,6 +33,8 @@ class GameDescription {
     public static readonly APAGOS: Localized = () => $localize`Very simple game, but, will you be able to win everytime?`;
 
     public static readonly AWALE: Localized = () => $localize`The international version of the famous African strategy game!`;
+
+    public static readonly BRANDHUB: Localized = () => $localize`The Irish version of the Tafl game family!`;
 
     public static readonly COERCEO: Localized = () => $localize`Get rid of all of your opponent's pieces on a board that shrinks little by little!`;
 
@@ -103,6 +106,7 @@ export class GameInfo {
         new GameInfo($localize`Abalone`, 'Abalone', AbaloneComponent, new Date('2021-07-13'), GameDescription.ABALONE()), // 71 days after Pentago
         new GameInfo($localize`Yinsh`, 'Yinsh', YinshComponent, new Date('2021-07-31'), GameDescription.YINSH()), // 94 days after LinesOfAction *Quentin
         new GameInfo($localize`Apagos`, 'Apagos', ApagosComponent, new Date('2021-11-04'), GameDescription.APAGOS()), // 4 month after Apagos
+        new GameInfo($localize`Brandhub`, 'Brandhub', BrandhubComponent, new Date('2021-11-22'), GameDescription.BRANDHUB()),
     ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
     // After Apagos: median = 26d; average = 53d
     // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m

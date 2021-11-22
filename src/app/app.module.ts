@@ -50,6 +50,7 @@ import { NextGameLoadingComponent } from './components/normal-component/next-gam
 import { AbaloneComponent } from './games/abalone/abalone.component';
 import { ApagosComponent } from './games/apagos/apagos.component';
 import { AwaleComponent } from './games/awale/awale.component';
+import { BrandhubComponent } from './games/tafl/brandhub/brandhub.component';
 import { CoerceoComponent } from './games/coerceo/coerceo.component';
 import { DvonnComponent } from './games/dvonn/dvonn.component';
 import { EncapsuleComponent } from './games/encapsule/encapsule.component';
@@ -132,6 +133,7 @@ const routes: Route [] = [
         AbaloneComponent,
         ApagosComponent,
         AwaleComponent,
+        BrandhubComponent,
         CoerceoComponent,
         DvonnComponent,
         EncapsuleComponent,
@@ -161,6 +163,7 @@ const routes: Route [] = [
         AbaloneComponent,
         ApagosComponent,
         AwaleComponent,
+        BrandhubComponent,
         DvonnComponent,
         EncapsuleComponent,
         EpaminondasComponent,

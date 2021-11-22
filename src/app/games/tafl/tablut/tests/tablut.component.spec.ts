@@ -7,6 +7,8 @@ import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Table } from 'src/app/utils/ArrayUtils';
+import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { TablutRules } from '../TablutRules';
 
 describe('TablutComponent', () => {
 
@@ -18,6 +20,7 @@ describe('TablutComponent', () => {
     const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
 
     beforeEach(fakeAsync(async() => {
+        MGPNode.ruler = TablutRules.get();
         componentTestUtils = await ComponentTestUtils.forGame<TablutComponent>('Tablut');
     }));
     it('should create', () => {
@@ -25,6 +28,12 @@ describe('TablutComponent', () => {
         expect(componentTestUtils.getComponent()).withContext('Component should be created').toBeDefined();
     });
     it('Should cancel move when clicking on opponent piece', fakeAsync( async() => {
+        // Given any state
+        const state: TablutState = TablutState.getInitialState();
+        componentTestUtils.setupState(state);
+
+        // When clicking on an opponent piece
+        // Then the move should be illegal
         await componentTestUtils.expectClickFailure('#click_4_4', RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
     }));
     it('Should cancel move when first click on empty case', fakeAsync( async() => {

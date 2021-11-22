@@ -471,7 +471,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         return MGPOptional.empty();
     }
     public getKingCoord(board: Table<TaflPawn>): MGPOptional<Coord> {
-        display(TaflRules.VERBOSE, { TablutRules_getKingCoord: { board } });
+        display(TaflRules.VERBOSE || true, { TablutRules_getKingCoord: { board, con: this.config } });
 
         for (let y: number = 0; y < this.config.WIDTH; y++) {
             for (let x: number = 0; x < this.config.WIDTH; x++) {
@@ -559,8 +559,8 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         let coord: Coord;
         let owner: RelativePlayer;
         const currentPlayer: Player = state.getCurrentPlayer();
-        for (let y: number = 0; y < this.config.WIDTH; y++) { // TODOTODO
-            for (let x: number = 0; x < this.config.WIDTH; x++) { // TODOTODO
+        for (let y: number = 0; y < this.config.WIDTH; y++) {
+            for (let x: number = 0; x < this.config.WIDTH; x++) {
                 // for each square
                 coord = new Coord(x, y);
                 owner = this.getRelativeOwner(currentPlayer, coord, currentBoard);
