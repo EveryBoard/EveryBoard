@@ -33,7 +33,7 @@ export class DiamTutorial {
         ),
         TutorialStep.fromMove(
             $localize`Types of move`,
-            $localize`You can perform two types of move: either dropping one of your piece like you did in the previous step, or you can shift one of your pieces on the board to the left or to the right. You can pick any of your piece on the board, even if there are pieces on top of it. When you pick a piece with other pieces on top of it, all the other pieces move with yours. <br/><br/>You're playing Dark, try to move one of your piece that is already on the board.`,
+            $localize`You can perform two types of move: either dropping one of your piece like you did in the previous step, or you can shift one of your pieces on the board to the left or to the right. You can pick any of your piece on the board, even if there are pieces on top of it. Only one condition applies: you cannot create a stack of more than 4 pieces. When you pick a piece with other pieces on top of it, all the other pieces move with yours.<br/><br/>You're playing Dark, try to move one of your piece that is already on the board.`,
             new DiamState([
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, B2, __, __, __],
@@ -49,7 +49,7 @@ export class DiamTutorial {
         ),
         TutorialStep.fromMove(
             $localize`Special case`,
-            $localize`It can happen that, in a single turn, both players reach an alignment. If it is the case, only the player with the highest alignment wins.<br/>Here, playing Dark, you can win by performing such a move, do it!`,
+            $localize`It can happen that, in a single turn, both players reach an alignment. If it is the case, only the player with the highest alignment wins.<br/><br/>Here, playing Dark, you can win by performing such a move, do it!`,
             new DiamState([
                 [__, __, __, __, A1, __, __, __],
                 [__, __, __, __, B2, __, __, A1],
@@ -58,7 +58,7 @@ export class DiamTutorial {
             ], [2, 2, 2, 2], 8),
             [new DiamMoveShift(new Coord(4, 2), 'left')],
             $localize`Congratulations!`,
-            $localize`Failed, try to shift a stack of your pieces to the left`,
+            $localize`Failed, try to shift a stack of pieces to the left.`,
         ),
     ]
 }

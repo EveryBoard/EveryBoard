@@ -36,7 +36,7 @@ class GameDescription {
 
     public static readonly COERCEO: Localized = () => $localize`Get rid of all of your opponent's pieces on a board that shrinks little by little!`;
 
-    public static readonly DIAM: Localized = () => $localize`Drop your pieces and move them around to to align two pieces of the same color across the board to win!`;
+    public static readonly DIAM: Localized = () => $localize`Drop your pieces and move them around to align two pieces of the same color across the board to win!`;
 
     public static readonly DVONN: Localized = () => $localize`Stack your pieces and control as many stacks as you can to win!`;
 
