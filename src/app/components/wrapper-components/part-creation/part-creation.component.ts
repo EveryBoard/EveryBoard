@@ -33,7 +33,7 @@ interface PartCreationViewInfo {
     partTypeName?: string,
     maximalMoveDuration?: number;
     totalPartDuration?: number;
-    candidates?: string[];
+    candidates: string[];
     chosenOpponent?: string;
     candidateClasses: { [key: string]: string[] },
 }
@@ -73,6 +73,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         firstPlayer: 'RANDOM',
         firstPlayerClasses: { 'CREATOR': [], 'RANDOM': ['is-selected', 'is-primary'], 'CHOSEN_PLAYER': [] },
         candidateClasses: {},
+        candidates: [],
     }
     public currentJoiner: IJoiner | null = null;
 

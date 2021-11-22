@@ -442,44 +442,6 @@ describe('YinshRules', () => {
         });
         it('should not allow making moves once victory has been reached', () => {
         });
-        // TODO FOR REVIEW: remove this test, it is not useful anymore (check that it doesn't uncover any code before though)
-        xit('should correctly apply move even if the results are not cached in the legality status', () => {
-            // Given a move (that should not have cached thingy ?)
-            const board: Table<YinshPiece> = [
-                [N, N, N, N, N, N, _, _, _, _, N],
-                [N, N, N, N, _, _, _, _, _, _, _],
-                [N, N, N, A, _, _, _, _, _, _, _],
-                [N, N, _, _, _, _, _, _, _, _, _],
-                [N, _, _, _, _, _, _, _, _, _, _],
-                [N, _, _, _, _, _, _, _, _, _, N],
-                [_, _, _, _, _, _, _, _, _, _, N],
-                [_, _, _, _, _, _, _, _, _, N, N],
-                [_, _, _, _, _, _, _, _, N, N, N],
-                [_, _, _, _, _, _, _, N, N, N, N],
-                [N, _, _, _, _, N, N, N, N, N, N],
-            ];
-            const state: YinshState = new YinshState(board, [0, 0], 10);
-
-            // when applying a move
-            const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(3, 3)), []);
-
-            // then the move should be legal still
-            const expectedBoard: Table<YinshPiece> = [
-                [N, N, N, N, N, N, _, _, _, _, N],
-                [N, N, N, N, _, _, _, _, _, _, _],
-                [N, N, N, a, _, _, _, _, _, _, _],
-                [N, N, _, A, _, _, _, _, _, _, _],
-                [N, _, _, _, _, _, _, _, _, _, _],
-                [N, _, _, _, _, _, _, _, _, _, N],
-                [_, _, _, _, _, _, _, _, _, _, N],
-                [_, _, _, _, _, _, _, _, _, N, N],
-                [_, _, _, _, _, _, _, _, N, N, N],
-                [_, _, _, _, _, _, _, N, N, N, N],
-                [N, _, _, _, _, N, N, N, N, N, N],
-            ];
-            const expectedState: YinshState = new YinshState(expectedBoard, [0, 0], 11);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        });
     });
     describe('getPossibleCaptures', () => {
         it('should not consider rings as capturable pieces', () => {

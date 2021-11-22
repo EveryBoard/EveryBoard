@@ -165,14 +165,14 @@ export class AuthenticationService implements OnDestroy {
     }
     public async sendEmailVerification(): Promise<MGPValidation> {
         display(AuthenticationService.VERBOSE, 'AuthenticationService.sendEmailVerification()');
-        const user: firebase.User | null = firebase.auth().currentUser;
-        if (user != null) {
-            if (this.emailVerified(user) === true) {
+        const user: MGPOptional<firebase.User> = MGPOptional.ofNullable(firebase.auth().currentUser);
+        if (user.isPresent()) {
+            if (this.emailVerified(user.get()) === true) {
                 // This should not be reachable from a component
                 return Utils.handleError('Verified users should not ask email verification twice');
             }
             try {
-                await user.sendEmailVerification();
+                await user.get().sendEmailVerification();
                 return MGPValidation.SUCCESS;
             } catch (e) {
                 return MGPValidation.failure(this.mapFirebaseError(e));
@@ -229,9 +229,9 @@ export class AuthenticationService implements OnDestroy {
 
     }
     public async disconnect(): Promise<MGPValidation> {
-        const user: firebase.User | null = firebase.auth().currentUser;
-        if (user != null) {
-            const uid: string = user.uid;
+        const user: MGPOptional<firebase.User> = MGPOptional.ofNullable(firebase.auth().currentUser);
+        if (user.isPresent()) {
+            const uid: string = user.get().uid;
             RTDB.setOffline(uid);
             await this.afAuth.signOut();
             return MGPValidation.SUCCESS;

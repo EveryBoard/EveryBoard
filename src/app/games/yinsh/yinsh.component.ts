@@ -127,9 +127,6 @@ export class YinshComponent
     }
     public updateViewInfo(): void {
         this.constructedState.allCoords().forEach((coord: Coord): void => {
-            if (this.constructedState.getPieceAt(coord) === YinshPiece.NONE) {
-                return;
-            }
             this.viewInfo.caseInfo[coord.y][coord.x].caseClasses = this.getCaseClasses(coord);
             const piece: YinshPiece = this.constructedState.getPieceAt(coord);
             this.viewInfo.caseInfo[coord.y][coord.x].removedClass = '';

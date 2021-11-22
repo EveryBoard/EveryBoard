@@ -37,7 +37,7 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
         if (captureValidity.isFailure()) {
             return captureValidity;
         }
-        return MGPFallible.success(captureValidity.get()); // TODO FOR REVIEW: was success(newBoard), should be correct because of mutability but better check
+        return MGPFallible.success(captureValidity.get()); // TODO FOR REVIEW: this line was success(newBoard), should be correct because of mutability but better check
     }
     public static getPhalanxValidity(state: EpaminondasState, move: EpaminondasMove): MGPValidation {
         let coord: Coord = move.coord;

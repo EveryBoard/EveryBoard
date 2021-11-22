@@ -1,5 +1,5 @@
 import { Table } from '../utils/ArrayUtils';
-import { assert, Utils } from '../utils/utils';
+import { Utils } from '../utils/utils';
 import { Coord } from './Coord';
 import { GameStateWithTable } from './GameStateWithTable';
 import { HexaDirection } from './HexaDirection';

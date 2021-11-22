@@ -105,23 +105,23 @@
             <div class="block" id="winnerIndicator" *ngIf="endGame">
                 <hr/>
                 <div *ngIf="currentPart.isDraw()">
-                    <p class="title" *ngIf="currentPart.getWinner().isAbsent()" i18n>Draw</p>
+                    <p class="title" i18n>Draw</p>
                 </div>
                 <div *ngIf="currentPart.isWin()">
                     <p class="title" id="youWonIndicator" *ngIf="currentPart.getWinner().get() === getPlayerName()" i18n>You won.</p>
                     <p class="title" *ngIf="(currentPart.getWinner().get() !== getPlayerName()) && isPlaying()" i18n>You lost.</p>
-                    <p class="title" *ngIf="observerRole === 2" i18n>{{ currentPart.getWinner().get() }} won.</p>
+                    <p class="title" *ngIf="isPlaying() === false" i18n>{{ currentPart.getWinner().get() }} won.</p>
                 </div>
                 <div *ngIf="currentPart.isTimeout()">
                     <p class="title" id="youWonIndicator" *ngIf="(currentPart.getWinner().get() === getPlayerName())" i18n>{{ currentPart.getLoser().get() }} has reached their time limit. You won.</p>
                     <p class="title" *ngIf="(currentPart.getWinner().get() !== getPlayerName()) && isPlaying()" i18n>You reached your time limit.</p>
-                    <p class="title" *ngIf="observerRole === 2" i18n>{{ currentPart.getLoser().get() }} has reached their time limit.</p>
+                    <p class="title" *ngIf="isPlaying() === false" i18n>{{ currentPart.getLoser().get() }} has reached their time limit.</p>
                 </div>
                 <div *ngIf="currentPart.isResign()">
                     <p class="title" id="resignIndicator"
                        *ngIf="(currentPart.getWinner().get() !== getPlayerName()) && isPlaying()" i18n>You resigned.</p>
                     <p class="title" id="resignIndicator"
-                       *ngIf="observerRole === 2 || currentPart.getWinner().get() === getPlayerName()" i18n>{{ currentPart.getLoser().get() }} has resigned.</p>
+                       *ngIf="isPlaying() === false || currentPart.getWinner().get() === getPlayerName()" i18n>{{ currentPart.getLoser().get() }} has resigned.</p>
                 </div>
 
             </div>

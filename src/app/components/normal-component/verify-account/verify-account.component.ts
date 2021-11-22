@@ -5,7 +5,6 @@ import { Subscription } from 'rxjs';
 import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import 'firebase/auth';
-import { Utils } from 'src/app/utils/utils';
 
 /**
  * Component to verify an account.

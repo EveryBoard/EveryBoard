@@ -1,4 +1,3 @@
-import { Comparable } from 'src/app/utils/Comparable';
 import { GameState } from '../GameState';
 
 class MyGameState extends GameState {

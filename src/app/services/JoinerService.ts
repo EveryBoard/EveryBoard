@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { FirstPlayer, IJoiner, IJoinerId, PartStatus, PartType } from '../domain/ijoiner';
 import { JoinerDAO } from '../dao/JoinerDAO';
-import { assert, display, Utils } from 'src/app/utils/utils';
+import { assert, display } from 'src/app/utils/utils';
 import { ArrayUtils } from '../utils/ArrayUtils';
 import { MGPOptional } from '../utils/MGPOptional';
 

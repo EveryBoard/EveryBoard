@@ -3,7 +3,7 @@ import { Observable, Subscription } from 'rxjs';
 import { IChat, IChatId } from '../domain/ichat';
 import { ChatDAO } from '../dao/ChatDAO';
 import { IMessage } from '../domain/imessage';
-import { display, Utils } from 'src/app/utils/utils';
+import { display } from 'src/app/utils/utils';
 import { MGPValidation } from '../utils/MGPValidation';
 import { ArrayUtils } from '../utils/ArrayUtils';
 import { Localized } from '../utils/LocaleUtils';

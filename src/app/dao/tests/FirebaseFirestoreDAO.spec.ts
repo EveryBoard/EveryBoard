@@ -3,7 +3,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import 'firebase/firestore';
 import { Injectable } from '@angular/core';
 import { FirebaseFirestoreDAO } from '../FirebaseFirestoreDAO';
-import { FirebaseJSONObject, Utils } from 'src/app/utils/utils';
+import { FirebaseJSONObject } from 'src/app/utils/utils';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';

@@ -5,7 +5,7 @@ import { SCORE } from '../../jscaip/SCORE';
 import { MGPNode } from '../../jscaip/MGPNode';
 import { P4State } from './P4State';
 import { Player } from 'src/app/jscaip/Player';
-import { assert, display, Utils } from 'src/app/utils/utils';
+import { assert, display } from 'src/app/utils/utils';
 import { P4Move } from './P4Move';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';

@@ -55,9 +55,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
     }
     public updatePlayer(player: 0|1): void {
         this.players[player] = MGPOptional.of(this.playerSelection[player]);
-        if (this.players[player].equalsValue('human') === false && this.aiDepths[player] !== '0') {
-            this.proposeAIToPlay();
-        }
+        this.proposeAIToPlay();
     }
     public async onLegalUserMove(move: Move): Promise<void> {
         display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapperComponent.onLegalUserMove');
@@ -92,6 +90,10 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
             return MGPOptional.empty();
         }
         const playerIndex: number = this.gameComponent.rules.node.gameState.turn % 2;
+        if (this.aiDepths[playerIndex] === '0') {
+            // No AI is playing if its level is set to 0
+            return MGPOptional.empty();
+        }
         return MGPOptional.ofNullable(
             this.gameComponent.availableMinimaxes.find((a: AbstractMinimax) => {
                 return this.players[playerIndex].equalsValue(a.name);
@@ -132,9 +134,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         this.gameComponent.updateBoard();
         this.endGame = false;
         this.winner = MGPOptional.empty();
-        if (this.players[Player.ZERO.value].equalsValue('human') === false && this.aiDepths[Player.ZERO.value] !== '0') {
-            this.proposeAIToPlay();
-        }
+        this.proposeAIToPlay();
     }
     public getPlayerName(): string {
         return 'human';

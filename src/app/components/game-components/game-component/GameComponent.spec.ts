@@ -71,7 +71,7 @@ describe('GameComponent', () => {
         const result: MGPValidation = await component.gameComponent.pass();
 
         // then it gives an error and handleError is called
-        const error: string = 'pass() called on a game that does not redefine it';
+        const error: string = 'GameComponent.pass() called on a game that does not redefine it';
         expect(result.isFailure()).toBeTrue();
         expect(result.getReason()).toEqual(error);
         expect(Utils.handleError).toHaveBeenCalledWith(error);

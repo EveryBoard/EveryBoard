@@ -99,13 +99,8 @@ export abstract class GameWrapper {
                                   scores?: [number, number]): Promise<MGPValidation>
     {
         const LOCAL_VERBOSE: boolean = false;
-        display(GameWrapper.VERBOSE || LOCAL_VERBOSE, {
-            gameWrapper_receiveValidMove_AKA_chooseMove: {
-                move,
-                state,
-                scores,
-            },
-        });
+        display(GameWrapper.VERBOSE || LOCAL_VERBOSE,
+                { gameWrapper_receiveValidMove_AKA_chooseMove: { move, state, scores } });
         if (!this.isPlayerTurn()) {
             return MGPValidation.failure(GameWrapperMessages.NOT_YOUR_TURN());
         }

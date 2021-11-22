@@ -154,7 +154,7 @@ describe('LocalGameWrapperComponent', () => {
             // given wrapper on which a first move have been done
             await componentTestUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
 
-            // when clicking on AI then it's level
+            // when clicking on AI then its level
             const selectAI: HTMLSelectElement = componentTestUtils.findElement('#playerOneSelect').nativeElement;
             selectAI.value = selectAI.options[1].value;
             selectAI.dispatchEvent(new Event('change'));

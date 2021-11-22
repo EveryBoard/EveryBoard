@@ -8,7 +8,6 @@ import { IChat } from 'src/app/domain/ichat';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { IMessage } from 'src/app/domain/imessage';
-import { Utils } from 'src/app/utils/utils';
 
 describe('ChatComponent', () => {
 
@@ -222,8 +221,7 @@ describe('ChatComponent', () => {
 
         // then the message is sent
         const username: string = AuthenticationServiceMock.CONNECTED.username.get();
-        expect(chatService.sendMessage)
-            .toHaveBeenCalledWith(username, 2, 'hello');
+        expect(chatService.sendMessage).toHaveBeenCalledWith(username, 2, 'hello');
         //  and the form is cleared
         expect(messageInput.nativeElement.value).toBe('');
     }));

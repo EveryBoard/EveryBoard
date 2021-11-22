@@ -98,8 +98,8 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
         return this.rules.node.gameState.turn;
     }
     public pass(): Promise<MGPValidation> {
-        Utils.handleError('pass() called on a game that does not redefine it');
-        return of(MGPValidation.failure('pass() called on a game that does not redefine it')).toPromise();
+        Utils.handleError('GameComponent.pass() called on a game that does not redefine it');
+        return of(MGPValidation.failure('GameComponent.pass() called on a game that does not redefine it')).toPromise();
     }
 }
 
