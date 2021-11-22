@@ -9,5 +9,5 @@ export class DiamFailure {
 
     public static readonly MUST_SHIFT_LEFT_OR_RIGHT: Localized = () => $localize`To perform a shift, you must move the pieces to the space either directly to the left or directly to the right.`;
 
-    public static readonly MUST_SELECT_PIECE_FIRST: Localized = () => $localize`You must first select either a piece from the side, or a stack of pieces to shift on the board.`;
+    public static readonly MUST_SELECT_PIECE_FIRST: Localized = () => $localize`You must first select either a piece from the side, or a stack of pieces to shift on the board.`;
 }

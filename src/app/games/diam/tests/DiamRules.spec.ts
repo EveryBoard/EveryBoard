@@ -1,9 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { AbstractGameState } from 'src/app/jscaip/GameState';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { Move } from 'src/app/jscaip/Move';
-import { Rules } from 'src/app/jscaip/Rules';
 import { DiamMove, DiamMoveDrop, DiamMoveShift } from '../DiamMove';
 import { DiamPiece } from '../DiamPiece';
 import { DiamNode, DiamRules } from '../DiamRules';

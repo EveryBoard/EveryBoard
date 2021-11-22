@@ -47,6 +47,7 @@ describe('DiamMove', () => {
         it('should correctly encode and decode all moves', () => {
             NumberEncoderTestUtils.expectToBeCorrect(DiamMoveEncoder, new DiamMoveDrop(3, DiamPiece.ZERO_FIRST));
             NumberEncoderTestUtils.expectToBeCorrect(DiamMoveEncoder, new DiamMoveShift(new Coord(3, 3), 'right'));
+            NumberEncoderTestUtils.expectToBeCorrect(DiamMoveEncoder, new DiamMoveShift(new Coord(3, 3), 'left'));
         });
 
     });
