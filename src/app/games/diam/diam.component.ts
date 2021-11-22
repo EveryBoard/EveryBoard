@@ -63,7 +63,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
         new Coord(255, 320),
         new Coord(100, 270),
     ];
-    public static PIECE_HEIGHT: number = 35;
+    public static PIECE_HEIGHT: number = 36;
     public BOARD_PATHS: string[] = [
         'M 2.8324855,277.57643 164.46619,228.81694 170.57257,148.42756 32.571357,104.19835 Z',
         'M 170.57257,148.42237 246.4213,96.276913 195.13813,2.0233391 32.571357,104.19315 Z',

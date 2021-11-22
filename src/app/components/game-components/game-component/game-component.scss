@@ -115,7 +115,10 @@ $victory: yellow;
     fill: $selected;
 }
 .clickable {
-    stroke: $clickable;;
+    stroke: $clickable;
+}
+.clickable-hover:hover {
+    stroke: $clickable;
 }
 .capturable {
     stroke-width: 2;
@@ -132,6 +135,9 @@ $victory: yellow;
 }
 .small-stroke {
     stroke-width: 2;
+}
+.mid-small-stroke {
+    stroke-width: 3;
 }
 .mid-stroke {
     stroke-width: 5;
