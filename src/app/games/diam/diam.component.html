@@ -32,18 +32,24 @@
     <g *ngFor="let x of [2, 1, 3, 0, 4, 7, 5, 6]"> <!-- This is the required order for drawing the piece because they could overlap otherwise -->
         <g *ngFor="let piece of viewInfo.boardInfo[x].pieces">
             <use id="click_{{ x }}_{{ piece.y }}"
-                 (click)="onPieceInGameClick(x, piece.y)"
                  [attr.x]="piece.drawPosition.x"
                  [attr.y]="piece.drawPosition.y"
+                 (click)="onPieceInGameClick(x, piece.y)"
                  xlink:href="#piece"
-                 class="base"
-                 [ngClass]="piece.bgClasses" />
+                 class="base mid-stroke"
+                 [ngClass]="piece.bgClasses">
+            </use>
             <use *ngIf="piece.actualPiece.otherPieceType"
                  [attr.x]="piece.drawPosition.x"
                  [attr.y]="piece.drawPosition.y"
                  xlink:href="#pieceDecoration"
                  class="base small-stroke" />
-
+            <use (click)="onPieceInGameClick(x, piece.y)"
+                 [attr.x]="piece.drawPosition.x"
+                 [attr.y]="piece.drawPosition.y"
+                 xlink:href="#piece"
+                 class="base-no-fill no-fill small-stroke"
+                 [ngClass]="piece.fgClasses" />
         </g>
     </g>
 
@@ -54,7 +60,7 @@
         <use [attr.x]="piece.drawPosition.x"
              [attr.y]="piece.drawPosition.y"
              xlink:href="#piece"
-             class="base"
+             class="base mid-stroke"
              [ngClass]="piece.bgClasses" />
         <use *ngIf="piece.actualPiece.otherPieceType"
              [attr.x]="piece.drawPosition.x"
@@ -64,7 +70,7 @@
         <use [attr.x]="piece.drawPosition.x"
              [attr.y]="piece.drawPosition.y"
              xlink:href="#piece"
-             class="base-no-fill no-fill mid-stroke"
+             class="base-no-fill no-fill small-stroke"
              [ngClass]="piece.fgClasses" />
     </g>
 
