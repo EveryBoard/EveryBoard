@@ -94,6 +94,9 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
     public getTurn(): number {
         return this.rules.node.gameState.turn;
     }
+    public getCurrentPlayer(): Player {
+        return this.rules.node.gameState.getCurrentPlayer();
+    }
 }
 
 export abstract class AbstractGameComponent extends GameComponent<Rules<Move, AbstractGameState>,

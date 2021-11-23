@@ -99,4 +99,13 @@ export class DiamRules extends Rules<DiamMove, DiamState, LegalityStatus> {
         }
         return MGPOptional.empty();
     }
+    public pieceCanMove(state: DiamState, coord: Coord): boolean {
+        if (this.isShiftLegal(new DiamMoveShift(coord, 'left'), state).legal.isSuccess()) {
+            return true;
+        } else if (this.isShiftLegal(new DiamMoveShift(coord, 'right'), state).legal.isSuccess()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

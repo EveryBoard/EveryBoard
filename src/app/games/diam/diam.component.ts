@@ -207,6 +207,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
                 pieces: this.getPieces(x),
             };
         }
+        const currentPlayer: Player = this.getCurrentPlayer();
         this.viewInfo.remainingPieces = [];
         for (const piece of DiamPiece.PLAYER_PIECES) {
             const remaining: number = this.rules.node.gameState.getRemainingPiecesOf(piece);
@@ -218,6 +219,10 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
                     y === remaining-1) {
                     // highlight the top piece of the remaining pieces stack if it is selected
                     fgClasses.push('highlighted');
+                }
+                if (y === remaining-1 && piece.owner === currentPlayer) {
+                    // Only let the top piece be clickable
+                    fgClasses.push('clickable-hover');
                 }
                 this.viewInfo.remainingPieces.push({
                     bgClasses: ['player' + piece.owner.value + (piece.otherPieceType ? '-alternate' : '')],
@@ -263,6 +268,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
     }
     private getPieces(x: number): PieceInfo[] {
         const highestAlignment: MGPOptional<Coord> = this.rules.findHighestAlignment(this.rules.node.gameState);
+        const currentPlayer: Player = this.getCurrentPlayer();
         const infos: PieceInfo[] = [];
         for (let y: number = DiamState.HEIGHT-1; y >= 0; y--) {
             const piece: DiamPiece = this.rules.node.gameState.getPieceAtXY(x, y);
@@ -288,6 +294,9 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
                     (highestAlignment.get().x % 4) === (x % 4) &&
                     highestAlignment.get().y === y) {
                     fgClasses.push('victory-stroke');
+                }
+                if (this.rules.pieceCanMove(this.rules.node.gameState, coord)) {
+                    fgClasses.push('clickable-hover');
                 }
                 infos.push({
                     bgClasses: ['player' + piece.owner.value + (piece.otherPieceType ? '-alternate' : '')],

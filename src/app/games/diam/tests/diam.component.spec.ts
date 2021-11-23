@@ -184,12 +184,12 @@ describe('DiamComponent', () => {
         ], [0, 3, 3, 3], 4);
         testUtils.setupState(state);
         // then only the winning pieces should be highlighted
-        testUtils.expectElementToHaveClass('#fg_0_2', 'victory-stroke');
-        testUtils.expectElementToHaveClass('#fg_4_2', 'victory-stroke');
-        testUtils.expectElementNotToHaveClass('#fg_0_3', 'victory-stroke');
-        testUtils.expectElementNotToHaveClass('#fg_0_1', 'victory-stroke');
-        testUtils.expectElementNotToHaveClass('#fg_7_3', 'victory-stroke');
-        testUtils.expectElementNotToHaveClass('#fg_7_2', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#click_0_2', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#click_4_2', 'victory-stroke');
+        testUtils.expectElementNotToHaveClass('#click_0_3', 'victory-stroke');
+        testUtils.expectElementNotToHaveClass('#click_0_1', 'victory-stroke');
+        testUtils.expectElementNotToHaveClass('#click_7_3', 'victory-stroke');
+        testUtils.expectElementNotToHaveClass('#click_7_2', 'victory-stroke');
     }));
 });
 
