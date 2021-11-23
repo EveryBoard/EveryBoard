@@ -1,6 +1,6 @@
 src/app/games/tablut,42
 src/app/jscaip,30
-src/app/services,21
+src/app/services,20
 src/app/games/six,16
 src/app/games/quarto,14
 src/app/components/wrapper-components/online-game-wrapper,11
@@ -8,7 +8,6 @@ src/app/components/wrapper-components/part-creation,7
 src/app/games/go,7
 src/app/games/yinsh,5
 src/app/games/dvonn,2
-src/app/games/kamisado,2
 src/app/games/lines-of-action,2
 src/app/games/p4,2
 src/app/games/pylos,2
@@ -46,7 +45,10 @@ src/app/dao,0
 src/app/directives,0
 src/app/domain,0
 src/app/games/abalone,0
+src/app/games/apagos,0
+src/app/games/diam,0
 src/app/games/gipf,0
+src/app/games/kamisado,0
 src/app/games/pentago,0
 src/app/games/quixo,0
 src/app/games/reversi,0
