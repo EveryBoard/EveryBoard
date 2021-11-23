@@ -268,7 +268,6 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
     }
     private getPieces(x: number): PieceInfo[] {
         const highestAlignment: MGPOptional<Coord> = this.rules.findHighestAlignment(this.rules.node.gameState);
-        const currentPlayer: Player = this.getCurrentPlayer();
         const infos: PieceInfo[] = [];
         for (let y: number = DiamState.HEIGHT-1; y >= 0; y--) {
             const piece: DiamPiece = this.rules.node.gameState.getPieceAtXY(x, y);
