@@ -62,7 +62,7 @@ describe('GameComponent', () => {
         activatedRouteStub.setRoute('compo', 'Abalone');
         fixture = TestBed.createComponent(LocalGameWrapperComponent);
         component = fixture.debugElement.componentInstance;
-        component.observerRole = 2;
+        component.observerRole = 1;
         fixture.detectChanges();
         tick(1);
         expect(component.gameComponent).toBeDefined();
@@ -167,9 +167,7 @@ describe('GameComponent', () => {
                 TestBed.createComponent(gameInfo.component).debugElement.componentInstance;
             expect(gameComponent.encoder).withContext('Encoder missing for ' + gameInfo.urlName).toBeTruthy();
             expect(gameComponent.tutorial).withContext('tutorial missing for ' + gameInfo.urlName).toBeTruthy();
-            if (gameComponent.tutorial != null) {
-                expect(gameComponent.tutorial.length).withContext('tutorial empty for ' + gameInfo.urlName).toBeGreaterThan(0);
-            }
+            expect(gameComponent.tutorial.length).withContext('tutorial empty for ' + gameInfo.urlName).toBeGreaterThan(0);
         }
     }));
 });
