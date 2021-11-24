@@ -25,6 +25,7 @@ src/app/components/normal-component/not-found,0
 src/app/components/normal-component/online-game-creation,0
 src/app/components/normal-component/pick-game,0
 src/app/components/normal-component/register,0
+src/app/components/normal-component/reset-password,0
 src/app/components/normal-component/tutorial-game-creation,0
 src/app/components/normal-component/verify-account,0
 src/app/components/normal-component/welcome,0
@@ -35,6 +36,7 @@ src/app/dao,0
 src/app/directives,0
 src/app/domain,0
 src/app/games/abalone,0
+src/app/games/apagos,0
 src/app/games/awale,0
 src/app/games/coerceo,0
 src/app/games/epaminondas,0
