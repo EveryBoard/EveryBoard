@@ -1,7 +1,7 @@
 AttackEpaminondasMinimax.ts,1
 AwaleRules.ts,2
 AwaleMinimax.ts,2
-AuthenticationService.ts,2
+AuthenticationService.ts,1
 ActivesPartsService.ts,4
 ActivesUsersService.ts,1
 count-down.component.ts,1
@@ -17,7 +17,7 @@ HexaDirection.ts,4
 HexagonalGameState.ts,3
 KamisadoRules.ts,5
 LinesOfActionRules.ts,3
-MGPNode.ts,9
+MGPNode.ts,8
 Minimax.ts,1
 MinimaxTestingMove.ts,1
 online-game-wrapper.component.ts,13
@@ -35,7 +35,7 @@ SixMinimax.ts,7
 SixRules.ts,1
 SiamPiece.ts,2
 SiamRules.ts,1
-TablutRules.ts,47
+TablutRules.ts,41
 TablutEscapeThenPieceThenControl.ts,3
 TablutPieceAndInfluenceMinimax.ts,2
 TablutPieceAndControlMinimax.ts,1
