@@ -3,11 +3,11 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { TablutState } from '../tablut/TablutState';
 import { TaflPawn } from '../TaflPawn';
 import { TablutRules } from '../tablut/TablutRules';
-import { TablutMinimax } from '../TablutMinimax';
+import { TaflMinimax } from '../TaflMinimax';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { TablutMove } from '../tablut/TablutMove';
 
-describe('TablutMinimax:', () => {
+describe('TaflMinimax:', () => {
 
     let rules: TablutRules;
     const _: TaflPawn = TaflPawn.UNOCCUPIED;
@@ -35,7 +35,7 @@ describe('TablutMinimax:', () => {
         rules.node = new MGPNode(null, null, state);
         const winnerMove: TablutMove = new TablutMove(new Coord(3, 0), new Coord(8, 0));
 
-        const minimax: TablutMinimax = new TablutMinimax(rules, 'TablutMinimax');
+        const minimax: TaflMinimax = new TaflMinimax(rules, 'TablutMinimax');
         const bestMove: TablutMove = rules.node.findBestMove(1, minimax);
         expect(bestMove).toEqual(winnerMove);
     });

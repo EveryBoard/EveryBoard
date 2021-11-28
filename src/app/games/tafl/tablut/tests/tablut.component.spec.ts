@@ -40,13 +40,27 @@ describe('TablutComponent', () => {
         await componentTestUtils.expectClickFailure('#click_0_0', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
     }));
     it('Should allow simple move', fakeAsync(async() => {
+        // given initial state
+        const state: TablutState = TablutState.getInitialState();
+        componentTestUtils.setupState(state);
+
+        // When moving your piece
         await componentTestUtils.expectClickSuccess('#click_4_1');
         const move: TablutMove = new TablutMove(new Coord(4, 1), new Coord(0, 1));
+
+        // Then the move should be legal
         await componentTestUtils.expectMoveSuccess('#click_0_1', move);
     }));
     it('Diagonal move attempt should not throw', fakeAsync(async() => {
+        // given initial state
+        const state: TablutState = TablutState.getInitialState();
+        componentTestUtils.setupState(state);
+
+        // When attempting diagonal move
         await componentTestUtils.expectClickSuccess('#click_3_0');
         const message: string = 'TaflMove cannot be diagonal.';
+
+        // Then it should not have throwed
         expect(async() => await componentTestUtils.expectClickFailure('#click_4_1', message)).not.toThrow();
     }));
     it('Should show captured piece and left cases', fakeAsync(async() => {

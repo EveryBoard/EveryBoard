@@ -3,13 +3,13 @@ import { Coord } from '../../../jscaip/Coord';
 import { TablutMove } from 'src/app/games/tafl/tablut/TablutMove';
 import { TablutState } from './TablutState';
 import { TablutRules } from './TablutRules';
-import { TablutMinimax } from '../TablutMinimax';
-import { TablutPieceAndInfluenceMinimax } from '../TablutPieceAndInfluenceMinimax';
-import { TablutPieceAndControlMinimax } from '../TablutPieceAndControlMinimax';
-import { TablutEscapeThenPieceAndControlMinimax } from '../TablutEscapeThenPieceThenControl';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { TablutTutorial } from './TablutTutorial';
 import { TaflComponent } from '../tafl.component';
+import { TaflMinimax } from '../TaflMinimax';
+import { TaflPieceAndInfluenceMinimax } from '../TaflPieceAndInfluenceMinimax';
+import { TaflPieceAndControlMinimax } from '../TaflPieceAndControlMinimax';
+import { TaflEscapeThenPieceAndControlMinimax } from '../TaflEscapeThenPieceThenControl';
 
 @Component({
     selector: 'app-tablut',
@@ -32,10 +32,10 @@ export class TablutComponent extends TaflComponent<TablutRules, TablutMove, Tabl
               TablutMove.from);
         this.rules = TablutRules.get();
         this.availableMinimaxes = [
-            new TablutMinimax(this.rules, 'DummyBot'),
-            new TablutPieceAndInfluenceMinimax(this.rules, 'Piece > Influence'),
-            new TablutPieceAndControlMinimax(this.rules, 'Piece > Control'),
-            new TablutEscapeThenPieceAndControlMinimax(this.rules, 'Escape > Piece > Control'), // TODOTODO place the 4 not the 3 in the tests
+            new TaflMinimax(this.rules, 'DummyBot'),
+            new TaflPieceAndInfluenceMinimax(this.rules, 'Piece > Influence'),
+            new TaflPieceAndControlMinimax(this.rules, 'Piece > Control'),
+            new TaflEscapeThenPieceAndControlMinimax(this.rules, 'Escape > Piece > Control'),
         ];
         this.encoder = TablutMove.encoder;
         this.tutorial = new TablutTutorial().tutorial;

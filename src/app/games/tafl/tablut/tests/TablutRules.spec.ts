@@ -1,5 +1,5 @@
 import { TablutNode, TablutRules } from '../TablutRules';
-import { TablutMinimax } from '../../TablutMinimax';
+import { TaflMinimax } from '../../TaflMinimax';
 import { TablutMove } from '../TablutMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { TablutState } from '../TablutState';
@@ -10,10 +10,10 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { TablutPieceAndInfluenceMinimax } from '../../TablutPieceAndInfluenceMinimax';
-import { TablutEscapeThenPieceAndControlMinimax } from '../../TablutEscapeThenPieceThenControl';
+import { TaflPieceAndInfluenceMinimax } from '../../TaflPieceAndInfluenceMinimax';
+import { TaflEscapeThenPieceAndControlMinimax } from '../../TaflEscapeThenPieceThenControl';
 import { TaflFailure } from '../../TaflFailure';
-import { TablutPieceAndControlMinimax } from '../../TablutPieceAndControlMinimax';
+import { TaflPieceAndControlMinimax } from '../../TaflPieceAndControlMinimax';
 
 describe('TablutRules', () => {
 
@@ -27,15 +27,14 @@ describe('TablutRules', () => {
     beforeEach(() => {
         rules = TablutRules.get();
         minimaxes = [
-            new TablutMinimax(rules, 'DummyBot'),
-            new TablutPieceAndInfluenceMinimax(rules, 'Piece > Influence'),
-            new TablutPieceAndControlMinimax(rules, 'Piece > Control'),
-            new TablutEscapeThenPieceAndControlMinimax(rules, 'Escape > Piece > Control'),
+            new TaflMinimax(rules, 'DummyBot'),
+            new TaflPieceAndInfluenceMinimax(rules, 'Piece > Influence'),
+            new TaflPieceAndControlMinimax(rules, 'Piece > Control'),
+            new TaflEscapeThenPieceAndControlMinimax(rules, 'Escape > Piece > Control'),
         ];
     });
     it('Should be created', () => {
         expect(rules).toBeTruthy();
-        expect(rules.node.gameState.turn).withContext('Game should start a turn 0').toBe(0);
     });
     it('Capture should work', () => {
         const board: Table<TaflPawn> = [
@@ -265,7 +264,7 @@ describe('TablutRules', () => {
         RulesUtils.expectToBeOngoing(rules, node, minimaxes);
     });
     it('King should be authorised to come back on the throne', () => {
-        // Given a board where the King is not on his throne but can go back
+        // Given a board where the king is not on his throne but can go back
         const board: TaflPawn[][] = [
             [_, _, O, _, _, _, _, _, _],
             [_, _, O, _, O, _, _, _, _],
@@ -279,7 +278,7 @@ describe('TablutRules', () => {
         ];
         const state: TablutState = new TablutState(board, 1);
 
-        // When moving the King back to his throne
+        // When moving the king back to his throne
         const move: TablutMove = new TablutMove(new Coord(4, 3), new Coord(4, 4));
 
         // Then the move should be juged legal

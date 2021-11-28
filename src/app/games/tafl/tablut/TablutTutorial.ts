@@ -65,7 +65,7 @@ export class TablutTutorial {
         TutorialStep.fromMove(
             $localize`Capturing a soldier (2/2)`,
             $localize`A second way to capture a soldier is against an empty throne.
-        The King has moved and endangered one of its soldiers.<br/><br/>
+        The king has moved and endangered one of its soldiers.<br/><br/>
         Capture it.`,
             new TablutState([
                 [_, _, _, x, x, x, _, _, _],
@@ -120,7 +120,7 @@ export class TablutTutorial {
                 [_, _, _, _, _, _, _, _, _],
             ], 72),
             [new TablutMove(new Coord(3, 3), new Coord(3, 1))],
-            $localize`The King is dead, long live the King. Congratulations, you won.`,
+            $localize`The king is dead, long live the king. Congratulations, you won.`,
             $localize`Failed!`,
         ),
     ];

@@ -7,16 +7,16 @@ import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { TaflPawn } from './TaflPawn';
-import { TablutState } from './tablut/TablutState';
-import { TablutPieceAndInfluenceMinimax } from './TablutPieceAndInfluenceMinimax';
+import { TaflState } from './TaflRules';
+import { TaflPieceAndInfluenceMinimax } from './TaflPieceAndInfluenceMinimax';
 import { PieceThreat } from '../../jscaip/PieceThreat';
-import { TablutNode, TablutRules } from './tablut/TablutRules';
+import { TaflNode } from './TaflMinimax';
 
-export class TablutPieceAndControlMinimax extends TablutPieceAndInfluenceMinimax {
+export class TaflPieceAndControlMinimax extends TaflPieceAndInfluenceMinimax {
 
     public static SCORE_BY_THREATENED_PIECE: number = 530;
 
-    public static SCORE_BY_SAFE_PIECE: number = (16 * TablutPieceAndControlMinimax.SCORE_BY_THREATENED_PIECE) + 1;
+    public static SCORE_BY_SAFE_PIECE: number = (16 * TaflPieceAndControlMinimax.SCORE_BY_THREATENED_PIECE) + 1;
 
     public static CONTROL_VALUE: NumberTable = [
         [64, 8, 8, 8, 8, 8, 8, 8, 64],
@@ -29,13 +29,13 @@ export class TablutPieceAndControlMinimax extends TablutPieceAndInfluenceMinimax
         [8, 1, 1, 1, 1, 1, 1, 1, 8],
         [64, 8, 8, 8, 8, 8, 8, 8, 64],
     ];
-    public getBoardValue(node: TablutNode): NodeUnheritance {
-        const gameStatus: GameStatus = TablutRules.get().getGameStatus(node);
+    public getBoardValue(node: TaflNode): NodeUnheritance {
+        const gameStatus: GameStatus = this.ruler.getGameStatus(node);
         if (gameStatus.isEndGame) {
             return new NodeUnheritance(gameStatus.toBoardValue());
         }
-        const state: TablutState = node.gameState;
-        const WIDTH: number = TablutRules.get().config.WIDTH;
+        const state: TaflState = node.gameState;
+        const WIDTH: number = this.ruler.config.WIDTH;
         const EMPTY: TaflPawn = TaflPawn.UNOCCUPIED;
 
         let score: number = 0;
@@ -46,9 +46,9 @@ export class TablutPieceAndControlMinimax extends TablutPieceAndInfluenceMinimax
             const controlleds: MGPSet<Coord> = new MGPSet();
             for (const coord of pieceMap.get(owner).get().getCopy()) {
                 if (filteredThreatMap.get(coord).isPresent()) {
-                    score += owner.getScoreModifier() * TablutPieceAndControlMinimax.SCORE_BY_THREATENED_PIECE;
+                    score += owner.getScoreModifier() * TaflPieceAndControlMinimax.SCORE_BY_THREATENED_PIECE;
                 } else {
-                    score += owner.getScoreModifier() * TablutPieceAndControlMinimax.SCORE_BY_SAFE_PIECE;
+                    score += owner.getScoreModifier() * TaflPieceAndControlMinimax.SCORE_BY_SAFE_PIECE;
                     for (const dir of Orthogonal.ORTHOGONALS) {
                         let testedCoord: Coord = coord.getNext(dir, 1);
                         while (testedCoord.isInRange(WIDTH, WIDTH) &&
@@ -61,7 +61,7 @@ export class TablutPieceAndControlMinimax extends TablutPieceAndInfluenceMinimax
                 }
             }
             for (const controlled of controlleds.getCopy()) {
-                const controlledValue: number = TablutPieceAndControlMinimax.CONTROL_VALUE[controlled.y][controlled.x];
+                const controlledValue: number = TaflPieceAndControlMinimax.CONTROL_VALUE[controlled.y][controlled.x];
                 score += owner.getScoreModifier() * controlledValue;
             }
         }

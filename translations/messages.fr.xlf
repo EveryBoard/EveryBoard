@@ -191,7 +191,7 @@
         <target>Placez vos pièces hexagonales les unes à côté des autres et soyez le premier à créer une des trois formes requises pour gagner !</target>
       </trans-unit>
       <trans-unit id="5829078581404563552" datatype="html">
-        <source>The Vikings checkers! Invaders must capture the King, defender must make him escape!</source>
+        <source>The Vikings checkers! Invaders must capture the king, defender must make him escape!</source>
         <target>Le jeu de dames Viking ! Les envahisseurs doivent capturer le roi, tandis que les défenseurs doivent le faire s'échapper !</target>
       </trans-unit>
       <trans-unit id="7926456268600574942" datatype="html">
@@ -2975,7 +2975,7 @@
       </trans-unit>
       <trans-unit id="3935652819200846577" datatype="html">
         <source>A second way to capture a soldier is against an empty throne.
-        The King has moved and endangered one of its soldiers.&lt;br/&gt;&lt;br/&gt;
+        The king has moved and endangered one of its soldiers.&lt;br/&gt;&lt;br/&gt;
         Capture it.</source>
         <target>Un deuxième moyen de capturer un soldat, est contre un trône vide.
         Le Roi a quitté son poste, et mis en danger un de ses soldats.&lt;br/&gt;&lt;br/&gt;
@@ -3020,7 +3020,7 @@
         Capturez le roi.</target>
       </trans-unit>
       <trans-unit id="6715271150391313638" datatype="html">
-        <source>The King is dead, long live the King. Congratulations, you won.</source>
+        <source>The king is dead, long live the king. Congratulations, you won.</source>
         <target>Le Roi est mort, longue vie au Roi. Bravo, vous avez gagné la partie.</target>
       </trans-unit>
       <trans-unit id="9155303779171419902" datatype="html">

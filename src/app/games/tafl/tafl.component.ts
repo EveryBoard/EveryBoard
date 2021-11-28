@@ -36,7 +36,6 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         display(this.VERBOSE, 'taflComponent.updateBoard');
         this.lastMove = this.rules.node.move;
         this.board = this.rules.node.gameState.getCopiedBoard();
-
         this.captureds = [];
         if (this.lastMove) {
             this.showPreviousMove();

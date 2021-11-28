@@ -4,6 +4,7 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { TaflPawn } from './TaflPawn';
 
 export class TaflLegalityStatus implements LegalityStatus {
+
     legal: MGPValidation;
 
     resultingBoard: Table<TaflPawn>;

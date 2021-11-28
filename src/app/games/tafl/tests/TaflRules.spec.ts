@@ -14,8 +14,8 @@ import { MyTaflMove } from './MyTaflMove.spec';
 import { MyTaflState } from './MyTaflState.spec';
 
 const myTaflConfig: TaflConfig = {
-    CAPTURE_KING_AGAINST_THRONE_RULES: true,
-    CAPTURE_PAWN_AGAINST_THRONE_RULES: true,
+    CAN_CAPTURE_KING_AGAINST_THRONE: true,
+    CAN_CAPTURE_PAWN_AGAINST_THRONE: true,
     CASTLE_IS_LEFT_FOR_GOOD: true,
     INVADER: Player.ZERO,
     KING_FAR_FROM_CENTRAL_THRONE_CAN_BE_CAPTURED_NORMALLY: true,

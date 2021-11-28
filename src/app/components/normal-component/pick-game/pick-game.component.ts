@@ -70,7 +70,7 @@ class GameDescription {
 
     public static readonly SIX: Localized = () => $localize`Put your hexagonal pieces next to another one, and create one of the 3 victorious shapes to win!`;
 
-    public static readonly TABLUT: Localized = () => $localize`The Vikings checkers! Invaders must capture the King, defender must make him escape!`;
+    public static readonly TABLUT: Localized = () => $localize`The Vikings checkers! Invaders must capture the king, defender must make him escape!`;
 
     public static readonly YINSH: Localized = () => $localize`Align your pieces to score points, but beware, pieces can flip!`;
 

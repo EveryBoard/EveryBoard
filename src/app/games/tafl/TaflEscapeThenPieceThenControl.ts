@@ -8,15 +8,15 @@ import { NumberTable, Table } from 'src/app/utils/ArrayUtils';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { TaflPawn } from './TaflPawn';
-import { TablutState } from './tablut/TablutState';
-import { TablutPieceAndControlMinimax } from './TablutPieceAndControlMinimax';
-import { TablutNode, TablutRules } from './tablut/TablutRules';
+import { TaflState } from './TaflRules';
+import { TaflPieceAndControlMinimax } from './TaflPieceAndControlMinimax';
+import { TaflNode } from './TaflMinimax';
 
-export class TablutEscapeThenPieceAndControlMinimax extends TablutPieceAndControlMinimax {
+export class TaflEscapeThenPieceAndControlMinimax extends TaflPieceAndControlMinimax {
 
     public static SCORE_BY_THREATENED_PIECE: number = 530;
 
-    public static SCORE_BY_SAFE_PIECE: number = (16 * TablutPieceAndControlMinimax.SCORE_BY_THREATENED_PIECE) + 1;
+    public static SCORE_BY_SAFE_PIECE: number = (16 * TaflPieceAndControlMinimax.SCORE_BY_THREATENED_PIECE) + 1;
 
     public static CONTROL_VALUE: NumberTable = [
         [64, 8, 8, 8, 8, 8, 8, 8, 64],
@@ -29,13 +29,13 @@ export class TablutEscapeThenPieceAndControlMinimax extends TablutPieceAndContro
         [8, 1, 1, 1, 1, 1, 1, 1, 8],
         [64, 8, 8, 8, 8, 8, 8, 8, 64],
     ];
-    public getBoardValue(node: TablutNode): NodeUnheritance {
-        const gameStatus: GameStatus = TablutRules.get().getGameStatus(node);
+    public getBoardValue(node: TaflNode): NodeUnheritance {
+        const gameStatus: GameStatus = this.ruler.getGameStatus(node);
         if (gameStatus.isEndGame) {
             return new NodeUnheritance(gameStatus.toBoardValue());
         }
-        const state: TablutState = node.gameState;
-        const WIDTH: number = TablutRules.get().config.WIDTH;
+        const state: TaflState = node.gameState;
+        const WIDTH: number = this.ruler.config.WIDTH;
         const EMPTY: TaflPawn = TaflPawn.UNOCCUPIED;
 
         let safeScore: number = 0;
@@ -62,7 +62,7 @@ export class TablutEscapeThenPieceAndControlMinimax extends TablutPieceAndContro
             }
             for (const controlled of controlleds.getCopy()) {
                 const controlledValue: number =
-                    TablutPieceAndControlMinimax.CONTROL_VALUE[controlled.y][controlled.x];
+                    TaflPieceAndControlMinimax.CONTROL_VALUE[controlled.y][controlled.x];
                 controlScore += owner.getScoreModifier() * controlledValue;
             }
         }
@@ -73,7 +73,7 @@ export class TablutEscapeThenPieceAndControlMinimax extends TablutPieceAndContro
                                    controlScore);
     }
     public getStepForEscape(board: Table<TaflPawn>): number {
-        const king: Coord = TablutRules.get().getKingCoord(board).get();
+        const king: Coord = this.ruler.getKingCoord(board).get();
         return this._getStepForEscape(board, 1, [king], []);
     }
     public _getStepForEscape(board: Table<TaflPawn>,
@@ -88,7 +88,7 @@ export class TablutEscapeThenPieceAndControlMinimax extends TablutPieceAndContro
             // not found:
             return null;
         }
-        if (nextGen.some((coord: Coord) => TablutRules.get().isExternalThrone(coord))) {
+        if (nextGen.some((coord: Coord) => this.ruler.isExternalThrone(coord))) {
             return step;
         } else {
             step++;
@@ -101,7 +101,7 @@ export class TablutEscapeThenPieceAndControlMinimax extends TablutPieceAndContro
         for (const piece of previousGen) {
             for (const dir of Orthogonal.ORTHOGONALS) {
                 let landing: Coord = piece.getNext(dir, 1);
-                while (landing.isInRange(TablutRules.get().config.WIDTH, TablutRules.get().config.WIDTH) &&
+                while (landing.isInRange(this.ruler.config.WIDTH, this.ruler.config.WIDTH) &&
                        board[landing.y][landing.x] === TaflPawn.UNOCCUPIED)
                 {
                     if (handledCoords.every((coord: Coord) => coord.equals(landing) === false)) {

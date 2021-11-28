@@ -5,11 +5,10 @@ import { BrandhubState } from './BrandhubState';
 import { BrandhubRules } from './BrandhubRules';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { TaflComponent } from '../tafl.component';
-import { TablutMinimax } from '../TablutMinimax';
-import { TablutPieceAndInfluenceMinimax } from '../TablutPieceAndInfluenceMinimax';
-import { TablutPieceAndControlMinimax } from '../TablutPieceAndControlMinimax';
-import { TablutEscapeThenPieceAndControlMinimax } from '../TablutEscapeThenPieceThenControl';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { TaflMinimax } from '../TaflMinimax';
+import { TaflPieceAndInfluenceMinimax } from '../TaflPieceAndInfluenceMinimax';
+import { TaflPieceAndControlMinimax } from '../TaflPieceAndControlMinimax';
+import { TaflEscapeThenPieceAndControlMinimax } from '../TaflEscapeThenPieceThenControl';
 import { BrandhubTutorial } from './BrandhubTutorial';
 
 @Component({
@@ -33,10 +32,10 @@ export class BrandhubComponent extends TaflComponent<BrandhubRules, BrandhubMove
               BrandhubMove.from);
         this.rules = BrandhubRules.get();
         this.availableMinimaxes = [
-            // new TablutMinimax(this.rules, 'DummyBot'),
-            // new TablutPieceAndInfluenceMinimax(this.rules, 'Piece > Influence'),
-            // new TablutPieceAndControlMinimax(this.rules, 'Piece > Control'),
-            // new TablutEscapeThenPieceAndControlMinimax(this.rules, 'Escape > Piece > Control'),
+            new TaflMinimax(this.rules, 'DummyBot'),
+            new TaflPieceAndInfluenceMinimax(this.rules, 'Piece > Influence'),
+            new TaflPieceAndControlMinimax(this.rules, 'Piece > Control'),
+            new TaflEscapeThenPieceAndControlMinimax(this.rules, 'Escape > Piece > Control'),
         ];
         this.encoder = BrandhubMove.encoder;
         this.tutorial = new BrandhubTutorial().tutorial;

@@ -144,7 +144,7 @@
         <source>Put your hexagonal pieces next to another one, and create one of the 3 victorious shapes to win!</source>
       </trans-unit>
       <trans-unit id="5829078581404563552" datatype="html">
-        <source>The Vikings checkers! Invaders must capture the King, defender must make him escape!</source>
+        <source>The Vikings checkers! Invaders must capture the king, defender must make him escape!</source>
       </trans-unit>
       <trans-unit id="7926456268600574942" datatype="html">
         <source>Align your pieces to score points, but beware, pieces can flip!</source>
@@ -2038,7 +2038,7 @@
       </trans-unit>
       <trans-unit id="3935652819200846577" datatype="html">
         <source>A second way to capture a soldier is against an empty throne.
-        The King has moved and endangered one of its soldiers.&lt;br/&gt;&lt;br/&gt;
+        The king has moved and endangered one of its soldiers.&lt;br/&gt;&lt;br/&gt;
         Capture it.</source>
       </trans-unit>
       <trans-unit id="6149168030196118189" datatype="html">
@@ -2068,7 +2068,7 @@
         Capture the king.</source>
       </trans-unit>
       <trans-unit id="6715271150391313638" datatype="html">
-        <source>The King is dead, long live the King. Congratulations, you won.</source>
+        <source>The king is dead, long live the king. Congratulations, you won.</source>
       </trans-unit>
       <trans-unit id="9155303779171419902" datatype="html">
         <source>You cannot put a new ring after the tenth turn.</source>

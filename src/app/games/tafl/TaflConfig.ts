@@ -7,14 +7,14 @@ export interface TaflConfig {
     // once the king leave the castle he cannot re-station there
     readonly NORMAL_CAPTURE_WORK_ON_THE_KING: boolean;
     // king can be capture by only two opposed invaders
-    readonly CAPTURE_KING_AGAINST_THRONE_RULES: boolean;
+    readonly CAN_CAPTURE_KING_AGAINST_THRONE: boolean;
     // the throne is considered an opponent to the king
-    readonly CAPTURE_PAWN_AGAINST_THRONE_RULES: boolean;
+    readonly CAN_CAPTURE_PAWN_AGAINST_THRONE: boolean;
     // the throne is considered an opponent to the pawn
     readonly THREE_INVADERS_AND_A_BORDER_CAN_CAPTURE_KING: boolean;
     // the king can be captured by only three invaders if he's against the corner
     readonly KING_FAR_FROM_CENTRAL_THRONE_CAN_BE_CAPTURED_NORMALLY: boolean;
-    // the King can be captured by two invader when he don't touch a throne
+    // the king can be captured by two invader when he don't touch a throne
     readonly WIDTH: number;
 
     readonly INVADER: Player;

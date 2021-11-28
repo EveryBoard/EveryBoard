@@ -1,5 +1,5 @@
 import { TablutRules } from '../tablut/TablutRules';
-import { TablutMinimax } from '../TablutMinimax';
+import { TaflMinimax } from '../TaflMinimax';
 import { TaflEncoder, TaflMove } from '../TaflMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
@@ -12,7 +12,7 @@ describe('TaflMove', () => {
             new TaflEncoder(9, (start: Coord, end: Coord) => new MyTaflMove(start, end));
         const rules: TablutRules = TablutRules.get();
         rules.node = rules.node.getInitialNode();
-        const minimax: TablutMinimax = new TablutMinimax(rules, 'TablutMinimax');
+        const minimax: TaflMinimax = new TaflMinimax(rules, 'TablutMinimax');
         const firstTurnMoves: TaflMove[] = minimax.getListMoves(rules.node);
         for (const move of firstTurnMoves) {
             NumberEncoderTestUtils.expectToBeCorrect(encoder, move);

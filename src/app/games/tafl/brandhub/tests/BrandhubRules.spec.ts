@@ -85,7 +85,7 @@ describe('BrandhubRules', () => {
         const expectedState: BrandhubState = new BrandhubState(expectedBoard, 2);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
-    it('should forbid King to move back on the throne', () => {
+    it('should forbid king to move back on the throne', () => {
         // Given a board where the king has the possibility to move back to his throne
         const board: Table<TaflPawn> = [
             [_, _, O, A, _, _, _],
@@ -105,7 +105,7 @@ describe('BrandhubRules', () => {
         const reason: string = TaflFailure.THRONE_IS_LEFT_FOR_GOOD();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
-    it('should allow capturing the King on his throne with 4 soldier', () => {
+    it('should allow capturing the king on his throne with 4 soldier', () => {
         // Given a board where the king is one move ahead from being captured on his throne
         const board: Table<TaflPawn> = [
             [_, _, _, _, _, _, _],
@@ -118,10 +118,10 @@ describe('BrandhubRules', () => {
         ];
         const state: BrandhubState = new BrandhubState(board, 0);
 
-        // When moving a fourth invader next to the King
+        // When moving a fourth invader next to the king
         const move: BrandhubMove = new BrandhubMove(new Coord(1, 2), new Coord(3, 2));
 
-        // Then the King should be captured and the game over
+        // Then the king should be captured and the game over
         const expectedBoard: Table<TaflPawn> = [
             [_, _, _, _, _, _, _],
             [_, X, _, _, _, _, _],
@@ -136,7 +136,7 @@ describe('BrandhubRules', () => {
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
-    it('should allow capturing the King beside his throne with 3 invader', () => {
+    it('should allow capturing the king beside his throne with 3 invader', () => {
         // Given a board where the king is one move ahead from being captured on his throne
         const board: Table<TaflPawn> = [
             [_, _, _, _, _, _, _],
@@ -152,7 +152,7 @@ describe('BrandhubRules', () => {
         // When moving a third piece next to the king
         const move: BrandhubMove = new BrandhubMove(new Coord(1, 1), new Coord(3, 1));
 
-        // Then the King should be captured and the game over
+        // Then the king should be captured and the game over
         const expectedBoard: Table<TaflPawn> = [
             [_, _, _, _, _, _, _],
             [_, _, _, O, _, _, _],
@@ -167,7 +167,7 @@ describe('BrandhubRules', () => {
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
-    it('should allow capturing the King with only two soldier when not touching a throne', () => {
+    it('should allow capturing the king with only two soldier when not touching a throne', () => {
         // Given a board where the king is one move ahead from being captured far from central throne
         const board: Table<TaflPawn> = [
             [_, _, O, _, _, _, _],
@@ -180,10 +180,10 @@ describe('BrandhubRules', () => {
         ];
         const state: BrandhubState = new BrandhubState(board, 0);
 
-        // When moving a second piece next to the King
+        // When moving a second piece next to the king
         const move: BrandhubMove = new BrandhubMove(new Coord(2, 0), new Coord(3, 0));
 
-        // Then the King should be captured and the game over
+        // Then the king should be captured and the game over
         const expectedBoard: Table<TaflPawn> = [
             [_, _, _, O, _, _, _],
             [_, O, _, _, _, _, _],
@@ -198,7 +198,7 @@ describe('BrandhubRules', () => {
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
-    it('should allow capturing the King between one soldier and a corner-throne', () => {
+    it('should allow capturing the king between one soldier and a corner-throne', () => {
         // Given a board where the king is one move ahead from being captured next to corner throne
         const board: Table<TaflPawn> = [
             [_, _, O, _, _, A, _],
@@ -211,10 +211,10 @@ describe('BrandhubRules', () => {
         ];
         const state: BrandhubState = new BrandhubState(board, 0);
 
-        // When moving a second piece next to the King
+        // When moving a second piece next to the king
         const move: BrandhubMove = new BrandhubMove(new Coord(2, 0), new Coord(4, 0));
 
-        // Then the King should be captured and the game over
+        // Then the king should be captured and the game over
         const expectedBoard: Table<TaflPawn> = [
             [_, _, _, _, O, _, _],
             [_, O, _, _, _, _, _],

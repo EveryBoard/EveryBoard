@@ -267,7 +267,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
             if (this.config.KING_FAR_FROM_CENTRAL_THRONE_CAN_BE_CAPTURED_NORMALLY) {
                 return kingCoord;
             }
-            if (this.config.CAPTURE_KING_AGAINST_THRONE_RULES === false) { // ///////////////////////////// 6
+            if (this.config.CAN_CAPTURE_KING_AGAINST_THRONE === false) { // ///////////////////////////// 6
                 return null;
             } // here king is capturable by this empty throne
             if (this.config.NORMAL_CAPTURE_WORK_ON_THE_KING) { // ///////////////////////////////////////// 7
@@ -330,7 +330,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         } else if (nbInvaders === 1) {
             if (this.isEmptyThrone(leftCoord, state) ||
                 this.isEmptyThrone(rightCoord, state)) {
-                if (this.config.CAPTURE_KING_AGAINST_THRONE_RULES) { // ////////////////////// 3
+                if (this.config.CAN_CAPTURE_KING_AGAINST_THRONE) { // ////////////////////// 3
                     // king captured by 1 border, 1 throne, 2 invaders
                     display(TaflRules.VERBOSE || LOCAL_VERBOSE,
                             'king captured by 2 invaders against 1 corner and 1 border');
@@ -379,7 +379,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
                         'cannot capture a pawn without an ally behind');
                 return null;
             } // here, back is an empty throne
-            if (this.config.CAPTURE_PAWN_AGAINST_THRONE_RULES) {
+            if (this.config.CAN_CAPTURE_PAWN_AGAINST_THRONE) {
                 display(TaflRules.VERBOSE || LOCAL_VERBOSE,
                         'pawn captured by 1 opponent and 1 throne; ' +
                         threatenedPieceCoord + 'threatened by ' + player + `'s pawn in  ` + c +
@@ -471,7 +471,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         return MGPOptional.empty();
     }
     public getKingCoord(board: Table<TaflPawn>): MGPOptional<Coord> {
-        display(TaflRules.VERBOSE || true, { TablutRules_getKingCoord: { board, con: this.config } });
+        display(TaflRules.VERBOSE, { TablutRules_getKingCoord: { board, con: this.config } });
 
         for (let y: number = 0; y < this.config.WIDTH; y++) {
             for (let x: number = 0; x < this.config.WIDTH; x++) {

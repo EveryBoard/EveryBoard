@@ -7,14 +7,14 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { TaflPawn } from '../TaflPawn';
 import { TablutState } from '../tablut/TablutState';
-import { TablutPieceAndInfluenceMinimax } from '../TablutPieceAndInfluenceMinimax';
+import { TaflPieceAndInfluenceMinimax } from '../TaflPieceAndInfluenceMinimax';
 import { SandwichThreat } from '../../../jscaip/PieceThreat';
 import { TablutRules } from '../tablut/TablutRules';
 import { TablutMove } from '../tablut/TablutMove';
 
 describe('TablutPieceAndInfluenceMinimax', () => {
 
-    let minimax: TablutPieceAndInfluenceMinimax;
+    let minimax: TaflPieceAndInfluenceMinimax;
     const _: TaflPawn = TaflPawn.UNOCCUPIED;
     const O: TaflPawn = TaflPawn.INVADERS;
     const X: TaflPawn = TaflPawn.DEFENDERS;
@@ -23,7 +23,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
     beforeEach(() => {
         const rules: TablutRules = TablutRules.get();
         rules.node = rules.node.getInitialNode();
-        minimax = new TablutPieceAndInfluenceMinimax(rules, 'TablutPieceAndInfluenceMinimax');
+        minimax = new TaflPieceAndInfluenceMinimax(rules, 'TablutPieceAndInfluenceMinimax');
     });
     it('Should be better of with more piece', () => {
         const weakBoard: Table<TaflPawn> = [
