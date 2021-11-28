@@ -77,7 +77,8 @@ describe('NumberEncoder', () => {
         const encoder1: NumberEncoder<number> = NumberEncoder.numberEncoder(5);
         const encoder2: NumberEncoder<boolean> = NumberEncoder.booleanEncoder;
         const encoder: NumberEncoder<number | boolean> =
-            NumberEncoder.disjunction(encoder1, encoder2,
+            NumberEncoder.disjunction(encoder1,
+                                      encoder2,
                                       (value : number | boolean): value is number => {
                                           return typeof(value) === 'number';
                                       });

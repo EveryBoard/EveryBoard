@@ -23,31 +23,31 @@ describe('DiamMove', () => {
     });
     describe('shift', () => {
         it('should compute the right targets', () => {
-            const move1: DiamMoveShift = new DiamMoveShift(new Coord(4, 0), 'right');
+            const move1: DiamMoveShift = new DiamMoveShift(new Coord(4, 0), 'clockwise');
             expect(move1.getTarget()).toBe(5);
-            const move2: DiamMoveShift = new DiamMoveShift(new Coord(7, 0), 'right');
+            const move2: DiamMoveShift = new DiamMoveShift(new Coord(7, 0), 'clockwise');
             expect(move2.getTarget()).toBe(0);
-            const move3: DiamMoveShift = new DiamMoveShift(new Coord(0, 0), 'left');
+            const move3: DiamMoveShift = new DiamMoveShift(new Coord(0, 0), 'anticlockwise');
             expect(move3.getTarget()).toBe(7);
         });
         it('should correctly redefine equality', () => {
-            const move1: DiamMoveShift = new DiamMoveShift(new Coord(0, 0), 'right');
-            const move2: DiamMoveShift = new DiamMoveShift(new Coord(0, 1), 'right');
-            const move3: DiamMoveShift = new DiamMoveShift(new Coord(0, 0), 'left');
+            const move1: DiamMoveShift = new DiamMoveShift(new Coord(0, 0), 'clockwise');
+            const move2: DiamMoveShift = new DiamMoveShift(new Coord(0, 1), 'clockwise');
+            const move3: DiamMoveShift = new DiamMoveShift(new Coord(0, 0), 'anticlockwise');
             expect(move1.equals(move1)).toBeTrue();
             expect(move1.equals(move2)).toBeFalse();
             expect(move1.equals(move3)).toBeFalse();
         });
         it('should redefine toString', () => {
-            const move: DiamMoveShift = new DiamMoveShift(new Coord(0, 0), 'right');
-            expect(move.toString()).toEqual('DiamMoveShift((0, 0), right)');
+            const move: DiamMoveShift = new DiamMoveShift(new Coord(0, 0), 'clockwise');
+            expect(move.toString()).toEqual('DiamMoveShift((0, 0), clockwise)');
         });
     });
     describe('encoder', () => {
         it('should correctly encode and decode all moves', () => {
             NumberEncoderTestUtils.expectToBeCorrect(DiamMoveEncoder, new DiamMoveDrop(3, DiamPiece.ZERO_FIRST));
-            NumberEncoderTestUtils.expectToBeCorrect(DiamMoveEncoder, new DiamMoveShift(new Coord(3, 3), 'right'));
-            NumberEncoderTestUtils.expectToBeCorrect(DiamMoveEncoder, new DiamMoveShift(new Coord(3, 3), 'left'));
+            NumberEncoderTestUtils.expectToBeCorrect(DiamMoveEncoder, new DiamMoveShift(new Coord(3, 3), 'clockwise'));
+            NumberEncoderTestUtils.expectToBeCorrect(DiamMoveEncoder, new DiamMoveShift(new Coord(3, 3), 'anticlockwise'));
         });
 
     });

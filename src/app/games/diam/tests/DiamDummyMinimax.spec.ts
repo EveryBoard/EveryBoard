@@ -15,20 +15,21 @@ describe('DiamMinimax', () => {
     const B2: DiamPiece = DiamPiece.ONE_SECOND;
 
     beforeEach(() => {
-        rules = new DiamRules(DiamState);
+        rules = DiamRules.get();
         minimax = new DiamDummyMinimax(rules, 'DiamDummyMinimax');
     });
     it('should propose 16 moves at first turn', () => {
+        rules.node = new DiamNode(null, null, DiamState.getInitialState());
         expect(minimax.getListMoves(rules.node).length).toBe(16);
     });
     it('should detect shift moves', () => {
         // given a state there can be a shift
-        const state: DiamState = new DiamState([
+        const state: DiamState = DiamState.fromRepresentation([
             [__, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, A1],
             [B1, __, __, __, __, __, __, B2],
             [A1, __, __, __, __, __, __, A2],
-        ], [2, 3, 3, 3], 4);
+        ], 4);
         rules.node = new DiamNode(null, null, state);
         // then there are 16 + 4 move
         expect(minimax.getListMoves(rules.node).length).toBe(20);

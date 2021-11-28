@@ -3,11 +3,8 @@ import { DiamPiece } from '../DiamPiece';
 
 describe('DiamPiece', () => {
     it('should correctly encode and decode all pieces', () => {
-        for (const piece of [
-            DiamPiece.EMPTY,
-            DiamPiece.ZERO_FIRST, DiamPiece.ZERO_SECOND,
-            DiamPiece.ONE_FIRST, DiamPiece.ONE_SECOND,
-        ]) {
+        NumberEncoderTestUtils.expectToBeCorrect(DiamPiece.encoder, DiamPiece.EMPTY);
+        for (const piece of DiamPiece.PLAYER_PIECES) {
             NumberEncoderTestUtils.expectToBeCorrect(DiamPiece.encoder, piece);
         }
     });

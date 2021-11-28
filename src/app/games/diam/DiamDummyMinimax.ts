@@ -12,52 +12,71 @@ import { DiamState } from './DiamState';
 export class DiamDummyMinimax extends Minimax<DiamMove, DiamState, LegalityStatus> {
     public getListMoves(node: DiamNode): DiamMove[] {
         const state: DiamState = node.gameState;
-        const moves: DiamMove[] = [];
-        const remainingPieces: DiamPiece[] = this.getRemainingPiecesForCurrentPlayer(state);
+        const drops: DiamMove[] = this.getListDrops(state);
+        const shifts: DiamMove[] = this.getListShifts(state);
+        return drops.concat(shifts);
+    }
+    private getListShifts(state: DiamState): DiamMoveShift[] {
+        const shifts: DiamMoveShift[] = [];
         const shiftSources: Coord[] = this.getShiftSources(state);
-        for (let x: number = 0; x < 8; x++) {
+        for (let x: number = 0; x < DiamState.WIDTH; x++) {
             const height: number = state.getStackHeight(x);
-            for (let y: number = 3; y >= 0; y--) {
+            for (let y: number = 0; y < DiamState.HEIGHT; y++) {
                 const piece: DiamPiece = state.getPieceAtXY(x, y);
                 if (piece === DiamPiece.EMPTY) {
                     // it can be the target for a drop or a shift
                     for (const shiftSource of shiftSources) {
-                        if (state.getStackHeight(shiftSource.x) - (3 - shiftSource.y) + height <= 4) {
-
-                            if ((shiftSource.x + 1) % 8 === x) {
-                                moves.push(new DiamMoveShift(shiftSource, 'right'));
+                        const movedHeight: number = state.getStackHeight(shiftSource.x) - shiftSource.y;
+                        const resultingHeight: number = height + movedHeight;
+                        if (resultingHeight < DiamState.HEIGHT) {
+                            if ((shiftSource.x + 1) % DiamState.WIDTH === x) {
+                                shifts.push(new DiamMoveShift(shiftSource, 'clockwise'));
                             }
-                            if ((shiftSource.x + 7) % 8 === x) {
-                                moves.push(new DiamMoveShift(shiftSource, 'left'));
+                            if ((shiftSource.x + (DiamState.WIDTH-1)) % DiamState.WIDTH === x) {
+                                shifts.push(new DiamMoveShift(shiftSource, 'anticlockwise'));
                             }
                         }
                     }
-                    for (const piece of remainingPieces) {
-                        moves.push(new DiamMoveDrop(x, piece));
-                    }
-                    break; // no need to continue iterating on y
+                    break; // no need to continue iterating on this y
                 }
             }
         }
-        return moves;
+        return shifts;
+    }
+    private getListDrops(state: DiamState): DiamMoveDrop[] {
+        const remainingPieces: DiamPiece[] = this.getRemainingPiecesForCurrentPlayer(state);
+        const drops: DiamMoveDrop[] = [];
+        for (let x: number = 0; x < DiamState.WIDTH; x++) {
+            for (let y: number = 0; y < DiamState.HEIGHT; y++) {
+                const piece: DiamPiece = state.getPieceAtXY(x, y);
+                if (piece === DiamPiece.EMPTY) {
+                    // it can be the target for a drop
+                    for (const piece of remainingPieces) {
+                        drops.push(new DiamMoveDrop(x, piece));
+                    }
+                    break; // no need to continue iterating on this y
+                }
+            }
+        }
+        return drops;
     }
     private getRemainingPiecesForCurrentPlayer(state: DiamState): DiamPiece[] {
         const pieces: DiamPiece[] = [];
-        for (const piece of [
-            DiamPiece.ZERO_FIRST, DiamPiece.ZERO_SECOND,
-            DiamPiece.ONE_FIRST, DiamPiece.ONE_SECOND,
-        ]) {
-            if (state.getCurrentPlayer() === piece.owner &&
-                state.getRemainingPiecesOf(piece) > 0) {
+        for (const piece of DiamPiece.PLAYER_PIECES) {
+            if (this.currentPlayerCanDropPiece(state, piece)) {
                 pieces.push(piece);
             }
         }
         return pieces;
     }
+    private currentPlayerCanDropPiece(state: DiamState, piece: DiamPiece): boolean {
+        return state.getCurrentPlayer() === piece.owner &&
+            state.getRemainingPiecesOf(piece) > 0;
+    }
     private getShiftSources(state: DiamState): Coord[] {
         const sources: Coord[] = [];
         const player: Player = state.getCurrentPlayer();
-        for (let y: number = 3; y >= 0; y--) {
+        for (let y: number = 0; y < DiamState.HEIGHT; y++) {
             for (let x: number = 0; x < DiamState.WIDTH; x++) {
                 if (state.getPieceAtXY(x, y).owner === player) {
                     sources.push(new Coord(x, y));
@@ -67,7 +86,7 @@ export class DiamDummyMinimax extends Minimax<DiamMove, DiamState, LegalityStatu
         return sources;
     }
     public getBoardValue(node: DiamNode): NodeUnheritance {
-        const gameStatus: GameStatus = DiamRules.singleton.getGameStatus(node);
+        const gameStatus: GameStatus = DiamRules.get().getGameStatus(node);
         if (gameStatus.isEndGame) {
             return new NodeUnheritance(gameStatus.toBoardValue());
         }

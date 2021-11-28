@@ -22,7 +22,7 @@ describe('DiamRules', () => {
     let minimaxes: Minimax<DiamMove, DiamState>[];
 
     beforeEach(() => {
-        rules = new DiamRules(DiamState);
+        rules = DiamRules.get();
         minimaxes = [
             new DiamDummyMinimax(rules, 'DiamDummyMinimax'),
         ];
@@ -36,12 +36,12 @@ describe('DiamRules', () => {
             const move: DiamMove = new DiamMoveDrop(0, A1);
             // then the piece goes to the bottom of that space
             // and there is one less piece of that type
-            const expectedState: DiamState = new DiamState([
+            const expectedState: DiamState = DiamState.fromRepresentation([
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __, __],
                 [A1, __, __, __, __, __, __, __],
-            ], [3, 4, 4, 4], 1);
+            ], 1);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it('should forbid dropping a piece from the opponent', () => {
@@ -54,25 +54,25 @@ describe('DiamRules', () => {
         });
         it('should forbid dropping on a space that is full', () => {
             // given a state where one space is already full
-            const state: DiamState = new DiamState([
+            const state: DiamState = DiamState.fromRepresentation([
                 [B1, __, __, __, __, __, __, __],
                 [A1, __, __, __, __, __, __, __],
                 [B1, __, __, __, __, __, __, __],
                 [A1, __, __, __, __, __, __, __],
-            ], [2, 4, 2, 4], 0);
+            ], 0);
             // when dropping a piece in a full space
             const move: DiamMove = new DiamMoveDrop(0, A2);
             // then the move is illegal
-            RulesUtils.expectMoveFailure(rules, state, move, DiamFailure.STACK_IS_FULL());
+            RulesUtils.expectMoveFailure(rules, state, move, DiamFailure.SPACE_IS_FULL());
         });
         it('should forbid dropping a piece that is not remaining', () => {
             // given a state where the player is out of one of its pieces
-            const state: DiamState = new DiamState([
+            const state: DiamState = DiamState.fromRepresentation([
                 [A1, __, B1, __, __, __, __, __],
                 [A1, __, B1, __, __, __, __, __],
                 [A1, __, B1, __, __, __, __, __],
                 [A1, __, B1, __, __, __, __, __],
-            ], [0, 4, 0, 4], 0);
+            ], 0);
             // when dropping a piece that is not remaining
             const move: DiamMove = new DiamMoveDrop(1, A1);
             // then the move is illegal
@@ -82,83 +82,83 @@ describe('DiamRules', () => {
     describe('shift moves', () => {
         it('should allow moving a stack where the first piece is owned by the player', () => {
             // given a state where a shift can be made
-            const state: DiamState = new DiamState([
+            const state: DiamState = DiamState.fromRepresentation([
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __, __],
                 [B1, __, __, __, __, __, __, B2],
                 [A1, __, __, __, __, __, __, A2],
-            ], [3, 3, 3, 3], 4);
-            // when moving the stack starting at A2 to the right
-            const move: DiamMove = new DiamMoveShift(new Coord(7, 3), 'right');
+            ], 4);
+            // when moving the stack starting at A2 clockwise
+            const move: DiamMove = DiamMoveShift.fromRepresentation(new Coord(7, 3), 'clockwise');
             // then the move suceeds and the stack is moved on top of the other one
-            const expectedState: DiamState = new DiamState([
+            const expectedState: DiamState = DiamState.fromRepresentation([
                 [B2, __, __, __, __, __, __, __],
                 [A2, __, __, __, __, __, __, __],
                 [B1, __, __, __, __, __, __, __],
                 [A1, __, __, __, __, __, __, __],
-            ], [3, 3, 3, 3], 5);
+            ], 5);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it('should allow moving from the middle of a stack', () => {
             // given a state where a shift can be made
-            const state: DiamState = new DiamState([
+            const state: DiamState = DiamState.fromRepresentation([
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __, __],
                 [A1, __, __, __, __, __, __, B2],
                 [B1, __, __, __, __, __, __, A2],
-            ], [3, 3, 3, 3], 4);
-            // when moving the stack starting at A1 to the left
-            const move: DiamMove = new DiamMoveShift(new Coord(0, 2), 'left');
+            ], 4);
+            // when moving the stack starting at A1 anticlockwise
+            const move: DiamMove = DiamMoveShift.fromRepresentation(new Coord(0, 2), 'anticlockwise');
             // then the move is legal
-            const expectedState: DiamState = new DiamState([
+            const expectedState: DiamState = DiamState.fromRepresentation([
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __, A1],
                 [__, __, __, __, __, __, __, B2],
                 [B1, __, __, __, __, __, __, A2],
-            ], [3, 3, 3, 3], 5);
+            ], 5);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it('should allow moving a full stack', () => {
             // given a state where a shift can be made
-            const state: DiamState = new DiamState([
+            const state: DiamState = DiamState.fromRepresentation([
                 [B2, __, __, __, __, __, __, __],
                 [A2, __, __, __, __, __, __, __],
                 [B1, __, __, __, __, __, __, __],
                 [A1, __, __, __, __, __, __, __],
-            ], [3, 3, 3, 3], 4);
-            // when moving the stack starting at A1 to the left
-            const move: DiamMove = new DiamMoveShift(new Coord(0, 3), 'left');
+            ], 4);
+            // when moving the stack starting at A1 anticlockwise
+            const move: DiamMove = DiamMoveShift.fromRepresentation(new Coord(0, 3), 'anticlockwise');
             // then the move is legal
-            const expectedState: DiamState = new DiamState([
+            const expectedState: DiamState = DiamState.fromRepresentation([
                 [__, __, __, __, __, __, __, B2],
                 [__, __, __, __, __, __, __, A2],
                 [__, __, __, __, __, __, __, B1],
                 [__, __, __, __, __, __, __, A1],
-            ], [3, 3, 3, 3], 5);
+            ], 5);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
         it('should forbid moving a stack if the first piece is not owned by the player', () => {
-            const state: DiamState = new DiamState([
+            const state: DiamState = DiamState.fromRepresentation([
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __, A1],
                 [B1, __, __, __, __, __, __, B2],
                 [A1, __, __, __, __, __, __, A2],
-            ], [2, 3, 3, 3], 4);
-            // when moving the stack starting at B2 to the right
-            const move: DiamMove = new DiamMoveShift(new Coord(7, 2), 'right');
+            ], 4);
+            // when moving the stack starting at B2 clockwise
+            const move: DiamMove = DiamMoveShift.fromRepresentation(new Coord(7, 2), 'clockwise');
             // then the move is not legal
             RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         });
         it('should forbid moving a stack if the receiving space will become too high', () => {
             // given a state where a shift would result in a too high stack
-            const state: DiamState = new DiamState([
+            const state: DiamState = DiamState.fromRepresentation([
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __, A1],
                 [B1, __, __, __, __, __, __, B2],
                 [A1, __, __, __, __, __, __, A2],
-            ], [2, 3, 3, 3], 4);
-            // when moving the stack starting at A2 to the right
-            const move: DiamMove = new DiamMoveShift(new Coord(7, 3), 'right');
+            ], 4);
+            // when moving the stack starting at A2 clockwise
+            const move: DiamMove = DiamMoveShift.fromRepresentation(new Coord(7, 3), 'clockwise');
             // then the move is not legal
             RulesUtils.expectMoveFailure(rules, state, move, DiamFailure.TARGET_STACK_TOO_HIGH());
         });
@@ -166,7 +166,7 @@ describe('DiamRules', () => {
             // given a state where no shifts are possible
             const state: DiamState = DiamState.getInitialState();
             // when moving a non-existing stack
-            const move: DiamMove = new DiamMoveShift(new Coord(0, 1), 'right');
+            const move: DiamMove = DiamMoveShift.fromRepresentation(new Coord(0, 1), 'clockwise');
             // then the move is not legal
             RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         });
@@ -174,48 +174,48 @@ describe('DiamRules', () => {
     describe('winning configurations', () => {
         it('should not consider ground alignment as win', () => {
             // given a state where there is an alignment on the first level
-            const state: DiamState = new DiamState([
+            const state: DiamState = DiamState.fromRepresentation([
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __, __],
                 [A1, __, __, __, __, __, __, __],
                 [B1, __, __, __, B1, __, __, __],
-            ], [3, 4, 2, 4], 3);
+            ], 3);
             const node: DiamNode = new DiamNode(null, null, state);
             // then the game is still ongoing
             RulesUtils.expectToBeOngoing(rules, node, minimaxes);
         });
         it('should not consider non-facing alignment as win', () => {
             // given a state where there is an alignment but not face-to-face
-            const state: DiamState = new DiamState([
+            const state: DiamState = DiamState.fromRepresentation([
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __, __],
                 [A1, A1, __, __, __, __, __, __],
                 [B1, B2, __, __, __, __, __, __],
-            ], [2, 4, 3, 3], 4);
+            ], 4);
             const node: DiamNode = new DiamNode(null, null, state);
             // then the game is still ongoing
             RulesUtils.expectToBeOngoing(rules, node, minimaxes);
         });
         it('should detect player 0 win with face-to-face alignment', () => {
             // given a state where player zero has a face-to-face alignment
-            const state: DiamState = new DiamState([
+            const state: DiamState = DiamState.fromRepresentation([
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __, __],
                 [A1, __, __, __, A1, __, __, __],
                 [B1, __, __, __, B2, __, __, __],
-            ], [2, 4, 3, 3], 4);
+            ], 4);
             const node: DiamNode = new DiamNode(null, null, state);
             // then it is detected as a v ictory for player zero
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
         });
         it('should detect win when two alignments happen in the same turn', () => {
             // given a board where two alignment exist, but player one has a higher alignment
-            const state: DiamState = new DiamState([
+            const state: DiamState = DiamState.fromRepresentation([
                 [__, __, __, __, __, __, __, __],
                 [B2, __, __, __, B2, __, __, __],
                 [A1, __, __, __, A1, __, __, __],
                 [B1, __, __, __, B2, __, __, __],
-            ], [2, 4, 3, 1], 4);
+            ], 4);
             const node: DiamNode = new DiamNode(null, null, state);
             // then the winner is the one with the highest alignment
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);

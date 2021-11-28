@@ -8,6 +8,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { assert } from 'src/app/utils/utils';
 import { DiamDummyMinimax } from './DiamDummyMinimax';
 import { DiamFailure } from './DiamFailure';
 import { DiamMove, DiamMoveDrop, DiamMoveEncoder, DiamMoveShift } from './DiamMove';
@@ -17,19 +18,19 @@ import { DiamState } from './DiamState';
 import { DiamTutorial } from './DiamTutorial';
 
 interface ViewInfo {
-    boardInfo: CaseInfo[],
+    boardInfo: SpaceInfo[],
     remainingPieces: PieceInfo[],
 }
 
-interface CaseInfo {
+interface SpaceInfo {
     x: number,
-    caseClasses: string[],
+    spaceClasses: string[],
     pieces: PieceInfo[],
 }
 
 interface PieceInfo {
-    bgClasses: string[],
-    fgClasses: string[],
+    backgroundClasses: string[],
+    foregroundClasses: string[],
     y: number,
     animate: boolean,
     drawPositionStart: MGPOptional<Coord>,
@@ -84,8 +85,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
         'm 166.97969,426.86815 v 40.08638 l 268.28379,-0.0433 v -40.08031 z',
         'm 2.8324855,277.57297 v 40.08636 L 166.97969,466.94782 v -40.08636 z',
     ];
-    public selected: Selected | null = null; // TODO: use MGPOptional after strictness merge
-    public lastMoved: LastMoved[] = [];
+    public selected: MGPOptional<Selected> = MGPOptional.empty();
 
     public viewInfo: ViewInfo = {
         boardInfo: [],
@@ -93,7 +93,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
     };
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = new DiamRules(DiamState);
+        this.rules = DiamRules.get();
         this.availableMinimaxes = [
             new DiamDummyMinimax(this.rules, 'DiamDummyMinimax'),
         ];
@@ -101,29 +101,30 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
         this.tutorial = new DiamTutorial().tutorial;
         this.updateBoard();
     }
-    public async onCaseClick(x: number): Promise<MGPValidation> {
+    public async onSpaceClick(x: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
 
-        return this.onCaseClickAfterCheck(x);
+        return this.onSpaceClickAfterCheck(x);
     }
-    private async onCaseClickAfterCheck(x: number): Promise<MGPValidation> {
-        if (this.selected != null) {
+    private async onSpaceClickAfterCheck(x: number): Promise<MGPValidation> {
+        if (this.selected.isPresent()) {
+            const selected: Selected = this.selected.get();
             let move: DiamMove;
-            if (this.selected.type === 'pieceFromReserve') {
-                move = new DiamMoveDrop(x, this.selected.piece);
+            if (selected.type === 'pieceFromReserve') {
+                move = new DiamMoveDrop(x, selected.piece);
             } else {
-                if ((this.selected.position.x + 1) % 8 === x) {
-                    move = new DiamMoveShift(this.selected.position, 'right');
-                } else if ((this.selected.position.x + 7) % 8 === x) {
-                    move = new DiamMoveShift(this.selected.position, 'left');
+                if ((selected.position.x + 1) % DiamState.WIDTH === x) {
+                    move = new DiamMoveShift(selected.position, 'clockwise');
+                } else if ((selected.position.x + (DiamState.WIDTH-1)) % DiamState.WIDTH === x) {
+                    move = new DiamMoveShift(selected.position, 'anticlockwise');
                 } else {
-                    return this.cancelMove(DiamFailure.MUST_SHIFT_LEFT_OR_RIGHT());
+                    return this.cancelMove(DiamFailure.MUST_SHIFT_TO_NEIGHBOR());
                 }
             }
-            return this.chooseMove(move, this.rules.node.gameState, null, null);
+            return this.chooseMove(move, this.getState(), null, null);
         } else {
             return this.cancelMove(DiamFailure.MUST_SELECT_PIECE_FIRST());
         }
@@ -133,11 +134,11 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        if (this.selected != null) {
-            return this.onCaseClickAfterCheck(x);
+        if (this.selected.isPresent()) {
+            return this.onSpaceClickAfterCheck(x);
         }
-        if (this.rules.node.gameState.getPieceAtXY(x, y).owner === this.rules.node.gameState.getCurrentPlayer()) {
-            this.selected = { type: 'pieceFromBoard', position: new Coord(x, y) };
+        if (this.getState().getPieceAtXY(x, y).owner === this.getCurrentPlayer()) {
+            this.selected = MGPOptional.of({ type: 'pieceFromBoard', position: new Coord(x, y) });
             this.updateViewInfo();
             return MGPValidation.SUCCESS;
         } else {
@@ -145,51 +146,51 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
         }
     }
     public async onRemainingPieceClick(piece: DiamPiece): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#piece_' + piece.owner.value + '_' + (piece.otherPieceType ? 1 : 0));
+        const clickValidity: MGPValidation = this.canUserPlay(this.getPieceId(piece));
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
 
-        if (piece.owner === this.rules.node.gameState.getCurrentPlayer()) {
-            this.selected = { type: 'pieceFromReserve', piece };
+        if (piece.owner === this.getCurrentPlayer()) {
+            this.selected = MGPOptional.of({ type: 'pieceFromReserve', piece });
             this.updateViewInfo();
             return MGPValidation.SUCCESS;
         } else {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
     }
+    private getPieceId(piece: DiamPiece): string {
+        return '#piece_' + piece.owner.value + '_' + (piece.otherPieceType ? 1 : 0);
+    }
     public updateBoard(): void {
         const lastMove: DiamMove | null = this.rules.node.move;
-        if (lastMove != null) {
-            const previousState: DiamState = this.rules.node.mother.gameState;
-            if (lastMove.isDrop()) {
-                this.lastMoved = this.getLastMovedFromDrop(lastMove, previousState);
-            } else {
-                this.lastMoved = this.getLastMovedFromShift(lastMove, previousState);
-            }
-        }
         this.updateViewInfo();
+        if (lastMove != null) {
+            this.showLastMove();
+        }
     }
     private getLastMovedFromDrop(drop: DiamMoveDrop, stateBefore: DiamState): LastMoved[] {
         const startDrawPosition: Coord =
             this.getDrawPositionRemainingPiece(drop.piece, stateBefore.getRemainingPiecesOf(drop.piece)-1);
         const x: number = drop.getTarget();
-        const y: number = 3 - stateBefore.getStackHeight(drop.getTarget());
+        const y: number = stateBefore.getStackHeight(drop.getTarget());
         const endDrawPosition: Coord = this.getDrawPositionOnBoard(x, y);
         const end: Coord = new Coord(x, y);
         return [{
-            start: MGPOptional.empty(), end,
-            startDrawPosition, endDrawPosition,
+            start: MGPOptional.empty(),
+            end,
+            startDrawPosition,
+            endDrawPosition,
         }];
     }
     private getLastMovedFromShift(shift: DiamMoveShift, stateBefore: DiamState): LastMoved[] {
         const sourceX: number = shift.start.x;
         const destinationX: number = shift.getTarget();
-        let destinationY: number = 3 - stateBefore.getStackHeight(destinationX);
+        let destinationY: number = stateBefore.getStackHeight(destinationX);
         const lastMoved: LastMoved[] = [];
         for (let sourceY: number = shift.start.y;
-            sourceY >= 0 && stateBefore.getPieceAtXY(sourceX, sourceY) !== DiamPiece.EMPTY;
-            sourceY--, destinationY--) {
+            sourceY < DiamState.HEIGHT && stateBefore.getPieceAtXY(sourceX, sourceY) !== DiamPiece.EMPTY;
+            sourceY++, destinationY++) {
             lastMoved.push({
                 start: MGPOptional.of(new Coord(sourceX, sourceY)),
                 end: new Coord(destinationX, destinationY),
@@ -200,33 +201,74 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
         return lastMoved;
     }
     private updateViewInfo(): void {
+        this.updateBoardInfo();
+        this.updateRemainingPiecesInfo();
+    }
+    private updateBoardInfo(): void {
         for (let x: number = 0; x < DiamState.WIDTH; x++) {
             this.viewInfo.boardInfo[x] = {
                 x,
-                caseClasses: this.getCaseClasses(x),
+                spaceClasses: [], // will be filled in showLastMove
                 pieces: this.getPieces(x),
             };
         }
+    }
+    private showLastMove(): void {
+        this.showLastMoveOnSpaces();
+        this.showLastMoveOnPieces();
+    }
+    private showLastMoveOnSpaces(): void {
+        const lastMove: DiamMove | null = this.rules.node.move;
+        assert(lastMove != null, 'showLastMoveOnSpaces called without a last move');
+        for (let x: number = 0; x < DiamState.WIDTH; x++) {
+            const classes: string[] = [];
+            if (lastMove.isDrop()) {
+                if (lastMove.getTarget() === x) {
+                    classes.push('moved');
+                }
+            } else {
+                if (lastMove.getTarget() === x || lastMove.start.x === x) {
+                    classes.push('moved');
+                }
+            }
+            this.viewInfo.boardInfo[x].spaceClasses = classes;
+        }
+    }
+    private showLastMoveOnPieces(): void {
+        const lastMove: DiamMove | null = this.rules.node.move;
+        assert(lastMove != null, 'showLastMoveOnPieces called without a last move');
+        const previousState: DiamState = this.getPreviousState();
+        let lastMoved: LastMoved[] = [];
+        if (lastMove.isDrop()) {
+            lastMoved = this.getLastMovedFromDrop(lastMove, previousState);
+        } else {
+            lastMoved = this.getLastMovedFromShift(lastMove, previousState);
+        }
+        for (const movedPiece of lastMoved) {
+            const x: number = movedPiece.end.x;
+            const y: number = movedPiece.end.y;
+            this.viewInfo.boardInfo[x].pieces[y].foregroundClasses.push('last-move');
+            this.viewInfo.boardInfo[x].pieces[y].animate = true;
+            this.viewInfo.boardInfo[x].pieces[y].drawPositionStart = MGPOptional.of(movedPiece.startDrawPosition);
+        }
+    }
+    private updateRemainingPiecesInfo(): void {
         const currentPlayer: Player = this.getCurrentPlayer();
         this.viewInfo.remainingPieces = [];
         for (const piece of DiamPiece.PLAYER_PIECES) {
-            const remaining: number = this.rules.node.gameState.getRemainingPiecesOf(piece);
+            const remaining: number = this.getState().getRemainingPiecesOf(piece);
             for (let y: number = 0; y < remaining; y++) {
-                const fgClasses: string[] = [];
-                if (this.selected != null &&
-                    this.selected.type === 'pieceFromReserve' &&
-                    this.selected.piece === piece &&
-                    y === remaining-1) {
-                    // highlight the top piece of the remaining pieces stack if it is selected
-                    fgClasses.push('highlighted');
+                const foregroundClasses: string[] = [];
+                if (this.isTopPieceOfReserveAndSelected(y, remaining, piece)) {
+                    foregroundClasses.push('highlighted');
                 }
                 if (y === remaining-1 && piece.owner === currentPlayer) {
                     // Only let the top piece be clickable
-                    fgClasses.push('clickable-hover');
+                    foregroundClasses.push('clickable-hover');
                 }
                 this.viewInfo.remainingPieces.push({
-                    bgClasses: ['player' + piece.owner.value + (piece.otherPieceType ? '-alternate' : '')],
-                    fgClasses,
+                    backgroundClasses: ['player' + piece.owner.value + (piece.otherPieceType ? '-alternate' : '')],
+                    foregroundClasses,
                     y,
                     animate: false,
                     drawPositionEnd: this.getDrawPositionRemainingPiece(piece, y),
@@ -234,6 +276,16 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
                     actualPiece: piece,
                 });
             }
+        }
+    }
+    private isTopPieceOfReserveAndSelected(y: number, remainingPiecesOfThatType: number, piece: DiamPiece): boolean {
+        if (this.selected.isPresent()) {
+            const selected: Selected = this.selected.get();
+            return selected.type === 'pieceFromReserve' &&
+                selected.piece === piece &&
+                y === remainingPiecesOfThatType-1;
+        } else {
+            return false;
         }
     }
     private getDrawPositionRemainingPiece(piece: DiamPiece, y: number): Coord {
@@ -251,58 +303,29 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
         }
         return new Coord(x, initialY).getNext(new Vector(0, -y*DiamComponent.PIECE_HEIGHT));
     }
-    private getCaseClasses(x: number): string[] {
-        const lastMove: DiamMove | null = this.rules.node.move;
-        if (lastMove != null) {
-            if (lastMove.isDrop()) {
-                if (lastMove.getTarget() === x) {
-                    return ['moved'];
-                }
-            } else {
-                if (lastMove.getTarget() === x || lastMove.start.x === x) {
-                    return ['moved'];
-                }
-            }
-        }
-        return [];
-    }
     private getPieces(x: number): PieceInfo[] {
-        const highestAlignment: MGPOptional<Coord> = this.rules.findHighestAlignment(this.rules.node.gameState);
+        const highestAlignment: MGPOptional<Coord> = this.rules.findHighestAlignment(this.getState());
         const infos: PieceInfo[] = [];
-        for (let y: number = DiamState.HEIGHT-1; y >= 0; y--) {
-            const piece: DiamPiece = this.rules.node.gameState.getPieceAtXY(x, y);
+        for (let y: number = 0; y < DiamState.HEIGHT; y++) {
+            const piece: DiamPiece = this.getState().getPieceAtXY(x, y);
             const coord: Coord = new Coord(x, y);
             if (piece !== DiamPiece.EMPTY) {
-                const fgClasses: string[] = [];
-                let animate: boolean = false;
-                let drawPositionStart: MGPOptional<Coord> = MGPOptional.empty();
-                if (this.selected != null &&
-                    this.selected.type === 'pieceFromBoard' &&
-                    this.selected.position.x === x &&
-                    this.selected.position.y === y) {
-                    fgClasses.push('highlighted');
+                const foregroundClasses: string[] = [];
+                if (this.pieceFromBoardIsSelected(x, y)) {
+                    foregroundClasses.push('highlighted');
                 }
-                if (this.lastMoved.some((movedPiece: LastMoved) => movedPiece.end.equals(coord))) {
-                    fgClasses.push('last-move');
-                    animate = true;
-                    drawPositionStart = MGPOptional.ofNullable(
-                        this.lastMoved.find((movedPiece: LastMoved) =>
-                            movedPiece.end.equals(coord)).startDrawPosition);
+                if (this.isVictory(x, y, highestAlignment)) {
+                    foregroundClasses.push('victory-stroke');
                 }
-                if (highestAlignment.isPresent() &&
-                    (highestAlignment.get().x % 4) === (x % 4) &&
-                    highestAlignment.get().y === y) {
-                    fgClasses.push('victory-stroke');
-                }
-                if (this.rules.pieceCanMove(this.rules.node.gameState, coord)) {
-                    fgClasses.push('clickable-hover');
+                if (this.rules.pieceCanMove(this.getState(), coord)) {
+                    foregroundClasses.push('clickable-hover');
                 }
                 infos.push({
-                    bgClasses: ['player' + piece.owner.value + (piece.otherPieceType ? '-alternate' : '')],
-                    fgClasses,
+                    backgroundClasses: ['player' + piece.owner.value + (piece.otherPieceType ? '-alternate' : '')],
+                    foregroundClasses,
                     y,
-                    animate,
-                    drawPositionStart,
+                    animate: false,
+                    drawPositionStart: MGPOptional.empty(),
                     drawPositionEnd: this.getDrawPositionOnBoard(x, y),
                     actualPiece: piece,
                 });
@@ -310,11 +333,28 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
         }
         return infos;
     }
+    private pieceFromBoardIsSelected(x: number, y: number): boolean {
+        if (this.selected.isPresent()) {
+            const selected: Selected = this.selected.get();
+            return selected.type === 'pieceFromBoard' &&
+                selected.position.x === x &&
+                selected.position.y === y;
+        } else {
+            return false;
+        }
+    }
+    private isVictory(x: number, y: number, highestAlignment: MGPOptional<Coord>): boolean {
+        if (highestAlignment.isPresent()) {
+            const alignmentCoord: Coord = highestAlignment.get();
+            return alignmentCoord.x % 4 === x % 4 && alignmentCoord.y === y;
+        }
+        return false;
+    }
     private getDrawPositionOnBoard(x: number, y: number): Coord {
-        return DiamComponent.CENTER[x].getNext(new Vector(0, (y-3)*DiamComponent.PIECE_HEIGHT));
+        return DiamComponent.CENTER[x].getNext(new Vector(0, -y*DiamComponent.PIECE_HEIGHT));
     }
     public cancelMoveAttempt(): void {
-        this.selected = null;
+        this.selected = MGPOptional.empty();
         this.updateBoard();
     }
 }

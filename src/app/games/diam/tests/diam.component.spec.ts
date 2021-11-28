@@ -41,12 +41,12 @@ describe('DiamComponent', () => {
     }));
     it('should consider a piece in game click as a space click if a piece is selected for better usability', fakeAsync(async() => {
         // given a state where there are already pieces in game
-        const state: DiamState = new DiamState([
+        const state: DiamState = DiamState.fromRepresentation([
             [__, __, __, __, __, __, __, __],
             [A1, __, __, __, __, __, __, __],
             [B1, __, __, __, __, __, __, __],
             [A1, __, __, __, __, __, __, __],
-        ], [2, 4, 3, 4], 0);
+        ], 0);
         testUtils.setupState(state);
         // when clicking on a remaining piece and then on a piece in game
         // then the move is made to the corresponding space
@@ -56,102 +56,105 @@ describe('DiamComponent', () => {
     }));
     it('should forbid dropping on a full stack', fakeAsync(async() => {
         // given a state where one stack is already full
-        const state: DiamState = new DiamState([
+        const state: DiamState = DiamState.fromRepresentation([
             [B1, __, __, __, __, __, __, __],
             [A1, __, __, __, __, __, __, __],
             [B1, __, __, __, __, __, __, __],
             [A1, __, __, __, __, __, __, __],
-        ], [2, 4, 2, 4], 0);
+        ], 0);
         testUtils.setupState(state);
         // when dropping a piece on the full stack
-        // then the move is rejected
         await testUtils.expectClickSuccess('#piece_0_0');
-        await testUtils.expectMoveFailure('#click_0', DiamFailure.STACK_IS_FULL(),
-                                          new DiamMoveDrop(0, DiamPiece.ZERO_FIRST));
+        const move: DiamMove = new DiamMoveDrop(0, DiamPiece.ZERO_FIRST);
+        // then the move is rejected
+        const reason: string = DiamFailure.SPACE_IS_FULL();
+        await testUtils.expectMoveFailure('#click_0', reason, move);
     }));
     it('should not let the user select a piece that is not available', fakeAsync(async() => {
         // given a state where one piece is not available
-        const state: DiamState = new DiamState([
+        const state: DiamState = DiamState.fromRepresentation([
             [A1, B1, __, __, __, __, __, __],
             [A1, B1, __, __, __, __, __, __],
             [A1, B1, __, __, __, __, __, __],
             [A1, B1, __, __, __, __, __, __],
-        ], [0, 4, 0, 4], 0);
+        ], 0);
+        // when rendering the state
         testUtils.setupState(state);
         // then it is impossible to select that piece
         testUtils.expectElementNotToExist('#piece_0_0');
     }));
     it('should allow shift by clicking the piece and then the target', fakeAsync(async() => {
         // given a state where a shift can be made
-        const state: DiamState = new DiamState([
+        const state: DiamState = DiamState.fromRepresentation([
             [__, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __],
             [B1, __, __, __, __, __, __, B2],
             [A1, __, __, __, __, __, __, A2],
-        ], [3, 3, 3, 3], 4);
+        ], 4);
         testUtils.setupState(state);
-        // when clicking on A2 and then on the first column
+        // when clicking on A2 (in 7, 0) and then on the first column (0)
+        await testUtils.expectClickSuccess('#click_7_0');
+        const move: DiamMove = DiamMoveShift.fromRepresentation(new Coord(7, 3), 'clockwise');
         // then the move is legal
-        await testUtils.expectClickSuccess('#click_7_3');
-        const move: DiamMove = new DiamMoveShift(new Coord(7, 3), 'right');
         await testUtils.expectMoveSuccess('#click_0', move);
     }));
     it('should allow shift from a piece in the middle of a stack', fakeAsync(async() => {
         // given a state where a shift can be made
-        const state: DiamState = new DiamState([
+        const state: DiamState = DiamState.fromRepresentation([
             [__, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __],
             [A1, __, __, __, __, __, __, B2],
             [B1, __, __, __, __, __, __, A2],
-        ], [3, 3, 3, 3], 4);
+        ], 4);
         testUtils.setupState(state);
         // when clicking on A1 and then on the last column
         // then the move is legal
-        await testUtils.expectClickSuccess('#click_0_2');
-        const move: DiamMove = new DiamMoveShift(new Coord(0, 2), 'left');
+        await testUtils.expectClickSuccess('#click_0_1');
+        const move: DiamMove = DiamMoveShift.fromRepresentation(new Coord(0, 2), 'anticlockwise');
         await testUtils.expectMoveSuccess('#click_7', move);
     }));
     it('should forbid shift of more than one space', fakeAsync(async() => {
         // given a state
-        const state: DiamState = new DiamState([
+        const state: DiamState = DiamState.fromRepresentation([
             [__, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, B2],
             [__, __, __, __, __, __, __, A2],
-        ], [4, 4, 3, 3], 4);
+        ], 4);
         testUtils.setupState(state);
         // when clicking on A2 and then somewhere else than the first line
         // then the move is not legal
-        await testUtils.expectClickSuccess('#click_7_3');
-        await testUtils.expectClickFailure('#click_2', DiamFailure.MUST_SHIFT_LEFT_OR_RIGHT());
+        await testUtils.expectClickSuccess('#click_7_0');
+        await testUtils.expectClickFailure('#click_2', DiamFailure.MUST_SHIFT_TO_NEIGHBOR());
     }));
     it('should forbid transferring from a piece not owned by the player', fakeAsync(async() => {
         // given a state
-        const state: DiamState = new DiamState([
+        const state: DiamState = DiamState.fromRepresentation([
             [__, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, B2],
             [__, __, __, __, __, __, __, A2],
-        ], [4, 4, 3, 3], 4);
+        ], 4);
         testUtils.setupState(state);
         // when clicking on B2
         // then this is not a legal selection for a shift
-        await testUtils.expectClickFailure('#click_7_2', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+        await testUtils.expectClickFailure('#click_7_1', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
     }));
     it('should forbid transferring if the stack would become too high', fakeAsync(async() => {
         // given a state
-        const state: DiamState = new DiamState([
+        const state: DiamState = DiamState.fromRepresentation([
             [__, __, __, __, __, __, __, __],
             [A1, __, __, __, __, __, __, __],
             [A1, __, __, __, __, __, __, B2],
             [A1, __, __, __, __, __, __, A2],
-        ], [1, 4, 3, 3], 4);
+        ], 4);
         testUtils.setupState(state);
         // when clicking on B2
+        await testUtils.expectClickSuccess('#click_7_0');
+        const move: DiamMove = DiamMoveShift.fromRepresentation(new Coord(7, 3), 'clockwise');
         // then this is not a legal selection for a shift
-        await testUtils.expectClickSuccess('#click_7_3');
-        await testUtils.expectMoveFailure('#click_0', DiamFailure.TARGET_STACK_TOO_HIGH(),
-                                          new DiamMoveShift(new Coord(7, 3), 'right'));
+        const reason: string = DiamFailure.TARGET_STACK_TOO_HIGH();
+        await testUtils.expectMoveFailure('#click_0', reason, move);
     }));
     it('should forbid clicking on a space without selecting a piece first', fakeAsync(async() => {
         // given the initial state
@@ -161,12 +164,12 @@ describe('DiamComponent', () => {
     }));
     it('should display the number of remainig pieces', fakeAsync(async() => {
         // given a state
-        const state: DiamState = new DiamState([
+        const state: DiamState = DiamState.fromRepresentation([
             [__, B1, __, __, __, __, __, __],
             [A1, B1, __, __, __, __, __, __],
             [A1, B1, __, __, __, __, __, B2],
             [A1, B1, __, __, __, __, __, A2],
-        ], [1, 3, 0, 3], 4);
+        ], 4);
         testUtils.setupState(state);
         // then we should see the number of remaining pieces
         testUtils.expectElementToExist('#piece_0_0'); // A1 remains
@@ -176,20 +179,20 @@ describe('DiamComponent', () => {
     }));
     it('should show winning configuration clearly', fakeAsync(async() => {
         // given a winning state
-        const state: DiamState = new DiamState([
+        const state: DiamState = DiamState.fromRepresentation([
             [__, __, __, __, __, __, __, __],
             [A1, __, __, __, __, __, __, __],
             [A1, __, __, __, A1, __, __, B2],
             [A1, __, __, __, B1, __, __, A2],
-        ], [0, 3, 3, 3], 4);
+        ], 4);
         testUtils.setupState(state);
         // then only the winning pieces should be highlighted
-        testUtils.expectElementToHaveClass('#click_0_2', 'victory-stroke');
-        testUtils.expectElementToHaveClass('#click_4_2', 'victory-stroke');
-        testUtils.expectElementNotToHaveClass('#click_0_3', 'victory-stroke');
-        testUtils.expectElementNotToHaveClass('#click_0_1', 'victory-stroke');
-        testUtils.expectElementNotToHaveClass('#click_7_3', 'victory-stroke');
-        testUtils.expectElementNotToHaveClass('#click_7_2', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#click_0_1', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#click_4_1', 'victory-stroke');
+        testUtils.expectElementNotToHaveClass('#click_0_0', 'victory-stroke');
+        testUtils.expectElementNotToHaveClass('#click_0_2', 'victory-stroke');
+        testUtils.expectElementNotToHaveClass('#click_7_0', 'victory-stroke');
+        testUtils.expectElementNotToHaveClass('#click_7_1', 'victory-stroke');
     }));
 });
 

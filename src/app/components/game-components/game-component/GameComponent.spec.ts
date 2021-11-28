@@ -11,8 +11,8 @@ import { ChatDAOMock } from 'src/app/dao/tests/ChatDAOMock.spec';
 import { JoinerDAOMock } from 'src/app/dao/tests/JoinerDAOMock.spec';
 import { UserDAOMock } from 'src/app/dao/tests/UserDAOMock.spec';
 import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
-import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { DiamPiece } from 'src/app/games/diam/DiamPiece';
+import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { Direction } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
 import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
@@ -70,7 +70,7 @@ describe('GameComponent', () => {
             Awale: { onClick: [0, 0] },
             Coerceo: { onClick: [0, 0] },
             Diam: {
-                onCaseClick: [0],
+                onSpaceClick: [0],
                 onPieceInGameClick: [0, 0],
                 onRemainingPieceClick: [DiamPiece.ZERO_FIRST],
             },

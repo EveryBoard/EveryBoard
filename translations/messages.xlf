@@ -879,11 +879,11 @@
       <trans-unit id="1718016291859374582" datatype="html">
         <source>You cannot play here: this space is already full.</source>
       </trans-unit>
-      <trans-unit id="3011799294333722541" datatype="html">
-        <source>You cannot add more pieces to the target space, as it will contain more than 4 pieces.</source>
+      <trans-unit id="8802049007421476454" datatype="html">
+        <source>You cannot add more pieces to the target stack, as it will contain more than 4 pieces.</source>
       </trans-unit>
-      <trans-unit id="5660375161018346302" datatype="html">
-        <source>To perform a shift, you must move the pieces to the space either directly to the left or directly to the right.</source>
+      <trans-unit id="3031759944936090505" datatype="html">
+        <source>To perform a shift, you must move the pieces to a neighboring space.</source>
       </trans-unit>
       <trans-unit id="290467566247457693" datatype="html">
         <source>You must first select either a piece from the side, or a stack of pieces to shift on the board.</source>
@@ -897,8 +897,8 @@
       <trans-unit id="5626639193339311369" datatype="html">
         <source>Goal of the game</source>
       </trans-unit>
-      <trans-unit id="6414311869674207113" datatype="html">
-        <source>At Diam, the goal is to align two of your pieces, having exactly the same color, on diametrically opposed spaces, on top of at least another piece. Note here that Dark does not win because the dark pieces are not on top of any other piece. You&apos;re playing Light. Here, you can win by dropping one of your pieces on the leftmost space. You can do it by clicking on the corresponding piece next to the board, and then on the space you want to drop it.&lt;br/&gt;&lt;br/&gt;Do it!</source>
+      <trans-unit id="8681171032929152275" datatype="html">
+        <source>At Diam, the goal is to align two of your pieces, having exactly the same color, on diametrically opposed spaces, on top of at least another piece. Note here that Dark does not win because the dark pieces are not on top of any other piece. You&apos;re playing Light. Here, you can win by dropping one of your pieces on the leftmost space. You can do it by clicking on the corresponding piece next to the board, and then on the space you want to drop your piece.&lt;br/&gt;&lt;br/&gt;Do it!</source>
       </trans-unit>
       <trans-unit id="5489405522962962283" datatype="html">
         <source>Congratulations, you won!</source>
@@ -909,8 +909,8 @@
       <trans-unit id="9079191930805040030" datatype="html">
         <source>Types of move</source>
       </trans-unit>
-      <trans-unit id="9175898720095398697" datatype="html">
-        <source>You can perform two types of move: either dropping one of your piece like you did in the previous step, or you can shift one of your pieces on the board to the left or to the right. You can pick any of your piece on the board, even if there are pieces on top of it. Only one condition applies: you cannot create a stack of more than 4 pieces. When you pick a piece with other pieces on top of it, all the other pieces move with yours.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, try to move one of your piece that is already on the board.</source>
+      <trans-unit id="7844462253208284371" datatype="html">
+        <source>You can perform two types of move: either dropping one of your piece like you did in the previous step, or you can shift one of your pieces on the board to a neighboring space. You can pick any of your piece on the board, even if there are pieces on top of it. Only one condition applies: there can never be more  than 4 pieces in a space. When you pick a piece with other pieces on top of it, all the other pieces move with yours.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, try to move one of your piece that is already on the board.</source>
       </trans-unit>
       <trans-unit id="4809034034760688818" datatype="html">
         <source>Failed, try to move one of your piece that is already on the board.</source>

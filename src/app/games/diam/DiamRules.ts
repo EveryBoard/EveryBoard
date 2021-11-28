@@ -1,3 +1,4 @@
+import { Type } from '@angular/core';
 import { Coord } from 'src/app/jscaip/Coord';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
@@ -14,7 +15,17 @@ export class DiamNode extends MGPNode<DiamRules, DiamMove, DiamState, LegalitySt
 
 export class DiamRules extends Rules<DiamMove, DiamState, LegalityStatus> {
 
-    public static readonly singleton: DiamRules = new DiamRules(DiamState);
+    private static singleton: MGPOptional<DiamRules> = MGPOptional.empty()
+    public static get(): DiamRules {
+        if (DiamRules.singleton.isAbsent()) {
+            DiamRules.singleton = MGPOptional.of(new DiamRules(DiamState));
+        }
+        return DiamRules.singleton.get();
+    }
+
+    private constructor(state: Type<DiamState>) {
+        super(state);
+    }
 
     public applyLegalMove(move: DiamMove, state: DiamState, _status: LegalityStatus): DiamState {
         if (move.isDrop()) {
@@ -25,7 +36,7 @@ export class DiamRules extends Rules<DiamMove, DiamState, LegalityStatus> {
     }
     private applyLegalDrop(drop: DiamMoveDrop, state: DiamState): DiamState {
         const newBoard: DiamPiece[][] = ArrayUtils.copyBiArray(state.board);
-        newBoard[3-state.getStackHeight(drop.target)][drop.target] = drop.piece;
+        newBoard[state.getStackHeight(drop.target)][drop.target] = drop.piece;
         const newRemainingPieces: [number, number, number, number] =
             ArrayUtils.copyImmutableArray(state.remainingPieces) as [number, number, number, number];
         newRemainingPieces[DiamState.pieceIndex(drop.piece)] -= 1;
@@ -34,13 +45,13 @@ export class DiamRules extends Rules<DiamMove, DiamState, LegalityStatus> {
     private applyLegalShift(shift: DiamMoveShift, state: DiamState): DiamState {
         const newBoard: DiamPiece[][] = ArrayUtils.copyBiArray(state.board);
         const targetX: number = shift.getTarget();
-        let targetY: number = 3 - state.getStackHeight(targetX);
+        let targetY: number = state.getStackHeight(targetX);
         let sourceY: number = shift.start.y;
-        while (sourceY >= 0 && state.getPieceAtXY(shift.start.x, sourceY) !== DiamPiece.EMPTY) {
+        while (sourceY < DiamState.HEIGHT && state.getPieceAtXY(shift.start.x, sourceY) !== DiamPiece.EMPTY) {
             newBoard[targetY][targetX] = state.getPieceAtXY(shift.start.x, sourceY);
             newBoard[sourceY][shift.start.x] = DiamPiece.EMPTY;
-            targetY--;
-            sourceY--;
+            targetY++;
+            sourceY++;
         }
         return new DiamState(newBoard, state.remainingPieces, state.turn+1);
     }
@@ -59,8 +70,8 @@ export class DiamRules extends Rules<DiamMove, DiamState, LegalityStatus> {
         if (state.getRemainingPiecesOf(drop.piece) === 0) {
             return LegalityStatus.failure(DiamFailure.NO_MORE_PIECES_OF_THIS_TYPE());
         }
-        if (state.getStackHeight(drop.target) === 4) {
-            return LegalityStatus.failure(DiamFailure.STACK_IS_FULL());
+        if (state.getStackHeight(drop.target) === DiamState.HEIGHT) {
+            return LegalityStatus.failure(DiamFailure.SPACE_IS_FULL());
         }
         return LegalityStatus.SUCCESS;
     }
@@ -68,12 +79,9 @@ export class DiamRules extends Rules<DiamMove, DiamState, LegalityStatus> {
         if (state.getPieceAt(shift.start).owner !== state.getCurrentPlayer()) {
             return LegalityStatus.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
-        const resultingHeight: number =
-            // the height of the stack we move
-            state.getStackHeight(shift.start.x) - (3 - shift.start.y) +
-            // the hegiht of the target
-            state.getStackHeight(shift.getTarget());
-        if (resultingHeight > 4) {
+        const movedHeight: number = state.getStackHeight(shift.start.x) - shift.start.y;
+        const resultingHeight: number = state.getStackHeight(shift.getTarget()) + movedHeight;
+        if (resultingHeight > DiamState.HEIGHT) {
             return LegalityStatus.failure(DiamFailure.TARGET_STACK_TOO_HIGH());
         }
         return LegalityStatus.SUCCESS;
@@ -88,10 +96,10 @@ export class DiamRules extends Rules<DiamMove, DiamState, LegalityStatus> {
         }
     }
     public findHighestAlignment(state: DiamState): MGPOptional<Coord> {
-        for (let x: number = 0; x < 4; x++) {
-            for (let y: number = 0; y < 3; y++) { // skip y = 3 because ground alignment isn't a win
+        for (let x: number = 0; x < DiamState.WIDTH/2; x++) {
+            for (let y: number = DiamState.HEIGHT-1; y > 0; y--) { // skip 0 because ground alignment isn't a win
                 const pieceHere: DiamPiece = state.getPieceAtXY(x, y);
-                const pieceThere: DiamPiece = state.getPieceAtXY(x+4, y);
+                const pieceThere: DiamPiece = state.getPieceAtXY(x+(DiamState.WIDTH/2), y);
                 if (pieceHere !== DiamPiece.EMPTY && pieceHere === pieceThere ) {
                     return MGPOptional.of(new Coord(x, y));
                 }
@@ -100,9 +108,9 @@ export class DiamRules extends Rules<DiamMove, DiamState, LegalityStatus> {
         return MGPOptional.empty();
     }
     public pieceCanMove(state: DiamState, coord: Coord): boolean {
-        if (this.isShiftLegal(new DiamMoveShift(coord, 'left'), state).legal.isSuccess()) {
+        if (this.isShiftLegal(new DiamMoveShift(coord, 'clockwise'), state).legal.isSuccess()) {
             return true;
-        } else if (this.isShiftLegal(new DiamMoveShift(coord, 'right'), state).legal.isSuccess()) {
+        } else if (this.isShiftLegal(new DiamMoveShift(coord, 'anticlockwise'), state).legal.isSuccess()) {
             return true;
         } else {
             return false;

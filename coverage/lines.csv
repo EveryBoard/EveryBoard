@@ -1,5 +1,5 @@
 AwaleRules.ts,1
-AuthenticationService.ts,4
+AuthenticationService.ts,3
 ActivesPartsService.ts,13
 ActivesUsersService.ts,3
 CoerceoPiecesThreatTilesMinimax.ts,1
@@ -13,7 +13,7 @@ GameService.ts,1
 HexaDirection.ts,5
 HexagonalGameState.ts,6
 LinesOfActionRules.ts,2
-MGPNode.ts,7
+MGPNode.ts,6
 Minimax.ts,2
 MinimaxTestingMove.ts,1
 NodeUnheritance.ts,1

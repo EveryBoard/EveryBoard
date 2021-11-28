@@ -32,21 +32,27 @@ export class DiamMoveDrop extends Move {
     }
 }
 
+type DiamShiftDirection = 'clockwise' | 'anticlockwise';
+
 export class DiamMoveShift extends Move {
     public static encoder: NumberEncoder<DiamMoveShift> = NumberEncoder.tuple(
         [Coord.numberEncoder(8, 4), NumberEncoder.booleanEncoder],
-        (shift: DiamMoveShift): [Coord, boolean] => [shift.start, shift.moveDirection === 'right'],
-        (fields: [Coord, boolean]): DiamMoveShift => new DiamMoveShift(fields[0], fields[1] ? 'right' : 'left'),
+        (shift: DiamMoveShift): [Coord, boolean] => [shift.start, shift.moveDirection === 'clockwise'],
+        (fields: [Coord, boolean]): DiamMoveShift => new DiamMoveShift(fields[0], fields[1] ? 'clockwise' : 'anticlockwise'),
     );
-    constructor(public readonly start: Coord,
-                public readonly moveDirection: 'right' | 'left') {
+    public static fromRepresentation(representationStart: Coord, moveDirection: DiamShiftDirection): DiamMoveShift {
+        // In the representation, the y axis is reverted, so 3 - y gives the real y on board
+        return new DiamMoveShift(new Coord(representationStart.x, 3 - representationStart.y), moveDirection);
+    }
+    public constructor(public readonly start: Coord,
+                       public readonly moveDirection: DiamShiftDirection) {
         super();
     }
     public isDrop(): this is DiamMoveDrop {
         return false;
     }
     public getTarget(): number {
-        if (this.moveDirection === 'right') {
+        if (this.moveDirection === 'clockwise') {
             return (this.start.x + 1) % 8;
         } else {
             return (this.start.x + 7) % 8;
@@ -65,7 +71,8 @@ export class DiamMoveShift extends Move {
 export type DiamMove = DiamMoveDrop | DiamMoveShift
 
 export const DiamMoveEncoder: NumberEncoder<DiamMove> =
-    NumberEncoder.disjunction(DiamMoveDrop.encoder, DiamMoveShift.encoder,
+    NumberEncoder.disjunction(DiamMoveDrop.encoder,
+                              DiamMoveShift.encoder,
                               (value: DiamMove): value is DiamMoveDrop => {
                                   return value.isDrop();
                               });

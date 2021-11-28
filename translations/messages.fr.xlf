@@ -1190,13 +1190,13 @@
         <source>You cannot play here: this space is already full.</source>
         <target>Vous ne pouvez pas jouer ici : cette case est déjà pleine.</target>
       </trans-unit>
-      <trans-unit id="3011799294333722541" datatype="html">
-        <source>You cannot add more pieces to the target space, as it will contain more than 4 pieces.</source>
+      <trans-unit id="8802049007421476454" datatype="html">
+        <source>You cannot add more pieces to the target stack, as it will contain more than 4 pieces.</source>
         <target>Vous ne pouvez pas ajouter de pièces dans la case ciblée, car elle contiendrait plus de 4 pièces.</target>
       </trans-unit>
-      <trans-unit id="5660375161018346302" datatype="html">
-        <source>To perform a shift, you must move the pieces to the space either directly to the left or directly to the right.</source>
-        <target>Pour déplacer des pièces du plateau, vous devez les déplacer sur la case directement à gauche ou directement à droite de la case de départ.</target>
+      <trans-unit id="3031759944936090505" datatype="html">
+        <source>To perform a shift, you must move the pieces to a neighboring space.</source>
+        <target>Pour déplacer des pièces du plateau, vous devez les déplacer sur une case voisine.</target>
       </trans-unit>
       <trans-unit id="290467566247457693" datatype="html">
         <source>You must first select either a piece from the side, or a stack of pieces to shift on the board.</source>
@@ -1210,9 +1210,9 @@
         <source>Diam&apos;s board is a circular board made of 8 spaces. Each player has 8 pieces: 4 of one color, and 4 of another color. Initially, the board is empty. All the remaining pieces are displayed next to the board: Dark&apos;s pieces are on the left, Light&apos;s pieces are on the right.</source>
         <target>Le plateau de Diam est un plateau circulaire composé de 8 cases. Chaque joueur possède 8 pièces : 4 d'une couleur, et 4 d'une autre couleur. Initialement, le plateau est vide. Toutes les pièces restantes sont montrées sur les côté du plateau : les pièces de Foncé sur la gauche, les pièces de Clair sur la droite.</target>
       </trans-unit>
-      <trans-unit id="6414311869674207113" datatype="html">
-        <source>At Diam, the goal is to align two of your pieces, having exactly the same color, on diametrically opposed spaces, on top of at least another piece. Note here that Dark does not win because the dark pieces are not on top of any other piece. You&apos;re playing Light. Here, you can win by dropping one of your pieces on the leftmost space. You can do it by clicking on the corresponding piece next to the board, and then on the space you want to drop it.&lt;br/&gt;&lt;br/&gt;Do it!</source>
-        <target>À Diam, le but est d'aligner deux de vos pièces, ayant exactement la même couleurs, sur des cases diamétralement opposées, au dessus d'au moins une pièce. Notez qu'ici, Foncé ne gagne pas car ses pièces ne sont pas au dessus d'une autre pièce. Vous jouez Clair. Ici, vous pouvez gagner en déposant une de vos pièces dans la case la plus à gauche. Vous pouvez le faire en cliquant sur la pièce correspondante à côté du plateau, et ensuite sur la case où vous souhaitez la déposer.&lt;br/&gt;&lt;br/&gt;Faites le !</target>
+      <trans-unit id="8681171032929152275" datatype="html">
+        <source>At Diam, the goal is to align two of your pieces, having exactly the same color, on diametrically opposed spaces, on top of at least another piece. Note here that Dark does not win because the dark pieces are not on top of any other piece. You&apos;re playing Light. Here, you can win by dropping one of your pieces on the leftmost space. You can do it by clicking on the corresponding piece next to the board, and then on the space you want to drop your piece.&lt;br/&gt;&lt;br/&gt;Do it!</source>
+        <target>À Diam, le but est d'aligner deux de vos pièces, ayant exactement la même couleurs, sur des cases diamétralement opposées, au dessus d'au moins une pièce. Notez qu'ici, Foncé ne gagne pas car ses pièces ne sont pas au dessus d'une autre pièce. Vous jouez Clair. Ici, vous pouvez gagner en déposant une de vos pièces dans la case la plus à gauche. Vous pouvez le faire en cliquant sur la pièce correspondante à côté du plateau, et ensuite sur la case où vous souhaitez déposer votre pièce.&lt;br/&gt;&lt;br/&gt;Faites le !</target>
       </trans-unit>
       <trans-unit id="6480264860477304836" datatype="html">
         <source>Failed, you should drop your piece on the leftmost space, using the piece of the same color of the other piece you already have on the board.</source>
@@ -1222,9 +1222,9 @@
         <source>Types of move</source>
         <target>Types de mouvements</target>
       </trans-unit>
-      <trans-unit id="9175898720095398697" datatype="html">
-        <source>You can perform two types of move: either dropping one of your piece like you did in the previous step, or you can shift one of your pieces on the board to the left or to the right. You can pick any of your piece on the board, even if there are pieces on top of it. Only one condition applies: you cannot create a stack of more than 4 pieces. When you pick a piece with other pieces on top of it, all the other pieces move with yours.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, try to move one of your piece that is already on the board.</source>
-        <target>Vous pouvez effectuer deux types de mouvement: soit déposer une de vos pièces comme vous l'avez fait à l'étape précédente, ou vous pouvez déplacer une de vos pièces sur le plateau, vers la gauche ou vers la droite. Vous pouvez choisir n'importe laquelle de vos pièces, même s'il y a déjà d'autres pièces au dessus. Une seule condition s'applique : celle de ne pas créer une pile de plus de 4 pièces. Quand vous sélectionnez une pièce avec d'autres dessus, toutes les autres pièces se déplacent avec la votre.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, essayez de déplacer une de vos pièces déjà sur le plateau.</target>
+      <trans-unit id="7844462253208284371" datatype="html">
+        <source>You can perform two types of move: either dropping one of your piece like you did in the previous step, or you can shift one of your pieces on the board to a neighboring space. You can pick any of your piece on the board, even if there are pieces on top of it. Only one condition applies: there can never be more  than 4 pieces in a space. When you pick a piece with other pieces on top of it, all the other pieces move with yours.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, try to move one of your piece that is already on the board.</source>
+        <target>Vous pouvez effectuer deux types de mouvement : soit déposer une de vos pièces comme vous l'avez fait à l'étape précédente, ou vous pouvez déplacer une de vos pièces sur le plateau, sur une case voisine. Vous pouvez choisir n'importe laquelle de vos pièces, même s'il y a déjà d'autres pièces au dessus. Une seule condition s'applique : ne pas créer une pile de plus de 4 pièces. Quand vous sélectionnez une pièce avec d'autres dessus, toutes les autres pièces se déplacent avec la votre.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, essayez de déplacer une de vos pièces déjà sur le plateau.</target>
       </trans-unit>
       <trans-unit id="4809034034760688818" datatype="html">
         <source>Failed, try to move one of your piece that is already on the board.</source>
@@ -1240,7 +1240,7 @@
       </trans-unit>
       <trans-unit id="3765076912748475454" datatype="html">
         <source>Failed, try to shift a stack of pieces to the left.</source>
-        <target>Raté, essayez de déplacer une pile de pièces vers la gauch.</target>
+        <target>Raté, essayez de déplacer une pile de pièces vers la gauche.</target>
       </trans-unit>
       <trans-unit id="2559409853005498554" datatype="html">
         <source>Invalid coordinate, please select a piece on the board.</source>

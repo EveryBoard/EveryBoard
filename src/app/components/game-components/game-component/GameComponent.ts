@@ -97,6 +97,12 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
     public getCurrentPlayer(): Player {
         return this.rules.node.gameState.getCurrentPlayer();
     }
+    public getState(): S {
+        return this.rules.node.gameState;
+    }
+    public getPreviousState(): S {
+        return this.rules.node.mother.gameState;
+    }
 }
 
 export abstract class AbstractGameComponent extends GameComponent<Rules<Move, AbstractGameState>,

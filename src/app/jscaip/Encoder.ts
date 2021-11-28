@@ -106,21 +106,21 @@ export abstract class NumberEncoder<T> extends MoveEncoder<T> {
     : NumberEncoder<T1 | T2> {
         return new class extends NumberEncoder<T1 | T2> {
             public maxValue(): number {
-                return Math.max(encoder1.maxValue() << 1,
-                                (encoder2.maxValue() << 1) + 1);
+                return Math.max(encoder1.maxValue() * 2,
+                                (encoder2.maxValue() * 2) + 1);
             }
             public encodeNumber(value: T1 | T2): number {
                 if (isT1(value)) {
-                    return encoder1.encodeNumber(value) << 1;
+                    return encoder1.encodeNumber(value) * 2;
                 } else {
-                    return (encoder2.encodeNumber(value) << 1) + 1;
+                    return (encoder2.encodeNumber(value) * 2) + 1;
                 }
             }
             public decodeNumber(encoded: number): T1 | T2 {
-                if ((encoded & 0x1) === 0) {
-                    return encoder1.decodeNumber(encoded >> 1);
+                if (encoded % 2 === 0) {
+                    return encoder1.decodeNumber(encoded / 2);
                 } else {
-                    return encoder2.decodeNumber((encoded - 1) >> 1);
+                    return encoder2.decodeNumber((encoded - 1) / 2);
                 }
             }
         };
