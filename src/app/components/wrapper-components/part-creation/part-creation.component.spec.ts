@@ -276,8 +276,8 @@ describe('PartCreationComponent:', () => {
         it('should update the form data when changing first player', fakeAsync(async() => {
             testUtils.clickElement('#firstPlayerOpponent');
 
-            expect(Utils.getNonNullable(component.configFormGroup.get('firstPlayer')).value)
-                .toEqual(FirstPlayer.CHOSEN_PLAYER.value);
+            const firstPlayer: string = Utils.getNonNullable(component.configFormGroup.get('firstPlayer')).value;
+            expect(firstPlayer).toEqual(FirstPlayer.CHOSEN_PLAYER.value);
         }));
         it('should show detailed timing options when choosing a custom part type', fakeAsync(async() => {
             await testUtils.clickElement('#partTypeCustom');
@@ -294,20 +294,20 @@ describe('PartCreationComponent:', () => {
             await testUtils.clickElement('#partTypeBlitz');
             testUtils.detectChanges();
 
-            expect(Utils.getNonNullable(component.configFormGroup.get('maximalMoveDuration')).value)
-                .toBe(PartType.BLITZ_MOVE_DURATION);
-            expect(Utils.getNonNullable(component.configFormGroup.get('totalPartDuration')).value)
-                .toBe(PartType.BLITZ_PART_DURATION);
+            const maximalMoveDuration: number = Utils.getNonNullable(component.configFormGroup.get('maximalMoveDuration')).value;
+            expect(maximalMoveDuration).toBe(PartType.BLITZ_MOVE_DURATION);
+            const totalPartDuration: number = Utils.getNonNullable(component.configFormGroup.get('totalPartDuration')).value;
+            expect(totalPartDuration).toBe(PartType.BLITZ_PART_DURATION);
         }));
         it('should update the timings when reselecting normal part', fakeAsync(async() => {
             await testUtils.clickElement('#partTypeBlitz');
             await testUtils.clickElement('#partTypeStandard');
             testUtils.detectChanges();
 
-            expect(Utils.getNonNullable(component.configFormGroup.get('maximalMoveDuration')).value)
-                .toBe(PartType.NORMAL_MOVE_DURATION);
-            expect(Utils.getNonNullable(component.configFormGroup.get('totalPartDuration')).value)
-                .toBe(PartType.NORMAL_PART_DURATION);
+            const maximalMoveDuration: number = Utils.getNonNullable(component.configFormGroup.get('maximalMoveDuration')).value;
+            expect(maximalMoveDuration).toBe(PartType.NORMAL_MOVE_DURATION);
+            const totalPartDuration: number = Utils.getNonNullable(component.configFormGroup.get('totalPartDuration')).value;
+            expect(totalPartDuration).toBe(PartType.NORMAL_PART_DURATION);
         }));
         it('should dispatch to joiner service when clicking on review config button', fakeAsync(async() => {
             await joinerDAOMock.update('joinerId', {

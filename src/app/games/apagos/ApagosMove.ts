@@ -45,7 +45,7 @@ export class ApagosMove extends Move {
         const drop: ApagosMove = Utils.getNonNullable(
             ApagosMove.ALL_MOVES.find((move: ApagosMove) => {
                 return move.landing.equals(coord) &&
-                    move.piece.equals(MGPOptional.of(piece)) &&
+                    move.piece.equalsValue(piece) &&
                     move.starting.equals(MGPOptional.empty());
             }));
         return drop;

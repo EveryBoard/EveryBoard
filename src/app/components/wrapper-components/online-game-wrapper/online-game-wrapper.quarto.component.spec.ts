@@ -388,8 +388,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         tick(1);
         const CURRENT_PART: Part = wrapper.currentPart;
 
-        // when receiving a move without time
+        // when receiving a move time being null
         await receivePartDAOUpdate({
+            lastMoveTime: null
             listMoves: [FIRST_MOVE_ENCODED],
             turn: 1,
         });

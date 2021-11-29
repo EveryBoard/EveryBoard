@@ -75,7 +75,7 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
         if (optionalOS.isPresent()) {
             return optionalOS.get().subject.getValue().doc;
         } else {
-            return null; // should return null if a document does not exist. This is behaviour relied upon!
+            return null; // should return null if a document does not exist. This is a behaviour relied upon!
         }
     }
     public async tryToRead(id: string): Promise<MGPOptional<T>> {

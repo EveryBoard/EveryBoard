@@ -18,7 +18,7 @@ export interface IPart extends FirebaseJSONObject {
      * so firebase write the server time and send us back a timestamp in the form of Time
      */
     readonly beginning?: firebase.firestore.FieldValue | Time,
-    readonly lastMoveTime?: firebase.firestore.FieldValue | Time | null, // TODO FOR REVIEW: when is it null? null in a firebase json object should only be used to remove a field
+    readonly lastMoveTime?: firebase.firestore.FieldValue | Time | null,
     readonly remainingMsForZero?: number;
     readonly remainingMsForOne?: number;
     readonly winner?: string,

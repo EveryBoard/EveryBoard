@@ -65,8 +65,8 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
     }
     public constructor(board: Table<FourStatePiece>,
                        turn: number,
-                       public readonly tiles: [number, number],
-                       public readonly captures: [number, number])
+                       public readonly tiles: readonly [number, number],
+                       public readonly captures: readonly [number, number])
     {
         super(board, turn);
     }

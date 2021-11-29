@@ -117,8 +117,7 @@ export abstract class GameWrapper {
         display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveValidMove says: valid move legal');
         return MGPValidation.SUCCESS;
     }
-    public abstract onLegalUserMove(move: Move, scores?: [number, number])
-    : Promise<void>;
+    public abstract onLegalUserMove(move: Move, scores?: [number, number]): Promise<void>;
 
     public onUserClick(_elementName: string): MGPValidation {
         // TODO: Not the same logic to use in Online and Local, make abstract

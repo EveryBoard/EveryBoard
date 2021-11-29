@@ -29,7 +29,7 @@ export class MGPOptional<T> {
         return MGPOptional.of(value as T);
     }
     public static empty<T>(): MGPOptional<T> {
-        return new MGPOptional((null as T | null));
+        return new MGPOptional(null as T | null);
     }
     private constructor(private readonly value: T | null) {}
 

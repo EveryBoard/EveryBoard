@@ -1116,9 +1116,9 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 const step: TutorialStep = stepExpectation[1];
                 const move: Move = stepExpectation[2];
                 const validation: MGPValidation = stepExpectation[3];
-                const status: MGPFallible<unknown> = rules.isLegal(move, step.state);
-                if (status.isSuccess()) {
-                    const state: GameState = rules.applyLegalMove(move, step.state, status.get());
+                const moveResult: MGPFallible<unknown> = rules.isLegal(move, step.state);
+                if (moveResult.isSuccess()) {
+                    const state: GameState = rules.applyLegalMove(move, step.state, moveResult.get());
                     if (step.isPredicate()) {
                         expect(Utils.getNonNullable(step.predicate)(move, state)).toEqual(validation);
                     } else {
@@ -1141,11 +1141,11 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 const steps: TutorialStep[] = gameComponent.tutorial;
                 for (const step of steps) {
                     if (step.hasSolution()) {
-                        const status: MGPFallible<unknown> = rules.isLegal(step.getSolution(), step.state);
-                        if (status.isSuccess()) {
+                        const moveResult: MGPFallible<unknown> = rules.isLegal(step.getSolution(), step.state);
+                        if (moveResult.isSuccess()) {
                             if (step.isPredicate()) {
                                 const state: GameState =
-                                    rules.applyLegalMove(step.getSolution(), step.state, status.get());
+                                    rules.applyLegalMove(step.getSolution(), step.state, moveResult.get());
                                 expect(Utils.getNonNullable(step.predicate)(step.getSolution(), state))
                                     .toEqual(MGPValidation.SUCCESS);
                             }

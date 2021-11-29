@@ -11,7 +11,8 @@ export abstract class TutorialStep {
                            acceptedMoves: ReadonlyArray<Move>,
                            successMessage: string,
                            failureMessage: string)
-    : TutorialStep {
+    : TutorialStep
+    {
         return new TutorialStepMove(title, instruction, state, acceptedMoves, successMessage, failureMessage);
     }
     public static forClick(title: string,
@@ -20,7 +21,8 @@ export abstract class TutorialStep {
                            acceptedClicks: ReadonlyArray<string>,
                            successMessage: string,
                            failureMessage: string)
-    : TutorialStep {
+    : TutorialStep
+    {
         return new TutorialStepClick(title, instruction, state, acceptedClicks, successMessage, failureMessage);
     }
     public static anyMove(title: string,
@@ -28,7 +30,8 @@ export abstract class TutorialStep {
                           state: GameState,
                           solutionMove: Move,
                           successMessage: string)
-    : TutorialStep {
+    : TutorialStep
+    {
         return new TutorialStepAnyMove(title, instruction, state, solutionMove, successMessage);
     }
     public static fromPredicate(title: string,
@@ -37,13 +40,15 @@ export abstract class TutorialStep {
                                 solutionMove: Move,
                                 predicate: (move: Move, resultingState: GameState) => MGPValidation,
                                 successMessage: string)
-    : TutorialStep {
+    : TutorialStep
+    {
         return new TutorialStepPredicate(title, instruction, state, solutionMove, predicate, successMessage);
     }
     public static informational(title: string,
                                 instruction: string,
                                 state: GameState)
-    : TutorialStep {
+    : TutorialStep
+    {
         return new TutorialStepInformational(title, instruction, state);
     }
 
