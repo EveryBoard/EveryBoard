@@ -22,6 +22,10 @@ export class DiamRules extends Rules<DiamMove, DiamState, LegalityStatus> {
         }
         return DiamRules.singleton.get();
     }
+    public static getWithFreshState(): DiamRules {
+        DiamRules.singleton = MGPOptional.of(new DiamRules(DiamState));
+        return DiamRules.singleton.get();
+    }
 
     private constructor(state: Type<DiamState>) {
         super(state);

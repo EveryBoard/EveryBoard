@@ -21,12 +21,12 @@ export class DiamTutorial {
         TutorialStep.fromMove(
             $localize`Goal of the game`,
             $localize`At Diam, the goal is to align two of your pieces, having exactly the same color, on diametrically opposed spaces, on top of at least another piece. Note here that Dark does not win because the dark pieces are not on top of any other piece. You're playing Light. Here, you can win by dropping one of your pieces on the leftmost space. You can do it by clicking on the corresponding piece next to the board, and then on the space you want to drop your piece.<br/><br/>Do it!`,
-            new DiamState([
+            DiamState.fromRepresentation([
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, B1, __, __, __],
                 [A1, __, __, __, A1, __, __, __],
-            ], [3, 4, 2, 4], 3),
+            ], 3),
             [new DiamMoveDrop(0, DiamPiece.ONE_FIRST)],
             $localize`Congratulations, you won!`,
             $localize`Failed, you should drop your piece on the leftmost space, using the piece of the same color of the other piece you already have on the board.`,
@@ -34,15 +34,17 @@ export class DiamTutorial {
         TutorialStep.fromMove(
             $localize`Types of move`,
             $localize`You can perform two types of move: either dropping one of your piece like you did in the previous step, or you can shift one of your pieces on the board to a neighboring space. You can pick any of your piece on the board, even if there are pieces on top of it. Only one condition applies: there can never be more  than 4 pieces in a space. When you pick a piece with other pieces on top of it, all the other pieces move with yours.<br/><br/>You're playing Dark, try to move one of your piece that is already on the board.`,
-            new DiamState([
+            DiamState.fromRepresentation([
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, B2, __, __, __],
                 [__, __, __, __, A1, __, __, __],
                 [B1, __, __, __, A2, __, __, __],
-            ], [3, 3, 3, 3], 4),
+            ], 4),
             [
-                new DiamMoveShift(new Coord(4, 3), 'anticlockwise'), new DiamMoveShift(new Coord(4, 3), 'clockwise'),
-                new DiamMoveShift(new Coord(4, 2), 'anticlockwise'), new DiamMoveShift(new Coord(4, 2), 'clockwise'),
+                DiamMoveShift.fromRepresentation(new Coord(4, 3), 'anticlockwise'),
+                DiamMoveShift.fromRepresentation(new Coord(4, 3), 'clockwise'),
+                DiamMoveShift.fromRepresentation(new Coord(4, 2), 'anticlockwise'),
+                DiamMoveShift.fromRepresentation(new Coord(4, 2), 'clockwise'),
             ],
             $localize`Congratulations!`,
             $localize`Failed, try to move one of your piece that is already on the board.`,
@@ -50,13 +52,13 @@ export class DiamTutorial {
         TutorialStep.fromMove(
             $localize`Special case`,
             $localize`It can happen that, in a single turn, both players reach an alignment. If it is the case, only the player with the highest alignment wins.<br/><br/>Here, playing Dark, you can win by performing such a move, do it!`,
-            new DiamState([
+            DiamState.fromRepresentation([
                 [__, __, __, __, A1, __, __, __],
                 [__, __, __, __, B2, __, __, A1],
                 [__, __, __, __, A1, __, __, B2],
                 [__, B1, __, __, A2, __, __, B1],
-            ], [2, 2, 2, 2], 8),
-            [new DiamMoveShift(new Coord(4, 2), 'anticlockwise')],
+            ], 8),
+            [DiamMoveShift.fromRepresentation(new Coord(4, 2), 'anticlockwise')],
             $localize`Congratulations!`,
             $localize`Failed, try to shift a stack of pieces to the left.`,
         ),

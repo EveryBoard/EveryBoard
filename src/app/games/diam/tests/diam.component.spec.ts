@@ -39,7 +39,7 @@ describe('DiamComponent', () => {
         // then the corresponding error is shown
         await testUtils.expectClickFailure('#piece_1_0', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
     }));
-    it('should consider a piece in game click as a space click if a piece is selected for better usability', fakeAsync(async() => {
+    it('should consider a piece in game click on an opponent piece as a space click if a piece is selected for better usability', fakeAsync(async() => {
         // given a state where there are already pieces in game
         const state: DiamState = DiamState.fromRepresentation([
             [__, __, __, __, __, __, __, __],
@@ -48,11 +48,26 @@ describe('DiamComponent', () => {
             [A1, __, __, __, __, __, __, __],
         ], 0);
         testUtils.setupState(state);
-        // when clicking on a remaining piece and then on a piece in game
-        // then the move is made to the corresponding space
+        // when clicking on a remaining piece and then on a opponent piece in game
         await testUtils.expectClickSuccess('#piece_0_0');
         const move: DiamMove = new DiamMoveDrop(0, DiamPiece.ZERO_FIRST);
+        // then the move is made to the corresponding space
         await testUtils.expectMoveSuccess('#click_0_2', move);
+    }));
+    it('should consider a piece in game click on a player piece as a regular piece click', fakeAsync(async() => {
+        // given a state where there are already pieces in game
+        const state: DiamState = DiamState.fromRepresentation([
+            [__, __, __, __, __, __, __, __],
+            [A1, __, __, __, __, __, __, __],
+            [B1, __, __, __, __, __, __, __],
+            [A1, __, __, __, __, __, __, __],
+        ], 0);
+        testUtils.setupState(state);
+        // when clicking on a remaining piece and then on a player piece in game
+        await testUtils.expectClickSuccess('#piece_0_0');
+        await testUtils.expectClickSuccess('#click_0_0');
+        // then no move is made and the new piece is selected
+        testUtils.expectElementToHaveClass('#click_0_0', 'selected');
     }));
     it('should forbid dropping on a full stack', fakeAsync(async() => {
         // given a state where one stack is already full

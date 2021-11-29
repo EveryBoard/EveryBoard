@@ -93,7 +93,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
     };
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = DiamRules.get();
+        this.rules = DiamRules.getWithFreshState();
         this.availableMinimaxes = [
             new DiamDummyMinimax(this.rules, 'DiamDummyMinimax'),
         ];
@@ -134,13 +134,14 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        if (this.selected.isPresent()) {
-            return this.onSpaceClickAfterCheck(x);
-        }
-        if (this.getState().getPieceAtXY(x, y).owner === this.getCurrentPlayer()) {
+        const clickedPiece: DiamPiece = this.getState().getPieceAtXY(x, y);
+        if (clickedPiece.owner === this.getCurrentPlayer()) {
             this.selected = MGPOptional.of({ type: 'pieceFromBoard', position: new Coord(x, y) });
             this.updateViewInfo();
             return MGPValidation.SUCCESS;
+        } else if (this.selected.isPresent()) {
+            // This becomes a click on the space
+            return this.onSpaceClickAfterCheck(x);
         } else {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
@@ -260,7 +261,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
             for (let y: number = 0; y < remaining; y++) {
                 const foregroundClasses: string[] = [];
                 if (this.isTopPieceOfReserveAndSelected(y, remaining, piece)) {
-                    foregroundClasses.push('highlighted');
+                    foregroundClasses.push('selected');
                 }
                 if (y === remaining-1 && piece.owner === currentPlayer) {
                     // Only let the top piece be clickable
@@ -312,7 +313,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
             if (piece !== DiamPiece.EMPTY) {
                 const foregroundClasses: string[] = [];
                 if (this.pieceFromBoardIsSelected(x, y)) {
-                    foregroundClasses.push('highlighted');
+                    foregroundClasses.push('selected');
                 }
                 if (this.isVictory(x, y, highestAlignment)) {
                     foregroundClasses.push('victory-stroke');
