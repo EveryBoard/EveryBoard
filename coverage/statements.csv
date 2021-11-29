@@ -15,7 +15,7 @@ GameService.ts,2
 HexaDirection.ts,5
 HexagonalGameState.ts,6
 LinesOfActionRules.ts,2
-MGPNode.ts,6
+MGPNode.ts,7
 Minimax.ts,2
 MinimaxTestingMove.ts,1
 NodeUnheritance.ts,1

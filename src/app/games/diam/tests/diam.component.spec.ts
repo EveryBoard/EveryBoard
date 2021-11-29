@@ -52,7 +52,7 @@ describe('DiamComponent', () => {
         await testUtils.expectClickSuccess('#piece_0_0');
         const move: DiamMove = new DiamMoveDrop(0, DiamPiece.ZERO_FIRST);
         // then the move is made to the corresponding space
-        await testUtils.expectMoveSuccess('#click_0_2', move);
+        await testUtils.expectMoveSuccess('#click_0_1', move);
     }));
     it('should consider a piece in game click on a player piece as a regular piece click', fakeAsync(async() => {
         // given a state where there are already pieces in game

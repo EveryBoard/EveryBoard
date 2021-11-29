@@ -105,8 +105,8 @@ export class GameInfo {
         new GameInfo($localize`Pentago`, 'Pentago', PentagoComponent, new Date('2021-05-23'), GameDescription.PENTAGO()), // 25 days after Six
         new GameInfo($localize`Abalone`, 'Abalone', AbaloneComponent, new Date('2021-07-13'), GameDescription.ABALONE()), // 71 days after Pentago
         new GameInfo($localize`Yinsh`, 'Yinsh', YinshComponent, new Date('2021-07-31'), GameDescription.YINSH()), // 94 days after LinesOfAction *Quentin
-        new GameInfo($localize`Apagos`, 'Apagos', ApagosComponent, new Date('2021-11-04'), GameDescription.APAGOS()), // 4 month after Apagos
-        new GameInfo($localize`Diam`, 'Diam', DiamComponent, new Date('2021-11-18'), GameDescription.DIAM()),
+        new GameInfo($localize`Apagos`, 'Apagos', ApagosComponent, new Date('2021-11-04'), GameDescription.APAGOS()), // 4 month after Abalone
+        new GameInfo($localize`Diam`, 'Diam', DiamComponent, new Date('2021-11-30'), GameDescription.DIAM()), // 4 months after Yinsh *Quentin
     ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
     // After Apagos: median = 26d; average = 53d
     // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m
