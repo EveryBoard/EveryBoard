@@ -26,13 +26,13 @@
             (click)="onPieceInGameClick(x, piece.y)"
             class="base-no-fill no-fill mid-small-stroke"
             [ngClass]="piece.foregroundClasses" >
-            <use [attr.x]="piece.drawPositionEnd.x"
-                 [attr.y]="piece.drawPositionEnd.y"
+            <use [attr.x]="piece.drawPosition.x"
+                 [attr.y]="piece.drawPosition.y"
                  xlink:href="#piece"
                  class="base mid-stroke"
                  [ngClass]="piece.backgroundClasses" />
-            <use [attr.x]="piece.drawPositionEnd.x"
-                 [attr.y]="piece.drawPositionEnd.y"
+            <use [attr.x]="piece.drawPosition.x"
+                 [attr.y]="piece.drawPosition.y"
                  xlink:href="#piece" />
         </g>
     </g>
@@ -42,13 +42,13 @@
        id="piece_{{ piece.actualPiece.owner.value }}_{{ piece.actualPiece.otherPieceType ? 1 : 0 }}"
        class="base-no-fill no-fill mid-small-stroke"
        [ngClass]="piece.foregroundClasses">
-        <use [attr.x]="piece.drawPositionEnd.x"
-             [attr.y]="piece.drawPositionEnd.y"
+        <use [attr.x]="piece.drawPosition.x"
+             [attr.y]="piece.drawPosition.y"
              xlink:href="#piece"
              class="base mid-stroke"
              [ngClass]="piece.backgroundClasses" />
-        <use [attr.x]="piece.drawPositionEnd.x"
-             [attr.y]="piece.drawPositionEnd.y"
+        <use [attr.x]="piece.drawPosition.x"
+             [attr.y]="piece.drawPosition.y"
              xlink:href="#piece" />
     </g>
 </svg>

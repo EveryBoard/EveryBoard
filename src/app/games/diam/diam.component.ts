@@ -32,9 +32,7 @@ interface PieceInfo {
     backgroundClasses: string[],
     foregroundClasses: string[],
     y: number,
-    animate: boolean,
-    drawPositionStart: MGPOptional<Coord>,
-    drawPositionEnd: Coord,
+    drawPosition: Coord,
     actualPiece: DiamPiece,
 }
 
@@ -249,8 +247,6 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
             const x: number = movedPiece.end.x;
             const y: number = movedPiece.end.y;
             this.viewInfo.boardInfo[x].pieces[y].foregroundClasses.push('last-move');
-            this.viewInfo.boardInfo[x].pieces[y].animate = true;
-            this.viewInfo.boardInfo[x].pieces[y].drawPositionStart = MGPOptional.of(movedPiece.startDrawPosition);
         }
     }
     private updateRemainingPiecesInfo(): void {
@@ -271,9 +267,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
                     backgroundClasses: ['player' + piece.owner.value + (piece.otherPieceType ? '-alternate' : '')],
                     foregroundClasses,
                     y,
-                    animate: false,
-                    drawPositionEnd: this.getDrawPositionRemainingPiece(piece, y),
-                    drawPositionStart: MGPOptional.empty(),
+                    drawPosition: this.getDrawPositionRemainingPiece(piece, y),
                     actualPiece: piece,
                 });
             }
@@ -325,9 +319,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
                     backgroundClasses: ['player' + piece.owner.value + (piece.otherPieceType ? '-alternate' : '')],
                     foregroundClasses,
                     y,
-                    animate: false,
-                    drawPositionStart: MGPOptional.empty(),
-                    drawPositionEnd: this.getDrawPositionOnBoard(x, y),
+                    drawPosition: this.getDrawPositionOnBoard(x, y),
                     actualPiece: piece,
                 });
             }
