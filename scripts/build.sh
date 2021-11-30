@@ -1,7 +1,7 @@
 #!/bin/sh
-$ARGS="$@"
-gpg --quiet --batch --yes --decrypt --passphrase="$ENC_SECRET" --output src/app/firebaseConfig.ts .netlify/firebaseConfig.ts.gpg
+ARGS="$@"
 pip install lxml selenium pandas
+cp ./netlify/firebaseConfig.ts src/app/
 python ./scripts/update-translations.sh
 bash ./scripts/check-translations.sh
 bash ./scripts/update-images.sh
