@@ -104,58 +104,54 @@ describe('SixMinimax', () => {
         it('should be true with lines', () => {
             const move: SixMove = SixMove.fromDrop(new Coord(1, 1));
             const weakerState: SixState = SixState.fromRepresentation([
-                [O, O, O, O, O, O],
-                [O, X, X, X, _, _],
-                [O, O, O, O, O, O],
-            ], 4);
+                [O, O, _, _, _],
+                [X, X, X, _, _],
+                [O, O, _, _, _],
+            ], 7);
             const strongerState: SixState = SixState.fromRepresentation([
-                [O, O, O, O, O, O],
-                [O, X, X, X, X, _],
-                [O, O, O, O, O, O],
-            ], 4);
-            RulesUtils.expectSecondStateToBeBetterThanFirst(weakerState, MGPOptional.of(move),
-                                                            strongerState, MGPOptional.of(move),
-                                                            minimax);
+                [O, O, _, _, _],
+                [X, X, X, X, _],
+                [O, O, _, _, _],
+            ], 7);
+            RulesUtils.expectSecondStateToBeBetterThanFirst(minimax,
+                                                            weakerState, MGPOptional.of(move),
+                                                            strongerState, MGPOptional.of(move));
         });
         it('should be true with triangle', () => {
             const move: SixMove = SixMove.fromDrop(new Coord(1, 3));
             const weakerState: SixState = SixState.fromRepresentation([
-                [O, O, O, O, O],
-                [O, X, _, _, O],
-                [O, X, _, O, O],
-                [O, X, O, O, _],
-                [O, O, O, _, _],
-            ], 4);
-            const strongerState: SixState = SixState.fromRepresentation([
-                [O, O, O, O, O],
-                [O, X, X, X, O],
                 [O, _, _, O, O],
-                [O, X, O, O, _],
-                [O, O, O, _, _],
-            ], 4);
-            RulesUtils.expectSecondStateToBeBetterThanFirst(weakerState, MGPOptional.of(move),
-                                                            strongerState, MGPOptional.of(move),
-                                                            minimax);
+                [O, X, _, _, O],
+                [_, X, _, O, O],
+                [O, X, O, _, _],
+                [O, _, _, _, _],
+            ], 7);
+            const strongerState: SixState = SixState.fromRepresentation([
+                [O, _, _, O, O],
+                [O, X, _, X, O],
+                [_, X, _, O, O],
+                [O, X, O, _, _],
+                [O, O, _, _, _],
+            ], 7);
+            RulesUtils.expectSecondStateToBeBetterThanFirst(minimax,
+                                                            weakerState, MGPOptional.of(move),
+                                                            strongerState, MGPOptional.of(move));
         });
         it('should be true with circle', () => {
             const move: SixMove = SixMove.fromDrop(new Coord(2, 1));
             const weakerState: SixState = SixState.fromRepresentation([
-                [_, O, O, O, O],
                 [O, O, X, X, O],
                 [O, _, O, X, O],
                 [O, _, _, O, O],
-                [O, O, O, O, _],
-            ], 4);
+            ], 7);
             const strongerState: SixState = SixState.fromRepresentation([
-                [_, O, O, O, O],
                 [O, O, X, X, O],
                 [O, _, O, X, O],
                 [O, _, X, O, O],
-                [O, O, O, O, _],
-            ], 4);
-            RulesUtils.expectSecondStateToBeBetterThanFirst(weakerState, MGPOptional.of(move),
-                                                            strongerState, MGPOptional.of(move),
-                                                            minimax);
+            ], 7);
+            RulesUtils.expectSecondStateToBeBetterThanFirst(minimax,
+                                                            weakerState, MGPOptional.of(move),
+                                                            strongerState, MGPOptional.of(move));
         });
     });
     describe('4 pieces aligned with two spaces should be better than 4 aligned with two opponents', () => {
@@ -165,15 +161,15 @@ describe('SixMinimax', () => {
                 [O, O, O, O, O, O],
                 [O, X, X, X, X, O],
                 [O, O, O, O, O, O],
-            ], 6);
+            ], 7);
             const strongerState: SixState = SixState.fromRepresentation([
                 [O, O, O, O, O, O],
                 [_, X, X, X, X, _],
                 [O, O, O, O, O, O],
-            ], 6);
-            RulesUtils.expectSecondStateToBeBetterThanFirst(weakerState, MGPOptional.of(move),
-                                                            strongerState, MGPOptional.of(move),
-                                                            minimax);
+            ], 7);
+            RulesUtils.expectSecondStateToBeBetterThanFirst(minimax,
+                                                            weakerState, MGPOptional.of(move),
+                                                            strongerState, MGPOptional.of(move));
         });
     });
     describe('Phase 2', () => {

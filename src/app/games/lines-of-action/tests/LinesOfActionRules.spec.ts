@@ -250,9 +250,8 @@ describe('LinesOfActionRules', () => {
             [_, _, _, _, _, _, _, _],
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
-        expect(LinesOfActionRules.getVictory(state)).toEqual(MGPOptional.of(Player.ONE));
-        expect(minimax.getBoardValue(new LinesOfActionNode(state)).value)
-            .toBe(Player.ONE.getVictoryValue());
+        const node: LinesOfActionNode = new LinesOfActionNode(state);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, [minimax]);
     });
     it(`should win when all the player's pieces are connected, in any direction`, () => {
         const board: Table<Player> = [
@@ -266,9 +265,8 @@ describe('LinesOfActionRules', () => {
             [_, _, _, _, _, _, _, _],
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
-        expect(LinesOfActionRules.getVictory(state)).toEqual(MGPOptional.of(Player.ZERO));
-        expect(minimax.getBoardValue(new LinesOfActionNode(state)).value)
-            .toBe(Player.ZERO.getVictoryValue());
+        const node: LinesOfActionNode = new LinesOfActionNode(state);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, [minimax]);
     });
     it('should draw on simultaneous connections', () => {
         const board: Table<Player> = [

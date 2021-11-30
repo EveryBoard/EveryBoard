@@ -157,13 +157,14 @@ describe('GipfRules:', () => {
         });
         it('should force to capture consecutive pieces', () => {
             // This is diagram 4 in the rules of Gipf
-            const linesAndCaptures: [FourStatePiece[], number[]][] = [
-                [[B, B, B, B, _, B, A], [0, 1, 2, 3]],
-                [[B, B, B, B, A, _, A], [0, 1, 2, 3, 4]],
-                [[B, A, B, B, B, B, _], [0, 1, 2, 3, 4, 5]],
-                [[A, B, B, B, B, A, B], [0, 1, 2, 3, 4, 5, 6]],
+            const linesCapturesAndResults: [FourStatePiece[], number[], FourStatePiece[], number, number][] = [
+                [[B, B, B, B, _, B, A], [0, 1, 2, 3], [_, _, _, _, _, B, A], 0, 4],
+                [[B, B, B, B, A, _, A], [0, 1, 2, 3, 4], [_, _, _, _, _, _, A], 1, 4],
+                [[B, A, B, B, B, B, _], [0, 1, 2, 3, 4, 5], [_, _, _, _, _, _, _], 1, 5],
+                [[A, B, B, B, B, A, B], [0, 1, 2, 3, 4, 5, 6], [_, _, _, _, _, _, _], 2, 5],
             ];
-            for (const [line, capturePositions] of linesAndCaptures) {
+            for (const [line, capturePositions, resultingLine, capturedOpponent, capturedSelf]
+                of linesCapturesAndResults) {
                 const board: Table<FourStatePiece> = [
                     [N, N, N, _, _, _, _],
                     [N, N, _, _, _, _, _],
@@ -177,8 +178,20 @@ describe('GipfRules:', () => {
                 const capture: GipfCapture = new GipfCapture(capturePositions.map((q: number) => new Coord(q, 3)));
                 const placement: GipfPlacement = new GipfPlacement(new Coord(3, 0), MGPOptional.empty());
                 const move: GipfMove = new GipfMove(placement, [capture], []);
-                const legality: MGPFallible<GipfLegalityInformation> = rules.isLegal(move, state);
-                expect(legality.isSuccess()).toBeTrue();
+                const expectedBoard: Table<FourStatePiece> = [
+                    [N, N, N, B, _, _, _],
+                    [N, N, _, _, _, _, _],
+                    [N, _, _, _, _, _, _],
+                    resultingLine,
+                    [_, _, _, _, _, _, N],
+                    [_, _, _, _, _, N, N],
+                    [_, _, _, _, N, N, N],
+                ];
+                const expectedState: GipfState = new GipfState(expectedBoard,
+                                                               P1Turn+1,
+                                                               [5, 4 + capturedSelf],
+                                                               [0, capturedOpponent]);
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
             }
         });
         it('should force to capture when possible', () => {
@@ -408,9 +421,8 @@ describe('GipfRules:', () => {
                 [_, _, _, _, N, N, N],
             ];
             const state: GipfState = new GipfState(board, P0Turn, [0, 5], [0, 0]);
-            RulesUtils.expectToBeOngoing(rules,
-                                         new GipfNode(state, MGPOptional.empty(), MGPOptional.of(dummyMove)),
-                                         minimaxes);
+            const node: GipfNode = new GipfNode(state, MGPOptional.empty(), MGPOptional.of(dummyMove));
+            RulesUtils.expectToBeOngoing(rules, node, minimaxes);
         });
     });
     describe('getAllDirectionsForEntrance', () => {

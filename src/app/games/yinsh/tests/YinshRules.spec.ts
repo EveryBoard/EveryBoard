@@ -8,8 +8,9 @@ import { YinshState } from '../YinshState';
 import { YinshMinimax } from '../YinshMinimax';
 import { YinshCapture, YinshMove } from '../YinshMove';
 import { YinshPiece } from '../YinshPiece';
-import { YinshNode, YinshRules } from '../YinshRules';
+import { YinshLegalityInformation, YinshNode, YinshRules } from '../YinshRules';
 import { Table } from 'src/app/utils/ArrayUtils';
+import { Minimax } from 'src/app/jscaip/Minimax';
 
 describe('YinshRules', () => {
 
@@ -22,7 +23,7 @@ describe('YinshRules', () => {
 
     let rules: YinshRules;
 
-    let minimaxes: YinshMinimax[]; // TODO: Minimax<Yinsh Things> TODO FOR REVIEW: why if we can be stricter?
+    let minimaxes: Minimax<YinshMove, YinshState, YinshLegalityInformation>[];
 
     beforeEach(() => {
         rules = new YinshRules(YinshState);

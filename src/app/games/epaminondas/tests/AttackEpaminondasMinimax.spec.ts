@@ -59,7 +59,7 @@ describe('AttackEpaminondasMinimax:', () => {
             [O, O, O, O, O, O, O, O, O, O, O, O, _, O],
             [O, O, O, O, O, O, O, O, O, O, O, O, _, O],
         ];
-        const greaterState: EpaminondasState = new EpaminondasState(greaterBoard, 0);
+        const greaterState: EpaminondasState = new EpaminondasState(greaterBoard, 1);
         const lesserBoard: Table<Player> = [
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
@@ -74,9 +74,9 @@ describe('AttackEpaminondasMinimax:', () => {
             [O, O, O, O, O, O, O, O, O, O, O, _, _, O],
             [O, O, O, O, O, O, O, O, O, O, O, _, O, _],
         ];
-        const lesserState: EpaminondasState = new EpaminondasState(lesserBoard, 0);
-        RulesUtils.expectSecondStateToBeBetterThanFirst(lesserState, MGPOptional.empty<EpaminondasMove>(),
-                                                        greaterState, MGPOptional.empty(),
-                                                        minimax);
+        const lesserState: EpaminondasState = new EpaminondasState(lesserBoard, 1);
+        RulesUtils.expectSecondStateToBeBetterThanFirst(minimax,
+                                                        lesserState, MGPOptional.empty(),
+                                                        greaterState, MGPOptional.empty());
     });
 });

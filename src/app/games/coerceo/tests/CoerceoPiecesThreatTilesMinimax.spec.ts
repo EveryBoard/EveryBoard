@@ -38,7 +38,7 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
             [N, N, N, N, N, N, O, _, _, N, N, N, N, N, N],
             [N, N, N, N, N, N, _, O, _, N, N, N, N, N, N],
         ];
-        const weakState: CoerceoState = new CoerceoState(weakBoard, 0, [0, 0], [0, 0]);
+        const weakState: CoerceoState = new CoerceoState(weakBoard, 1, [0, 0], [0, 0]);
         const strongBoard: Table<FourStatePiece> = [
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -51,10 +51,10 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
             [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
             [N, N, N, N, N, N, _, O, _, N, N, N, N, N, N],
         ];
-        const strongState: CoerceoState = new CoerceoState(strongBoard, 0, [0, 0], [0, 1]);
-        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, MGPOptional.empty<CoerceoMove>(),
-                                                        strongState, MGPOptional.empty(),
-                                                        minimax);
+        const strongState: CoerceoState = new CoerceoState(strongBoard, 1, [0, 0], [0, 1]);
+        RulesUtils.expectSecondStateToBeBetterThanFirst(minimax,
+                                                        weakState, MGPOptional.empty(),
+                                                        strongState, MGPOptional.empty());
     });
     it('Should prefer board with more safe pieces', () => {
         const weakBoard: Table<FourStatePiece> = [
@@ -83,9 +83,9 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
             [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
         ];
         const strongState: CoerceoState = new CoerceoState(strongBoard, 1, [0, 0], [0, 0]);
-        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, MGPOptional.empty<CoerceoMove>(),
-                                                        strongState, MGPOptional.empty(),
-                                                        minimax);
+        RulesUtils.expectSecondStateToBeBetterThanFirst(minimax,
+                                                        weakState, MGPOptional.empty(),
+                                                        strongState, MGPOptional.empty());
     });
     it('Should distinguish fake and true threats', () => {
         const weakBoard: Table<FourStatePiece> = [
@@ -100,7 +100,7 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
             [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
             [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
         ];
-        const weakState: CoerceoState = new CoerceoState(weakBoard, 0, [0, 0], [0, 0]);
+        const weakState: CoerceoState = new CoerceoState(weakBoard, 1, [0, 0], [0, 0]);
         const strongBoard: Table<FourStatePiece> = [
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -113,10 +113,10 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
             [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
             [N, N, N, N, N, N, _, O, _, N, N, N, N, N, N],
         ];
-        const strongState: CoerceoState = new CoerceoState(strongBoard, 0, [0, 0], [0, 0]);
-        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, MGPOptional.empty<CoerceoMove>(),
-                                                        strongState, MGPOptional.empty(),
-                                                        minimax);
+        const strongState: CoerceoState = new CoerceoState(strongBoard, 1, [0, 0], [0, 0]);
+        RulesUtils.expectSecondStateToBeBetterThanFirst(minimax,
+                                                        weakState, MGPOptional.empty(),
+                                                        strongState, MGPOptional.empty());
     });
     it('Should prefer board with more tiles (with safe board config)', () => {
         const weakBoard: Table<FourStatePiece> = [
@@ -131,7 +131,7 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
             [N, N, N, N, N, N, O, _, _, N, N, N, N, N, N],
             [N, N, N, N, N, N, _, O, _, N, N, N, N, N, N],
         ];
-        const weakState: CoerceoState = new CoerceoState(weakBoard, 0, [0, 0], [0, 0]);
+        const weakState: CoerceoState = new CoerceoState(weakBoard, 1, [0, 0], [0, 0]);
         const strongBoard: Table<FourStatePiece> = [
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -144,10 +144,10 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
             [N, N, N, N, N, N, O, _, _, N, N, N, N, N, N],
             [N, N, N, N, N, N, _, O, _, N, N, N, N, N, N],
         ];
-        const strongState: CoerceoState = new CoerceoState(strongBoard, 0, [0, 1], [0, 0]);
-        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, MGPOptional.empty<CoerceoMove>(),
-                                                        strongState, MGPOptional.empty(),
-                                                        minimax);
+        const strongState: CoerceoState = new CoerceoState(strongBoard, 1, [0, 1], [0, 0]);
+        RulesUtils.expectSecondStateToBeBetterThanFirst(minimax,
+                                                        weakState, MGPOptional.empty(),
+                                                        strongState, MGPOptional.empty());
     });
     describe('filteredThreatMap', () => {
         it('should see threats coming', () => {

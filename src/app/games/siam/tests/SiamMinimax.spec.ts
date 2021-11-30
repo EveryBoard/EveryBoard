@@ -154,8 +154,8 @@ describe('SiamMinimax:', () => {
         ];
         const state: SiamState = new SiamState(board, 0);
         const move: SiamMove = new SiamMove(1, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT);
-        const boardValue: number = minimax.getBoardValue(
-            new SiamNode(state, MGPOptional.empty(), MGPOptional.of(move))).value;
+        const node: SiamNode = new SiamNode(state, MGPOptional.empty(), MGPOptional.of(move));
+        const boardValue: number = minimax.getBoardValue(node).value;
         expect(boardValue).toBeLessThan(0);
     });
     it('Board value test: Symetry test', () => {
@@ -168,12 +168,12 @@ describe('SiamMinimax:', () => {
         ];
         const state: SiamState = new SiamState(board, 0);
         const move: SiamMove = new SiamMove(1, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT);
-        const boardValue: number = minimax.getBoardValue(
-            new SiamNode(state, MGPOptional.empty(), MGPOptional.of(move))).value;
+        const node: SiamNode = new SiamNode(state, MGPOptional.empty(), MGPOptional.of(move));
+        const boardValue: number = minimax.getBoardValue(node).value;
 
         const symetryState: SiamState = new SiamState(board, 1);
-        const symetryBoardValue: number = minimax.getBoardValue(
-            new SiamNode(symetryState, MGPOptional.empty(), MGPOptional.of(move))).value;
+        const symmetryNode: SiamNode = new SiamNode(symetryState, MGPOptional.empty(), MGPOptional.of(move));
+        const symetryBoardValue: number = minimax.getBoardValue(symmetryNode).value;
         expect(boardValue).toEqual(-1 * symetryBoardValue, 'Both board value should have same absolute value');
     });
     it('Logical test: Should get option for first turn', () => {

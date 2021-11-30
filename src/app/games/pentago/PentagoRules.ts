@@ -9,9 +9,8 @@ import { PentagoFailure } from './PentagoFailure';
 import { PentagoMove } from './PentagoMove';
 import { PentagoState } from './PentagoState';
 
-export class PentagoNode extends MGPNode<PentagoRules,
-                                                  PentagoMove,
-                                                  PentagoState> {}
+export class PentagoNode extends MGPNode<PentagoRules, PentagoMove, PentagoState> {}
+
 export class PentagoRules extends Rules<PentagoMove, PentagoState> {
 
     public static readonly singleton: PentagoRules = new PentagoRules(PentagoState);

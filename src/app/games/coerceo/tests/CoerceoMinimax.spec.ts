@@ -33,7 +33,7 @@ describe('CoerceoMinimax', () => {
             [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
             [N, N, N, N, N, N, _, X, O, N, N, N, N, N, N],
         ];
-        const weakState: CoerceoState = new CoerceoState(weakBoard, 0, [0, 0], [0, 0]);
+        const weakState: CoerceoState = new CoerceoState(weakBoard, 1, [0, 0], [0, 0]);
         const strongBoard: Table<FourStatePiece> = [
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -46,9 +46,9 @@ describe('CoerceoMinimax', () => {
             [N, N, N, N, N, N, _, X, O, N, N, N, N, N, N],
             [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
         ];
-        const strongState: CoerceoState = new CoerceoState(strongBoard, 0, [0, 0], [0, 0]);
-        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, MGPOptional.empty<CoerceoMove>(),
-                                                        strongState, MGPOptional.empty(),
-                                                        minimax);
+        const strongState: CoerceoState = new CoerceoState(strongBoard, 1, [0, 0], [0, 0]);
+        RulesUtils.expectSecondStateToBeBetterThanFirst(minimax,
+                                                        weakState, MGPOptional.empty(),
+                                                        strongState, MGPOptional.empty());
     });
 });

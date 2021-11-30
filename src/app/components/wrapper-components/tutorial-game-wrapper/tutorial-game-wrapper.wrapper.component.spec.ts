@@ -1126,7 +1126,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     }
                 } else {
                     const context: string = 'Move should be legal to reach predicate but failed because';
-                    TestUtils.expectValidationSuccess(MGPValidation.ofFallible(status), context);
+                    TestUtils.expectValidationSuccess(MGPValidation.ofFallible(moveResult), context);
                 }
             }
         }));
@@ -1150,7 +1150,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                                     .toEqual(MGPValidation.SUCCESS);
                             }
                         } else {
-                            expect(status.getReason()).withContext('Solution move should be legal but failed').toBeNull();
+                            expect(moveResult.getReason()).withContext('Solution move should be legal but failed').toBeNull();
                         }
                     }
                 }

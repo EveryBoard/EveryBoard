@@ -37,7 +37,7 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
         if (captureValidity.isFailure()) {
             return captureValidity;
         }
-        return MGPFallible.success(captureValidity.get()); // TODO FOR REVIEW: this line was success(newBoard), should be correct because of mutability but better check
+        return MGPFallible.success(captureValidity.get());
     }
     public static getPhalanxValidity(state: EpaminondasState, move: EpaminondasMove): MGPValidation {
         let coord: Coord = move.coord;
@@ -122,8 +122,7 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
                           newBoard: EpaminondasLegalityInformation)
     : EpaminondasState
     {
-        const resultingState: EpaminondasState =
-            new EpaminondasState(Utils.getNonNullable(newBoard), state.turn + 1);
+        const resultingState: EpaminondasState = new EpaminondasState(newBoard, state.turn + 1);
         return resultingState;
     }
     public getGameStatus(node: EpaminondasNode): GameStatus {

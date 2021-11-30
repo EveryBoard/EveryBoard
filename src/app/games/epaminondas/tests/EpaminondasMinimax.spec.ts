@@ -58,7 +58,7 @@ describe('EpaminondasMinimax:', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, O, O, _, _, _, _, _, _, _, _, _, _, _],
-        ], 0);
+        ], 1);
         const strongerState: EpaminondasState = new EpaminondasState([
             [_, _, _, _, _, _, _, _, _, X, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, X, _, _, _, _],
@@ -72,8 +72,9 @@ describe('EpaminondasMinimax:', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, O, O, _, _, _, _, _, _, _, _, _, _, _],
-        ], 0);
-        RulesUtils.expectSecondStateToBeBetterThanFirst(weakerState, MGPOptional.empty<EpaminondasMove>(),
-                                                        strongerState, MGPOptional.empty(), minimax);
+        ], 1);
+        RulesUtils.expectSecondStateToBeBetterThanFirst(minimax,
+                                                        weakerState, MGPOptional.empty(),
+                                                        strongerState, MGPOptional.empty());
     });
 });

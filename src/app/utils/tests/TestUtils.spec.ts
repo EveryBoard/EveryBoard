@@ -307,7 +307,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     public async expectMoveSuccess(elementName: string,
                                    move: Move,
                                    state?: GameState,
-                                   scores?: [number, number])
+                                   scores?: readonly [number, number])
     : Promise<void>
     {
         const element: DebugElement = this.findElement(elementName);
@@ -335,7 +335,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
                                    reason: string,
                                    move: Move,
                                    state?: GameState,
-                                   scores?: [number, number])
+                                   scores?: readonly [number, number])
     : Promise<void>
     {
         const element: DebugElement = this.findElement(elementName);

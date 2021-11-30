@@ -15,10 +15,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
 
     public static VERBOSE: boolean = false;
 
-    public applyLegalMove(move: CoerceoMove,
-                          state: CoerceoState,
-                          _info: void)
-    : CoerceoState
+    public applyLegalMove(move: CoerceoMove, state: CoerceoState, _info: void): CoerceoState
     {
         if (move.isTileExchange()) {
             return this.applyLegalTileExchange(move, state);
@@ -26,9 +23,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
             return this.applyLegalDeplacement(move, state);
         }
     }
-    public applyLegalTileExchange(move: CoerceoMove,
-                                  state: CoerceoState)
-    : CoerceoState
+    public applyLegalTileExchange(move: CoerceoMove, state: CoerceoState): CoerceoState
     {
         const newBoard: FourStatePiece[][] = state.getCopiedBoard();
         const captured: Coord = move.capture.get();
@@ -51,9 +46,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
                     { a_initialState: state, afterCapture, afterTileRemoval, resultingState } });
         return resultingState;
     }
-    public applyLegalDeplacement(move: CoerceoMove,
-                                 state: CoerceoState)
-    : CoerceoState
+    public applyLegalDeplacement(move: CoerceoMove, state: CoerceoState): CoerceoState
     {
         // Move the piece
         const afterDeplacement: CoerceoState = state.applyLegalDeplacement(move);

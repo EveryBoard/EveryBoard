@@ -19,7 +19,7 @@ export class RulesUtils {
         const legality: MGPFallible<L> = rules.isLegal(move, state);
         if (legality.isSuccess()) {
             const resultingState: S = rules.applyLegalMove(move, state, legality.get());
-            if (isComparableObject(resultingState)) {
+            if (false && isComparableObject(resultingState)) {
                 const equals: boolean = comparableEquals(resultingState, expectedState);
                 expect(equals).withContext('states should be equal').toBeTrue();
             } else {
@@ -84,18 +84,25 @@ export class RulesUtils {
         }
     }
     public static expectSecondStateToBeBetterThanFirst<M extends Move, S extends GameState, L>(
+        minimax: Minimax<M, S, L>,
         weakerState: S,
         weakMove: MGPOptional<M>,
         strongerState: S,
-        strongMove: MGPOptional<M>,
-        minimax: Minimax<M, S, L>)
+        strongMove: MGPOptional<M>)
     : void
     {
         const weakValue: number =
             minimax.getBoardValue(new MGPNode(weakerState, MGPOptional.empty(), weakMove)).value;
         const strongValue: number =
             minimax.getBoardValue(new MGPNode(strongerState, MGPOptional.empty(), strongMove)).value;
-        expect(weakValue).toBeLessThan(strongValue);
+        expect(weakerState.getCurrentPlayer())
+            .withContext('expectSecondStateToBeBetterThanFirst expects states for the same player')
+            .toBe(strongerState.getCurrentPlayer());
+        if (weakerState.getCurrentPlayer() === Player.ZERO) {
+            expect(weakValue).toBeGreaterThan(strongValue);
+        } else {
+            expect(weakValue).toBeLessThan(strongValue);
+        }
     }
     public static expectStateToBePreVictory<M extends Move, S extends GameState, L>(
         state: S,

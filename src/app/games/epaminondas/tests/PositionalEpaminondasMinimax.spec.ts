@@ -60,7 +60,7 @@ describe('PositionalEpaminondasMinimax:', () => {
             [O, O, O, O, O, O, O, O, O, O, O, O, _, O],
             [O, O, O, O, O, O, O, O, O, O, O, O, _, O],
         ];
-        const greaterState: EpaminondasState = new EpaminondasState(greaterBoard, 0);
+        const greaterState: EpaminondasState = new EpaminondasState(greaterBoard, 1);
         const lesserBoard: Table<Player> = [
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
@@ -75,10 +75,10 @@ describe('PositionalEpaminondasMinimax:', () => {
             [O, O, O, O, O, O, O, O, O, O, O, O, _, _],
             [O, O, O, O, O, O, O, O, O, O, O, O, _, _],
         ];
-        const lesserState: EpaminondasState = new EpaminondasState(lesserBoard, 0);
-        RulesUtils.expectSecondStateToBeBetterThanFirst(lesserState, MGPOptional.empty<EpaminondasMove>(),
-                                                        greaterState, MGPOptional.empty(),
-                                                        minimax);
+        const lesserState: EpaminondasState = new EpaminondasState(lesserBoard, 1);
+        RulesUtils.expectSecondStateToBeBetterThanFirst(minimax,
+                                                        lesserState, MGPOptional.empty(),
+                                                        greaterState, MGPOptional.empty());
     });
     it('Should prefer to have aligned piece than higher piece', () => {
         const greaterBoard: Table<Player> = [
@@ -95,7 +95,7 @@ describe('PositionalEpaminondasMinimax:', () => {
             [O, O, O, O, O, O, O, _, O, O, O, O, O, O],
             [O, O, O, O, O, O, O, _, O, O, O, O, O, O],
         ];
-        const greaterState: EpaminondasState = new EpaminondasState(greaterBoard, 0);
+        const greaterState: EpaminondasState = new EpaminondasState(greaterBoard, 1);
         const lesserBoard: Table<Player> = [
             [X, X, X, X, X, X, X, _, X, X, X, X, _, X],
             [X, X, X, X, X, X, X, _, X, X, X, X, _, _],
@@ -110,9 +110,9 @@ describe('PositionalEpaminondasMinimax:', () => {
             [O, O, O, O, O, O, O, _, O, O, O, O, O, O],
             [O, O, O, O, O, O, O, _, O, O, O, O, O, O],
         ];
-        const lesserState: EpaminondasState = new EpaminondasState(lesserBoard, 0);
-        RulesUtils.expectSecondStateToBeBetterThanFirst(lesserState, MGPOptional.empty<EpaminondasMove>(),
-                                                        greaterState, MGPOptional.empty(),
-                                                        minimax);
+        const lesserState: EpaminondasState = new EpaminondasState(lesserBoard, 1);
+        RulesUtils.expectSecondStateToBeBetterThanFirst(minimax,
+                                                        lesserState, MGPOptional.empty(),
+                                                        greaterState, MGPOptional.empty());
     });
 });

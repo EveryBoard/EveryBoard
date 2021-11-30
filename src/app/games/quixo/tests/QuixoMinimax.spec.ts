@@ -29,7 +29,7 @@ describe('QuixoMinimax:', () => {
         ];
         const state: QuixoState = new QuixoState(board, 0);
         const move: QuixoMove = new QuixoMove(0, 2, Orthogonal.RIGHT);
-        expect(minimax.getBoardValue(
-            new QuixoNode(state, MGPOptional.empty(), MGPOptional.of(move))).value).toEqual(-1);
+        const node: QuixoNode = new QuixoNode(state, MGPOptional.empty(), MGPOptional.of(move));
+        expect(minimax.getBoardValue(node).value).toEqual(-1);
     });
 });

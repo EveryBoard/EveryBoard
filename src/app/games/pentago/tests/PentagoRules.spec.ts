@@ -106,9 +106,8 @@ describe('PentagoRules', () => {
         const expectedState: PentagoState = new PentagoState(expectedBoard, 5);
         const move: PentagoMove = PentagoMove.withRotation(0, 0, 0, true);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        RulesUtils.expectToBeOngoing(rules,
-                                     new PentagoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move)),
-                                     minimaxes);
+        const node: PentagoNode = new PentagoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+        RulesUtils.expectToBeOngoing(rules, node, minimaxes);
     });
     it('it should be able to twist any board anti-clockwise', () => {
         const board: Table<Player> = [

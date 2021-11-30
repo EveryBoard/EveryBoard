@@ -154,23 +154,22 @@ describe('P4Rules', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
-            [_, _, _, O, _, _, _],
+            [_, _, _, _, _, _, O],
         ];
-        const state1: P4State = new P4State(board1, 12);
+        const state1: P4State = new P4State(board1, 0);
         const board2: Player[][] = [
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
-            [_, _, _, _, _, _, O],
+            [_, _, _, O, _, _, _],
         ];
-        const state2: P4State = new P4State(board2, 12);
+        const state2: P4State = new P4State(board2, 0);
 
-        // TODO: this should actually be the opposite!
-        RulesUtils.expectSecondStateToBeBetterThanFirst(state1, MGPOptional.empty<P4Move>(),
-                                                        state2, MGPOptional.empty(),
-                                                        minimax);
+        RulesUtils.expectSecondStateToBeBetterThanFirst(minimax,
+                                                        state1, MGPOptional.empty(),
+                                                        state2, MGPOptional.empty());
     });
     it('should know where the lowest case is', () => {
         const board: Player[][] = [

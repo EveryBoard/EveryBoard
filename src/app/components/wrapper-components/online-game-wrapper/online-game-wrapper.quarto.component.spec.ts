@@ -390,7 +390,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         // when receiving a move time being null
         await receivePartDAOUpdate({
-            lastMoveTime: null
+            lastMoveTime: null,
             listMoves: [FIRST_MOVE_ENCODED],
             turn: 1,
         });

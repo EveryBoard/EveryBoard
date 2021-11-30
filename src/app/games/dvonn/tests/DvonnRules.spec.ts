@@ -12,7 +12,6 @@ import { MaxStacksDvonnMinimax } from '../MaxStacksDvonnMinimax';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 
 describe('DvonnRules:', () => {
 
@@ -261,9 +260,8 @@ describe('DvonnRules:', () => {
             [_, _, _, _, _, _, _, _, _, N, N],
         ];
         const state: DvonnState = new DvonnState(board, 10, true);
-        expect(minimaxes[0].getListMoves(
-            new DvonnNode(state, MGPOptional.empty(), MGPOptional.of(DvonnMove.PASS))).length)
-            .toEqual(0);
+        const node: DvonnNode = new DvonnNode(state, MGPOptional.empty(), MGPOptional.of(DvonnMove.PASS));
+        expect(minimaxes[0].getListMoves(node).length).toEqual(0);
     });
     it('should not end if moves can be done', () => {
         const board: Table<DvonnPieceStack> = [
@@ -320,9 +318,8 @@ describe('DvonnRules:', () => {
     });
     describe('isMovablePiece', () => {
         it('should fail if the coord is not on the board', () => {
-            // TODO FOR REVIEW: we don't have a generic failure for this, should it not be checked by each game?
-            expect(rules.isMovablePiece(DvonnState.getInitialState(), new Coord(-1, -1)))
-                .toEqual(MGPValidation.failure(DvonnFailure.INVALID_COORD()));
+            expect(() => rules.isMovablePiece(DvonnState.getInitialState(), new Coord(-1, -1)))
+                .toThrowError('Assertion failure: piece is not on the board');
         });
     });
 });

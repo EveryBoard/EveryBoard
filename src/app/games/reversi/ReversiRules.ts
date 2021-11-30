@@ -5,7 +5,7 @@ import { Coord } from '../../jscaip/Coord';
 import { Direction } from '../../jscaip/Direction';
 import { ReversiMove } from './ReversiMove';
 import { Player } from 'src/app/jscaip/Player';
-import { assert, display, Utils } from 'src/app/utils/utils';
+import { assert, display } from 'src/app/utils/utils';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ReversiFailure } from './ReversiFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
@@ -51,7 +51,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
                 new ReversiState(board, turn + 1);
             return sameBoardDifferentTurn;
         }
-        for (const s of Utils.getNonNullable(switched)) {
+        for (const s of switched) {
             board[s.y][s.x] = player;
         }
         board[move.coord.y][move.coord.x] = player;

@@ -11,6 +11,7 @@ import { HexagonalGameState } from 'src/app/jscaip/HexagonalGameState';
 import { DvonnFailure } from './DvonnFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { assert } from 'src/app/utils/utils';
 
 export class DvonnNode extends MGPNode<DvonnRules, DvonnMove, DvonnState> { }
 
@@ -73,9 +74,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
         return [p0Score, p1Score];
     }
     public isMovablePiece(state: DvonnState, coord: Coord): MGPValidation {
-        if (!state.isOnBoard(coord)) {
-            return MGPValidation.failure(DvonnFailure.INVALID_COORD());
-        }
+        assert(state.isOnBoard(coord), 'piece is not on the board');
         const stack: DvonnPieceStack = state.getPieceAt(coord);
         if (stack.getSize() < 1) {
             return MGPValidation.failure(DvonnFailure.EMPTY_STACK());

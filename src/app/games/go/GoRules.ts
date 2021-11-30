@@ -244,10 +244,7 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
     public isLegal(move: GoMove, state: GoState): MGPFallible<GoLegalityInformation> {
         return GoRules.isLegal(move, state);
     }
-    public applyLegalMove(legalMove: GoMove,
-                          state: GoState,
-                          status: GoLegalityInformation)
-    : GoState
+    public applyLegalMove(legalMove: GoMove, state: GoState, status: GoLegalityInformation): GoState
     {
         display(GoRules.VERBOSE, { applyLegalMove: { legalMove, state, status } });
         if (GoRules.isPass(legalMove)) {

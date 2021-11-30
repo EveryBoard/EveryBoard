@@ -41,7 +41,7 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
 
     public canPass: boolean;
 
-    public scores: MGPOptional<[number, number]> = MGPOptional.empty();
+    public scores: MGPOptional<readonly [number, number]> = MGPOptional.empty();
 
     public imagesLocation: string = 'assets/images/';
 
@@ -51,7 +51,7 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
 
     public chooseMove: (move: M,
                         state: S,
-                        scores?: [number, number]) => Promise<MGPValidation>;
+                        scores?: readonly [number, number]) => Promise<MGPValidation>;
 
     public canUserPlay: (element: string) => MGPValidation;
 

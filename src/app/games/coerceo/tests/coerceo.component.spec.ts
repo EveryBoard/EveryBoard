@@ -17,8 +17,8 @@ describe('CoerceoComponent', () => {
     const O: FourStatePiece = FourStatePiece.ZERO;
     const X: FourStatePiece = FourStatePiece.ONE;
 
-    function getScores(): [number, number] {
-        return componentTestUtils.getComponent().rules.node.gameState['captures'];
+    function getScores(): readonly [number, number] {
+        return componentTestUtils.getComponent().scores.get();
     }
     function expectCoordToBeOfRemovedFill(x: number, y: number): void {
         const gameComponent: CoerceoComponent = componentTestUtils.getComponent();

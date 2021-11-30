@@ -89,9 +89,8 @@ describe('ReversiRules', () => {
             const move: ReversiMove = new ReversiMove(0, 7);
             const expectedState: ReversiState = new ReversiState(expectedBoard, 60);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-            RulesUtils.expectToBeVictoryFor(rules,
-                                            new ReversiNode(expectedState, MGPOptional.empty(), MGPOptional.of(move)),
-                                            Player.ONE, minimaxes);
+            const node: ReversiNode = new ReversiNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
         });
         it('Should consider the player with the more point the winner at the end (Player.ZERO remix)', () => {
             const board: Table<Player> = [
@@ -118,10 +117,8 @@ describe('ReversiRules', () => {
             const move: ReversiMove = new ReversiMove(0, 7);
             const expectedState: ReversiState = new ReversiState(expectedBoard, 61);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-            RulesUtils.expectToBeVictoryFor(rules,
-                                            new ReversiNode(expectedState, MGPOptional.empty(), MGPOptional.of(move)),
-                                            Player.ZERO,
-                                            minimaxes);
+            const node: ReversiNode = new ReversiNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
         });
         it('Should recognize draws', () => {
             const board: Table<Player> = [

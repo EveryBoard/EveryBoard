@@ -29,7 +29,7 @@ describe('SaharaMinimax', () => {
             [N, _, _, _, _, _, _, _, _, _, N],
             [N, N, X, O, _, _, _, X, O, N, N],
         ];
-        const weakState: SaharaState = new SaharaState(weakBoard, 0);
+        const weakState: SaharaState = new SaharaState(weakBoard, 1);
         const strongBoard: FourStatePiece[][] = [
             [N, N, _, O, X, _, _, O, X, N, N],
             [N, _, _, _, _, _, _, _, _, _, N],
@@ -38,9 +38,9 @@ describe('SaharaMinimax', () => {
             [N, _, _, _, _, _, _, _, _, _, N],
             [N, N, X, O, _, _, _, X, O, N, N],
         ];
-        const strongState: SaharaState = new SaharaState(strongBoard, 0);
-        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, MGPOptional.empty<SaharaMove>(),
-                                                        strongState, MGPOptional.empty(),
-                                                        minimax);
+        const strongState: SaharaState = new SaharaState(strongBoard, 1);
+        RulesUtils.expectSecondStateToBeBetterThanFirst(minimax,
+                                                        weakState, MGPOptional.empty(),
+                                                        strongState, MGPOptional.empty());
     });
 });
