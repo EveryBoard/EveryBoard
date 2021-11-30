@@ -54,7 +54,7 @@ jobs:
       - name: Install python dependencies
         uses: BSFishy/pip-action@v1
         with:
-          packages: lxml selenium pandas
+          packages: lxml selenium pandas webdriver-manager
       - name: Check coverage
         run: python ./scripts/coverage.py check
       - name: Update and check translations

@@ -1,11 +1,12 @@
 #!/usr/bin/python
 from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
 
 from selenium.webdriver.chrome.options import Options
 
 options = Options()
 options.headless = True
-driver = webdriver.Chrome(options=options)
+driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
 
 games = []
 with open('scripts/games.txt') as f:
