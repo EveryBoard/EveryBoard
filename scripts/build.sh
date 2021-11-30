@@ -12,4 +12,4 @@ echo "export const firebaseConfig = {
 bash ./scripts/update-translations.sh
 bash ./scripts/check-translations.sh
 bash ./scripts/update-images.sh
-npm run build $ARGS
+npm run build:netlify $ARGS

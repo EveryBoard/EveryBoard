@@ -6,6 +6,7 @@
     "start": "ng serve",
     "start:emulator": "bash ./scripts/start-in-emulator.sh",
     "build": "ng build --configuration=production",
+    "build:netlify": "ng build --configuration=production-netlify"
     "build:dev": "ng build --configuration=production,dev",
     "build:test": "ng build --configuration=test",
     "test": "bash ./scripts/test.sh",
