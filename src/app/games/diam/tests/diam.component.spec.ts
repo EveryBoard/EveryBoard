@@ -125,7 +125,7 @@ describe('DiamComponent', () => {
         // when clicking on A1 and then on the last column
         // then the move is legal
         await testUtils.expectClickSuccess('#click_0_1');
-        const move: DiamMove = DiamMoveShift.fromRepresentation(new Coord(0, 2), 'anticlockwise');
+        const move: DiamMove = DiamMoveShift.fromRepresentation(new Coord(0, 2), 'counterclockwise');
         await testUtils.expectMoveSuccess('#click_7', move);
     }));
     it('should forbid shift of more than one space', fakeAsync(async() => {

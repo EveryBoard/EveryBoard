@@ -91,7 +91,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
     };
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
-        this.rules = DiamRules.getWithFreshState();
+        this.rules = DiamRules.get();
         this.availableMinimaxes = [
             new DiamDummyMinimax(this.rules, 'DiamDummyMinimax'),
         ];
@@ -117,7 +117,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
                 if ((selected.position.x + 1) % DiamState.WIDTH === x) {
                     move = new DiamMoveShift(selected.position, 'clockwise');
                 } else if ((selected.position.x + (DiamState.WIDTH-1)) % DiamState.WIDTH === x) {
-                    move = new DiamMoveShift(selected.position, 'anticlockwise');
+                    move = new DiamMoveShift(selected.position, 'counterclockwise');
                 } else {
                     return this.cancelMove(DiamFailure.MUST_SHIFT_TO_NEIGHBOR());
                 }

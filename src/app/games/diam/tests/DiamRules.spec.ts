@@ -107,8 +107,8 @@ describe('DiamRules', () => {
                 [A1, __, __, __, __, __, __, B2],
                 [B1, __, __, __, __, __, __, A2],
             ], 4);
-            // when moving the stack starting at A1 anticlockwise
-            const move: DiamMove = DiamMoveShift.fromRepresentation(new Coord(0, 2), 'anticlockwise');
+            // when moving the stack starting at A1 counterclockwise
+            const move: DiamMove = DiamMoveShift.fromRepresentation(new Coord(0, 2), 'counterclockwise');
             // then the move is legal
             const expectedState: DiamState = DiamState.fromRepresentation([
                 [__, __, __, __, __, __, __, __],
@@ -126,8 +126,8 @@ describe('DiamRules', () => {
                 [B1, __, __, __, __, __, __, __],
                 [A1, __, __, __, __, __, __, __],
             ], 4);
-            // when moving the stack starting at A1 anticlockwise
-            const move: DiamMove = DiamMoveShift.fromRepresentation(new Coord(0, 3), 'anticlockwise');
+            // when moving the stack starting at A1 counterclockwise
+            const move: DiamMove = DiamMoveShift.fromRepresentation(new Coord(0, 3), 'counterclockwise');
             // then the move is legal
             const expectedState: DiamState = DiamState.fromRepresentation([
                 [__, __, __, __, __, __, __, B2],

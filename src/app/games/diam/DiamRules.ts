@@ -22,10 +22,6 @@ export class DiamRules extends Rules<DiamMove, DiamState, LegalityStatus> {
         }
         return DiamRules.singleton.get();
     }
-    public static getWithFreshState(): DiamRules {
-        DiamRules.singleton = MGPOptional.of(new DiamRules(DiamState));
-        return DiamRules.singleton.get();
-    }
 
     private constructor(state: Type<DiamState>) {
         super(state);
@@ -114,7 +110,7 @@ export class DiamRules extends Rules<DiamMove, DiamState, LegalityStatus> {
     public pieceCanMove(state: DiamState, coord: Coord): boolean {
         if (this.isShiftLegal(new DiamMoveShift(coord, 'clockwise'), state).legal.isSuccess()) {
             return true;
-        } else if (this.isShiftLegal(new DiamMoveShift(coord, 'anticlockwise'), state).legal.isSuccess()) {
+        } else if (this.isShiftLegal(new DiamMoveShift(coord, 'counterclockwise'), state).legal.isSuccess()) {
             return true;
         } else {
             return false;

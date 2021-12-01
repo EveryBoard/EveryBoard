@@ -32,13 +32,13 @@ export class DiamMoveDrop extends Move {
     }
 }
 
-type DiamShiftDirection = 'clockwise' | 'anticlockwise';
+type DiamShiftDirection = 'clockwise' | 'counterclockwise';
 
 export class DiamMoveShift extends Move {
     public static encoder: NumberEncoder<DiamMoveShift> = NumberEncoder.tuple(
         [Coord.numberEncoder(8, 4), NumberEncoder.booleanEncoder],
         (shift: DiamMoveShift): [Coord, boolean] => [shift.start, shift.moveDirection === 'clockwise'],
-        (fields: [Coord, boolean]): DiamMoveShift => new DiamMoveShift(fields[0], fields[1] ? 'clockwise' : 'anticlockwise'),
+        (fields: [Coord, boolean]): DiamMoveShift => new DiamMoveShift(fields[0], fields[1] ? 'clockwise' : 'counterclockwise'),
     );
     public static fromRepresentation(representationStart: Coord, moveDirection: DiamShiftDirection): DiamMoveShift {
         // In the representation, the y axis is reverted, so 3 - y gives the real y on board

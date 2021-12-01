@@ -19,25 +19,10 @@ export class DiamDummyMinimax extends Minimax<DiamMove, DiamState, LegalityStatu
     private getListShifts(state: DiamState): DiamMoveShift[] {
         const shifts: DiamMoveShift[] = [];
         const shiftSources: Coord[] = this.getShiftSources(state);
-        for (let x: number = 0; x < DiamState.WIDTH; x++) {
-            const height: number = state.getStackHeight(x);
-            for (let y: number = 0; y < DiamState.HEIGHT; y++) {
-                const piece: DiamPiece = state.getPieceAtXY(x, y);
-                if (piece === DiamPiece.EMPTY) {
-                    // it can be the target for a drop or a shift
-                    for (const shiftSource of shiftSources) {
-                        const movedHeight: number = state.getStackHeight(shiftSource.x) - shiftSource.y;
-                        const resultingHeight: number = height + movedHeight;
-                        if (resultingHeight < DiamState.HEIGHT) {
-                            if ((shiftSource.x + 1) % DiamState.WIDTH === x) {
-                                shifts.push(new DiamMoveShift(shiftSource, 'clockwise'));
-                            }
-                            if ((shiftSource.x + (DiamState.WIDTH-1)) % DiamState.WIDTH === x) {
-                                shifts.push(new DiamMoveShift(shiftSource, 'anticlockwise'));
-                            }
-                        }
-                    }
-                    break; // no need to continue iterating on this y
+        for (const shiftSource of shiftSources) {
+            for (const shift of [new DiamMoveShift(shiftSource, 'clockwise'), new DiamMoveShift(shiftSource, 'counterclockwise')]) {
+                if (DiamRules.get().isLegal(shift, state).legal.isSuccess()) {
+                    shifts.push(shift);
                 }
             }
         }
@@ -47,14 +32,10 @@ export class DiamDummyMinimax extends Minimax<DiamMove, DiamState, LegalityStatu
         const remainingPieces: DiamPiece[] = this.getRemainingPiecesForCurrentPlayer(state);
         const drops: DiamMoveDrop[] = [];
         for (let x: number = 0; x < DiamState.WIDTH; x++) {
-            for (let y: number = 0; y < DiamState.HEIGHT; y++) {
-                const piece: DiamPiece = state.getPieceAtXY(x, y);
-                if (piece === DiamPiece.EMPTY) {
-                    // it can be the target for a drop
-                    for (const piece of remainingPieces) {
-                        drops.push(new DiamMoveDrop(x, piece));
-                    }
-                    break; // no need to continue iterating on this y
+            for (const piece of remainingPieces) {
+                const drop: DiamMoveDrop = new DiamMoveDrop(x, piece);
+                if (DiamRules.get().isLegal(drop, state).legal.isSuccess()) {
+                    drops.push(drop);
                 }
             }
         }
