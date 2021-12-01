@@ -6,6 +6,7 @@ import { Player } from './Player';
 import { GameState } from './GameState';
 import { MGPOptional } from '../utils/MGPOptional';
 import { MGPFallible } from '../utils/MGPFallible';
+import { NodeUnheritance } from './NodeUnheritance';
 
 export class GameStatus {
 
@@ -46,13 +47,14 @@ export class GameStatus {
 
 export abstract class Rules<M extends Move,
                             S extends GameState,
-                            L = void>
+                            L = void,
+                            U extends NodeUnheritance = NodeUnheritance>
 {
 
     public constructor(public readonly stateType: Type<S>) {
         this.setInitialBoard();
     }
-    public node: MGPNode<Rules<M, S, L>, M, S, L>;
+    public node: MGPNode<Rules<M, S, L, U>, M, S, L, U>;
     /* The data that represent the status of the game at the current moment, including:
      * the board
      * the turn
@@ -70,7 +72,7 @@ export abstract class Rules<M extends Move,
         const legality: MGPFallible<L> = this.isLegal(move, this.node.gameState);
         if (this.node.hasMoves()) { // if calculation has already been done by the AI
             display(LOCAL_VERBOSE, 'Rules.choose: current node has moves');
-            const choice: MGPOptional<MGPNode<Rules<M, S, L>, M, S, L>> = this.node.getSonByMove(move);
+            const choice: MGPOptional<MGPNode<Rules<M, S, L, U>, M, S, L, U>> = this.node.getSonByMove(move);
             // let's not create the node twice
             if (choice.isPresent()) {
                 assert(legality.isSuccess(), 'Rules.choose: Move is illegal: ' + legality.getReasonOr(''));
@@ -88,9 +90,9 @@ export abstract class Rules<M extends Move,
         }
 
         const resultingState: GameState = this.applyLegalMove(move, this.node.gameState, legality.get());
-        const son: MGPNode<Rules<M, S, L>, M, S, L> = new MGPNode(resultingState as S,
-                                                                  MGPOptional.of(this.node),
-                                                                  MGPOptional.of(move));
+        const son: MGPNode<Rules<M, S, L, U>, M, S, L, U> = new MGPNode(resultingState as S,
+                                                                        MGPOptional.of(this.node),
+                                                                        MGPOptional.of(move));
         this.node = son;
         return true;
     }

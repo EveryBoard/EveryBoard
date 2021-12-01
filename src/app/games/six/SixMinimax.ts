@@ -13,7 +13,7 @@ import { SixVictorySource, SixNode, SixRules, SixLegalityInformation } from './S
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 
-export class SixNodeUnheritance implements NodeUnheritance {
+export class SixNodeUnheritance extends NodeUnheritance {
 
     public equals(_o: SixNodeUnheritance): boolean {
         throw new Error('SixNodeUnheritance.equals not implemented.');
@@ -24,7 +24,9 @@ export class SixNodeUnheritance implements NodeUnheritance {
                'preVictory: ' + preVictory;
     }
     public constructor(public readonly value: number,
-                       public readonly preVictory: MGPOptional<Coord>) {}
+                       public readonly preVictory: MGPOptional<Coord>) {
+        super(value);
+    }
 }
 
 export class SixMinimax extends AlignementMinimax<SixMove,
@@ -49,7 +51,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
 
     public getListMoves(node: SixNode): SixMove[] {
         const minimax: SixMinimax = SixMinimax.getInstance();
-        const unheritance: SixNodeUnheritance = node.getOwnValue(minimax) as SixNodeUnheritance; // TODO: why is the cast necessary here?
+        const unheritance: SixNodeUnheritance = node.getOwnValue(minimax);
         if (unheritance.preVictory.isPresent()) {
             if (node.gameState.turn < 40) {
                 return this.createForcedDrop(unheritance);

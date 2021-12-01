@@ -82,9 +82,8 @@ describe('SixMinimax', () => {
             const state: SixState = SixState.fromRepresentation(board, 9);
             const move: SixMove = SixMove.fromDrop(new Coord(2, 3));
             rules.node = new SixNode(state);
-            const boardValue: { value: number, preVictory?: Coord } =
-                minimax.getBoardValue(new SixNode(state, MGPOptional.empty(), MGPOptional.of(move)));
-            expect(boardValue.preVictory).toBeUndefined();
+            const boardValue: SixNodeUnheritance = minimax.getBoardValue(new SixNode(state, MGPOptional.empty(), MGPOptional.of(move)));
+            expect(boardValue.preVictory.isAbsent()).toBeTrue();
             expect(boardValue.value).toBe(Player.ZERO.getPreVictory());
         });
         it('shound point the right preVictory coord with circle', () => {
@@ -96,8 +95,9 @@ describe('SixMinimax', () => {
             const state: SixState = SixState.fromRepresentation(board, 9);
             const move: SixMove = SixMove.fromDrop(new Coord(1, 0));
             const node: SixNode = new SixNode(state, MGPOptional.empty(), MGPOptional.of(move));
-            const boardValue: { value: number, preVictory?: Coord } = minimax.getBoardValue(node);
-            expect(boardValue.preVictory).toEqual(new Coord(2, 0));
+            const boardValue: SixNodeUnheritance = minimax.getBoardValue(node);
+            expect(boardValue.preVictory.isPresent()).toBeTrue();
+            expect(boardValue.preVictory.get()).toEqual(new Coord(2, 0));
         });
     });
     describe('4 pieces aligned is better than 3 pieces aligned', () => {
