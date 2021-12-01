@@ -1,6 +1,6 @@
 #!/bin/sh
 ARGS="$@"
-pip3 install lxml selenium pandas webdriver-manager
+python3 -m pip install lxml selenium pandas webdriver-manager
 echo "export const firebaseConfig = {
     apiKey: '$API_KEY',
     authDomain: '$AUTH_DOMAIN',
