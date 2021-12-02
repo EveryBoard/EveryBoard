@@ -2,41 +2,45 @@
 import sys
 from lxml import html
 import pandas
+from glob import glob
 
 if len(sys.argv) < 2:
     print('Usage: %s [generate|check]' % sys.argv[0])
     exit(1)
 
-
+def sort_function(x):
+    return str.lower(x[0])
 def to_missing(x):
     "Converts from the string AA/BB to the number BB-AA"
     [low, high] = x.split('/')
     return int(high)-int(low)
 
-
-def load_coverage_data_from_html_tree(tree, dirs, td):
-    data = map(to_missing, tree.xpath('//tr/td[%d]/text()' % td))
-    return dict(sorted(zip(dirs, data), key=lambda x: -x[1]))
-
 def load_coverage_data():
-    f = open('coverage/index.html', mode='r')
-    page = f.read()
-    f.close()
-    tree = html.fromstring(page)
-
-    dirs = tree.xpath('//td/a/text()')
-    return {
-        'statements': load_coverage_data_from_html_tree(tree, dirs, 4),
-        'branches': load_coverage_data_from_html_tree(tree, dirs, 6),
-        'functions': load_coverage_data_from_html_tree(tree, dirs, 8),
-        'lines': load_coverage_data_from_html_tree(tree, dirs, 10)
+    files = glob("coverage/**/*.ts.html", recursive=True)
+    data = {
+        'statements': {},
+        'branches': {},
+        'functions': {},
+        'lines': {},
     }
+    for path in files:
+        f = open(path, mode='r')
+        page = f.read()
+        f.close()
+        tree = html.fromstring(page)
+        filename = path.split('/')[-1][:-5]
+        xpath_results = tree.xpath("//span[contains(@class, 'fraction')]/text()")
+        data['statements'][filename] = to_missing(xpath_results[0])
+        data['branches'][filename] = to_missing(xpath_results[1])
+        data['functions'][filename] = to_missing(xpath_results[2])
+        data['lines'][filename] = to_missing(xpath_results[3])
+    return data
 
 def load_stored_coverage_from(path):
     data = pandas.read_csv(path, header=None)
-    dirs = data[0]
+    files = data[0]
     values = data[1]
-    return dict(sorted(zip(dirs, values), key=lambda x: -x[1]))
+    return dict(sorted(zip(files, values), key=sort_function))
 
 def load_stored_coverage():
     return {
@@ -48,8 +52,10 @@ def load_stored_coverage():
 
 def generate_in_file(data, path):
     f = open(path, mode='w')
-    for directory in data:
-        f.write('%s,%d\n' % (directory, data[directory]))
+    for directory in sorted(data, key=sort_function):
+        if data[directory] > 0:
+            # Only store if coverage is > 0
+            f.write('%s,%d\n' % (directory, data[directory]))
     f.close()
 
 def generate():
@@ -83,7 +89,7 @@ def check():
                 new_missing = new[type_][directory]
                 if new_missing > 0:
                     decreased = True
-                    print('ERROR: increased missing %s in coverage of %s due to a new directory with missing coverage of %d %s' % (type_, directory, new_missing, type_))
+                    print('ERROR: increased missing %s in coverage of %s: uncovered %d %s' % (type_, directory, new_missing, type_))
     if decreased:
         exit(1) # fail for CI script
 
