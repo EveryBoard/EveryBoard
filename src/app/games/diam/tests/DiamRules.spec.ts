@@ -137,7 +137,7 @@ describe('DiamRules', () => {
             ], 5);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         });
-        it('should forbid moving a stack if the first piece is not owned by the player', () => {
+        it('should forbid moving a substack if its lowest piece is not owned by the player', () => {
             const state: DiamState = DiamState.fromRepresentation([
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __, A1],

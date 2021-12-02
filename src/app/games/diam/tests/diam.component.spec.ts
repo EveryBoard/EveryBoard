@@ -55,7 +55,7 @@ describe('DiamComponent', () => {
         await testUtils.expectMoveSuccess('#click_0_1', move);
     }));
     it('should consider a piece in game click on a player piece as a regular piece click', fakeAsync(async() => {
-        // given a state where there are already pieces in game
+        // given a state where there are already pieces in game and a remaining piece is selected
         const state: DiamState = DiamState.fromRepresentation([
             [__, __, __, __, __, __, __, __],
             [A1, __, __, __, __, __, __, __],
@@ -63,8 +63,8 @@ describe('DiamComponent', () => {
             [A1, __, __, __, __, __, __, __],
         ], 0);
         testUtils.setupState(state);
-        // when clicking on a remaining piece and then on a player piece in game
         await testUtils.expectClickSuccess('#piece_0_0');
+        // when clicking  on a player piece in game
         await testUtils.expectClickSuccess('#click_0_0');
         // then no move is made and the new piece is selected
         testUtils.expectElementToHaveClass('#click_0_0', 'selected');
@@ -177,7 +177,7 @@ describe('DiamComponent', () => {
         // then it should let the user know that a piece must be selected first
         await testUtils.expectClickFailure('#click_0', DiamFailure.MUST_SELECT_PIECE_FIRST());
     }));
-    it('should display the number of remainig pieces', fakeAsync(async() => {
+    it('should display the right number of remainig pieces', fakeAsync(async() => {
         // given a state
         const state: DiamState = DiamState.fromRepresentation([
             [__, B1, __, __, __, __, __, __],
