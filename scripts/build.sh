@@ -1,5 +1,6 @@
 #!/bin/sh
 ARGS="$@"
+export CHROME_BIN="$CHROME_PATH"
 echo $CHROME_PATH
 ls -l $CHROME_PATH
 python3 -m pip install lxml selenium pandas webdriver-manager
