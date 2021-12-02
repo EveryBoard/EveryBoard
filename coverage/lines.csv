@@ -33,7 +33,7 @@ SixState.ts,1
 SixMinimax.ts,13
 SixMove.ts,2
 SiamPiece.ts,1
-TablutRules.ts,37
+TablutRules.ts,34
 TablutEscapeThenPieceThenControl.ts,4
 TablutPieceAndControlMinimax.ts,1
 yinsh.component.ts,1

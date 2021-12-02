@@ -35,7 +35,7 @@ SixState.ts,1
 SixMinimax.ts,13
 SixMove.ts,2
 SiamPiece.ts,2
-TablutRules.ts,39
+TablutRules.ts,36
 TablutFailure.ts,1
 TablutEscapeThenPieceThenControl.ts,5
 TablutPieceAndControlMinimax.ts,1
