@@ -5,7 +5,7 @@ from selenium.webdriver.chrome.options import Options
 
 options = Options()
 options.headless = True
-driver = webdriver.Chrome(os.getenv('CHROME_PATH'), options=options)
+driver = webdriver.Chrome(options=options)
 
 games = []
 with open('scripts/games.txt') as f:
