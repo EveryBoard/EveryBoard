@@ -1,5 +1,7 @@
 #!/bin/sh
 ARGS="$@"
+echo $CHROME_PATH
+ls -l $CHROME_PATH
 python3 -m pip install lxml selenium pandas webdriver-manager
 echo "export const firebaseConfig = {
     apiKey: '$API_KEY',
