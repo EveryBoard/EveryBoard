@@ -2,10 +2,6 @@
   publish = "dist/pantheonsgame"
   command = "sh scripts/build.sh"
 
-[[plugins]]
-  # Installs the Lighthouse Build Plugin for all deploy contexts
-  package = "netlify-plugin-chromium"
-
 [[redirects]]
   from = "/*"
   to = "/index.html"
