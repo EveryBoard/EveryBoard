@@ -26,7 +26,6 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
     public lastMove: M;
 
     public constructor(messageDisplayer: MessageDisplayer,
-                       public throneCoords: Coord[],
                        public VERBOSE: boolean,
                        public moveGenerator: (start: Coord, end: Coord) => M)
     {
@@ -109,6 +108,9 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
     public isThrone(x: number, y: number): boolean {
         const state: S = this.rules.node.gameState;
         return this.rules.isThrone(state, new Coord(x, y));
+    }
+    public isCentralThrone(x: number, y: number): boolean {
+        return this.rules.isExternalThrone(new Coord(x, y)) === false;
     }
     public getPieceClasses(x: number, y: number): string[] {
         const classes: string[] = [];

@@ -97,7 +97,6 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         return MGPValidation.SUCCESS;
     }
     public getRelativeOwner(player: Player, c: Coord, board: Table<TaflPawn>): RelativePlayer {
-        const caseC: TaflPawn = board[c.y][c.x];
         const owner: Player = this.getAbsoluteOwner(c, board);
         let relativeOwner: RelativePlayer;
         if (owner === Player.NONE) {
@@ -107,53 +106,6 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         } else {
             relativeOwner = RelativePlayer.OPPONENT;
         }
-        // TESTS
-        if (caseC === TaflPawn.UNOCCUPIED) {
-            if (relativeOwner !== RelativePlayer.NONE) {
-                display(TaflRules.VERBOSE,
-                        'WTF, empty is on no one side but here is on ' +
-                        relativeOwner + ' :: ' + owner + ' :: ' + player);
-            }
-        } else if (player === Player.ZERO) {
-            if (caseC === TaflPawn.INVADERS) {
-                if (this.config.INVADER === Player.ZERO) {
-                    if (relativeOwner !== RelativePlayer.PLAYER) {
-                        display(TaflRules.VERBOSE,
-                                `player start, invader start, case is invader, but player don't own the case ` +
-                                relativeOwner + ' :: ' + owner + ' :: ' + player);
-                    }
-                } else {
-                    if (relativeOwner !== RelativePlayer.OPPONENT) {
-                        display(TaflRules.VERBOSE,
-                                'player start, defender start, case is invader, but is not opponent ??? ' +
-                                relativeOwner + ' :: ' + owner + ' :: ' + player);
-                    }
-                }
-            } else {
-                // TODO
-            }
-        } else { // player follow
-            if (this.config.INVADER === Player.ZERO) {
-                if (caseC === TaflPawn.INVADERS) {
-                    if (relativeOwner !== RelativePlayer.OPPONENT) {
-                        display(TaflRules.VERBOSE,
-                                'player follow, invader start, case is invader, but case is not opponent ' +
-                            relativeOwner + ' :: ' + owner + ' :: ' + player);
-                    }
-                }
-            } else { // invader follow
-                if (caseC === TaflPawn.INVADERS) {
-                    if (relativeOwner !== RelativePlayer.PLAYER) {
-                        display(TaflRules.VERBOSE,
-                                'player follow, invader follow, case is invader, but player don\t own it ??? ' +
-                            relativeOwner + ' :: ' + owner + ' :: ' + player);
-                    }
-                } else {
-                    // TODO
-                }
-            }
-        }
-        // FIN DE TESTS
         return relativeOwner;
     }
     public getAbsoluteOwner(c: Coord, board: Table<TaflPawn>): Player {
@@ -217,12 +169,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         }
         return this.capturePawn(player, landingPawn, d, state);
     }
-    private captureKing(player: Player,
-                        landingPiece: Coord,
-                        d: Orthogonal,
-                        state: S)
-    : Coord
-    {
+    private captureKing(player: Player, landingPiece: Coord, d: Orthogonal, state: S) : Coord {
         /**
          * the king is the next coord after c (in direction d)
          * the landingPiece partipate in the capture
@@ -248,7 +195,6 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
          * - 3 invaders 1 border
          * - 4 invaders
          */
-        const LOCAL_VERBOSE: boolean = false;
         const kingCoord: Coord = landingPiece.getNext(d);
 
         const {
@@ -257,26 +203,12 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
             rightCoord, right,
         } = this.getSurroundings(kingCoord, d, player, state.board);
 
-        if (!backInRange) { // //////////////////////////////////////////////////////////////////////////// 1
+        if (backInRange === false) { // /////////////////////////////////////////////////////////////////// 1
             return this.captureKingAgainstTheWall(left, leftCoord, right, rightCoord, kingCoord, state); // 2, 3
         }
-        if (back === RelativePlayer.NONE) { // //////////////////////////////////////////////////////////// 4
-            if (this.isThrone(state, backCoord) === false) { // /////////////////////////////////////////// 5
-                return null;
-            } // here, back is an empty throne
+        if (back === RelativePlayer.NONE && this.isThrone(state, backCoord)) { // ///////////////////////// 4
             if (this.config.KING_FAR_FROM_CENTRAL_THRONE_CAN_BE_CAPTURED_NORMALLY) {
                 return kingCoord;
-            }
-            if (this.config.CAN_CAPTURE_KING_AGAINST_THRONE === false) { // ///////////////////////////// 6
-                return null;
-            } // here king is capturable by this empty throne
-            if (this.config.NORMAL_CAPTURE_WORK_ON_THE_KING) { // ///////////////////////////////////////// 7
-                display(TaflRules.VERBOSE || LOCAL_VERBOSE, 'king captured by 1 invader and 1 throne');
-                return kingCoord; // king captured by 1 invader and 1 throne
-            }
-            if (left === RelativePlayer.PLAYER && right === RelativePlayer.PLAYER) {
-                display(TaflRules.VERBOSE || LOCAL_VERBOSE, 'king captured by 3 invaders + 1 throne');
-                return kingCoord; // king captured by 3 invaders + 1 throne
             }
         }
         if (back === RelativePlayer.PLAYER) {
@@ -408,17 +340,25 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
     : Coord
     {
         const LOCAL_VERBOSE: boolean = false;
-        if (this.config.NORMAL_CAPTURE_WORK_ON_THE_KING) {
-            display(TaflRules.VERBOSE || LOCAL_VERBOSE, 'king captured by two invaders');
-            return kingCoord; // king captured by two invaders
-        }
         const kingHasThroneOnItsLeft: boolean = left === RelativePlayer.NONE &&
                                                 state.isCentralThrone(leftCoord);
         const kingHasThroneOnItsRight: boolean = right === RelativePlayer.NONE &&
                                                  state.isCentralThrone(rightCoord);
+        const kingHasOpponentOnItsLeft: boolean = left === RelativePlayer.PLAYER;
+        const kingHasOpponentOnItsRight: boolean = right === RelativePlayer.PLAYER;
         const kingTouchCentralThrone: boolean = kingHasThroneOnItsLeft || kingHasThroneOnItsRight;
-        if (kingTouchCentralThrone === false && this.config.KING_FAR_FROM_CENTRAL_THRONE_CAN_BE_CAPTURED_NORMALLY) {
+        const kingHasThreeOpponentAround: boolean = kingHasOpponentOnItsLeft || kingHasOpponentOnItsRight;
+        if (kingTouchCentralThrone &&
+            this.config.CAN_CAPTURE_KING_AGAINST_THRONE &&
+            kingHasThreeOpponentAround)
+        {
             return kingCoord;
+        } else {
+            if (state.isCentralThrone(kingCoord) === false &&
+                this.config.KING_FAR_FROM_CENTRAL_THRONE_CAN_BE_CAPTURED_NORMALLY)
+            {
+                return kingCoord;
+            }
         }
         if (left === RelativePlayer.PLAYER && right === RelativePlayer.PLAYER) {
             display(TaflRules.VERBOSE || LOCAL_VERBOSE, 'king captured by 4 invaders');
@@ -537,8 +477,14 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
             {
                 const destinationEmpty: boolean = this.getAbsoluteOwner(foundDestination, state.board) === Player.NONE;
                 if (destinationEmpty) {
-                    if (this.isThrone(state, foundDestination)) {
+                    if (this.isExternalThrone(foundDestination)) {
                         if (state.board[depart.y][depart.x].isKing()) {
+                            destinations.push(foundDestination);
+                        }
+                    } else if (state.isCentralThrone(foundDestination)) {
+                        if (state.board[depart.y][depart.x].isKing() &&
+                            this.config.CASTLE_IS_LEFT_FOR_GOOD === false)
+                        {
                             destinations.push(foundDestination);
                         }
                     } else {

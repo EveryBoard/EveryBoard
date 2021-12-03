@@ -43,7 +43,7 @@ export class BrandhubTutorial {
             ],
             $localize`Congratulations, that will teach him a lesson!`,
             $localize`Failed, you missed an opportunity to capture a piece of the opponent.`,
-        ).withPreviousMove(new BrandhubMove(new Coord(1, 4), new Coord(2, 4))),
+        ),
         TutorialStep.fromMove(
             $localize`Capturing a soldier (2/2)`,
             $localize`A second way to capture a soldier is against an empty throne.
@@ -65,7 +65,7 @@ export class BrandhubTutorial {
             $localize`Congratulations, one less defender. But keep an eye on the king, it is the most important.`,
             $localize`Failed, you did not do the expected move.`,
         ),
-        TutorialStep.fromMove( // TODOTODO central throne displayed as central throne in brandhub!
+        TutorialStep.fromMove(
             $localize`Capturing the king on his throne`,
             $localize`To capture the king when he sits on his throne, the four squares neighbor to the king (horizontally and vertically) must be occupied by your soldiers.<br/><br/>Capture the king.`,
             new BrandhubState([
@@ -81,8 +81,8 @@ export class BrandhubTutorial {
             $localize`Congratulations, you won!`,
             $localize`Failed, you let the king run away.`,
         ),
-        TutorialStep.fromMove( // TODOTODO the fuck the king is not dead
-            $localize`Capturing the king next to his throne`, // TODOTODO the fuck is the demo not done!
+        TutorialStep.fromMove(
+            $localize`Capturing the king next to his throne`,
             $localize`Another way to capture the king is to use three soldier plus the central throne to surround the king on four sides.<br/><br/>Capture the king.`,
             new BrandhubState([
                 [_, _, O, _, _, _, _],
@@ -96,7 +96,7 @@ export class BrandhubTutorial {
             [new BrandhubMove(new Coord(2, 0), new Coord(2, 2))],
             $localize`The king is dead, long live the king. Congratulations, you won.`,
             $localize`Failed!`,
-        ).withPreviousMove(new BrandhubMove(new Coord(3, 3), new Coord(3, 2))),
+        ),
         TutorialStep.fromMove(
             $localize`Capturing the king far from his throne`,
             $localize`When the king is nor on his central throne nor next to it, he can be captured normally.<br/><br/>Capture the king.`,
@@ -112,6 +112,6 @@ export class BrandhubTutorial {
             [new BrandhubMove(new Coord(3, 6), new Coord(2, 6))],
             $localize`The king is dead, long live the king. Congratulations, you won.`,
             $localize`Failed!`,
-        ).withPreviousMove(new BrandhubMove(new Coord(1, 3), new Coord(1, 6))),
+        ),
     ];
 }

@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Coord } from '../../../jscaip/Coord';
 import { TablutMove } from 'src/app/games/tafl/tablut/TablutMove';
 import { TablutState } from './TablutState';
 import { TablutRules } from './TablutRules';
@@ -18,16 +17,8 @@ import { TaflEscapeThenPieceAndControlMinimax } from '../TaflEscapeThenPieceThen
 })
 export class TablutComponent extends TaflComponent<TablutRules, TablutMove, TablutState> {
 
-    public static throneCoords: Coord[] = [
-        new Coord(0, 0),
-        new Coord(0, 8),
-        new Coord(4, 4),
-        new Coord(8, 0),
-        new Coord(8, 8),
-    ];
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer,
-              TablutComponent.throneCoords,
               false,
               TablutMove.from);
         this.rules = TablutRules.get();

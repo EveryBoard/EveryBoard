@@ -136,7 +136,7 @@ describe('BrandhubRules', () => {
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
-    it('should allow capturing the king beside his throne with 3 invader', () => {
+    it('should allow capturing the king beside his throne with 3 invader (option throne sandwich)', () => {
         // Given a board where the king is one move ahead from being captured on his throne
         const board: Table<TaflPawn> = [
             [_, _, _, _, _, _, _],
@@ -157,6 +157,37 @@ describe('BrandhubRules', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, O, _, _, _],
             [_, O, O, _, O, _, _],
+            [_, _, _, _, O, _, _],
+            [_, _, _, O, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, X, _, _, _],
+        ];
+        const expectedState: BrandhubState = new BrandhubState(expectedBoard, 1);
+        const node: BrandhubNode = new MGPNode(null, null, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+    });
+    it('should allow capturing the king beside his throne with 3 invader (option soldier sandwich)', () => {
+        // Given a board where the king is one move ahead from being captured on his throne
+        const board: Table<TaflPawn> = [
+            [_, _, O, _, _, _, _],
+            [_, _, _, O, _, _, _],
+            [_, _, _, A, O, _, _],
+            [_, _, _, _, O, _, _],
+            [_, _, _, O, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, X, _, _, _],
+        ];
+        const state: BrandhubState = new BrandhubState(board, 0);
+
+        // When moving a third piece next to the king
+        const move: BrandhubMove = new BrandhubMove(new Coord(2, 0), new Coord(2, 2));
+
+        // Then the king should be captured and the game over
+        const expectedBoard: Table<TaflPawn> = [
+            [_, _, _, _, _, _, _],
+            [_, _, _, O, _, _, _],
+            [_, _, O, _, O, _, _],
             [_, _, _, _, O, _, _],
             [_, _, _, O, _, _, _],
             [_, _, _, _, _, _, _],
@@ -248,5 +279,34 @@ describe('BrandhubRules', () => {
         // Then the move should be deemed illegal
         const reason: string = TaflFailure.SOLDIERS_CANNOT_SIT_ON_THRONE();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
+    });
+    it('Should not allow capturing the king with 4 soldier if one is an ally', () => {
+        // Given a board where the king is one move ahead from being captured on his throne
+        const board: Table<TaflPawn> = [
+            [_, _, _, _, _, _, _],
+            [_, X, _, _, _, _, _],
+            [_, O, _, _, _, _, _],
+            [_, _, O, A, X, _, _],
+            [_, _, _, O, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, X, _, _, _],
+        ];
+        const state: BrandhubState = new BrandhubState(board, 0);
+
+        // When moving a fourth invader next to the king
+        const move: BrandhubMove = new BrandhubMove(new Coord(1, 2), new Coord(3, 2));
+
+        // Then the king should be captured and the game over
+        const expectedBoard: Table<TaflPawn> = [
+            [_, _, _, _, _, _, _],
+            [_, X, _, _, _, _, _],
+            [_, _, _, O, _, _, _],
+            [_, _, O, A, X, _, _],
+            [_, _, _, O, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, X, _, _, _],
+        ];
+        const expectedState: BrandhubState = new BrandhubState(expectedBoard, 1);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
 });

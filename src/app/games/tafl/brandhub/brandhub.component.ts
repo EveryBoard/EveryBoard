@@ -18,16 +18,8 @@ import { BrandhubTutorial } from './BrandhubTutorial';
 })
 export class BrandhubComponent extends TaflComponent<BrandhubRules, BrandhubMove, BrandhubState> {
 
-    public static throneCoords: Coord[] = [
-        new Coord(0, 0),
-        new Coord(0, 6),
-        new Coord(3, 3),
-        new Coord(6, 0),
-        new Coord(6, 6),
-    ];
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer,
-              BrandhubComponent.throneCoords,
               false,
               BrandhubMove.from);
         this.rules = BrandhubRules.get();

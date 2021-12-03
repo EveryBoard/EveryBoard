@@ -3,9 +3,11 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { TaflConfig } from '../TaflConfig';
+import { TaflFailure } from '../TaflFailure';
 import { TaflLegalityStatus } from '../TaflLegalityStatus';
 import { TaflMove } from '../TaflMove';
 import { TaflPawn } from '../TaflPawn';
@@ -19,7 +21,7 @@ const myTaflConfig: TaflConfig = {
     CASTLE_IS_LEFT_FOR_GOOD: true,
     INVADER: Player.ZERO,
     KING_FAR_FROM_CENTRAL_THRONE_CAN_BE_CAPTURED_NORMALLY: true,
-    NORMAL_CAPTURE_WORK_ON_THE_KING: true,
+    THREE_INVADERS_AND_CENTRAL_THRONE_CAN_CAPTURE_KING: true,
     THREE_INVADERS_AND_A_BORDER_CAN_CAPTURE_KING: true,
     WIDTH: 7,
 };
@@ -65,16 +67,40 @@ describe('TaflRules', () => {
         });
     });
     it('Moving emptyness should be illegal', () => {
-        expect(rules.choose(new MyTaflMove(new Coord(0, 1), new Coord(1, 1)))).toBeFalse();
+        // Given initial board
+        const state: MyTaflState = MyTaflState.getInitialState();
+
+        // When trying to move an empty piece
+        const move: MyTaflMove = new MyTaflMove(new Coord(0, 1), new Coord(1, 1));
+
+        // Then the move should be illegal
+        const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('Moving opponent pawn should be illegal', () => {
         expect(rules.choose(new MyTaflMove(new Coord(4, 2), new Coord(4, 3)))).toBeFalse();
     });
     it('Landing on pawn should be illegal', () => {
-        expect(rules.choose(new MyTaflMove(new Coord(0, 3), new Coord(4, 3)))).toBeFalse();
+        // Given initial board
+        const state: MyTaflState = MyTaflState.getInitialState();
+
+        // When doing a move landing on the ennemy
+        const move: MyTaflMove = new MyTaflMove(new Coord(1, 0), new Coord(1, 3));
+
+        // Then the move should be juged illegal
+        const reason: string = TaflFailure.LANDING_ON_OCCUPIED_CASE();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('Passing through pawn should be illegal', () => {
-        expect(rules.choose(new MyTaflMove(new Coord(0, 3), new Coord(5, 3)))).toBeFalse();
+        // Given initial board
+        const state: MyTaflState = MyTaflState.getInitialState();
+
+        // When doing a move passing through a piece
+        const move: MyTaflMove = new MyTaflMove(new Coord(1, 0), new Coord(1, 4));
+
+        // Then the move should be juged illegal
+        const reason: string = TaflFailure.SOMETHING_IN_THE_WAY();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('Should consider defender winner when all invaders are dead', () => {
         const board: Table<TaflPawn> = [
