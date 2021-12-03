@@ -62,4 +62,13 @@ export class RegisterComponent {
         }
         return 'is-success';
     }
+    public canRegister(): boolean {
+        const password: string = this.registrationForm.value.password || '';
+        const email: string = this.registrationForm.value.email || '';
+        const username: string = this.registrationForm.value.username || '';
+        if (email === '' || username === '' || password === '' || password.length < 6) {
+            return false;
+        }
+        return true;
+    }
 }
