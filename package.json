@@ -12,7 +12,8 @@
     "test": "bash ./scripts/test.sh",
     "test:ci": "bash ./scripts/test.sh --watch=false --browsers=ChromeHeadlessCustom",
     "lint": "eslint --ext ts ./",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "deploy:maintenance": "netlify deploy --prod --dir=maintenance/"
   },
   "private": true,
   "dependencies": {
