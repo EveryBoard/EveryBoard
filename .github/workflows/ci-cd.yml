@@ -164,10 +164,9 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
       - name: Deploy develop on deployment (only temporary for testing)
-        if: ${{ github.ref == 'refs/heads/deployment' }}
         uses: netlify/actions/cli@master
         with:
-          args: deploy --trigger --prod --site=awesomboard --branch=deployment
+          args: deploy --trigger --site=awesomboard --branch=deployment
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
