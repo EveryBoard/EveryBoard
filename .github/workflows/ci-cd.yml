@@ -10,7 +10,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Setup repository and dependencies
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+      - name: Setup dependencies
         uses: ./.github/actions/setup@5911f5521254c44a09888c5009998955cd1ab875
       - name: Build
         run: npm run build
@@ -19,7 +21,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Setup repository and dependencies
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+      - name: Setup dependencies
         uses: ./.github/actions/setup@5911f5521254c44a09888c5009998955cd1ab875
       - name: Run test suite
         run: npm run test:ci
@@ -34,7 +38,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Setup repository and dependencies
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+      - name: Setup dependencies
         uses: ./.github/actions/setup@5911f5521254c44a09888c5009998955cd1ab875
       - name: Run linter with dev config
         run: npm run lint
@@ -54,7 +60,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Setup repository and dependencies
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+      - name: Setup dependencies
         uses: ./.github/actions/setup@5911f5521254c44a09888c5009998955cd1ab875
       - name: Install python dependencies
         uses: BSFishy/pip-action@v1
