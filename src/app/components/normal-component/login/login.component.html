@@ -50,6 +50,7 @@
                         <button id="loginButton"
                                 class="button is-primary is-fullwidth"
                                 (click)="loginWithEmail(loginForm.value)"
+                                [disabled]="!canLogin()"
                                 i18n>Log in</button>
                     </div>
                 </div>
@@ -74,9 +75,12 @@
             <div class="message-body" id="errorMessage">{{ errorMessage }}</div>
         </div>
         <p class="help level-right">
-            <ng-container i18n>No account?</ng-container> 
+            <ng-container i18n>No account?</ng-container>&nbsp;
             <a [routerLink]="['/register']" i18n>Register</a>
         </p>
-
+        <p class="help level-right">
+            <ng-container i18n>Forgot your password?</ng-container>&nbsp;
+            <a [routerLink]="['/reset-password']" i18n>Reset your password</a>
+        </p>
     </form>
 </div>

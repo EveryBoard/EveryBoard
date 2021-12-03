@@ -84,6 +84,7 @@ import { NotConnectedGuard } from './guard/not-connected.guard';
 import { AutofocusDirective } from './directives/autofocus.directive';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ToggleVisibilityDirective } from './directives/toggle-visibility.directive';
+import { ResetPasswordComponent } from './components/normal-component/reset-password/reset-password.component';
 
 
 registerLocaleData(localeFr);
@@ -92,6 +93,7 @@ const routes: Route [] = [
     { path: 'login', component: LoginComponent },
     { path: 'server', component: ServerPageComponent, canActivate: [VerifiedAccountGuard] },
     { path: 'register', component: RegisterComponent, canActivate: [NotConnectedGuard] },
+    { path: 'reset-password', component: ResetPasswordComponent, canActivate: [NotConnectedGuard] },
     { path: 'notFound', component: NotFoundComponent, canActivate: [VerifiedAccountGuard] },
     { path: 'nextGameLoading', component: NextGameLoadingComponent, canActivate: [VerifiedAccountGuard] },
     { path: 'verify-account', component: VerifyAccountComponent, canActivate: [ConnectedButNotVerifiedGuard] },
@@ -128,6 +130,7 @@ const routes: Route [] = [
         OnlineGameCreationComponent,
         TutorialGameCreationComponent,
         VerifyAccountComponent,
+        ResetPasswordComponent,
 
         AbaloneComponent,
         ApagosComponent,
