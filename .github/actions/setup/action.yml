@@ -2,6 +2,13 @@ name: Setup the project and its dependencies
 
 on:
   workflow_call:
+    input:
+      os:
+        required: true
+        type: string
+      hash:
+        required: true
+        type: string
 
 jobs:
   setup:
@@ -14,10 +21,11 @@ jobs:
           cache-name: cache-node-modules
         with:
           path: ~/.npm
-          key: build-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ inputs.os }}-build-${{ env.cache-name }}-${{ inputs.hash }}
           restore-keys: |
-            build-
-            -
+            ${{ inputs.os }}-build-${{ env.cache-name }}-
+            ${{ inputs.os }}-build-
+            ${{ inputs.os }}-
       - name: Setup node
         uses: actions/setup-node@v1
         with:

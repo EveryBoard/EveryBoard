@@ -14,6 +14,9 @@ jobs:
         uses: actions/checkout@v2
       - name: Setup dependencies
         uses: ./.github/actions/setup
+        with:
+          os: ${{ runner.os }}
+          hash: hashFiles('**/package-lock.json')
       - name: Build
         run: npm run build
 
@@ -25,6 +28,9 @@ jobs:
         uses: actions/checkout@v2
       - name: Setup dependencies
         uses: ./.github/actions/setup
+        with:
+          os: ${{ runner.os }}
+          hash: hashFiles('**/package-lock.json')
       - name: Run test suite
         run: npm run test:ci
       - name: Install python dependencies
@@ -42,6 +48,9 @@ jobs:
         uses: actions/checkout@v2
       - name: Setup dependencies
         uses: ./.github/actions/setup
+        with:
+          os: ${{ runner.os }}
+          hash: hashFiles('**/package-lock.json')
       - name: Run linter with dev config
         run: npm run lint
       - name: Run linter with stricter CI config
@@ -64,6 +73,9 @@ jobs:
         uses: actions/checkout@v2
       - name: Setup dependencies
         uses: ./.github/actions/setup
+        with:
+          os: ${{ runner.os }}
+          hash: hashFiles('**/package-lock.json')
       - name: Install python dependencies
         uses: BSFishy/pip-action@v1
         with:
