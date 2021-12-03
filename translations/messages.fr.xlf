@@ -82,6 +82,14 @@
         <source>No account?</source>
         <target>Pas de compte ?</target>
       </trans-unit>
+      <trans-unit id="2012659005494284050" datatype="html">
+        <source>Forgot your password?</source>
+        <target>Mot de passe oublié ?</target>
+      </trans-unit>
+      <trans-unit id="4371680625121499898" datatype="html">
+        <source>Reset your password</source>
+        <target>Réinitialiser votre mot de passe</target>
+      </trans-unit>
       <trans-unit id="3301086086650990787" datatype="html">
         <source>Register</source>
         <target>Créer un compte</target>
@@ -313,6 +321,26 @@
       <trans-unit id="3412247232926911550" datatype="html">
         <source>Have an account?</source>
         <target>Vous avez déjà un compte ?</target>
+      </trans-unit>
+      <trans-unit id="2565164139557117651" datatype="html">
+        <source>Password reset</source>
+        <target>Réinitialisation de mot de passe</target>
+      </trans-unit>
+      <trans-unit id="2687175749283802253" datatype="html">
+        <source>An email will be sent with instruction to reset your password.</source>
+        <target>Un email vous sera envoyé avec les instructions pour réinitialiser votre mot de passe.</target>
+      </trans-unit>
+      <trans-unit id="6808826847039952270" datatype="html">
+        <source>The email has been sent, please follow the instructions from that email.</source>
+        <target>L'email a été envoyé, veuillez suivre les instructions qui s'y trouvent.</target>
+      </trans-unit>
+      <trans-unit id="1636934520301910285" datatype="html">
+        <source>Reset password</source>
+        <target>Réinitialiser le mot de passe</target>
+      </trans-unit>
+      <trans-unit id="1519954996184640001" datatype="html">
+        <source>Error</source>
+        <target>Erreur</target>
       </trans-unit>
       <trans-unit id="6535780676661833462" datatype="html">
         <source>Registration error</source>
@@ -3261,9 +3289,9 @@
         <source>This email address is invalid.</source>
         <target>Cette addresse email est invalide.</target>
       </trans-unit>
-      <trans-unit id="6256195380439544351" datatype="html">
-        <source>You have entered an invalid email or password.</source>
-        <target>Vous avez entré un email ou mot de passe invalide.</target>
+      <trans-unit id="2330128434446069317" datatype="html">
+        <source>You have entered invalid credentials.</source>
+        <target>Vous avez entré des identifiants invalides.</target>
       </trans-unit>
       <trans-unit id="321667206564180755" datatype="html">
         <source>The credential is invalid or has expired, please try again.</source>

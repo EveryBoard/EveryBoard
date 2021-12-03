@@ -68,6 +68,12 @@
       <trans-unit id="850080272338290812" datatype="html">
         <source>No account?</source>
       </trans-unit>
+      <trans-unit id="2012659005494284050" datatype="html">
+        <source>Forgot your password?</source>
+      </trans-unit>
+      <trans-unit id="4371680625121499898" datatype="html">
+        <source>Reset your password</source>
+      </trans-unit>
       <trans-unit id="6005801113696805305" datatype="html">
         <source>The replay game is loading, please wait, it should not take long.</source>
       </trans-unit>
@@ -241,6 +247,21 @@
       </trans-unit>
       <trans-unit id="3412247232926911550" datatype="html">
         <source>Have an account?</source>
+      </trans-unit>
+      <trans-unit id="2565164139557117651" datatype="html">
+        <source>Password reset</source>
+      </trans-unit>
+      <trans-unit id="2687175749283802253" datatype="html">
+        <source>An email will be sent with instruction to reset your password.</source>
+      </trans-unit>
+      <trans-unit id="6808826847039952270" datatype="html">
+        <source>The email has been sent, please follow the instructions from that email.</source>
+      </trans-unit>
+      <trans-unit id="1636934520301910285" datatype="html">
+        <source>Reset password</source>
+      </trans-unit>
+      <trans-unit id="1519954996184640001" datatype="html">
+        <source>Error</source>
       </trans-unit>
       <trans-unit id="7656395805241225659" datatype="html">
         <source>Games</source>
@@ -2238,8 +2259,8 @@
       <trans-unit id="3098841477756660384" datatype="html">
         <source>This email address is invalid.</source>
       </trans-unit>
-      <trans-unit id="6256195380439544351" datatype="html">
-        <source>You have entered an invalid email or password.</source>
+      <trans-unit id="2330128434446069317" datatype="html">
+        <source>You have entered invalid credentials.</source>
       </trans-unit>
       <trans-unit id="321667206564180755" datatype="html">
         <source>The credential is invalid or has expired, please try again.</source>

@@ -78,7 +78,7 @@ export class DiamRules extends Rules<DiamMove, DiamState, LegalityStatus> {
         }
         return LegalityStatus.SUCCESS;
     }
-mu    private isShiftLegal(shift: DiamMoveShift, state: DiamState): LegalityStatus {
+    private isShiftLegal(shift: DiamMoveShift, state: DiamState): LegalityStatus {
         if (state.getPieceAt(shift.start).owner !== state.getCurrentPlayer()) {
             return LegalityStatus.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
