@@ -12,11 +12,26 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v2
-      - name: Setup dependencies
-        uses: ./.github/actions/setup
+      - name: Setup dependencies (cache node modules)
+        uses: actions/cache@v1
+        env:
+          cache-name: cache-node-modules
         with:
-          os: ${{ runner.os }}
-          hash: hashFiles('**/package-lock.json')
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: Setup dependencies (setup node)
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - name: Setup dependencies (install dependencies)
+        run: npm ci
+      - name: Setup dependencies (setup dummy Firebase secret)
+        run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
+
       - name: Build
         run: npm run build
 
@@ -26,11 +41,26 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v2
-      - name: Setup dependencies
-        uses: ./.github/actions/setup
+      - name: Setup dependencies (cache node modules)
+        uses: actions/cache@v1
+        env:
+          cache-name: cache-node-modules
         with:
-          os: ${{ runner.os }}
-          hash: hashFiles('**/package-lock.json')
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: Setup dependencies (setup node)
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - name: Setup dependencies (install dependencies)
+        run: npm ci
+      - name: Setup dependencies (setup dummy Firebase secret)
+        run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
+
       - name: Run test suite
         run: npm run test:ci
       - name: Install python dependencies
@@ -46,11 +76,26 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v2
-      - name: Setup dependencies
-        uses: ./.github/actions/setup
+      - name: Setup dependencies (cache node modules)
+        uses: actions/cache@v1
+        env:
+          cache-name: cache-node-modules
         with:
-          os: ${{ runner.os }}
-          hash: hashFiles('**/package-lock.json')
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: Setup dependencies (setup node)
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - name: Setup dependencies (install dependencies)
+        run: npm ci
+      - name: Setup dependencies (setup dummy Firebase secret)
+        run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
+
       - name: Run linter with dev config
         run: npm run lint
       - name: Run linter with stricter CI config
@@ -71,11 +116,26 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v2
-      - name: Setup dependencies
-        uses: ./.github/actions/setup
+      - name: Setup dependencies (cache node modules)
+        uses: actions/cache@v1
+        env:
+          cache-name: cache-node-modules
         with:
-          os: ${{ runner.os }}
-          hash: hashFiles('**/package-lock.json')
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: Setup dependencies (setup node)
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - name: Setup dependencies (install dependencies)
+        run: npm ci
+      - name: Setup dependencies (setup dummy Firebase secret)
+        run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
+
       - name: Install python dependencies
         uses: BSFishy/pip-action@v1
         with:
@@ -85,3 +145,31 @@ jobs:
       - name: Check completeness of translations
         run: ./scripts/check-translations.sh
 
+  deployment:
+    runs-on: ubuntu-latest
+    needs: [ build, tests, linter, images, translations ]
+    steps:
+      - name: Deploy master on push
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+        uses: netlify/actions/cli@master
+        with:
+          args: deploy --trigger --prod --site=awesomboard
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+      - name: Deploy develop on push
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/develop' }}
+        uses: netlify/actions/cli@master
+        with:
+          args: deploy --trigger --prod --site=awesomboard --branch=develop
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+      - name: Deploy develop on deployment (only temporary for testing)
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/deployment' }}
+        uses: netlify/actions/cli@master
+        with:
+          args: deploy --trigger --prod --site=awesomboard --branch=deployment
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
