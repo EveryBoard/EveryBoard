@@ -21,7 +21,7 @@ export class DiamDummyMinimax extends Minimax<DiamMove, DiamState, LegalityStatu
         const shiftSources: Coord[] = this.getShiftSources(state);
         for (const shiftSource of shiftSources) {
             for (const shift of [new DiamMoveShift(shiftSource, 'clockwise'), new DiamMoveShift(shiftSource, 'counterclockwise')]) {
-                if (DiamRules.get().isLegal(shift, state).legal.isSuccess()) {
+                if (DiamRules.get().shiftHeightValidity(shift, state).legal.isSuccess()) {
                     shifts.push(shift);
                 }
             }
@@ -34,7 +34,7 @@ export class DiamDummyMinimax extends Minimax<DiamMove, DiamState, LegalityStatu
         for (let x: number = 0; x < DiamState.WIDTH; x++) {
             for (const piece of remainingPieces) {
                 const drop: DiamMoveDrop = new DiamMoveDrop(x, piece);
-                if (DiamRules.get().isLegal(drop, state).legal.isSuccess()) {
+                if (DiamRules.get().dropHeightValidity(drop, state).legal.isSuccess()) {
                     drops.push(drop);
                 }
             }

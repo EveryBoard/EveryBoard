@@ -70,15 +70,21 @@ export class DiamRules extends Rules<DiamMove, DiamState, LegalityStatus> {
         if (state.getRemainingPiecesOf(drop.piece) === 0) {
             return LegalityStatus.failure(DiamFailure.NO_MORE_PIECES_OF_THIS_TYPE());
         }
+        return this.dropHeightValidity(drop, state);
+    }
+    public dropHeightValidity(drop: DiamMoveDrop, state: DiamState): LegalityStatus {
         if (state.getStackHeight(drop.target) === DiamState.HEIGHT) {
             return LegalityStatus.failure(DiamFailure.SPACE_IS_FULL());
         }
         return LegalityStatus.SUCCESS;
     }
-    private isShiftLegal(shift: DiamMoveShift, state: DiamState): LegalityStatus {
+mu    private isShiftLegal(shift: DiamMoveShift, state: DiamState): LegalityStatus {
         if (state.getPieceAt(shift.start).owner !== state.getCurrentPlayer()) {
             return LegalityStatus.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
+        return this.shiftHeightValidity(shift, state);
+    }
+    public shiftHeightValidity(shift: DiamMoveShift, state: DiamState): LegalityStatus {
         const movedHeight: number = state.getStackHeight(shift.start.x) - shift.start.y;
         const resultingHeight: number = state.getStackHeight(shift.getTarget()) + movedHeight;
         if (resultingHeight > DiamState.HEIGHT) {
