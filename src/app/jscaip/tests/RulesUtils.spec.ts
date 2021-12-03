@@ -18,7 +18,7 @@ export class RulesUtils {
         expect(legality.legal).toBeTruthy();
         if (legality.legal.isSuccess()) {
             const resultingState: AbstractGameState = rules.applyLegalMove(move, state, legality);
-            if (resultingState['equals'] !== null) { // TODOTODO: will be isComparableObject when your branch is merged
+            if (resultingState['equals'] != null) { // TODOTODO: will be isComparableObject when your branch is merged
                 const equals: boolean = comparableEquals(resultingState as unknown as ComparableObject,
                                                          expectedState as unknown as ComparableObject);
                 expect(equals).withContext('states should be equal').toBeTrue();

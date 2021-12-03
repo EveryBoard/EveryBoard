@@ -51,6 +51,7 @@ import { AbaloneComponent } from './games/abalone/abalone.component';
 import { ApagosComponent } from './games/apagos/apagos.component';
 import { AwaleComponent } from './games/awale/awale.component';
 import { CoerceoComponent } from './games/coerceo/coerceo.component';
+import { DiamComponent } from './games/diam/diam.component';
 import { DvonnComponent } from './games/dvonn/dvonn.component';
 import { EncapsuleComponent } from './games/encapsule/encapsule.component';
 import { EpaminondasComponent } from './games/epaminondas/epaminondas.component';
@@ -77,6 +78,7 @@ import { USE_EMULATOR as USE_DATABASE_EMULATOR } from '@angular/fire/database';
 import { USE_EMULATOR as USE_AUTH_EMULATOR } from '@angular/fire/auth';
 import { USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/functions';
 import { LocaleUtils } from './utils/LocaleUtils';
+
 import { VerifiedAccountGuard } from './guard/verified-account.guard';
 import { VerifyAccountComponent } from './components/normal-component/verify-account/verify-account.component';
 import { ConnectedButNotVerifiedGuard } from './guard/connected-but-not-verified.guard';
@@ -85,7 +87,6 @@ import { AutofocusDirective } from './directives/autofocus.directive';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ToggleVisibilityDirective } from './directives/toggle-visibility.directive';
 import { ResetPasswordComponent } from './components/normal-component/reset-password/reset-password.component';
-
 
 registerLocaleData(localeFr);
 
@@ -136,6 +137,7 @@ const routes: Route [] = [
         ApagosComponent,
         AwaleComponent,
         CoerceoComponent,
+        DiamComponent,
         DvonnComponent,
         EncapsuleComponent,
         EpaminondasComponent,
@@ -159,30 +161,6 @@ const routes: Route [] = [
         HumanDuration,
         AutofocusDirective,
         ToggleVisibilityDirective,
-    ],
-    entryComponents: [
-        AbaloneComponent,
-        ApagosComponent,
-        AwaleComponent,
-        DvonnComponent,
-        EncapsuleComponent,
-        EpaminondasComponent,
-        GipfComponent,
-        GoComponent,
-        KamisadoComponent,
-        LinesOfActionComponent,
-        MinimaxTestingComponent,
-        P4Component,
-        PentagoComponent,
-        PylosComponent,
-        QuartoComponent,
-        QuixoComponent,
-        ReversiComponent,
-        SaharaComponent,
-        SiamComponent,
-        SixComponent,
-        TablutComponent,
-        YinshComponent,
     ],
     imports: [
         BrowserModule,
