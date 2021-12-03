@@ -14,9 +14,8 @@ jobs:
           cache-name: cache-node-modules
         with:
           path: ~/.npm
-          key: build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          key: build-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            build-${{ env.cache-name }}-
             build-
             -
       - name: Setup node
