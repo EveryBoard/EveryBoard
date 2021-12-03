@@ -8,8 +8,6 @@ jobs:
     name: Setup the project and its dependencies
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout the repository
-        uses: actions/checkout@v2
       - name: Cache node modules
         uses: actions/cache@v1
         env:
