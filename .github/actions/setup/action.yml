@@ -2,7 +2,7 @@ name: Setup the project and its dependencies
 
 on:
   workflow_call:
-    input:
+    inputs:
       os:
         required: true
         type: string
