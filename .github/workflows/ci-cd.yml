@@ -96,10 +96,8 @@ jobs:
       - name: Setup dependencies (setup dummy Firebase secret)
         run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
 
-      - name: Run linter with dev config
+      - name: Run linter with config
         run: npm run lint
-      - name: Run linter with stricter CI config
-        run: npm run lint:ci
 
   images:
     runs-on: ubuntu-latest
@@ -139,7 +137,7 @@ jobs:
       - name: Install python dependencies
         uses: BSFishy/pip-action@v1
         with:
-          packages: pandas
+          packages: lxml
       - name: Update translations
         run: ./scripts/update-translations.sh
       - name: Check completeness of translations
