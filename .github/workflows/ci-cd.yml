@@ -13,7 +13,7 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v2
       - name: Setup dependencies
-        uses: ./.github/actions/setup@5911f5521254c44a09888c5009998955cd1ab875
+        uses: ./.github/actions/setup
       - name: Build
         run: npm run build
 
@@ -24,7 +24,7 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v2
       - name: Setup dependencies
-        uses: ./.github/actions/setup@5911f5521254c44a09888c5009998955cd1ab875
+        uses: ./.github/actions/setup
       - name: Run test suite
         run: npm run test:ci
       - name: Install python dependencies
@@ -41,7 +41,7 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v2
       - name: Setup dependencies
-        uses: ./.github/actions/setup@5911f5521254c44a09888c5009998955cd1ab875
+        uses: ./.github/actions/setup
       - name: Run linter with dev config
         run: npm run lint
       - name: Run linter with stricter CI config
@@ -63,7 +63,7 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v2
       - name: Setup dependencies
-        uses: ./.github/actions/setup@5911f5521254c44a09888c5009998955cd1ab875
+        uses: ./.github/actions/setup
       - name: Install python dependencies
         uses: BSFishy/pip-action@v1
         with:
