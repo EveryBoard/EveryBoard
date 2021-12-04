@@ -12,11 +12,11 @@ export class EncoderTestUtils {
 }
 
 export class NumberEncoderTestUtils {
-    public static expectToBeCorrect<T extends ComparableObject>(encoder: NumberEncoder<T>, value: T): void {
+    public static expectToBeCorrect<T>(encoder: NumberEncoder<T>, value: T): void {
         const encoded: number = encoder.encodeNumber(value);
         expect(encoded).toBeLessThanOrEqual(encoder.maxValue());
         const decoded: T = encoder.decodeNumber(encoded);
-        expect(decoded.equals(value));
+        expect(decoded).toEqual(value);
     }
 }
 
@@ -57,20 +57,37 @@ describe('NumberEncoder', () => {
             expect(encoder.decodeNumber(0)).toBe(magicNumber);
         });
     });
-    describe('ofCombination', () => {
+    describe('tuple', () => {
         class T implements ComparableObject {
             public constructor(public field1: boolean, public field2: number, public field3: Player) {}
             public equals(t: T): boolean {
                 return this.field1 === t.field1 && this.field2 === t.field2 && this.field3 === t.field3;
             }
         }
-        const encoder: NumberEncoder<T> = NumberEncoder.ofCombination<T, [boolean, number, Player]>(
+        const encoder: NumberEncoder<T> = NumberEncoder.tuple<T, [boolean, number, Player]>(
             [NumberEncoder.booleanEncoder, NumberEncoder.numberEncoder(5), Player.numberEncoder],
             (t: T): [boolean, number, Player] => [t.field1, t.field2, t.field3],
             (fields: [boolean, number, Player]): T => new T(fields[0], fields[1], fields[2]));
         it('should successfully encode and decode', () => {
             NumberEncoderTestUtils.expectToBeCorrect(encoder, new T(true, 3, Player.ONE));
             NumberEncoderTestUtils.expectToBeCorrect(encoder, new T(false, 2, Player.ONE));
+        });
+    });
+    describe('disjunction', () => {
+        const encoder1: NumberEncoder<number> = NumberEncoder.numberEncoder(5);
+        const encoder2: NumberEncoder<boolean> = NumberEncoder.booleanEncoder;
+        const encoder: NumberEncoder<number | boolean> =
+            NumberEncoder.disjunction(encoder1,
+                                      encoder2,
+                                      (value : number | boolean): value is number => {
+                                          return typeof(value) === 'number';
+                                      });
+        it('should successfully encode and decode', () => {
+            NumberEncoderTestUtils.expectToBeCorrect(encoder, 0 as number | boolean);
+            NumberEncoderTestUtils.expectToBeCorrect(encoder, 1 as number | boolean);
+            NumberEncoderTestUtils.expectToBeCorrect(encoder, 3 as number | boolean);
+            NumberEncoderTestUtils.expectToBeCorrect(encoder, true as number | boolean);
+            NumberEncoderTestUtils.expectToBeCorrect(encoder, false as number | boolean);
         });
     });
 });

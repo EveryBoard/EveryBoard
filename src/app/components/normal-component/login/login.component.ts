@@ -46,4 +46,12 @@ export class LoginComponent implements OnInit {
     private async redirect(): Promise<boolean> {
         return this.router.navigate(['/server']);
     }
+    public canLogin(): boolean {
+        const email: string = this.loginForm.value.email || '';
+        const password: string = this.loginForm.value.password || '';
+        if (email === '' || password === '') {
+            return false;
+        }
+        return true;
+    }
 }
