@@ -207,9 +207,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
             return this.captureKingAgainstTheWall(left, leftCoord, right, rightCoord, kingCoord, state); // 2, 3
         }
         if (back === RelativePlayer.NONE && this.isThrone(state, backCoord)) { // ///////////////////////// 4
-            if (this.config.KING_FAR_FROM_CENTRAL_THRONE_CAN_BE_CAPTURED_NORMALLY) {
-                return kingCoord;
-            }
+            return this.captureKingAgainstThrone(backCoord, kingCoord, left, right);
         }
         if (back === RelativePlayer.PLAYER) {
             return this.captureKingWithAtLeastASandwhich(state, kingCoord, left, leftCoord, right, rightCoord);
@@ -255,14 +253,14 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         const LOCAL_VERBOSE: boolean = false;
         let nbInvaders: number = (left === RelativePlayer.PLAYER ? 1 : 0);
         nbInvaders += (right === RelativePlayer.PLAYER ? 1 : 0);
-        if (nbInvaders === 2 && this.config.THREE_INVADERS_AND_A_BORDER_CAN_CAPTURE_KING) { // 2
+        if (nbInvaders === 2 && this.config.BORDER_CAN_SURROUND_KING) { // 2
             // king captured by 3 invaders against 1 border
             display(TaflRules.VERBOSE || LOCAL_VERBOSE, 'king captured by 3 invaders against 1 border');
             return kingCoord;
         } else if (nbInvaders === 1) {
             if (this.isEmptyThrone(leftCoord, state) ||
                 this.isEmptyThrone(rightCoord, state)) {
-                if (this.config.CAN_CAPTURE_KING_AGAINST_THRONE) { // ////////////////////// 3
+                if (this.config.THRONE_CAN_SURROUND_KING) { // ////////////////////// 3
                     // king captured by 1 border, 1 throne, 2 invaders
                     display(TaflRules.VERBOSE || LOCAL_VERBOSE,
                             'king captured by 2 invaders against 1 corner and 1 border');
@@ -278,6 +276,24 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
             return state.board[c.y][c.x] === TaflPawn.UNOCCUPIED;
         }
         return false;
+    }
+    private captureKingAgainstThrone(backCoord: Coord, kingCoord: Coord, left: RelativePlayer, right: RelativePlayer): Coord {
+        if (this.isExternalThrone(backCoord)) {
+            if (this.config.KING_FAR_FROM_CENTRAL_THRONE_CAN_BE_SANDWICHED) {
+                return kingCoord;
+            }
+        } else { // Central throne
+            const kingHasOpponentOnItsLeft: boolean = left === RelativePlayer.PLAYER;
+            const kingHasOpponentOnItsRight: boolean = right === RelativePlayer.PLAYER;
+            const kingHasThreeOpponentAround: boolean = kingHasOpponentOnItsLeft || kingHasOpponentOnItsRight;
+            if (this.config.THRONE_CAN_SURROUND_KING &&
+                kingHasThreeOpponentAround)
+            {
+                return kingCoord;
+            } else {
+                return null;
+            }
+        }
     }
     private capturePawn(player: Player, c: Coord, d: Orthogonal, state: S): Coord {
         /* the pawn is the next coord after c (in direction d)
@@ -311,7 +327,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
                         'cannot capture a pawn without an ally behind');
                 return null;
             } // here, back is an empty throne
-            if (this.config.CAN_CAPTURE_PAWN_AGAINST_THRONE) {
+            if (this.config.CAN_SANDWICH_PAWN_AGAINST_THRONE) {
                 display(TaflRules.VERBOSE || LOCAL_VERBOSE,
                         'pawn captured by 1 opponent and 1 throne; ' +
                         threatenedPieceCoord + 'threatened by ' + player + `'s pawn in  ` + c +
@@ -349,13 +365,13 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         const kingTouchCentralThrone: boolean = kingHasThroneOnItsLeft || kingHasThroneOnItsRight;
         const kingHasThreeOpponentAround: boolean = kingHasOpponentOnItsLeft || kingHasOpponentOnItsRight;
         if (kingTouchCentralThrone &&
-            this.config.CAN_CAPTURE_KING_AGAINST_THRONE &&
-            kingHasThreeOpponentAround)
+            kingHasThreeOpponentAround &&
+            this.config.THRONE_CAN_SURROUND_KING)
         {
             return kingCoord;
         } else {
             if (state.isCentralThrone(kingCoord) === false &&
-                this.config.KING_FAR_FROM_CENTRAL_THRONE_CAN_BE_CAPTURED_NORMALLY)
+                this.config.KING_FAR_FROM_CENTRAL_THRONE_CAN_BE_SANDWICHED)
             {
                 return kingCoord;
             }

@@ -10,7 +10,7 @@ import { TaflFailure } from '../../TaflFailure';
 import { BrandhubMove } from '../BrandhubMove';
 import { TaflPawn } from '../../TaflPawn';
 
-describe('BrandhubRules', () => {
+fdescribe('BrandhubRules', () => {
 
     const _: TaflPawn = TaflPawn.UNOCCUPIED;
     const O: TaflPawn = TaflPawn.INVADERS;
@@ -281,7 +281,7 @@ describe('BrandhubRules', () => {
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('Should not allow capturing the king with 4 soldier if one is an ally', () => {
-        // Given a board where the king is one move ahead from being captured on his throne
+        // Given a board where the king is one move ahead from being surrounded on his throne
         const board: Table<TaflPawn> = [
             [_, _, _, _, _, _, _],
             [_, X, _, _, _, _, _],
@@ -293,15 +293,44 @@ describe('BrandhubRules', () => {
         ];
         const state: BrandhubState = new BrandhubState(board, 0);
 
-        // When moving a fourth invader next to the king
+        // When moving a fourth piece next to the king
         const move: BrandhubMove = new BrandhubMove(new Coord(1, 2), new Coord(3, 2));
 
-        // Then the king should be captured and the game over
+        // Then the king should not be captured and the game ongoing
         const expectedBoard: Table<TaflPawn> = [
             [_, _, _, _, _, _, _],
             [_, X, _, _, _, _, _],
             [_, _, _, O, _, _, _],
             [_, _, O, A, X, _, _],
+            [_, _, _, O, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, X, _, _, _],
+        ];
+        const expectedState: BrandhubState = new BrandhubState(expectedBoard, 1);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+    });
+    it('Should not allow capturing the king with one piece next to central throne', () => {
+        // Given a board where the king is one move ahead from being sandwiched next to his throne
+        const board: Table<TaflPawn> = [
+            [_, _, _, _, _, _, _],
+            [_, O, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, A, _, X, _, _],
+            [_, _, _, O, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, X, _, _, _],
+        ];
+        const state: BrandhubState = new BrandhubState(board, 0);
+
+        // When moving an invader next to the king
+        const move: BrandhubMove = new BrandhubMove(new Coord(1, 1), new Coord(1, 3));
+
+        // Then the king should not be captured
+        const expectedBoard: Table<TaflPawn> = [
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, O, A, _, X, _, _],
             [_, _, _, O, _, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, X, _, _, _],

@@ -64,9 +64,7 @@ export class TablutTutorial {
         ),
         TutorialStep.fromMove(
             $localize`Capturing a soldier (2/2)`,
-            $localize`A second way to capture a soldier is against an empty throne.
-        The king has moved and endangered one of its soldiers.<br/><br/>
-        Capture it.`,
+            $localize`A second way to capture a soldier is against an empty throne. The king has moved and endangered one of its soldiers.<br/><br/>Capture it.`,
             new TablutState([
                 [_, _, _, x, x, x, _, _, _],
                 [_, _, _, _, x, _, _, _, _],

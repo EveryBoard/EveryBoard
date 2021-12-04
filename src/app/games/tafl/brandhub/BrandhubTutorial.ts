@@ -46,9 +46,7 @@ export class BrandhubTutorial {
         ),
         TutorialStep.fromMove(
             $localize`Capturing a soldier (2/2)`,
-            $localize`A second way to capture a soldier is against an empty throne.
-        The king has moved and endangered one of its soldiers.<br/><br/>
-        Capture it.`,
+            $localize`A second way to capture a soldier is against an empty throne. The king has moved and endangered one of its soldiers.<br/><br/>Capture it.`,
             new BrandhubState([
                 [_, _, _, O, _, _, _],
                 [_, _, O, _, _, _, _],
