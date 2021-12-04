@@ -147,26 +147,5 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ build, tests, linter, images, translations ]
     steps:
-      - name: Deploy master on push
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
-        uses: netlify/actions/cli@master
-        with:
-          args: deploy --trigger --prod --site=awesomboard
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-      - name: Deploy develop on push
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/develop' }}
-        uses: netlify/actions/cli@master
-        with:
-          args: deploy --trigger --prod --site=awesomboard --branch=develop
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
       - name: Deploy develop on deployment (only temporary for testing)
-        uses: netlify/actions/cli@master
-        with:
-          args: deploy --trigger --site=awesomboard --branch=deployment
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: curl -X POST -d {} https://api.netlify.com/build_hooks/${{ secrets.NETLIFY_BUILD_HOOK }}
