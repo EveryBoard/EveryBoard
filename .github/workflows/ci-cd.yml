@@ -170,7 +170,7 @@ jobs:
         run: npm ci
       - name: Setup dependencies (setup Firebase secret)
         run: |
-        echo "export const firebaseConfig = {
+          echo "export const firebaseConfig = {
     apiKey: '${{ secrets.FIREBASE_API_KEY }}',
     authDomain: '${{ secrets.FIREBASE_AUTH_DOMAIN }}',
     databaseURL: '${{ secrets.FIREBASE_DATABASE_URL }}',
