@@ -67,9 +67,9 @@ module.exports = {
                     'FunctionExpression': { 'parameters': 'first' },
                 },
             ],
-            'object-curly-spacing': ['warn', 'always'],
+            'object-curly-spacing': ['error', 'always'],
             'no-redeclare': ['error'],
-            'camelcase': ['warn'],
+            'camelcase': ['error'],
             'no-case-declarations': ['off'],
             'padded-blocks': ['off'],
             'space-before-function-paren': ['error', {
@@ -81,6 +81,7 @@ module.exports = {
             'eqeqeq': ['error', 'always', {
                 'null': 'ignore',
             }],
+            'max-lines-per-function': ['off', 20]
         },
     }, {
         files: ['*.html'],

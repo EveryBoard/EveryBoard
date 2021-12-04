@@ -66,6 +66,9 @@ export class AuthenticationServiceMock {
     public async reloadUser(): Promise<void> {
         this.userRS.next(this.currentUser);
     }
+    public async sendPasswordResetEmail(): Promise<MGPValidation> {
+        return MGPValidation.failure('not mocked');
+    }
 }
 
 async function setupAuthTestModule(): Promise<unknown> {
@@ -318,7 +321,7 @@ describe('AuthenticationService', () => {
 
             // then the login fails
             expect(result.isFailure()).toBeTrue();
-            expect(result.getReason()).toBe(`You have entered an invalid email or password.`);
+            expect(result.getReason()).toBe(`You have entered invalid credentials.`);
         });
         it('should fail when the user is not registered', async() => {
             // given that the user does not exist
@@ -328,7 +331,7 @@ describe('AuthenticationService', () => {
 
             // then the login fails
             expect(result.isFailure()).toBeTrue();
-            expect(result.getReason()).toBe(`You have entered an invalid email or password.`);
+            expect(result.getReason()).toBe(`You have entered invalid credentials.`);
         });
     });
     describe('google login', () => {
@@ -520,6 +523,32 @@ describe('AuthenticationService', () => {
             // then it fails
             expect(result.isFailure()).toBeTrue();
             expect(result.getReason()).toEqual('Error');
+        });
+    });
+    describe('sendPasswordResetEmail', () => {
+        it('should delegate to the corresponding firebase method', async() => {
+            spyOn(firebase.auth(), 'sendPasswordResetEmail').and.resolveTo();
+            // given a registered user
+            expect((await service.doRegister(username, email, password)).isSuccess()).toBeTrue();
+
+            // when asking for password reset
+            const result: MGPValidation = await service.sendPasswordResetEmail(email);
+
+            // then it should have delegated and succeeded
+            expect(result.isSuccess()).toBeTrue();
+            expect(firebase.auth().sendPasswordResetEmail).toHaveBeenCalledWith(email);
+        });
+        it('should properly map errors', async() => {
+            // given a user that doesn't exist
+            const email: string = 'foo@jaja.com';
+            const error: firebase.FirebaseError = new Error('Error') as firebase.FirebaseError;
+            error.code = 'auth/user-not-found';
+            spyOn(firebase.auth(), 'sendPasswordResetEmail').and.rejectWith(error);
+            // when asking for password reset
+            const result: MGPValidation = await service.sendPasswordResetEmail(email);
+            // then it should fail
+            expect(result.isFailure()).toBeTrue();
+            expect(result.getReason()).toBe('You have entered invalid credentials.');
         });
     });
     it('should unsubscribe from auth subscription upon destruction', () => {

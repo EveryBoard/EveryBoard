@@ -282,7 +282,6 @@ export class ApagosComponent extends GameComponent<ApagosRules,
             piece: this.getLowestPlayerPiece(square, currentPlayer),
         });
         if (this.showAndGetPossibleTranfers().length === 0) {
-            console.log('no fucking transfer possible');
             return this.cancelMove(ApagosFailure.NO_POSSIBLE_TRANSFER_REMAINS());
         }
         return MGPValidation.SUCCESS;
