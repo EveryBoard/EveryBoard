@@ -148,5 +148,7 @@ jobs:
     needs: [ build, tests, linter, images, translations ]
     environment: netlify
     steps:
+      - name: Install netlify CLI
+        run: npm install netlify
       - name: Deploy develop on deployment (only temporary for testing)
-        run: curl -X POST -d {} https://api.netlify.com/build_hooks/${{ secrets.NETLIFY_BUILD_HOOK }}
+        run: netlify deploy --trigger --branch=deployment
