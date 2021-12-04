@@ -146,6 +146,7 @@ jobs:
   deployment:
     runs-on: ubuntu-latest
     needs: [ build, tests, linter, images, translations ]
+    environment: netlify
     steps:
       - name: Deploy develop on deployment (only temporary for testing)
         run: curl -X POST -d {} https://api.netlify.com/build_hooks/${{ secrets.NETLIFY_BUILD_HOOK }}
