@@ -149,6 +149,8 @@ jobs:
     environment: netlify
 # TODO:    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
       - name: Setup dependencies (cache node modules)
         uses: actions/cache@v1
         env:
