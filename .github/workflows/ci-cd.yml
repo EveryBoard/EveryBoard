@@ -152,3 +152,6 @@ jobs:
         run: npm install netlify
       - name: Deploy develop on deployment (only temporary for testing)
         run: netlify deploy --trigger --branch=deployment
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
