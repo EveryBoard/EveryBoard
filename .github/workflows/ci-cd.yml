@@ -147,11 +147,34 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ build, tests, linter, images, translations ]
     environment: netlify
+# TODO:    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     steps:
-      - name: Install netlify CLI
-        run: npm install netlify
+      - name: Setup dependencies (cache node modules)
+        uses: actions/cache@v1
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: Setup dependencies (setup node)
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - name: Setup dependencies (install dependencies)
+        run: npm ci
+      - name: Setup dependencies (setup Firebase secret)
+        run: |
+          gpg --quiet --batch --yes --decrypt --passphrase="$ENC_SECRET" --output src/app/firebaseConfig.ts .github/firebaseConfig.ts.gpg
+        env:
+          ENC_SECRET: ${{ secrets.ENC_SECRET }}
+      - name: Build
+        run: npm run build:netlify
       - name: Deploy develop on deployment (only temporary for testing)
-        run: netlify deploy --trigger --branch=deployment
+        run: netlify deploy --dir=dist/pantheonsgame --branch=deployment
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
