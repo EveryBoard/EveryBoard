@@ -21,6 +21,8 @@ $victory: yellow;
     stroke: $base-stroke;
     stroke-width: 8;
     fill: $background-fill;
+    stroke-linecap: butt;
+    stroke-linejoin: round;
 }
 .base-no-fill {
     stroke: $base-stroke;
@@ -45,11 +47,17 @@ $victory: yellow;
 .player0 {
     fill: $player0;
 }
+.player0-alternate {
+    fill: $player0-alternate;
+}
 .player0-stroke {
     stroke: $player0;
 }
 .player1 {
     fill: $player1;
+}
+.player1-alternate {
+    fill: $player1-alternate;
 }
 .player1-stroke {
     stroke: $player1;
@@ -107,7 +115,10 @@ $victory: yellow;
     fill: $selected;
 }
 .clickable {
-    stroke: $clickable;;
+    stroke: $clickable;
+}
+.clickable-hover:hover {
+    stroke: $clickable;
 }
 .capturable {
     stroke-width: 2;
@@ -124,6 +135,9 @@ $victory: yellow;
 }
 .small-stroke {
     stroke-width: 2;
+}
+.mid-small-stroke {
+    stroke-width: 3;
 }
 .mid-stroke {
     stroke-width: 5;
@@ -155,6 +169,15 @@ $victory: yellow;
 }
 .text-center {
     text-anchor: middle;
+}
+.color-variant {
+    filter: hue-rotate(20deg);
+}
+.low-brightness {
+    filter: brightness(0.8);
+}
+.high-brightness {
+    filter: brightness(1.1);
 }
 svg {
     max-height: calc(100vh - 10rem); /* Full height minus the navbar */
