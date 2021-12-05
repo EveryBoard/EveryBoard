@@ -51,12 +51,14 @@ describe('PylosMove', () => {
     it('Should override equals correctly', () => {
         const badCoord: PylosCoord = new PylosCoord(1, 1, 1);
         const move: PylosMove = PylosMove.fromClimb(coord, highCoord, [coord, highCoord]);
+        const sameMove: PylosMove = PylosMove.fromClimb(coord, highCoord, [coord, highCoord]);
         const otherMove1: PylosMove = PylosMove.fromClimb(badCoord, highCoord, [coord, highCoord]);
         const otherMove2: PylosMove = PylosMove.fromClimb(coord, badCoord, [coord, highCoord]);
         const otherMove3: PylosMove = PylosMove.fromClimb(coord, highCoord, [badCoord, highCoord]);
         const otherMove4: PylosMove = PylosMove.fromClimb(coord, highCoord, [coord, badCoord]);
 
         expect(move.equals(move)).toBeTrue();
+        expect(move.equals(sameMove)).toBeTrue();
         expect(move.equals(otherMove1)).toBeFalse();
         expect(move.equals(otherMove2)).toBeFalse();
         expect(move.equals(otherMove3)).toBeFalse();

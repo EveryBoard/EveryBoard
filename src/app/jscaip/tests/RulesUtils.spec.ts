@@ -7,6 +7,7 @@ import { GameState } from '../GameState';
 import { comparableEquals, isComparableObject } from 'src/app/utils/Comparable';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+
 export class RulesUtils {
 
     public static expectMoveSuccess<R extends Rules<M, S, L>, M extends Move, S extends GameState, L>(
@@ -19,7 +20,7 @@ export class RulesUtils {
         const legality: MGPFallible<L> = rules.isLegal(move, state);
         if (legality.isSuccess()) {
             const resultingState: S = rules.applyLegalMove(move, state, legality.get());
-            if (false && isComparableObject(resultingState)) {
+            if (isComparableObject(resultingState)) {
                 const equals: boolean = comparableEquals(resultingState, expectedState);
                 expect(equals).withContext('states should be equal').toBeTrue();
             } else {

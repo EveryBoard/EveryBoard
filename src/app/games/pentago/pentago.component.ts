@@ -175,7 +175,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         return classes;
     }
     public async rotate(arrow: [string, number, boolean]): Promise<MGPValidation> {
-        const clockwise: string = arrow[2] ? 'clockwise' : 'anticlockwise';
+        const clockwise: string = arrow[2] ? 'clockwise' : 'counterclockwise';
         const clickValidity: MGPValidation = this.canUserPlay('#rotate_' + arrow[1] + '_' + clockwise);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());

@@ -55,8 +55,10 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
         }
     }
     private showLastMove() {
-        const y: number = P4Rules.getLowestUnoccupiedCase(state.board, this.rules.node.move.get().x) + 1;
-        this.last = return new Coord(move.x, y);
+        const state: P4State = this.rules.node.gameState;
+        const lastMove: MGPOptional<P4Move> = this.rules.node.move;
+        const y: number = P4Rules.getLowestUnoccupiedCase(state.board, lastMove.get().x) + 1;
+        this.last = MGPOptional.of(new Coord(lastMove.get().x, y));
     }
     private hideLastMove() {
         this.last = MGPOptional.empty();

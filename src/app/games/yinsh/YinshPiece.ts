@@ -6,7 +6,7 @@ import { assert, Utils } from 'src/app/utils/utils';
 export class YinshPiece implements ComparableObject {
 
     public static encoder: NumberEncoder<YinshPiece> =
-        NumberEncoder.ofCombination<YinshPiece, [Player, boolean]>(
+        NumberEncoder.tuple<YinshPiece, [Player, boolean]>(
             [Player.numberEncoder, NumberEncoder.booleanEncoder],
             (piece: YinshPiece): [Player, boolean] => [piece.player, piece.isRing],
             (fields: [Player, boolean]): YinshPiece => {

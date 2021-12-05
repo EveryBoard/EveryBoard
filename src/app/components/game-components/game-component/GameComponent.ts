@@ -94,12 +94,21 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
                 return '';
         }
     }
-    public getTurn(): number {
-        return this.rules.node.gameState.turn;
-    }
     public pass(): Promise<MGPValidation> {
         Utils.handleError('GameComponent.pass() called on a game that does not redefine it');
         return of(MGPValidation.failure('GameComponent.pass() called on a game that does not redefine it')).toPromise();
+    }
+    public getTurn(): number {
+        return this.rules.node.gameState.turn;
+    }
+    public getCurrentPlayer(): Player {
+        return this.rules.node.gameState.getCurrentPlayer();
+    }
+    public getState(): S {
+        return this.rules.node.gameState;
+    }
+    public getPreviousState(): S {
+        return this.rules.node.mother.get().gameState;
     }
 }
 

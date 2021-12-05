@@ -6,6 +6,7 @@ import { IChatId } from 'src/app/domain/ichat';
 import { assert, display } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { faReply, IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-chat',
@@ -14,8 +15,8 @@ import { faReply, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     public static VERBOSE: boolean = false;
 
-    @Input() public chatId: string;
-    @Input() public turn: number | undefined;
+    @Input() public chatId!: string;
+    @Input() public turn?: number;
     public userMessage: string = '';
     public username: MGPOptional<string> = MGPOptional.empty();
 
@@ -31,6 +32,8 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     private isNearBottom: boolean = true;
     private notYetScrolled: boolean = true;
 
+    private authSubscription!: Subscription; // Initialized in ngOnInit
+
     @ViewChild('chatDiv') chatDiv: ElementRef<HTMLElement>;
 
     constructor(private chatService: ChatService,
@@ -41,8 +44,7 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
         display(ChatComponent.VERBOSE, `ChatComponent.ngOnInit for chat ${this.chatId}`);
 
         assert(this.chatId != null && this.chatId !== '', 'No chat to join mentionned');
-
-        this.authenticationService.getUserObs()
+        this.authSubscription = this.authenticationService.getUserObs()
             .subscribe((user: AuthUser) => {
                 if (this.isConnectedUser(user)) {
                     display(ChatComponent.VERBOSE, JSON.stringify(user) + ' just connected');
@@ -131,6 +133,7 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
         await this.chatService.sendMessage(this.username.get(), this.turn, content);
     }
     public ngOnDestroy(): void {
+        this.authSubscription.unsubscribe();
         if (this.chatService.isObserving()) {
             this.chatService.stopObserving();
         }

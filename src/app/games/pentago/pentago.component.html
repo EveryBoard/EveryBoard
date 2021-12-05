@@ -52,7 +52,7 @@
     />
     <path *ngFor="let arrow of arrows"
           [attr.d]="arrow[0]"
-          id="rotate_{{ arrow[1] }}_{{ arrow[2] ? 'clockwise' : 'anticlockwise' }}"
+          id="rotate_{{ arrow[1] }}_{{ arrow[2] ? 'clockwise' : 'counterclockwise' }}"
           stroke="blue"
           fill="none"
           (click)="rotate(arrow)"

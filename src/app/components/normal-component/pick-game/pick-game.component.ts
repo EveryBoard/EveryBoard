@@ -1,7 +1,9 @@
 import { Component, EventEmitter, Output, Type } from '@angular/core';
 import { AbaloneComponent } from 'src/app/games/abalone/abalone.component';
+import { ApagosComponent } from 'src/app/games/apagos/apagos.component';
 import { AwaleComponent } from 'src/app/games/awale/awale.component';
 import { CoerceoComponent } from 'src/app/games/coerceo/coerceo.component';
+import { DiamComponent } from 'src/app/games/diam/diam.component';
 import { DvonnComponent } from 'src/app/games/dvonn/dvonn.component';
 import { EncapsuleComponent } from 'src/app/games/encapsule/encapsule.component';
 import { EpaminondasComponent } from 'src/app/games/epaminondas/epaminondas.component';
@@ -23,7 +25,6 @@ import { TablutComponent } from 'src/app/games/tablut/tablut.component';
 import { YinshComponent } from 'src/app/games/yinsh/yinsh.component';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { Localized } from 'src/app/utils/LocaleUtils';
-import { ApagosComponent } from 'src/app/games/apagos/apagos.component';
 
 class GameDescription {
 
@@ -34,6 +35,8 @@ class GameDescription {
     public static readonly AWALE: Localized = () => $localize`The international version of the famous African strategy game!`;
 
     public static readonly COERCEO: Localized = () => $localize`Get rid of all of your opponent's pieces on a board that shrinks little by little!`;
+
+    public static readonly DIAM: Localized = () => $localize`Drop your pieces and move them around to align two pieces of the same color across the board to win!`;
 
     public static readonly DVONN: Localized = () => $localize`Stack your pieces and control as many stacks as you can to win!`;
 
@@ -102,7 +105,8 @@ export class GameInfo {
         new GameInfo($localize`Pentago`, 'Pentago', PentagoComponent, new Date('2021-05-23'), GameDescription.PENTAGO()), // 25 days after Six
         new GameInfo($localize`Abalone`, 'Abalone', AbaloneComponent, new Date('2021-07-13'), GameDescription.ABALONE()), // 71 days after Pentago
         new GameInfo($localize`Yinsh`, 'Yinsh', YinshComponent, new Date('2021-07-31'), GameDescription.YINSH()), // 94 days after LinesOfAction *Quentin
-        new GameInfo($localize`Apagos`, 'Apagos', ApagosComponent, new Date('2021-11-04'), GameDescription.APAGOS()), // 4 month after Apagos
+        new GameInfo($localize`Apagos`, 'Apagos', ApagosComponent, new Date('2021-11-04'), GameDescription.APAGOS()), // 4 month after Abalone
+        new GameInfo($localize`Diam`, 'Diam', DiamComponent, new Date('2021-11-30'), GameDescription.DIAM()), // 4 months after Yinsh *Quentin
     ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
     // After Apagos: median = 26d; average = 53d
     // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m

@@ -50,6 +50,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
             display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapper.ngAfterViewInit inside timeout');
             display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapper AfterViewInit: '+(this.gameComponent!=null));
             this.afterGameIncluderViewInit();
+            this.restartGame();
             this.cdr.detectChanges();
         }, 1);
     }
