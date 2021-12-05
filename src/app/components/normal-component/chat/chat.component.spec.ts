@@ -185,20 +185,6 @@ describe('ChatComponent', () => {
             testUtils.detectChanges();
             await testUtils.whenStable();
 
-<<<<<<< HEAD
-        // then the message is sent
-        const username: string = AuthenticationServiceMock.CONNECTED.username.get();
-        expect(chatService.sendMessage).toHaveBeenCalledWith(username, 2, 'hello');
-        //  and the form is cleared
-        expect(messageInput.nativeElement.value).toBe('');
-    }));
-    it('should scroll to bottom when sending a message', fakeAsync(async() => {
-        // given a chat with many messages
-        AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
-        await chatDAO.update('fauxChat', { messages: LOTS_OF_MESSAGES.concat(MSG) }); // new message has been received
-        testUtils.detectChanges();
-        spyOn(component, 'scrollTo');
-=======
             // then the view is scrolled to the bottom
             expect(component.scrollToBottom).toHaveBeenCalled();
             // and the indicator has disappeared
@@ -215,7 +201,6 @@ describe('ChatComponent', () => {
             testUtils.detectChanges();
             let switchButton: DebugElement = testUtils.findElement('#switchChatVisibilityButton');
             expect(switchButton.nativeElement.innerText).toEqual('Show chat (1 new message)');
->>>>>>> 77f174824f1fc54a1e2bf1204d1cc5b5e95201af
 
             // When the chat is shown and then hidden again
             testUtils.clickElement('#switchChatVisibilityButton');
@@ -244,7 +229,8 @@ describe('ChatComponent', () => {
             await testUtils.whenStable();
 
             // then the message is sent
-            expect(chatService.sendMessage).toHaveBeenCalledWith(AuthenticationServiceMock.CONNECTED.username, 2, 'hello');
+            const username: string = AuthenticationServiceMock.CONNECTED.username.get();
+            expect(chatService.sendMessage).toHaveBeenCalledWith(username, 2, 'hello');
             //  and the form is cleared
             expect(messageInput.nativeElement.value).toBe('');
         }));

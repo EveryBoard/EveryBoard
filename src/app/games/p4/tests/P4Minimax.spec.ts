@@ -31,7 +31,7 @@ describe('P4Minimax', () => {
         getListMovesSpy.calls.reset();
 
         // when computing the same information with alpha-beta pruning enabled
-        rules.node = new MGPNode(null, null, P4State.getInitialState());
+        rules.node = new P4Node(P4State.getInitialState());
         rules.node.findBestMove(3, minimax, false, true);
         const callsToGetBoardValueWithPruning: number = getBoardValueSpy.calls.count();
         const callsToGetListMovesWithPruning: number = getListMovesSpy.calls.count();

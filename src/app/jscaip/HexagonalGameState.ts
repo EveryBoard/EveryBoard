@@ -29,9 +29,7 @@ export abstract class HexagonalGameState<P> extends GameStateWithTable<P> {
             throw new Error('Invalid excluded cases specification for HexagonalGameState.');
         }
     }
-    public setAtUnsafe(coord: Coord, v: P): this {
-        throw new Error('Should be overridden');
-    }
+    public abstract setAtUnsafe(coord: Coord, v: P): this
     public setAt(coord: Coord, v: P): this {
         if (this.isOnBoard(coord)) {
             return this.setAtUnsafe(coord, v);

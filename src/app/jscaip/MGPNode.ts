@@ -110,7 +110,7 @@ export class MGPNode<R extends Rules<M, S, L>, // TODO FOR REVIEW: why not remov
     }
     public findBestMove(readingDepth: number,
                         minimax: Minimax<M, S, L, U>,
-                        random: boolean = false,
+                        random: boolean = true,
                         prune: boolean = true)
     : M
     {
@@ -201,9 +201,7 @@ export class MGPNode<R extends Rules<M, S, L>, // TODO FOR REVIEW: why not remov
         let child: MGPOptional<MGPNode<R, M, S, L, U>> = this.getSonByMove(move);
         if (child.isAbsent()) {
             const legality: MGPFallible<L> = minimax.ruler.isLegal(move, this.gameState);
-            if (legality.isFailure()) {
-                Utils.handleError(`The minimax has accepted an illegal move, this should not happen.`);
-            }
+            assert(legality.isSuccess(),'The minimax has accepted an illegal move, this should not happen.');
             const state: S = minimax.ruler.applyLegalMove(move, this.gameState, legality.get());
             child = MGPOptional.of(new MGPNode(state, MGPOptional.of(this), MGPOptional.of(move), minimax));
             this.childs.get().push(child.get());
@@ -247,7 +245,7 @@ export class MGPNode<R extends Rules<M, S, L>, // TODO FOR REVIEW: why not remov
             return 'NodeInitial: ' + turn;
         }
         while (node.mother.isPresent()) {
-            const move: string = node.move == null ? ' ' : ' > ' + node.move.toString() + '> ';
+            const move: string = node.move.isAbsent() ? ' ' : ' > ' + node.move.get().toString() + '> ';
             const turn: number = node.gameState.turn;
             genealogy = move + turn + ' ' + genealogy;
             node = node.mother.get();
