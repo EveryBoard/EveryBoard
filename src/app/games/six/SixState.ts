@@ -182,8 +182,7 @@ export class SixState extends GameState {
         const pieces: MGPMap<Player, MGPSet<Coord>> = MGPMap.groupByValue(this.pieces);
         const zeroPieces: MGPSet<Coord> = pieces.get(Player.ZERO).getOrElse(new MGPSet());
         const onePieces: MGPSet<Coord> = pieces.get(Player.ONE).getOrElse(new MGPSet());
-        return [zeroPieces.size(), onePieces.size(),
-        ];
+        return [zeroPieces.size(), onePieces.size()];
     }
     public switchPiece(coord: Coord): SixState {
         const newPieces: MGPMap<Coord, Player> = this.pieces.getCopy();

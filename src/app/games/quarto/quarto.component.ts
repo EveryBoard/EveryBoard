@@ -26,8 +26,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
 
     public chosen: MGPOptional<Coord> = MGPOptional.empty();
     public lastMove: MGPOptional<Coord> = MGPOptional.empty();
-    public pieceInHand: QuartoPiece;
-    // the piece that the current user must place on the board
+    public pieceInHand: QuartoPiece = QuartoPiece.NONE; // the piece that the current user must place on the board
     public pieceToGive: QuartoPiece = QuartoPiece.NONE; // the piece that the user wants to give to the opponent
     public victoriousCoords: Coord[] = [];
 
@@ -46,6 +45,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         const state: QuartoState = this.rules.node.gameState;
         const move: MGPOptional<QuartoMove> = this.rules.node.move;
         this.board = state.getCopiedBoard();
+        this.chosen = MGPOptional.empty();
         this.pieceInHand = state.pieceInHand;
         this.victoriousCoords = this.rules.getVictoriousCoords(state);
         this.lastMove = move.map((move: QuartoMove) => move.coord);

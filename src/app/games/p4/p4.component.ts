@@ -48,10 +48,18 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
 
         this.victoryCoords = P4Rules.getVictoriousCoords(state);
         this.board = state.board;
-        this.last = lastMove.map((move: P4Move) => {
-            const y: number = P4Rules.getLowestUnoccupiedCase(state.board, move.x) + 1;
-            return new Coord(move.x, y);
-        });
+        if (lastMove.isPresent()) {
+            this.showLastMove();
+        } else {
+            this.hideLastMove();
+        }
+    }
+    private showLastMove() {
+        const y: number = P4Rules.getLowestUnoccupiedCase(state.board, this.rules.node.move.get().x) + 1;
+        this.last = return new Coord(move.x, y);
+    }
+    private hideLastMove() {
+        this.last = MGPOptional.empty();
     }
     public getCaseClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);

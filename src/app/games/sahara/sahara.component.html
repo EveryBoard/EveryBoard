@@ -25,7 +25,7 @@
             </g>
         </g>
     </g>
-    <ng-container *ngIf="lastMoved.isPresent() && lastCoord.isPresent()">
+    <ng-container *ngIf="lastMoved.isPresent()">
         <polyline [attr.points]="getTriangleCoordinate(lastCoord.get().x, lastCoord.get().y)"
                   class="base no-fill small-stroke highlighted" />
         <polyline [attr.points]="getTriangleCoordinate(lastMoved.get().x, lastMoved.get().y)"

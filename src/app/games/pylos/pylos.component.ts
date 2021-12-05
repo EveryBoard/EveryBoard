@@ -101,7 +101,8 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
             move = PylosMove.fromDrop(this.chosenLandingCoord.get(), captures);
         } else {
             move = PylosMove.fromClimb(this.chosenStartingCoord.get(),
-                                       this.chosenLandingCoord.get(), captures);
+                                       this.chosenLandingCoord.get(),
+                                       captures);
         }
         return this.tryMove(move, this.state);
     }

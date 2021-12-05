@@ -3,6 +3,8 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
+export type SiamPieceValue = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+
 export class SiamPiece {
 
     public static readonly EMPTY: SiamPiece = new SiamPiece(0);
@@ -25,7 +27,7 @@ export class SiamPiece {
 
     public static readonly MOUNTAIN: SiamPiece = new SiamPiece(9);
 
-    public static decode(value: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9): SiamPiece {
+    public static decode(value: SiamPieceValue): SiamPiece {
         switch (value) {
             case 0: return SiamPiece.EMPTY;
             case 1: return SiamPiece.WHITE_UP;

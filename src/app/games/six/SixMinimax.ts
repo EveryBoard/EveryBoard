@@ -440,8 +440,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         if (subSum === 4.16) {
             display(this.VERBOSE, '5+1 found!');
             // We found 5 pieces aligned and one space, so that space is a preVictory coord
-            if (preVictory.isPresent() &&
-                (lastEmpty.isAbsent() || preVictory.equals(lastEmpty) === false)) {
+            if (preVictory.isPresent() && (preVictory.equals(lastEmpty) === false)) {
                 return {
                     status: SCORE.PRE_VICTORY,
                     victory: MGPOptional.empty(),
