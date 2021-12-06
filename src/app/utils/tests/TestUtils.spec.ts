@@ -260,7 +260,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     }
     public async expectInterfaceClickSuccess(elementName: string): Promise<void> {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext('Element "' + elementName + '" should exist.').toBeTruthy();
+        expect(element).withContext('Element "' + elementName + '" should exist').toBeTruthy();
         element.triggerEventHandler('click', null);
         await this.fixture.whenStable();
         this.fixture.detectChanges();
@@ -270,7 +270,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     }
     public async expectClickFailure(elementName: string, reason: string): Promise<void> {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext('Element "' + elementName + '" should exist.').toBeTruthy();
+        expect(element).withContext('Element "' + elementName + '" should exist').toBeTruthy();
         if (element == null) {
             return;
         } else {
@@ -287,7 +287,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     }
     public async expectClickForbidden(elementName: string, reason: string): Promise<void> {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext('Element "' + elementName + '" should exist.').toBeTruthy();
+        expect(element).withContext('Element "' + elementName + '" should exist').toBeTruthy();
         if (element == null) {
             return;
         } else {
@@ -312,7 +312,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     : Promise<void>
     {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext('Element "' + elementName + '" should exist.').toBeTruthy();
+        expect(element).withContext('Element "' + elementName + '" should exist').toBeTruthy();
         if (element == null) {
             return;
         } else {
@@ -349,7 +349,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     : Promise<void>
     {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext('Element "' + elementName + '" should exist.').toBeTruthy();
+        expect(element).withContext('Element "' + elementName + '" should exist').toBeTruthy();
         if (element == null) {
             return;
         } else {
