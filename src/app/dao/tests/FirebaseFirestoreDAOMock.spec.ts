@@ -68,18 +68,15 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
         }
         return elementWithTime as N;
     }
-    public async read(id: string): Promise<T | null> {
+    public async read(id: string): Promise<MGPOptional<T>> {
         display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE, this.collectionName + '.read(' + id + ')');
 
         const optionalOS: MGPOptional<ObservableSubject<{id: string, doc: T}>> = this.getStaticDB().get(id);
         if (optionalOS.isPresent()) {
-            return optionalOS.get().subject.getValue().doc;
+            return MGPOptional.of(optionalOS.get().subject.getValue().doc);
         } else {
-            return null; // should return null if a document does not exist. This is a behaviour relied upon!
+            return MGPOptional.empty();
         }
-    }
-    public async tryToRead(id: string): Promise<MGPOptional<T>> {
-        return MGPOptional.ofNullable(await this.read(id));
     }
     public async set(id: string, doc: T): Promise<void> {
         display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE,

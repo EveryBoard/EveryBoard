@@ -23,8 +23,6 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
     public applyLegalMove(_move: YinshMove, _state: YinshState, info: YinshState): YinshState {
         const stateWithoutTurn: YinshState = info;
         return new YinshState(stateWithoutTurn.board, stateWithoutTurn.sideRings, stateWithoutTurn.turn+1);
-        // TODO: dont merge this, move HexaBoard into HexagonalGameState first!!
-        // TODO FOR REVIEW: what about this comment?
     }
     public applyCaptures(state: YinshState, captures: ReadonlyArray<YinshCapture>): YinshState {
         let computedState: YinshState = state;

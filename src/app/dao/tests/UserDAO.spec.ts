@@ -59,7 +59,7 @@ describe('UserDAO', () => {
             await dao.setUsername(uid, 'foo');
 
             // then its username has changed
-            const user: IUser = (await dao.tryToRead(uid)).get();
+            const user: IUser = (await dao.read(uid)).get();
             expect(user.username).toEqual('foo');
         });
     });

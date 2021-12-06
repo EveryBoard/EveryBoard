@@ -56,12 +56,12 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         this.scores = MGPOptional.of(this.state.captures);
         this.tiles = this.state.tiles;
         const move: MGPOptional<CoerceoMove> = this.rules.node.move;
-        if (move.isAbsent()) {
-            this.lastStart = MGPOptional.empty();
-            this.lastEnd = MGPOptional.empty();
-        } else {
+        if (move.isPresent()) {
             this.lastStart = move.get().start;
             this.lastEnd = move.get().landingCoord;
+        } else {
+            this.lastStart = MGPOptional.empty();
+            this.lastEnd = MGPOptional.empty();
         }
         this.board = this.rules.node.gameState.board;
     }

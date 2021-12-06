@@ -46,8 +46,13 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         this.board = state.getCopiedBoard();
         const move: MGPOptional<EncapsuleMove> = this.rules.node.move;
 
-        this.lastLandingCoord = move.map((move: EncapsuleMove) => move.landingCoord);
-        this.lastStartingCoord = move.flatMap((move: EncapsuleMove) => move.startingCoord);
+        if (move.isPresent()) {
+            this.lastLandingCoord = MGPOptional.of(move.get().landingCoord);
+            this.lastStartingCoord = move.get().startingCoord;
+        } else {
+            this.lastLandingCoord = MGPOptional.empty();
+            this.lastStartingCoord = MGPOptional.empty();
+        }
     }
     public getListPieces(content: EncapsuleCase): EncapsulePiece[] {
         return content.toList();

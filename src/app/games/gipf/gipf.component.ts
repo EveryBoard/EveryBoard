@@ -72,8 +72,8 @@ export class GipfComponent
         this.inserted = MGPOptional.empty();
         const lastMove: MGPOptional<GipfMove> = this.rules.node.move;
         if (lastMove.isPresent() && lastMove.get().placement.direction.isPresent()) {
-            this.inserted = MGPOptional.of(
-                this.arrowTowards(lastMove.get().placement.coord, lastMove.get().placement.direction.get()));
+            const lastPlacement: GipfPlacement = lastMove.get().placement;
+            this.inserted = MGPOptional.of(this.arrowTowards(lastPlacement.coord, lastPlacement.direction.get()));
         }
         this.cancelMoveAttempt();
     }

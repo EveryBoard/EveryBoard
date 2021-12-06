@@ -181,7 +181,7 @@ describe('PartCreationComponent:', () => {
             ...JoinerMocks.WITH_ACCEPTED_CONFIG.doc,
             firstPlayer: FirstPlayer.CREATOR.value,
         });
-        const currentPart: IPart = (await partDAOMock.tryToRead('joinerId')).get();
+        const currentPart: IPart = (await partDAOMock.read('joinerId')).get();
         const expectedPart: IPart = { ...PartMocks.STARTING.doc, beginning: currentPart.beginning };
         expect(currentPart).toEqual(expectedPart);
     }));
@@ -451,7 +451,7 @@ describe('PartCreationComponent:', () => {
             component.userName = 'creator';
             component.partId = 'does not exist';
             const joinerDAOMock: JoinerDAO = TestBed.inject(JoinerDAO);
-            spyOn(joinerDAOMock, 'tryToRead').and.resolveTo(MGPOptional.empty());
+            spyOn(joinerDAOMock, 'read').and.resolveTo(MGPOptional.empty());
             const joinerService: JoinerService = TestBed.inject(JoinerService);
             spyOn(joinerService, 'observe');
 

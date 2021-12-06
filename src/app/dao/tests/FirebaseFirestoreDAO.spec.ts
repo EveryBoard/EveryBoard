@@ -29,18 +29,18 @@ describe('FirebaseFirestoreDAO', () => {
         dao = TestBed.inject(FooDAO);
     });
     it('should not read an object that does not exist', async() => {
-        await expectAsync(dao.tryToRead('idonotexist')).toBeResolvedTo(MGPOptional.empty());
+        await expectAsync(dao.read('idonotexist')).toBeResolvedTo(MGPOptional.empty());
     });
     it('should be able to read back objects that exist', async() => {
         const id: string = await dao.create({ value: 'this is my value', otherValue: 42 });
-        const stored: Foo = (await dao.tryToRead(id)).get();
+        const stored: Foo = (await dao.read(id)).get();
         expect(stored.value).toBe('this is my value');
         expect(stored.otherValue).toBe(42);
     });
     it('should support partial updates', async() => {
         const id: string = await dao.create({ value: 'foo', otherValue: 1 });
         await dao.update(id, { otherValue: 2 });
-        const stored: Foo = (await dao.tryToRead(id)).get();
+        const stored: Foo = (await dao.read(id)).get();
         expect(stored.value).toBe('foo');
         expect(stored.otherValue).toBe(2);
     });
@@ -52,7 +52,7 @@ describe('FirebaseFirestoreDAO', () => {
     it('should update an object upon set', async() => {
         const id: string = await dao.create({ value: 'foo', otherValue: 1 });
         await dao.set(id, { value: 'bar', otherValue: 2 });
-        const stored: Foo = (await dao.tryToRead(id)).get();
+        const stored: Foo = (await dao.read(id)).get();
         expect(stored.value).toBe('bar');
         expect(stored.otherValue).toBe(2);
     });

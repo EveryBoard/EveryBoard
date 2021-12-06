@@ -141,7 +141,7 @@ describe('ChatService', () => {
         it('should not send message if no chat is observed', fakeAsync(async() => {
             // given that no chat is observed
             // when sending a message
-            const result: Promise<MGPValidation> = service.sendMessage('foo', 2, 'foo');
+            const result: Promise<MGPValidation> = service.sendMessage('foo', 'foo', 2);
             // then the message is rejected
             await expectAsync(result).toBeResolvedTo(MGPValidation.failure('Cannot send message if not observing chat'));
         }));
@@ -150,7 +150,7 @@ describe('ChatService', () => {
             await chatDAO.set('chatId', EMPTY_CHAT);
             service.startObserving('chatId', () => {});
             // when sending a message without a username
-            const result: Promise<MGPValidation> = service.sendMessage('', 2, 'foo');
+            const result: Promise<MGPValidation> = service.sendMessage('', 'foo', 2);
             // then the message is rejected
             await expectAsync(result).toBeResolvedTo(MGPValidation.failure(ChatMessages.CANNOT_SEND_MESSAGE()));
         }));
@@ -159,7 +159,7 @@ describe('ChatService', () => {
             await chatDAO.set('chatId', EMPTY_CHAT);
             service.startObserving('chatId', () => {});
             // when sending an empty message
-            const result: Promise<MGPValidation> = service.sendMessage('sender', 2, '');
+            const result: Promise<MGPValidation> = service.sendMessage('sender', '', 2);
             // then the message is rejected
             await expectAsync(result).toBeResolvedTo(MGPValidation.failure(ChatMessages.FORBIDDEN_MESSAGE()));
         }));
@@ -171,7 +171,7 @@ describe('ChatService', () => {
             service.startObserving('id', (_: IChatId) => { });
 
             // when a message is sent on that chat
-            await service.sendMessage('sender', 2, 'foo');
+            await service.sendMessage('sender', 'foo', 2);
 
             // then the chat should be updated with the new message
             expect(chatDAO.update).toHaveBeenCalledWith('id', NON_EMPTY_CHAT);

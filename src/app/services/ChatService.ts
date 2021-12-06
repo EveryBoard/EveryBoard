@@ -66,7 +66,7 @@ export class ChatService implements OnDestroy {
             messages: [],
         });
     }
-    public async sendMessage(userName: string, currentTurn: number | undefined, content: string)
+    public async sendMessage(userName: string, content: string, currentTurn?: number)
     : Promise<MGPValidation> {
         if (this.followedChatId.isAbsent()) {
             return MGPValidation.failure('Cannot send message if not observing chat');
@@ -78,7 +78,7 @@ export class ChatService implements OnDestroy {
         if (this.isForbiddenMessage(content)) {
             return MGPValidation.failure(ChatMessages.FORBIDDEN_MESSAGE());
         }
-        const chat: IChat = (await this.chatDao.tryToRead(chatId)).get();
+        const chat: IChat = (await this.chatDao.read(chatId)).get();
         const messages: IMessage[] = ArrayUtils.copyImmutableArray(chat.messages);
         const newMessage: IMessage = {
             content,

@@ -46,10 +46,10 @@ export abstract class GameWrapper {
     }
     public getMatchingComponent(compoString: string) : Type<AbstractGameComponent> {
         display(GameWrapper.VERBOSE, 'GameWrapper.getMatchingComponent');
-        const gameInfo: GameInfo | undefined =
-            GameInfo.ALL_GAMES().find((gameInfo: GameInfo) => gameInfo.urlName === compoString);
-        assert(gameInfo != null, 'Unknown Games are unwrappable');
-        return Utils.getNonNullable(gameInfo).component;
+        const gameInfo: MGPOptional<GameInfo> =
+            MGPOptional.ofNullable(GameInfo.ALL_GAMES().find((gameInfo: GameInfo) => gameInfo.urlName === compoString));
+        assert(gameInfo.isPresent(), 'Unknown Games are unwrappable');
+        return gameInfo.get().component;
     }
     protected afterGameIncluderViewInit(): void {
         display(GameWrapper.VERBOSE, 'GameWrapper.afterGameIncluderViewInit');

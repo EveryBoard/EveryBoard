@@ -39,15 +39,14 @@ export class JoinerService {
     public async joinGame(partId: string, userName: string): Promise<boolean> {
         display(JoinerService.VERBOSE, 'JoinerService.joinGame(' + partId + ', ' + userName + ')');
 
-        const joinerOpt: MGPOptional<IJoiner> = await this.joinerDao.tryToRead(partId);
-        if (joinerOpt.isAbsent()) {
+        const joiner: MGPOptional<IJoiner> = await this.joinerDao.read(partId);
+        if (joiner.isAbsent()) {
             return false;
         }
-        const joiner: IJoiner = joinerOpt.get();
-        const joinerList: string[] = ArrayUtils.copyImmutableArray(joiner.candidates);
+        const joinerList: string[] = ArrayUtils.copyImmutableArray(joiner.get().candidates);
         if (joinerList.includes(userName)) {
             throw new Error('JoinerService.joinGame was called by a user already in the game');
-        } else if (userName === joiner.creator) {
+        } else if (userName === joiner.get().creator) {
             return true;
         } else {
             joinerList[joinerList.length] = userName;
@@ -62,7 +61,7 @@ export class JoinerService {
         if (this.observedJoinerId == null) {
             throw new Error('cannot cancel joining when not observing a joiner');
         }
-        const joinerOpt: MGPOptional<IJoiner> = await this.joinerDao.tryToRead(this.observedJoinerId);
+        const joinerOpt: MGPOptional<IJoiner> = await this.joinerDao.read(this.observedJoinerId);
         if (joinerOpt.isAbsent()) {
             // The part does not exist, so we can consider that we succesfully cancelled joining
             return;
@@ -161,7 +160,7 @@ export class JoinerService {
     public async readJoinerById(partId: string): Promise<IJoiner> {
         display(JoinerService.VERBOSE, 'JoinerService.readJoinerById(' + partId + ')');
 
-        return (await this.joinerDao.tryToRead(partId)).get();
+        return (await this.joinerDao.read(partId)).get();
     }
     public async set(partId: string, joiner: IJoiner): Promise<void> {
         display(JoinerService.VERBOSE, 'JoinerService.set(' + partId + ', ' + JSON.stringify(joiner) + ')');

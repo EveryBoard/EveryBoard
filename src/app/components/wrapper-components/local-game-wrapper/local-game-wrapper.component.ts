@@ -107,7 +107,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         assert(gameStatus === GameStatus.ONGOING, 'IA should not try to play when game is over!');
         const turn: number = ruler.node.gameState.turn % 2;
         const currentAiDepth: number = Number.parseInt(this.aiDepths[turn % 2]);
-        const aiMove: Move = ruler.node.findBestMove(currentAiDepth, playingMinimax);
+        const aiMove: Move = ruler.node.findBestMove(currentAiDepth, playingMinimax, true);
         if (ruler.choose(aiMove)) {
             this.updateBoard();
             this.cdr.detectChanges();

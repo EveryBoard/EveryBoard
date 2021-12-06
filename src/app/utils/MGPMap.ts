@@ -4,22 +4,6 @@ import { MGPSet } from './MGPSet';
 import { assert } from './utils';
 
 export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unknown>> {
-    public static groupByValue<K extends NonNullable<Comparable>, V extends NonNullable<Comparable>>(map: MGPMap<K, V>)
-    : MGPMap<V, MGPSet<K>> {
-        const reversedMap: MGPMap<V, MGPSet<K>> = new MGPMap<V, MGPSet<K>>();
-        for (const key of map.listKeys()) {
-            const value: V = map.get(key).get();
-            if (reversedMap.containsKey(value)) {
-                reversedMap.get(value).get().add(key);
-            } else {
-                const newSet: MGPSet<K> = new MGPSet<K>();
-                newSet.add(key);
-                reversedMap.set(value, newSet);
-            }
-        }
-        return reversedMap;
-    }
-
     private map: {key: K, value: V}[] = [];
 
     private isImmutable: boolean = false;
@@ -117,8 +101,9 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
         }
         throw new Error('No Value to delete for key "'+ key.toString() +'"!');
     }
-    public getCopy(): MGPMap<K, V> {
-        const newMap: MGPMap<K, V> = new MGPMap<K, V>();
+    public getCopy(): this {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const newMap: this = new (<any> this.constructor)();
         for (const key of this.listKeys()) {
             newMap.set(key, this.get(key).get());
         }
@@ -140,5 +125,22 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
             }
         }
         return true;
+    }
+}
+
+export class ReversibleMap<K extends NonNullable<Comparable>, V extends NonNullable<Comparable>> extends MGPMap<K, V> {
+    public reverse(): ReversibleMap<V, MGPSet<K>> {
+        const reversedMap: ReversibleMap<V, MGPSet<K>> = new ReversibleMap<V, MGPSet<K>>();
+        for (const key of this.listKeys()) {
+            const value: V = this.get(key).get();
+            if (reversedMap.containsKey(value)) {
+                reversedMap.get(value).get().add(key);
+            } else {
+                const newSet: MGPSet<K> = new MGPSet<K>();
+                newSet.add(key);
+                reversedMap.set(value, newSet);
+            }
+        }
+        return reversedMap;
     }
 }

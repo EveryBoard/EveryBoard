@@ -157,8 +157,7 @@ describe('SiamMinimax:', () => {
         const state: SiamState = new SiamState(board, 0);
         const move: SiamMove = new SiamMove(1, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT);
         const node: SiamNode = new SiamNode(state, MGPOptional.empty(), MGPOptional.of(move));
-        const boardValue: number = minimax.getBoardValue(node).value;
-        expect(boardValue).toBeLessThan(0);
+        expect(minimax.getBoardValue(node).value).toBeLessThan(0);
     });
     it('Board value test: Symetry test', () => {
         const board: Table<SiamPiece> = [

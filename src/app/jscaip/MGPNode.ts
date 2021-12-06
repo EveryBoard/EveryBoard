@@ -110,7 +110,7 @@ export class MGPNode<R extends Rules<M, S, L>, // TODO FOR REVIEW: why not remov
     }
     public findBestMove(readingDepth: number,
                         minimax: Minimax<M, S, L, U>,
-                        random: boolean = true,
+                        random: boolean = false,
                         prune: boolean = true)
     : M
     {

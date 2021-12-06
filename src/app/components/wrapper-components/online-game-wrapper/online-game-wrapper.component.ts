@@ -188,7 +188,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         const updateType: UpdateType = this.getUpdateType(part);
         const turn: number = update.doc.turn;
         if (updateType === UpdateType.REQUEST) {
-            display(OnlineGameWrapperComponent.VERBOSE, 'UpdateType: Request(' + Utils.getNonNullable(Utils.getNonNullable(part.doc.request)).code + ') (' + turn + ')');
+            display(OnlineGameWrapperComponent.VERBOSE, 'UpdateType: Request(' + Utils.getNonNullable(part.doc.request).code + ') (' + turn + ')');
         } else {
             display(OnlineGameWrapperComponent.VERBOSE, 'UpdateType: ' + updateType.value + '(' + turn + ')');
         }
@@ -389,11 +389,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     }
     public notifyDraw(encodedMove: JSONValueWithoutArray, scores?: [number, number]): void {
         this.endGame = true;
-        this.gameService.updateDBBoard(this.currentPartId,
-                                       encodedMove,
-                                       [0, 0],
-                                       scores,
-                                       true);
+        this.gameService.updateDBBoard(this.currentPartId, encodedMove, [0, 0], scores, true);
     }
     public notifyTimeoutVictory(victoriousPlayer: string, loser: string): void {
         this.endGame = true;
@@ -434,7 +430,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         } else if (this.currentPart.doc.request &&
                    this.currentPart.doc.request.code === 'TakeBackRefused' &&
                    this.currentPart.doc.request.data &&
-                   this.currentPart.doc.request.data['player'] &&
                    this.currentPart.doc.request.data['player'] === this.getPlayer().getOpponent().value)
         {
             return false;

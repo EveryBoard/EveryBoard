@@ -148,9 +148,9 @@ describe('EncapsuleComponent', () => {
         const component: EncapsuleComponent = componentTestUtils.getComponent();
         const minimax: EncapsuleMinimax = new EncapsuleMinimax(component.rules, 'EncapsuleMinimax');
 
-        expect(minimax.getBoardValue(
-            new EncapsuleNode(component.rules.node.gameState, MGPOptional.empty(), MGPOptional.of(move))).value)
-            .toBe(Number.MIN_SAFE_INTEGER);
+        const node: EncapsuleNode =
+            new EncapsuleNode(component.rules.node.gameState, MGPOptional.empty(), MGPOptional.of(move));
+        expect(minimax.getBoardValue(node).value).toBe(Number.MIN_SAFE_INTEGER);
     }));
     it('should forbid selecting the same coord for destination and origin', fakeAsync(async() => {
         const x: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.ZERO, Player.NONE);

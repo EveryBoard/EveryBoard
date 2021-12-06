@@ -23,7 +23,7 @@ export interface StartingPartConfig extends Partial<IPart> {
     playerZero: string,
     playerOne: string,
     turn: number,
-    beginning: firebase.firestore.FieldValue | Time | undefined,
+    beginning?: firebase.firestore.FieldValue | Time,
 }
 
 @Injectable({
@@ -80,7 +80,7 @@ export class GameService implements OnDestroy {
         this.userNameSub.unsubscribe();
     }
     public async getPartValidity(partId: string, gameType: string): Promise<MGPValidation> {
-        const part: MGPOptional<IPart> = await this.partDao.tryToRead(partId);
+        const part: MGPOptional<IPart> = await this.partDao.read(partId);
         if (part.isAbsent()) {
             return MGPValidation.failure('NONEXISTENT_PART');
         }
@@ -196,8 +196,7 @@ export class GameService implements OnDestroy {
             winner,
             loser,
             result: MGPResult.TIMEOUT.value,
-            // TODO FOR REVIEW: what is the meaning of this TODO? It should be clarified, ticketted, or removed
-            request: null, // TODO: check line use
+            request: null,
         });
     }
     public sendRequest(partId: string, request: Request): Promise<void> {
@@ -251,14 +250,12 @@ export class GameService implements OnDestroy {
     public askTakeBack(partId: string, player: Player): Promise<void> {
         return this.sendRequest(partId, Request.takeBackAsked(player));
     }
-    public async acceptTakeBack(id: string,
-                                part: Part,
-                                observerRole: Player,
-                                msToSubstract: [number, number])
-    : Promise<void> {
+    public async acceptTakeBack(id: string, part: Part, observerRole: Player, msToSubstract: [number, number])
+    : Promise<void>
+    {
         assert(observerRole !== Player.NONE, 'Illegal for observer to make request');
-        assert(Request.getPlayer(Utils.getNonNullable(part.doc.request)) !== observerRole,
-               'Illegal to accept your own request.');
+        const requester: Player = Request.getPlayer(Utils.getNonNullable(part.doc.request));
+        assert(requester !== observerRole, 'Illegal to accept your own request.');
 
         const request: Request = Request.takeBackAccepted(observerRole);
         let listMoves: JSONValueWithoutArray[] = part.doc.listMoves.slice(0, part.doc.listMoves.length - 1);
@@ -307,7 +304,7 @@ export class GameService implements OnDestroy {
         display(GameService.VERBOSE, { gameService_updateDBBoard: {
             partId, encodedMove, scores, msToSubstract, notifyDraw, winner, loser } });
 
-        const part: IPart = (await this.partDao.tryToRead(partId)).get(); // TODO: optimise this
+        const part: IPart = (await this.partDao.read(partId)).get(); // TODO: optimise this
         const turn: number = part.turn + 1;
         const listMoves: JSONValueWithoutArray[] = ArrayUtils.copyImmutableArray(part.listMoves);
         listMoves[listMoves.length] = encodedMove;
@@ -343,7 +340,7 @@ export class GameService implements OnDestroy {
                 loser,
                 result: MGPResult.VICTORY.value,
             };
-        } else if (notifyDraw != null && notifyDraw) {
+        } else if (notifyDraw === true) {
             update = {
                 ...update,
                 result: MGPResult.DRAW.value,

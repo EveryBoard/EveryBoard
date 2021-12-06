@@ -96,7 +96,7 @@ export class AuthenticationService implements OnDestroy {
                     this.registrationInProgress = MGPOptional.empty();
                 }
                 RTDB.updatePresence(user.uid);
-                const userInDB: IUser = (await userDAO.tryToRead(user.uid)).get();
+                const userInDB: IUser = (await userDAO.read(user.uid)).get();
                 display(AuthenticationService.VERBOSE, `User ${userInDB.username} is connected, and the verified status is ${this.emailVerified(user)}`);
                 const userHasFinalizedVerification: boolean =
                     this.emailVerified(user) === true && userInDB.username !== null;
@@ -210,10 +210,10 @@ export class AuthenticationService implements OnDestroy {
      */
     public async createUser(uid: string, username?: string): Promise<void> {
         assert(await this.userDAO.exists(uid) === false, 'createUser should only be called for new users');
-        if (username != null) {
-            await this.userDAO.set(uid, { username, verified: false });
-        } else {
+        if (username == null) {
             await this.userDAO.set(uid, { verified: false });
+        } else {
+            await this.userDAO.set(uid, { username, verified: false });
         }
     }
     public async doGoogleLogin(): Promise<MGPValidation> {

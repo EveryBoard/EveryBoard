@@ -19,7 +19,11 @@ export function isJSONPrimitive(value: unknown): value is JSONPrimitive {
 }
 
 export type FirebaseJSONPrimitive = JSONPrimitive | firebase.firestore.FieldValue;
-export type FirebaseJSONValue = FirebaseJSONPrimitive | FirebaseJSONObject | Array<FirebaseJSONValueWithoutArray>;
+export type FirebaseJSONValue =
+    FirebaseJSONPrimitive |
+    FirebaseJSONObject |
+    Array<FirebaseJSONValueWithoutArray> |
+    ReadonlyArray<FirebaseJSONValueWithoutArray>;
 export type FirebaseJSONValueWithoutArray = FirebaseJSONPrimitive | FirebaseJSONObject
 export type FirebaseJSONObject = { [member: string]: FirebaseJSONValue };
 

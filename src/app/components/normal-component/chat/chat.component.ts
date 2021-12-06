@@ -130,7 +130,7 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
         assert(this.username.isPresent(), 'disconnected user is not able to send a message');
         const content: string = this.userMessage;
         this.userMessage = ''; // clears it first to seem more responsive
-        await this.chatService.sendMessage(this.username.get(), this.turn, content);
+        await this.chatService.sendMessage(this.username.get(), content, this.turn);
     }
     public ngOnDestroy(): void {
         this.authSubscription.unsubscribe();

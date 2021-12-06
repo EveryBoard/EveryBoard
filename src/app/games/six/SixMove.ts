@@ -49,7 +49,7 @@ export class SixMove extends Move {
         if (start.equalsValue(landing)) {
             throw new Error('Deplacement cannot be static!');
         }
-        if (start.isPresent() && keep.isPresent() && start.get().equals(keep.get())) {
+        if (start.isPresent() && start.equals(keep)) {
             throw new Error('Cannot keep starting coord, since it will always be empty after move!');
         }
     }

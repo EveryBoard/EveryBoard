@@ -79,7 +79,7 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
     public getThreat(coord: Coord, state: CoerceoState): MGPOptional<PieceThreat> {
         const threatenerPlayer: Player = Player.of(state.getPieceAt(coord).value);
         const OPPONENT: Player = threatenerPlayer.getOpponent();
-        let freedom: MGPOptional<Coord> = MGPOptional.empty();
+        let uniqueFreedom: MGPOptional<Coord> = MGPOptional.empty();
         const directThreats: Coord[] = [];
         const neighboors: Coord[] = TriangularCheckerBoard
             .getNeighboors(coord)
@@ -89,18 +89,18 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
             if (threat.is(OPPONENT)) {
                 directThreats.push(directThreat);
             } else if (threat === FourStatePiece.EMPTY) {
-                if (freedom.isPresent()) {
+                if (uniqueFreedom.isPresent()) {
                     // more than one freedom!
                     return MGPOptional.empty();
                 } else {
-                    freedom = MGPOptional.of(directThreat);
+                    uniqueFreedom = MGPOptional.of(directThreat);
                 }
             }
         }
-        if (freedom.isPresent()) {
+        if (uniqueFreedom.isPresent()) {
             const movingThreats: Coord[] = [];
             for (const step of CoerceoStep.STEPS) {
-                const movingThreat: Coord = freedom.get().getNext(step.direction, 1);
+                const movingThreat: Coord = uniqueFreedom.get().getNext(step.direction, 1);
                 if (movingThreat.isInRange(15, 10) &&
                     state.getPieceAt(movingThreat).is(OPPONENT) &&
                     directThreats.every((coord: Coord) => coord.equals(movingThreat) === false))

@@ -106,7 +106,7 @@ export class YinshComponent
                                          FlatHexaOrientation.INSTANCE);
         this.constructedState = this.rules.node.gameState;
         this.constructedState.allCoords().forEach((coord: Coord): void => {
-            if (this.viewInfo.caseInfo[coord.y] == null ) {
+            if (this.viewInfo.caseInfo[coord.y] == null) {
                 this.viewInfo.caseInfo[coord.y] = [];
             }
             this.viewInfo.caseInfo[coord.y][coord.x] = {

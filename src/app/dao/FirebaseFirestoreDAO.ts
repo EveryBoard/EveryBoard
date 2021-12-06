@@ -34,7 +34,7 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
         const docRef: DocumentReference = await this.afs.collection<T>(this.collectionName).add({ ...newElement });
         return docRef.id;
     }
-    public async tryToRead(id: string): Promise<MGPOptional<T>> {
+    public async read(id: string): Promise<MGPOptional<T>> {
         const docSnapshot: firebase.firestore.DocumentSnapshot<T> =
             await this.afs.collection<T>(this.collectionName).doc(id).ref.get();
         if (docSnapshot.exists) {
@@ -44,7 +44,7 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
         }
     }
     public async exists(id: string): Promise<boolean> {
-        return (await this.tryToRead(id)).isPresent();
+        return (await this.read(id)).isPresent();
     }
     public async update(id: string, modification: Partial<T>): Promise<void> {
         return this.afs.collection(this.collectionName).doc<T>(id).ref.update(modification);

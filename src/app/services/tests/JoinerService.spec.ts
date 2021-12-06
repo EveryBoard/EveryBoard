@@ -6,6 +6,7 @@ import { FirstPlayer, IJoiner, PartStatus, PartType } from 'src/app/domain/ijoin
 import { JoinerDAOMock } from 'src/app/dao/tests/JoinerDAOMock.spec';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 import { Utils } from 'src/app/utils/utils';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('JoinerService', () => {
 
@@ -21,7 +22,7 @@ describe('JoinerService', () => {
         expect(service).toBeTruthy();
     }));
     it('read should be delegated to JoinerDAO', fakeAsync(async() => {
-        spyOn(dao, 'read').and.resolveTo(JoinerMocks.WITH_FIRST_CANDIDATE.doc);
+        spyOn(dao, 'read').and.resolveTo(MGPOptional.of(JoinerMocks.WITH_FIRST_CANDIDATE.doc));
         await service.readJoinerById('myJoinerId');
         expect(dao.read).toHaveBeenCalledWith('myJoinerId');
     }));
@@ -66,7 +67,7 @@ describe('JoinerService', () => {
 
             await service.joinGame('joinerId', JoinerMocks.INITIAL.doc.creator);
 
-            const resultingJoiner: IJoiner = Utils.getNonNullable(await dao.read('joinerId'));
+            const resultingJoiner: IJoiner = (await dao.read('joinerId')).get();
 
             expect(dao.update).not.toHaveBeenCalled();
             expect(resultingJoiner).toEqual(JoinerMocks.INITIAL.doc);
@@ -80,7 +81,7 @@ describe('JoinerService', () => {
             expect(dao.update).toHaveBeenCalled();
         }));
         it('should return false when joining an invalid joiner', fakeAsync(async() => {
-            spyOn(dao, 'read').and.resolveTo(undefined);
+            spyOn(dao, 'read').and.resolveTo(MGPOptional.empty());
             await expectAsync(service.joinGame('invalidJoinerId', 'creator')).toBeResolvedTo(false);
         }));
     });

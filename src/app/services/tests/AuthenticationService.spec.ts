@@ -32,7 +32,7 @@ export class AuthenticationServiceMock {
         (TestBed.inject(AuthenticationService) as unknown as AuthenticationServiceMock).setUser(user);
     }
 
-    private currentUser: AuthUser | null = null;
+    private currentUser: MGPOptional<AuthUser> = MGPOptional.empty();
 
     private userRS: ReplaySubject<AuthUser>;
 
@@ -40,7 +40,7 @@ export class AuthenticationServiceMock {
         this.userRS = new ReplaySubject<AuthUser>(1);
     }
     public setUser(user: AuthUser): void {
-        this.currentUser = user;
+        this.currentUser = MGPOptional.of(user);
         this.userRS.next(user);
     }
     public getUserObs(): Observable<AuthUser> {
@@ -68,8 +68,8 @@ export class AuthenticationServiceMock {
         return MGPValidation.failure('not mocked');
     }
     public async reloadUser(): Promise<void> {
-        if (this.currentUser != null) {
-            this.userRS.next(this.currentUser);
+        if (this.currentUser.isPresent()) {
+            this.userRS.next(this.currentUser.get());
         } else {
             throw new Error('AuthenticationServiceMock: cannot reload user without setting a user first');
         }

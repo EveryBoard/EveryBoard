@@ -2,7 +2,7 @@ import firebase from 'firebase';
 import { FirebaseJSONObject, JSONValueWithoutArray } from 'src/app/utils/utils';
 import { Request } from './request';
 import { DomainWrapper } from './DomainWrapper';
-import { Time } from './Time';
+import { FirebaseTime, Time } from './Time';
 import { MGPOptional } from '../utils/MGPOptional';
 
 export interface IPart extends FirebaseJSONObject {
@@ -10,15 +10,14 @@ export interface IPart extends FirebaseJSONObject {
     readonly playerZero: string, // the id of the first player
     readonly turn: number, // -1 means the part has not started, 0 is the initial turn
     readonly result: IMGPResult,
-    // TODO: should be ReadonlyArray, but does not compile with it!
-    readonly listMoves: Array<JSONValueWithoutArray>,
+    readonly listMoves: ReadonlyArray<JSONValueWithoutArray>,
 
     readonly playerOne?: string, // the id of the second player
     /* Server time being handled on server by firestore, when we send it, it's a FieldValue
      * so firebase write the server time and send us back a timestamp in the form of Time
      */
     readonly beginning?: firebase.firestore.FieldValue | Time,
-    readonly lastMoveTime?: firebase.firestore.FieldValue | Time | null,
+    readonly lastMoveTime?: FirebaseTime,
     readonly remainingMsForZero?: number;
     readonly remainingMsForOne?: number;
     readonly winner?: string,
