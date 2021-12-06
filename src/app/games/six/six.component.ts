@@ -41,7 +41,7 @@ export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixS
     public disconnecteds: Coord[] = [];
     public cuttableGroups: Coord[][] = [];
     public victoryCoords: Coord[];
-    public neighboors: Coord[];
+    public neighbors: Coord[];
     public leftCoord: Coord = null;
     public lastDrop: Coord = null;
 
@@ -52,6 +52,8 @@ export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixS
     public pointScale: Scale;
     public coordScale: Scale;
     public Y_OFFSET: number;
+
+    private nextClickShouldSelectGroup: boolean = false;
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -79,6 +81,8 @@ export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixS
         this.selectedPiece = null;
         this.chosenLanding = null;
         this.cuttableGroups = [];
+        this.nextClickShouldSelectGroup = false;
+        this.updateBoard(); // Need to refresh the board in case we showed virtual moves for cuts
     }
     public updateBoard(): void {
         const node: SixNode = this.rules.node;
@@ -94,7 +98,7 @@ export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixS
             this.disconnecteds = [];
         }
         this.pieces = this.state.pieces.listKeys();
-        this.neighboors = this.getEmptyNeighboors();
+        this.neighbors = this.getEmptyNeighbors();
         this.viewBox = this.getViewBox();
     }
     public showLastMove(): void {
@@ -129,7 +133,7 @@ export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixS
         }
         return disconnecteds;
     }
-    public getEmptyNeighboors(): Coord[] {
+    public getEmptyNeighbors(): Coord[] {
         let legalLandings: Coord[] = SixRules.getLegalLandings(this.state);
         if (this.chosenLanding) {
             legalLandings = legalLandings.filter((c: Coord) => c.equals(this.chosenLanding) === false);
@@ -137,7 +141,7 @@ export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixS
         return legalLandings;
     }
     private getViewBox(): string {
-        const abstractScale: Scale = this.getAbstractBoardUse(this.pieces, this.neighboors, this.disconnecteds);
+        const abstractScale: Scale = this.getAbstractBoardUse(this.pieces, this.neighbors, this.disconnecteds);
         const abstractWidth: number = abstractScale.maxX - abstractScale.minX;
         const abstractHeight: number = abstractScale.maxY - abstractScale.minY;
 
@@ -154,8 +158,8 @@ export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixS
                (this.CONCRETE_WIDTH + 20) + ' ' +
                (this.CONCRETE_HEIGHT + 20);
     }
-    public getAbstractBoardUse(pieces: Coord[], neighboors: Coord[], disconnecteds: Coord[]): Scale {
-        const coords: Coord[] = pieces.concat(neighboors).concat(disconnecteds);
+    public getAbstractBoardUse(pieces: Coord[], neighbors: Coord[], disconnecteds: Coord[]): Scale {
+        const coords: Coord[] = pieces.concat(neighbors).concat(disconnecteds);
         let upperPiece: Coord;
         let lefterPiece: Coord;
         let maxX: number = Number.MIN_SAFE_INTEGER;
@@ -163,8 +167,8 @@ export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixS
         let minX: number = Number.MAX_SAFE_INTEGER;
         let minY: number = Number.MAX_SAFE_INTEGER;
         for (const coord of coords) {
-            const coordY: number = (2 * coord.y) + coord.x; // en demi Y_OFFSETs
-            const coordX: number = coord.x; // en nombre de colonnes, simplement
+            const coordY: number = (2 * coord.y) + coord.x; // in half Y_OFFSETs
+            const coordX: number = coord.x; // in number of columns
             if (coordX < minX) {
                 minX = coordX;
                 lefterPiece = coord;
@@ -197,26 +201,31 @@ export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixS
             return MGPValidation.SUCCESS;
         } else {
             const cuttingMove: SixMove = SixMove.fromCut(this.selectedPiece, this.chosenLanding, piece);
+            this.nextClickShouldSelectGroup = false;
             return this.chooseMove(cuttingMove, this.state, null, null);
         }
     }
-    public async onNeighboorClick(neighboor: Coord): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#neighboor_' + neighboor.x + '_' + neighboor.y);
+    public async onNeighborClick(neighbor: Coord): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = this.canUserPlay('#neighbor_' + neighbor.x + '_' + neighbor.y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
+        if (this.nextClickShouldSelectGroup) {
+            return this.cancelMove(SixFailure.MUST_CUT());
+        }
         if (this.state.turn < 40) {
-            return this.chooseMove(SixMove.fromDrop(neighboor), this.state, null, null);
+            return this.chooseMove(SixMove.fromDrop(neighbor), this.state, null, null);
         } else {
             if (this.selectedPiece == null) {
                 return this.cancelMove(SixFailure.CAN_NO_LONGER_DROP());
             } else {
-                const deplacement: SixMove = SixMove.fromDeplacement(this.selectedPiece, neighboor);
+                const deplacement: SixMove = SixMove.fromDeplacement(this.selectedPiece, neighbor);
                 const legality: SixLegalityStatus = SixRules.isLegalPhaseTwoMove(deplacement, this.state);
                 if (this.neededCutting(legality)) {
-                    this.chosenLanding = neighboor;
+                    this.chosenLanding = neighbor;
                     this.moveVirtuallyPiece();
                     this.showCuttable();
+                    this.nextClickShouldSelectGroup = true;
                     return MGPValidation.SUCCESS;
                 } else {
                     return this.chooseMove(deplacement, this.state, null, null);
@@ -230,7 +239,7 @@ export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixS
     }
     private moveVirtuallyPiece(): void {
         this.pieces = this.pieces.filter((c: Coord) => c.equals(this.selectedPiece) === false);
-        this.neighboors = this.getEmptyNeighboors();
+        this.neighbors = this.getEmptyNeighbors();
     }
     private showCuttable(): void {
         const deplacement: SixMove = SixMove.fromDeplacement(this.selectedPiece, this.chosenLanding);

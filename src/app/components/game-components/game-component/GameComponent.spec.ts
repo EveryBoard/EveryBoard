@@ -116,7 +116,7 @@ describe('GameComponent', () => {
             },
             Six: {
                 onPieceClick: [0, 0],
-                onNeighboorClick: [0, 0],
+                onNeighborClick: [0, 0],
             },
             Tablut: { onClick: [0, 0] },
             Yinsh: { onClick: [0, 0] },
