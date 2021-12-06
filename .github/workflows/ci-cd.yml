@@ -171,10 +171,19 @@ jobs:
       - name: Setup dependencies (setup Firebase secret)
         run: |
           echo "export const firebaseConfig = { apiKey: '${{ secrets.FIREBASE_API_KEY }}', authDomain: '${{ secrets.FIREBASE_AUTH_DOMAIN }}', databaseURL: '${{ secrets.FIREBASE_DATABASE_URL }}', projectId: '${{ secrets.FIREBASE_PROJECT_ID }}', storageBucket: '${{ secrets.FIREBASE_STORAGE_BUCKET }}', messagingSenderId: '${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}' };" > src/app/firebaseConfig.ts
+      - name: Check if push by an org member
+        id: is_organization_member
+        uses: jamessingleton/is-organization-member@v1
+        with:
+          organization: AwesomBoard
+          username: ${{ github.event.issue.user.login }}
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Build
+        if: steps.is_organization_member.output.result == true
         run: npm run build:netlify
-      - name: Deploy develop on deployment (only temporary for testing)
-        run: netlify deploy --dir=dist/pantheonsgame --branch=deployment
+      - name: Deploy
+        if: steps.is_organization_member.output.result == true
+        run: netlify deploy --dir=dist/pantheonsgame --alias=deployment --message="Deployment from github ($GITHUB_REF_NAME, commit $GITHUB_SHA"
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
