@@ -1,9 +1,5 @@
 @charset "utf-8";
 
-$primary: #3273dc;
-$danger: #f14668;
-$warning: #ffdd57;
-
 @import "../../node_modules/bulmaswatch/cyborg/bulmaswatch.scss";
 @import '~bulma-slider';
 @import "./variables.scss";
@@ -19,9 +15,6 @@ $warning: #ffdd57;
     border-color: #363636;
     color: #fff;
 }
-
-$scheme-main: $black;
-$scheme-invert: $white;
 
 $gap: 10pt;
 @media screen and (max-width: 768px) {
