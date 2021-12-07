@@ -62,9 +62,13 @@ export abstract class NumberEncoder<T> extends MoveEncoder<T> {
         }
     };
 
-    public static ofCombination<T, Fields>(encoders: NumberEncoderArray<Fields>,
-                                           encode: (t: T) => Fields,
-                                           decode: (fields: Fields) => T): NumberEncoder<T> {
+    /**
+     *  This creates a "product" encoder that encodes a type T as all of its fields
+     *  i.e., if T = (a, b), then it does encode(a) << shiftForA + encode(b)
+     */
+    public static tuple<T, Fields>(encoders: NumberEncoderArray<Fields>,
+                                   encode: (t: T) => Fields,
+                                   decode: (fields: Fields) => T): NumberEncoder<T> {
         return new class extends NumberEncoder<T> {
             public maxValue(): number {
                 let max: number = 0;
@@ -90,6 +94,34 @@ export abstract class NumberEncoder<T> extends MoveEncoder<T> {
                     fields[key] = encoders[key].decode(fieldN);
                 });
                 return decode(fields as Fields);
+            }
+        };
+    }
+    /**
+     * This creates a "sum" encoder, i.e., it encodes values of either type T1 and T2
+     */
+    public static disjunction<T1, T2>(encoder1: NumberEncoder<T1>,
+                                      encoder2: NumberEncoder<T2>,
+                                      isT1: (v: T1 | T2) => v is T1)
+    : NumberEncoder<T1 | T2> {
+        return new class extends NumberEncoder<T1 | T2> {
+            public maxValue(): number {
+                return Math.max(encoder1.maxValue() * 2,
+                                (encoder2.maxValue() * 2) + 1);
+            }
+            public encodeNumber(value: T1 | T2): number {
+                if (isT1(value)) {
+                    return encoder1.encodeNumber(value) * 2;
+                } else {
+                    return (encoder2.encodeNumber(value) * 2) + 1;
+                }
+            }
+            public decodeNumber(encoded: number): T1 | T2 {
+                if (encoded % 2 === 0) {
+                    return encoder1.decodeNumber(encoded / 2);
+                } else {
+                    return encoder2.decodeNumber((encoded - 1) / 2);
+                }
             }
         };
     }

@@ -6,7 +6,7 @@ import { NumberEncoder } from 'src/app/jscaip/Encoder';
 export class TaflEncoder<M extends TaflMove> extends NumberEncoder<M> {
 
     constructor(public readonly MAX: number,
-                public readonly instanceProdider: (start: Coord, end: Coord) => M) {
+                public readonly instanceProvider: (start: Coord, end: Coord) => M) {
         super();
     }
     public maxValue(): number {
@@ -42,7 +42,7 @@ export class TaflEncoder<M extends TaflMove> extends NumberEncoder<M> {
         encodedMove -= encodedMove % 1;
         const dx: number = encodedMove % this.MAX;
         const start: Coord = new Coord(dx, dy);
-        return this.instanceProdider(start, end);
+        return this.instanceProvider(start, end);
     }
 }
 
@@ -63,7 +63,7 @@ export abstract class TaflMove extends MoveCoordToCoord {
     }
     public equals(o: TaflMove): boolean {
         if (o === this) return true;
-        if (!o.coord.equals(this.coord)) return false;
+        if (o.coord.equals(this.coord) === false) return false;
         return o.end.equals(this.end);
     }
     public toString(): string {

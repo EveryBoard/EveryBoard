@@ -70,7 +70,7 @@ describe('TaflRules', () => {
             expect(backCoord).toEqual(new Coord(4, 1));
         });
     });
-    it('Moving emptyness should be illegal', () => {
+    it('should be illegal to move an empty pawn', () => {
         // Given initial board
         const state: MyTaflState = MyTaflState.getInitialState();
 
@@ -81,10 +81,10 @@ describe('TaflRules', () => {
         const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
-    it('Moving opponent pawn should be illegal', () => {
+    it('should be illegal to move an opponent pawn', () => {
         expect(rules.choose(new MyTaflMove(new Coord(4, 2), new Coord(4, 3)))).toBeFalse();
     });
-    it('Landing on pawn should be illegal', () => {
+    it('should be illegal to land on a pawn', () => {
         // Given initial board
         const state: MyTaflState = MyTaflState.getInitialState();
 
@@ -95,7 +95,7 @@ describe('TaflRules', () => {
         const reason: string = TaflFailure.LANDING_ON_OCCUPIED_CASE();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
-    it('Passing through pawn should be illegal', () => {
+    it('should be illegal to pass through a pawn', () => {
         // Given initial board
         const state: MyTaflState = MyTaflState.getInitialState();
 

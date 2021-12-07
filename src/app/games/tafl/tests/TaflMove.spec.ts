@@ -7,7 +7,7 @@ import { MyTaflMove } from './MyTaflMove.spec';
 
 describe('TaflMove', () => {
 
-    it('encoder should be correct', () => {
+    fit('encoder should be correct', () => {
         const encoder: TaflEncoder<MyTaflMove> =
             new TaflEncoder(9, (start: Coord, end: Coord) => new MyTaflMove(start, end));
         const rules: TablutRules = TablutRules.get();
@@ -18,7 +18,7 @@ describe('TaflMove', () => {
             NumberEncoderTestUtils.expectToBeCorrect(encoder, move);
         }
     });
-    it('TablutMove creation, as a MoveCoordToCoord, should throw when created immobile', () => {
+    it('TablutMove creation, as a MoveCoordToCoord, should throw when created static', () => {
         expect(() => new MyTaflMove(new Coord(0, 0), new Coord(0, 0)))
             .toThrowError('MoveCoordToCoord cannot be static.');
     });

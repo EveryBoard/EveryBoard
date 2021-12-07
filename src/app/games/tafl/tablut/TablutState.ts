@@ -5,8 +5,6 @@ import { Coord } from 'src/app/jscaip/Coord';
 
 export class TablutState extends TaflState {
 
-    // Statics Methods :
-
     public static getInitialState(): TablutState {
         const _: TaflPawn = TaflPawn.UNOCCUPIED;
         const O: TaflPawn = TaflPawn.INVADERS;
