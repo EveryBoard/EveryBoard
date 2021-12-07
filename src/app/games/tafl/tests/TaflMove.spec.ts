@@ -7,13 +7,15 @@ import { MyTaflMove } from './MyTaflMove.spec';
 
 describe('TaflMove', () => {
 
-    fit('encoder should be correct', () => {
+    it('encoder should be correct', () => {
         const encoder: TaflEncoder<MyTaflMove> =
             new TaflEncoder(9, (start: Coord, end: Coord) => new MyTaflMove(start, end));
         const rules: TablutRules = TablutRules.get();
         rules.node = rules.node.getInitialNode();
         const minimax: TaflMinimax = new TaflMinimax(rules, 'TablutMinimax');
-        const firstTurnMoves: TaflMove[] = minimax.getListMoves(rules.node);
+        const firstTurnMoves: TaflMove[] = minimax
+            .getListMoves(rules.node)
+            .map((move: TaflMove) => new MyTaflMove(move.coord, move.end));
         for (const move of firstTurnMoves) {
             NumberEncoderTestUtils.expectToBeCorrect(encoder, move);
         }

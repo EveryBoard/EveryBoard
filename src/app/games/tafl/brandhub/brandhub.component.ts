@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Coord } from '../../../jscaip/Coord';
 import { BrandhubMove } from 'src/app/games/tafl/brandhub/BrandhubMove';
 import { BrandhubState } from './BrandhubState';
 import { BrandhubRules } from './BrandhubRules';
