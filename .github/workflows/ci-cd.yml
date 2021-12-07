@@ -175,7 +175,7 @@ jobs:
         id: is_organization_member
         uses: jamessingleton/is-organization-member@1.0.0
         with:
-          organization: AwesomBoard
+          organization: 'AwesomBoard'
           username: ${{ github.actor }}
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Build
