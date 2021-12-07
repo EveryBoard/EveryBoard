@@ -10,7 +10,7 @@ import { TaflFailure } from '../../TaflFailure';
 import { BrandhubMove } from '../BrandhubMove';
 import { TaflPawn } from '../../TaflPawn';
 
-fdescribe('BrandhubRules', () => {
+describe('BrandhubRules', () => {
 
     const _: TaflPawn = TaflPawn.UNOCCUPIED;
     const O: TaflPawn = TaflPawn.INVADERS;

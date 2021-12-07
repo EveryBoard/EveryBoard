@@ -313,4 +313,38 @@ describe('TablutRules', () => {
         const status: TaflLegalityStatus = rules.isLegal(move, state);
         expect(status.legal.getReason()).toBe(TaflFailure.SOLDIERS_CANNOT_SIT_ON_THRONE());
     });
+    it('Should not sandwich the king far from throne', () => {
+
+        // Given a board where the king is next to a corner and one move ahead from sandwich
+        const board: TaflPawn[][] = [
+            [_, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+            [O, _, _, X, _, X, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+            [A, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+        ];
+        const state: TablutState = new TablutState(board, 2);
+
+        // When trying to sandwiching the king
+        const move: TablutMove = new TablutMove(new Coord(0, 4), new Coord(0, 6));
+
+        // Then the move should be juged legal
+        const expectedBoard: TaflPawn[][] = [
+            [_, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+            [_, _, _, X, _, X, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+            [O, _, _, _, _, _, _, _, _],
+            [A, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+        ];
+        const expectedState: TablutState = new TablutState(expectedBoard, 3);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+    });
 });

@@ -5,10 +5,6 @@ export const tablutConfig: TaflConfig = {
 
     CASTLE_IS_LEFT_FOR_GOOD: false,
 
-    THRONE_CAN_SURROUND_KING: false,
-
-    CAN_SANDWICH_PAWN_AGAINST_THRONE: true,
-
     BORDER_CAN_SURROUND_KING: true,
 
     CENTRAL_THRONE_CAN_SURROUND_KING: false,

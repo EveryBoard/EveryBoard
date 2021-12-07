@@ -46,7 +46,7 @@ export class TaflEncoder<M extends TaflMove> extends NumberEncoder<M> {
     }
 }
 
-export class TaflMove extends MoveCoordToCoord {
+export abstract class TaflMove extends MoveCoordToCoord {
 
     public constructor(start: Coord, end: Coord) {
         super(start, end);
@@ -69,7 +69,5 @@ export class TaflMove extends MoveCoordToCoord {
     public toString(): string {
         return 'TaflMove(' + this.coord + '->' + this.end + ')';
     }
-    public getWidth(): number {
-        throw new Error('TaflMove.getWidth should be implemented on concrete TaflMove Children!');
-    }
+    public abstract getWidth(): number;
 }

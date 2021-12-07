@@ -9,10 +9,6 @@ export interface TaflConfig {
 
     readonly CASTLE_IS_LEFT_FOR_GOOD: boolean;
     // once the king leave the castle he cannot re-station there
-    readonly THRONE_CAN_SURROUND_KING: boolean;
-    // the throne is considered an opponent to the king
-    readonly CAN_SANDWICH_PAWN_AGAINST_THRONE: boolean;
-    // the throne is considered an opponent to the pawn
     readonly BORDER_CAN_SURROUND_KING: boolean;
     // A border can be counted as participating to a 4-enemy capture
     readonly CENTRAL_THRONE_CAN_SURROUND_KING: boolean;

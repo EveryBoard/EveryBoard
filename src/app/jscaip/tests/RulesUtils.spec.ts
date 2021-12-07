@@ -6,7 +6,6 @@ import { Player } from '../Player';
 import { GameStatus, Rules } from '../Rules';
 import { AbstractGameState } from '../GameState';
 import { comparableEquals, ComparableObject } from 'src/app/utils/Comparable';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 export class RulesUtils {
 
     public static expectMoveSuccess(rules: Rules<Move, AbstractGameState>,
@@ -45,7 +44,9 @@ export class RulesUtils {
                                        minimaxes: Minimax<Move, AbstractGameState>[])
     : void
     {
-        expect(rules.getGameStatus(node)).toEqual(GameStatus.getVictory(player));
+        expect(rules.getGameStatus(node))
+            .withContext('Rules should consider gameStatus a victory for player ' + player.value)
+            .toEqual(GameStatus.getVictory(player));
         for (const minimax of minimaxes) {
             expect(minimax.getBoardValue(node).value)
                 .withContext(minimax.name + ' should consider part a victory for player ' + player.value)

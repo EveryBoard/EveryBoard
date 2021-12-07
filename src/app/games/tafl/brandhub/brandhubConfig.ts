@@ -5,11 +5,7 @@ export const brandhubConfig: TaflConfig = {
 
     CASTLE_IS_LEFT_FOR_GOOD: true,
 
-    THRONE_CAN_SURROUND_KING: true,
-
-    CAN_SANDWICH_PAWN_AGAINST_THRONE: true,
-
-    BORDER_CAN_SURROUND_KING: true,
+    BORDER_CAN_SURROUND_KING: false,
 
     CENTRAL_THRONE_CAN_SURROUND_KING: true,
 

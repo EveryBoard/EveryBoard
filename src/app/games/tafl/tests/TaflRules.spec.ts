@@ -16,13 +16,17 @@ import { MyTaflMove } from './MyTaflMove.spec';
 import { MyTaflState } from './MyTaflState.spec';
 
 const myTaflConfig: TaflConfig = {
-    THRONE_CAN_SURROUND_KING: true,
-    CAN_SANDWICH_PAWN_AGAINST_THRONE: true,
+
     CASTLE_IS_LEFT_FOR_GOOD: true,
+
     INVADER: Player.ZERO,
+
     KING_FAR_FROM_CENTRAL_THRONE_CAN_BE_SANDWICHED: true,
+
     CENTRAL_THRONE_CAN_SURROUND_KING: true,
+
     BORDER_CAN_SURROUND_KING: true,
+
     WIDTH: 7,
 };
 
