@@ -1,6 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -9,6 +8,7 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { TaflConfig } from '../TaflConfig';
 import { TaflFailure } from '../TaflFailure';
 import { TaflLegalityStatus } from '../TaflLegalityStatus';
+import { TaflNode } from '../TaflMinimax';
 import { TaflMove } from '../TaflMove';
 import { TaflPawn } from '../TaflPawn';
 import { TaflRules, TaflState } from '../TaflRules';
@@ -45,8 +45,6 @@ class MyTaflRules extends TaflRules<MyTaflMove, MyTaflState> {
     }
 }
 
-class MyTaflNode extends MGPNode<MyTaflRules, MyTaflMove, MyTaflState> {}
-
 describe('TaflRules', () => {
 
     let rules: MyTaflRules;
@@ -63,50 +61,59 @@ describe('TaflRules', () => {
         ];
     });
     describe('getSurroundings', () => {
-        it('Should return neighboorings cases', () => {
-            const startingBoard: Table<TaflPawn> = rules.node.gameState.getCopiedBoard();
+        it('Should return neighborings cases', () => {
+            const startingState: TaflState = rules.node.gameState;
             const { backCoord } =
-                rules.getSurroundings(new Coord(3, 1), Orthogonal.RIGHT, Player.ZERO, startingBoard);
+                rules.getSurroundings(new Coord(3, 1), Orthogonal.RIGHT, Player.ZERO, startingState);
             expect(backCoord).toEqual(new Coord(4, 1));
         });
     });
-    it('should be illegal to move an empty pawn', () => {
-        // Given initial board
+    it('should be illegal to move an empty square', () => {
+        // Given the initial board
         const state: MyTaflState = MyTaflState.getInitialState();
 
-        // When trying to move an empty piece
-        const move: MyTaflMove = new MyTaflMove(new Coord(0, 1), new Coord(1, 1));
+        // When trying to move an empty square
+        const move: MyTaflMove = MyTaflMove.from(new Coord(0, 1), new Coord(1, 1));
 
         // Then the move should be illegal
         const reason: string = RulesFailure.MUST_CHOOSE_PLAYER_PIECE();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should be illegal to move an opponent pawn', () => {
-        expect(rules.choose(new MyTaflMove(new Coord(4, 2), new Coord(4, 3)))).toBeFalse();
-    });
-    it('should be illegal to land on a pawn', () => {
-        // Given initial board
+        // Given the initial board
         const state: MyTaflState = MyTaflState.getInitialState();
 
-        // When doing a move landing on the ennemy
-        const move: MyTaflMove = new MyTaflMove(new Coord(1, 0), new Coord(1, 3));
+        // When trying to move an opponent pawn
+        const move: MyTaflMove = MyTaflMove.from(new Coord(4, 2), new Coord(4, 3));
 
-        // Then the move should be juged illegal
+        // Then the move should be deemed illegal
+        const reason: string = RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
+    });
+    it('should be illegal to land on a pawn', () => {
+        // Given the initial board
+        const state: MyTaflState = MyTaflState.getInitialState();
+
+        // When doing a move landing on the opponent
+        const move: MyTaflMove = MyTaflMove.from(new Coord(1, 0), new Coord(1, 3));
+
+        // Then the move should be illegal
         const reason: string = TaflFailure.LANDING_ON_OCCUPIED_CASE();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('should be illegal to pass through a pawn', () => {
-        // Given initial board
+        // Given the initial board
         const state: MyTaflState = MyTaflState.getInitialState();
 
         // When doing a move passing through a piece
-        const move: MyTaflMove = new MyTaflMove(new Coord(1, 0), new Coord(1, 4));
+        const move: MyTaflMove = MyTaflMove.from(new Coord(1, 0), new Coord(1, 4));
 
-        // Then the move should be juged illegal
+        // Then the move should be illegal
         const reason: string = TaflFailure.SOMETHING_IN_THE_WAY();
         RulesUtils.expectMoveFailure(rules, state, move, reason);
     });
     it('Should consider defender winner when all invaders are dead', () => {
+        // Given a board where the last invader is about to be slaughter on an altar dedicated to Thor
         const board: Table<TaflPawn> = [
             [_, O, _, A, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
@@ -118,6 +125,12 @@ describe('TaflRules', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
+        const state: MyTaflState = new MyTaflState(board, 23);
+
+        // When sacrificing him
+        const move: MyTaflMove = MyTaflMove.from(new Coord(3, 0), new Coord(2, 0));
+
+        // Then the move should be a success and the part a victory of Odin's Kin.
         const expectedBoard: Table<TaflPawn> = [
             [_, _, A, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
@@ -129,17 +142,13 @@ describe('TaflRules', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const state: MyTaflState = new MyTaflState(board, 23);
-        const move: MyTaflMove = new MyTaflMove(new Coord(3, 0), new Coord(2, 0));
-        const status: TaflLegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.isSuccess()).toBeTrue();
-        const resultingState: MyTaflState = rules.applyLegalMove(move, state, status);
         const expectedState: MyTaflState = new MyTaflState(expectedBoard, 24);
-        expect(resultingState).toEqual(expectedState);
-        const node: MyTaflNode = new MGPNode(null, move, expectedState);
+        const node: TaflNode = new TaflNode(null, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
     it('Should consider invader winner when all defender are immobilized', () => {
+        // Given a board where the last invader is about to be slaughter on an altar dedicated to Thor
         const board: Table<TaflPawn> = [
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
@@ -151,6 +160,12 @@ describe('TaflRules', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
+        const state: MyTaflState = new MyTaflState(board, 24);
+
+        // When sacrificing him
+        const move: MyTaflMove = MyTaflMove.from(new Coord(8, 4), new Coord(1, 4));
+
+        // Then the move should be a success and the part a victory of Odin's Kin.
         const expectedBoard: Table<TaflPawn> = [
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
@@ -162,14 +177,9 @@ describe('TaflRules', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const state: MyTaflState = new MyTaflState(board, 24);
-        const move: MyTaflMove = new MyTaflMove(new Coord(8, 4), new Coord(1, 4));
-        const status: TaflLegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.isSuccess()).toBeTrue();
-        const resultingState: MyTaflState = rules.applyLegalMove(move, state, status);
         const expectedState: MyTaflState = new MyTaflState(expectedBoard, 25);
-        expect(resultingState).toEqual(expectedState);
-        const node: MyTaflNode = new MGPNode(null, move, expectedState);
+        const node: TaflNode = new TaflNode(null, move, expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
 });

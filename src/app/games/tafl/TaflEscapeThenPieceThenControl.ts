@@ -4,7 +4,7 @@ import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { SandwichThreat } from 'src/app/jscaip/PieceThreat';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
-import { NumberTable, Table } from 'src/app/utils/ArrayUtils';
+import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { TaflPawn } from './TaflPawn';
@@ -45,7 +45,7 @@ export class TaflEscapeThenPieceAndControlMinimax extends TaflPieceAndControlMin
         const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = this.getThreatMap(state, pieceMap);
         const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = this.filterThreatMap(threatMap, state);
         for (const owner of [Player.ZERO, Player.ONE]) {
-            const controlleds: MGPSet<Coord> = new MGPSet();
+            const controlledSquares: MGPSet<Coord> = new MGPSet();
             for (const coord of pieceMap.get(owner).get().getCopy()) {
                 if (filteredThreatMap.get(coord).isPresent()) {
                     threatenedScore += owner.getScoreModifier();
@@ -54,35 +54,35 @@ export class TaflEscapeThenPieceAndControlMinimax extends TaflPieceAndControlMin
                     for (const dir of Orthogonal.ORTHOGONALS) {
                         let testedCoord: Coord = coord.getNext(dir, 1);
                         while (testedCoord.isInRange(WIDTH, WIDTH) && state.getPieceAt(testedCoord) === EMPTY) {
-                            controlleds.add(testedCoord);
+                            controlledSquares.add(testedCoord);
                             testedCoord = testedCoord.getNext(dir, 1);
                         }
                     }
                 }
             }
-            for (const controlled of controlleds.getCopy()) {
+            for (const controlled of controlledSquares.getCopy()) {
                 const controlledValue: number =
                     TaflPieceAndControlMinimax.CONTROL_VALUE[controlled.y][controlled.x];
                 controlScore += owner.getScoreModifier() * controlledValue;
             }
         }
-        const stepForEscape: number = this.getStepForEscape(state.getCopiedBoard());
+        const stepForEscape: number = this.getStepForEscape(state);
         return new NodeUnheritance((stepForEscape * 531 * 17 * 17) +
                                    (safeScore * 531 * 17) +
                                    (threatenedScore * 531) +
                                    controlScore);
     }
-    public getStepForEscape(board: Table<TaflPawn>): number {
-        const king: Coord = this.ruler.getKingCoord(board).get();
-        return this._getStepForEscape(board, 1, [king], []);
+    public getStepForEscape(state: TaflState): number {
+        const king: Coord = this.ruler.getKingCoord(state).get();
+        return this._getStepForEscape(state, 1, [king], []);
     }
-    public _getStepForEscape(board: Table<TaflPawn>,
+    public _getStepForEscape(state: TaflState,
                              step: number,
                              previousGen: Coord[],
                              handledCoords: Coord[])
     : number
     {
-        const nextGen: Coord[] = this.getNextGen(board, previousGen, handledCoords);
+        const nextGen: Coord[] = this.getNextGen(state, previousGen, handledCoords);
 
         if (nextGen.length === 0) {
             // not found:
@@ -93,16 +93,16 @@ export class TaflEscapeThenPieceAndControlMinimax extends TaflPieceAndControlMin
         } else {
             step++;
             handledCoords.push(...nextGen);
-            return this._getStepForEscape(board, step, nextGen, handledCoords);
+            return this._getStepForEscape(state, step, nextGen, handledCoords);
         }
     }
-    public getNextGen(board: Table<TaflPawn>, previousGen: Coord[], handledCoords: Coord[]): Coord[] {
+    public getNextGen(state: TaflState, previousGen: Coord[], handledCoords: Coord[]): Coord[] {
         const newGen: Coord[] = [];
         for (const piece of previousGen) {
             for (const dir of Orthogonal.ORTHOGONALS) {
                 let landing: Coord = piece.getNext(dir, 1);
                 while (landing.isInRange(this.ruler.config.WIDTH, this.ruler.config.WIDTH) &&
-                       board[landing.y][landing.x] === TaflPawn.UNOCCUPIED)
+                       state.getPieceAt(landing) === TaflPawn.UNOCCUPIED)
                 {
                     if (handledCoords.every((coord: Coord) => coord.equals(landing) === false)) {
                         // coord is new

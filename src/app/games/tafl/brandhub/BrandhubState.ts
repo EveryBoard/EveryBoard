@@ -1,4 +1,3 @@
-import { Coord } from 'src/app/jscaip/Coord';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { TaflPawn } from '../TaflPawn';
 import { TaflState } from '../TaflRules';
@@ -23,8 +22,5 @@ export class BrandhubState extends TaflState {
     }
     public from(board: Table<TaflPawn>, turn: number): this {
         return new BrandhubState(board, turn) as this;
-    }
-    public isCentralThrone(c: Coord): boolean {
-        return (c.x === 3 && c.y === 3);
     }
 }

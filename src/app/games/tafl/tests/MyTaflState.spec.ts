@@ -27,7 +27,7 @@ export class MyTaflState extends TaflState {
     public from(board: Table<TaflPawn>, turn: number): this {
         return new MyTaflState(board, turn) as this;
     }
-    public isCentralThrone(c: Coord): boolean {
-        return c.equals(new Coord(4, 3));
+    public isCentralThrone(coord: Coord): boolean {
+        return coord.equals(new Coord(4, 3));
     }
 }

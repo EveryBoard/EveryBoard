@@ -40,19 +40,19 @@ describe('TablutComponent', () => {
         await componentTestUtils.expectClickFailure('#click_0_0', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
     }));
     it('Should allow simple move', fakeAsync(async() => {
-        // given initial state
+        // given the initial state
         const state: TablutState = TablutState.getInitialState();
         componentTestUtils.setupState(state);
 
         // When moving your piece
         await componentTestUtils.expectClickSuccess('#click_4_1');
-        const move: TablutMove = new TablutMove(new Coord(4, 1), new Coord(0, 1));
+        const move: TablutMove = TablutMove.instanceProvider(new Coord(4, 1), new Coord(0, 1));
 
         // Then the move should be legal
         await componentTestUtils.expectMoveSuccess('#click_0_1', move);
     }));
     it('Diagonal move attempt should not throw', fakeAsync(async() => {
-        // given initial state
+        // given the initial state
         const state: TablutState = TablutState.getInitialState();
         componentTestUtils.setupState(state);
 
@@ -79,7 +79,7 @@ describe('TablutComponent', () => {
         componentTestUtils.setupState(initialState);
 
         await componentTestUtils.expectClickSuccess('#click_1_0');
-        const move: TablutMove = new TablutMove(new Coord(1, 0), new Coord(2, 0));
+        const move: TablutMove = TablutMove.instanceProvider(new Coord(1, 0), new Coord(2, 0));
         await componentTestUtils.expectMoveSuccess('#click_2_0', move);
 
         const tablutGameComponent: TablutComponent = componentTestUtils.getComponent();

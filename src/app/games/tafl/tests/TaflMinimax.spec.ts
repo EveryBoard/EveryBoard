@@ -36,7 +36,7 @@ describe('TaflMinimax:', () => {
         ];
         const state: TablutState = new TablutState(board, 1);
         rules.node = new MGPNode(null, null, state);
-        const winnerMove: TablutMove = new TablutMove(new Coord(3, 0), new Coord(8, 0));
+        const winnerMove: TablutMove = TablutMove.instanceProvider(new Coord(3, 0), new Coord(8, 0));
 
         const minimax: TaflMinimax = new TaflMinimax(rules, 'TablutMinimax');
         const bestMove: TablutMove = rules.node.findBestMove(1, minimax);
@@ -63,7 +63,7 @@ describe('TaflMinimax:', () => {
 
         // Then going back on throne should not be part of it
         function doesKingGoBack(moves: BrandhubMove[]): boolean {
-            const kingBackOnThrone: BrandhubMove = new BrandhubMove(new Coord(3, 2), new Coord(3, 3));
+            const kingBackOnThrone: BrandhubMove = BrandhubMove.instanceProvider(new Coord(3, 2), new Coord(3, 3));
             for (const move of moves) {
                 if (move.equals(kingBackOnThrone)) {
                     return true;

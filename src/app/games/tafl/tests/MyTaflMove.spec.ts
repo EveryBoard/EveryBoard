@@ -6,7 +6,7 @@ export class MyTaflMove extends TaflMove {
     public static from(start: Coord, end: Coord): MyTaflMove {
         return new MyTaflMove(start, end);
     }
-    public getWidth(): number {
-        return 19;
+    public getMaximalDistance(): number {
+        return 9;
     }
 }

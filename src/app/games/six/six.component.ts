@@ -163,8 +163,8 @@ export class SixComponent extends HexagonalGameComponent<SixRules, SixMove, SixS
         let minX: number = Number.MAX_SAFE_INTEGER;
         let minY: number = Number.MAX_SAFE_INTEGER;
         for (const coord of coords) {
-            const coordY: number = (2 * coord.y) + coord.x; // en demi Y_OFFSETs
-            const coordX: number = coord.x; // en nombre de colonnes, simplement
+            const coordY: number = (2 * coord.y) + coord.x; // in half Y_OFFSETs
+            const coordX: number = coord.x; // number of column
             if (coordX < minX) {
                 minX = coordX;
                 lefterPiece = coord;

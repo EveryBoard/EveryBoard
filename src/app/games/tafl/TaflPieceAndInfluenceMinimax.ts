@@ -3,7 +3,6 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
-import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { SandwichThreat } from '../../jscaip/PieceThreat';
@@ -14,20 +13,20 @@ import { TaflMove } from './TaflMove';
 
 export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
 
-    public WIDTH: number;
+    public width: number;
 
-    public MAX_INFLUENCE: number;
+    public maxInfluence: number;
 
-    public SCORE_BY_THREATENED_PIECE: number;
+    public scoreByThreatenedPiece: number;
 
-    public SCORE_BY_SAFE_PIECE: number;
+    public scoreBySafePiece: number;
 
     public constructor(ruler: TaflRules<TaflMove, TaflState>, name: string) {
         super(ruler, name);
-        this.WIDTH = this.ruler.config.WIDTH;
-        this.MAX_INFLUENCE = 16 * ((this.WIDTH * 2) - 2);
-        this.SCORE_BY_THREATENED_PIECE = (16 * this.MAX_INFLUENCE) + 1;
-        this.SCORE_BY_SAFE_PIECE = (16 * this.SCORE_BY_THREATENED_PIECE) + 1;
+        this.width = this.ruler.config.WIDTH;
+        this.maxInfluence = 16 * ((this.width * 2) - 2);
+        this.scoreByThreatenedPiece = (16 * this.maxInfluence) + 1;
+        this.scoreBySafePiece = (16 * this.scoreByThreatenedPiece) + 1;
     }
     public getBoardValue(node: TaflNode): NodeUnheritance {
         const gameStatus: GameStatus = this.ruler.getGameStatus(node);
@@ -44,13 +43,13 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
         for (const owner of [Player.ZERO, Player.ONE]) {
             for (const coord of pieceMap.get(owner).get().getCopy()) {
                 if (filteredThreatMap.get(coord).isPresent()) {
-                    score += owner.getScoreModifier() * this.SCORE_BY_THREATENED_PIECE;
+                    score += owner.getScoreModifier() * this.scoreByThreatenedPiece;
                 } else {
-                    score += owner.getScoreModifier() * this.SCORE_BY_SAFE_PIECE;
+                    score += owner.getScoreModifier() * this.scoreBySafePiece;
                     let influence: number = 0;
                     for (const dir of Orthogonal.ORTHOGONALS) {
                         let testedCoord: Coord = coord.getNext(dir, 1);
-                        while (testedCoord.isInRange(this.WIDTH, this.WIDTH) &&
+                        while (testedCoord.isInRange(this.width, this.width) &&
                                state.getPieceAt(testedCoord) === EMPTY)
                         {
                             influence++;
@@ -64,17 +63,16 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
         return new NodeUnheritance(score);
     }
     public getPiecesMap(state: TaflState): MGPMap<Player, MGPSet<Coord>> {
-        const board: Table<TaflPawn> = state.getCopiedBoard();
         const EMPTY: TaflPawn = TaflPawn.UNOCCUPIED;
         const map: MGPMap<Player, MGPSet<Coord>> = new MGPMap();
         const zeroPieces: Coord[] = [];
         const onePieces: Coord[] = [];
-        for (let y: number = 0; y < this.WIDTH; y++) {
-            for (let x: number = 0; x < this.WIDTH; x++) {
+        for (let y: number = 0; y < this.width; y++) {
+            for (let x: number = 0; x < this.width; x++) {
                 const coord: Coord = new Coord(x, y);
                 const piece: TaflPawn = state.getPieceAt(coord);
                 if (piece !== EMPTY) {
-                    const owner: Player = this.ruler.getAbsoluteOwner(coord, board);
+                    const owner: Player = state.getAbsoluteOwner(coord);
                     if (owner === Player.ZERO) {
                         zeroPieces.push(coord);
                     } else {
@@ -103,8 +101,7 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
         return threatMap;
     }
     public getThreats(coord: Coord, state: TaflState): SandwichThreat[] {
-        const board: Table<TaflPawn> = state.getCopiedBoard();
-        const threatenerPlayer: Player = this.ruler.getAbsoluteOwner(coord, board).getOpponent();
+        const threatenerPlayer: Player = state.getAbsoluteOwner(coord).getOpponent();
         const threats: SandwichThreat[] = [];
         for (const dir of Orthogonal.ORTHOGONALS) {
             const directThreat: Coord = coord.getPrevious(dir, 1);
@@ -115,13 +112,13 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
                         continue;
                     }
                     let futureCapturer: Coord = coord.getNext(dir, 1);
-                    while (futureCapturer.isInRange(this.WIDTH, this.WIDTH) &&
+                    while (futureCapturer.isInRange(this.width, this.width) &&
                            state.getPieceAt(futureCapturer) === TaflPawn.UNOCCUPIED)
                     {
                         futureCapturer = futureCapturer.getNext(captureDirection);
                     }
-                    if (futureCapturer.isInRange(this.WIDTH, this.WIDTH) &&
-                        this.ruler.getAbsoluteOwner(futureCapturer, board) === threatenerPlayer &&
+                    if (futureCapturer.isInRange(this.width, this.width) &&
+                        state.getAbsoluteOwner(futureCapturer) === threatenerPlayer &&
                         coord.getNext(dir, 1).equals(futureCapturer) === false)
                     {
                         movingThreats.push(futureCapturer);
@@ -133,10 +130,10 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
         return threats;
     }
     public isAThreat(coord: Coord, state: TaflState, opponent: Player): boolean {
-        if (coord.isNotInRange(this.WIDTH, this.WIDTH)) {
+        if (coord.isNotInRange(this.width, this.width)) {
             return false;
         }
-        if (this.ruler.getAbsoluteOwner(coord, state.getCopiedBoard()) === opponent) {
+        if (state.getAbsoluteOwner(coord) === opponent) {
             return true;
         }
         if (this.ruler.isThrone(state, coord)) {
@@ -168,12 +165,11 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
     {
         const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = new MGPMap();
         const threateneds: Coord[] = threatMap.listKeys();
-        const board: Table<TaflPawn> = state.getCopiedBoard();
         const threatenedPlayerPieces: Coord[] = threateneds.filter((coord: Coord) => {
-            return this.ruler.getAbsoluteOwner(coord, board) === state.getCurrentPlayer();
+            return state.getAbsoluteOwner(coord) === state.getCurrentPlayer();
         });
         const threatenedOpponentPieces: MGPSet<Coord> = new MGPSet(threateneds.filter((coord: Coord) => {
-            return this.ruler.getAbsoluteOwner(coord, board) === state.getCurrentOpponent();
+            return state.getAbsoluteOwner(coord) === state.getCurrentOpponent();
         }));
         for (const threatenedPiece of threatenedPlayerPieces) {
             const oldThreatSet: SandwichThreat[] = threatMap.get(threatenedPiece).get().getCopy();

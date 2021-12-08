@@ -1,7 +1,6 @@
 import { TaflPawn } from '../TaflPawn';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { TaflState } from '../TaflRules';
-import { Coord } from 'src/app/jscaip/Coord';
 
 export class TablutState extends TaflState {
 
@@ -26,8 +25,5 @@ export class TablutState extends TaflState {
     }
     public from(board: Table<TaflPawn>, turn: number): this {
         return new TablutState(board, turn) as this;
-    }
-    public isCentralThrone(c: Coord): boolean {
-        return (c.x === 4 && c.y === 4);
     }
 }

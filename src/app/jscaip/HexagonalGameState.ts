@@ -115,12 +115,12 @@ export abstract class HexagonalGameState<P> extends GameStateWithTable<P> {
     }
     private findEntranceFrom(line: HexaLine, start: Coord): Coord {
         const dir: HexaDirection = line.getDirection();
-        let c: Coord = start;
+        let coord: Coord = start;
         for (let i: number = 0; i < Math.max(this.width, this.height); i++) {
-            if (this.isOnBoard(c)) {
-                return c;
+            if (this.isOnBoard(coord)) {
+                return coord;
             }
-            c = c.getNext(dir);
+            coord = coord.getNext(dir);
         }
         assert(false, 'could not find a board entrance, board must be invalid');
     }

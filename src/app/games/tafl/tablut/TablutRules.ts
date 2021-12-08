@@ -5,7 +5,7 @@ import { TablutMove } from './TablutMove';
 import { TablutState } from './TablutState';
 import { TaflRules } from '../TaflRules';
 
-export abstract class TablutNode extends MGPNode<TablutRules, TablutMove, TablutState, TaflLegalityStatus> {}
+export class TablutNode extends MGPNode<TablutRules, TablutMove, TablutState, TaflLegalityStatus> {}
 
 export class TablutRules extends TaflRules<TablutMove, TablutState> {
 
@@ -19,6 +19,6 @@ export class TablutRules extends TaflRules<TablutMove, TablutState> {
         return TablutRules.singleton;
     }
     private constructor() {
-        super(TablutState, tablutConfig, TablutMove.from);
+        super(TablutState, tablutConfig, TablutMove.instanceProvider);
     }
 }

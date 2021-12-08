@@ -35,15 +35,12 @@ export class TablutTutorial {
         To move a piece, click on it and then on its landing square.<br/><br/>
         This is the initial board, do the first move.`,
             TablutState.getInitialState(),
-            new TablutMove(new Coord(4, 1), new Coord(1, 1)),
+            TablutMove.instanceProvider(new Coord(4, 1), new Coord(1, 1)),
             $localize`Congratulations!`,
         ),
         TutorialStep.fromMove(
             $localize`Capturing a soldier (1/2)`,
-            $localize`All pieces except the king, attackers and defenders, are soldiers.
-        To capture them, they have to be sandwiched between two of your pieces.
-        By getting too close, an attacker's soldier is in danger.<br/><br/>
-        Capture it.`,
+            $localize`All pieces except the king, attackers and defenders, are soldiers. To capture them, they have to be sandwiched between two of your pieces. By getting too close, an attacker's soldier is in danger.<br/><br/>Capture it.`,
             new TablutState([
                 [_, _, _, x, x, x, _, _, _],
                 [_, _, _, _, x, _, _, _, _],
@@ -56,8 +53,8 @@ export class TablutTutorial {
                 [_, _, _, x, x, x, _, _, _],
             ], 1),
             [
-                new TablutMove(new Coord(2, 4), new Coord(2, 3)),
-                new TablutMove(new Coord(4, 2), new Coord(3, 2)),
+                TablutMove.instanceProvider(new Coord(2, 4), new Coord(2, 3)),
+                TablutMove.instanceProvider(new Coord(4, 2), new Coord(3, 2)),
             ],
             $localize`Congratulations, that will teach him a lesson!`,
             $localize`Failed, you missed an opportunity to capture a piece of the opponent.`,
@@ -76,7 +73,7 @@ export class TablutTutorial {
                 [_, _, _, _, x, _, _, _, _],
                 [_, _, _, x, x, x, _, _, _],
             ], 12),
-            [new TablutMove(new Coord(1, 4), new Coord(2, 4))],
+            [TablutMove.instanceProvider(new Coord(1, 4), new Coord(2, 4))],
             $localize`Congratulations, one less defender. But keep an eye on the king, it is the most important.`,
             $localize`Failed, you did not do the expected move.`,
         ),
@@ -97,7 +94,7 @@ export class TablutTutorial {
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
             ], 72),
-            [new TablutMove(new Coord(3, 4), new Coord(2, 4))],
+            [TablutMove.instanceProvider(new Coord(3, 4), new Coord(2, 4))],
             $localize`Congratulations, you won!`,
             $localize`Failed, you let the king run away.`,
         ),
@@ -117,7 +114,7 @@ export class TablutTutorial {
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
             ], 72),
-            [new TablutMove(new Coord(3, 3), new Coord(3, 1))],
+            [TablutMove.instanceProvider(new Coord(3, 3), new Coord(3, 1))],
             $localize`The king is dead, long live the king. Congratulations, you won.`,
             $localize`Failed!`,
         ),

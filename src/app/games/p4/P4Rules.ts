@@ -101,21 +101,21 @@ export class P4Rules extends Rules<P4Move, P4State> {
         assert(c !== Player.NONE, 'getOpponent should not be called with Player.NONE');
         return (c === Player.ONE) ? Player.ZERO : Player.ONE;
     }
-    public static getCaseScore(board: Table<Player>, c: Coord): number {
-        display(P4Rules.VERBOSE, 'getCaseScore(board, ' + c.x + ', ' + c.y + ') called');
+    public static getCaseScore(board: Table<Player>, coord: Coord): number {
+        display(P4Rules.VERBOSE, 'getCaseScore(board, ' + coord.x + ', ' + coord.y + ') called');
         display(P4Rules.VERBOSE, board);
-        assert(board[c.y][c.x] !== Player.NONE, 'getCaseScore should not be called on an empty case');
+        assert(board[coord.y][coord.x] !== Player.NONE, 'getCaseScore should not be called on an empty case');
 
         let score: number = 0; // final result, count the theoretical victorys possibility
 
-        const opponent: Player = P4Rules.getOpponent(board, c);
-        const ally: Player = board[c.y][c.x];
+        const opponent: Player = P4Rules.getOpponent(board, coord);
+        const ally: Player = board[coord.y][coord.x];
 
         const distByDirs: Map<Direction, number> = new Map();
         const alliesByDirs: Map<Direction, number> = new Map();
 
         for (const dir of Direction.DIRECTIONS) {
-            const tmpData: [number, number] = P4Rules.getNumberOfFreeSpacesAndAllies(board, c, dir, opponent, ally);
+            const tmpData: [number, number] = P4Rules.getNumberOfFreeSpacesAndAllies(board, coord, dir, opponent, ally);
             distByDirs.set(dir, tmpData[0]);
             alliesByDirs.set(dir, tmpData[1]);
         }
@@ -125,7 +125,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
             const lineAllies: number = alliesByDirs.get(dir) + alliesByDirs.get(dir.getOpposite());
             if (lineAllies > 2) {
                 display(P4Rules.VERBOSE, { text:
-                    'there is some kind of victory here (' + c.x + ', ' + c.y + ')' + '\n' +
+                    'there is some kind of victory here (' + coord.x + ', ' + coord.y + ')' + '\n' +
                     'line allies : ' + lineAllies + '\n',
                 board,
                 });

@@ -10,11 +10,11 @@ export class TaflEncoder<M extends TaflMove> extends NumberEncoder<M> {
         super();
     }
     public maxValue(): number {
-        const bigDigit: number = this.MAX - 1;
-        return (bigDigit * this.MAX * this.MAX * this.MAX) +
-               (bigDigit * this.MAX * this.MAX) +
-               (bigDigit * this.MAX) +
-               bigDigit;
+        const biggestMove: number = this.MAX - 1;
+        return (biggestMove * this.MAX * this.MAX * this.MAX) +
+               (biggestMove * this.MAX * this.MAX) +
+               (biggestMove * this.MAX) +
+               biggestMove;
     }
     public encodeNumber(move: TaflMove): number {
         // encoded as (binarywise) A(x, y) -> B(X, Y)
@@ -48,12 +48,12 @@ export class TaflEncoder<M extends TaflMove> extends NumberEncoder<M> {
 
 export abstract class TaflMove extends MoveCoordToCoord {
 
-    public constructor(start: Coord, end: Coord) {
+    protected constructor(start: Coord, end: Coord) {
         super(start, end);
-        if (start.isNotInRange(this.getWidth(), this.getWidth())) {
+        if (start.isNotInRange(this.getMaximalDistance(), this.getMaximalDistance())) {
             throw new Error('Starting coord of TaflMove must be on the board, not at ' + start.toString() + '.');
         }
-        if (end.isNotInRange(this.getWidth(), this.getWidth())) {
+        if (end.isNotInRange(this.getMaximalDistance(), this.getMaximalDistance())) {
             throw new Error('Landing coord of TaflMove must be on the board, not at ' + end.toString() + '.');
         }
         const dir: Direction = start.getDirectionToward(end).get();
@@ -69,5 +69,5 @@ export abstract class TaflMove extends MoveCoordToCoord {
     public toString(): string {
         return 'TaflMove(' + this.coord + '->' + this.end + ')';
     }
-    public abstract getWidth(): number;
+    public abstract getMaximalDistance(): number;
 }

@@ -23,7 +23,7 @@ describe('AbaloneComponent', () => {
     }));
     describe('first click', () => {
         it('should highlight selected piece and show legal directions choice when clicking piece', fakeAsync(async() => {
-            // given initial board
+            // Given the initial board
 
             // when clicking on a piece
             await componentTestUtils.expectClickSuccess('#piece_2_6');
@@ -38,7 +38,7 @@ describe('AbaloneComponent', () => {
             componentTestUtils.expectElementNotToExist('#direction_DOWN_LEFT');
         }));
         it('should cancel move when clicking on opponent piece', fakeAsync(async() => {
-            // given initial board
+            // Given the initial board
 
             // when clicking on an opponent piece
             // then expect click to be a failure
@@ -47,7 +47,7 @@ describe('AbaloneComponent', () => {
     });
     describe('second piece click', () => {
         it('should show translation and pushings directions when second piece is clicked', fakeAsync(async() => {
-            // given initial board
+            // Given the initial board
 
             // when clicking on a piece then a second
             await componentTestUtils.expectClickSuccess('#piece_2_6');
@@ -63,7 +63,7 @@ describe('AbaloneComponent', () => {
             componentTestUtils.expectElementNotToExist('#direction_DOWN');
         }));
         it('should unselect single piece when reclicking it', fakeAsync(async() => {
-            // given initial board
+            // Given the initial board
             // when clicking a piece
             await componentTestUtils.expectClickSuccess('#piece_2_7');
 
@@ -78,7 +78,7 @@ describe('AbaloneComponent', () => {
             expect(compo.getPieceClasses(2, 7)).toEqual(['player0']);
         }));
         it('should select clicked piece when not aligned with first (non dir)', fakeAsync(async() => {
-            // given initial board with first click
+            // Given the initial board with first click
             await componentTestUtils.expectClickSuccess('#piece_2_6');
 
             // when clicking second unaligned coord
@@ -90,7 +90,7 @@ describe('AbaloneComponent', () => {
             expect(compo.getPieceClasses(4, 7)).toEqual(['player0', 'highlighted']);
         }));
         it('should select clicked piece when not aligned with first (non hexa dir)', fakeAsync(async() => {
-            // given initial board with first click
+            // Given the initial board with first click
             await componentTestUtils.expectClickSuccess('#piece_2_6');
 
             // when clicking second unaligned coord
@@ -127,7 +127,7 @@ describe('AbaloneComponent', () => {
             expect(compo.getPieceClasses(1, 7)).toEqual(['player0', 'highlighted']);
         }));
         it('should cancel move when trying to select more than three pieces', fakeAsync(async() => {
-            // given initial board with one piece selected
+            // Given the initial board with one piece selected
             await componentTestUtils.expectClickSuccess('#piece_0_7');
 
             // when clicking 3 case on the right
@@ -140,7 +140,7 @@ describe('AbaloneComponent', () => {
     });
     describe('third click', () => {
         it('should deselect first piece only when reclicked, and change it', fakeAsync(async() => {
-            // given initial board with 2 pieces selected
+            // Given the initial board with 2 pieces selected
             await componentTestUtils.expectClickSuccess('#piece_2_6');
             await componentTestUtils.expectClickSuccess('#piece_3_6');
 
@@ -153,7 +153,7 @@ describe('AbaloneComponent', () => {
             expect(compo.getPieceClasses(3, 6)).toEqual(['player0', 'highlighted']);
         }));
         it('should deselect last piece selected when reclicked', fakeAsync(async() => {
-            // given initial board with 2 pieces selected
+            // Given the initial board with 2 pieces selected
             await componentTestUtils.expectClickSuccess('#piece_2_6');
             await componentTestUtils.expectClickSuccess('#piece_3_6');
 
@@ -166,7 +166,7 @@ describe('AbaloneComponent', () => {
             expect(compo.getPieceClasses(3, 6)).toEqual(['player0']);
         }));
         it('should cancel move when clicking middle piece of a 3 piece column and selecting middle', fakeAsync(async() => {
-            // given initial board
+            // Given the initial board
             // when clicking first coord then third coord
             await componentTestUtils.expectClickSuccess('#piece_2_7');
             await componentTestUtils.expectClickSuccess('#piece_4_7');
@@ -186,7 +186,7 @@ describe('AbaloneComponent', () => {
             expect(compo.getPieceClasses(4, 7)).toEqual(['player0']);
         }));
         it('should cancel move then select clicked piece as first piece when it is not aligned with first piece', fakeAsync(async() => {
-            // given initial board with a line selected
+            // Given the initial board with a line selected
             await componentTestUtils.expectClickSuccess('#piece_2_6');
             await componentTestUtils.expectClickSuccess('#piece_4_6');
 
@@ -194,7 +194,7 @@ describe('AbaloneComponent', () => {
             await componentTestUtils.expectClickFailure('#piece_4_7', AbaloneFailure.LINE_AND_COORD_NOT_ALIGNED());
         }));
         it('should cancel move then select clicked piece as first piece when it is not aligned with second piece', fakeAsync(async() => {
-            // given initial board with a line selected
+            // Given the initial board with a line selected
             await componentTestUtils.expectClickSuccess('#piece_2_6');
             await componentTestUtils.expectClickSuccess('#piece_4_6');
 
@@ -202,7 +202,7 @@ describe('AbaloneComponent', () => {
             await componentTestUtils.expectClickFailure('#piece_2_7', AbaloneFailure.LINE_AND_COORD_NOT_ALIGNED());
         }));
         it('should recognize line extension and show new directions (1-2-3)', fakeAsync(async() => {
-            // given initial board with an extendable two piece line selected
+            // Given the initial board with an extendable two piece line selected
             await componentTestUtils.expectClickSuccess('#piece_2_6');
             await componentTestUtils.expectClickSuccess('#piece_3_6');
 
@@ -216,7 +216,7 @@ describe('AbaloneComponent', () => {
             expect(compo.getPieceClasses(4, 6)).toEqual(['player0', 'highlighted']);
         }));
         it('should recognize line extension and show new directions (M-2-1-3) and move it as one', fakeAsync(async() => {
-            // given initial board with an extendable two piece line selected
+            // Given the initial board with an extendable two piece line selected
             await componentTestUtils.expectClickSuccess('#piece_3_6');
             await componentTestUtils.expectClickSuccess('#piece_2_6');
 
@@ -234,7 +234,7 @@ describe('AbaloneComponent', () => {
             expect(compo.getCaseClasses(4, 6)).toEqual(['moved']);
         }));
         it('should refuse too long extension', fakeAsync(async() => {
-            // given initial board with two case selected
+            // Given the initial board with two case selected
             await componentTestUtils.expectClickSuccess('#piece_0_7');
             await componentTestUtils.expectClickSuccess('#piece_1_7');
 
@@ -245,7 +245,7 @@ describe('AbaloneComponent', () => {
     });
     describe('direction click', () => {
         it('should do move when clicking direction', fakeAsync(async() => {
-            // given initial board with piece selected
+            // Given the initial board with piece selected
             await componentTestUtils.expectClickSuccess('#piece_0_7');
 
             // when clicking on coord then direction
@@ -256,7 +256,7 @@ describe('AbaloneComponent', () => {
         }));
     });
     it('should allow clicking on arrow landing coord as if it was the arrow (case)', fakeAsync(async() => {
-        // Given initial board with first case clicked
+        // Given the initial board with first case clicked
         await componentTestUtils.expectClickSuccess('#piece_2_6');
 
         // when clicking on the case marked by the direction instead of it's arrow
@@ -289,7 +289,7 @@ describe('AbaloneComponent', () => {
         await componentTestUtils.expectMoveSuccess('#piece_2_5', move, state, 0, 0);
     }));
     it('should not do anything when clicking case that are not below a direction arrow', fakeAsync(async() => {
-        // Given initial board with first case clicked
+        // Given the initial board with first case clicked
         await componentTestUtils.expectClickSuccess('#case_1_6');
 
         // when clicking on the case marked by the direction instead of it's arrow

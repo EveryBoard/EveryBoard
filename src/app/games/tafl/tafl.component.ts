@@ -5,7 +5,8 @@ import { Player } from 'src/app/jscaip/Player';
 import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
-import { Table } from 'src/app/utils/ArrayUtils';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { display } from 'src/app/utils/utils';
 import { TaflLegalityStatus } from './TaflLegalityStatus';
@@ -23,33 +24,33 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
 
     public chosen: Coord = new Coord(-1, -1);
 
-    public lastMove: M;
+    public lastMove: MGPOptional<M> = MGPOptional.empty();
 
     public constructor(messageDisplayer: MessageDisplayer,
                        public VERBOSE: boolean,
-                       public moveGenerator: (start: Coord, end: Coord) => M)
+                       public generateMove: (start: Coord, end: Coord) => MGPFallible<M>)
     {
         super(messageDisplayer);
     }
     public updateBoard(): void {
         display(this.VERBOSE, 'taflComponent.updateBoard');
-        this.lastMove = this.rules.node.move;
+        this.lastMove = MGPOptional.ofNullable(this.rules.node.move);
         this.board = this.rules.node.gameState.getCopiedBoard();
         this.captureds = [];
-        if (this.lastMove) {
+        if (this.lastMove.isPresent()) {
             this.showPreviousMove();
         }
     }
     private showPreviousMove(): void {
-        const previousBoard: Table<TaflPawn> = this.rules.node.mother.gameState.board;
+        const previousState: S = this.rules.node.mother.gameState;
         const OPPONENT: Player = this.rules.node.gameState.getCurrentOpponent();
         for (const orthogonal of Orthogonal.ORTHOGONALS) {
-            const captured: Coord = this.lastMove.end.getNext(orthogonal, 1);
+            const captured: Coord = this.lastMove.get().end.getNext(orthogonal, 1);
             if (captured.isInRange(this.rules.config.WIDTH, this.rules.config.WIDTH)) {
-                const previously: RelativePlayer = this.rules.getRelativeOwner(OPPONENT, captured, previousBoard);
-                const wasOpponent: boolean = previously === RelativePlayer.OPPONENT;
-                const currently: TaflPawn = this.rules.node.gameState.getPieceAt(captured);
-                const isEmpty: boolean = currently === TaflPawn.UNOCCUPIED;
+                const previousOwner: RelativePlayer = previousState.getRelativeOwner(OPPONENT, captured);
+                const wasOpponent: boolean = previousOwner === RelativePlayer.OPPONENT;
+                const currentPiece: TaflPawn = this.rules.node.gameState.getPieceAt(captured);
+                const isEmpty: boolean = currentPiece === TaflPawn.UNOCCUPIED;
                 if (wasOpponent && isEmpty) {
                     this.captureds.push(captured);
                 }
@@ -73,14 +74,13 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
 
         const chosenPiece: Coord = this.chosen;
         const chosenDestination: Coord = new Coord(x, y);
-        let move: M;
-        try {
-            move = this.moveGenerator(chosenPiece, chosenDestination);
-        } catch (error) {
-            return this.cancelMove(error.message);
+        const move: MGPFallible<M> = this.generateMove(chosenPiece, chosenDestination);
+        if (move.isSuccess()) {
+            this.cancelMove();
+            return await this.chooseMove(move.get(), this.rules.node.gameState, null, null);
+        } else {
+            return this.cancelMove(move.getReason());
         }
-        this.cancelMove();
-        return await this.chooseMove(move, this.rules.node.gameState, null, null);
     }
     public choosePiece(x: number, y: number): MGPValidation {
         display(this.VERBOSE, 'TaflComponent.choosePiece');
@@ -97,10 +97,10 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         return MGPValidation.SUCCESS;
     }
     public pieceBelongToCurrentPlayer(x: number, y: number): boolean {
-        // TODO: see that verification is done and refactor this shit
-        const player: Player = this.rules.node.gameState.getCurrentPlayer();
+        const state: S = this.rules.node.gameState;
+        const player: Player = state.getCurrentPlayer();
         const coord: Coord = new Coord(x, y);
-        return this.rules.getRelativeOwner(player, coord, this.board) === RelativePlayer.PLAYER;
+        return state.getRelativeOwner(player, coord) === RelativePlayer.PLAYER;
     }
     public cancelMoveAttempt(): void {
         this.chosen = new Coord(-1, -1);
@@ -110,13 +110,13 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         return this.rules.isThrone(state, new Coord(x, y));
     }
     public isCentralThrone(x: number, y: number): boolean {
-        return this.rules.isExternalThrone(new Coord(x, y)) === false;
+        return this.rules.node.gameState.isCentralThrone(new Coord(x, y)) === false;
     }
     public getPieceClasses(x: number, y: number): string[] {
         const classes: string[] = [];
         const coord: Coord = new Coord(x, y);
 
-        const owner: Player = this.rules.getAbsoluteOwner(coord, this.board);
+        const owner: Player = this.rules.node.gameState.getAbsoluteOwner(coord);
         classes.push(this.getPlayerClass(owner));
 
         if (this.chosen.equals(coord)) {
@@ -129,8 +129,8 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         const classes: string[] = [];
 
         const coord: Coord = new Coord(x, y);
-        const lastStart: Coord = this.lastMove ? this.lastMove.coord : null;
-        const lastEnd: Coord = this.lastMove ? this.lastMove.end : null;
+        const lastStart: Coord = this.lastMove.isPresent() ? this.lastMove.get().coord : null;
+        const lastEnd: Coord = this.lastMove.isPresent() ? this.lastMove.get().end : null;
         if (this.captureds.some((c: Coord) => c.equals(coord))) {
             classes.push('captured');
         } else if (coord.equals(lastStart) || coord.equals(lastEnd)) {
