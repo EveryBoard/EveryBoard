@@ -134,6 +134,10 @@
         <source>Get rid of all of your opponent&apos;s pieces on a board that shrinks little by little!</source>
         <target>Éliminez tous vos ennemis sur un plateau qui rapetisse petit à petit !</target>
       </trans-unit>
+      <trans-unit id="1337301714912876574" datatype="html">
+        <source>Drop your pieces and move them around to align two pieces of the same color across the board to win!</source>
+        <target>Déposez vos pièces et déplacez les afin d'aligner deux pièces de la même couleur au travers du plateau pour gagner !</target>
+      </trans-unit>
       <trans-unit id="1207528295664437538" datatype="html">
         <source>Stack your pieces and control as many stacks as you can to win!</source>
         <target>Empilez vos pièces pour en contrôler un maximum et gagner !</target>
@@ -293,6 +297,10 @@
       <trans-unit id="4497962271113144657" datatype="html">
         <source>Apagos</source>
         <target>Apagos</target>
+      </trans-unit>
+      <trans-unit id="2246994058243837093" datatype="html">
+        <source>Diam</source>
+        <target>Diam</target>
       </trans-unit>
       <trans-unit id="2218572265318708454" datatype="html">
         <source>Registering</source>
@@ -1201,6 +1209,66 @@
         However, the opponent&apos;s piece has disappeared because the tile&apos;s capture has removed its last empty neighboring space.</source>
         <target>Bravo ! Voyez, votre pièce n'a plus de case voisine libre après avoir récupéré la tuile, mais est restée car c&apos;était votre tour.
         Celle de l&apos;adversaire a disparu car la capture de la tuile lui a enlevé sa dernière case voisine libre !</target>
+      </trans-unit>
+      <trans-unit id="3460005588993308010" datatype="html">
+        <source>You do not have any pieces of this type anymore.</source>
+        <target>Vous n'avez plus de pièces de ce type.</target>
+      </trans-unit>
+      <trans-unit id="1718016291859374582" datatype="html">
+        <source>You cannot play here: this space is already full.</source>
+        <target>Vous ne pouvez pas jouer ici : cette case est déjà pleine.</target>
+      </trans-unit>
+      <trans-unit id="8802049007421476454" datatype="html">
+        <source>You cannot add more pieces to the target stack, as it will contain more than 4 pieces.</source>
+        <target>Vous ne pouvez pas ajouter de pièces dans la case ciblée, car elle contiendrait plus de 4 pièces.</target>
+      </trans-unit>
+      <trans-unit id="3031759944936090505" datatype="html">
+        <source>To perform a shift, you must move the pieces to a neighboring space.</source>
+        <target>Pour déplacer des pièces du plateau, vous devez les déplacer sur une case voisine.</target>
+      </trans-unit>
+      <trans-unit id="290467566247457693" datatype="html">
+        <source>You must first select either a piece from the side, or a stack of pieces to shift on the board.</source>
+        <target>Vous devez d'abord sélectionner une pièce hors du plateau, ou une pièce étant sur une case du plateau pour la déplacer.</target>
+      </trans-unit>
+      <trans-unit id="354630056284498570" datatype="html">
+        <source>Initial board and player pieces</source>
+        <target>Plateau initial et pièces des joueurs</target>
+      </trans-unit>
+      <trans-unit id="8818359317795688141" datatype="html">
+        <source>Diam&apos;s board is a circular board made of 8 spaces. Each player has 8 pieces: 4 of one color, and 4 of another color. Initially, the board is empty. All the remaining pieces are displayed next to the board: Dark&apos;s pieces are on the left, Light&apos;s pieces are on the right.</source>
+        <target>Le plateau de Diam est un plateau circulaire composé de 8 cases. Chaque joueur possède 8 pièces : 4 d'une couleur, et 4 d'une autre couleur. Initialement, le plateau est vide. Toutes les pièces restantes sont montrées sur les côté du plateau : les pièces de Foncé sur la gauche, les pièces de Clair sur la droite.</target>
+      </trans-unit>
+      <trans-unit id="1679691893411241087" datatype="html">
+        <source>At Diam, the goal is to align two of your pieces, having exactly the same color, on diametrically opposed spaces, on top of at least another piece. Note here that Dark does not win because the dark pieces are not on top of any other piece. You&apos;re playing Light. Here, you can win by dropping one of your pieces on the leftmost space. You can do it by clicking on the corresponding piece next to the board, and then on the space in which you want to drop your piece.&lt;br/&gt;&lt;br/&gt;Do it!</source>
+        <target>À Diam, le but est d'aligner deux de vos pièces, ayant exactement la même couleurs, sur des cases diamétralement opposées, au dessus d'au moins une pièce. Notez qu'ici, Foncé ne gagne pas car ses pièces ne sont pas au dessus d'une autre pièce. Vous jouez Clair. Ici, vous pouvez gagner en déposant une de vos pièces dans la case la plus à gauche. Vous pouvez le faire en cliquant sur la pièce correspondante à côté du plateau, et ensuite sur la case où vous souhaitez déposer votre pièce.&lt;br/&gt;&lt;br/&gt;Faites le !</target>
+      </trans-unit>
+      <trans-unit id="6480264860477304836" datatype="html">
+        <source>Failed, you should drop your piece on the leftmost space, using the piece of the same color of the other piece you already have on the board.</source>
+        <target>Raté, vous devez déposer votre pièce sur la case la plus à gauche, en utilisant la pièce de la même couleur que celle que vous avez déjà sur le plateau.</target>
+      </trans-unit>
+      <trans-unit id="9079191930805040030" datatype="html">
+        <source>Types of move</source>
+        <target>Types de mouvements</target>
+      </trans-unit>
+      <trans-unit id="7844462253208284371" datatype="html">
+        <source>You can perform two types of move: either dropping one of your piece like you did in the previous step, or you can shift one of your pieces on the board to a neighboring space. You can pick any of your piece on the board, even if there are pieces on top of it. Only one condition applies: there can never be more  than 4 pieces in a space. When you pick a piece with other pieces on top of it, all the other pieces move with yours.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, try to move one of your piece that is already on the board.</source>
+        <target>Vous pouvez effectuer deux types de mouvement : soit déposer une de vos pièces comme vous l'avez fait à l'étape précédente, soit déplacer une de vos pièces sur le plateau, sur une case voisine. Vous pouvez choisir n'importe laquelle de vos pièces, même s'il y a déjà d'autres pièces au dessus. Une seule condition s'applique : ne pas créer une pile de plus de 4 pièces. Quand vous sélectionnez une pièce avec d'autres dessus, toutes les autres pièces se déplacent avec la votre.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, essayez de déplacer une de vos pièces déjà sur le plateau.</target>
+      </trans-unit>
+      <trans-unit id="4809034034760688818" datatype="html">
+        <source>Failed, try to move one of your piece that is already on the board.</source>
+        <target>Raté, essayez de déplacer une de vos pièces qui se situe déjà sur le plateau.</target>
+      </trans-unit>
+      <trans-unit id="8650632621721803918" datatype="html">
+        <source>Special case</source>
+        <target>Cas spécial</target>
+      </trans-unit>
+      <trans-unit id="62569781199384353" datatype="html">
+        <source>It can happen that, in a single turn, both players reach an alignment. If it is the case, only the player with the highest alignment wins.&lt;br/&gt;&lt;br/&gt;Here, playing Dark, you can win by performing such a move, do it!</source>
+        <target>Il peut arriver que lors d'un tour, les deux joueurs se retrouvent avec des pièces alignées pour la victoire. Si c'est le cas, le joueur avec l'alignement le plus élevé gagne.&lt;br/&gt;&lt;br/&gt;Ici, en jouant Foncé, vous pouvez gagner en effectuant un tel mouvement, faites le !</target>
+      </trans-unit>
+      <trans-unit id="3765076912748475454" datatype="html">
+        <source>Failed, try to shift a stack of pieces to the left.</source>
+        <target>Raté, essayez de déplacer une pile de pièces vers la gauche.</target>
       </trans-unit>
       <trans-unit id="2559409853005498554" datatype="html">
         <source>Invalid coordinate, please select a piece on the board.</source>

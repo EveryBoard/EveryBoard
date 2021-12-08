@@ -158,7 +158,7 @@ describe('ChatService', () => {
             expect(chatDAO.update).toHaveBeenCalledWith('id', NON_EMPTY_CHAT);
         }));
     });
-    afterAll(() => {
+    afterEach(() => {
         service.ngOnDestroy();
     });
 });

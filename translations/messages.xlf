@@ -101,6 +101,9 @@
       <trans-unit id="2776505193142258762" datatype="html">
         <source>Get rid of all of your opponent&apos;s pieces on a board that shrinks little by little!</source>
       </trans-unit>
+      <trans-unit id="1337301714912876574" datatype="html">
+        <source>Drop your pieces and move them around to align two pieces of the same color across the board to win!</source>
+      </trans-unit>
       <trans-unit id="1207528295664437538" datatype="html">
         <source>Stack your pieces and control as many stacks as you can to win!</source>
       </trans-unit>
@@ -220,6 +223,9 @@
       </trans-unit>
       <trans-unit id="4497962271113144657" datatype="html">
         <source>Apagos</source>
+      </trans-unit>
+      <trans-unit id="2246994058243837093" datatype="html">
+        <source>Diam</source>
       </trans-unit>
       <trans-unit id="2218572265318708454" datatype="html">
         <source>Registering</source>
@@ -888,6 +894,57 @@
         <source>Congratulations! See, your piece no longer had any empty neighboring space after you have gained the tile, but it stayed on the board as it was your turn.
         However, the opponent&apos;s piece has disappeared because the tile&apos;s capture has removed its last empty neighboring space.</source>
       </trans-unit>
+      <trans-unit id="3460005588993308010" datatype="html">
+        <source>You do not have any pieces of this type anymore.</source>
+      </trans-unit>
+      <trans-unit id="1718016291859374582" datatype="html">
+        <source>You cannot play here: this space is already full.</source>
+      </trans-unit>
+      <trans-unit id="8802049007421476454" datatype="html">
+        <source>You cannot add more pieces to the target stack, as it will contain more than 4 pieces.</source>
+      </trans-unit>
+      <trans-unit id="3031759944936090505" datatype="html">
+        <source>To perform a shift, you must move the pieces to a neighboring space.</source>
+      </trans-unit>
+      <trans-unit id="290467566247457693" datatype="html">
+        <source>You must first select either a piece from the side, or a stack of pieces to shift on the board.</source>
+      </trans-unit>
+      <trans-unit id="354630056284498570" datatype="html">
+        <source>Initial board and player pieces</source>
+      </trans-unit>
+      <trans-unit id="8818359317795688141" datatype="html">
+        <source>Diam&apos;s board is a circular board made of 8 spaces. Each player has 8 pieces: 4 of one color, and 4 of another color. Initially, the board is empty. All the remaining pieces are displayed next to the board: Dark&apos;s pieces are on the left, Light&apos;s pieces are on the right.</source>
+      </trans-unit>
+      <trans-unit id="5626639193339311369" datatype="html">
+        <source>Goal of the game</source>
+      </trans-unit>
+      <trans-unit id="1679691893411241087" datatype="html">
+        <source>At Diam, the goal is to align two of your pieces, having exactly the same color, on diametrically opposed spaces, on top of at least another piece. Note here that Dark does not win because the dark pieces are not on top of any other piece. You&apos;re playing Light. Here, you can win by dropping one of your pieces on the leftmost space. You can do it by clicking on the corresponding piece next to the board, and then on the space in which you want to drop your piece.&lt;br/&gt;&lt;br/&gt;Do it!</source>
+      </trans-unit>
+      <trans-unit id="5489405522962962283" datatype="html">
+        <source>Congratulations, you won!</source>
+      </trans-unit>
+      <trans-unit id="6480264860477304836" datatype="html">
+        <source>Failed, you should drop your piece on the leftmost space, using the piece of the same color of the other piece you already have on the board.</source>
+      </trans-unit>
+      <trans-unit id="9079191930805040030" datatype="html">
+        <source>Types of move</source>
+      </trans-unit>
+      <trans-unit id="7844462253208284371" datatype="html">
+        <source>You can perform two types of move: either dropping one of your piece like you did in the previous step, or you can shift one of your pieces on the board to a neighboring space. You can pick any of your piece on the board, even if there are pieces on top of it. Only one condition applies: there can never be more  than 4 pieces in a space. When you pick a piece with other pieces on top of it, all the other pieces move with yours.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, try to move one of your piece that is already on the board.</source>
+      </trans-unit>
+      <trans-unit id="4809034034760688818" datatype="html">
+        <source>Failed, try to move one of your piece that is already on the board.</source>
+      </trans-unit>
+      <trans-unit id="8650632621721803918" datatype="html">
+        <source>Special case</source>
+      </trans-unit>
+      <trans-unit id="62569781199384353" datatype="html">
+        <source>It can happen that, in a single turn, both players reach an alignment. If it is the case, only the player with the highest alignment wins.&lt;br/&gt;&lt;br/&gt;Here, playing Dark, you can win by performing such a move, do it!</source>
+      </trans-unit>
+      <trans-unit id="3765076912748475454" datatype="html">
+        <source>Failed, try to shift a stack of pieces to the left.</source>
+      </trans-unit>
       <trans-unit id="2559409853005498554" datatype="html">
         <source>Invalid coordinate, please select a piece on the board.</source>
       </trans-unit>
@@ -991,9 +1048,6 @@
       </trans-unit>
       <trans-unit id="2209428336874697936" datatype="html">
         <source>You are performing a move, you must select a landing square.</source>
-      </trans-unit>
-      <trans-unit id="5626639193339311369" datatype="html">
-        <source>Goal of the game</source>
       </trans-unit>
       <trans-unit id="5197172538685178535" datatype="html">
         <source>The goal of Encapsule is to align three of your pieces.
@@ -1730,9 +1784,6 @@
         If you create both, you lose too!&lt;br/&gt;&lt;br/&gt;
         You can win with this board, try it.
         You&apos;re playing Light.</source>
-      </trans-unit>
-      <trans-unit id="5489405522962962283" datatype="html">
-        <source>Congratulations, you won!</source>
       </trans-unit>
       <trans-unit id="2829152398724302132" datatype="html">
         <source>Your move should switch at least one piece.</source>
