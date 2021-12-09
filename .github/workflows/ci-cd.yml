@@ -209,6 +209,7 @@ jobs:
         run: |
           result=${{ steps.is_organization_member.outputs.result }}
           branch_name=${{ github.payload.pull_request.head.ref }}
+          echo ${{ github.payload.pull_request }}
           if [ $result == true ]; then
             netlify deploy --dir=dist/pantheonsgame --alias="$branch_name" --message="Develop deployment from github ($GITHUB_REF_NAME, commit $GITHUB_SHA)"
           fi
