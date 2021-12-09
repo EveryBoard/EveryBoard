@@ -208,8 +208,9 @@ jobs:
         if: ${{ github.ref != 'refs/heads/master'  && github.ref != 'refs/heads/develop' }}
         run: |
           result=${{ steps.is_organization_member.outputs.result }}
+          branch_name=${{ github.payload.pull_request.head.ref }}
           if [ $result == true ]; then
-            netlify deploy --dir=dist/pantheonsgame --alias="${GITHUB_REF##*/}" --message="Develop deployment from github ($GITHUB_REF_NAME, commit $GITHUB_SHA)"
+            netlify deploy --dir=dist/pantheonsgame --alias="$branch_name" --message="Develop deployment from github ($GITHUB_REF_NAME, commit $GITHUB_SHA)"
           fi
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
