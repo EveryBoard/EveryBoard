@@ -1,11 +1,10 @@
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { tablutConfig } from './tablutConfig';
-import { TaflLegalityStatus } from '../TaflLegalityStatus';
 import { TablutMove } from './TablutMove';
 import { TablutState } from './TablutState';
 import { TaflRules } from '../TaflRules';
 
-export class TablutNode extends MGPNode<TablutRules, TablutMove, TablutState, TaflLegalityStatus> {}
+export class TablutNode extends MGPNode<TablutRules, TablutMove, TablutState> {}
 
 export class TablutRules extends TaflRules<TablutMove, TablutState> {
 
@@ -19,6 +18,6 @@ export class TablutRules extends TaflRules<TablutMove, TablutState> {
         return TablutRules.singleton;
     }
     private constructor() {
-        super(TablutState, tablutConfig, TablutMove.instanceProvider);
+        super(TablutState, tablutConfig, TablutMove.of);
     }
 }

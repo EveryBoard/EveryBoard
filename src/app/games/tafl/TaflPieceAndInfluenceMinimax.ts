@@ -8,7 +8,8 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 import { SandwichThreat } from '../../jscaip/PieceThreat';
 import { TaflPawn } from './TaflPawn';
 import { TaflMinimax, TaflNode } from './TaflMinimax';
-import { TaflRules, TaflState } from './TaflRules';
+import { TaflRules } from './TaflRules';
+import { TaflState } from './TaflState';
 import { TaflMove } from './TaflMove';
 
 export class TaflPieceAndInfluenceMinimax extends TaflMinimax {

@@ -7,45 +7,18 @@ import { TaflPawn } from './TaflPawn';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { display } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { Table } from 'src/app/utils/ArrayUtils';
-import { TaflLegalityStatus } from './TaflLegalityStatus';
+import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { TaflFailure } from './TaflFailure';
 import { TaflConfig } from './TaflConfig';
 import { Type } from '@angular/core';
-import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { TaflState } from './TaflState';
 
-export abstract class TaflState extends GameStateWithTable<TaflPawn> {
+class TaflNode extends MGPNode<TaflRules<TaflMove, TaflState>, TaflMove, TaflState> {}
 
-    public abstract from(board: Table<TaflPawn>, turn: number): this;
-
-    public isCentralThrone(coord: Coord): boolean {
-        const center: number = (this.board.length - 1) / 2;
-        return coord.equals(new Coord(center, center));
-    }
-
-    public getRelativeOwner(player: Player, coord: Coord): RelativePlayer {
-        const owner: Player = this.getAbsoluteOwner(coord);
-        let relativeOwner: RelativePlayer;
-        if (owner === Player.NONE) {
-            relativeOwner = RelativePlayer.NONE;
-        } else if (player === owner) {
-            relativeOwner = RelativePlayer.PLAYER;
-        } else {
-            relativeOwner = RelativePlayer.OPPONENT;
-        }
-        return relativeOwner;
-    }
-    public getAbsoluteOwner(coord: Coord): Player {
-        const pawn: TaflPawn = this.getPieceAt(coord);
-        return pawn.owner;
-    }
-}
-class TaflNode extends MGPNode<TaflRules<TaflMove, TaflState>, TaflMove, TaflState, TaflLegalityStatus> {}
-
-export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends Rules<M, S, TaflLegalityStatus> {
+export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends Rules<M, S> {
 
     public static VERBOSE: boolean = false;
 
@@ -55,29 +28,15 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
     {
         super(stateType);
     }
-    public isLegal(move: TaflMove, state: S): TaflLegalityStatus {
+    public isLegal(move: TaflMove, state: S): LegalityStatus {
         display(TaflRules.VERBOSE, { tablutRules_isLegal: { move, state } });
-        const board: TaflPawn[][] = state.getCopiedBoard();
 
         const player: Player = state.getCurrentPlayer();
         const validity: MGPValidation = this.getMoveValidity(player, move, state);
         if (validity.isFailure()) {
-            return { legal: validity, resultingBoard: null };
+            return LegalityStatus.failure(validity.getReason());
         }
-
-        // move is legal here
-        const start: Coord = move.coord;
-        const end: Coord = move.end;
-        board[end.y][end.x] = board[start.y][start.x]; // move the piece to the new position
-        board[start.y][start.x] = TaflPawn.UNOCCUPIED; // remove it from the previous position
-        let captured: MGPOptional<Coord> = MGPOptional.empty();
-        for (const d of Orthogonal.ORTHOGONALS) {
-            captured = this.tryCapture(player, move.end, d, state);
-            if (captured.isPresent()) {
-                board[captured.get().y][captured.get().x] = TaflPawn.UNOCCUPIED;
-            }
-        }
-        return { legal: MGPValidation.SUCCESS, resultingBoard: board };
+        return LegalityStatus.SUCCESS;
     }
     private getMoveValidity(player: Player, move: TaflMove, state: S): MGPValidation {
         const owner: RelativePlayer = state.getRelativeOwner(player, move.coord);
@@ -236,9 +195,10 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         }
         return MGPOptional.empty();
     }
-    private capturePawn(player: Player, coord: Coord, d: Orthogonal, state: S): MGPOptional<Coord> {
-        /* the pawn is the next coord after c (in direction d)
-         * c partipate in the capture
+    private capturePawn(player: Player, coord: Coord, direction: Orthogonal, state: S): MGPOptional<Coord> {
+        /**
+         * the captured pawn is on the next coord after 'coord' (in direction 'direction')
+         * coord partipate in the capture
          *
          * So these are the different capture ways :
          * - 2 opponents
@@ -246,9 +206,9 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
          */
         const LOCAL_VERBOSE: boolean = false;
 
-        const threatenedPieceCoord: Coord = coord.getNext(d);
+        const threatenedPieceCoord: Coord = coord.getNext(direction);
 
-        const backCoord: Coord = threatenedPieceCoord.getNext(d);
+        const backCoord: Coord = threatenedPieceCoord.getNext(direction);
         // the piece that just move is always considered in front
         const back: RelativePlayer = state.getRelativeOwner(player, backCoord);
         if (back === RelativePlayer.NONE) {
@@ -256,26 +216,26 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
                 display(TaflRules.VERBOSE || LOCAL_VERBOSE,
                         'cannot capture a pawn without an ally; ' +
                         threatenedPieceCoord + 'threatened by ' + player + `'s pawn in  ` + coord +
-                        ' coming from this direction (' + d.x + ', ' + d.y + ')' +
+                        ' coming from this direction (' + direction.x + ', ' + direction.y + ')' +
                         'cannot capture a pawn without an ally behind');
                 return MGPOptional.empty();
             } // here, back is an empty throne
             display(TaflRules.VERBOSE || LOCAL_VERBOSE,
                     'pawn captured by 1 opponent and 1 throne; ' +
                     threatenedPieceCoord + 'threatened by ' + player + `'s pawn in  ` + coord +
-                    ' coming from this direction (' + d.x + ', ' + d.y + ')');
+                    ' coming from this direction (' + direction.x + ', ' + direction.y + ')');
             return MGPOptional.of(threatenedPieceCoord); // pawn captured by 1 opponent and 1 throne
         }
         if (back === RelativePlayer.PLAYER) {
             display(TaflRules.VERBOSE || LOCAL_VERBOSE,
                     'pawn captured by 2 opponents; ' + threatenedPieceCoord +
                     'threatened by ' + player + `'s pawn in  ` + coord +
-                    ' coming from this direction (' + d.x + ', ' + d.y + ')');
+                    ' coming from this direction (' + direction.x + ', ' + direction.y + ')');
             return MGPOptional.of(threatenedPieceCoord); // pawn captured by two opponents
         }
         display(TaflRules.VERBOSE || LOCAL_VERBOSE,
                 'no captures; ' + threatenedPieceCoord + 'threatened by ' + player + `'s pawn in  ` + coord +
-                ' coming from this direction (' + d.x + ', ' + d.y + ')');
+                ' coming from this direction (' + direction.x + ', ' + direction.y + ')');
         return MGPOptional.empty();
     }
     private captureKingWithAtLeastASandwhich(state: S,
@@ -296,11 +256,23 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         }
         return MGPOptional.empty();
     }
-    public applyLegalMove(move: TaflMove, state: S, status: TaflLegalityStatus): S {
-        display(TaflRules.VERBOSE, { TablutRules_applyLegalMove: { move, state, status } });
+    public applyLegalMove(move: TaflMove, state: S, _status: LegalityStatus): S {
+        display(TaflRules.VERBOSE, { TablutRules_applyLegalMove: { move, state } });
         const turn: number = state.turn;
 
-        return state.from(status.resultingBoard, turn + 1);
+        const board: TaflPawn[][] = state.getCopiedBoard();
+        const player: Player = state.getCurrentPlayer();
+        const start: Coord = move.coord;
+        const end: Coord = move.end;
+        board[end.y][end.x] = board[start.y][start.x]; // move the piece to the new position
+        board[start.y][start.x] = TaflPawn.UNOCCUPIED; // remove it from the previous position
+        for (const d of Orthogonal.ORTHOGONALS) {
+            const captured: MGPOptional<Coord> = this.tryCapture(player, move.end, d, state);
+            if (captured.isPresent()) {
+                board[captured.get().y][captured.get().x] = TaflPawn.UNOCCUPIED;
+            }
+        }
+        return state.from(board, turn + 1);
     }
     public getGameStatus(node: TaflNode): GameStatus {
         const state: S = node.gameState as S;

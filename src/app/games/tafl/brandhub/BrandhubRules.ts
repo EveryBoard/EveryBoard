@@ -18,6 +18,6 @@ export class BrandhubRules extends TaflRules<BrandhubMove, BrandhubState> {
         return BrandhubRules.singleton;
     }
     private constructor() {
-        super(BrandhubState, brandhubConfig, BrandhubMove.instanceProvider);
+        super(BrandhubState, brandhubConfig, BrandhubMove.of);
     }
 }

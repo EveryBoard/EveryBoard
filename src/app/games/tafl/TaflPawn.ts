@@ -10,10 +10,13 @@ export class TaflPawn {
 
     public static readonly DEFENDERS: TaflPawn = new TaflPawn(Player.ONE, false);
 
-    private constructor(public readonly owner: Player,
+    private constructor(private readonly owner: Player,
                         private readonly king: boolean) {
     }
     public isKing(): boolean {
         return this.king;
+    }
+    public getOwner(): Player {
+        return this.owner;
     }
 }

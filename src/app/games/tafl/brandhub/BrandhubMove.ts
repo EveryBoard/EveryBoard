@@ -4,9 +4,9 @@ import { TaflEncoder, TaflMove } from '../TaflMove';
 
 export class BrandhubMove extends TaflMove {
 
-    public static encoder: TaflEncoder<BrandhubMove> = new TaflEncoder(7, BrandhubMove.instanceProvider);
+    public static encoder: TaflEncoder<BrandhubMove> = new TaflEncoder(7, BrandhubMove.of);
 
-    public static instanceProvider(start: Coord, end: Coord): BrandhubMove {
+    public static of(start: Coord, end: Coord): BrandhubMove {
         return new BrandhubMove(start, end);
     }
     public static from(start: Coord, end: Coord): MGPFallible<BrandhubMove> {

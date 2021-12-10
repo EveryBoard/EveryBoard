@@ -1,6 +1,6 @@
 import { TaflPawn } from '../TaflPawn';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { TaflState } from '../TaflRules';
+import { TaflState } from '../TaflState';
 
 export class TablutState extends TaflState {
 

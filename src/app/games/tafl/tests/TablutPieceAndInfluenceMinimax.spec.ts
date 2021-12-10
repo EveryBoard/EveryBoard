@@ -291,7 +291,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             ];
             const state: TablutState = new TablutState(board, 1);
             const node: MGPNode<TablutRules, TablutMove, TablutState> = new MGPNode(null, null, state);
-            const expectedMove: TablutMove = TablutMove.instanceProvider(new Coord(1, 0), new Coord(0, 0));
+            const expectedMove: TablutMove = TablutMove.of(new Coord(1, 0), new Coord(0, 0));
             for (let depth: number = 1; depth < 4; depth++) {
                 const chosenMove: TablutMove = node.findBestMove(depth, minimax);
                 expect(chosenMove).toEqual(expectedMove);

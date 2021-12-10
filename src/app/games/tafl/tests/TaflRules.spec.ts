@@ -7,15 +7,15 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { TaflConfig } from '../TaflConfig';
 import { TaflFailure } from '../TaflFailure';
-import { TaflLegalityStatus } from '../TaflLegalityStatus';
 import { TaflNode } from '../TaflMinimax';
 import { TaflMove } from '../TaflMove';
 import { TaflPawn } from '../TaflPawn';
-import { TaflRules, TaflState } from '../TaflRules';
+import { TaflState } from '../TaflState';
 import { MyTaflMove } from './MyTaflMove.spec';
+import { MyTaflRules } from './MyTaflRules.spec';
 import { MyTaflState } from './MyTaflState.spec';
 
-const myTaflConfig: TaflConfig = {
+export const myTaflConfig: TaflConfig = {
 
     CASTLE_IS_LEFT_FOR_GOOD: true,
 
@@ -30,25 +30,10 @@ const myTaflConfig: TaflConfig = {
     WIDTH: 7,
 };
 
-class MyTaflRules extends TaflRules<MyTaflMove, MyTaflState> {
-
-    private static singleton: MyTaflRules;
-
-    public static get(): MyTaflRules {
-        if (MyTaflRules.singleton == null) {
-            MyTaflRules.singleton = new MyTaflRules();
-        }
-        return MyTaflRules.singleton;
-    }
-    private constructor() {
-        super(MyTaflState, myTaflConfig, MyTaflMove.from);
-    }
-}
-
 describe('TaflRules', () => {
 
     let rules: MyTaflRules;
-    let minimaxes: Minimax<TaflMove, TaflState, TaflLegalityStatus>[];
+    let minimaxes: Minimax<TaflMove, TaflState>[];
 
     const _: TaflPawn = TaflPawn.UNOCCUPIED;
     const O: TaflPawn = TaflPawn.INVADERS;

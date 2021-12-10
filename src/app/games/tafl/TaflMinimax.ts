@@ -1,21 +1,22 @@
 
-import { TaflRules, TaflState } from './TaflRules';
+import { TaflRules } from './TaflRules';
+import { TaflState } from './TaflState';
 import { TaflMove } from './TaflMove';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { display } from 'src/app/utils/utils';
-import { TaflLegalityStatus } from './TaflLegalityStatus';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 
-export class TaflNode extends MGPNode<TaflRules<TaflMove, TaflState>, TaflMove, TaflState, TaflLegalityStatus> {}
+export class TaflNode extends MGPNode<TaflRules<TaflMove, TaflState>, TaflMove, TaflState> {}
 
 export class TaflMinimax extends Minimax<TaflMove,
                                          TaflState,
-                                         TaflLegalityStatus,
+                                         LegalityStatus,
                                          NodeUnheritance,
                                          TaflRules<TaflMove, TaflState>>
 {

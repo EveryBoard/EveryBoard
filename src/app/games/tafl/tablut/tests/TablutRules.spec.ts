@@ -5,7 +5,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { TablutState } from '../TablutState';
 import { TaflPawn } from '../../TaflPawn';
 import { Player } from 'src/app/jscaip/Player';
-import { TaflLegalityStatus } from '../../TaflLegalityStatus';
+
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { Minimax } from 'src/app/jscaip/Minimax';
@@ -14,11 +14,12 @@ import { TaflPieceAndInfluenceMinimax } from '../../TaflPieceAndInfluenceMinimax
 import { TaflEscapeThenPieceAndControlMinimax } from '../../TaflEscapeThenPieceThenControl';
 import { TaflFailure } from '../../TaflFailure';
 import { TaflPieceAndControlMinimax } from '../../TaflPieceAndControlMinimax';
+import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 
 describe('TablutRules', () => {
 
     let rules: TablutRules;
-    let minimaxes: Minimax<TablutMove, TablutState, TaflLegalityStatus>[];
+    let minimaxes: Minimax<TablutMove, TablutState>[];
     const _: TaflPawn = TaflPawn.UNOCCUPIED;
     const O: TaflPawn = TaflPawn.INVADERS;
     const X: TaflPawn = TaflPawn.DEFENDERS;
@@ -60,8 +61,8 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const state: TablutState = new TablutState(board, 3);
-        const move: TablutMove = TablutMove.instanceProvider(new Coord(1, 0), new Coord(2, 0));
-        const status: TaflLegalityStatus = rules.isLegal(move, state);
+        const move: TablutMove = TablutMove.of(new Coord(1, 0), new Coord(2, 0));
+        const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingState: TablutState = rules.applyLegalMove(move, state, status);
         const expectedState: TablutState = new TablutState(expectedBoard, 4);
@@ -91,8 +92,8 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const state: TablutState = new TablutState(board, 3);
-        const move: TablutMove = TablutMove.instanceProvider(new Coord(3, 0), new Coord(2, 0));
-        const status: TaflLegalityStatus = rules.isLegal(move, state);
+        const move: TablutMove = TablutMove.of(new Coord(3, 0), new Coord(2, 0));
+        const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingState: TablutState = rules.applyLegalMove(move, state, status);
         const expectedState: TablutState = new TablutState(expectedBoard, 4);
@@ -122,8 +123,8 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const state: TablutState = new TablutState(board, 0);
-        const move: TablutMove = TablutMove.instanceProvider(new Coord(2, 0), new Coord(3, 0));
-        const status: TaflLegalityStatus = rules.isLegal(move, state);
+        const move: TablutMove = TablutMove.of(new Coord(2, 0), new Coord(3, 0));
+        const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingState: TablutState = rules.applyLegalMove(move, state, status);
         const expectedState: TablutState = new TablutState(expectedBoard, 1);
@@ -155,8 +156,8 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const state: TablutState = new TablutState(board, 0);
-        const move: TablutMove = TablutMove.instanceProvider(new Coord(2, 1), new Coord(3, 1));
-        const status: TaflLegalityStatus = rules.isLegal(move, state);
+        const move: TablutMove = TablutMove.of(new Coord(2, 1), new Coord(3, 1));
+        const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingState: TablutState = rules.applyLegalMove(move, state, status);
         const expectedState: TablutState = new TablutState(expectedBoard, 1);
@@ -188,8 +189,8 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const state: TablutState = new TablutState(board, 2);
-        const move: TablutMove = TablutMove.instanceProvider(new Coord(2, 1), new Coord(1, 1));
-        const status: TaflLegalityStatus = rules.isLegal(move, state);
+        const move: TablutMove = TablutMove.of(new Coord(2, 1), new Coord(1, 1));
+        const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingState: TablutState = rules.applyLegalMove(move, state, status);
         const expectedState: TablutState = new TablutState(expectedBoard, 3);
@@ -213,7 +214,7 @@ describe('TablutRules', () => {
         const state: TablutState = new TablutState(board, 0);
 
         // When trying to sandwich
-        const move: TablutMove = TablutMove.instanceProvider(new Coord(2, 2), new Coord(4, 2));
+        const move: TablutMove = TablutMove.of(new Coord(2, 2), new Coord(4, 2));
 
         // Then the move is legal but the king alive
         const expectedBoard: Table<TaflPawn> = [
@@ -248,7 +249,7 @@ describe('TablutRules', () => {
         const state: TablutState = new TablutState(board, 12);
 
         // When attempting to surround him
-        const move: TablutMove = TablutMove.instanceProvider(new Coord(2, 2), new Coord(4, 2));
+        const move: TablutMove = TablutMove.of(new Coord(2, 2), new Coord(4, 2));
 
         // Then the move is legal but the king not captured, hence the part ongoing
         const expectedBoard: Table<TaflPawn> = [
@@ -283,7 +284,7 @@ describe('TablutRules', () => {
         const state: TablutState = new TablutState(board, 1);
 
         // When moving the king back to his throne
-        const move: TablutMove = TablutMove.instanceProvider(new Coord(4, 3), new Coord(4, 4));
+        const move: TablutMove = TablutMove.of(new Coord(4, 3), new Coord(4, 4));
 
         // Then the move should be legal
         const expectedBoard: TaflPawn[][] = [
@@ -316,7 +317,7 @@ describe('TablutRules', () => {
         const state: TablutState = new TablutState(board, 1);
 
         // When trying to sit on the king's throne
-        const move: TablutMove = TablutMove.instanceProvider(new Coord(0, 4), new Coord(4, 4));
+        const move: TablutMove = TablutMove.of(new Coord(0, 4), new Coord(4, 4));
 
         // Then the move should be illegal
         const reason: string = TaflFailure.SOLDIERS_CANNOT_SIT_ON_THRONE();
@@ -338,7 +339,7 @@ describe('TablutRules', () => {
         const state: TablutState = new TablutState(board, 2);
 
         // When trying to sandwiching the king
-        const move: TablutMove = TablutMove.instanceProvider(new Coord(0, 4), new Coord(0, 6));
+        const move: TablutMove = TablutMove.of(new Coord(0, 4), new Coord(0, 6));
 
         // Then the move should be legal
         const expectedBoard: TaflPawn[][] = [

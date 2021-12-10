@@ -7,7 +7,7 @@ import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { TaflPawn } from './TaflPawn';
-import { TaflState } from './TaflRules';
+import { TaflState } from './TaflState';
 import { TaflPieceAndInfluenceMinimax } from './TaflPieceAndInfluenceMinimax';
 import { PieceThreat } from '../../jscaip/PieceThreat';
 import { TaflNode } from './TaflMinimax';

@@ -4,9 +4,9 @@ import { TaflEncoder, TaflMove } from '../TaflMove';
 
 export class TablutMove extends TaflMove {
 
-    public static encoder: TaflEncoder<TablutMove> = new TaflEncoder(9, TablutMove.instanceProvider);
+    public static encoder: TaflEncoder<TablutMove> = new TaflEncoder(9, TablutMove.of);
 
-    public static instanceProvider(start: Coord, end: Coord): TablutMove {
+    public static of(start: Coord, end: Coord): TablutMove {
         return new TablutMove(start, end);
     }
     public static from(start: Coord, end: Coord): MGPFallible<TablutMove> {

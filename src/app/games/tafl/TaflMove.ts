@@ -5,8 +5,8 @@ import { NumberEncoder } from 'src/app/jscaip/Encoder';
 
 export class TaflEncoder<M extends TaflMove> extends NumberEncoder<M> {
 
-    constructor(public readonly MAX: number,
-                public readonly instanceProvider: (start: Coord, end: Coord) => M) {
+    constructor(private readonly MAX: number,
+                private readonly of: (start: Coord, end: Coord) => M) {
         super();
     }
     public maxValue(): number {
@@ -42,7 +42,7 @@ export class TaflEncoder<M extends TaflMove> extends NumberEncoder<M> {
         encodedMove -= encodedMove % 1;
         const dx: number = encodedMove % this.MAX;
         const start: Coord = new Coord(dx, dy);
-        return this.instanceProvider(start, end);
+        return this.of(start, end);
     }
 }
 

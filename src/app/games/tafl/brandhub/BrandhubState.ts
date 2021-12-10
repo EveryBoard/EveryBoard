@@ -1,6 +1,6 @@
 import { Table } from 'src/app/utils/ArrayUtils';
 import { TaflPawn } from '../TaflPawn';
-import { TaflState } from '../TaflRules';
+import { TaflState } from '../TaflState';
 
 export class BrandhubState extends TaflState {
 

@@ -46,7 +46,7 @@ describe('TablutComponent', () => {
 
         // When moving your piece
         await componentTestUtils.expectClickSuccess('#click_4_1');
-        const move: TablutMove = TablutMove.instanceProvider(new Coord(4, 1), new Coord(0, 1));
+        const move: TablutMove = TablutMove.of(new Coord(4, 1), new Coord(0, 1));
 
         // Then the move should be legal
         await componentTestUtils.expectMoveSuccess('#click_0_1', move);
@@ -79,7 +79,7 @@ describe('TablutComponent', () => {
         componentTestUtils.setupState(initialState);
 
         await componentTestUtils.expectClickSuccess('#click_1_0');
-        const move: TablutMove = TablutMove.instanceProvider(new Coord(1, 0), new Coord(2, 0));
+        const move: TablutMove = TablutMove.of(new Coord(1, 0), new Coord(2, 0));
         await componentTestUtils.expectMoveSuccess('#click_2_0', move);
 
         const tablutGameComponent: TablutComponent = componentTestUtils.getComponent();

@@ -9,13 +9,13 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { display } from 'src/app/utils/utils';
-import { TaflLegalityStatus } from './TaflLegalityStatus';
 import { TaflMove } from './TaflMove';
 import { TaflPawn } from './TaflPawn';
-import { TaflRules, TaflState } from './TaflRules';
+import { TaflRules } from './TaflRules';
+import { TaflState } from './TaflState';
 
 export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMove, S extends TaflState>
-    extends RectangularGameComponent<R, M, S, TaflPawn, TaflLegalityStatus>
+    extends RectangularGameComponent<R, M, S, TaflPawn>
 {
 
     public NONE: TaflPawn = TaflPawn.UNOCCUPIED;
