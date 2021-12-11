@@ -87,6 +87,7 @@ import { AutofocusDirective } from './directives/autofocus.directive';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ToggleVisibilityDirective } from './directives/toggle-visibility.directive';
 import { ResetPasswordComponent } from './components/normal-component/reset-password/reset-password.component';
+import { DynamicCSSService } from './services/DynamicCSSService';
 
 registerLocaleData(localeFr);
 
@@ -185,6 +186,7 @@ const routes: Route [] = [
         ChatService,
         PartDAO,
         AngularFireAuth,
+        DynamicCSSService,
         { provide: LOCALE_ID, useValue: LocaleUtils.getLocale() },
     ],
     bootstrap: [AppComponent],

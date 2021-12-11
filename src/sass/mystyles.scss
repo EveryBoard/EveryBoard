@@ -1,55 +1,16 @@
 @charset "utf-8";
 
-@import "../../node_modules/bulmaswatch/cyborg/bulmaswatch.scss";
-@import '~bulma-slider';
-@import "./variables.scss";
-
-
-.select select {
-    background-color: #111;
-    border-color: #363636;
-    color: #fff;
-}
-.input {
-    background-color: #111;
-    border-color: #363636;
-    color: #fff;
-}
-
-$gap: 10pt;
-@media screen and (max-width: 768px) {
-    .masonry {
-        column-count: 1;
-    }
-}
-@media screen and (min-width: 769px), print {
-    .masonry {
-        column-count: 3;
-    }
-}
-.masonry {
-    margin: $gap;
-    column-gap: $gap;
-}
-.masonry .item {
-    margin: 0 0 $gap;
-
-    /* For Chrome */
-    column-break-inside: avoid;
-    /* For Firefox */
-    display: inline-grid;
-    page-break-inside: avoid;
-}
+@import "./masonry.scss";
 
 html {
     min-height: 100%;
 }
 
 .player0-bg {
-    background-color: $player0;
+    background-color: var(--player0);
 }
 .player1-bg {
-    background-color: $player1;
+    background-color: var(--player1);
 }
 
 .clickable-icon {

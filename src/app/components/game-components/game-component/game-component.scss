@@ -1,128 +1,109 @@
-@import "variables.scss";
-$base-stroke: #444;
-$background-fill: #888;
-$moved: #AAA;
-$alt-background-fill: #666;
-$alt-alt-background-fill: #AAA;
-$nonplayer: #5c0838;
-$nonplayer-light: #8d2660;
-$pre-captured: pink;
-$captured: red;
-$alt-captured: #990000;
-$indicator: #990;
-$last-move: #AA8;
-$capturable: #990;
-$clickable: #990;
-$selectable: #990;
-$selected: #99E;
-$victory: green;
-
 .base {
-    stroke: $base-stroke;
+    stroke: var(--base-stroke);
     stroke-width: 8;
-    fill: $background-fill;
+    fill: var(--background-fill);
     stroke-linecap: butt;
     stroke-linejoin: round;
 }
 .base-no-fill {
-    stroke: $base-stroke;
+    stroke: var(--base-stroke);
     stroke-width: 8;
 }
 .arrow {
-    stroke: $base-stroke;
+    stroke: var(--base-stroke);
     stroke-width: 3;
 }
 .white-background {
     fill: white;
 }
 .background {
-    fill: $background-fill;
+    fill: var(--background-fill);
 }
 .background2 {
-    fill: $alt-background-fill;
+    fill: var(--alt-background-fill);
 }
 .background3 {
-    fill: $alt-alt-background-fill;
+    fill: var(--alt-alt-background-fill);
 }
 .player0 {
-    fill: $player0;
+    fill: var(--player0);
 }
 .player0-alternate {
-    fill: $player0-alternate;
+    fill: var(--player0-alternate);
 }
 .player0-stroke {
-    stroke: $player0;
+    stroke: var(--player0);
 }
 .player1 {
-    fill: $player1;
+    fill: var(--player1);
 }
 .player1-alternate {
-    fill: $player1-alternate;
+    fill: var(--player1-alternate);
 }
 .player1-stroke {
-    stroke: $player1;
+    stroke: var(--player1);
 }
 .other-piece {
-    fill: $nonplayer;
+    fill: var(--nonplayer);
 }
 .other-piece-light {
-    fill: $nonplayer-light;
+    fill: var(--nonplayer-light);
 }
 .other-piece-stroke {
-    stroke: $nonplayer;
+    stroke: var(--nonplayer);
 }
 .dashed-stroke {
     stroke-dasharray: 2;
 }
 .pre-captured {
-    fill: $pre-captured;
+    fill: var(--pre-captured);
 }
 .captured {
-    fill: $captured;
+    fill: var(--captured);
 }
 .captured2 {
-    fill: $alt-captured;
+    fill: var(--alt-captured);
 }
 .captured-stroke {
-    stroke: $captured;
+    stroke: var(--captured);
 }
 .moved {
-    fill: $moved;
+    fill: var(--moved);
 }
 .moved-stroke {
-    stroke: $moved;
+    stroke: var(--moved);
 }
 .indicator {
-    fill: $indicator;
+    fill: var(--indicator);
     stroke: none;
 }
 .highlighted {
-    stroke: $selectable;
+    stroke: var(--selectable);
 }
 .last-move {
-    stroke: $last-move;
+    stroke: var(--last-move);
 }
 .victory {
-    fill: $victory;
+    fill: var(--victory);
 }
 .victory-stroke {
-    stroke: $victory;
+    stroke: var(--victory);
 }
 .selected {
-    stroke: $selected;
+    stroke: var(--selected);
 }
 .selected-fill {
-    fill: $selected;
+    fill: var(--selected);
 }
 .clickable {
-    stroke: $clickable;
+    stroke: var(--clickable);
 }
 .clickable-hover:hover {
-    stroke: $clickable;
+    stroke: var(--clickable);
 }
 .capturable {
     stroke-width: 2;
-    stroke: $capturable;
+    stroke: var(--capturable);
 }
 .capturable:hover {
     stroke-width: 8;
@@ -169,15 +150,6 @@ $victory: green;
 }
 .text-center {
     text-anchor: middle;
-}
-.color-variant {
-    filter: hue-rotate(20deg);
-}
-.low-brightness {
-    filter: brightness(0.8);
-}
-.high-brightness {
-    filter: brightness(1.1);
 }
 svg {
     max-height: calc(100vh - 10rem); /* Full height minus the navbar */
