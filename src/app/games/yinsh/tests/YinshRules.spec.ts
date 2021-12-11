@@ -23,7 +23,7 @@ describe('YinshRules', () => {
 
     let rules: YinshRules;
 
-    let minimaxes: YinshMinimax[];
+    let minimaxes: YinshMinimax[]; // TODO: Minimax<Yinsh Things>
 
     beforeEach(() => {
         rules = new YinshRules(YinshState);
@@ -221,8 +221,9 @@ describe('YinshRules', () => {
             ];
             const state: YinshState = new YinshState(board, [0, 0], 10);
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(3, 7)), []);
+            const reason: string = YinshFailure.MOVE_SHOULD_END_AT_FIRST_EMPTY_CASE_AFTER_MARKERS();
 
-            RulesUtils.expectMoveFailure(rules, state, move, YinshFailure.MOVE_SHOULD_END_AT_FIRST_EMPTY_CASE_AFTER_MARKERS());
+            RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should forbid moving over two sets of markers', () => {
             const board: Table<YinshPiece> = [
@@ -240,8 +241,9 @@ describe('YinshRules', () => {
             ];
             const state: YinshState = new YinshState(board, [0, 0], 10);
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(3, 8)), []);
+            const reason: string = YinshFailure.MOVE_SHOULD_END_AT_FIRST_EMPTY_CASE_AFTER_MARKERS();
 
-            RulesUtils.expectMoveFailure(rules, state, move, YinshFailure.MOVE_SHOULD_END_AT_FIRST_EMPTY_CASE_AFTER_MARKERS());
+            RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('should forbid moving over rings', () => {
             const board: Table<YinshPiece> = [

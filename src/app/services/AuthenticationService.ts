@@ -112,6 +112,14 @@ export class AuthenticationService implements OnDestroy {
         // Only needed for mocking purposes
         return user.emailVerified;
     }
+    public async sendPasswordResetEmail(email: string): Promise<MGPValidation> {
+        try {
+            await firebase.auth().sendPasswordResetEmail(email);
+            return MGPValidation.SUCCESS;
+        } catch (e) {
+            return MGPValidation.failure(this.mapFirebaseError(e));
+        }
+    }
     /**
      * Registers an user given its username, email, and password.
      * Returns the firebase user upon success, or a failure otherwise.
@@ -150,7 +158,7 @@ export class AuthenticationService implements OnDestroy {
             case 'auth/user-not-found':
             case 'auth/wrong-password':
                 // In accordance with security best practices, we don't give too much details here
-                return $localize`You have entered an invalid email or password.`;
+                return $localize`You have entered invalid credentials.`;
             case 'auth/invalid-credential':
                 return $localize`The credential is invalid or has expired, please try again.`;
             case 'auth/weak-password':

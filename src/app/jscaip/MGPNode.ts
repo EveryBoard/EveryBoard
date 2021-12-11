@@ -3,7 +3,7 @@ import { SCORE } from './SCORE';
 import { Rules } from './Rules';
 import { MGPMap } from '../utils/MGPMap';
 import { LegalityStatus } from './LegalityStatus';
-import { assert, display, Utils } from 'src/app/utils/utils';
+import { assert, display } from 'src/app/utils/utils';
 import { NodeUnheritance } from './NodeUnheritance';
 import { Minimax } from './Minimax';
 import { MGPSet } from '../utils/MGPSet';
@@ -104,13 +104,19 @@ export class MGPNode<R extends Rules<M, S, L>,
         MGPNodeStats.createdNodes++;
         display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'creating ' + this.myToString(null));
     }
-    public findBestMove(readingDepth: number, minimax: Minimax<M, S, L, U>, random: boolean = true): M {
+    public findBestMove(readingDepth: number,
+                        minimax: Minimax<M, S, L, U>,
+                        random: boolean = false,
+                        prune: boolean = true)
+    : M
+    {
         const startTime: number = new Date().getTime();
         let bestDescendant: MGPNode<R, M, S, L, U> = this.alphaBeta(readingDepth,
                                                                     Number.MIN_SAFE_INTEGER,
                                                                     Number.MAX_SAFE_INTEGER,
                                                                     minimax,
-                                                                    random);
+                                                                    random,
+                                                                    prune);
         while (bestDescendant.gameState.turn > this.gameState.turn + 1) {
             bestDescendant = bestDescendant.mother;
             readingDepth--;
@@ -118,7 +124,12 @@ export class MGPNode<R extends Rules<M, S, L>,
         MGPNodeStats.minimaxTime += new Date().getTime() - startTime;
         return bestDescendant.move;
     }
-    public alphaBeta(depth: number, alpha: number, beta: number, minimax: Minimax<M, S, L, U>, random: boolean)
+    public alphaBeta(depth: number,
+                     alpha: number,
+                     beta: number,
+                     minimax: Minimax<M, S, L, U>,
+                     random: boolean,
+                     prune: boolean)
     : MGPNode<R, M, S, L, U>
     {
         const LOCAL_VERBOSE: boolean = false;
@@ -130,7 +141,7 @@ export class MGPNode<R extends Rules<M, S, L>,
             return this; // rules - leaf or calculation - leaf
         }
         const possibleMoves: M[] = this.getPossibleMoves(minimax);
-        assert(possibleMoves.length > 0, 'Minimax ' + minimax.name + ' should give move, received nones!');
+        assert(possibleMoves.length > 0, 'Minimax ' + minimax.name + ' should give move, received none!');
         this.childs = this.childs || [];
         let bestChilds: MGPNode<R, M, S, L, U>[] = [];
         const currentPlayer: Player = this.gameState.getCurrentPlayer();
@@ -141,25 +152,22 @@ export class MGPNode<R extends Rules<M, S, L>,
         for (const move of possibleMoves) {
             const child: MGPNode<R, M, S, L, U> = this.getOrCreateChild(move, minimax);
             const bestChildDescendant: MGPNode<R, M, S, L, U> =
-                child.alphaBeta(depth - 1, alpha, beta, minimax, random);
+                child.alphaBeta(depth - 1, alpha, beta, minimax, random, prune);
             const bestChildValue: number = bestChildDescendant.getHopedValue(minimax);
             if (newValueIsBetter(bestChildValue, extremumExpected) || bestChilds.length === 0) {
-                extremumExpected = bestChildDescendant.getHopedValue(minimax);
-                if (currentPlayer === Player.ZERO) {
-                    beta = Math.min(extremumExpected, beta);
-                } else {
-                    alpha = Math.max(extremumExpected, alpha);
-                }
+                extremumExpected = bestChildValue;
                 bestChilds = [bestChildDescendant];
-                if (alpha >= beta) {
-                    display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'is pruned : ' +
-                        this.myToString(minimax) + ' after calculating ' + bestChildDescendant.myToString(minimax));
-                    const bestChildHopedValue: number = bestChildDescendant.getHopedValue(minimax);
-                    this.hopedValue.put(minimax.name, bestChildHopedValue);
-                    return bestChildDescendant;
-                }
             } else if (bestChildValue === extremumExpected) {
                 bestChilds.push(bestChildDescendant);
+            }
+            if (prune && newValueIsBetter(extremumExpected, currentPlayer === Player.ZERO ? alpha : beta)) {
+                // cut-off, no need to explore the other childs
+                break;
+            }
+            if (currentPlayer === Player.ZERO) {
+                beta = Math.min(extremumExpected, beta);
+            } else {
+                alpha = Math.max(extremumExpected, alpha);
             }
         }
         let bestChild: MGPNode<R, M, S, L, U>;
@@ -187,9 +195,7 @@ export class MGPNode<R extends Rules<M, S, L>,
         let child: MGPNode<R, M, S, L, U> = this.getSonByMove(move);
         if (child == null) {
             const status: L = minimax.ruler.isLegal(move, this.gameState);
-            if (status.legal.isFailure()) {
-                Utils.handleError(`The minimax has accepted an illegal move, this should not happen.`);
-            }
+            assert(status.legal.isSuccess(), `The minimax has accepted an illegal move, this should not happen.`);
             const state: S = minimax.ruler.applyLegalMove(move, this.gameState, status);
             child = new MGPNode(state, this, move, minimax);
             this.childs.push(child);
@@ -249,9 +255,6 @@ export class MGPNode<R extends Rules<M, S, L>,
             return 0;
         }
         let nbDescendants: number = this.childs.length;
-        if (nbDescendants === 0) {
-            return 0;
-        }
         for (const son of this.childs) {
             nbDescendants += son.countDescendants();
         }

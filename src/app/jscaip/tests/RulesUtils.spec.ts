@@ -4,24 +4,29 @@ import { Move } from '../Move';
 import { Player } from '../Player';
 import { GameStatus, Rules } from '../Rules';
 import { AbstractGameState } from '../GameState';
+import { comparableEquals, ComparableObject } from 'src/app/utils/Comparable';
 import { LegalityStatus } from '../LegalityStatus';
 
 export class RulesUtils {
-
     public static expectMoveSuccess(rules: Rules<Move, AbstractGameState>,
                                     state: AbstractGameState,
-                                    move: Move, expectedState: AbstractGameState)
+                                    move: Move,
+                                    expectedState: AbstractGameState)
     : void
     {
         const legality: LegalityStatus = rules.isLegal(move, state);
         expect(legality.legal).toBeTruthy();
         if (legality.legal.isSuccess()) {
             const resultingState: AbstractGameState = rules.applyLegalMove(move, state, legality);
-            expect(resultingState)
-                .withContext('state should be equals')
-                .toEqual(expectedState);
+            if (resultingState['equals'] != null) { // TODOTODO: will be isComparableObject when your branch is merged
+                const equals: boolean = comparableEquals(resultingState as unknown as ComparableObject,
+                                                         expectedState as unknown as ComparableObject);
+                expect(equals).withContext('states should be equal').toBeTrue();
+            } else {
+                expect(resultingState).withContext('states should be equal').toEqual(expectedState);
+            }
         } else {
-            throw new Error('expected move to be valid but it not: ' + legality.legal.getReason());
+            throw new Error('expected move to be valid but it is not: ' + legality.legal.getReason());
         }
     }
     public static expectMoveFailure(rules: Rules<Move, AbstractGameState>,
@@ -74,6 +79,17 @@ export class RulesUtils {
                 .toBe(0);
         }
     }
+    public static expectSecondStateToBeBetterThanFirst(weakerState: AbstractGameState,
+                                                       weakMove: Move,
+                                                       strongerState: AbstractGameState,
+                                                       strongMove: Move,
+                                                       minimax: Minimax<Move, AbstractGameState>)
+    : void
+    {
+        const weakValue: number = minimax.getBoardValue(new MGPNode(weakerState, null, weakMove)).value;
+        const strongValue: number = minimax.getBoardValue(new MGPNode(strongerState, null, strongMove)).value;
+        expect(weakValue).toBeLessThan(strongValue);
+    }
     public static expectStateToBePreVictory(state: AbstractGameState,
                                             previousMove: Move,
                                             player: Player,
@@ -85,16 +101,5 @@ export class RulesUtils {
             const expectedValue: number = player.getPreVictory();
             expect(value).toBe(expectedValue);
         }
-    }
-    public static expectSecondStateToBeBetterThanFirst(weakerState: AbstractGameState,
-                                                       weakMove: Move,
-                                                       strongerState: AbstractGameState,
-                                                       strongMove: Move,
-                                                       minimax: Minimax<Move, AbstractGameState>)
-    : void
-    {
-        const weakValue: number = minimax.getBoardValue(new MGPNode(weakerState, null, weakMove)).value;
-        const strongValue: number = minimax.getBoardValue(new MGPNode(strongerState, null, strongMove)).value;
-        expect(weakValue).toBeLessThan(strongValue);
     }
 }

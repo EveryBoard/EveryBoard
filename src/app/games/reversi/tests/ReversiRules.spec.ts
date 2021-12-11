@@ -93,7 +93,8 @@ describe('ReversiRules', () => {
             const resultingState: ReversiState = rules.applyLegalMove(move, state, status);
             const expectedState: ReversiState = new ReversiState(expectedBoard, 60);
             expect(resultingState).toEqual(expectedState);
-            RulesUtils.expectToBeVictoryFor(rules, new MGPNode(expectedState, null, move), Player.ONE, minimaxes);
+            const node: ReversiNode = new ReversiNode(expectedState, null, move);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
         });
         it('Should consider the player with the more point the winner at the end (Player.ZERO remix)', () => {
             const board: Table<Player> = [

@@ -77,10 +77,10 @@ describe('PentagoComponent', () => {
         expect(component.getBlockClasses(1, 1)).toEqual(['moved']);
         expect(component.getCaseClasses(3, 5)).toEqual(['player0', 'last-move']);
     }));
-    it('Should highlight last move (with rotation of last drop, anticlockwise)', fakeAsync(async() => {
+    it('Should highlight last move (with rotation of last drop, counterclockwise)', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_0_5');
         const move: PentagoMove = PentagoMove.withRotation(0, 5, 2, false);
-        await componentTestUtils.expectMoveSuccess('#rotate_2_anticlockwise', move);
+        await componentTestUtils.expectMoveSuccess('#rotate_2_counterclockwise', move);
         const component: PentagoComponent = componentTestUtils.getComponent();
         expect(component.getBlockClasses(0, 1)).toEqual(['moved']);
         expect(component.getCaseClasses(2, 5)).toEqual(['player0', 'last-move']);
@@ -98,7 +98,7 @@ describe('PentagoComponent', () => {
         componentTestUtils.setupState(state);
         await componentTestUtils.expectClickSuccess('#click_0_1');
         const move: PentagoMove = PentagoMove.withRotation(0, 1, 1, false);
-        await componentTestUtils.expectMoveSuccess('#rotate_1_anticlockwise', move);
+        await componentTestUtils.expectMoveSuccess('#rotate_1_counterclockwise', move);
         const component: PentagoComponent = componentTestUtils.getComponent();
         expect(component.getBlockClasses(1, 0)).toEqual(['moved']);
         expect(component.getCaseClasses(0, 1)).toEqual(['player1', 'last-move']);

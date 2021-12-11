@@ -27,7 +27,7 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
 {
     public encoder: MoveEncoder<M>;
 
-    public CASE_SIZE: number = 100;
+    public SPACE_SIZE: number = 100;
 
     public readonly STROKE_WIDTH: number = 8;
 
@@ -93,6 +93,15 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
     }
     public getTurn(): number {
         return this.rules.node.gameState.turn;
+    }
+    public getCurrentPlayer(): Player {
+        return this.rules.node.gameState.getCurrentPlayer();
+    }
+    public getState(): S {
+        return this.rules.node.gameState;
+    }
+    public getPreviousState(): S {
+        return this.rules.node.mother.gameState;
     }
 }
 

@@ -7,16 +7,16 @@
             <g id="click_{{ x }}_{{ y }}"
                (click)="onClick(x, y)">
                 <!-- Background -->
-                <rect [attr.x]="x * CASE_SIZE"
-                      [attr.y]="y * CASE_SIZE"
-                      [attr.width]="CASE_SIZE"
-                      [attr.height]="CASE_SIZE"
+                <rect [attr.x]="x * SPACE_SIZE"
+                      [attr.y]="y * SPACE_SIZE"
+                      [attr.width]="SPACE_SIZE"
+                      [attr.height]="SPACE_SIZE"
                       [ngClass]="getCaseClasses(x, y)"
                       class="base" />
                 <!-- Piece -->
                 <circle *ngIf="caseContent !== EMPTY"
-                        [attr.cx]="CASE_SIZE/2 + (x * CASE_SIZE)"
-                        [attr.cy]="CASE_SIZE/2 + (y * CASE_SIZE)"
+                        [attr.cx]="SPACE_SIZE/2 + (x * SPACE_SIZE)"
+                        [attr.cy]="SPACE_SIZE/2 + (y * SPACE_SIZE)"
                         [ngClass]="getPieceClasses(x, y)"
                         r="40"
                         class="base"/>
@@ -24,8 +24,8 @@
         </g>
     </g>
     <g *ngFor="let coord of targets">
-        <rect [attr.x]="coord.x * CASE_SIZE + (CASE_SIZE/2 - INDICATOR_SIZE/2)"
-              [attr.y]="coord.y * CASE_SIZE + (CASE_SIZE/2 - INDICATOR_SIZE/2)"
+        <rect [attr.x]="coord.x * SPACE_SIZE + (SPACE_SIZE/2 - INDICATOR_SIZE/2)"
+              [attr.y]="coord.y * SPACE_SIZE + (SPACE_SIZE/2 - INDICATOR_SIZE/2)"
               [attr.width]="INDICATOR_SIZE"
               [attr.height]="INDICATOR_SIZE"
               (click)="onClick(coord.x, coord.y)"

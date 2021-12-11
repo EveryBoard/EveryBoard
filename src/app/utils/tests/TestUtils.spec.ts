@@ -161,8 +161,8 @@ export class SimpleComponentTestUtils<T> {
     }
 }
 type MyGameComponent = GameComponent<Rules<Move, AbstractGameState>,
-                                           Move,
-                                           AbstractGameState>;
+                                     Move,
+                                     AbstractGameState>;
 
 export class ComponentTestUtils<T extends MyGameComponent> {
     public fixture: ComponentFixture<GameWrapper>;
@@ -210,7 +210,6 @@ export class ComponentTestUtils<T extends MyGameComponent> {
         }).compileComponents();
         return new ComponentTestUtils<T>(activatedRouteStub);
     }
-
     private constructor(private readonly activatedRouteStub: ActivatedRouteStub) {}
 
     public prepareFixture(wrapperKind: Type<GameWrapper>): void {
@@ -261,7 +260,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     }
     public async expectInterfaceClickSuccess(elementName: string): Promise<void> {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext('Element "' + elementName + '" should exist.').toBeTruthy();
+        expect(element).withContext('Element "' + elementName + '" should exist').toBeTruthy();
         element.triggerEventHandler('click', null);
         await this.fixture.whenStable();
         this.fixture.detectChanges();
@@ -271,7 +270,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     }
     public async expectClickFailure(elementName: string, reason: string): Promise<void> {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext('Element "' + elementName + '" should exist.').toBeTruthy();
+        expect(element).withContext('Element "' + elementName + '" should exist').toBeTruthy();
         if (element == null) {
             return;
         } else {
@@ -288,7 +287,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     }
     public async expectClickForbidden(elementName: string, reason: string): Promise<void> {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext('Element "' + elementName + '" should exist.').toBeTruthy();
+        expect(element).withContext('Element "' + elementName + '" should exist').toBeTruthy();
         if (element == null) {
             return;
         } else {
@@ -313,7 +312,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     : Promise<void>
     {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext('Element "' + elementName + '" should exist.').toBeTruthy();
+        expect(element).withContext('Element "' + elementName + '" should exist').toBeTruthy();
         if (element == null) {
             return;
         } else {
@@ -350,7 +349,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     : Promise<void>
     {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext('Element "' + elementName + '" should exist.').toBeTruthy();
+        expect(element).withContext('Element "' + elementName + '" should exist').toBeTruthy();
         if (element == null) {
             return;
         } else {
@@ -381,7 +380,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     }
     public expectElementNotToExist(elementName: string): void {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(elementName + ' should not to exist').toBeNull();
+        expect(element).withContext(elementName + ' should not exist').toBeNull();
     }
     public expectElementToExist(elementName: string): DebugElement {
         const element: DebugElement = this.findElement(elementName);
@@ -391,14 +390,16 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     public expectElementToHaveClass(elementName: string, cssClass: string): void {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(elementName + ' should exist').toBeTruthy();
-        const elementClasses: string[] = element.attributes.class.split(' ').sort();
-        expect(elementClasses).toContain(cssClass);
+        const classAttribute: string = element.attributes.class;
+        expect(classAttribute).withContext(elementName + ' should have class attribute').toBeTruthy();
+        const elementClasses: string[] = classAttribute.split(' ').sort();
+        expect(elementClasses).withContext(elementName + ' should contain ' + cssClass).toContain(cssClass);
     }
     public expectElementNotToHaveClass(elementName: string, cssClass: string): void {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(elementName + ' should exist').toBeTruthy();
         const elementClasses: string[] = element.attributes.class.split(' ').sort();
-        expect(elementClasses).not.toContain(cssClass);
+        expect(elementClasses).withContext(elementName + ' should not contain ' + cssClass).not.toContain(cssClass);
     }
     public expectElementToHaveClasses(elementName: string, classes: string[]): void {
         const classesSorted: string[] = [...classes].sort();
@@ -412,6 +413,14 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     }
     public querySelector(query: string): DebugElement {
         return this.debugElement.nativeElement.querySelector(query);
+    }
+}
+
+export class TestUtils {
+
+    public static expectValidationSuccess(validation: MGPValidation, context?: string): void {
+        const reason: string = validation.reason;
+        expect(validation.isSuccess()).withContext(context + ': ' + reason).toBeTrue();
     }
 }
 

@@ -68,6 +68,12 @@
       <trans-unit id="850080272338290812" datatype="html">
         <source>No account?</source>
       </trans-unit>
+      <trans-unit id="2012659005494284050" datatype="html">
+        <source>Forgot your password?</source>
+      </trans-unit>
+      <trans-unit id="4371680625121499898" datatype="html">
+        <source>Reset your password</source>
+      </trans-unit>
       <trans-unit id="6005801113696805305" datatype="html">
         <source>The replay game is loading, please wait, it should not take long.</source>
       </trans-unit>
@@ -86,11 +92,17 @@
       <trans-unit id="5561648955936795459" datatype="html">
         <source>Use simple mechanics to push 6 of the opponent&apos;s pieces out of the board!</source>
       </trans-unit>
+      <trans-unit id="6379805581447060110" datatype="html">
+        <source>Very simple game, but, will you be able to win everytime?</source>
+      </trans-unit>
       <trans-unit id="6262000022886850348" datatype="html">
         <source>The international version of the famous African strategy game!</source>
       </trans-unit>
       <trans-unit id="2776505193142258762" datatype="html">
         <source>Get rid of all of your opponent&apos;s pieces on a board that shrinks little by little!</source>
+      </trans-unit>
+      <trans-unit id="1337301714912876574" datatype="html">
+        <source>Drop your pieces and move them around to align two pieces of the same color across the board to win!</source>
       </trans-unit>
       <trans-unit id="1207528295664437538" datatype="html">
         <source>Stack your pieces and control as many stacks as you can to win!</source>
@@ -209,6 +221,12 @@
       <trans-unit id="5094417734463136297" datatype="html">
         <source>Yinsh</source>
       </trans-unit>
+      <trans-unit id="4497962271113144657" datatype="html">
+        <source>Apagos</source>
+      </trans-unit>
+      <trans-unit id="2246994058243837093" datatype="html">
+        <source>Diam</source>
+      </trans-unit>
       <trans-unit id="2218572265318708454" datatype="html">
         <source>Registering</source>
       </trans-unit>
@@ -229,6 +247,21 @@
       </trans-unit>
       <trans-unit id="3412247232926911550" datatype="html">
         <source>Have an account?</source>
+      </trans-unit>
+      <trans-unit id="2565164139557117651" datatype="html">
+        <source>Password reset</source>
+      </trans-unit>
+      <trans-unit id="2687175749283802253" datatype="html">
+        <source>An email will be sent with instruction to reset your password.</source>
+      </trans-unit>
+      <trans-unit id="6808826847039952270" datatype="html">
+        <source>The email has been sent, please follow the instructions from that email.</source>
+      </trans-unit>
+      <trans-unit id="1636934520301910285" datatype="html">
+        <source>Reset password</source>
+      </trans-unit>
+      <trans-unit id="1519954996184640001" datatype="html">
+        <source>Error</source>
       </trans-unit>
       <trans-unit id="7656395805241225659" datatype="html">
         <source>Games</source>
@@ -604,6 +637,51 @@
       <trans-unit id="8139485336036692612" datatype="html">
         <source>Failed!</source>
       </trans-unit>
+      <trans-unit id="4382056880714150954" datatype="html">
+        <source>Pieces should only move downward!</source>
+      </trans-unit>
+      <trans-unit id="6303549979055320494" datatype="html">
+        <source>That square is already full, you cannot put a piece in it!</source>
+      </trans-unit>
+      <trans-unit id="4038709557650879610" datatype="html">
+        <source>You have no pieces in that square, select one that contains at least one of your pieces!</source>
+      </trans-unit>
+      <trans-unit id="7840393692836937676" datatype="html">
+        <source>There are no remaining pieces of that color to drop!</source>
+      </trans-unit>
+      <trans-unit id="139135108801629927" datatype="html">
+        <source>There is no possible transfer from that square!</source>
+      </trans-unit>
+      <trans-unit id="8322338146903087210" datatype="html">
+        <source>At Apagos, there are 4 squares, each of them has a fixed number of holes for pieces. Each player starts with 10 pieces. Dark pieces belong to the first player, light pieces belong to the second one. The game ends when no one can play. The player owning the most pieces in the rightmost square wins!</source>
+      </trans-unit>
+      <trans-unit id="4304656288372447065" datatype="html">
+        <source>Drop</source>
+      </trans-unit>
+      <trans-unit id="6297839182321652830" datatype="html">
+        <source>There are two kind of moves. One is the drop. To do one, you must click on a visible arrow, being of your color or the opponent&apos;s. If the chosen square is one of the 3 leftmost ones, it will exchange position with the square on its right. You play Light.&lt;br/&gt;&lt;br/&gt;Drop a piece on one of thoses three squares.</source>
+      </trans-unit>
+      <trans-unit id="8402696305361715603" datatype="html">
+        <source>Transfer</source>
+      </trans-unit>
+      <trans-unit id="759585629296293659" datatype="html">
+        <source>The other kind of move is the transfer.&lt;ol&gt;&lt;li&gt;Choose one of your pieces on the board by clicking on the square in which it is.&lt;/li&gt;&lt;li&gt;Choose its landing square by clicking on one of the arrow to finish the transfer.&lt;/li&gt;&lt;/ol&gt;It can only be done with your pieces, from an higher square to a lower one.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a transfer!</source>
+      </trans-unit>
+      <trans-unit id="2553091915151695430" datatype="html">
+        <source>This move is a drop, please do a transfer!</source>
+      </trans-unit>
+      <trans-unit id="1116173898665219180" datatype="html">
+        <source>Victory</source>
+      </trans-unit>
+      <trans-unit id="7759745104864966912" datatype="html">
+        <source>When you put a last piece into a square, the games end. In this configuration you can win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do the winning move!</source>
+      </trans-unit>
+      <trans-unit id="3614265026318366150" datatype="html">
+        <source>You actively made your opponent win!</source>
+      </trans-unit>
+      <trans-unit id="6535908388530528403" datatype="html">
+        <source>Wrong choice, your opponent will win in the next turn no matter which piece is dropped!</source>
+      </trans-unit>
       <trans-unit id="8572141978310888290" datatype="html">
         <source>You cannot distribute from the opponent&apos;s home.</source>
       </trans-unit>
@@ -816,6 +894,57 @@
         <source>Congratulations! See, your piece no longer had any empty neighboring space after you have gained the tile, but it stayed on the board as it was your turn.
         However, the opponent&apos;s piece has disappeared because the tile&apos;s capture has removed its last empty neighboring space.</source>
       </trans-unit>
+      <trans-unit id="3460005588993308010" datatype="html">
+        <source>You do not have any pieces of this type anymore.</source>
+      </trans-unit>
+      <trans-unit id="1718016291859374582" datatype="html">
+        <source>You cannot play here: this space is already full.</source>
+      </trans-unit>
+      <trans-unit id="8802049007421476454" datatype="html">
+        <source>You cannot add more pieces to the target stack, as it will contain more than 4 pieces.</source>
+      </trans-unit>
+      <trans-unit id="3031759944936090505" datatype="html">
+        <source>To perform a shift, you must move the pieces to a neighboring space.</source>
+      </trans-unit>
+      <trans-unit id="290467566247457693" datatype="html">
+        <source>You must first select either a piece from the side, or a stack of pieces to shift on the board.</source>
+      </trans-unit>
+      <trans-unit id="354630056284498570" datatype="html">
+        <source>Initial board and player pieces</source>
+      </trans-unit>
+      <trans-unit id="8818359317795688141" datatype="html">
+        <source>Diam&apos;s board is a circular board made of 8 spaces. Each player has 8 pieces: 4 of one color, and 4 of another color. Initially, the board is empty. All the remaining pieces are displayed next to the board: Dark&apos;s pieces are on the left, Light&apos;s pieces are on the right.</source>
+      </trans-unit>
+      <trans-unit id="5626639193339311369" datatype="html">
+        <source>Goal of the game</source>
+      </trans-unit>
+      <trans-unit id="1679691893411241087" datatype="html">
+        <source>At Diam, the goal is to align two of your pieces, having exactly the same color, on diametrically opposed spaces, on top of at least another piece. Note here that Dark does not win because the dark pieces are not on top of any other piece. You&apos;re playing Light. Here, you can win by dropping one of your pieces on the leftmost space. You can do it by clicking on the corresponding piece next to the board, and then on the space in which you want to drop your piece.&lt;br/&gt;&lt;br/&gt;Do it!</source>
+      </trans-unit>
+      <trans-unit id="5489405522962962283" datatype="html">
+        <source>Congratulations, you won!</source>
+      </trans-unit>
+      <trans-unit id="6480264860477304836" datatype="html">
+        <source>Failed, you should drop your piece on the leftmost space, using the piece of the same color of the other piece you already have on the board.</source>
+      </trans-unit>
+      <trans-unit id="9079191930805040030" datatype="html">
+        <source>Types of move</source>
+      </trans-unit>
+      <trans-unit id="7844462253208284371" datatype="html">
+        <source>You can perform two types of move: either dropping one of your piece like you did in the previous step, or you can shift one of your pieces on the board to a neighboring space. You can pick any of your piece on the board, even if there are pieces on top of it. Only one condition applies: there can never be more  than 4 pieces in a space. When you pick a piece with other pieces on top of it, all the other pieces move with yours.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, try to move one of your piece that is already on the board.</source>
+      </trans-unit>
+      <trans-unit id="4809034034760688818" datatype="html">
+        <source>Failed, try to move one of your piece that is already on the board.</source>
+      </trans-unit>
+      <trans-unit id="8650632621721803918" datatype="html">
+        <source>Special case</source>
+      </trans-unit>
+      <trans-unit id="62569781199384353" datatype="html">
+        <source>It can happen that, in a single turn, both players reach an alignment. If it is the case, only the player with the highest alignment wins.&lt;br/&gt;&lt;br/&gt;Here, playing Dark, you can win by performing such a move, do it!</source>
+      </trans-unit>
+      <trans-unit id="3765076912748475454" datatype="html">
+        <source>Failed, try to shift a stack of pieces to the left.</source>
+      </trans-unit>
       <trans-unit id="2559409853005498554" datatype="html">
         <source>Invalid coordinate, please select a piece on the board.</source>
       </trans-unit>
@@ -911,17 +1040,14 @@
       <trans-unit id="5649666705061470825" datatype="html">
         <source>You must pick your piece among the remaining ones.</source>
       </trans-unit>
-      <trans-unit id="6944709858503579555" datatype="html">
-        <source>You must pick one of your remaining piece or one piece on the board that is the biggest of its square.</source>
+      <trans-unit id="5001561383056924621" datatype="html">
+        <source>You must pick one of your remaining pieces or one piece on the board that is the biggest of its square.</source>
       </trans-unit>
       <trans-unit id="7341165560842722107" datatype="html">
         <source>You must select a different landing square than the square where the move originates from.</source>
       </trans-unit>
       <trans-unit id="2209428336874697936" datatype="html">
         <source>You are performing a move, you must select a landing square.</source>
-      </trans-unit>
-      <trans-unit id="5626639193339311369" datatype="html">
-        <source>Goal of the game</source>
       </trans-unit>
       <trans-unit id="5197172538685178535" datatype="html">
         <source>The goal of Encapsule is to align three of your pieces.
@@ -1437,9 +1563,6 @@
       <trans-unit id="5836753691261182816" datatype="html">
         <source>As you can see, the piece falls at the bottom of the column.</source>
       </trans-unit>
-      <trans-unit id="1116173898665219180" datatype="html">
-        <source>Victory</source>
-      </trans-unit>
       <trans-unit id="5880375817695791500" datatype="html">
         <source>You&apos;re playing Dark.
         Place your piece so that you create a horizontal alignment of 4 of your pieces.</source>
@@ -1661,9 +1784,6 @@
         If you create both, you lose too!&lt;br/&gt;&lt;br/&gt;
         You can win with this board, try it.
         You&apos;re playing Light.</source>
-      </trans-unit>
-      <trans-unit id="5489405522962962283" datatype="html">
-        <source>Congratulations, you won!</source>
       </trans-unit>
       <trans-unit id="2829152398724302132" datatype="html">
         <source>Your move should switch at least one piece.</source>
@@ -2139,8 +2259,8 @@
       <trans-unit id="3098841477756660384" datatype="html">
         <source>This email address is invalid.</source>
       </trans-unit>
-      <trans-unit id="6256195380439544351" datatype="html">
-        <source>You have entered an invalid email or password.</source>
+      <trans-unit id="2330128434446069317" datatype="html">
+        <source>You have entered invalid credentials.</source>
       </trans-unit>
       <trans-unit id="321667206564180755" datatype="html">
         <source>The credential is invalid or has expired, please try again.</source>
@@ -2150,6 +2270,15 @@
       </trans-unit>
       <trans-unit id="2368572652596435161" datatype="html">
         <source>There has been too many requests from your device. You are temporarily blocked due to unusual activity. Try again later.</source>
+      </trans-unit>
+      <trans-unit id="8414332856711181199" datatype="html">
+        <source>You closed the authentication popup without finalizing your log in.</source>
+      </trans-unit>
+      <trans-unit id="4550935601489856530" datatype="html">
+        <source>Your username may not be empty.</source>
+      </trans-unit>
+      <trans-unit id="3618174181025506941" datatype="html">
+        <source>This username is already in use, please select a different one.</source>
       </trans-unit>
       <trans-unit id="75196759111440200" datatype="html">
         <source>You&apos;re not allowed to send a message here.</source>

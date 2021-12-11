@@ -636,4 +636,21 @@ describe('GoRules:', () => {
         const expectedScore: number[] = [7, 3];
         expect(score).withContext('Score should be 7 vs 3').toEqual(expectedScore);
     });
+    it('Should calculate correctly board with dead stones', () => {
+        const board: Table<GoPiece> = [
+            [_, _, X, O, _],
+            [_, _, X, O, _],
+            [_, _, X, O, X],
+            [X, X, X, O, _],
+            [_, O, O, O, _],
+        ];
+        const state: GoState = new GoState(board, [0, 0], 0, MGPOptional.empty(), Phase.PASSED);
+        rules.node = new MGPNode(state);
+        expect(rules.choose(GoMove.PASS)).toBeTrue();
+        expect(rules.node.gameState.phase).toBe(Phase.COUNTING);
+        expect(rules.choose(new GoMove(4, 2))).toBeTrue();
+        expect(rules.choose(GoMove.ACCEPT)).toBeTrue();
+        expect(rules.choose(GoMove.ACCEPT)).toBeTrue();
+        RulesUtils.expectToBeDraw(rules, rules.node, minimaxes);
+    });
 });

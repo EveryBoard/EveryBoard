@@ -82,6 +82,14 @@
         <source>No account?</source>
         <target>Pas de compte ?</target>
       </trans-unit>
+      <trans-unit id="2012659005494284050" datatype="html">
+        <source>Forgot your password?</source>
+        <target>Mot de passe oublié ?</target>
+      </trans-unit>
+      <trans-unit id="4371680625121499898" datatype="html">
+        <source>Reset your password</source>
+        <target>Réinitialiser votre mot de passe</target>
+      </trans-unit>
       <trans-unit id="3301086086650990787" datatype="html">
         <source>Register</source>
         <target>Créer un compte</target>
@@ -114,6 +122,10 @@
         <source>Use simple mechanics to push 6 of the opponent&apos;s pieces out of the board!</source>
         <target>Utilisez des mécaniques simples pour pousser 6 pièces adverses hors du plateau !</target>
       </trans-unit>
+      <trans-unit id="6379805581447060110" datatype="html">
+        <source>Very simple game, but, will you be able to win everytime?</source>
+        <target>Un jeu très simple, mais, saurez-vous gagner à chaque fois ?</target>
+      </trans-unit>
       <trans-unit id="6262000022886850348" datatype="html">
         <source>The international version of the famous African strategy game!</source>
         <target>La version internationale du fameux jeu de stratégie africain !</target>
@@ -121,6 +133,10 @@
       <trans-unit id="2776505193142258762" datatype="html">
         <source>Get rid of all of your opponent&apos;s pieces on a board that shrinks little by little!</source>
         <target>Éliminez tous vos ennemis sur un plateau qui rapetisse petit à petit !</target>
+      </trans-unit>
+      <trans-unit id="1337301714912876574" datatype="html">
+        <source>Drop your pieces and move them around to align two pieces of the same color across the board to win!</source>
+        <target>Déposez vos pièces et déplacez les afin d'aligner deux pièces de la même couleur au travers du plateau pour gagner !</target>
       </trans-unit>
       <trans-unit id="1207528295664437538" datatype="html">
         <source>Stack your pieces and control as many stacks as you can to win!</source>
@@ -164,7 +180,7 @@
       </trans-unit>
       <trans-unit id="3383193846061013912" datatype="html">
         <source>Create a winning alignment. The problem: you don&apos;t pick the piece that you&apos;re placing on the board!</source>
-        <target>Faites un alignement gagnant. La difficulté : vous ne choisissez pas la pièce que vous placez !</target>
+        <target>Faites un alignement gagnant. La difficulté : vous ne choisissez pas la pièce que vous placez !</target>
       </trans-unit>
       <trans-unit id="3529667957993318888" datatype="html">
         <source>Align 5 of your pieces on a board where pieces slide!</source>
@@ -172,7 +188,7 @@
       </trans-unit>
       <trans-unit id="6046365494353024298" datatype="html">
         <source>Sandwich your opponent&apos;s pieces to dominate the board!</source>
-        <target>Prenez en sandwich les pièces adverses pour dominer le plateau !</target>
+        <target>Prenez en sandwich les pièces adverses pour dominer le plateau !</target>
       </trans-unit>
       <trans-unit id="1827371853303540301" datatype="html">
         <source>Immobilize one of your opponent&apos;s pyramids before your opponent does!</source>
@@ -278,6 +294,14 @@
         <source>Yinsh</source>
         <target>Yinsh</target>
       </trans-unit>
+      <trans-unit id="4497962271113144657" datatype="html">
+        <source>Apagos</source>
+        <target>Apagos</target>
+      </trans-unit>
+      <trans-unit id="2246994058243837093" datatype="html">
+        <source>Diam</source>
+        <target>Diam</target>
+      </trans-unit>
       <trans-unit id="2218572265318708454" datatype="html">
         <source>Registering</source>
         <target>Création de compte</target>
@@ -297,6 +321,26 @@
       <trans-unit id="3412247232926911550" datatype="html">
         <source>Have an account?</source>
         <target>Vous avez déjà un compte ?</target>
+      </trans-unit>
+      <trans-unit id="2565164139557117651" datatype="html">
+        <source>Password reset</source>
+        <target>Réinitialisation de mot de passe</target>
+      </trans-unit>
+      <trans-unit id="2687175749283802253" datatype="html">
+        <source>An email will be sent with instruction to reset your password.</source>
+        <target>Un email vous sera envoyé avec les instructions pour réinitialiser votre mot de passe.</target>
+      </trans-unit>
+      <trans-unit id="6808826847039952270" datatype="html">
+        <source>The email has been sent, please follow the instructions from that email.</source>
+        <target>L'email a été envoyé, veuillez suivre les instructions qui s'y trouvent.</target>
+      </trans-unit>
+      <trans-unit id="1636934520301910285" datatype="html">
+        <source>Reset password</source>
+        <target>Réinitialiser le mot de passe</target>
+      </trans-unit>
+      <trans-unit id="1519954996184640001" datatype="html">
+        <source>Error</source>
+        <target>Erreur</target>
       </trans-unit>
       <trans-unit id="6535780676661833462" datatype="html">
         <source>Registration error</source>
@@ -810,6 +854,50 @@
         <source>Failed!</source>
         <target>Raté !</target>
       </trans-unit>
+      <trans-unit id="4382056880714150954" datatype="html">
+        <source>Pieces should only move downward!</source>
+        <target>Les pièces ne peuvent se déplacer que vers le bas !</target>
+      </trans-unit>
+      <trans-unit id="6303549979055320494" datatype="html">
+        <source>That square is already full, you cannot put a piece in it!</source>
+        <target>Cette case est déjà complète, vous ne pouvez pas y ajouter une pièce !</target>
+      </trans-unit>
+      <trans-unit id="4038709557650879610" datatype="html">
+        <source>You have no pieces in that square, select one that contains at least one of your pieces!</source>
+        <target>Vous n'avez plus de pièces dans cette case, choisissez-en une qui contient au moins une de vos pièces !</target>
+      </trans-unit>
+      <trans-unit id="7840393692836937676" datatype="html">
+        <source>There are no remaining pieces of that color to drop!</source>
+        <target>Il ne reste plus de pièces de cette couleur à poser !</target>
+      </trans-unit>
+      <trans-unit id="139135108801629927" datatype="html">
+        <source>There is no possible transfer from that square!</source>
+        <target>Il n'y a pas de transfert possible pour cette case !</target>
+      </trans-unit>
+      <trans-unit id="8322338146903087210" datatype="html">
+        <source>At Apagos, there are 4 squares, each of them has a fixed number of holes for pieces. Each player starts with 10 pieces. Dark pieces belong to the first player, light pieces belong to the second one. The game ends when no one can play. The player owning the most pieces in the rightmost square wins!</source>
+        <target>À Apagos, il y a 4 cases, chacune contient un nombre fixe d'emplacements pouvant contenir des pièces. Chaque joueur commence avec 10 pièces. Les pièces foncées appartiennent au premier joueur, les claires aux deuxième. Le jeu fini quand personne ne sais jouer. Le joueur possédant le plus de pièce dans la case la plus à droite gagne !</target>
+      </trans-unit>
+      <trans-unit id="4304656288372447065" datatype="html">
+        <source>Drop</source>
+        <target>Pose</target>
+      </trans-unit>
+      <trans-unit id="6297839182321652830" datatype="html">
+        <source>There are two kind of moves. One is the drop. To do one, you must click on a visible arrow, being of your color or the opponent's. If the chosen square is one of the 3 leftmost ones, it will exchange position with the square on its right. You play Light.&lt;br/&gt;&lt;br/&gt;Drop a piece on one of thoses three squares.</source>
+        <target>Un des deux types de coup est la pose. Pour en faire une, vous devez cliquer sur une flèche, qu'elle soit de votre couleur ou de celle de l'adversaire. Si la case choisie est l'une des trois les plus à gauche, elle échangera sa place avec celle juste à sa droite. Vous jouez Clair.&lt;br/&gt;&lt;br/&gt;Posez une pièce sur l'une de ces trois cases.</target>
+      </trans-unit>
+      <trans-unit id="8402696305361715603" datatype="html">
+        <source>Transfer</source>
+        <target>Transfert</target>
+      </trans-unit>
+      <trans-unit id="759585629296293659" datatype="html">
+        <source>The other kind of move is the transfer.&lt;ol&gt;&lt;li&gt;Choose one of your pieces on the board by clicking on the square in which it is.&lt;/li&gt;&lt;li&gt;Choose its landing square by clicking on one of the arrow to finish the transfer.&lt;/li&gt;&lt;/ol&gt;It can only be done with your pieces, from an higher square to a lower one.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a transfer!</source>
+        <target>L'autre type de mouvement est le transfert.&lt;ol&gt;&lt;li&gt;Choisissez une de vos pièces sur le plateau en cliquant sur la case qui la contient.&lt;/li&gt;&lt;li&gt;Choisissez sa case d'atterrissage en cliquant sur la flèche au dessus de celle-ci pour finir le transfert.&lt;/li&gt;&lt;/ol&gt;Cela peut seulement être fait avec une de vos pièces, d'une case à une autre case plus basse.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites un transfert!</target>
+      </trans-unit>
+      <trans-unit id="2553091915151695430" datatype="html">
+        <source>This move is a drop, please do a transfer!</source>
+        <target>Ce coup est une pose! Veuillez faire un transfert!</target>
+      </trans-unit>
       <trans-unit id="8572141978310888290" datatype="html">
         <source>You cannot distribute from the opponent&apos;s home.</source>
         <target>Vous ne pouvez pas égréner depuis le côté de l'adversaire.</target>
@@ -1122,6 +1210,66 @@
         <target>Bravo ! Voyez, votre pièce n'a plus de case voisine libre après avoir récupéré la tuile, mais est restée car c&apos;était votre tour.
         Celle de l&apos;adversaire a disparu car la capture de la tuile lui a enlevé sa dernière case voisine libre !</target>
       </trans-unit>
+      <trans-unit id="3460005588993308010" datatype="html">
+        <source>You do not have any pieces of this type anymore.</source>
+        <target>Vous n'avez plus de pièces de ce type.</target>
+      </trans-unit>
+      <trans-unit id="1718016291859374582" datatype="html">
+        <source>You cannot play here: this space is already full.</source>
+        <target>Vous ne pouvez pas jouer ici : cette case est déjà pleine.</target>
+      </trans-unit>
+      <trans-unit id="8802049007421476454" datatype="html">
+        <source>You cannot add more pieces to the target stack, as it will contain more than 4 pieces.</source>
+        <target>Vous ne pouvez pas ajouter de pièces dans la case ciblée, car elle contiendrait plus de 4 pièces.</target>
+      </trans-unit>
+      <trans-unit id="3031759944936090505" datatype="html">
+        <source>To perform a shift, you must move the pieces to a neighboring space.</source>
+        <target>Pour déplacer des pièces du plateau, vous devez les déplacer sur une case voisine.</target>
+      </trans-unit>
+      <trans-unit id="290467566247457693" datatype="html">
+        <source>You must first select either a piece from the side, or a stack of pieces to shift on the board.</source>
+        <target>Vous devez d'abord sélectionner une pièce hors du plateau, ou une pièce étant sur une case du plateau pour la déplacer.</target>
+      </trans-unit>
+      <trans-unit id="354630056284498570" datatype="html">
+        <source>Initial board and player pieces</source>
+        <target>Plateau initial et pièces des joueurs</target>
+      </trans-unit>
+      <trans-unit id="8818359317795688141" datatype="html">
+        <source>Diam&apos;s board is a circular board made of 8 spaces. Each player has 8 pieces: 4 of one color, and 4 of another color. Initially, the board is empty. All the remaining pieces are displayed next to the board: Dark&apos;s pieces are on the left, Light&apos;s pieces are on the right.</source>
+        <target>Le plateau de Diam est un plateau circulaire composé de 8 cases. Chaque joueur possède 8 pièces : 4 d'une couleur, et 4 d'une autre couleur. Initialement, le plateau est vide. Toutes les pièces restantes sont montrées sur les côté du plateau : les pièces de Foncé sur la gauche, les pièces de Clair sur la droite.</target>
+      </trans-unit>
+      <trans-unit id="1679691893411241087" datatype="html">
+        <source>At Diam, the goal is to align two of your pieces, having exactly the same color, on diametrically opposed spaces, on top of at least another piece. Note here that Dark does not win because the dark pieces are not on top of any other piece. You&apos;re playing Light. Here, you can win by dropping one of your pieces on the leftmost space. You can do it by clicking on the corresponding piece next to the board, and then on the space in which you want to drop your piece.&lt;br/&gt;&lt;br/&gt;Do it!</source>
+        <target>À Diam, le but est d'aligner deux de vos pièces, ayant exactement la même couleurs, sur des cases diamétralement opposées, au dessus d'au moins une pièce. Notez qu'ici, Foncé ne gagne pas car ses pièces ne sont pas au dessus d'une autre pièce. Vous jouez Clair. Ici, vous pouvez gagner en déposant une de vos pièces dans la case la plus à gauche. Vous pouvez le faire en cliquant sur la pièce correspondante à côté du plateau, et ensuite sur la case où vous souhaitez déposer votre pièce.&lt;br/&gt;&lt;br/&gt;Faites le !</target>
+      </trans-unit>
+      <trans-unit id="6480264860477304836" datatype="html">
+        <source>Failed, you should drop your piece on the leftmost space, using the piece of the same color of the other piece you already have on the board.</source>
+        <target>Raté, vous devez déposer votre pièce sur la case la plus à gauche, en utilisant la pièce de la même couleur que celle que vous avez déjà sur le plateau.</target>
+      </trans-unit>
+      <trans-unit id="9079191930805040030" datatype="html">
+        <source>Types of move</source>
+        <target>Types de mouvements</target>
+      </trans-unit>
+      <trans-unit id="7844462253208284371" datatype="html">
+        <source>You can perform two types of move: either dropping one of your piece like you did in the previous step, or you can shift one of your pieces on the board to a neighboring space. You can pick any of your piece on the board, even if there are pieces on top of it. Only one condition applies: there can never be more  than 4 pieces in a space. When you pick a piece with other pieces on top of it, all the other pieces move with yours.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, try to move one of your piece that is already on the board.</source>
+        <target>Vous pouvez effectuer deux types de mouvement : soit déposer une de vos pièces comme vous l'avez fait à l'étape précédente, soit déplacer une de vos pièces sur le plateau, sur une case voisine. Vous pouvez choisir n'importe laquelle de vos pièces, même s'il y a déjà d'autres pièces au dessus. Une seule condition s'applique : ne pas créer une pile de plus de 4 pièces. Quand vous sélectionnez une pièce avec d'autres dessus, toutes les autres pièces se déplacent avec la votre.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, essayez de déplacer une de vos pièces déjà sur le plateau.</target>
+      </trans-unit>
+      <trans-unit id="4809034034760688818" datatype="html">
+        <source>Failed, try to move one of your piece that is already on the board.</source>
+        <target>Raté, essayez de déplacer une de vos pièces qui se situe déjà sur le plateau.</target>
+      </trans-unit>
+      <trans-unit id="8650632621721803918" datatype="html">
+        <source>Special case</source>
+        <target>Cas spécial</target>
+      </trans-unit>
+      <trans-unit id="62569781199384353" datatype="html">
+        <source>It can happen that, in a single turn, both players reach an alignment. If it is the case, only the player with the highest alignment wins.&lt;br/&gt;&lt;br/&gt;Here, playing Dark, you can win by performing such a move, do it!</source>
+        <target>Il peut arriver que lors d'un tour, les deux joueurs se retrouvent avec des pièces alignées pour la victoire. Si c'est le cas, le joueur avec l'alignement le plus élevé gagne.&lt;br/&gt;&lt;br/&gt;Ici, en jouant Foncé, vous pouvez gagner en effectuant un tel mouvement, faites le !</target>
+      </trans-unit>
+      <trans-unit id="3765076912748475454" datatype="html">
+        <source>Failed, try to shift a stack of pieces to the left.</source>
+        <target>Raté, essayez de déplacer une pile de pièces vers la gauche.</target>
+      </trans-unit>
       <trans-unit id="2559409853005498554" datatype="html">
         <source>Invalid coordinate, please select a piece on the board.</source>
         <target>Coordonnée invalide, veuillez sélectionner un pièce sur le plateau.</target>
@@ -1262,8 +1410,8 @@
         <source>You must pick your piece among the remaining ones.</source>
         <target>Veuillez choisir une de vos pièces parmi les pièces restantes.</target>
       </trans-unit>
-      <trans-unit id="6944709858503579555" datatype="html">
-        <source>You must pick one of your remaining piece or one piece on the board that is the biggest of its square.</source>
+      <trans-unit id="5001561383056924621" datatype="html">
+        <source>You must pick one of your remaining pieces or one piece on the board that is the biggest of its square.</source>
         <target>Veuillez sélectionner une de vos pièces restantes, ou une case sur le plateau où vous avez la pièce la plus grande.</target>
       </trans-unit>
       <trans-unit id="7341165560842722107" datatype="html">
@@ -2074,6 +2222,17 @@
       <trans-unit id="1116173898665219180" datatype="html">
         <source>Victory</source>
         <target>Victoire</target>
+      </trans-unit><trans-unit id="7759745104864966912" datatype="html">
+        <source>When you put a last piece into a square, the games end. In this configuration you can win.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do the winning move!</source>
+        <target>Quand vous posez une dernière pièce dans une case, le jeu fini. Dans cette configuration vous pouvez gagner.&lt;br/&gt;&lt;br/&gt;Vous jouez Clair, faites le mouvement gagnant !</target>
+      </trans-unit>
+      <trans-unit id="3614265026318366150" datatype="html">
+        <source>You actively made your opponent win!</source>
+        <target>Vous avez activement fait gagner votre adversaire !</target>
+      </trans-unit>
+      <trans-unit id="6535908388530528403" datatype="html">
+        <source>Wrong choice, your opponent will win in the next turn no matter which piece is dropped!</source>
+        <target>Mauvais choix, votre adversaire va gagner au prochain tour quelle que soit la pièce déposée !</target>
       </trans-unit>
       <trans-unit id="5880375817695791500" datatype="html">
         <source>You&apos;re playing Dark.
@@ -2730,7 +2889,7 @@
       </trans-unit>
       <trans-unit id="7208567678509553256" datatype="html">
         <source>This move does not disconnect your opponent&apos;s pieces. Try again with another piece.</source>
-        <target>Ce mouvement ne déconnecte pas du jeu de pièces adverses ! Réessayez avec une autre pièce !</target>
+        <target>Ce mouvement ne déconnecte pas du jeu de pièces adverses ! Réessayez avec une autre pièce !</target>
       </trans-unit>
       <trans-unit id="6058377963019501239" datatype="html">
         <source>You lost one of your pieces during this move. There is a way to disconnect an opponent&apos;s piece without losing any of yours, try again!</source>
@@ -2998,11 +3157,11 @@
       </trans-unit>
       <trans-unit id="7525019515401716113" datatype="html">
         <source>Failed! You need to align 5 markers of your color in order to get them, and to get a ring at the same time.</source>
-        <target>Raté ! Vous devez aligner 5 marqueurs de votre couleur pour pouvoir les capturer, ainsi que pour récupérer un anneau.</target>
+        <target>Raté ! Vous devez aligner 5 marqueurs de votre couleur pour pouvoir les capturer, ainsi que pour récupérer un anneau.</target>
       </trans-unit>
       <trans-unit id="4464967427027571359" datatype="html">
         <source>Failed! You can capture two rings in total, by capturing two times 5 of your markers. Try again.</source>
-        <target>Raté ! Vous pouvez capturer deux anneaux en tout, en procédant à deux captures de 5 de vos marqueurs. Réessayez.</target>
+        <target>Raté ! Vous pouvez capturer deux anneaux en tout, en procédant à deux captures de 5 de vos marqueurs. Réessayez.</target>
       </trans-unit>
       <trans-unit id="2051808586522733055" datatype="html">
         <source>The goal at Yinsh is to capture three rings in total.
@@ -3078,9 +3237,9 @@
         During the capture selection, if you see that the marker you clicked belongs to two captures, you have to click on a second marker to avoid any ambiguity.&lt;br/&gt;&lt;br/&gt;
         Here, you can capture two rings, do it!</source>
         <target>Il est possible que lors d'un tour, vous ayez la possibilité de choisir entre plusieurs captures,
-        ou même d'effectuer plusieurs captures !
+        ou même d'effectuer plusieurs captures !
         Lorsque, lors de la sélection d'une capture, le marqueur sur lequel vous avez cliqué appartient à deux captures, il vous faudra cliquer sur un second marqueur pour lever toute ambiguité.&lt;br/&gt;&lt;br/&gt;
-        Ici, vous pouvez récupérer deux anneaux, faites-le !</target>
+        Ici, vous pouvez récupérer deux anneaux, faites-le !</target>
       </trans-unit>
       <trans-unit id="6079681718244869210" datatype="html">
         <source>You cannot pick a piece of the opponent.</source>
@@ -3130,9 +3289,9 @@
         <source>This email address is invalid.</source>
         <target>Cette addresse email est invalide.</target>
       </trans-unit>
-      <trans-unit id="6256195380439544351" datatype="html">
-        <source>You have entered an invalid email or password.</source>
-        <target>Vous avez entré un email ou mot de passe invalide.</target>
+      <trans-unit id="2330128434446069317" datatype="html">
+        <source>You have entered invalid credentials.</source>
+        <target>Vous avez entré des identifiants invalides.</target>
       </trans-unit>
       <trans-unit id="321667206564180755" datatype="html">
         <source>The credential is invalid or has expired, please try again.</source>

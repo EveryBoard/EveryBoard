@@ -11,8 +11,10 @@ import { ChatDAOMock } from 'src/app/dao/tests/ChatDAOMock.spec';
 import { JoinerDAOMock } from 'src/app/dao/tests/JoinerDAOMock.spec';
 import { UserDAOMock } from 'src/app/dao/tests/UserDAOMock.spec';
 import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
+import { DiamPiece } from 'src/app/games/diam/DiamPiece';
 import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { Direction } from 'src/app/jscaip/Direction';
+import { Player } from 'src/app/jscaip/Player';
 import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -61,8 +63,17 @@ describe('GameComponent', () => {
                 onCaseClick: [0, 0],
                 chooseDirection: [Direction.UP],
             },
+            Apagos: {
+                onSquareClick: [0],
+                onArrowClick: [0, Player.ONE],
+            },
             Awale: { onClick: [0, 0] },
             Coerceo: { onClick: [0, 0] },
+            Diam: {
+                onSpaceClick: [0],
+                onPieceInGameClick: [0, 0],
+                onRemainingPieceClick: [DiamPiece.ZERO_FIRST],
+            },
             Dvonn: { onClick: [0, 0] },
             Encapsule: {
                 onBoardClick: [0, 0],
@@ -105,7 +116,7 @@ describe('GameComponent', () => {
             },
             Six: {
                 onPieceClick: [0, 0],
-                onNeighboorClick: [0, 0],
+                onNeighborClick: [0, 0],
             },
             Tablut: { onClick: [0, 0] },
             Yinsh: { onClick: [0, 0] },

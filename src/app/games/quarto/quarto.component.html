@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="auto"
-     [attr.viewBox]="'0 0 ' + (4.25 * CASE_SIZE) + ' ' + (10.75 * CASE_SIZE)"
+     [attr.viewBox]="'0 0 ' + (4.25 * SPACE_SIZE) + ' ' + (10.75 * SPACE_SIZE)"
      preserveAspectRatio="xMidYMid meet"
 >
     <g transform="translate(5 5)">
@@ -10,33 +10,33 @@
             <g *ngFor="let caseContent of line; index as x">
                 <rect id="chooseCoord_{{ x }}_{{ y }}"
                       (click)="chooseCoord(x, y)"
-                      [attr.x]="CASE_SIZE*x"
-                      [attr.y]="CASE_SIZE*y"
-                      [attr.width]="CASE_SIZE"
-                      [attr.height]="CASE_SIZE"
+                      [attr.x]="SPACE_SIZE * x"
+                      [attr.y]="SPACE_SIZE * y"
+                      [attr.width]="SPACE_SIZE"
+                      [attr.height]="SPACE_SIZE"
                       [ngClass]="getCaseClasses(x, y)"
                       class="base"
                 />
                 <g *ngIf="caseContent !== EMPTY">
                     <rect *ngIf="caseContent.isRectangle() else circle"
-                          [attr.x]="CASE_SIZE*x+(CASE_SIZE/2 - getPieceSize(caseContent.value))"
-                          [attr.y]="CASE_SIZE*y+(CASE_SIZE/2 - getPieceSize(caseContent.value))"
+                          [attr.x]="(SPACE_SIZE * x) + (SPACE_SIZE/2 - getPieceSize(caseContent.value))"
+                          [attr.y]="(SPACE_SIZE * y) + (SPACE_SIZE/2 - getPieceSize(caseContent.value))"
                           [attr.width]="getPieceSize(caseContent.value)*2"
                           [attr.height]="getPieceSize(caseContent.value)*2"
                           [ngClass]="getPieceClasses(caseContent.value)"
                           class="base"
                     />
                     <ng-template #circle>
-                        <circle [attr.cx]="CASE_SIZE*x + CASE_SIZE/2"
-                                [attr.cy]="CASE_SIZE*y + CASE_SIZE/2"
+                        <circle [attr.cx]="(SPACE_SIZE * x) + (SPACE_SIZE / 2)"
+                                [attr.cy]="(SPACE_SIZE * y) + (SPACE_SIZE / 2)"
                                 [attr.r]="getPieceSize(caseContent.value)"
                                 [ngClass]="getPieceClasses(caseContent.value)"
                                 class="base"
                         />
                     </ng-template>
                     <circle *ngIf="pieceHasDot(caseContent.value)"
-                            [attr.cx]="CASE_SIZE*x + CASE_SIZE/2"
-                            [attr.cy]="CASE_SIZE*y + CASE_SIZE/2"
+                            [attr.cx]="(SPACE_SIZE * x) + (SPACE_SIZE / 2)"
+                            [attr.cy]="(SPACE_SIZE * y) + (SPACE_SIZE / 2)"
                             [attr.r]="10"
                     />
                 </g>
@@ -44,34 +44,34 @@
         </g>
         <g #chosenPiece
            *ngIf="chosen.x !== -1"
-           [attr.transform]="'translate(' + (chosen.x*CASE_SIZE) + ' ' + (chosen.y*CASE_SIZE) + ')'"
+           [attr.transform]="'translate(' + (chosen.x * SPACE_SIZE) + ' ' + (chosen.y * SPACE_SIZE) + ')'"
         >
             <rect id="highlight"
                   x="0" y="0"
-                  [attr.width]="CASE_SIZE"
-                  [attr.height]="CASE_SIZE"
+                  [attr.width]="SPACE_SIZE"
+                  [attr.height]="SPACE_SIZE"
                   class="base highlighted mid-stroke"
             />
             <rect *ngIf="pieceInHand.isRectangle() else circle"
                   x="0" y="0"
-                  [attr.x]="CASE_SIZE/2 - getPieceSize(pieceInHand.value)"
-                  [attr.y]="CASE_SIZE/2 - getPieceSize(pieceInHand.value)"
+                  [attr.x]="(SPACE_SIZE / 2) - getPieceSize(pieceInHand.value)"
+                  [attr.y]="(SPACE_SIZE / 2) - getPieceSize(pieceInHand.value)"
                   [attr.width]="getPieceSize(pieceInHand.value)*2"
                   [attr.height]="getPieceSize(pieceInHand.value)*2"
                   [ngClass]="getPieceClasses(pieceInHand.value)"
                   class="base"
             />
             <ng-template #circle>
-                <circle [attr.cx]="CASE_SIZE/2"
-                        [attr.cy]="CASE_SIZE/2"
+                <circle [attr.cx]="SPACE_SIZE / 2"
+                        [attr.cy]="SPACE_SIZE / 2"
                         [attr.r]="getPieceSize(pieceInHand.value)"
                         [ngClass]="getPieceClasses(pieceInHand.value)"
                         class="base"
                 />
             </ng-template>
             <circle *ngIf="pieceHasDot(pieceInHand.value)"
-                    [attr.cx]="CASE_SIZE/2"
-                    [attr.cy]="CASE_SIZE/2"
+                    [attr.cx]="SPACE_SIZE / 2"
+                    [attr.cy]="SPACE_SIZE / 2"
                     [attr.r]="10"
             />
         </g>
@@ -80,26 +80,26 @@
         >
             <rect id="victory"
                   x="0" y="0"
-                  [attr.width]="CASE_SIZE"
-                  [attr.height]="CASE_SIZE"
-                  [attr.transform]="'translate(' + (coord.x*CASE_SIZE) + ' ' + (coord.y*CASE_SIZE) + ')'"
+                  [attr.width]="SPACE_SIZE"
+                  [attr.height]="SPACE_SIZE"
+                  [attr.transform]="'translate(' + (coord.x * SPACE_SIZE) + ' ' + (coord.y * SPACE_SIZE) + ')'"
                   class="base no-fill victory-stroke"
             />
         </g>
         <g #pieceInHandDiv
-           [attr.transform]="'translate(' + (2 * CASE_SIZE) + ', ' + (4.5 * CASE_SIZE) + ')'"
+           [attr.transform]="'translate(' + (2 * SPACE_SIZE) + ', ' + (4.5 * SPACE_SIZE) + ')'"
         >
             <rect #rectangleInWhichThePieceInHandIsWaiting
                   x="0" y="0"
-                  [attr.width]="1.5 * CASE_SIZE"
-                  [attr.height]="1.5 * CASE_SIZE"
-                  [attr.transform]="'translate(' + (-0.75 * CASE_SIZE) + ', 0)'"
+                  [attr.width]="1.5 * SPACE_SIZE"
+                  [attr.height]="1.5 * SPACE_SIZE"
+                  [attr.transform]="'translate(' + (-0.75 * SPACE_SIZE) + ', 0)'"
                   class="base no-fill"
             />
             <g *ngIf="pieceInHand != null && chosen.x === -1">
                 <rect *ngIf="pieceInHand.isRectangle() else circle"
                       [attr.x]="0"
-                      [attr.y]="CASE_SIZE * 0.75"
+                      [attr.y]="SPACE_SIZE * 0.75"
                       [attr.transform]="'translate(' + (- getPieceSize(pieceInHand.value)) + ', ' + (- getPieceSize(pieceInHand.value)) + ')'"
                       [attr.width]="getPieceSize(pieceInHand.value) * 2"
                       [attr.height]="getPieceSize(pieceInHand.value) * 2"
@@ -108,7 +108,7 @@
                 />
                 <ng-template #circle>
                     <circle cx="0"
-                            [attr.cy]="CASE_SIZE * 0.75"
+                            [attr.cy]="SPACE_SIZE * 0.75"
                             [attr.r]="getPieceSize(pieceInHand.value)"
                             [ngClass]="getPieceClasses(pieceInHand.value)"
                             class="base"
@@ -116,20 +116,20 @@
                 </ng-template>
                 <circle *ngIf="pieceHasDot(pieceInHand.value)"
                         cx="0"
-                        [attr.cy]="CASE_SIZE * 0.75"
+                        [attr.cy]="SPACE_SIZE * 0.75"
                         [attr.r]="10"
                 />
             </g>
         </g>
         <g #remainingPiece
            *ngFor="let line of board; index as y"
-           [attr.transform]="'translate(0 ' + (CASE_SIZE * 6.5) + ')'"
+           [attr.transform]="'translate(0 ' + (SPACE_SIZE * 6.5) + ')'"
         >
             <rect #rectangleInWhichTheRemainingPiecesAre
-                  [attr.x]="-0.125 * CASE_SIZE"
-                  [attr.y]="-0.125 * CASE_SIZE"
-                  [attr.width]="CASE_SIZE * 4.25"
-                  [attr.height]="CASE_SIZE * 4.25"
+                  [attr.x]="-0.125 * SPACE_SIZE"
+                  [attr.y]="-0.125 * SPACE_SIZE"
+                  [attr.width]="SPACE_SIZE * 4.25"
+                  [attr.height]="SPACE_SIZE * 4.25"
                   stroke-dasharray="10, 10"
                   class="base no-fill"
             />
@@ -139,31 +139,31 @@
                    id="choosePiece_{{(4*y)+x}}"
                 >
                     <rect *ngIf="pieceToGive.value === (4*y)+x"
-                          [attr.x]="CASE_SIZE*x"
-                          [attr.y]="CASE_SIZE*y"
-                          [attr.width]="CASE_SIZE"
-                          [attr.height]="CASE_SIZE"
+                          [attr.x]="SPACE_SIZE * x"
+                          [attr.y]="SPACE_SIZE * y"
+                          [attr.width]="SPACE_SIZE"
+                          [attr.height]="SPACE_SIZE"
                           class="base highlighted"
                     />
                     <rect *ngIf="((4*y)+x) % 4 < 2 else circle"
-                          [attr.x]="CASE_SIZE*x+(CASE_SIZE/2 - getPieceSize((4*y)+x))"
-                          [attr.y]="CASE_SIZE*y+(CASE_SIZE/2 - getPieceSize((4*y)+x))"
+                          [attr.x]="(SPACE_SIZE * x) + (SPACE_SIZE / 2) - getPieceSize((4 * y) + x)"
+                          [attr.y]="(SPACE_SIZE * y) + (SPACE_SIZE / 2) - getPieceSize((4 * y) + x)"
                           [attr.width]="getPieceSize((4*y)+x)*2"
                           [attr.height]="getPieceSize((4*y)+x)*2"
                           [ngClass]="getPieceClasses((4*y)+x)"
                           class="base"
                     />
                     <ng-template #circle>
-                        <circle [attr.cx]="CASE_SIZE*x + CASE_SIZE/2"
-                                [attr.cy]="CASE_SIZE*y + CASE_SIZE/2"
+                        <circle [attr.cx]="(SPACE_SIZE * x) + (SPACE_SIZE / 2)"
+                                [attr.cy]="(SPACE_SIZE * y) + (SPACE_SIZE / 2)"
                                 [attr.r]="getPieceSize((4*y)+x)"
                                 [ngClass]="getPieceClasses((4*y)+x)"
                                 class="base"
                         />
                     </ng-template>
                     <circle *ngIf="pieceHasDot((4*y)+x)"
-                            [attr.cx]="CASE_SIZE*x + CASE_SIZE/2"
-                            [attr.cy]="CASE_SIZE*y + CASE_SIZE/2"
+                            [attr.cx]="(SPACE_SIZE * x) + (SPACE_SIZE / 2)"
+                            [attr.cy]="(SPACE_SIZE * y) + (SPACE_SIZE / 2)"
                             [attr.r]="10"
                     />
                 </g>

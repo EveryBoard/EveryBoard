@@ -39,7 +39,7 @@ export abstract class HexagonalGameState<P> extends GameStateWithTable<P> {
             throw new Error('Setting coord not on board: ' + coord + '.');
         }
     }
-    public equals(other: HexagonalGameState<P>, equalT: (a: P, b: P) => boolean): boolean {
+    public equalsT(other: HexagonalGameState<P>, equal: (a: P, b: P) => boolean): boolean {
         if (this === other) {
             return true;
         }
@@ -49,7 +49,7 @@ export abstract class HexagonalGameState<P> extends GameStateWithTable<P> {
         if (this.height !== other.height) {
             return false;
         }
-        if (equalT(this.empty, other.empty) === false) {
+        if (equal(this.empty, other.empty) === false) {
             return false;
         }
         if (this.excludedCases.length !== other.excludedCases.length) {
@@ -61,7 +61,7 @@ export abstract class HexagonalGameState<P> extends GameStateWithTable<P> {
             }
         }
         for (const coord of this.allCoords()) {
-            if (equalT(this.getNullable(coord), other.getNullable(coord)) === false) {
+            if (equal(this.getNullable(coord), other.getNullable(coord)) === false) {
                 return false;
             }
         }

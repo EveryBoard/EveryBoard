@@ -48,9 +48,9 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         ];
         this.encoder = PentagoMove.encoder;
         this.tutorial = new PentagoTutorial().tutorial;
-        this.BLOCK_WIDTH = (3 * this.CASE_SIZE) + (2 * this.STROKE_WIDTH);
+        this.BLOCK_WIDTH = (3 * this.SPACE_SIZE) + (2 * this.STROKE_WIDTH);
         this.BLOCK_SEPARATION = (this.BLOCK_WIDTH + 2 * this.STROKE_WIDTH);
-        this.DIAGONAL_BAR_OFFSET = Math.cos(Math.PI / 4) * 0.75 * this.CASE_SIZE;
+        this.DIAGONAL_BAR_OFFSET = Math.cos(Math.PI / 4) * 0.75 * this.SPACE_SIZE;
         this.ARROWS = this.generateArrowsCoord();
         this.updateBoard();
     }
@@ -104,8 +104,8 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
     }
     private generateArrowsCoord(): [string, number, boolean][] {
         const B: number = 2 * this.BLOCK_SEPARATION;
-        const C: number = this.CASE_SIZE;
-        const c: number = 0.5 * this.CASE_SIZE;
+        const C: number = this.SPACE_SIZE;
+        const c: number = 0.5 * this.SPACE_SIZE;
         return [
             ['M ' + c + ' 0 q ' + C + ' -' + C + ' ' + (2 * C) + ' 0', 0, true],
             ['M 0 ' + c + ' q -' + C + ' ' + C + ' 0 ' + (2 * C), 0, false],
@@ -143,7 +143,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
     }
     public getCenter(xOrY: number): number {
         const block: number = xOrY < 3 ? 0 : this.BLOCK_SEPARATION;
-        return block + (2 * this.STROKE_WIDTH) + (((xOrY % 3) + 0.5) * this.CASE_SIZE);
+        return block + (2 * this.STROKE_WIDTH) + (((xOrY % 3) + 0.5) * this.SPACE_SIZE);
     }
     public displayArrows(neutralBlocks: number[]): void {
         this.arrows = [];
@@ -172,7 +172,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         return classes;
     }
     public async rotate(arrow: [string, number, boolean]): Promise<MGPValidation> {
-        const clockwise: string = arrow[2] ? 'clockwise' : 'anticlockwise';
+        const clockwise: string = arrow[2] ? 'clockwise' : 'counterclockwise';
         const clickValidity: MGPValidation = this.canUserPlay('#rotate_' + arrow[1] + '_' + clockwise);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
