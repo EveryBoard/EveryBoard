@@ -6,12 +6,15 @@ import { Inject, Injectable } from '@angular/core';
     providedIn: 'root',
 })
 export class DynamicCSSService {
+    private theme: 'dark' | 'light';
 
     constructor(@Inject(DOCUMENT) private document: Document) {
         if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
             this.loadStyle('dark.css');
+            this.theme = 'dark';
         } else {
             this.loadStyle('light.css');
+            this.theme = 'light';
         }
     }
 
@@ -29,5 +32,8 @@ export class DynamicCSSService {
 
             head.appendChild(style);
         }
+    }
+    public getTheme(): 'dark' | 'light' {
+        return this.theme;
     }
 }
