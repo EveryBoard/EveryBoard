@@ -24,7 +24,6 @@
 
 $primary: #994d00;
 @import "../../node_modules/bulmaswatch/cyborg/bulmaswatch.scss";
-@import '~bulma-slider';
 @import "./mystyles.scss";
 
 .select select {
@@ -42,6 +41,10 @@ $primary: #994d00;
     text-transform: uppercase;
     font-size: 0.85rem;
     font-weight: bold;
+}
+
+.message.is-primary .message-body {
+    color: #fff;
 }
 
 /* Show the page only after the CSS has been loaded */

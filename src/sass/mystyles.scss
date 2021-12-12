@@ -1,5 +1,6 @@
 @charset "utf-8";
-
+@import '~bulma-slider';
+@import "../../node_modules/@creativebulma/bulma-tooltip/dist/bulma-tooltip.css";
 @import "./masonry.scss";
 
 html {
@@ -16,4 +17,17 @@ html {
 .clickable-icon {
     pointer-events: all;
     cursor:pointer
+}
+
+.game-card .is-overlay {
+    opacity: 0;
+}
+.game-card:hover img {
+    opacity: 0.8;
+}
+.game-card:hover .is-overlay {
+    opacity: 1;
+}
+.game-image-buttons {
+    top: auto;
 }
