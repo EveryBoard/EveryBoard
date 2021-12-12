@@ -1,0 +1,61 @@
+import { DOCUMENT } from '@angular/common';
+import { Inject, Injectable } from '@angular/core';
+import { MGPOptional } from '../utils/MGPOptional';
+
+type Theme = 'dark' | 'light';
+
+@Injectable({
+    providedIn: 'root',
+})
+export class ThemeService {
+    private theme: Theme;
+
+    constructor(@Inject(DOCUMENT) private document: Document) {
+        const storedTheme: MGPOptional<Theme> = this.getStoredTheme();
+        if (storedTheme.isPresent()) {
+            this.loadTheme(storedTheme.get());
+        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            this.loadTheme('dark');
+        } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+            this.loadTheme('light');
+        } else {
+            this.loadTheme('dark'); // dark by default
+        }
+    }
+    private getStoredTheme(): MGPOptional<Theme> {
+        const theme: MGPOptional<string> = MGPOptional.ofNullable(localStorage.getItem('theme'));
+        if (theme.isPresent()) {
+            const actualTheme: string = theme.get();
+            if (actualTheme === 'dark' || actualTheme === 'light') {
+                return MGPOptional.of(actualTheme);
+            }
+        }
+        return MGPOptional.empty();
+    }
+    private loadTheme(theme: Theme): void {
+        this.loadStyle(theme + '.css');
+        this.theme = theme;
+    }
+    private loadStyle(styleName: string): void {
+        const head: HTMLHeadElement = this.document.getElementsByTagName('head')[0];
+
+        const themeLink: HTMLLinkElement = this.document.getElementById('theme') as HTMLLinkElement;
+        if (themeLink) {
+            themeLink.href = styleName;
+        } else {
+            const style: HTMLLinkElement = this.document.createElement('link');
+            style.id = 'theme';
+            style.rel = 'stylesheet';
+            style.href = `${styleName}`;
+
+            head.appendChild(style);
+        }
+    }
+    public getTheme(): Theme {
+        return this.theme;
+    }
+    public changeTheme(theme: Theme): void {
+        this.loadStyle(theme + '.css');
+        localStorage.setItem('theme', theme);
+    }
+}

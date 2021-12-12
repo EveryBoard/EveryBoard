@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { DynamicCSSService } from 'src/app/services/DynamicCSSService';
+import { ThemeService } from 'src/app/services/ThemeService';
 import { GameService } from 'src/app/services/GameService';
 import { GameInfo } from '../pick-game/pick-game.component';
 
@@ -14,7 +14,7 @@ export class WelcomeComponent {
 
     public constructor(private gameService: GameService,
                        private router: Router,
-                       themeService: DynamicCSSService) {
+                       themeService: ThemeService) {
         this.theme = themeService.getTheme();
     }
     public async createGame(game: string): Promise<boolean> {

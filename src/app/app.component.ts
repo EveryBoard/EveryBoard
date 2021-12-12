@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { DynamicCSSService } from './services/DynamicCSSService';
+import { ThemeService } from './services/ThemeService';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
 })
 export class AppComponent {
-    constructor(private _dynamicCssService: DynamicCSSService) {}
+    constructor(private _themeService: ThemeService) {}
 }
