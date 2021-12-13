@@ -2,17 +2,17 @@
      width="100%" height="auto"
      [attr.viewBox]="viewBox"
      preserveAspectRatio="xMidYMid meet">
-    <!-- PIECES AND NEIGHBOORS -->
+    <!-- PIECES AND NEIGHBORS -->
     <polyline *ngFor="let piece of pieces"
               id="piece_{{ piece.x }}_{{ piece.y }}"
               (click)="onPieceClick(piece)"
               [attr.points]="getHexaCoordsAt(piece)"
               [ngClass]="getPieceClass(piece)"
               class="base round" />
-    <polyline *ngFor="let neighboor of neighboors"
-              id="neighboor_{{ neighboor.x }}_{{ neighboor.y }}"
-              (click)="onNeighboorClick(neighboor)"
-              [attr.points]="getHexaCoordsAt(neighboor)"
+    <polyline *ngFor="let neighbor of neighbors"
+              id="neighbor_{{ neighbor.x }}_{{ neighbor.y }}"
+              (click)="onNeighborClick(neighbor)"
+              [attr.points]="getHexaCoordsAt(neighbor)"
               class="base round" />
     <polyline *ngIf="chosenLanding"
               id="chosenLanding_{{ chosenLanding.x }}_{{ chosenLanding.y }}"
@@ -27,7 +27,7 @@
               class="base round captured"/>
     <polyline *ngIf="leftCoord != null"
               id="leftCoord_{{ leftCoord.x }}_{{ leftCoord.y }}"
-              (click)="onNeighboorClick(leftCoord)"
+              (click)="onNeighborClick(leftCoord)"
               [attr.points]="getHexaCoordsAt(leftCoord)"
               class="base round moved mid-stroke"/>
     <polyline *ngIf="lastDrop != null"
