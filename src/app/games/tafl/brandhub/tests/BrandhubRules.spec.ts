@@ -32,7 +32,7 @@ describe('BrandhubRules', () => {
         const state: BrandhubState = BrandhubState.getInitialState();
 
         // When moving an invader
-        const move: BrandhubMove = BrandhubMove.of(new Coord(1, 3), new Coord(1, 5));
+        const move: BrandhubMove = BrandhubMove.of(new Coord(1, 3), new Coord(1, 6));
 
         // Then invader piece should be moved
         const expectedBoard: Table<TaflPawn> = [
@@ -41,14 +41,43 @@ describe('BrandhubRules', () => {
             [_, _, _, X, _, _, _],
             [O, _, X, A, X, O, O],
             [_, _, _, X, _, _, _],
-            [_, O, _, O, _, _, _],
             [_, _, _, O, _, _, _],
+            [_, O, _, O, _, _, _],
         ];
         const expectedState: BrandhubState = new BrandhubState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
+    it('should allow second move by defender', () => {
+        // Given the initial board
+        const board: Table<TaflPawn> = [
+            [_, _, _, O, _, _, _],
+            [_, _, _, O, _, _, _],
+            [_, _, _, X, _, _, _],
+            [O, _, X, A, X, O, O],
+            [_, _, _, X, _, _, _],
+            [_, _, _, O, _, _, _],
+            [_, O, _, O, _, _, _],
+        ];
+        const state: BrandhubState = new BrandhubState(board, 1);
+
+        // When moving an invader
+        const move: BrandhubMove = BrandhubMove.of(new Coord(3, 4), new Coord(0, 4));
+
+        // Then invader piece should be moved
+        const expectedBoard: Table<TaflPawn> = [
+            [_, _, _, O, _, _, _],
+            [_, _, _, O, _, _, _],
+            [_, _, _, X, _, _, _],
+            [O, _, X, A, X, O, O],
+            [X, _, _, _, _, _, _],
+            [_, _, _, O, _, _, _],
+            [_, O, _, O, _, _, _],
+        ];
+        const expectedState: BrandhubState = new BrandhubState(expectedBoard, 2);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+    });
     it('should allow soldier to be captured against a throne', () => {
-        // Given a board with a endangerd invader
+        // Given a board with an endangered invader
         const board: Table<TaflPawn> = [
             [_, _, _, _, _, O, _],
             [_, _, _, O, _, _, _],

@@ -46,7 +46,6 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         if (owner === RelativePlayer.OPPONENT) {
             return MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         }
-
         const landingCoordOwner: RelativePlayer = state.getRelativeOwner(player, move.end);
         if (landingCoordOwner !== RelativePlayer.NONE) {
             return MGPValidation.failure(TaflFailure.LANDING_ON_OCCUPIED_CASE());
@@ -60,9 +59,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
                 return MGPValidation.failure(TaflFailure.SOLDIERS_CANNOT_SIT_ON_THRONE());
             }
         }
-
         const dir: Direction = move.coord.getDirectionToward(move.end).get();
-
         const dist: number = move.coord.getOrthogonalDistance(move.end);
         let inspectedCoord: Coord = move.coord.getNext(dir);
         for (let i: number = 1; i < dist; i++) {
@@ -210,7 +207,10 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
 
         const backCoord: Coord = threatenedPieceCoord.getNext(direction);
         // the piece that just move is always considered in front
-        const back: RelativePlayer = state.getRelativeOwner(player, backCoord);
+        let back: RelativePlayer = RelativePlayer.NONE;
+        if (backCoord.isInRange(this.config.WIDTH, this.config.WIDTH)) {
+            back = state.getRelativeOwner(player, backCoord);
+        }
         if (back === RelativePlayer.NONE) {
             if (this.isThrone(state, backCoord) === false) {
                 display(TaflRules.VERBOSE || LOCAL_VERBOSE,

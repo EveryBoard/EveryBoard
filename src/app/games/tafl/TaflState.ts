@@ -14,7 +14,6 @@ export abstract class TaflState extends GameStateWithTable<TaflPawn> {
         const center: number = (this.board.length - 1) / 2;
         return coord.equals(new Coord(center, center));
     }
-
     public getRelativeOwner(player: Player, coord: Coord): RelativePlayer {
         const owner: Player = this.getAbsoluteOwner(coord);
         let relativeOwner: RelativePlayer;

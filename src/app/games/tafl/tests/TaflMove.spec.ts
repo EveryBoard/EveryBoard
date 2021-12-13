@@ -1,25 +1,9 @@
-import { TablutRules } from '../tablut/TablutRules';
-import { TaflMinimax } from '../TaflMinimax';
-import { TaflEncoder, TaflMove } from '../TaflMove';
+import { TaflMove } from '../TaflMove';
 import { Coord } from 'src/app/jscaip/Coord';
-import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 import { MyTaflMove } from './MyTaflMove.spec';
 
 describe('TaflMove', () => {
 
-    it('encoder should be correct', () => {
-        const encoder: TaflEncoder<MyTaflMove> =
-            new TaflEncoder(9, (start: Coord, end: Coord) => MyTaflMove.from(start, end));
-        const rules: TablutRules = TablutRules.get();
-        rules.node = rules.node.getInitialNode();
-        const minimax: TaflMinimax = new TaflMinimax(rules, 'TablutMinimax');
-        const firstTurnMoves: TaflMove[] = minimax
-            .getListMoves(rules.node)
-            .map((move: TaflMove) => MyTaflMove.from(move.coord, move.end));
-        for (const move of firstTurnMoves) {
-            NumberEncoderTestUtils.expectToBeCorrect(encoder, move);
-        }
-    });
     it('TablutMove creation, as a MoveCoordToCoord, should throw when created static', () => {
         expect(() => MyTaflMove.from(new Coord(0, 0), new Coord(0, 0)))
             .toThrowError('MoveCoordToCoord cannot be static.');

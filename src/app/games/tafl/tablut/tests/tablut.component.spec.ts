@@ -9,6 +9,9 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { TablutRules } from '../TablutRules';
+import { MoveEncoder, NumberEncoder } from 'src/app/jscaip/Encoder';
+import { TaflMinimax } from '../../TaflMinimax';
+import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 
 describe('TablutComponent', () => {
 
@@ -87,4 +90,16 @@ describe('TablutComponent', () => {
         expect(tablutGameComponent.getRectClasses(1, 0)).toContain('moved');
         expect(tablutGameComponent.getRectClasses(2, 0)).toContain('moved');
     }));
+    it('encoder should be correct', () => {
+        const encoder: MoveEncoder<TablutMove> = componentTestUtils.getComponent().encoder;
+        const rules: TablutRules = TablutRules.get();
+        rules.node = rules.node.getInitialNode();
+        const minimax: TaflMinimax = new TaflMinimax(rules, 'TablutMinimax');
+        const firstTurnMoves: TablutMove[] = minimax
+            .getListMoves(rules.node)
+            .map((move: TablutMove) => TablutMove.of(move.coord, move.end));
+        for (const move of firstTurnMoves) {
+            NumberEncoderTestUtils.expectToBeCorrect(encoder as NumberEncoder<TablutMove>, move);
+        }
+    });
 });
