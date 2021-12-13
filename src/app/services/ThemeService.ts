@@ -1,6 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { Inject, Injectable } from '@angular/core';
 import { MGPOptional } from '../utils/MGPOptional';
+import { UserSettingsService } from './UserSettingsService';
 
 type Theme = 'dark' | 'light';
 
@@ -10,7 +11,8 @@ type Theme = 'dark' | 'light';
 export class ThemeService {
     private theme: Theme;
 
-    constructor(@Inject(DOCUMENT) private document: Document) {
+    constructor(@Inject(DOCUMENT) private document: Document,
+                private userSettingsService: UserSettingsService) {
         const storedTheme: MGPOptional<Theme> = this.getStoredTheme();
         if (storedTheme.isPresent()) {
             this.loadTheme(storedTheme.get());
@@ -23,7 +25,7 @@ export class ThemeService {
         }
     }
     private getStoredTheme(): MGPOptional<Theme> {
-        const theme: MGPOptional<string> = MGPOptional.ofNullable(localStorage.getItem('theme'));
+        const theme: MGPOptional<string> = this.userSettingsService.getTheme();
         if (theme.isPresent()) {
             const actualTheme: string = theme.get();
             if (actualTheme === 'dark' || actualTheme === 'light') {
@@ -32,7 +34,7 @@ export class ThemeService {
         }
         return MGPOptional.empty();
     }
-    private loadTheme(theme: Theme): void {
+    public loadTheme(theme: Theme): void {
         this.loadStyle(theme + '.css');
         this.theme = theme;
     }
@@ -53,9 +55,5 @@ export class ThemeService {
     }
     public getTheme(): Theme {
         return this.theme;
-    }
-    public changeTheme(theme: Theme): void {
-        this.loadStyle(theme + '.css');
-        localStorage.setItem('theme', theme);
     }
 }
