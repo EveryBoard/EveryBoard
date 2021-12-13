@@ -10,6 +10,7 @@ type Theme = 'dark' | 'light';
 })
 export class ThemeService {
     private theme: Theme;
+    private availableThemes: Theme[] = ['dark', 'light'];
 
     constructor(@Inject(DOCUMENT) private document: Document,
                 private userSettingsService: UserSettingsService) {
@@ -28,8 +29,8 @@ export class ThemeService {
         const theme: MGPOptional<string> = this.userSettingsService.getTheme();
         if (theme.isPresent()) {
             const actualTheme: string = theme.get();
-            if (actualTheme === 'dark' || actualTheme === 'light') {
-                return MGPOptional.of(actualTheme);
+            if (this.availableThemes.some((availableTheme: Theme) => availableTheme === actualTheme)) {
+                return MGPOptional.of(actualTheme as Theme);
             }
         }
         return MGPOptional.empty();

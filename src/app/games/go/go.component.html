@@ -5,9 +5,7 @@
     <rect x="0" y="0"
           [attr.width]="board.length * 50"
           [attr.height]="board.length * 50"
-          stroke="black"
-          stroke-width="3"
-          fill="lightgrey"
+          class="base mid-small-stroke"
     />
     <g *ngFor="let line of board; index as y">
         <g *ngFor="let caseContent of line; index as x">
