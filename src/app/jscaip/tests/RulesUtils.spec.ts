@@ -84,21 +84,24 @@ export class RulesUtils {
                 .withContext(minimax.name + ' should consider it a draw').toBe(0);
         }
     }
-    public static expectSecondStateToBeBetterThanFirst<M extends Move, S extends GameState, L>(
+    public static expectSecondStateToBeBetterThanFirstFor<M extends Move, S extends GameState, L>(
         minimax: Minimax<M, S, L>,
         weakerState: S,
         weakMove: MGPOptional<M>,
         strongerState: S,
-        strongMove: MGPOptional<M>)
+        strongMove: MGPOptional<M>,
+        player: Player)
     : void
     {
         const weakValue: number =
             minimax.getBoardValue(new MGPNode(weakerState, MGPOptional.empty(), weakMove)).value;
         const strongValue: number =
             minimax.getBoardValue(new MGPNode(strongerState, MGPOptional.empty(), strongMove)).value;
-        const multipliedWeakValue: number = weakValue * weakerState.getCurrentPlayer().getScoreModifier();
-        const multipliedStrongValue: number = strongValue * strongerState.getCurrentPlayer().getScoreModifier();
-        expect(multipliedWeakValue).toBeLessThan(multipliedStrongValue);
+        if (player === Player.ZERO) {
+            expect(weakValue).toBeGreaterThan(strongValue);
+        } else {
+            expect(weakValue).toBeLessThan(strongValue);
+        }
     }
     public static expectStateToBePreVictory<M extends Move, S extends GameState, L>(
         state: S,

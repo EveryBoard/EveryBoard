@@ -11,7 +11,6 @@ GameWrapper.ts,1
 GoGroupsDatas.ts,5
 GoRules.ts,3
 GoState.ts,1
-GameService.ts,2
 HexagonalGameState.ts,3
 KamisadoRules.ts,5
 LinesOfActionRules.ts,1

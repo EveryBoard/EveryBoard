@@ -1,5 +1,4 @@
 import firebase from 'firebase';
-import { DiamPiece } from '../games/diam/DiamPiece';
 
 // These are the datatypes supported by firestore. Arrays of arrays are not
 // supported, but arrays containing objects containing arrays are, which is what

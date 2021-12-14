@@ -386,9 +386,9 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
         this.stopCountdownsFor(player);
     }
-    public notifyDraw(encodedMove: JSONValueWithoutArray, scores?: [number, number]): void {
+    public notifyDraw(encodedMove: JSONValueWithoutArray, scores?: [number, number]): Promise<void> {
         this.endGame = true;
-        this.gameService.updateDBBoard(this.currentPartId, encodedMove, [0, 0], scores, true);
+        return this.gameService.updateDBBoard(this.currentPartId, encodedMove, [0, 0], scores, true);
     }
     public notifyTimeoutVictory(victoriousPlayer: string, loser: string): void {
         this.endGame = true;
@@ -399,7 +399,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 
         this.gameService.notifyTimeout(this.currentPartId, victoriousPlayer, loser);
     }
-    public notifyVictory(encodedMove: JSONValueWithoutArray, scores?: [number, number]): void {
+    public notifyVictory(encodedMove: JSONValueWithoutArray, scores?: [number, number]): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.notifyVictory');
 
         const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.rules.node);
@@ -411,13 +411,13 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
         this.endGame = true;
 
-        this.gameService.updateDBBoard(this.currentPartId,
-                                       encodedMove,
-                                       [0, 0],
-                                       scores,
-                                       false,
-                                       this.currentPart.getWinner().get(),
-                                       this.currentPart.getLoser().get());
+        return this.gameService.updateDBBoard(this.currentPartId,
+                                              encodedMove,
+                                              [0, 0],
+                                              scores,
+                                              false,
+                                              this.currentPart.getWinner().get(),
+                                              this.currentPart.getLoser().get());
     }
     public canAskTakeBack(): boolean {
         if (this.isPlaying() === false) {
@@ -428,7 +428,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             return false;
         } else if (this.currentPart.doc.request &&
                    this.currentPart.doc.request.code === 'TakeBackRefused' &&
-                   this.currentPart.doc.request.data &&
                    this.currentPart.doc.request.data['player'] === this.getPlayer().getOpponent().value)
         {
             return false;
@@ -595,9 +594,9 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.rules.node);
         if (gameStatus.isEndGame) {
             if (gameStatus === GameStatus.DRAW) {
-                this.notifyDraw(encodedMove, scores);
+                return this.notifyDraw(encodedMove, scores);
             } else {
-                this.notifyVictory(encodedMove, scores);
+                return this.notifyVictory(encodedMove, scores);
             }
         } else {
             if (this.previousUpdateWasATakeBack === true) {

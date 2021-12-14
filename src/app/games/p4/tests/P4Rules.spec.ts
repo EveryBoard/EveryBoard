@@ -167,9 +167,10 @@ describe('P4Rules', () => {
         ];
         const state2: P4State = new P4State(board2, 0);
 
-        RulesUtils.expectSecondStateToBeBetterThanFirst(minimax,
-                                                        state1, MGPOptional.empty(),
-                                                        state2, MGPOptional.empty());
+        RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+                                                           state1, MGPOptional.empty(),
+                                                           state2, MGPOptional.empty(),
+                                                           Player.ZERO);
     });
     it('should know where the lowest case is', () => {
         const board: Player[][] = [

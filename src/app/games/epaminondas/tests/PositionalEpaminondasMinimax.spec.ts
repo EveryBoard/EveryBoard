@@ -76,9 +76,10 @@ describe('PositionalEpaminondasMinimax:', () => {
             [O, O, O, O, O, O, O, O, O, O, O, O, _, _],
         ];
         const lesserState: EpaminondasState = new EpaminondasState(lesserBoard, 1);
-        RulesUtils.expectSecondStateToBeBetterThanFirst(minimax,
-                                                        lesserState, MGPOptional.empty(),
-                                                        greaterState, MGPOptional.empty());
+        RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+                                                           lesserState, MGPOptional.empty(),
+                                                           greaterState, MGPOptional.empty(),
+                                                           Player.ONE);
     });
     it('Should prefer to have aligned piece than higher piece', () => {
         const greaterBoard: Table<Player> = [
@@ -111,8 +112,9 @@ describe('PositionalEpaminondasMinimax:', () => {
             [O, O, O, O, O, O, O, _, O, O, O, O, O, O],
         ];
         const lesserState: EpaminondasState = new EpaminondasState(lesserBoard, 1);
-        RulesUtils.expectSecondStateToBeBetterThanFirst(minimax,
-                                                        lesserState, MGPOptional.empty(),
-                                                        greaterState, MGPOptional.empty());
+        RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+                                                           lesserState, MGPOptional.empty(),
+                                                           greaterState, MGPOptional.empty(),
+                                                           Player.ONE);
     });
 });

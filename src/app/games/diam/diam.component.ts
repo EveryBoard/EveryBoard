@@ -97,7 +97,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
         this.encoder = DiamMoveEncoder;
         this.tutorial = new DiamTutorial().tutorial;
     }
-    public ngOnInit() {
+    public ngOnInit(): void {
         this.updateBoard();
     }
     public async onSpaceClick(x: number): Promise<MGPValidation> {

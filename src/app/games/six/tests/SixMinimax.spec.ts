@@ -114,9 +114,11 @@ describe('SixMinimax', () => {
                 [X, X, X, X, _],
                 [O, O, _, _, _],
             ], 7);
-            RulesUtils.expectSecondStateToBeBetterThanFirst(minimax,
-                                                            weakerState, MGPOptional.of(move),
-                                                            strongerState, MGPOptional.of(move));
+            RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+                                                               weakerState, MGPOptional.of(move),
+                                                               strongerState, MGPOptional.of(move),
+
+                                                               Player.ONE);
         });
         it('should be true with triangle', () => {
             const move: SixMove = SixMove.fromDrop(new Coord(1, 3));
@@ -132,9 +134,10 @@ describe('SixMinimax', () => {
                 [X, _, O],
                 [X, O, _],
             ], 7);
-            RulesUtils.expectSecondStateToBeBetterThanFirst(minimax,
-                                                            weakerState, MGPOptional.of(move),
-                                                            strongerState, MGPOptional.of(move));
+            RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+                                                               weakerState, MGPOptional.of(move),
+                                                               strongerState, MGPOptional.of(move),
+                                                               Player.ONE);
         });
         it('should be true with circle', () => {
             const move: SixMove = SixMove.fromDrop(new Coord(2, 1));
@@ -148,9 +151,10 @@ describe('SixMinimax', () => {
                 [_, O, X],
                 [_, X, _],
             ], 7);
-            RulesUtils.expectSecondStateToBeBetterThanFirst(minimax,
-                                                            weakerState, MGPOptional.of(move),
-                                                            strongerState, MGPOptional.of(move));
+            RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+                                                               weakerState, MGPOptional.of(move),
+                                                               strongerState, MGPOptional.of(move),
+                                                               Player.ONE);
         });
     });
     describe('4 pieces aligned with two spaces should be better than 4 aligned with two opponents', () => {
@@ -166,9 +170,10 @@ describe('SixMinimax', () => {
                 [_, X, X, X, X, _],
                 [O, O, O, O, O, O],
             ], 7);
-            RulesUtils.expectSecondStateToBeBetterThanFirst(minimax,
-                                                            weakerState, MGPOptional.of(move),
-                                                            strongerState, MGPOptional.of(move));
+            RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+                                                               weakerState, MGPOptional.of(move),
+                                                               strongerState, MGPOptional.of(move),
+                                                              Player.ONE);
         });
     });
     describe('Phase 2', () => {

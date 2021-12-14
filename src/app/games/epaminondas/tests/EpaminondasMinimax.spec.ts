@@ -73,8 +73,9 @@ describe('EpaminondasMinimax:', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, O, O, _, _, _, _, _, _, _, _, _, _, _],
         ], 1);
-        RulesUtils.expectSecondStateToBeBetterThanFirst(minimax,
-                                                        weakerState, MGPOptional.empty(),
-                                                        strongerState, MGPOptional.empty());
+        RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+                                                           weakerState, MGPOptional.empty(),
+                                                           strongerState, MGPOptional.empty(),
+                                                           Player.ONE);
     });
 });

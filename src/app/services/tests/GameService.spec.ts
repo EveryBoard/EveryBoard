@@ -23,12 +23,17 @@ import { Utils } from 'src/app/utils/utils';
 import { Router } from '@angular/router';
 import { MessageDisplayer } from '../message-displayer/MessageDisplayer';
 import { JoinerService } from '../JoinerService';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import firebase from 'firebase/app';
 
 describe('GameService', () => {
 
     let service: GameService;
 
     let partDao: PartDAO;
+
+    const MOVE_1: number = 161;
+    const MOVE_2: number = 107;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -60,7 +65,7 @@ describe('GameService', () => {
             playerZero: 'creator',
             playerOne: 'joiner',
             turn: 2,
-            listMoves: [107, 161],
+            listMoves: [MOVE_1, MOVE_2],
             result: MGPResult.UNACHIEVED.value,
         } }));
         service.startObserving('partId', myCallback);
@@ -86,7 +91,7 @@ describe('GameService', () => {
                 playerZero: 'creator',
                 playerOne: 'joiner',
                 turn: 2,
-                listMoves: [107, 161],
+                listMoves: [MOVE_1, MOVE_2],
                 request: Request.takeBackAsked(player),
                 result: MGPResult.UNACHIEVED.value,
             });
@@ -201,7 +206,7 @@ describe('GameService', () => {
             const lastPart: ICurrentPartId = {
                 id: 'partId',
                 doc: {
-                    listMoves: [1, 2],
+                    listMoves: [MOVE_1, MOVE_2],
                     playerZero: 'creator',
                     playerOne: 'joiner',
                     result: MGPResult.VICTORY.value,
@@ -244,7 +249,7 @@ describe('GameService', () => {
             const lastPart: ICurrentPartId = {
                 id: 'partId',
                 doc: {
-                    listMoves: [1, 2],
+                    listMoves: [MOVE_1, MOVE_2],
                     playerZero: 'joiner',
                     playerOne: 'creator',
                     result: MGPResult.VICTORY.value,
@@ -281,6 +286,49 @@ describe('GameService', () => {
 
             // then we should have a part created with playerOne and playerZero switched
             expect(called).toBeTrue();
+        }));
+    });
+    describe('updateDBBoard', () => {
+        const part: Part = new Part({
+            typeGame: 'Quarto',
+            playerZero: 'creator',
+            playerOne: 'joiner',
+            turn: 1,
+            listMoves: [MOVE_1],
+            request: null,
+            result: MGPResult.UNACHIEVED.value,
+        });
+        beforeEach(() => {
+            spyOn(partDao, 'read').and.resolveTo(MGPOptional.of(part.doc));
+            spyOn(partDao, 'update').and.resolveTo();
+        });
+        it('should add scores to update when scores are present', fakeAsync(async() => {
+            // when updating the board with scores
+            const scores: [number, number] = [5, 0];
+            await service.updateDBBoard('partId', MOVE_2, [0, 0], scores);
+            // then the update should contain the scores
+            const expectedUpdate: Partial<IPart> = {
+                listMoves: [MOVE_1, MOVE_2],
+                turn: 2,
+                request: null,
+                lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
+                scorePlayerZero: 5,
+                scorePlayerOne: 0,
+            };
+            expect(partDao.update).toHaveBeenCalledWith('partId', expectedUpdate);
+        }));
+        it('should include the draw notification if requested', fakeAsync(async() => {
+            // when updating the board to notify of a draw
+            await service.updateDBBoard('partId', MOVE_2, [0, 0], undefined, true);
+            // then the result is set to draw in the update
+            const expectedUpdate: Partial<IPart> = {
+                listMoves: [MOVE_1, MOVE_2],
+                turn: 2,
+                request: null,
+                lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
+                result: MGPResult.DRAW.value,
+            };
+            expect(partDao.update).toHaveBeenCalledWith('partId', expectedUpdate);
         }));
     });
     afterEach(() => {
