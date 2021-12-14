@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { GameComponent } from 'src/app/components/game-components/game-component/GameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Direction';
@@ -50,7 +50,7 @@ interface LastMoved {
     templateUrl: './diam.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState> {
+export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState> implements OnInit {
     private static CENTER: Coord[] = [
         new Coord(40, 160),
         new Coord(100, 50),
@@ -96,6 +96,8 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
         ];
         this.encoder = DiamMoveEncoder;
         this.tutorial = new DiamTutorial().tutorial;
+    }
+    public ngOnInit() {
         this.updateBoard();
     }
     public async onSpaceClick(x: number): Promise<MGPValidation> {
@@ -253,6 +255,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
     private updateRemainingPiecesInfo(): void {
         const currentPlayer: Player = this.getCurrentPlayer();
         this.viewInfo.remainingPieces = [];
+        const isPlayerTurn: boolean = this.isPlayerTurn();
         for (const piece of DiamPiece.PLAYER_PIECES) {
             const remaining: number = this.getState().getRemainingPiecesOf(piece);
             for (let y: number = 0; y < remaining; y++) {
@@ -260,7 +263,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
                 if (this.isTopPieceOfReserveAndSelected(y, remaining, piece)) {
                     foregroundClasses.push('selected');
                 }
-                if (y === remaining-1 && piece.owner === currentPlayer) {
+                if (isPlayerTurn && y === remaining-1 && piece.owner === currentPlayer) {
                     // Only let the top piece be clickable
                     foregroundClasses.push('clickable-hover');
                 }
@@ -301,6 +304,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
     }
     private getPieces(x: number): PieceInfo[] {
         const highestAlignment: MGPOptional<Coord> = this.rules.findHighestAlignment(this.getState());
+        const isPlayerTurn: boolean = this.isPlayerTurn();
         const infos: PieceInfo[] = [];
         for (let y: number = 0; y < DiamState.HEIGHT; y++) {
             const piece: DiamPiece = this.getState().getPieceAtXY(x, y);
@@ -313,7 +317,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
                 if (this.isVictory(x, y, highestAlignment)) {
                     foregroundClasses.push('victory-stroke');
                 }
-                if (this.rules.pieceCanMove(this.getState(), coord)) {
+                if (isPlayerTurn && this.rules.pieceCanMove(this.getState(), coord)) {
                     foregroundClasses.push('clickable-hover');
                 }
                 infos.push({

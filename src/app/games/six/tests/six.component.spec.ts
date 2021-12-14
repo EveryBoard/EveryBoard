@@ -169,4 +169,23 @@ describe('SixComponent', () => {
         const move: SixMove = SixMove.fromCut(new Coord(0, 2), new Coord(0, -1), new Coord(0, 1));
         await componentTestUtils.expectMoveSuccess('#piece_0_1', move);
     }));
+    it('should cancel the move if player clicks on an empty space instead of chosing a group for cutting', fakeAsync(async() => {
+        // Given that a cuttable group must be selected by the user
+        const board: NumberTable = [
+            [O],
+            [X],
+            [O],
+            [X],
+            [O],
+            [X],
+        ];
+        const state: SixState = SixState.fromRepresentation(board, 40);
+        componentTestUtils.setupState(state);
+        await componentTestUtils.expectClickSuccess('#piece_0_2');
+        await componentTestUtils.expectClickSuccess('#neighbor_0_-1');
+        // when the user clicks on an empty case instead of selecting a group
+        // then the move is cancelled and the board is back to its initial state
+        await componentTestUtils.expectClickFailure('#neighbor_1_-1', SixFailure.MUST_CUT());
+        componentTestUtils.expectElementToExist('#piece_0_2');
+    }));
 });

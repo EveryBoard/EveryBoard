@@ -55,6 +55,8 @@ export class SixComponent
     public coordScale: Scale;
     public Y_OFFSET: number;
 
+    private nextClickShouldSelectGroup: boolean = false;
+
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.rules = new SixRules(SixState);
@@ -81,6 +83,8 @@ export class SixComponent
         this.selectedPiece = MGPOptional.empty();
         this.chosenLanding = MGPOptional.empty();
         this.cuttableGroups = [];
+        this.nextClickShouldSelectGroup = false;
+        this.updateBoard(); // Need to refresh the board in case we showed virtual moves for cuts
     }
     public updateBoard(): void {
         const node: SixNode = this.rules.node;
@@ -168,8 +172,8 @@ export class SixComponent
         let minX: number = Number.MAX_SAFE_INTEGER;
         let minY: number = Number.MAX_SAFE_INTEGER;
         for (const coord of coords) {
-            const coordY: number = (2 * coord.y) + coord.x; // en demi Y_OFFSETs
-            const coordX: number = coord.x; // en nombre de colonnes, simplement
+            const coordY: number = (2 * coord.y) + coord.x; // in half Y_OFFSETs
+            const coordX: number = coord.x; // in number of columns
             if (coordX < minX) {
                 minX = coordX;
                 lefterPiece = MGPOptional.of(coord);
@@ -216,6 +220,9 @@ export class SixComponent
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
+        if (this.nextClickShouldSelectGroup) {
+            return this.cancelMove(SixFailure.MUST_CUT());
+        }
         if (this.state.turn < 40) {
             return this.chooseMove(SixMove.fromDrop(neighbor), this.state);
         } else {
@@ -229,6 +236,7 @@ export class SixComponent
                     this.chosenLanding = MGPOptional.of(neighbor);
                     this.moveVirtuallyPiece();
                     this.showCuttable();
+                    this.nextClickShouldSelectGroup = true;
                     return MGPValidation.SUCCESS;
                 } else {
                     return this.chooseMove(deplacement, this.state);
