@@ -79,11 +79,4 @@ export class MGPOptional<T> {
             return MGPOptional.empty();
         }
     }
-    public flatMap<U>(f: (value: T) => MGPOptional<U>): MGPOptional<U> {
-        if (this.isPresent()) {
-            return f(this.get());
-        } else {
-            return MGPOptional.empty();
-        }
-    }
 }
