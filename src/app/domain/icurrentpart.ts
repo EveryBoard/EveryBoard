@@ -1,8 +1,7 @@
-import firebase from 'firebase';
 import { FirebaseJSONObject, JSONValueWithoutArray } from 'src/app/utils/utils';
 import { Request } from './request';
 import { DomainWrapper } from './DomainWrapper';
-import { FirebaseTime, Time } from './Time';
+import { FirebaseTime } from './Time';
 import { MGPOptional } from '../utils/MGPOptional';
 
 export interface IPart extends FirebaseJSONObject {
@@ -16,7 +15,7 @@ export interface IPart extends FirebaseJSONObject {
     /* Server time being handled on server by firestore, when we send it, it's a FieldValue
      * so firebase write the server time and send us back a timestamp in the form of Time
      */
-    readonly beginning?: firebase.firestore.FieldValue | Time,
+    readonly beginning?: FirebaseTime,
     readonly lastMoveTime?: FirebaseTime,
     readonly remainingMsForZero?: number;
     readonly remainingMsForOne?: number;

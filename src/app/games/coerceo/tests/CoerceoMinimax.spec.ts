@@ -5,7 +5,6 @@ import { CoerceoMinimax } from '../CoerceoMinimax';
 import { CoerceoRules } from '../CoerceoRules';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { CoerceoMove } from '../CoerceoMove';
 
 describe('CoerceoMinimax', () => {
 

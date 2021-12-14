@@ -10,7 +10,6 @@ import { CoerceoState } from '../CoerceoState';
 import { CoerceoPiecesThreatTilesMinimax } from '../CoerceoPiecesThreatTilesMinimax';
 import { CoerceoRules } from '../CoerceoRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { CoerceoMove } from '../CoerceoMove';
 
 describe('CoerceoPiecesThreatTilesMinimax', () => {
 

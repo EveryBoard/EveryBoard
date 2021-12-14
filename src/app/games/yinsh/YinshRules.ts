@@ -119,9 +119,9 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
         const player: Player = state.getCurrentPlayer();
         const sideRings: [number, number] = [state.sideRings[0], state.sideRings[1]];
         sideRings[player.value] -= 1;
-        return MGPFallible.success(new YinshState(state.setAt(coord, YinshPiece.of(player, true)).board,
-                                                  sideRings,
-                                                  state.turn));
+        const newBoard: Table<YinshPiece> = state.setAt(coord, YinshPiece.of(player, true)).board;
+        const newState: YinshState = new YinshState(newBoard, sideRings, state.turn);
+        return MGPFallible.success(newState);
     }
     public moveStartValidity(state: YinshState, start: Coord): MGPValidation {
         const player: number = state.getCurrentPlayer().value;

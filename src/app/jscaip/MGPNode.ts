@@ -2,7 +2,7 @@ import { Move } from './Move';
 import { SCORE } from './SCORE';
 import { Rules } from './Rules';
 import { MGPMap } from '../utils/MGPMap';
-import { assert, display, Utils } from 'src/app/utils/utils';
+import { assert, display } from 'src/app/utils/utils';
 import { NodeUnheritance } from './NodeUnheritance';
 import { Minimax } from './Minimax';
 import { MGPSet } from '../utils/MGPSet';
@@ -16,7 +16,7 @@ export class MGPNodeStats {
     public static minimaxTime: number = 0;
 }
 
-export class MGPNode<R extends Rules<M, S, L>, // TODO FOR REVIEW: why not remove R and use Rules<M, S, L> instead of R?
+export class MGPNode<R extends Rules<M, S, L>,
                      M extends Move,
                      S extends GameState,
                      L = void,
@@ -201,7 +201,7 @@ export class MGPNode<R extends Rules<M, S, L>, // TODO FOR REVIEW: why not remov
         let child: MGPOptional<MGPNode<R, M, S, L, U>> = this.getSonByMove(move);
         if (child.isAbsent()) {
             const legality: MGPFallible<L> = minimax.ruler.isLegal(move, this.gameState);
-            assert(legality.isSuccess(),'The minimax has accepted an illegal move, this should not happen.');
+            assert(legality.isSuccess(), 'The minimax has accepted an illegal move, this should not happen.');
             const state: S = minimax.ruler.applyLegalMove(move, this.gameState, legality.get());
             child = MGPOptional.of(new MGPNode(state, MGPOptional.of(this), MGPOptional.of(move), minimax));
             this.childs.get().push(child.get());

@@ -82,7 +82,8 @@ describe('SixMinimax', () => {
             const state: SixState = SixState.fromRepresentation(board, 9);
             const move: SixMove = SixMove.fromDrop(new Coord(2, 3));
             rules.node = new SixNode(state);
-            const boardValue: SixNodeUnheritance = minimax.getBoardValue(new SixNode(state, MGPOptional.empty(), MGPOptional.of(move)));
+            const node: SixNode = new SixNode(state, MGPOptional.empty(), MGPOptional.of(move));
+            const boardValue: SixNodeUnheritance = minimax.getBoardValue(node);
             expect(boardValue.preVictory.isAbsent()).toBeTrue();
             expect(boardValue.value).toBe(Player.ZERO.getPreVictory());
         });

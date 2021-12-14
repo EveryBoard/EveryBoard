@@ -497,7 +497,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
             } else if (subSum === 5.16 &&
                 status === SCORE.DEFAULT) {
                 if (preVictory.isPresent()) {
-                    assert(lastEmpty.isAbsent() || preVictory.equals(lastEmpty) === false,
+                    assert(preVictory.equals(lastEmpty) === false,
                            'Impossible to have point aligned with differents line to a same point');
                     status = SCORE.PRE_VICTORY;
                 } else {

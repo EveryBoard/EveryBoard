@@ -140,9 +140,9 @@ export class SixState extends GameState {
     }
     public isCoordConnected(coord: Coord, except: MGPOptional<Coord>): boolean {
         for (const dir of HexaDirection.factory.all) {
-            const neighboor: Coord = coord.getNext(dir, 1);
-            if (this.pieces.containsKey(neighboor) &&
-                (except.equalsValue(neighboor) === false))
+            const neighbor: Coord = coord.getNext(dir, 1);
+            if (this.pieces.containsKey(neighbor) &&
+                (except.equalsValue(neighbor) === false))
             {
                 return true;
             }

@@ -8,18 +8,18 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { AwaleFailure } from './AwaleFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 
-export type AwaleLegalityInformation = {
+export type AwaleMoveResult = {
     captured: ReadonlyArray<number>,
     resultingBoard: Table<number>,
 }
 
-export class AwaleNode extends MGPNode<AwaleRules, AwaleMove, AwaleState, AwaleLegalityInformation> {}
+export class AwaleNode extends MGPNode<AwaleRules, AwaleMove, AwaleState, AwaleMoveResult> {}
 
-export class AwaleRules extends Rules<AwaleMove, AwaleState, AwaleLegalityInformation> {
+export class AwaleRules extends Rules<AwaleMove, AwaleState, AwaleMoveResult> {
 
     public static VERBOSE: boolean = false;
 
-    public applyLegalMove(move: AwaleMove, state: AwaleState, infos: AwaleLegalityInformation): AwaleState {
+    public applyLegalMove(move: AwaleMove, state: AwaleState, infos: AwaleMoveResult): AwaleState {
         display(AwaleRules.VERBOSE, { called: 'AwaleRules.applyLegalMove', move, state, status });
         const turn: number = state.turn;
 
@@ -51,7 +51,7 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState, AwaleLegalityInform
      * Returns -1 if it is not legal, if so, the board should not be affected
      * Returns the number captured otherwise
      */
-    public static isLegal(move: AwaleMove, state: AwaleState): MGPFallible<AwaleLegalityInformation> {
+    public static isLegal(move: AwaleMove, state: AwaleState): MGPFallible<AwaleMoveResult> {
         const turn: number = state.turn;
         let resultingBoard: number[][] = state.getCopiedBoard();
 
@@ -95,7 +95,7 @@ export class AwaleRules extends Rules<AwaleMove, AwaleState, AwaleLegalityInform
         }
         return MGPFallible.success({ captured, resultingBoard });
     }
-    public isLegal(move: AwaleMove, state: AwaleState): MGPFallible<AwaleLegalityInformation> {
+    public isLegal(move: AwaleMove, state: AwaleState): MGPFallible<AwaleMoveResult> {
         return AwaleRules.isLegal(move, state);
     }
     public static doesDistribute(x: number, y: number, board: number[][]): boolean {

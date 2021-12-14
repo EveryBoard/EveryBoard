@@ -35,10 +35,10 @@ export class Request implements JSONObject {
     }
 
     public code: RequestCode;
-    public data: JSONValue;
+    public data: NonNullable<JSONValue>;
 }
 
-function make(code: RequestCode, data: JSONValue): Request {
+function make(code: RequestCode, data: NonNullable<JSONValue>): Request {
     return { code, data };
 }
 

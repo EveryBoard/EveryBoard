@@ -4,7 +4,6 @@ import { SaharaMinimax } from '../SaharaMinimax';
 import { SaharaState } from '../SaharaState';
 import { SaharaRules } from '../SaharaRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { SaharaMove } from '../SaharaMove';
 
 describe('SaharaMinimax', () => {
 

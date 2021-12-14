@@ -96,14 +96,9 @@ export class RulesUtils {
             minimax.getBoardValue(new MGPNode(weakerState, MGPOptional.empty(), weakMove)).value;
         const strongValue: number =
             minimax.getBoardValue(new MGPNode(strongerState, MGPOptional.empty(), strongMove)).value;
-        expect(weakerState.getCurrentPlayer())
-            .withContext('expectSecondStateToBeBetterThanFirst expects states for the same player')
-            .toBe(strongerState.getCurrentPlayer());
-        if (weakerState.getCurrentPlayer() === Player.ZERO) {
-            expect(weakValue).toBeGreaterThan(strongValue);
-        } else {
-            expect(weakValue).toBeLessThan(strongValue);
-        }
+        const multipliedWeakValue: number = weakValue * weakerState.getCurrentPlayer().getScoreModifier();
+        const multipliedStrongValue: number = strongValue * strongerState.getCurrentPlayer().getScoreModifier();
+        expect(multipliedWeakValue).toBeLessThan(multipliedStrongValue);
     }
     public static expectStateToBePreVictory<M extends Move, S extends GameState, L>(
         state: S,

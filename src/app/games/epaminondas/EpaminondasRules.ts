@@ -7,7 +7,6 @@ import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
 import { EpaminondasFailure } from './EpaminondasFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Utils } from 'src/app/utils/utils';
 import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 

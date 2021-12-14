@@ -83,10 +83,9 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     private msToSubstract: [number, number] = [0, 0];
     private previousUpdateWasATakeBack: boolean = false;
 
-    protected routerEventsSub: Subscription;
-    protected userSub: Subscription;
-    protected observedPartSubscription: Subscription;
-    protected opponentSubscription: () => void;
+    protected routerEventsSub!: Subscription; // Initialized in ngOnInit
+    protected userSub!: Subscription; // Initialized in ngOnInit
+    protected opponentSubscription: MGPOptional<() => void> = MGPOptional.empty();
 
     public readonly OFFLINE_FONT_COLOR: { [key: string]: string} = { color: 'lightgrey' };
 
@@ -550,10 +549,10 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         let opponentName: MGPOptional<string> = MGPOptional.empty();
         if (this.players[0].equalsValue(this.getPlayerName())) {
             this.observerRole = Player.ZERO.value;
-            opponentName = Utils.getNonNullable(this.players[1]);
+            opponentName = this.players[1];
         } else if (this.players[1].equalsValue(this.getPlayerName())) {
             this.observerRole = Player.ONE.value;
-            opponentName = Utils.getNonNullable(this.players[0]);
+            opponentName = this.players[0];
         } else {
             this.observerRole = Player.NONE.value;
         }
@@ -573,7 +572,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                                                onDocumentModified,
                                                onDocumentDeleted);
             this.opponentSubscription =
-                this.userService.observeUserByUsername(opponentName.get(), callback);
+                MGPOptional.of(this.userService.observeUserByUsername(opponentName.get(), callback));
         }
     }
     public async onLegalUserMove(move: Move, scores?: [number, number]): Promise<void> {
@@ -783,11 +782,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             this.userSub.unsubscribe();
         }
         if (this.gameStarted === true) {
-            if (this.observedPartSubscription != null) {
-                this.observedPartSubscription.unsubscribe();
-            }
-            if (this.opponentSubscription) {
-                this.opponentSubscription();
+            if (this.opponentSubscription.isPresent()) {
+                this.opponentSubscription.get()();
             }
             this.gameService.stopObserving();
         }
