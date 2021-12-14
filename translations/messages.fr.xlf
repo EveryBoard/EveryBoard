@@ -3013,21 +3013,21 @@
         <source>Something is in the way.</source>
         <target>Le chemin est obstrué.</target>
       </trans-unit>
-      <trans-unit id="6521349463429898217" datatype="html">
-        <source>Brandhub is the Irish version of the family of viking strategy game called Tafl. The goal of the game is different for each player. The attacker plays first. Their pieces (dark) are close to the edges. Their goal is to capture the king, which is in the center of the board. The defender plays second. Their pieces (light) are in the middle. Their goal is to put the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
+      <trans-unit id="1634828513961256784" datatype="html">
+        <source>Brandhub is the Irish version of the family of viking strategy game called Tafl. The goal of the game is different for each player. The attacker plays first. Their pieces (dark) are close to the edges. Their goal is to capture the king, which is in the center of the board. The defender plays second. Their pieces (light) are in the middle. Their goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
         <target>Brandhub est la version irlandaise du jeu de Tafl, la famille de jeu de stratégie Viking. Le but du jeu est différent pour chaque joueur. Les attaquants jouent en premier. Leurs pièces (foncées) sont près des bords. Leur but est de capturer le roi, qui est au centre du plateau. Les défenseurs jouent en deuxième. Leurs pièces (claires) sont au milieu. Leur but est que le roi atteigne l'un des 4 trônes dans les coins. Notez que la case sur laquelle le roi commence, au centre du plateau, est aussi un trône.</target>
       </trans-unit>
       <trans-unit id="676965820757710392" datatype="html">
         <source>All pieces move the same way. Similarly to a rook in chess, a piece can move: &lt;ol&gt;&lt;li&gt;By as many squares as you want.&lt;/li&gt;&lt;li&gt;Without going over another piece or stopping on another piece.&lt;/li&gt;&lt;li&gt;Horizontally or vertically.&lt;/li&gt;&lt;li&gt;Only the king can land on a corner throne.&lt;/li&gt;&lt;li&gt;Once the king left his central throne, he can&apos;t go back on it, nor can the other pieces.&lt;/li&gt;&lt;/ol&gt;To move a piece, click on it and then on its landing square.&lt;br/&gt;&lt;br/&gt;This is the initial board, do the first move.</source>
-        <target>Toutes les pièces se déplacent de la même façon. Comme la tour aux échecs, une pièce peut </target>
+        <target>Toutes les pièces se déplacent de la même façon. Comme la tour aux échecs, une pièce peut bouger : &lt;ol&gt;&lt;li&gt;D'autant de case que souhaité.&lt;/li&gt;&lt;li&gt;Sans passer par dessus une autre pièce ni s'arrêter sur une autre pièce.&lt;/li&gt;&lt;li&gt;Horizontalement ou verticalement.&lt;/li&gt;&lt;li&gt;Seul le roi peut s'arrêter sur l'un des coins.&lt;/li&gt;&lt;li&gt;Une fois que le roi a quitté le trône central, il ne peut plus y retourner, les autres pièces non plus.&lt;/li&gt;&lt;/ol&gt;Pour déplacer une pièce, cliquez dessus puis sur sa destination.&lt;br/&gt;&lt;br/&gt;Ceci est le plateau initial, faites le premier coup.</target>
       </trans-unit>
-      <trans-unit id="9184509533119533012" datatype="html">
+      <trans-unit id="2643653187802774042" datatype="html">
         <source>Tablut is a strategy game that was played by the Vikings.
         The goal of the game is different for each player.
         The attacker plays first. Its pieces (dark) are close to the edges.
         Its goal is to capture the king, which is in the center of the board.
         The defender plays second. Its pieces (light) are in the middle.
-        Its goal is to put the king on one of the 4 thrones in the corners.
+        Its goal is to move the king on one of the 4 thrones in the corners.
         Note that the square in which the king starts, in the center of the board, is also a throne.</source>
         <target>Le Tablut est un jeu de stratégie auquel jouaient les Vikings.
         Le but du jeu pour les deux joueurs n&apos;est pas le même.
@@ -3063,9 +3063,9 @@
         <source>Capturing a soldier (1/2)</source>
         <target>Capturer un simple soldat (1/2)</target>
       </trans-unit>
-      <trans-unit id="7472190306522217884" datatype="html">
-        <source>All pieces except the king, attackers and defenders, are soldiers. To capture them, they have to be sandwiched between two of your pieces. By getting too close, an attacker&apos;s soldier is in danger.&lt;br/&gt;&lt;br/&gt;Capture it.</source>
-        <target>Toutes les pièces, attaquantes comme défenseuses, sont des soldats, à l&apos;exception du roi. Pour les capturer, il faut en prendre une en sandwich entre deux de vos soldats. En s&apos;approchant trop, un pion de l&apos;envahisseur s&apos;est mis en danger.&lt;br/&gt;&lt;br/&gt;Capturez le.</target>
+      <trans-unit id="1850808010105870709" datatype="html">
+        <source>All pieces, attackers and defenders, except the king, are soldiers. To capture them, they have to be sandwiched between two of your pieces. By getting too close, an attacker&apos;s soldier is in danger.&lt;br/&gt;&lt;br/&gt;Capture it.</source>
+        <target>Toutes les pièces, attaquantes comme défenseuses, sont des soldats, à l&apos;exception du roi. Pour les capturer, il faut en prendre une en sandwich entre deux de vos soldats. En s&apos;approchant trop, un soldat de l&apos;envahisseur s&apos;est mis en danger.&lt;br/&gt;&lt;br/&gt;Capturez le.</target>
       </trans-unit>
       <trans-unit id="1504890408061490574" datatype="html">
         <source>Congratulations, that will teach him a lesson!</source>
@@ -3079,11 +3079,9 @@
         <source>Capturing a soldier (2/2)</source>
         <target>Capturer un simple soldat (2/2)</target>
       </trans-unit>
-      <trans-unit id="3654892692978928025" datatype="html">
-        <source>A second way to capture a soldier is against an empty throne. The king has moved and endangered one of its soldiers.&lt;br/&gt;&lt;br/&gt;Capture it.</source>
-        <target>Un deuxième moyen de capturer un soldat, est contre un trône vide.
-        Le Roi a quitté son poste, et mis en danger un de ses soldats.&lt;br/&gt;&lt;br/&gt;
-        Capturez le.</target>
+      <trans-unit id="7815830988890986315" datatype="html">
+        <source>A second way to capture a soldier is to sandwich it against an empty throne. The king has moved and endangered one of its soldiers.&lt;br/&gt;&lt;br/&gt;Capture it.</source>
+        <target>Un deuxième moyen de capturer un soldat, est de le prendre en sandwich contre un trône vide. Le Roi a quitté son poste, et mis en danger un de ses soldats.&lt;br/&gt;&lt;br/&gt; Capturez le.</target>
       </trans-unit>
       <trans-unit id="6149168030196118189" datatype="html">
         <source>Congratulations, one less defender. But keep an eye on the king, it is the most important.</source>
@@ -3147,9 +3145,9 @@
         <source>Capturing the king far from his throne</source>
         <target>Capturer le roi loin de son trône</target>
       </trans-unit>
-      <trans-unit id="299541516858562303" datatype="html">
-        <source>When the king is nor on his central throne nor next to it, he can be captured normally.&lt;br/&gt;&lt;br/&gt;Capture the king.</source>
-        <target>Quand le roi n'est ni sur son trône central, ni à côté de celui-ci, il peut être capturé normalement.&lt;br/&gt;&lt;br/&gt;Capturez le roi.</target>
+      <trans-unit id="3108682754212137830" datatype="html">
+        <source>When the king is not on his central throne nor next to it, he can be captured like a soldier.&lt;br/&gt;&lt;br/&gt;Capture the king.</source>
+        <target>Quand le roi n'est ni sur son trône central, ni à côté de celui-ci, il peut être capturé comme un soldat.&lt;br/&gt;&lt;br/&gt;Capturez le roi.</target>
       </trans-unit>
       <trans-unit id="9155303779171419902" datatype="html">
         <source>You cannot put a new ring after the tenth turn.</source>

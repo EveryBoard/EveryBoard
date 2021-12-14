@@ -123,7 +123,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
             return this.captureKingAgainstThrone(backCoord, kingCoord, left, right);
         }
         if (back === RelativePlayer.PLAYER) {
-            return this.captureKingWithAtLeastASandwhich(state, kingCoord, left, right);
+            return this.captureKingWithAtLeastASandwich(state, kingCoord, left, right);
         }
         return MGPOptional.empty();
     }
@@ -238,10 +238,10 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
                 ' coming from this direction (' + direction.x + ', ' + direction.y + ')');
         return MGPOptional.empty();
     }
-    private captureKingWithAtLeastASandwhich(state: S,
-                                             kingCoord: Coord,
-                                             left: RelativePlayer,
-                                             right: RelativePlayer)
+    private captureKingWithAtLeastASandwich(state: S,
+                                            kingCoord: Coord,
+                                            left: RelativePlayer,
+                                            right: RelativePlayer)
     : MGPOptional<Coord>
     {
         const LOCAL_VERBOSE: boolean = false;

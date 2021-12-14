@@ -51,27 +51,27 @@ describe('BrandhubRules', () => {
         // Given the initial board
         const board: Table<TaflPawn> = [
             [_, _, _, O, _, _, _],
-            [_, _, _, O, _, _, _],
+            [_, _, O, _, _, _, _],
             [_, _, _, X, _, _, _],
-            [O, _, X, A, X, O, O],
+            [O, O, X, A, X, O, O],
             [_, _, _, X, _, _, _],
             [_, _, _, O, _, _, _],
-            [_, O, _, O, _, _, _],
+            [_, _, _, O, _, _, _],
         ];
         const state: BrandhubState = new BrandhubState(board, 1);
 
         // When moving an invader
-        const move: BrandhubMove = BrandhubMove.of(new Coord(3, 4), new Coord(0, 4));
+        const move: BrandhubMove = BrandhubMove.of(new Coord(3, 2), new Coord(3, 1));
 
         // Then invader piece should be moved
         const expectedBoard: Table<TaflPawn> = [
             [_, _, _, O, _, _, _],
-            [_, _, _, O, _, _, _],
+            [_, _, O, X, _, _, _],
+            [_, _, _, _, _, _, _],
+            [O, O, X, A, X, O, O],
             [_, _, _, X, _, _, _],
-            [O, _, X, A, X, O, O],
-            [X, _, _, _, _, _, _],
             [_, _, _, O, _, _, _],
-            [_, O, _, O, _, _, _],
+            [_, _, _, O, _, _, _],
         ];
         const expectedState: BrandhubState = new BrandhubState(expectedBoard, 2);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);

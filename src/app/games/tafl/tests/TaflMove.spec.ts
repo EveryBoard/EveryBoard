@@ -4,7 +4,7 @@ import { MyTaflMove } from './MyTaflMove.spec';
 
 describe('TaflMove', () => {
 
-    it('TablutMove creation, as a MoveCoordToCoord, should throw when created static', () => {
+    it('TaflMove creation, as a MoveCoordToCoord, should throw when created static', () => {
         expect(() => MyTaflMove.from(new Coord(0, 0), new Coord(0, 0)))
             .toThrowError('MoveCoordToCoord cannot be static.');
     });
@@ -16,7 +16,7 @@ describe('TaflMove', () => {
         expect(() => MyTaflMove.from(inRange, outOfRange))
             .toThrowError('Landing coord of TaflMove must be on the board, not at (-1, -1).');
     });
-    it('TablutMove must throw if created non-orthogonally', () => {
+    it('TaflMove must throw if created non-orthogonally', () => {
         expect(() => MyTaflMove.from(new Coord(0, 0), new Coord(1, 1))).toThrowError('TaflMove cannot be diagonal.');
     });
     it('Should override equals and toString correctly', () => {

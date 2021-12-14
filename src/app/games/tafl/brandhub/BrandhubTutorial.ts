@@ -13,7 +13,7 @@ export class BrandhubTutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             $localize`Goal of the game`,
-            $localize`Brandhub is the Irish version of the family of viking strategy game called Tafl. The goal of the game is different for each player. The attacker plays first. Their pieces (dark) are close to the edges. Their goal is to capture the king, which is in the center of the board. The defender plays second. Their pieces (light) are in the middle. Their goal is to put the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.`,
+            $localize`Brandhub is the Irish version of the family of viking strategy game called Tafl. The goal of the game is different for each player. The attacker plays first. Their pieces (dark) are close to the edges. Their goal is to capture the king, which is in the center of the board. The defender plays second. Their pieces (light) are in the middle. Their goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.`,
             BrandhubState.getInitialState(),
         ),
         TutorialStep.anyMove(
@@ -25,7 +25,7 @@ export class BrandhubTutorial {
         ),
         TutorialStep.fromMove(
             $localize`Capturing a soldier (1/2)`,
-            $localize`All pieces except the king, attackers and defenders, are soldiers. To capture them, they have to be sandwiched between two of your pieces. By getting too close, an attacker's soldier is in danger.<br/><br/>Capture it.`,
+            $localize`All pieces, attackers and defenders, except the king, are soldiers. To capture them, they have to be sandwiched between two of your pieces. By getting too close, an attacker's soldier is in danger.<br/><br/>Capture it.`,
             new BrandhubState([
                 [_, _, _, O, _, _, _],
                 [_, _, _, O, _, _, _],
@@ -43,7 +43,7 @@ export class BrandhubTutorial {
         ),
         TutorialStep.fromMove(
             $localize`Capturing a soldier (2/2)`,
-            $localize`A second way to capture a soldier is against an empty throne. The king has moved and endangered one of its soldiers.<br/><br/>Capture it.`,
+            $localize`A second way to capture a soldier is to sandwich it against an empty throne. The king has moved and endangered one of its soldiers.<br/><br/>Capture it.`,
             new BrandhubState([
                 [_, _, _, O, _, _, _],
                 [_, _, O, _, _, _, _],
@@ -94,7 +94,7 @@ export class BrandhubTutorial {
         ),
         TutorialStep.fromMove(
             $localize`Capturing the king far from his throne`,
-            $localize`When the king is nor on his central throne nor next to it, he can be captured normally.<br/><br/>Capture the king.`,
+            $localize`When the king is not on his central throne nor next to it, he can be captured like a soldier.<br/><br/>Capture the king.`,
             new BrandhubState([
                 [_, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
