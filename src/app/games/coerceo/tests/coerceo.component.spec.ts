@@ -17,8 +17,8 @@ describe('CoerceoComponent', () => {
     const O: FourStatePiece = FourStatePiece.ZERO;
     const X: FourStatePiece = FourStatePiece.ONE;
 
-    function getScore(player: number): number {
-        return componentTestUtils.getComponent().rules.node.gameState['captures'][player];
+    function getScores(): readonly [number, number] {
+        return componentTestUtils.getComponent().scores.get();
     }
     function expectCoordToBeOfRemovedFill(x: number, y: number): void {
         const gameComponent: CoerceoComponent = componentTestUtils.getComponent();
@@ -40,7 +40,7 @@ describe('CoerceoComponent', () => {
     it('Should accept tiles exchange proposal as first click', fakeAsync(async() => {
         const move: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(6, 9));
         await componentTestUtils.expectMoveFailure('#click_6_9', CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE(),
-                                                   move, undefined, getScore(0), getScore(1));
+                                                   move, undefined, getScores());
     }));
     it('Should show possibles destination after choosing your own piece', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_6_2');
@@ -53,7 +53,7 @@ describe('CoerceoComponent', () => {
     it('Should accept deplacement', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_6_2');
         const move: CoerceoMove = CoerceoMove.fromCoordToCoord(new Coord(6, 2), new Coord(7, 3));
-        await componentTestUtils.expectMoveSuccess('#click_7_3', move, undefined, getScore(0), getScore(1));
+        await componentTestUtils.expectMoveSuccess('#click_7_3', move, undefined, getScores());
     }));
     it('Should cancelMoveAttempt without toasting when re-clicking on selected piece', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_6_2');

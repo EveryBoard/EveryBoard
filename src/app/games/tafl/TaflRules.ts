@@ -7,7 +7,6 @@ import { TaflPawn } from './TaflPawn';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { display } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { TaflFailure } from './TaflFailure';
@@ -15,6 +14,7 @@ import { TaflConfig } from './TaflConfig';
 import { Type } from '@angular/core';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { TaflState } from './TaflState';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 class TaflNode extends MGPNode<TaflRules<TaflMove, TaflState>, TaflMove, TaflState> {}
 
@@ -28,15 +28,15 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
     {
         super(stateType);
     }
-    public isLegal(move: TaflMove, state: S): LegalityStatus {
+    public isLegal(move: TaflMove, state: S): MGPFallible<void> {
         display(TaflRules.VERBOSE, { tablutRules_isLegal: { move, state } });
 
         const player: Player = state.getCurrentPlayer();
         const validity: MGPValidation = this.getMoveValidity(player, move, state);
         if (validity.isFailure()) {
-            return LegalityStatus.failure(validity.getReason());
+            return MGPFallible.failure(validity.getReason());
         }
-        return LegalityStatus.SUCCESS;
+        return MGPFallible.success(undefined);
     }
     private getMoveValidity(player: Player, move: TaflMove, state: S): MGPValidation {
         const owner: RelativePlayer = state.getRelativeOwner(player, move.coord);
@@ -256,7 +256,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
         }
         return MGPOptional.empty();
     }
-    public applyLegalMove(move: TaflMove, state: S, _status: LegalityStatus): S {
+    public applyLegalMove(move: TaflMove, state: S): S {
         display(TaflRules.VERBOSE, { TablutRules_applyLegalMove: { move, state } });
         const turn: number = state.turn;
 

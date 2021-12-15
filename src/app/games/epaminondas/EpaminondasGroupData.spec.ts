@@ -18,7 +18,7 @@ export class EpaminondasGroupData extends GroupDatas<number> {
     public getCoords(): Coord[] {
         return this.values.get(this.color).get().getCopy();
     }
-    public countains(coord: Coord): boolean {
+    public contains(coord: Coord): boolean {
         const none: MGPOptional<MGPSet<Coord>> = this.values.get(Player.NONE.value);
         if (none.isPresent() &&
             none.get().contains(coord))
@@ -35,14 +35,9 @@ export class EpaminondasGroupData extends GroupDatas<number> {
         return one.isPresent() && one.get().contains(coord);
     }
     public addPawn(coord: Coord, color: number): void {
-        const set: MGPSet<Coord> = this.values.get(color).getOrNull();
-        let newList: Coord[];
-        if (set == null) {
-            newList = [coord];
-        } else {
-            const list: Coord[] = set.getCopy();
-            newList = GroupDatas.insertAsEntryPoint(list, coord);
-        }
+        const set: MGPSet<Coord> = this.values.get(color).getOrElse(new MGPSet());
+        const list: Coord[] = set.getCopy();
+        const newList: Coord[] = GroupDatas.insertAsEntryPoint(list, coord);
         this.values.put(color, new MGPSet<Coord>(newList));
     }
     public getNeighboorsEntryPoint(): Coord[] {

@@ -5,7 +5,7 @@ export class JoinerMocks {
         new Joiner({
             candidates: [],
             creator: 'creator',
-            chosenPlayer: '',
+            chosenPlayer: null,
             firstPlayer: FirstPlayer.RANDOM.value,
             partType: PartType.STANDARD.value,
             partStatus: PartStatus.PART_CREATED.value,
@@ -17,7 +17,7 @@ export class JoinerMocks {
         new Joiner({
             candidates: ['firstCandidate'],
             creator: 'creator',
-            chosenPlayer: '',
+            chosenPlayer: null,
             firstPlayer: FirstPlayer.RANDOM.value,
             partType: PartType.STANDARD.value,
             partStatus: PartStatus.PART_CREATED.value,
@@ -29,7 +29,7 @@ export class JoinerMocks {
         new Joiner({
             candidates: ['firstCandidate', 'secondCandidate'],
             creator: 'creator',
-            chosenPlayer: '',
+            chosenPlayer: null,
             firstPlayer: FirstPlayer.RANDOM.value,
             partType: PartType.STANDARD.value,
             partStatus: PartStatus.PART_CREATED.value,

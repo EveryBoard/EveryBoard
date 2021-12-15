@@ -1,5 +1,4 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPMap } from 'src/app/utils/MGPMap';
@@ -9,8 +8,9 @@ import { TaflPawn } from '../TaflPawn';
 import { TablutState } from '../tablut/TablutState';
 import { TaflPieceAndInfluenceMinimax } from '../TaflPieceAndInfluenceMinimax';
 import { SandwichThreat } from '../../../jscaip/PieceThreat';
-import { TablutRules } from '../tablut/TablutRules';
+import { TablutNode, TablutRules } from '../tablut/TablutRules';
 import { TablutMove } from '../tablut/TablutMove';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('TablutPieceAndInfluenceMinimax', () => {
 
@@ -49,8 +49,11 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const strongState: TablutState = new TablutState(strongBoard, 0);
-        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, null, strongState, null, minimax);
+        const strongState: TablutState = new TablutState(strongBoard, 1);
+        RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+                                                           weakState, MGPOptional.empty(),
+                                                           strongState, MGPOptional.empty(),
+                                                           Player.ONE);
     });
     it('Should be better of with more influence (at piece number equal)', () => {
         const weakBoard: Table<TaflPawn> = [
@@ -76,8 +79,11 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, O, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const strongState: TablutState = new TablutState(strongBoard, 0);
-        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, null, strongState, null, minimax);
+        const strongState: TablutState = new TablutState(strongBoard, 1);
+        RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+                                                           weakState, MGPOptional.empty(),
+                                                           strongState, MGPOptional.empty(),
+                                                           Player.ONE);
     });
     it('Should be better of with non threatened piece (at piece number equal)', () => {
         const weakBoard: Table<TaflPawn> = [
@@ -103,8 +109,11 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const strongState: TablutState = new TablutState(strongBoard, 0);
-        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, null, strongState, null, minimax);
+        const strongState: TablutState = new TablutState(strongBoard, 1);
+        RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+                                                           weakState, MGPOptional.empty(),
+                                                           strongState, MGPOptional.empty(),
+                                                           Player.ONE);
     });
     it('Should be better of with non threatened piece (at piece number equal) (opposite one)', () => {
         const weakBoard: Table<TaflPawn> = [
@@ -130,8 +139,11 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const strongState: TablutState = new TablutState(strongBoard, 0);
-        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, null, strongState, null, minimax);
+        const strongState: TablutState = new TablutState(strongBoard, 1);
+        RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+                                                           weakState, MGPOptional.empty(),
+                                                           strongState, MGPOptional.empty(),
+                                                           Player.ONE);
     });
     it('Should be better of with more kill than influence', () => {
         const weakBoard: Table<TaflPawn> = [
@@ -157,8 +169,11 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const strongState: TablutState = new TablutState(strongBoard, 0);
-        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, null, strongState, null, minimax);
+        const strongState: TablutState = new TablutState(strongBoard, 1);
+        RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+                                                           weakState, MGPOptional.empty(),
+                                                           strongState, MGPOptional.empty(),
+                                                           Player.ONE);
     });
     describe('isThreatened', () => {
         it('should now that empty thrones are threatening', () => {
@@ -313,7 +328,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
                 [_, _, _, _, _, _, _, _, _],
             ];
             const state: TablutState = new TablutState(board, 1);
-            const node: MGPNode<TablutRules, TablutMove, TablutState> = new MGPNode(null, null, state);
+            const node: TablutNode = new TablutNode(state);
             const expectedMove: TablutMove = TablutMove.of(new Coord(1, 0), new Coord(0, 0));
             for (let depth: number = 1; depth < 4; depth++) {
                 const chosenMove: TablutMove = node.findBestMove(depth, minimax);

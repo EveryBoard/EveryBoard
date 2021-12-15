@@ -43,7 +43,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         wrapper = componentTestUtils.wrapper as OnlineGameWrapperComponent;
     });
     describe('for creator', () => {
-        it('Initialisation should lead to child component PartCreation to call JoinerService', fakeAsync(async() => {
+        it('Initialization should lead to child component PartCreation to call JoinerService', fakeAsync(async() => {
             await prepareComponent(JoinerMocks.INITIAL.doc, PartMocks.INITIAL.doc);
             const joinerService: JoinerService = TestBed.inject(JoinerService);
 
@@ -60,7 +60,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             expect(joinerService.joinGame).toHaveBeenCalledTimes(1);
             expect(joinerService.observe).toHaveBeenCalledTimes(1);
         }));
-        it('Initialisation on accepted config should lead to PartCreationComponent to call startGame', fakeAsync(async() => {
+        it('Initialization on accepted config should lead to PartCreationComponent to call startGame', fakeAsync(async() => {
             await prepareComponent(JoinerMocks.WITH_ACCEPTED_CONFIG.doc, PartMocks.INITIAL.doc);
             componentTestUtils.detectChanges();
 
@@ -108,7 +108,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             componentTestUtils.detectChanges();
             tick(1);
         }));
-        it('Initialisation should make appear PartCreationComponent', fakeAsync(async() => {
+        it('Initialization should make appear PartCreationComponent', fakeAsync(async() => {
             await prepareComponent(JoinerMocks.INITIAL.doc, PartMocks.INITIAL.doc);
             let partCreationId: DebugElement = componentTestUtils.findElement('#partCreation');
             expect(partCreationId).withContext('partCreation id should be absent before ngOnInit').toBeFalsy();
@@ -177,7 +177,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
     it('should redirect to index page if part does not exist', fakeAsync(async() => {
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate');
-        await prepareComponent(null, null);
+        await TestBed.inject(ChatDAO).set('joinerId', { messages: [], status: `I don't have a clue` });
         componentTestUtils.detectChanges();
         tick();
 

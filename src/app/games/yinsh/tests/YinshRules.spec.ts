@@ -1,5 +1,4 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
@@ -9,8 +8,9 @@ import { YinshState } from '../YinshState';
 import { YinshMinimax } from '../YinshMinimax';
 import { YinshCapture, YinshMove } from '../YinshMove';
 import { YinshPiece } from '../YinshPiece';
-import { YinshNode, YinshRules } from '../YinshRules';
+import { YinshLegalityInformation, YinshNode, YinshRules } from '../YinshRules';
 import { Table } from 'src/app/utils/ArrayUtils';
+import { Minimax } from 'src/app/jscaip/Minimax';
 
 describe('YinshRules', () => {
 
@@ -23,7 +23,7 @@ describe('YinshRules', () => {
 
     let rules: YinshRules;
 
-    let minimaxes: YinshMinimax[]; // TODO: Minimax<Yinsh Things>
+    let minimaxes: Minimax<YinshMove, YinshState, YinshLegalityInformation>[];
 
     beforeEach(() => {
         rules = new YinshRules(YinshState);
@@ -443,43 +443,6 @@ describe('YinshRules', () => {
         });
         it('should not allow making moves once victory has been reached', () => {
         });
-        it('should correctly apply move even if the results are not cached in the legality status', () => {
-            // Given a move (that should not have cached thingy ?)
-            const board: Table<YinshPiece> = [
-                [N, N, N, N, N, N, _, _, _, _, N],
-                [N, N, N, N, _, _, _, _, _, _, _],
-                [N, N, N, A, _, _, _, _, _, _, _],
-                [N, N, _, _, _, _, _, _, _, _, _],
-                [N, _, _, _, _, _, _, _, _, _, _],
-                [N, _, _, _, _, _, _, _, _, _, N],
-                [_, _, _, _, _, _, _, _, _, _, N],
-                [_, _, _, _, _, _, _, _, _, N, N],
-                [_, _, _, _, _, _, _, _, N, N, N],
-                [_, _, _, _, _, _, _, N, N, N, N],
-                [N, _, _, _, _, N, N, N, N, N, N],
-            ];
-            const state: YinshState = new YinshState(board, [0, 0], 10);
-
-            // when applying a move
-            const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(3, 3)), []);
-
-            // then the move should be legal still
-            const expectedBoard: Table<YinshPiece> = [
-                [N, N, N, N, N, N, _, _, _, _, N],
-                [N, N, N, N, _, _, _, _, _, _, _],
-                [N, N, N, a, _, _, _, _, _, _, _],
-                [N, N, _, A, _, _, _, _, _, _, _],
-                [N, _, _, _, _, _, _, _, _, _, _],
-                [N, _, _, _, _, _, _, _, _, _, N],
-                [_, _, _, _, _, _, _, _, _, _, N],
-                [_, _, _, _, _, _, _, _, _, N, N],
-                [_, _, _, _, _, _, _, _, N, N, N],
-                [_, _, _, _, _, _, _, N, N, N, N],
-                [N, _, _, _, _, N, N, N, N, N, N],
-            ];
-            const expectedState: YinshState = new YinshState(expectedBoard, [0, 0], 11);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
-        });
     });
     describe('getPossibleCaptures', () => {
         it('should not consider rings as capturable pieces', () => {
@@ -597,19 +560,19 @@ describe('YinshRules', () => {
     describe('getGameStatus', () => {
         it('should consider initial phase as ongoing', () => {
             const state: YinshState = YinshState.getInitialState();
-            expect(rules.getGameStatus(new MGPNode(null, null, state))).toBe(GameStatus.ONGOING);
+            expect(rules.getGameStatus(new YinshNode(state))).toBe(GameStatus.ONGOING);
         });
         it('should detect part after initial phase as ongoing if victory criterion is not met', () => {
             const state: YinshState = new YinshState(YinshState.getInitialState().board, [0, 0], 20);
-            expect(rules.getGameStatus(new MGPNode(null, null, state))).toBe(GameStatus.ONGOING);
+            expect(rules.getGameStatus(new YinshNode(state))).toBe(GameStatus.ONGOING);
         });
         it('should detect victory for a player if it obtains more than 3 rings', () => {
             const state1: YinshState = new YinshState(YinshState.getInitialState().board, [3, 0], 20);
-            const node1: YinshNode = new MGPNode(null, null, state1);
+            const node1: YinshNode = new YinshNode(state1);
             RulesUtils.expectToBeVictoryFor(rules, node1, Player.ZERO, minimaxes);
 
             const state2: YinshState = new YinshState(YinshState.getInitialState().board, [0, 3], 20);
-            const node2: YinshNode = new MGPNode(null, null, state2);
+            const node2: YinshNode = new YinshNode(state2);
             RulesUtils.expectToBeVictoryFor(rules, node2, Player.ONE, minimaxes);
 
         });

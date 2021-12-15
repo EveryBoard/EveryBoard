@@ -8,44 +8,21 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { assert } from 'src/app/utils/utils';
 import { YinshFailure } from './YinshFailure';
 import { YinshState } from './YinshState';
-import { YinshLegalityStatus } from './YinshLegalityStatus';
 import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';
 import { Table } from 'src/app/utils/ArrayUtils';
 
-export class YinshNode extends MGPNode<YinshRules, YinshMove, YinshState> { }
+export type YinshLegalityInformation = YinshState
 
-export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityStatus> {
+export class YinshNode extends MGPNode<YinshRules, YinshMove, YinshState, YinshLegalityInformation> { }
 
-    public applyLegalMove(move: YinshMove, state: YinshState, status: YinshLegalityStatus): YinshState {
-        let stateWithoutTurn: YinshState;
-        if (status.computedState != null) {
-            stateWithoutTurn = status.computedState;
-        } else if (move.isInitialPlacement()) {
-            stateWithoutTurn = this.applyInitialPlacement(state, move.start);
-        } else {
-            const stateAfterInitialCaptures: YinshState =
-                this.applyCaptures(state, move.initialCaptures);
-            const stateAfterMoveAndFlip: YinshState =
-                this.applyRingMoveAndFlip(stateAfterInitialCaptures, move.start, move.end.get());
-            const stateAfterFinalCaptures: YinshState =
-                this.applyCaptures(stateAfterMoveAndFlip, move.finalCaptures);
-            stateWithoutTurn = stateAfterFinalCaptures;
-        }
+export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInformation> {
+
+    public applyLegalMove(_move: YinshMove, _state: YinshState, info: YinshState): YinshState {
+        const stateWithoutTurn: YinshState = info;
         return new YinshState(stateWithoutTurn.board, stateWithoutTurn.sideRings, stateWithoutTurn.turn+1);
-        // TODO: dont merge this, move HexaBoard into HexagonalGameState first!!
-    }
-    private applyInitialPlacement(state: YinshState, coord: Coord): YinshState {
-        const player: number = state.getCurrentPlayer().value;
-        assert(player < 2, 'YinshRules: state.getCurrentPlayer() can only return player 0 or 1');
-        const piece: YinshPiece = YinshPiece.RINGS[player];
-        const board: Table<YinshPiece> = state.setAt(coord, piece).board;
-        const sideRings: [number, number] = [state.sideRings[0], state.sideRings[1]];
-        sideRings[player] -= 1;
-        return new YinshState(board, sideRings, state.turn);
     }
     public applyCaptures(state: YinshState, captures: ReadonlyArray<YinshCapture>): YinshState {
         let computedState: YinshState = state;
@@ -97,49 +74,54 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityStatus
         }
         return newState;
     }
-    public isLegal(move: YinshMove, state: YinshState): YinshLegalityStatus {
+    public isLegal(move: YinshMove, state: YinshState): MGPFallible<YinshLegalityInformation> {
         if (move.isInitialPlacement()) {
-            return { legal: this.initialPlacementValidity(state, move.start) };
+            return this.initialPlacementValidity(state, move.start);
         }
         if (state.isInitialPlacementPhase()) {
-            return { legal: MGPValidation.failure(YinshFailure.NO_MARKERS_IN_INITIAL_PHASE()) };
+            return MGPFallible.failure(YinshFailure.NO_MARKERS_IN_INITIAL_PHASE());
         }
 
         const initialCapturesValidity: MGPValidation = this.capturesValidity(state, move.initialCaptures);
         if (initialCapturesValidity.isFailure()) {
-            return { legal: initialCapturesValidity };
+            return initialCapturesValidity.toFailedFallible();
         }
         const stateAfterInitialCaptures: YinshState = this.applyCaptures(state, move.initialCaptures);
 
         const moveValidity: MGPValidation =
             this.moveValidity(stateAfterInitialCaptures, move.start, move.end.get());
         if (moveValidity.isFailure()) {
-            return { legal: moveValidity };
+            return moveValidity.toFailedFallible();
         }
         const stateAfterRingMove: YinshState =
             this.applyRingMoveAndFlip(stateAfterInitialCaptures, move.start, move.end.get());
 
         const finalCapturesValidity: MGPValidation = this.capturesValidity(stateAfterRingMove, move.finalCaptures);
         if (finalCapturesValidity.isFailure()) {
-            return { legal: finalCapturesValidity };
+            return finalCapturesValidity.toFailedFallible();
         }
         const stateAfterFinalCaptures: YinshState = this.applyCaptures(stateAfterRingMove, move.finalCaptures);
 
         const noMoreCapturesValidity: MGPValidation = this.noMoreCapturesValidity(stateAfterFinalCaptures);
         if (noMoreCapturesValidity.isFailure()) {
-            return { legal: noMoreCapturesValidity };
+            return noMoreCapturesValidity.toFailedFallible();
         }
 
-        return { legal: MGPValidation.SUCCESS, computedState: stateAfterFinalCaptures };
+        return MGPFallible.success(stateAfterFinalCaptures);
     }
-    public initialPlacementValidity(state: YinshState, coord: Coord): MGPValidation {
+    public initialPlacementValidity(state: YinshState, coord: Coord): MGPFallible<YinshLegalityInformation> {
         if (state.isInitialPlacementPhase() !== true) {
-            return MGPValidation.failure(YinshFailure.PLACEMENT_AFTER_INITIAL_PHASE());
+            return MGPFallible.failure(YinshFailure.PLACEMENT_AFTER_INITIAL_PHASE());
         }
         if (state.getPieceAt(coord) !== YinshPiece.EMPTY) {
-            return MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
+            return MGPFallible.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
         }
-        return MGPValidation.SUCCESS;
+        const player: Player = state.getCurrentPlayer();
+        const sideRings: [number, number] = [state.sideRings[0], state.sideRings[1]];
+        sideRings[player.value] -= 1;
+        const newBoard: Table<YinshPiece> = state.setAt(coord, YinshPiece.of(player, true)).board;
+        const newState: YinshState = new YinshState(newBoard, sideRings, state.turn);
+        return MGPFallible.success(newState);
     }
     public moveStartValidity(state: YinshState, start: Coord): MGPValidation {
         const player: number = state.getCurrentPlayer().value;

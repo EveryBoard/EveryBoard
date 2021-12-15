@@ -1,5 +1,4 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -8,28 +7,23 @@ import { CoerceoMove } from './CoerceoMove';
 import { CoerceoState } from './CoerceoState';
 import { CoerceoFailure } from './CoerceoFailure';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
-export abstract class CoerceoNode extends MGPNode<CoerceoRules, CoerceoMove, CoerceoState> {}
+export class CoerceoNode extends MGPNode<CoerceoRules, CoerceoMove, CoerceoState> {}
 
 export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
 
     public static VERBOSE: boolean = false;
 
-    public applyLegalMove(move: CoerceoMove,
-                          state: CoerceoState,
-                          status: LegalityStatus)
-    : CoerceoState
+    public applyLegalMove(move: CoerceoMove, state: CoerceoState, _info: void): CoerceoState
     {
         if (move.isTileExchange()) {
-            return this.applyLegalTileExchange(move, state, status);
+            return this.applyLegalTileExchange(move, state);
         } else {
-            return this.applyLegalDeplacement(move, state, status);
+            return this.applyLegalDeplacement(move, state);
         }
     }
-    public applyLegalTileExchange(move: CoerceoMove,
-                                  state: CoerceoState,
-                                  _status: LegalityStatus)
-    : CoerceoState
+    public applyLegalTileExchange(move: CoerceoMove, state: CoerceoState): CoerceoState
     {
         const newBoard: FourStatePiece[][] = state.getCopiedBoard();
         const captured: Coord = move.capture.get();
@@ -52,10 +46,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
                     { a_initialState: state, afterCapture, afterTileRemoval, resultingState } });
         return resultingState;
     }
-    public applyLegalDeplacement(move: CoerceoMove,
-                                 state: CoerceoState,
-                                 _status: LegalityStatus)
-    : CoerceoState
+    public applyLegalDeplacement(move: CoerceoMove, state: CoerceoState): CoerceoState
     {
         // Move the piece
         const afterDeplacement: CoerceoState = state.applyLegalDeplacement(move);
@@ -75,50 +66,50 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
             resultingState });
         return resultingState;
     }
-    public isLegal(move: CoerceoMove, state: CoerceoState): LegalityStatus {
+    public isLegal(move: CoerceoMove, state: CoerceoState): MGPFallible<void> {
         if (move.isTileExchange()) {
             return this.isLegalTileExchange(move, state);
         } else {
             return this.isLegalDeplacement(move, state);
         }
     }
-    public isLegalTileExchange(move: CoerceoMove, state: CoerceoState): LegalityStatus {
+    public isLegalTileExchange(move: CoerceoMove, state: CoerceoState): MGPFallible<void> {
         if (state.tiles[state.getCurrentPlayer().value] < 2) {
-            return LegalityStatus.failure(CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE());
+            return MGPFallible.failure(CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE());
         }
         const captured: FourStatePiece = state.getPieceAt(move.capture.get());
         if (captured === FourStatePiece.NONE ||
             captured === FourStatePiece.EMPTY)
         {
-            return LegalityStatus.failure(CoerceoFailure.CANNOT_CAPTURE_FROM_EMPTY());
+            return MGPFallible.failure(CoerceoFailure.CANNOT_CAPTURE_FROM_EMPTY());
         }
         if (captured.is(state.getCurrentPlayer())) {
-            return LegalityStatus.failure(CoerceoFailure.CANNOT_CAPTURE_OWN_PIECES());
+            return MGPFallible.failure(CoerceoFailure.CANNOT_CAPTURE_OWN_PIECES());
         }
-        return LegalityStatus.SUCCESS;
+        return MGPFallible.success(undefined);
     }
-    public isLegalDeplacement(move: CoerceoMove, state: CoerceoState): LegalityStatus {
+    public isLegalDeplacement(move: CoerceoMove, state: CoerceoState): MGPFallible<void> {
         if (state.getPieceAt(move.start.get()) === FourStatePiece.NONE) {
             const reason: string = 'Cannot start with a coord outside the board ' + move.start.get().toString() + '.';
-            return LegalityStatus.failure(reason);
+            return MGPFallible.failure(reason);
         }
         if (state.getPieceAt(move.landingCoord.get()) === FourStatePiece.NONE) {
             const reason: string =
                 'Cannot end with a coord outside the board ' + move.landingCoord.get().toString() + '.';
-            return LegalityStatus.failure(reason);
+            return MGPFallible.failure(reason);
         }
         const starter: FourStatePiece = state.getPieceAt(move.start.get());
         if (starter === FourStatePiece.EMPTY) {
-            return LegalityStatus.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+            return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }
         if (starter.is(state.getCurrentOpponent())) {
-            return LegalityStatus.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            return MGPFallible.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         }
         const lander: FourStatePiece = state.getPieceAt(move.landingCoord.get());
         if (lander.is(state.getCurrentPlayer())) {
-            return LegalityStatus.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
+            return MGPFallible.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
-        return LegalityStatus.SUCCESS;
+        return MGPFallible.success(undefined);
     }
     public static getGameStatus(node: CoerceoNode): GameStatus {
         const state: CoerceoState = node.gameState;

@@ -15,9 +15,6 @@ class NonAbstractMoveCoordToCoord extends MoveCoordToCoord {
 }
 describe('MoveCoordToCoord', () => {
 
-    it('should throw when created with a null end', () => {
-        expect(() => new NonAbstractMoveCoordToCoord(new Coord(0, 0), null)).toThrowError('End cannot be null!');
-    });
     describe('getDirection', () => {
         it('should return the direction of the move', () => {
             const source: Coord = new Coord(0, 0);

@@ -5,6 +5,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { TaflConfig } from '../TaflConfig';
 import { TaflFailure } from '../TaflFailure';
 import { TaflNode } from '../TaflMinimax';
@@ -128,7 +129,7 @@ describe('TaflRules', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const expectedState: MyTaflState = new MyTaflState(expectedBoard, 24);
-        const node: TaflNode = new TaflNode(null, move, expectedState);
+        const node: TaflNode = new TaflNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
@@ -163,7 +164,7 @@ describe('TaflRules', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const expectedState: MyTaflState = new MyTaflState(expectedBoard, 25);
-        const node: TaflNode = new TaflNode(null, move, expectedState);
+        const node: TaflNode = new TaflNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });

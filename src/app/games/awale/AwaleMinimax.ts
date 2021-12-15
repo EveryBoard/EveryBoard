@@ -1,14 +1,14 @@
 import { AwaleState } from './AwaleState';
 import { AwaleMove } from './AwaleMove';
-import { AwaleLegalityStatus } from './AwaleLegalityStatus';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
-import { AwaleNode, AwaleRules } from './AwaleRules';
+import { AwaleLegalityInformation, AwaleNode, AwaleRules } from './AwaleRules';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
-export class AwaleMinimax extends Minimax<AwaleMove, AwaleState, AwaleLegalityStatus> {
+export class AwaleMinimax extends Minimax<AwaleMove, AwaleState, AwaleLegalityInformation> {
 
     public getListMoves(node: AwaleNode): AwaleMove[] {
         const moves: AwaleMove[] = [];
@@ -22,9 +22,10 @@ export class AwaleMinimax extends Minimax<AwaleMove, AwaleState, AwaleLegalitySt
             if (state.getPieceAtXY(x, player) !== 0) {
                 // if the house is not empty
                 newMove = AwaleMove.from(x);
-                const legality: AwaleLegalityStatus = AwaleRules.isLegal(newMove, state); // see if the move is legal
+                // see if the move is legal
+                const legality: MGPFallible<AwaleLegalityInformation> = AwaleRules.isLegal(newMove, state);
 
-                if (legality.legal.isSuccess()) {
+                if (legality.isSuccess()) {
                     // if the move is legal, we addPart it to the listMoves
                     newMove = AwaleMove.from(x);
 

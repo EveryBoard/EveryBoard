@@ -10,6 +10,7 @@ import { DebugElement } from '@angular/core';
 import { P4Minimax } from 'src/app/games/p4/P4Minimax';
 import { P4Rules } from 'src/app/games/p4/P4Rules';
 import { GameStatus } from 'src/app/jscaip/Rules';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('LocalGameWrapperComponent', () => {
 
@@ -69,12 +70,11 @@ describe('LocalGameWrapperComponent', () => {
         expect(componentTestUtils.findElement('#draw')).withContext('Draw indicator should be present').toBeTruthy();
     }));
     it('should show score if needed', fakeAsync(async() => {
-        componentTestUtils.getComponent().showScore = false;
+        componentTestUtils.getComponent().scores = MGPOptional.empty();
         componentTestUtils.expectElementNotToExist('#scoreZero');
         componentTestUtils.expectElementNotToExist('#scoreOne');
 
-        componentTestUtils.getComponent().showScore = true;
-        componentTestUtils.getComponent()['scores'] = [0, 0];
+        componentTestUtils.getComponent().scores = MGPOptional.of([0, 0]);
         componentTestUtils.forceChangeDetection();
 
         componentTestUtils.expectElementToExist('#scoreZero');
@@ -138,7 +138,7 @@ describe('LocalGameWrapperComponent', () => {
         });
         it('should propose AI to play when restarting game', fakeAsync(async() => {
             const wrapper: LocalGameWrapperComponent = componentTestUtils.wrapper as LocalGameWrapperComponent;
-            wrapper.players[0] = 'P4Minimax';
+            wrapper.players[0] = MGPOptional.of('P4Minimax');
             wrapper.aiDepths[0] = '1';
 
             const proposeAIToPlay: jasmine.Spy = spyOn(wrapper, 'proposeAIToPlay').and.callThrough();
@@ -154,7 +154,7 @@ describe('LocalGameWrapperComponent', () => {
             // given wrapper on which a first move have been done
             await componentTestUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
 
-            // when clicking on AI then it's level
+            // when clicking on AI then its level
             const selectAI: HTMLSelectElement = componentTestUtils.findElement('#playerOneSelect').nativeElement;
             selectAI.value = selectAI.options[1].value;
             selectAI.dispatchEvent(new Event('change'));

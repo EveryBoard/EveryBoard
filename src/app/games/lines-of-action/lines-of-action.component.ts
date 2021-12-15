@@ -56,7 +56,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
                 const move: MGPFallible<LinesOfActionMove> =
                     LinesOfActionMove.of(this.selected.get(), new Coord(x, y));
                 if (move.isSuccess()) {
-                    return this.chooseMove(move.get(), this.rules.node.gameState, null, null);
+                    return this.chooseMove(move.get(), this.rules.node.gameState);
                 } else {
                     return this.cancelMove(LinesOfActionFailure.INVALID_DIRECTION());
                 }
@@ -80,12 +80,12 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
         return this.rules.node.gameState;
     }
     public getPreviousState(): LinesOfActionState {
-        return this.rules.node.mother.gameState;
+        return this.rules.node.mother.get().gameState;
     }
     public updateBoard(): void {
         this.cancelMoveAttempt();
         this.board = this.getState().board;
-        this.lastMove = MGPOptional.ofNullable(this.rules.node.move);
+        this.lastMove = this.rules.node.move;
         if (this.lastMove.isPresent()) {
             const lastMove: LinesOfActionMove = this.lastMove.get();
             if (this.getPreviousState().getPieceAt(lastMove.end) !== Player.NONE) {

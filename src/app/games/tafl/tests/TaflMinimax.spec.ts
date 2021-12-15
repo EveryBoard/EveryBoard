@@ -1,8 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { TablutState } from '../tablut/TablutState';
 import { TaflPawn } from '../TaflPawn';
-import { TablutRules } from '../tablut/TablutRules';
+import { TablutNode, TablutRules } from '../tablut/TablutRules';
 import { TaflMinimax, TaflNode } from '../TaflMinimax';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { TablutMove } from '../tablut/TablutMove';
@@ -35,7 +34,7 @@ describe('TaflMinimax:', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const state: TablutState = new TablutState(board, 1);
-        rules.node = new MGPNode(null, null, state);
+        rules.node = new TablutNode(state);
         const winnerMove: TablutMove = TablutMove.of(new Coord(3, 0), new Coord(8, 0));
 
         const minimax: TaflMinimax = new TaflMinimax(rules, 'TablutMinimax');
@@ -56,7 +55,7 @@ describe('TaflMinimax:', () => {
             [_, _, _, _, _, _, _],
         ];
         const state: BrandhubState = new BrandhubState(board, 1);
-        const node: TaflNode = new BrandhubNode(null, null, state) as TaflNode;
+        const node: TaflNode = new BrandhubNode(state) as TaflNode;
 
         // When asking the list of legal move
         const moves: BrandhubMove[] = minimax.getListMoves(node);

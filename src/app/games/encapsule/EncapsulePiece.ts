@@ -1,5 +1,6 @@
 import { Player } from 'src/app/jscaip/Player';
 import { ComparableObject } from 'src/app/utils/Comparable';
+import { Utils } from 'src/app/utils/utils';
 
 export enum Size {
     NONE = 0,
@@ -67,7 +68,8 @@ export class EncapsulePiece implements ComparableObject {
             case EncapsulePiece.SMALL_BLACK:
             case EncapsulePiece.SMALL_WHITE:
                 return Size.SMALL;
-            case EncapsulePiece.NONE:
+            default:
+                Utils.expectToBe(this, EncapsulePiece.NONE);
                 return Size.NONE;
         }
     }
@@ -85,7 +87,9 @@ export class EncapsulePiece implements ComparableObject {
             case EncapsulePiece.MEDIUM_WHITE: return 'MEDIUM_WHITE';
             case EncapsulePiece.SMALL_BLACK: return 'SMALL_BLACK';
             case EncapsulePiece.SMALL_WHITE: return 'SMALL_WHITE';
-            case EncapsulePiece.NONE: return 'NONE';
+            default:
+                Utils.expectToBe(this, EncapsulePiece.NONE);
+                return 'NONE';
         }
     }
 }

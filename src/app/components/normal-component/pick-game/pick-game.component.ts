@@ -137,7 +137,8 @@ export class PickGameComponent {
 
     @Output('pickGame') pickGame: EventEmitter<string> = new EventEmitter<string>();
 
-    public onChange(game: string): void {
-        this.pickGame.emit(game);
+    public onChange(event: Event): void {
+        const select: HTMLSelectElement = event.target as HTMLSelectElement;
+        this.pickGame.emit(select.value);
     }
 }

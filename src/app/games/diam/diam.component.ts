@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { GameComponent } from 'src/app/components/game-components/game-component/GameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Direction';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
@@ -51,7 +50,7 @@ interface LastMoved {
     templateUrl: './diam.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState, LegalityStatus> implements OnInit {
+export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState> implements OnInit {
     private static CENTER: Coord[] = [
         new Coord(40, 160),
         new Coord(100, 50),
@@ -98,7 +97,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
         this.encoder = DiamMoveEncoder;
         this.tutorial = new DiamTutorial().tutorial;
     }
-    public ngOnInit() {
+    public ngOnInit(): void {
         this.updateBoard();
     }
     public async onSpaceClick(x: number): Promise<MGPValidation> {
@@ -124,7 +123,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
                     return this.cancelMove(DiamFailure.MUST_SHIFT_TO_NEIGHBOR());
                 }
             }
-            return this.chooseMove(move, this.getState(), null, null);
+            return this.chooseMove(move, this.getState());
         } else {
             return this.cancelMove(DiamFailure.MUST_SELECT_PIECE_FIRST());
         }
@@ -164,9 +163,9 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
         return '#piece_' + piece.owner.value + '_' + (piece.otherPieceType ? 1 : 0);
     }
     public updateBoard(): void {
-        const lastMove: DiamMove | null = this.rules.node.move;
         this.updateViewInfo();
-        if (lastMove != null) {
+        const lastMove: MGPOptional<DiamMove> = this.rules.node.move;
+        if (lastMove.isPresent()) {
             this.showLastMove();
         }
     }
@@ -219,8 +218,9 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
         this.showLastMoveOnPieces();
     }
     private showLastMoveOnSpaces(): void {
-        const lastMove: DiamMove | null = this.rules.node.move;
-        assert(lastMove != null, 'showLastMoveOnSpaces called without a last move');
+        const lastMoveOpt: MGPOptional<DiamMove> = this.rules.node.move;
+        assert(lastMoveOpt.isPresent(), 'showLastMoveOnSpaces called without a last move');
+        const lastMove: DiamMove = lastMoveOpt.get();
         for (let x: number = 0; x < DiamState.WIDTH; x++) {
             const classes: string[] = [];
             if (lastMove.isDrop()) {
@@ -236,8 +236,9 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState,
         }
     }
     private showLastMoveOnPieces(): void {
-        const lastMove: DiamMove | null = this.rules.node.move;
-        assert(lastMove != null, 'showLastMoveOnPieces called without a last move');
+        const lastMoveOpt: MGPOptional<DiamMove> = this.rules.node.move;
+        assert(lastMoveOpt.isPresent(), 'showLastMoveOnPieces called without a last move');
+        const lastMove: DiamMove = lastMoveOpt.get();
         const previousState: DiamState = this.getPreviousState();
         let lastMoved: LastMoved[] = [];
         if (lastMove.isDrop()) {

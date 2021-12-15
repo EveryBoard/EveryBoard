@@ -11,6 +11,7 @@ import { TaflPawn } from './TaflPawn';
 import { TaflState } from './TaflState';
 import { TaflPieceAndControlMinimax } from './TaflPieceAndControlMinimax';
 import { TaflNode } from './TaflMinimax';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class TaflEscapeThenPieceAndControlMinimax extends TaflPieceAndControlMinimax {
 
@@ -74,22 +75,22 @@ export class TaflEscapeThenPieceAndControlMinimax extends TaflPieceAndControlMin
     }
     public getStepForEscape(state: TaflState): number {
         const king: Coord = this.ruler.getKingCoord(state).get();
-        return this._getStepForEscape(state, 1, [king], []);
+        return this._getStepForEscape(state, 1, [king], []).getOrElse(Number.MAX_SAFE_INTEGER);
     }
     public _getStepForEscape(state: TaflState,
                              step: number,
                              previousGen: Coord[],
                              handledCoords: Coord[])
-    : number
+    : MGPOptional<number>
     {
         const nextGen: Coord[] = this.getNextGen(state, previousGen, handledCoords);
 
         if (nextGen.length === 0) {
             // not found:
-            return null;
+            return MGPOptional.empty();
         }
         if (nextGen.some((coord: Coord) => this.ruler.isExternalThrone(coord))) {
-            return step;
+            return MGPOptional.of(step);
         } else {
             step++;
             handledCoords.push(...nextGen);

@@ -35,9 +35,6 @@ export class QuartoMove extends MoveCoord {
          * piece is the quarto piece you give
          */
         super(x, y);
-        if (piece == null) {
-            throw new Error(`Piece to give can't be null.`);
-        }
     }
     public toString(): string {
         return 'QuartoMove(' + this.coord.x + ', ' +

@@ -34,7 +34,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
     }
     public updateBoard(): void {
         display(this.VERBOSE, 'taflComponent.updateBoard');
-        this.lastMove = MGPOptional.ofNullable(this.rules.node.move);
+        this.lastMove = this.rules.node.move;
         this.board = this.rules.node.gameState.getCopiedBoard();
         this.captureds = [];
         if (this.lastMove.isPresent()) {
@@ -42,7 +42,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         }
     }
     private showPreviousMove(): void {
-        const previousState: S = this.rules.node.mother.gameState;
+        const previousState: S = this.rules.node.mother.get().gameState;
         const OPPONENT: Player = this.rules.node.gameState.getCurrentOpponent();
         for (const orthogonal of Orthogonal.ORTHOGONALS) {
             const captured: Coord = this.lastMove.get().end.getNext(orthogonal, 1);
@@ -77,7 +77,7 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         const move: MGPFallible<M> = this.generateMove(chosenPiece, chosenDestination);
         if (move.isSuccess()) {
             this.cancelMove();
-            return await this.chooseMove(move.get(), this.rules.node.gameState, null, null);
+            return await this.chooseMove(move.get(), this.rules.node.gameState);
         } else {
             return this.cancelMove(move.getReason());
         }
@@ -129,12 +129,14 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
         const classes: string[] = [];
 
         const coord: Coord = new Coord(x, y);
-        const lastStart: Coord = this.lastMove.isPresent() ? this.lastMove.get().coord : null;
-        const lastEnd: Coord = this.lastMove.isPresent() ? this.lastMove.get().end : null;
         if (this.captureds.some((c: Coord) => c.equals(coord))) {
             classes.push('captured');
-        } else if (coord.equals(lastStart) || coord.equals(lastEnd)) {
-            classes.push('moved');
+        } else if (this.lastMove.isPresent()) {
+            const lastStart: Coord = this.lastMove.get().coord;
+            const lastEnd: Coord = this.lastMove.get().end;
+            if (coord.equals(lastStart) || coord.equals(lastEnd)) {
+                classes.push('moved');
+            }
         }
 
         return classes;

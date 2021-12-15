@@ -10,13 +10,12 @@ import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 
 export class TaflNode extends MGPNode<TaflRules<TaflMove, TaflState>, TaflMove, TaflState> {}
 
 export class TaflMinimax extends Minimax<TaflMove,
                                          TaflState,
-                                         LegalityStatus,
+                                         void,
                                          NodeUnheritance,
                                          TaflRules<TaflMove, TaflState>>
 {

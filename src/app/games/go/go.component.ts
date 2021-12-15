@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { GoMove } from 'src/app/games/go/GoMove';
-import { GoRules } from 'src/app/games/go/GoRules';
+import { GoLegalityInformation, GoRules } from 'src/app/games/go/GoRules';
 import { GoMinimax } from 'src/app/games/go/GoMinimax';
 import { GoState, Phase, GoPiece } from 'src/app/games/go/GoState';
 import { Coord } from 'src/app/jscaip/Coord';
-import { GoLegalityStatus } from 'src/app/games/go/GoLegalityStatus';
 import { display } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -19,17 +18,15 @@ import { GoTutorial } from './GoTutorial';
     templateUrl: './go.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoState, GoPiece, GoLegalityStatus> {
+export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoState, GoPiece, GoLegalityInformation> {
 
     public static VERBOSE: boolean = false;
 
-    public scores: number[] = [0, 0];
-
     public boardInfo: GroupDatas<GoPiece>;
 
-    public ko: Coord;
+    public ko: MGPOptional<Coord> = MGPOptional.empty();
 
-    public last: Coord = new Coord(-1, -1);
+    public last: MGPOptional<Coord> = MGPOptional.empty();
 
     public canPass: boolean;
 
@@ -39,6 +36,7 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
+        this.scores = MGPOptional.of([0, 0]);
         this.rules = new GoRules(GoState);
         this.availableMinimaxes = [
             new GoMinimax(this.rules, 'GoMinimax'),
@@ -46,7 +44,6 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
         this.encoder = GoMove.encoder;
         this.tutorial = new GoTutorial().tutorial;
         this.canPass = true;
-        this.showScore = true;
         this.updateBoard();
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
@@ -54,40 +51,39 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        this.last = new Coord(-1, -1); // now the user stop try to do a move
-        // we stop showing him the last move
+        this.last = MGPOptional.empty(); // now that the user stopped trying to do a move
+        // we stop showing the user the last move
         const resultlessMove: GoMove = new GoMove(x, y);
-        return this.chooseMove(resultlessMove, this.rules.node.gameState, this.scores[0], this.scores[1]);
+        return this.chooseMove(resultlessMove, this.rules.node.gameState, this.scores.get());
     }
     public updateBoard(): void {
         display(GoComponent.VERBOSE, 'updateBoard');
 
         const state: GoState = this.rules.node.gameState;
-        const move: GoMove = this.rules.node.move;
-        const koCoord: MGPOptional<Coord> = state.koCoord;
+        const move: MGPOptional<GoMove> = this.rules.node.move;
         const phase: Phase = state.phase;
 
         this.board = state.getCopiedBoard();
-        this.scores = state.getCapturedCopy();
+        this.scores = MGPOptional.of(state.getCapturedCopy());
 
-        this.last = move ? move.coord : null;
-        this.ko = koCoord.getOrNull();
-        if (move == null) {
-            this.captures = [];
-        } else {
+        this.ko = state.koCoord;
+        if (move.isPresent()) {
             this.showCaptures();
+        } else {
+            this.captures = [];
         }
+        this.last = move.map((move: GoMove) => move.coord);
         this.canPass = phase !== Phase.FINISHED;
     }
     private showCaptures(): void {
-        const previousState: GoState = this.rules.node.mother.gameState;
+        const previousState: GoState = this.rules.node.mother.get().gameState;
         this.captures = [];
         for (let y: number = 0; y < this.board.length; y++) {
             for (let x: number = 0; x < this.board[0].length; x++) {
                 const coord: Coord = new Coord(x, y);
                 const wasOccupied: boolean = previousState.getPieceAt(coord).isEmpty() === false;
                 const isEmpty: boolean = this.board[y][x] === GoPiece.EMPTY;
-                const isNotKo: boolean = !coord.equals(this.ko);
+                const isNotKo: boolean = this.ko.equalsValue(coord) === false;
                 if (wasOccupied && isEmpty && isNotKo) {
                     this.captures.push(coord);
                 }
@@ -114,14 +110,12 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
         return piece !== GoPiece.EMPTY && !this.isTerritory(x, y);
     }
     public isLastCase(x: number, y: number): boolean {
-        if (this.last == null) {
-            return false;
+        if (this.last.isPresent()) {
+            const last: Coord = this.last.get();
+            return x === last.x && y === last.y;
         } else {
-            return x === this.last.x && y === this.last.y;
+            return false;
         }
-    }
-    public isThereAKo(): boolean {
-        return this.ko != null;
     }
     public isDead(x: number, y: number): boolean {
         return this.rules.node.gameState.isDead(new Coord(x, y));

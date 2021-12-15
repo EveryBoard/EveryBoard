@@ -1278,10 +1278,6 @@
         <source>Failed, try to shift a stack of pieces to the left.</source>
         <target>Raté, essayez de déplacer une pile de pièces vers la gauche.</target>
       </trans-unit>
-      <trans-unit id="2559409853005498554" datatype="html">
-        <source>Invalid coordinate, please select a piece on the board.</source>
-        <target>Coordonnée invalide, veuillez sélectionner un pièce sur le plateau.</target>
-      </trans-unit>
       <trans-unit id="5012524143343727947" datatype="html">
         <source>You must select a piece or a stack of your color.</source>
         <target>Veuillez choisir une des piles vous appartenant.</target>

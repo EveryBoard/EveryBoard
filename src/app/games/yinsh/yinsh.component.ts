@@ -10,12 +10,13 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { YinshFailure } from './YinshFailure';
 import { YinshState } from './YinshState';
-import { YinshLegalityStatus } from './YinshLegalityStatus';
 import { YinshMinimax } from './YinshMinimax';
 import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';
-import { YinshRules } from './YinshRules';
+import { YinshLegalityInformation, YinshRules } from './YinshRules';
 import { YinshTutorial } from './YinshTutorial';
+import { Utils } from 'src/app/utils/utils';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 interface CaseInfo {
     coord: Coord,
@@ -48,15 +49,14 @@ interface ViewInfo {
     templateUrl: './yinsh.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class YinshComponent extends HexagonalGameComponent<YinshRules, YinshMove, YinshState, YinshLegalityStatus> {
+export class YinshComponent
+    extends HexagonalGameComponent<YinshRules, YinshMove, YinshState, YinshPiece, YinshLegalityInformation> {
 
     private static RING_OUTER_SIZE: number = 40;
     private static RING_MID_SIZE: number = 34;
     private static RING_INNER_SIZE: number = 28;
     private static MARKER_SIZE: number = YinshComponent.RING_INNER_SIZE;
     private static INDICATOR_SIZE: number = 10;
-
-    public scores: number[] = [0, 0];
 
     private constructedState: YinshState;
 
@@ -94,6 +94,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules, YinshMove
     };
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
+        this.scores = MGPOptional.of([0, 0]);
         this.rules = new YinshRules(YinshState);
         this.availableMinimaxes = [
             new YinshMinimax(this.rules, 'YinshMinimax'),
@@ -103,7 +104,6 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules, YinshMove
         this.hexaLayout = new HexaLayout(YinshComponent.RING_OUTER_SIZE * 1.50,
                                          new Coord(YinshComponent.RING_OUTER_SIZE * 2, 0),
                                          FlatHexaOrientation.INSTANCE);
-        this.showScore = true;
         this.constructedState = this.rules.node.gameState;
         this.constructedState.allCoords().forEach((coord: Coord): void => {
             if (this.viewInfo.caseInfo[coord.y] == null) {
@@ -127,9 +127,6 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules, YinshMove
     }
     public updateViewInfo(): void {
         this.constructedState.allCoords().forEach((coord: Coord): void => {
-            if (this.constructedState.getPieceAt(coord) === YinshPiece.NONE) {
-                return;
-            }
             this.viewInfo.caseInfo[coord.y][coord.x].caseClasses = this.getCaseClasses(coord);
             const piece: YinshPiece = this.constructedState.getPieceAt(coord);
             this.viewInfo.caseInfo[coord.y][coord.x].removedClass = '';
@@ -205,8 +202,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules, YinshMove
         this.viewInfo.caseInfo[coord.y][coord.x].isMarker = false;
         this.viewInfo.caseInfo[coord.y][coord.x].markerClasses = [];
         if (piece !== YinshPiece.EMPTY) {
-            const containsMarker: boolean = !piece.isRing ||
-                (piece.isRing && coord.equals(this.moveStart.getOrNull()));
+            const containsMarker: boolean = !piece.isRing || (piece.isRing && this.moveStart.equalsValue(coord));
             if (containsMarker) {
                 const playerClass: string = this.getPlayerClass(piece.player);
                 this.viewInfo.caseInfo[coord.y][coord.x].isMarker = true;
@@ -227,8 +223,9 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules, YinshMove
         this.moveToInitialCaptureOrMovePhase();
     }
     private showLastMove(): void {
-        const move: YinshMove = this.rules.node.move;
-        if (move != null) {
+        const moveOptional: MGPOptional<YinshMove> = this.rules.node.move;
+        if (moveOptional.isPresent()) {
+            const move: YinshMove = moveOptional.get();
             if (move.isInitialPlacement()) {
                 this.viewInfo.caseInfo[move.start.y][move.start.x].caseClasses = ['moved'];
             } else {
@@ -344,7 +341,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules, YinshMove
         } else if (captures.length === 0) {
             return this.cancelMove(YinshFailure.MISSING_CAPTURES());
         } else {
-            this.selectCapture(captures[0]);
+            return this.selectCapture(captures[0]);
         }
     }
     private selectCapture(capture: YinshCapture) {
@@ -406,7 +403,8 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules, YinshMove
                     this.updateViewInfo();
                     return MGPValidation.SUCCESS;
                 }
-            case 'FINAL_CAPTURE_SELECT_RING':
+            default:
+                Utils.expectToBe(this.movePhase, 'FINAL_CAPTURE_SELECT_RING');
                 this.finalCaptures.push(capture);
                 if (this.possibleCaptures.length === 0) {
                     return this.tryMove();
@@ -427,12 +425,13 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules, YinshMove
                                               this.moveStart.get(),
                                               this.moveEnd,
                                               this.finalCaptures);
-        const validity: MGPValidation = await this.chooseMove(move, this.rules.node.gameState, null, null);
+        const validity: MGPValidation = await this.chooseMove(move, this.rules.node.gameState, this.scores.get());
         return validity;
     }
     private async selectMoveStart(coord: Coord): Promise<MGPValidation> {
         if (this.constructedState.isInitialPlacementPhase()) {
-            const validity: MGPValidation = this.rules.initialPlacementValidity(this.constructedState, coord);
+            const validity: MGPFallible<YinshLegalityInformation> =
+                this.rules.initialPlacementValidity(this.constructedState, coord);
             if (validity.isFailure()) {
                 return this.cancelMove(validity.getReason());
             }
@@ -467,6 +466,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules, YinshMove
         } else {
             this.movePhase = 'FINAL_CAPTURE_SELECT_FIRST';
             this.updateViewInfo();
+            return MGPValidation.SUCCESS;
         }
     }
 }

@@ -9,6 +9,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { P4Tutorial } from './P4Tutorial';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 @Component({
     selector: 'app-p4',
@@ -20,7 +21,7 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
     public static VERBOSE: boolean = false;
 
     public EMPTY_CASE: Player = Player.NONE;
-    public last: Coord;
+    public last: MGPOptional<Coord>;
     public victoryCoords: Coord[] = [];
 
     public constructor(messageDisplayer: MessageDisplayer) {
@@ -39,27 +40,35 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
             return this.cancelMove(clickValidity.getReason());
         }
         const chosenMove: P4Move = P4Move.of(x);
-        return await this.chooseMove(chosenMove, this.rules.node.gameState, null, null);
+        return await this.chooseMove(chosenMove, this.rules.node.gameState);
     }
     public updateBoard(): void {
         const state: P4State = this.rules.node.gameState;
-        const lastMove: P4Move = this.rules.node.move;
+        const lastMove: MGPOptional<P4Move> = this.rules.node.move;
 
         this.victoryCoords = P4Rules.getVictoriousCoords(state);
         this.board = state.board;
-        if (lastMove == null) {
-            this.last = null;
+        if (lastMove.isPresent()) {
+            this.showLastMove();
         } else {
-            const y: number = P4Rules.getLowestUnoccupiedCase(state.board, lastMove.x) + 1;
-            this.last = new Coord(lastMove.x, y);
+            this.hideLastMove();
         }
+    }
+    private showLastMove() {
+        const state: P4State = this.rules.node.gameState;
+        const lastMove: MGPOptional<P4Move> = this.rules.node.move;
+        const y: number = P4Rules.getLowestUnoccupiedCase(state.board, lastMove.get().x) + 1;
+        this.last = MGPOptional.of(new Coord(lastMove.get().x, y));
+    }
+    private hideLastMove() {
+        this.last = MGPOptional.empty();
     }
     public getCaseClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
         const classes: string[] = [];
         if (this.victoryCoords.some((c: Coord): boolean => c.equals(coord))) {
             classes.push('victory-stroke');
-        } else if (this.last && this.last.equals(coord)) {
+        } else if (this.last.equalsValue(coord)) {
             classes.push('last-move');
         }
         return classes;

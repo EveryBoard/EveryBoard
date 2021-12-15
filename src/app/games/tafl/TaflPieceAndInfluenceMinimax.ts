@@ -144,6 +144,7 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
                 return state.getPieceAt(coord) === TaflPawn.UNOCCUPIED;
             }
         }
+        return false;
     }
     public isThreatReal(coord: Coord, state: TaflState, threats: SandwichThreat[]): boolean {
         if (threats.length === 0) {

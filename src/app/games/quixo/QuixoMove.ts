@@ -36,8 +36,7 @@ export class QuixoMove extends MoveCoord {
     constructor(x: number, y: number, public readonly direction: Orthogonal) {
         super(x, y);
         const coordValidity: MGPValidation = QuixoMove.isValidCoord(this.coord);
-        if (coordValidity.isFailure()) throw new Error(coordValidity.reason);
-        if (direction == null) throw new Error('Direction cannot be null.');
+        if (coordValidity.isFailure()) throw new Error(coordValidity.getReason());
         if (x === 0 && direction === Orthogonal.LEFT) {
             throw new Error(`Invalid direction: pawn on the left side can't be moved to the left.`);
         }

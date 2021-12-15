@@ -254,6 +254,9 @@
       <trans-unit id="3412247232926911550" datatype="html">
         <source>Have an account?</source>
       </trans-unit>
+      <trans-unit id="4047787446065773376" datatype="html">
+        <source>There are missing fields in the registration form, please check that you filled in all fields.</source>
+      </trans-unit>
       <trans-unit id="2565164139557117651" datatype="html">
         <source>Password reset</source>
       </trans-unit>
@@ -366,10 +369,10 @@
         <source>Level <x id="INTERPOLATION" equiv-text="{{ i }}"/></source>
       </trans-unit>
       <trans-unit id="3272612818120648715" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ gameComponent.scores[0] }}"/> points</source>
+        <source><x id="INTERPOLATION" equiv-text="{{ gameComponent.scores.get()[0] }}"/> points</source>
       </trans-unit>
       <trans-unit id="8739046962840362623" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ winner }}"/> won</source>
+        <source><x id="INTERPOLATION" equiv-text="{{ winner.get() }}"/> won</source>
       </trans-unit>
       <trans-unit id="8647687729200262691" datatype="html">
         <source>Draw</source>
@@ -423,22 +426,22 @@
         <source>You lost.</source>
       </trans-unit>
       <trans-unit id="6165538570244502951" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ currentPart.getWinner() }}"/> won.</source>
+        <source><x id="INTERPOLATION" equiv-text="{{ currentPart.getWinner().get() }}"/> won.</source>
       </trans-unit>
       <trans-unit id="1601597703777069856" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser() }}"/> has reached their time limit. You won.</source>
+        <source><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser().get() }}"/> has reached their time limit. You won.</source>
       </trans-unit>
       <trans-unit id="7814033294193818165" datatype="html">
         <source>You reached your time limit.</source>
       </trans-unit>
       <trans-unit id="2324913504104154958" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser() }}"/> has reached their time limit.</source>
+        <source><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser().get() }}"/> has reached their time limit.</source>
       </trans-unit>
       <trans-unit id="2826140657122926749" datatype="html">
         <source>You resigned.</source>
       </trans-unit>
       <trans-unit id="7250880851290385128" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser() }}"/> has resigned.</source>
+        <source><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser().get() }}"/> has resigned.</source>
       </trans-unit>
       <trans-unit id="4624707315308487849" datatype="html">
         <source>Go back to the game list</source>
@@ -480,7 +483,7 @@
         <source>Custom</source>
       </trans-unit>
       <trans-unit id="594218318757354614" datatype="html">
-        <source>Maximal game duration: <x id="START_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;output&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.totalPartDuration | humanDuration }}"/> per player<x id="CLOSE_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;/output&gt;"/></source>
+        <source>Maximal game duration: <x id="START_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;output&gt;"/><x id="INTERPOLATION" equiv-text="{{ (viewInfo.totalPartDuration || 0) | humanDuration }}"/> per player<x id="CLOSE_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;/output&gt;"/></source>
       </trans-unit>
       <trans-unit id="4247449258896721566" datatype="html">
         <source>Opponents</source>
@@ -528,10 +531,10 @@
         <source>the first player is selected randomly</source>
       </trans-unit>
       <trans-unit id="3649232689954543597" datatype="html">
-        <source>a turn lasts at most <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.maximalMoveDuration | humanDuration }}"/> <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
+        <source>a turn lasts at most <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ (viewInfo.maximalMoveDuration || 0) | humanDuration }}"/> <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
       </trans-unit>
       <trans-unit id="7852346564484185703" datatype="html">
-        <source>the game lasts at most <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ viewInfo.totalPartDuration | humanDuration }}"/> per player<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
+        <source>the game lasts at most <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ (viewInfo.totalPartDuration || 0) | humanDuration }}"/> per player<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
       </trans-unit>
       <trans-unit id="1012784993066568401" datatype="html">
         <source>Accept and start</source>
@@ -950,9 +953,6 @@
       </trans-unit>
       <trans-unit id="3765076912748475454" datatype="html">
         <source>Failed, try to shift a stack of pieces to the left.</source>
-      </trans-unit>
-      <trans-unit id="2559409853005498554" datatype="html">
-        <source>Invalid coordinate, please select a piece on the board.</source>
       </trans-unit>
       <trans-unit id="5012524143343727947" datatype="html">
         <source>You must select a piece or a stack of your color.</source>
@@ -2271,9 +2271,6 @@
       </trans-unit>
       <trans-unit id="5966391152315784819" datatype="html">
         <source>You have selected an empty space, you must select one of your own pieces.</source>
-      </trans-unit>
-      <trans-unit id="4047787446065773376" datatype="html">
-        <source>There are missing fields in the registration form, please check that you filled in all fields.</source>
       </trans-unit>
       <trans-unit id="7065414996126753833" datatype="html">
         <source>This username is already in use.</source>

@@ -49,14 +49,14 @@ describe('GoComponent', () => {
         componentTestUtils.setupState(state);
 
         const move: GoMove = new GoMove(0, 1);
-        await componentTestUtils.expectMoveSuccess('#click_0_1', move, undefined, 0, 0);
+        await componentTestUtils.expectMoveSuccess('#click_0_1', move, undefined, [0, 0]);
         const goComponent: GoComponent = componentTestUtils.getComponent();
         expect(goComponent.captures).toEqual([new Coord(0, 0)]);
     }));
     it('Should allow simple clicks', fakeAsync(async() => {
         const move: GoMove = new GoMove(1, 1);
-        await componentTestUtils.expectMoveSuccess('#click_1_1', move, undefined, 0, 0);
+        await componentTestUtils.expectMoveSuccess('#click_1_1', move, undefined, [0, 0]);
         const secondMove: GoMove = new GoMove(2, 2);
-        await componentTestUtils.expectMoveSuccess('#click_2_2', secondMove, undefined, 0, 0);
+        await componentTestUtils.expectMoveSuccess('#click_2_2', secondMove, undefined, [0, 0]);
     }));
 });

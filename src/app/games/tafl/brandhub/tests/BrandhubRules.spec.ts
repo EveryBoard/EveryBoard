@@ -1,5 +1,4 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
@@ -152,7 +151,7 @@ describe('BrandhubRules', () => {
             [_, _, _, X, _, _, _],
         ];
         const expectedState: BrandhubState = new BrandhubState(expectedBoard, 1);
-        const node: BrandhubNode = new MGPNode(null, null, expectedState);
+        const node: BrandhubNode = new BrandhubNode(expectedState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
@@ -183,7 +182,7 @@ describe('BrandhubRules', () => {
             [_, _, _, X, _, _, _],
         ];
         const expectedState: BrandhubState = new BrandhubState(expectedBoard, 1);
-        const node: BrandhubNode = new MGPNode(null, null, expectedState);
+        const node: BrandhubNode = new BrandhubNode(expectedState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
@@ -214,7 +213,7 @@ describe('BrandhubRules', () => {
             [_, _, _, X, _, _, _],
         ];
         const expectedState: BrandhubState = new BrandhubState(expectedBoard, 1);
-        const node: BrandhubNode = new MGPNode(null, null, expectedState);
+        const node: BrandhubNode = new BrandhubNode(expectedState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
@@ -245,7 +244,7 @@ describe('BrandhubRules', () => {
             [_, _, _, X, _, _, _],
         ];
         const expectedState: BrandhubState = new BrandhubState(expectedBoard, 1);
-        const node: BrandhubNode = new MGPNode(null, null, expectedState);
+        const node: BrandhubNode = new BrandhubNode(expectedState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
@@ -276,7 +275,7 @@ describe('BrandhubRules', () => {
             [_, _, _, X, _, _, _],
         ];
         const expectedState: BrandhubState = new BrandhubState(expectedBoard, 1);
-        const node: BrandhubNode = new MGPNode(null, null, expectedState);
+        const node: BrandhubNode = new BrandhubNode(expectedState);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });

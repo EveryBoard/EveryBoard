@@ -41,7 +41,6 @@ export class MinimaxTestingState extends GameStateWithTable<number> {
 
     public constructor(readonly turn: number, readonly location: Coord) {
         super(ArrayUtils.copyBiArray(MinimaxTestingState.initialBoard), turn);
-        if (location == null) throw new Error('location cannot be null');
     }
     public static getInitialState(): MinimaxTestingState {
         return new MinimaxTestingState(0, new Coord(0, 0));

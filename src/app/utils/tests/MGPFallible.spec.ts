@@ -5,17 +5,12 @@ describe('MGPFallible', () => {
 
     describe('success', () => {
         const value: MGPFallible<number> = MGPFallible.success(42);
-        it('should not accept null values', () => {
-            expect(() => MGPFallible.success(null))
-                .toThrowError('Fallible cannot be created with empty value, use MGPFallible.failure instead');
-        });
         it('should create a success value', () => {
             expect(value.isSuccess()).toBeTrue();
             expect(value.isFailure()).toBeFalse();
         });
-        it('should have value accessible with get and getOrNull', () => {
+        it('should have value accessible with get', () => {
             expect(value.get()).toBe(42);
-            expect(value.getOrNull()).toBe(42);
         });
         it('should throw when accessing the failure reason', () => {
             expect(() => value.getReason())
@@ -23,6 +18,9 @@ describe('MGPFallible', () => {
         });
         it('should convert to an optional with the same value', () => {
             expect(value.toOptional()).toEqual(MGPOptional.of(42));
+        });
+        it('should extract the passed value with getReasonOr', () => {
+            expect(value.getReasonOr('foo')).toBe('foo');
         });
         it('should have a well-defined equality', () => {
             expect(value.equals(value)).toBeTrue();
@@ -36,15 +34,17 @@ describe('MGPFallible', () => {
             expect(value.isSuccess()).toBeFalse();
             expect(value.isFailure()).toBeTrue();
         });
-        it('should throw when accessing value with get, and return null with getOrNull', () => {
+        it('should throw when accessing value with get', () => {
             expect(() => value.get()).toThrowError('Value is absent from failure, with the following reason: reason');
-            expect(value.getOrNull()).toBe(null);
         });
         it('should contain the failure reason', () => {
             expect(value.getReason()).toBe('reason');
         });
         it('should convert to an empty optional', () => {
             expect(value.toOptional()).toEqual(MGPOptional.empty());
+        });
+        it('should extract the reason with getReasonOr', () => {
+            expect(value.getReasonOr('foo')).toBe('reason');
         });
         it('should have a well-defined equality', () => {
             expect(value.equals(value)).toBeTrue();
