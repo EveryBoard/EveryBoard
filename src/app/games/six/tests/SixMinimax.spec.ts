@@ -173,7 +173,7 @@ describe('SixMinimax', () => {
             RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
                                                                weakerState, MGPOptional.of(move),
                                                                strongerState, MGPOptional.of(move),
-                                                              Player.ONE);
+                                                               Player.ONE);
         });
     });
     describe('Phase 2', () => {

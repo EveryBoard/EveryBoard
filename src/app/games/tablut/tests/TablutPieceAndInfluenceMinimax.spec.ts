@@ -52,7 +52,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
         RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
                                                            weakState, MGPOptional.empty(),
                                                            strongState, MGPOptional.empty(),
-                                                          Player.ONE);
+                                                           Player.ONE);
     });
     it('Should be better of with more influence (at piece number equal)', () => {
         const weakBoard: Table<TablutCase> = [
