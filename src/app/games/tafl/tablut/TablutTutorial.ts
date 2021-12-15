@@ -33,7 +33,7 @@ export class TablutTutorial {
             <li>Only the king can land on a throne.</li>
         </ol>
         To move a piece, click on it and then on its landing square.<br/><br/>
-        This is the initial board, do the first move.`,
+        You're playing Dark, do the first move.`,
             TablutState.getInitialState(),
             TablutMove.of(new Coord(4, 1), new Coord(1, 1)),
             $localize`Congratulations!`,

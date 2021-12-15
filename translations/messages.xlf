@@ -155,8 +155,8 @@
       <trans-unit id="5737474371494262748" datatype="html">
         <source>Put your hexagonal pieces next to another one, and create one of the 3 victorious shapes to win!</source>
       </trans-unit>
-      <trans-unit id="5953008102885748258" datatype="html">
-        <source>The Vikings checkers! Invaders must capture the king, defender must make him escape!</source>
+      <trans-unit id="3778423604946977624" datatype="html">
+        <source>The Viking board game! Invaders must capture the king, defender must make him escape!</source>
       </trans-unit>
       <trans-unit id="7926456268600574942" datatype="html">
         <source>Align your pieces to score points, but beware, pieces can flip!</source>
@@ -2078,8 +2078,8 @@
       <trans-unit id="1634828513961256784" datatype="html">
         <source>Brandhub is the Irish version of the family of viking strategy game called Tafl. The goal of the game is different for each player. The attacker plays first. Their pieces (dark) are close to the edges. Their goal is to capture the king, which is in the center of the board. The defender plays second. Their pieces (light) are in the middle. Their goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
       </trans-unit>
-      <trans-unit id="676965820757710392" datatype="html">
-        <source>All pieces move the same way. Similarly to a rook in chess, a piece can move: &lt;ol&gt;&lt;li&gt;By as many squares as you want.&lt;/li&gt;&lt;li&gt;Without going over another piece or stopping on another piece.&lt;/li&gt;&lt;li&gt;Horizontally or vertically.&lt;/li&gt;&lt;li&gt;Only the king can land on a corner throne.&lt;/li&gt;&lt;li&gt;Once the king left his central throne, he can&apos;t go back on it, nor can the other pieces.&lt;/li&gt;&lt;/ol&gt;To move a piece, click on it and then on its landing square.&lt;br/&gt;&lt;br/&gt;This is the initial board, do the first move.</source>
+      <trans-unit id="3703259835450002878" datatype="html">
+        <source>All pieces move the same way. Similarly to a rook in chess, a piece can move: &lt;ol&gt;&lt;li&gt;By as many squares as you want.&lt;/li&gt;&lt;li&gt;Without going over another piece or stopping on another piece.&lt;/li&gt;&lt;li&gt;Horizontally or vertically.&lt;/li&gt;&lt;li&gt;Only the king can land on a corner throne.&lt;/li&gt;&lt;li&gt;Once the king left his central throne, he can&apos;t go back on it, nor can the other pieces.&lt;/li&gt;&lt;/ol&gt;To move a piece, click on it and then on its landing square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do the first move.</source>
       </trans-unit>
       <trans-unit id="6012770625680782650" datatype="html">
         <source>Capturing a soldier (1/2)</source>
@@ -2138,7 +2138,7 @@
         Its goal is to move the king on one of the 4 thrones in the corners.
         Note that the square in which the king starts, in the center of the board, is also a throne.</source>
       </trans-unit>
-      <trans-unit id="688519268553438993" datatype="html">
+      <trans-unit id="5152957749531280485" datatype="html">
         <source>All pieces move the same way.
         Similarly to a rook in chess, a piece can move:
         &lt;ol&gt;
@@ -2148,7 +2148,7 @@
             &lt;li&gt;Only the king can land on a throne.&lt;/li&gt;
         &lt;/ol&gt;
         To move a piece, click on it and then on its landing square.&lt;br/&gt;&lt;br/&gt;
-        This is the initial board, do the first move.</source>
+        You&apos;re playing Dark, do the first move.</source>
       </trans-unit>
       <trans-unit id="2222427678565473040" datatype="html">
         <source>Capturing the king (1/2)</source>

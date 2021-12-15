@@ -18,7 +18,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
     const _: TaflPawn = TaflPawn.UNOCCUPIED;
     const O: TaflPawn = TaflPawn.INVADERS;
     const X: TaflPawn = TaflPawn.DEFENDERS;
-    const T: TaflPawn = TaflPawn.PLAYER_ONE_KING;
+    const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
 
     beforeEach(() => {
         const rules: TablutRules = TablutRules.get();
@@ -28,7 +28,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
     it('Should be better of with more piece', () => {
         const weakBoard: Table<TaflPawn> = [
             [_, _, _, _, _, _, _, _, _],
-            [_, _, O, T, O, _, _, _, _],
+            [_, _, O, A, O, _, _, _, _],
             [_, _, _, O, _, _, _, _, _],
             [_, _, _, _, _, _, X, _, _],
             [_, _, _, _, _, _, _, _, _],
@@ -40,7 +40,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
         const weakState: TablutState = new TablutState(weakBoard, 0);
         const strongBoard: Table<TaflPawn> = [
             [_, _, _, _, _, _, _, _, _],
-            [_, _, O, T, O, _, X, _, _],
+            [_, _, O, A, O, _, X, _, _],
             [_, _, _, O, _, _, _, _, _],
             [_, _, _, _, _, _, X, _, _],
             [_, _, _, _, _, _, _, _, _],
@@ -58,7 +58,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, O, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
-            [_, _, O, _, T, _, O, _, _],
+            [_, _, O, _, A, _, O, _, _],
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, O, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
@@ -70,7 +70,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, O, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
-            [_, O, _, _, T, _, _, O, _],
+            [_, O, _, _, A, _, _, O, _],
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, O, _, _, _, _],
@@ -85,7 +85,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
             [O, _, _, X, O, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
-            [_, _, _, _, T, _, _, _, _],
+            [_, _, _, _, A, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
@@ -97,7 +97,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
             [O, _, X, _, O, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
-            [_, _, _, _, T, _, _, _, _],
+            [_, _, _, _, A, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
@@ -112,7 +112,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
             [X, _, O, _, X, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
-            [_, _, _, _, T, _, _, _, _],
+            [_, _, _, _, A, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
@@ -124,7 +124,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
             [X, _, _, O, X, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
-            [_, _, _, _, T, _, _, _, _],
+            [_, _, _, _, A, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
@@ -139,7 +139,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [O, _, _, _, _, _, _, _, _],
             [_, X, X, _, _, _, _, _, _],
             [X, _, _, _, _, _, _, _, _],
-            [_, _, _, _, T, _, _, _, _],
+            [_, _, _, _, A, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
@@ -151,7 +151,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             [_, _, _, _, _, _, _, _, _],
             [X, _, X, _, _, _, _, _, _],
             [X, _, _, _, _, _, _, _, _],
-            [_, _, _, _, T, _, _, _, _],
+            [_, _, _, _, A, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
@@ -161,13 +161,13 @@ describe('TablutPieceAndInfluenceMinimax', () => {
         RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, null, strongState, null, minimax);
     });
     describe('isThreatened', () => {
-        it('should now that empty thrones are threats', () => {
+        it('should now that empty thrones are threatening', () => {
             const board: Table<TaflPawn> = [
                 [_, _, _, _, _, _, _, _, _],
                 [X, _, _, _, _, _, _, _, _],
                 [_, _, O, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
-                [_, _, _, _, T, _, _, _, _],
+                [_, _, _, _, A, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
@@ -185,7 +185,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
                 [_, _, _, _, _, _, _, _, _],
                 [X, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
-                [O, _, _, _, T, _, _, _, _],
+                [O, _, _, _, A, _, _, _, _],
                 [X, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
@@ -203,7 +203,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, X, _, _, _, _, _],
-                [O, _, _, _, T, _, _, _, _],
+                [O, _, _, _, A, _, _, _, _],
                 [X, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
@@ -221,7 +221,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, O, _, _, _, _, _],
-                [O, _, _, T, _, _, _, _, _],
+                [O, _, _, A, _, _, _, _, _],
                 [O, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
@@ -233,13 +233,13 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.filterThreatMap(threatMap, state);
             expect(filteredThreatMap.containsKey(new Coord(3, 4))).toBeFalse();
         });
-        it('should not consider opponent-threatened piece as threats', () => {
+        it(`should not consider neighbors opponent's threatened pieces as threatening`, () => {
             const board: Table<TaflPawn> = [
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, X, _, _, _, _],
                 [_, _, _, O, X, _, O, _, _],
-                [_, _, X, X, T, _, _, _, _],
+                [_, _, X, X, A, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, O, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
@@ -257,13 +257,36 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             expectedMap.set(new Coord(3, 3), new MGPSet(expectedThreats));
             expect(filteredThreatMap.equals(expectedMap)).toBeTrue();
         });
-        it('should not consider ensandwiched piece as threats', () => {
+        it(`should not consider "moving" opponent's threatened pieces as threatening`, () => {
+            // Given a board were the passive player threaten (4, 3) with a "moving" threatened (6, 3)
+            const board: Table<TaflPawn> = [
+                [_, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _],
+                [_, _, _, O, _, _, X, _, _],
+                [_, _, _, O, X, _, O, _, _],
+                [_, _, _, X, A, _, _, X, _],
+                [_, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _],
+            ];
+            const state: TablutState = new TablutState(board, 1);
+            const pieces: MGPMap<Player, MGPSet<Coord>> = minimax.getPiecesMap(state);
+            const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.getThreatMap(state, pieces);
+
+            // When checking the threat list
+            const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.filterThreatMap(threatMap, state);
+
+            // Then (4, 3) should not be deemed threaten since (6, 3) could be killed
+            expect(filteredThreatMap.containsKey(new Coord(4, 3))).toBeFalse();
+        });
+        it('should not consider ensandwiched pieces as threatened', () => {
             const board: Table<TaflPawn> = [
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
-                [_, _, _, _, T, _, _, _, _],
+                [_, _, _, _, A, _, _, _, _],
                 [_, _, _, _, O, _, _, _, _],
                 [_, _, _, _, X, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
@@ -279,7 +302,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
     describe('Victory', () => {
         it('Should choose king escape, at depth 1 and more', () => {
             const board: Table<TaflPawn> = [
-                [_, T, _, _, _, _, _, O, _],
+                [_, A, _, _, _, _, _, O, _],
                 [_, O, _, O, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
