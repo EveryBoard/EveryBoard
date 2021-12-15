@@ -62,9 +62,6 @@ export class AbaloneMove extends MoveCoord {
         }
     }
     public static fromDoubleCoord(first: Coord, second: Coord, dir: HexaDirection): MGPFallible<AbaloneMove> {
-        if (second == null) {
-            return MGPFallible.failure('second coord cannot be null');
-        }
         const coords: Coord[] = [first, second];
         ArrayUtils.sortByDescending(coords, AbaloneMove.sortCoord);
         const direction: Direction = coords[1].getDirectionToward(coords[0]).get();
@@ -93,9 +90,6 @@ export class AbaloneMove extends MoveCoord {
                         public lastPiece: MGPOptional<Coord>)
     {
         super(coord.x, coord.y);
-        if (dir == null) {
-            throw new Error('Direction cannot be null.');
-        }
         if (coord.isNotInRange(9, 9)) {
             throw new Error('Coord ' + coord.toString() + ' out of range, invalid move!');
         }

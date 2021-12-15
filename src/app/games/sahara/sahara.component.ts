@@ -27,9 +27,9 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
 {
     public static VERBOSE: boolean = false;
 
-    public lastCoord: Coord = new Coord(-2, -2);
+    public lastCoord: MGPOptional<Coord> = MGPOptional.empty();
 
-    public lastMoved: Coord = new Coord(-2, -2);
+    public lastMoved: MGPOptional<Coord> = MGPOptional.empty();
 
     public chosenCoord: MGPOptional<Coord> = MGPOptional.empty();
 
@@ -50,7 +50,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         const clickedCoord: Coord = new Coord(x, y);
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.reason);
+            return this.cancelMove(clickValidity.getReason());
         }
         if (this.chosenCoord.isAbsent()) { // Must select pyramid
             return this.choosePiece(x, y);
@@ -67,7 +67,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
             } catch (error) {
                 return this.cancelMove(error.message);
             }
-            return await this.chooseMove(newMove, this.rules.node.gameState, null, null);
+            return await this.chooseMove(newMove, this.rules.node.gameState);
         }
     }
     private choosePiece(x: number, y: number): MGPValidation {
@@ -82,14 +82,9 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
     }
     public updateBoard(): void {
         this.chosenCoord = MGPOptional.empty();
-        const move: SaharaMove = this.rules.node.move;
-        if (move == null) {
-            this.lastCoord = null;
-            this.lastMoved = null;
-        } else {
-            this.lastCoord = move.coord;
-            this.lastMoved = move.end;
-        }
+        const move: MGPOptional<SaharaMove> = this.rules.node.move;
+        this.lastCoord = move.map((move: SaharaMove) => move.coord);
+        this.lastMoved = move.map((move: SaharaMove) => move.end);
         this.board = this.rules.node.gameState.board;
     }
     public getPlayerClassFor(x: number, y: number): string {

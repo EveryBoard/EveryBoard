@@ -2,8 +2,7 @@ import { Component } from '@angular/core';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { SiamMove } from 'src/app/games/siam/SiamMove';
 import { SiamState } from 'src/app/games/siam/SiamState';
-import { SiamLegalityStatus } from 'src/app/games/siam/SiamLegalityStatus';
-import { SiamRules } from 'src/app/games/siam/SiamRules';
+import { SiamLegalityInformation, SiamRules } from 'src/app/games/siam/SiamRules';
 import { SiamMinimax } from 'src/app/games/siam/SiamMinimax';
 import { SiamPiece } from 'src/app/games/siam/SiamPiece';
 import { SiamTutorial } from './SiamTutorial';
@@ -27,15 +26,15 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
                                                             SiamMove,
                                                             SiamState,
                                                             SiamPiece,
-                                                            SiamLegalityStatus>
+                                                            SiamLegalityInformation>
 {
     public static VERBOSE: boolean = false;
 
-    public lastMove: SiamMove;
-    public chosenCoord: Coord;
-    public landingCoord: Coord;
-    public chosenDirection: MGPOptional<Orthogonal>;
-    public chosenOrientation: Orthogonal;
+    public lastMove: MGPOptional<SiamMove> = MGPOptional.empty();
+    public chosenCoord: MGPOptional<Coord> = MGPOptional.empty();
+    public landingCoord: MGPOptional<Coord> = MGPOptional.empty();
+    public chosenDirection: MGPOptional<Orthogonal> = MGPOptional.empty();
+    public chosenOrientation: MGPOptional<Orthogonal> = MGPOptional.empty();
     public movedPieces: Coord[] = [];
 
     public constructor(messageDisplayer: MessageDisplayer) {
@@ -53,36 +52,37 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         const state: SiamState = this.rules.node.gameState;
         this.board = state.board;
         this.lastMove = this.rules.node.move;
-        if (this.lastMove) {
-            this.movedPieces = this.rules.isLegal(this.lastMove, this.rules.node.mother.gameState).moved;
+        if (this.lastMove.isPresent()) {
+            const previousGameState: SiamState = this.rules.node.mother.get().gameState;
+            this.movedPieces = this.rules.isLegal(this.lastMove.get(), previousGameState).get().moved;
         } else {
             this.movedPieces = [];
         }
     }
     public cancelMoveAttempt(): void {
-        this.chosenCoord = null;
-        this.chosenDirection = null;
-        this.landingCoord = null;
-        this.chosenOrientation = null;
+        this.chosenCoord = MGPOptional.empty();
+        this.chosenDirection = MGPOptional.empty();
+        this.landingCoord = MGPOptional.empty();
+        this.chosenOrientation = MGPOptional.empty();
     }
     public clickPiece(x: number, y: number): MGPValidation {
         const clickValidity: MGPValidation = this.canUserPlay('#clickPiece_' + x + '_' + y);
         if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.reason);
+            return this.cancelMove(clickValidity.getReason());
         }
         const piece: SiamPiece = this.board[y][x];
         const opponent: Player = this.rules.node.gameState.getCurrentOpponent();
         if (piece.getOwner() === opponent) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
-        this.chosenCoord = new Coord(x, y);
+        this.chosenCoord = MGPOptional.of(new Coord(x, y));
         return MGPValidation.SUCCESS;
     }
     public async chooseDirection(direction: string): Promise<MGPValidation> {
         display(SiamComponent.VERBOSE, 'SiamComponent.chooseDirection(' + direction + ')');
         const clickValidity: MGPValidation = this.canUserPlay('#chooseDirection_' + direction);
         if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.reason);
+            return this.cancelMove(clickValidity.getReason());
         }
         if (direction === '') {
             this.chosenDirection = MGPOptional.empty();
@@ -90,10 +90,10 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         } else {
             const dir: Orthogonal = Orthogonal.factory.fromString(direction).get();
             this.chosenDirection = MGPOptional.of(dir);
-            this.landingCoord = this.chosenCoord.getNext(dir);
-            if (this.landingCoord.isNotInRange(5, 5)) {
+            this.landingCoord = MGPOptional.of(this.chosenCoord.get().getNext(dir));
+            if (this.landingCoord.get().isNotInRange(5, 5)) {
                 display(SiamComponent.VERBOSE, 'orientation and direction should be the same: ' + dir);
-                this.chosenOrientation = dir;
+                this.chosenOrientation = MGPOptional.of(dir);
                 return await this.tryMove();
             }
         }
@@ -103,44 +103,44 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         display(SiamComponent.VERBOSE, 'SiamComponent.chooseOrientation(' + orientation + ')');
         const clickValidity: MGPValidation = this.canUserPlay('#chooseOrientation_' + orientation);
         if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.reason);
+            return this.cancelMove(clickValidity.getReason());
         }
-        this.chosenOrientation = Orthogonal.factory.fromString(orientation).get();
+        this.chosenOrientation = MGPOptional.of(Orthogonal.factory.fromString(orientation).get());
         return await this.tryMove();
     }
     public async insertAt(x: number, y: number): Promise<MGPValidation> {
         display(SiamComponent.VERBOSE, 'SiamComponent.insertAt(' + x + ', ' + y + ')');
         const clickValidity: MGPValidation = this.canUserPlay('#insertAt_' + x + '_' + y);
         if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.reason);
+            return this.cancelMove(clickValidity.getReason());
         }
-        if (this.chosenCoord) {
+        if (this.chosenCoord.isPresent()) {
             return this.cancelMove(SiamFailure.CANNOT_INSERT_WHEN_SELECTED());
         } else {
-            this.chosenCoord = new Coord(x, y);
+            this.chosenCoord = MGPOptional.of(new Coord(x, y));
             const dir: Orthogonal = SiamRules.getCoordDirection(x, y, this.rules.node.gameState);
             this.chosenDirection = MGPOptional.of(dir);
-            this.landingCoord = this.chosenCoord.getNext(dir);
+            this.landingCoord = MGPOptional.of(this.chosenCoord.get().getNext(dir));
             return MGPValidation.SUCCESS;
         }
     }
     public async tryMove(): Promise<MGPValidation> {
-        const move: SiamMove = new SiamMove(this.chosenCoord.x,
-                                            this.chosenCoord.y,
+        const chosenCoord: Coord = this.chosenCoord.get();
+        const move: SiamMove = new SiamMove(chosenCoord.x,
+                                            chosenCoord.y,
                                             this.chosenDirection,
-                                            this.chosenOrientation);
+                                            this.chosenOrientation.get());
         this.cancelMove();
-        return await this.chooseMove(move, this.rules.node.gameState, null, null);
+        return await this.chooseMove(move, this.rules.node.gameState);
     }
     public isMountain(piece: SiamPiece): boolean {
         return piece === SiamPiece.MOUNTAIN;
     }
     public choosingOrientation(x: number, y: number): boolean {
         const coord: Coord = new Coord(x, y);
-        if (this.chosenCoord &&
-            this.chosenDirection &&
-            coord.equals(this.landingCoord) &&
-            this.chosenOrientation == null)
+        if (this.chosenCoord.isPresent() &&
+            this.landingCoord.equalsValue(coord) &&
+            this.chosenOrientation.isAbsent())
         {
             display(SiamComponent.VERBOSE, 'choosing orientation now');
             return true;
@@ -149,10 +149,10 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
     }
     public choosingDirection(x: number, y: number): boolean {
         const coord: Coord = new Coord(x, y);
-        if (coord.equals(this.chosenCoord) &&
-            this.chosenDirection == null &&
-            this.landingCoord == null &&
-            this.chosenOrientation == null)
+        if (this.chosenCoord.equalsValue(coord) &&
+            this.chosenDirection.isAbsent() &&
+            this.landingCoord.isAbsent() &&
+            this.chosenOrientation.isAbsent())
         {
             display(SiamComponent.VERBOSE, 'choosing direction now');
             return true;

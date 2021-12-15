@@ -1,6 +1,7 @@
 import { GroupDatas } from 'src/app/jscaip/BoardDatas';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPMap } from 'src/app/utils/MGPMap';
+import { Utils } from 'src/app/utils/utils';
 import { GoPiece } from './GoState';
 
 export class GoGroupDatas extends GroupDatas<GoPiece> {
@@ -27,7 +28,7 @@ export class GoGroupDatas extends GroupDatas<GoPiece> {
             return this.emptyCoords;
         }
     }
-    public countains(coord: Coord): boolean {
+    public contains(coord: Coord): boolean {
         const allCoords: Coord[] = this.blackCoords
             .concat(this.whiteCoords
                 .concat(this.emptyCoords
@@ -36,23 +37,25 @@ export class GoGroupDatas extends GroupDatas<GoPiece> {
         return allCoords.some((c: Coord) => c.equals(coord));
     }
     public addPawn(coord: Coord, color: GoPiece): void {
-        if (this.countains(coord)) {
+        if (this.contains(coord)) {
             throw new Error('This group already contains ' + coord);
         }
-        if (color === GoPiece.BLACK) {
-            this.blackCoords = GroupDatas.insertAsEntryPoint(this.blackCoords, coord);
-        } else if (color === GoPiece.WHITE) {
-            this.whiteCoords = GroupDatas.insertAsEntryPoint(this.whiteCoords, coord);
-        } else if (color === GoPiece.DEAD_BLACK) {
-            this.deadBlackCoords = GroupDatas.insertAsEntryPoint(this.deadBlackCoords, coord);
-        } else if (color === GoPiece.DEAD_WHITE) {
-            this.deadWhiteCoords = GroupDatas.insertAsEntryPoint(this.deadWhiteCoords, coord);
-        } else if (color === GoPiece.EMPTY ||
-            color === GoPiece.BLACK_TERRITORY ||
-            color === GoPiece.WHITE_TERRITORY) {
-            this.emptyCoords = GroupDatas.insertAsEntryPoint(this.emptyCoords, coord);
-        } else {
-            throw new Error(`This pawn color does not exist for Go: ` + color.toString());
+        switch (color) {
+            case GoPiece.BLACK:
+                this.blackCoords = GroupDatas.insertAsEntryPoint(this.blackCoords, coord);
+                break;
+            case GoPiece.WHITE:
+                this.whiteCoords = GroupDatas.insertAsEntryPoint(this.whiteCoords, coord);
+                break;
+            case GoPiece.DEAD_BLACK:
+                this.deadBlackCoords = GroupDatas.insertAsEntryPoint(this.deadBlackCoords, coord);
+                break;
+            case GoPiece.DEAD_WHITE:
+                this.deadWhiteCoords = GroupDatas.insertAsEntryPoint(this.deadWhiteCoords, coord);
+                break;
+            default:
+                Utils.expectToBeMultiple(color, [GoPiece.EMPTY, GoPiece.BLACK_TERRITORY, GoPiece.WHITE_TERRITORY]);
+                this.emptyCoords = GroupDatas.insertAsEntryPoint(this.emptyCoords, coord);
         }
     }
     public isMonoWrapped(): boolean {

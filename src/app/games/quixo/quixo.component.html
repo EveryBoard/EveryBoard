@@ -18,11 +18,11 @@
             />
         </g>
     </g>
-    <g *ngIf="chosenCoord != null">
+    <g *ngIf="chosenCoord.isPresent()">
         <use *ngFor="let direction of getPossiblesDirections()"
              xlink:href="#triangle"
              id="chooseDirection_{{ direction }}"
              (click)="chooseDirection(direction)"
-             [attr.transform]="getArrowTransform(chosenCoord, direction)"/>
+             [attr.transform]="getArrowTransform(chosenCoord.get(), direction)"/>
     </g>
 </svg>

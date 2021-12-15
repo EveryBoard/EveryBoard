@@ -8,12 +8,11 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GipfMinimax } from '../gipf/GipfMinimax';
 import { GipfCapture } from '../gipf/GipfMove';
 import { YinshState } from './YinshState';
-import { YinshLegalityStatus } from './YinshLegalityStatus';
 import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';
-import { YinshNode, YinshRules } from './YinshRules';
+import { YinshLegalityInformation, YinshNode, YinshRules } from './YinshRules';
 
-export class YinshMinimax extends Minimax<YinshMove, YinshState, YinshLegalityStatus> {
+export class YinshMinimax extends Minimax<YinshMove, YinshState, YinshLegalityInformation> {
 
     public getBoardValue(node: YinshNode): NodeUnheritance {
         const gameStatus: GameStatus = this.ruler.getGameStatus(node);

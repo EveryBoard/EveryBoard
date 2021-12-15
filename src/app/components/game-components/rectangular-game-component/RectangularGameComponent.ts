@@ -1,5 +1,4 @@
 import { Move } from '../../../jscaip/Move';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Component } from '@angular/core';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { GameComponent } from '../game-component/GameComponent';
@@ -13,7 +12,7 @@ export abstract class RectangularGameComponent<R extends Rules<M, S, L>,
                                                M extends Move,
                                                S extends GameStateWithTable<P>,
                                                P,
-                                               L extends LegalityStatus = LegalityStatus>
+                                               L = void>
     extends GameComponent<R, M, S, L>
 {
 

@@ -1,13 +1,12 @@
-import { ReversiNode, ReversiRules } from '../ReversiRules';
+import { ReversiLegalityInformation, ReversiNode, ReversiRules } from '../ReversiRules';
 import { ReversiMinimax } from '../ReversiMinimax';
 import { ReversiMove } from '../ReversiMove';
 import { ReversiState } from '../ReversiState';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
-import { Table } from 'src/app/utils/ArrayUtils';
-import { ReversiLegalityStatus } from '../ReversiLegalityStatus';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Minimax } from 'src/app/jscaip/Minimax';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Table } from 'src/app/utils/ArrayUtils';
 
 describe('ReversiRules', () => {
 
@@ -16,7 +15,7 @@ describe('ReversiRules', () => {
     const O: Player = Player.ZERO;
 
     let rules: ReversiRules;
-    let minimaxes: Minimax<ReversiMove, ReversiState, ReversiLegalityStatus>[];
+    let minimaxes: Minimax<ReversiMove, ReversiState, ReversiLegalityInformation>[];
 
     beforeEach(() => {
         rules = new ReversiRules(ReversiState);
@@ -61,7 +60,7 @@ describe('ReversiRules', () => {
             [_, _, _, _, O, _, _, _],
         ];
         const state: ReversiState = new ReversiState(board, 1);
-        rules.node = new MGPNode(null, null, state);
+        rules.node = new ReversiNode(state);
         expect(rules.choose(ReversiMove.PASS)).toBeTrue();
     });
     describe('Endgames', () => {
@@ -88,12 +87,10 @@ describe('ReversiRules', () => {
             ];
             const state: ReversiState = new ReversiState(board, 59);
             const move: ReversiMove = new ReversiMove(0, 7);
-            const status: ReversiLegalityStatus = rules.isLegal(move, state);
-            expect(status.legal.isSuccess()).toBeTrue();
-            const resultingState: ReversiState = rules.applyLegalMove(move, state, status);
             const expectedState: ReversiState = new ReversiState(expectedBoard, 60);
-            expect(resultingState).toEqual(expectedState);
-            RulesUtils.expectToBeVictoryFor(rules, new MGPNode(null, move, expectedState), Player.ONE, minimaxes);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            const node: ReversiNode = new ReversiNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
         });
         it('Should consider the player with the more point the winner at the end (Player.ZERO remix)', () => {
             const board: Table<Player> = [
@@ -118,12 +115,10 @@ describe('ReversiRules', () => {
             ];
             const state: ReversiState = new ReversiState(board, 60);
             const move: ReversiMove = new ReversiMove(0, 7);
-            const status: ReversiLegalityStatus = rules.isLegal(move, state);
-            expect(status.legal.isSuccess()).toBeTrue();
-            const resultingState: ReversiState = rules.applyLegalMove(move, state, status);
             const expectedState: ReversiState = new ReversiState(expectedBoard, 61);
-            expect(resultingState).toEqual(expectedState);
-            RulesUtils.expectToBeVictoryFor(rules, new MGPNode(null, move, expectedState), Player.ZERO, minimaxes);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            const node: ReversiNode = new ReversiNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
         });
         it('Should recognize draws', () => {
             const board: Table<Player> = [
@@ -148,12 +143,11 @@ describe('ReversiRules', () => {
             ];
             const state: ReversiState = new ReversiState(board, 60);
             const move: ReversiMove = new ReversiMove(0, 7);
-            const status: ReversiLegalityStatus = rules.isLegal(move, state);
-            expect(status.legal.isSuccess()).toBeTrue();
-            const resultingState: ReversiState = rules.applyLegalMove(move, state, status);
             const expectedState: ReversiState = new ReversiState(expectedBoard, 61);
-            expect(resultingState).toEqual(expectedState);
-            const node: ReversiNode = new MGPNode(null, move, resultingState);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+            const node: ReversiNode = new ReversiNode(expectedState,
+                                                      MGPOptional.empty(),
+                                                      MGPOptional.of(move));
             RulesUtils.expectToBeDraw(rules, node, minimaxes);
         });
     });

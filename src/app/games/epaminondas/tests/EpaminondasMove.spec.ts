@@ -7,14 +7,6 @@ import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 
 describe('EpaminondasMove: ', () => {
 
-    it('Should forbid null values', () => {
-        expect(() => new EpaminondasMove(null, 1, 1, 1, Direction.UP)).toThrowError('X cannot be null.');
-        expect(() => new EpaminondasMove(1, null, 1, 1, Direction.UP)).toThrowError('Y cannot be null.');
-        expect(() => new EpaminondasMove(1, 1, null, 1, Direction.UP))
-            .toThrowError('Number of moved pieces cannot be null.');
-        expect(() => new EpaminondasMove(1, 1, 1, null, Direction.UP)).toThrowError('Step size cannot be null.');
-        expect(() => new EpaminondasMove(1, 1, 1, 1, null)).toThrowError('Direction cannot be null.');
-    });
     it('Should forbid out of range coords', () => {
         expect(() => new EpaminondasMove(-1, 0, 1, 1, Direction.DOWN_LEFT))
             .toThrowError('Illegal coord outside of board (-1, 0).');

@@ -10,31 +10,21 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { GipfCapture, GipfMove, GipfPlacement } from './GipfMove';
 import { GipfState } from './GipfState';
-import { GipfLegalityStatus } from './GipfLegalityStatus';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { GipfFailure } from './GipfFailure';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
-export class GipfNode extends MGPNode<GipfRules, GipfMove, GipfState> {}
+export type GipfLegalityInformation = GipfState
 
-export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityStatus> {
+export class GipfNode extends MGPNode<GipfRules, GipfMove, GipfState, GipfLegalityInformation> {}
 
-    public applyLegalMove(move: GipfMove, state: GipfState, status: GipfLegalityStatus): GipfState {
-        let stateWithoutTurn: GipfState;
-        if (status.computedState == null) {
-            const stateAfterInitialCapture: GipfState =
-                GipfRules.applyCaptures(state, move.initialCaptures);
-            const stateAfterPlacement: GipfState =
-                GipfRules.applyPlacement(stateAfterInitialCapture, move.placement);
-            const stateAfterFinalCapture: GipfState =
-                GipfRules.applyCaptures(stateAfterPlacement, move.finalCaptures);
-            stateWithoutTurn = stateAfterFinalCapture;
-        } else {
-            stateWithoutTurn = status.computedState;
-        }
-        return new GipfState(stateWithoutTurn.board,
-                             stateWithoutTurn.turn + 1,
-                             stateWithoutTurn.sidePieces,
-                             stateWithoutTurn.capturedPieces);
+export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformation> {
+
+    public applyLegalMove(_move: GipfMove, _state: GipfState, computedState: GipfLegalityInformation): GipfState {
+        return new GipfState(computedState.board,
+                             computedState.turn + 1,
+                             computedState.sidePieces,
+                             computedState.capturedPieces);
     }
     public static applyCaptures(state: GipfState, captures: ReadonlyArray<GipfCapture>)
     : GipfState
@@ -164,22 +154,22 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityStatus> {
             throw new Error('not a border');
         }
     }
-    public isLegal(move: GipfMove, state: GipfState): GipfLegalityStatus {
+    public isLegal(move: GipfMove, state: GipfState): MGPFallible<GipfLegalityInformation> {
         const initialCapturesValidity: MGPValidation = this.capturesValidity(state, move.initialCaptures);
         if (initialCapturesValidity.isFailure()) {
-            return { legal: initialCapturesValidity };
+            return initialCapturesValidity.toFailedFallible();
         }
         const stateAfterInitialCaptures: GipfState = GipfRules.applyCaptures(state, move.initialCaptures);
 
         const noMoreCaptureAfterInitialValidity: MGPValidation = this.noMoreCapturesValidity(stateAfterInitialCaptures);
         if (noMoreCaptureAfterInitialValidity.isFailure()) {
-            return { legal: noMoreCaptureAfterInitialValidity };
+            return noMoreCaptureAfterInitialValidity.toFailedFallible();
         }
 
         const placementValidity: MGPValidation =
             this.placementValidity(stateAfterInitialCaptures, move.placement);
         if (placementValidity.isFailure()) {
-            return { legal: placementValidity };
+            return placementValidity.toFailedFallible();
         }
         const stateAfterPlacement: GipfState =
             GipfRules.applyPlacement(stateAfterInitialCaptures, move.placement);
@@ -187,7 +177,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityStatus> {
         const finalCapturesValidity: MGPValidation =
             this.capturesValidity(stateAfterPlacement, move.finalCaptures);
         if (finalCapturesValidity.isFailure()) {
-            return { legal: finalCapturesValidity };
+            return finalCapturesValidity.toFailedFallible();
         }
 
         const stateAfterFinalCaptures: GipfState =
@@ -195,10 +185,10 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityStatus> {
         const noMoreCaptureAfterFinalValidity: MGPValidation =
             this.noMoreCapturesValidity(stateAfterFinalCaptures);
         if (noMoreCaptureAfterFinalValidity.isFailure()) {
-            return { legal: noMoreCaptureAfterFinalValidity };
+            return noMoreCaptureAfterFinalValidity.toFailedFallible();
         }
 
-        return { legal: MGPValidation.SUCCESS, computedState: stateAfterFinalCaptures };
+        return MGPFallible.success(stateAfterFinalCaptures);
     }
     private capturesValidity(state: GipfState, captures: ReadonlyArray<GipfCapture>)
     : MGPValidation

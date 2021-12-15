@@ -3,15 +3,13 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
-import { assert, display, FirebaseJSONObject } from 'src/app/utils/utils';
+import { assert, display, FirebaseJSONObject, Utils } from 'src/app/utils/utils';
 import { FirebaseCollectionObserver } from './FirebaseCollectionObserver';
 import { MGPOptional } from '../utils/MGPOptional';
 
 export interface IFirebaseFirestoreDAO<T extends FirebaseJSONObject> {
 
     create(newElement: T): Promise<string>;
-
-    read(id: string): Promise<T>;
 
     update(id: string, modification: Partial<T>): Promise<void>;
 
@@ -21,9 +19,9 @@ export interface IFirebaseFirestoreDAO<T extends FirebaseJSONObject> {
 
     getObsById(id: string): Observable<{id: string, doc: T}>;
 
-    observingWhere(conditions: [NonNullable<string>,
-                                NonNullable<firebase.firestore.WhereFilterOp>,
-                                NonNullable<unknown>][],
+    observingWhere(conditions: [string,
+                                firebase.firestore.WhereFilterOp,
+                                unknown][],
                    callback: FirebaseCollectionObserver<T>): () => void;
 }
 
@@ -36,20 +34,17 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
         const docRef: DocumentReference = await this.afs.collection<T>(this.collectionName).add({ ...newElement });
         return docRef.id;
     }
-    public async tryToRead(id: string): Promise<MGPOptional<T>> {
+    public async read(id: string): Promise<MGPOptional<T>> {
         const docSnapshot: firebase.firestore.DocumentSnapshot<T> =
             await this.afs.collection<T>(this.collectionName).doc(id).ref.get();
         if (docSnapshot.exists) {
-            return MGPOptional.of(docSnapshot.data() as NonNullable<T>);
+            return MGPOptional.of(docSnapshot.data() as T);
         } else {
             return MGPOptional.empty();
         }
     }
     public async exists(id: string): Promise<boolean> {
-        return (await this.tryToRead(id)).isPresent();
-    }
-    public async read(id: string): Promise<T> {
-        return (await this.tryToRead(id)).getOrNull();
+        return (await this.read(id)).isPresent();
     }
     public async update(id: string, modification: Partial<T>): Promise<void> {
         return this.afs.collection(this.collectionName).doc<T>(id).ref.update(modification);
@@ -78,14 +73,14 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
      * - a comparison
      * - a value that is matched against the field using the comparison
      **/
-    public observingWhere(conditions: [NonNullable<string>,
-                                       NonNullable<firebase.firestore.WhereFilterOp>,
-                                       NonNullable<unknown>][],
+    public observingWhere(conditions: [string,
+                                       firebase.firestore.WhereFilterOp,
+                                       unknown][],
                           callback: FirebaseCollectionObserver<T>)
     : () => void
     {
         assert(conditions.length >= 1, 'observingWhere called without conditions');
-        let query: firebase.firestore.Query<unknown> = null;
+        let query: firebase.firestore.Query<unknown> | null = null;
         for (const condition of conditions) {
             if (query == null) {
                 query = this.afs.collection(this.collectionName).ref
@@ -94,7 +89,7 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
                 query = query.where(condition[0], condition[1], condition[2]);
             }
         }
-        return query
+        return Utils.getNonNullable(query)
             .onSnapshot((snapshot: firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>) => {
                 const createdDocs: {doc: T, id: string}[] = [];
                 const modifiedDocs: {doc: T, id: string}[] = [];

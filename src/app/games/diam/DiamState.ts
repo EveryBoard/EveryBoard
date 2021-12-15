@@ -1,6 +1,6 @@
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { assert } from 'src/app/utils/utils';
+import { assert, Utils } from 'src/app/utils/utils';
 import { DiamPiece } from './DiamPiece';
 
 export class DiamState extends GameStateWithTable<DiamPiece> {
@@ -33,12 +33,14 @@ export class DiamState extends GameStateWithTable<DiamPiece> {
                'Invalid DiamState representation uses too many pieces');
         return new DiamState(board, pieces, turn);
     }
-    public static pieceIndex(piece: DiamPiece): 0 | 1 | 2 | 3 {
+    public static pieceIndex(piece: DiamPiece): number {
         switch (piece) {
             case DiamPiece.ZERO_FIRST: return 0;
             case DiamPiece.ZERO_SECOND: return 1;
             case DiamPiece.ONE_FIRST: return 2;
-            case DiamPiece.ONE_SECOND: return 3;
+            default:
+                Utils.expectToBe(piece, DiamPiece.ONE_SECOND);
+                return 3;
         }
     }
 

@@ -4,16 +4,14 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { PentagoFailure } from './PentagoFailure';
-import { PentagoLegalityStatus } from './PentagoLegalityStatus';
 import { PentagoMove } from './PentagoMove';
 import { PentagoState } from './PentagoState';
 
-export abstract class PentagoNode extends MGPNode<PentagoRules,
-                                                  PentagoMove,
-                                                  PentagoState,
-                                                  PentagoLegalityStatus> {}
-export class PentagoRules extends Rules<PentagoMove, PentagoState, PentagoLegalityStatus> {
+export class PentagoNode extends MGPNode<PentagoRules, PentagoMove, PentagoState> {}
+
+export class PentagoRules extends Rules<PentagoMove, PentagoState> {
 
     public static readonly singleton: PentagoRules = new PentagoRules(PentagoState);
 
@@ -41,27 +39,27 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState, PentagoLegali
         [new Coord(1, 4), new Vector(1, 0), true],
         [new Coord(1, 5), new Vector(1, 0), true],
     ];
-    public applyLegalMove(move: PentagoMove, state: PentagoState, status: PentagoLegalityStatus): PentagoState {
+    public applyLegalMove(move: PentagoMove, state: PentagoState, _info: void): PentagoState {
         return state.applyLegalMove(move);
     }
-    public isLegal(move: PentagoMove, state: PentagoState): PentagoLegalityStatus {
+    public isLegal(move: PentagoMove, state: PentagoState): MGPFallible<void> {
         if (state.getPieceAt(move.coord) !== Player.NONE) {
-            return PentagoLegalityStatus.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
+            return MGPFallible.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
         const postDropState: PentagoState = state.applyLegalDrop(move);
         if (postDropState.neutralBlocks.length === 0) {
             if (move.blockTurned.isAbsent()) {
-                return PentagoLegalityStatus.failure(PentagoFailure.MUST_CHOOSE_BLOCK_TO_ROTATE());
+                return MGPFallible.failure(PentagoFailure.MUST_CHOOSE_BLOCK_TO_ROTATE());
             }
         } else {
             if (move.blockTurned.isPresent()) {
                 const blockTurned: number = move.blockTurned.get();
                 if (postDropState.neutralBlocks.includes(blockTurned)) {
-                    return PentagoLegalityStatus.failure(PentagoFailure.CANNOT_ROTATE_NEUTRAL_BLOCK());
+                    return MGPFallible.failure(PentagoFailure.CANNOT_ROTATE_NEUTRAL_BLOCK());
                 }
             }
         }
-        return PentagoLegalityStatus.SUCCESS;
+        return MGPFallible.success(undefined);
     }
     public getVictoryCoords(state: PentagoState): Coord[] {
         let victoryCoords: Coord[] = [];

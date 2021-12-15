@@ -1,10 +1,9 @@
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { PylosCoord } from '../PylosCoord';
 import { PylosMinimax } from '../PylosMinimax';
 import { PylosMove } from '../PylosMove';
 import { PylosOrderedMinimax } from '../PylosOrderedMinimax';
 import { PylosState } from '../PylosState';
-import { PylosRules } from '../PylosRules';
+import { PylosNode, PylosRules } from '../PylosRules';
 
 describe('PylosOrderedMinimax', () => {
 
@@ -20,7 +19,7 @@ describe('PylosOrderedMinimax', () => {
     it('should delegate getListMoves to PylosMinimax', () => {
         spyOn(PylosMinimax, 'getListMoves').and.callThrough();
 
-        minimax.getListMoves(new MGPNode(null, null, PylosState.getInitialState()));
+        minimax.getListMoves(new PylosNode(PylosState.getInitialState()));
 
         expect(PylosMinimax.getListMoves).toHaveBeenCalledTimes(1);
     });

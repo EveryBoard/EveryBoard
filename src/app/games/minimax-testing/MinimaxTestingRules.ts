@@ -3,12 +3,12 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { MinimaxTestingState } from './MinimaxTestingState';
 import { MinimaxTestingMove } from './MinimaxTestingMove';
 import { Coord } from 'src/app/jscaip/Coord';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
-export abstract class MinimaxTestingNode extends MGPNode<MinimaxTestingRules,
-                                                         MinimaxTestingMove,
-                                                         MinimaxTestingState> {}
+export class MinimaxTestingNode extends MGPNode<MinimaxTestingRules,
+                                                MinimaxTestingMove,
+                                                MinimaxTestingState> {}
 
 export class MinimaxTestingRules extends Rules<MinimaxTestingMove, MinimaxTestingState> {
 
@@ -34,7 +34,7 @@ export class MinimaxTestingRules extends Rules<MinimaxTestingMove, MinimaxTestin
     }
     public applyLegalMove(move: MinimaxTestingMove,
                           state: MinimaxTestingState,
-                          _status: LegalityStatus)
+                          _status: void)
     : MinimaxTestingState
     {
         const newX: number = state.location.x + (move.right === true ? 1 : 0);
@@ -42,16 +42,16 @@ export class MinimaxTestingRules extends Rules<MinimaxTestingMove, MinimaxTestin
         const newLocation: Coord = new Coord(newX, newY);
         return new MinimaxTestingState(state.turn + 1, newLocation);
     }
-    public isLegal(move: MinimaxTestingMove, state: MinimaxTestingState): LegalityStatus {
+    public isLegal(move: MinimaxTestingMove, state: MinimaxTestingState): MGPFallible<void> {
         const coord: Coord = state.location;
         const board: number[][] = state.getCopiedBoard();
         if (coord.x + 1 === board[0].length && move.right === true) {
-            return LegalityStatus.failure('incorrect move');
+            return MGPFallible.failure('incorrect move');
         }
         if (coord.y + 1 === board.length && move.right === false) {
-            return LegalityStatus.failure('incorrect move');
+            return MGPFallible.failure('incorrect move');
         }
-        return LegalityStatus.SUCCESS;
+        return MGPFallible.success(undefined);
     }
     public getGameStatus(node: MinimaxTestingNode): GameStatus {
         return MinimaxTestingRules.getGameStatus(node);

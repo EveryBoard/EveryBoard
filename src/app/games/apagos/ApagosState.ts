@@ -5,7 +5,7 @@ import { MGPMap } from 'src/app/utils/MGPMap';
 import { ApagosCoord } from './ApagosCoord';
 import { ApagosSquare } from './ApagosSquare';
 
-export class ApagosState extends GameState<ApagosCoord, ApagosSquare> {
+export class ApagosState extends GameState {
 
     public static PIECES_PER_PLAYER: number = 10;
 
@@ -54,17 +54,6 @@ export class ApagosState extends GameState<ApagosCoord, ApagosSquare> {
     }
     public getRemainingCopy(): MGPMap<Player, number> {
         return this.remaining.getCopy();
-    }
-    public isOnBoard(coord: ApagosCoord): boolean {
-        // TODOTODO: delete when strictness is merged
-        return coord != null;
-    }
-    public getNullable(coord: ApagosCoord): ApagosSquare {
-        // TODOTODO: delete when strictness is merged
-        if (coord == null) {
-            return null;
-        }
-        return this.board[coord.x];
     }
     public getRemaining(piece: Player): number {
         return this.remaining.get(piece).get();

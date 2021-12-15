@@ -1,5 +1,4 @@
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { QuixoState } from '../QuixoState';
 import { QuixoNode, QuixoRules } from '../QuixoRules';
@@ -8,6 +7,7 @@ import { QuixoMove } from '../QuixoMove';
 import { QuixoFailure } from '../QuixoFailure';
 import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('QuixoMove:', () => {
 
@@ -21,9 +21,6 @@ describe('QuixoMove:', () => {
     it('Should forbid move creation from coord not on the side', () => {
         expect(() => new QuixoMove(1, 1, Orthogonal.UP))
             .toThrowError(QuixoFailure.NO_INSIDE_CLICK());
-    });
-    it('Should forbid move creation without direction', () => {
-        expect(() => new QuixoMove(0, 0, null)).toThrowError('Direction cannot be null.');
     });
     it('Should forbid move creation from board whose side is the same as the direction', () => {
         expect(() => new QuixoMove(0, 2, Orthogonal.LEFT))
@@ -45,7 +42,7 @@ describe('QuixoMove:', () => {
         ];
         const move: QuixoMove = new QuixoMove(0, 0, Orthogonal.DOWN);
         const state: QuixoState = new QuixoState(board, 0);
-        const node: QuixoNode = new MGPNode(null, move, state);
+        const node: QuixoNode = new QuixoNode(state, MGPOptional.empty(), MGPOptional.of(move));
         const rules: QuixoRules = new QuixoRules(QuixoState);
         const minimax: QuixoMinimax = new QuixoMinimax(rules, 'QuixoMinimax');
         const moves: QuixoMove[] = minimax.getListMoves(node);

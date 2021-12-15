@@ -3,6 +3,8 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { SaharaMinimax } from '../SaharaMinimax';
 import { SaharaState } from '../SaharaState';
 import { SaharaRules } from '../SaharaRules';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Player } from 'src/app/jscaip/Player';
 
 describe('SaharaMinimax', () => {
 
@@ -27,7 +29,7 @@ describe('SaharaMinimax', () => {
             [N, _, _, _, _, _, _, _, _, _, N],
             [N, N, X, O, _, _, _, X, O, N, N],
         ];
-        const weakState: SaharaState = new SaharaState(weakBoard, 0);
+        const weakState: SaharaState = new SaharaState(weakBoard, 1);
         const strongBoard: FourStatePiece[][] = [
             [N, N, _, O, X, _, _, O, X, N, N],
             [N, _, _, _, _, _, _, _, _, _, N],
@@ -36,7 +38,10 @@ describe('SaharaMinimax', () => {
             [N, _, _, _, _, _, _, _, _, _, N],
             [N, N, X, O, _, _, _, X, O, N, N],
         ];
-        const strongState: SaharaState = new SaharaState(strongBoard, 0);
-        RulesUtils.expectSecondStateToBeBetterThanFirst(weakState, null, strongState, null, minimax);
+        const strongState: SaharaState = new SaharaState(strongBoard, 1);
+        RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+                                                           weakState, MGPOptional.empty(),
+                                                           strongState, MGPOptional.empty(),
+                                                           Player.ONE);
     });
 });

@@ -5,11 +5,10 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 export class PylosCoord extends Coord {
     public static encodeOptional(optionalCoord: MGPOptional<PylosCoord>): number {
         let result: number;
-        const coord: PylosCoord = optionalCoord.getOrNull();
-        if (coord == null) {
-            result = 0;
+        if (optionalCoord.isPresent()) {
+            result = PylosCoord.encode(optionalCoord.get()) + 1; // From 1 to 64
         } else {
-            result = PylosCoord.encode(coord) + 1; // From 1 to 64
+            result = 0;
         } // result from 0 to 64
         return result;
     }
@@ -38,7 +37,6 @@ export class PylosCoord extends Coord {
     }
     constructor(x: number, y: number, public readonly z: number) {
         super(x, y);
-        if (z == null) throw new Error(`PylosCoord: Z can't be null.`);
         if (x < 0 || x > 3) throw new Error(`PylosCoord: Invalid X: ${x}.`);
         if (y < 0 || y > 3) throw new Error(`PylosCoord: Invalid Y: ${y}.`);
         if (z < 0 || z > 3) throw new Error(`PylosCoord: Invalid Z: ${z}.`);
@@ -53,7 +51,6 @@ export class PylosCoord extends Coord {
     }
     public equals(obj: PylosCoord): boolean {
         if (this === obj) return true;
-        if (obj == null) return false;
         if (obj.x !== this.x) return false;
         if (obj.y !== this.y) return false;
         return obj.z === this.z;

@@ -1,5 +1,5 @@
 import { Table } from '../utils/ArrayUtils';
-import { assert } from '../utils/utils';
+import { Utils } from '../utils/utils';
 import { Coord } from './Coord';
 import { GameStateWithTable } from './GameStateWithTable';
 import { HexaDirection } from './HexaDirection';
@@ -29,9 +29,7 @@ export abstract class HexagonalGameState<P> extends GameStateWithTable<P> {
             throw new Error('Invalid excluded cases specification for HexagonalGameState.');
         }
     }
-    public setAtUnsafe(coord: Coord, v: P): this {
-        throw new Error('Should be overridden');
-    }
+    public abstract setAtUnsafe(coord: Coord, v: P): this
     public setAt(coord: Coord, v: P): this {
         if (this.isOnBoard(coord)) {
             return this.setAtUnsafe(coord, v);
@@ -61,7 +59,7 @@ export abstract class HexagonalGameState<P> extends GameStateWithTable<P> {
             }
         }
         for (const coord of this.allCoords()) {
-            if (equal(this.getNullable(coord), other.getNullable(coord)) === false) {
+            if (equal(this.getPieceAt(coord), other.getPieceAt(coord)) === false) {
                 return false;
             }
         }
@@ -122,6 +120,7 @@ export abstract class HexagonalGameState<P> extends GameStateWithTable<P> {
             }
             c = c.getNext(dir);
         }
-        assert(false, 'could not find a board entrance, board must be invalid');
+        Utils.handleError('could not find a board entrance, board must be invalid');
+        return new Coord(-1, -1);
     }
 }

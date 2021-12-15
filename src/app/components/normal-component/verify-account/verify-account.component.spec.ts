@@ -5,6 +5,7 @@ import { VerifyAccountComponent } from './verify-account.component';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Router } from '@angular/router';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('VerifyAccountComponent', () => {
     let testUtils: SimpleComponentTestUtils<VerifyAccountComponent>;
@@ -21,7 +22,7 @@ describe('VerifyAccountComponent', () => {
     describe('google user', () => {
         beforeEach(() => {
             // given a user that registered through google
-            AuthenticationServiceMock.setUser(new AuthUser('jeanjaja@gmail.com', null, true));
+            AuthenticationServiceMock.setUser(new AuthUser(MGPOptional.of('jeanjaja@gmail.com'), MGPOptional.empty(), true));
             testUtils.detectChanges();
         });
         it('should ask the username if the user has none', fakeAsync(async() => {
@@ -63,7 +64,7 @@ describe('VerifyAccountComponent', () => {
     describe('email user', () => {
         beforeEach(() => {
             // given a user that registered through its email
-            AuthenticationServiceMock.setUser(new AuthUser('jean@jaja.europe', 'jeanjaja', false));
+            AuthenticationServiceMock.setUser(new AuthUser(MGPOptional.of('jean@jaja.europe'), MGPOptional.of('jeanjaja'), false));
             testUtils.detectChanges();
         });
         it('should resend email verification if asked by the user and show that it succeeded', fakeAsync(async() => {
@@ -104,7 +105,7 @@ describe('VerifyAccountComponent', () => {
             spyOn(router, 'navigate').and.resolveTo(true);
 
             // ... and given a user that verified its email
-            AuthenticationServiceMock.setUser(new AuthUser('jean@jaja.europe', 'jeanjaja', true));
+            AuthenticationServiceMock.setUser(new AuthUser(MGPOptional.of('jean@jaja.europe'), MGPOptional.of('jeanjaja'), true));
 
             // when the user clicks on "finalize" without having verified its account
             await testUtils.clickElement('#finalizeVerification');

@@ -1,27 +1,27 @@
-
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { GoState, Phase, GoPiece } from './GoState';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { GoMove } from './GoMove';
-import { GoLegalityStatus } from './GoLegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 import { GoGroupDatas } from './GoGroupsDatas';
 import { assert, display } from 'src/app/utils/utils';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GoGroupDatasFactory } from './GoGroupDatasFactory';
 import { GoFailure } from './GoFailure';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
-export abstract class GoNode extends MGPNode<GoRules, GoMove, GoState, GoLegalityStatus> {}
+export type GoLegalityInformation = Coord[];
 
-export class GoRules extends Rules<GoMove, GoState, GoLegalityStatus> {
+export class GoNode extends MGPNode<GoRules, GoMove, GoState, GoLegalityInformation> {}
+
+export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
 
     public static VERBOSE: boolean = false;
 
-    public static isLegal(move: GoMove, state: GoState): GoLegalityStatus {
+    public static isLegal(move: GoMove, state: GoState): MGPFallible<GoLegalityInformation> {
         const LOCAL_VERBOSE: boolean = false;
         display(GoRules.VERBOSE ||LOCAL_VERBOSE, { isLegal: { move, state } });
 
@@ -30,28 +30,29 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityStatus> {
             const passed: boolean = state.phase === Phase.PASSED;
             display(GoRules.VERBOSE ||LOCAL_VERBOSE,
                     'GoRules.isLegal at ' + state.phase + ((playing || passed) ? ' forbid' : ' allowed') +
-                    ' passing on ' + state.getCopiedBoard());
-            return {
-                legal: (playing || passed) ? MGPValidation.SUCCESS :
-                    MGPValidation.failure(GoFailure.CANNOT_PASS_AFTER_PASSED_PHASE()),
-                capturedCoords: [],
-            };
+                ' passing on ' + state.getCopiedBoard());
+            if (playing || passed) {
+                return MGPFallible.success([]);
+            } else {
+                return MGPFallible.failure(GoFailure.CANNOT_PASS_AFTER_PASSED_PHASE());
+            }
         } else if (GoRules.isAccept(move)) {
             const counting: boolean = state.phase === Phase.COUNTING;
             const accept: boolean = state.phase === Phase.ACCEPT;
-            return {
-                legal: (counting || accept) ? MGPValidation.SUCCESS :
-                    MGPValidation.failure(GoFailure.CANNOT_ACCEPT_BEFORE_COUNTING_PHASE()),
-                capturedCoords: [],
-            };
+            if (counting || accept) {
+                return MGPFallible.success([]);
+            } else {
+                return MGPFallible.failure(GoFailure.CANNOT_ACCEPT_BEFORE_COUNTING_PHASE());
+            }
         }
         if (GoRules.isOccupied(move.coord, state.getCopiedBoard())) {
             display(GoRules.VERBOSE ||LOCAL_VERBOSE, 'GoRules.isLegal: move is marking');
             const legal: boolean = GoRules.isLegalDeadMarking(move, state);
-            return {
-                legal: legal ? MGPValidation.SUCCESS : MGPValidation.failure(GoFailure.OCCUPIED_INTERSECTION()),
-                capturedCoords: [],
-            };
+            if (legal) {
+                return MGPFallible.success([]);
+            } else {
+                return MGPFallible.failure(GoFailure.OCCUPIED_INTERSECTION());
+            }
         } else {
             display(GoRules.VERBOSE ||LOCAL_VERBOSE, 'GoRules.isLegal: move is normal stuff: ' + move.toString());
             return GoRules.isLegalNormalMove(move, state);
@@ -67,18 +68,18 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityStatus> {
         return GoRules.isOccupied(move.coord, state.getCopiedBoard()) &&
                (state.phase === Phase.COUNTING || state.phase === Phase.ACCEPT);
     }
-    private static isLegalNormalMove(move: GoMove, state: GoState): GoLegalityStatus {
+    private static isLegalNormalMove(move: GoMove, state: GoState): MGPFallible<GoLegalityInformation> {
 
         const boardCopy: GoPiece[][] = state.getCopiedBoard();
         if (GoRules.isKo(move, state)) {
-            return GoLegalityStatus.failure(GoFailure.ILLEGAL_KO());
+            return MGPFallible.failure(GoFailure.ILLEGAL_KO());
         }
         if ([Phase.COUNTING, Phase.ACCEPT].includes(state.phase)) {
             state = GoRules.resurrectStones(state);
         }
         const captureState: CaptureState = GoRules.getCaptureState(move, state);
         if (CaptureState.isCapturing(captureState)) {
-            return { legal: MGPValidation.SUCCESS, capturedCoords: captureState.capturedCoords };
+            return MGPFallible.success(captureState.capturedCoords);
         } else {
             boardCopy[move.coord.y][move.coord.x] = state.turn%2 === 0 ? GoPiece.BLACK : GoPiece.WHITE;
             const goGroupDatasFactory: GoGroupDatasFactory = new GoGroupDatasFactory();
@@ -88,9 +89,9 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityStatus> {
             boardCopy[move.coord.y][move.coord.x] = GoPiece.EMPTY;
 
             if (isSuicide) {
-                return GoLegalityStatus.failure(GoFailure.CANNOT_COMMIT_SUICIDE());
+                return MGPFallible.failure(GoFailure.CANNOT_COMMIT_SUICIDE());
             } else {
-                return { legal: MGPValidation.SUCCESS, capturedCoords: [] };
+                return MGPFallible.success([]);
             }
         }
     }
@@ -143,7 +144,7 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityStatus> {
     }
     public static isCapturableGroup(groupDatas: GoGroupDatas, koCoord: MGPOptional<Coord>): boolean {
         if (groupDatas.color.isOccupied() && groupDatas.emptyCoords.length === 1) {
-            return !groupDatas.emptyCoords[0].equals(koCoord.getOrNull()); // Ko Rules Block Capture
+            return koCoord.equalsValue(groupDatas.emptyCoords[0]) === false; // Ko Rules Block Capture
         } else {
             return false;
         }
@@ -185,7 +186,7 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityStatus> {
     }
     private static applyNormalLegalMove(currentState: GoState,
                                         legalMove: GoMove,
-                                        status: GoLegalityStatus)
+                                        capturedCoords: GoLegalityInformation)
     : GoState
     {
         display(GoRules.VERBOSE, { applyNormalLegal: { currentState, legalMove, status } });
@@ -203,7 +204,6 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityStatus> {
         const currentPlayer: GoPiece = GoPiece.ofPlayer(state.getCurrentPlayer());
         const newTurn: number = currentTurn + 1;
         newBoard[y][x] = currentPlayer;
-        const capturedCoords: Coord[] = status.capturedCoords;
         for (const capturedCoord of capturedCoords) {
             newBoard[capturedCoord.y][capturedCoord.x] = GoPiece.EMPTY;
         }
@@ -237,13 +237,10 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityStatus> {
                         Phase.COUNTING);
         return GoRules.markTerritoryAndCount(resultingState);
     }
-    public isLegal(move: GoMove, state: GoState): GoLegalityStatus {
+    public isLegal(move: GoMove, state: GoState): MGPFallible<GoLegalityInformation> {
         return GoRules.isLegal(move, state);
     }
-    public applyLegalMove(legalMove: GoMove,
-                          state: GoState,
-                          status: GoLegalityStatus)
-    : GoState
+    public applyLegalMove(legalMove: GoMove, state: GoState, status: GoLegalityInformation): GoState
     {
         display(GoRules.VERBOSE, { applyLegalMove: { legalMove, state, status } });
         if (GoRules.isPass(legalMove)) {
@@ -347,7 +344,7 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityStatus> {
                 coord = new Coord(x, y);
                 currentCase = board[y][x];
                 if (condition(currentCase)) {
-                    if (!groups.some((currentGroup: GoGroupDatas) => currentGroup.selfCountains(coord))) {
+                    if (!groups.some((currentGroup: GoGroupDatas) => currentGroup.selfContains(coord))) {
                         group = goGroupDatasFactory.getGroupDatas(coord, board) as GoGroupDatas;
                         groups.push(group);
                     }

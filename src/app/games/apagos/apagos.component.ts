@@ -92,7 +92,7 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         this.remainingOne = state.remaining.get(Player.ONE).get();
 
         this.hideLastMove();
-        if (this.rules.node.move != null) {
+        if (this.rules.node.move.isPresent()) {
             this.showLastMove();
         }
         this.showPossibleDrops();
@@ -103,8 +103,8 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         this.leftPiece = MGPOptional.empty();
         this.selectedPiece = MGPOptional.empty();
     }
-    public showLastMove(): void {
-        const lastMove: ApagosMove = this.rules.node.move;
+    private showLastMove(): void {
+        const lastMove: ApagosMove = this.rules.node.move.get();
         if (lastMove.isDrop()) {
             this.showLastDrop(lastMove);
         } else {
@@ -136,7 +136,7 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         }
     }
     public showLastTransfer(lastMove: ApagosMove): void {
-        const previousState: ApagosState = this.rules.node.mother.gameState;
+        const previousState: ApagosState = this.rules.node.mother.get().gameState;
         const previousPlayer: Player = previousState.getCurrentPlayer();
         const leftSquare: number = lastMove.starting.get().x;
         const previousSquare: ApagosSquare = previousState.board[leftSquare];
@@ -225,7 +225,7 @@ export class ApagosComponent extends GameComponent<ApagosRules,
             move = ApagosMove.drop(clicked, player);
         }
         const state: ApagosState = this.rules.node.gameState;
-        return this.chooseMove(move, state, null, null);
+        return this.chooseMove(move, state);
     }
     public getPieceClasses(x: number, i: number, square: ApagosSquare): string[] {
         const pieceLocation: PieceLocation = { square: x, piece: i };
@@ -247,8 +247,8 @@ export class ApagosComponent extends GameComponent<ApagosRules,
             }
         }
         const neutral: number = square.count(Player.NONE) - (one + zero);
-        const pieceColor: string | null = this.getPieceColor(i, zero, neutral);
-        if (pieceColor != null) {
+        const pieceColor: string = this.getPieceColor(i, zero, neutral);
+        if (pieceColor !== '') {
             classes.push(pieceColor);
         }
         return classes;
@@ -259,6 +259,7 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         } else if (i >= (zero + neutral)) {
             return 'player1';
         }
+        return '';
 
     }
     public async onSquareClick(x: number): Promise<MGPValidation> {

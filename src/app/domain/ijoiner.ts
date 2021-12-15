@@ -2,16 +2,15 @@ import { assert, JSONObject } from '../utils/utils';
 import { DomainWrapper } from './DomainWrapper';
 
 export interface IJoiner extends JSONObject {
-    readonly creator: NonNullable<string>;
-    readonly candidates: NonNullable<Array<string>>; // TODO: give default empty value
-    readonly chosenPlayer: NonNullable<string>;
-    // TODO: make optional, since first value set is '', a non-null way to say null
-    readonly partStatus: NonNullable<IPartStatus>;
+    readonly creator: string;
+    readonly candidates: Array<string>;
+    readonly chosenPlayer: string | null;
+    readonly partStatus: IPartStatus;
 
-    readonly firstPlayer: NonNullable<IFirstPlayer>;
-    readonly partType: NonNullable<IPartType>
-    readonly maximalMoveDuration: NonNullable<number>;
-    readonly totalPartDuration: NonNullable<number>;
+    readonly firstPlayer: IFirstPlayer;
+    readonly partType: IPartType
+    readonly maximalMoveDuration: number;
+    readonly totalPartDuration: number;
 }
 
 export class Joiner implements DomainWrapper<IJoiner> {

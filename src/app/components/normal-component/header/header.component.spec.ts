@@ -2,6 +2,7 @@ import { fakeAsync } from '@angular/core/testing';
 import { AuthUser } from 'src/app/services/AuthenticationService';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { LocaleUtils } from 'src/app/utils/LocaleUtils';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { HeaderComponent } from './header.component';
 
@@ -28,7 +29,13 @@ describe('HeaderComponent', () => {
     it('should have empty username when user is not connected', fakeAsync(async() => {
         AuthenticationServiceMock.setUser(AuthUser.NOT_CONNECTED);
         testUtils.detectChanges();
-        expect(testUtils.getComponent().username).toBeNull();
+        expect(testUtils.getComponent().username).toEqual('');
+    }));
+    it('should show user email if the user has not set its username yet', fakeAsync(async() => {
+        const email: string = 'jean@jaja.us';
+        AuthenticationServiceMock.setUser(new AuthUser(MGPOptional.of(email), MGPOptional.empty(), false));
+        testUtils.detectChanges();
+        expect(testUtils.getComponent().username).toEqual(email);
     }));
     it('should use fr as the default language if the language of the navigator is not set', fakeAsync(async() => {
         // given a navigator where the language is not set

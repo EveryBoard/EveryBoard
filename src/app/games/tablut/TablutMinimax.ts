@@ -3,15 +3,14 @@ import { TablutMove } from './TablutMove';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { display } from 'src/app/utils/utils';
-import { TablutLegalityStatus } from './TablutLegalityStatus';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
-import { TablutNode, TablutRules } from './TablutRules';
+import { TablutLegalityInformation, TablutNode, TablutRules } from './TablutRules';
 import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { TablutCase } from './TablutCase';
 
-export class TablutMinimax extends Minimax<TablutMove, TablutState, TablutLegalityStatus> {
+export class TablutMinimax extends Minimax<TablutMove, TablutState, TablutLegalityInformation> {
 
     public getListMoves(node: TablutNode): TablutMove[] {
         const LOCAL_VERBOSE: boolean = false;
