@@ -6,7 +6,7 @@ import { SaharaRules } from '../SaharaRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
 
-describe('SaharaMinimax', () => {
+fdescribe('SaharaMinimax', () => {
 
     let minimax: SaharaMinimax;
     let rules: SaharaRules;

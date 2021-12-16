@@ -9,4 +9,6 @@ export class SaharaFailure {
     public static readonly MUST_CHOOSE_PYRAMID_FIRST: Localized = () => $localize`You must pick one of your pyramids first.`;
 
     public static readonly MUST_CHOOSE_OWN_PYRAMID: Localized = () => $localize`You must pick one of your pyramids.`;
+
+    public static readonly THOSES_TWO_SPACE_ARE_NOT_NEIGHBORS: Localized = () => $localize`Those two spaces are not neighbors.`;
 }

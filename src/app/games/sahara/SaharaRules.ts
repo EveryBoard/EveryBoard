@@ -35,7 +35,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         const playerFreedoms: number[] = [];
         for (const piece of playersPiece) {
             const freedoms: number =
-                TriangularGameState.getEmptyNeighboors(board, piece, FourStatePiece.EMPTY).length;
+                TriangularGameState.getEmptyNeighbors(board, piece, FourStatePiece.EMPTY).length;
             if (freedoms === 0) {
                 return [0];
             }
@@ -64,9 +64,9 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         if (landingCase !== FourStatePiece.EMPTY) {
             return MGPFallible.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
-        const commonNeighboor: MGPOptional<Coord> = TriangularCheckerBoard.getCommonNeighboor(move.coord, move.end);
-        if (commonNeighboor.isPresent()) {
-            if (state.getPieceAt(commonNeighboor.get()) === FourStatePiece.EMPTY) {
+        const commonNeighbor: MGPOptional<Coord> = TriangularCheckerBoard.getCommonNeighbor(move.coord, move.end);
+        if (commonNeighbor.isPresent()) {
+            if (state.getPieceAt(commonNeighbor.get()) === FourStatePiece.EMPTY) {
                 return MGPFallible.success(undefined);
             } else {
                 return MGPFallible.failure(SaharaFailure.CAN_ONLY_REBOUND_ON_EMPTY_SPACE());

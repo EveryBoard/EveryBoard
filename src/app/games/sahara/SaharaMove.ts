@@ -4,6 +4,8 @@ import { SaharaState } from './SaharaState';
 import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
 import { NumberEncoder } from 'src/app/jscaip/Encoder';
 import { SaharaFailure } from './SaharaFailure';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 
 export class SaharaMove extends MoveCoordToCoord {
     public static encoder: NumberEncoder<SaharaMove> = new class extends NumberEncoder<SaharaMove> {
@@ -29,38 +31,46 @@ export class SaharaMove extends MoveCoordToCoord {
             encodedMove -= sy;
             encodedMove /= 6;
             const sx: number = encodedMove;
-            return new SaharaMove(new Coord(sx, sy), new Coord(ex, ey));
+            return SaharaMove.from(new Coord(sx, sy), new Coord(ex, ey)).get();
         }
     }
-    public static checkDistanceAndLocation(start: Coord, end: Coord): void {
+    public static checkDistanceAndLocation(start: Coord, end: Coord): MGPValidation {
         const dx: number = Math.abs(start.x - end.x);
         const dy: number = Math.abs(start.y - end.y);
         const distance: number = dx+dy;
         if (distance === 1) {
-            const fakeNeighboors: Coord = TriangularCheckerBoard.getFakeNeighboors(start);
-            if (end.equals(fakeNeighboors)) {
-                throw new Error(start.toString() + ' and ' + end.toString() + ' are not neighboors.');
+            const fakeNeighbors: Coord = TriangularCheckerBoard.getFakeNeighbors(start);
+            if (end.equals(fakeNeighbors)) {
+                return MGPValidation.failure(SaharaFailure.THOSES_TWO_SPACE_ARE_NOT_NEIGHBORS());
             }
         } else if (distance === 2) {
             if ((start.x + start.y) % 2 === 0) {
-                throw new Error(SaharaFailure.CAN_ONLY_REBOUND_ON_BLACK());
+                return MGPValidation.failure(SaharaFailure.CAN_ONLY_REBOUND_ON_BLACK());
             }
             if (start.x === end.x) {
-                throw new Error(start.toString() + ' and ' + end.toString() + ' have no intermediary neighboors.');
+                return MGPValidation.failure($localize`Thoses two space have no intermediary neighbors.`);
             }
         } else {
-            throw new Error($localize`You can move one or two spaces, not ${distance}.`);
+            return MGPValidation.failure($localize`You can move one or two spaces, not ${distance}.`);
         }
+        return MGPValidation.SUCCESS;
     }
-    constructor(start: Coord, end: Coord) {
-        super(start, end);
+    public static from(start: Coord, end: Coord): MGPFallible<SaharaMove> {
         if (!start.isInRange(SaharaState.WIDTH, SaharaState.HEIGHT)) {
             throw new Error('Move must start inside the board not at ' + start.toString() + '.');
         }
         if (!end.isInRange(SaharaState.WIDTH, SaharaState.HEIGHT)) {
             throw new Error('Move must end inside the board not at ' + end.toString() + '.');
         }
-        SaharaMove.checkDistanceAndLocation(start, end);
+        const validity: MGPValidation = SaharaMove.checkDistanceAndLocation(start, end);
+        if (validity.isFailure()) {
+            return validity.toFailedFallible();
+        } else {
+            return MGPFallible.success(new SaharaMove(start, end));
+        }
+    }
+    private constructor(start: Coord, end: Coord) {
+        super(start, end);
     }
     public isSimpleStep(): boolean {
         const dx: number = Math.abs(this.coord.x - this.end.x);
