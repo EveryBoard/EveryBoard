@@ -10,7 +10,7 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 
-fdescribe('SaharaRules', () => {
+describe('SaharaRules', () => {
 
     const N: FourStatePiece = FourStatePiece.NONE;
     const O: FourStatePiece = FourStatePiece.ZERO;

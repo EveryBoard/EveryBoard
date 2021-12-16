@@ -1833,6 +1833,12 @@
       <trans-unit id="6312339673351478538" datatype="html">
         <source>You must pick one of your pyramids.</source>
       </trans-unit>
+      <trans-unit id="2094727233255278649" datatype="html">
+        <source>Those two spaces are not neighbors.</source>
+      </trans-unit>
+      <trans-unit id="1341520995969246799" datatype="html">
+        <source>Thoses two spaces have no intermediary neighbor.</source>
+      </trans-unit>
       <trans-unit id="7194810718741841575" datatype="html">
         <source>You can move one or two spaces, not <x id="PH" equiv-text="distance"/>.</source>
       </trans-unit>
@@ -2246,6 +2252,9 @@
       </trans-unit>
       <trans-unit id="5966391152315784819" datatype="html">
         <source>You have selected an empty space, you must select one of your own pieces.</source>
+      </trans-unit>
+      <trans-unit id="7782275541868926318" datatype="html">
+        <source>Move cannot be static, choose different starting and ending coord.</source>
       </trans-unit>
       <trans-unit id="7065414996126753833" datatype="html">
         <source>This username is already in use.</source>

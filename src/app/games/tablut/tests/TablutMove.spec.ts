@@ -4,6 +4,7 @@ import { TablutMove } from '../TablutMove';
 import { TablutState } from '../TablutState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 describe('TablutMove', () => {
 
@@ -17,7 +18,7 @@ describe('TablutMove', () => {
     });
     it('TablutMove creation, as a MoveCoordToCoord, should throw when created immobile', () => {
         expect(() => new TablutMove(new Coord(0, 0), new Coord(0, 0)))
-            .toThrowError('MoveCoordToCoord cannot be static.');
+            .toThrowError(RulesFailure.MOVE_CANNOT_BE_STATIC());
     });
     it('Should throw when given out of range coords', () => {
         const outOfRange: Coord = new Coord(-1, -1);

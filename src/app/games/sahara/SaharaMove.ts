@@ -6,6 +6,7 @@ import { NumberEncoder } from 'src/app/jscaip/Encoder';
 import { SaharaFailure } from './SaharaFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 export class SaharaMove extends MoveCoordToCoord {
     public static encoder: NumberEncoder<SaharaMove> = new class extends NumberEncoder<SaharaMove> {
@@ -38,7 +39,9 @@ export class SaharaMove extends MoveCoordToCoord {
         const dx: number = Math.abs(start.x - end.x);
         const dy: number = Math.abs(start.y - end.y);
         const distance: number = dx+dy;
-        if (distance === 1) {
+        if (distance === 0) {
+            return MGPValidation.failure(RulesFailure.MOVE_CANNOT_BE_STATIC());
+        } else if (distance === 1) {
             const fakeNeighbors: Coord = TriangularCheckerBoard.getFakeNeighbors(start);
             if (end.equals(fakeNeighbors)) {
                 return MGPValidation.failure(SaharaFailure.THOSES_TWO_SPACE_ARE_NOT_NEIGHBORS());
@@ -48,7 +51,7 @@ export class SaharaMove extends MoveCoordToCoord {
                 return MGPValidation.failure(SaharaFailure.CAN_ONLY_REBOUND_ON_BLACK());
             }
             if (start.x === end.x) {
-                return MGPValidation.failure($localize`Thoses two space have no intermediary neighbors.`);
+                return MGPValidation.failure($localize`Thoses two spaces have no intermediary neighbor.`);
             }
         } else {
             return MGPValidation.failure($localize`You can move one or two spaces, not ${distance}.`);

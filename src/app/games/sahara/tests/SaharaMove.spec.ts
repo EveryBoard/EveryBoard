@@ -6,8 +6,9 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 import { SaharaFailure } from '../SaharaFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
-fdescribe('SaharaMoves', () => {
+describe('SaharaMoves', () => {
 
     it('SaharaMoves should be created bidirectionnaly encodable/decodable', () => {
         const rules: SaharaRules = new SaharaRules(SaharaState);
@@ -55,12 +56,12 @@ fdescribe('SaharaMoves', () => {
     it('Should fail when distance is 2 but common neighbors is the fake neighbors', () => {
         const start: Coord = new Coord(1, 0);
         const end: Coord = new Coord(1, 2);
-        const expectedError: string = 'Thoses two space have no intermediary neighbors.';
+        const expectedError: string = 'Thoses two spaces have no intermediary neighbor.';
         const failure: MGPFallible<SaharaMove> = MGPFallible.failure(expectedError);
         expect(SaharaMove.from(start, end)).toEqual(failure);
     });
     it('Should throw when called with static move', () => {
-        const error: string = 'MoveCoordToCoord cannot be static.';
+        const error: string = RulesFailure.MOVE_CANNOT_BE_STATIC();
         const failure: MGPFallible<SaharaMove> = MGPFallible.failure(error);
         expect(SaharaMove.from(new Coord(0, 0), new Coord(0, 0))).toEqual(failure);
     });

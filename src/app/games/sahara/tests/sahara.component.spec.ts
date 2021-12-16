@@ -9,7 +9,7 @@ import { SaharaFailure } from '../SaharaFailure';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Table } from 'src/app/utils/ArrayUtils';
 
-fdescribe('SaharaComponent', () => {
+describe('SaharaComponent', () => {
 
     let componentTestUtils: ComponentTestUtils<SaharaComponent>;
     const N: FourStatePiece = FourStatePiece.NONE;

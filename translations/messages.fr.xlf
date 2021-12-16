@@ -2641,6 +2641,14 @@
         <source>You must pick one of your pyramids.</source>
         <target>Vous devez choisir une de vos pyramides.</target>
       </trans-unit>
+      <trans-unit id="2094727233255278649" datatype="html">
+        <source>Those two spaces are not neighbors.</source>
+        <target>Ces deux cases ne sont pas voisines.</target>
+      </trans-unit>
+      <trans-unit id="1341520995969246799" datatype="html">
+        <source>Thoses two spaces have no intermediary neighbor.</source>
+        <target>Ces deux cases n&apos;ont pas de voisin communs.</target>
+      </trans-unit>
       <trans-unit id="7194810718741841575" datatype="html">
         <source>You can move one or two spaces, not <x id="PH" equiv-text="distance"/>.</source>
         <target>Vous pouvez vous déplacer maximum de 2 cases, pas de <x id="PH" equiv-text="distance"/>.</target>
@@ -3268,6 +3276,10 @@
       <trans-unit id="5966391152315784819" datatype="html">
         <source>You have selected an empty space, you must select one of your own pieces.</source>
         <target>Vous avez sélectionné une case vide, vous devez sélectionner l&apos;une de vos pièces.</target>
+      </trans-unit>
+      <trans-unit id="7782275541868926318" datatype="html">
+        <source>Move cannot be static, choose different starting and ending coord.</source>
+        <target>Le mouvement ne peut pas être statique, choisissez une case de départ et d&apos;arrivée différentes.</target>
       </trans-unit>
       <trans-unit id="4047787446065773376" datatype="html">
         <source>There are missing fields in the registration form, please check that you filled in all fields.</source>
