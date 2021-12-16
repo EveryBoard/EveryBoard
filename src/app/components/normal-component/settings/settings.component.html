@@ -4,7 +4,7 @@
         <label class="label" for="theme" i18n>Theme</label>
         <div class="control">
             <div class="select">
-                <select id="theme" (change)="changeTheme($event.target.value)">
+                <select id="theme" (change)="changeTheme($event)">
                     <option *ngFor="let theme of availableThemes"
                             [value]="theme.value"
                             [selected]="theme.value === currentTheme">
@@ -18,7 +18,7 @@
         <label class="label" for="language" i18n>Language</label>
         <div class="control">
             <div class="select">
-                <select id="language" (change)="changeLanguage($event.target.value)">
+                <select id="language" (change)="changeLanguage($event)">
                     <option *ngFor="let language of availableLanguages"
                             [value]="language.value"
                             [selected]="language.value === currentLanguage">

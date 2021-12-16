@@ -23,6 +23,9 @@
 }
 
 $primary: #994d00;
+$yellow: #b38f00;
+$red: darkred;
+$red-invert: white;
 @import "../../node_modules/bulmaswatch/cyborg/bulmaswatch.scss";
 @import '~bulma-slider';
 @import "../../node_modules/@creativebulma/bulma-tooltip/dist/bulma-tooltip.css";
@@ -39,14 +42,37 @@ $primary: #994d00;
     color: #fff;
 }
 
-.button {
-    text-transform: uppercase;
-    font-size: 0.85rem;
-    font-weight: bold;
-}
-
 .message.is-primary .message-body {
     color: #fff;
+}
+
+.message {
+  background-color: $background;
+  border-radius: $radius;
+  font-size: $size-normal;
+  // Colors
+  @each $name, $pair in $colors {
+    $color: nth($pair, 1);
+    $color-invert: nth($pair, 2);
+    $color-lightning: max((100% - lightness($color)) - 3%, 0%);
+    $color-luminance: colorLuminance($color);
+    $darken-percentage: $color-luminance * 70%;
+    $desaturate-percentage: $color-luminance * 30%;
+
+    &.is-#{$name} {
+      background-color: darken($color, $color-lightning);
+
+      .message-header {
+        background-color: $color;
+        color: $color-invert;
+      }
+
+      .message-body {
+        border-color: $color;
+        color: $color-invert;
+      }
+    }
+  }
 }
 
 /* Show the page only after the CSS has been loaded */

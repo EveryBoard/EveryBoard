@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { ThemeService } from 'src/app/services/ThemeService';
 import { GameService } from 'src/app/services/GameService';
 import { GameInfo } from '../pick-game/pick-game.component';
-import { faGlobe, faDesktop, faBookOpen, IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import { faNetworkWired, faDesktop, faBookOpen, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-welcome',
@@ -12,9 +12,9 @@ import { faGlobe, faDesktop, faBookOpen, IconDefinition } from '@fortawesome/fre
 export class WelcomeComponent {
     public readonly games: GameInfo[] = GameInfo.ALL_GAMES().filter((game: GameInfo) => game.display === true);
     public readonly theme: 'dark' | 'light';
-    public faGlobe: IconDefinition = faGlobe;
-    public faDesktop: IconDefinition = faDesktop;
-    public faBookOpen: IconDefinition = faBookOpen;
+    public iconOnlineGame: IconDefinition = faNetworkWired;
+    public iconLocalGame: IconDefinition = faDesktop;
+    public iconTutorial: IconDefinition = faBookOpen;
 
     public constructor(private gameService: GameService,
                        private router: Router,

@@ -26,12 +26,14 @@ export class SettingsComponent {
         this.currentTheme = themeService.getTheme();
         this.currentLanguage = this.userSettingsService.getLanguage();
     }
-    public changeLanguage(language: string): void {
-        this.userSettingsService.changeLanguage(language);
+    public changeLanguage(event: Event): void {
+        const target: HTMLSelectElement = event.target as HTMLSelectElement;
+        this.userSettingsService.changeLanguage(target.value);
         this.reload();
     }
-    public changeTheme(theme: string): void {
-        this.userSettingsService.changeTheme(theme);
+    public changeTheme(event: Event): void {
+        const target: HTMLSelectElement = event.target as HTMLSelectElement;
+        this.userSettingsService.changeTheme(target.value);
         this.reload();
     }
     private reload(): void {
