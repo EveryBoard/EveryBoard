@@ -1,6 +1,6 @@
 import { Localized } from 'src/app/utils/LocaleUtils';
 
-export class TablutFailure {
+export class TaflFailure {
 
     public static readonly LANDING_ON_OCCUPIED_CASE: Localized = () => $localize`You cannot land on an occupied square.`;
 

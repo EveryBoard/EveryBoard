@@ -1150,7 +1150,8 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                                     .toEqual(MGPValidation.SUCCESS);
                             }
                         } else {
-                            expect(moveResult.getReason()).withContext('Solution move should be legal but failed').toBeNull();
+                            const context: string = 'Solution move should be legal but failed in "' + step.title + '"';
+                            expect(moveResult.getReason()).withContext(context).toBeNull();
                         }
                     }
                 }

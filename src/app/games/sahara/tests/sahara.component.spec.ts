@@ -43,35 +43,35 @@ describe('SaharaComponent', () => {
         expect(componentTestUtils.wrapper.endGame).toBeTrue();
     }));
     it('should not allow to click on empty case when no pyramid selected', fakeAsync(async() => {
-        // given initial board
+        // Given the initial board
         // when clicking on empty case, expect move to be refused
         await componentTestUtils.expectClickFailure('#click_2_2', SaharaFailure.MUST_CHOOSE_PYRAMID_FIRST());
     }));
     it('should not allow to select opponent pyramid', fakeAsync(async() => {
-        // given initial board
+        // Given the initial board
         // when clicking on empty case, expect move to be refused
         await componentTestUtils.expectClickFailure('#click_0_4', SaharaFailure.MUST_CHOOSE_OWN_PYRAMID());
     }));
     it('should not allow to land on opponent pyramid', fakeAsync(async() => {
-        // given initial board
+        // Given the initial board
         await componentTestUtils.expectClickSuccess('#click_2_0');
         const move: SaharaMove = SaharaMove.from(new Coord(2, 0), new Coord(3, 0)).get();
         await componentTestUtils.expectMoveFailure('#click_3_0', RulesFailure.MUST_LAND_ON_EMPTY_SPACE(), move);
     }));
     it('should not allow to bounce on occupied brown case', fakeAsync(async() => {
-        // given initial board
+        // Given the initial board
         await componentTestUtils.expectClickSuccess('#click_7_0');
         const move: SaharaMove = SaharaMove.from(new Coord(7, 0), new Coord(8, 1)).get();
         await componentTestUtils.expectMoveFailure('#click_8_1', SaharaFailure.CAN_ONLY_REBOUND_ON_EMPTY_SPACE(), move);
     }));
     it('should not allow invalid moves', fakeAsync(async() => {
-        // given initial board
+        // Given the initial board
         await componentTestUtils.expectClickSuccess('#click_0_3');
         const reason: string = 'You can move one or two spaces, not 3.';
         await componentTestUtils.expectClickFailure('#click_2_2', reason);
     }));
     it('should change selected piece when clicking twice in a row on current player pieces', fakeAsync(async() => {
-        // given initial board
+        // Given the initial board
         await componentTestUtils.expectClickSuccess('#click_2_0');
         await componentTestUtils.expectClickSuccess('#click_7_0');
     }));

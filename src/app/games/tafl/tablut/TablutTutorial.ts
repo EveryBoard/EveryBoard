@@ -1,13 +1,13 @@
-import { TablutMove } from 'src/app/games/tablut/TablutMove';
-import { TablutCase } from 'src/app/games/tablut/TablutCase';
-import { TablutState } from 'src/app/games/tablut/TablutState';
+import { TablutMove } from 'src/app/games/tafl/tablut/TablutMove';
+import { TaflPawn } from 'src/app/games/tafl/TaflPawn';
+import { TablutState } from 'src/app/games/tafl/tablut/TablutState';
 import { Coord } from 'src/app/jscaip/Coord';
-import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
-const _: TablutCase = TablutCase.UNOCCUPIED;
-const x: TablutCase = TablutCase.INVADERS;
-const i: TablutCase = TablutCase.DEFENDERS;
-const A: TablutCase = TablutCase.PLAYER_ONE_KING;
+const _: TaflPawn = TaflPawn.UNOCCUPIED;
+const x: TaflPawn = TaflPawn.INVADERS;
+const i: TaflPawn = TaflPawn.DEFENDERS;
+const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
 
 export class TablutTutorial {
     public tutorial: TutorialStep[] = [
@@ -18,7 +18,7 @@ export class TablutTutorial {
         The attacker plays first. Its pieces (dark) are close to the edges.
         Its goal is to capture the king, which is in the center of the board.
         The defender plays second. Its pieces (light) are in the middle.
-        Its goal is to put the king on one of the 4 thrones in the corners.
+        Its goal is to move the king on one of the 4 thrones in the corners.
         Note that the square in which the king starts, in the center of the board, is also a throne.`,
             TablutState.getInitialState(),
         ),
@@ -33,17 +33,14 @@ export class TablutTutorial {
             <li>Only the king can land on a throne.</li>
         </ol>
         To move a piece, click on it and then on its landing square.<br/><br/>
-        This is the initial board, do the first move.`,
+        You're playing Dark, do the first move.`,
             TablutState.getInitialState(),
-            new TablutMove(new Coord(4, 1), new Coord(1, 1)),
+            TablutMove.of(new Coord(4, 1), new Coord(1, 1)),
             $localize`Congratulations!`,
         ),
         TutorialStep.fromMove(
             $localize`Capturing a soldier (1/2)`,
-            $localize`All pieces except the king, attackers and defenders, are soldiers.
-        To capture them, they have to be sandwiched between two of your pieces.
-        By getting too close, an attacker's soldier is in danger.<br/><br/>
-        Capture it.`,
+            $localize`All pieces, attackers and defenders, except the king, are soldiers. To capture them, they have to be sandwiched between two of your pieces. By getting too close, an attacker's soldier is in danger.<br/><br/>Capture it.`,
             new TablutState([
                 [_, _, _, x, x, x, _, _, _],
                 [_, _, _, _, x, _, _, _, _],
@@ -56,17 +53,15 @@ export class TablutTutorial {
                 [_, _, _, x, x, x, _, _, _],
             ], 1),
             [
-                new TablutMove(new Coord(2, 4), new Coord(2, 3)),
-                new TablutMove(new Coord(4, 2), new Coord(3, 2)),
+                TablutMove.of(new Coord(2, 4), new Coord(2, 3)),
+                TablutMove.of(new Coord(4, 2), new Coord(3, 2)),
             ],
             $localize`Congratulations, that will teach him a lesson!`,
             $localize`Failed, you missed an opportunity to capture a piece of the opponent.`,
         ),
         TutorialStep.fromMove(
             $localize`Capturing a soldier (2/2)`,
-            $localize`A second way to capture a soldier is against an empty throne.
-        The King has moved and endangered one of its soldiers.<br/><br/>
-        Capture it.`,
+            $localize`A second way to capture a soldier is to sandwich it against an empty throne. The king has moved and endangered one of its soldiers.<br/><br/>Capture it.`,
             new TablutState([
                 [_, _, _, x, x, x, _, _, _],
                 [_, _, _, _, x, _, _, _, _],
@@ -78,7 +73,7 @@ export class TablutTutorial {
                 [_, _, _, _, x, _, _, _, _],
                 [_, _, _, x, x, x, _, _, _],
             ], 12),
-            [new TablutMove(new Coord(1, 4), new Coord(2, 4))],
+            [TablutMove.of(new Coord(1, 4), new Coord(2, 4))],
             $localize`Congratulations, one less defender. But keep an eye on the king, it is the most important.`,
             $localize`Failed, you did not do the expected move.`,
         ),
@@ -99,7 +94,7 @@ export class TablutTutorial {
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
             ], 72),
-            [new TablutMove(new Coord(3, 4), new Coord(2, 4))],
+            [TablutMove.of(new Coord(3, 4), new Coord(2, 4))],
             $localize`Congratulations, you won!`,
             $localize`Failed, you let the king run away.`,
         ),
@@ -119,8 +114,8 @@ export class TablutTutorial {
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
             ], 72),
-            [new TablutMove(new Coord(3, 3), new Coord(3, 1))],
-            $localize`The King is dead, long live the King. Congratulations, you won.`,
+            [TablutMove.of(new Coord(3, 3), new Coord(3, 1))],
+            $localize`The king is dead, long live the king. Congratulations, you won.`,
             $localize`Failed!`,
         ),
     ];

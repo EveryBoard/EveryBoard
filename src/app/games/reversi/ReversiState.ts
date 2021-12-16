@@ -20,14 +20,14 @@ export class ReversiState extends GameStateWithTable<Player> {
         return new ReversiState(board, 0);
     }
     public static getNeighbooringPawnLike(board: Player[][], searchedValue: Player, cx: number, cy: number): Coord[] {
-        let c: Coord;
+        let coord: Coord;
         const result: Coord[] = [];
         for (let ny: number = -1; ny < 2; ny++) {
             for (let nx: number = -1; nx < 2; nx++) {
-                c = new Coord(cx + nx, cy + ny);
-                if (c.isInRange(this.BOARD_WIDTH, this.BOARD_HEIGHT)) {
-                    if (board[c.y][c.x] === searchedValue) {
-                        result.push(c);
+                coord = new Coord(cx + nx, cy + ny);
+                if (coord.isInRange(this.BOARD_WIDTH, this.BOARD_HEIGHT)) {
+                    if (board[coord.y][coord.x] === searchedValue) {
+                        result.push(coord);
                     }
                 }
             }
