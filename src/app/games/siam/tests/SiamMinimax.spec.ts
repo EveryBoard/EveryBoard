@@ -62,20 +62,21 @@ describe('SiamMinimax:', () => {
             .withContext('First player should be considered as closer to victory')
             .toBeLessThan(0);
     });
-    xit('Best choice test: Should choose victory immediately', () => {
-        const board: Table<SiamPiece> = [
-            [_, U, _, M, _],
-            [_, _, _, U, _],
-            [_, M, M, _, _],
-            [_, _, _, _, _],
-            [_, _, _, _, _],
-        ];
-        const state: SiamState = new SiamState(board, 0);
-        const node: SiamNode = new SiamNode(state);
-        const chosenMove: SiamMove = node.findBestMove(1, minimax);
-        const bestMove: SiamMove = new SiamMove(3, 1, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
-        expect(chosenMove).toEqual(bestMove);
-        expect(node.countDescendants()).withContext('Pre-victory node should only have victory child').toBe(1);
+    it('Best choice test: Should choose victory immediately (no matter the AI depth', () => {
+        for (let aiDepth: number = 1; aiDepth < 3; aiDepth++) {
+            const board: Table<SiamPiece> = [
+                [_, U, _, M, _],
+                [_, _, _, U, _],
+                [_, M, M, _, _],
+                [_, _, _, _, _],
+                [_, _, _, _, _],
+            ];
+            const state: SiamState = new SiamState(board, 0);
+            const node: SiamNode = new SiamNode(state);
+            const chosenMove: SiamMove = node.findBestMove(aiDepth, minimax);
+            const bestMove: SiamMove = new SiamMove(3, 1, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
+            expect(chosenMove).toEqual(bestMove);
+        }
     });
     it('Best choice test: Should consider pushing as the best option', () => {
         const board: Table<SiamPiece> = [
