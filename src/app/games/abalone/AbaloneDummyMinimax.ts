@@ -6,10 +6,11 @@ import { GameStatus } from 'src/app/jscaip/Rules';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { AbaloneState } from './AbaloneState';
 import { AbaloneMove } from './AbaloneMove';
-import { AbaloneLegalityStatus, AbaloneNode, AbaloneRules } from './AbaloneRules';
+import { AbaloneLegalityInformation, AbaloneNode, AbaloneRules } from './AbaloneRules';
 import { Player } from 'src/app/jscaip/Player';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
-export class AbaloneDummyMinimax extends Minimax<AbaloneMove, AbaloneState, AbaloneLegalityStatus> {
+export class AbaloneDummyMinimax extends Minimax<AbaloneMove, AbaloneState, AbaloneLegalityInformation> {
 
     public getListMoves(node: AbaloneNode): AbaloneMove[] {
         const moves: AbaloneMove[] = [];
@@ -36,7 +37,7 @@ export class AbaloneDummyMinimax extends Minimax<AbaloneMove, AbaloneState, Abal
                             const second: Coord = first.getNext(alignement, distance);
                             if (second.isInRange(9, 9)) {
                                 const translation: AbaloneMove = AbaloneMove.fromDoubleCoord(first, second, dir).get();
-                                if (AbaloneRules.isLegal(translation, state).legal.isSuccess()) {
+                                if (AbaloneRules.isLegal(translation, state).isSuccess()) {
                                     moves.push(translation);
                                 }
                             } else {
@@ -51,10 +52,10 @@ export class AbaloneDummyMinimax extends Minimax<AbaloneMove, AbaloneState, Abal
     }
     private isAcceptablePush(move: AbaloneMove, state: AbaloneState): boolean {
         const scores: [number, number] = state.getScores();
-        const status: AbaloneLegalityStatus = AbaloneRules.isLegal(move, state);
-        if (status.legal.isSuccess()) {
+        const status: MGPFallible<AbaloneLegalityInformation> = AbaloneRules.isLegal(move, state);
+        if (status.isSuccess()) {
             const OPPONENT: number = state.getCurrentOpponent().value;
-            const newState: AbaloneState = new AbaloneState(status.newBoard, state.turn + 1);
+            const newState: AbaloneState = new AbaloneState(status.get(), state.turn + 1);
             const newScores: [number, number] = newState.getScores();
             if (newScores[OPPONENT] > scores[OPPONENT]) {
                 return false; // he just pushed himself

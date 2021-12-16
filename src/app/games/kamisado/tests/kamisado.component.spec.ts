@@ -30,7 +30,7 @@ describe('KamisadoComponent', () => {
     });
     it('should choose (-1,-1) as chosen coord when calling updateBoard without move', () => {
         componentTestUtils.getComponent().updateBoard();
-        expect(componentTestUtils.getComponent().chosen.equals(new Coord(-1, -1))).toBeTrue();
+        expect(componentTestUtils.getComponent().chosen.isAbsent()).toBeTrue();
     });
     it('should not allow to pass initially', fakeAsync(async() => {
         expect((await componentTestUtils.getComponent().pass()).reason).toBe(RulesFailure.CANNOT_PASS());
@@ -39,12 +39,12 @@ describe('KamisadoComponent', () => {
     it('should allow changing initial choice', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_0_7'); // Select initial piece
         await componentTestUtils.expectClickSuccess('#click_1_7'); // Select another piece
-        expect(componentTestUtils.getComponent().chosen.equals(new Coord(1, 7))).toBeTrue();
+        expect(componentTestUtils.getComponent().chosen.equalsValue(new Coord(1, 7))).toBeTrue();
     }));
     it('should allow deselecting initial choice', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_0_7'); // Select initial piece
         await componentTestUtils.expectClickSuccess('#click_0_7'); // Deselect it
-        expect(componentTestUtils.getComponent().chosen.equals(new Coord(-1, -1))).toBeTrue();
+        expect(componentTestUtils.getComponent().chosen.isAbsent()).toBeTrue();
     }));
     it('should allow to pass if stuck position', fakeAsync(async() => {
         const board: Table<KamisadoPiece> = [

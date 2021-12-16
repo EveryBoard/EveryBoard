@@ -4,25 +4,22 @@ import { SiamPiece } from './SiamPiece';
 import { Player } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { SiamLegalityStatus } from './SiamLegalityStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { display } from 'src/app/utils/utils';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { SiamRules, SiamNode } from './SiamRules';
+import { SiamRules, SiamNode, SiamLegalityInformation } from './SiamRules';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
-export class SiamMinimax extends Minimax<SiamMove, SiamState, SiamLegalityStatus> {
+export class SiamMinimax extends Minimax<SiamMove, SiamState, SiamLegalityInformation> {
 
     public getBoardValue(node: SiamNode): NodeUnheritance {
-        const move: SiamMove = node.move;
-        const state: SiamState = node.gameState;
-        return new NodeUnheritance(SiamRules.getBoardValueInfo(move, state).boardValue);
+        return new NodeUnheritance(SiamRules.getBoardValueInfo(node.move, node.gameState).boardValue);
     }
     public getListMoves(node: SiamNode): SiamMove[] {
         let moves: SiamMove[] = [];
         const currentPlayer: Player = node.gameState.getCurrentPlayer();
         let c: SiamPiece;
-        let legality: SiamLegalityStatus;
         for (let y: number = 0; y < 5; y++) {
             for (let x: number = 0; x < 5; x++) {
                 c = node.gameState.getPieceAtXY(x, y);
@@ -46,8 +43,9 @@ export class SiamMinimax extends Minimax<SiamMove, SiamState, SiamLegalityStatus
                         }
                         for (const orientation of orientations) {
                             const forwardMove: SiamMove = new SiamMove(x, y, MGPOptional.of(direction), orientation);
-                            legality = SiamRules.isLegalForwarding(forwardMove, node.gameState, c);
-                            if (legality.legal.isSuccess()) {
+                            const legality: MGPFallible<SiamLegalityInformation> =
+                                SiamRules.isLegalForwarding(forwardMove, node.gameState, c);
+                            if (legality.isSuccess()) {
                                 moves.push(forwardMove);
                             }
                         }

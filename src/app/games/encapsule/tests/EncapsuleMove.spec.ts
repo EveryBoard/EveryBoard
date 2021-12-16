@@ -12,10 +12,6 @@ describe('EncapsuleMove', () => {
         expect(EncapsuleMove.fromDrop(EncapsulePiece.SMALL_BLACK, new Coord(2, 1))).toBeTruthy();
         expect(EncapsuleMove.fromMove(new Coord(1, 1), new Coord(2, 1))).toBeTruthy();
     });
-    it('should throw when move has null as landing coord', () => {
-        expect(() => EncapsuleMove.fromMove(new Coord(2, 1), null)).toThrow();
-        expect(() => EncapsuleMove.fromDrop(EncapsulePiece.SMALL_BLACK, null)).toThrow();
-    });
     it('should throw when move has the same starting and landing coords', () => {
         expect(() => EncapsuleMove.fromMove(new Coord(2, 1), new Coord(2, 1))).toThrow();
     });

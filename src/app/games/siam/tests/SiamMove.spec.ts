@@ -4,7 +4,6 @@ import { SiamMove } from '../SiamMove';
 import { SiamState } from '../SiamState';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { SiamPiece } from '../SiamPiece';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
@@ -26,7 +25,7 @@ describe('SiamMove', () => {
         ];
         const move: SiamMove = new SiamMove(0, 0, MGPOptional.of(Orthogonal.DOWN), Orthogonal.UP);
         const state: SiamState = new SiamState(board, 0);
-        const node: SiamNode = new MGPNode(null, move, state);
+        const node: SiamNode = new SiamNode(state, MGPOptional.empty(), MGPOptional.of(move));
         const rules: SiamRules = new SiamRules(SiamState);
         const minimax: SiamMinimax = new SiamMinimax(rules, 'SiamMinimax');
         const moves: SiamMove[] = minimax.getListMoves(node);
@@ -47,12 +46,6 @@ describe('SiamMove', () => {
     });
 
     it('Should throw during invalid SiamMove creation', () => {
-        expect(() => {
-            new SiamMove(2, 2, MGPOptional.of(Orthogonal.UP), null);
-        }).toThrowError('Landing orientation must be set.');
-        expect(() => {
-            new SiamMove(2, 2, null, Orthogonal.UP);
-        }).toThrowError('Move Direction must be set (even if optional).');
         expect(() => {
             new SiamMove(0, 0, MGPOptional.of(Orthogonal.UP), Orthogonal.DOWN);
         }).toThrowError('SiamMove should have moveDirection and landingOrientation matching when a piece goes out of the board: SiamMove(0, 0, UP, DOWN).');

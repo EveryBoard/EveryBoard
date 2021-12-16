@@ -1,5 +1,4 @@
 import { fakeAsync } from '@angular/core/testing';
-
 import { QuixoComponent } from '../quixo.component';
 import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
 import { Orthogonal } from 'src/app/jscaip/Direction';
@@ -10,6 +9,7 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/Player';
 import { QuixoState } from 'src/app/games/quixo/QuixoState';
 import { QuixoFailure } from 'src/app/games/quixo/QuixoFailure';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('QuixoComponent', () => {
 
@@ -27,14 +27,14 @@ describe('QuixoComponent', () => {
         expect(componentTestUtils.getComponent()).withContext('Component should be created').toBeTruthy();
     });
     it('should style piece correctly', () => {
-        componentTestUtils.getComponent().chosenCoord = new Coord(0, 0);
+        componentTestUtils.getComponent().chosenCoord = MGPOptional.of(new Coord(0, 0));
         expect(componentTestUtils.getComponent().getPieceClasses(0, 0)).toContain('selected');
 
-        componentTestUtils.getComponent().lastMoveCoord = new Coord(4, 4);
+        componentTestUtils.getComponent().lastMoveCoord = MGPOptional.of(new Coord(4, 4));
         expect(componentTestUtils.getComponent().getPieceClasses(4, 4)).toContain('last-move');
     });
     it('should give correct direction', () => {
-        componentTestUtils.getComponent().chosenCoord = new Coord(0, 0);
+        componentTestUtils.getComponent().chosenCoord = MGPOptional.of(new Coord(0, 0));
         expect(componentTestUtils.getComponent().getPossiblesDirections()).toEqual(['RIGHT', 'DOWN']);
 
         componentTestUtils.getComponent().onBoardClick(4, 4);

@@ -1,14 +1,14 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { QuixoState } from './QuixoState';
 import { QuixoMove } from './QuixoMove';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
-export abstract class QuixoNode extends MGPNode<QuixoRules, QuixoMove, QuixoState> {}
+export class QuixoNode extends MGPNode<QuixoRules, QuixoMove, QuixoState> {}
 
 export class QuixoRules extends Rules<QuixoMove, QuixoState> {
 
@@ -108,22 +108,22 @@ export class QuixoRules extends Rules<QuixoMove, QuixoState> {
     }
     public applyLegalMove(move: QuixoMove,
                           state: QuixoState,
-                          status: LegalityStatus): QuixoState
+                          status: void): QuixoState
     {
         return QuixoRules.applyLegalMove(move, state, status);
     }
     public static applyLegalMove(move: QuixoMove,
                                  state: QuixoState,
-                                 _status: LegalityStatus)
+                                 _status: void)
     : QuixoState
     {
         return state.applyLegalMove(move);
     }
-    public isLegal(move: QuixoMove, state: QuixoState): LegalityStatus {
+    public isLegal(move: QuixoMove, state: QuixoState): MGPFallible<void> {
         if (state.getPieceAt(move.coord) === state.getCurrentOpponent()) {
-            return LegalityStatus.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            return MGPFallible.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         } else {
-            return LegalityStatus.SUCCESS;
+            return MGPFallible.success(undefined);
         }
     }
     public getGameStatus(node: QuixoNode): GameStatus {

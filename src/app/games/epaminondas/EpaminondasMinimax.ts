@@ -1,16 +1,16 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
-import { EpaminondasLegalityStatus } from './epaminondaslegalitystatus';
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { EpaminondasNode, EpaminondasRules } from './EpaminondasRules';
+import { EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from './EpaminondasRules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { GameStatus } from 'src/app/jscaip/Rules';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
-export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasState, EpaminondasLegalityStatus> {
+export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasState, EpaminondasLegalityInformation> {
 
     public static getListMoves(node: EpaminondasNode): EpaminondasMove[] {
         const PLAYER: Player = node.gameState.getCurrentPlayer();
@@ -59,8 +59,8 @@ export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasStat
                           state: EpaminondasState)
     : EpaminondasMove[]
     {
-        const legality: EpaminondasLegalityStatus = EpaminondasRules.isLegal(move, state);
-        if (legality.legal.isSuccess()) {
+        const legality: MGPFallible<EpaminondasLegalityInformation> = EpaminondasRules.isLegal(move, state);
+        if (legality.isSuccess()) {
             moves.push(move);
         }
         return moves;

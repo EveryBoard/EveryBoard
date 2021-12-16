@@ -23,6 +23,7 @@ import { GameInfo, PickGameComponent } from '../../normal-component/pick-game/pi
 import { GameWrapperMessages } from '../../wrapper-components/GameWrapper';
 import { LocalGameWrapperComponent } from '../../wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { AbstractGameComponent } from './GameComponent';
+import { Utils } from 'src/app/utils/utils';
 
 describe('GameComponent', () => {
 
@@ -55,6 +56,26 @@ describe('GameComponent', () => {
             ],
         }).compileComponents();
         AuthenticationServiceMock.setUser(AuthUser.NOT_CONNECTED);
+    }));
+    it('should fail if pass() is called on a game that does not support it', fakeAsync(async() => {
+        spyOn(Utils, 'handleError').and.returnValue(null);
+        // given such a game, like Abalone
+        activatedRouteStub.setRoute('compo', 'Abalone');
+        fixture = TestBed.createComponent(LocalGameWrapperComponent);
+        component = fixture.debugElement.componentInstance;
+        component.observerRole = 1;
+        fixture.detectChanges();
+        tick(1);
+        expect(component.gameComponent).toBeDefined();
+
+        // when we try to pass
+        const result: MGPValidation = await component.gameComponent.pass();
+
+        // then it gives an error and handleError is called
+        const error: string = 'GameComponent.pass() called on a game that does not redefine it';
+        expect(result.isFailure()).toBeTrue();
+        expect(result.getReason()).toEqual(error);
+        expect(Utils.handleError).toHaveBeenCalledWith(error);
     }));
     it('Clicks method should refuse when observer click', fakeAsync(async() => {
         const clickableMethods: { [gameName: string]: { [methodName: string]: unknown[] } } = {
@@ -136,6 +157,7 @@ describe('GameComponent', () => {
             tick(1);
             expect(component.gameComponent).toBeDefined();
             for (const methodName of Object.keys(game)) {
+                expect(component.gameComponent[methodName]).withContext(`click method ${methodName} should be defined for game ${gameName}`).toBeDefined();
                 const clickResult: MGPValidation = await component.gameComponent[methodName](...game[methodName]);
                 expect(clickResult).toEqual(refusal);
             }
@@ -151,9 +173,7 @@ describe('GameComponent', () => {
                 TestBed.createComponent(gameInfo.component).debugElement.componentInstance;
             expect(gameComponent.encoder).withContext('Encoder missing for ' + gameInfo.urlName).toBeTruthy();
             expect(gameComponent.tutorial).withContext('tutorial missing for ' + gameInfo.urlName).toBeTruthy();
-            if (gameComponent.tutorial) {
-                expect(gameComponent.tutorial.length).withContext('tutorial empty for ' + gameInfo.urlName).toBeGreaterThan(0);
-            }
+            expect(gameComponent.tutorial.length).withContext('tutorial empty for ' + gameInfo.urlName).toBeGreaterThan(0);
         }
     }));
 });

@@ -16,9 +16,9 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     public static VERBOSE: boolean = false;
 
     @Input() public chatId!: string;
-    @Input() public turn!: number;
+    @Input() public turn?: number;
     public userMessage: string = '';
-    public userName: MGPOptional<string> = MGPOptional.empty();
+    public username: MGPOptional<string> = MGPOptional.empty();
 
     public connected: boolean = false;
     public chat: IMessage[] = [];
@@ -48,12 +48,12 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
             .subscribe((user: AuthUser) => {
                 if (this.isConnectedUser(user)) {
                     display(ChatComponent.VERBOSE, JSON.stringify(user) + ' just connected');
-                    this.userName = MGPOptional.of(user.username);
+                    this.username = user.username;
                     this.connected = true;
                     this.loadChatContent();
                 } else {
                     display(ChatComponent.VERBOSE, 'No User Logged');
-                    this.userName = MGPOptional.empty();
+                    this.username = MGPOptional.empty();
                     this.connected = false;
                 }
             });
@@ -62,10 +62,10 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
         this.scrollToBottomIfNeeded();
     }
     public isConnectedUser(user: AuthUser): boolean {
-        return user && user.username && user.username !== '';
+        return user.username.isPresent() && user.username.get() !== '';
     }
     public loadChatContent(): void {
-        display(ChatComponent.VERBOSE, `User '` + this.userName + `' logged, loading chat content`);
+        display(ChatComponent.VERBOSE, `User '${this.username}' logged, loading chat content`);
 
         this.chatService.startObserving(this.chatId, (id: IChatId) => {
             this.updateMessages(id);
@@ -127,10 +127,10 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
         });
     }
     public async sendMessage(): Promise<void> {
-        assert(this.userName.isPresent(), 'disconnected user is not able to send a message');
+        assert(this.username.isPresent(), 'disconnected user is not able to send a message');
         const content: string = this.userMessage;
         this.userMessage = ''; // clears it first to seem more responsive
-        await this.chatService.sendMessage(this.userName.get(), this.turn, content);
+        await this.chatService.sendMessage(this.username.get(), content, this.turn);
     }
     public ngOnDestroy(): void {
         this.authSubscription.unsubscribe();

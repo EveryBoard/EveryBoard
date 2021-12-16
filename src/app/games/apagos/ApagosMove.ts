@@ -3,7 +3,7 @@ import { Move } from 'src/app/jscaip/Move';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { assert } from 'src/app/utils/utils';
+import { assert, Utils } from 'src/app/utils/utils';
 import { ApagosCoord } from './ApagosCoord';
 import { ApagosFailure } from './ApagosFailure';
 
@@ -36,28 +36,30 @@ export class ApagosMove extends Move {
             return moveIndex;
         }
         public decodeNumber(encodedMove: number): ApagosMove {
+            assert(encodedMove < ApagosMove.ALL_MOVES.length, encodedMove + ' is not a valid encoded number for ApagosMove decoder');
             const move: ApagosMove = ApagosMove.ALL_MOVES[encodedMove];
-            assert(move != null, encodedMove + ' is not a valid encoded number for ApagosMove decoder');
             return move;
         }
     }
     public static drop(coord: ApagosCoord, piece: Player): ApagosMove {
-        const drop: ApagosMove = ApagosMove.ALL_MOVES.find((move: ApagosMove) => {
-            return move.landing.equals(coord) &&
-                   move.piece.equals(MGPOptional.of(piece)) &&
-                   move.starting.equals(MGPOptional.empty());
-        });
+        const drop: ApagosMove = Utils.getNonNullable(
+            ApagosMove.ALL_MOVES.find((move: ApagosMove) => {
+                return move.landing.equals(coord) &&
+                    move.piece.equalsValue(piece) &&
+                    move.starting.equals(MGPOptional.empty());
+            }));
         return drop;
     }
     public static transfer(start: ApagosCoord, landing: ApagosCoord): MGPFallible<ApagosMove> {
         if (start.x <= landing.x) {
             return MGPFallible.failure(ApagosFailure.PIECE_SHOULD_MOVE_DOWNWARD());
         }
-        const slideDown: ApagosMove = ApagosMove.ALL_MOVES.find((move: ApagosMove) => {
-            return move.landing.equals(landing) &&
-                   move.piece.equals(MGPOptional.empty()) &&
-                   move.starting.equals(MGPOptional.of(start));
-        });
+        const slideDown: ApagosMove = Utils.getNonNullable(
+            ApagosMove.ALL_MOVES.find((move: ApagosMove) => {
+                return move.landing.equals(landing) &&
+                    move.piece.equals(MGPOptional.empty()) &&
+                    move.starting.equals(MGPOptional.of(start));
+            }));
         return MGPFallible.success(slideDown);
     }
     private constructor(public readonly landing: ApagosCoord,

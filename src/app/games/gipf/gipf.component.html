@@ -62,11 +62,11 @@
         </g>
     </g>
 
-    <line *ngIf="inserted"
-          [attr.x1]="inserted.x1"
-          [attr.y1]="inserted.y1"
-          [attr.x2]="inserted.x2"
-          [attr.y2]="inserted.y2"
+    <line *ngIf="inserted.isPresent()"
+          [attr.x1]="inserted.get().x1"
+          [attr.y1]="inserted.get().y1"
+          [attr.x2]="inserted.get().x2"
+          [attr.y2]="inserted.get().y2"
           class="arrow moved-stroke"
           marker-end="url(#arrowhead-moved)"
     />

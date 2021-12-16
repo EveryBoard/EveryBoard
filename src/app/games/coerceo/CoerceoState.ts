@@ -7,6 +7,7 @@ import { assert, display } from 'src/app/utils/utils';
 import { CoerceoMove, CoerceoStep } from './CoerceoMove';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Player } from 'src/app/jscaip/Player';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class CoerceoState extends TriangularGameState<FourStatePiece> {
 
@@ -64,8 +65,8 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
     }
     public constructor(board: Table<FourStatePiece>,
                        turn: number,
-                       public readonly tiles: { readonly 0: number, readonly 1: number},
-                       public readonly captures: { readonly 0: number, readonly 1: number})
+                       public readonly tiles: readonly [number, number],
+                       public readonly captures: readonly [number, number])
     {
         super(board, turn);
     }
@@ -172,17 +173,17 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
     }
     public getPresentNeighboorTilesRelativeIndexes(tile: Coord): number[] {
         const neighboorsIndexes: number[] = [];
-        let firstIndex: number;
+        let firstIndex: MGPOptional<number> = MGPOptional.empty();
         for (let i: number = 0; i < 6; i++) {
             const vector: Vector = CoerceoState.NEIGHBOORS_TILES_DIRECTIONS[i];
             const neighboorTile: Coord = tile.getNext(vector, 1);
             if (neighboorTile.isInRange(15, 10) &&
                 this.getPieceAt(neighboorTile) !== FourStatePiece.NONE)
             {
-                if (firstIndex == null) {
-                    firstIndex = i;
+                if (firstIndex.isAbsent()) {
+                    firstIndex = MGPOptional.of(i);
                 }
-                neighboorsIndexes.push(i - firstIndex);
+                neighboorsIndexes.push(i - firstIndex.get());
             }
         }
         return neighboorsIndexes;
@@ -211,7 +212,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         const legalLandings: Coord[] = [];
         for (const step of CoerceoStep.STEPS) {
             const landing: Coord = coord.getNext(step.direction, 1);
-            if (this.getNullable(landing) === FourStatePiece.EMPTY) {
+            if (this.isOnBoard(landing) && this.getPieceAt(landing) === FourStatePiece.EMPTY) {
                 legalLandings.push(landing);
             }
         }

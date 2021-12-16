@@ -14,14 +14,6 @@ export class PieceThreat implements ComparableObject {
     public toString(): string {
         throw new Error('Method not implemented.');
     }
-    public filter(coord: Coord): PieceThreat {
-        const newDirect: MGPSet<Coord> = this.direct.removeAndCopy(coord);
-        const newMover: MGPSet<Coord> = this.mover.removeAndCopy(coord);
-        if (newDirect.size() === 0 || newMover.size() === 0) {
-            return null;
-        }
-        return new PieceThreat(newDirect, newMover);
-    }
 }
 
 export class SandwichThreat extends PieceThreat {

@@ -1,9 +1,8 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { TablutMove } from '../TablutMove';
 import { TablutState } from '../TablutState';
 import { TablutCase } from '../TablutCase';
-import { TablutRules } from '../TablutRules';
+import { TablutNode, TablutRules } from '../TablutRules';
 import { TablutMinimax } from '../TablutMinimax';
 import { Table } from 'src/app/utils/ArrayUtils';
 
@@ -31,7 +30,7 @@ describe('TablutMinimax:', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const state: TablutState = new TablutState(board, 1);
-        rules.node = new MGPNode(null, null, state);
+        rules.node = new TablutNode(state);
         const winnerMove: TablutMove = new TablutMove(new Coord(3, 0), new Coord(8, 0));
 
         const minimax: TablutMinimax = new TablutMinimax(rules, 'TablutMinimax');

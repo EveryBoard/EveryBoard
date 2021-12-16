@@ -54,9 +54,9 @@
             </ng-template>
         </g>
     </g>
-    <rect *ngIf="isThereAKo()"
+    <rect *ngIf="ko.isPresent()"
           width="25" height="25"
-          [attr.x]="12.5 + 50 * ko.x" [attr.y]="12.5 + 50 * ko.y"
+          [attr.x]="12.5 + 50 * ko.get().x" [attr.y]="12.5 + 50 * ko.get().y"
           class="captured-stroke mid-stroke"
           fill="none"
     />

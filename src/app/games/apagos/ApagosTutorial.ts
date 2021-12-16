@@ -54,7 +54,7 @@ export class ApagosTutorial {
 
             (move: ApagosMove, _: ApagosState) => {
                 if (move.isDrop()) {
-                    if (move.piece.getOrNull() === Player.ONE) {
+                    if (move.piece.equalsValue(Player.ONE)) {
                         return MGPValidation.SUCCESS;
                     } else {
                         return MGPValidation.failure($localize`You actively made your opponent win!`);

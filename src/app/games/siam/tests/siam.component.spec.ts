@@ -19,20 +19,20 @@ describe('SiamComponent', () => {
     const U: SiamPiece = SiamPiece.WHITE_UP;
     const u: SiamPiece = SiamPiece.BLACK_UP;
 
-    const expectMoveLegality: (move: SiamMove) => Promise<void> = async(move: SiamMove) => {
+    async function expectMoveLegality(move: SiamMove): Promise<void> {
         if (move.isInsertion()) {
             await componentTestUtils.expectClickSuccess('#insertAt_' + move.coord.x + '_' + move.coord.y);
             const orientation: string = move.landingOrientation.toString();
             return componentTestUtils.expectMoveSuccess('#chooseOrientation_' + orientation, move);
         } else {
             await componentTestUtils.expectClickSuccess('#clickPiece_' + move.coord.x + '_' + move.coord.y);
-            const direction: Orthogonal = move.moveDirection.getOrNull();
-            const moveDirection: string = direction ? direction.toString() : '';
+            const direction: MGPOptional<Orthogonal> = move.moveDirection;
+            const moveDirection: string = direction.isPresent() ? direction.get().toString() : '';
             await componentTestUtils.expectClickSuccess('#chooseDirection_' + moveDirection);
             const landingOrientation: string = move.landingOrientation.toString();
             return componentTestUtils.expectMoveSuccess('#chooseOrientation_' + landingOrientation, move);
         }
-    };
+    }
     beforeEach(fakeAsync(async() => {
         componentTestUtils = await ComponentTestUtils.forGame<SiamComponent>('Siam');
     }));

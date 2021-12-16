@@ -1,4 +1,3 @@
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GoMinimax } from '../GoMinimax';
@@ -31,7 +30,7 @@ describe('GoMinimax', () => {
                 [_, _, _, _, _],
             ];
             const state: GoState = new GoState(board, [0, 0], 0, MGPOptional.empty(), Phase.PLAYING);
-            const initialNode: GoNode = new MGPNode(null, null, state);
+            const initialNode: GoNode = new GoNode(state);
             const moves: GoMove[] = minimax.getListMoves(initialNode);
             expect(moves.length).toBe(23);
             expect(moves.some((m: GoMove) => m.equals(GoMove.PASS))).toBeTrue();
@@ -39,14 +38,14 @@ describe('GoMinimax', () => {
         it('should only have GoMove.ACCEPT in ACCEPT Phase when agreeing on the result', () => {
             const initialBoard: GoPiece[][] = GoState.getInitialState().getCopiedBoard();
             const state: GoState = new GoState(initialBoard, [0, 0], 0, MGPOptional.empty(), Phase.ACCEPT);
-            const initialNode: GoNode = new MGPNode(null, null, state);
+            const initialNode: GoNode = new GoNode(state);
             const moves: GoMove[] = minimax.getListMoves(initialNode);
             expect(moves).toEqual([GoMove.ACCEPT]);
         });
         it('should only have GoMove.ACCEPT in COUNTNG Phase when agreeing on the result', () => {
             const initialBoard: GoPiece[][] = GoState.getInitialState().getCopiedBoard();
             const state: GoState = new GoState(initialBoard, [0, 0], 0, MGPOptional.empty(), Phase.COUNTING);
-            const initialNode: GoNode = new MGPNode(null, null, state);
+            const initialNode: GoNode = new GoNode(state);
             spyOn(minimax, 'getCountingMovesList').and.returnValue([]);
             const moves: GoMove[] = minimax.getListMoves(initialNode);
             expect(moves).toEqual([GoMove.ACCEPT]);
@@ -54,7 +53,7 @@ describe('GoMinimax', () => {
         it('should only have counting moves in COUNTING Phase when not agreeing on the result', () => {
             const initialBoard: GoPiece[][] = GoState.getInitialState().getCopiedBoard();
             const state: GoState = new GoState(initialBoard, [0, 0], 0, MGPOptional.empty(), Phase.ACCEPT);
-            const initialNode: GoNode = new MGPNode(null, null, state);
+            const initialNode: GoNode = new GoNode(state);
             spyOn(minimax, 'getCountingMovesList').and.returnValue([new GoMove(1, 1)]);
             const moves: GoMove[] = minimax.getListMoves(initialNode);
             expect(moves).toEqual([new GoMove(1, 1)]);
@@ -68,7 +67,7 @@ describe('GoMinimax', () => {
                 [_, _, _, _, _],
             ];
             const state: GoState = new GoState(board, [0, 0], 0, MGPOptional.empty(), Phase.COUNTING);
-            const initialNode: GoNode = new MGPNode(null, null, state);
+            const initialNode: GoNode = new GoNode(state);
             const moves: GoMove[] = minimax.getListMoves(initialNode);
             expect(moves.length).toBe(1);
             expect(moves.some((m: GoMove) => m.equals(new GoMove(3, 3)))).toBeTrue();
@@ -83,7 +82,7 @@ describe('GoMinimax', () => {
             [_, X, _, O, _],
         ];
         const state: GoState = new GoState(board, [0, 0], 0, MGPOptional.empty(), Phase.PLAYING);
-        const initialNode: GoNode = new MGPNode(null, null, state);
+        const initialNode: GoNode = new GoNode(state);
         const boardValue: number = minimax.getBoardValue(initialNode).value;
         expect(boardValue).toBe(3);
     });

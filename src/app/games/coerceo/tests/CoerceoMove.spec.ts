@@ -15,10 +15,6 @@ describe('CoerceoMove', () => {
         expect(capture.isTileExchange()).toBeTrue();
     });
     describe('fromMove', () => {
-        it('Should not create move with nulls values', () => {
-            expect(() => CoerceoMove.fromDeplacement(new Coord(2, 2), null))
-                .toThrowError('Step cannot be null.');
-        });
         it('Should not create move of invalid distance', () => {
             expect(() => CoerceoMove.fromCoordToCoord(new Coord(2, 2), new Coord(9, 9)))
                 .toThrowError(CoerceoFailure.INVALID_DISTANCE());
@@ -50,7 +46,6 @@ describe('CoerceoMove', () => {
             const differentStart: CoerceoMove = CoerceoMove.fromCoordToCoord(c, b);
             const differentEnd: CoerceoMove = CoerceoMove.fromCoordToCoord(a, d);
 
-            expect(tileExchange.equals(null)).toBeFalse();
             expect(tileExchange.equals(differentCapture)).toBeFalse();
             expect(tileExchange.equals(tileExchange)).toBeTrue();
 

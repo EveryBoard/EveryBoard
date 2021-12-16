@@ -1,21 +1,20 @@
 import { MGPOptional } from '../utils/MGPOptional';
 import { Coord } from './Coord';
-import { LegalityStatus } from './LegalityStatus';
 import { Minimax } from './Minimax';
 import { Move } from './Move';
 import { NodeUnheritance } from './NodeUnheritance';
 import { SCORE } from './SCORE';
-import { AbstractGameState } from './GameState';
+import { GameState } from './GameState';
 
 export interface BoardInfo {
     status: SCORE,
-    victory: Coord[],
+    victory: MGPOptional<Coord[]>,
     preVictory: MGPOptional<Coord>,
-    sum: number
+    sum: number,
 }
 export abstract class AlignementMinimax<M extends Move,
-                                        S extends AbstractGameState,
-                                        L extends LegalityStatus,
+                                        S extends GameState,
+                                        L,
                                         V,
                                         U extends NodeUnheritance = NodeUnheritance>
     extends Minimax<M, S, L, U>
@@ -25,7 +24,7 @@ export abstract class AlignementMinimax<M extends Move,
         this.startSearchingVictorySources();
         let boardInfo: BoardInfo = {
             status: SCORE.DEFAULT,
-            victory: null,
+            victory: MGPOptional.empty(),
             preVictory: MGPOptional.empty(),
             sum: 0,
         };
@@ -42,7 +41,7 @@ export abstract class AlignementMinimax<M extends Move,
             }
             boardInfo = {
                 status: newBoardInfo.status,
-                victory: null,
+                victory: MGPOptional.empty(),
                 preVictory: newBoardInfo.preVictory,
                 sum: boardInfo.sum + newBoardInfo.sum,
             };

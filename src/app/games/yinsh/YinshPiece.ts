@@ -1,7 +1,7 @@
 import { NumberEncoder } from 'src/app/jscaip/Encoder';
 import { Player } from 'src/app/jscaip/Player';
 import { ComparableObject } from 'src/app/utils/Comparable';
-import { assert } from 'src/app/utils/utils';
+import { assert, Utils } from 'src/app/utils/utils';
 
 export class YinshPiece implements ComparableObject {
 
@@ -54,7 +54,9 @@ export class YinshPiece implements ComparableObject {
             case YinshPiece.MARKER_ZERO: return 'MARKER_ZERO';
             case YinshPiece.MARKER_ONE: return 'MARKER_ONE';
             case YinshPiece.RING_ZERO: return 'RING_ZERO';
-            case YinshPiece.RING_ONE: return 'RING_ONE';
+            default:
+                Utils.expectToBe(this, YinshPiece.RING_ONE);
+                return 'RING_ONE';
         }
     }
 }

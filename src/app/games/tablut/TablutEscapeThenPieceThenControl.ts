@@ -12,6 +12,7 @@ import { TablutState } from './TablutState';
 import { TablutPieceAndControlMinimax } from './TablutPieceAndControlMinimax';
 import { TablutNode, TablutRules } from './TablutRules';
 import { TablutRulesConfig } from './TablutRulesConfig';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class TablutEscapeThenPieceAndControlMinimax extends TablutPieceAndControlMinimax {
 
@@ -67,13 +68,13 @@ export class TablutEscapeThenPieceAndControlMinimax extends TablutPieceAndContro
                 controlScore += owner.getScoreModifier() * controlledValue;
             }
         }
-        const stepForEscape: number = this.getStepForEscape(state.getCopiedBoard());
+        const stepForEscape: number = this.getStepForEscape(state.getCopiedBoard()).getOrElse(0);
         return new NodeUnheritance((stepForEscape * 531 * 17 * 17) +
                                    (safeScore * 531 * 17) +
                                    (threatenedScore * 531) +
                                    controlScore);
     }
-    public getStepForEscape(board: Table<TablutCase>): number {
+    public getStepForEscape(board: Table<TablutCase>): MGPOptional<number> {
         const king: Coord = TablutRules.getKingCoord(board).get();
         return this._getStepForEscape(board, 1, [king], []);
     }
@@ -81,16 +82,16 @@ export class TablutEscapeThenPieceAndControlMinimax extends TablutPieceAndContro
                              step: number,
                              previousGen: Coord[],
                              handledCoords: Coord[])
-    : number
+    : MGPOptional<number>
     {
         const nextGen: Coord[] = this.getNextGen(board, previousGen, handledCoords);
 
         if (nextGen.length === 0) {
             // not found:
-            return null;
+            return MGPOptional.empty();
         }
         if (nextGen.some((coord: Coord) => TablutRules.isExternalThrone(coord))) {
-            return step;
+            return MGPOptional.of(step);
         } else {
             step++;
             handledCoords.push(...nextGen);
