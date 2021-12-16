@@ -28,7 +28,3 @@ Rules.ts,1
 server-page.component.ts,1
 SixMinimax.ts,13
 SiamPiece.ts,1
-TablutRules.ts,25
-TablutFailure.ts,1
-TablutEscapeThenPieceThenControl.ts,5
-TablutPieceAndControlMinimax.ts,1

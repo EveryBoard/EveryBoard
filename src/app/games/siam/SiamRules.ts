@@ -140,15 +140,15 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
     public isLegalRotation(rotation: SiamMove, state: SiamState): MGPFallible<SiamLegalityInformation> {
         display(SiamRules.VERBOSE, { isLegalRotation: { rotation, state } });
 
-        const c: Coord = rotation.coord;
-        const currentPiece: SiamPiece = state.getPieceAt(c);
+        const coord: Coord = rotation.coord;
+        const currentPiece: SiamPiece = state.getPieceAt(coord);
         const currentPlayer: Player = state.getCurrentPlayer();
         if (currentPiece.getDirection() === rotation.landingOrientation) {
             return MGPFallible.failure(SiamFailure.ILLEGAL_ROTATION());
         }
         const resultingBoard: SiamPiece[][] = state.getCopiedBoard();
-        resultingBoard[c.y][c.x] = SiamPiece.of(rotation.landingOrientation, currentPlayer);
-        return MGPFallible.success(new SiamLegalityInformation(resultingBoard, [c]));
+        resultingBoard[coord.y][coord.x] = SiamPiece.of(rotation.landingOrientation, currentPlayer);
+        return MGPFallible.success(new SiamLegalityInformation(resultingBoard, [coord]));
     }
     public applyLegalMove(_move: SiamMove,
                           state: SiamState,

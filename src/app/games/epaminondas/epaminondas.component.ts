@@ -127,11 +127,11 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     private getFirstPieceExtensions(PLAYER: Player): Coord[] {
         const extensions: Coord[] = [];
         for (const direction of Direction.DIRECTIONS) {
-            let c: Coord = this.firstPiece.get().getNext(direction, 1);
-            while (c.isInRange(14, 12) &&
-                   this.board[c.y][c.x] === PLAYER) {
-                extensions.push(c);
-                c = c.getNext(direction, 1);
+            let coord: Coord = this.firstPiece.get().getNext(direction, 1);
+            while (coord.isInRange(14, 12) &&
+                   this.board[coord.y][coord.x] === PLAYER) {
+                extensions.push(coord);
+                coord = coord.getNext(direction, 1);
             }
         }
         return extensions;

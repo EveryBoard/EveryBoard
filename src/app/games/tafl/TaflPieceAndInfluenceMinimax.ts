@@ -3,32 +3,39 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
-import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { SandwichThreat } from '../../jscaip/PieceThreat';
-import { TablutCase } from './TablutCase';
-import { TablutMinimax } from './TablutMinimax';
-import { TablutState } from './TablutState';
-import { TablutNode, TablutRules } from './TablutRules';
-import { TablutRulesConfig } from './TablutRulesConfig';
+import { TaflPawn } from './TaflPawn';
+import { TaflMinimax, TaflNode } from './TaflMinimax';
+import { TaflRules } from './TaflRules';
+import { TaflState } from './TaflState';
+import { TaflMove } from './TaflMove';
 
-export class TablutPieceAndInfluenceMinimax extends TablutMinimax {
+export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
 
-    public static MAX_INFLUENCE: number = 16 * ((TablutRulesConfig.WIDTH * 2) - 2);
+    public width: number;
 
-    public static SCORE_BY_THREATENED_PIECE: number = (16 * TablutPieceAndInfluenceMinimax.MAX_INFLUENCE) + 1;
+    public maxInfluence: number;
 
-    public static SCORE_BY_SAFE_PIECE: number = (16 * TablutPieceAndInfluenceMinimax.SCORE_BY_THREATENED_PIECE) + 1;
+    public scoreByThreatenedPiece: number;
 
-    public getBoardValue(node: TablutNode): NodeUnheritance {
-        const gameStatus: GameStatus = TablutRules.getGameStatus(node);
+    public scoreBySafePiece: number;
+
+    public constructor(ruler: TaflRules<TaflMove, TaflState>, name: string) {
+        super(ruler, name);
+        this.width = this.ruler.config.WIDTH;
+        this.maxInfluence = 16 * ((this.width * 2) - 2);
+        this.scoreByThreatenedPiece = (16 * this.maxInfluence) + 1;
+        this.scoreBySafePiece = (16 * this.scoreByThreatenedPiece) + 1;
+    }
+    public getBoardValue(node: TaflNode): NodeUnheritance {
+        const gameStatus: GameStatus = this.ruler.getGameStatus(node);
         if (gameStatus.isEndGame) {
             return new NodeUnheritance(gameStatus.toBoardValue());
         }
-        const state: TablutState = node.gameState;
-        const WIDTH: number = TablutRulesConfig.WIDTH;
-        const EMPTY: TablutCase = TablutCase.UNOCCUPIED;
+        const state: TaflState = node.gameState;
+        const EMPTY: TaflPawn = TaflPawn.UNOCCUPIED;
 
         let score: number = 0;
         const pieceMap: MGPMap<Player, MGPSet<Coord>> = this.getPiecesMap(state);
@@ -37,13 +44,15 @@ export class TablutPieceAndInfluenceMinimax extends TablutMinimax {
         for (const owner of [Player.ZERO, Player.ONE]) {
             for (const coord of pieceMap.get(owner).get().getCopy()) {
                 if (filteredThreatMap.get(coord).isPresent()) {
-                    score += owner.getScoreModifier() * TablutPieceAndInfluenceMinimax.SCORE_BY_THREATENED_PIECE;
+                    score += owner.getScoreModifier() * this.scoreByThreatenedPiece;
                 } else {
-                    score += owner.getScoreModifier() * TablutPieceAndInfluenceMinimax.SCORE_BY_SAFE_PIECE;
+                    score += owner.getScoreModifier() * this.scoreBySafePiece;
                     let influence: number = 0;
                     for (const dir of Orthogonal.ORTHOGONALS) {
                         let testedCoord: Coord = coord.getNext(dir, 1);
-                        while (testedCoord.isInRange(WIDTH, WIDTH) && state.getPieceAt(testedCoord) === EMPTY) {
+                        while (testedCoord.isInRange(this.width, this.width) &&
+                               state.getPieceAt(testedCoord) === EMPTY)
+                        {
                             influence++;
                             testedCoord = testedCoord.getNext(dir, 1);
                         }
@@ -54,19 +63,17 @@ export class TablutPieceAndInfluenceMinimax extends TablutMinimax {
         }
         return new NodeUnheritance(score);
     }
-    public getPiecesMap(state: TablutState): MGPMap<Player, MGPSet<Coord>> {
-        const WIDTH: number = TablutRulesConfig.WIDTH;
-        const board: Table<TablutCase> = state.getCopiedBoard();
-        const EMPTY: TablutCase = TablutCase.UNOCCUPIED;
+    public getPiecesMap(state: TaflState): MGPMap<Player, MGPSet<Coord>> {
+        const EMPTY: TaflPawn = TaflPawn.UNOCCUPIED;
         const map: MGPMap<Player, MGPSet<Coord>> = new MGPMap();
         const zeroPieces: Coord[] = [];
         const onePieces: Coord[] = [];
-        for (let y: number = 0; y < WIDTH; y++) {
-            for (let x: number = 0; x < WIDTH; x++) {
+        for (let y: number = 0; y < this.width; y++) {
+            for (let x: number = 0; x < this.width; x++) {
                 const coord: Coord = new Coord(x, y);
-                const piece: TablutCase = state.getPieceAt(coord);
+                const piece: TaflPawn = state.getPieceAt(coord);
                 if (piece !== EMPTY) {
-                    const owner: Player = TablutRules.getAbsoluteOwner(coord, board);
+                    const owner: Player = state.getAbsoluteOwner(coord);
                     if (owner === Player.ZERO) {
                         zeroPieces.push(coord);
                     } else {
@@ -79,7 +86,7 @@ export class TablutPieceAndInfluenceMinimax extends TablutMinimax {
         map.set(Player.ONE, new MGPSet(onePieces));
         return map;
     }
-    public getThreatMap(state: TablutState,
+    public getThreatMap(state: TaflState,
                         pieces: MGPMap<Player, MGPSet<Coord>>)
     : MGPMap<Coord, MGPSet<SandwichThreat>>
     {
@@ -94,9 +101,8 @@ export class TablutPieceAndInfluenceMinimax extends TablutMinimax {
         }
         return threatMap;
     }
-    public getThreats(coord: Coord, state: TablutState): SandwichThreat[] {
-        const board: Table<TablutCase> = state.getCopiedBoard();
-        const threatenerPlayer: Player = TablutRules.getAbsoluteOwner(coord, board).getOpponent();
+    public getThreats(coord: Coord, state: TaflState): SandwichThreat[] {
+        const threatenerPlayer: Player = state.getAbsoluteOwner(coord).getOpponent();
         const threats: SandwichThreat[] = [];
         for (const dir of Orthogonal.ORTHOGONALS) {
             const directThreat: Coord = coord.getPrevious(dir, 1);
@@ -107,13 +113,13 @@ export class TablutPieceAndInfluenceMinimax extends TablutMinimax {
                         continue;
                     }
                     let futureCapturer: Coord = coord.getNext(dir, 1);
-                    while (futureCapturer.isInRange(TablutRulesConfig.WIDTH, TablutRulesConfig.WIDTH) &&
-                           state.getPieceAt(futureCapturer) === TablutCase.UNOCCUPIED)
+                    while (futureCapturer.isInRange(this.width, this.width) &&
+                           state.getPieceAt(futureCapturer) === TaflPawn.UNOCCUPIED)
                     {
                         futureCapturer = futureCapturer.getNext(captureDirection);
                     }
-                    if (futureCapturer.isInRange(TablutRulesConfig.WIDTH, TablutRulesConfig.WIDTH) &&
-                        TablutRules.getAbsoluteOwner(futureCapturer, board) === threatenerPlayer &&
+                    if (futureCapturer.isInRange(this.width, this.width) &&
+                        state.getAbsoluteOwner(futureCapturer) === threatenerPlayer &&
                         coord.getNext(dir, 1).equals(futureCapturer) === false)
                     {
                         movingThreats.push(futureCapturer);
@@ -124,23 +130,23 @@ export class TablutPieceAndInfluenceMinimax extends TablutMinimax {
         }
         return threats;
     }
-    public isAThreat(coord: Coord, state: TablutState, opponent: Player): boolean {
-        if (coord.isNotInRange(TablutRulesConfig.WIDTH, TablutRulesConfig.WIDTH)) {
+    public isAThreat(coord: Coord, state: TaflState, opponent: Player): boolean {
+        if (coord.isNotInRange(this.width, this.width)) {
             return false;
         }
-        if (TablutRules.getAbsoluteOwner(coord, state.getCopiedBoard()) === opponent) {
+        if (state.getAbsoluteOwner(coord) === opponent) {
             return true;
         }
-        if (TablutRules.isThrone(coord)) {
+        if (this.ruler.isThrone(state, coord)) {
             if (opponent === Player.ONE) { // Defender
                 return true;
             } else {
-                return state.getPieceAt(coord) === TablutCase.UNOCCUPIED;
+                return state.getPieceAt(coord) === TaflPawn.UNOCCUPIED;
             }
         }
         return false;
     }
-    public isThreatReal(coord: Coord, state: TablutState, threats: SandwichThreat[]): boolean {
+    public isThreatReal(coord: Coord, state: TaflState, threats: SandwichThreat[]): boolean {
         if (threats.length === 0) {
             return false;
         }
@@ -156,17 +162,16 @@ export class TablutPieceAndInfluenceMinimax extends TablutMinimax {
         }
     }
     public filterThreatMap(threatMap: MGPMap<Coord, MGPSet<SandwichThreat>>,
-                           state: TablutState)
+                           state: TaflState)
     : MGPMap<Coord, MGPSet<SandwichThreat>>
     {
         const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = new MGPMap();
         const threateneds: Coord[] = threatMap.listKeys();
-        const board: Table<TablutCase> = state.getCopiedBoard();
         const threatenedPlayerPieces: Coord[] = threateneds.filter((coord: Coord) => {
-            return TablutRules.getAbsoluteOwner(coord, board) === state.getCurrentPlayer();
+            return state.getAbsoluteOwner(coord) === state.getCurrentPlayer();
         });
         const threatenedOpponentPieces: MGPSet<Coord> = new MGPSet(threateneds.filter((coord: Coord) => {
-            return TablutRules.getAbsoluteOwner(coord, board) === state.getCurrentOpponent();
+            return state.getAbsoluteOwner(coord) === state.getCurrentOpponent();
         }));
         for (const threatenedPiece of threatenedPlayerPieces) {
             const oldThreatSet: SandwichThreat[] = threatMap.get(threatenedPiece).get().getCopy();

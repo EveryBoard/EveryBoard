@@ -314,7 +314,7 @@ describe('AbaloneRules', () => {
         RulesUtils.expectMoveFailure(rules, state, move, AbaloneFailure.MUST_ONLY_TRANSLATE_YOUR_PIECES());
     });
     it('Should push on NONE the same way as outside the array board', () => {
-        // given initial state
+        // given the initial state
         const state: AbaloneState = AbaloneState.getInitialState();
 
         // when moving a piece in one of the coord in the array but out of the board
