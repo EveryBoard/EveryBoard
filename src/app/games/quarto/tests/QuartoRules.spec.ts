@@ -10,6 +10,7 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { QuartoFailure } from '../QuartoFailure';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('QuartoRules', () => {
 
@@ -144,7 +145,7 @@ describe('QuartoRules', () => {
             [QuartoPiece.AAAA, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
         ];
         const expectedState: QuartoState = new QuartoState(expectedBoard, 5, QuartoPiece.AAAB);
-        const node: QuartoNode = new MGPNode(expectedState, null, move);
+        const node: QuartoNode = new QuartoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
 
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
@@ -170,33 +171,18 @@ describe('QuartoRules', () => {
             [QuartoPiece.ABBB, QuartoPiece.NONE, QuartoPiece.BAAB, QuartoPiece.BBAB],
         ];
         const expectedState: QuartoState = new QuartoState(expectedBoard, 10, QuartoPiece.AABA);
-        const node: QuartoNode = new MGPNode(expectedState, null, move);
+        const node: QuartoNode = new QuartoNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
 
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
-    xit('Should recognize ongoing games', () => {
-        // Given TODOTODO
+    it('Should recognize ongoing games', () => {
+        // Given an ongoing game
         const board: Table<QuartoPiece> = [
             [QuartoPiece.AAAA, QuartoPiece.ABBB, QuartoPiece.ABBB, QuartoPiece.NONE],
             [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.BBBB],
             [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.AAAB],
             [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.AAAB],
-        ];
-        const state: QuartoState = new QuartoState(board, 9, QuartoPiece.BAAA);
-        const node: QuartoNode = new MGPNode(state);
-
-        // When evaluating board value
-        // Then it should be evaluated as Ongoing
-        RulesUtils.expectToBeOngoing(rules, node, minimaxes);
-    });
-    xit('Should recognize ongoing games', () => {
-        // Given TODOTODO
-        const board: Table<QuartoPiece> = [
-            [QuartoPiece.AAAA, QuartoPiece.ABBB, QuartoPiece.ABBB, QuartoPiece.NONE],
-            [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.AAAA],
-            [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.ABBB],
-            [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.ABBB],
         ];
         const state: QuartoState = new QuartoState(board, 9, QuartoPiece.BAAA);
         const node: QuartoNode = new MGPNode(state);
@@ -219,7 +205,8 @@ describe('QuartoRules', () => {
 
             // When evaluating board value
             // Then it should be evaluated as Ongoing
-            RulesUtils.expectStateToBePreVictory(state, null, Player.ONE, minimaxes);
+            const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
+            RulesUtils.expectStateToBePreVictory(state, move, Player.ONE, minimaxes);
         });
     });
 });

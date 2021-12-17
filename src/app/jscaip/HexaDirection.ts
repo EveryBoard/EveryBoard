@@ -1,4 +1,4 @@
-import { assert } from 'src/app/utils/utils';
+import { assert, Utils } from 'src/app/utils/utils';
 import { MGPFallible } from '../utils/MGPFallible';
 import { BaseDirection, DirectionFactory } from './Direction';
 import { NumberEncoder } from './Encoder';
@@ -53,12 +53,14 @@ export class HexaDirection extends BaseDirection {
 
     public static getAngle(direction: HexaDirection): number {
         switch (direction) {
-            case (HexaDirection.UP): return 0;
-            case (HexaDirection.UP_RIGHT): return 60;
-            case (HexaDirection.RIGHT): return 120;
-            case (HexaDirection.DOWN): return 180;
-            case (HexaDirection.DOWN_LEFT): return 240;
-            case (HexaDirection.LEFT): return 300;
+            case HexaDirection.UP: return 0;
+            case HexaDirection.UP_RIGHT: return 60;
+            case HexaDirection.RIGHT: return 120;
+            case HexaDirection.DOWN: return 180;
+            case HexaDirection.DOWN_LEFT: return 240;
+            default:
+                Utils.expectToBe(direction, HexaDirection.LEFT);
+                return 300;
         }
     }
     private constructor(x: 0|1|-1, y: 0|1|-1) {

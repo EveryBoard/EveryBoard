@@ -1,30 +1,29 @@
-import firebase from 'firebase';
 import { FirebaseJSONObject, JSONValueWithoutArray } from 'src/app/utils/utils';
 import { Request } from './request';
 import { DomainWrapper } from './DomainWrapper';
-import { Time } from './Time';
+import { FirebaseTime } from './Time';
+import { MGPOptional } from '../utils/MGPOptional';
 
 export interface IPart extends FirebaseJSONObject {
-    readonly typeGame: NonNullable<string>, // the type of game
-    readonly playerZero: NonNullable<string>, // the id of the first player
-    readonly turn: NonNullable<number>, // -1 means the part has not started, 0 is the initial turn
-    readonly result: NonNullable<IMGPResult>,
-    // TODO: should be ReadonlyArray, but does not compile with it!
-    readonly listMoves: NonNullable<Array<NonNullable<JSONValueWithoutArray>>>,
+    readonly typeGame: string, // the type of game
+    readonly playerZero: string, // the id of the first player
+    readonly turn: number, // -1 means the part has not started, 0 is the initial turn
+    readonly result: IMGPResult,
+    readonly listMoves: ReadonlyArray<JSONValueWithoutArray>,
 
     readonly playerOne?: string, // the id of the second player
     /* Server time being handled on server by firestore, when we send it, it's a FieldValue
      * so firebase write the server time and send us back a timestamp in the form of Time
      */
-    readonly beginning?: firebase.firestore.FieldValue | Time,
-    readonly lastMoveTime?: firebase.firestore.FieldValue | Time,
+    readonly beginning?: FirebaseTime,
+    readonly lastMoveTime?: FirebaseTime,
     readonly remainingMsForZero?: number;
     readonly remainingMsForOne?: number;
     readonly winner?: string,
     readonly loser?: string,
     readonly scorePlayerZero?: number,
     readonly scorePlayerOne?: number,
-    readonly request?: Request
+    readonly request?: Request | null, // can be null because we should be able to remove a request
 }
 
 export class Part implements DomainWrapper<IPart> {
@@ -45,11 +44,11 @@ export class Part implements DomainWrapper<IPart> {
     public isResign(): boolean {
         return this.doc.result === MGPResult.RESIGN.value;
     }
-    public getWinner(): string {
-        return this.doc.winner;
+    public getWinner(): MGPOptional<string> {
+        return MGPOptional.ofNullable(this.doc.winner);
     }
-    public getLoser(): string {
-        return this.doc.loser;
+    public getLoser(): MGPOptional<string> {
+        return MGPOptional.ofNullable(this.doc.loser);
     }
     public setWinnerAndLoser(winner: string, loser: string): Part {
         return new Part({ ...this.doc, winner, loser });

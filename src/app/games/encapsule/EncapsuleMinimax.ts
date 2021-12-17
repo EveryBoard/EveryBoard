@@ -1,17 +1,17 @@
 import { EncapsuleState, EncapsuleCase } from './EncapsuleState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Sets } from 'src/app/utils/Sets';
-import { EncapsuleLegalityStatus } from './EncapsuleLegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { EncapsuleMove } from './EncapsuleMove';
 import { EncapsulePiece } from './EncapsulePiece';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
-import { EncapsuleRules, EncapsuleNode } from './EncapsuleRules';
+import { EncapsuleRules, EncapsuleNode, EncapsuleLegalityInformation } from './EncapsuleRules';
 import { GameStatus } from 'src/app/jscaip/Rules';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
-export class EncapsuleMinimax extends Minimax<EncapsuleMove, EncapsuleState, EncapsuleLegalityStatus> {
+export class EncapsuleMinimax extends Minimax<EncapsuleMove, EncapsuleState, EncapsuleLegalityInformation> {
 
     public getBoardValue(node: EncapsuleNode): NodeUnheritance {
         const gameStatus: GameStatus = EncapsuleRules.getGameStatus(node);
@@ -29,8 +29,8 @@ export class EncapsuleMinimax extends Minimax<EncapsuleMove, EncapsuleState, Enc
                 // each drop
                 for (const piece of puttablePieces) {
                     const move: EncapsuleMove = EncapsuleMove.fromDrop(piece, coord);
-                    const status: EncapsuleLegalityStatus = EncapsuleRules.isLegal(move, state);
-                    if (status.legal.isSuccess()) {
+                    const status: MGPFallible<EncapsuleLegalityInformation> = EncapsuleRules.isLegal(move, state);
+                    if (status.isSuccess()) {
                         moves.push(move);
                     }
                 }
@@ -40,8 +40,9 @@ export class EncapsuleMinimax extends Minimax<EncapsuleMove, EncapsuleState, Enc
                             const landingCoord: Coord = new Coord(lx, ly);
                             if (!landingCoord.equals(coord)) {
                                 const newMove: EncapsuleMove = EncapsuleMove.fromMove(coord, landingCoord);
-                                const status: EncapsuleLegalityStatus = EncapsuleRules.isLegal(newMove, state);
-                                if (status.legal.isSuccess()) {
+                                const status: MGPFallible<EncapsuleLegalityInformation> =
+                                    EncapsuleRules.isLegal(newMove, state);
+                                if (status.isSuccess()) {
                                     moves.push(newMove);
                                 }
                             }

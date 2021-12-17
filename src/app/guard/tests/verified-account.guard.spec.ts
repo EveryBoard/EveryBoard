@@ -5,6 +5,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { VerifiedAccountGuard } from '../verified-account.guard';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('VerifiedAccountGuard', () => {
     let guard: VerifiedAccountGuard;
@@ -41,7 +42,7 @@ describe('VerifiedAccountGuard', () => {
         await expectAsync(guard.canActivate()).toBeResolvedTo(router.parseUrl('/verify-account'));
     }));
     it('should move users without username to verify-account page and refuse them', fakeAsync(async() => {
-        AuthenticationServiceMock.setUser(new AuthUser('jeanjaja@gmail.com', null, false));
+        AuthenticationServiceMock.setUser(new AuthUser(MGPOptional.of('jeanjaja@gmail.com'), MGPOptional.empty(), false));
         await expectAsync(guard.canActivate()).toBeResolvedTo(router.parseUrl('/verify-account'));
     }));
     it('should accept verified user', fakeAsync(async() => {

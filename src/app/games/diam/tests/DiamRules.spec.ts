@@ -28,12 +28,19 @@ describe('DiamRules', () => {
         ];
     });
 
+    function drop(target: number, piece: DiamPiece): DiamMove {
+        return new DiamMoveDrop(target, piece);
+    }
+    function shift(start: Coord, direction: 'clockwise' | 'counterclockwise'): DiamMove {
+        return DiamMoveShift.fromRepresentation(start, direction);
+    }
+
     describe('drop moves', () => {
         it('should allow a simple drop on the empty board', () => {
             // given the initial state
             const state: DiamState = DiamState.getInitialState();
             // when dropping a Player.ZERO piece in a valid space
-            const move: DiamMove = new DiamMoveDrop(0, A1);
+            const move: DiamMove = drop(0, A1);
             // then the piece goes to the bottom of that space
             // and there is one less piece of that type
             const expectedState: DiamState = DiamState.fromRepresentation([
@@ -48,7 +55,7 @@ describe('DiamRules', () => {
             // given the initial state
             const state: DiamState = DiamState.getInitialState();
             // when dropping a Player.ONE piece in a valid space
-            const move: DiamMove = new DiamMoveDrop(0, B1);
+            const move: DiamMove = drop(0, B1);
             // then the move is illegal
             RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         });
@@ -61,7 +68,7 @@ describe('DiamRules', () => {
                 [A1, __, __, __, __, __, __, __],
             ], 0);
             // when dropping a piece in a full space
-            const move: DiamMove = new DiamMoveDrop(0, A2);
+            const move: DiamMove = drop(0, A2);
             // then the move is illegal
             RulesUtils.expectMoveFailure(rules, state, move, DiamFailure.SPACE_IS_FULL());
         });
@@ -74,7 +81,7 @@ describe('DiamRules', () => {
                 [A1, __, B1, __, __, __, __, __],
             ], 0);
             // when dropping a piece that is not remaining
-            const move: DiamMove = new DiamMoveDrop(1, A1);
+            const move: DiamMove = drop(1, A1);
             // then the move is illegal
             RulesUtils.expectMoveFailure(rules, state, move, DiamFailure.NO_MORE_PIECES_OF_THIS_TYPE());
         });
@@ -89,7 +96,7 @@ describe('DiamRules', () => {
                 [A1, __, __, __, __, __, __, A2],
             ], 4);
             // when moving the stack starting at A2 clockwise
-            const move: DiamMove = DiamMoveShift.fromRepresentation(new Coord(7, 3), 'clockwise');
+            const move: DiamMove = shift(new Coord(7, 3), 'clockwise');
             // then the move suceeds and the stack is moved on top of the other one
             const expectedState: DiamState = DiamState.fromRepresentation([
                 [B2, __, __, __, __, __, __, __],
@@ -108,7 +115,7 @@ describe('DiamRules', () => {
                 [B1, __, __, __, __, __, __, A2],
             ], 4);
             // when moving the stack starting at A1 counterclockwise
-            const move: DiamMove = DiamMoveShift.fromRepresentation(new Coord(0, 2), 'counterclockwise');
+            const move: DiamMove = shift(new Coord(0, 2), 'counterclockwise');
             // then the move is legal
             const expectedState: DiamState = DiamState.fromRepresentation([
                 [__, __, __, __, __, __, __, __],
@@ -127,7 +134,7 @@ describe('DiamRules', () => {
                 [A1, __, __, __, __, __, __, __],
             ], 4);
             // when moving the stack starting at A1 counterclockwise
-            const move: DiamMove = DiamMoveShift.fromRepresentation(new Coord(0, 3), 'counterclockwise');
+            const move: DiamMove = shift(new Coord(0, 3), 'counterclockwise');
             // then the move is legal
             const expectedState: DiamState = DiamState.fromRepresentation([
                 [__, __, __, __, __, __, __, B2],
@@ -145,7 +152,7 @@ describe('DiamRules', () => {
                 [A1, __, __, __, __, __, __, A2],
             ], 4);
             // when moving the stack starting at B2 clockwise
-            const move: DiamMove = DiamMoveShift.fromRepresentation(new Coord(7, 2), 'clockwise');
+            const move: DiamMove = shift(new Coord(7, 2), 'clockwise');
             // then the move is not legal
             RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         });
@@ -158,7 +165,7 @@ describe('DiamRules', () => {
                 [A1, __, __, __, __, __, __, A2],
             ], 4);
             // when moving the stack starting at A2 clockwise
-            const move: DiamMove = DiamMoveShift.fromRepresentation(new Coord(7, 3), 'clockwise');
+            const move: DiamMove = shift(new Coord(7, 3), 'clockwise');
             // then the move is not legal
             RulesUtils.expectMoveFailure(rules, state, move, DiamFailure.TARGET_STACK_TOO_HIGH());
         });
@@ -166,7 +173,7 @@ describe('DiamRules', () => {
             // given a state where no shifts are possible
             const state: DiamState = DiamState.getInitialState();
             // when moving a non-existing stack
-            const move: DiamMove = DiamMoveShift.fromRepresentation(new Coord(0, 1), 'clockwise');
+            const move: DiamMove = shift(new Coord(0, 1), 'clockwise');
             // then the move is not legal
             RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         });

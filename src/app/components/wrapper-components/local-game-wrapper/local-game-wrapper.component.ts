@@ -6,10 +6,11 @@ import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
 import { assert, display } from 'src/app/utils/utils';
 import { MGPNode, MGPNodeStats } from 'src/app/jscaip/MGPNode';
-import { AbstractGameState } from 'src/app/jscaip/GameState';
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { GameState } from 'src/app/jscaip/GameState';
+import { AbstractMinimax } from 'src/app/jscaip/Minimax';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { Player } from 'src/app/jscaip/Player';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 @Component({
     selector: 'app-local-game-wrapper',
@@ -22,7 +23,9 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
 
     public aiDepths: [string, string] = ['0', '0'];
 
-    public winner: string = null;
+    public playerSelection: [string, string] = ['human', 'human'];
+
+    public winner: MGPOptional<string> = MGPOptional.empty();
 
     public botTimeOut: number = 1000;
 
@@ -32,7 +35,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
                 public cdr: ChangeDetectorRef)
     {
         super(componentFactoryResolver, actRoute, authenticationService);
-        this.players = ['human', 'human'];
+        this.players = [MGPOptional.of(this.playerSelection[0]), MGPOptional.of(this.playerSelection[1])];
         display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapper.constructor');
     }
     public getCreatedNodes(): number {
@@ -52,9 +55,8 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         }, 1);
     }
     public updatePlayer(player: 0|1): void {
-        if (this.players[player] !== 'human' && this.aiDepths[player] !== '0') {
-            this.proposeAIToPlay();
-        }
+        this.players[player] = MGPOptional.of(this.playerSelection[player]);
+        this.proposeAIToPlay();
     }
     public async onLegalUserMove(move: Move): Promise<void> {
         display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapperComponent.onLegalUserMove');
@@ -69,38 +71,43 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         if (gameStatus.isEndGame === true) {
             this.endGame = true;
             if (gameStatus.winner !== Player.NONE) {
-                this.winner = $localize`Player ${gameStatus.winner.value + 1}`;
+                this.winner = MGPOptional.of($localize`Player ${gameStatus.winner.value + 1}`);
             }
         }
     }
     public proposeAIToPlay(): void {
         // check if ai's turn has come, if so, make her start after a delay
-        const playingMinimax: Minimax<Move, AbstractGameState> = this.getPlayingAI();
-        if (playingMinimax != null) {
+        const playingMinimax: MGPOptional<AbstractMinimax> = this.getPlayingAI();
+        if (playingMinimax.isPresent()) {
             // bot's turn
             setTimeout(() => {
-                this.doAIMove(playingMinimax);
+                this.doAIMove(playingMinimax.get());
             }, this.botTimeOut);
         }
     }
-    private getPlayingAI(): Minimax<Move, AbstractGameState> {
-        const turn: number = this.gameComponent.rules.node.gameState.turn % 2;
+    private getPlayingAI(): MGPOptional<AbstractMinimax> {
         if (this.gameComponent.rules.getGameStatus(this.gameComponent.rules.node).isEndGame) {
             // No AI is playing when the game is finished
-            return null;
+            return MGPOptional.empty();
         }
-        return this.gameComponent.availableMinimaxes.find((a: Minimax<Move, AbstractGameState>) => {
-            return a.name === this.players[turn];
-        });
+        const playerIndex: number = this.gameComponent.rules.node.gameState.turn % 2;
+        if (this.aiDepths[playerIndex] === '0') {
+            // No AI is playing if its level is set to 0
+            return MGPOptional.empty();
+        }
+        return MGPOptional.ofNullable(
+            this.gameComponent.availableMinimaxes.find((a: AbstractMinimax) => {
+                return this.players[playerIndex].equalsValue(a.name);
+            }));
     }
-    public doAIMove(playingMinimax: Minimax<Move, AbstractGameState>): void {
+    public doAIMove(playingMinimax: AbstractMinimax): void {
         // called only when it's AI's Turn
-        const ruler: Rules<Move, AbstractGameState> = this.gameComponent.rules;
+        const ruler: Rules<Move, GameState, unknown> = this.gameComponent.rules;
         const gameStatus: GameStatus = ruler.getGameStatus(ruler.node);
         assert(gameStatus === GameStatus.ONGOING, 'IA should not try to play when game is over!');
         const turn: number = ruler.node.gameState.turn % 2;
         const currentAiDepth: number = Number.parseInt(this.aiDepths[turn % 2]);
-        const aiMove: Move = ruler.node.findBestMove(currentAiDepth, playingMinimax);
+        const aiMove: Move = ruler.node.findBestMove(currentAiDepth, playingMinimax, true);
         if (ruler.choose(aiMove)) {
             this.updateBoard();
             this.cdr.detectChanges();
@@ -113,24 +120,22 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         return this.gameComponent.rules.node.gameState.turn > 0;
     }
     public takeBack(): void {
-        this.gameComponent.rules.node = this.gameComponent.rules.node.mother;
+        this.gameComponent.rules.node = this.gameComponent.rules.node.mother.get();
         if (this.isAITurn()) {
-            this.gameComponent.rules.node = this.gameComponent.rules.node.mother;
+            this.gameComponent.rules.node = this.gameComponent.rules.node.mother.get();
         }
         this.gameComponent.updateBoard();
     }
     private isAITurn(): boolean {
-        return this.getPlayingAI() != null;
+        return this.getPlayingAI().isPresent();
     }
     public restartGame(): void {
-        const state: AbstractGameState = this.gameComponent.rules.stateType['getInitialState']();
-        this.gameComponent.rules.node = this.gameComponent.rules.node = new MGPNode(state);
+        const state: GameState = this.gameComponent.rules.stateType['getInitialState']();
+        this.gameComponent.rules.node = new MGPNode(state);
         this.gameComponent.updateBoard();
         this.endGame = false;
-        this.winner = null;
-        if (this.players[Player.ZERO.value] !== 'human' && this.aiDepths[Player.ZERO.value] !== '0') {
-            this.proposeAIToPlay();
-        }
+        this.winner = MGPOptional.empty();
+        this.proposeAIToPlay();
     }
     public getPlayerName(): string {
         return 'human';

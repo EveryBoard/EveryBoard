@@ -19,7 +19,6 @@ describe('PylosCoord:', () => {
     });
 
     it('Should forbid invalid coord creation', () => {
-        expect(() => new PylosCoord(0, 0, null)).toThrowError(`PylosCoord: Z can't be null.`);
         expect(() => new PylosCoord(-1, 0, 0)).toThrowError('PylosCoord: Invalid X: -1.');
         expect(() => new PylosCoord(0, -1, 0)).toThrowError('PylosCoord: Invalid Y: -1.');
         expect(() => new PylosCoord(0, 0, -1)).toThrowError('PylosCoord: Invalid Z: -1.');

@@ -5,9 +5,9 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { EncapsuleCase, EncapsuleState } from '../EncapsuleState';
 import { Player } from 'src/app/jscaip/Player';
 import { EncapsulePiece } from '../EncapsulePiece';
-import { EncapsuleLegalityStatus } from '../EncapsuleLegalityStatus';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { EncapsuleFailure } from '../EncapsuleFailure';
 
 describe('EncapsuleRules', () => {
 
@@ -69,7 +69,7 @@ describe('EncapsuleRules', () => {
                 X0, X0, X1, X2,
             ]);
             expect(EncapsuleRules.isVictory(state).isPresent()).toBeFalse();
-            const node: EncapsuleNode = new MGPNode(state);
+            const node: EncapsuleNode = new EncapsuleNode(state);
             expect(minimax.getBoardValue(node).value).toBe(0);
         });
     });
@@ -87,8 +87,6 @@ describe('EncapsuleRules', () => {
 
         // when doing that "actively loosing move"
         const move: EncapsuleMove = EncapsuleMove.fromMove(new Coord(0, 0), new Coord(1, 0));
-        const status: EncapsuleLegalityStatus = rules.isLegal(move, state);
-        const resultingState: EncapsuleState = rules.applyLegalMove(move, state, status);
 
         // then the active player should have lost
         const expectedBoard: EncapsuleCase[][] = [
@@ -100,9 +98,9 @@ describe('EncapsuleRules', () => {
             O0, O0, O1, O2, O2,
             X0, X1, X2,
         ]);
-        expect(status.legal.isSuccess()).toBeTrue();
-        expect(resultingState).toEqual(expectedState);
-        const node: EncapsuleNode = new MGPNode(expectedState, null, move);
+
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        const node: EncapsuleNode = new EncapsuleNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, [minimax]);
     });
     it('should allow simplest victory for player zero', () => {
@@ -137,8 +135,6 @@ describe('EncapsuleRules', () => {
 
         // when moving a single piece elsewhere
         const move: EncapsuleMove = EncapsuleMove.fromMove(new Coord(0, 0), new Coord(2, 2));
-        const status: EncapsuleLegalityStatus = rules.isLegal(move, state);
-        const resultingState: EncapsuleState = rules.applyLegalMove(move, state, status);
 
         // then the piece should have been moved
         const expectedBoard: EncapsuleCase[][] = [
@@ -147,8 +143,7 @@ describe('EncapsuleRules', () => {
             [___, ___, O__],
         ];
         const expectedState: EncapsuleState = new EncapsuleState(expectedBoard, 3, remainingPieces);
-        expect(status.legal.isSuccess()).toBeTrue();
-        expect(resultingState).toEqual(expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
     it('should allow moving piece on a smaller piece', () => {
         // Given a board with small and bigger piece on it
@@ -162,8 +157,6 @@ describe('EncapsuleRules', () => {
 
         // when moving a single piece elsewhere
         const move: EncapsuleMove = EncapsuleMove.fromMove(new Coord(0, 0), new Coord(2, 2));
-        const status: EncapsuleLegalityStatus = rules.isLegal(move, state);
-        const resultingState: EncapsuleState = rules.applyLegalMove(move, state, status);
 
         // then the piece should have been moved over the smaller one
         const expectedBoard: EncapsuleCase[][] = [
@@ -172,8 +165,7 @@ describe('EncapsuleRules', () => {
             [___, ___, XO_],
         ];
         const expectedState: EncapsuleState = new EncapsuleState(expectedBoard, 3, remainingPieces);
-        expect(status.legal.isSuccess()).toBeTrue();
-        expect(resultingState).toEqual(expectedState);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
     it('should forbid moving pieces on a piece with the same size', () => {
         expect(drop(EncapsulePiece.SMALL_BLACK, new Coord(2, 0))).toBeTrue();
@@ -194,7 +186,7 @@ describe('EncapsuleRules', () => {
             EncapsulePiece.BIG_BLACK,
         ]);
         const move: EncapsuleMove = EncapsuleMove.fromDrop(EncapsulePiece.SMALL_BLACK, new Coord(0, 0));
-        expect(rules.isLegal(move, state).legal.isFailure()).toBeTrue();
+        RulesUtils.expectMoveFailure(rules, state, move, EncapsuleFailure.INVALID_PLACEMENT());
     });
     it('should refuse to put three identical piece on the board', () => {
         expect(drop(EncapsulePiece.SMALL_BLACK, new Coord(0, 0))).toBeTrue();

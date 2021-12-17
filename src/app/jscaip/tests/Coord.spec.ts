@@ -63,15 +63,7 @@ describe('Coord', () => {
         it('Should fail when given invalid direction', () => {
             const center: Coord = new Coord(0, 0);
             const lowRight: Coord = new Coord(2, 4);
-            let success: boolean;
-            try {
-                center.getDirectionToward(lowRight).get();
-                success = true;
-            } catch (error) {
-                success = false;
-            } finally {
-                expect(success).toBeFalse();
-            }
+            expect(() => center.getDirectionToward(lowRight).get()).toThrow();
         });
     });
 });

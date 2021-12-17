@@ -35,9 +35,9 @@
         </marker>
     </defs>
     <g *ngFor="let arrow of directions">
+        <!-- TODO FOR REVIEW this line had: (click)="onPieceClick(x, y)", but I removed it since x and y are not defined, hence it can only fail --> 
         <line id="line_start_{{ arrow.dir.toString() }}"
               class="arrow"
-              (click)="onPieceClick(x, y)"
               [attr.x1]="arrow.startCenter.x"
               [attr.y1]="arrow.startCenter.y"
               [attr.x2]="arrow.middle.x"

@@ -43,8 +43,8 @@
             </g>
         </g>
         <g #chosenPiece
-           *ngIf="chosen.x !== -1"
-           [attr.transform]="'translate(' + (chosen.x * SPACE_SIZE) + ' ' + (chosen.y * SPACE_SIZE) + ')'"
+           *ngIf="chosen.isPresent()"
+           [attr.transform]="'translate(' + (chosen.get().x * SPACE_SIZE) + ' ' + (chosen.get().y * SPACE_SIZE) + ')'"
         >
             <rect id="highlight"
                   x="0" y="0"
@@ -96,7 +96,7 @@
                   [attr.transform]="'translate(' + (-0.75 * SPACE_SIZE) + ', 0)'"
                   class="base no-fill"
             />
-            <g *ngIf="pieceInHand != null && chosen.x === -1">
+            <g *ngIf="chosen.isAbsent()">
                 <rect *ngIf="pieceInHand.isRectangle() else circle"
                       [attr.x]="0"
                       [attr.y]="SPACE_SIZE * 0.75"

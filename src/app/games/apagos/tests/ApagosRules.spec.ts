@@ -1,4 +1,3 @@
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
@@ -121,7 +120,7 @@ describe('ApagosRules', () => {
             [7, 5, 3, 1],
         ], 0, 0);
         // then we should know who won
-        const node: ApagosNode = new MGPNode(state);
+        const node: ApagosNode = new ApagosNode(state);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
     it('should know who is winning (Player.ONE)', () => {
@@ -132,7 +131,7 @@ describe('ApagosRules', () => {
             [7, 5, 3, 1],
         ], 0, 0);
         // then we should know who won
-        const node: ApagosNode = new MGPNode(state);
+        const node: ApagosNode = new ApagosNode(state);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
 });

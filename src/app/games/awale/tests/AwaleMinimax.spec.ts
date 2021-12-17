@@ -1,8 +1,7 @@
-import { AwaleRules } from '../AwaleRules';
+import { AwaleNode, AwaleRules } from '../AwaleRules';
 import { AwaleMinimax } from '../AwaleMinimax';
 import { AwaleMove } from '../AwaleMove';
 import { AwaleState } from '../AwaleState';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 
 describe('AwaleMinimax:', () => {
 
@@ -16,7 +15,7 @@ describe('AwaleMinimax:', () => {
     });
     it('should not throw at first choice', () => {
         const bestMove: AwaleMove = rules.node.findBestMove(2, minimax);
-        expect(rules.isLegal(bestMove, rules.node.gameState).legal.isSuccess()).toBeTrue();
+        expect(rules.isLegal(bestMove, rules.node.gameState).isSuccess()).toBeTrue();
     });
     it('should choose capture when possible (at depth 1)', () => {
         const board: number[][] = [
@@ -24,7 +23,7 @@ describe('AwaleMinimax:', () => {
             [4, 4, 4, 4, 4, 1],
         ];
         const state: AwaleState = new AwaleState(board, 0, [0, 0]);
-        const node: MGPNode<AwaleRules, AwaleMove, AwaleState> = new MGPNode(state);
+        const node: AwaleNode = new AwaleNode(state);
         const bestMove: AwaleMove = node.findBestMove(1, minimax);
         expect(bestMove).toEqual(AwaleMove.TWO);
     });
@@ -34,7 +33,7 @@ describe('AwaleMinimax:', () => {
             [0, 0, 0, 0, 1, 0],
         ];
         const state: AwaleState = new AwaleState(board, 0, [0, 0]);
-        const node: MGPNode<AwaleRules, AwaleMove, AwaleState> = new MGPNode(state);
+        const node: AwaleNode = new AwaleNode(state);
         const bestMove: AwaleMove = node.findBestMove(2, minimax);
         expect(bestMove).toEqual(AwaleMove.FOUR);
     });

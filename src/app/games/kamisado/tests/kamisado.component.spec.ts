@@ -39,7 +39,7 @@ describe('KamisadoComponent', () => {
     it('should allow changing initial choice', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_0_7'); // Select initial piece
         await componentTestUtils.expectClickSuccess('#click_1_7'); // Select another piece
-        expect(componentTestUtils.getComponent().chosen.get().equals(new Coord(1, 7))).toBeTrue();
+        expect(componentTestUtils.getComponent().chosen.equalsValue(new Coord(1, 7))).toBeTrue();
     }));
     it('should allow deselecting initial choice', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_0_7'); // Select initial piece

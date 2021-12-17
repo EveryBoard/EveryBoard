@@ -3,57 +3,64 @@ import { Minimax } from '../Minimax';
 import { Move } from '../Move';
 import { Player } from '../Player';
 import { GameStatus, Rules } from '../Rules';
-import { AbstractGameState } from '../GameState';
-import { comparableEquals, ComparableObject } from 'src/app/utils/Comparable';
-import { LegalityStatus } from '../LegalityStatus';
+import { GameState } from '../GameState';
+import { comparableEquals, isComparableObject } from 'src/app/utils/Comparable';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 export class RulesUtils {
-    public static expectMoveSuccess(rules: Rules<Move, AbstractGameState>,
-                                    state: AbstractGameState,
-                                    move: Move,
-                                    expectedState: AbstractGameState)
+
+    public static expectMoveSuccess<R extends Rules<M, S, L>, M extends Move, S extends GameState, L>(
+        rules: R,
+        state: S,
+        move: M,
+        expectedState: S)
     : void
     {
-        const legality: LegalityStatus = rules.isLegal(move, state);
-        expect(legality.legal).toBeTruthy();
-        if (legality.legal.isSuccess()) {
-            const resultingState: AbstractGameState = rules.applyLegalMove(move, state, legality);
-            if (resultingState['equals'] != null) { // TODOTODO: will be isComparableObject when your branch is merged
-                const equals: boolean = comparableEquals(resultingState as unknown as ComparableObject,
-                                                         expectedState as unknown as ComparableObject);
+        const legality: MGPFallible<L> = rules.isLegal(move, state);
+        if (legality.isSuccess()) {
+            const resultingState: S = rules.applyLegalMove(move, state, legality.get());
+            if (isComparableObject(resultingState)) {
+                const equals: boolean = comparableEquals(resultingState, expectedState);
                 expect(equals).withContext('states should be equal').toBeTrue();
             } else {
-                expect(resultingState).withContext('states should be equal').toEqual(expectedState);
+                expect(resultingState).withContext('states should be equals').toEqual(expectedState);
             }
         } else {
-            throw new Error('expected move to be valid but it is not: ' + legality.legal.getReason());
+            throw new Error('expected move to be valid but it is not: ' + legality.getReason());
         }
     }
-    public static expectMoveFailure(rules: Rules<Move, AbstractGameState>,
-                                    state: AbstractGameState,
-                                    move: Move,
-                                    reason: string)
+    public static expectMoveFailure<R extends Rules<M, S, L>, M extends Move, S extends GameState, L>(
+        rules: R,
+        state: S,
+        move: M,
+        reason: string)
     : void
     {
-        const legality: LegalityStatus = rules.isLegal(move, state);
-        expect(legality.legal.reason).toBe(reason);
+        const legality: MGPFallible<L> = rules.isLegal(move, state);
+        expect(legality.isFailure()).withContext('move should have failed but it succeeded').toBeTrue();
+        expect(legality.getReason()).toBe(reason);
     }
-    public static expectToBeVictoryFor(rules: Rules<Move, AbstractGameState>,
-                                       node: MGPNode<Rules<Move, AbstractGameState>, Move, AbstractGameState>,
-                                       player: Player,
-                                       minimaxes: Minimax<Move, AbstractGameState>[])
+    public static expectToBeVictoryFor<R extends Rules<M, S, L>, M extends Move, S extends GameState, L>(
+        rules: R,
+        node: MGPNode<R, M, S, L>,
+        player: Player,
+        minimaxes: Minimax<M, S, L>[])
     : void
     {
-        expect(rules.getGameStatus(node)).toEqual(GameStatus.getVictory(player));
+        expect(rules.getGameStatus(node))
+            .withContext('Rules should consider gameStatus a victory for player ' + player.value)
+            .toEqual(GameStatus.getVictory(player));
         for (const minimax of minimaxes) {
             expect(minimax.getBoardValue(node).value)
                 .withContext(minimax.name + ' should consider part a victory for player ' + player.value)
                 .toEqual(player.getVictoryValue());
         }
     }
-    public static expectToBeOngoing(rules: Rules<Move, AbstractGameState>,
-                                    node: MGPNode<Rules<Move, AbstractGameState>, Move, AbstractGameState>,
-                                    minimaxes: Minimax<Move, AbstractGameState>[])
+    public static expectToBeOngoing<R extends Rules<M, S, L>, M extends Move, S extends GameState, L>(
+        rules: R,
+        node: MGPNode<R, M, S, L>,
+        minimaxes: Minimax<M, S, L>[])
     : void
     {
         expect(rules.getGameStatus(node)).toEqual(GameStatus.ONGOING);
@@ -67,9 +74,10 @@ export class RulesUtils {
                 .not.toEqual(Player.ONE.getVictoryValue());
         }
     }
-    public static expectToBeDraw(rules: Rules<Move, AbstractGameState>,
-                                 node: MGPNode<Rules<Move, AbstractGameState>, Move, AbstractGameState>,
-                                 minimaxes: Minimax<Move, AbstractGameState>[])
+    public static expectToBeDraw<R extends Rules<M, S, L>, M extends Move, S extends GameState, L>(
+        rules: R,
+        node: MGPNode<R, M, S, L>,
+        minimaxes: Minimax<M, S, L>[])
     : void
     {
         expect(rules.getGameStatus(node)).toBe(GameStatus.DRAW);
@@ -79,25 +87,36 @@ export class RulesUtils {
                 .toBe(0);
         }
     }
-    public static expectSecondStateToBeBetterThanFirst(weakerState: AbstractGameState,
-                                                       weakMove: Move,
-                                                       strongerState: AbstractGameState,
-                                                       strongMove: Move,
-                                                       minimax: Minimax<Move, AbstractGameState>)
+    public static expectSecondStateToBeBetterThanFirstFor<M extends Move, S extends GameState, L>(
+        minimax: Minimax<M, S, L>,
+        weakerState: S,
+        weakMove: MGPOptional<M>,
+        strongerState: S,
+        strongMove: MGPOptional<M>,
+        player: Player)
     : void
     {
-        const weakValue: number = minimax.getBoardValue(new MGPNode(weakerState, null, weakMove)).value;
-        const strongValue: number = minimax.getBoardValue(new MGPNode(strongerState, null, strongMove)).value;
-        expect(weakValue).toBeLessThan(strongValue);
+        const weakValue: number =
+            minimax.getBoardValue(new MGPNode(weakerState, MGPOptional.empty(), weakMove)).value;
+        const strongValue: number =
+            minimax.getBoardValue(new MGPNode(strongerState, MGPOptional.empty(), strongMove)).value;
+        if (player === Player.ZERO) {
+            expect(weakValue).toBeGreaterThan(strongValue);
+        } else {
+            expect(weakValue).toBeLessThan(strongValue);
+        }
     }
-    public static expectStateToBePreVictory(state: AbstractGameState,
-                                            previousMove: Move,
-                                            player: Player,
-                                            minimaxes: Minimax<Move, AbstractGameState>[])
+    public static expectStateToBePreVictory<M extends Move, S extends GameState, L>(
+        state: S,
+        previousMove: M,
+        player: Player,
+        minimaxes: Minimax<M, S, L>[])
     : void
     {
         for (const minimax of minimaxes) {
-            const value: number = minimax.getBoardNumericValue(new MGPNode(state, null, previousMove));
+            const value: number = minimax.getBoardNumericValue(new MGPNode(state,
+                                                                           MGPOptional.empty(),
+                                                                           MGPOptional.of(previousMove)));
             const expectedValue: number = player.getPreVictory();
             expect(value).toBe(expectedValue);
         }

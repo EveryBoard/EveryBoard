@@ -1,21 +1,20 @@
-
 import { GoMove } from '../GoMove';
 import { Phase, GoState, GoPiece } from '../GoState';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { GoNode, GoRules } from '../GoRules';
+import { GoLegalityInformation, GoNode, GoRules } from '../GoRules';
 import { GoMinimax } from '../GoMinimax';
 import { GoFailure } from '../GoFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 describe('GoRules:', () => {
 
     let rules: GoRules;
-    let minimaxes: Minimax<GoMove, GoState>[];
+    let minimaxes: Minimax<GoMove, GoState, GoLegalityInformation>[];
 
     const X: GoPiece = GoPiece.WHITE;
     const O: GoPiece = GoPiece.BLACK;
@@ -42,7 +41,7 @@ describe('GoRules:', () => {
         it('should always be GameStatus.ONGOING', () => {
             // Given starting board
             const state: GoState = GoState.getInitialState();
-            const node: GoNode = new MGPNode(state);
+            const node: GoNode = new GoNode(state);
 
             // When evaluating it
             // Then it should be ongoing
@@ -360,13 +359,12 @@ describe('GoRules:', () => {
                 [k, k, O, X, w],
             ];
             const state: GoState = new GoState(board, [10, 1], 0, MGPOptional.empty(), Phase.COUNTING);
-            const node: GoNode = new MGPNode(state);
+            const node: GoNode = new GoNode(state);
 
             // When evaluating it
             // Then it should be ongoing
             RulesUtils.expectToBeOngoing(rules, node, minimaxes);
         });
-
         it('should attribute shared territory to surviving group', () => {
             // Given a board with a shared territory
             const board: Table<GoPiece> = [
@@ -578,7 +576,7 @@ describe('GoRules:', () => {
                 [w, X, _, O, _],
             ];
             const expectedState: GoState = new GoState(expectedBoard, [0, 5], 2, MGPOptional.empty(), Phase.FINISHED);
-            const node: GoNode = new MGPNode(expectedState);
+            const node: GoNode = new GoNode(expectedState);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
         });
@@ -594,7 +592,7 @@ describe('GoRules:', () => {
                 [_, O, O, O, b],
             ];
             const state: GoState = new GoState(board, [6, 6], 4, MGPOptional.empty(), Phase.FINISHED);
-            const node: GoNode = new MGPNode(state);
+            const node: GoNode = new GoNode(state);
 
             // When evaluating its value
             // Then it should see the draw
@@ -610,12 +608,57 @@ describe('GoRules:', () => {
                 [w, X, _, O, b],
             ];
             const state: GoState = new GoState(board, [6, 5], 2, MGPOptional.empty(), Phase.FINISHED);
-            const node: GoNode = new MGPNode(state);
+            const node: GoNode = new GoNode(state);
 
             // When evaluating it
             // Then it should be recognised as a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
         });
+    });
+    it('should markAndCountTerritory correctly, bis', () => { // TODOTODO should I remove this
+        const board: Table<GoPiece> = [
+            [b, O, X, w, w],
+            [b, O, X, w, w],
+            [b, O, X, w, w],
+            [b, O, X, w, w],
+            [b, O, X, w, w],
+        ];
+        const expectedBoard: GoPiece[][] = [
+            [b, O, k, b, b],
+            [b, O, k, b, b],
+            [b, O, k, b, b],
+            [b, O, k, b, b],
+            [b, O, k, b, b],
+        ];
+        const state: GoState = new GoState(board, [5, 10], 0, MGPOptional.empty(), Phase.COUNTING);
+        const move: GoMove = new GoMove(2, 2);
+        const status: MGPFallible<GoLegalityInformation> = rules.isLegal(move, state);
+        const resultingState: GoState = rules.applyLegalMove(move, state, status.get());
+        expect(status.isSuccess()).toBeTrue();
+        expect(resultingState.getCopiedBoard()).toEqual(expectedBoard);
+        expect(resultingState.getCapturedCopy()).toEqual([25, 0]);
+    });
+    it('simply shared board should be simple to calculate', () => {
+        const previousBoard: Table<GoPiece> = [
+            [_, _, O, X, _],
+            [_, _, O, X, _],
+            [_, _, O, X, _],
+            [_, _, O, X, _],
+            [_, _, O, X, _],
+        ];
+        const expectedBoard: GoPiece[][] = [
+            [b, b, O, X, w],
+            [b, b, O, X, w],
+            [b, b, O, X, w],
+            [b, b, O, X, w],
+            [b, b, O, X, w],
+        ];
+        const state: GoState = new GoState(previousBoard, [0, 0], 10, MGPOptional.empty(), Phase.PASSED);
+        const move: GoMove = GoMove.PASS;
+        const legality: MGPFallible<GoLegalityInformation> = rules.isLegal(move, state);
+        const resultingState: GoState = rules.applyLegalMove(move, state, legality.get());
+        expect(resultingState.getCapturedCopy()).withContext('Board score should be 10 against 5').toEqual([10, 5]);
+        expect(resultingState.getCopiedBoard()).toEqual(expectedBoard);
     });
     it('AddDeadToScore should be a simple counting method', () => {
         // Given a board with dead not counted as score yet
@@ -645,7 +688,7 @@ describe('GoRules:', () => {
             [_, O, O, O, _],
         ];
         const state: GoState = new GoState(board, [0, 0], 0, MGPOptional.empty(), Phase.PASSED);
-        rules.node = new MGPNode(state);
+        rules.node = new GoNode(state);
         expect(rules.choose(GoMove.PASS)).toBeTrue();
         expect(rules.node.gameState.phase).toBe(Phase.COUNTING);
         expect(rules.choose(new GoMove(4, 2))).toBeTrue();

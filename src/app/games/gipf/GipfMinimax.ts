@@ -3,12 +3,11 @@ import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GipfCapture, GipfMove, GipfPlacement } from './GipfMove';
 import { GipfState } from './GipfState';
-import { GipfLegalityStatus } from './GipfLegalityStatus';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
-import { GipfRules, GipfNode } from './GipfRules';
+import { GipfRules, GipfNode, GipfLegalityInformation } from './GipfRules';
 
-export class GipfMinimax extends Minimax<GipfMove, GipfState, GipfLegalityStatus> {
+export class GipfMinimax extends Minimax<GipfMove, GipfState, GipfLegalityInformation> {
     public static getPossibleCaptureCombinationsFromPossibleCaptures(
         possibleCaptures: GipfCapture[],
     ): Table<GipfCapture> {

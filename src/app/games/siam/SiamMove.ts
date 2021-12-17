@@ -39,8 +39,6 @@ export class SiamMove extends MoveCoord {
         public readonly moveDirection: MGPOptional<Orthogonal>,
         public readonly landingOrientation: Orthogonal) {
         super(x, y);
-        if (moveDirection == null) throw new Error('Move Direction must be set (even if optional).');
-        if (landingOrientation == null) throw new Error('Landing orientation must be set.');
         this.checkValidity();
     }
     public checkValidity(): void {

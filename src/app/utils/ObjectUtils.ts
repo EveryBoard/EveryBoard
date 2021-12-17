@@ -3,7 +3,7 @@ export type Dictionary = { [key: string]: any };
 
 export class ObjectDifference {
 
-    public static from(before: Dictionary, after: Dictionary): ObjectDifference {
+    public static from(before: Dictionary | null, after: Dictionary | null): ObjectDifference {
         const changes: ObjectDifference = new ObjectDifference({}, {}, {});
         if (before == null) {
             changes.added = { ...after };
@@ -97,7 +97,7 @@ export class ObjectDifference {
             this.removed[removedKey] = before[removedKey];
         }
     }
-    public isPresent(key: string): { state?: 'added' | 'modified' | 'removed', present: boolean } {
+    public isPresent(key: string): { state: 'added' | 'modified' | 'removed' | null, present: boolean } {
         if (this.added[key] != null) {
             return { state: 'added', present: true };
         }

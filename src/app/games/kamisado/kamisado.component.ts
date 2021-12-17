@@ -27,7 +27,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
                                                                 KamisadoPiece>
 {
     public UNOCCUPIED: KamisadoPiece = KamisadoPiece.NONE;
-    public lastMove: KamisadoMove = null;
+    public lastMove: MGPOptional<KamisadoMove> = MGPOptional.empty();
     public chosen: MGPOptional<Coord> = MGPOptional.empty();
     public chosenAutomatically: boolean = false;
 
@@ -70,7 +70,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
     }
     public async pass(): Promise<MGPValidation> {
         if (this.canPass) {
-            return this.chooseMove(KamisadoMove.PASS, this.rules.node.gameState, null, null);
+            return this.chooseMove(KamisadoMove.PASS, this.rules.node.gameState);
         } else {
             return this.cancelMove(RulesFailure.CANNOT_PASS());
         }
@@ -80,12 +80,13 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
+        const clickedCoord: Coord = new Coord(x, y);
         if (this.canPass) {
             return this.cancelMove(RulesFailure.MUST_PASS());
         }
         if (this.chosen.isAbsent()) {
             return this.choosePiece(x, y);
-        } else if (this.chosenAutomatically === false && this.chosen.get().equals(new Coord(x, y))) {
+        } else if (this.chosenAutomatically === false && this.chosen.equalsValue(clickedCoord)) {
             // user selected the already-selected piece
             this.cancelMoveAttempt();
             return MGPValidation.SUCCESS;
@@ -97,7 +98,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
                 if (this.chosenAutomatically) {
                     return this.cancelMove(KamisadoFailure.PLAY_WITH_SELECTED_PIECE());
                 } else {
-                    this.chosen = MGPOptional.of(new Coord(x, y));
+                    this.chosen = MGPOptional.of(clickedCoord);
                     return MGPValidation.SUCCESS;
                 }
             } else {
@@ -118,7 +119,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
         const chosenPiece: Coord = this.chosen.get();
         const chosenDestination: Coord = new Coord(x, y);
         const move: KamisadoMove = KamisadoMove.of(chosenPiece, chosenDestination);
-        return this.chooseMove(move, this.rules.node.gameState, null, null);
+        return this.chooseMove(move, this.rules.node.gameState);
     }
     public cancelMoveAttempt(): void {
         if (!this.chosenAutomatically) {

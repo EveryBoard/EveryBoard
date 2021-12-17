@@ -5,5 +5,5 @@ export interface IMessage extends JSONObject {
     content: string;
     sender: string;
     postedTime: number; // timeStamp of the publication time
-    currentTurn: number; // number of the turn when this was write
+    currentTurn?: number; // number of the turn when this message was written
 }

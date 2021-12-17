@@ -42,7 +42,7 @@ describe('DiamMinimax', () => {
             [__, __, __, __, __, __, __, A2],
             [__, __, __, __, __, __, __, B2],
         ], 4);
-        rules.node = new DiamNode(state);
+        rules.node = new DiamNode( state);
         // then there are 14 + 4 move
         expect(minimax.getListMoves(rules.node).length).toBe(18);
     });

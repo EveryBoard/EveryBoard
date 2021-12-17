@@ -43,7 +43,7 @@ export class QuartoMinimax extends Minimax<QuartoMove, QuartoState> {
                         listMoves.push(move);
                         return listMoves;
                     }
-                    // Pour chaque cases vides
+                    // For each empty square
                     for (const remainingPiece of pawns) { // the piece we will give
                         const move: QuartoMove = new QuartoMove(x, y, remainingPiece); // this is the move
                         listMoves.push(move);

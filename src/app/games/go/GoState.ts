@@ -102,9 +102,6 @@ export class GoState extends GameStateWithTable<GoPiece> {
                        phase: Phase)
     {
         super(board, turn);
-        if (captured == null) throw new Error('Captured cannot be null.');
-        if (koCoord == null) throw new Error('Ko Coord cannot be null, use MGPOptional.empty() instead.');
-        if (phase == null) throw new Error('Phase cannot be null.');
         this.captured = captured;
         this.koCoord = koCoord;
         this.phase = phase;
@@ -113,7 +110,7 @@ export class GoState extends GameStateWithTable<GoPiece> {
         const board: Table<GoPiece> = GoState.getStartingBoard();
         return new GoState(board, [0, 0], 0, MGPOptional.empty(), Phase.PLAYING);
     }
-    public getCapturedCopy(): number[] {
+    public getCapturedCopy(): [number, number] {
         return [this.captured[0], this.captured[1]];
     }
     public static getStartingBoard(): Table<GoPiece> {

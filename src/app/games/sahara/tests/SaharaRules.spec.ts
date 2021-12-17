@@ -5,10 +5,8 @@ import { SaharaMove } from '../SaharaMove';
 import { SaharaState } from '../SaharaState';
 import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
 import { MGPSet } from 'src/app/utils/MGPSet';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 
@@ -72,8 +70,7 @@ describe('SaharaRules', () => {
     it('Should forbid moving opponent piece', () => {
         const state: SaharaState = SaharaState.getInitialState();
         const move: SaharaMove = new SaharaMove(new Coord(3, 0), new Coord(4, 0));
-        const status: LegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.reason).toEqual(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+        RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
     });
     it('Should see that Player.ONE won', () => {
         const board: FourStatePiece[][] = [
@@ -85,7 +82,7 @@ describe('SaharaRules', () => {
             [N, N, X, O, _, _, _, X, O, N, N],
         ];
         const state: SaharaState = new SaharaState(board, 4);
-        const node: SaharaNode = new MGPNode(state);
+        const node: SaharaNode = new SaharaNode(state);
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, [new SaharaMinimax(rules, '')]);
     });
 });

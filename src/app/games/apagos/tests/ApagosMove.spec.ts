@@ -7,7 +7,7 @@ import { ApagosMove } from '../ApagosMove';
 
 describe('ApagosMove', () => {
 
-    it('should refuse creating immobile sliding', () => {
+    it('should refuse creating static sliding', () => {
         // given a move whose landing coord is lower than starting
         const invalidMove: MGPFallible<ApagosMove> = ApagosMove.transfer(ApagosCoord.ZERO, ApagosCoord.ZERO);
         // then it should not be legal

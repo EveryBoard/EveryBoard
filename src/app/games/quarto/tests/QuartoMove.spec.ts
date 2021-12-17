@@ -15,9 +15,6 @@ describe('QuartoMove', () => {
             NumberEncoderTestUtils.expectToBeCorrect(QuartoMove.encoder, move);
         }
     });
-    it('should refuse null piece', () => {
-        expect(() => new QuartoMove(0, 0, null)).toThrowError(`Piece to give can't be null.`);
-    });
     it('should override toString and equals correctly', () => {
         const move: QuartoMove = new QuartoMove(1, 1, QuartoPiece.AAAB);
         const secondMove: QuartoMove = new QuartoMove(0, 0, QuartoPiece.AAAB);

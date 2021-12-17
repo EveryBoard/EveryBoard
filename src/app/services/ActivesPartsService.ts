@@ -73,7 +73,7 @@ export class ActivesPartsService implements OnDestroy {
     public hasActivePart(user: string): boolean {
         for (const part of this.getActiveParts()) {
             const playerZero: string = part.doc.playerZero;
-            const playerOne: string = part.doc.playerOne;
+            const playerOne: string | undefined = part.doc.playerOne;
             if (user === playerZero || user === playerOne) {
                 return true;
             }

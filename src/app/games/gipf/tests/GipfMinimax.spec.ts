@@ -6,7 +6,6 @@ import { GipfState } from '../GipfState';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { GipfNode, GipfRules } from '../GipfRules';
 import { GipfMinimax } from '../GipfMinimax';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Table } from 'src/app/utils/ArrayUtils';
 
 describe('GipfMinimax', () => {
@@ -120,7 +119,8 @@ describe('GipfMinimax', () => {
                 [_, B, _, _, N, N, N],
             ];
             const state: GipfState = new GipfState(board, P0Turn, [5, 5], [0, 7]);
-            expect(minimax.getBoardValue(new MGPNode(state, null, dummyMove))).toBeLessThan(0);
+            const node: GipfNode = new GipfNode(state, MGPOptional.empty(), MGPOptional.of(dummyMove));
+            expect(minimax.getBoardValue(node)).toBeLessThan(0);
         });
         it('should favor having pieces to play pieces', () => {
             const board: Table<FourStatePiece> = [
@@ -133,7 +133,8 @@ describe('GipfMinimax', () => {
                 [_, B, _, _, N, N, N],
             ];
             const state: GipfState = new GipfState(board, P0Turn, [5, 7], [0, 0]);
-            expect(minimax.getBoardValue(new MGPNode(state, null, dummyMove))).toBeLessThan(0);
+            const node: GipfNode = new GipfNode(state, MGPOptional.empty(), MGPOptional.of(dummyMove));
+            expect(minimax.getBoardValue(node)).toBeLessThan(0);
         });
     });
 });

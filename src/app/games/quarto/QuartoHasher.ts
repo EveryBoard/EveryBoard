@@ -3,6 +3,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { QuartoPiece } from './QuartoPiece';
+import { Utils } from 'src/app/utils/utils';
 
 export interface CoordDir {
     readonly coord: Coord,
@@ -50,8 +51,8 @@ export class QuartoHasher {
         for (const quartoHashInfo of quartoHashInfos) {
             let firstPiece: MGPOptional<QuartoPiece> = quartoHashInfo.firstPiece;
             const coordDir: CoordDir = quartoHashInfo.coordDir;
-            const c: Coord = QuartoHasher.get(coordDir, depth);
-            let piece: QuartoPiece = QuartoPiece.fromInt(board[c.y][c.x]);
+            const coord: Coord = QuartoHasher.get(coordDir, depth);
+            let piece: QuartoPiece = QuartoPiece.fromInt(board[coord.y][coord.x]);
             if (piece !== QuartoPiece.NONE && firstPiece.isAbsent()) {
                 firstPiece = MGPOptional.of(piece);
             }
@@ -75,9 +76,9 @@ export class QuartoHasher {
     public static get(coordDir: CoordDir, n: number): Coord {
         let coord: Coord = coordDir.coord.getCopy();
         const firstDir: Orthogonal = coordDir.dir;
-        const secondDir: Orthogonal = QuartoHasher.coordDirs.find((coordDir: CoordDir) =>
+        const secondDir: Orthogonal = Utils.getNonNullable(QuartoHasher.coordDirs.find((coordDir: CoordDir) =>
             coordDir.coord.equals(coord) &&
-            coordDir.dir.equals(firstDir) === false).dir;
+            coordDir.dir.equals(firstDir) === false)).dir;
         while (n >= 4) {
             n -= 4;
             coord = coord.getNext(secondDir, 1);

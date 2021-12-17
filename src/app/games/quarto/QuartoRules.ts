@@ -3,8 +3,7 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { QuartoState } from './QuartoState';
 import { QuartoMove } from './QuartoMove';
 import { QuartoPiece } from './QuartoPiece';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { display } from 'src/app/utils/utils';
+import { display, Utils } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
@@ -14,6 +13,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { QuartoFailure } from './QuartoFailure';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPMap } from 'src/app/utils/MGPMap';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 export interface BoardStatus {
 
@@ -53,7 +53,7 @@ class Criteria {
     public indexOf(c: Criterion): number {
         let i: number;
         for (i = 0; i < 3; i++) {
-            if (this.criteria[i] != null && this.criteria[i].equals(c)) {
+            if (this.criteria[i] != null && Utils.getNonNullable(this.criteria[i]).equals(c)) {
                 return i;
             }
         }
@@ -66,6 +66,7 @@ class Criteria {
                 return i;
             }
         }
+        return -1;
     }
     public equals(other: Criteria): boolean {
         throw new Error('useless');
@@ -79,7 +80,7 @@ class Criteria {
  */
 class Criterion {
 
-    readonly subCriterion: boolean[] = [null, null, null, null];
+    readonly subCriterion: (boolean | null)[] = [null, null, null, null];
 
     constructor(bSquare: QuartoPiece) {
         // a criterion is initialized with a square, it takes the square's value
@@ -167,13 +168,13 @@ class Line {
         return coords;
     }
 }
-export abstract class QuartoNode extends MGPNode<QuartoRules, QuartoMove, QuartoState> {}
+export class QuartoNode extends MGPNode<QuartoRules, QuartoMove, QuartoState> {}
 
 interface LineInfos {
 
-    commonCriterion: Criterion;
+    commonCriterion: MGPOptional<Criterion>;
 
-    sensitiveCoord: Coord;
+    sensitiveCoord: MGPOptional<Coord>;
 
     boardStatus: MGPOptional<BoardStatus>;
 }
@@ -252,15 +253,15 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
     }
     // Overrides :
 
-    public isLegal(move: QuartoMove, state: QuartoState): LegalityStatus {
-        return { legal: QuartoRules.isLegal(move, state) };
+    public isLegal(move: QuartoMove, state: QuartoState): MGPFallible<void> {
+        return QuartoRules.isLegal(move, state).toFallible(undefined);
     }
     public static updateBoardStatus(line: Line, state: QuartoState, boardStatus: BoardStatus): BoardStatus {
         if (boardStatus.score === SCORE.PRE_VICTORY) {
             if (this.isThereAVictoriousLine(line, state)) {
                 return {
                     score: SCORE.VICTORY,
-                    sensitiveSquares: null,
+                    sensitiveSquares: new MGPMap(),
                 };
             } else {
                 return boardStatus;
@@ -305,27 +306,27 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         if (lineInfos.boardStatus.isPresent()) {
             return lineInfos.boardStatus.get();
         }
-        const commonCriterion: Criterion = lineInfos.commonCriterion;
-        const sensitiveCoord: Coord = lineInfos.sensitiveCoord;
+        const commonCriterion: MGPOptional<Criterion> = lineInfos.commonCriterion;
+        const sensitiveCoord: MGPOptional<Coord> = lineInfos.sensitiveCoord;
 
         // we now have looked through the entire line, we summarize everything
-        if ((commonCriterion != null) && (!commonCriterion.isAllNull())) {
+        if (commonCriterion.isPresent() && (commonCriterion.get().isAllNull() === false)) {
             // this line is not null and has a common criterion between all of its pieces
-            if (sensitiveCoord == null) {
+            if (sensitiveCoord.isAbsent()) {
                 // the line is full
-                return { score: SCORE.VICTORY, sensitiveSquares: null };
+                return { score: SCORE.VICTORY, sensitiveSquares: new MGPMap() };
             } else {
                 // if there is only one empty square, then the sensitive square we found is indeed sensitive
-                if (commonCriterion.matchInt(state.pieceInHand)) {
+                if (commonCriterion.get().matchInt(state.pieceInHand)) {
                     boardStatus.score = SCORE.PRE_VICTORY;
                 }
-                const coord: Coord = new Coord(sensitiveCoord.x, sensitiveCoord.y);
+                const coord: Coord = sensitiveCoord.get();
                 if (boardStatus.sensitiveSquares.containsKey(coord)) {
                     const oldSensitiveSquare: Criteria = boardStatus.sensitiveSquares.get(coord).get();
-                    oldSensitiveSquare.addCriterion(commonCriterion);
+                    oldSensitiveSquare.addCriterion(commonCriterion.get());
                 } else {
                     const newCriteria: Criteria = new Criteria();
-                    newCriteria.addCriterion(commonCriterion);
+                    newCriteria.addCriterion(commonCriterion.get());
                     boardStatus.sensitiveSquares.set(coord, newCriteria);
                 }
             }
@@ -335,8 +336,8 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
     private static getLineInfos(line: Line, state: QuartoState, boardStatus: BoardStatus)
     : LineInfos
     {
-        let sensitiveCoord: Coord = null; // the first square is empty
-        let commonCriterion: Criterion;
+        let sensitiveCoord: MGPOptional<Coord> = MGPOptional.empty(); // the first square is empty
+        let commonCriterion: MGPOptional<Criterion> = MGPOptional.empty();
 
         let coord: Coord = line.initialCoord;
         for (let i: number = 0; i < 4; i++) {
@@ -344,23 +345,23 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
             // we look through the entire line
             if (c === QuartoPiece.NONE) {
                 // if c is unoccupied
-                if (sensitiveCoord == null) {
-                    sensitiveCoord = coord;
+                if (sensitiveCoord.isAbsent()) {
+                    sensitiveCoord = MGPOptional.of(coord);
                 } else {
                     // 2 empty square: no victory or pre-victory, or new criterion
                     return {
-                        sensitiveCoord: coord,
+                        sensitiveCoord: MGPOptional.of(coord),
                         commonCriterion,
                         boardStatus: MGPOptional.of(boardStatus),
                     };
                 }
             } else {
                 // if c is occupied
-                if (commonCriterion == null) {
-                    commonCriterion = new Criterion(c);
+                if (commonCriterion.isAbsent()) {
+                    commonCriterion = MGPOptional.of(new Criterion(c));
                     display(QuartoRules.VERBOSE, 'set commonCrit to ' + commonCriterion.toString());
                 } else {
-                    commonCriterion.mergeWithQuartoPiece(c);
+                    commonCriterion.get().mergeWithQuartoPiece(c);
                     display(QuartoRules.VERBOSE, 'update commonCrit: ' + commonCriterion.toString());
                 }
             }

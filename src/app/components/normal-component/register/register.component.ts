@@ -30,18 +30,22 @@ export class RegisterComponent {
         const username: string | null = this.registrationForm.value.username;
         const email: string | null = this.registrationForm.value.email;
         const password: string | null = this.registrationForm.value.password;
-        const registrationResult: MGPFallible<firebase.User> =
-            await this.authService.doRegister(username, email, password);
-        if (registrationResult.isSuccess()) {
-            const emailResult: MGPValidation =
-                await this.authService.sendEmailVerification();
-            if (emailResult.isSuccess()) {
-                await this.router.navigate(['/verify-account']);
-            } else {
-                this.errorMessage = emailResult.getReason();
-            }
+        if (username == null || email == null || password == null) {
+            this.errorMessage = $localize`There are missing fields in the registration form, please check that you filled in all fields.`;
         } else {
-            this.errorMessage = registrationResult.getReason();
+            const registrationResult: MGPFallible<firebase.User> =
+                await this.authService.doRegister(username, email, password);
+            if (registrationResult.isSuccess()) {
+                const emailResult: MGPValidation =
+                    await this.authService.sendEmailVerification();
+                if (emailResult.isSuccess()) {
+                    await this.router.navigate(['/verify-account']);
+                } else {
+                    this.errorMessage = emailResult.getReason();
+                }
+            } else {
+                this.errorMessage = registrationResult.getReason();
+            }
         }
     }
     public async registerWithGoogle(): Promise<void> {

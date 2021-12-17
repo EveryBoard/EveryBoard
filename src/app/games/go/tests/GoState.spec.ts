@@ -1,8 +1,5 @@
-import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/utils/ArrayUtils';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { GoState, GoPiece, Phase } from '../GoState';
+import { GoPiece } from '../GoState';
 
 describe('GoState', () => {
 
@@ -21,16 +18,5 @@ describe('GoState', () => {
             const error: string = 'Assertion failure: Owner must be Player.ZERO or Player.ONE, got Player.NONE.';
             expect(() => GoPiece.pieceBelongTo(GoPiece.BLACK, Player.NONE)).toThrowError(error);
         });
-    });
-    it('Should throw when constructor called with capture or phase as null', () => {
-        const board: Table<GoPiece> = [];
-        const captured: number[] = [];
-        const turn: number = 1;
-        const koCoord: MGPOptional<Coord> = MGPOptional.empty();
-        const phase: Phase = Phase.ACCEPT;
-        expect(() => new GoState(board, null, turn, koCoord, phase)).toThrowError('Captured cannot be null.');
-        expect(() => new GoState(board, captured, turn, null, phase))
-            .toThrowError('Ko Coord cannot be null, use MGPOptional.empty() instead.');
-        expect(() => new GoState(board, captured, turn, koCoord, null)).toThrowError('Phase cannot be null.');
     });
 });

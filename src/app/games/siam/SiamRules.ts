@@ -6,28 +6,33 @@ import { SiamPiece } from './SiamPiece';
 import { Player } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { SiamLegalityStatus } from './SiamLegalityStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { display } from 'src/app/utils/utils';
 import { SiamFailure } from './SiamFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
-abstract class _SiamRules extends Rules<SiamMove, SiamState, SiamLegalityStatus> {}
+export class SiamLegalityInformation {
+    public constructor(public readonly resultingBoard: Table<SiamPiece>,
+                       public readonly moved: Coord[]) {
+    }
+}
 
-export abstract class SiamNode extends MGPNode<_SiamRules, SiamMove, SiamState, SiamLegalityStatus> {}
+export class SiamNode extends MGPNode<SiamRules, SiamMove, SiamState, SiamLegalityInformation> {}
 
-export class SiamRules extends _SiamRules {
+export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformation> {
 
     public static VERBOSE: boolean = false;
 
-    public isLegal(move: SiamMove, state: SiamState): SiamLegalityStatus {
+    public isLegal(move: SiamMove, state: SiamState): MGPFallible<SiamLegalityInformation> {
         display(SiamRules.VERBOSE, { SiamRules_isLegal: { move, state } });
 
         if (!move.isInsertion()) {
             const movedPiece: SiamPiece = state.getPieceAt(move.coord);
             if (!movedPiece.belongTo(state.getCurrentPlayer())) {
-                return SiamLegalityStatus.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
+                return MGPFallible.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
             }
         }
         if (move.isRotation()) {
@@ -40,7 +45,7 @@ export class SiamRules extends _SiamRules {
                 const insertionInfo: {insertedPiece: SiamPiece, legal: MGPValidation} =
                     this.isLegalInsertion(move.coord, state);
                 if (insertionInfo.legal.isFailure()) {
-                    return SiamLegalityStatus.failure(insertionInfo.legal.getReason());
+                    return MGPFallible.failure(insertionInfo.legal.getReason());
                 }
                 movingPiece = insertionInfo.insertedPiece;
             } else {
@@ -65,7 +70,8 @@ export class SiamRules extends _SiamRules {
         if (entrance.x === 5) return SiamPiece.of(Orthogonal.LEFT, player);
         return SiamPiece.of(Orthogonal.UP, player);
     }
-    public static isLegalForwarding(move: SiamMove, state: SiamState, firstPiece: SiamPiece): SiamLegalityStatus {
+    public static isLegalForwarding(move: SiamMove, state: SiamState, firstPiece: SiamPiece)
+    : MGPFallible<SiamLegalityInformation> {
         display(SiamRules.VERBOSE, { isLegalForwarding: { move: move.toString(), state, firstPiece } });
 
         const movedPieces: Coord[] = [];
@@ -78,9 +84,9 @@ export class SiamRules extends _SiamRules {
         ) {
             display(SiamRules.VERBOSE,
                     'Illegal push because not straight or not pushing anything or leaving the board');
-            return SiamLegalityStatus.failure(SiamFailure.ILLEGAL_PUSH());
+            return MGPFallible.failure(SiamFailure.ILLEGAL_PUSH());
         }
-        let currentDirection: Orthogonal = pushingDir;
+        let currentDirection: MGPOptional<Orthogonal> = MGPOptional.of(pushingDir);
         const resistingDir: Orthogonal = pushingDir.getOpposite();
         let totalForce: number = 0;
         const resultingBoard: SiamPiece[][] = state.getCopiedBoard();
@@ -92,12 +98,10 @@ export class SiamRules extends _SiamRules {
                                        movingPiece !== SiamPiece.EMPTY;
 
         while (pushingPossible) {
-            if (currentDirection != null) {
-                if (pushingDir.equals(currentDirection)) {
-                    totalForce++;
-                } else if (resistingDir.equals(currentDirection)) {
-                    totalForce--;
-                }
+            if (currentDirection.equalsValue(pushingDir)) {
+                totalForce++;
+            } else if (currentDirection.equalsValue(resistingDir)) {
+                totalForce--;
             }
             display(SiamRules.VERBOSE, { totalForce, movingPiece, landingCoord });
             const tmpPiece: SiamPiece = resultingBoard[landingCoord.y][landingCoord.x];
@@ -106,7 +110,7 @@ export class SiamRules extends _SiamRules {
             movedPieces.push(landingCoord);
             movingPiece = tmpPiece;
             landingCoord = landingCoord.getNext(pushingDir);
-            currentDirection = movingPiece.getNullableDirection();
+            currentDirection = movingPiece.getOptionalDirection();
             pushingPossible = landingCoord.isInRange(5, 5) &&
                               movingPiece !== SiamPiece.EMPTY &&
                               totalForce > 0;
@@ -114,51 +118,49 @@ export class SiamRules extends _SiamRules {
         if (landingCoord.isNotInRange(5, 5)) {
             display(SiamRules.VERBOSE, 'This movement would push ' + movingPiece + ' outside the board');
 
-            if (currentDirection != null) {
-                if (pushingDir.equals(currentDirection)) {
-                    totalForce++;
-                } else if (resistingDir.equals(currentDirection)) {
-                    totalForce--;
-                }
+            if (currentDirection.equalsValue(pushingDir)) {
+                totalForce++;
+            } else if (currentDirection.equalsValue(resistingDir)) {
+                totalForce--;
             }
         }
         if (totalForce <= 0) {
             display(SiamRules.VERBOSE, 'This move is an illegal push: ' + resultingBoard);
-            return SiamLegalityStatus.failure(SiamFailure.NOT_ENOUGH_FORCE_TO_PUSH());
+            return MGPFallible.failure(SiamFailure.NOT_ENOUGH_FORCE_TO_PUSH());
         }
 
         display(SiamRules.VERBOSE, 'This move is a legal push: '+resultingBoard);
-        return { legal: MGPValidation.SUCCESS, resultingBoard, moved: movedPieces };
+        return MGPFallible.success(new SiamLegalityInformation(resultingBoard, movedPieces));
     }
     public static isStraight(piece: SiamPiece, move: SiamMove): boolean {
         const pieceDirection: Orthogonal = piece.getDirection();
-        return (pieceDirection === move.moveDirection.getOrNull() &&
+        return (move.moveDirection.equalsValue(pieceDirection) &&
                 pieceDirection === move.landingOrientation);
     }
-    public isLegalRotation(rotation: SiamMove, state: SiamState): SiamLegalityStatus {
+    public isLegalRotation(rotation: SiamMove, state: SiamState): MGPFallible<SiamLegalityInformation> {
         display(SiamRules.VERBOSE, { isLegalRotation: { rotation, state } });
 
-        const c: Coord = rotation.coord;
-        const currentPiece: SiamPiece = state.getPieceAt(c);
+        const coord: Coord = rotation.coord;
+        const currentPiece: SiamPiece = state.getPieceAt(coord);
         const currentPlayer: Player = state.getCurrentPlayer();
         if (currentPiece.getDirection() === rotation.landingOrientation) {
-            return SiamLegalityStatus.failure(SiamFailure.ILLEGAL_ROTATION());
+            return MGPFallible.failure(SiamFailure.ILLEGAL_ROTATION());
         }
         const resultingBoard: SiamPiece[][] = state.getCopiedBoard();
-        resultingBoard[c.y][c.x] = SiamPiece.of(rotation.landingOrientation, currentPlayer);
-        return { legal: MGPValidation.SUCCESS, resultingBoard, moved: [c] };
+        resultingBoard[coord.y][coord.x] = SiamPiece.of(rotation.landingOrientation, currentPlayer);
+        return MGPFallible.success(new SiamLegalityInformation(resultingBoard, [coord]));
     }
     public applyLegalMove(_move: SiamMove,
                           state: SiamState,
-                          status: SiamLegalityStatus)
+                          status: SiamLegalityInformation)
     : SiamState
     {
-        const newBoard: SiamPiece[][] = status.resultingBoard;
+        const newBoard: Table<SiamPiece> = ArrayUtils.copyBiArray(status.resultingBoard);
         const newTurn: number = state.turn + 1;
         const resultingState: SiamState = new SiamState(newBoard, newTurn);
         return resultingState;
     }
-    public static getBoardValueInfo(move: SiamMove,
+    public static getBoardValueInfo(move: MGPOptional<SiamMove>,
                                     state: SiamState)
     : { shortestZero: number, shortestOne: number, boardValue: number }
     {
@@ -245,9 +247,9 @@ export class SiamRules extends _SiamRules {
         }
         return { rows, columns, nbMountain };
     }
-    public static getWinner(state: SiamState, move: SiamMove, nbMountain: number): Player {
+    public static getWinner(state: SiamState, move: MGPOptional<SiamMove>, nbMountain: number): Player {
         if (nbMountain === 2) {
-            return SiamRules.getPusher(state, move);
+            return SiamRules.getPusher(state, move.get());
         } else {
             return Player.NONE;
         }
@@ -352,7 +354,7 @@ export class SiamRules extends _SiamRules {
         let currentDistance: number = 1;
         let previousPiece: SiamPiece = state.getPieceAt(fallingCoord);
         let testedCoord: Coord = fallingCoord.getCopy();
-        let almostPusher: Coord;
+        let almostPusher: MGPOptional<Coord> = MGPOptional.empty();
         let pusherFound: boolean = false;
         let mountainEncountered: boolean = false;
         let missingForce: number = 0;
@@ -396,7 +398,7 @@ export class SiamRules extends _SiamRules {
                 } else {
                     display(SiamRules.VERBOSE, 'found a sideway almost-pusher');
                     if (mountainEncountered) {
-                        almostPusher = testedCoord.getCopy();
+                        almostPusher = MGPOptional.of(testedCoord.getCopy());
                         if (previousPiece !== SiamPiece.EMPTY) {
                             display(SiamRules.VERBOSE, 'his orientation will slow him down');
                             currentDistance++;
@@ -412,11 +414,11 @@ export class SiamRules extends _SiamRules {
             testedCoord = testedCoord.getPrevious(direction);
         }
         display(SiamRules.VERBOSE, { testedCoord: testedCoord.toString(), loopResultingDistance: currentDistance });
-        if (pusherFound === false && almostPusher != null) {
+        if (pusherFound === false && almostPusher.isPresent()) {
             currentDistance++;
             missingForce -= 1;
             display(SiamRules.VERBOSE, 'no pusher found but found one sideway guy');
-            while (testedCoord.equals(almostPusher) === false) {
+            while (testedCoord.equals(almostPusher.get()) === false) {
                 display(SiamRules.VERBOSE, 'he was one piece backward');
                 testedCoord = testedCoord.getNext(direction);
                 currentDistance--;
@@ -450,10 +452,10 @@ export class SiamRules extends _SiamRules {
             newMoves.push(new SiamMove(xOrY, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.UP));
             insertedPieces.push(SiamPiece.of(Orthogonal.UP, currentPlayer));
         }
-        let legality: SiamLegalityStatus;
         for (let i: number = 0; i < newMoves.length; i++) {
-            legality = this.isLegalForwarding(newMoves[i], node.gameState, insertedPieces[i]);
-            if (legality.legal.isSuccess()) {
+            const legality: MGPFallible<SiamLegalityInformation> =
+                this.isLegalForwarding(newMoves[i], node.gameState, insertedPieces[i]);
+            if (legality.isSuccess()) {
                 insertions.push(newMoves[i]);
             }
         }
@@ -464,12 +466,12 @@ export class SiamRules extends _SiamRules {
         const currentPlayer: Player = node.gameState.getCurrentPlayer();
         let newMove: SiamMove;
         let insertedPiece: SiamPiece;
-        let legality: SiamLegalityStatus;
+        let legality: MGPFallible<SiamLegalityInformation>;
         for (let y: number =1; y<=3; y++) {
             newMove = new SiamMove(-1, y, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.UP);
             insertedPiece = SiamPiece.of(Orthogonal.UP, currentPlayer);
             legality = this.isLegalForwarding(newMove, node.gameState, insertedPiece);
-            if (legality.legal.isSuccess()) {
+            if (legality.isSuccess()) {
                 insertions.push(newMove);
 
                 // If this insertion is legal, then the same one in an opposite landing direction will be
@@ -482,7 +484,7 @@ export class SiamRules extends _SiamRules {
             newMove = new SiamMove(5, y, MGPOptional.of(Orthogonal.LEFT), Orthogonal.UP);
             insertedPiece = SiamPiece.of(Orthogonal.UP, currentPlayer);
             legality = this.isLegalForwarding(newMove, node.gameState, insertedPiece);
-            if (legality.legal.isSuccess()) {
+            if (legality.isSuccess()) {
                 insertions.push(newMove);
 
                 // If this insertion is legal, then the same one in an opposite landing direction will be
@@ -496,7 +498,7 @@ export class SiamRules extends _SiamRules {
             newMove = new SiamMove(x, -1, MGPOptional.of(Orthogonal.DOWN), Orthogonal.LEFT);
             insertedPiece = SiamPiece.of(Orthogonal.LEFT, currentPlayer);
             legality = this.isLegalForwarding(newMove, node.gameState, insertedPiece);
-            if (legality.legal.isSuccess()) {
+            if (legality.isSuccess()) {
                 insertions.push(newMove);
 
                 // If this insertion is legal, then the same one in an opposite landing direction will be
@@ -509,7 +511,7 @@ export class SiamRules extends _SiamRules {
             newMove = new SiamMove(x, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.LEFT);
             insertedPiece = SiamPiece.of(Orthogonal.LEFT, currentPlayer);
             legality = this.isLegalForwarding(newMove, node.gameState, insertedPiece);
-            if (legality.legal.isSuccess()) {
+            if (legality.isSuccess()) {
                 insertions.push(newMove);
 
                 // If this insertion is legal, then the same one in an opposite landing direction will be
@@ -530,7 +532,9 @@ export class SiamRules extends _SiamRules {
         const mountainsInfo: { rows: number[], columns: number[], nbMountain: number } =
             SiamRules.getMountainsRowsAndColumns(node.gameState);
 
-        const winner: Player = SiamRules.getWinner(node.gameState, node.move, mountainsInfo.nbMountain);
+        const winner: Player = SiamRules.getWinner(node.gameState,
+                                                   node.move,
+                                                   mountainsInfo.nbMountain);
         if (winner === Player.NONE) {
             return GameStatus.ONGOING;
         } else {

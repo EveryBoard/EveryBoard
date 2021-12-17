@@ -1,134 +1,172 @@
 import { Move } from 'src/app/jscaip/Move';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { AbstractGameState } from 'src/app/jscaip/GameState';
+import { GameState } from 'src/app/jscaip/GameState';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { assert } from 'src/app/utils/utils';
 
-export class TutorialStep {
-
-    public static informational(title: string, instruction: string, state: AbstractGameState): TutorialStep {
-        return new TutorialStep(title,
-                                instruction,
-                                state,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null);
-    }
+export abstract class TutorialStep {
     public static fromMove(title: string,
                            instruction: string,
-                           state: AbstractGameState,
+                           state: GameState,
                            acceptedMoves: ReadonlyArray<Move>,
                            successMessage: string,
-                           failureMessage: string,
-    ): TutorialStep
+                           failureMessage: string)
+    : TutorialStep
     {
-        return new TutorialStep(title,
-                                instruction,
-                                state,
-                                acceptedMoves,
-                                acceptedMoves[0],
-                                null,
-                                null,
-                                successMessage,
-                                failureMessage,
-                                null);
+        return new TutorialStepMove(title, instruction, state, acceptedMoves, successMessage, failureMessage);
     }
     public static forClick(title: string,
                            instruction: string,
-                           state: AbstractGameState,
+                           state: GameState,
                            acceptedClicks: ReadonlyArray<string>,
                            successMessage: string,
-                           failureMessage: string,
-    ): TutorialStep
+                           failureMessage: string)
+    : TutorialStep
     {
-        return new TutorialStep(title,
-                                instruction,
-                                state,
-                                null,
-                                null,
-                                acceptedClicks,
-                                null,
-                                successMessage,
-                                failureMessage,
-                                null);
+        return new TutorialStepClick(title, instruction, state, acceptedClicks, successMessage, failureMessage);
     }
     public static anyMove(title: string,
                           instruction: string,
-                          state: AbstractGameState,
+                          state: GameState,
                           solutionMove: Move,
-                          successMessage: string,
-    ): TutorialStep
+                          successMessage: string)
+    : TutorialStep
     {
-        return new TutorialStep(title,
-                                instruction,
-                                state,
-                                [],
-                                solutionMove,
-                                null,
-                                null,
-                                successMessage,
-                                null,
-                                null);
+        return new TutorialStepAnyMove(title, instruction, state, solutionMove, successMessage);
     }
     public static fromPredicate(title: string,
                                 instruction: string,
-                                state: AbstractGameState,
+                                state: GameState,
                                 solutionMove: Move,
-                                predicate: (move: Move, resultingState: AbstractGameState) => MGPValidation,
-                                successMessage: string,
-    ): TutorialStep
+                                predicate: (move: Move, resultingState: GameState) => MGPValidation,
+                                successMessage: string)
+    : TutorialStep
     {
-        return new TutorialStep(title,
-                                instruction,
-                                state,
-                                null,
-                                solutionMove,
-                                null,
-                                predicate,
-                                successMessage,
-                                null,
-                                null);
+        return new TutorialStepPredicate(title, instruction, state, solutionMove, predicate, successMessage);
     }
-    private constructor(public readonly title: string,
-                        public readonly instruction: string,
-                        public readonly state: AbstractGameState,
-                        public readonly acceptedMoves: ReadonlyArray<Move>,
-                        public readonly solutionMove: Move,
-                        public readonly acceptedClicks: ReadonlyArray<string>,
-                        public readonly predicate: (move: Move, resultingState: AbstractGameState) => MGPValidation,
-                        public readonly successMessage: string,
-                        public readonly failureMessage: string,
-                        public readonly previousMove: Move | null,
-    ) { }
-    public isMove(): boolean {
-        return this.acceptedMoves != null;
+    public static informational(title: string,
+                                instruction: string,
+                                state: GameState)
+    : TutorialStep
+    {
+        return new TutorialStepInformational(title, instruction, state);
     }
-    public isAnyMove(): boolean {
-        return this.acceptedMoves != null && this.acceptedMoves.length === 0;
+
+    public previousMove: MGPOptional<Move> = MGPOptional.empty()
+    protected constructor(public title: string,
+                          public instruction: string,
+                          public state: GameState) {
     }
-    public isClick(): boolean {
-        return this.acceptedClicks != null && this.acceptedClicks.length > 0;
+    public isMove(): this is TutorialStepMove {
+        return false;
     }
-    public isPredicate(): boolean {
-        return this.predicate != null;
+    public isAnyMove(): this is TutorialStepAnyMove {
+        return false;
     }
-    public isInformation(): boolean {
-        return this.acceptedClicks == null &&
-               this.acceptedMoves == null &&
-               this.predicate == null;
+    public isClick(): this is TutorialStepClick {
+        return false;
     }
-    public withPreviousMove(previousMove: Move): TutorialStep {
-        return new TutorialStep(this.title,
-                                this.instruction,
-                                this.state,
-                                this.acceptedMoves,
-                                this.solutionMove,
-                                this.acceptedClicks,
-                                this.predicate,
-                                this.successMessage,
-                                this.failureMessage,
-                                previousMove);
+    public isPredicate(): this is TutorialStepPredicate {
+        return false;
+    }
+    public isInformation(): this is TutorialStepInformational {
+        return false;
+    }
+    public hasSolution(): this is TutorialStepWithSolution {
+        return false;
+    }
+    public withPreviousMove(previousMove: Move): this {
+        this.previousMove = MGPOptional.of(previousMove);
+        return this;
+    }
+}
+
+export abstract class TutorialStepWithSolution extends TutorialStep {
+    public constructor(title: string,
+                       instruction: string,
+                       state: GameState,
+                       private readonly solution: Move,
+                       private readonly successMessage: string) {
+        super(title, instruction, state);
+    }
+    public hasSolution(): this is TutorialStepWithSolution {
+        return true;
+    }
+    public getSolution(): Move {
+        return this.solution;
+    }
+    public getSuccessMessage(): string {
+        return this.successMessage;
+    }
+}
+
+export class TutorialStepMove extends TutorialStepWithSolution {
+    public constructor(title: string,
+                       instruction: string,
+                       state: GameState,
+                       public readonly acceptedMoves: ReadonlyArray<Move>,
+                       successMessage: string,
+                       public readonly failureMessage: string) {
+        super(title, instruction, state, acceptedMoves[0], successMessage);
+        assert(acceptedMoves.length > 0, 'TutorialStepMove: At least one accepted move should be provided, otherwise use TutorialStepInformational');
+    }
+    public isMove(): this is TutorialStepMove {
+        return true;
+    }
+    public getFailureMessage(): string {
+        return this.failureMessage;
+    }
+}
+
+export class TutorialStepAnyMove extends TutorialStepWithSolution {
+    public constructor(title: string,
+                       instruction: string,
+                       state: GameState,
+                       solutionMove: Move,
+                       successMessage: string) {
+        super(title, instruction, state, solutionMove, successMessage);
+    }
+    public isAnyMove(): this is TutorialStepAnyMove {
+        return true;
+    }
+}
+
+export class TutorialStepClick extends TutorialStep {
+    public constructor(title: string,
+                       instruction: string,
+                       state: GameState,
+                       public readonly acceptedClicks: ReadonlyArray<string>,
+                       public readonly successMessage: string,
+                       public readonly failureMessage: string) {
+        super(title, instruction, state);
+    }
+    public isClick(): this is TutorialStepClick {
+        return true;
+    }
+    public getSuccessMessage(): string {
+        return this.successMessage;
+    }
+    public getFailureMessage(): string {
+        return this.failureMessage;
+    }
+}
+
+export class TutorialStepPredicate extends TutorialStepWithSolution {
+    public constructor(title: string,
+                       instruction: string,
+                       state: GameState,
+                       solutionMove: Move,
+                       public readonly predicate: (move: Move, resultingState: GameState) => MGPValidation,
+                       successMessage: string) {
+        super(title, instruction, state, solutionMove, successMessage);
+    }
+    public isPredicate(): this is TutorialStepPredicate {
+        return true;
+    }
+}
+
+export class TutorialStepInformational extends TutorialStep {
+    public isInformation(): this is TutorialStepInformational {
+        return true;
     }
 }

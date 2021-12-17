@@ -5,15 +5,14 @@ import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { EpaminondasLegalityStatus } from './epaminondaslegalitystatus';
 import { EpaminondasMinimax } from './EpaminondasMinimax';
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
-import { EpaminondasNode } from './EpaminondasRules';
+import { EpaminondasLegalityInformation, EpaminondasNode } from './EpaminondasRules';
 
 export class PositionalEpaminondasMinimax extends Minimax<EpaminondasMove,
                                                           EpaminondasState,
-                                                          EpaminondasLegalityStatus>
+                                                          EpaminondasLegalityInformation>
 {
 
     public getListMoves(node: EpaminondasNode): EpaminondasMove[] {

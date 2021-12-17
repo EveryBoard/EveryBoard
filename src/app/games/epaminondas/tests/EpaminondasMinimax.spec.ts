@@ -1,11 +1,11 @@
 import { Table } from 'src/app/utils/ArrayUtils';
 import { Direction } from 'src/app/jscaip/Direction';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasState } from '../EpaminondasState';
-import { EpaminondasRules } from '../EpaminondasRules';
+import { EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
 import { EpaminondasMinimax } from '../EpaminondasMinimax';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 
 describe('EpaminondasMinimax:', () => {
@@ -39,7 +39,7 @@ describe('EpaminondasMinimax:', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 0);
-        rules.node = new MGPNode(state);
+        rules.node = new EpaminondasNode(state);
         const capture: EpaminondasMove = new EpaminondasMove(4, 9, 2, 1, Direction.UP);
         const bestMove: EpaminondasMove = rules.node.findBestMove(1, minimax);
         expect(bestMove).toEqual(capture);
@@ -58,7 +58,7 @@ describe('EpaminondasMinimax:', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, O, O, _, _, _, _, _, _, _, _, _, _, _],
-        ], 0);
+        ], 1);
         const strongerState: EpaminondasState = new EpaminondasState([
             [_, _, _, _, _, _, _, _, _, X, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, X, _, _, _, _],
@@ -72,7 +72,10 @@ describe('EpaminondasMinimax:', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, O, O, _, _, _, _, _, _, _, _, _, _, _],
-        ], 0);
-        RulesUtils.expectSecondStateToBeBetterThanFirst(weakerState, null, strongerState, null, minimax);
+        ], 1);
+        RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+                                                           weakerState, MGPOptional.empty(),
+                                                           strongerState, MGPOptional.empty(),
+                                                           Player.ONE);
     });
 });

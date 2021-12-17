@@ -90,9 +90,6 @@ export class CoerceoMove extends Move {
         if (start.isNotInRange(15, 10)) {
             throw new Error('Starting coord cannot be out of range (width: 15, height: 10).');
         }
-        if (step == null) {
-            throw new Error('Step cannot be null.');
-        }
         const landingCoord: Coord = new Coord(start.x + step.direction.x, start.y + step.direction.y);
         if (landingCoord.isNotInRange(15, 10)) {
             throw new Error('Landing coord cannot be out of range (width: 15, height: 10).');
@@ -135,7 +132,6 @@ export class CoerceoMove extends Move {
         }
     }
     public equals(o: CoerceoMove): boolean {
-        if (o == null) return false;
         if (!this.capture.equals(o.capture)) return false;
         if (!this.start.equals(o.start)) return false;
         if (!this.step.equals(o.step)) return false;

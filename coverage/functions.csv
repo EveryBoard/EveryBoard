@@ -59,22 +59,20 @@ src/environments,0
 AuthenticationService.ts,2
 ActivesPartsService.ts,5
 ActivesUsersService.ts,3
-DvonnState.ts,2
 EncapsuleState.ts,1
-HexaDirection.ts,1
-HexagonalGameState.ts,1
 Minimax.ts,1
 NodeUnheritance.ts,1
 online-game-wrapper.component.ts,2
-part-creation.component.ts,1
-PieceThreat.ts,2
-PylosState.ts,2
+PieceThreat.ts,1
+PylosState.ts,1
 QuartoRules.ts,3
 server-page.component.ts,1
-SixState.ts,1
 SixMinimax.ts,3
+<<<<<<< HEAD
 SixMove.ts,2
 TablutRules.ts,1
 TablutFailure.ts,1
 TablutEscapeThenPieceThenControl.ts,1
 >>>>>>> a68186a919e49ab4bec3a7fc9fa3c835b40a2510
+=======
+>>>>>>> 6691e353b3258b48335b61c40167fdad56f67197
