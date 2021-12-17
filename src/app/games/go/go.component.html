@@ -57,8 +57,7 @@
     <rect *ngIf="ko.isPresent()"
           width="25" height="25"
           [attr.x]="12.5 + 50 * ko.get().x" [attr.y]="12.5 + 50 * ko.get().y"
-          class="captured-stroke mid-stroke"
-          fill="none"
+          class="captured-stroke mid-stroke no-fill"
     />
     <circle *ngFor="let capture of captures"
             (click)="onClick(capture.x, capture.y)"

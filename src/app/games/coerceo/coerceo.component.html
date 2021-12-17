@@ -24,15 +24,7 @@
             <polyline *ngIf="caseContent !== NONE"
                       id="dark_line_{{ x }}_{{ y }}"
                       [attr.points]="getLineCoordinate(x, y)"
-                      stroke-linecap="round"
-                      stroke="black"
-                      stroke-width="10"
-            />
-            <polyline *ngIf="caseContent !== NONE"
-                      id="dark_line_{{ x }}_{{ y }}"
-                      [attr.points]="getLineCoordinate(x, y)"
-                      stroke-linecap="round"
-                      stroke="white"
+                      class="base"
             />
         </g>
     </g>
@@ -60,7 +52,7 @@
               [attr.x]="(SPACE_SIZE / 2) + SPACE_SIZE * 0"
               [attr.y]="16 + (SPACE_SIZE / 2) + SPACE_SIZE * 0"
               text-anchor="middle"
-              stroke="black"
+              class="base small-stroke"
               [attr.font-size]="SPACE_SIZE / 2"
         >{{ tiles[0] }}</text>
     </g>
@@ -76,7 +68,7 @@
               [attr.x]="(SPACE_SIZE / 2) + SPACE_SIZE * 0"
               [attr.y]="16 + (SPACE_SIZE / 2) + SPACE_SIZE * 9"
               text-anchor="middle"
-              stroke="black"
+              class="base small-stroke"
               [attr.font-size]="SPACE_SIZE / 2"
         >{{ tiles[1] }}</text>
     </g>
