@@ -41,11 +41,11 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
     private static isLegalPush(move: AbaloneMove, state: AbaloneState): MGPFallible<AbaloneLegalityInformation> {
         let pieces: number = 1;
         let tested: Coord = move.coord.getNext(move.dir);
-        const PLAYER: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentPlayer());
-        const EMPTY: FourStatePiece = FourStatePiece.EMPTY;
+        const player: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentPlayer());
+        const empty: FourStatePiece = FourStatePiece.EMPTY;
         const newBoard: FourStatePiece[][] = state.getCopiedBoard();
-        newBoard[move.coord.y][move.coord.x] = EMPTY;
-        while (pieces <= 3 && state.isOnBoard(tested) && state.getPieceAt(tested) === PLAYER) {
+        newBoard[move.coord.y][move.coord.x] = empty;
+        while (pieces <= 3 && state.isOnBoard(tested) && state.getPieceAt(tested) === player) {
             pieces++;
             tested = tested.getNext(move.dir);
         }
@@ -54,8 +54,8 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
         } else if (state.isInBoard(tested) === false) {
             return MGPFallible.success(newBoard);
         }
-        newBoard[tested.y][tested.x] = PLAYER;
-        if (state.getPieceAt(tested) === EMPTY) {
+        newBoard[tested.y][tested.x] = player;
+        if (state.getPieceAt(tested) === empty) {
             return MGPFallible.success(newBoard);
         }
         return AbaloneRules.isLegalRealPush(tested, move, state, pieces, newBoard);
@@ -69,7 +69,7 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
     {
         let opponentPieces: number = 0;
         const OPPONENT: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentOpponent());
-        const PLAYER: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentPlayer());
+        const player: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentPlayer());
         while (opponentPieces < pushingPieces &&
                state.isOnBoard(firstOpponent) &&
                state.getPieceAt(firstOpponent) === OPPONENT) {
@@ -82,7 +82,7 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
             if (state.getPieceAt(firstOpponent) === FourStatePiece.EMPTY) {
                 newBoard[firstOpponent.y][firstOpponent.x] = OPPONENT;
             }
-            if (state.getPieceAt(firstOpponent) === PLAYER) {
+            if (state.getPieceAt(firstOpponent) === player) {
                 return MGPFallible.failure(AbaloneFailure.CANNOT_PUSH_YOUR_OWN_PIECES());
             }
         }
@@ -93,10 +93,10 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
         const alignement: Direction = move.coord.getDirectionToward(last).get();
         last = last.getNext(alignement); // to include lastPiece as well
         let tested: Coord = move.coord;
-        const PLAYER: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentPlayer());
+        const player: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentPlayer());
         const newBoard: FourStatePiece[][] = state.getCopiedBoard();
         while (tested.equals(last) === false && tested.isInRange(9, 9)) {
-            if (state.getPieceAt(tested) !== PLAYER) {
+            if (state.getPieceAt(tested) !== player) {
                 return MGPFallible.failure(AbaloneFailure.MUST_ONLY_TRANSLATE_YOUR_PIECES());
             }
             const landing: Coord = tested.getNext(move.dir);
@@ -106,7 +106,7 @@ export class AbaloneRules extends Rules<AbaloneMove, AbaloneState, AbaloneLegali
                     return MGPFallible.failure(AbaloneFailure.TRANSLATION_IMPOSSIBLE());
                 }
                 if (state.getPieceAt(landing) === FourStatePiece.EMPTY) {
-                    newBoard[landing.y][landing.x] = PLAYER;
+                    newBoard[landing.y][landing.x] = player;
                 }
             }
             tested = tested.getNext(alignement);

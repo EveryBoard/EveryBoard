@@ -8,6 +8,5 @@ describe('PylosState:', () => {
             const state: PylosState = PylosState.getInitialState();
             expect(state.isSupporting(new PylosCoord(0, 0, 3))).toBeFalse();
         });
-        xit('Should recognize supporting block');
     });
 });

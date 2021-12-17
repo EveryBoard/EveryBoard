@@ -17,32 +17,32 @@ export class SaharaMinimax extends Minimax<SaharaMove, SaharaState> {
         const player: Player = node.gameState.getCurrentPlayer();
         const startingCoords: Coord[] = SaharaRules.getStartingCoords(board, player);
         for (const start of startingCoords) {
-            const neighboors: Coord[] =
-                TriangularGameState.getEmptyNeighboors(board, start, FourStatePiece.EMPTY);
-            for (const neighboor of neighboors) {
-                const newMove: SaharaMove = new SaharaMove(start, neighboor);
-                board[neighboor.y][neighboor.x] = board[start.y][start.x];
+            const neighbors: Coord[] =
+                TriangularGameState.getEmptyNeighbors(board, start, FourStatePiece.EMPTY);
+            for (const neighbor of neighbors) {
+                const newMove: SaharaMove = SaharaMove.from(start, neighbor).get();
+                board[neighbor.y][neighbor.x] = board[start.y][start.x];
                 board[start.y][start.x] = FourStatePiece.EMPTY;
                 moves.push(newMove);
 
-                const upwardTriangle: boolean = (neighboor.y + neighboor.x) % 2 === 0;
+                const upwardTriangle: boolean = (neighbor.y + neighbor.x) % 2 === 0;
                 if (upwardTriangle) {
-                    const farNeighboors: Coord[] =
-                        TriangularGameState.getEmptyNeighboors(board, neighboor, FourStatePiece.EMPTY);
-                    for (const farNeighboor of farNeighboors) {
-                        if (!farNeighboor.equals(start)) {
-                            const farMove: SaharaMove = new SaharaMove(start, farNeighboor);
-                            board[farNeighboor.y][farNeighboor.x] = board[neighboor.y][neighboor.x];
-                            board[neighboor.y][neighboor.x] = FourStatePiece.EMPTY;
+                    const farNeighbors: Coord[] =
+                        TriangularGameState.getEmptyNeighbors(board, neighbor, FourStatePiece.EMPTY);
+                    for (const farNeighbor of farNeighbors) {
+                        if (!farNeighbor.equals(start)) {
+                            const farMove: SaharaMove = SaharaMove.from(start, farNeighbor).get();
+                            board[farNeighbor.y][farNeighbor.x] = board[neighbor.y][neighbor.x];
+                            board[neighbor.y][neighbor.x] = FourStatePiece.EMPTY;
                             moves.push(farMove);
 
-                            board[neighboor.y][neighboor.x] = board[farNeighboor.y][farNeighboor.x];
-                            board[farNeighboor.y][farNeighboor.x] = FourStatePiece.EMPTY;
+                            board[neighbor.y][neighbor.x] = board[farNeighbor.y][farNeighbor.x];
+                            board[farNeighbor.y][farNeighbor.x] = FourStatePiece.EMPTY;
                         }
                     }
                 }
-                board[start.y][start.x] = board[neighboor.y][neighboor.x];
-                board[neighboor.y][neighboor.x] = FourStatePiece.EMPTY;
+                board[start.y][start.x] = board[neighbor.y][neighbor.x];
+                board[neighbor.y][neighbor.x] = FourStatePiece.EMPTY;
             }
         }
         return moves;

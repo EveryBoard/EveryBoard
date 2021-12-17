@@ -1086,12 +1086,12 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 ], [
                     new SaharaRules(SaharaState),
                     saharaTutorial[2],
-                    new SaharaMove(new Coord(7, 0), new Coord(5, 0)),
+                    SaharaMove.from(new Coord(7, 0), new Coord(5, 0)).get(),
                     MGPValidation.failure(`You have made a double step, which is good but it is the next exercise!`),
                 ], [
                     new SaharaRules(SaharaState),
                     saharaTutorial[3],
-                    new SaharaMove(new Coord(2, 0), new Coord(2, 1)),
+                    SaharaMove.from(new Coord(2, 0), new Coord(2, 1)).get(),
                     MGPValidation.failure(`Failed! You have made a single step.`),
                 ], [
                     new SixRules(SixState),
