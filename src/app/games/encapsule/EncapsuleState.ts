@@ -4,7 +4,6 @@ import { Player } from 'src/app/jscaip/Player';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert, Utils } from 'src/app/utils/utils';
-import { ComparableObject } from 'src/app/utils/Comparable';
 
 export class EncapsuleState extends GameStateWithTable<EncapsuleCase> {
 
@@ -48,7 +47,7 @@ export class EncapsuleState extends GameStateWithTable<EncapsuleCase> {
     }
 }
 
-export class EncapsuleCase implements ComparableObject {
+export class EncapsuleCase {
 
     public static readonly EMPTY: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.NONE);
 
@@ -149,9 +148,6 @@ export class EncapsuleCase implements ComparableObject {
     }
     public belongsTo(player: Player): boolean {
         return this.getBiggest().getPlayer() === player;
-    }
-    public equals(o: EncapsuleCase): boolean {
-        throw new Error('EncapsuleCase.equals is needed! Blame the dev!' + o.toString());
     }
     public toString(): string {
         const pieceNames: string[] = this.toOrderedPieceNames();

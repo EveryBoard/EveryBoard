@@ -78,11 +78,11 @@ export class EncapsuleTutorial {
                 EncapsulePiece.MEDIUM_WHITE, EncapsulePiece.MEDIUM_WHITE,
             ]),
             EncapsuleMove.fromMove(new Coord(0, 1), new Coord(0, 2)),
-            (move: EncapsuleMove, resultingState: EncapsuleState) => {
-                const isGoodLandingCoord: boolean = move.landingCoord.equals(new Coord(0, 2));
-                if (isGoodLandingCoord) {
+            (move: EncapsuleMove, _: EncapsuleState) => {
+                const isCorrectLandingCoord: boolean = move.landingCoord.equals(new Coord(0, 2));
+                if (isCorrectLandingCoord) {
                     if (move.isDropping()) {
-                        return MGPValidation.failure($localize`You won, but the exercice is to do a victory while moving a piece!`);
+                        return MGPValidation.failure($localize`You won, but the exercise is to win while moving a piece!`);
                     } else if (move.startingCoord.equalsValue(new Coord(0, 1))) {
                         return MGPValidation.SUCCESS;
                     }
