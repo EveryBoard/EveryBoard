@@ -1,45 +1,66 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="auto"
-     viewBox="0 0 1000 320"
+     viewBox="0 0 520 520"
      preserveAspectRatio="xMidYMid meet">
-    <g *ngFor="let line of board; index as y">
-        <g *ngFor="let caseContent of line; index as x">
-            <rect id="click_{{ x }}_{{ y }}"
-                  (click)="onBoardClick(x, y)"
-                  [attr.x]="(SPACE_SIZE * x) + STROKE_WIDTH"
-                  [attr.y]="(SPACE_SIZE * y) + STROKE_WIDTH"
-                  [attr.width]="SPACE_SIZE"
-                  [attr.height]="SPACE_SIZE"
-                  [ngClass]="getRectClasses(x, y)"
-                  class="base"
-                  />
-            <circle *ngFor="let piece of getListPieces(caseContent)"
-                    (click)="onBoardClick(x, y)"
+
+    <g #remainingCasePlayerZero
+       [attr.transform]="'translate(' + STROKE_WIDTH + ', 0)'">
+        <g *ngFor="let piece of getRemainingPieces(0); index as pieceIdx">
+            <circle id="piece_0_{{ piece.toString() }}"
+                    (click)="onPieceClick(0, piece, pieceIdx)"
                     [attr.r]="getPieceRadius(piece)"
-                    [attr.cx]="(SPACE_SIZE * x) + STROKE_WIDTH + (SPACE_SIZE / 2)"
-                    [attr.cy]="(SPACE_SIZE * y) + STROKE_WIDTH + (SPACE_SIZE / 2)"
-                    [ngClass]="getPieceClasses(piece)"
-                    class='base no-fill'
-                    />
+                    [attr.cx]="getPieceLeftX(0, pieceIdx) + getPieceRadius(piece)"
+                    [attr.cy]="(SPACE_SIZE / 2)"
+                    [ngClass]="getSidePieceClasses(piece, pieceIdx)"
+                    class="base no-fill"
+                    pointer-events="fill"
+            />
         </g>
     </g>
-    <g *ngFor="let coord of getHighlightedCases()">
-        <rect (click)="onBoardClick(coord.x, coord.y)"
-              [attr.x]="(SPACE_SIZE * coord.x) + STROKE_WIDTH"
-              [attr.y]="(SPACE_SIZE * coord.y) + STROKE_WIDTH"
-              [attr.width]="SPACE_SIZE"
-              [attr.height]="SPACE_SIZE"
-              class="base no-fill highlighted"
-              pointer-events="fill"
-              />
+    <g #boardDiv
+       [attr.transform]="'translate(' + (260 - (1.5 * SPACE_SIZE) - STROKE_WIDTH) + ', ' + SPACE_SIZE + ')'"
+    >
+        <g *ngFor="let line of board; index as y">
+            <g *ngFor="let caseContent of line; index as x">
+                <rect id="click_{{ x }}_{{ y }}"
+                      (click)="onBoardClick(x, y)"
+                      [attr.x]="(SPACE_SIZE * x) + STROKE_WIDTH"
+                      [attr.y]="(SPACE_SIZE * y) + STROKE_WIDTH"
+                      [attr.width]="SPACE_SIZE"
+                      [attr.height]="SPACE_SIZE"
+                      [ngClass]="getRectClasses(x, y)"
+                      class="base"
+                      />
+                <circle *ngFor="let piece of getListPieces(caseContent)"
+                        (click)="onBoardClick(x, y)"
+                        [attr.r]="getPieceRadius(piece)"
+                        [attr.cx]="(SPACE_SIZE * x) + STROKE_WIDTH + (SPACE_SIZE / 2)"
+                        [attr.cy]="(SPACE_SIZE * y) + STROKE_WIDTH + (SPACE_SIZE / 2)"
+                        [ngClass]="getPieceClasses(piece)"
+                        class='base no-fill'
+                        />
+            </g>
+        </g>
+        <g *ngFor="let coord of getHighlightedCases()">
+            <rect (click)="onBoardClick(coord.x, coord.y)"
+                  [attr.x]="(SPACE_SIZE * coord.x) + STROKE_WIDTH"
+                  [attr.y]="(SPACE_SIZE * coord.y) + STROKE_WIDTH"
+                  [attr.width]="SPACE_SIZE"
+                  [attr.height]="SPACE_SIZE"
+                  class="base no-fill highlighted"
+                  pointer-events="fill"
+                  />
+        </g>
     </g>
-    <g *ngFor="let player of [0, 1]">
-        <g *ngFor="let piece of getRemainingPieces(player); index as pieceIdx">
-            <circle id="piece_{{ player }}_{{ piece.toString() }}"
-                    (click)="onPieceClick(player, piece, pieceIdx)"
+    <g #remainingCasePlayerOne
+       [attr.transform]="'translate(' + STROKE_WIDTH + ', ' + ((2 * STROKE_WIDTH) + (4 * SPACE_SIZE)) + ')'"
+    >
+        <g *ngFor="let piece of getRemainingPieces(1); index as pieceIdx">
+            <circle id="piece_1_{{ piece.toString() }}"
+                    (click)="onPieceClick(1, piece, pieceIdx)"
                     [attr.r]="getPieceRadius(piece)"
-                    [attr.cx]="(SPACE_SIZE * 4) + (SPACE_SIZE / 2) + (SPACE_SIZE * pieceIdx)"
-                    [attr.cy]="(SPACE_SIZE / 2) + (SPACE_SIZE * player)"
+                    [attr.cx]="getPieceLeftX(1, pieceIdx) + getPieceRadius(piece)"
+                    [attr.cy]="(SPACE_SIZE / 2)"
                     [ngClass]="getSidePieceClasses(piece, pieceIdx)"
                     class="base no-fill"
                     pointer-events="fill"

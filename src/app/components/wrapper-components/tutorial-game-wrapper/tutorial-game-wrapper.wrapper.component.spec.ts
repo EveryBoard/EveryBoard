@@ -56,6 +56,11 @@ import { ApagosMove } from 'src/app/games/apagos/ApagosMove';
 import { ApagosCoord } from 'src/app/games/apagos/ApagosCoord';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { EncapsuleRules } from 'src/app/games/encapsule/EncapsuleRules';
+import { EncapsuleState } from 'src/app/games/encapsule/EncapsuleState';
+import { EncapsuleTutorial } from 'src/app/games/encapsule/EncapsuleTutorial';
+import { EncapsuleMove } from 'src/app/games/encapsule/EncapsuleMove';
+import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 
 describe('TutorialGameWrapperComponent (wrapper)', () => {
 
@@ -997,6 +1002,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
         it('Should make sure that predicate step have healthy behaviors', fakeAsync(async() => {
             const apagosTutorial: TutorialStep[] = new ApagosTutorial().tutorial;
             const dvonnTutorial: TutorialStep[] = new DvonnTutorial().tutorial;
+            const encapsuleTutorial: TutorialStep[] = new EncapsuleTutorial().tutorial;
             const epaminondasTutorial: TutorialStep[] = new EpaminondasTutorial().tutorial;
             const pentagoTutorial: TutorialStep[] = new PentagoTutorial().tutorial;
             const pylosTutorial: TutorialStep[] = new PylosTutorial().tutorial;
@@ -1033,6 +1039,21 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     DvonnMove.of(new Coord(2, 1), new Coord(1, 1)),
                     MGPValidation.failure($localize`You have not taken possession of a source, try again.`),
                 ], [
+                    new EncapsuleRules(EncapsuleState),
+                    encapsuleTutorial[3],
+                    EncapsuleMove.fromDrop(EncapsulePiece.BIG_BLACK, new Coord(0, 2)),
+                    MGPValidation.failure(`You won, but the exercise is to win while moving a piece!`),
+                ], [
+                    new EncapsuleRules(EncapsuleState),
+                    encapsuleTutorial[3],
+                    EncapsuleMove.fromMove(new Coord(0, 0), new Coord(0, 2)),
+                    MGPValidation.failure(`Failed. Try again.`),
+                ], [
+                    new EncapsuleRules(EncapsuleState),
+                    encapsuleTutorial[3],
+                    EncapsuleMove.fromMove(new Coord(0, 0), new Coord(1, 0)),
+                    MGPValidation.failure(`Failed. Try again.`),
+                ], [
                     new EpaminondasRules(EpaminondasState),
                     epaminondasTutorial[3],
                     new EpaminondasMove(0, 11, 2, 1, Direction.UP),
@@ -1065,12 +1086,12 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 ], [
                     new SaharaRules(SaharaState),
                     saharaTutorial[2],
-                    new SaharaMove(new Coord(7, 0), new Coord(5, 0)),
+                    SaharaMove.from(new Coord(7, 0), new Coord(5, 0)).get(),
                     MGPValidation.failure(`You have made a double step, which is good but it is the next exercise!`),
                 ], [
                     new SaharaRules(SaharaState),
                     saharaTutorial[3],
-                    new SaharaMove(new Coord(2, 0), new Coord(2, 1)),
+                    SaharaMove.from(new Coord(2, 0), new Coord(2, 1)).get(),
                     MGPValidation.failure(`Failed! You have made a single step.`),
                 ], [
                     new SixRules(SixState),

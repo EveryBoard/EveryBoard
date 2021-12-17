@@ -890,8 +890,8 @@
         <source>Drop</source>
         <target>Pose</target>
       </trans-unit>
-      <trans-unit id="6297839182321652830" datatype="html">
-        <source>There are two kind of moves. One is the drop. To do one, you must click on a visible arrow, being of your color or the opponent's. If the chosen square is one of the 3 leftmost ones, it will exchange position with the square on its right. You play Light.&lt;br/&gt;&lt;br/&gt;Drop a piece on one of thoses three squares.</source>
+      <trans-unit id="5812794158768312814" datatype="html">
+        <source>There are two kind of moves. One is the drop. To do one, you must click on a visible arrow, being of your color or the opponent's. If the chosen square is one of the 3 leftmost ones, it will exchange position with the square on its right. You play Light.&lt;br/&gt;&lt;br/&gt;Drop a piece on one of those three squares.</source>
         <target>Un des deux types de coup est la pose. Pour en faire une, vous devez cliquer sur une flèche, qu'elle soit de votre couleur ou de celle de l'adversaire. Si la case choisie est l'une des trois les plus à gauche, elle échangera sa place avec celle juste à sa droite. Vous jouez Clair.&lt;br/&gt;&lt;br/&gt;Posez une pièce sur l'une de ces trois cases.</target>
       </trans-unit>
       <trans-unit id="8402696305361715603" datatype="html">
@@ -1473,6 +1473,10 @@
         Finalement, il est interdit de recouvrir une pièce avec une autre pièce plus petite.
         Vous jouez Foncé et pouvez gagner à ce tour de plusieurs façons.&lt;br/&gt;&lt;br/&gt;
         Essayez de gagner en effectuant un déplacement, et non un placement (c&apos;est à dire en déposant une nouvelle pièce).</target>
+      </trans-unit>
+      <trans-unit id="6204412729347708092" datatype="html">
+        <source>You won, but the exercise is to win while moving a piece!</source>
+        <target>Vous avez gagné, mais le but de l'exercice est de gagner en faisant un déplacmement !</target>
       </trans-unit>
       <trans-unit id="5530182224164938313" datatype="html">
         <source>The move distance of your phalanx puts it out of the board.</source>
@@ -2649,6 +2653,14 @@
         <source>You must pick one of your pyramids.</source>
         <target>Vous devez choisir une de vos pyramides.</target>
       </trans-unit>
+      <trans-unit id="2094727233255278649" datatype="html">
+        <source>Those two spaces are not neighbors.</source>
+        <target>Ces deux cases ne sont pas voisines.</target>
+      </trans-unit>
+      <trans-unit id="5908478672900888285" datatype="html">
+        <source>Those two spaces have no intermediary neighbor.</source>
+        <target>Ces deux cases n&apos;ont pas de voisin commun.</target>
+      </trans-unit>
       <trans-unit id="7194810718741841575" datatype="html">
         <source>You can move one or two spaces, not <x id="PH" equiv-text="distance"/>.</source>
         <target>Vous pouvez vous déplacer maximum de 2 cases, pas de <x id="PH" equiv-text="distance"/>.</target>
@@ -3298,6 +3310,10 @@
       <trans-unit id="5966391152315784819" datatype="html">
         <source>You have selected an empty space, you must select one of your own pieces.</source>
         <target>Vous avez sélectionné une case vide, vous devez sélectionner l&apos;une de vos pièces.</target>
+      </trans-unit>
+      <trans-unit id="1153768241274180865" datatype="html">
+        <source>You must choose different starting and ending coordinates.</source>
+        <target>Le mouvement ne peut pas être statique, choisissez une case de départ et d&apos;arrivée différentes.</target>
       </trans-unit>
       <trans-unit id="4047787446065773376" datatype="html">
         <source>There are missing fields in the registration form, please check that you filled in all fields.</source>
