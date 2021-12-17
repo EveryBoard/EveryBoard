@@ -34,7 +34,7 @@ describe('KamisadoComponent', () => {
     });
     it('should not allow to pass initially', fakeAsync(async() => {
         expect((await componentTestUtils.getComponent().pass()).reason).toBe(RulesFailure.CANNOT_PASS());
-        tick(3000); // needs to be >2999
+        tick(3000); // needs to be > 2999
     }));
     it('should allow changing initial choice', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_0_7'); // Select initial piece

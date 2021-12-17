@@ -393,7 +393,7 @@ describe('GipfRules:', () => {
         const placement: GipfPlacement = new GipfPlacement(new Coord(1, 6),
                                                            MGPOptional.of(HexaDirection.UP_RIGHT));
         const dummyMove: GipfMove = new GipfMove(placement, [], []);
-        it('should declare victory when one player does not have any piece left (Player.ONE)', () => {
+        it('should declare victory when one player does not have any piece left (Player.ZERO)', () => {
             const board: Table<FourStatePiece> = [
                 [N, N, N, _, A, _, _],
                 [N, N, _, _, A, _, _],
@@ -407,7 +407,7 @@ describe('GipfRules:', () => {
             const node: GipfNode = new GipfNode(state, MGPOptional.empty(), MGPOptional.of(dummyMove));
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
         });
-        it('should declare victory when one player does not have any piece left (Player.ZERO)', () => {
+        it('should declare victory when one player does not have any piece left (Player.ONE)', () => {
             const board: Table<FourStatePiece> = [
                 [N, N, N, _, A, _, _],
                 [N, N, _, _, A, _, _],
