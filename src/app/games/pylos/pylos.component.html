@@ -2,6 +2,7 @@
      width="100%" height="auto"
      viewBox="0 -4 800 1021"
      preserveAspectRatio="xMidYMid meet">
+
     <g *ngFor="let player of [0, 1]">
         <g *ngFor="let p of getPlayerSidePieces(player)">
             <circle id="piece_{{ player }}_{{ p }}"
