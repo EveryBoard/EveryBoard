@@ -3311,8 +3311,8 @@
         <source>You have selected an empty space, you must select one of your own pieces.</source>
         <target>Vous avez sélectionné une case vide, vous devez sélectionner l&apos;une de vos pièces.</target>
       </trans-unit>
-      <trans-unit id="2392176600769052262" datatype="html">
-        <source>Move cannot be static, you must choose differents starting and ending coordinates.</source>
+      <trans-unit id="1153768241274180865" datatype="html">
+        <source>You must choose different starting and ending coordinates.</source>
         <target>Le mouvement ne peut pas être statique, choisissez une case de départ et d&apos;arrivée différentes.</target>
       </trans-unit>
       <trans-unit id="4047787446065773376" datatype="html">

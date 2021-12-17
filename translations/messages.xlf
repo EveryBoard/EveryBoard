@@ -2281,8 +2281,8 @@
       <trans-unit id="5966391152315784819" datatype="html">
         <source>You have selected an empty space, you must select one of your own pieces.</source>
       </trans-unit>
-      <trans-unit id="2392176600769052262" datatype="html">
-        <source>Move cannot be static, you must choose differents starting and ending coordinates.</source>
+      <trans-unit id="1153768241274180865" datatype="html">
+        <source>You must choose different starting and ending coordinates.</source>
       </trans-unit>
       <trans-unit id="7065414996126753833" datatype="html">
         <source>This username is already in use.</source>
