@@ -1083,6 +1083,9 @@
         You&apos;re playing Dark and you can win now in various ways.&lt;br/&gt;&lt;br/&gt;
         Try to win by making a move, and not by putting a new piece on the board.</source>
       </trans-unit>
+      <trans-unit id="6204412729347708092" datatype="html">
+        <source>You won, but the exercise is to win while moving a piece!</source>
+      </trans-unit>
       <trans-unit id="5530182224164938313" datatype="html">
         <source>The move distance of your phalanx puts it out of the board.</source>
       </trans-unit>

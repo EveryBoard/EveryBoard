@@ -97,7 +97,6 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         }
     }
     private async firstClick(x: number, y: number): Promise<MGPValidation> {
-        this.hidePreviousMove(); // TODO check if must be deleted
         const OPPONENT: Player = this.rules.node.gameState.getCurrentOpponent();
         const PLAYER: Player = this.rules.node.gameState.getCurrentPlayer();
         switch (this.board[y][x]) {

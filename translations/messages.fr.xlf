@@ -1474,6 +1474,10 @@
         Vous jouez Foncé et pouvez gagner à ce tour de plusieurs façons.&lt;br/&gt;&lt;br/&gt;
         Essayez de gagner en effectuant un déplacement, et non un placement (c&apos;est à dire en déposant une nouvelle pièce).</target>
       </trans-unit>
+      <trans-unit id="6204412729347708092" datatype="html">
+        <source>You won, but the exercise is to win while moving a piece!</source>
+        <target>Vous avez gagné, mais le but de l'exercice est de gagner en faisant un déplacmement !</target>
+      </trans-unit>
       <trans-unit id="5530182224164938313" datatype="html">
         <source>The move distance of your phalanx puts it out of the board.</source>
         <target>La distance de déplacement de votre phalange la fait sortir du plateau.</target>
