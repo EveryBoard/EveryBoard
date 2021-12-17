@@ -1,12 +1,14 @@
 import { TaflMove } from '../TaflMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MyTaflMove } from './MyTaflMove.spec';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 describe('TaflMove', () => {
 
     it('TaflMove creation, as a MoveCoordToCoord, should throw when created static', () => {
+        const error: string = RulesFailure.MOVE_CANNOT_BE_STATIC();
         expect(() => MyTaflMove.from(new Coord(0, 0), new Coord(0, 0)))
-            .toThrowError('MoveCoordToCoord cannot be static.');
+            .toThrowError(error);
     });
     it('Should throw when given out of range coords', () => {
         const outOfRange: Coord = new Coord(-1, -1);

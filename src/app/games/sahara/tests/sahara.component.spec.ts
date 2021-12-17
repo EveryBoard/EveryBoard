@@ -80,8 +80,8 @@ describe('SaharaComponent', () => {
         await componentTestUtils.expectClickSuccess('#click_7_0');
 
         // when clicking on the false neighbor
-        // then the good message should be shown
-        const reason: string = SaharaFailure.THOSES_TWO_SPACE_ARE_NOT_NEIGHBORS();
+        // then the correct message should be shown
+        const reason: string = SaharaFailure.THOSE_TWO_SPACES_ARE_NOT_NEIGHBORS();
         await componentTestUtils.expectClickFailure('#click_7_1', reason);
     }));
 });

@@ -44,14 +44,14 @@ export class SaharaMove extends MoveCoordToCoord {
         } else if (distance === 1) {
             const fakeNeighbors: Coord = TriangularCheckerBoard.getFakeNeighbors(start);
             if (end.equals(fakeNeighbors)) {
-                return MGPValidation.failure(SaharaFailure.THOSES_TWO_SPACE_ARE_NOT_NEIGHBORS());
+                return MGPValidation.failure(SaharaFailure.THOSE_TWO_SPACES_ARE_NOT_NEIGHBORS());
             }
         } else if (distance === 2) {
             if ((start.x + start.y) % 2 === 0) {
                 return MGPValidation.failure(SaharaFailure.CAN_ONLY_REBOUND_ON_BLACK());
             }
             if (start.x === end.x) {
-                return MGPValidation.failure($localize`Thoses two spaces have no intermediary neighbor.`);
+                return MGPValidation.failure(SaharaFailure.THOSE_TWO_SPACES_HAVE_NO_COMMON_NEIGHBOR());
             }
         } else {
             return MGPValidation.failure($localize`You can move one or two spaces, not ${distance}.`);

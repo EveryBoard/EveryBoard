@@ -42,7 +42,7 @@ describe('SaharaMoves', () => {
     it('Should throw error when distance is 1 but start and end arent neighbors', () => {
         const start: Coord = new Coord(0, 1);
         const end: Coord = new Coord(0, 2);
-        const expectedError: string = SaharaFailure.THOSES_TWO_SPACE_ARE_NOT_NEIGHBORS();
+        const expectedError: string = SaharaFailure.THOSE_TWO_SPACES_ARE_NOT_NEIGHBORS();
         const failure: MGPFallible<SaharaMove> = MGPFallible.failure(expectedError);
         expect(SaharaMove.from(start, end)).toEqual(failure);
     });
@@ -56,7 +56,7 @@ describe('SaharaMoves', () => {
     it('Should fail when distance is 2 but common neighbors is the fake neighbors', () => {
         const start: Coord = new Coord(1, 0);
         const end: Coord = new Coord(1, 2);
-        const expectedError: string = 'Thoses two spaces have no intermediary neighbor.';
+        const expectedError: string = SaharaFailure.THOSE_TWO_SPACES_HAVE_NO_COMMON_NEIGHBOR();
         const failure: MGPFallible<SaharaMove> = MGPFallible.failure(expectedError);
         expect(SaharaMove.from(start, end)).toEqual(failure);
     });

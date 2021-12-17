@@ -71,8 +71,8 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
     private async chooseLandingCoord(x: number, y: number): Promise<MGPValidation> {
         const clickedCoord: Coord = new Coord(x, y);
         const currentPlayer: Player = this.rules.node.gameState.getCurrentPlayer();
-        const PLAYER: FourStatePiece = FourStatePiece.ofPlayer(currentPlayer);
-        if (this.board[y][x] === PLAYER) {
+        const player: FourStatePiece = FourStatePiece.ofPlayer(currentPlayer);
+        if (this.board[y][x] === player) {
             this.chosenCoord = MGPOptional.of(new Coord(x, y));
             return MGPValidation.SUCCESS;
         }
