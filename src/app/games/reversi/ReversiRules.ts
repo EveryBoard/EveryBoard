@@ -4,12 +4,14 @@ import { ReversiState } from './ReversiState';
 import { Coord } from '../../jscaip/Coord';
 import { Direction } from '../../jscaip/Direction';
 import { ReversiMove } from './ReversiMove';
-import { ReversiLegalityStatus } from './ReversiLegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 import { assert, display } from 'src/app/utils/utils';
-import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ReversiFailure } from './ReversiFailure';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
+
+
+export type ReversiLegalityInformation = Coord[];
 
 export class ReversiMoveWithSwitched {
 
@@ -18,9 +20,9 @@ export class ReversiMoveWithSwitched {
     }
 }
 
-export class ReversiNode extends MGPNode<ReversiRules, ReversiMove, ReversiState, ReversiLegalityStatus> {}
+export class ReversiNode extends MGPNode<ReversiRules, ReversiMove, ReversiState, ReversiLegalityInformation> {}
 
-export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegalityStatus> {
+export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegalityInformation> {
 
     public static VERBOSE: boolean = false;
 
@@ -40,7 +42,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
         }
         return GameStatus.DRAW;
     }
-    public applyLegalMove(move: ReversiMove, state: ReversiState, status: ReversiLegalityStatus): ReversiState {
+    public applyLegalMove(move: ReversiMove, state: ReversiState, switched: ReversiLegalityInformation): ReversiState {
         const turn: number = state.turn;
         const player: Player = state.getCurrentPlayer();
         const board: Player[][] = state.getCopiedBoard();
@@ -49,7 +51,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
                 new ReversiState(board, turn + 1);
             return sameBoardDifferentTurn;
         }
-        for (const s of status.switched) {
+        for (const s of switched) {
             board[s.y][s.x] = player;
         }
         board[move.coord.y][move.coord.x] = player;
@@ -156,29 +158,28 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
         }
         return moves;
     }
-    public isLegal(move: ReversiMove, state: ReversiState): ReversiLegalityStatus {
+    public isLegal(move: ReversiMove, state: ReversiState): MGPFallible<ReversiLegalityInformation> {
         const board: Player[][] = state.getCopiedBoard();
-        if (move.equals(ReversiMove.PASS)) { // if the player pass
+        if (move.equals(ReversiMove.PASS)) { // if the player passes
             // let's check that pass is a legal move right now
-            // if he had no choice but to pass, then passing is legal!
+            // if there was no choice but to pass, then passing is legal!
             // else, passing was illegal
-            return {
-                legal: ReversiRules.playerCanOnlyPass(state) ?
-                    MGPValidation.SUCCESS :
-                    MGPValidation.failure(RulesFailure.MUST_PASS()),
-                switched: null,
-            };
+            if (ReversiRules.playerCanOnlyPass(state)) {
+                return MGPFallible.success([]);
+            } else {
+                return MGPFallible.failure(RulesFailure.MUST_PASS());
+            }
         }
         if (board[move.coord.y][move.coord.x] !== Player.NONE) {
             display(ReversiRules.VERBOSE, 'ReversiRules.isLegal: you cannot play on a busy case');
-            return { legal: MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE()), switched: null };
+            return MGPFallible.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
         }
         const switched: Coord[] = ReversiRules.getAllSwitcheds(move, state.getCurrentPlayer(), board);
         display(ReversiRules.VERBOSE, 'ReversiRules.isLegal: '+ switched.length + ' element(s) switched');
-        return {
-            legal: (switched.length === 0) ?
-                MGPValidation.failure(ReversiFailure.NO_ELEMENT_SWITCHED()) : MGPValidation.SUCCESS,
-            switched,
-        };
+        if (switched.length === 0) {
+            return MGPFallible.failure(ReversiFailure.NO_ELEMENT_SWITCHED());
+        } else {
+            return MGPFallible.success(switched);
+        }
     }
 }

@@ -3,17 +3,17 @@ import { Coord } from '../../jscaip/Coord';
 import { GameStatus, Rules } from '../../jscaip/Rules';
 import { SCORE } from '../../jscaip/SCORE';
 import { MGPNode } from '../../jscaip/MGPNode';
-
 import { P4State } from './P4State';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 import { assert, display } from 'src/app/utils/utils';
 import { P4Move } from './P4Move';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { P4Failure } from './P4Failure';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPMap } from 'src/app/utils/MGPMap';
 
-export abstract class P4Node extends MGPNode<P4Rules, P4Move, P4State> {}
+export class P4Node extends MGPNode<P4Rules, P4Move, P4State> {}
 
 export class P4Rules extends Rules<P4Move, P4State> {
 
@@ -101,38 +101,38 @@ export class P4Rules extends Rules<P4Move, P4State> {
         assert(c !== Player.NONE, 'getOpponent should not be called with Player.NONE');
         return (c === Player.ONE) ? Player.ZERO : Player.ONE;
     }
-    public static getCaseScore(board: Table<Player>, c: Coord): number {
-        display(P4Rules.VERBOSE, 'getCaseScore(board, ' + c.x + ', ' + c.y + ') called');
+    public static getCaseScore(board: Table<Player>, coord: Coord): number {
+        display(P4Rules.VERBOSE, 'getCaseScore(board, ' + coord.x + ', ' + coord.y + ') called');
         display(P4Rules.VERBOSE, board);
-        assert(board[c.y][c.x] !== Player.NONE, 'getCaseScore should not be called on an empty case');
+        assert(board[coord.y][coord.x] !== Player.NONE, 'getCaseScore should not be called on an empty case');
 
         let score: number = 0; // final result, count the theoretical victorys possibility
 
-        const opponent: Player = P4Rules.getOpponent(board, c);
-        const ally: Player = board[c.y][c.x];
+        const opponent: Player = P4Rules.getOpponent(board, coord);
+        const ally: Player = board[coord.y][coord.x];
 
-        const distByDirs: Map<Direction, number> = new Map();
-        const alliesByDirs: Map<Direction, number> = new Map();
+        const distByDirs: MGPMap<Direction, number> = new MGPMap();
+        const alliesByDirs: MGPMap<Direction, number> = new MGPMap();
 
         for (const dir of Direction.DIRECTIONS) {
-            const tmpData: [number, number] = P4Rules.getNumberOfFreeSpacesAndAllies(board, c, dir, opponent, ally);
+            const tmpData: [number, number] = P4Rules.getNumberOfFreeSpacesAndAllies(board, coord, dir, opponent, ally);
             distByDirs.set(dir, tmpData[0]);
             alliesByDirs.set(dir, tmpData[1]);
         }
 
         for (const dir of [Direction.UP, Direction.UP_RIGHT, Direction.RIGHT, Direction.DOWN_RIGHT]) {
             // for each pair of opposite directions
-            const lineAllies: number = alliesByDirs.get(dir) + alliesByDirs.get(dir.getOpposite());
+            const lineAllies: number = alliesByDirs.get(dir).get() + alliesByDirs.get(dir.getOpposite()).get();
             if (lineAllies > 2) {
                 display(P4Rules.VERBOSE, { text:
-                    'there is some kind of victory here (' + c.x + ', ' + c.y + ')' + '\n' +
+                    'there is some kind of victory here (' + coord.x + ', ' + coord.y + ')' + '\n' +
                     'line allies : ' + lineAllies + '\n',
                 board,
                 });
                 return ally.getVictoryValue();
             }
 
-            const lineDist: number = distByDirs.get(dir) + distByDirs.get(dir.getOpposite());
+            const lineDist: number = distByDirs.get(dir).get() + distByDirs.get(dir.getOpposite()).get();
             if (lineDist === 3) {
                 score += 2;
             } else if (lineDist > 3) {
@@ -163,10 +163,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
         });
         return P4Rules.getBoardValueFromScratch(state);
     }
-    public applyLegalMove(move: P4Move,
-                          state: P4State,
-                          _status: LegalityStatus)
-    : P4State
+    public applyLegalMove(move: P4Move, state: P4State, _status: void): P4State
     {
         const x: number = move.x;
         const board: Player[][] = state.getCopiedBoard();
@@ -179,12 +176,12 @@ export class P4Rules extends Rules<P4Move, P4State> {
         const resultingState: P4State = new P4State(board, turn+1);
         return resultingState;
     }
-    public isLegal(move: P4Move, state: P4State): LegalityStatus {
+    public isLegal(move: P4Move, state: P4State): MGPFallible<void> {
         display(P4Rules.VERBOSE, { context: 'P4Rules.isLegal', move: move.toString(), state });
         if (state.getPieceAtXY(move.x, 0) !== Player.NONE) {
-            return LegalityStatus.failure(P4Failure.COLUMN_IS_FULL());
+            return MGPFallible.failure(P4Failure.COLUMN_IS_FULL());
         }
-        return LegalityStatus.SUCCESS;
+        return MGPFallible.success(undefined);
     }
     public getGameStatus(node: P4Node): GameStatus {
         const state: P4State = node.gameState;

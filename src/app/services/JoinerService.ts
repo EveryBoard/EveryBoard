@@ -4,6 +4,7 @@ import { FirstPlayer, IJoiner, IJoinerId, PartStatus, PartType } from '../domain
 import { JoinerDAO } from '../dao/JoinerDAO';
 import { assert, display } from 'src/app/utils/utils';
 import { ArrayUtils } from '../utils/ArrayUtils';
+import { MGPOptional } from '../utils/MGPOptional';
 
 @Injectable({
     providedIn: 'root',
@@ -11,16 +12,6 @@ import { ArrayUtils } from '../utils/ArrayUtils';
 export class JoinerService {
     public static VERBOSE: boolean = false;
 
-    public static readonly EMPTY_JOINER: IJoiner = {
-        creator: null,
-        candidates: [],
-        chosenPlayer: '',
-        firstPlayer: FirstPlayer.RANDOM.value,
-        partType: PartType.STANDARD.value,
-        partStatus: PartStatus.PART_CREATED.value,
-        maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
-        totalPartDuration: PartType.NORMAL_PART_DURATION,
-    };
     private observedJoinerId: string;
 
     constructor(private joinerDao: JoinerDAO) {
@@ -34,7 +25,13 @@ export class JoinerService {
         display(JoinerService.VERBOSE, 'JoinerService.createInitialJoiner(' + creatorName + ', ' + joinerId + ')');
 
         const newJoiner: IJoiner = {
-            ...JoinerService.EMPTY_JOINER,
+            candidates: [],
+            chosenPlayer: null,
+            firstPlayer: FirstPlayer.RANDOM.value,
+            partType: PartType.STANDARD.value,
+            partStatus: PartStatus.PART_CREATED.value,
+            maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
+            totalPartDuration: PartType.NORMAL_PART_DURATION,
             creator: creatorName,
         };
         return this.set(joinerId, newJoiner);
@@ -42,14 +39,14 @@ export class JoinerService {
     public async joinGame(partId: string, userName: string): Promise<boolean> {
         display(JoinerService.VERBOSE, 'JoinerService.joinGame(' + partId + ', ' + userName + ')');
 
-        const joiner: IJoiner = await this.joinerDao.read(partId);
-        if (joiner == null) {
+        const joiner: MGPOptional<IJoiner> = await this.joinerDao.read(partId);
+        if (joiner.isAbsent()) {
             return false;
         }
-        const joinerList: string[] = ArrayUtils.copyImmutableArray(joiner.candidates);
+        const joinerList: string[] = ArrayUtils.copyImmutableArray(joiner.get().candidates);
         if (joinerList.includes(userName)) {
             throw new Error('JoinerService.joinGame was called by a user already in the game');
-        } else if (userName === joiner.creator) {
+        } else if (userName === joiner.get().creator) {
             return true;
         } else {
             joinerList[joinerList.length] = userName;
@@ -64,19 +61,20 @@ export class JoinerService {
         if (this.observedJoinerId == null) {
             throw new Error('cannot cancel joining when not observing a joiner');
         }
-        const joiner: IJoiner = await this.joinerDao.read(this.observedJoinerId);
-        if (joiner == null) {
+        const joinerOpt: MGPOptional<IJoiner> = await this.joinerDao.read(this.observedJoinerId);
+        if (joinerOpt.isAbsent()) {
             // The part does not exist, so we can consider that we succesfully cancelled joining
             return;
         } else {
+            const joiner: IJoiner = joinerOpt.get();
             const candidates: string[] = ArrayUtils.copyImmutableArray(joiner.candidates);
             const indexLeaver: number = candidates.indexOf(userName);
-            let chosenPlayer: string = joiner.chosenPlayer;
+            let chosenPlayer: string | null = joiner.chosenPlayer;
             let partStatus: number = joiner.partStatus;
             candidates.splice(indexLeaver, 1); // remove player from candidates list
             if (chosenPlayer === userName) {
                 // if the chosenPlayer leave, we're back to initial part creation
-                chosenPlayer = '';
+                chosenPlayer = null;
                 partStatus = PartStatus.PART_CREATED.value;
             } else if (indexLeaver === -1) {
                 throw new Error('someone that was nor candidate nor chosenPlayer just left the chat: ' + userName);
@@ -144,7 +142,7 @@ export class JoinerService {
 
         return this.joinerDao.update(this.observedJoinerId, {
             partStatus: PartStatus.PART_CREATED.value,
-            chosenPlayer: '',
+            chosenPlayer: null,
             candidates,
         });
     }
@@ -162,7 +160,7 @@ export class JoinerService {
     public async readJoinerById(partId: string): Promise<IJoiner> {
         display(JoinerService.VERBOSE, 'JoinerService.readJoinerById(' + partId + ')');
 
-        return this.joinerDao.read(partId);
+        return (await this.joinerDao.read(partId)).get();
     }
     public async set(partId: string, joiner: IJoiner): Promise<void> {
         display(JoinerService.VERBOSE, 'JoinerService.set(' + partId + ', ' + JSON.stringify(joiner) + ')');

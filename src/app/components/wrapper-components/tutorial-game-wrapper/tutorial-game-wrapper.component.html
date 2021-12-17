@@ -6,9 +6,9 @@
                 <p class="title">{{ getCurrentStepTitle() }} [{{stepIndex + 1}}/{{ getNumberOfSteps() }}]</p>
                 <p id='currentMessage' [innerHTML]="currentMessage"></p>
             </div>
-            <div *ngIf="currentReason" class="message is-danger" role="alert">
+            <div *ngIf="currentReason.isPresent()" class="message is-danger" role="alert">
                 <div class="message-header" i18n>Failure</div>
-                <div id="currentReason" class="message-body">{{ currentReason }}</div>
+                <div id="currentReason" class="message-body">{{ currentReason.get() }}</div>
             </div>
             <div class="block">
                 <button id="retryButton"
@@ -22,7 +22,7 @@
                         *ngIf="tutorialOver === false"
                         (click)="next()"
                         >
-                    <ng-container *ngIf="steps && steps[stepIndex].isInformation() else notInfo" i18n>Ok</ng-container>
+                    <ng-container *ngIf="steps[stepIndex] && steps[stepIndex].isInformation() else notInfo" i18n>Ok</ng-container>
                     <ng-template #notInfo>
                         <ng-container *ngIf="stepFinished && stepFinished[stepIndex] else notFinished" i18n>Continue</ng-container>
                     </ng-template>
@@ -55,7 +55,7 @@
                         i18n
                 >See solution</button>
                 <div class="select">
-                    <select id="steps" (change)="changeStep($event.target.value)">
+                    <select id="steps" (change)="changeStep($event)">
                         <ng-container *ngFor="let step of steps; index as i">
                             <ng-container *ngIf="i === stepIndex else otherstep">
                                 <option id="step_{{ i }}" [value]="i" selected>{{ step.title }}</option>

@@ -3,6 +3,7 @@ import { Coord } from './Coord';
 import { NumberEncoder } from './Encoder';
 import { Direction } from './Direction';
 import { MGPFallible } from '../utils/MGPFallible';
+import { RulesFailure } from './RulesFailure';
 
 export abstract class MoveCoordToCoord extends MoveCoord {
     public static getEncoder<T extends MoveCoordToCoord>(width: number, height: number,
@@ -44,8 +45,7 @@ export abstract class MoveCoordToCoord extends MoveCoord {
 
     constructor(start: Coord, end: Coord) {
         super(start.x, start.y);
-        if (end == null) throw new Error('End cannot be null!');
-        if (start.equals(end)) throw new Error('MoveCoordToCoord cannot be static.');
+        if (start.equals(end)) throw new Error(RulesFailure.MOVE_CANNOT_BE_STATIC());
         this.end = end;
     }
     public length(): number {

@@ -1,15 +1,14 @@
 import { ReversiState } from './ReversiState';
 import { ReversiMove } from './ReversiMove';
-import { ReversiLegalityStatus } from './ReversiLegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
-import { ReversiRules, ReversiNode, ReversiMoveWithSwitched } from './ReversiRules';
+import { ReversiRules, ReversiNode, ReversiMoveWithSwitched, ReversiLegalityInformation } from './ReversiRules';
 import { Coord } from 'src/app/jscaip/Coord';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { GameStatus } from 'src/app/jscaip/Rules';
 
-export class ReversiMinimax extends Minimax<ReversiMove, ReversiState, ReversiLegalityStatus> {
+export class ReversiMinimax extends Minimax<ReversiMove, ReversiState, ReversiLegalityInformation> {
 
     public static readonly bestCoords: Coord[] = [
         new Coord(0, 0),

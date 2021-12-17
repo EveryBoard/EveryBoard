@@ -70,7 +70,6 @@ export class EncapsuleMove extends Move {
                         public readonly landingCoord: Coord,
                         public readonly piece: MGPOptional<EncapsulePiece>) {
         super();
-        if (landingCoord == null) throw new Error(`Landing Coord can't be null`);
     }
     public static fromMove(startingCoord: Coord, landingCoord: Coord): EncapsuleMove {
         if (startingCoord.equals(landingCoord)) {

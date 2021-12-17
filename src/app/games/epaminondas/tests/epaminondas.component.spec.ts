@@ -203,8 +203,8 @@ describe('EpaminondasComponent', () => {
         await componentTestUtils.expectClickSuccess('#click_0_11'); // deselect first piece
 
         const epaminondasComponent: EpaminondasComponent = componentTestUtils.getComponent();
-        expect(epaminondasComponent.firstPiece).toEqual(new Coord(0, 10));
-        expect(epaminondasComponent.lastPiece).toEqual(new Coord(-15, -1));
+        expect(epaminondasComponent.firstPiece.get()).toEqual(new Coord(0, 10));
+        expect(epaminondasComponent.lastPiece.isAbsent()).toBeTrue();
         expectClickable(0, 9);
         expectNotClickable(0, 10);
         expectClickable(0, 11);
@@ -236,8 +236,8 @@ describe('EpaminondasComponent', () => {
         await componentTestUtils.expectClickSuccess('#click_0_11'); // deselect first piece
 
         const epaminondasComponent: EpaminondasComponent = componentTestUtils.getComponent();
-        expect(epaminondasComponent.firstPiece).toEqual(new Coord(0, 10));
-        expect(epaminondasComponent.lastPiece).toEqual(new Coord(0, 9));
+        expect(epaminondasComponent.firstPiece.get()).toEqual(new Coord(0, 10));
+        expect(epaminondasComponent.lastPiece.get()).toEqual(new Coord(0, 9));
         expectNotClickable(0, 8);
         expectNotClickable(0, 9);
         expectNotClickable(0, 10);
@@ -267,8 +267,8 @@ describe('EpaminondasComponent', () => {
         await componentTestUtils.expectClickSuccess('#click_0_10'); // deselect last piece
 
         const epaminondasComponent: EpaminondasComponent = componentTestUtils.getComponent();
-        expect(epaminondasComponent.firstPiece).toEqual(new Coord(0, 11));
-        expect(epaminondasComponent.lastPiece).toEqual(new Coord(-15, -1));
+        expect(epaminondasComponent.firstPiece.get()).toEqual(new Coord(0, 11));
+        expect(epaminondasComponent.lastPiece.isAbsent()).toBeTrue();
         expectClickable(0, 9);
         expectClickable(0, 10);
         expectNotClickable(0, 11);
@@ -299,8 +299,8 @@ describe('EpaminondasComponent', () => {
         await componentTestUtils.expectClickSuccess('#click_0_8'); // deselect last piece
 
         const epaminondasComponent: EpaminondasComponent = componentTestUtils.getComponent();
-        expect(epaminondasComponent.firstPiece).toEqual(new Coord(0, 11));
-        expect(epaminondasComponent.lastPiece).toEqual(new Coord(0, 9));
+        expect(epaminondasComponent.firstPiece.get()).toEqual(new Coord(0, 11));
+        expect(epaminondasComponent.lastPiece.get()).toEqual(new Coord(0, 9));
         expect(epaminondasComponent.getPieceClasses(0, 7)).not.toContain('highlighted');
         expect(epaminondasComponent.getPieceClasses(0, 8)).not.toContain('highlighted');
         expect(epaminondasComponent.getPieceClasses(0, 9)).toContain('highlighted');
@@ -380,25 +380,25 @@ describe('EpaminondasComponent', () => {
         await componentTestUtils.expectClickSuccess('#click_1_10');
         await componentTestUtils.expectClickSuccess('#click_2_10');
         const epaminondasComponent: EpaminondasComponent = componentTestUtils.getComponent();
-        expect(epaminondasComponent.firstPiece).toEqual(new Coord(1, 10));
-        expect(epaminondasComponent.lastPiece).toEqual(new Coord(2, 10));
+        expect(epaminondasComponent.firstPiece.get()).toEqual(new Coord(1, 10));
+        expect(epaminondasComponent.lastPiece.get()).toEqual(new Coord(2, 10));
 
         await componentTestUtils.expectClickSuccess('#click_0_10');
 
-        expect(epaminondasComponent.firstPiece).toEqual(new Coord(2, 10));
-        expect(epaminondasComponent.lastPiece).toEqual(new Coord(0, 10));
+        expect(epaminondasComponent.firstPiece.get()).toEqual(new Coord(2, 10));
+        expect(epaminondasComponent.lastPiece.get()).toEqual(new Coord(0, 10));
     }));
     it('Should change last soldier coord when last click was a phalanx extension in the phalanx direction', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_0_10');
         await componentTestUtils.expectClickSuccess('#click_1_10');
         const epaminondasComponent: EpaminondasComponent = componentTestUtils.getComponent();
-        expect(epaminondasComponent.firstPiece).toEqual(new Coord(0, 10));
-        expect(epaminondasComponent.lastPiece).toEqual(new Coord(1, 10));
+        expect(epaminondasComponent.firstPiece.get()).toEqual(new Coord(0, 10));
+        expect(epaminondasComponent.lastPiece.get()).toEqual(new Coord(1, 10));
 
         await componentTestUtils.expectClickSuccess('#click_2_10');
 
-        expect(epaminondasComponent.firstPiece).toEqual(new Coord(0, 10));
-        expect(epaminondasComponent.lastPiece).toEqual(new Coord(2, 10));
+        expect(epaminondasComponent.firstPiece.get()).toEqual(new Coord(0, 10));
+        expect(epaminondasComponent.lastPiece.get()).toEqual(new Coord(2, 10));
     }));
     it('End: Should show last move when no move is ongoing (captures, left case, moved phalanx)', fakeAsync(async() => {
         const initialBoard: Table<Player> = [

@@ -1,5 +1,4 @@
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -12,6 +11,7 @@ import { TriangularGameState } from 'src/app/jscaip/TriangularGameState';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { SaharaFailure } from './SaharaFailure';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 export class SaharaNode extends MGPNode<SaharaRules, SaharaMove, SaharaState> {}
 
@@ -35,7 +35,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         const playerFreedoms: number[] = [];
         for (const piece of playersPiece) {
             const freedoms: number =
-                TriangularGameState.getEmptyNeighboors(board, piece, FourStatePiece.EMPTY).length;
+                TriangularGameState.getEmptyNeighbors(board, piece, FourStatePiece.EMPTY).length;
             if (freedoms === 0) {
                 return [0];
             }
@@ -45,7 +45,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
     }
     public applyLegalMove(move: SaharaMove,
                           state: SaharaState,
-                          _status: LegalityStatus)
+                          _status: void)
     : SaharaState
     {
         display(SaharaRules.VERBOSE, 'Legal move ' + move.toString() + ' applied');
@@ -55,24 +55,24 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         const resultingState: SaharaState = new SaharaState(board, state.turn + 1);
         return resultingState;
     }
-    public isLegal(move: SaharaMove, state: SaharaState): LegalityStatus {
+    public isLegal(move: SaharaMove, state: SaharaState): MGPFallible<void> {
         const movedPawn: FourStatePiece = state.getPieceAt(move.coord);
         if (movedPawn.value !== state.getCurrentPlayer().value) {
-            return LegalityStatus.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
+            return MGPFallible.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         }
         const landingCase: FourStatePiece = state.getPieceAt(move.end);
         if (landingCase !== FourStatePiece.EMPTY) {
-            return LegalityStatus.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
+            return MGPFallible.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
-        const commonNeighboor: MGPOptional<Coord> = TriangularCheckerBoard.getCommonNeighboor(move.coord, move.end);
-        if (commonNeighboor.isPresent()) {
-            if (state.getPieceAt(commonNeighboor.get()) === FourStatePiece.EMPTY) {
-                return LegalityStatus.SUCCESS;
+        const commonNeighbor: MGPOptional<Coord> = TriangularCheckerBoard.getCommonNeighbor(move.coord, move.end);
+        if (commonNeighbor.isPresent()) {
+            if (state.getPieceAt(commonNeighbor.get()) === FourStatePiece.EMPTY) {
+                return MGPFallible.success(undefined);
             } else {
-                return LegalityStatus.failure(SaharaFailure.CAN_ONLY_REBOUND_ON_EMPTY_SPACE());
+                return MGPFallible.failure(SaharaFailure.CAN_ONLY_REBOUND_ON_EMPTY_SPACE());
             }
         } else {
-            return LegalityStatus.SUCCESS;
+            return MGPFallible.success(undefined);
         }
     }
     public getGameStatus(node: SaharaNode): GameStatus {

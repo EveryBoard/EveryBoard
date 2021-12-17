@@ -3,8 +3,7 @@ import { EncapsulePiece, Size } from 'src/app/games/encapsule/EncapsulePiece';
 import { Player } from 'src/app/jscaip/Player';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { assert } from 'src/app/utils/utils';
-import { ComparableObject } from 'src/app/utils/Comparable';
+import { assert, Utils } from 'src/app/utils/utils';
 
 export class EncapsuleState extends GameStateWithTable<EncapsuleCase> {
 
@@ -12,7 +11,6 @@ export class EncapsuleState extends GameStateWithTable<EncapsuleCase> {
 
     constructor(board: EncapsuleCase[][], turn: number, remainingPieces: EncapsulePiece[]) {
         super(board, turn);
-        if (remainingPieces == null) throw new Error('RemainingPieces cannot be null');
         this.remainingPieces = remainingPieces;
     }
     public static getInitialState(): EncapsuleState {
@@ -49,15 +47,9 @@ export class EncapsuleState extends GameStateWithTable<EncapsuleCase> {
     }
 }
 
-export class EncapsuleCase implements ComparableObject {
+export class EncapsuleCase {
 
     public static readonly EMPTY: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.NONE);
-
-    public readonly small: Player;
-
-    public readonly medium: Player;
-
-    public readonly big: Player;
 
     public static decode(encapsuleCase: number): EncapsuleCase {
         assert(encapsuleCase % 1 === 0, 'EncapsuleCase must be encoded as integer: ' + encapsuleCase);
@@ -72,13 +64,9 @@ export class EncapsuleCase implements ComparableObject {
         const big: Player = Player.of(encapsuleCase);
         return new EncapsuleCase(small, medium, big);
     }
-    constructor(small: Player, medium: Player, big: Player) {
-        if (small == null) throw new Error('Small cannot be null');
-        if (medium == null) throw new Error('Medium cannot be null');
-        if (big == null) throw new Error('Big cannot be null');
-        this.small = small;
-        this.medium = medium;
-        this.big = big;
+    constructor(public readonly small: Player,
+                public readonly medium: Player,
+                public readonly big: Player) {
     }
     public isEmpty(): boolean {
         return this.small === Player.NONE && this.medium === Player.NONE && this.big === Player.NONE;
@@ -122,29 +110,32 @@ export class EncapsuleCase implements ComparableObject {
             throw new Error('Cannot removed piece from empty case');
         }
         let removedCase: EncapsuleCase;
-        switch (removedPiece.getSize()) {
+        const size: Size = removedPiece.getSize();
+        switch (size) {
             case Size.BIG:
                 removedCase = new EncapsuleCase(this.small, this.medium, Player.NONE);
                 break;
             case Size.MEDIUM:
                 removedCase = new EncapsuleCase(this.small, Player.NONE, Player.NONE);
                 break;
-            case Size.SMALL:
+            default:
+                Utils.expectToBe(size, Size.SMALL);
                 removedCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.NONE);
-                break;
         }
         return { removedCase, removedPiece };
     }
     public put(piece: EncapsulePiece): EncapsuleCase {
         if (piece === EncapsulePiece.NONE) throw new Error('Cannot put NONE on case');
         const piecePlayer: Player = piece.getPlayer();
-        switch (piece.getSize()) {
+        const size: Size = piece.getSize();
+        switch (size) {
             case Size.BIG:
                 return new EncapsuleCase(this.small, this.medium, piecePlayer);
             case Size.MEDIUM:
                 assert(this.big === Player.NONE, 'Cannot put a piece on top of a bigger one');
                 return new EncapsuleCase(this.small, piecePlayer, this.big);
-            case Size.SMALL:
+            default:
+                Utils.expectToBe(size, Size.SMALL);
                 assert(this.big === Player.NONE, 'Cannot put a piece on top of a bigger one');
                 assert(this.medium === Player.NONE, 'Cannot put a piece on top of a bigger one');
                 return new EncapsuleCase(piecePlayer, this.medium, this.big);
@@ -157,9 +148,6 @@ export class EncapsuleCase implements ComparableObject {
     }
     public belongsTo(player: Player): boolean {
         return this.getBiggest().getPlayer() === player;
-    }
-    public equals(o: EncapsuleCase): boolean {
-        throw new Error('EncapsuleCase.equals is needed! Blame the dev!' + o.toString());
     }
     public toString(): string {
         const pieceNames: string[] = this.toOrderedPieceNames();

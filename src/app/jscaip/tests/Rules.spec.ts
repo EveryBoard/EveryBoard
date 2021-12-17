@@ -1,8 +1,9 @@
 import { P4Move } from 'src/app/games/p4/P4Move';
-import { LegalityStatus } from '../LegalityStatus';
 import { MGPNode } from '../MGPNode';
 import { GameStatus, Rules } from '../Rules';
 import { GameStateWithTable } from '../GameStateWithTable';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 
 class MyAbstractState extends GameStateWithTable<number> {
@@ -16,12 +17,12 @@ class AbstractNode extends MGPNode<Rules<P4Move, MyAbstractState>, P4Move, MyAbs
 
 class AbstractRules extends Rules<P4Move, MyAbstractState> {
 
-    public applyLegalMove(move: P4Move, state: MyAbstractState, status: LegalityStatus): MyAbstractState {
+    public applyLegalMove(move: P4Move, state: MyAbstractState, _legality: void): MyAbstractState {
         const board: readonly number[] = state.board[0];
         return new MyAbstractState([board.concat([move.x])], state.turn + 1);
     }
-    public isLegal(move: P4Move, state: MyAbstractState): LegalityStatus {
-        return LegalityStatus.SUCCESS;
+    public isLegal(move: P4Move, state: MyAbstractState): MGPFallible<void> {
+        return MGPFallible.success(undefined);
     }
     public getGameStatus(node: AbstractNode): GameStatus {
         return GameStatus.ONGOING;
@@ -38,7 +39,7 @@ describe('Rules', () => {
     it('should create child to already calculated node which did not include this legal child yet', () => {
         // Given a node with sons
         spyOn(rules.node, 'hasMoves').and.returnValue(true);
-        spyOn(rules.node, 'getSonByMove').and.returnValue(null);
+        spyOn(rules.node, 'getSonByMove').and.returnValue(MGPOptional.empty());
 
         // when choosing another one
         const wasLegal: boolean = rules.choose(P4Move.ZERO);

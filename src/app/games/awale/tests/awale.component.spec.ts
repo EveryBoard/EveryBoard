@@ -25,7 +25,7 @@ describe('AwaleComponent', () => {
         componentTestUtils.setupState(state);
 
         const move: AwaleMove = AwaleMove.FIVE;
-        componentTestUtils.expectMoveSuccess('#click_5_0', move, undefined, 0, 0);
+        componentTestUtils.expectMoveSuccess('#click_5_0', move, undefined, [0, 0]);
         const awaleComponent: AwaleComponent = componentTestUtils.getComponent() as AwaleComponent;
         expect(awaleComponent.getCaseClasses(5, 0)).toEqual(['moved', 'highlighted']);
         expect(awaleComponent.getCaseClasses(5, 1)).toEqual(['moved']);
@@ -42,7 +42,7 @@ describe('AwaleComponent', () => {
         const move: AwaleMove = AwaleMove.ZERO;
         await componentTestUtils.expectMoveFailure('#click_0_0',
                                                    AwaleFailure.MUST_CHOOSE_NONEMPTY_HOUSE(),
-                                                   move, undefined, 0, 0);
+                                                   move, undefined, [0, 0]);
     }));
     it(`should tell to user opponent's house cannot be moved`, fakeAsync(async() => {
         const board: number[][] = [

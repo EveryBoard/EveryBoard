@@ -2,11 +2,10 @@ import { ArrayUtils, Table } from '../utils/ArrayUtils';
 import { Coord } from './Coord';
 import { GameState } from './GameState';
 
-export abstract class GameStateWithTable<P> extends GameState<Coord, P> {
+export abstract class GameStateWithTable<P> extends GameState {
 
     public constructor(public readonly board: Table<P>, turn: number) {
         super(turn);
-        if (board == null) throw new Error('Board cannot be null.');
     }
     public getPieceAt(coord: Coord): P {
         if (this.isOnBoard(coord)) {
@@ -17,13 +16,6 @@ export abstract class GameStateWithTable<P> extends GameState<Coord, P> {
     }
     public isOnBoard(coord: Coord): boolean {
         return coord.isInRange(this.board[0].length, this.board.length);
-    }
-    public getNullable(coord: Coord): P | null {
-        if (this.isOnBoard(coord)) {
-            return this.board[coord.y][coord.x];
-        } else {
-            return null;
-        }
     }
     public getPieceAtXY(x: number, y: number): P {
         return this.getPieceAt(new Coord(x, y));
@@ -39,7 +31,7 @@ export abstract class GameStateWithTable<P> extends GameState<Coord, P> {
             for (let x: number = 0; x < this.board[y].length; x++) {
                 const coord: Coord = new Coord(x, y);
                 if (this.isOnBoard(coord)) {
-                    coordsAndContents.push([coord, this.getNullable(coord)]);
+                    coordsAndContents.push([coord, this.getPieceAt(coord)]);
                 }
             }
         }

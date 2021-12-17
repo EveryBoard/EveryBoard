@@ -7,6 +7,7 @@ import { assert, display } from 'src/app/utils/utils';
 import { CoerceoMove, CoerceoStep } from './CoerceoMove';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Player } from 'src/app/jscaip/Player';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class CoerceoState extends TriangularGameState<FourStatePiece> {
 
@@ -64,8 +65,8 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
     }
     public constructor(board: Table<FourStatePiece>,
                        turn: number,
-                       public readonly tiles: { readonly 0: number, readonly 1: number},
-                       public readonly captures: { readonly 0: number, readonly 1: number})
+                       public readonly tiles: readonly [number, number],
+                       public readonly captures: readonly [number, number])
     {
         super(board, turn);
     }
@@ -82,6 +83,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
     public doDeplacementCaptures(move: CoerceoMove): CoerceoState {
         display(CoerceoState.VERBOSE, { coerceoState_doDeplacementCaptures: { object: this, move } });
         const captureds: Coord[] = this.getCapturedNeighbors(move.landingCoord.get());
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
         let resultingState: CoerceoState = this;
         for (const captured of captureds) {
             resultingState = resultingState.capture(captured);
@@ -90,7 +92,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
     }
     public getCapturedNeighbors(coord: Coord): Coord[] {
         const OPPONENT: Player = this.getCurrentOpponent();
-        const neighbors: Coord[] = TriangularCheckerBoard.getNeighboors(coord);
+        const neighbors: Coord[] = TriangularCheckerBoard.getNeighbors(coord);
         return neighbors.filter((neighbor: Coord) => {
             if (neighbor.isNotInRange(15, 10)) {
                 return false;
@@ -117,6 +119,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
     public removeTilesIfNeeded(tile: Coord, countTiles: boolean): CoerceoState {
         display(CoerceoState.VERBOSE,
                 { coerceoState_removeTilesIfNeeded: { object: this, tile, countTiles } });
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
         let resultingState: CoerceoState = this;
         const currentTile: Coord = CoerceoState.getTilesUpperLeftCoord(tile);
         if (this.isTileEmpty(currentTile) &&
@@ -172,17 +175,17 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
     }
     public getPresentNeighboorTilesRelativeIndexes(tile: Coord): number[] {
         const neighboorsIndexes: number[] = [];
-        let firstIndex: number;
+        let firstIndex: MGPOptional<number> = MGPOptional.empty();
         for (let i: number = 0; i < 6; i++) {
             const vector: Vector = CoerceoState.NEIGHBOORS_TILES_DIRECTIONS[i];
             const neighboorTile: Coord = tile.getNext(vector, 1);
             if (neighboorTile.isInRange(15, 10) &&
                 this.getPieceAt(neighboorTile) !== FourStatePiece.NONE)
             {
-                if (firstIndex == null) {
-                    firstIndex = i;
+                if (firstIndex.isAbsent()) {
+                    firstIndex = MGPOptional.of(i);
                 }
-                neighboorsIndexes.push(i - firstIndex);
+                neighboorsIndexes.push(i - firstIndex.get());
             }
         }
         return neighboorsIndexes;
@@ -211,7 +214,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
         const legalLandings: Coord[] = [];
         for (const step of CoerceoStep.STEPS) {
             const landing: Coord = coord.getNext(step.direction, 1);
-            if (this.getNullable(landing) === FourStatePiece.EMPTY) {
+            if (this.isOnBoard(landing) && this.getPieceAt(landing) === FourStatePiece.EMPTY) {
                 legalLandings.push(landing);
             }
         }

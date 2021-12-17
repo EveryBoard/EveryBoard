@@ -43,7 +43,7 @@ export class SaharaTutorial {
         </ol><br/>
         Do any simple step.`,
             SaharaState.getInitialState(),
-            new SaharaMove(new Coord(2, 0), new Coord(2, 1)),
+            SaharaMove.from(new Coord(2, 0), new Coord(2, 1)).get(),
             (move: SaharaMove, _state: SaharaState) => {
                 if (move.isSimpleStep()) {
                     return MGPValidation.SUCCESS;
@@ -63,7 +63,7 @@ export class SaharaTutorial {
                  the 6 neighboring light spaces of the 3 dark spaces that are neighbors of your pyramid.
         </ol>`,
             SaharaState.getInitialState(),
-            new SaharaMove(new Coord(7, 0), new Coord(5, 0)),
+            SaharaMove.from(new Coord(7, 0), new Coord(5, 0)).get(),
             (move: SaharaMove, _: SaharaState) => {
                 if (move.isSimpleStep()) {
                     return MGPValidation.failure($localize`Failed! You have made a single step.`);

@@ -11,6 +11,7 @@ import { CoerceoMinimax } from './CoerceoMinimax';
 import { CoerceoStep } from './CoerceoMove';
 import { CoerceoState } from './CoerceoState';
 import { CoerceoNode, CoerceoRules } from './CoerceoRules';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
 
@@ -66,36 +67,40 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
         const threatMap: MGPMap<Coord, PieceThreat> = new MGPMap();
         for (const player of [Player.ZERO, Player.ONE]) {
             for (const piece of pieces.get(player).get().getCopy()) {
-                const threat: PieceThreat = this.getThreat(piece, state);
-                if (threat != null) {
-                    threatMap.set(piece, threat);
+                const threat: MGPOptional<PieceThreat> = this.getThreat(piece, state);
+                if (threat.isPresent()) {
+                    threatMap.set(piece, threat.get());
                 }
             }
         }
         return threatMap;
     }
-    public getThreat(coord: Coord, state: CoerceoState): PieceThreat { // TODO: check threat by leaving tile
+    // TODO: check threat by leaving tile
+    public getThreat(coord: Coord, state: CoerceoState): MGPOptional<PieceThreat> {
         const threatenerPlayer: Player = Player.of(state.getPieceAt(coord).value);
         const OPPONENT: Player = threatenerPlayer.getOpponent();
-        let freedoms: number = 0;
-        let freedom: Coord;
+        let uniqueFreedom: MGPOptional<Coord> = MGPOptional.empty();
         const directThreats: Coord[] = [];
         const neighboors: Coord[] = TriangularCheckerBoard
-            .getNeighboors(coord)
+            .getNeighbors(coord)
             .filter((c: Coord) => c.isInRange(15, 10));
         for (const directThreat of neighboors) {
             const threat: FourStatePiece = state.getPieceAt(directThreat);
             if (threat.is(OPPONENT)) {
                 directThreats.push(directThreat);
             } else if (threat === FourStatePiece.EMPTY) {
-                freedoms++;
-                freedom = directThreat;
+                if (uniqueFreedom.isPresent()) {
+                    // more than one freedom!
+                    return MGPOptional.empty();
+                } else {
+                    uniqueFreedom = MGPOptional.of(directThreat);
+                }
             }
         }
-        if (freedoms === 1) {
+        if (uniqueFreedom.isPresent()) {
             const movingThreats: Coord[] = [];
             for (const step of CoerceoStep.STEPS) {
-                const movingThreat: Coord = freedom.getNext(step.direction, 1);
+                const movingThreat: Coord = uniqueFreedom.get().getNext(step.direction, 1);
                 if (movingThreat.isInRange(15, 10) &&
                     state.getPieceAt(movingThreat).is(OPPONENT) &&
                     directThreats.every((coord: Coord) => coord.equals(movingThreat) === false))
@@ -104,10 +109,10 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
                 }
             }
             if (movingThreats.length > 0) {
-                return new PieceThreat(new MGPSet(directThreats), new MGPSet(movingThreats));
+                return MGPOptional.of(new PieceThreat(new MGPSet(directThreats), new MGPSet(movingThreats)));
             }
         }
-        return null;
+        return MGPOptional.empty();
     }
     public filterThreatMap(threatMap: MGPMap<Coord, PieceThreat>,
                            state: CoerceoState)
@@ -123,7 +128,7 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
         }));
         for (const threatenedPiece of threatenedPlayerPieces) {
             const oldThreat: PieceThreat = threatMap.get(threatenedPiece).get();
-            let newThreat: PieceThreat;
+            let newThreat: MGPOptional<PieceThreat> = MGPOptional.empty();
             if (threatenedOpponentPieces.contains(oldThreat.direct.get(0)) === false) {
                 // if the direct threat of this piece is not a false threat
                 const newMover: Coord[] = [];
@@ -134,11 +139,11 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
                     }
                 }
                 if (newMover.length > 0) {
-                    newThreat = new PieceThreat(oldThreat.direct, new MGPSet(newMover));
+                    newThreat = MGPOptional.of(new PieceThreat(oldThreat.direct, new MGPSet(newMover)));
                 }
             }
-            if (newThreat != null) {
-                filteredThreatMap.set(threatenedPiece, newThreat);
+            if (newThreat.isPresent()) {
+                filteredThreatMap.set(threatenedPiece, newThreat.get());
             }
         }
         for (const threatenedOpponentPiece of threatenedOpponentPieces.getCopy()) {

@@ -24,11 +24,17 @@ describe('MGPSet', () => {
             expect(one.equals(two)).toBeFalse();
         });
     });
-    it('toString should work', () => {
-        const a: Coord = new Coord(0, 0);
-        const b: Coord = new Coord(1, 1);
-        const set: MGPSet<Coord> = new MGPSet([a, b]);
-        expect(set.toString()).toBe('[' + a.toString() + ', ' + b.toString() + ']');
+    describe('toString', () => {
+        it('should work as expected', () => {
+            const a: Coord = new Coord(0, 0);
+            const b: Coord = new Coord(1, 1);
+            const set: MGPSet<Coord> = new MGPSet([a, b]);
+            expect(set.toString()).toBe('[' + a.toString() + ', ' + b.toString() + ']');
+        });
+        it('should support null', () => {
+            const set: MGPSet<Coord | null> = new MGPSet([null]);
+            expect(set.toString()).toBe('[null]');
+        });
     });
     it('while non-copy assignation would modify the original, copy dont', () => {
         const originalData: Coord[] = [new Coord(0, 0), new Coord(1, 1)];
@@ -41,7 +47,7 @@ describe('MGPSet', () => {
         expect(set.equals(assigned)).toBeTrue();
         expect(copiedData).toEqual(originalData);
     });
-    it('should not add duplicata, and say so', () => {
+    it('should not add duplicates, and say so', () => {
         const set: MGPSet<Coord> = new MGPSet([new Coord(0, 0), new Coord(1, 1)]);
         expect(set.add(new Coord(2, 2))).toBeTrue();
         expect(set.add(new Coord(0, 0))).toBeFalse();

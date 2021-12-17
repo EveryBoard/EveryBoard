@@ -11,9 +11,6 @@ describe('EncapsuleState', () => {
 
     const emptyBoard: EncapsuleCase[][] = ArrayUtils.createTable(3, 3, _);
 
-    it('should forbid construction of state with null remaining pieces', () => {
-        expect(() => new EncapsuleState(emptyBoard, 0, null)).toThrow();
-    });
     describe('getPieceAt', () => {
         it('should return the expected case', () => {
             const someCase: EncapsuleCase = new EncapsuleCase(Player.ONE, Player.NONE, Player.NONE);
@@ -43,11 +40,6 @@ describe('EncapsuleState', () => {
 
 describe('EncapsuleCase', () => {
 
-    it('should forbid construction with any null member', () => {
-        expect(() => new EncapsuleCase(null, Player.NONE, Player.NONE)).toThrow();
-        expect(() => new EncapsuleCase(Player.NONE, null, Player.NONE)).toThrow();
-        expect(() => new EncapsuleCase(Player.NONE, Player.NONE, null)).toThrow();
-    });
     describe('isEmpty', () => {
         it('should consider the empty case empty', () => {
             const empty: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.NONE);

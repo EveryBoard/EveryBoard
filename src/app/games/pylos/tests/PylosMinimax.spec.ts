@@ -1,10 +1,10 @@
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { PylosCoord } from '../PylosCoord';
 import { PylosMove } from '../PylosMove';
 import { PylosState } from '../PylosState';
 import { PylosNode, PylosRules } from '../PylosRules';
 import { PylosMinimax } from '../PylosMinimax';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('PylosMinimax:', () => {
 
@@ -44,7 +44,7 @@ describe('PylosMinimax:', () => {
         ];
 
         const state: PylosState = new PylosState(board, 0);
-        const node: PylosNode = new MGPNode(null, null, state);
+        const node: PylosNode = new PylosNode(state);
         expect(minimax.getListMoves(node).length).toBe(31);
     });
 
@@ -69,6 +69,6 @@ describe('PylosMinimax:', () => {
 
         const state: PylosState = new PylosState(board, 0);
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(2, 2, 1), []);
-        expect(minimax.getBoardValue(new MGPNode(null, move, state)).value).toBe(0);
+        expect(minimax.getBoardValue(new PylosNode(state, MGPOptional.empty(), MGPOptional.of(move))).value).toBe(0);
     });
 });

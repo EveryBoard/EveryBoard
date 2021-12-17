@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Coord } from 'src/app/jscaip/Coord';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Move } from 'src/app/jscaip/Move';
 import { GameComponent } from './GameComponent';
 import { GameState } from 'src/app/jscaip/GameState';
@@ -10,9 +9,9 @@ import { Rules } from 'src/app/jscaip/Rules';
 @Component({ template: '' })
 export abstract class TriangularGameComponent<R extends Rules<M, S, L>,
                                               M extends Move,
-                                              S extends GameState<Coord, P>,
+                                              S extends GameState,
                                               P,
-                                              L extends LegalityStatus = LegalityStatus>
+                                              L = void>
     extends GameComponent<R, M, S, L>
 {
     public SPACE_SIZE: number = 50;

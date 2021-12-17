@@ -3,7 +3,6 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { QuartoState } from './QuartoState';
 import { QuartoMove } from './QuartoMove';
 import { QuartoPiece } from './QuartoPiece';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { assert, display } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -12,6 +11,8 @@ import { SCORE } from 'src/app/jscaip/SCORE';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { QuartoFailure } from './QuartoFailure';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export interface BoardStatus {
     score: SCORE;
@@ -78,7 +79,7 @@ class SensitiveSquare {
  */
 class Criterion {
 
-    readonly subCriterion: boolean[] = [null, null, null, null];
+    readonly subCriterion: (boolean | null)[] = [null, null, null, null];
 
     constructor(bSquare: QuartoPiece) {
         // a criterion is initialized with a square, it takes the square's value
@@ -180,7 +181,7 @@ class Line {
         return coords;
     }
 }
-export abstract class QuartoNode extends MGPNode<QuartoRules, QuartoMove, QuartoState> {}
+export class QuartoNode extends MGPNode<QuartoRules, QuartoMove, QuartoState> {}
 
 export class QuartoRules extends Rules<QuartoMove, QuartoState> {
 
@@ -211,8 +212,6 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         new Line(new Coord(0, 0), Direction.DOWN_RIGHT),
         new Line(new Coord(0, 3), Direction.UP_RIGHT),
     ];
-
-    public node: MGPNode<QuartoRules, QuartoMove, QuartoState>;
 
     private static isOccupied(square: QuartoPiece): boolean {
         return (square !== QuartoPiece.NONE);
@@ -257,15 +256,15 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
     }
     // Overrides :
 
-    public isLegal(move: QuartoMove, state: QuartoState): LegalityStatus {
-        return { legal: QuartoRules.isLegal(move, state) };
+    public isLegal(move: QuartoMove, state: QuartoState): MGPFallible<void> {
+        return QuartoRules.isLegal(move, state).toFallible(undefined);
     }
     public static updateBoardStatus(line: Line, state: QuartoState, boardStatus: BoardStatus): BoardStatus {
         if (boardStatus.score === SCORE.PRE_VICTORY) {
             if (this.isThereAVictoriousLine(line, state)) {
                 return {
                     score: SCORE.VICTORY,
-                    sensitiveSquares: null,
+                    sensitiveSquares: [],
                 };
             } else {
                 return boardStatus;
@@ -306,8 +305,8 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
     : BoardStatus
     {
         // we're looking for a victory, pre-victory, or normal score
-        let cs: SensitiveSquare = null; // the first square is empty
-        let commonCrit: Criterion;
+        let cs: MGPOptional<SensitiveSquare> = MGPOptional.empty(); // the first square is empty
+        let commonCrit: MGPOptional<Criterion> = MGPOptional.empty();
 
         let coord: Coord = line.initialCoord;
         for (let i: number = 0; i < 4; i++) {
@@ -315,18 +314,18 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
             // we look through the entire line
             if (c === QuartoPiece.NONE) {
                 // if c is unoccupied
-                if (cs == null) {
-                    cs = new SensitiveSquare(coord.x, coord.y);
+                if (cs.isAbsent()) {
+                    cs = MGPOptional.of(new SensitiveSquare(coord.x, coord.y));
                 } else {
                     return boardStatus; // 2 empty square: no victory or pre-victory, or new criterion
                 }
             } else {
                 // if c is occupied
-                if (commonCrit == null) {
-                    commonCrit = new Criterion(c);
+                if (commonCrit.isAbsent()) {
+                    commonCrit = MGPOptional.of(new Criterion(c));
                     display(QuartoRules.VERBOSE, 'set commonCrit to ' + commonCrit.toString());
                 } else {
-                    commonCrit.mergeWithQuartoPiece(c);
+                    commonCrit.get().mergeWithQuartoPiece(c);
                     display(QuartoRules.VERBOSE, 'update commonCrit: ' + commonCrit.toString());
                 }
             }
@@ -334,17 +333,17 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         }
 
         // we now have looked through the entire line, we summarize everything
-        if ((commonCrit != null) && (!commonCrit.isAllNull())) {
+        if (commonCrit.isPresent() && (!commonCrit.get().isAllNull())) {
             // this line is not null and has a common criterion between all of its pieces
-            if (cs == null) {
-                return { score: SCORE.VICTORY, sensitiveSquares: null };
+            if (cs.isAbsent()) {
+                return { score: SCORE.VICTORY, sensitiveSquares: [] };
             } else {
                 // if these is only one empty square, then the sensitive square we found is indeed sensitive
-                if (commonCrit.matchInt(state.pieceInHand)) {
+                if (commonCrit.get().matchInt(state.pieceInHand)) {
                     boardStatus.score = SCORE.PRE_VICTORY;
                 }
-                cs.addCriterion(commonCrit);
-                boardStatus.sensitiveSquares.push(cs);
+                cs.get().addCriterion(commonCrit.get());
+                boardStatus.sensitiveSquares.push(cs.get());
             }
         }
         return boardStatus;

@@ -39,15 +39,13 @@ export class GipfCapture {
                 return coord1.x > coord2.x ? 1 : -1;
             }
         });
-        let prev: Coord = null;
+        let previous: MGPOptional<Coord> = MGPOptional.empty();
         // Captured cases must be consecutive
         for (const coord of this.capturedCases) {
-            if (prev != null) {
-                if (prev.getDistance(coord) !== 1) {
-                    throw new Error('Cannot create a GipfCapture with non-consecutive cases');
-                }
+            if (previous.isPresent() && previous.get().getDistance(coord) !== 1) {
+                throw new Error('Cannot create a GipfCapture with non-consecutive cases');
             }
-            prev = coord;
+            previous = MGPOptional.of(coord);
         }
     }
     public toString(): string {

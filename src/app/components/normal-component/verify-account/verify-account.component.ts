@@ -17,7 +17,7 @@ import 'firebase/auth';
     templateUrl: './verify-account.component.html',
 })
 export class VerifyAccountComponent implements OnInit, OnDestroy {
-    public verificationType: 'send-email' | 'enter-username' = null;
+    public verificationType: 'send-email' | 'enter-username' | null = null;
 
     public success: boolean = false;
 
@@ -39,9 +39,9 @@ export class VerifyAccountComponent implements OnInit, OnDestroy {
     public async ngOnInit(): Promise<void> {
         this.userSub = this.authService.getUserObs()
             .subscribe(async(user: AuthUser) => {
-                this.emailAddress = user.email;
+                this.emailAddress = user.email.get();
                 // We know that if this page is shown, something needs to be done to finalize the account
-                if (user.username == null || user.username === '') {
+                if (user.username.isAbsent()) {
                     // If the user has no username, it will need to be defined
                     this.verificationType = 'enter-username';
                 } else {

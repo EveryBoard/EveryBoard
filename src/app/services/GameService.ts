@@ -1,9 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
-
-import firebase from 'firebase/app';
-
 import { PartDAO } from '../dao/PartDAO';
 import { MGPResult, ICurrentPartId, IPart, Part } from '../domain/icurrentpart';
 import { FirstPlayer, IJoiner, PartStatus } from '../domain/ijoiner';
@@ -14,17 +11,19 @@ import { Request } from '../domain/request';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { assert, display, JSONValueWithoutArray } from 'src/app/utils/utils';
+import { assert, display, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 import { AuthenticationService, AuthUser } from './AuthenticationService';
 import { MessageDisplayer } from './message-displayer/MessageDisplayer';
 import { GameServiceMessages } from './GameServiceMessages';
 import { Time } from '../domain/Time';
+import firebase from 'firebase/app';
+import { MGPOptional } from '../utils/MGPOptional';
 
 export interface StartingPartConfig extends Partial<IPart> {
     playerZero: string,
     playerOne: string,
     turn: number,
-    beginning: firebase.firestore.FieldValue | Time,
+    beginning?: firebase.firestore.FieldValue | Time,
 }
 
 @Injectable({
@@ -34,15 +33,15 @@ export class GameService implements OnDestroy {
 
     public static VERBOSE: boolean = false;
 
-    private followedPartId: string;
+    private followedPartId: MGPOptional<string> = MGPOptional.empty();
 
-    private followedPartObs: Observable<ICurrentPartId>;
+    private followedPartObs: MGPOptional<Observable<ICurrentPartId>> = MGPOptional.empty();
 
     private followedPartSub: Subscription;
 
     private userNameSub: Subscription;
 
-    private userName: string;
+    private userName: MGPOptional<string>;
 
     constructor(private partDao: PartDAO,
                 private activesPartsService: ActivesPartsService,
@@ -55,8 +54,7 @@ export class GameService implements OnDestroy {
         display(GameService.VERBOSE, 'GameService.constructor');
         this.userNameSub = this.authenticationService.getUserObs()
             .subscribe((joueur: AuthUser) => {
-                if (joueur == null) this.userName = null;
-                else this.userName = joueur.username;
+                this.userName = joueur.username;
             });
     }
     public async createGameAndRedirectOrShowError(game: string): Promise<boolean> {
@@ -64,8 +62,8 @@ export class GameService implements OnDestroy {
             this.messageDisplayer.infoMessage(GameServiceMessages.USER_OFFLINE());
             this.router.navigate(['/login']);
             return false;
-        } else if (this.canCreateGame() === true) {
-            const gameId: string = await this.createPartJoinerAndChat(this.userName, game, '');
+        } else if (this.canCreateGame() === true && this.userName.isPresent()) {
+            const gameId: string = await this.createPartJoinerAndChat(this.userName.get(), game);
             // create Part and Joiner
             this.router.navigate(['/play/' + game, gameId]);
             return true;
@@ -76,32 +74,29 @@ export class GameService implements OnDestroy {
         }
     }
     public isUserOffline(): boolean {
-        return this.userName == null;
+        return this.userName.isAbsent();
     }
     public ngOnDestroy(): void {
-        if (this.userNameSub != null) {
-            this.userNameSub.unsubscribe();
-        }
+        this.userNameSub.unsubscribe();
     }
     public async getPartValidity(partId: string, gameType: string): Promise<MGPValidation> {
-        const part: IPart = await this.partDao.read(partId);
-        if (part == null) {
-            return MGPValidation.failure('UNEXISTANT_PART');
+        const part: MGPOptional<IPart> = await this.partDao.read(partId);
+        if (part.isAbsent()) {
+            return MGPValidation.failure('NONEXISTENT_PART');
         }
-        if (part.typeGame === gameType) {
+        if (part.get().typeGame === gameType) {
             return MGPValidation.SUCCESS;
         } else {
             return MGPValidation.failure('WRONG_GAME_TYPE');
         }
     }
-    protected createUnstartedPart(creatorName: string, typeGame: string, chosenPlayer: string): Promise<string> {
+    protected createUnstartedPart(creatorName: string, typeGame: string): Promise<string> {
         display(GameService.VERBOSE,
-                'GameService.createPart(' + creatorName + ', ' + typeGame + ', ' + chosenPlayer + ')');
+                'GameService.createPart(' + creatorName + ', ' + typeGame + ')');
 
         const newPart: IPart = {
             typeGame,
             playerZero: creatorName,
-            playerOne: chosenPlayer,
             turn: -1,
             result: MGPResult.UNACHIEVED.value,
             listMoves: [],
@@ -113,16 +108,16 @@ export class GameService implements OnDestroy {
 
         return this.chatService.createNewChat(chatId);
     }
-    public async createPartJoinerAndChat(creatorName: string, typeGame: string, chosenPlayer: string): Promise<string> {
+    public async createPartJoinerAndChat(creatorName: string, typeGame: string): Promise<string> {
         display(GameService.VERBOSE, 'GameService.createGame(' + creatorName + ', ' + typeGame + ')');
 
-        const gameId: string = await this.createUnstartedPart(creatorName, typeGame, chosenPlayer);
+        const gameId: string = await this.createUnstartedPart(creatorName, typeGame);
         await this.joinerService.createInitialJoiner(creatorName, gameId);
         await this.createChat(gameId);
         return gameId;
     }
     public canCreateGame(): boolean {
-        return this.userName != null && this.activesPartsService.hasActivePart(this.userName) === false;
+        return this.userName.isPresent() && this.activesPartsService.hasActivePart(this.userName.get()) === false;
     }
     public unSubFromActivesPartsObs(): void {
         display(GameService.VERBOSE, 'GameService.unSubFromActivesPartsObs()');
@@ -150,9 +145,9 @@ export class GameService implements OnDestroy {
         let playerOne: string;
         if (whoStarts === FirstPlayer.CREATOR) {
             playerZero = joiner.creator;
-            playerOne = joiner.chosenPlayer;
+            playerOne = Utils.getNonNullable(joiner.chosenPlayer);
         } else {
-            playerZero = joiner.chosenPlayer;
+            playerZero = Utils.getNonNullable(joiner.chosenPlayer);
             playerOne = joiner.creator;
         }
         return {
@@ -166,7 +161,6 @@ export class GameService implements OnDestroy {
     }
     public async deletePart(partId: string): Promise<void> {
         display(GameService.VERBOSE, 'GameService.deletePart(' + partId + ')');
-        assert(partId != null, `Can't delete id for partId = null`);
         return this.partDao.delete(partId);
     }
     public async acceptConfig(partId: string, joiner: IJoiner): Promise<void> {
@@ -178,12 +172,12 @@ export class GameService implements OnDestroy {
     // on OnlineGame Component
 
     public startObserving(partId: string, callback: (iPart: ICurrentPartId) => void): void {
-        if (this.followedPartId == null) {
+        if (this.followedPartId.isAbsent()) {
             display(GameService.VERBOSE, '[start watching part ' + partId);
 
-            this.followedPartId = partId;
-            this.followedPartObs = this.partDao.getObsById(partId);
-            this.followedPartSub = this.followedPartObs
+            this.followedPartId = MGPOptional.of(partId);
+            this.followedPartObs = MGPOptional.of(this.partDao.getObsById(partId));
+            this.followedPartSub = this.followedPartObs.get()
                 .subscribe((onFullFilled: ICurrentPartId) => callback(onFullFilled));
         } else {
             throw new Error('GameService.startObserving should not be called while already observing a game');
@@ -202,7 +196,7 @@ export class GameService implements OnDestroy {
             winner,
             loser,
             result: MGPResult.TIMEOUT.value,
-            request: null, // TODO: check line use
+            request: null,
         });
     }
     public sendRequest(partId: string, request: Request): Promise<void> {
@@ -256,13 +250,12 @@ export class GameService implements OnDestroy {
     public askTakeBack(partId: string, player: Player): Promise<void> {
         return this.sendRequest(partId, Request.takeBackAsked(player));
     }
-    public async acceptTakeBack(id: string,
-                                part: Part,
-                                observerRole: Player,
-                                msToSubstract: [number, number])
-    : Promise<void> {
+    public async acceptTakeBack(id: string, part: Part, observerRole: Player, msToSubstract: [number, number])
+    : Promise<void>
+    {
         assert(observerRole !== Player.NONE, 'Illegal for observer to make request');
-        assert(part.doc.request.data['player'] !== observerRole.value, 'Illegal to accept your own request.');
+        const requester: Player = Request.getPlayer(Utils.getNonNullable(part.doc.request));
+        assert(requester !== observerRole, 'Illegal to accept your own request.');
 
         const request: Request = Request.takeBackAccepted(observerRole);
         let listMoves: JSONValueWithoutArray[] = part.doc.listMoves.slice(0, part.doc.listMoves.length - 1);
@@ -275,8 +268,8 @@ export class GameService implements OnDestroy {
             listMoves,
             turn: listMoves.length,
             lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
-            remainingMsForZero: part.doc.remainingMsForZero - msToSubstract[0],
-            remainingMsForOne: part.doc.remainingMsForOne - msToSubstract[1],
+            remainingMsForZero: Utils.getNonNullable(part.doc.remainingMsForZero) - msToSubstract[0],
+            remainingMsForOne: Utils.getNonNullable(part.doc.remainingMsForOne) - msToSubstract[1],
         };
         return await this.partDao.update(id, update);
     }
@@ -291,44 +284,54 @@ export class GameService implements OnDestroy {
     public stopObserving(): void {
         display(GameService.VERBOSE, 'GameService.stopObserving();');
 
-        assert(this.followedPartId != null, '!!! GameService.stopObserving: we already stop watching doc');
+        assert(this.followedPartId.isPresent(), '!!! GameService.stopObserving: we already stop watching doc');
 
         display(GameService.VERBOSE, 'stopped watching joiner ' + this.followedPartId + ']');
 
-        this.followedPartId = null;
+        this.followedPartId = MGPOptional.empty();
         this.followedPartSub.unsubscribe();
-        this.followedPartObs = null;
+        this.followedPartObs = MGPOptional.empty();
     }
     public async updateDBBoard(partId: string,
                                encodedMove: JSONValueWithoutArray,
-                               scorePlayerZero: number,
-                               scorePlayerOne: number,
                                msToSubstract: [number, number],
+                               scores?: [number, number],
                                notifyDraw?: boolean,
                                winner?: string,
                                loser?: string)
     : Promise<void>
     {
         display(GameService.VERBOSE, { gameService_updateDBBoard: {
-            partId, encodedMove, scorePlayerZero, scorePlayerOne, msToSubstract, notifyDraw, winner, loser } });
+            partId, encodedMove, scores, msToSubstract, notifyDraw, winner, loser } });
 
-        const part: IPart = await this.partDao.read(partId); // TODO: optimise this
+        const part: IPart = (await this.partDao.read(partId)).get(); // TODO: optimise this
         const turn: number = part.turn + 1;
         const listMoves: JSONValueWithoutArray[] = ArrayUtils.copyImmutableArray(part.listMoves);
         listMoves[listMoves.length] = encodedMove;
         let update: Partial<IPart> = {
             listMoves,
             turn,
-            scorePlayerZero,
-            scorePlayerOne,
             request: null,
             lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
         };
+        if (scores !== undefined) {
+            update = {
+                ...update,
+                scorePlayerZero: scores[0],
+                scorePlayerOne: scores[1],
+            };
+        }
         if (msToSubstract[0] > 0) {
-            update = { ...update, remainingMsForZero: part.remainingMsForZero - msToSubstract[0] };
+            update = {
+                ...update,
+                remainingMsForZero: Utils.getNonNullable(part.remainingMsForZero) - msToSubstract[0],
+            };
         }
         if (msToSubstract[1] > 0) {
-            update = { ...update, remainingMsForOne: part.remainingMsForOne - msToSubstract[1] };
+            update = {
+                ...update,
+                remainingMsForOne: Utils.getNonNullable(part.remainingMsForOne) - msToSubstract[1],
+            };
         }
         if (winner != null) {
             update = {
@@ -337,7 +340,7 @@ export class GameService implements OnDestroy {
                 loser,
                 result: MGPResult.VICTORY.value,
             };
-        } else if (notifyDraw) {
+        } else if (notifyDraw === true) {
             update = {
                 ...update,
                 result: MGPResult.DRAW.value,

@@ -58,23 +58,14 @@ export class EpaminondasMove extends MoveCoord {
         if (this.coord.isNotInRange(14, 12)) {
             throw new Error('Illegal coord outside of board ' + this.coord.toString() + '.');
         }
-        if (movedPieces == null) {
-            throw new Error('Number of moved pieces cannot be null.');
-        }
         if (movedPieces < 1) {
             throw new Error('Must select minimum one piece (got ' + movedPieces + ').');
-        }
-        if (stepSize == null) {
-            throw new Error('Step size cannot be null.');
         }
         if (stepSize < 1) {
             throw new Error('Step size must be minimum one (got ' + stepSize + ').');
         }
         if (stepSize > movedPieces) {
             throw new Error('Cannot move a phalanx further than its size (got step size ' + stepSize + ' for ' + movedPieces+ ' pieces).');
-        }
-        if (direction == null) {
-            throw new Error('Direction cannot be null.');
         }
     }
     public toString(): string {

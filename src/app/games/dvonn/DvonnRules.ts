@@ -1,5 +1,4 @@
 import { MGPNode } from 'src/app/jscaip/MGPNode';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { DvonnState } from './DvonnState';
 import { DvonnPieceStack } from './DvonnPieceStack';
 import { DvonnMove } from './DvonnMove';
@@ -11,8 +10,10 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { HexagonalGameState } from 'src/app/jscaip/HexagonalGameState';
 import { DvonnFailure } from './DvonnFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { assert } from 'src/app/utils/utils';
 
-export abstract class DvonnNode extends MGPNode<DvonnRules, DvonnMove, DvonnState> { }
+export class DvonnNode extends MGPNode<DvonnRules, DvonnMove, DvonnState> { }
 
 export class DvonnRules extends Rules<DvonnMove, DvonnState> {
 
@@ -58,7 +59,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
         return possibleTargets.filter((c: Coord): boolean =>
             state.isOnBoard(c) && state.getPieceAt(c).isEmpty() === false);
     }
-    public static getScores(state: DvonnState): number[] {
+    public static getScores(state: DvonnState): [number, number] {
         // Board value is the total number of pieces controlled by player 0 - by player 1
         let p0Score: number = 0;
         let p1Score: number = 0;
@@ -73,9 +74,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
         return [p0Score, p1Score];
     }
     public isMovablePiece(state: DvonnState, coord: Coord): MGPValidation {
-        if (!state.isOnBoard(coord)) {
-            return MGPValidation.failure(DvonnFailure.INVALID_COORD());
-        }
+        assert(state.isOnBoard(coord), 'piece is not on the board');
         const stack: DvonnPieceStack = state.getPieceAt(coord);
         if (stack.getSize() < 1) {
             return MGPValidation.failure(DvonnFailure.EMPTY_STACK());
@@ -127,7 +126,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
     }
     public applyLegalMove(move: DvonnMove,
                           state: DvonnState,
-                          _status: LegalityStatus)
+                          _status: void)
     : DvonnState
     {
         if (move === DvonnMove.PASS) {
@@ -145,32 +144,34 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
             return resultingState;
         }
     }
-    public isLegal(move: DvonnMove, state: DvonnState): LegalityStatus {
+    public isLegal(move: DvonnMove, state: DvonnState): MGPFallible<void> {
         if (DvonnRules.getMovablePieces(state).length === 0) {
             // If no pieces are movable, the player can pass
             // but only if the previous move was not a pass itself
             if (move === DvonnMove.PASS && !state.alreadyPassed) {
-                return LegalityStatus.SUCCESS;
+                return MGPFallible.success(undefined);
             } else {
-                return LegalityStatus.failure(RulesFailure.MUST_PASS());
+                return MGPFallible.failure(RulesFailure.MUST_PASS());
             }
+        } else if (move === DvonnMove.PASS) {
+            return MGPFallible.failure(RulesFailure.CANNOT_PASS());
         }
 
         const pieceMovable: MGPValidation = this.isMovablePiece(state, move.coord);
         if (pieceMovable.isFailure()) {
-            return { legal: pieceMovable };
+            return pieceMovable.toFailedFallible();
         }
 
         const stack: DvonnPieceStack = state.getPieceAt(move.coord);
         if (move.length() !== stack.getSize()) {
-            return LegalityStatus.failure(DvonnFailure.INVALID_MOVE_LENGTH());
+            return MGPFallible.failure(DvonnFailure.INVALID_MOVE_LENGTH());
         }
 
         const targetStack: DvonnPieceStack = state.getPieceAt(move.end);
         if (targetStack.isEmpty()) {
-            return LegalityStatus.failure(DvonnFailure.EMPTY_TARGET_STACK());
+            return MGPFallible.failure(DvonnFailure.EMPTY_TARGET_STACK());
         }
-        return LegalityStatus.SUCCESS;
+        return MGPFallible.success(undefined);
     }
     public getGameStatus(node: DvonnNode): GameStatus {
         return DvonnRules.getGameStatus(node);

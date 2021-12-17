@@ -16,8 +16,8 @@ export class CountDownComponent implements OnInit, OnDestroy {
     public remainingMs: number;
     public displayedSec: number;
     public displayedMinute: number;
-    private timeoutHandleGlobal: number;
-    private timeoutHandleSec: number;
+    private timeoutHandleGlobal: number | null;
+    private timeoutHandleSec: number | null;
     private isPaused: boolean = true;
     private isSet: boolean = false;
     private started: boolean = false;
@@ -159,11 +159,15 @@ export class CountDownComponent implements OnInit, OnDestroy {
     private clearTimeouts(): void {
         display(CountDownComponent.VERBOSE, this.debugName + '.clearTimeouts');
 
-        clearTimeout(this.timeoutHandleSec);
-        this.timeoutHandleSec = null;
+        if (this.timeoutHandleSec != null) {
+            clearTimeout(this.timeoutHandleSec);
+            this.timeoutHandleSec = null;
+        }
 
-        clearTimeout(this.timeoutHandleGlobal);
-        this.timeoutHandleGlobal = null;
+        if (this.timeoutHandleGlobal != null) {
+            clearTimeout(this.timeoutHandleGlobal);
+            this.timeoutHandleGlobal = null;
+        }
     }
     public ngOnDestroy(): void {
         this.clearTimeouts();
