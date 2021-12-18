@@ -201,12 +201,12 @@ describe('QuartoRules', () => {
                 [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
                 [QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE, QuartoPiece.NONE],
             ];
-            const state: QuartoState = new QuartoState(board, 9, QuartoPiece.BBBB);
+            const state: QuartoState = new QuartoState(board, 10, QuartoPiece.BBBB);
 
             // When evaluating board value
             // Then it should be evaluated as Ongoing
             const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
-            RulesUtils.expectStateToBePreVictory(state, move, Player.ONE, minimaxes);
+            RulesUtils.expectStateToBePreVictory(state, move, Player.ZERO, minimaxes);
         });
     });
 });

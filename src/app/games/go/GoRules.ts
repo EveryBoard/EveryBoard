@@ -4,7 +4,7 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { GoMove } from './GoMove';
 import { Player } from 'src/app/jscaip/Player';
 import { GoGroupDatas } from './GoGroupsDatas';
-import { assert, display } from 'src/app/utils/utils';
+import { assert, display, Utils } from 'src/app/utils/utils';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
@@ -188,7 +188,7 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
                 }
                 break;
             default:
-                assert(group.color === GoPiece.BLACK, 'TODOTODO the other thingy');
+                Utils.expectToBe(group.color, GoPiece.BLACK);
                 captured[1] += 2 * group.blackCoords.length;
                 for (const blackCoord of group.blackCoords) {
                     switchedBoard[blackCoord.y][blackCoord.x] = GoPiece.DEAD_BLACK;

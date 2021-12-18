@@ -615,51 +615,6 @@ describe('GoRules:', () => {
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
         });
     });
-    it('should markAndCountTerritory correctly, bis', () => { // TODOTODO should I remove this
-        const board: Table<GoPiece> = [
-            [b, O, X, w, w],
-            [b, O, X, w, w],
-            [b, O, X, w, w],
-            [b, O, X, w, w],
-            [b, O, X, w, w],
-        ];
-        const expectedBoard: GoPiece[][] = [
-            [b, O, k, b, b],
-            [b, O, k, b, b],
-            [b, O, k, b, b],
-            [b, O, k, b, b],
-            [b, O, k, b, b],
-        ];
-        const state: GoState = new GoState(board, [5, 10], 0, MGPOptional.empty(), Phase.COUNTING);
-        const move: GoMove = new GoMove(2, 2);
-        const status: MGPFallible<GoLegalityInformation> = rules.isLegal(move, state);
-        const resultingState: GoState = rules.applyLegalMove(move, state, status.get());
-        expect(status.isSuccess()).toBeTrue();
-        expect(resultingState.getCopiedBoard()).toEqual(expectedBoard);
-        expect(resultingState.getCapturedCopy()).toEqual([25, 0]);
-    });
-    it('simply shared board should be simple to calculate', () => {
-        const previousBoard: Table<GoPiece> = [
-            [_, _, O, X, _],
-            [_, _, O, X, _],
-            [_, _, O, X, _],
-            [_, _, O, X, _],
-            [_, _, O, X, _],
-        ];
-        const expectedBoard: GoPiece[][] = [
-            [b, b, O, X, w],
-            [b, b, O, X, w],
-            [b, b, O, X, w],
-            [b, b, O, X, w],
-            [b, b, O, X, w],
-        ];
-        const state: GoState = new GoState(previousBoard, [0, 0], 10, MGPOptional.empty(), Phase.PASSED);
-        const move: GoMove = GoMove.PASS;
-        const legality: MGPFallible<GoLegalityInformation> = rules.isLegal(move, state);
-        const resultingState: GoState = rules.applyLegalMove(move, state, legality.get());
-        expect(resultingState.getCapturedCopy()).withContext('Board score should be 10 against 5').toEqual([10, 5]);
-        expect(resultingState.getCopiedBoard()).toEqual(expectedBoard);
-    });
     it('AddDeadToScore should be a simple counting method', () => {
         // Given a board with dead not counted as score yet
         const board: Table<GoPiece> = [

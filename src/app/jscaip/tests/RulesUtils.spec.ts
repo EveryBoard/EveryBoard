@@ -7,6 +7,7 @@ import { GameState } from '../GameState';
 import { comparableEquals, isComparableObject } from 'src/app/utils/Comparable';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { SCORE } from '../SCORE';
 
 export class RulesUtils {
 
@@ -114,10 +115,12 @@ export class RulesUtils {
     : void
     {
         for (const minimax of minimaxes) {
-            const value: number = minimax.getBoardNumericValue(new MGPNode(state,
-                                                                           MGPOptional.empty(),
-                                                                           MGPOptional.of(previousMove)));
+            const node: MGPNode<Rules<M, S, L>, M, S, L> = new MGPNode(state,
+                                                                       MGPOptional.empty(),
+                                                                       MGPOptional.of(previousMove));
+            const value: number = minimax.getBoardNumericValue(node);
             const expectedValue: number = player.getPreVictory();
+            expect(MGPNode.getScoreStatus(value)).toBe(SCORE.PRE_VICTORY);
             expect(value).toBe(expectedValue);
         }
     }

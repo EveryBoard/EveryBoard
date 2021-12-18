@@ -448,4 +448,8 @@ describe('KamisadoRules:', () => {
         expect(() => KamisadoRules.playerDirections(Player.NONE)).toThrowError();
         expect(() => KamisadoRules.directionAllowedForPlayer(Direction.UP, Player.NONE)).toThrowError();
     });
+    it('should not allow creating invalid color', () => {
+        expect(() => KamisadoColor.of(15)).toThrowError();
+        expect(KamisadoColor.of(0)).toBe(KamisadoColor.ANY);
+    });
 });
