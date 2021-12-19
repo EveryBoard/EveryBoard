@@ -4,6 +4,7 @@ import { ThemeService } from 'src/app/services/ThemeService';
 import { GameService } from 'src/app/services/GameService';
 import { GameInfo } from '../pick-game/pick-game.component';
 import { faNetworkWired, faDesktop, faBookOpen, IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 @Component({
     selector: 'app-welcome',
@@ -16,6 +17,8 @@ export class WelcomeComponent {
     public readonly iconOnlineGame: IconDefinition = faNetworkWired;
     public readonly iconLocalGame: IconDefinition = faDesktop;
     public readonly iconTutorial: IconDefinition = faBookOpen;
+
+    public gameInfoDetails: MGPOptional<GameInfo> = MGPOptional.empty();
 
     public constructor(private gameService: GameService,
                        private router: Router,
@@ -39,5 +42,11 @@ export class WelcomeComponent {
     }
     public createTutorial(game: string): void {
         this.router.navigate(['/tutorial/' + game]);
+    }
+    public openInfo(gameInfo: GameInfo): void {
+        this.gameInfoDetails = MGPOptional.of(gameInfo);
+    }
+    public closeInfo(): void {
+        this.gameInfoDetails = MGPOptional.empty();
     }
 }

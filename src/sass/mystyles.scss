@@ -22,15 +22,15 @@ html {
     cursor:pointer
 }
 
+.game-card img {
+    opacity: 0.8;
+}
 .game-card .is-overlay {
     opacity: 0;
-}
-.game-card:hover img {
-    opacity: 0.8;
 }
 .game-card:hover .is-overlay {
     opacity: 1;
 }
-.game-image-buttons {
+.game-card figcaption {
     top: auto;
 }
