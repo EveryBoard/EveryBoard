@@ -48,7 +48,7 @@
             </header>
             <section class="modal-card-body">
                 <div class="columns">
-                    <div class="column is-one-quarter">
+                    <div class="column is-one-third">
                         <p class="image"><img src="assets/images/{{ theme }}/{{ gameInfoDetails.get().urlName }}.png"></p>
                     </div>
                     <div class="column">
@@ -57,12 +57,18 @@
                         </div>
                     </div>
                 </div>
+                <div class="columns">
+                    <div class="column is-one-third">
+                        <a (click)="createGame(gameInfoDetails.get().urlName)" class="button is-fullwidth"><fa-icon [icon]="iconOnlineGame"></fa-icon>&nbsp;<span i18n>Play online</span></a>
+                    </div>
+                    <div class="column is-one-third">
+                        <a (click)="createLocalGame(gameInfoDetails.get().urlName)" class="button is-fullwidth"><fa-icon [icon]="iconLocalGame"></fa-icon>&nbsp;<span i18n>Play offline</span></a>
+                    </div>
+                    <div class="column is-one-third">
+                        <a (click)="createTutorial(gameInfoDetails.get().urlName)" class="button is-fullwidth"><fa-icon [icon]="iconTutorial"></fa-icon>&nbsp;<span i18n>Learn the rules</span></a>
+                    </div>
+                </div>
             </section>
-            <footer class="modal-card-foot is-centered">
-                <a (click)="createGame(gameInfoDetails.get().urlName)" class="button"><fa-icon [icon]="iconOnlineGame"></fa-icon>&nbsp;<span i18n>Play online</span></a>
-                <a (click)="createLocalGame(gameInfoDetails.get().urlName)" class="button"><fa-icon [icon]="iconLocalGame"></fa-icon>&nbsp;<span i18n>Play offline</span></a>
-                <a (click)="createTutorial(gameInfoDetails.get().urlName)" class="button"><fa-icon [icon]="iconTutorial"></fa-icon>&nbsp;<span i18n>Learn the rules</span></a>
-            </footer>
         </div>
     </div>
     <div class="columns">
