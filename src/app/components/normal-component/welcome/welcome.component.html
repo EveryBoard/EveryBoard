@@ -35,9 +35,12 @@
         </div>
     </div>
 
-    <div *ngIf="gameInfoDetails.isPresent()"
+    <div id="gameInfoModal"
+         *ngIf="gameInfoDetails.isPresent()"
          class="modal is-active">
-        <div class="modal-background" (click)="closeInfo()"></div>
+        <div id="modalBackground"
+             class="modal-background"
+             (click)="closeInfo()"></div>
         <div class="modal-card">
             <header class="modal-card-head is-primary">
                 <p class="modal-card-title">{{ gameInfoDetails.get().name }}</p>
@@ -80,8 +83,9 @@
                 </div>
                 <div class="card-image game-card">
                     <figure class="image">
-                        <img src="assets/images/{{ theme }}/{{ game.urlName }}.png"
+                        <img id="image_{{ game.urlName }}"
                              class="is-clickable"
+                             src="assets/images/{{ theme }}/{{ game.urlName }}.png"
                              (click)="openInfo(game)" />
                         <figcaption class="has-text-centered is-overlay game-image-text is-clickable"
                                     (click)="openInfo(game)">

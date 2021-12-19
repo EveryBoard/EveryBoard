@@ -77,7 +77,7 @@ describe('ChatComponent', () => {
             testUtils.detectChanges();
             let switchButton: DebugElement = testUtils.findElement('#switchChatVisibilityButton');
             const chat: DebugElement = testUtils.findElement('#chatForm');
-            expect(switchButton.nativeElement.innerText).toEqual('Hide chat');
+            expect(switchButton.nativeElement.innerText).toEqual('Hide chat'.toUpperCase());
             expect(chat).withContext('Chat should be visible on init').toBeTruthy();
 
             // when switching the chat visibility
@@ -86,7 +86,7 @@ describe('ChatComponent', () => {
 
             switchButton = testUtils.findElement('#switchChatVisibilityButton');
             // Then the chat is not visible and the button changes its text
-            expect(switchButton.nativeElement.innerText).toEqual('Show chat (no new message)');
+            expect(switchButton.nativeElement.innerText).toEqual('Show chat (no new message)'.toUpperCase());
             testUtils.expectElementNotToExist('#chatDiv');
             testUtils.expectElementNotToExist('#chatForm');
         }));
@@ -99,7 +99,7 @@ describe('ChatComponent', () => {
             // Given that the chat is hidden
             let switchButton: DebugElement = testUtils.findElement('#switchChatVisibilityButton');
             let chat: DebugElement = testUtils.findElement('#chatForm');
-            expect(switchButton.nativeElement.innerText).toEqual('Show chat (no new message)');
+            expect(switchButton.nativeElement.innerText).toEqual('Show chat (no new message)'.toUpperCase());
             expect(chat).withContext('Chat should be hidden').toBeFalsy();
 
             // when showing the chat
@@ -109,7 +109,7 @@ describe('ChatComponent', () => {
             // then the chat is shown
             switchButton = testUtils.findElement('#switchChatVisibilityButton');
             chat = testUtils.findElement('#chatForm');
-            expect(switchButton.nativeElement.innerText).toEqual('Hide chat');
+            expect(switchButton.nativeElement.innerText).toEqual('Hide chat'.toUpperCase());
             expect(chat).withContext('Chat should be visible after calling show').toBeTruthy();
         }));
         it('should show how many messages where sent since you hide the chat', fakeAsync(async() => {
@@ -119,7 +119,7 @@ describe('ChatComponent', () => {
             testUtils.clickElement('#switchChatVisibilityButton');
             testUtils.detectChanges();
             let switchButton: DebugElement = testUtils.findElement('#switchChatVisibilityButton');
-            expect(switchButton.nativeElement.innerText).toEqual('Show chat (no new message)');
+            expect(switchButton.nativeElement.innerText).toEqual('Show chat (no new message)'.toUpperCase());
 
             // when a new message is received
             await chatDAO.update('fauxChat', { messages: [MSG, MSG, MSG] });
@@ -127,7 +127,7 @@ describe('ChatComponent', () => {
 
             // then the button shows how many new messages there are
             switchButton = testUtils.findElement('#switchChatVisibilityButton');
-            expect(switchButton.nativeElement.innerText).toEqual('Show chat (3 new messages)');
+            expect(switchButton.nativeElement.innerText).toEqual('Show chat (3 new messages)'.toUpperCase());
         }));
         it('should scroll to the bottom on load', fakeAsync(async() => {
             // Given a visible chat with multiple messages
@@ -200,7 +200,7 @@ describe('ChatComponent', () => {
             await chatDAO.update('fauxChat', chat);
             testUtils.detectChanges();
             let switchButton: DebugElement = testUtils.findElement('#switchChatVisibilityButton');
-            expect(switchButton.nativeElement.innerText).toEqual('Show chat (1 new message)');
+            expect(switchButton.nativeElement.innerText).toEqual('Show chat (1 new message)'.toUpperCase());
 
             // When the chat is shown and then hidden again
             testUtils.clickElement('#switchChatVisibilityButton');
@@ -210,7 +210,7 @@ describe('ChatComponent', () => {
 
             // Then the button text is updated
             switchButton = testUtils.findElement('#switchChatVisibilityButton');
-            expect(switchButton.nativeElement.innerText).toEqual('Show chat (no new message)');
+            expect(switchButton.nativeElement.innerText).toEqual('Show chat (no new message)'.toUpperCase());
         }));
         it('should send messages using the chat service', fakeAsync(async() => {
             spyOn(chatService, 'sendMessage');
