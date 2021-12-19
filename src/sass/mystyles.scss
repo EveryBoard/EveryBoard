@@ -31,6 +31,16 @@ html {
 .game-card:hover .is-overlay {
     opacity: 1;
 }
-.game-card figcaption {
+.game-card .game-image-buttons {
     top: auto;
+}
+.game-card .game-image-text {
+    top: 38%;
+    color: black;
+    -webkit-text-fill-color: white; /* Will override color (regardless of order) */
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: black;
+}
+.modal-card-head, .is-primary {
+    background-color: var(--player0);
 }
