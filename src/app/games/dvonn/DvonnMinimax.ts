@@ -4,11 +4,12 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { DvonnNode, DvonnRules } from './DvonnRules';
 import { DvonnState } from './DvonnState';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class DvonnMinimax extends Minimax<DvonnMove, DvonnState> {
 
     public getListMoves(node: DvonnNode): DvonnMove[] {
-        const lastMove: DvonnMove = node.move;
+        const lastMove: MGPOptional<DvonnMove> = node.move;
         const state: DvonnState = node.gameState;
         const moves: DvonnMove[] = [];
         // For each movable piece, look at its possible targets
@@ -19,7 +20,7 @@ export class DvonnMinimax extends Minimax<DvonnMove, DvonnState> {
                 moves.push(move);
             });
         });
-        if (moves.length === 0 && lastMove !== DvonnMove.PASS) {
+        if (moves.length === 0 && lastMove.equalsValue(DvonnMove.PASS) === false) {
             moves.push(DvonnMove.PASS);
         }
         return moves;

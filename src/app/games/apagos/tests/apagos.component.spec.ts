@@ -174,7 +174,7 @@ describe('ApagosComponent', () => {
         componentTestUtils.expectClickFailure('#square_2', reason);
     }));
     it('should drop when clicking on arrow above square', fakeAsync(async() => {
-        // Given initial board
+        // Given the initial board
         const state: ApagosState = ApagosState.getInitialState();
         componentTestUtils.setupState(state);
 

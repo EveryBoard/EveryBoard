@@ -2,9 +2,10 @@ import { Comparable, comparableEquals, ComparableObject } from './Comparable';
 import { Sets } from './Sets';
 
 export class MGPSet<T extends Comparable> implements ComparableObject {
+    private values: T[];
 
-    constructor(private values?: T[]) {
-        if (values == null) {
+    constructor(values?: T[]) {
+        if (values === undefined) {
             this.values = [];
         } else {
             this.values = Sets.toComparableSet(values);
@@ -23,11 +24,13 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
         return true;
     }
     public toString(): string {
-        const printer: (element: T) => string = (element: T) => element.toString();
-
         let result: string = '';
         for (const element of this.values) {
-            result += printer(element) + ', ';
+            if (element == null) {
+                result += 'null, ';
+            } else {
+                result += element.toString() + ', ';
+            }
         }
         return '[' + result.slice(0, -2) + ']';
     }

@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { Move } from 'src/app/jscaip/Move';
-import { JSONObject, JSONValue, JSONValueWithoutArray } from 'src/app/utils/utils';
+import { JSONObject, JSONValueWithoutArray } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class SixMove extends Move {
@@ -46,10 +46,10 @@ export class SixMove extends Move {
                         public readonly keep: MGPOptional<Coord>)
     {
         super();
-        if (landing.equals(start.getOrNull())) {
+        if (start.equalsValue(landing)) {
             throw new Error('Deplacement cannot be static!');
         }
-        if (start.isPresent() && start.get().equals(keep.getOrNull())) {
+        if (start.isPresent() && start.equals(keep)) {
             throw new Error('Cannot keep starting coord, since it will always be empty after move!');
         }
     }
@@ -72,9 +72,6 @@ export class SixMove extends Move {
         }
     }
     public equals(o: SixMove): boolean {
-        if (o == null) {
-            return false;
-        }
         if (this.landing.equals(o.landing) === false) {
             return false;
         }
@@ -82,11 +79,5 @@ export class SixMove extends Move {
             return false;
         }
         return this.keep.equals(o.keep);
-    }
-    public encode(): JSONValue {
-        return SixMove.encoder.encode(this);
-    }
-    public decode(encodedMove: JSONValue): SixMove {
-        return SixMove.encoder.decode(encodedMove);
     }
 }

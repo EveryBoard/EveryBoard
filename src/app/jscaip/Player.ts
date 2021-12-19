@@ -1,4 +1,4 @@
-import { assert } from 'src/app/utils/utils';
+import { assert, Utils } from 'src/app/utils/utils';
 import { ComparableObject } from 'src/app/utils/Comparable';
 import { NumberEncoder } from './Encoder';
 
@@ -17,8 +17,9 @@ export class Player implements ComparableObject {
         switch (value) {
             case 0: return Player.ZERO;
             case 1: return Player.ONE;
-            case 2: return Player.NONE;
-            default: throw new Error('Unknown Player value ' + value);
+            default:
+                Utils.expectToBe(value, 2);
+                return Player.NONE;
         }
     }
     public static fromTurn(turn: number): Player {
@@ -59,7 +60,9 @@ export class Player implements ComparableObject {
         switch (this) {
             case Player.ZERO: return Player.ONE;
             case Player.ONE: return Player.ZERO;
-            case Player.NONE: return Player.NONE;
+            default:
+                Utils.expectToBe(this, Player.NONE);
+                return Player.NONE;
         }
     }
 }

@@ -36,7 +36,7 @@ describe('SixComponent', () => {
     it('Should drop before 40th turn', fakeAsync(async() => {
         componentTestUtils.fixture.detectChanges();
         const move: SixMove = SixMove.fromDrop(new Coord(0, 2));
-        await componentTestUtils.expectMoveSuccess('#neighboor_0_2', move);
+        await componentTestUtils.expectMoveSuccess('#neighbor_0_2', move);
     }));
     it('Should do deplacement after the 39th turn and show left coords', fakeAsync(async() => {
         const board: NumberTable = [
@@ -54,7 +54,7 @@ describe('SixComponent', () => {
         await componentTestUtils.expectClickSuccess('#piece_0_0');
         componentTestUtils.expectElementToExist('#selectedPiece_0_0');
         const move: SixMove = SixMove.fromDeplacement(new Coord(0, 0), new Coord(0, 6));
-        await componentTestUtils.expectMoveSuccess('#neighboor_0_6', move);
+        await componentTestUtils.expectMoveSuccess('#neighbor_0_6', move);
 
         componentTestUtils.expectElementToExist('#leftCoord_0_-1');
         componentTestUtils.expectElementToExist('#lastDrop_0_5');
@@ -74,10 +74,10 @@ describe('SixComponent', () => {
         await componentTestUtils.expectClickSuccess('#piece_1_2');
 
         // Choosing landing case
-        await componentTestUtils.expectClickSuccess('#neighboor_2_3');
+        await componentTestUtils.expectClickSuccess('#neighbor_2_3');
         componentTestUtils.expectElementNotToExist('#piece_2_3'); // Landing coord should be filled
         componentTestUtils.expectElementToExist('#chosenLanding_2_3'); // Landing coord should be filled
-        componentTestUtils.expectElementNotToExist('#neighboor_2_3'); // And no longer an empty coord
+        componentTestUtils.expectElementNotToExist('#neighbor_2_3'); // And no longer an empty coord
 
         componentTestUtils.expectElementNotToExist('#piece_1_2'); // Piece should be moved
         componentTestUtils.expectElementToExist('#selectedPiece_1_2'); // Piece should not be highlighted anymore
@@ -109,7 +109,7 @@ describe('SixComponent', () => {
 
         await componentTestUtils.expectClickSuccess('#piece_0_0');
         const move: SixMove = SixMove.fromDeplacement(new Coord(0, 0), new Coord(-1, 1));
-        await componentTestUtils.expectMoveSuccess('#neighboor_-1_1', move);
+        await componentTestUtils.expectMoveSuccess('#neighbor_-1_1', move);
         componentTestUtils.expectElementToExist('#victoryCoord_0_0');
         componentTestUtils.expectElementToExist('#victoryCoord_5_0');
     }));
@@ -127,7 +127,7 @@ describe('SixComponent', () => {
         await componentTestUtils.expectClickSuccess('#piece_1_2');
 
         // Choosing landing case
-        await componentTestUtils.expectClickSuccess('#neighboor_2_3');
+        await componentTestUtils.expectClickSuccess('#neighbor_2_3');
         const move: SixMove = SixMove.fromCut(new Coord(1, 2), new Coord(2, 3), new Coord(0, 0));
         await componentTestUtils.expectMoveSuccess('#piece_0_0', move);
         componentTestUtils.expectElementToExist('#disconnected_2_0');
@@ -150,7 +150,7 @@ describe('SixComponent', () => {
         const state: SixState = SixState.fromRepresentation(board, 40);
         componentTestUtils.setupState(state);
 
-        await componentTestUtils.expectClickFailure('#neighboor_1_1', SixFailure.CAN_NO_LONGER_DROP());
+        await componentTestUtils.expectClickFailure('#neighbor_1_1', SixFailure.CAN_NO_LONGER_DROP());
     }));
     it('should still allow to click on opponent piece after 40th as a third click', fakeAsync(async() => {
         const board: NumberTable = [
@@ -165,8 +165,27 @@ describe('SixComponent', () => {
         componentTestUtils.setupState(state);
 
         await componentTestUtils.expectClickSuccess('#piece_0_2');
-        await componentTestUtils.expectClickSuccess('#neighboor_0_-1');
+        await componentTestUtils.expectClickSuccess('#neighbor_0_-1');
         const move: SixMove = SixMove.fromCut(new Coord(0, 2), new Coord(0, -1), new Coord(0, 1));
         await componentTestUtils.expectMoveSuccess('#piece_0_1', move);
+    }));
+    it('should cancel the move if player clicks on an empty space instead of chosing a group for cutting', fakeAsync(async() => {
+        // Given that a cuttable group must be selected by the user
+        const board: NumberTable = [
+            [O],
+            [X],
+            [O],
+            [X],
+            [O],
+            [X],
+        ];
+        const state: SixState = SixState.fromRepresentation(board, 40);
+        componentTestUtils.setupState(state);
+        await componentTestUtils.expectClickSuccess('#piece_0_2');
+        await componentTestUtils.expectClickSuccess('#neighbor_0_-1');
+        // when the user clicks on an empty case instead of selecting a group
+        // then the move is cancelled and the board is back to its initial state
+        await componentTestUtils.expectClickFailure('#neighbor_1_-1', SixFailure.MUST_CUT());
+        componentTestUtils.expectElementToExist('#piece_0_2');
     }));
 });

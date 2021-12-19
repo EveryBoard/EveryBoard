@@ -37,42 +37,51 @@ describe('SaharaComponent', () => {
         componentTestUtils.setupState(initialState);
 
         await componentTestUtils.expectClickSuccess('#click_2_1'); // select first piece
-        const move: SaharaMove = new SaharaMove(new Coord(2, 1), new Coord(1, 2));
+        const move: SaharaMove = SaharaMove.from(new Coord(2, 1), new Coord(1, 2)).get();
         await componentTestUtils.expectMoveSuccess('#click_1_2', move); // select landing
 
         expect(componentTestUtils.wrapper.endGame).toBeTrue();
     }));
     it('should not allow to click on empty case when no pyramid selected', fakeAsync(async() => {
-        // given initial board
+        // Given the initial board
         // when clicking on empty case, expect move to be refused
         await componentTestUtils.expectClickFailure('#click_2_2', SaharaFailure.MUST_CHOOSE_PYRAMID_FIRST());
     }));
     it('should not allow to select opponent pyramid', fakeAsync(async() => {
-        // given initial board
+        // Given the initial board
         // when clicking on empty case, expect move to be refused
         await componentTestUtils.expectClickFailure('#click_0_4', SaharaFailure.MUST_CHOOSE_OWN_PYRAMID());
     }));
     it('should not allow to land on opponent pyramid', fakeAsync(async() => {
-        // given initial board
+        // Given the initial board
         await componentTestUtils.expectClickSuccess('#click_2_0');
-        const move: SaharaMove = new SaharaMove(new Coord(2, 0), new Coord(3, 0));
+        const move: SaharaMove = SaharaMove.from(new Coord(2, 0), new Coord(3, 0)).get();
         await componentTestUtils.expectMoveFailure('#click_3_0', RulesFailure.MUST_LAND_ON_EMPTY_SPACE(), move);
     }));
     it('should not allow to bounce on occupied brown case', fakeAsync(async() => {
-        // given initial board
+        // Given the initial board
         await componentTestUtils.expectClickSuccess('#click_7_0');
-        const move: SaharaMove = new SaharaMove(new Coord(7, 0), new Coord(8, 1));
+        const move: SaharaMove = SaharaMove.from(new Coord(7, 0), new Coord(8, 1)).get();
         await componentTestUtils.expectMoveFailure('#click_8_1', SaharaFailure.CAN_ONLY_REBOUND_ON_EMPTY_SPACE(), move);
     }));
     it('should not allow invalid moves', fakeAsync(async() => {
-        // given initial board
+        // Given the initial board
         await componentTestUtils.expectClickSuccess('#click_0_3');
         const reason: string = 'You can move one or two spaces, not 3.';
         await componentTestUtils.expectClickFailure('#click_2_2', reason);
     }));
     it('should change selected piece when clicking twice in a row on current player pieces', fakeAsync(async() => {
-        // given initial board
+        // Given the initial board
         await componentTestUtils.expectClickSuccess('#click_2_0');
         await componentTestUtils.expectClickSuccess('#click_7_0');
+    }));
+    it('should take "false neighbor" as 3-step move', fakeAsync(async() => {
+        // given the initial board with a first piece selected
+        await componentTestUtils.expectClickSuccess('#click_7_0');
+
+        // when clicking on the false neighbor
+        // then the correct message should be shown
+        const reason: string = SaharaFailure.THOSE_TWO_SPACES_ARE_NOT_NEIGHBORS();
+        await componentTestUtils.expectClickFailure('#click_7_1', reason);
     }));
 });

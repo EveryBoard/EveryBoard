@@ -1,5 +1,4 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { Player } from 'src/app/jscaip/Player';
@@ -9,7 +8,7 @@ import { DiamPiece } from './DiamPiece';
 import { DiamNode, DiamRules } from './DiamRules';
 import { DiamState } from './DiamState';
 
-export class DiamDummyMinimax extends Minimax<DiamMove, DiamState, LegalityStatus> {
+export class DiamDummyMinimax extends Minimax<DiamMove, DiamState> {
     public getListMoves(node: DiamNode): DiamMove[] {
         const state: DiamState = node.gameState;
         const drops: DiamMove[] = this.getListDrops(state);
@@ -21,7 +20,7 @@ export class DiamDummyMinimax extends Minimax<DiamMove, DiamState, LegalityStatu
         const shiftSources: Coord[] = this.getShiftSources(state);
         for (const shiftSource of shiftSources) {
             for (const shift of [new DiamMoveShift(shiftSource, 'clockwise'), new DiamMoveShift(shiftSource, 'counterclockwise')]) {
-                if (DiamRules.get().shiftHeightValidity(shift, state).legal.isSuccess()) {
+                if (DiamRules.get().shiftHeightValidity(shift, state).isSuccess()) {
                     shifts.push(shift);
                 }
             }
@@ -34,7 +33,7 @@ export class DiamDummyMinimax extends Minimax<DiamMove, DiamState, LegalityStatu
         for (let x: number = 0; x < DiamState.WIDTH; x++) {
             for (const piece of remainingPieces) {
                 const drop: DiamMoveDrop = new DiamMoveDrop(x, piece);
-                if (DiamRules.get().dropHeightValidity(drop, state).legal.isSuccess()) {
+                if (DiamRules.get().dropHeightValidity(drop, state).isSuccess()) {
                     drops.push(drop);
                 }
             }

@@ -15,7 +15,7 @@ export class ApagosTutorial {
         ),
         TutorialStep.anyMove(
             $localize`Drop`,
-            $localize`There are two kind of moves. One is the drop. To do one, you must click on a visible arrow, being of your color or the opponent's. If the chosen square is one of the 3 leftmost ones, it will exchange position with the square on its right. You play Light.<br/><br/>Drop a piece on one of thoses three squares.`,
+            $localize`There are two kind of moves. One is the drop. To do one, you must click on a visible arrow, being of your color or the opponent's. If the chosen square is one of the 3 leftmost ones, it will exchange position with the square on its right. You play Light.<br/><br/>Drop a piece on one of those three squares.`,
             ApagosState.fromRepresentation(1, [
                 [0, 0, 0, 1],
                 [0, 0, 0, 0],
@@ -54,7 +54,7 @@ export class ApagosTutorial {
 
             (move: ApagosMove, _: ApagosState) => {
                 if (move.isDrop()) {
-                    if (move.piece.getOrNull() === Player.ONE) {
+                    if (move.piece.equalsValue(Player.ONE)) {
                         return MGPValidation.SUCCESS;
                     } else {
                         return MGPValidation.failure($localize`You actively made your opponent win!`);

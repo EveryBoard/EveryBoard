@@ -6,7 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';
-import { AbstractGameState } from '../../jscaip/GameState';
+import { GameState } from '../../jscaip/GameState';
 import { Move } from '../../jscaip/Move';
 import { MGPValidation } from '../MGPValidation';
 import { AppModule } from '../../app.module';
@@ -28,6 +28,7 @@ import { LocalGameWrapperComponent }
     from '../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { HumanDuration } from '../TimeUtils';
 import { Rules } from 'src/app/jscaip/Rules';
+import { Utils } from '../utils';
 import { AutofocusDirective } from 'src/app/directives/autofocus.directive';
 import { ToggleVisibilityDirective } from 'src/app/directives/toggle-visibility.directive';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
@@ -38,6 +39,7 @@ import { USE_EMULATOR as USE_DATABASE_EMULATOR } from '@angular/fire/database';
 import { USE_EMULATOR as USE_AUTH_EMULATOR } from '@angular/fire/auth';
 import { USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/functions';
 import { environment } from 'src/environments/environment';
+import { MGPOptional } from '../MGPOptional';
 
 @Component({})
 export class BlankComponent {}
@@ -140,7 +142,8 @@ export class SimpleComponentTestUtils<T> {
     public expectElementToHaveClass(elementName: string, cssClass: string): void {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(elementName + ' should exist').toBeTruthy();
-        const elementClasses: string[] = element.attributes.class.split(' ').sort();
+        expect(element.attributes.class).withContext(`${elementName} should have a class attribute`).not.toBeNull();
+        const elementClasses: string[] = Utils.getNonNullable(element.attributes.class).split(' ').sort();
         expect(elementClasses).withContext(elementName + ' should contain class ' + cssClass).toContain(cssClass);
     }
     public expectElementNotToExist(elementName: string): void {
@@ -160,9 +163,7 @@ export class SimpleComponentTestUtils<T> {
         element.nativeElement.dispatchEvent(new Event('input'));
     }
 }
-type MyGameComponent = GameComponent<Rules<Move, AbstractGameState>,
-                                     Move,
-                                     AbstractGameState>;
+type MyGameComponent = GameComponent<Rules<Move, GameState, unknown>, Move, GameState, unknown>;
 
 export class ComponentTestUtils<T extends MyGameComponent> {
     public fixture: ComponentFixture<GameWrapper>;
@@ -236,17 +237,16 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     public setRoute(id: string, value: string): void {
         this.activatedRouteStub.setRoute(id, value);
     }
-    public setupState(state: AbstractGameState,
-                      previousState?: AbstractGameState,
+    public setupState(state: GameState,
+                      previousState?: GameState,
                       previousMove?: Move)
     : void
     {
-        if (previousState !== undefined) {
-            this.gameComponent.rules.node =
-                new MGPNode(new MGPNode(null, null, previousState), previousMove, state);
-        } else {
-            this.gameComponent.rules.node = new MGPNode(null, previousMove || null, state);
-        }
+        this.gameComponent.rules.node = new MGPNode(
+            state,
+            MGPOptional.ofNullable(previousState).map((previousState: GameState) =>
+                new MGPNode(previousState)),
+            MGPOptional.ofNullable(previousMove));
         this.gameComponent.updateBoard();
         this.forceChangeDetection();
     }
@@ -260,7 +260,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     }
     public async expectInterfaceClickSuccess(elementName: string): Promise<void> {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext('Element "' + elementName + '" should exist.').toBeTruthy();
+        expect(element).withContext('Element "' + elementName + '" should exist').toBeTruthy();
         element.triggerEventHandler('click', null);
         await this.fixture.whenStable();
         this.fixture.detectChanges();
@@ -270,7 +270,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     }
     public async expectClickFailure(elementName: string, reason: string): Promise<void> {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext('Element "' + elementName + '" should exist.').toBeTruthy();
+        expect(element).withContext('Element "' + elementName + '" should exist').toBeTruthy();
         if (element == null) {
             return;
         } else {
@@ -287,7 +287,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     }
     public async expectClickForbidden(elementName: string, reason: string): Promise<void> {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext('Element "' + elementName + '" should exist.').toBeTruthy();
+        expect(element).withContext('Element "' + elementName + '" should exist').toBeTruthy();
         if (element == null) {
             return;
         } else {
@@ -306,61 +306,54 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     }
     public async expectMoveSuccess(elementName: string,
                                    move: Move,
-                                   state?: AbstractGameState,
-                                   scoreZero?: number,
-                                   scoreOne?: number)
+                                   state?: GameState,
+                                   scores?: readonly [number, number])
     : Promise<void>
     {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext('Element "' + elementName + '" should exist.').toBeTruthy();
+        expect(element).withContext('Element "' + elementName + '" should exist').toBeTruthy();
         if (element == null) {
             return;
         } else {
-            const moveState: AbstractGameState = state || this.gameComponent.rules.node.gameState;
+            const moveState: GameState = state || this.gameComponent.rules.node.gameState;
             element.triggerEventHandler('click', null);
             await this.fixture.whenStable();
             this.fixture.detectChanges();
             expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
             this.canUserPlaySpy.calls.reset();
-            expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move,
-                                                                moveState,
-                                                                this.getScore(scoreZero),
-                                                                this.getScore(scoreOne));
+            if (scores) {
+                expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move, moveState, scores);
+            } else {
+                expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move, moveState);
+            }
             this.chooseMoveSpy.calls.reset();
-            expect(this.onLegalUserMoveSpy).toHaveBeenCalledOnceWith(move,
-                                                                     this.getScore(scoreZero),
-                                                                     this.getScore(scoreOne));
+            expect(this.onLegalUserMoveSpy).toHaveBeenCalledOnceWith(move, scores);
             this.onLegalUserMoveSpy.calls.reset();
-        }
-    }
-    private getScore(score?: number): number {
-        if (score === undefined) {
-            return null;
-        } else {
-            return score;
         }
     }
     public async expectMoveFailure(elementName: string,
                                    reason: string,
                                    move: Move,
-                                   state?: AbstractGameState,
-                                   scoreZero?: number,
-                                   scoreOne?: number)
+                                   state?: GameState,
+                                   scores?: readonly [number, number])
     : Promise<void>
     {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext('Element "' + elementName + '" should exist.').toBeTruthy();
+        expect(element).withContext('Element "' + elementName + '" should exist').toBeTruthy();
         if (element == null) {
             return;
         } else {
-            const moveState: AbstractGameState = state || this.gameComponent.rules.node.gameState;
+            const moveState: GameState = state || this.gameComponent.rules.node.gameState;
             element.triggerEventHandler('click', null);
             await this.fixture.whenStable();
             this.fixture.detectChanges();
             expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
             this.canUserPlaySpy.calls.reset();
-            expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(
-                move, moveState, this.getScore(scoreZero), this.getScore(scoreOne));
+            if (scores) {
+                expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move, moveState, scores);
+            } else {
+                expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move, moveState);
+            }
             this.chooseMoveSpy.calls.reset();
             expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(reason);
             this.cancelMoveSpy.calls.reset();
@@ -390,22 +383,24 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     public expectElementToHaveClass(elementName: string, cssClass: string): void {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(elementName + ' should exist').toBeTruthy();
-        const classAttribute: string = element.attributes.class;
-        expect(classAttribute).withContext(elementName + ' should have class attribute').toBeTruthy();
-        const elementClasses: string[] = classAttribute.split(' ').sort();
+        const classAttribute: string = Utils.getNonNullable(element.attributes.class);
+        expect(classAttribute).withContext(elementName + ' should have a class attribute').toBeTruthy();
+        const elementClasses: string[] = Utils.getNonNullable(classAttribute).split(' ').sort();
         expect(elementClasses).withContext(elementName + ' should contain ' + cssClass).toContain(cssClass);
     }
     public expectElementNotToHaveClass(elementName: string, cssClass: string): void {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(elementName + ' should exist').toBeTruthy();
-        const elementClasses: string[] = element.attributes.class.split(' ').sort();
+        expect(element.attributes.class).withContext(`${elementName} should have a class attribute`).not.toBeNull();
+        const elementClasses: string[] = Utils.getNonNullable(element.attributes.class).split(' ').sort();
         expect(elementClasses).withContext(elementName + ' should not contain ' + cssClass).not.toContain(cssClass);
     }
     public expectElementToHaveClasses(elementName: string, classes: string[]): void {
         const classesSorted: string[] = [...classes].sort();
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(elementName + ' should exist').toBeTruthy();
-        const elementClasses: string[] = element.attributes.class.split(' ').sort();
+        expect(element.attributes.class).withContext(`${elementName} should have a class attribute`).toBeTruthy();
+        const elementClasses: string[] = Utils.getNonNullable(element.attributes.class).split(' ').sort();
         expect(elementClasses).toEqual(classesSorted);
     }
     public findElement(elementName: string): DebugElement {
@@ -419,7 +414,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
 export class TestUtils {
 
     public static expectValidationSuccess(validation: MGPValidation, context?: string): void {
-        const reason: string = validation.reason;
+        const reason: string = validation.getReason();
         expect(validation.isSuccess()).withContext(context + ': ' + reason).toBeTrue();
     }
 }

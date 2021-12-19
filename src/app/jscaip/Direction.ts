@@ -51,7 +51,7 @@ export abstract class BaseDirection extends Vector {
 
 export abstract class DirectionFactory<T extends BaseDirection> {
 
-    public abstract all: ReadonlyArray<NonNullable<T>>;
+    public abstract all: ReadonlyArray<T>;
 
     public of(x: number, y: number): MGPFallible<T> {
         for (const dir of this.all) {

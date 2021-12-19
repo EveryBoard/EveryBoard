@@ -120,7 +120,7 @@ export class SixTutorial {
             ], 40),
             SixMove.fromDeplacement(new Coord(2, 3), new Coord(3, 3)),
             (move: SixMove, _resultingState: SixState) => {
-                if (new Coord(2, 3).equals(move.start.getOrNull())) {
+                if (move.start.equalsValue(new Coord(2, 3))) {
                     return MGPValidation.SUCCESS;
                 } else {
                     return MGPValidation.failure(SixTutorialMessages.MOVEMENT_NOT_DISCONNECTING());

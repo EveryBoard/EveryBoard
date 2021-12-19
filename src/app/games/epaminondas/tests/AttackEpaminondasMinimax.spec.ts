@@ -1,12 +1,12 @@
 import { Direction } from 'src/app/jscaip/Direction';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { AttackEpaminondasMinimax } from '../AttackEpaminondasMinimax';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasState } from '../EpaminondasState';
-import { EpaminondasRules } from '../EpaminondasRules';
+import { EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('AttackEpaminondasMinimax:', () => {
 
@@ -39,7 +39,7 @@ describe('AttackEpaminondasMinimax:', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const state: EpaminondasState = new EpaminondasState(board, 1);
-        rules.node = new MGPNode(null, null, state);
+        rules.node = new EpaminondasNode(state);
         const expectedMove: EpaminondasMove = new EpaminondasMove(9, 1, 4, 4, Direction.LEFT);
         const bestMove: EpaminondasMove = rules.node.findBestMove(1, minimax);
         expect(bestMove).toEqual(expectedMove);
@@ -59,7 +59,7 @@ describe('AttackEpaminondasMinimax:', () => {
             [O, O, O, O, O, O, O, O, O, O, O, O, _, O],
             [O, O, O, O, O, O, O, O, O, O, O, O, _, O],
         ];
-        const greaterState: EpaminondasState = new EpaminondasState(greaterBoard, 0);
+        const greaterState: EpaminondasState = new EpaminondasState(greaterBoard, 1);
         const lesserBoard: Table<Player> = [
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
@@ -74,7 +74,10 @@ describe('AttackEpaminondasMinimax:', () => {
             [O, O, O, O, O, O, O, O, O, O, O, _, _, O],
             [O, O, O, O, O, O, O, O, O, O, O, _, O, _],
         ];
-        const lesserState: EpaminondasState = new EpaminondasState(lesserBoard, 0);
-        RulesUtils.expectSecondStateToBeBetterThanFirst(lesserState, null, greaterState, null, minimax);
+        const lesserState: EpaminondasState = new EpaminondasState(lesserBoard, 1);
+        RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
+                                                           lesserState, MGPOptional.empty(),
+                                                           greaterState, MGPOptional.empty(),
+                                                           Player.ONE);
     });
 });

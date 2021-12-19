@@ -22,12 +22,12 @@ export class PentagoMove extends MoveCoord {
             const casted: JSONObject = encoded as JSONObject;
 
             const coord: Coord = Coord.encoder.decode(casted['coord']);
-            const nullableBlockTurned: number = casted['blockTurned'] as number;
-            if (nullableBlockTurned != null) {
+            const nullableBlockTurned: MGPOptional<number> = MGPOptional.ofNullable(casted['blockTurned'] as number | null);
+            if (nullableBlockTurned.isPresent()) {
                 const turnedClockwise: boolean = casted['turnedClockwise'] as boolean;
                 return PentagoMove.withRotation(coord.x,
                                                 coord.y,
-                                                nullableBlockTurned,
+                                                nullableBlockTurned.get(),
                                                 turnedClockwise);
             } else {
                 return PentagoMove.rotationless(coord.x, coord.y);
@@ -47,12 +47,12 @@ export class PentagoMove extends MoveCoord {
         return new PentagoMove(x, y, MGPOptional.of(blockTurned), turnedClockwise);
     }
     public static rotationless(x: number, y: number): PentagoMove {
-        return new PentagoMove(x, y, MGPOptional.empty(), null);
+        return new PentagoMove(x, y, MGPOptional.empty());
     }
     private constructor(x: number,
                         y: number,
                         public readonly blockTurned: MGPOptional<number>,
-                        public readonly turnedClockwise: boolean)
+                        public readonly turnedClockwise: boolean = false)
     {
         super(x, y);
         if (this.coord.isNotInRange(6, 6)) {

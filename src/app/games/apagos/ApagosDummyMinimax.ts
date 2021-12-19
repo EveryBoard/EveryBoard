@@ -11,12 +11,12 @@ export class ApagosDummyMinimax extends Minimax<ApagosMove, ApagosState> {
     public getListMoves(node: ApagosNode): ApagosMove[] {
         const state: ApagosState = node.gameState;
         function isLegal(move: ApagosMove) {
-            return ApagosRules.singleton.isLegal(move, state).legal.isSuccess();
+            return ApagosRules.get().isLegal(move, state).isSuccess();
         }
         return ApagosMove.ALL_MOVES.filter(isLegal);
     }
     public getBoardValue(node: ApagosNode): NodeUnheritance {
-        const gameStatus: GameStatus = ApagosRules.singleton.getGameStatus(node);
+        const gameStatus: GameStatus = ApagosRules.get().getGameStatus(node);
         if (gameStatus.isEndGame) {
             return NodeUnheritance.fromWinner(gameStatus.winner);
         }

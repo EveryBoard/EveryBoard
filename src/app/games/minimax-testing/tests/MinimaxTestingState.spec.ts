@@ -1,7 +1,8 @@
+import { Coord } from 'src/app/jscaip/Coord';
 import { MinimaxTestingState } from '../MinimaxTestingState';
 
 describe('MinimaxTestingState', () => {
-    it('should throw when created without location', () => {
-        expect(() => new MinimaxTestingState(0, null)).toThrowError('location cannot be null');
+    it('should successfully be created', () => {
+        expect(new MinimaxTestingState(0, new Coord(0, 0))).toBeTruthy();
     });
 });

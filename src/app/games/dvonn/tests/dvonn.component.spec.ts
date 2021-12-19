@@ -8,6 +8,7 @@ import { fakeAsync } from '@angular/core/testing';
 import { DvonnFailure } from 'src/app/games/dvonn/DvonnFailure';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('DvonnComponent', () => {
 
@@ -69,13 +70,13 @@ describe('DvonnComponent', () => {
         const gameComponent: DvonnComponent = componentTestUtils.getComponent();
         // expect board to show it
         expect(gameComponent.disconnecteds).toEqual([
-            { x: 4, y: 1, caseContent: W_ },
+            { coord: new Coord(4, 1), caseContent: W_ },
         ]);
     }));
     it('should allow clicking twice on a piece to deselect it', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_2_0');
         await componentTestUtils.expectClickSuccess('#click_2_0');
-        expect(componentTestUtils.getComponent().chosen).toBeNull();
+        expect(componentTestUtils.getComponent().chosen).toEqual(MGPOptional.empty());
     }));
 });
 

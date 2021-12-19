@@ -27,8 +27,6 @@ export class Coord implements ComparableObject {
     constructor(public readonly x: number,
                 public readonly y: number)
     {
-        if (x == null) throw new Error('X cannot be null.');
-        if (y == null) throw new Error('Y cannot be null.');
     }
     public getNext(dir: Vector, distance?: number): Coord {
         // return the next coord in the direction 'dir'
@@ -179,7 +177,6 @@ export class Coord implements ComparableObject {
 
     public equals(obj: Coord): boolean {
         if (this === obj) return true;
-        if (obj == null) return false;
         if (obj.x !== this.x) return false;
         return obj.y === this.y;
     }

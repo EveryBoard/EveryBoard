@@ -25,7 +25,7 @@ describe('HexaDirection', () => {
         expect(HexaDirection.LEFT.toString()).toEqual('LEFT');
     });
     it('Should encode/decode nicely', () => {
-        for (let i: number; i < 6; i++) {
+        for (let i: number = 0; i < 6; i++) {
             const dir: HexaDirection = HexaDirection.factory.all[i];
             const encoded: number = HexaDirection.encoder.encodeNumber(dir);
             expect(encoded).toBe(i);
@@ -33,7 +33,7 @@ describe('HexaDirection', () => {
         }
     });
     it('Should map to angle correctly', () => {
-        for (let i: number; i < 6; i++) {
+        for (let i: number = 0; i < 6; i++) {
             const dir: HexaDirection = HexaDirection.factory.all[i];
             expect(HexaDirection.getAngle(dir)).toBe(i * 60);
         }

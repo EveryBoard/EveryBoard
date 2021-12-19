@@ -36,7 +36,6 @@ describe('SixMove', () => {
             const deplacement: SixMove = SixMove.fromDeplacement(new Coord(1, 1), new Coord(0, 0));
             const cuttingDeplacement: SixMove =
                 SixMove.fromCut(new Coord(1, 1), new Coord(0, 0), new Coord(2, 2));
-            expect(drop.equals(null)).toBeFalse();
             expect(drop.equals(otherDrop)).toBeFalse();
             expect(drop.equals(deplacement)).toBeFalse();
             expect(deplacement.equals(cuttingDeplacement)).toBeFalse();

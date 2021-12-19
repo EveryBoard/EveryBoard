@@ -2,8 +2,6 @@ import { Localized } from 'src/app/utils/LocaleUtils';
 
 export class DvonnFailure {
 
-    public static readonly INVALID_COORD: Localized = () => $localize`Invalid coordinate, please select a piece on the board.`;
-
     public static readonly NOT_PLAYER_PIECE: Localized = () => $localize`You must select a piece or a stack of your color.`;
 
     public static readonly EMPTY_STACK: Localized = () => $localize`You must select a stack.`;

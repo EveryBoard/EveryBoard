@@ -1,6 +1,5 @@
 import { SiamRules, SiamNode } from '../SiamRules';
 import { SiamPiece } from '../SiamPiece';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { SiamState } from '../SiamState';
 import { SiamMove } from '../SiamMove';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -45,7 +44,7 @@ describe('SiamMinimax:', () => {
         ];
         const state: SiamState = new SiamState(board, 0);
         const move: SiamMove = new SiamMove(3, 3, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
-        expect(minimax.getBoardValue(new MGPNode(null, move, state)).value)
+        expect(minimax.getBoardValue(new SiamNode(state, MGPOptional.empty(), MGPOptional.of(move))).value)
             .withContext('First player should be considered as closer to victory')
             .toBeLessThan(0);
     });
@@ -59,24 +58,25 @@ describe('SiamMinimax:', () => {
         ];
         const state: SiamState = new SiamState(board, 0);
         const move: SiamMove = new SiamMove(2, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
-        expect(minimax.getBoardValue(new MGPNode(null, move, state)).value)
+        expect(minimax.getBoardValue(new SiamNode(state, MGPOptional.empty(), MGPOptional.of(move))).value)
             .withContext('First player should be considered as closer to victory')
             .toBeLessThan(0);
     });
-    xit('Best choice test: Should choose victory immediately', () => {
-        const board: Table<SiamPiece> = [
-            [_, U, _, M, _],
-            [_, _, _, U, _],
-            [_, M, M, _, _],
-            [_, _, _, _, _],
-            [_, _, _, _, _],
-        ];
-        const state: SiamState = new SiamState(board, 0);
-        const node: SiamNode = new MGPNode(null, null, state);
-        const chosenMove: SiamMove = node.findBestMove(1, minimax);
-        const bestMove: SiamMove = new SiamMove(3, 1, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
-        expect(chosenMove).toEqual(bestMove);
-        expect(node.countDescendants()).withContext('Pre-victory node should only have victory child').toBe(1);
+    it('Best choice test: Should choose victory immediately (no matter the AI depth', () => {
+        for (let aiDepth: number = 1; aiDepth < 3; aiDepth++) {
+            const board: Table<SiamPiece> = [
+                [_, U, _, M, _],
+                [_, _, _, U, _],
+                [_, M, M, _, _],
+                [_, _, _, _, _],
+                [_, _, _, _, _],
+            ];
+            const state: SiamState = new SiamState(board, 0);
+            const node: SiamNode = new SiamNode(state);
+            const chosenMove: SiamMove = node.findBestMove(aiDepth, minimax);
+            const bestMove: SiamMove = new SiamMove(3, 1, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
+            expect(chosenMove).toEqual(bestMove);
+        }
     });
     it('Best choice test: Should consider pushing as the best option', () => {
         const board: Table<SiamPiece> = [
@@ -87,7 +87,7 @@ describe('SiamMinimax:', () => {
             [_, _, _, _, _],
         ];
         const state: SiamState = new SiamState(board, 0);
-        const node: SiamNode = new MGPNode(null, null, state);
+        const node: SiamNode = new SiamNode(state);
         const chosenMove: SiamMove = node.findBestMove(1, minimax);
         const bestMove: SiamMove = new SiamMove(3, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
         expect(chosenMove).toEqual(bestMove);
@@ -101,7 +101,7 @@ describe('SiamMinimax:', () => {
             [_, _, _, U, _],
         ];
         const state: SiamState = new SiamState(board, 0);
-        const node: SiamNode = new MGPNode(null, null, state);
+        const node: SiamNode = new SiamNode(state);
         const moves: SiamMove[] = minimax.getListMoves(node);
         const moveType: { [moveTYpe: string]: number} = {
             moving: 0,
@@ -136,7 +136,7 @@ describe('SiamMinimax:', () => {
             [_, _, _, M, _],
         ];
         const state: SiamState = new SiamState(board, 1);
-        const node: SiamNode = new MGPNode(null, null, state);
+        const node: SiamNode = new SiamNode(state);
         const moves: SiamMove[] = minimax.getListMoves(node);
         let isInsertionPossible: boolean = false;
         for (const move of moves) {
@@ -157,8 +157,8 @@ describe('SiamMinimax:', () => {
         ];
         const state: SiamState = new SiamState(board, 0);
         const move: SiamMove = new SiamMove(1, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT);
-        const boardValue: number = minimax.getBoardValue(new MGPNode(null, move, state)).value;
-        expect(boardValue).toBeLessThan(0);
+        const node: SiamNode = new SiamNode(state, MGPOptional.empty(), MGPOptional.of(move));
+        expect(minimax.getBoardValue(node).value).toBeLessThan(0);
     });
     it('Board value test: Symetry test', () => {
         const board: Table<SiamPiece> = [
@@ -170,10 +170,12 @@ describe('SiamMinimax:', () => {
         ];
         const state: SiamState = new SiamState(board, 0);
         const move: SiamMove = new SiamMove(1, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT);
-        const boardValue: number = minimax.getBoardValue(new MGPNode(null, move, state)).value;
+        const node: SiamNode = new SiamNode(state, MGPOptional.empty(), MGPOptional.of(move));
+        const boardValue: number = minimax.getBoardValue(node).value;
 
         const symetryState: SiamState = new SiamState(board, 1);
-        const symetryBoardValue: number = minimax.getBoardValue(new MGPNode(null, move, symetryState)).value;
+        const symmetryNode: SiamNode = new SiamNode(symetryState, MGPOptional.empty(), MGPOptional.of(move));
+        const symetryBoardValue: number = minimax.getBoardValue(symmetryNode).value;
         expect(boardValue).withContext('Both board value should have same absolute value').toEqual(-1 * symetryBoardValue);
     });
     it('Logical test: Should get option for first turn', () => {
@@ -353,7 +355,7 @@ describe('SiamMinimax:', () => {
     it('Should getScoreFromShortestDistances (Player Zero) correctly', () => {
         const currentPlayer: Player = Player.ZERO;
         const T: number = currentPlayer === Player.ZERO ? -1 : 1;
-        const expectedValues: number[][] = [
+        const expectedValues: (number | null)[][] = [
         // 0:  won     1     2     3     4     5  nothing
             [null, null, null, null, null, null, null], // 1 has won
             [null, T, 55, 56, 57, 58, 59], // 1 has 1
@@ -363,7 +365,7 @@ describe('SiamMinimax:', () => {
             [null, -58, -48, -38, -28, T, 19], // 1 has 5
             [null, -59, -49, -39, -29, -19, T], // 1 has nothing
         ];
-        const actualValues: number[][] = [];
+        const actualValues: (number | null)[][] = [];
         for (let oneShortestDistance: number = 0; oneShortestDistance <= 6; oneShortestDistance++) {
             actualValues.push([]);
             for (let zeroShortestDistance: number = 0; zeroShortestDistance <= 6; zeroShortestDistance++) {

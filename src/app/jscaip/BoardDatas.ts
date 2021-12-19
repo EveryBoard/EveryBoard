@@ -60,7 +60,7 @@ export abstract class GroupDatasFactory<T> {
             for (const direction of this.getDirections()) {
                 const nextCoord: Coord = coord.getNext(direction);
                 if (nextCoord.isInRange(board[0].length, board.length)) {
-                    if (!groupDatas.countains(nextCoord)) {
+                    if (!groupDatas.contains(nextCoord)) {
                         groupDatas = this._getGroupDatas(nextCoord, board, groupDatas);
                     }
                 }
@@ -78,13 +78,13 @@ export abstract class GroupDatas<T> {
 
     public abstract getCoords(): Coord[];
 
-    public abstract countains(coord: Coord): boolean;
+    public abstract contains(coord: Coord): boolean;
 
     public abstract addPawn(coord: Coord, color: T): void;
 
     public abstract getNeighboorsEntryPoint(): Coord[];
 
-    public selfCountains(coord: Coord): boolean {
+    public selfContains(coord: Coord): boolean {
         const ownCoords: Coord[] = this.getCoords();
         return ownCoords.some((c: Coord) => c.equals(coord));
     }

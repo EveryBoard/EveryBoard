@@ -1,9 +1,8 @@
-import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { DvonnMove } from '../DvonnMove';
 import { DvonnState } from '../DvonnState';
 import { DvonnPieceStack } from '../DvonnPieceStack';
-import { DvonnRules } from '../DvonnRules';
+import { DvonnNode, DvonnRules } from '../DvonnRules';
 import { MaxStacksDvonnMinimax } from '../MaxStacksDvonnMinimax';
 import { Table } from 'src/app/utils/ArrayUtils';
 
@@ -37,7 +36,7 @@ describe('MaxStacksDvonnMinimax', () => {
         ];
 
         const state: DvonnState = new DvonnState(board, 0, false);
-        rules.node = new MGPNode(null, null, state);
+        rules.node = new DvonnNode(state);
         const bestMove: DvonnMove = rules.node.findBestMove(1, minimax);
         expect(minimax.getListMoves(rules.node).length).toBe(3); // There are three possible moves
         // The best is the one that finishes on WW
@@ -54,7 +53,7 @@ describe('MaxStacksDvonnMinimax', () => {
         ];
 
         const state: DvonnState = new DvonnState(board, 0, false);
-        rules.node = new MGPNode(null, null, state);
+        rules.node = new DvonnNode(state);
         const bestMove: DvonnMove = rules.node.findBestMove(1, minimax);
         expect(minimax.getListMoves(rules.node).length).toBe(2);
         // The best move is the one that finishes on W
