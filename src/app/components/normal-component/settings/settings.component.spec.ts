@@ -39,7 +39,7 @@ describe('SettingsComponent', () => {
 
         localStorage.clear(); // clean up local storage
     }));
-    it('should update update user setting and redirect when a theme change is made', fakeAsync(async() => {
+    it('should update user setting and redirect when a theme change is made', fakeAsync(async() => {
         // given that the dark theme is selected
         spyOn(userSettingsService, 'getTheme').and.returnValue(MGPOptional.of('dark'));
         spyOn(userSettingsService, 'changeTheme');
