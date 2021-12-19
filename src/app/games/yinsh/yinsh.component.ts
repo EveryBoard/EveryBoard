@@ -124,10 +124,12 @@ export class YinshComponent
     }
     public updateBoard(): void {
         this.cancelMoveAttempt();
+        const state: YinshState = this.rules.node.gameState;
+        this.scores = MGPOptional.of(state.countScores());
     }
     public updateViewInfo(): void {
         this.constructedState.allCoords().forEach((coord: Coord): void => {
-            this.viewInfo.caseInfo[coord.y][coord.x].caseClasses = this.getCaseClasses(coord);
+            this.viewInfo.caseInfo[coord.y][coord.x].caseClasses = this.getSpaceClasses(coord);
             const piece: YinshPiece = this.constructedState.getPieceAt(coord);
             this.viewInfo.caseInfo[coord.y][coord.x].removedClass = '';
             this.setRingInfo(coord, piece);
@@ -181,7 +183,7 @@ export class YinshComponent
             this.markCurrentCapture(capture);
         }
     }
-    private getCaseClasses(coord: Coord): string[] {
+    private getSpaceClasses(coord: Coord): string[] {
         if (this.currentlyMoved.some((c: Coord) => c.equals(coord))) {
             return ['moved'];
         } else {
@@ -259,9 +261,9 @@ export class YinshComponent
                 this.markRemovedMarker(coord, this.rules.node.gameState.getCurrentPlayer().getOpponent());
             }
         }
-        this.viewInfo.caseInfo[capture.ringTaken.y][capture.ringTaken.x].caseClasses = ['captured'];
+        this.viewInfo.caseInfo[capture.ringTaken.get().y][capture.ringTaken.get().x].caseClasses = ['captured'];
         if (alsoShowPiece) {
-            this.markRemovedRing(capture.ringTaken, this.rules.node.gameState.getCurrentPlayer().getOpponent());
+            this.markRemovedRing(capture.ringTaken.get(), this.rules.node.gameState.getCurrentPlayer().getOpponent());
         }
     }
     private moveToInitialCaptureOrMovePhase(): MGPValidation {
@@ -369,9 +371,9 @@ export class YinshComponent
             this.viewInfo.selectedCoords.push(coord);
             this.markRemovedMarker(coord, this.rules.node.gameState.getCurrentPlayer());
         }
-        if (!capture.ringTaken.equals(new Coord(-1, -1))) {
-            this.viewInfo.selectedCoords.push(capture.ringTaken);
-            this.markRemovedRing(capture.ringTaken, this.rules.node.gameState.getCurrentPlayer());
+        if (capture.ringTaken.isPresent()) {
+            this.viewInfo.selectedCoords.push(capture.ringTaken.get());
+            this.markRemovedRing(capture.ringTaken.get(), this.rules.node.gameState.getCurrentPlayer());
         }
     }
     private markRemovedMarker(coord: Coord, player: Player): void {

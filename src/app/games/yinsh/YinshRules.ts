@@ -33,7 +33,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
     }
     public applyCapture(state: YinshState, capture: YinshCapture): YinshState {
         const board: Table<YinshPiece> = this.applyCaptureWithoutTakingRing(state, capture);
-        return this.takeRing(new YinshState(board, state.sideRings, state.turn), capture.ringTaken);
+        return this.takeRing(new YinshState(board, state.sideRings, state.turn), capture.ringTaken.get());
     }
     public takeRing(state: YinshState, ringTaken: Coord): YinshState {
         const player: number = state.getCurrentPlayer().value;
@@ -187,7 +187,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
             }
         }
         // The ring taken should be a ring
-        if (state.getPieceAt(capture.ringTaken) !== YinshPiece.RINGS[player]) {
+        if (state.getPieceAt(capture.ringTaken.get()) !== YinshPiece.RINGS[player]) {
             return MGPValidation.failure(YinshFailure.CAPTURE_SHOULD_TAKE_RING());
         }
         return MGPValidation.SUCCESS;
@@ -251,7 +251,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
                 for (let cur: Coord = linePortion.start;
                     cur.getDistance(linePortion.end) >= 5;
                     cur = cur.getNext(linePortion.dir)) {
-                    captures.push(YinshCapture.of(cur, cur.getNext(linePortion.dir, 4), new Coord(-1, -1)));
+                    captures.push(YinshCapture.of(cur, cur.getNext(linePortion.dir, 4)));
                 }
             });
         return captures;

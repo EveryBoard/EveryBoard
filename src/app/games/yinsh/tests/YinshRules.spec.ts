@@ -506,7 +506,7 @@ describe('YinshRules', () => {
                 [N, _, _, a, _, _, _, _, _, _, _],
                 [N, _, _, a, _, _, _, _, _, _, N],
                 [_, _, _, a, _, _, _, _, _, _, N],
-                [_, _, _, _, _, _, _, _, _, N, N],
+                [_, _, _, A, _, _, _, _, _, N, N],
                 [_, _, _, _, _, _, _, _, N, N, N],
                 [_, _, _, _, _, _, _, N, N, N, N],
                 [N, _, _, _, _, N, N, N, N, N, N],
@@ -514,7 +514,8 @@ describe('YinshRules', () => {
             const state: YinshState = new YinshState(board, [0, 0], 10);
             const captures: YinshCapture[] = rules.getPossibleCaptures(state);
             expect(captures.length).toBe(1);
-            expect(captures[0].equals(YinshCapture.of(new Coord(3, 2), new Coord(3, 6), new Coord(-1, -1)))).toBeTrue();
+            const capture: YinshCapture = YinshCapture.of(new Coord(3, 2), new Coord(3, 6));
+            expect(captures[0]).toEqual(capture);
         });
         it('should consider 6 aligned markers as two possible captures', () => {
             const board: Table<YinshPiece> = [
@@ -534,9 +535,9 @@ describe('YinshRules', () => {
             const captures: YinshCapture[] = rules.getPossibleCaptures(state);
             expect(captures.length).toBe(2);
             expect(captures.some((c: YinshCapture): boolean =>
-                c.equals(YinshCapture.of(new Coord(3, 2), new Coord(3, 6), new Coord(-1, -1))))).toBeTrue();
+                c.equals(YinshCapture.of(new Coord(3, 2), new Coord(3, 6))))).toBeTrue();
             expect(captures.some((c: YinshCapture): boolean =>
-                c.equals(YinshCapture.of(new Coord(3, 3), new Coord(3, 7), new Coord(-1, -1))))).toBeTrue();
+                c.equals(YinshCapture.of(new Coord(3, 3), new Coord(3, 7))))).toBeTrue();
         });
         it('should detect capture on specific board', () => {
             const board: Table<YinshPiece> = [

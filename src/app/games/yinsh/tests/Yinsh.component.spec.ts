@@ -59,6 +59,91 @@ describe('YinshComponent', () => {
         }));
     });
     describe('Main phase', () => {
+        it('should highlight clickable rings when its players turn', fakeAsync(async() => {
+            // Given a bouard where it is player's turn
+            const board: Table<YinshPiece> = [
+                [N, N, N, N, N, N, _, _, _, _, N],
+                [N, N, N, N, _, _, _, _, _, _, _],
+                [N, N, N, _, _, _, _, _, _, _, _],
+                [N, N, _, A, _, _, _, _, _, _, _],
+                [N, _, _, _, B, _, _, _, _, _, _],
+                [N, _, _, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, _, _, N, N],
+                [_, _, _, _, _, _, _, _, N, N, N],
+                [_, _, _, _, _, _, _, N, N, N, N],
+                [N, _, _, _, _, N, N, N, N, N, N],
+            ];
+            const state: YinshState = new YinshState(board, [0, 0], 10);
+            const component: YinshComponent = testUtils.getComponent();
+            spyOn(component, 'isPlayerTurn').and.returnValue(true);
+
+            // when rendering it
+            testUtils.setupState(state);
+            // Then your ring should be highlighted
+            testUtils.expectElementToExist('#selectable_3_3');
+            testUtils.expectElementNotToExist('#selectable_4_4');
+        }));
+        it('should not highlight clickable rings when it is not players turn', fakeAsync(async() => {
+            // Given a bouard where it is not player's turn
+            const board: Table<YinshPiece> = [
+                [N, N, N, N, N, N, _, _, _, _, N],
+                [N, N, N, N, _, _, _, _, _, _, _],
+                [N, N, N, _, _, _, _, _, _, _, _],
+                [N, N, _, A, _, _, _, _, _, _, _],
+                [N, _, _, _, B, _, _, _, _, _, _],
+                [N, _, _, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, _, _, N, N],
+                [_, _, _, _, _, _, _, _, N, N, N],
+                [_, _, _, _, _, _, _, N, N, N, N],
+                [N, _, _, _, _, N, N, N, N, N, N],
+            ];
+            const state: YinshState = new YinshState(board, [0, 0], 10);
+            const component: YinshComponent = testUtils.getComponent();
+            spyOn(component, 'isPlayerTurn').and.returnValue(false);
+
+            // when rendering it
+            testUtils.setupState(state);
+            // Then the rings should not be highlighted
+            testUtils.expectElementNotToExist('#selectable_3_3');
+            testUtils.expectElementNotToExist('#selectable_4_4');
+        }));
+        it('should display score as 0 - 0 when game is in posing phase', fakeAsync(async() => {
+            // Given the initial state
+            const state: YinshState = YinshState.getInitialState();
+
+            // Then rendering it
+            testUtils.setupState(state);
+
+            // Then score 0 - 0 should be displayed
+            const expectedScore: MGPOptional<[number, number]> = MGPOptional.of([0, 0]);
+            expect(testUtils.getComponent().scores).toEqual(expectedScore);
+        }));
+        it('should display score ring count when game is second phase', fakeAsync(async() => {
+            // Given a game with captures and second phase
+            const board: Table<YinshPiece> = [
+                [N, N, N, N, N, N, _, _, _, _, N],
+                [N, N, N, N, _, _, _, _, _, _, _],
+                [N, N, N, _, _, _, _, _, _, _, _],
+                [N, N, _, A, _, _, _, _, _, _, _],
+                [N, _, _, _, B, _, _, _, _, _, _],
+                [N, _, _, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, _, _, N, N],
+                [_, _, _, _, _, _, _, _, N, N, N],
+                [_, _, _, _, _, _, _, N, N, N, N],
+                [N, _, _, _, _, N, N, N, N, N, N],
+            ];
+            const state: YinshState = new YinshState(board, [2, 1], 20);
+
+            // Then rendering it
+            testUtils.setupState(state);
+
+            // Then score 2 - 1 should be displayed
+            const expectedScore: MGPOptional<[number, number]> = MGPOptional.of([2, 1]);
+            expect(testUtils.getComponent().scores).toEqual(expectedScore);
+        }));
         it('should allow a simple move without capture', fakeAsync(async() => {
             const board: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],
