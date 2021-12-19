@@ -28,8 +28,6 @@ QuartoRules.ts,6
 Rules.ts,1
 SixMinimax.ts,6
 SiamPiece.ts,1
-TablutRules.ts,39
 TablutEscapeThenPieceThenControl.ts,3
 TablutPieceAndInfluenceMinimax.ts,1
 TablutPieceAndControlMinimax.ts,1
-TablutState.ts,1

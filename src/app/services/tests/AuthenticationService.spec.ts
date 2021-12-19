@@ -145,7 +145,7 @@ describe('AuthenticationService', () => {
         });
         const subscription: Subscription = service.getUserObs().subscribe((_user: AuthUser) => {
             // Wait 200ms to ensure that the handler has the time to mark for verification
-            setTimeout(resolvePromise, 200);
+            setTimeout(resolvePromise, 2000);
         });
         await service.doEmailLogin(email, password);
         await userHasUpdated;

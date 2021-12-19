@@ -25,11 +25,13 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
                                                                  EncapsuleCase,
                                                                  EncapsuleLegalityInformation>
 {
+    private INTER_PIECE_SPACE: number = 20;
     private lastLandingCoord: MGPOptional<Coord> = MGPOptional.empty();
     private lastStartingCoord: MGPOptional<Coord> = MGPOptional.empty();
     private chosenCoord: MGPOptional<Coord> = MGPOptional.empty();
     private chosenPiece: MGPOptional<EncapsulePiece> = MGPOptional.empty();
     private chosenPieceIndex: number;
+    public remainingPieceLeftX: number[][] = [];
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -45,6 +47,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         const state: EncapsuleState = this.rules.node.gameState;
         this.board = state.getCopiedBoard();
         const move: MGPOptional<EncapsuleMove> = this.rules.node.move;
+        this.calculateLeftX();
 
         if (move.isPresent()) {
             this.lastLandingCoord = MGPOptional.of(move.get().landingCoord);
@@ -162,5 +165,25 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     }
     private isSelectedPiece(piece: EncapsulePiece): boolean {
         return this.chosenPiece.equalsValue(piece);
+    }
+    private calculateLeftX(): void {
+        this.remainingPieceLeftX = [];
+        for (let player: number = 0; player <= 1; player++) {
+            this.remainingPieceLeftX.push([]);
+            const pieces: EncapsulePiece[] = this.getRemainingPieces(player);
+            for (let indexX: number = 0; indexX < pieces.length; indexX++) {
+                if (indexX === 0) {
+                    this.remainingPieceLeftX[player].push(0);
+                } else {
+                    const previousPieceLeftX: number = this.remainingPieceLeftX[player][indexX - 1];
+                    const previousPieceWidth: number = 2 * this.getPieceRadius(pieces[indexX - 1]);
+                    const previousPieceEndX: number = previousPieceLeftX + previousPieceWidth;
+                    this.remainingPieceLeftX[player].push(previousPieceEndX + this.INTER_PIECE_SPACE);
+                }
+            }
+        }
+    }
+    public getPieceLeftX(player: number, pieceIdx: number): number {
+        return this.remainingPieceLeftX[player][pieceIdx];
     }
 }

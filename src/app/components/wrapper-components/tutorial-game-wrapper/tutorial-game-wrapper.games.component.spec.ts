@@ -2,8 +2,11 @@ import { TutorialGameWrapperComponent } from './tutorial-game-wrapper.component'
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
 import { AbaloneComponent } from 'src/app/games/abalone/abalone.component';
+import { ApagosComponent } from 'src/app/games/apagos/apagos.component';
 import { AwaleComponent } from 'src/app/games/awale/awale.component';
+import { BrandhubComponent } from 'src/app/games/tafl/brandhub/brandhub.component';
 import { CoerceoComponent } from 'src/app/games/coerceo/coerceo.component';
+import { DiamComponent } from 'src/app/games/diam/diam.component';
 import { DvonnComponent } from 'src/app/games/dvonn/dvonn.component';
 import { EncapsuleComponent } from 'src/app/games/encapsule/encapsule.component';
 import { EpaminondasComponent } from 'src/app/games/epaminondas/epaminondas.component';
@@ -20,7 +23,7 @@ import { ReversiComponent } from 'src/app/games/reversi/reversi.component';
 import { SaharaComponent } from 'src/app/games/sahara/sahara.component';
 import { SiamComponent } from 'src/app/games/siam/siam.component';
 import { SixComponent } from 'src/app/games/six/six.component';
-import { TablutComponent } from 'src/app/games/tablut/tablut.component';
+import { TablutComponent } from 'src/app/games/tafl/tablut/tablut.component';
 import { YinshComponent } from 'src/app/games/yinsh/yinsh.component';
 
 describe('TutorialGameWrapperComponent (games)', () => {
@@ -33,15 +36,33 @@ describe('TutorialGameWrapperComponent (games)', () => {
         wrapper = componentTestUtils.wrapper as TutorialGameWrapperComponent;
         expect(wrapper).toBeTruthy();
     }));
+    it('Apagos', fakeAsync(async() => {
+        const componentTestUtils: ComponentTestUtils<ApagosComponent> =
+            await ComponentTestUtils.forGame<ApagosComponent>('Apagos', TutorialGameWrapperComponent);
+        wrapper = componentTestUtils.wrapper as TutorialGameWrapperComponent;
+        expect(wrapper).toBeTruthy();
+    }));
     it('Awale', fakeAsync(async() => {
         const componentTestUtils: ComponentTestUtils<AwaleComponent> =
             await ComponentTestUtils.forGame<AwaleComponent>('Awale', TutorialGameWrapperComponent);
         wrapper = componentTestUtils.wrapper as TutorialGameWrapperComponent;
         expect(wrapper).toBeTruthy();
     }));
+    it('Brandhub', fakeAsync(async() => {
+        const componentTestUtils: ComponentTestUtils<BrandhubComponent> =
+            await ComponentTestUtils.forGame<BrandhubComponent>('Brandhub', TutorialGameWrapperComponent);
+        wrapper = componentTestUtils.wrapper as TutorialGameWrapperComponent;
+        expect(wrapper).toBeTruthy();
+    }));
     it('Coerceo', fakeAsync(async() => {
         const componentTestUtils: ComponentTestUtils<CoerceoComponent> =
             await ComponentTestUtils.forGame<CoerceoComponent>('Coerceo', TutorialGameWrapperComponent);
+        wrapper = componentTestUtils.wrapper as TutorialGameWrapperComponent;
+        expect(wrapper).toBeTruthy();
+    }));
+    it('Diam', fakeAsync(async() => {
+        const componentTestUtils: ComponentTestUtils<DiamComponent> =
+            await ComponentTestUtils.forGame<DiamComponent>('Diam', TutorialGameWrapperComponent);
         wrapper = componentTestUtils.wrapper as TutorialGameWrapperComponent;
         expect(wrapper).toBeTruthy();
     }));

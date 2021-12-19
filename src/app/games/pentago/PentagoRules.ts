@@ -13,8 +13,15 @@ export class PentagoNode extends MGPNode<PentagoRules, PentagoMove, PentagoState
 
 export class PentagoRules extends Rules<PentagoMove, PentagoState> {
 
-    public static readonly singleton: PentagoRules = new PentagoRules(PentagoState);
+    private static singleton: PentagoRules;
 
+    public static get(): PentagoRules {
+        if (PentagoRules.singleton == null) {
+            PentagoRules.singleton = new PentagoRules(PentagoState);
+        }
+        MGPNode.ruler = this.singleton;
+        return this.singleton;
+    }
     public static VICTORY_SOURCE: [Coord, Vector, boolean][] = [
         // [ firstCoordToTest, directionToTest, shouldLookTheCaseBeforeAsWellAsCaseAfter]
         [new Coord(1, 0), new Vector(1, 1), false], // 4 short diagonals

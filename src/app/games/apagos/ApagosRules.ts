@@ -13,8 +13,15 @@ export class ApagosNode extends MGPNode<ApagosRules, ApagosMove, ApagosState> {}
 
 export class ApagosRules extends Rules<ApagosMove, ApagosState> {
 
-    public static readonly singleton: ApagosRules = new ApagosRules(ApagosState);
+    private static singleton: ApagosRules;
 
+    public static get(): ApagosRules {
+        if (ApagosRules.singleton == null) {
+            ApagosRules.singleton = new ApagosRules(ApagosState);
+        }
+        MGPNode.ruler = this.singleton;
+        return this.singleton;
+    }
     public applyLegalMove(move: ApagosMove, state: ApagosState, _info: void): ApagosState {
         if (move.isDrop()) {
             return this.applyLegalDrop(move, state);

@@ -24,7 +24,7 @@ export class RulesUtils {
                 const equals: boolean = comparableEquals(resultingState, expectedState);
                 expect(equals).withContext('states should be equal').toBeTrue();
             } else {
-                expect(resultingState).withContext('states should be equal').toEqual(expectedState);
+                expect(resultingState).withContext('states should be equals').toEqual(expectedState);
             }
         } else {
             throw new Error('expected move to be valid but it is not: ' + legality.getReason());
@@ -48,7 +48,9 @@ export class RulesUtils {
         minimaxes: Minimax<M, S, L>[])
     : void
     {
-        expect(rules.getGameStatus(node)).toEqual(GameStatus.getVictory(player));
+        expect(rules.getGameStatus(node))
+            .withContext('Rules should consider gameStatus a victory for player ' + player.value)
+            .toEqual(GameStatus.getVictory(player));
         for (const minimax of minimaxes) {
             expect(minimax.getBoardValue(node).value)
                 .withContext(minimax.name + ' should consider part a victory for player ' + player.value)

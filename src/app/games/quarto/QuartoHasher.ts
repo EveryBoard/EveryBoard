@@ -51,8 +51,8 @@ export class QuartoHasher {
         for (const quartoHashInfo of quartoHashInfos) {
             let firstPiece: MGPOptional<QuartoPiece> = quartoHashInfo.firstPiece;
             const coordDir: CoordDir = quartoHashInfo.coordDir;
-            const c: Coord = QuartoHasher.get(coordDir, depth);
-            let piece: QuartoPiece = QuartoPiece.fromInt(board[c.y][c.x]);
+            const coord: Coord = QuartoHasher.get(coordDir, depth);
+            let piece: QuartoPiece = QuartoPiece.fromInt(board[coord.y][coord.x]);
             if (piece !== QuartoPiece.NONE && firstPiece.isAbsent()) {
                 firstPiece = MGPOptional.of(piece);
             }

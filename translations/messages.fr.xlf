@@ -134,6 +134,10 @@
         <source>The international version of the famous African strategy game!</source>
         <target>La version internationale du fameux jeu de stratégie africain !</target>
       </trans-unit>
+      <trans-unit id="4553628047523274326" datatype="html">
+        <source>The Irish version of the Tafl game family!</source>
+        <target>La version irlandaise de la famille de jeu Tafl !</target>
+      </trans-unit>
       <trans-unit id="2776505193142258762" datatype="html">
         <source>Get rid of all of your opponent&apos;s pieces on a board that shrinks little by little!</source>
         <target>Éliminez tous vos ennemis sur un plateau qui rapetisse petit à petit !</target>
@@ -206,9 +210,9 @@
         <source>Put your hexagonal pieces next to another one, and create one of the 3 victorious shapes to win!</source>
         <target>Placez vos pièces hexagonales les unes à côté des autres et soyez le premier à créer une des trois formes requises pour gagner !</target>
       </trans-unit>
-      <trans-unit id="5829078581404563552" datatype="html">
-        <source>The Vikings checkers! Invaders must capture the King, defender must make him escape!</source>
-        <target>Le jeu de dames Viking ! Les envahisseurs doivent capturer le roi, tandis que les défenseurs doivent le faire s'échapper !</target>
+      <trans-unit id="3778423604946977624" datatype="html">
+        <source>The Viking board game! Invaders must capture the king, defender must make him escape!</source>
+        <target>Le jeu de plateau des Vikings ! Les envahisseurs doivent capturer le roi, tandis que les défenseurs doivent le faire s'échapper !</target>
       </trans-unit>
       <trans-unit id="7926456268600574942" datatype="html">
         <source>Align your pieces to score points, but beware, pieces can flip!</source>
@@ -301,6 +305,10 @@
       <trans-unit id="4497962271113144657" datatype="html">
         <source>Apagos</source>
         <target>Apagos</target>
+      </trans-unit>
+      <trans-unit id="947579386294731197" datatype="html">
+        <source>Brandhub</source>
+        <target>Brandhub</target>
       </trans-unit>
       <trans-unit id="2246994058243837093" datatype="html">
         <source>Diam</source>
@@ -906,8 +914,8 @@
         <source>Drop</source>
         <target>Pose</target>
       </trans-unit>
-      <trans-unit id="6297839182321652830" datatype="html">
-        <source>There are two kind of moves. One is the drop. To do one, you must click on a visible arrow, being of your color or the opponent's. If the chosen square is one of the 3 leftmost ones, it will exchange position with the square on its right. You play Light.&lt;br/&gt;&lt;br/&gt;Drop a piece on one of thoses three squares.</source>
+      <trans-unit id="5812794158768312814" datatype="html">
+        <source>There are two kind of moves. One is the drop. To do one, you must click on a visible arrow, being of your color or the opponent's. If the chosen square is one of the 3 leftmost ones, it will exchange position with the square on its right. You play Light.&lt;br/&gt;&lt;br/&gt;Drop a piece on one of those three squares.</source>
         <target>Un des deux types de coup est la pose. Pour en faire une, vous devez cliquer sur une flèche, qu'elle soit de votre couleur ou de celle de l'adversaire. Si la case choisie est l'une des trois les plus à gauche, elle échangera sa place avec celle juste à sa droite. Vous jouez Clair.&lt;br/&gt;&lt;br/&gt;Posez une pièce sur l'une de ces trois cases.</target>
       </trans-unit>
       <trans-unit id="8402696305361715603" datatype="html">
@@ -1489,6 +1497,10 @@
         Finalement, il est interdit de recouvrir une pièce avec une autre pièce plus petite.
         Vous jouez Foncé et pouvez gagner à ce tour de plusieurs façons.&lt;br/&gt;&lt;br/&gt;
         Essayez de gagner en effectuant un déplacement, et non un placement (c&apos;est à dire en déposant une nouvelle pièce).</target>
+      </trans-unit>
+      <trans-unit id="6204412729347708092" datatype="html">
+        <source>You won, but the exercise is to win while moving a piece!</source>
+        <target>Vous avez gagné, mais le but de l'exercice est de gagner en faisant un déplacmement !</target>
       </trans-unit>
       <trans-unit id="5530182224164938313" datatype="html">
         <source>The move distance of your phalanx puts it out of the board.</source>
@@ -2665,6 +2677,14 @@
         <source>You must pick one of your pyramids.</source>
         <target>Vous devez choisir une de vos pyramides.</target>
       </trans-unit>
+      <trans-unit id="2094727233255278649" datatype="html">
+        <source>Those two spaces are not neighbors.</source>
+        <target>Ces deux cases ne sont pas voisines.</target>
+      </trans-unit>
+      <trans-unit id="5908478672900888285" datatype="html">
+        <source>Those two spaces have no intermediary neighbor.</source>
+        <target>Ces deux cases n&apos;ont pas de voisin commun.</target>
+      </trans-unit>
       <trans-unit id="7194810718741841575" datatype="html">
         <source>You can move one or two spaces, not <x id="PH" equiv-text="distance"/>.</source>
         <target>Vous pouvez vous déplacer maximum de 2 cases, pas de <x id="PH" equiv-text="distance"/>.</target>
@@ -3025,13 +3045,21 @@
         <source>Something is in the way.</source>
         <target>Le chemin est obstrué.</target>
       </trans-unit>
-      <trans-unit id="9184509533119533012" datatype="html">
+      <trans-unit id="1634828513961256784" datatype="html">
+        <source>Brandhub is the Irish version of the family of viking strategy game called Tafl. The goal of the game is different for each player. The attacker plays first. Their pieces (dark) are close to the edges. Their goal is to capture the king, which is in the center of the board. The defender plays second. Their pieces (light) are in the middle. Their goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
+        <target>Brandhub est la version irlandaise du jeu de Tafl, la famille de jeu de stratégie Viking. Le but du jeu est différent pour chaque joueur. Les attaquants jouent en premier. Leurs pièces (foncées) sont près des bords. Leur but est de capturer le roi, qui est au centre du plateau. Les défenseurs jouent en deuxième. Leurs pièces (claires) sont au milieu. Leur but est que le roi atteigne l'un des 4 trônes dans les coins. Notez que la case sur laquelle le roi commence, au centre du plateau, est aussi un trône.</target>
+      </trans-unit>
+      <trans-unit id="3703259835450002878" datatype="html">
+        <source>All pieces move the same way. Similarly to a rook in chess, a piece can move: &lt;ol&gt;&lt;li&gt;By as many squares as you want.&lt;/li&gt;&lt;li&gt;Without going over another piece or stopping on another piece.&lt;/li&gt;&lt;li&gt;Horizontally or vertically.&lt;/li&gt;&lt;li&gt;Only the king can land on a corner throne.&lt;/li&gt;&lt;li&gt;Once the king left his central throne, he can&apos;t go back on it, nor can the other pieces.&lt;/li&gt;&lt;/ol&gt;To move a piece, click on it and then on its landing square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do the first move.</source>
+        <target>Toutes les pièces se déplacent de la même façon. Comme la tour aux échecs, une pièce peut bouger : &lt;ol&gt;&lt;li&gt;D'autant de case que souhaité.&lt;/li&gt;&lt;li&gt;Sans passer par dessus une autre pièce ni s'arrêter sur une autre pièce.&lt;/li&gt;&lt;li&gt;Horizontalement ou verticalement.&lt;/li&gt;&lt;li&gt;Seul le roi peut s'arrêter sur l'un des coins.&lt;/li&gt;&lt;li&gt;Une fois que le roi a quitté le trône central, il ne peut plus y retourner, les autres pièces non plus.&lt;/li&gt;&lt;/ol&gt;Pour déplacer une pièce, cliquez dessus puis sur sa destination.&lt;br/&gt;&lt;br/&gt;Ceci est le plateau initial, faites le premier coup.</target>
+      </trans-unit>
+      <trans-unit id="2643653187802774042" datatype="html">
         <source>Tablut is a strategy game that was played by the Vikings.
         The goal of the game is different for each player.
         The attacker plays first. Its pieces (dark) are close to the edges.
         Its goal is to capture the king, which is in the center of the board.
         The defender plays second. Its pieces (light) are in the middle.
-        Its goal is to put the king on one of the 4 thrones in the corners.
+        Its goal is to move the king on one of the 4 thrones in the corners.
         Note that the square in which the king starts, in the center of the board, is also a throne.</source>
         <target>Le Tablut est un jeu de stratégie auquel jouaient les Vikings.
         Le but du jeu pour les deux joueurs n&apos;est pas le même.
@@ -3041,7 +3069,7 @@
         Son but est de placer le roi sur l&apos;un des 4 trônes situés dans les coins.
         Notez que la case où est le roi au début du jeu, au centre du plateau, est également un trône.</target>
       </trans-unit>
-      <trans-unit id="688519268553438993" datatype="html">
+      <trans-unit id="5152957749531280485" datatype="html">
         <source>All pieces move the same way.
         Similarly to a rook in chess, a piece can move:
         &lt;ol&gt;
@@ -3051,7 +3079,7 @@
             &lt;li&gt;Only the king can land on a throne.&lt;/li&gt;
         &lt;/ol&gt;
         To move a piece, click on it and then on its landing square.&lt;br/&gt;&lt;br/&gt;
-        This is the initial board, do the first move.</source>
+        You&apos;re playing Dark, do the first move.</source>
         <target>Au Tablut, toutes les pièces se déplacent de la même façon.
         De façon équivalente aux tours aux échecs, une pièce se déplace :
         &lt;ol&gt;
@@ -3067,15 +3095,9 @@
         <source>Capturing a soldier (1/2)</source>
         <target>Capturer un simple soldat (1/2)</target>
       </trans-unit>
-      <trans-unit id="677441772205421573" datatype="html">
-        <source>All pieces except the king, attackers and defenders, are soldiers.
-        To capture them, they have to be sandwiched between two of your pieces.
-        By getting too close, an attacker&apos;s soldier is in danger.&lt;br/&gt;&lt;br/&gt;
-        Capture it.</source>
-        <target>Toutes les pièces, attaquantes comme défenseuses, sont des soldats, à l&apos;exception du roi.
-        Pour les capturer, il faut en prendre une en sandwich entre deux de vos soldats.
-        En s&apos;approchant trop, un pion de l&apos;envahisseur s&apos;est mis en danger.&lt;br/&gt;&lt;br/&gt;
-        Capturez le.</target>
+      <trans-unit id="1850808010105870709" datatype="html">
+        <source>All pieces, attackers and defenders, except the king, are soldiers. To capture them, they have to be sandwiched between two of your pieces. By getting too close, an attacker&apos;s soldier is in danger.&lt;br/&gt;&lt;br/&gt;Capture it.</source>
+        <target>Toutes les pièces, attaquantes comme défenseuses, sont des soldats, à l&apos;exception du roi. Pour les capturer, il faut en prendre une en sandwich entre deux de vos soldats. En s&apos;approchant trop, un soldat de l&apos;envahisseur s&apos;est mis en danger.&lt;br/&gt;&lt;br/&gt;Capturez le.</target>
       </trans-unit>
       <trans-unit id="1504890408061490574" datatype="html">
         <source>Congratulations, that will teach him a lesson!</source>
@@ -3089,13 +3111,9 @@
         <source>Capturing a soldier (2/2)</source>
         <target>Capturer un simple soldat (2/2)</target>
       </trans-unit>
-      <trans-unit id="3935652819200846577" datatype="html">
-        <source>A second way to capture a soldier is against an empty throne.
-        The King has moved and endangered one of its soldiers.&lt;br/&gt;&lt;br/&gt;
-        Capture it.</source>
-        <target>Un deuxième moyen de capturer un soldat, est contre un trône vide.
-        Le Roi a quitté son poste, et mis en danger un de ses soldats.&lt;br/&gt;&lt;br/&gt;
-        Capturez le.</target>
+      <trans-unit id="7815830988890986315" datatype="html">
+        <source>A second way to capture a soldier is to sandwich it against an empty throne. The king has moved and endangered one of its soldiers.&lt;br/&gt;&lt;br/&gt;Capture it.</source>
+        <target>Un deuxième moyen de capturer un soldat, est de le prendre en sandwich contre un trône vide. Le Roi a quitté son poste, et mis en danger un de ses soldats.&lt;br/&gt;&lt;br/&gt; Capturez le.</target>
       </trans-unit>
       <trans-unit id="6149168030196118189" datatype="html">
         <source>Congratulations, one less defender. But keep an eye on the king, it is the most important.</source>
@@ -3104,6 +3122,14 @@
       <trans-unit id="2625274275364629010" datatype="html">
         <source>Failed, you did not do the expected move.</source>
         <target>Raté, vous n&apos;avez pas fait le mouvement demandé.</target>
+      </trans-unit>
+      <trans-unit id="8078344255720503228" datatype="html">
+        <source>Capturing the king on his throne</source>
+        <target>Capturer le roi sur son trône</target>
+      </trans-unit>
+      <trans-unit id="4384170874923825000" datatype="html">
+        <source>To capture the king when he sits on his throne, the four squares neighbor to the king (horizontally and vertically) must be occupied by your soldiers.&lt;br/&gt;&lt;br/&gt;Capture the king.</source>
+        <target>Pour capturer le roi quand il est sur son trône, les 4 cases voisines au roi (horizontalement et verticalement) doivent être occupées par vos pions.&lt;br/&gt;&lt;br/&gt;Capturez le roi.</target>
       </trans-unit>
       <trans-unit id="2222427678565473040" datatype="html">
         <source>Capturing the king (1/2)</source>
@@ -3123,6 +3149,14 @@
         <source>Failed, you let the king run away.</source>
         <target>Raté, vous avez laissé fuir le roi.</target>
       </trans-unit>
+      <trans-unit id="4897090029478298745" datatype="html">
+        <source>Capturing the king next to his throne</source>
+        <target>Capturer le roi à côté de son trône</target>
+      </trans-unit>
+      <trans-unit id="2153359406126924155" datatype="html">
+        <source>Another way to capture the king is to use three soldier plus the central throne to surround the king on four sides.&lt;br/&gt;&lt;br/&gt;Capture the king.</source>
+        <target>Un autre moyen de capturer le roi est d'utiliser trois soldats plus le trône central pour entourer le roi des 4 côtés.&lt;br/&gt;&lt;br/&gt;Capturez le roi.</target>
+      </trans-unit>
       <trans-unit id="2262651303124763617" datatype="html">
         <source>Capturing the king (2/2)</source>
         <target>Capturer le roi (2/2)</target>
@@ -3135,9 +3169,17 @@
         Notez qu&apos;un roi n&apos;est pas capturable sur une case voisine à un trône.&lt;br/&gt;&lt;br/&gt;
         Capturez le roi.</target>
       </trans-unit>
-      <trans-unit id="6715271150391313638" datatype="html">
-        <source>The King is dead, long live the King. Congratulations, you won.</source>
+      <trans-unit id="2462375977615446954" datatype="html">
+        <source>The king is dead, long live the king. Congratulations, you won.</source>
         <target>Le Roi est mort, longue vie au Roi. Bravo, vous avez gagné la partie.</target>
+      </trans-unit>
+      <trans-unit id="6061494208056217209" datatype="html">
+        <source>Capturing the king far from his throne</source>
+        <target>Capturer le roi loin de son trône</target>
+      </trans-unit>
+      <trans-unit id="3108682754212137830" datatype="html">
+        <source>When the king is not on his central throne nor next to it, he can be captured like a soldier.&lt;br/&gt;&lt;br/&gt;Capture the king.</source>
+        <target>Quand le roi n'est ni sur son trône central, ni à côté de celui-ci, il peut être capturé comme un soldat.&lt;br/&gt;&lt;br/&gt;Capturez le roi.</target>
       </trans-unit>
       <trans-unit id="9155303779171419902" datatype="html">
         <source>You cannot put a new ring after the tenth turn.</source>
@@ -3292,6 +3334,10 @@
       <trans-unit id="5966391152315784819" datatype="html">
         <source>You have selected an empty space, you must select one of your own pieces.</source>
         <target>Vous avez sélectionné une case vide, vous devez sélectionner l&apos;une de vos pièces.</target>
+      </trans-unit>
+      <trans-unit id="1153768241274180865" datatype="html">
+        <source>You must choose different starting and ending coordinates.</source>
+        <target>Le mouvement ne peut pas être statique, choisissez une case de départ et d&apos;arrivée différentes.</target>
       </trans-unit>
       <trans-unit id="4047787446065773376" datatype="html">
         <source>There are missing fields in the registration form, please check that you filled in all fields.</source>

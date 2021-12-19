@@ -1,4 +1,5 @@
 #!/usr/bin/python
+import os
 import sys
 from lxml import html
 import pandas
@@ -24,11 +25,11 @@ def load_coverage_data():
         'lines': {},
     }
     for path in files:
-        f = open(path, mode='r')
+        f = open(path, mode='r', encoding='utf8')
         page = f.read()
         f.close()
         tree = html.fromstring(page)
-        filename = path.split('/')[-1][:-5]
+        filename = os.path.split(path)[1][:-5]
         xpath_results = tree.xpath("//span[contains(@class, 'fraction')]/text()")
         data['statements'][filename] = to_missing(xpath_results[0])
         data['branches'][filename] = to_missing(xpath_results[1])
@@ -37,7 +38,7 @@ def load_coverage_data():
     return data
 
 def load_stored_coverage_from(path):
-    data = pandas.read_csv(path, header=None)
+    data = pandas.read_csv(path, header=None, encoding='utf8')
     files = data[0]
     values = data[1]
     return dict(sorted(zip(files, values), key=sort_function))
@@ -51,7 +52,7 @@ def load_stored_coverage():
     }
 
 def generate_in_file(data, path):
-    f = open(path, mode='w')
+    f = open(path, mode='w', encoding='utf8')
     for directory in sorted(data, key=sort_function):
         if data[directory] > 0:
             # Only store if coverage is > 0

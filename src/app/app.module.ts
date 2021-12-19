@@ -50,6 +50,7 @@ import { NextGameLoadingComponent } from './components/normal-component/next-gam
 import { AbaloneComponent } from './games/abalone/abalone.component';
 import { ApagosComponent } from './games/apagos/apagos.component';
 import { AwaleComponent } from './games/awale/awale.component';
+import { BrandhubComponent } from './games/tafl/brandhub/brandhub.component';
 import { CoerceoComponent } from './games/coerceo/coerceo.component';
 import { DiamComponent } from './games/diam/diam.component';
 import { DvonnComponent } from './games/dvonn/dvonn.component';
@@ -69,7 +70,7 @@ import { ReversiComponent } from './games/reversi/reversi.component';
 import { SaharaComponent } from './games/sahara/sahara.component';
 import { SiamComponent } from './games/siam/siam.component';
 import { SixComponent } from './games/six/six.component';
-import { TablutComponent } from './games/tablut/tablut.component';
+import { TablutComponent } from './games/tafl/tablut/tablut.component';
 import { YinshComponent } from './games/yinsh/yinsh.component';
 
 import { environment } from 'src/environments/environment';
@@ -140,6 +141,7 @@ const routes: Route [] = [
         AbaloneComponent,
         ApagosComponent,
         AwaleComponent,
+        BrandhubComponent,
         CoerceoComponent,
         DiamComponent,
         DvonnComponent,

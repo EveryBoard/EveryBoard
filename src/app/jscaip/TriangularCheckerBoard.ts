@@ -2,7 +2,7 @@ import { Coord } from './Coord';
 import { MGPOptional } from '../utils/MGPOptional';
 
 export class TriangularCheckerBoard {
-    public static getNeighboors(c: Coord): Coord[] {
+    public static getNeighbors(c: Coord): Coord[] {
         let neighboors: Coord[];
         const left: Coord = new Coord(c.x - 1, c.y);
         const right: Coord = new Coord(c.x + 1, c.y);
@@ -15,13 +15,13 @@ export class TriangularCheckerBoard {
         }
         return neighboors;
     }
-    public static getFakeNeighboors(c: Coord): Coord {
+    public static getFakeNeighbors(c: Coord): Coord {
         if ((c.x + c.y)%2 === 1) return new Coord(c.x, c.y + 1); // DOWN
         return new Coord(c.x, c.y - 1); // UP
     }
-    public static getCommonNeighboor(a: Coord, b: Coord): MGPOptional<Coord> {
-        const aNeighboors: Coord[] = TriangularCheckerBoard.getNeighboors(a);
-        const bNeighboors: Coord[] = TriangularCheckerBoard.getNeighboors(b);
+    public static getCommonNeighbor(a: Coord, b: Coord): MGPOptional<Coord> {
+        const aNeighboors: Coord[] = TriangularCheckerBoard.getNeighbors(a);
+        const bNeighboors: Coord[] = TriangularCheckerBoard.getNeighbors(b);
         let i: number = 0;
         while (i < aNeighboors.length) {
             const aNeighboor: Coord = aNeighboors[i];

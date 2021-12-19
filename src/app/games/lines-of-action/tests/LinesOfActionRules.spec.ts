@@ -24,7 +24,6 @@ describe('LinesOfActionRules', () => {
     });
     it('should be created', () => {
         expect(rules).toBeTruthy();
-        expect(minimax.getBoardValue(rules.node).value).toEqual(0);
     });
     it('should forbid moving a piece of the opponent', () => {
         const state: LinesOfActionState = LinesOfActionState.getInitialState();
