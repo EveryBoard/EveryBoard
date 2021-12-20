@@ -25,6 +25,7 @@ describe('P4Component', () => {
         await componentTestUtils.expectMoveSuccess('#click_3', move);
     }));
     it('should highlight victory', fakeAsync(async() => {
+        // Given a board with a victory
         const board: Table<Player> = [
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
@@ -34,7 +35,14 @@ describe('P4Component', () => {
             [_, _, _, O, _, _, _],
         ];
         const state: P4State = new P4State(board, 0);
+
+        // When rendering it
         componentTestUtils.setupState(state);
-        expect(componentTestUtils.getComponent().getCaseClasses(3, 3)).toContain('victory-stroke');
+
+        // Then victorious coords should be shown
+        componentTestUtils.expectElementToHaveClass('#victory_coord_3_2', 'victory-stroke');
+        componentTestUtils.expectElementToHaveClass('#victory_coord_3_3', 'victory-stroke');
+        componentTestUtils.expectElementToHaveClass('#victory_coord_3_4', 'victory-stroke');
+        componentTestUtils.expectElementToHaveClass('#victory_coord_3_5', 'victory-stroke');
     }));
 });

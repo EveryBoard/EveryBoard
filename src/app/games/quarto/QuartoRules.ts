@@ -3,7 +3,7 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { QuartoState } from './QuartoState';
 import { QuartoMove } from './QuartoMove';
 import { QuartoPiece } from './QuartoPiece';
-import { assert, display } from 'src/app/utils/utils';
+import { display, Utils } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
@@ -11,30 +11,29 @@ import { SCORE } from 'src/app/jscaip/SCORE';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { QuartoFailure } from './QuartoFailure';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPMap } from 'src/app/utils/MGPMap';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 export interface BoardStatus {
+
     score: SCORE;
-    sensitiveSquares: SensitiveSquare[];
+
+    sensitiveSquares: MGPMap<Coord, Criteria>;
 }
-class SensitiveSquare {
+class Criteria {
     /**
      * List of criteria that need to be fulfilled in this square in order to win.
      * If the piece in hand matches one of these criterion, this is a pre-victory
      */
-    criteria: Criterion[];
-    x: number;
-    y: number;
+    criteria: [Criterion | null, Criterion | null, Criterion | null];
 
-    constructor(x: number, y: number) {
+    constructor() {
         /**
          * a sensitive square can be in maximum three lines
          * the horizontal, the vertical, and the diagonal
          */
-        this.criteria = new Array<Criterion>(3);
-        this.x = x;
-        this.y = y;
+        this.criteria = [null, null, null];
     }
     /**
      * Add a criterion in square several line contains this sensitive square (1 to 3 lines could)
@@ -44,31 +43,33 @@ class SensitiveSquare {
     public addCriterion(c: Criterion): boolean {
         const i: number = this.indexOf(c);
         if (i > 0) {
-            // not added, counted twice
+            // already present
             return false;
         }
-        // TODO remove this debug
-        assert(i !== 3, `This is impossible, too many elements were added in this SensitiveSquare`);
-        this.criteria[-i - 1] = c;
+        const firstEmptyIndex: number = this.firstEmpty();
+        this.criteria[firstEmptyIndex] = c;
         return true;
     }
-    /**
-     * See if this criterion is already part of the list
-     * Returns the index of c if it is found
-     * Returns the index of where it could be added if it is not found
-     */
     public indexOf(c: Criterion): number {
-        // TODO Criterion.contains
+        let i: number;
+        for (i = 0; i < 3; i++) {
+            if (this.criteria[i] != null && Utils.getNonNullable(this.criteria[i]).equals(c)) {
+                return i;
+            }
+        }
+        return -1; // is not contained and there is no more room
+    }
+    public firstEmpty(): number {
         let i: number;
         for (i = 0; i < 3; i++) {
             if (this.criteria[i] == null) {
-                return -i - 1; // is not contained, and there is room at index i
-            }
-            if (this.criteria[i].equals(c)) {
-                return i + 1; // is contained at index i
+                return i;
             }
         }
-        return 4; // is not contained and there is no more room
+        return -1;
+    }
+    public equals(other: Criteria): boolean {
+        throw new Error('useless');
     }
 }
 /**
@@ -88,23 +89,12 @@ class Criterion {
         this.subCriterion[2] = (bSquare.value & 2) === 2;
         this.subCriterion[3] = (bSquare.value & 1) === 1;
     }
-    public setSubCrition(index: number, value: boolean): boolean {
-        this.subCriterion[index] = value;
-        return true;
-        /**
-         * TODO check if we need to keep this
-         *  currently, it is used to check that there is no override but it should be impossible that it happens
-         */
-    }
     public equals(o: Criterion): boolean {
-        let i: number = 0;
-        do {
+        for (let i: number = 0; i < 4; i++) {
             if (this.subCriterion[i] !== o.subCriterion[i]) {
-                return false; // a!=b
+                return false;
             }
-            i++;
-        } while (i < 4);
-
+        }
         return true;
     }
     /**
@@ -157,9 +147,6 @@ class Criterion {
         } while (i < 4);
         return false;
     }
-    public matchQE(qe: QuartoPiece): boolean {
-        return this.match(new Criterion(qe));
-    }
     public matchInt(c: QuartoPiece): boolean {
         return this.match(new Criterion(c));
     }
@@ -182,6 +169,15 @@ class Line {
     }
 }
 export class QuartoNode extends MGPNode<QuartoRules, QuartoMove, QuartoState> {}
+
+interface LineInfos {
+
+    commonCriterion: MGPOptional<Criterion>;
+
+    sensitiveCoord: MGPOptional<Coord>;
+
+    boardStatus: MGPOptional<BoardStatus>;
+}
 
 export class QuartoRules extends Rules<QuartoMove, QuartoState> {
 
@@ -212,6 +208,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         new Line(new Coord(0, 0), Direction.DOWN_RIGHT),
         new Line(new Coord(0, 3), Direction.UP_RIGHT),
     ];
+    public node: MGPNode<QuartoRules, QuartoMove, QuartoState>;
 
     private static isOccupied(square: QuartoPiece): boolean {
         return (square !== QuartoPiece.NONE);
@@ -264,7 +261,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
             if (this.isThereAVictoriousLine(line, state)) {
                 return {
                     score: SCORE.VICTORY,
-                    sensitiveSquares: [],
+                    sensitiveSquares: new MGPMap(),
                 };
             } else {
                 return boardStatus;
@@ -304,9 +301,43 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
                                                       boardStatus: BoardStatus)
     : BoardStatus
     {
-        // we're looking for a victory, pre-victory, or normal score
-        let cs: MGPOptional<SensitiveSquare> = MGPOptional.empty(); // the first square is empty
-        let commonCrit: MGPOptional<Criterion> = MGPOptional.empty();
+        // we're looking for a victory, pre-victory
+        const lineInfos: LineInfos = QuartoRules.getLineInfos(line, state, boardStatus);
+        if (lineInfos.boardStatus.isPresent()) {
+            return lineInfos.boardStatus.get();
+        }
+        const commonCriterion: MGPOptional<Criterion> = lineInfos.commonCriterion;
+        const sensitiveCoord: MGPOptional<Coord> = lineInfos.sensitiveCoord;
+
+        // we now have looked through the entire line, we summarize everything
+        if (commonCriterion.isPresent() && (commonCriterion.get().isAllNull() === false)) {
+            // this line is not null and has a common criterion between all of its pieces
+            if (sensitiveCoord.isAbsent()) {
+                // the line is full
+                return { score: SCORE.VICTORY, sensitiveSquares: new MGPMap() };
+            } else {
+                // if there is only one empty square, then the sensitive square we found is indeed sensitive
+                if (commonCriterion.get().matchInt(state.pieceInHand)) {
+                    boardStatus.score = SCORE.PRE_VICTORY;
+                }
+                const coord: Coord = sensitiveCoord.get();
+                if (boardStatus.sensitiveSquares.containsKey(coord)) {
+                    const oldSensitiveSquare: Criteria = boardStatus.sensitiveSquares.get(coord).get();
+                    oldSensitiveSquare.addCriterion(commonCriterion.get());
+                } else {
+                    const newCriteria: Criteria = new Criteria();
+                    newCriteria.addCriterion(commonCriterion.get());
+                    boardStatus.sensitiveSquares.set(coord, newCriteria);
+                }
+            }
+        }
+        return boardStatus;
+    }
+    private static getLineInfos(line: Line, state: QuartoState, boardStatus: BoardStatus)
+    : LineInfos
+    {
+        let sensitiveCoord: MGPOptional<Coord> = MGPOptional.empty(); // the first square is empty
+        let commonCriterion: MGPOptional<Criterion> = MGPOptional.empty();
 
         let coord: Coord = line.initialCoord;
         for (let i: number = 0; i < 4; i++) {
@@ -314,39 +345,29 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
             // we look through the entire line
             if (c === QuartoPiece.NONE) {
                 // if c is unoccupied
-                if (cs.isAbsent()) {
-                    cs = MGPOptional.of(new SensitiveSquare(coord.x, coord.y));
+                if (sensitiveCoord.isAbsent()) {
+                    sensitiveCoord = MGPOptional.of(coord);
                 } else {
-                    return boardStatus; // 2 empty square: no victory or pre-victory, or new criterion
+                    // 2 empty square: no victory or pre-victory, or new criterion
+                    return {
+                        sensitiveCoord: MGPOptional.of(coord),
+                        commonCriterion,
+                        boardStatus: MGPOptional.of(boardStatus),
+                    };
                 }
             } else {
                 // if c is occupied
-                if (commonCrit.isAbsent()) {
-                    commonCrit = MGPOptional.of(new Criterion(c));
-                    display(QuartoRules.VERBOSE, 'set commonCrit to ' + commonCrit.toString());
+                if (commonCriterion.isAbsent()) {
+                    commonCriterion = MGPOptional.of(new Criterion(c));
+                    display(QuartoRules.VERBOSE, 'set commonCrit to ' + commonCriterion.toString());
                 } else {
-                    commonCrit.get().mergeWithQuartoPiece(c);
-                    display(QuartoRules.VERBOSE, 'update commonCrit: ' + commonCrit.toString());
+                    commonCriterion.get().mergeWithQuartoPiece(c);
+                    display(QuartoRules.VERBOSE, 'update commonCrit: ' + commonCriterion.toString());
                 }
             }
             coord = coord.getNext(line.direction, 1);
         }
-
-        // we now have looked through the entire line, we summarize everything
-        if (commonCrit.isPresent() && (!commonCrit.get().isAllNull())) {
-            // this line is not null and has a common criterion between all of its pieces
-            if (cs.isAbsent()) {
-                return { score: SCORE.VICTORY, sensitiveSquares: [] };
-            } else {
-                // if these is only one empty square, then the sensitive square we found is indeed sensitive
-                if (commonCrit.get().matchInt(state.pieceInHand)) {
-                    boardStatus.score = SCORE.PRE_VICTORY;
-                }
-                cs.get().addCriterion(commonCrit.get());
-                boardStatus.sensitiveSquares.push(cs.get());
-            }
-        }
-        return boardStatus;
+        return { commonCriterion, sensitiveCoord, boardStatus: MGPOptional.empty() };
     }
     public static scoreToGameStatus(score: SCORE, turn: number): GameStatus {
         const player: Player = Player.of(turn % 2);
@@ -359,7 +380,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoState> {
         const state: QuartoState = node.gameState;
         let boardStatus: BoardStatus = {
             score: SCORE.DEFAULT,
-            sensitiveSquares: [],
+            sensitiveSquares: new MGPMap(),
         };
         for (const line of QuartoRules.lines) {
             boardStatus = QuartoRules.updateBoardStatus(line, state, boardStatus);
