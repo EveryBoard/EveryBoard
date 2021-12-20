@@ -147,7 +147,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ build, tests, linter, images, translations ]
     environment: netlify
-# TODO:    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v2
@@ -175,7 +174,7 @@ jobs:
         id: is_organization_member
         uses: jamessingleton/is-organization-member@1.0.1
         with:
-          organization: AwesomBoard
+          organization: EveryBoard
           username: ${{ github.actor }}
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Build if org member
@@ -183,6 +182,8 @@ jobs:
           result=${{ steps.is_organization_member.outputs.result }}
           if [ $result == true ]; then
             npm run build:netlify
+            ./scripts/update-images.sh
+            ./scripts/check-translations.sh
           fi
       - name: Deploy master on push if org member
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
