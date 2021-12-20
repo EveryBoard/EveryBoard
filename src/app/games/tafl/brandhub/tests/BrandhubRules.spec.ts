@@ -357,4 +357,33 @@ describe('BrandhubRules', () => {
         const expectedState: BrandhubState = new BrandhubState(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
+    it('Should not allow capturing the king with two pieces next to central throne', () => {
+        // Given a board where the king next to his throne and to one opponent
+        const board: Table<TaflPawn> = [
+            [_, _, _, _, _, _, _],
+            [_, _, O, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, A, _, X, _, _],
+            [_, _, O, O, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, X, _, _, _],
+        ];
+        const state: BrandhubState = new BrandhubState(board, 0);
+
+        // When moving an invader next to the king (on the opposite side)
+        const move: BrandhubMove = BrandhubMove.of(new Coord(2, 1), new Coord(2, 2));
+
+        // Then the king should not be captured
+        const expectedBoard: Table<TaflPawn> = [
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, O, _, _, _, _],
+            [_, _, A, _, X, _, _],
+            [_, _, O, O, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, X, _, _, _],
+        ];
+        const expectedState: BrandhubState = new BrandhubState(expectedBoard, 1);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+    });
 });
