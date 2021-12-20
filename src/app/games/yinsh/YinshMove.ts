@@ -13,7 +13,7 @@ export class YinshCapture extends GipfCapture {
     public static encoder: Encoder<YinshCapture> = new class extends Encoder<YinshCapture> {
         public encode(capture: YinshCapture): JSONValue {
             return {
-                captured: capture.capturedCases.map((coord: Coord): JSONValueWithoutArray => {
+                captured: capture.capturedSpaces.map((coord: Coord): JSONValueWithoutArray => {
                     return Coord.encoder.encode(coord) as JSONValueWithoutArray;
                 }),
                 ringTaken: Coord.encoder.encode(capture.ringTaken.get()),
@@ -30,7 +30,6 @@ export class YinshCapture extends GipfCapture {
         }
     };
     public static of(start: Coord, end: Coord, ringTaken?: Coord): YinshCapture {
-        if (ringTaken != null && ringTaken.x === -1) throw new Error('TA MERE PAR LA FENETRE')
         const coords: Coord[] = [];
         const dir: HexaDirection = HexaDirection.factory.fromMove(start, end).get();
         for (let cur: Coord = start; cur.equals(end) === false; cur = cur.getNext(dir)) {
@@ -50,7 +49,7 @@ export class YinshCapture extends GipfCapture {
         this.ringTaken = MGPOptional.ofNullable(ringTaken);
     }
     public setRingTaken(ringTaken: Coord): YinshCapture {
-        return new YinshCapture(this.capturedCases, ringTaken);
+        return new YinshCapture(this.capturedSpaces, ringTaken);
     }
     public equals(other: YinshCapture): boolean {
         if (super.equals(other) === false) return false;

@@ -31,7 +31,7 @@ describe('YinshComponent', () => {
         it('should allow placing a ring and show it highlighted', fakeAsync(async() => {
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.empty(), []);
             await testUtils.expectMoveSuccess('#click_3_2', move, undefined, [0, 0]);
-            testUtils.expectElementToHaveClasses('#case_3_2', ['base', 'moved']);
+            testUtils.expectElementToHaveClasses('#space_3_2', ['base', 'moved']);
         }));
         it('should forbid placing a ring on an occupied space', fakeAsync(async() => {
             const board: Table<YinshPiece> = [
@@ -188,10 +188,10 @@ describe('YinshComponent', () => {
             await testUtils.expectClickSuccess('#click_3_2');
             await testUtils.expectMoveSuccess('#click_6_2', move, undefined, [0, 0]);
 
-            testUtils.expectElementToHaveClass('#case_3_2', 'moved'); // the new marker
-            testUtils.expectElementToHaveClass('#case_4_2', 'moved'); // a flipped marker
-            testUtils.expectElementToHaveClass('#case_5_2', 'moved'); // another flipped marker
-            testUtils.expectElementToHaveClass('#case_6_2', 'moved'); // the moved ring
+            testUtils.expectElementToHaveClass('#space_3_2', 'moved'); // the new marker
+            testUtils.expectElementToHaveClass('#space_4_2', 'moved'); // a flipped marker
+            testUtils.expectElementToHaveClass('#space_5_2', 'moved'); // another flipped marker
+            testUtils.expectElementToHaveClass('#space_6_2', 'moved'); // the moved ring
         }));
         it('should fill the ring selected at the beginning of a move', fakeAsync(async() => {
             const board: Table<YinshPiece> = [

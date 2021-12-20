@@ -221,7 +221,7 @@ describe('YinshRules', () => {
             ];
             const state: YinshState = new YinshState(board, [0, 0], 10);
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(3, 7)), []);
-            const reason: string = YinshFailure.MOVE_SHOULD_END_AT_FIRST_EMPTY_CASE_AFTER_MARKERS();
+            const reason: string = YinshFailure.MOVE_SHOULD_END_AT_FIRST_EMPTY_SPACE_AFTER_MARKERS();
 
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
@@ -241,7 +241,7 @@ describe('YinshRules', () => {
             ];
             const state: YinshState = new YinshState(board, [0, 0], 10);
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(3, 8)), []);
-            const reason: string = YinshFailure.MOVE_SHOULD_END_AT_FIRST_EMPTY_CASE_AFTER_MARKERS();
+            const reason: string = YinshFailure.MOVE_SHOULD_END_AT_FIRST_EMPTY_SPACE_AFTER_MARKERS();
 
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
@@ -420,7 +420,7 @@ describe('YinshRules', () => {
 
             RulesUtils.expectMoveFailure(rules, state, move, YinshFailure.CAN_ONLY_CAPTURE_YOUR_MARKERS());
         });
-        it('should forbid capturing empty cases', () => {
+        it('should forbid capturing empty spaces', () => {
             const board: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, _, _, _, _, _, _, _],

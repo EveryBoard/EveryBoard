@@ -63,7 +63,7 @@ export class YinshMinimax extends Minimax<YinshMove, YinshState, YinshLegalityIn
                 return Combinatorics.getCombinations(ringCoords, captureCombination.length)
                     .map((ringsTaken: Coord[]): YinshCapture[] => {
                         return captureCombination.map((capture: GipfCapture, index: number): YinshCapture => {
-                            return new YinshCapture(capture.capturedCases, ringsTaken[index]);
+                            return new YinshCapture(capture.capturedSpaces, ringsTaken[index]);
                         });
                     });
             }).reduce((accumulator: YinshCapture[][], captures: YinshCapture[][]): YinshCapture[][] => {

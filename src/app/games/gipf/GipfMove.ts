@@ -10,7 +10,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 export class GipfCapture {
     public static encoder: Encoder<GipfCapture> = new class extends Encoder<GipfCapture> {
         public encode(capture: GipfCapture): JSONValue {
-            return capture.capturedCases.map((coord: Coord): JSONValueWithoutArray => {
+            return capture.capturedSpaces.map((coord: Coord): JSONValueWithoutArray => {
                 return Coord.encoder.encode(coord) as JSONValueWithoutArray;
             });
         }
@@ -20,7 +20,7 @@ export class GipfCapture {
         }
     }
 
-    public readonly capturedCases: ReadonlyArray<Coord>;
+    public readonly capturedSpaces: ReadonlyArray<Coord>;
 
     public constructor(captured: ReadonlyArray<Coord>) {
         if (captured.length < 4) {
@@ -29,7 +29,7 @@ export class GipfCapture {
         if (HexaLine.areOnSameLine(captured) === false) {
             throw new Error('Cannot create a GipfCapture with pieces that are not on the same line');
         }
-        this.capturedCases = ArrayUtils.copyImmutableArray(captured).sort((coord1: Coord, coord2: Coord) => {
+        this.capturedSpaces = ArrayUtils.copyImmutableArray(captured).sort((coord1: Coord, coord2: Coord) => {
             if (coord1.x === coord2.x) {
                 if (coord1.y === coord2.y) {
                     throw new Error('Cannot create a GipfCapture with duplicate cases');
@@ -41,7 +41,7 @@ export class GipfCapture {
         });
         let previous: MGPOptional<Coord> = MGPOptional.empty();
         // Captured cases must be consecutive
-        for (const coord of this.capturedCases) {
+        for (const coord of this.capturedSpaces) {
             if (previous.isPresent() && previous.get().getDistance(coord) !== 1) {
                 throw new Error('Cannot create a GipfCapture with non-consecutive cases');
             }
@@ -50,7 +50,7 @@ export class GipfCapture {
     }
     public toString(): string {
         let str: string = '';
-        for (const coord of this.capturedCases) {
+        for (const coord of this.capturedSpaces) {
             if (str !== '') {
                 str += ',';
             }
@@ -59,34 +59,34 @@ export class GipfCapture {
         return str;
     }
     public size(): number {
-        return this.capturedCases.length;
+        return this.capturedSpaces.length;
     }
     public forEach(callback: (coord: Coord) => void): void {
-        this.capturedCases.forEach(callback);
+        this.capturedSpaces.forEach(callback);
     }
     public contains(coord: Coord): boolean {
-        for (let i: number = 0; i < this.capturedCases.length; i++) {
-            if (this.capturedCases[i].equals(coord)) {
+        for (let i: number = 0; i < this.capturedSpaces.length; i++) {
+            if (this.capturedSpaces[i].equals(coord)) {
                 return true;
             }
         }
         return false;
     }
     public intersectsWith(capture: GipfCapture): boolean {
-        return this.capturedCases.some((coord: Coord) => {
+        return this.capturedSpaces.some((coord: Coord) => {
             return capture.contains(coord);
         });
     }
     public getLine(): HexaLine {
-        const line: MGPOptional<HexaLine> = HexaLine.fromTwoCoords(this.capturedCases[0], this.capturedCases[1]);
+        const line: MGPOptional<HexaLine> = HexaLine.fromTwoCoords(this.capturedSpaces[0], this.capturedSpaces[1]);
         // Invariant: all captured pieces are on the same line, hence we can safely call .get()
         return line.get();
     }
     public equals(other: GipfCapture): boolean {
         if (this === other) return true;
-        if (this.capturedCases.length !== other.capturedCases.length) return false;
-        for (let i: number = 0; i < this.capturedCases.length; i++) {
-            if (!this.capturedCases[i].equals(other.capturedCases[i])) return false;
+        if (this.capturedSpaces.length !== other.capturedSpaces.length) return false;
+        for (let i: number = 0; i < this.capturedSpaces.length; i++) {
+            if (!this.capturedSpaces[i].equals(other.capturedSpaces[i])) return false;
         }
         return true;
     }
