@@ -14,6 +14,7 @@ import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisp
 import { SaharaFailure } from './SaharaFailure';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { SaharaTutorial } from './SaharaTutorial';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 @Component({
     selector: 'app-sahara',
@@ -47,7 +48,6 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         this.chosenCoord = MGPOptional.empty();
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickedCoord: Coord = new Coord(x, y);
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
@@ -55,19 +55,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         if (this.chosenCoord.isAbsent()) { // Must select pyramid
             return this.choosePiece(x, y);
         } else { // Must choose empty landing case
-            const currentPlayer: Player = this.rules.node.gameState.getCurrentPlayer();
-            const PLAYER: FourStatePiece = FourStatePiece.ofPlayer(currentPlayer);
-            if (this.board[y][x] === PLAYER) {
-                this.chosenCoord = MGPOptional.of(new Coord(x, y));
-                return MGPValidation.SUCCESS;
-            }
-            let newMove: SaharaMove;
-            try {
-                newMove = new SaharaMove(this.chosenCoord.get(), clickedCoord);
-            } catch (error) {
-                return this.cancelMove(error.message);
-            }
-            return await this.chooseMove(newMove, this.rules.node.gameState);
+            return this.chooseLandingCoord(x, y);
         }
     }
     private choosePiece(x: number, y: number): MGPValidation {
@@ -79,6 +67,20 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         } else { // Selected opponent pyramid
             return this.cancelMove(SaharaFailure.MUST_CHOOSE_OWN_PYRAMID());
         }
+    }
+    private async chooseLandingCoord(x: number, y: number): Promise<MGPValidation> {
+        const clickedCoord: Coord = new Coord(x, y);
+        const currentPlayer: Player = this.rules.node.gameState.getCurrentPlayer();
+        const player: FourStatePiece = FourStatePiece.ofPlayer(currentPlayer);
+        if (this.board[y][x] === player) {
+            this.chosenCoord = MGPOptional.of(new Coord(x, y));
+            return MGPValidation.SUCCESS;
+        }
+        const newMove: MGPFallible<SaharaMove> = SaharaMove.from(this.chosenCoord.get(), clickedCoord);
+        if (newMove.isFailure()) {
+            return this.cancelMove(newMove.getReason());
+        }
+        return await this.chooseMove(newMove.get(), this.rules.node.gameState);
     }
     public updateBoard(): void {
         this.chosenCoord = MGPOptional.empty();

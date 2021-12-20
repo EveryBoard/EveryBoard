@@ -667,8 +667,8 @@
       <trans-unit id="4304656288372447065" datatype="html">
         <source>Drop</source>
       </trans-unit>
-      <trans-unit id="6297839182321652830" datatype="html">
-        <source>There are two kind of moves. One is the drop. To do one, you must click on a visible arrow, being of your color or the opponent&apos;s. If the chosen square is one of the 3 leftmost ones, it will exchange position with the square on its right. You play Light.&lt;br/&gt;&lt;br/&gt;Drop a piece on one of thoses three squares.</source>
+      <trans-unit id="5812794158768312814" datatype="html">
+        <source>There are two kind of moves. One is the drop. To do one, you must click on a visible arrow, being of your color or the opponent&apos;s. If the chosen square is one of the 3 leftmost ones, it will exchange position with the square on its right. You play Light.&lt;br/&gt;&lt;br/&gt;Drop a piece on one of those three squares.</source>
       </trans-unit>
       <trans-unit id="8402696305361715603" datatype="html">
         <source>Transfer</source>
@@ -1082,6 +1082,9 @@
         Finally, you cannot encapsulate a piece with a smaller piece.
         You&apos;re playing Dark and you can win now in various ways.&lt;br/&gt;&lt;br/&gt;
         Try to win by making a move, and not by putting a new piece on the board.</source>
+      </trans-unit>
+      <trans-unit id="6204412729347708092" datatype="html">
+        <source>You won, but the exercise is to win while moving a piece!</source>
       </trans-unit>
       <trans-unit id="5530182224164938313" datatype="html">
         <source>The move distance of your phalanx puts it out of the board.</source>
@@ -1839,6 +1842,12 @@
       <trans-unit id="6312339673351478538" datatype="html">
         <source>You must pick one of your pyramids.</source>
       </trans-unit>
+      <trans-unit id="2094727233255278649" datatype="html">
+        <source>Those two spaces are not neighbors.</source>
+      </trans-unit>
+      <trans-unit id="5908478672900888285" datatype="html">
+        <source>Those two spaces have no intermediary neighbor.</source>
+      </trans-unit>
       <trans-unit id="7194810718741841575" datatype="html">
         <source>You can move one or two spaces, not <x id="PH" equiv-text="distance"/>.</source>
       </trans-unit>
@@ -2271,6 +2280,9 @@
       </trans-unit>
       <trans-unit id="5966391152315784819" datatype="html">
         <source>You have selected an empty space, you must select one of your own pieces.</source>
+      </trans-unit>
+      <trans-unit id="1153768241274180865" datatype="html">
+        <source>You must choose different starting and ending coordinates.</source>
       </trans-unit>
       <trans-unit id="7065414996126753833" datatype="html">
         <source>This username is already in use.</source>

@@ -83,6 +83,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
     public doDeplacementCaptures(move: CoerceoMove): CoerceoState {
         display(CoerceoState.VERBOSE, { coerceoState_doDeplacementCaptures: { object: this, move } });
         const captureds: Coord[] = this.getCapturedNeighbors(move.landingCoord.get());
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
         let resultingState: CoerceoState = this;
         for (const captured of captureds) {
             resultingState = resultingState.capture(captured);
@@ -91,7 +92,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
     }
     public getCapturedNeighbors(coord: Coord): Coord[] {
         const OPPONENT: Player = this.getCurrentOpponent();
-        const neighbors: Coord[] = TriangularCheckerBoard.getNeighboors(coord);
+        const neighbors: Coord[] = TriangularCheckerBoard.getNeighbors(coord);
         return neighbors.filter((neighbor: Coord) => {
             if (neighbor.isNotInRange(15, 10)) {
                 return false;
@@ -118,6 +119,7 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
     public removeTilesIfNeeded(tile: Coord, countTiles: boolean): CoerceoState {
         display(CoerceoState.VERBOSE,
                 { coerceoState_removeTilesIfNeeded: { object: this, tile, countTiles } });
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
         let resultingState: CoerceoState = this;
         const currentTile: Coord = CoerceoState.getTilesUpperLeftCoord(tile);
         if (this.isTileEmpty(currentTile) &&

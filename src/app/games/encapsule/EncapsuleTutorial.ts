@@ -3,6 +3,7 @@ import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { EncapsuleCase, EncapsuleState } from 'src/app/games/encapsule/EncapsuleState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
 const _: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.NONE);
@@ -14,7 +15,6 @@ const B: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.ONE)
 
 const Sm: EncapsuleCase = new EncapsuleCase(Player.ONE, Player.ZERO, Player.NONE);
 const sm: EncapsuleCase = new EncapsuleCase(Player.ZERO, Player.ZERO, Player.NONE);
-const Mb: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.ONE, Player.ZERO);
 
 export class EncapsuleTutorial {
 
@@ -59,7 +59,7 @@ export class EncapsuleTutorial {
             ],
             $localize`Congratulations!`,
             $localize`Failed. Try again.`),
-        TutorialStep.fromMove(
+        TutorialStep.fromPredicate(
             $localize`Particularity`,
             $localize`At Encapsule, pieces encapsulate each other.
         It is therefore possible to have up to three pieces per square!
@@ -71,18 +71,24 @@ export class EncapsuleTutorial {
         Try to win by making a move, and not by putting a new piece on the board.`,
             new EncapsuleState([
                 [Sm, _, S],
-                [sm, Mb, B],
+                [sm, B, B],
                 [_, _, _],
             ], 0, [
                 EncapsulePiece.MEDIUM_BLACK, EncapsulePiece.BIG_BLACK,
-                EncapsulePiece.MEDIUM_WHITE, EncapsulePiece.BIG_WHITE,
+                EncapsulePiece.MEDIUM_WHITE, EncapsulePiece.MEDIUM_WHITE,
             ]),
-            [
-                EncapsuleMove.fromMove(new Coord(0, 1), new Coord(2, 2)),
-                EncapsuleMove.fromMove(new Coord(0, 1), new Coord(0, 2)),
-                EncapsuleMove.fromMove(new Coord(1, 1), new Coord(0, 2)),
-            ],
-            $localize`Congratulations!`,
-            $localize`Failed. Try again.`),
+            EncapsuleMove.fromMove(new Coord(0, 1), new Coord(0, 2)),
+            (move: EncapsuleMove, _: EncapsuleState) => {
+                const isCorrectLandingCoord: boolean = move.landingCoord.equals(new Coord(0, 2));
+                if (isCorrectLandingCoord) {
+                    if (move.isDropping()) {
+                        return MGPValidation.failure($localize`You won, but the exercise is to win while moving a piece!`);
+                    } else if (move.startingCoord.equalsValue(new Coord(0, 1))) {
+                        return MGPValidation.SUCCESS;
+                    }
+                }
+                return MGPValidation.failure($localize`Failed. Try again.`);
+            },
+            $localize`Congratulations!`),
     ];
 }
