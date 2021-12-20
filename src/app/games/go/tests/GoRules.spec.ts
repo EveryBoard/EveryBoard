@@ -9,7 +9,6 @@ import { GoFailure } from '../GoFailure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 describe('GoRules:', () => {
 
