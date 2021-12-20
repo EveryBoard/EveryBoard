@@ -24,18 +24,14 @@ describe('GoComponent', () => {
         componentTestUtils = await ComponentTestUtils.forGame<GoComponent>('Go');
     }));
     it('should create', () => {
-        expect(componentTestUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
-        expect(componentTestUtils.getComponent()).withContext('Component should be created').toBeTruthy();
+        componentTestUtils.expectToBeCreated();
     });
     it('Should allow to pass twice, then use "pass" as the method to "accept"', fakeAsync(async() => {
-        expect((await componentTestUtils.getComponent().pass()).isSuccess()).toBeTrue(); // Passed
-        expect((await componentTestUtils.getComponent().pass()).isSuccess()).toBeTrue(); // Counting
-        expect((await componentTestUtils.getComponent().pass()).isSuccess()).toBeTrue(); // Accept
-
-        expect((await componentTestUtils.getComponent().pass()).isSuccess()).toBeTrue(); // Finished
-
-        expect((await componentTestUtils.getComponent().pass()).reason).toBe(RulesFailure.CANNOT_PASS());
-        tick(3000); // needs to be >2999
+        await componentTestUtils.expectPassSuccess(GoMove.PASS, [0, 0]); // Passed
+        await componentTestUtils.expectPassSuccess(GoMove.PASS, [0, 0]); // Counting
+        await componentTestUtils.expectPassSuccess(GoMove.ACCEPT, [0, 0]); // Accept
+        await componentTestUtils.expectPassSuccess(GoMove.ACCEPT, [0, 0]); // Finished
+        componentTestUtils.expectPassToBeForbidden();
     }));
     it('Should show captures', fakeAsync(async() => {
         const board: Table<GoPiece> = [
