@@ -109,7 +109,8 @@ export abstract class Rules<M extends Move,
     public setInitialBoard(): void {
         if (this.node == null) {
             const initialState: S = this.stateType['getInitialState']();
-            this.node = MGPNode.getFirstNode(initialState, this);
+            MGPNode.ruler = this;
+            this.node = new MGPNode(initialState);
         } else {
             this.node = this.node.getInitialNode();
         }

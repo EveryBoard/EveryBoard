@@ -7,6 +7,7 @@ import { GameState } from '../GameState';
 import { comparableEquals, isComparableObject } from 'src/app/utils/Comparable';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { SCORE } from '../SCORE';
 
 export class RulesUtils {
 
@@ -83,7 +84,8 @@ export class RulesUtils {
         expect(rules.getGameStatus(node)).toBe(GameStatus.DRAW);
         for (const minimax of minimaxes) {
             expect(minimax.getBoardValue(node).value)
-                .withContext(minimax.name + ' should consider it a draw').toBe(0);
+                .withContext(minimax.name + ' should consider it a draw')
+                .toBe(0);
         }
     }
     public static expectSecondStateToBeBetterThanFirstFor<M extends Move, S extends GameState, L>(
@@ -109,14 +111,17 @@ export class RulesUtils {
         state: S,
         previousMove: M,
         player: Player,
-        minimax: Minimax<M, S, L>)
+        minimaxes: Minimax<M, S, L>[])
     : void
     {
-        const value: number = minimax.getBoardNumericValue(new MGPNode(state,
+        for (const minimax of minimaxes) {
+            const node: MGPNode<Rules<M, S, L>, M, S, L> = new MGPNode(state,
                                                                        MGPOptional.empty(),
-                                                                       MGPOptional.of(previousMove)));
-        const expectedValue: number = player.getPreVictory();
-        expect(value).toBe(expectedValue);
+                                                                       MGPOptional.of(previousMove));
+            const value: number = minimax.getBoardNumericValue(node);
+            const expectedValue: number = player.getPreVictory();
+            expect(MGPNode.getScoreStatus(value)).toBe(SCORE.PRE_VICTORY);
+            expect(value).toBe(expectedValue);
+        }
     }
-
 }

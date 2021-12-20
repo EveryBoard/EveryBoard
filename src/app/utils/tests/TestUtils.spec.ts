@@ -246,7 +246,8 @@ export class ComponentTestUtils<T extends MyGameComponent> {
             state,
             MGPOptional.ofNullable(previousState).map((previousState: GameState) =>
                 new MGPNode(previousState)),
-            MGPOptional.ofNullable(previousMove));
+            MGPOptional.ofNullable(previousMove),
+        );
         this.gameComponent.updateBoard();
         this.forceChangeDetection();
     }
@@ -301,7 +302,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
             this.canUserPlaySpy.calls.reset();
             expect(this.chooseMoveSpy).not.toHaveBeenCalled();
             expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(clickValidity.reason);
-            tick(3000); // needs to be >2999
+            tick(3000); // needs to be > 2999
         }
     }
     public async expectMoveSuccess(elementName: string,

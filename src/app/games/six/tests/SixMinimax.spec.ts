@@ -57,7 +57,7 @@ describe('SixMinimax', () => {
                 [X, X, X, X, X],
             ], 2);
             const previousMove: SixMove = SixMove.fromDrop(new Coord(0, 0));
-            RulesUtils.expectStateToBePreVictory(state, previousMove, Player.ONE, minimax);
+            RulesUtils.expectStateToBePreVictory(state, previousMove, Player.ONE, [minimax]);
         });
         it('should know that full-bowtie aligned with two empty extension mean PRE_VICTORY', () => {
             const state: SixState = SixState.fromRepresentation([
@@ -68,7 +68,7 @@ describe('SixMinimax', () => {
 
             ], 2);
             const previousMove: SixMove = SixMove.fromDrop(new Coord(2, 2));
-            RulesUtils.expectStateToBePreVictory(state, previousMove, Player.ONE, minimax);
+            RulesUtils.expectStateToBePreVictory(state, previousMove, Player.ONE, [minimax]);
         });
         it('shound only count one preVictory when one coord is a forcing move for two lines', () => {
             const board: number[][] = [
@@ -97,8 +97,7 @@ describe('SixMinimax', () => {
             const move: SixMove = SixMove.fromDrop(new Coord(1, 0));
             const node: SixNode = new SixNode(state, MGPOptional.empty(), MGPOptional.of(move));
             const boardValue: SixNodeUnheritance = minimax.getBoardValue(node);
-            expect(boardValue.preVictory.isPresent()).toBeTrue();
-            expect(boardValue.preVictory.get()).toEqual(new Coord(2, 0));
+            expect(boardValue.preVictory.equalsValue(new Coord(2, 0))).toBeTrue();
         });
     });
     describe('4 pieces aligned is better than 3 pieces aligned', () => {
@@ -224,9 +223,8 @@ describe('SixMinimax', () => {
                 [X, X, X, X, O, O, O, O, O],
                 [X, X, X, X, O, O, O, O, O],
             ], 40);
-            const node: SixNode = new SixNode(state,
-                                              MGPOptional.empty(),
-                                              MGPOptional.of(SixMove.fromDrop(new Coord(1, 1))));
+            const move: SixMove = SixMove.fromDrop(new Coord(1, 1));
+            const node: SixNode = new SixNode(state, MGPOptional.empty(), MGPOptional.of(move));
             expect(minimax.getBoardNumericValue(node)).toBe(2);
         });
     });

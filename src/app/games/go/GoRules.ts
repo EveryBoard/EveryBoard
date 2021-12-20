@@ -4,7 +4,7 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { GoMove } from './GoMove';
 import { Player } from 'src/app/jscaip/Player';
 import { GoGroupDatas } from './GoGroupsDatas';
-import { assert, display } from 'src/app/utils/utils';
+import { assert, display, Utils } from 'src/app/utils/utils';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
@@ -56,6 +56,163 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
         } else {
             display(GoRules.VERBOSE ||LOCAL_VERBOSE, 'GoRules.isLegal: move is normal stuff: ' + move.toString());
             return GoRules.isLegalNormalMove(move, state);
+        }
+    }
+    public static getNewKo(move: GoMove, newBoard: GoPiece[][], captures: Coord[]): MGPOptional<Coord> {
+        if (captures.length === 1) {
+            const captured: Coord = captures[0];
+            const capturerCoord: Coord = move.coord;
+            const capturer: GoPiece = newBoard[capturerCoord.y][capturerCoord.x];
+            const goGroupDatasFactory: GoGroupDatasFactory = new GoGroupDatasFactory();
+            const capturersInfo: GoGroupDatas =
+                goGroupDatasFactory.getGroupDatas(capturerCoord, newBoard) as GoGroupDatas;
+            const capturersFreedoms: Coord[] = capturersInfo.emptyCoords;
+            const capturersGroup: Coord[] =
+                GoPiece.pieceBelongTo(capturer, Player.ZERO) ? capturersInfo.blackCoords : capturersInfo.whiteCoords;
+            if (capturersFreedoms.length === 1 &&
+                capturersFreedoms[0].equals(captured) &&
+                capturersGroup.length === 1) {
+                return MGPOptional.of(captured);
+            }
+        }
+        return MGPOptional.empty();
+    }
+    public static markTerritoryAndCount(state: GoState): GoState {
+        display(GoRules.VERBOSE, { markTerritoryAndCount: { state } });
+        const resultingBoard: GoPiece[][] = state.getCopiedBoard();
+        const emptyZones: GoGroupDatas[] = GoRules.getTerritoryLikeGroup(state);
+        const captured: number[] = state.getCapturedCopy();
+
+        for (const emptyZone of emptyZones) {
+            const pointMaker: GoPiece = emptyZone.getWrapper();
+            if (pointMaker === GoPiece.WHITE) {
+                // white territory
+                captured[1] += emptyZone.emptyCoords.length;
+                for (const territory of emptyZone.getCoords()) {
+                    resultingBoard[territory.y][territory.x] = GoPiece.WHITE_TERRITORY;
+                }
+            } else {
+                assert(pointMaker === GoPiece.BLACK, 'territory should be wrapped by black or white, not by ' + pointMaker.toString());
+                // black territory
+                captured[0] += emptyZone.emptyCoords.length;
+                for (const territory of emptyZone.getCoords()) {
+                    resultingBoard[territory.y][territory.x] = GoPiece.BLACK_TERRITORY;
+                }
+            }
+        }
+        return new GoState(resultingBoard, captured, state.turn, state.koCoord, state.phase);
+    }
+    public static removeAndSubstractTerritory(state: GoState): GoState {
+        const resultingBoard: GoPiece[][] = state.getCopiedBoard();
+        const captured: number[] = state.getCapturedCopy();
+        let currentPiece: GoPiece;
+        for (let y: number = 0; y < state.board.length; y++) {
+            for (let x: number = 0; x < state.board[0].length; x++) {
+                currentPiece = resultingBoard[y][x];
+                if (currentPiece === GoPiece.BLACK_TERRITORY) {
+                    resultingBoard[y][x] = GoPiece.EMPTY;
+                    captured[0] = captured[0] - 1;
+                } else if (currentPiece === GoPiece.WHITE_TERRITORY) {
+                    resultingBoard[y][x] = GoPiece.EMPTY;
+                    captured[1] = captured[1] - 1;
+                }
+            }
+        }
+        return new GoState(resultingBoard, captured, state.turn, state.koCoord, state.phase);
+    }
+    public static getEmptyZones(deadlessState: GoState): GoGroupDatas[] {
+        return GoRules.getGroupsDatasWhere(deadlessState.getCopiedBoard(), (pawn: GoPiece) => pawn.isEmpty());
+    }
+    public static getGroupsDatasWhere(board: GoPiece[][], condition: (pawn: GoPiece) => boolean): GoGroupDatas[] {
+        const groups: GoGroupDatas[] = [];
+        let coord: Coord;
+        let group: GoGroupDatas;
+        let currentCase: GoPiece;
+        const goGroupDatasFactory: GoGroupDatasFactory = new GoGroupDatasFactory();
+        for (let y: number = 0; y < board.length; y++) {
+            for (let x: number = 0; x < board[0].length; x++) {
+                coord = new Coord(x, y);
+                currentCase = board[y][x];
+                if (condition(currentCase)) {
+                    if (!groups.some((currentGroup: GoGroupDatas) => currentGroup.selfContains(coord))) {
+                        group = goGroupDatasFactory.getGroupDatas(coord, board) as GoGroupDatas;
+                        groups.push(group);
+                    }
+                }
+            }
+        }
+        return groups;
+    }
+    public static addDeadToScore(state: GoState): number[] {
+        const captured: number[] = state.getCapturedCopy();
+        let whiteScore: number = captured[1];
+        let blackScore: number = captured[0];
+        let currentCase: GoPiece;
+        for (let y: number = 0; y < state.board.length; y++) {
+            for (let x: number = 0; x < state.board[0].length; x++) {
+                currentCase = state.getPieceAtXY(x, y);
+                if (currentCase === GoPiece.DEAD_BLACK) {
+                    whiteScore++;
+                } else if (currentCase === GoPiece.DEAD_WHITE) {
+                    blackScore++;
+                }
+            }
+        }
+        return [blackScore, whiteScore];
+    }
+    public static switchAliveness(groupCoord: Coord, switchedState: GoState): GoState {
+        const switchedBoard: GoPiece[][] = switchedState.getCopiedBoard();
+        const switchedPiece: GoPiece = switchedBoard[groupCoord.y][groupCoord.x];
+        assert(switchedPiece.isEmpty() === false, `Can't switch emptyness aliveness`);
+
+        const goGroupDatasFactory: GoGroupDatasFactory = new GoGroupDatasFactory();
+        const group: GoGroupDatas = goGroupDatasFactory.getGroupDatas(groupCoord, switchedBoard) as GoGroupDatas;
+        const captured: number[] = switchedState.getCapturedCopy();
+        switch (group.color) {
+            case GoPiece.DEAD_BLACK:
+                captured[1] -= 2 * group.deadBlackCoords.length;
+                for (const deadBlackCoord of group.deadBlackCoords) {
+                    switchedBoard[deadBlackCoord.y][deadBlackCoord.x] = GoPiece.BLACK;
+                }
+                break;
+            case GoPiece.DEAD_WHITE:
+                captured[0] -= 2 * group.deadWhiteCoords.length;
+                for (const deadWhiteCoord of group.deadWhiteCoords) {
+                    switchedBoard[deadWhiteCoord.y][deadWhiteCoord.x] = GoPiece.WHITE;
+                }
+                break;
+            case GoPiece.WHITE:
+                captured[0] += 2 * group.whiteCoords.length;
+                for (const whiteCoord of group.whiteCoords) {
+                    switchedBoard[whiteCoord.y][whiteCoord.x] = GoPiece.DEAD_WHITE;
+                }
+                break;
+            default:
+                Utils.expectToBe(group.color, GoPiece.BLACK);
+                captured[1] += 2 * group.blackCoords.length;
+                for (const blackCoord of group.blackCoords) {
+                    switchedBoard[blackCoord.y][blackCoord.x] = GoPiece.DEAD_BLACK;
+                }
+                break;
+        }
+        return new GoState(switchedBoard,
+                           captured,
+                           switchedState.turn,
+                           switchedState.koCoord,
+                           switchedState.phase);
+    }
+    public static getGameStatus(node: GoNode): GameStatus {
+        const state: GoState = node.gameState;
+        if (state.phase === Phase.FINISHED) {
+            if (state.captured[0] > state.captured[1]) {
+                return GameStatus.ZERO_WON;
+            } else if (state.captured[1] > state.captured[0]) {
+                return GameStatus.ONE_WON;
+            } else {
+                return GameStatus.DRAW;
+            }
+        } else {
+            return GameStatus.ONGOING;
         }
     }
     private static isPass(move: GoMove): boolean {
@@ -257,167 +414,8 @@ export class GoRules extends Rules<GoMove, GoState, GoLegalityInformation> {
             return GoRules.applyNormalLegalMove(state, legalMove, status);
         }
     }
-    public static getNewKo(move: GoMove, newBoard: GoPiece[][], captures: Coord[]): MGPOptional<Coord> {
-        if (captures.length === 1) {
-            const captured: Coord = captures[0];
-            const capturerCoord: Coord = move.coord;
-            const capturer: GoPiece = newBoard[capturerCoord.y][capturerCoord.x];
-            const goGroupDatasFactory: GoGroupDatasFactory = new GoGroupDatasFactory();
-            const capturersInfo: GoGroupDatas =
-                goGroupDatasFactory.getGroupDatas(capturerCoord, newBoard) as GoGroupDatas;
-            const capturersFreedoms: Coord[] = capturersInfo.emptyCoords;
-            const capturersGroup: Coord[] =
-                GoPiece.pieceBelongTo(capturer, Player.ZERO) ? capturersInfo.blackCoords : capturersInfo.whiteCoords;
-            if (capturersFreedoms.length === 1 &&
-                capturersFreedoms[0].equals(captured) &&
-                capturersGroup.length === 1) {
-                return MGPOptional.of(captured);
-            }
-        }
-        return MGPOptional.empty();
-    }
-    public static markTerritoryAndCount(state: GoState): GoState {
-        display(GoRules.VERBOSE, { markTerritoryAndCount: { state } });
-        const resultingBoard: GoPiece[][] = state.getCopiedBoard();
-        const emptyZones: GoGroupDatas[] = GoRules.getTerritoryLikeGroup(state);
-        const captured: number[] = state.getCapturedCopy();
-
-        for (const emptyZone of emptyZones) {
-            const pointMaker: GoPiece = emptyZone.getWrapper();
-            if (pointMaker === GoPiece.WHITE) {
-                // white territory
-                captured[1] += emptyZone.emptyCoords.length;
-                for (const territory of emptyZone.getCoords()) {
-                    resultingBoard[territory.y][territory.x] = GoPiece.WHITE_TERRITORY;
-                }
-            } else if (pointMaker === GoPiece.BLACK) {
-                // black territory
-                captured[0] += emptyZone.emptyCoords.length;
-                for (const territory of emptyZone.getCoords()) {
-                    resultingBoard[territory.y][territory.x] = GoPiece.BLACK_TERRITORY;
-                }
-            }
-        }
-        return new GoState(resultingBoard, captured, state.turn, state.koCoord, state.phase);
-    }
-    public static getDeadStones(state: GoState): number[] {
-        const killed: number[] = [0, 0];
-        for (let y: number = 0; y < state.board.length; y++) {
-            for (let x: number = 0; x < state.board[0].length; x++) {
-                const piece: GoPiece = state.getPieceAtXY(x, y);
-                if (piece.type === 'dead') {
-                    killed[piece.player.value] = killed[piece.player.value] + 1;
-                }
-            }
-        }
-        return killed;
-    }
-    public static removeAndSubstractTerritory(state: GoState): GoState {
-        const resultingBoard: GoPiece[][] = state.getCopiedBoard();
-        const captured: number[] = state.getCapturedCopy();
-        let currentPiece: GoPiece;
-        for (let y: number = 0; y < state.board.length; y++) {
-            for (let x: number = 0; x < state.board[0].length; x++) {
-                currentPiece = resultingBoard[y][x];
-                if (currentPiece === GoPiece.BLACK_TERRITORY) {
-                    resultingBoard[y][x] = GoPiece.EMPTY;
-                    captured[0] = captured[0] - 1;
-                } else if (currentPiece === GoPiece.WHITE_TERRITORY) {
-                    resultingBoard[y][x] = GoPiece.EMPTY;
-                    captured[1] = captured[1] - 1;
-                }
-            }
-        }
-        return new GoState(resultingBoard, captured, state.turn, state.koCoord, state.phase);
-    }
-    public static getEmptyZones(deadlessState: GoState): GoGroupDatas[] {
-        return GoRules.getGroupsDatasWhere(deadlessState.getCopiedBoard(), (pawn: GoPiece) => pawn.isEmpty());
-    }
-    public static getGroupsDatasWhere(board: GoPiece[][], condition: (pawn: GoPiece) => boolean): GoGroupDatas[] {
-        const groups: GoGroupDatas[] = [];
-        let coord: Coord;
-        let group: GoGroupDatas;
-        let currentCase: GoPiece;
-        const goGroupDatasFactory: GoGroupDatasFactory = new GoGroupDatasFactory();
-        for (let y: number = 0; y < board.length; y++) {
-            for (let x: number = 0; x < board[0].length; x++) {
-                coord = new Coord(x, y);
-                currentCase = board[y][x];
-                if (condition(currentCase)) {
-                    if (!groups.some((currentGroup: GoGroupDatas) => currentGroup.selfContains(coord))) {
-                        group = goGroupDatasFactory.getGroupDatas(coord, board) as GoGroupDatas;
-                        groups.push(group);
-                    }
-                }
-            }
-        }
-        return groups;
-    }
-    public static addDeadToScore(state: GoState): number[] {
-        const captured: number[] = state.getCapturedCopy();
-        let whiteScore: number = captured[1];
-        let blackScore: number = captured[0];
-        let currentCase: GoPiece;
-        for (let y: number = 0; y < state.board.length; y++) {
-            for (let x: number = 0; x < state.board[0].length; x++) {
-                currentCase = state.getPieceAtXY(x, y);
-                if (currentCase === GoPiece.DEAD_BLACK) {
-                    whiteScore++;
-                } else if (currentCase === GoPiece.DEAD_WHITE) {
-                    blackScore++;
-                }
-            }
-        }
-        return [blackScore, whiteScore];
-    }
-    public static switchAliveness(groupCoord: Coord, switchedState: GoState): GoState {
-        const switchedBoard: GoPiece[][] = switchedState.getCopiedBoard();
-        const switchedPiece: GoPiece = switchedBoard[groupCoord.y][groupCoord.x];
-        assert(switchedPiece.isEmpty() === false, `Can't switch emptyness aliveness`);
-
-        const goGroupDatasFactory: GoGroupDatasFactory = new GoGroupDatasFactory();
-        const group: GoGroupDatas = goGroupDatasFactory.getGroupDatas(groupCoord, switchedBoard) as GoGroupDatas;
-        const captured: number[] = switchedState.getCapturedCopy();
-        if (group.color === GoPiece.DEAD_BLACK) {
-            captured[1] -= 2 * group.deadBlackCoords.length;
-            for (const deadBlackCoord of group.deadBlackCoords) {
-                switchedBoard[deadBlackCoord.y][deadBlackCoord.x] = GoPiece.BLACK;
-            }
-        } else if (group.color === GoPiece.DEAD_WHITE) {
-            captured[0] -= 2 * group.deadWhiteCoords.length;
-            for (const deadWhiteCoord of group.deadWhiteCoords) {
-                switchedBoard[deadWhiteCoord.y][deadWhiteCoord.x] = GoPiece.WHITE;
-            }
-        } else if (group.color === GoPiece.WHITE) {
-            captured[0] += 2 * group.whiteCoords.length;
-            for (const whiteCoord of group.whiteCoords) {
-                switchedBoard[whiteCoord.y][whiteCoord.x] = GoPiece.DEAD_WHITE;
-            }
-        } else if (group.color === GoPiece.BLACK) {
-            captured[1] += 2 * group.blackCoords.length;
-            for (const blackCoord of group.blackCoords) {
-                switchedBoard[blackCoord.y][blackCoord.x] = GoPiece.DEAD_BLACK;
-            }
-        }
-        return new GoState(switchedBoard,
-                           captured,
-                           switchedState.turn,
-                           switchedState.koCoord,
-                           switchedState.phase);
-    }
     public getGameStatus(node: GoNode): GameStatus {
-        const state: GoState = node.gameState;
-        if (state.phase === Phase.FINISHED) {
-            if (state.captured[0] > state.captured[1]) {
-                return GameStatus.ZERO_WON;
-            } else if (state.captured[1] > state.captured[0]) {
-                return GameStatus.ONE_WON;
-            } else {
-                return GameStatus.DRAW;
-            }
-        } else {
-            return GameStatus.ONGOING;
-        }
+        return GoRules.getGameStatus(node);
     }
 }
 class CaptureState {
