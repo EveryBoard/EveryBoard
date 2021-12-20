@@ -286,6 +286,20 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(wrapper.currentPart.doc.listMoves).toEqual([FIRST_MOVE_ENCODED, 166]);
         tick(wrapper.joiner.maximalMoveDuration * 1000);
     }));
+    it('should show player names', fakeAsync(async() => {
+        // Given a started game
+        await prepareStartedGameFor(USER_CREATOR);
+        tick(1);
+        componentTestUtils.detectChanges();
+
+        // Then the usernames are shown
+        const playerIndicator: HTMLElement = componentTestUtils.findElement('#playerZeroIndicator').nativeElement;
+        expect(playerIndicator.innerText).toBe(USER_CREATOR.username.get());
+        const opponentIndicator: HTMLElement = componentTestUtils.findElement('#playerOneIndicator').nativeElement;
+        expect(opponentIndicator.innerText).toBe(USER_OPPONENT.username.get());
+
+        tick(wrapper.joiner.maximalMoveDuration * 1000);
+    }));
     it('Prepared Game for joiner should allow simple move', fakeAsync(async() => {
         await prepareStartedGameFor(USER_OPPONENT);
         tick(1);
