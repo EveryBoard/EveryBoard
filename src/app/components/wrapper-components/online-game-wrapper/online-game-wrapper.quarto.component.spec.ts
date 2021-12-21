@@ -292,7 +292,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         tick(1);
         componentTestUtils.detectChanges();
 
-        // Then the usernames are shown
+        // Then the usernames should be shown
         const playerIndicator: HTMLElement = componentTestUtils.findElement('#playerZeroIndicator').nativeElement;
         expect(playerIndicator.innerText).toBe(USER_CREATOR.username.get());
         const opponentIndicator: HTMLElement = componentTestUtils.findElement('#playerOneIndicator').nativeElement;
