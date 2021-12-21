@@ -28,7 +28,7 @@ describe('MGPFallible', () => {
             expect(value.equals(MGPFallible.failure('foo'))).toBeFalse();
         });
         it('should be convertible to string', () => {
-            expect(value.toString()).toBe('MGPFallible.succes(42)');
+            expect(value.toString()).toBe('MGPFallible.success(42)');
         });
     });
     describe('failure', () => {
