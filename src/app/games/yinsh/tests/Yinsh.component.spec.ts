@@ -59,8 +59,8 @@ describe('YinshComponent', () => {
         }));
     });
     describe('Main phase', () => {
-        it('should highlight clickable rings when its players turn', fakeAsync(async() => {
-            // Given a bouard where it is player's turn
+        it(`should highlight clickable rings when it is the player's turn`, fakeAsync(async() => {
+            // Given a board where it is player's turn
             const board: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, _, _, _, _, _, _, _],
@@ -85,7 +85,7 @@ describe('YinshComponent', () => {
             testUtils.expectElementNotToExist('#selectable_4_4');
         }));
         it('should not highlight clickable rings when it is not players turn', fakeAsync(async() => {
-            // Given a bouard where it is not player's turn
+            // Given a board where it is not player's turn
             const board: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, _, _, _, _, _, _, _],
@@ -109,7 +109,7 @@ describe('YinshComponent', () => {
             testUtils.expectElementNotToExist('#selectable_3_3');
             testUtils.expectElementNotToExist('#selectable_4_4');
         }));
-        it('should display score as 0 - 0 when game is in posing phase', fakeAsync(async() => {
+        it('should display score as 0 - 0 when game is in placement phase', fakeAsync(async() => {
             // Given the initial state
             const state: YinshState = YinshState.getInitialState();
 
