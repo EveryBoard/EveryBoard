@@ -5,7 +5,7 @@ import { KamisadoPiece } from 'src/app/games/kamisado/KamisadoPiece';
 import { KamisadoFailure } from 'src/app/games/kamisado/KamisadoFailure';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { KamisadoComponent } from '../kamisado.component';
-import { fakeAsync, tick } from '@angular/core/testing';
+import { fakeAsync } from '@angular/core/testing';
 import { Coord } from 'src/app/jscaip/Coord';
 import { KamisadoMove } from 'src/app/games/kamisado/KamisadoMove';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -33,8 +33,7 @@ describe('KamisadoComponent', () => {
         expect(componentTestUtils.getComponent().chosen.isAbsent()).toBeTrue();
     });
     it('should not allow to pass initially', fakeAsync(async() => {
-        expect((await componentTestUtils.getComponent().pass()).reason).toBe(RulesFailure.CANNOT_PASS());
-        tick(3000); // needs to be >2999
+        componentTestUtils.expectPassToBeForbidden();
     }));
     it('should allow changing initial choice', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_0_7'); // Select initial piece
@@ -47,6 +46,7 @@ describe('KamisadoComponent', () => {
         expect(componentTestUtils.getComponent().chosen.isAbsent()).toBeTrue();
     }));
     it('should allow to pass if stuck position', fakeAsync(async() => {
+        // Given a board with a stuck piece being the one that has to play
         const board: Table<KamisadoPiece> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -59,9 +59,12 @@ describe('KamisadoComponent', () => {
         ];
         const state: KamisadoState =
             new KamisadoState(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
+
+        // When displayign the board
         componentTestUtils.setupState(state);
 
-        expect((await componentTestUtils.getComponent().pass()).isSuccess()).toBeTrue();
+        // Then the player can pass
+        componentTestUtils.expectPassSuccess(KamisadoMove.PASS);
     }));
     it('should forbid all click in stuck position and ask to pass', fakeAsync(async() => {
         // given a board where the piece that must move is stuck
