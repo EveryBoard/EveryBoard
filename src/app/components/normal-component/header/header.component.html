@@ -1,4 +1,4 @@
-<nav class="navbar" role="navigation" aria-label="main navigation">
+<nav class="navbar is-primary" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
         <a class="navbar-item" [routerLink]="['/']">
             <img src="assets/images/logo.png" width="28" height="28">
@@ -29,17 +29,7 @@
             </div>
         </div>
         <div class="navbar-end">
-            <div class="navbar-item has-dropdown is-hoverable">
-                <a class="navbar-link">{{ currentLanguage }}</a>
-                <div class="navbar-dropdown">
-                    <ng-container *ngFor="let language of availableLanguages">
-                        <a *ngIf="language !== currentLanguage"
-                           id="language_{{ language }}"
-                           class="navbar-item"
-                           (click)="changeLanguage(language)">{{ language }}</a>
-                    </ng-container>
-                </div>
-            </div>
+            <a class="navbar-item" [routerLink]="['/settings']" i18n-data-tooltip data-tooltip="Settings"><fa-icon [icon]="faCog"></fa-icon></a>
             <div class="navbar-item">
                 <ng-container *ngIf="username else connect">
                     <div class="navbar-item has-dropdown is-hoverable">

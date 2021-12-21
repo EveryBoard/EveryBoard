@@ -13,7 +13,6 @@ export class UserService {
     constructor(private activesUsersService: ActivesUsersService,
                 private joueursDao: UserDAO) {
     }
-    // On Server Component
 
     public getActivesUsersObs(): Observable<IUserId[]> {
         // TODO: unsubscriptions from other user services
@@ -23,7 +22,6 @@ export class UserService {
     public unSubFromActivesUsersObs(): void {
         this.activesUsersService.stopObserving();
     }
-    // Delegate
     public observeUserByUsername(username: string, callback: FirebaseCollectionObserver<IUser>): () => void {
         // the callback will be called on the foundUser
         return this.joueursDao.observeUserByUsername(username, callback);

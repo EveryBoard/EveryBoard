@@ -1,36 +1,9 @@
 @charset "utf-8";
 
-$primary: #3273dc;
-$danger: #f14668;
-$warning: #ffdd57;
-
-@import "../../node_modules/bulma/bulma.sass";
-@import '~bulma-slider';
-@import "./variables.scss";
-
-$gap: 10pt;
-@media screen and (max-width: 768px) {
-    .masonry {
-        column-count: 1;
-    }
-}
-@media screen and (min-width: 769px), print {
-    .masonry {
-        column-count: 5;
-    }
-}
-.masonry {
-    margin: $gap;
-    column-gap: $gap;
-}
-.masonry .item {
-    margin: 0 0 $gap;
-
-    /* For Chrome */
-    column-break-inside: avoid;
-    /* For Firefox */
-    display: inline-grid;
-    page-break-inside: avoid;
+.button {
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    font-weight: bold;
 }
 
 html {
@@ -38,13 +11,36 @@ html {
 }
 
 .player0-bg {
-    background-color: $player0;
+    background-color: var(--player0);
 }
 .player1-bg {
-    background-color: $player1;
+    background-color: var(--player1);
 }
 
 .clickable-icon {
     pointer-events: all;
     cursor:pointer
+}
+
+.game-card img {
+    opacity: 0.8;
+}
+.game-card .is-overlay {
+    opacity: 0;
+}
+.game-card:hover .is-overlay {
+    opacity: 1;
+}
+.game-card .game-image-buttons {
+    top: auto;
+}
+.game-card .game-image-text {
+    top: 38%;
+    color: black;
+    -webkit-text-fill-color: white; /* Will override color (regardless of order) */
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: black;
+}
+.modal-card-head, .is-primary {
+    background-color: var(--player0);
 }

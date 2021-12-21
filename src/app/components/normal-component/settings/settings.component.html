@@ -1,0 +1,31 @@
+<div class="box">
+    <p class="title" i18n>User settings</p>
+    <div class="field">
+        <label class="label" for="theme" i18n>Theme</label>
+        <div class="control">
+            <div class="select">
+                <select id="theme" (change)="changeTheme($event)">
+                    <option *ngFor="let theme of availableThemes"
+                            [value]="theme.value"
+                            [selected]="theme.value === currentTheme">
+                        {{ theme.name }}
+                    </option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="field">
+        <label class="label" for="language" i18n>Language</label>
+        <div class="control">
+            <div class="select">
+                <select id="language" (change)="changeLanguage($event)">
+                    <option *ngFor="let language of availableLanguages"
+                            [value]="language.value"
+                            [selected]="language.value === currentLanguage">
+                        {{ language.name }}
+                    </option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
