@@ -113,7 +113,8 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
 
         const {
             backCoord, back, backInRange,
-            left, right,
+            left, leftCoord,
+            right, rightCoord,
         } = this.getSurroundings(kingCoord, d, player, state);
 
         if (backInRange === false) {
@@ -123,7 +124,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
             return this.captureKingAgainstThrone(backCoord, kingCoord, left, right);
         }
         if (back === RelativePlayer.PLAYER) {
-            return this.captureKingWithAtLeastASandwich(state, kingCoord, left, right);
+            return this.captureKingWithAtLeastASandwich(state, kingCoord, left, leftCoord, right, rightCoord);
         }
         return MGPOptional.empty();
     }
@@ -241,20 +242,31 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
     private captureKingWithAtLeastASandwich(state: S,
                                             kingCoord: Coord,
                                             left: RelativePlayer,
-                                            right: RelativePlayer)
+                                            leftCoord: Coord,
+                                            right: RelativePlayer,
+                                            rightCoord: Coord)
     : MGPOptional<Coord>
     {
         const LOCAL_VERBOSE: boolean = false;
-        if (state.isCentralThrone(kingCoord) === false &&
+        if (this.kingTouchCentralThrone(state, kingCoord) === false &&
             this.config.KING_FAR_FROM_CENTRAL_THRONE_CAN_BE_SANDWICHED)
         {
             return MGPOptional.of(kingCoord);
         }
-        if (left === RelativePlayer.PLAYER && right === RelativePlayer.PLAYER) {
+        const throneCanSurrond: boolean = this.config.CENTRAL_THRONE_CAN_SURROUND_KING;
+        const leftIsThrone: boolean = this.isThrone(state, leftCoord);
+        const leftCanSurround: boolean = left === RelativePlayer.PLAYER || (leftIsThrone && throneCanSurrond);
+        const rightIsThrone: boolean = this.isThrone(state, rightCoord);
+        const rightCanSurround: boolean = right === RelativePlayer.PLAYER || (rightIsThrone && throneCanSurrond);
+        if (leftCanSurround && rightCanSurround) {
             display(TaflRules.VERBOSE || LOCAL_VERBOSE, 'king captured by 4 invaders');
             return MGPOptional.of(kingCoord); // king captured by 4 invaders
         }
         return MGPOptional.empty();
+    }
+    private kingTouchCentralThrone(state: S, kingCoord: Coord): boolean {
+        const centralThrone: Coord = state.getCentralThrone();
+        return kingCoord.getOrthogonalDistance(centralThrone) <= 1;
     }
     public applyLegalMove(move: TaflMove, state: S): S {
         display(TaflRules.VERBOSE, { TablutRules_applyLegalMove: { move, state } });

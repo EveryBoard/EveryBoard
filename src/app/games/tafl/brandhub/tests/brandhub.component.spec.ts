@@ -12,6 +12,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { TaflPawn } from '../../TaflPawn';
+import { TaflFailure } from '../../TaflFailure';
 
 describe('BrandhubComponent', () => {
 
@@ -61,7 +62,7 @@ describe('BrandhubComponent', () => {
 
         // When attempting diagonal move
         await componentTestUtils.expectClickSuccess('#click_3_0');
-        const message: string = 'TaflMove cannot be diagonal.';
+        const message: string = TaflFailure.MOVE_MUST_BE_ORTHOGONAL();
 
         // Then it should not have throwed
         expect(async() => await componentTestUtils.expectClickFailure('#click_4_1', message)).not.toThrow();
