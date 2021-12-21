@@ -120,7 +120,7 @@ export abstract class Rules<M extends Move,
         for (const encodedMove of encodedMoves) {
             const move: M = moveDecoder(encodedMove);
             const legality: MGPFallible<L> = this.isLegal(move, state);
-            assert(legality.isSuccess(), `Can't create state from invalid moves (` + i + '): ' + legality + '.');
+            assert(legality.isSuccess(), `Can't create state from invalid moves (` + i + '): ' + legality.toString() + '.');
             state = this.applyLegalMove(move, state, legality.get());
             i++;
         }
