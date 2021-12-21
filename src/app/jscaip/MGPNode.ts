@@ -218,6 +218,7 @@ export class MGPNode<R extends Rules<M, S, L>,
         return MGPOptional.empty();
     }
     public getInitialNode(): MGPNode<R, M, S, L, U> {
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
         let almightyMom: MGPNode<R, M, S, L, U> = this;
         while (almightyMom.mother.isPresent()) {
             almightyMom = almightyMom.mother.get();
@@ -239,6 +240,7 @@ export class MGPNode<R extends Rules<M, S, L>,
     }
     public myToString(): string {
         let genealogy: string = '';
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
         let node: MGPNode<R, M, S, L, U> = this;
         if (node.mother.isAbsent()) {
             const turn: number = node.gameState.turn;

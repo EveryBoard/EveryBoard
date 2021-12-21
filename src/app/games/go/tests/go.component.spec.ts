@@ -5,8 +5,7 @@ import { Table } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { fakeAsync, tick } from '@angular/core/testing';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { fakeAsync } from '@angular/core/testing';
 
 describe('GoComponent', () => {
 
