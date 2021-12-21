@@ -7,43 +7,43 @@
            id="click_{{x}}_{{y}}"
            (click)="onClick(x, y)"
         >
-            <polyline *ngIf="isPyramid(x, y) else emptyCase"
+            <polygon *ngIf="isPyramid(x, y) else emptyCase"
                       [attr.points]="getPyramidCoordinate(x, y)"
                       [ngClass]="getPyramidClass(x, y)"
                       class="base mid-stroke"
                       stroke-linecap="round"
             />
             <ng-template #emptyCase>
-                <polyline *ngIf="isEmptyCase(x, y)"
+                <polygon *ngIf="isEmptyCase(x, y)"
                           [attr.points]="getTriangleCoordinate(x, y)"
                           [ngClass]="getEmptyClass(x, y)"
                           class="base small-stroke"
                           stroke-linecap="round"
                 />
             </ng-template>
-            <polyline *ngIf="caseContent !== NONE"
+            <polygon *ngIf="caseContent !== NONE"
                       id="dark_line_{{ x }}_{{ y }}"
                       [attr.points]="getLineCoordinate(x, y)"
                       class="base"
             />
         </g>
     </g>
-    <polyline *ngFor="let hl of highlights"
+    <polygon *ngFor="let hl of highlights"
               [attr.points]="getTriangleCoordinate(hl.x, hl.y)"
               class="base no-fill highlighted" />
-    <polyline *ngIf="lastStart.isPresent()"
+    <polygon *ngIf="lastStart.isPresent()"
               [attr.points]="getTriangleCoordinate(lastStart.get().x, lastStart.get().y)"
               class="base no-fill last-move" />
-    <polyline *ngIf="lastEnd.isPresent()"
+    <polygon *ngIf="lastEnd.isPresent()"
               [attr.points]="getTriangleCoordinate(lastEnd.get().x, lastEnd.get().y)"
               class="base no-fill last-move" />
-    <polyline *ngIf="chosenCoord.isPresent()"
+    <polygon *ngIf="chosenCoord.isPresent()"
               [attr.points]="getTriangleCoordinate(chosenCoord.get().x, chosenCoord.get().y)"
               class="base no-fill selected" />
     <g *ngIf="mustShowTilesOf(0)"
         id="tilesCountZero"
     >
-        <polyline [attr.points]="getTilesCountCoordinate(0, 0)"
+        <polygon [attr.points]="getTilesCountCoordinate(0, 0)"
                   [attr.stroke]="lastTurnWasTilesExchange(0) ? 'yellow' : 'black'"
                   class="base player0"
                   stroke-linecap="round"
@@ -59,7 +59,7 @@
     <g *ngIf="mustShowTilesOf(1)"
         id="tilesCountOne"
     >
-        <polyline [attr.points]="getTilesCountCoordinate(0, 9)"
+        <polygon [attr.points]="getTilesCountCoordinate(0, 9)"
                   [attr.stroke]="lastTurnWasTilesExchange(1) ? 'yellow' : 'black'"
                   class="base player1"
                   stroke-linecap="round"
