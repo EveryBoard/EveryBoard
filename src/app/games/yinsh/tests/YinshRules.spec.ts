@@ -566,15 +566,15 @@ describe('YinshRules', () => {
             const state: YinshState = new YinshState(YinshState.getInitialState().board, [0, 0], 20);
             expect(rules.getGameStatus(new YinshNode(state))).toBe(GameStatus.ONGOING);
         });
-        it('should detect victory for a player if it obtains more than 3 rings', () => {
-            const state1: YinshState = new YinshState(YinshState.getInitialState().board, [3, 0], 20);
-            const node1: YinshNode = new YinshNode(state1);
-            RulesUtils.expectToBeVictoryFor(rules, node1, Player.ZERO, minimaxes);
-
-            const state2: YinshState = new YinshState(YinshState.getInitialState().board, [0, 3], 20);
-            const node2: YinshNode = new YinshNode(state2);
-            RulesUtils.expectToBeVictoryFor(rules, node2, Player.ONE, minimaxes);
-
+        it('should detect victory for a player if it obtains more than 3 rings (Player.ZERO)', () => {
+            const state: YinshState = new YinshState(YinshState.getInitialState().board, [3, 0], 20);
+            const node: YinshNode = new YinshNode(state);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+        });
+        it('should detect victory for a player if it obtains more than 3 rings (Player.ONE)', () => {
+            const state: YinshState = new YinshState(YinshState.getInitialState().board, [0, 3], 20);
+            const node: YinshNode = new YinshNode(state);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
         });
     });
 });

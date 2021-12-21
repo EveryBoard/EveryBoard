@@ -88,12 +88,15 @@ import { AutofocusDirective } from './directives/autofocus.directive';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ToggleVisibilityDirective } from './directives/toggle-visibility.directive';
 import { ResetPasswordComponent } from './components/normal-component/reset-password/reset-password.component';
+import { ThemeService } from './services/ThemeService';
+import { SettingsComponent } from './components/normal-component/settings/settings.component';
 
 registerLocaleData(localeFr);
 
 const routes: Route [] = [
     { path: 'login', component: LoginComponent },
     { path: 'server', component: ServerPageComponent, canActivate: [VerifiedAccountGuard] },
+    { path: 'settings', component: SettingsComponent },
     { path: 'register', component: RegisterComponent, canActivate: [NotConnectedGuard] },
     { path: 'reset-password', component: ResetPasswordComponent, canActivate: [NotConnectedGuard] },
     { path: 'notFound', component: NotFoundComponent, canActivate: [VerifiedAccountGuard] },
@@ -133,6 +136,7 @@ const routes: Route [] = [
         TutorialGameCreationComponent,
         VerifyAccountComponent,
         ResetPasswordComponent,
+        SettingsComponent,
 
         AbaloneComponent,
         ApagosComponent,
@@ -187,6 +191,7 @@ const routes: Route [] = [
         ChatService,
         PartDAO,
         AngularFireAuth,
+        ThemeService,
         { provide: LOCALE_ID, useValue: LocaleUtils.getLocale() },
     ],
     bootstrap: [AppComponent],

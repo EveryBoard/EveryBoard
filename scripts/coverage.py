@@ -29,7 +29,7 @@ def load_coverage_data():
         page = f.read()
         f.close()
         tree = html.fromstring(page)
-        filename = os.path.split(path)[:-5]
+        filename = os.path.split(path)[1][:-5]
         xpath_results = tree.xpath("//span[contains(@class, 'fraction')]/text()")
         data['statements'][filename] = to_missing(xpath_results[0])
         data['branches'][filename] = to_missing(xpath_results[1])

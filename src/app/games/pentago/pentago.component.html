@@ -22,9 +22,7 @@
                   [attr.width]="BLOCK_WIDTH"
                   [attr.height]="BLOCK_WIDTH"
                   [ngClass]="getBlockClasses(bx, by)"
-                  stroke="black"
-                  [attr.stroke-width]="STROKE_WIDTH"
-                  fill="none"
+                  class="base no-fill"
             />
             <ng-container *ngFor="let localY of [0, 1, 2]">
                 <ng-container *ngFor="let localX of [0, 1, 2]">
@@ -53,8 +51,8 @@
     <path *ngFor="let arrow of arrows"
           [attr.d]="arrow[0]"
           id="rotate_{{ arrow[1] }}_{{ arrow[2] ? 'clockwise' : 'counterclockwise' }}"
+          class="no-fill"
           stroke="blue"
-          fill="none"
           (click)="rotate(arrow)"
           [attr.stroke-width]="2 * STROKE_WIDTH"
           marker-end="url(#arrowhead)"
@@ -76,7 +74,7 @@
                [attr.r]="0.75 * SPACE_SIZE"
                stroke="red"
                [attr.stroke-width]="2 * STROKE_WIDTH"
-               fill="grey"
+               class="background"
         />
         <line [attr.x1]="BLOCK_SEPARATION - DIAGONAL_BAR_OFFSET"
               [attr.y1]="BLOCK_SEPARATION + DIAGONAL_BAR_OFFSET"

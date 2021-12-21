@@ -1,0 +1,82 @@
+:root {
+    --player0: #994d00;
+    --player0-alternate: #d3853d;
+    --player1: #ffc34d;
+    --player1-alternate: #ffe19b;
+    --base-stroke: #444;
+    --background-fill: #888;
+    --moved: #AAA;
+    --alt-background-fill: #666;
+    --alt-alt-background-fill: #AAA;
+    --nonplayer: #5c0838;
+    --nonplayer-light: #8d2660;
+    --pre-captured: pink;
+    --captured: red;
+    --alt-captured: #990000;
+    --indicator: #990;
+    --last-move: #AA8;
+    --capturable: #990;
+    --clickable: #990;
+    --selectable: #990;
+    --selected: #99E;
+    --victory: green;
+}
+
+$primary: #994d00;
+$yellow: #b38f00;
+$red: darkred;
+$red-invert: white;
+@import "../../node_modules/bulmaswatch/cyborg/bulmaswatch.scss";
+@import '~bulma-slider';
+@import "../../node_modules/@creativebulma/bulma-tooltip/dist/bulma-tooltip.css";
+@import "./mystyles.scss";
+
+.select select {
+    background-color: #111;
+    border-color: #363636;
+    color: #fff;
+}
+.input {
+    background-color: #111;
+    border-color: #363636;
+    color: #fff;
+}
+
+.message.is-primary .message-body {
+    color: #fff;
+}
+
+.message {
+  background-color: $background;
+  border-radius: $radius;
+  font-size: $size-normal;
+  // Colors
+  @each $name, $pair in $colors {
+    $color: nth($pair, 1);
+    $color-invert: nth($pair, 2);
+    $color-lightning: max((100% - lightness($color)) - 3%, 0%);
+    $color-luminance: colorLuminance($color);
+    $darken-percentage: $color-luminance * 70%;
+    $desaturate-percentage: $color-luminance * 30%;
+
+    &.is-#{$name} {
+      background-color: darken($color, $color-lightning);
+
+      .message-header {
+        background-color: $color;
+        color: $color-invert;
+      }
+
+      .message-body {
+        border-color: $color;
+        color: $color-invert;
+      }
+    }
+  }
+}
+
+/* Show the page only after the CSS has been loaded */
+html, body {
+    display: block;
+}
+

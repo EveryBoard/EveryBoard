@@ -44,6 +44,9 @@
       <trans-unit id="3468367367164457633" datatype="html">
         <source>Learn the rules</source>
       </trans-unit>
+      <trans-unit id="4930506384627295710" datatype="html">
+        <source>Settings</source>
+      </trans-unit>
       <trans-unit id="7507948636555938109" datatype="html">
         <source>Log out</source>
       </trans-unit>
@@ -298,6 +301,21 @@
       </trans-unit>
       <trans-unit id="1670632975695309948" datatype="html">
         <source>Connected users:</source>
+      </trans-unit>
+      <trans-unit id="6153797048311741939" datatype="html">
+        <source>User settings</source>
+      </trans-unit>
+      <trans-unit id="7103588127254721505" datatype="html">
+        <source>Theme</source>
+      </trans-unit>
+      <trans-unit id="2826581353496868063" datatype="html">
+        <source>Language</source>
+      </trans-unit>
+      <trans-unit id="413116577994876478" datatype="html">
+        <source>Light</source>
+      </trans-unit>
+      <trans-unit id="3892161059518616136" datatype="html">
+        <source>Dark</source>
       </trans-unit>
       <trans-unit id="6996804354508674341" datatype="html">
         <source>Account verification</source>
