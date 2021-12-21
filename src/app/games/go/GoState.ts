@@ -72,8 +72,8 @@ export class GoPiece implements ComparableObject {
         return this.player;
     }
     public nonTerritory(): GoPiece {
-        if (this.isEmpty()) return GoPiece.EMPTY;
-        else return this;
+        assert(this.isEmpty(), 'Usually not false, if false, cover by test and return "this"');
+        return GoPiece.EMPTY;
     }
 }
 export enum Phase {

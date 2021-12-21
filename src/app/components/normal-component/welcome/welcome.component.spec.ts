@@ -39,5 +39,36 @@ describe('WelcomeComponent', () => {
 
         expect(router.navigate).toHaveBeenCalledWith(['/tutorial/Awale']);
     }));
+    describe('game list', () => {
+        it('should open a modal dialog when clicking on a game image', fakeAsync(async() => {
+            // Given that the page is loaded
+
+            // When clicking on the info for a game
+            await testUtils.clickElement('#image_Awale');
+
+            // Then the modal dialog is shown
+            testUtils.expectElementToExist('#gameInfoModal');
+        }));
+        it('should close the modal dialog when clicking anywhere on its background', fakeAsync(async() => {
+            // Given that the modal dialog is shown for a game
+            await testUtils.clickElement('#image_Awale');
+
+            // When clicking on its background
+            await testUtils.clickElement('#modalBackground');
+
+            // Then the modal dialog disappears
+            testUtils.expectElementNotToExist('#gameInfoModal');
+        }));
+        it('should close the modal dialog when clicking anywhere on its close button', fakeAsync(async() => {
+            // Given that the modal dialog is shown for a game
+            await testUtils.clickElement('#image_Awale');
+
+            // When clicking on its close button
+            await testUtils.clickElement('#closeInfo');
+
+            // Then the modal dialog disappears
+            testUtils.expectElementNotToExist('#gameInfoModal');
+        }));
+    });
 
 });

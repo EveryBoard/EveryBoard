@@ -1,3 +1,5 @@
+import { Utils } from 'src/app/utils/utils';
+
 export class KamisadoColor {
     public static readonly ANY: KamisadoColor = new KamisadoColor(0, 'any', '#000');
     public static readonly ORANGE: KamisadoColor = new KamisadoColor(1, 'orange', '#d67421');
@@ -19,8 +21,9 @@ export class KamisadoColor {
             case 5: return KamisadoColor.YELLOW;
             case 6: return KamisadoColor.RED;
             case 7: return KamisadoColor.GREEN;
-            case 8: return KamisadoColor.BROWN;
-            default: throw new Error('Invalid value ' + value + ' for KamisadoColor');
+            default:
+                Utils.expectToBe(value, 8, 'Invalid value ' + value + ' for KamisadoColor');
+                return KamisadoColor.BROWN;
         }
     }
     private constructor(public readonly value: number, public readonly name: string, public readonly rgb: string) {

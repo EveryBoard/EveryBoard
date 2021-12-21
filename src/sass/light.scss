@@ -1,0 +1,34 @@
+:root {
+    --player0: #994d00;
+    --player0-alternate: #d3853d;
+    --player1: #ffc34d;
+    --player1-alternate: #ffe19b;
+    --base-stroke: black;
+    --background-fill: lightgrey;
+    --alt-background-fill: gray;
+    --alt-alt-background-fill: dimgray;
+    --nonplayer: #5c0838;
+    --nonplayer-light: #8d2660;
+    --pre-captured: pink;
+    --captured: red;
+    --alt-captured: #990000;
+    --moved: gray;
+    --indicator: green;
+    --last-move: orange;
+    --capturable: yellow;
+    --clickable: yellow;
+    --selectable: yellow;
+    --selected: blue;
+    --victory: yellow;
+}
+
+$primary: #ffc34d;
+@import "../../node_modules/bulmaswatch/default/bulmaswatch.scss";
+@import '~bulma-slider';
+@import "../../node_modules/@creativebulma/bulma-tooltip/dist/bulma-tooltip.css";
+@import "./mystyles.scss";
+
+/* Show the page only after the CSS has been loaded */
+html, body {
+    display: block;
+}
