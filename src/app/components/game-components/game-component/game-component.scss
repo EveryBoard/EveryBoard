@@ -13,8 +13,14 @@
     stroke: var(--base-stroke);
     stroke-width: 3;
 }
+.text {
+    fill: var(--base-stroke);
+}
 .white-background {
     fill: white;
+}
+.white-stroke {
+    stroke: white;
 }
 .background {
     fill: var(--background-fill);
