@@ -9,4 +9,6 @@ export class TaflFailure {
     public static readonly SOLDIERS_CANNOT_SIT_ON_THRONE: Localized = () => $localize`Soldiers cannot sit on the throne.`;
 
     public static readonly SOMETHING_IN_THE_WAY: Localized = () => $localize`Something is in the way.`;
+
+    public static readonly MOVE_MUST_BE_ORTHOGONAL: Localized = () => $localize`Tafl moves must be orthogonal.`;
 }
