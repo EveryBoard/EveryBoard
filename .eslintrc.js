@@ -13,19 +13,37 @@ module.exports = {
         },
         plugins: [
             '@typescript-eslint',
+            'jasmine',
         ],
         extends: [
             'eslint:recommended',
             'google',
             'plugin:@typescript-eslint/recommended',
-            // 'plugin:@angular-eslint/recommended',
+            'plugin:@angular-eslint/recommended',
+            'plugin:jasmine/recommended',
         ],
         rules: {
+            'jasmine/new-line-before-expect': ['off'],
+            'jasmine/new-line-between-declarations': ['off'],
             'no-warning-comments': [
                 'warn',
                 { 'terms': ['todo', 'fixme', 'xxx'], 'location': 'start' }
             ],
             'complexity': ['error', 20],
+            '@angular-eslint/no-output-rename': ['warn'],
+            '@angular-eslint/component-class-suffix': ['warn'],
+            '@typescript-eslint/no-unnecessary-condition': ['warn'],
+            '@typescript-eslint/no-unnecessary-type-arguments': ['warn'],
+            '@typescript-eslint/no-unnecessary-type-assertion': ['warn'],
+            '@typescript-eslint/no-unnecessary-type-constraint': ['warn'],
+            '@typescript-eslint/prefer-for-of': ['warn'],
+            '@typescript-eslint/prefer-nullish-coalescing': ['warn'],
+            '@typescript-eslint/prefer-readonly': ['warn'],
+            '@typescript-eslint/switch-exhaustiveness-check': ['warn'],
+            '@typescript-eslint/no-unused-expressions': ['warn'],
+            '@typescript-eslint/no-unused-vars': ['warn'],
+            '@typescript-eslint/no-use-before-define': ['warn'],
+            '@typescript-eslint/no-useless-constructor': ['warn'],
             '@typescript-eslint/typedef': [
                 'error',
                 {
