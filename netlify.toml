@@ -1,6 +1,6 @@
 [build]
   publish = "dist/pantheonsgame"
-  command = "npm run build:netlify"
+  command = "sh scripts/build.sh"
 
 [[redirects]]
   from = "/*"
