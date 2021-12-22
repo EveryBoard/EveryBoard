@@ -47,8 +47,8 @@ export class LoginComponent implements OnInit {
         return this.router.navigate(['/server']);
     }
     public canLogin(): boolean {
-        const email: string = this.loginForm.value.email || '';
-        const password: string = this.loginForm.value.password || '';
+        const email: string = this.loginForm.value.email ?? '';
+        const password: string = this.loginForm.value.password ?? '';
         if (email === '' || password === '') {
             return false;
         }

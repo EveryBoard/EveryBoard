@@ -127,7 +127,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         componentTestUtils.detectChanges();
         await wrapper.partCreation.proposeConfig();
         componentTestUtils.detectChanges();
-        if (shorterGlobalChrono) {
+        if (shorterGlobalChrono != null) {
             await joinerDAO.update('joinerId', {
                 partStatus: PartStatus.PART_STARTED.value,
                 totalPartDuration: 10,

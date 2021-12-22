@@ -9,7 +9,7 @@ module.exports = {
         parserOptions: {
             ecmaVersion: 12,
             sourceType: 'module',
-            //        project: 'tsconfig.json',
+            project: 'tsconfig.json',
         },
         plugins: [
             '@typescript-eslint',
@@ -21,9 +21,13 @@ module.exports = {
             // 'plugin:@angular-eslint/recommended',
         ],
         rules: {
+            'no-warning-comments': [
+                'warn',
+                { 'terms': ['todo', 'fixme', 'xxx'], 'location': 'start' }
+            ],
             'complexity': ['error', 20],
             '@typescript-eslint/typedef': [
-                'warn',
+                'error',
                 {
                     'arrowParameter': true,
                     'memberVariableDeclaration': true,
@@ -32,21 +36,21 @@ module.exports = {
                     'parameter': true,
                 },
             ],
-            //        '@typescript-eslint/strict-boolean-expressions': ['error'],
+            '@typescript-eslint/strict-boolean-expressions': ['error'],
             '@typescript-eslint/no-empty-function': ['off'],
             '@typescript-eslint/no-namespace': ['off'],
             '@typescript-eslint/ban-types': [
                 'error',
                 { 'types': { 'String': { 'message': 'Use string instead', 'fixWith': 'string' } } },
             ],
-            '@typescript-eslint/no-this-alias': ['warn'],
+            '@typescript-eslint/no-this-alias': ['error'],
             '@typescript-eslint/no-inferrable-types': ['off'],
             '@typescript-eslint/no-redeclare': [
                 'error',
                 { 'ignoreDeclarationMerge': true },
             ],
-            'max-len': ['warn', { 'code': 120, 'ignoreStrings': true, 'ignoreTemplateLiterals': true }],
-            'require-jsdoc': ['warn', { 'require': {
+            'max-len': ['error', { 'code': 120, 'ignoreStrings': true, 'ignoreTemplateLiterals': true }],
+            'require-jsdoc': ['error', { 'require': {
                 'FunctionDeclaration': false,
                 'MethodDefinition': false,
                 'ClassDeclaration': false,
