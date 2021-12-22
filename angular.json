@@ -23,7 +23,16 @@
                             "src/assets"
                         ],
                         "styles": [
-                            "src/sass/mystyles.scss"
+                            {
+                                "input": "src/sass/dark.scss",
+                                "bundleName": "dark",
+                                "inject": false
+                            },
+                            {
+                                "input": "src/sass/light.scss",
+                                "bundleName": "light",
+                                "inject": false
+                            }
                         ],
                         "stylePreprocessorOptions": {
                             "includePaths": [

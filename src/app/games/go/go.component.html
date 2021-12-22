@@ -5,9 +5,7 @@
     <rect x="0" y="0"
           [attr.width]="board.length * 50"
           [attr.height]="board.length * 50"
-          stroke="black"
-          stroke-width="3"
-          fill="lightgrey"
+          class="base mid-small-stroke"
     />
     <g *ngFor="let line of board; index as y">
         <g *ngFor="let caseContent of line; index as x">
@@ -58,8 +56,7 @@
     <rect *ngIf="ko.isPresent()"
           width="25" height="25"
           [attr.x]="12.5 + 50 * ko.get().x" [attr.y]="12.5 + 50 * ko.get().y"
-          class="captured-stroke mid-stroke"
-          fill="none"
+          class="captured-stroke mid-stroke no-fill"
     />
     <circle *ngFor="let capture of captures"
             (click)="onClick(capture.x, capture.y)"

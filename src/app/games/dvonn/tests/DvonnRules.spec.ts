@@ -272,11 +272,11 @@ describe('DvonnRules:', () => {
             [_, OS6, _, _, _, _, _, _, _, N, N],
         ];
         const state: DvonnState = new DvonnState(board, 11, true);
+        const move: DvonnMove = DvonnMove.of(new Coord(1, 3), new Coord(1, 4));
         const node: DvonnNode = new DvonnNode(state,
                                               MGPOptional.empty(),
-                                              MGPOptional.of(DvonnMove.of(new Coord(1, 3), new Coord(1, 4))));
-        expect(minimaxes[0].getListMoves(node).length)
-            .toEqual(1);
+                                              MGPOptional.of(move));
+        expect(minimaxes[0].getListMoves(node).length).toEqual(1);
     });
     describe('endgames', () => {
         it('should recognize victory for player zero', () => {

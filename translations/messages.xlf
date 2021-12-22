@@ -44,6 +44,9 @@
       <trans-unit id="3468367367164457633" datatype="html">
         <source>Learn the rules</source>
       </trans-unit>
+      <trans-unit id="4930506384627295710" datatype="html">
+        <source>Settings</source>
+      </trans-unit>
       <trans-unit id="7507948636555938109" datatype="html">
         <source>Log out</source>
       </trans-unit>
@@ -298,6 +301,21 @@
       </trans-unit>
       <trans-unit id="1670632975695309948" datatype="html">
         <source>Connected users:</source>
+      </trans-unit>
+      <trans-unit id="6153797048311741939" datatype="html">
+        <source>User settings</source>
+      </trans-unit>
+      <trans-unit id="7103588127254721505" datatype="html">
+        <source>Theme</source>
+      </trans-unit>
+      <trans-unit id="2826581353496868063" datatype="html">
+        <source>Language</source>
+      </trans-unit>
+      <trans-unit id="413116577994876478" datatype="html">
+        <source>Light</source>
+      </trans-unit>
+      <trans-unit id="3892161059518616136" datatype="html">
+        <source>Dark</source>
       </trans-unit>
       <trans-unit id="6996804354508674341" datatype="html">
         <source>Account verification</source>
@@ -2083,6 +2101,9 @@
       </trans-unit>
       <trans-unit id="5525790446318724698" datatype="html">
         <source>Something is in the way.</source>
+      </trans-unit>
+      <trans-unit id="6790757046240382671" datatype="html">
+        <source>Tafl moves must be orthogonal.</source>
       </trans-unit>
       <trans-unit id="1634828513961256784" datatype="html">
         <source>Brandhub is the Irish version of the family of viking strategy game called Tafl. The goal of the game is different for each player. The attacker plays first. Their pieces (dark) are close to the edges. Their goal is to capture the king, which is in the center of the board. The defender plays second. Their pieces (light) are in the middle. Their goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
