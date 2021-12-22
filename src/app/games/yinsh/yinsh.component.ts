@@ -18,10 +18,10 @@ import { YinshTutorial } from './YinshTutorial';
 import { Utils } from 'src/app/utils/utils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 
-interface CaseInfo {
+interface SpaceInfo {
     coord: Coord,
     coordinates: string,
-    caseClasses: string[],
+    spaceClasses: string[],
     markerClasses: string[],
     ringClasses: string[],
     isMarker: boolean,
@@ -31,7 +31,7 @@ interface CaseInfo {
 }
 
 interface ViewInfo {
-    caseInfo: CaseInfo[][],
+    spaceInfo: SpaceInfo[][],
     selectableCoords: Coord[],
     selectedCoords: Coord[],
     targets: Coord[],
@@ -80,7 +80,7 @@ export class YinshComponent
     private possibleCaptures: YinshCapture[] = [];
 
     public viewInfo: ViewInfo = {
-        caseInfo: [],
+        spaceInfo: [],
         selectableCoords: [],
         selectedCoords: [],
         targets: [],
@@ -106,14 +106,14 @@ export class YinshComponent
                                          FlatHexaOrientation.INSTANCE);
         this.constructedState = this.rules.node.gameState;
         this.constructedState.allCoords().forEach((coord: Coord): void => {
-            if (this.viewInfo.caseInfo[coord.y] == null) {
-                this.viewInfo.caseInfo[coord.y] = [];
+            if (this.viewInfo.spaceInfo[coord.y] == null) {
+                this.viewInfo.spaceInfo[coord.y] = [];
             }
-            this.viewInfo.caseInfo[coord.y][coord.x] = {
+            this.viewInfo.spaceInfo[coord.y][coord.x] = {
                 coord,
                 coordinates: this.getHexaCoordsAt(coord),
                 center: this.getCenterAt(coord),
-                caseClasses: [],
+                spaceClasses: [],
                 markerClasses: [],
                 ringClasses: [],
                 isMarker: false,
@@ -124,12 +124,14 @@ export class YinshComponent
     }
     public updateBoard(): void {
         this.cancelMoveAttempt();
+        const state: YinshState = this.rules.node.gameState;
+        this.scores = MGPOptional.of(state.countScores());
     }
     public updateViewInfo(): void {
         this.constructedState.allCoords().forEach((coord: Coord): void => {
-            this.viewInfo.caseInfo[coord.y][coord.x].caseClasses = this.getCaseClasses(coord);
+            this.viewInfo.spaceInfo[coord.y][coord.x].spaceClasses = this.getSpaceClasses(coord);
             const piece: YinshPiece = this.constructedState.getPieceAt(coord);
-            this.viewInfo.caseInfo[coord.y][coord.x].removedClass = '';
+            this.viewInfo.spaceInfo[coord.y][coord.x].removedClass = '';
             this.setRingInfo(coord, piece);
             this.setMarkerInfo(coord, piece);
         });
@@ -148,7 +150,7 @@ export class YinshComponent
             case 'FINAL_CAPTURE_SELECT_LAST':
                 this.viewInfo.selectableCoords = [];
                 for (const capture of this.possibleCaptures) {
-                    for (const coord of capture.capturedCases) {
+                    for (const coord of capture.capturedSpaces) {
                         this.viewInfo.selectableCoords.push(coord);
                     }
                 }
@@ -181,7 +183,7 @@ export class YinshComponent
             this.markCurrentCapture(capture);
         }
     }
-    private getCaseClasses(coord: Coord): string[] {
+    private getSpaceClasses(coord: Coord): string[] {
         if (this.currentlyMoved.some((c: Coord) => c.equals(coord))) {
             return ['moved'];
         } else {
@@ -191,22 +193,22 @@ export class YinshComponent
     private setRingInfo(coord: Coord, piece: YinshPiece): void {
         if (piece.isRing) {
             const playerClass: string = this.getPlayerClass(piece.player);
-            this.viewInfo.caseInfo[coord.y][coord.x].isRing = true;
-            this.viewInfo.caseInfo[coord.y][coord.x].ringClasses = [playerClass + '-stroke'];
+            this.viewInfo.spaceInfo[coord.y][coord.x].isRing = true;
+            this.viewInfo.spaceInfo[coord.y][coord.x].ringClasses = [playerClass + '-stroke'];
         } else {
-            this.viewInfo.caseInfo[coord.y][coord.x].isRing = false;
-            this.viewInfo.caseInfo[coord.y][coord.x].ringClasses = [];
+            this.viewInfo.spaceInfo[coord.y][coord.x].isRing = false;
+            this.viewInfo.spaceInfo[coord.y][coord.x].ringClasses = [];
         }
     }
     private setMarkerInfo(coord: Coord, piece: YinshPiece): void {
-        this.viewInfo.caseInfo[coord.y][coord.x].isMarker = false;
-        this.viewInfo.caseInfo[coord.y][coord.x].markerClasses = [];
+        this.viewInfo.spaceInfo[coord.y][coord.x].isMarker = false;
+        this.viewInfo.spaceInfo[coord.y][coord.x].markerClasses = [];
         if (piece !== YinshPiece.EMPTY) {
             const containsMarker: boolean = !piece.isRing || (piece.isRing && this.moveStart.equalsValue(coord));
             if (containsMarker) {
                 const playerClass: string = this.getPlayerClass(piece.player);
-                this.viewInfo.caseInfo[coord.y][coord.x].isMarker = true;
-                this.viewInfo.caseInfo[coord.y][coord.x].markerClasses = [playerClass];
+                this.viewInfo.spaceInfo[coord.y][coord.x].isMarker = true;
+                this.viewInfo.spaceInfo[coord.y][coord.x].markerClasses = [playerClass];
             }
         }
     }
@@ -227,10 +229,10 @@ export class YinshComponent
         if (moveOptional.isPresent()) {
             const move: YinshMove = moveOptional.get();
             if (move.isInitialPlacement()) {
-                this.viewInfo.caseInfo[move.start.y][move.start.x].caseClasses = ['moved'];
+                this.viewInfo.spaceInfo[move.start.y][move.start.x].spaceClasses = ['moved'];
             } else {
                 for (const coord of this.coordsBetween(move.start, move.end.get())) {
-                    this.viewInfo.caseInfo[coord.y][coord.x].caseClasses = ['moved'];
+                    this.viewInfo.spaceInfo[coord.y][coord.x].spaceClasses = ['moved'];
                 }
                 const nothingSelectedThisTurn: boolean =
                     this.currentCapture.isAbsent() &&
@@ -253,15 +255,15 @@ export class YinshComponent
         return coords;
     }
     private showLastMoveCapture(capture: YinshCapture, alsoShowPiece: boolean): void {
-        for (const coord of capture.capturedCases) {
-            this.viewInfo.caseInfo[coord.y][coord.x].caseClasses = ['captured'];
+        for (const coord of capture.capturedSpaces) {
+            this.viewInfo.spaceInfo[coord.y][coord.x].spaceClasses = ['captured'];
             if (alsoShowPiece) {
                 this.markRemovedMarker(coord, this.rules.node.gameState.getCurrentPlayer().getOpponent());
             }
         }
-        this.viewInfo.caseInfo[capture.ringTaken.y][capture.ringTaken.x].caseClasses = ['captured'];
+        this.viewInfo.spaceInfo[capture.ringTaken.get().y][capture.ringTaken.get().x].spaceClasses = ['captured'];
         if (alsoShowPiece) {
-            this.markRemovedRing(capture.ringTaken, this.rules.node.gameState.getCurrentPlayer().getOpponent());
+            this.markRemovedRing(capture.ringTaken.get(), this.rules.node.gameState.getCurrentPlayer().getOpponent());
         }
     }
     private moveToInitialCaptureOrMovePhase(): MGPValidation {
@@ -316,7 +318,7 @@ export class YinshComponent
         this.viewInfo.selectableCoords = [];
         this.possibleCaptures = possibleCaptures;
         for (const capture of possibleCaptures) {
-            for (const coord of capture.capturedCases) {
+            for (const coord of capture.capturedSpaces) {
                 this.viewInfo.selectableCoords.push(coord);
             }
         }
@@ -365,21 +367,21 @@ export class YinshComponent
         return MGPValidation.SUCCESS;
     }
     private markCurrentCapture(capture: YinshCapture): void {
-        for (const coord of capture.capturedCases) {
+        for (const coord of capture.capturedSpaces) {
             this.viewInfo.selectedCoords.push(coord);
             this.markRemovedMarker(coord, this.rules.node.gameState.getCurrentPlayer());
         }
-        if (!capture.ringTaken.equals(new Coord(-1, -1))) {
-            this.viewInfo.selectedCoords.push(capture.ringTaken);
-            this.markRemovedRing(capture.ringTaken, this.rules.node.gameState.getCurrentPlayer());
+        if (capture.ringTaken.isPresent()) {
+            this.viewInfo.selectedCoords.push(capture.ringTaken.get());
+            this.markRemovedRing(capture.ringTaken.get(), this.rules.node.gameState.getCurrentPlayer());
         }
     }
     private markRemovedMarker(coord: Coord, player: Player): void {
-        this.viewInfo.caseInfo[coord.y][coord.x].removedClass = 'transparent';
+        this.viewInfo.spaceInfo[coord.y][coord.x].removedClass = 'transparent';
         this.setMarkerInfo(coord, YinshPiece.MARKERS[player.value]);
     }
     private markRemovedRing(coord: Coord, player: Player): void {
-        this.viewInfo.caseInfo[coord.y][coord.x].removedClass = 'transparent';
+        this.viewInfo.spaceInfo[coord.y][coord.x].removedClass = 'transparent';
         this.setRingInfo(coord, YinshPiece.RINGS[player.value]);
     }
     private async selectRing(coord: Coord): Promise<MGPValidation> {
