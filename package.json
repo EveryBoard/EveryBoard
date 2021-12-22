@@ -6,12 +6,14 @@
     "start": "ng serve",
     "start:emulator": "bash ./scripts/start-in-emulator.sh",
     "build": "ng build --configuration=production",
+    "build:netlify": "ng build --configuration=production-netlify",
     "build:dev": "ng build --configuration=production,dev",
     "build:test": "ng build --configuration=test",
     "test": "bash ./scripts/test.sh",
     "test:ci": "bash ./scripts/test.sh --watch=false --browsers=ChromeHeadlessCustom",
     "lint": "eslint --ext ts ./",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "deploy:maintenance": "netlify deploy --prod --dir=maintenance/"
   },
   "private": true,
   "dependencies": {
@@ -52,10 +54,10 @@
     "@angular/compiler-cli": "^11.2.14",
     "@angular/localize": "^11.2.14",
     "@types/jasmine": "^3.9.0",
-    "@typescript-eslint/eslint-plugin": "4.16.1",
-    "@typescript-eslint/parser": "4.16.1",
+    "@typescript-eslint/eslint-plugin": "^5.5.0",
+    "@typescript-eslint/parser": "^5.5.0",
     "angular-eslint": "^0.0.1-alpha.0",
-    "eslint": "^7.6.0",
+    "eslint": "^7.32.0",
     "eslint-config-google": "^0.14.0",
     "eslint-config-standard": "^16.0.2",
     "eslint-plugin-import": "^2.22.1",
@@ -67,8 +69,10 @@
     "karma-coverage": "^2.0.3",
     "karma-jasmine": "^4.0.0",
     "karma-jasmine-html-reporter": "^1.5.0",
+    "netlify-cli": "^8.0.5",
+    "netlify-plugin-chromium": "^1.1.4",
     "protractor": "^7.0.0",
-    "sass": "^1.32.6",
+    "sass": "^1.44.0",
     "typescript": "~4.1.5"
   }
 }

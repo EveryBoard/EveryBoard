@@ -1,0 +1,9 @@
+[build]
+  publish = "dist/pantheonsgame"
+  command = "sh scripts/build.sh"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+

@@ -42,4 +42,6 @@ Thumbs.db
 # firebase config file
 /src/app/firebaseConfig.ts
 
-package-lock.json
+
+# Local Netlify folder
+.netlify
