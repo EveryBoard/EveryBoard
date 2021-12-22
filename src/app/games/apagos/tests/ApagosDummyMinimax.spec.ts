@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { ApagosDummyMinimax } from '../ApagosDummyMinimax';
 import { ApagosMove } from '../ApagosMove';
 import { ApagosNode, ApagosRules } from '../ApagosRules';

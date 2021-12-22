@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 

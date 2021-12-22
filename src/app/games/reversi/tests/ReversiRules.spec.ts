@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { ReversiLegalityInformation, ReversiNode, ReversiRules } from '../ReversiRules';
 import { ReversiMinimax } from '../ReversiMinimax';
 import { ReversiMove } from '../ReversiMove';

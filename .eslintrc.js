@@ -103,7 +103,7 @@ module.exports = {
             'eqeqeq': ['error', 'always', {
                 'null': 'ignore',
             }],
-            'max-lines-per-function': ['off', 20]
+            'max-lines-per-function': ['warn', 50]
         },
     }, {
         files: ['*.html'],

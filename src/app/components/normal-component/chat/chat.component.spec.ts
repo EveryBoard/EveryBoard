@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { ChatComponent } from './chat.component';
 import { AuthUser } from 'src/app/services/AuthenticationService';

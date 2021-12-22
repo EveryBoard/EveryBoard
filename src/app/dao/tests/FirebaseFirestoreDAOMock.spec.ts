@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 
 import firebase from 'firebase/app';

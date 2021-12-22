@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { AuthenticationService, AuthUser, RTDB } from '../AuthenticationService';
 import { Observable, ReplaySubject, Subscription } from 'rxjs';
 import { fakeAsync, TestBed } from '@angular/core/testing';

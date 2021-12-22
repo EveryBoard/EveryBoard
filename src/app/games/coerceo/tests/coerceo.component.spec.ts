@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { CoerceoComponent } from '../coerceo.component';
 import { CoerceoMove } from 'src/app/games/coerceo/CoerceoMove';
 import { Coord } from 'src/app/jscaip/Coord';

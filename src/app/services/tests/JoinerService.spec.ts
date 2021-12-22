@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 import { JoinerService } from '../JoinerService';
 import { JoinerDAO } from 'src/app/dao/JoinerDAO';

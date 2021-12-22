@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { TablutComponent } from '../tablut.component';
 import { TablutMove } from 'src/app/games/tafl/tablut/TablutMove';
 import { Coord } from 'src/app/jscaip/Coord';

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { EncapsuleComponent } from '../encapsule.component';
 import { EncapsuleMove } from 'src/app/games/encapsule/EncapsuleMove';
 import { Coord } from 'src/app/jscaip/Coord';

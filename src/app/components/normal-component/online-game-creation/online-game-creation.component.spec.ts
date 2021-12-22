@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
