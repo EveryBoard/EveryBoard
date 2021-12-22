@@ -181,20 +181,12 @@ jobs:
           organization: EveryBoard
           username: ${{ github.actor }}
           token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build if org member
-        run: |
-          result=${{ steps.is_organization_member.outputs.result }}
-          if [ $result == true ]; then
-            npm run build:netlify
-            ./scripts/update-images.sh
-            ./scripts/check-translations.sh
-          fi
       - name: Deploy master on push if org member
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
         run: |
           result=${{ steps.is_organization_member.outputs.result }}
           if [ $result == true ]; then
-            netlify deploy --dir=dist/pantheonsgame --prod --message="Master deployment from github ($GITHUB_REF_NAME, commit $GITHUB_SHA)"
+            netlify deploy --trigger --prod --message="Master deployment from github ($GITHUB_REF_NAME, commit $GITHUB_SHA)"
           fi
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
@@ -204,7 +196,7 @@ jobs:
         run: |
           result=${{ steps.is_organization_member.outputs.result }}
           if [ $result == true ]; then
-            netlify deploy --dir=dist/pantheonsgame --alias=develop --message="Develop deployment from github ($GITHUB_REF_NAME, commit $GITHUB_SHA)"
+            netlify deploy --trigger --alias=develop --message="Develop deployment from github ($GITHUB_REF_NAME, commit $GITHUB_SHA)"
           fi
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
@@ -214,7 +206,7 @@ jobs:
         run: |
           result=${{ steps.is_organization_member.outputs.result }}
           if [ $result == true ]; then
-            netlify deploy --dir=dist/pantheonsgame --prod --alias="$GITHUB_HEAD_REF" --message="Develop deployment from github ($GITHUB_HEAD_REF, $GITHUB_HEAD_REF_NAME, commit $GITHUB_SHA)"
+            netlify deploy --trigger --alias="$GITHUB_HEAD_REF" --message="Develop deployment from github ($GITHUB_HEAD_REF, $GITHUB_HEAD_REF_NAME, commit $GITHUB_SHA)"
           fi
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
