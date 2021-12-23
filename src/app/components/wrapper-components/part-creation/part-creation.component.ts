@@ -192,7 +192,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             this.viewInfo.maximalMoveDuration = joiner.maximalMoveDuration;
             this.viewInfo.totalPartDuration = joiner.totalPartDuration;
             this.viewInfo.partType = joiner.partType;
-            this.viewInfo.chosenOpponent = joiner.chosenPlayer ?? undefined;
+            this.viewInfo.chosenOpponent = joiner.chosenPlayer || undefined;
             this.viewInfo.firstPlayer = joiner.firstPlayer;
         }
         switch (joiner.partType) {
@@ -208,15 +208,15 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         }
     }
     private setDataForCreator(joiner: IJoiner): void {
-        this.viewInfo.maximalMoveDuration = this.viewInfo.maximalMoveDuration ?? joiner.maximalMoveDuration;
-        this.viewInfo.totalPartDuration = this.viewInfo.totalPartDuration ?? joiner.totalPartDuration;
+        this.viewInfo.maximalMoveDuration = this.viewInfo.maximalMoveDuration || joiner.maximalMoveDuration;
+        this.viewInfo.totalPartDuration = this.viewInfo.totalPartDuration || joiner.totalPartDuration;
         let opponent: string | undefined = this.viewInfo.chosenOpponent;
-        if (opponent != null) {
+        if (opponent) {
             if (joiner.candidates.indexOf(opponent) === -1) {
                 opponent = ''; // chosenOppoent left
             }
         } else {
-            opponent = joiner.chosenPlayer ?? '';
+            opponent = joiner.chosenPlayer || '';
         }
         this.getForm('chosenOpponent').setValue(opponent);
     }
