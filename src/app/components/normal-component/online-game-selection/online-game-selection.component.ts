@@ -2,10 +2,10 @@ import { Component } from '@angular/core';
 import { GameService } from 'src/app/services/GameService';
 
 @Component({
-    selector: 'app-online-game-creation',
-    templateUrl: './online-game-creation.component.html',
+    selector: 'app-online-game-selection',
+    templateUrl: './online-game-selection.component.html',
 })
-export class OnlineGameCreationComponent {
+export class OnlineGameSelectionComponent {
 
     public selectedGame: string;
 

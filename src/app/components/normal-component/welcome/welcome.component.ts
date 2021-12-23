@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ThemeService } from 'src/app/services/ThemeService';
-import { GameService } from 'src/app/services/GameService';
 import { GameInfo } from '../pick-game/pick-game.component';
 import { faNetworkWired, faDesktop, faBookOpen, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -20,8 +19,7 @@ export class WelcomeComponent {
 
     public gameInfoDetails: MGPOptional<GameInfo> = MGPOptional.empty();
 
-    public constructor(private gameService: GameService,
-                       private router: Router,
+    public constructor(private readonly router: Router,
                        themeService: ThemeService) {
         this.theme = themeService.getTheme();
         const allGames: GameInfo[] = GameInfo.ALL_GAMES().filter((game: GameInfo) => game.display === true);
@@ -35,7 +33,8 @@ export class WelcomeComponent {
         }
     }
     public async createGame(game: string): Promise<boolean> {
-        return this.gameService.createGameAndRedirectOrShowError(game);
+        return this.router.navigate(['/play/' + game])
+        // return this.gameService.createGameAndRedirectOrShowError(game);
     }
     public createLocalGame(game: string): void {
         this.router.navigate(['/local/' + game]);
