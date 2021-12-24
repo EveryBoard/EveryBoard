@@ -205,9 +205,9 @@ export class GameService implements OnDestroy {
     public proposeDraw(partId: string, player: Player): Promise<void> {
         return this.sendRequest(partId, Request.drawProposed(player));
     }
-    public acceptDraw(partId: string): Promise<void> {
+    public acceptDraw(partId: string): Promise<void> { console.log('ACCEPT DRAW LE SERVICE')
         return this.partDao.update(partId, {
-            result: MGPResult.DRAW.value,
+            result: MGPResult.AGREED_DRAW.value,
             request: null,
         });
     }
@@ -280,6 +280,32 @@ export class GameService implements OnDestroy {
         return this.partDao.update(id, {
             request,
         });
+    }
+    public async addGlobalTime(id: string,
+                               part: Part,
+                               observerRole: Player)
+    : Promise<void>
+    {
+        assert(observerRole !== Player.NONE, 'Illegal for observer to make request');
+
+        let update: Partial<IPart> = {
+            request: Request.globalTimeAdded(observerRole.getOpponent()),
+        };
+        if (observerRole === Player.ZERO) {
+            update = {
+                ...update,
+                remainingMsForOne: Utils.getNonNullable(part.doc.remainingMsForOne) + 5 * 60 * 1000,
+            };
+        } else {
+            update = {
+                ...update,
+                remainingMsForZero: Utils.getNonNullable(part.doc.remainingMsForZero) + 5 * 60 * 1000,
+            };
+        }
+        return await this.partDao.update(id, update);
+    }
+    public async addLocalTime(observerRole: Player, id: string): Promise<void> {
+        return await this.partDao.update(id, { request: Request.localTimeAdded(observerRole.getOpponent()) });
     }
     public stopObserving(): void {
         display(GameService.VERBOSE, 'GameService.stopObserving();');

@@ -29,13 +29,18 @@
                                 [dangerTimeLimit]="60*1000"
                                 [active]="(currentPart == null) ? false : currentPart.getTurn() % 2 === 0"
                                 debugName="ZERO Global"
-                                (outOfTimeAction)="reachedOutOfTime(0)">
+                                (outOfTimeAction)="reachedOutOfTime(0)"
+                                (addTimeToOpponent)="addGlobalTime()"
+                >
                 </app-count-down>
                 <app-count-down #chronoZeroLocal
                                 [dangerTimeLimit]="15*1000"
                                 [active]="(currentPart == null) ? false : currentPart.getTurn() % 2 === 0"
+                                [canAddTime]='observerRole === 1 && endGame === false'
                                 debugName="ZERO Local"
-                                (outOfTimeAction)="reachedOutOfTime(0)">
+                                (outOfTimeAction)="reachedOutOfTime(0)"
+                                (addTimeToOpponent)="addLocalTime()"
+                >
                 </app-count-down>
             </div>
             <p class="is-size-3" i18n>vs.</p>
@@ -48,14 +53,20 @@
                 <app-count-down #chronoOneGlobal
                                 [dangerTimeLimit]="60*1000"
                                 [active]="(currentPart == null) ? false : currentPart.getTurn() % 2 === 1"
+                                [canAddTime]='observerRole === 0 && endGame === false'
                                 debugName="ONE Global"
-                                (outOfTimeAction)="reachedOutOfTime(1)">
+                                (outOfTimeAction)="reachedOutOfTime(1)"
+                                (addTimeToOpponent)="addGlobalTime()"
+                >
                 </app-count-down>
                 <app-count-down #chronoOneLocal
                                 [dangerTimeLimit]="15*1000"
                                 [active]="(currentPart == null) ? false : currentPart.getTurn() % 2 === 1"
+                                [canAddTime]='observerRole === 0 && endGame === false'
                                 debugName="ONE Local"
-                                (outOfTimeAction)="reachedOutOfTime(1)">
+                                (outOfTimeAction)="reachedOutOfTime(1)"
+                                (addTimeToOpponent)="addLocalTime()"
+                >
                 </app-count-down>
             </div>
             <hr/>
@@ -111,7 +122,8 @@
             <div class="block" id="winnerIndicator" *ngIf="endGame">
                 <hr/>
                 <div *ngIf="currentPart.isDraw()">
-                    <p class="title" i18n>Draw</p>
+                    <p class="title" id="hardDrawIndicator" *ngIf="currentPart.isHardDraw()" i18n>Draw</p>
+                    <p class="title" id="agreedDrawIndicator" *ngIf="currentPart.isAgreedDraw()" i18n>You agreed to draw</p>
                 </div>
                 <div *ngIf="currentPart.isWin()">
                     <p class="title" id="youWonIndicator" *ngIf="currentPart.getWinner().get() === getPlayerName()" i18n>You won.</p>

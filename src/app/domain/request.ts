@@ -4,9 +4,9 @@ import { JSONObject } from 'src/app/utils/utils';
 
 export type RequestCode =
     'DrawProposed' | 'DrawAccepted' | 'DrawRefused' |
-    'AddedTime' |
     'TakeBackAsked' | 'TakeBackAccepted' | 'TakeBackRefused' |
-    'RematchProposed' | 'RematchAccepted';
+    'RematchProposed' | 'RematchAccepted' |
+    'LocalTimeAdded' | 'GlobalTimeAdded';
 
 export class Request implements JSONObject {
     [key: string]: JSONValue; // Index signature to type to JSONObject
@@ -23,6 +23,8 @@ export class Request implements JSONObject {
     public static rematchAccepted(typeGame: string, partId: string): Request {
         return make('RematchAccepted', { typeGame, partId });
     }
+    public static localTimeAdded: (to: Player) => Request = makeWithPlayer('LocalTimeAdded');
+    public static globalTimeAdded: (to: Player) => Request = makeWithPlayer('GlobalTimeAdded');
 
     public static getPlayer(request: Request): Player {
         return Player.of(Utils.getNonNullable(request.data)['player']);

@@ -33,7 +33,14 @@ export class Part implements DomainWrapper<IPart> {
         return this.doc.turn;
     }
     public isDraw(): boolean {
+        return this.doc.result === MGPResult.DRAW.value ||
+               this.doc.result === MGPResult.AGREED_DRAW.value;
+    }
+    public isHardDraw(): boolean {
         return this.doc.result === MGPResult.DRAW.value;
+    }
+    public isAgreedDraw(): boolean {
+        return this.doc.result === MGPResult.AGREED_DRAW.value;
     }
     public isWin(): boolean {
         return this.doc.result === MGPResult.VICTORY.value;

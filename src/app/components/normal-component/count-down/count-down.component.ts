@@ -12,6 +12,7 @@ export class CountDownComponent implements OnInit, OnDestroy {
     @Input() debugName: string;
     @Input() dangerTimeLimit: number;
     @Input() active: boolean;
+    @Input() canAddTime: boolean;
 
     public remainingMs: number;
     public displayedSec: number;
@@ -24,24 +25,25 @@ export class CountDownComponent implements OnInit, OnDestroy {
     private startTime: number;
 
     @Output() outOfTimeAction: EventEmitter<void> = new EventEmitter<void>();
+    @Output() addTimeToOpponent: EventEmitter<void> = new EventEmitter<void>();
 
-    public readonly DANGER_TIME_EVEN: { [key: string]: string } = {
+    public static readonly DANGER_TIME_EVEN: { [key: string]: string } = {
         'color': 'red',
         'font-weight': 'bold',
     };
-    public readonly DANGER_TIME_ODD: { [key: string]: string } = {
+    public static readonly DANGER_TIME_ODD: { [key: string]: string } = {
         'color': 'white',
         'font-weight': 'bold',
         'background-color': 'red',
     };
-    public readonly PASSIVE_STYLE: { [key: string]: string } = {
+    public static readonly PASSIVE_STYLE: { [key: string]: string } = {
         'color': 'lightgrey',
         'background-color': 'darkgrey',
         'font-size': 'italic',
     };
-    public readonly SAFE_TIME: { [key: string]: string } = { color: 'black' };
+    public static readonly SAFE_TIME: { [key: string]: string } = { color: 'black' };
 
-    public style: { [key: string]: string } = this.SAFE_TIME;
+    public style: { [key: string]: string } = CountDownComponent.SAFE_TIME;
 
     public ngOnInit(): void {
         display(CountDownComponent.VERBOSE, 'CountDownComponent.ngOnInit (' + this.debugName + ')');
@@ -56,9 +58,20 @@ export class CountDownComponent implements OnInit, OnDestroy {
         this.changeDuration(duration);
     }
     public changeDuration(ms: number): void {
+        let mustResume: boolean = false;
+        if (this.isPaused === false) {
+            this.pause();
+            mustResume = true;
+        }
         this.remainingMs = ms;
-        this.displayedSec = ms % (60 * 1000);
-        this.displayedMinute = (ms - this.displayedSec) / (60 * 1000);
+        this.displayDuration();
+        if (mustResume) {
+            this.resume();
+        }
+    }
+    private displayDuration(): void {
+        this.displayedSec = this.remainingMs % (60 * 1000);
+        this.displayedMinute = (this.remainingMs - this.displayedSec) / (60 * 1000);
         this.displayedSec = Math.floor(this.displayedSec / 1000);
     }
     public start(): void {
@@ -134,25 +147,29 @@ export class CountDownComponent implements OnInit, OnDestroy {
     }
     public getTimeStyle(): { [key: string]: string } {
         if (this.active === false) {
-            return this.PASSIVE_STYLE;
+            return CountDownComponent.PASSIVE_STYLE;
         }
         if (this.remainingMs < this.dangerTimeLimit) {
             if (this.remainingMs % 2000 < 1000) {
-                return this.DANGER_TIME_ODD;
+                return CountDownComponent.DANGER_TIME_ODD;
             } else {
-                return this.DANGER_TIME_EVEN;
+                return CountDownComponent.DANGER_TIME_EVEN;
             }
         } else {
-            return this.SAFE_TIME;
+            return CountDownComponent.SAFE_TIME;
         }
+    }
+    public getBackgroundColor(): { [key: string]: string } {
+        const buttonStyle: { [key: string]: string } = this.getTimeStyle();
+        return { 'background-color': buttonStyle['background-color'] };
     }
     private updateShownTime(): void {
         const now: number = Date.now();
         this.remainingMs -= (now - this.startTime);
-        this.changeDuration(this.remainingMs);
+        this.displayDuration();
         this.style = this.getTimeStyle();
         this.startTime = now;
-        if (!this.isPaused) {
+        if (this.isPaused === false) {
             this.countSeconds();
         }
     }
@@ -168,6 +185,9 @@ export class CountDownComponent implements OnInit, OnDestroy {
             clearTimeout(this.timeoutHandleGlobal);
             this.timeoutHandleGlobal = null;
         }
+    }
+    public addTime(): void {
+        this.addTimeToOpponent.emit();
     }
     public ngOnDestroy(): void {
         this.clearTimeouts();

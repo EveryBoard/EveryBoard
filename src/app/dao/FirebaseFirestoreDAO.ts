@@ -26,6 +26,7 @@ export interface IFirebaseFirestoreDAO<T extends FirebaseJSONObject> {
 }
 
 export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> implements IFirebaseFirestoreDAO<T> {
+
     public static VERBOSE: boolean = false;
 
     constructor(public readonly collectionName: string, protected afs: AngularFirestore) {}
