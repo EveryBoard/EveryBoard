@@ -90,6 +90,7 @@ import { ToggleVisibilityDirective } from './directives/toggle-visibility.direct
 import { ResetPasswordComponent } from './components/normal-component/reset-password/reset-password.component';
 import { ThemeService } from './services/ThemeService';
 import { SettingsComponent } from './components/normal-component/settings/settings.component';
+import { OnlineGameCreationComponent } from './components/normal-component/online-game-creation/online-game-creation.component';
 
 registerLocaleData(localeFr);
 
@@ -104,7 +105,7 @@ const routes: Route [] = [
     { path: 'verify-account', component: VerifyAccountComponent, canActivate: [ConnectedButNotVerifiedGuard] },
 
     { path: 'play', component: OnlineGameSelectionComponent, canActivate: [VerifiedAccountGuard] },
-//    { path: 'play/:compo', component: OnlineGameCreationComponent, canActivate: [VerifiedAccountGuard] },
+    { path: 'play/:compo', component: OnlineGameCreationComponent, canActivate: [VerifiedAccountGuard] },
     { path: 'play/:compo/:id', component: OnlineGameWrapperComponent, canActivate: [VerifiedAccountGuard] },
     { path: 'local', component: LocalGameCreationComponent },
     { path: 'local/:compo', component: LocalGameWrapperComponent },
