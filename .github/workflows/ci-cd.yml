@@ -181,42 +181,30 @@ jobs:
           organization: EveryBoard
           username: ${{ github.actor }}
           token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build if org member
-        run: |
-          result=${{ steps.is_organization_member.outputs.result }}
-          if [ $result == true ]; then
-            npm run build:netlify
-            ./scripts/update-images.sh
-            ./scripts/check-translations.sh
-          fi
       - name: Deploy master on push if org member
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
         run: |
           result=${{ steps.is_organization_member.outputs.result }}
           if [ $result == true ]; then
-            netlify deploy --dir=dist/pantheonsgame --prod --message="Master deployment from github ($GITHUB_REF_NAME, commit $GITHUB_SHA)"
+            npx ng deploy --base-href=/ --repo=https://github.com/EveryBoard/master --cname=everyboard.org --message="Deployment from action ($GITHUB_HEAD_REF, commit $GITHUB_SHA)" --name acieroid
           fi
         env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          GH_TOKEN: ${{ secrets.DEPLOY_GH_TOKEN }}
       - name: Deploy develop on push if org member
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/develop' }}
         run: |
           result=${{ steps.is_organization_member.outputs.result }}
           if [ $result == true ]; then
-            netlify deploy --dir=dist/pantheonsgame --alias=develop --message="Develop deployment from github ($GITHUB_REF_NAME, commit $GITHUB_SHA)"
+            npx ng deploy --base-href=/ --repo=https://github.com/EveryBoard/master --cname=dev.everyboard.org --message="Deployment from action ($GITHUB_HEAD_REF, commit $GITHUB_SHA)" --name acieroid
           fi
         env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          GH_TOKEN: ${{ secrets.DEPLOY_GH_TOKEN }}
       - name: Deploy feature branch if org member
         if: ${{ github.ref != 'refs/heads/master'  && github.ref != 'refs/heads/develop' }}
         run: |
           result=${{ steps.is_organization_member.outputs.result }}
-          branch_name=${{ github.payload.pull_request.head.ref }}
-          echo ${{ github.payload.pull_request }}
           if [ $result == true ]; then
-            netlify deploy --dir=dist/pantheonsgame --alias="$GITHUB_HEAD_REF" --message="Develop deployment from github ($GITHUB_HEAD_REF, $GITHUB_HEAD_REF_NAME, commit $GITHUB_SHA)"
+            netlify deploy --dir=dist/pantheonsgame --alias="$GITHUB_HEAD_REF" --message="Develop deployment from github ($GITHUB_HEAD_REF, commit $GITHUB_SHA)"
           fi
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
