@@ -33,8 +33,7 @@ export class WelcomeComponent {
         }
     }
     public async createGame(game: string): Promise<boolean> {
-        return this.router.navigate(['/play/' + game])
-        // return this.gameService.createGameAndRedirectOrShowError(game);
+        return this.router.navigate(['/play/' + game]);
     }
     public createLocalGame(game: string): void {
         this.router.navigate(['/local/' + game]);
