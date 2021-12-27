@@ -3,7 +3,7 @@
     "version": 1,
     "newProjectRoot": "projects",
     "projects": {
-        "pantheonsgame": {
+        "everyboard": {
             "root": "",
             "sourceRoot": "src",
             "projectType": "application",
@@ -13,7 +13,7 @@
                 "build": {
                     "builder": "@angular-devkit/build-angular:browser",
                     "options": {
-                        "outputPath": "dist/pantheonsgame",
+                        "outputPath": "dist/everyboard",
                         "index": "src/index.html",
                         "main": "src/main.ts",
                         "polyfills": "src/polyfills.ts",
@@ -124,21 +124,21 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                        "browserTarget": "pantheonsgame:build"
+                        "browserTarget": "everyboard:build"
                     },
                     "configurations": {
                         "fr": {
-                            "browserTarget": "pantheonsgame:build:fr"
+                            "browserTarget": "everyboard:build:fr"
                         },
                         "local": {
-                            "browserTarget": "pantheonsgame:build:local"
+                            "browserTarget": "everyboard:build:local"
                         }
                     }
                 },
                 "extract-i18n": {
                     "builder": "@angular-devkit/build-angular:extract-i18n",
                     "options": {
-                        "browserTarget": "pantheonsgame:build"
+                        "browserTarget": "everyboard:build"
                     }
                 },
                 "test": {
@@ -196,7 +196,7 @@
                 }
             }
         },
-        "pantheonsgame-e2e": {
+        "everyboard-e2e": {
             "root": "e2e/",
             "projectType": "application",
             "architect": {
@@ -204,11 +204,11 @@
                     "builder": "@angular-devkit/build-angular:protractor",
                     "options": {
                         "protractorConfig": "e2e/protractor.conf.js",
-                        "devServerTarget": "pantheonsgame:serve"
+                        "devServerTarget": "everyboard:serve"
                     },
                     "configurations": {
                         "production": {
-                            "devServerTarget": "pantheonsgame:serve:production"
+                            "devServerTarget": "everyboard:serve:production"
                         }
                     }
                 },
@@ -224,5 +224,5 @@
             }
         }
     },
-    "defaultProject": "pantheonsgame"
+    "defaultProject": "everyboard"
 }
