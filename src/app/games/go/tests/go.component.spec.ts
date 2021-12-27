@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { GoComponent } from '../go.component';
 import { GoMove } from 'src/app/games/go/GoMove';
 import { GoState, GoPiece, Phase } from 'src/app/games/go/GoState';

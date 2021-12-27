@@ -42,8 +42,8 @@ export class ThemeService {
     private loadStyle(styleName: string): void {
         const head: HTMLHeadElement = this.document.getElementsByTagName('head')[0];
 
-        const themeLink: HTMLLinkElement = this.document.getElementById('theme') as HTMLLinkElement;
-        if (themeLink) {
+        const themeLink: HTMLLinkElement | null = this.document.getElementById('theme') as HTMLLinkElement;
+        if (themeLink != null) {
             themeLink.href = styleName;
         } else {
             const style: HTMLLinkElement = this.document.createElement('link');

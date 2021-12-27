@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { ChatMessages, ChatService } from '../ChatService';
 import { ChatDAO } from 'src/app/dao/ChatDAO';
 import { ChatDAOMock } from 'src/app/dao/tests/ChatDAOMock.spec';

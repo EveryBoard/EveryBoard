@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { ArrayUtils, NumberTable } from 'src/app/utils/ArrayUtils';
 import { Coord } from '../Coord';
 import { HexagonalGameState } from '../HexagonalGameState';

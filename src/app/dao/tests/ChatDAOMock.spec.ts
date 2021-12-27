@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { ObservableSubject } from 'src/app/utils/tests/ObservableSubject.spec';
 import { FirebaseFirestoreDAOMock } from './FirebaseFirestoreDAOMock.spec';

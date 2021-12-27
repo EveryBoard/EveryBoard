@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { Dictionary, ObjectDifference } from '../ObjectUtils';
 
 describe('getUpdateType', () => {

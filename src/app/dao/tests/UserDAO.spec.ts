@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { TestBed } from '@angular/core/testing';
 import { IUser } from 'src/app/domain/iuser';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { MGPNode } from '../MGPNode';
 import { Minimax } from '../Minimax';
 import { Move } from '../Move';

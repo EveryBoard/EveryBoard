@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { UserService } from '../UserService';
 import { ActivesUsersService } from '../ActivesUsersService';
 import { UserDAO } from 'src/app/dao/UserDAO';

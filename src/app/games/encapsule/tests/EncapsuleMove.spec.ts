@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { EncapsuleRules } from '../EncapsuleRules';
 import { EncapsuleMinimax } from '../EncapsuleMinimax';
 import { EncapsuleState } from '../EncapsuleState';

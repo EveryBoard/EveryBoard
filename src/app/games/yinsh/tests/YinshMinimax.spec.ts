@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { Player } from 'src/app/jscaip/Player';
 import { YinshState } from '../YinshState';
 import { YinshMinimax } from '../YinshMinimax';

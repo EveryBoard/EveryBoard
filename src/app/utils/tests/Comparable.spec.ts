@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { comparableEquals, ComparableJSON, ComparableObject, isComparableJSON, isComparableObject, isComparableValue } from '../Comparable';
 import { Utils } from '../utils';
 

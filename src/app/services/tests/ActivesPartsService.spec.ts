@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { ActivesPartsService } from '../ActivesPartsService';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { fakeAsync, TestBed } from '@angular/core/testing';

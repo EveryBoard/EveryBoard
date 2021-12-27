@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { AbaloneDummyMinimax } from '../AbaloneDummyMinimax';

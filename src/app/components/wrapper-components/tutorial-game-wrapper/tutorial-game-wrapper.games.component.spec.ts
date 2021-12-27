@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { TutorialGameWrapperComponent } from './tutorial-game-wrapper.component';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
