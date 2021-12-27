@@ -186,7 +186,7 @@ jobs:
         run: |
           result=${{ steps.is_organization_member.outputs.result }}
           if [ $result == true ]; then
-            npx ng deploy --base-href=/ --repo=https://github.com/EveryBoard/master --cname=everyboard.org --message="Deployment from action ($GITHUB_HEAD_REF, commit $GITHUB_SHA)" --name acieroid --email 'everyboard@everyboard.org'
+            npx ng deploy --base-href=/ --repo=https://github.com/EveryBoard/master --cname=everyboard.org --message="Deployment from action (commit $GITHUB_SHA)" --name acieroid --email 'everyboard@everyboard.org'
           fi
         env:
           GH_TOKEN: ${{ secrets.DEPLOY_GH_TOKEN }}
@@ -195,7 +195,7 @@ jobs:
         run: |
           result=${{ steps.is_organization_member.outputs.result }}
           if [ $result == true ]; then
-            npx ng deploy --base-href=/ --repo=https://github.com/EveryBoard/develop --cname=dev.everyboard.org --message="Deployment from action ($GITHUB_HEAD_REF, commit $GITHUB_SHA)" --name acieroid --email 'everyboard@everyboard.org' --no-silent
+            npx ng deploy --base-href=/ --repo=https://github.com/EveryBoard/develop --cname=dev.everyboard.org --message="Deployment from action (commit $GITHUB_SHA)" --name acieroid --email 'everyboard@everyboard.org'
           fi
         env:
           GH_TOKEN: ${{ secrets.DEPLOY_GH_TOKEN }}
@@ -204,6 +204,7 @@ jobs:
         run: |
           result=${{ steps.is_organization_member.outputs.result }}
           if [ $result == true ]; then
+            npm run build:netlify
             netlify deploy --dir=dist/pantheonsgame --alias="$GITHUB_HEAD_REF" --message="Deployment from github ($GITHUB_HEAD_REF, commit $GITHUB_SHA)"
           fi
         env:
