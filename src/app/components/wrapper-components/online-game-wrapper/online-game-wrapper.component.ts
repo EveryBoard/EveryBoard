@@ -66,8 +66,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     // GameWrapping's Template
     @ViewChild('chronoZeroGlobal') public chronoZeroGlobal: CountDownComponent;
     @ViewChild('chronoOneGlobal') public chronoOneGlobal: CountDownComponent;
-    @ViewChild('chronoZeroLocal') public chronoZeroLocal: CountDownComponent;
-    @ViewChild('chronoOneLocal') public chronoOneLocal: CountDownComponent;
+    @ViewChild('chronoZeroTurn') public chronoZeroTurn: CountDownComponent;
+    @ViewChild('chronoOneTurn') public chronoOneTurn: CountDownComponent;
 
     // link between GameWrapping's template and remote opponent
     public currentPart: Part;
@@ -331,20 +331,18 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         this.chronoZeroGlobal.setDuration(this.joiner.totalPartDuration * 1000);
         this.chronoOneGlobal.setDuration(this.joiner.totalPartDuration * 1000);
 
-        this.chronoZeroLocal.setDuration(this.joiner.maximalMoveDuration * 1000);
-        this.chronoOneLocal.setDuration(this.joiner.maximalMoveDuration * 1000);
+        this.chronoZeroTurn.setDuration(this.joiner.maximalMoveDuration * 1000);
+        this.chronoOneTurn.setDuration(this.joiner.maximalMoveDuration * 1000);
     }
     private didUserPlay(player: Player): boolean {
         return this.hasUserPlayed[player.value];
     }
     private doNewMoves(part: Part) {
         this.switchPlayer();
-        let currentPartTurn: number;
         const listMoves: JSONValue[] = ArrayUtils.copyImmutableArray(part.doc.listMoves);
         const rules: Rules<Move, GameState, unknown, NodeUnheritance> = this.gameComponent.rules;
         while (rules.node.gameState.turn < listMoves.length) {
-            currentPartTurn = rules.node.gameState.turn;
-            currentPartTurn = this.gameComponent.rules.node.gameState.turn;
+            const currentPartTurn: number = rules.node.gameState.turn;
             const chosenMove: Move = this.gameComponent.encoder.decode(listMoves[currentPartTurn]);
             const legality: MGPFallible<unknown> = rules.isLegal(chosenMove, rules.node.gameState);
             const message: string = 'We received an incorrect db move: ' + chosenMove.toString() +
@@ -532,10 +530,10 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 break;
             case 'DrawRefused':
                 break;
-            case 'LocalTimeAdded':
-                const addedLocalTime: number = 30 * 1000;
+            case 'TurnTimeAdded':
+                const addedTurnTime: number = 30 * 1000;
                 const localPlayer: Player = Player.of(request.data['player']);
-                this.addLocalTimeTo(localPlayer, addedLocalTime);
+                this.addTurnTimeTo(localPlayer, addedTurnTime);
                 break;
             case 'GlobalTimeAdded':
                 const addedGlobalTime: number = 5 * 60 * 1000;
@@ -543,7 +541,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 this.addGlobalTimeTo(globalPlayer, addedGlobalTime);
                 break;
             default:
-                assert(request.code === 'DrawAccepted', 'Unknown RequestType : ' + request.code + ' for ' + JSON.stringify(request));
+                Utils.expectToBe(request.code, 'DrawAccepted', 'Unknown RequestType : ' + request.code + ' for ' + JSON.stringify(request));
                 this.acceptDraw();
                 break;
         }
@@ -700,10 +698,10 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         this.hasUserPlayed[player.value] = true;
         if (player === Player.ZERO) {
             this.chronoZeroGlobal.start();
-            this.chronoZeroLocal.start();
+            this.chronoZeroTurn.start();
         } else {
             this.chronoOneGlobal.start();
-            this.chronoOneLocal.start();
+            this.chronoOneTurn.start();
         }
     }
     public resumeCountDownFor(player: Player): void {
@@ -714,13 +712,13 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         if (player === Player.ZERO) {
             this.chronoZeroGlobal.changeDuration(Utils.getNonNullable(this.currentPart.doc.remainingMsForZero));
             this.chronoZeroGlobal.resume();
-            this.chronoZeroLocal.setDuration(this.joiner.maximalMoveDuration * 1000);
-            this.chronoZeroLocal.start();
+            this.chronoZeroTurn.setDuration(this.joiner.maximalMoveDuration * 1000);
+            this.chronoZeroTurn.start();
         } else {
             this.chronoOneGlobal.changeDuration(Utils.getNonNullable(this.currentPart.doc.remainingMsForOne));
             this.chronoOneGlobal.resume();
-            this.chronoOneLocal.setDuration(this.joiner.maximalMoveDuration * 1000);
-            this.chronoOneLocal.start();
+            this.chronoOneTurn.setDuration(this.joiner.maximalMoveDuration * 1000);
+            this.chronoOneTurn.start();
         }
     }
     public pauseCountDownsFor(player: Player): void {
@@ -729,10 +727,10 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 ') (turn ' + this.currentPart.doc.turn + ')');
         if (player === Player.ZERO) {
             this.chronoZeroGlobal.pause();
-            this.chronoZeroLocal.stop();
+            this.chronoZeroTurn.stop();
         } else {
             this.chronoOneGlobal.pause();
-            this.chronoOneLocal.stop();
+            this.chronoOneTurn.stop();
         }
     }
     private stopCountdownsFor(player: Player) {
@@ -744,15 +742,15 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             if (this.chronoZeroGlobal.isStarted()) {
                 this.chronoZeroGlobal.stop();
             }
-            if (this.chronoZeroLocal.isStarted()) {
-                this.chronoZeroLocal.stop();
+            if (this.chronoZeroTurn.isStarted()) {
+                this.chronoZeroTurn.stop();
             }
         } else {
             if (this.chronoOneGlobal.isStarted()) {
                 this.chronoOneGlobal.stop();
             }
-            if (this.chronoOneLocal.isStarted()) {
-                this.chronoOneLocal.stop();
+            if (this.chronoOneTurn.isStarted()) {
+                this.chronoOneTurn.stop();
             }
         }
     }
@@ -800,17 +798,17 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         const giver: Player = Player.of(this.observerRole);
         return this.gameService.addGlobalTime(this.currentPartId, this.currentPart, giver);
     }
-    public addLocalTime(): Promise<void> {
+    public addTurnTime(): Promise<void> {
         const giver: Player = Player.of(this.observerRole);
-        return this.gameService.addLocalTime(giver, this.currentPartId);
+        return this.gameService.addTurnTime(giver, this.currentPartId);
     }
-    public addLocalTimeTo(player: Player, addedMs: number): void {
+    public addTurnTimeTo(player: Player, addedMs: number): void {
         if (player === Player.ZERO) {
-            const currentDuration: number = this.chronoZeroLocal.remainingMs;
-            this.chronoZeroLocal.changeDuration(currentDuration + addedMs);
+            const currentDuration: number = this.chronoZeroTurn.remainingMs;
+            this.chronoZeroTurn.changeDuration(currentDuration + addedMs);
         } else {
-            const currentDuration: number = this.chronoOneLocal.remainingMs;
-            this.chronoOneLocal.changeDuration(currentDuration + addedMs);
+            const currentDuration: number = this.chronoOneTurn.remainingMs;
+            this.chronoOneTurn.changeDuration(currentDuration + addedMs);
         }
     }
     public addGlobalTimeTo(player: Player, addedMs: number): void {

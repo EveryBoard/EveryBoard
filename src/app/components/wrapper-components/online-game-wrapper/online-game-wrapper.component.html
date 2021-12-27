@@ -28,18 +28,19 @@
                 <app-count-down #chronoZeroGlobal
                                 [dangerTimeLimit]="60*1000"
                                 [active]="(currentPart == null) ? false : currentPart.getTurn() % 2 === 0"
+                                [canAddTime]='observerRole === 1 && endGame === false'
                                 debugName="ZERO Global"
                                 (outOfTimeAction)="reachedOutOfTime(0)"
                                 (addTimeToOpponent)="addGlobalTime()"
                 >
                 </app-count-down>
-                <app-count-down #chronoZeroLocal
+                <app-count-down #chronoZeroTurn
                                 [dangerTimeLimit]="15*1000"
                                 [active]="(currentPart == null) ? false : currentPart.getTurn() % 2 === 0"
                                 [canAddTime]='observerRole === 1 && endGame === false'
                                 debugName="ZERO Local"
                                 (outOfTimeAction)="reachedOutOfTime(0)"
-                                (addTimeToOpponent)="addLocalTime()"
+                                (addTimeToOpponent)="addTurnTime()"
                 >
                 </app-count-down>
             </div>
@@ -59,13 +60,13 @@
                                 (addTimeToOpponent)="addGlobalTime()"
                 >
                 </app-count-down>
-                <app-count-down #chronoOneLocal
+                <app-count-down #chronoOneTurn
                                 [dangerTimeLimit]="15*1000"
                                 [active]="(currentPart == null) ? false : currentPart.getTurn() % 2 === 1"
                                 [canAddTime]='observerRole === 0 && endGame === false'
                                 debugName="ONE Local"
                                 (outOfTimeAction)="reachedOutOfTime(1)"
-                                (addTimeToOpponent)="addLocalTime()"
+                                (addTimeToOpponent)="addTurnTime()"
                 >
                 </app-count-down>
             </div>

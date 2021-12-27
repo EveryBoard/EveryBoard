@@ -34,6 +34,10 @@
         <source><x id="PH" equiv-text="unreadMessages"/> new messages</source>
         <target><x id="PH" equiv-text="unreadMessages"/> nouveaux messages</target>
       </trans-unit>
+      <trans-unit id="1757694539090699374" datatype="html">
+        <source> + </source>
+        <target> + </target>
+      </trans-unit>
       <trans-unit id="2821179408673282599" datatype="html">
         <source>Home</source>
         <target>Accueil</target>
@@ -581,6 +585,10 @@
       <trans-unit id="7003355968351203755" datatype="html">
         <source>Ask to take back one move</source>
         <target>Demander à reprendre un coup</target>
+      </trans-unit>
+      <trans-unit id="7974932122576857895" datatype="html">
+        <source>You agreed to draw</source>
+        <target>Vous avez accepté un match nul.</target>
       </trans-unit>
       <trans-unit id="2826140657122926749" datatype="html">
         <source>You resigned.</source>

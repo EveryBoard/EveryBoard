@@ -1,12 +1,12 @@
-<div class="tile"
+<div class="block level-left"
      [ngStyle]="getBackgroundColor()"
 >
     <p id="remainingTime"
-       class="remainingTimeText"
+       class="level-item"
        style="margin: auto; width: 67%"
        [ngStyle]="getTimeStyle()">{{ displayedMinute }}:{{ displayedSec | number:'2.0-0' }}</p>
     <button id="addTimeButton"
-            class="button is-small remainingTimeButton"
+            class="button level-item is-small"
             [ngStyle]="getBackgroundColor()"
             *ngIf="canAddTime"
             (click)="addTime()"

@@ -26,6 +26,9 @@
       <trans-unit id="5075342719298110640" datatype="html">
         <source><x id="PH" equiv-text="unreadMessages"/> new messages</source>
       </trans-unit>
+      <trans-unit id="1757694539090699374" datatype="html">
+        <source> + </source>
+      </trans-unit>
       <trans-unit id="2821179408673282599" datatype="html">
         <source>Home</source>
       </trans-unit>
@@ -436,6 +439,9 @@
       </trans-unit>
       <trans-unit id="7003355968351203755" datatype="html">
         <source>Ask to take back one move</source>
+      </trans-unit>
+      <trans-unit id="7974932122576857895" datatype="html">
+        <source>You agreed to draw</source>
       </trans-unit>
       <trans-unit id="7815479892408473764" datatype="html">
         <source>You won.</source>

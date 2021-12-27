@@ -6,7 +6,7 @@ export type RequestCode =
     'DrawProposed' | 'DrawAccepted' | 'DrawRefused' |
     'TakeBackAsked' | 'TakeBackAccepted' | 'TakeBackRefused' |
     'RematchProposed' | 'RematchAccepted' |
-    'LocalTimeAdded' | 'GlobalTimeAdded';
+    'TurnTimeAdded' | 'GlobalTimeAdded';
 
 export class Request implements JSONObject {
     [key: string]: JSONValue; // Index signature to type to JSONObject
@@ -23,7 +23,7 @@ export class Request implements JSONObject {
     public static rematchAccepted(typeGame: string, partId: string): Request {
         return make('RematchAccepted', { typeGame, partId });
     }
-    public static localTimeAdded: (to: Player) => Request = makeWithPlayer('LocalTimeAdded');
+    public static turnTimeAdded: (to: Player) => Request = makeWithPlayer('TurnTimeAdded');
     public static globalTimeAdded: (to: Player) => Request = makeWithPlayer('GlobalTimeAdded');
 
     public static getPlayer(request: Request): Player {

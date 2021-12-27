@@ -135,19 +135,19 @@ describe('CountDownComponent', () => {
             component.remainingMs = 60 * 1000;
             testUtils.detectChanges();
 
-            // when clicking the add time button
+            // When clicking the add time button
             spyOn(component.addTimeToOpponent, 'emit').and.callThrough();
             await testUtils.clickElement('#addTimeButton');
 
-            // the component should have called addTimeToOpponent
+            // Then the component should have called addTimeToOpponent
             expect(component.addTimeToOpponent.emit).toHaveBeenCalledOnceWith();
         }));
         it('should not display button when not allowed to add time', fakeAsync(async() => {
-            // given a CountDownComponent not allowed to add time
+            // Given a CountDownComponent not allowed to add time
             component.canAddTime = false;
             testUtils.detectChanges();
 
-            // the component should not have that button
+            // Then the component should not have that button
             testUtils.expectElementNotToExist('#addTimeButton');
         }));
     });

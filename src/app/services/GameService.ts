@@ -205,7 +205,7 @@ export class GameService implements OnDestroy {
     public proposeDraw(partId: string, player: Player): Promise<void> {
         return this.sendRequest(partId, Request.drawProposed(player));
     }
-    public acceptDraw(partId: string): Promise<void> { console.log('ACCEPT DRAW LE SERVICE')
+    public acceptDraw(partId: string): Promise<void> {
         return this.partDao.update(partId, {
             result: MGPResult.AGREED_DRAW.value,
             request: null,
@@ -304,8 +304,8 @@ export class GameService implements OnDestroy {
         }
         return await this.partDao.update(id, update);
     }
-    public async addLocalTime(observerRole: Player, id: string): Promise<void> {
-        return await this.partDao.update(id, { request: Request.localTimeAdded(observerRole.getOpponent()) });
+    public async addTurnTime(observerRole: Player, id: string): Promise<void> {
+        return await this.partDao.update(id, { request: Request.turnTimeAdded(observerRole.getOpponent()) });
     }
     public stopObserving(): void {
         display(GameService.VERBOSE, 'GameService.stopObserving();');
