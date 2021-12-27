@@ -205,7 +205,7 @@ jobs:
           result=${{ steps.is_organization_member.outputs.result }}
           if [ $result == true ]; then
             npm run build:netlify
-            netlify deploy --dir=dist/pantheonsgame --alias="$GITHUB_HEAD_REF" --message="Deployment from github ($GITHUB_HEAD_REF, commit $GITHUB_SHA)"
+            netlify deploy --dir=dist/everyboard --alias="$GITHUB_HEAD_REF" --message="Deployment from github ($GITHUB_HEAD_REF, commit $GITHUB_SHA)"
           fi
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}

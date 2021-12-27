@@ -1,5 +1,5 @@
 [build]
-  publish = "dist/pantheonsgame"
+  publish = "dist/everyboard"
   command = "sh scripts/build.sh"
 
 [[redirects]]
