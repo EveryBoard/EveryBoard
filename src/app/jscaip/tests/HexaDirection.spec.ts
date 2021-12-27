@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { HexaDirection } from '../HexaDirection';
 import { NumberEncoderTestUtils } from './Encoder.spec';
 

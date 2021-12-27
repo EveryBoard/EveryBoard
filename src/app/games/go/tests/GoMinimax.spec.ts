@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GoMinimax } from '../GoMinimax';

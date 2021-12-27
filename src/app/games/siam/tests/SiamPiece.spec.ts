@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
 import { SiamPiece, SiamPieceValue } from '../SiamPiece';

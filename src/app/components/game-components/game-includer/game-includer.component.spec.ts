@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GameIncluderComponent } from './game-includer.component';

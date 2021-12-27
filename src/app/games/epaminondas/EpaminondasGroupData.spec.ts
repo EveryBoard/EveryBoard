@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { GroupDatas, GroupDatasFactory } from 'src/app/jscaip/BoardDatas';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';

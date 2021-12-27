@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { SaharaMinimax } from '../SaharaMinimax';

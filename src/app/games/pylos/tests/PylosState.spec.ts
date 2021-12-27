@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { PylosCoord } from '../PylosCoord';
 import { PylosState } from '../PylosState';
 

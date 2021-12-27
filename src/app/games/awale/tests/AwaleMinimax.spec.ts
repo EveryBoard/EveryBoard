@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { AwaleNode, AwaleRules } from '../AwaleRules';
 import { AwaleMinimax } from '../AwaleMinimax';
 import { AwaleMove } from '../AwaleMove';

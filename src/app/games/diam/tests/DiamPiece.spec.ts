@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 import { DiamPiece } from '../DiamPiece';
 
