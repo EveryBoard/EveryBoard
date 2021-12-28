@@ -704,33 +704,46 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             this.chronoOneTurn.start();
         }
     }
-    public resumeCountDownFor(player: Player): void {
+    public resumeCountDownFor(player: Player, resetTurn: boolean = true): void {
         display(OnlineGameWrapperComponent.VERBOSE,
                 'dans OnlineGameWrapperComponent.resumeCountDownFor(' + player.toString() +
                 ') (turn ' + this.currentPart.doc.turn + ')');
 
+        let turnChrono: CountDownComponent;
         if (player === Player.ZERO) {
             this.chronoZeroGlobal.changeDuration(Utils.getNonNullable(this.currentPart.doc.remainingMsForZero));
             this.chronoZeroGlobal.resume();
-            this.chronoZeroTurn.setDuration(this.joiner.maximalMoveDuration * 1000);
-            this.chronoZeroTurn.start();
+            turnChrono = this.chronoZeroTurn;
         } else {
             this.chronoOneGlobal.changeDuration(Utils.getNonNullable(this.currentPart.doc.remainingMsForOne));
             this.chronoOneGlobal.resume();
-            this.chronoOneTurn.setDuration(this.joiner.maximalMoveDuration * 1000);
-            this.chronoOneTurn.start();
+            turnChrono = this.chronoOneTurn;
+        }
+
+        if (resetTurn) {
+            turnChrono.setDuration(this.joiner.maximalMoveDuration * 1000);
+            turnChrono.start();
+        } else {
+            turnChrono.resume();
         }
     }
-    public pauseCountDownsFor(player: Player): void {
+    public pauseCountDownsFor(player: Player, stopTurn: boolean = true): void {
         display(OnlineGameWrapperComponent.VERBOSE,
                 'dans OnlineGameWrapperComponent.pauseCountDownFor(' + player.value +
                 ') (turn ' + this.currentPart.doc.turn + ')');
+        let turnChrono: CountDownComponent;
         if (player === Player.ZERO) {
             this.chronoZeroGlobal.pause();
-            this.chronoZeroTurn.stop();
+            turnChrono = this.chronoZeroTurn;
         } else {
             this.chronoOneGlobal.pause();
-            this.chronoOneTurn.stop();
+            turnChrono = this.chronoOneTurn;
+        }
+
+        if (stopTurn) {
+            turnChrono.stop();
+        } else {
+            turnChrono.pause();
         }
     }
     private stopCountdownsFor(player: Player) {
@@ -803,6 +816,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         return this.gameService.addTurnTime(giver, this.currentPartId);
     }
     public addTurnTimeTo(player: Player, addedMs: number): void {
+        const currentPlayer: Player = Player.fromTurn(this.currentPart.getTurn());
+        this.pauseCountDownsFor(currentPlayer, false);
         if (player === Player.ZERO) {
             const currentDuration: number = this.chronoZeroTurn.remainingMs;
             this.chronoZeroTurn.changeDuration(currentDuration + addedMs);
@@ -810,6 +825,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             const currentDuration: number = this.chronoOneTurn.remainingMs;
             this.chronoOneTurn.changeDuration(currentDuration + addedMs);
         }
+        this.resumeCountDownFor(currentPlayer, false);
     }
     public addGlobalTimeTo(player: Player, addedMs: number): void {
         if (player === Player.ZERO) {

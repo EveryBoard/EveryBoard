@@ -49,7 +49,7 @@ export class CountDownComponent implements OnInit, OnDestroy {
         display(CountDownComponent.VERBOSE, 'CountDownComponent.ngOnInit (' + this.debugName + ')');
     }
     public setDuration(duration: number): void {
-        display(CountDownComponent.VERBOSE, this.debugName + '.set(' + duration + 'ms)');
+        display(CountDownComponent.VERBOSE || true, this.debugName + '.set(' + duration + 'ms)');
         // duration is in ms
         if (this.started) {
             throw new Error('Should not set a chrono that has already been started (' + this.debugName + ')!');
@@ -63,6 +63,7 @@ export class CountDownComponent implements OnInit, OnDestroy {
             this.pause();
             mustResume = true;
         }
+        console.log(this.debugName + ' just set to ' + ms + ' instead of ' + this.remainingMs);
         this.remainingMs = ms;
         this.displayDuration();
         if (mustResume) {
@@ -102,7 +103,7 @@ export class CountDownComponent implements OnInit, OnDestroy {
         this.countSeconds();
     }
     private onEndReached(): void {
-        display(CountDownComponent.VERBOSE, this.debugName + '.onEndReached');
+        display(CountDownComponent.VERBOSE || true, this.debugName + '.onEndReached');
 
         this.isPaused = true;
         this.started = false;

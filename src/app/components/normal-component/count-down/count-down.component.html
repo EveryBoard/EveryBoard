@@ -2,8 +2,7 @@
      [ngStyle]="getBackgroundColor()"
 >
     <p id="remainingTime"
-       class="level-item"
-       style="margin: auto; width: 67%"
+       class="level-item remainingTime"
        [ngStyle]="getTimeStyle()">{{ displayedMinute }}:{{ displayedSec | number:'2.0-0' }}</p>
     <button id="addTimeButton"
             class="button level-item is-small"

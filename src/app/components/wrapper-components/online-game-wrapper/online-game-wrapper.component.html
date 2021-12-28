@@ -38,7 +38,7 @@
                                 [dangerTimeLimit]="15*1000"
                                 [active]="(currentPart == null) ? false : currentPart.getTurn() % 2 === 0"
                                 [canAddTime]='observerRole === 1 && endGame === false'
-                                debugName="ZERO Local"
+                                debugName="ZERO Turn"
                                 (outOfTimeAction)="reachedOutOfTime(0)"
                                 (addTimeToOpponent)="addTurnTime()"
                 >
@@ -64,7 +64,7 @@
                                 [dangerTimeLimit]="15*1000"
                                 [active]="(currentPart == null) ? false : currentPart.getTurn() % 2 === 1"
                                 [canAddTime]='observerRole === 0 && endGame === false'
-                                debugName="ONE Local"
+                                debugName="ONE Turn"
                                 (outOfTimeAction)="reachedOutOfTime(1)"
                                 (addTimeToOpponent)="addTurnTime()"
                 >
@@ -122,8 +122,10 @@
             >Ask to take back one move</button>
             <div class="block" id="winnerIndicator" *ngIf="endGame">
                 <hr/>
-                <div *ngIf="currentPart.isDraw()">
-                    <p class="title" id="hardDrawIndicator" *ngIf="currentPart.isHardDraw()" i18n>Draw</p>
+                <div *ngIf="currentPart.isHardDraw()">
+                    <p class="title" id="hardDrawIndicator" i18n>Draw</p>
+                </div>
+                <div *ngIf="currentPart.isAgreedDraw()">
                     <p class="title" id="agreedDrawIndicator" *ngIf="currentPart.isAgreedDraw()" i18n>You agreed to draw</p>
                 </div>
                 <div *ngIf="currentPart.isWin()">

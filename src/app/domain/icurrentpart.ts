@@ -32,10 +32,6 @@ export class Part implements DomainWrapper<IPart> {
     public getTurn(): number {
         return this.doc.turn;
     }
-    public isDraw(): boolean {
-        return this.doc.result === MGPResult.DRAW.value ||
-               this.doc.result === MGPResult.AGREED_DRAW.value;
-    }
     public isHardDraw(): boolean {
         return this.doc.result === MGPResult.DRAW.value;
     }
