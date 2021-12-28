@@ -2,6 +2,9 @@ import { comparableEquals } from './Comparable';
 import { MGPOptional } from './MGPOptional';
 
 export abstract class MGPFallible<T> {
+    isAbsent() {
+        throw new Error('Method not implemented.');
+    }
     public static success<T>(value: T): MGPFallible<T> {
         return new MGPFallibleSuccess(value);
     }

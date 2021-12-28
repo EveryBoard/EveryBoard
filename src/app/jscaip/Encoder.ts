@@ -1,6 +1,43 @@
-import { assert, JSONValue, JSONValueWithoutArray } from 'src/app/utils/utils';
+import { assert, JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 
 export abstract class Encoder<T> {
+    public static disjunction3<T1, T2, T3>(encoder1: Encoder<T1>,
+                                           encoder2: Encoder<T2>,
+                                           encoder3: Encoder<T3>,
+                                           isT1: (v: T1 | T2 | T3) => v is T1,
+                                           isT2: (v: T1 | T2 | T3) => v is T2)
+    : Encoder<T1 | T2 | T3> {
+        return new class extends Encoder<T1 | T2 | T3> {
+            public encode(value: T1 | T2 | T3): JSONValue {
+                if (isT1(value)) {
+                    return {
+                        type: 'T1',
+                        encoded: encoder1.encode(value),
+                    };
+                } else if (isT2(value)) {
+                    return {
+                        type: 'T2',
+                        encoded: encoder2.encode(value),
+                    };
+                } else {
+                    return {
+                        type: 'T3',
+                        encoded: encoder3.encode(value),
+                    };
+                }
+            }
+            public decode(encoded: JSONValue): T1 | T2 | T3 {
+                const type_: string = Utils.getNonNullable(encoded)['type'];
+                if (type_ === 'T1') {
+                    return encoder1.decode(encoded);
+                } else if (type_ === 'T2') {
+                    return encoder2.decode(encoded);
+                } else {
+                    return encoder3.decode(encoded);
+                }
+            }
+        };
+    }
 
     public abstract encode(t: T): JSONValue;
 
