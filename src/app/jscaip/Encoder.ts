@@ -15,7 +15,7 @@ export abstract class MoveEncoder<T> extends Encoder<T> {
                                            isT2: (v: T1 | T2 | T3) => v is T2)
     : MoveEncoder<T1 | T2 | T3> {
         return new class extends MoveEncoder<T1 | T2 | T3> {
-            public encode(value: T1 | T2 | T3): JSONValue {
+            public encodeMove(value: T1 | T2 | T3): JSONValueWithoutArray {
                 if (isT1(value)) {
                     return {
                         type: 'T1',
@@ -33,7 +33,7 @@ export abstract class MoveEncoder<T> extends Encoder<T> {
                     };
                 }
             }
-            public decode(encoded: JSONValue): T1 | T2 | T3 {
+            public decodeMove(encoded: JSONValueWithoutArray): T1 | T2 | T3 {
                 const type_: string = Utils.getNonNullable(encoded)['type'];
                 const content: JSONValue = Utils.getNonNullable(encoded)['encoded'] as JSONValue;
                 if (type_ === 'T1') {

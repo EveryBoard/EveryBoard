@@ -4,6 +4,7 @@ import { MoveEncoder, NumberEncoder } from 'src/app/jscaip/Encoder';
 import { Move } from 'src/app/jscaip/Move';
 import { MoveCoord, MoveCoordEncoder } from 'src/app/jscaip/MoveCoord';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
+import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { assert, JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 import { ConspirateursFailure } from './ConspirateursFailure';
@@ -110,6 +111,11 @@ export class ConspirateursMoveJump extends Move {
     }
     private constructor(public coords: readonly Coord[]) {
         super();
+    }
+    public addJump(target: Coord): MGPFallible<ConspirateursMoveJump> {
+        const coords: Coord[] = ArrayUtils.copyImmutableArray(this.coords);
+        coords.push(target);
+        return ConspirateursMoveJump.of(coords);
     }
     public getStartingCoord(): Coord {
         return this.coords[0];

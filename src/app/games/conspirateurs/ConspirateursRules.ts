@@ -84,7 +84,7 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
     public getGameStatus(node: ConspirateursNode): GameStatus {
         const state: ConspirateursState = node.gameState;
         const protectedPawns: [number, number] = [0, 0];
-        for (const shelter of state.getAllShelters()) {
+        for (const shelter of ConspirateursState.ALL_SHELTERS) {
             const content: Player = state.getPieceAt(shelter);
             if (content !== Player.NONE) {
                 protectedPawns[content.value] += 1;

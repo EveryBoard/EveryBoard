@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="100%" height="auto"
+     viewBox="0 0 1700 1700"
+     preserveAspectRatio="xMidYMid meet">
+    <g *ngFor="let line of viewInfo.boardInfo; index as y">
+        <g *ngFor="let square of line; index as x">
+            <rect id="click_{{ x }}_{{ y }}"
+                  [ngClass]="square.squareClasses"
+                  class="base"
+                  (click)="onClick(square.coord)"
+                  [attr.x]="(SPACE_SIZE * x) + STROKE_WIDTH"
+                  [attr.y]="(SPACE_SIZE * y) + STROKE_WIDTH"
+                  [attr.width]="SPACE_SIZE"
+                  [attr.height]="SPACE_SIZE"
+            />
+            <circle *ngIf="square.hasPiece"
+                    [ngClass]="square.pieceClasses"
+                    class="base"
+                    (click)="onClick(square.coord)"
+                    [attr.r]="(SPACE_SIZE - (2 * STROKE_WIDTH)) * 0.5"
+                    [attr.cx]="(SPACE_SIZE * x) + STROKE_WIDTH + (SPACE_SIZE / 2)"
+                    [attr.cy]="(SPACE_SIZE * y) + STROKE_WIDTH + (SPACE_SIZE / 2)"
+            />
+        </g>
+    </g>
+    <g *ngFor="let coord of viewInfo.shelters">
+        <rect (click)="onClick(coord)"
+              [attr.x]="STROKE_WIDTH * 2 + (SPACE_SIZE * coord.x) + STROKE_WIDTH"
+              [attr.y]="STROKE_WIDTH * 2 + (SPACE_SIZE * coord.y) + STROKE_WIDTH"
+              [attr.width]="SPACE_SIZE - STROKE_WIDTH * 4"
+              [attr.height]="SPACE_SIZE - STROKE_WIDTH * 4"
+              class="base no-fill mid-stroke"
+        />
+    </g>
+    <rect [attr.x]="STROKE_WIDTH * 2 + (SPACE_SIZE * viewInfo.centralZoneStart.x) + STROKE_WIDTH"
+          [attr.y]="STROKE_WIDTH * 2 + (SPACE_SIZE * viewInfo.centralZoneStart.y) + STROKE_WIDTH"
+          [attr.width]="viewInfo.centralZoneSize.x * SPACE_SIZE - STROKE_WIDTH * 4"
+          [attr.height]="viewInfo.centralZoneSize.y * SPACE_SIZE - STROKE_WIDTH * 4"
+          class="base no-fill mid-stroke"
+    />
+    <g *ngFor="let coord of viewInfo.victory">
+        <rect (click)="onClick(coord)"
+              [attr.x] = "(SPACE_SIZE * coord.x) + STROKE_WIDTH"
+              [attr.y] = "(SPACE_SIZE * coord.y) + STROKE_WIDTH"
+              [attr.width]="SPACE_SIZE"
+              [attr.height]="SPACE_SIZE"
+              class="no-fill mid-stroke victory"
+        />
+    </g>
+</svg>
