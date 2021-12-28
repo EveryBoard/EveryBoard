@@ -116,7 +116,7 @@
       </trans-unit>
       <trans-unit id="7017932994058745268" datatype="html">
         <source>Creating online game, please wait, it should not take long.</source>
-        <target>Création d'un jeu en ligne. Veuillez attendre, cela ne devrait pas prendre longtemps.</target>
+        <target>Création d'une partie en ligne. Veuillez attendre, cela ne devrait pas prendre longtemps.</target>
       </trans-unit>
       <trans-unit id="2009811124619716606" datatype="html">
         <source>Create an online game</source>
