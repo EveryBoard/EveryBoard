@@ -77,7 +77,9 @@ export class SimpleComponentTestUtils<T> {
 
     private component: T;
 
-    public static async create<T>(componentType: Type<T>): Promise<SimpleComponentTestUtils<T>> {
+    public static async create<T>(componentType: Type<T>, activatedRouteStub?: ActivatedRouteStub)
+    : Promise<SimpleComponentTestUtils<T>>
+    {
         await TestBed.configureTestingModule({
             imports: [
                 RouterTestingModule.withRoutes([
@@ -97,6 +99,7 @@ export class SimpleComponentTestUtils<T> {
                 CUSTOM_ELEMENTS_SCHEMA,
             ],
             providers: [
+                { provide: ActivatedRoute, useValue: activatedRouteStub },
                 { provide: AuthenticationService, useClass: AuthenticationServiceMock },
                 { provide: PartDAO, useClass: PartDAOMock },
                 { provide: JoinerDAO, useClass: JoinerDAOMock },
@@ -190,7 +193,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
         testUtils.prepareSpies();
         return testUtils;
     }
-    public static async basic<T extends MyGameComponent>(game: string): Promise<ComponentTestUtils<T>> {
+    public static async basic<T extends MyGameComponent>(game?: string): Promise<ComponentTestUtils<T>> {
         const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub(game, 'joinerId');
         await TestBed.configureTestingModule({
             imports: [
