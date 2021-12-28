@@ -1,19 +1,19 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
-import { Encoder, NumberEncoder } from 'src/app/jscaip/Encoder';
+import { MoveEncoder, NumberEncoder } from 'src/app/jscaip/Encoder';
 import { Move } from 'src/app/jscaip/Move';
-import { MoveCoord } from 'src/app/jscaip/MoveCoord';
+import { MoveCoord, MoveCoordEncoder } from 'src/app/jscaip/MoveCoord';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { JSONValue } from 'src/app/utils/utils';
+import { assert, JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 import { ConspirateursFailure } from './ConspirateursFailure';
 import { ConspirateursState } from './ConspirateursState';
 
 export class ConspirateursMoveDrop extends MoveCoord {
     public static encoder: NumberEncoder<ConspirateursMoveDrop> =
-        MoveCoord.getEncoder(ConspirateursState.WIDTH,
-                             ConspirateursState.HEIGHT,
-                             (coord: Coord) => ConspirateursMoveDrop.of(coord).get());
+        MoveCoordEncoder.getEncoder(ConspirateursState.WIDTH,
+                                    ConspirateursState.HEIGHT,
+                                    (coord: Coord) => ConspirateursMoveDrop.of(coord).get());
 
     public static of(coord: Coord): MGPFallible<ConspirateursMoveDrop> {
         if (coord.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT) === false) {
@@ -77,15 +77,18 @@ export class ConspirateursMoveSimple extends MoveCoordToCoord {
     }
 }
 export class ConspirateursMoveJump extends Move {
-    public static encoder: Encoder<ConspirateursMoveJump> = new class extends Encoder<ConspirateursMoveJump> {
+    public static encoder: MoveEncoder<ConspirateursMoveJump> = new class extends MoveEncoder<ConspirateursMoveJump> {
         private coordEncoder: NumberEncoder<Coord> =
             Coord.numberEncoder(ConspirateursState.WIDTH, ConspirateursState.HEIGHT);
-        public encode(move: ConspirateursMoveJump): JSONValue {
-            return move.coords.map(this.coordEncoder.encodeNumber);
+        public encodeMove(move: ConspirateursMoveJump): JSONValueWithoutArray {
+            return {
+                'coords': move.coords.map(this.coordEncoder.encodeNumber),
+            };
         }
-        public decode(encoded: JSONValue): ConspirateursMoveJump {
-            const casted: number[] = encoded as number[];
-            const decoded: Coord[] = casted.map(this.coordEncoder.decodeNumber);
+        public decodeMove(encoded: JSONValue): ConspirateursMoveJump {
+            assert(Utils.getNonNullable(encoded)['coords'] != null, 'Encoded ConspirateursMoveJump should contain coords');
+            const coords: number[] = Utils.getNonNullable(encoded)['coords'] as number[];
+            const decoded: Coord[] = coords.map(this.coordEncoder.decodeNumber);
             return ConspirateursMoveJump.of(decoded).get();
         }
     }
@@ -94,13 +97,13 @@ export class ConspirateursMoveJump extends Move {
             return MGPFallible.failure('ConspirateursMoveJump requires at least one jump, so two coords');
         }
         for (let i: number = 1; i < coords.length; i++) {
-            const jumpDistance: number = coords[i-1].getDistance(coords[i]);
-            if (jumpDistance !== 2) {
-                return MGPFallible.failure('ConspirateursMoveJump requires jumps to be of a distance of 2');
-            }
             const jumpDirection: MGPFallible<Direction> = coords[i - 1].getDirectionToward(coords[i]);
             if (jumpDirection.isFailure()) {
                 return MGPFallible.failure('ConspirateursJump: invalid jump direction');
+            }
+            const jumpDistance: number = coords[i-1].getDistance(coords[i]);
+            if (jumpDistance !== 2) {
+                return MGPFallible.failure('ConspirateursMoveJump requires jumps to be of a distance of 2');
             }
         }
         return MGPFallible.success(new ConspirateursMoveJump(coords));
@@ -129,7 +132,7 @@ export class ConspirateursMoveJump extends Move {
         const jumps: string = this.coords
             .map((coord: Coord) => coord.toString())
             .reduce((coord1: string, coord2: string) => coord1 + ' -> ' + coord2);
-        return `ConspirateurMoveJump(${jumps})`;
+        return `ConspirateursMoveJump(${jumps})`;
     }
     public equals(other: ConspirateursMoveJump): boolean {
         if (other === this) return true;
@@ -149,9 +152,9 @@ export class ConspirateursMoveJump extends Move {
 
 export type ConspirateursMove = ConspirateursMoveDrop | ConspirateursMoveSimple | ConspirateursMoveJump
 
-export const ConspirateursMoveEncoder: Encoder<ConspirateursMove> =
-    Encoder.disjunction3(ConspirateursMoveDrop.encoder,
-                         ConspirateursMoveSimple.encoder,
-                         ConspirateursMoveJump.encoder,
-                         (value: ConspirateursMove): value is ConspirateursMoveDrop => value.isDrop(),
-                         (value: ConspirateursMove): value is ConspirateursMoveSimple => value.isSimple());
+export const ConspirateursMoveEncoder: MoveEncoder<ConspirateursMove> =
+    MoveEncoder.disjunction3(ConspirateursMoveDrop.encoder,
+                             ConspirateursMoveSimple.encoder,
+                             ConspirateursMoveJump.encoder,
+                             (value: ConspirateursMove): value is ConspirateursMoveDrop => value.isDrop(),
+                             (value: ConspirateursMove): value is ConspirateursMoveSimple => value.isSimple());

@@ -1,13 +1,20 @@
 import { assert, JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 
 export abstract class Encoder<T> {
-    public static disjunction3<T1, T2, T3>(encoder1: Encoder<T1>,
-                                           encoder2: Encoder<T2>,
-                                           encoder3: Encoder<T3>,
+    public abstract encode(t: T): JSONValue;
+
+    public abstract decode(encoded: JSONValue): T;
+}
+
+export abstract class MoveEncoder<T> extends Encoder<T> {
+
+    public static disjunction3<T1, T2, T3>(encoder1: MoveEncoder<T1>,
+                                           encoder2: MoveEncoder<T2>,
+                                           encoder3: MoveEncoder<T3>,
                                            isT1: (v: T1 | T2 | T3) => v is T1,
                                            isT2: (v: T1 | T2 | T3) => v is T2)
-    : Encoder<T1 | T2 | T3> {
-        return new class extends Encoder<T1 | T2 | T3> {
+    : MoveEncoder<T1 | T2 | T3> {
+        return new class extends MoveEncoder<T1 | T2 | T3> {
             public encode(value: T1 | T2 | T3): JSONValue {
                 if (isT1(value)) {
                     return {
@@ -28,23 +35,18 @@ export abstract class Encoder<T> {
             }
             public decode(encoded: JSONValue): T1 | T2 | T3 {
                 const type_: string = Utils.getNonNullable(encoded)['type'];
+                const content: JSONValue = Utils.getNonNullable(encoded)['encoded'] as JSONValue;
                 if (type_ === 'T1') {
-                    return encoder1.decode(encoded);
+                    return encoder1.decode(content);
                 } else if (type_ === 'T2') {
-                    return encoder2.decode(encoded);
+                    return encoder2.decode(content);
                 } else {
-                    return encoder3.decode(encoded);
+                    return encoder3.decode(content);
                 }
             }
         };
     }
 
-    public abstract encode(t: T): JSONValue;
-
-    public abstract decode(encoded: JSONValue): T;
-}
-
-export abstract class MoveEncoder<T> extends Encoder<T> {
 
     public encode(t: T): JSONValue {
         return this.encodeMove(t);

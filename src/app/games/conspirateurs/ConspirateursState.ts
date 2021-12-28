@@ -17,7 +17,9 @@ export class ConspirateursState extends GameStateWithTable<Player> {
                                                          Player.NONE);
         return new ConspirateursState(board, 0);
     }
-
+    public isCentralZone(coord: Coord): boolean {
+        return coord.x >= 4 && coord.x <= 12 && coord.y >= 6 && coord.y <= 10;
+    }
     public isShelter(coord: Coord): boolean {
         if (coord.x === 0 || coord.x === ConspirateursState.WIDTH-1) {
             return ConspirateursState.SHELTERS_INDICES.some((y: number) => coord.y === y);

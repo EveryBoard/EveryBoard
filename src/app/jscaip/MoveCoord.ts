@@ -4,6 +4,16 @@ import { NumberEncoder } from './Encoder';
 
 export abstract class MoveCoord extends Move {
 
+    public readonly coord: Coord;
+
+    constructor(x: number, y: number) {
+        super();
+        this.coord = new Coord(x, y);
+    }
+}
+
+export class MoveCoordEncoder {
+    // TODO FOR REVIEW: where should this go (it fails when in MoveCoord, because MoveCoordToCoord also defines a static getEncoder, and they are not compatible, even though they are both static...)
     public static getEncoder<T extends MoveCoord>(width: number, height: number,
                                                   construct: (coord: Coord) => T): NumberEncoder<T> {
         return new class extends NumberEncoder<T> {
@@ -25,10 +35,4 @@ export abstract class MoveCoord extends Move {
         };
     }
 
-    public readonly coord: Coord;
-
-    constructor(x: number, y: number) {
-        super();
-        this.coord = new Coord(x, y);
-    }
 }

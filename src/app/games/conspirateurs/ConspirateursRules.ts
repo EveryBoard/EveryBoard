@@ -48,7 +48,7 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
             if (state.getPieceAt(move.coord) !== Player.NONE) {
                 return MGPFallible.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
             }
-            if (state.isShelter(move.coord) === false) {
+            if (state.isCentralZone(move.coord) === false) {
                 return MGPFallible.failure(ConspirateursFailure.MUST_DROP_IN_CENTRAL_ZONE());
             }
         } else if (move.isSimple()) {
