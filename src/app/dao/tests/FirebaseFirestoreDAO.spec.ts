@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { TestBed } from '@angular/core/testing';
 import { AngularFirestore } from '@angular/fire/firestore';
 import 'firebase/firestore';

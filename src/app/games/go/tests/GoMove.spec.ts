@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { GoRules } from '../GoRules';
 import { GoMinimax } from '../GoMinimax';
 import { GoState } from '../GoState';

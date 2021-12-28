@@ -1,20 +1,24 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { GameService } from 'src/app/services/GameService';
+import { Utils } from 'src/app/utils/utils';
 
 @Component({
     selector: 'app-online-game-creation',
-    templateUrl: './online-game-creation.component.html',
+    template: '<p i18n>Creating online game, please wait, it should not take long.</p>',
 })
-export class OnlineGameCreationComponent {
+export class OnlineGameCreationComponent implements OnInit {
 
-    public selectedGame: string;
-
-    public constructor(private gameService: GameService) {
+    public constructor(private route: ActivatedRoute,
+                       private gameService: GameService) {
     }
-    public pickGame(pickedGame: string): void {
-        this.selectedGame = pickedGame;
+    public async ngOnInit(): Promise<void> {
+        await this.createGame(this.extractGameFromURL());
     }
-    public async createGame(): Promise<void> {
-        this.gameService.createGameAndRedirectOrShowError(this.selectedGame);
+    private extractGameFromURL(): string {
+        return Utils.getNonNullable(this.route.snapshot.paramMap.get('compo'));
+    }
+    private async createGame(game: string): Promise<boolean> {
+        return this.gameService.createGameAndRedirectOrShowError(game);
     }
 }

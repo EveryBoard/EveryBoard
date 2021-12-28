@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { DvonnComponent } from '../dvonn.component';
 import { Coord } from 'src/app/jscaip/Coord';
 import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';

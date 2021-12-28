@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { PartCreationComponent } from './part-creation.component';
 import { JoinerService } from 'src/app/services/JoinerService';

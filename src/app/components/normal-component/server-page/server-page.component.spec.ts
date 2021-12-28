@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { ServerPageComponent } from './server-page.component';
 import { AuthUser } from 'src/app/services/AuthenticationService';

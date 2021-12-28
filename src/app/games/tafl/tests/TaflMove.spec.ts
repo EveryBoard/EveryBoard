@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { TaflMove } from '../TaflMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MyTaflMove } from './MyTaflMove.spec';

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { P4Node, P4Rules } from '../P4Rules';
 import { Player } from 'src/app/jscaip/Player';
 import { P4State } from '../P4State';

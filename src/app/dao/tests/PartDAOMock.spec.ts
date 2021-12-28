@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { ICurrentPartId, IPart, MGPResult } from 'src/app/domain/icurrentpart';
 import { FirebaseFirestoreDAOMock } from './FirebaseFirestoreDAOMock.spec';
 import { ObservableSubject } from 'src/app/utils/tests/ObservableSubject.spec';

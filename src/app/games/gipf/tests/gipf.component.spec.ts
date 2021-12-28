@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { GipfComponent } from '../gipf.component';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GipfFailure } from 'src/app/games/gipf/GipfFailure';

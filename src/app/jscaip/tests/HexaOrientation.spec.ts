@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { Coord } from '../Coord';
 import { HexagonalGameState } from '../HexagonalGameState';
 import { FlatHexaOrientation } from '../HexaOrientation';

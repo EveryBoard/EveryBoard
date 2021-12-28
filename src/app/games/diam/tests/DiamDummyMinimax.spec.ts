@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { DiamDummyMinimax } from '../DiamDummyMinimax';
 import { DiamPiece } from '../DiamPiece';
 import { DiamNode, DiamRules } from '../DiamRules';

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { assert, display, isJSONPrimitive, Utils } from '../utils';
 
 describe('utils', () => {

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { JSONValue } from 'src/app/utils/utils';
 import { PentagoMove } from '../PentagoMove';
 
