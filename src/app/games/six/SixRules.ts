@@ -71,7 +71,7 @@ export class SixRules extends Rules<SixMove,
     }
     public isLegalDrop(move: SixMove, state: SixState): MGPFallible<SixLegalityInformation> {
         if (move.isDrop() === false) {
-            return MGPFallible.failure(SixFailure.NO_DEPLACEMENT_BEFORE_TURN_40());
+            return MGPFallible.failure(SixFailure.NO_MOVEMENT_BEFORE_TURN_40());
         }
         return MGPFallible.success(state.pieces.getKeySet());
     }

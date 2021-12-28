@@ -20,7 +20,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
         if (move.isTileExchange()) {
             return this.applyLegalTileExchange(move, state);
         } else {
-            return this.applyLegalDeplacement(move, state);
+            return this.applyLegalMovement(move, state);
         }
     }
     public applyLegalTileExchange(move: CoerceoMove, state: CoerceoState): CoerceoState
@@ -46,23 +46,23 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
                     { a_initialState: state, afterCapture, afterTileRemoval, resultingState } });
         return resultingState;
     }
-    public applyLegalDeplacement(move: CoerceoMove, state: CoerceoState): CoerceoState
+    public applyLegalMovement(move: CoerceoMove, state: CoerceoState): CoerceoState
     {
         // Move the piece
-        const afterDeplacement: CoerceoState = state.applyLegalDeplacement(move);
+        const afterMovement: CoerceoState = state.applyLegalMovement(move);
         // removes emptied tiles
-        const afterTilesRemoved: CoerceoState = afterDeplacement.removeTilesIfNeeded(move.start.get(), true);
+        const afterTilesRemoved: CoerceoState = afterMovement.removeTilesIfNeeded(move.start.get(), true);
         // removes captured pieces
-        const afterCaptures: CoerceoState = afterTilesRemoved.doDeplacementCaptures(move);
+        const afterCaptures: CoerceoState = afterTilesRemoved.doMovementCaptures(move);
         const resultingState: CoerceoState = new CoerceoState(afterCaptures.board,
                                                               state.turn + 1,
                                                               afterCaptures.tiles,
                                                               afterCaptures.captures);
         display(CoerceoRules.VERBOSE, {
             ab_state: state,
-            afterDeplacement,
-            afterTilesRemoved: afterTilesRemoved,
-            d_afterCaptures: afterCaptures,
+            afterMovement,
+            afterTilesRemoved,
+            afterCaptures,
             resultingState });
         return resultingState;
     }
@@ -70,7 +70,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
         if (move.isTileExchange()) {
             return this.isLegalTileExchange(move, state);
         } else {
-            return this.isLegalDeplacement(move, state);
+            return this.isLegalMovement(move, state);
         }
     }
     public isLegalTileExchange(move: CoerceoMove, state: CoerceoState): MGPFallible<void> {
@@ -88,7 +88,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoState> {
         }
         return MGPFallible.success(undefined);
     }
-    public isLegalDeplacement(move: CoerceoMove, state: CoerceoState): MGPFallible<void> {
+    public isLegalMovement(move: CoerceoMove, state: CoerceoState): MGPFallible<void> {
         if (state.getPieceAt(move.start.get()) === FourStatePiece.NONE) {
             const reason: string = 'Cannot start with a coord outside the board ' + move.start.get().toString() + '.';
             return MGPFallible.failure(reason);

@@ -43,7 +43,7 @@ describe('SixRules', () => {
             const reason: string = RulesFailure.MUST_LAND_ON_EMPTY_SPACE();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
-        it('Should forbid landing/dropping on existing piece (deplacement)', () => {
+        it('Should forbid landing/dropping on existing piece (movement)', () => {
             // Given a board in Phase 1 with pieces
             const board: NumberTable = [
                 [X, _, O],
@@ -53,7 +53,7 @@ describe('SixRules', () => {
             const state: SixState = SixState.fromRepresentation(board, 42);
 
             // When dropping a piece on another
-            const move: SixMove = SixMove.fromDeplacement(new Coord(0, 0), new Coord(1, 1));
+            const move: SixMove = SixMove.fromMovement(new Coord(0, 0), new Coord(1, 1));
 
             // Then the move should be illegal
             const reason: string = RulesFailure.MUST_LAND_ON_EMPTY_SPACE();
@@ -65,7 +65,7 @@ describe('SixRules', () => {
                 [_, _, O],
                 [_, X, _],
                 [X, O, _],
-            ]; // Fake 40th turn, since there is not 42 stone on the board
+            ]; // Fake 40th turn, since there are not 42 stones on the board
             const state: SixState = SixState.fromRepresentation(board, 40);
 
             // When dropping on a legal landing coord
@@ -76,7 +76,7 @@ describe('SixRules', () => {
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('Should allow drop outside the current range', () => {
-            // Given a board in a certain
+            // Given a board in a certain range (5 by 5 when put in a square)
             const board: NumberTable = [
                 [X, X, O, _, X],
                 [X, X, O, _, O],
@@ -119,7 +119,7 @@ describe('SixRules', () => {
         });
     });
     describe('Deplacement', () => {
-        it('Should forbid deplacement before 40th turn', () => {
+        it('Should forbid movement before 40th turn', () => {
             // Given a board in phase 1
             const board: NumberTable = [
                 [_, _, O],
@@ -128,11 +128,11 @@ describe('SixRules', () => {
             ];
             const state: SixState = SixState.fromRepresentation(board, 0);
 
-            // When doing a deplacement
-            const move: SixMove = SixMove.fromDeplacement(new Coord(1, 2), new Coord(3, 0));
+            // When doing a movement
+            const move: SixMove = SixMove.fromMovement(new Coord(1, 2), new Coord(3, 0));
 
             // Then the move should be deemed illegal
-            const reason: string = SixFailure.NO_DEPLACEMENT_BEFORE_TURN_40();
+            const reason: string = SixFailure.NO_MOVEMENT_BEFORE_TURN_40();
             RulesUtils.expectMoveFailure(rules, state, move, reason);
         });
         it('Should forbid moving opponent piece', () => {
@@ -145,7 +145,7 @@ describe('SixRules', () => {
             const state: SixState = SixState.fromRepresentation(board, 42);
 
             // When trying to move an opponent piece
-            const move: SixMove = SixMove.fromDeplacement(new Coord(0, 2), new Coord(2, 1));
+            const move: SixMove = SixMove.fromMovement(new Coord(0, 2), new Coord(2, 1));
 
             // Then the move should be deemed illegal
             const reason: string = RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE();
@@ -161,7 +161,7 @@ describe('SixRules', () => {
             const state: SixState = SixState.fromRepresentation(board, 42);
 
             // When trying to move empty piece
-            const move: SixMove = SixMove.fromDeplacement(new Coord(0, 0), new Coord(2, 1));
+            const move: SixMove = SixMove.fromMovement(new Coord(0, 0), new Coord(2, 1));
 
             // Then the move should be illegal
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
@@ -177,7 +177,7 @@ describe('SixRules', () => {
             const state: SixState = SixState.fromRepresentation(board, 42);
 
             // When moving a piece on a space that only that piece neighbored
-            const move: SixMove = SixMove.fromDeplacement(new Coord(1, 2), new Coord(2, 2));
+            const move: SixMove = SixMove.fromMovement(new Coord(1, 2), new Coord(2, 2));
 
             // Then the move should be illegal
             const reason: string = SixFailure.MUST_DROP_NEXT_TO_OTHER_PIECE();
@@ -197,7 +197,7 @@ describe('SixRules', () => {
             const state: SixState = SixState.fromRepresentation(board, 42);
 
             // When disconnecting them
-            const move: SixMove = SixMove.fromDeplacement(new Coord(3, 4), new Coord(3, 0));
+            const move: SixMove = SixMove.fromMovement(new Coord(3, 4), new Coord(3, 0));
 
             // Then the small group should be removed from the board
             const expectedBoard: NumberTable = [
@@ -222,7 +222,7 @@ describe('SixRules', () => {
             const state: SixState = SixState.fromRepresentation(board, 42);
 
             // When doing that move without choosing which half to keep
-            const move: SixMove = SixMove.fromDeplacement(new Coord(2, 2), new Coord(4, 3));
+            const move: SixMove = SixMove.fromMovement(new Coord(2, 2), new Coord(4, 3));
 
             // Then the move should be refused
             const reason: string = SixFailure.MUST_CUT();
@@ -472,7 +472,7 @@ describe('SixRules', () => {
                 const state: SixState = SixState.fromRepresentation(board, 43);
 
                 // When making the opponent pass bellow 6 pieces
-                const move: SixMove = SixMove.fromDeplacement(new Coord(3, 4), new Coord(3, 0));
+                const move: SixMove = SixMove.fromMovement(new Coord(3, 4), new Coord(3, 0));
 
                 // Then the move should be a victory
                 const expectedBoard: NumberTable = [
@@ -499,7 +499,7 @@ describe('SixRules', () => {
                 const state: SixState = SixState.fromRepresentation(board, 42);
 
                 // When making the opponent drop bellow 5 pieces
-                const move: SixMove = SixMove.fromDeplacement(new Coord(3, 4), new Coord(3, 0));
+                const move: SixMove = SixMove.fromMovement(new Coord(3, 4), new Coord(3, 0));
 
                 // Then the move should be a victory
                 const expectedBoard: NumberTable = [
@@ -525,7 +525,7 @@ describe('SixRules', () => {
                 const state: SixState = SixState.fromRepresentation(board, 40);
 
                 // When making both player drop bellow 6 pieces
-                const move: SixMove = SixMove.fromDeplacement(new Coord(4, 1), new Coord(-1, 1));
+                const move: SixMove = SixMove.fromMovement(new Coord(4, 1), new Coord(-1, 1));
 
                 // Then the one with the more pieces remaining win
                 const expectedBoard: number[][] = [
@@ -547,7 +547,7 @@ describe('SixRules', () => {
                 const state: SixState = SixState.fromRepresentation(board, 42);
 
                 // When dropping both player bellow 6 pieces
-                const move: SixMove = SixMove.fromDeplacement(new Coord(4, 1), new Coord(6, 1));
+                const move: SixMove = SixMove.fromMovement(new Coord(4, 1), new Coord(6, 1));
 
                 // Then the player with the more piece win
                 const expectedBoard: number[][] = [

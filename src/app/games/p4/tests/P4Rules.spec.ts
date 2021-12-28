@@ -28,7 +28,7 @@ describe('P4Rules', () => {
         // Given the initial board
         const state: P4State = P4State.getInitialState();
 
-        // When playing in colum 3
+        // When playing in column 3
         const move: P4Move = P4Move.of(3);
 
         // Then the move should be a success
@@ -55,7 +55,7 @@ describe('P4Rules', () => {
         ];
         const state: P4State = new P4State(board, 6);
 
-        // when aligned a fourth piece
+        // when aligning a fourth piece
         const move: P4Move = P4Move.of(3);
 
         // Then the move should be legal and player zero winner
@@ -84,7 +84,7 @@ describe('P4Rules', () => {
         ];
         const state: P4State = new P4State(board, 7);
 
-        // when aligned a fourth piece
+        // when aligning a fourth piece
         const move: P4Move = P4Move.of(3);
 
         // Then the move should be legal and player zero winner

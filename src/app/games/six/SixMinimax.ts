@@ -75,7 +75,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         for (let i: number = 0; i < starts.size(); i++) {
             const start: Coord = starts.get(i);
             for (const landing of landings) {
-                const move: SixMove = SixMove.fromDeplacement(start, landing);
+                const move: SixMove = SixMove.fromMovement(start, landing);
                 if (state.isCoordConnected(landing, MGPOptional.of(start))) {
                     const piecesAfterDeplacement: ReversibleMap<Coord, Player> = SixState.deplacePiece(state, move);
                     const groupsAfterMove: MGPSet<MGPSet<Coord>> =

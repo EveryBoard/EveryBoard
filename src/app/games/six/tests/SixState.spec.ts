@@ -82,7 +82,7 @@ describe('SixState', () => {
             beforePieces.put(new Coord(0, 2), Player.ONE);
             const beforeState: SixState = new SixState(beforePieces, 0);
 
-            const move: SixMove = SixMove.fromDeplacement(new Coord(0, 0), new Coord(0, 3));
+            const move: SixMove = SixMove.fromMovement(new Coord(0, 0), new Coord(0, 3));
             const afterState: SixState = beforeState.applyLegalDeplacement(move, new MGPSet());
 
             const expectedPieces: ReversibleMap<Coord, Player> = new ReversibleMap<Coord, Player>();

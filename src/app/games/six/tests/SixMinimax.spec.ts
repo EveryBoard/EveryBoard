@@ -190,7 +190,7 @@ describe('SixMinimax', () => {
             rules.node = new SixNode(state);
             expect(rules.choose(move)).toBeTrue();
             const bestMove: SixMove = rules.node.findBestMove(1, minimax);
-            const expectedMove: SixMove = SixMove.fromDeplacement(new Coord(1, 0), new Coord(0, 6));
+            const expectedMove: SixMove = SixMove.fromMovement(new Coord(1, 0), new Coord(0, 6));
             expect(bestMove).toEqual(expectedMove);
             expect(rules.node.countDescendants()).toBe(1);
         });
@@ -211,7 +211,7 @@ describe('SixMinimax', () => {
 
             expect(rules.getGameStatus(rules.node).isEndGame).toBeFalse();
             const bestMove: SixMove = rules.node.findBestMove(1, minimax);
-            expect(bestMove).toEqual(SixMove.fromDeplacement(new Coord(0, 0), new Coord(0, 6)));
+            expect(bestMove).toEqual(SixMove.fromMovement(new Coord(0, 0), new Coord(0, 6)));
             expect(rules.node.countDescendants()).toBe(1);
 
             expect(rules.choose(bestMove)).toBeTrue();
@@ -236,14 +236,14 @@ describe('SixMinimax', () => {
             ], 1);
             const node: SixNode = new SixNode(state);
 
-            // When calculating list move
+            // When calculating the list of moves
             const listMoves: SixMove[] = minimax.getListMoves(node);
 
             // Then the list should have all the possible drops and only them
             expect(listMoves.every((move: SixMove) => move.isDrop())).toBeTrue();
             expect(listMoves.length).toBe(6); // One for each neighbors
         });
-        it('should pass possible deplacement when Phase 2', () => {
+        it('should pass possible movement when Phase 2', () => {
             // Given a game state in phase 2
             const state: SixState = SixState.fromRepresentation([
                 [O, O, O, X, X, X],
@@ -251,7 +251,7 @@ describe('SixMinimax', () => {
             ], 42);
             const node: SixNode = new SixNode(state);
 
-            // When calculating list move
+            // When calculating the list of moves
             const listMoves: SixMove[] = minimax.getListMoves(node);
 
             // Then the list should have all the possible deplacements and only them
@@ -265,7 +265,7 @@ describe('SixMinimax', () => {
             ], 43);
             const node: SixNode = new SixNode(state);
 
-            // When calculating list move
+            // When calculating the list of moves
             const listMoves: SixMove[] = minimax.getListMoves(node);
 
             // Then the list should have all the possible deplacements and only them
