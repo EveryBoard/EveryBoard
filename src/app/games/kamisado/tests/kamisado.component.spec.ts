@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { KamisadoState } from 'src/app/games/kamisado/KamisadoState';
 import { KamisadoColor } from 'src/app/games/kamisado/KamisadoColor';
 import { MGPOptional } from 'src/app/utils/MGPOptional';

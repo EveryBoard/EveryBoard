@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { FirstPlayer, Joiner, PartStatus, PartType } from './ijoiner';
 
 export class JoinerMocks {

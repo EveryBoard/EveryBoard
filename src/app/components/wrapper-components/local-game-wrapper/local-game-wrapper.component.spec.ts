@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { fakeAsync, tick } from '@angular/core/testing';
 import { P4State } from 'src/app/games/p4/P4State';
 import { Player } from 'src/app/jscaip/Player';

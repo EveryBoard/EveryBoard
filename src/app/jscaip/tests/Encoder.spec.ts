@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { ComparableObject } from 'src/app/utils/Comparable';
 import { JSONValue } from 'src/app/utils/utils';
 import { Encoder, NumberEncoder } from '../Encoder';

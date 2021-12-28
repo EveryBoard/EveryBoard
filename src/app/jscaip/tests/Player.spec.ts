@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { Player } from '../Player';
 
 describe('Player', () => {

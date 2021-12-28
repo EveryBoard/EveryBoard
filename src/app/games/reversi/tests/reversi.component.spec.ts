@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { ReversiComponent } from '../reversi.component';
 import { ReversiMove } from 'src/app/games/reversi/ReversiMove';
 import { ReversiState } from 'src/app/games/reversi/ReversiState';

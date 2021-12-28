@@ -79,7 +79,7 @@ export class VerifyAccountComponent implements OnInit, OnDestroy {
         await this.authService.reloadUser();
     }
     public ngOnDestroy(): void {
-        if (this.userSub && this.userSub.unsubscribe) {
+        if (this.userSub != null && this.userSub.unsubscribe != null) {
             this.userSub.unsubscribe();
         }
     }

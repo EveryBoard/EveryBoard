@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { MGPMap } from '../MGPMap';
 import { MGPOptional } from '../MGPOptional';
 

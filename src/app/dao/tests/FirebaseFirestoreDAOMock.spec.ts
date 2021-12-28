@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 
 import firebase from 'firebase/app';
@@ -32,7 +33,7 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
     public abstract resetStaticDB(): void;
 
     public reset(): void {
-        const removed: string = this.getStaticDB() ? this.getStaticDB().size() + ' removed' : 'not initialised yet';
+        const removed: string = this.getStaticDB() != null ? this.getStaticDB().size() + ' removed' : 'not initialised yet';
         display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE, this.collectionName + '.reset, ' + removed);
 
         this.resetStaticDB();

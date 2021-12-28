@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import firebase from 'firebase';
 import { MGPResult, Part } from './icurrentpart';
 

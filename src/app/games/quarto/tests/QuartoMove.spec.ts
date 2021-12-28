@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { QuartoRules } from '../QuartoRules';
 import { QuartoMinimax } from '../QuartoMinimax';
 import { QuartoMove } from '../QuartoMove';

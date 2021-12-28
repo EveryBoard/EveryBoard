@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Coord } from 'src/app/jscaip/Coord';

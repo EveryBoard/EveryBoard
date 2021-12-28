@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { Coord } from '../Coord';
 import { GameStateWithTable } from '../GameStateWithTable';
 

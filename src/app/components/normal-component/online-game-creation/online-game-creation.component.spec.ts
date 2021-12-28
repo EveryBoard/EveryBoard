@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { GameService } from 'src/app/services/GameService';
 import { ActivatedRouteStub, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';

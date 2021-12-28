@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { BoardDatas, GroupInfos } from '../../../jscaip/BoardDatas';
 import { GoState, GoPiece } from '../GoState';
 import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';

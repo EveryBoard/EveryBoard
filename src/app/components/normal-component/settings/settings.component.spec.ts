@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { UserSettingsService } from 'src/app/services/UserSettingsService';
 import { LocaleUtils } from 'src/app/utils/LocaleUtils';
