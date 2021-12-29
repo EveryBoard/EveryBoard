@@ -440,8 +440,14 @@
       <trans-unit id="7003355968351203755" datatype="html">
         <source>Ask to take back one move</source>
       </trans-unit>
-      <trans-unit id="7974932122576857895" datatype="html">
-        <source>You agreed to draw</source>
+      <trans-unit id="4830863788651301313" datatype="html">
+        <source>You agreed to draw.</source>
+      </trans-unit>
+      <trans-unit id="5730736324595001106" datatype="html">
+        <source>Your draw proposal has been accepted.</source>
+      </trans-unit>
+      <trans-unit id="4530815769033051580" datatype="html">
+        <source>Agreed draw.</source>
       </trans-unit>
       <trans-unit id="7815479892408473764" datatype="html">
         <source>You won.</source>

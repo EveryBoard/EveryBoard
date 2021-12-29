@@ -586,9 +586,17 @@
         <source>Ask to take back one move</source>
         <target>Demander à reprendre un coup</target>
       </trans-unit>
-      <trans-unit id="7974932122576857895" datatype="html">
-        <source>You agreed to draw</source>
+      <trans-unit id="4830863788651301313" datatype="html">
+        <source>You agreed to draw.</source>
         <target>Vous avez accepté un match nul.</target>
+      </trans-unit>
+      <trans-unit id="5730736324595001106" datatype="html">
+        <source>Your draw proposal has been accepted.</source>
+        <target>Votre proposition de match nul a été acceptée.</target>
+      </trans-unit>
+      <trans-unit id="4530815769033051580" datatype="html">
+        <source>Agreed draw.</source>
+        <target>Un match nul a été convenu.</target>
       </trans-unit>
       <trans-unit id="2826140657122926749" datatype="html">
         <source>You resigned.</source>

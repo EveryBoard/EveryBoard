@@ -1,4 +1,4 @@
-import { FirebaseJSONObject, JSONValueWithoutArray } from 'src/app/utils/utils';
+import { assert, FirebaseJSONObject, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 import { Request } from './request';
 import { DomainWrapper } from './DomainWrapper';
 import { FirebaseTime } from './Time';
@@ -26,17 +26,47 @@ export interface IPart extends FirebaseJSONObject {
     readonly request?: Request | null, // can be null because we should be able to remove a request
 }
 
+export class MGPResult {
+    public static readonly HARD_DRAW: MGPResult = new MGPResult(0);
+
+    public static readonly RESIGN: MGPResult = new MGPResult(1);
+
+    public static readonly ESCAPE: MGPResult = new MGPResult(2);
+
+    public static readonly VICTORY: MGPResult = new MGPResult(3);
+
+    public static readonly TIMEOUT: MGPResult = new MGPResult(4);
+
+    public static readonly UNACHIEVED: MGPResult = new MGPResult(5);
+
+    public static readonly AGREED_DRAW_BY_ZERO: MGPResult = new MGPResult(6);
+
+    public static readonly AGREED_DRAW_BY_ONE: MGPResult = new MGPResult(7);
+
+    private constructor(public readonly value: IMGPResult) {}
+}
+
 export class Part implements DomainWrapper<IPart> {
+
     public constructor(public readonly doc: IPart) {
     }
     public getTurn(): number {
         return this.doc.turn;
     }
     public isHardDraw(): boolean {
-        return this.doc.result === MGPResult.DRAW.value;
+        return this.doc.result === MGPResult.HARD_DRAW.value;
     }
     public isAgreedDraw(): boolean {
-        return this.doc.result === MGPResult.AGREED_DRAW.value;
+        return this.doc.result === MGPResult.AGREED_DRAW_BY_ZERO.value ||
+               this.doc.result === MGPResult.AGREED_DRAW_BY_ONE.value;
+    }
+    public getDrawAccepter(): string {
+        if (this.doc.result === MGPResult.AGREED_DRAW_BY_ZERO.value) {
+            return this.doc.playerZero;
+        } else {
+            assert(this.doc.result === MGPResult.AGREED_DRAW_BY_ONE.value, 'should not ask draw accepter when no draw accepted!');
+            return Utils.getNonNullable(this.doc.playerOne);
+        }
     }
     public isWin(): boolean {
         return this.doc.result === MGPResult.VICTORY.value;
@@ -64,21 +94,3 @@ export interface ICurrentPartId {
     doc: IPart;
 }
 export type IMGPResult = number;
-export class MGPResult {
-    public static readonly DRAW: MGPResult = new MGPResult(0);
-
-    public static readonly RESIGN: MGPResult = new MGPResult(1);
-
-    public static readonly ESCAPE: MGPResult = new MGPResult(2);
-
-    public static readonly VICTORY: MGPResult = new MGPResult(3);
-
-    public static readonly TIMEOUT: MGPResult = new MGPResult(4);
-
-    public static readonly UNACHIEVED: MGPResult = new MGPResult(5);
-
-    public static readonly AGREED_DRAW: MGPResult = new MGPResult(6);
-
-    private constructor(public readonly value: IMGPResult) {}
-}
-

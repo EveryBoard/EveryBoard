@@ -28,6 +28,14 @@ $primary: #ffc34d;
 @import "../../node_modules/@creativebulma/bulma-tooltip/dist/bulma-tooltip.css";
 @import "./mystyles.scss";
 
+.modal-card-head, .is-primary {
+    background-color: $primary;
+}
+
+.has-text-passive {
+    color: #AAA;
+}
+
 /* Show the page only after the CSS has been loaded */
 html, body {
     display: block;

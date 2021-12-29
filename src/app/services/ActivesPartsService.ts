@@ -21,7 +21,7 @@ export class ActivesPartsService implements OnDestroy {
 
     private unsubscribe: () => void;
 
-    constructor(public partDao: PartDAO) {
+    constructor(public partDAO: PartDAO) {
         this.activesPartsBS = new BehaviorSubject<ICurrentPartId[]>([]);
         this.activesPartsObs = this.activesPartsBS.asObservable();
         this.startObserving();
@@ -60,7 +60,7 @@ export class ActivesPartsService implements OnDestroy {
             new FirebaseCollectionObserver(onDocumentCreated,
                                            onDocumentModified,
                                            onDocumentDeleted);
-        this.unsubscribe = this.partDao.observeActivesParts(partObserver);
+        this.unsubscribe = this.partDAO.observeActivesParts(partObserver);
         this.activesPartsObs.subscribe((activesParts: ICurrentPartId[]) => {
             this.activesParts = activesParts;
         });

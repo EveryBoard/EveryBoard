@@ -3,7 +3,7 @@
 >
     <p id="remainingTime"
        class="level-item remainingTime"
-       [ngStyle]="getTimeStyle()">{{ displayedMinute }}:{{ displayedSec | number:'2.0-0' }}</p>
+       [ngClass]="getTimeClass()">{{ displayedMinute }}:{{ displayedSec | number:'2.0-0' }}</p>
     <button id="addTimeButton"
             class="button level-item is-small"
             [ngStyle]="getBackgroundColor()"

@@ -27,29 +27,18 @@ export class CountDownComponent implements OnInit, OnDestroy {
     @Output() outOfTimeAction: EventEmitter<void> = new EventEmitter<void>();
     @Output() addTimeToOpponent: EventEmitter<void> = new EventEmitter<void>();
 
-    public static readonly DANGER_TIME_EVEN: { [key: string]: string } = {
-        'color': 'red',
-        'font-weight': 'bold',
-    };
-    public static readonly DANGER_TIME_ODD: { [key: string]: string } = {
-        'color': 'white',
-        'font-weight': 'bold',
-        'background-color': 'red',
-    };
-    public static readonly PASSIVE_STYLE: { [key: string]: string } = {
-        'color': 'lightgrey',
-        'background-color': 'darkgrey',
-        'font-size': 'italic',
-    };
-    public static readonly SAFE_TIME: { [key: string]: string } = { color: 'black' };
+    public static readonly DANGER_TIME_EVEN: string = 'has-background-danger has-text-white';
+    public static readonly DANGER_TIME_ODD: string = 'has-background-warning has-text-white';
+    public static readonly PASSIVE_STYLE: string = 'has-text-passive is-italic';
+    public static readonly SAFE_TIME: string = '';
 
-    public style: { [key: string]: string } = CountDownComponent.SAFE_TIME;
+    public style: string = CountDownComponent.SAFE_TIME;
 
     public ngOnInit(): void {
         display(CountDownComponent.VERBOSE, 'CountDownComponent.ngOnInit (' + this.debugName + ')');
     }
     public setDuration(duration: number): void {
-        display(CountDownComponent.VERBOSE || true, this.debugName + '.set(' + duration + 'ms)');
+        display(CountDownComponent.VERBOSE, this.debugName + '.set(' + duration + 'ms)');
         // duration is in ms
         if (this.started) {
             throw new Error('Should not set a chrono that has already been started (' + this.debugName + ')!');
@@ -63,7 +52,6 @@ export class CountDownComponent implements OnInit, OnDestroy {
             this.pause();
             mustResume = true;
         }
-        console.log(this.debugName + ' just set to ' + ms + ' instead of ' + this.remainingMs);
         this.remainingMs = ms;
         this.displayDuration();
         if (mustResume) {
@@ -103,7 +91,7 @@ export class CountDownComponent implements OnInit, OnDestroy {
         this.countSeconds();
     }
     private onEndReached(): void {
-        display(CountDownComponent.VERBOSE || true, this.debugName + '.onEndReached');
+        display(CountDownComponent.VERBOSE, this.debugName + '.onEndReached');
 
         this.isPaused = true;
         this.started = false;
@@ -117,7 +105,7 @@ export class CountDownComponent implements OnInit, OnDestroy {
         }, 1000);
     }
     public isIdle(): boolean {
-        return this.isPaused || (this.started === false);
+        return this.started === false || this.isPaused;
     }
     public pause(): void {
         display(CountDownComponent.VERBOSE, this.debugName + '.pause(' + this.remainingMs + 'ms)');
@@ -146,7 +134,7 @@ export class CountDownComponent implements OnInit, OnDestroy {
     public isStarted(): boolean {
         return this.started;
     }
-    public getTimeStyle(): { [key: string]: string } {
+    public getTimeClass(): string {
         if (this.active === false) {
             return CountDownComponent.PASSIVE_STYLE;
         }
@@ -161,14 +149,21 @@ export class CountDownComponent implements OnInit, OnDestroy {
         }
     }
     public getBackgroundColor(): { [key: string]: string } {
-        const buttonStyle: { [key: string]: string } = this.getTimeStyle();
-        return { 'background-color': buttonStyle['background-color'] };
+        if (this.active === false) {
+            return { 'background-color': 'darkgrey' };
+        }
+        if (this.remainingMs < this.dangerTimeLimit) {
+            if (this.remainingMs % 2000 < 1000) {
+                return { 'background-color': 'red' };
+            }
+        }
+        return {};
     }
     private updateShownTime(): void {
         const now: number = Date.now();
         this.remainingMs -= (now - this.startTime);
         this.displayDuration();
-        this.style = this.getTimeStyle();
+        this.style = this.getTimeClass();
         this.startTime = now;
         if (this.isPaused === false) {
             this.countSeconds();

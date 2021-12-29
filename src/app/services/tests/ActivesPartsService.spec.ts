@@ -20,7 +20,7 @@ describe('ActivesPartsService', () => {
     });
     describe('hasActiveParts', () => {
         it('should return true when user is playerZero in a game', fakeAsync(async() => {
-            // Given a partDao including an active part whose playerZero is our user
+            // Given a partDAO including an active part whose playerZero is our user
             spyOn(service, 'getActiveParts').and.returnValue([{
                 id: 'joinerIdOrWhatever',
                 doc: {
@@ -40,7 +40,7 @@ describe('ActivesPartsService', () => {
             expect(hasUserActiveParts).toBeTrue();
         }));
         it('should return true when user is playerOne in a game', () => {
-            // Given a partDao including an active part whose playerZero is our user
+            // Given a partDAO including an active part whose playerZero is our user
             spyOn(service, 'getActiveParts').and.returnValue([{
                 id: 'joinerIdOrWhatever',
                 doc: {
@@ -60,7 +60,7 @@ describe('ActivesPartsService', () => {
             expect(hasUserActiveParts).toBeTrue();
         });
         it('should return false when user is not in a game', () => {
-            // Given a partDao including an active part whose playerZero is our user
+            // Given a partDAO including an active part whose playerZero is our user
             spyOn(service, 'getActiveParts').and.returnValue([{
                 id: 'joinerIdOrWhatever',
                 doc: {

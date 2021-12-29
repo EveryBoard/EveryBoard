@@ -126,7 +126,9 @@
                     <p class="title" id="hardDrawIndicator" i18n>Draw</p>
                 </div>
                 <div *ngIf="currentPart.isAgreedDraw()">
-                    <p class="title" id="agreedDrawIndicator" *ngIf="currentPart.isAgreedDraw()" i18n>You agreed to draw</p>
+                    <p class="title" id="youAgreedToDrawIndicator" *ngIf="currentPart.getDrawAccepter() === getPlayerName()" i18n>You agreed to draw.</p>
+                    <p class="title" id="yourOpponentAgreedToDrawIndicator" *ngIf="(currentPart.getDrawAccepter() !== getPlayerName()) && isPlaying()" i18n>Your draw proposal has been accepted.</p>
+                    <p class="title" id="playersAgreedToDraw" *ngIf="isPlaying() === false" i18n>Agreed draw.</p>
                 </div>
                 <div *ngIf="currentPart.isWin()">
                     <p class="title" id="youWonIndicator" *ngIf="currentPart.getWinner().get() === getPlayerName()" i18n>You won.</p>
@@ -134,7 +136,7 @@
                     <p class="title" *ngIf="isPlaying() === false" i18n>{{ currentPart.getWinner().get() }} won.</p>
                 </div>
                 <div *ngIf="currentPart.isTimeout()">
-                    <p class="title" id="youWonIndicator" *ngIf="(currentPart.getWinner().get() === getPlayerName())" i18n>{{ currentPart.getLoser().get() }} has reached their time limit. You won.</p>
+                    <p class="title" id="youWonIndicator" *ngIf="currentPart.getWinner().get() === getPlayerName()" i18n>{{ currentPart.getLoser().get() }} has reached their time limit. You won.</p>
                     <p class="title" *ngIf="(currentPart.getWinner().get() !== getPlayerName()) && isPlaying()" i18n>You reached your time limit.</p>
                     <p class="title" *ngIf="isPlaying() === false" i18n>{{ currentPart.getLoser().get() }} has reached their time limit.</p>
                 </div>

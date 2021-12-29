@@ -156,17 +156,17 @@ describe('CountDownComponent', () => {
         it('Should be safe style when upper than limit', () => {
             component.dangerTimeLimit = 10 * 1000;
             component.setDuration(12 * 1000);
-            expect(component.getTimeStyle()).toEqual(CountDownComponent.SAFE_TIME);
+            expect(component.getTimeClass()).toEqual(CountDownComponent.SAFE_TIME);
         });
         it('Should be first danger style when lower than limit and even remaining second', () => {
             component.dangerTimeLimit = 10 * 1000;
             component.setDuration(9 * 1000);
-            expect(component.getTimeStyle()).toEqual(CountDownComponent.DANGER_TIME_EVEN);
+            expect(component.getTimeClass()).toEqual(CountDownComponent.DANGER_TIME_EVEN);
         });
         it('Should be second danger style when lower than limit and odd remaining second', () => {
             component.dangerTimeLimit = 10 * 1000;
             component.setDuration(8 * 1000);
-            expect(component.getTimeStyle()).toEqual(CountDownComponent.DANGER_TIME_ODD);
+            expect(component.getTimeClass()).toEqual(CountDownComponent.DANGER_TIME_ODD);
         });
         it('Should be in passive style when passive', () => {
             // given a chrono that could be in danger time style
@@ -176,7 +176,7 @@ describe('CountDownComponent', () => {
             component.active = false;
 
             // then it should still be in passive style
-            expect(component.getTimeStyle()).toEqual(CountDownComponent.PASSIVE_STYLE);
+            expect(component.getTimeClass()).toEqual(CountDownComponent.PASSIVE_STYLE);
         });
     });
 });

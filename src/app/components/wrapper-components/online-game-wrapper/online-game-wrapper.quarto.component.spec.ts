@@ -55,6 +55,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     let joinerDAO: JoinerDAO;
     let partDAO: PartDAO;
     let userDAO: UserDAO;
+    let chatDAO: ChatDAO;
 
     const USER_CREATOR: AuthUser = new AuthUser(MGPOptional.of('cre@tor'), MGPOptional.of('creator'), true);
     const PLAYER_CREATOR: IUser = {
@@ -89,11 +90,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         turn: 0,
         lastMoveTime: FAKE_MOMENT,
     };
-    async function prepareComponent(initialJoiner: IJoiner): Promise<void> {
+    async function prepareMockDBContent(initialJoiner: IJoiner): Promise<void> {
         partDAO = TestBed.inject(PartDAO);
         joinerDAO = TestBed.inject(JoinerDAO);
         userDAO = TestBed.inject(UserDAO);
-        const chatDAO: ChatDAO = TestBed.inject(ChatDAO);
+        chatDAO = TestBed.inject(ChatDAO);
         await joinerDAO.set('joinerId', initialJoiner);
         await partDAO.set('joinerId', PartMocks.INITIAL.doc);
         await userDAO.set('firstCandidateDocId', PLAYER_OPPONENT);
@@ -103,10 +104,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         return Promise.resolve();
     }
     async function prepareStartedGameFor(user: AuthUser, shorterGlobalChrono?: boolean): Promise<void> {
+        await prepareMockDBContent(JoinerMocks.INITIAL.doc);
         AuthenticationServiceMock.setUser(user);
         componentTestUtils.prepareFixture(OnlineGameWrapperComponent);
         wrapper = componentTestUtils.wrapper as OnlineGameWrapperComponent;
-        await prepareComponent(JoinerMocks.INITIAL.doc);
         componentTestUtils.detectChanges();
         tick(1);
         componentTestUtils.bindGameComponent();
@@ -442,9 +443,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 loser: 'firstCandidate',
                 result: MGPResult.VICTORY.value,
             });
-            expect(componentTestUtils.findElement('#youWonIndicator'))
-                .withContext('Component should show who is the winner.')
-                .toBeTruthy();
+            componentTestUtils.expectElementToExist('#youWonIndicator');
             expectGameToBeOver();
         }));
         it('Draw move from player should notifyDraw', fakeAsync(async() => {
@@ -486,11 +485,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 // TODO: investigate on why remainingTimes is not changed
                 request: null,
                 lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
-                result: MGPResult.DRAW.value,
+                result: MGPResult.HARD_DRAW.value,
             });
-            expect(componentTestUtils.findElement('#hardDrawIndicator'))
-                .withContext('Component should show it is a draw.')
-                .toBeTruthy();
+            componentTestUtils.expectElementToExist('#hardDrawIndicator');
+            expectGameToBeOver();
         }));
     });
     describe('Take Back', () => {
@@ -710,7 +708,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             }));
         });
         describe('Opponent given take back during user turn', () => {
-            it('should move board back one turn and call switchPlayer', fakeAsync(async() => {
+            it('should move board back one turn and call switchPlayer (for opponent)', fakeAsync(async() => {
                 // Given an initial board where it's user's (first) turn, and opponent asked for take back
                 await prepareStartedGameFor(USER_OPPONENT);
                 tick(1);
@@ -826,7 +824,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 const ALTERNATIVE_MOVE_ENCODED: number = QuartoMove.encoder.encodeNumber(ALTERNATIVE_MOVE);
                 await doMove(ALTERNATIVE_MOVE, true);
 
-                // Then partDao should be updated without including remainingMsFor(any)
+                // Then partDAO should be updated without including remainingMsFor(any)
                 expect(partDAO.update).toHaveBeenCalledOnceWith('joinerId', {
                     turn: 1,
                     listMoves: [ALTERNATIVE_MOVE_ENCODED],
@@ -837,7 +835,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             }));
         });
         describe('User given take back during opponent turn', () => {
-            it('should move board back one turn and call switchPlayer', fakeAsync(async() => {
+            it('should move board back one turn and call switchPlayer (for creator)', fakeAsync(async() => {
                 // Given an initial board where it's opponent's [second] turn, and user just asked for take back
                 await prepareStartedGameFor(USER_CREATOR);
                 tick(1);
@@ -888,7 +886,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 const ALTERNATIVE_MOVE_ENCODED: number = QuartoMove.encoder.encodeNumber(ALTERNATIVE_MOVE);
                 await doMove(ALTERNATIVE_MOVE, true);
 
-                // Then partDao should be updated without including remainingMsFor(any)
+                // Then partDAO should be updated without including remainingMsFor(any)
                 expect(partDAO.update).toHaveBeenCalledOnceWith('joinerId', {
                     turn: 1,
                     listMoves: [ALTERNATIVE_MOVE_ENCODED],
@@ -906,14 +904,17 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             componentTestUtils.detectChanges();
         }
         it('should send draw request when player asks to', fakeAsync(async() => {
+            // Given any board
             await setup();
             spyOn(partDAO, 'update').and.callThrough();
 
+            // When clicking the propose draw button
             await componentTestUtils.clickElement('#proposeDrawButton');
+
+            // Then a request of draw proposition should have been sent
             expect(partDAO.update).toHaveBeenCalledWith('joinerId', {
                 request: Request.drawProposed(Player.ZERO),
             });
-
             tick(wrapper.joiner.maximalMoveDuration * 1000);
         }));
         it('should forbid to propose to draw while draw request is waiting', fakeAsync(async() => {
@@ -934,18 +935,22 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(wrapper.joiner.maximalMoveDuration * 1000);
         }));
         it('should finish the game after accepting a proposed draw', fakeAsync(async() => {
+            // Given a part on which a draw has been proposed
             await setup();
             await receiveRequest(Request.drawProposed(Player.ONE));
-
             spyOn(partDAO, 'update').and.callThrough();
-            await componentTestUtils.clickElement('#acceptDrawButton');
 
+            // When accepting the drawn
+            await componentTestUtils.clickElement('#acceptDrawButton');
             tick(1);
+
+            // Then a request indicating game is an agreed draw should be sent
             expect(partDAO.update).toHaveBeenCalledWith('joinerId', {
-                result: MGPResult.AGREED_DRAW.value,
+                result: MGPResult.AGREED_DRAW_BY_ZERO.value,
                 request: null,
             });
-
+            componentTestUtils.expectElementToExist('#youAgreedToDrawIndicator');
+            expectGameToBeOver();
             tick(wrapper.joiner.maximalMoveDuration * 1000);
         }));
         it('should finish the game when opponent accepts our proposed draw', fakeAsync(async() => {
@@ -956,15 +961,13 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // when draw is accepted
             spyOn(partDAO, 'update').and.callThrough();
             await receivePartDAOUpdate({
-                result: MGPResult.AGREED_DRAW.value,
+                result: MGPResult.AGREED_DRAW_BY_ONE.value,
                 request: null,
             });
 
             // then game should be over
             expectGameToBeOver();
-            expect(componentTestUtils.findElement('#agreedDrawIndicator'))
-                .withContext('Component should show it is an agreed draw.')
-                .toBeTruthy();
+            componentTestUtils.expectElementToExist('#yourOpponentAgreedToDrawIndicator');
             expect(partDAO.update).toHaveBeenCalledTimes(1);
         }));
         it('should send refusal when player asks to', fakeAsync(async() => {
@@ -1261,25 +1264,15 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             spyOn(partDAO, 'update').and.callThrough();
             tick(1);
 
-            console.log('>>> base', wrapper.chronoZeroTurn.remainingMs);
             await receivePartDAOUpdate({
                 request: Request.turnTimeAdded(Player.ZERO),
             });
             componentTestUtils.detectChanges();
 
             // then endgame should happend later
-            console.log('ZERO TURN post-add', wrapper.chronoZeroTurn.remainingMs);
             tick(wrapper.joiner.maximalMoveDuration * 1000);
-            console.log('ZERO TURN minus turn', wrapper.chronoZeroTurn.remainingMs);
             expect(componentTestUtils.wrapper.endGame).withContext('game should not be finished yet').toBeFalse();
-            tick(10 * 1000);
-            console.log('ZERO TURN minus first third of bonus time', wrapper.chronoZeroTurn.remainingMs);
-            tick(10 * 1000);
-            console.log('ZERO TURN minus second third of bonus time', wrapper.chronoZeroTurn.remainingMs);
-            tick(9 * 1000);
-            console.log('ZERO TURN minus 9/10th of bonus time', wrapper.chronoZeroTurn.remainingMs);
-            tick(1 * 1000);
-            console.log('ZERO TURN minus last bonus second', wrapper.chronoZeroTurn.remainingMs);
+            tick(30 * 1000);
             expectGameToBeOver();
         }));
     });
@@ -1786,6 +1779,24 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             for (const name of forbiddenFunctionNames) {
                 expect(wrapper[name]()).toBeFalse();
             }
+            tick(wrapper.joiner.maximalMoveDuration * 1000);
+        }));
+        it('should display that the game is a draw', fakeAsync(async() => {
+            // Given a part that the two player agreed to draw
+            await prepareStartedGameFor(new AuthUser(MGPOptional.ofNullable(OBSERVER.username),
+                                                     MGPOptional.of('observer@home'),
+                                                     true));
+            spyOn(componentTestUtils.wrapper as OnlineGameWrapperComponent, 'startCountDownFor').and.callFake(() => null);
+            await receiveRequest(Request.drawProposed(Player.ONE));
+            await receivePartDAOUpdate({
+                result: MGPResult.AGREED_DRAW_BY_ZERO.value,
+                request: null,
+            });
+
+            // When displaying the board
+            // Then the text should indicate player have agreed to draw
+            componentTestUtils.expectElementToExist('#playersAgreedToDraw');
+            expectGameToBeOver();
             tick(wrapper.joiner.maximalMoveDuration * 1000);
         }));
     });

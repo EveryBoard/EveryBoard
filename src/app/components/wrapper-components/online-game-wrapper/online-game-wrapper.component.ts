@@ -180,12 +180,9 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     }
     private async onCurrentPartUpdate(update: ICurrentPartId): Promise<void> {
         const part: Part = new Part(update.doc);
-        display(OnlineGameWrapperComponent.VERBOSE, { OnlineGameWrapperComponent_onCurrentPartUpdate: {
-            before: this.currentPart,
-            then: update.doc,
-            before_part_turn: part.doc.turn,
-            before_state_turn: this.gameComponent.rules.node.gameState.turn,
-            nbPlayedMoves: part.doc.listMoves.length,
+        display(OnlineGameWrapperComponent.VERBOSE || true, { OnlineGameWrapperComponent_onCurrentPartUpdate: {
+            before: this.currentPart, then: update.doc, before_part_turn: part.doc.turn,
+            before_state_turn: this.gameComponent.rules.node.gameState.turn, nbPlayedMoves: part.doc.listMoves.length,
         } });
         const updateType: UpdateType = this.getUpdateType(part);
         const turn: number = update.doc.turn;
@@ -380,7 +377,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         const currentPart: Part = this.currentPart;
         const player: Player = Player.fromTurn(currentPart.doc.turn);
         this.endGame = true;
-        const lastMoveResult: MGPResult[] = [MGPResult.VICTORY, MGPResult.DRAW];
+        const lastMoveResult: MGPResult[] = [MGPResult.VICTORY, MGPResult.HARD_DRAW];
         const endGameIsMove: boolean = lastMoveResult.some((r: MGPResult) => r.value === currentPart.doc.result);
         if (endGameIsMove) {
             this.doNewMoves(this.currentPart);
@@ -388,7 +385,9 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             const endGameResults: MGPResult[] = [
                 MGPResult.RESIGN,
                 MGPResult.TIMEOUT,
-                MGPResult.AGREED_DRAW,
+                MGPResult.HARD_DRAW,
+                MGPResult.AGREED_DRAW_BY_ZERO,
+                MGPResult.AGREED_DRAW_BY_ONE,
             ];
             const resultIsIncluded: boolean =
                 endGameResults.some((result: MGPResult) => result.value === currentPart.doc.result);
@@ -559,7 +558,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         this.gameComponent.updateBoard();
     }
     public setPlayersDatas(updatedICurrentPart: Part): void {
-        display(OnlineGameWrapperComponent.VERBOSE, { OnlineGameWrapper_setPlayersDatas: updatedICurrentPart });
+        display(OnlineGameWrapperComponent.VERBOSE ||true, { OnlineGameWrapper_setPlayersDatas: updatedICurrentPart });
         this.players = [
             MGPOptional.of(updatedICurrentPart.doc.playerZero),
             MGPOptional.ofNullable(updatedICurrentPart.doc.playerOne),
@@ -672,7 +671,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         this.gameService.proposeDraw(this.currentPartId, this.getPlayer());
     }
     public acceptDraw(): void {
-        this.gameService.acceptDraw(this.currentPartId);
+        const user: Player = Player.of(this.observerRole);
+        this.gameService.acceptDraw(this.currentPartId, user);
     }
     public refuseDraw(): void {
         const player: Player = Player.of(this.observerRole);
