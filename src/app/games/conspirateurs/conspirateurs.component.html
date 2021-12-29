@@ -32,11 +32,12 @@
               class="base no-fill mid-stroke"
         />
     </g>
-    <rect [attr.x]="STROKE_WIDTH * 2 + (SPACE_SIZE * viewInfo.centralZoneStart.x) + STROKE_WIDTH"
-          [attr.y]="STROKE_WIDTH * 2 + (SPACE_SIZE * viewInfo.centralZoneStart.y) + STROKE_WIDTH"
-          [attr.width]="viewInfo.centralZoneSize.x * SPACE_SIZE - STROKE_WIDTH * 4"
-          [attr.height]="viewInfo.centralZoneSize.y * SPACE_SIZE - STROKE_WIDTH * 4"
-          class="base no-fill mid-stroke"
+    <rect *ngIf="viewInfo.dropPhase"
+          [attr.x]="(SPACE_SIZE * viewInfo.centralZoneStart.x) + STROKE_WIDTH"
+          [attr.y]="(SPACE_SIZE * viewInfo.centralZoneStart.y) + STROKE_WIDTH"
+          [attr.width]="viewInfo.centralZoneSize.x * SPACE_SIZE"
+          [attr.height]="viewInfo.centralZoneSize.y * SPACE_SIZE"
+          class="base no-fill highlighted mid-stroke"
     />
     <g *ngFor="let coord of viewInfo.victory">
         <rect (click)="onClick(coord)"

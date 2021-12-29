@@ -3,6 +3,7 @@ import { GameComponent } from 'src/app/components/game-components/game-component
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -15,6 +16,7 @@ interface ViewInfo {
     boardInfo: SquareInfo[][],
     centralZoneStart: Coord,
     centralZoneSize: Vector,
+    dropPhase: boolean,
     shelters: Coord[],
     victory: Coord[],
 }
@@ -33,6 +35,7 @@ interface SquareInfo {
 })
 export class ConspirateursComponent extends GameComponent<ConspirateursRules, ConspirateursMove, ConspirateursState> {
     public viewInfo: ViewInfo = {
+        dropPhase: true,
         boardInfo: [],
         centralZoneStart: new Coord(4, 6),
         centralZoneSize: new Coord(9, 5),
@@ -61,6 +64,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
     }
     private updateViewInfo() {
         const state: ConspirateursState = this.getState();
+        this.viewInfo.dropPhase = state.isDropPhase();
         this.viewInfo.boardInfo = [];
         for (let y: number = 0; y < ConspirateursState.HEIGHT; y++) {
             this.viewInfo.boardInfo.push([]);
@@ -83,7 +87,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
                 const jumpCurrent: Coord = jump.getEndingCoord();
                 this.viewInfo.boardInfo[jumpStart.y][jumpStart.x].hasPiece = false;
                 this.viewInfo.boardInfo[jumpCurrent.y][jumpCurrent.x].pieceClasses =
-                    [this.getPlayerClass(this.getCurrentPlayer())];
+                    [this.getPlayerClass(this.getCurrentPlayer()), 'selected'];
                 this.viewInfo.boardInfo[jumpCurrent.y][jumpCurrent.x].hasPiece = true;
                 for (const coord of jump.coords) {
                     this.viewInfo.boardInfo[coord.y][coord.x].squareClasses.push('moved');
@@ -113,41 +117,69 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         this.updateBoard();
     }
     public async onClick(coord: Coord): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = this.canUserPlay('#click_' + coord.x + '_' + coord.y);
+        if (clickValidity.isFailure()) {
+            return this.cancelMove(clickValidity.getReason());
+        }
+
         const state: ConspirateursState = this.getState();
         if (this.jumpInConstruction.isPresent()) {
-            const jump: ConspirateursMoveJump = this.jumpInConstruction.get();
-            if (coord.equals(jump.getEndingCoord())) {
-                return this.chooseMove(jump, state);
-            } else {
-                const newJump: MGPFallible<ConspirateursMoveJump> = jump.addJump(coord);
-                if (newJump.isFailure()) {
-                    return this.cancelMove(newJump.getReason());
-                }
-                this.jumpInConstruction = MGPOptional.of(newJump.get());
-            }
-        }
-        if (this.selected.isPresent()) {
-            const selected: Coord = this.selected.get();
-            if (selected.getDistance(coord) === 1) {
-                const move: MGPFallible<ConspirateursMove> = ConspirateursMoveSimple.of(selected, coord);
-                return this.tryMove(move);
-            } else {
-                const jump: MGPFallible<ConspirateursMoveJump> = ConspirateursMoveJump.of([selected, coord]);
-                if (jump.isFailure()) {
-                    return this.cancelMove(jump.getReason());
-                }
-                this.jumpInConstruction = MGPOptional.of(jump.get());
-            }
+            return this.constructJump(coord);
+        } else if (this.selected.isPresent()) {
+            return this.selectNextCoord(coord);
+        } else if (state.isDropPhase()) {
+            const move: MGPFallible<ConspirateursMove> = ConspirateursMoveDrop.of(coord);
+            return this.tryMove(move);
         } else {
-            console.log(state.isDropPhase())
-            if (state.isDropPhase()) {
-                const move: MGPFallible<ConspirateursMove> = ConspirateursMoveDrop.of(coord);
-                return this.tryMove(move);
-            } else {
+            if (state.getPieceAt(coord) === this.getCurrentPlayer()) {
                 this.selected = MGPOptional.of(coord);
+                this.updateViewInfo();
+                return MGPValidation.SUCCESS;
+            } else {
+                return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
             }
         }
-        return MGPValidation.SUCCESS;
+    }
+    private async constructJump(nextTarget: Coord): Promise<MGPValidation> {
+        const jump: ConspirateursMoveJump = this.jumpInConstruction.get();
+        const state: ConspirateursState = this.getState();
+        if (nextTarget.equals(jump.getEndingCoord())) {
+            // double clicking on an early destination performs the jump
+            return this.chooseMove(jump, state);
+        } else {
+            const newJump: MGPFallible<ConspirateursMoveJump> = jump.addJump(nextTarget);
+            if (newJump.isFailure()) {
+                return this.cancelMove(newJump.getReason());
+            }
+            const jumpLegality: MGPFallible<void> = this.rules.jumpLegality(newJump.get(), state);
+            if (jumpLegality.isFailure()) {
+                return this.cancelMove(jumpLegality.getReason());
+            }
+            return this.updateJump(newJump.get());
+        }
+    }
+    private async updateJump(jump: ConspirateursMoveJump): Promise<MGPValidation> {
+        const state: ConspirateursState = this.getState();
+        if (this.rules.jumpHasPossibleNextTargets(jump, state)) {
+            this.jumpInConstruction = MGPOptional.of(jump);
+            this.updateViewInfo();
+            return MGPValidation.SUCCESS;
+        } else {
+            return this.chooseMove(jump, state);
+        }
+    }
+    private async selectNextCoord(coord: Coord): Promise<MGPValidation> {
+        const selected: Coord = this.selected.get();
+        if (selected.getDistance(coord) === 1) {
+            const move: MGPFallible<ConspirateursMove> = ConspirateursMoveSimple.of(selected, coord);
+            return this.tryMove(move);
+        } else {
+            const jump: MGPFallible<ConspirateursMoveJump> = ConspirateursMoveJump.of([selected, coord]);
+            if (jump.isFailure()) {
+                return this.cancelMove(jump.getReason());
+            }
+            return this.updateJump(jump.get());
+        }
     }
     private async tryMove(move: MGPFallible<ConspirateursMove>): Promise<MGPValidation> {
         if (move.isFailure()) {

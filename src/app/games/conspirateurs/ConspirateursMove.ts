@@ -6,6 +6,7 @@ import { MoveCoord, MoveCoordEncoder } from 'src/app/jscaip/MoveCoord';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPSet } from 'src/app/utils/MGPSet';
 import { assert, JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 import { ConspirateursFailure } from './ConspirateursFailure';
 import { ConspirateursState } from './ConspirateursState';
@@ -79,7 +80,7 @@ export class ConspirateursMoveSimple extends MoveCoordToCoord {
 }
 export class ConspirateursMoveJump extends Move {
     public static encoder: MoveEncoder<ConspirateursMoveJump> = new class extends MoveEncoder<ConspirateursMoveJump> {
-        private coordEncoder: NumberEncoder<Coord> =
+        private readonly coordEncoder: NumberEncoder<Coord> =
             Coord.numberEncoder(ConspirateursState.WIDTH, ConspirateursState.HEIGHT);
         public encodeMove(move: ConspirateursMoveJump): JSONValueWithoutArray {
             return {
@@ -100,12 +101,16 @@ export class ConspirateursMoveJump extends Move {
         for (let i: number = 1; i < coords.length; i++) {
             const jumpDirection: MGPFallible<Direction> = coords[i - 1].getDirectionToward(coords[i]);
             if (jumpDirection.isFailure()) {
-                return MGPFallible.failure('ConspirateursJump: invalid jump direction');
+                return MGPFallible.failure(ConspirateursFailure.INVALID_JUMP());
             }
             const jumpDistance: number = coords[i-1].getDistance(coords[i]);
             if (jumpDistance !== 2) {
-                return MGPFallible.failure('ConspirateursMoveJump requires jumps to be of a distance of 2');
+                return MGPFallible.failure(ConspirateursFailure.INVALID_JUMP());
             }
+        }
+        const uniqueCoords: MGPSet<Coord> = new MGPSet(coords);
+        if (uniqueCoords.size() !== coords.length) {
+            return MGPFallible.failure(ConspirateursFailure.SAME_LOCATION_VISITED_IN_JUMP());
         }
         return MGPFallible.success(new ConspirateursMoveJump(coords));
     }
