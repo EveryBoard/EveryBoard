@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
 import { Router } from '@angular/router';
 import { fakeAsync, TestBed } from '@angular/core/testing';

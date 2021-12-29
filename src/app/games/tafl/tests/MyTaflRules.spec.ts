@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { TaflRules } from '../TaflRules';
 import { MyTaflMove } from './MyTaflMove.spec';
 import { MyTaflState } from './MyTaflState.spec';

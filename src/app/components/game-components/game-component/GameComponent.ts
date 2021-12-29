@@ -72,11 +72,11 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
     public cancelMove(reason?: string): MGPValidation {
         this.cancelMoveAttempt();
         this.cancelMoveOnWrapper(reason);
-        if (reason) {
+        if (reason == null) {
+            return MGPValidation.SUCCESS;
+        } else {
             this.messageDisplayer.gameMessage(reason);
             return MGPValidation.failure(reason);
-        } else {
-            return MGPValidation.SUCCESS;
         }
     }
     public cancelMoveAttempt(): void {

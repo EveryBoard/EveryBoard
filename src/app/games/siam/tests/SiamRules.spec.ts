@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { SiamLegalityInformation, SiamNode, SiamRules } from '../SiamRules';
 import { SiamMinimax } from '../SiamMinimax';
 import { SiamMove } from '../SiamMove';

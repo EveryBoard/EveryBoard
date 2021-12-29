@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { IJoinerId, IJoiner } from 'src/app/domain/ijoiner';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { ObservableSubject } from 'src/app/utils/tests/ObservableSubject.spec';

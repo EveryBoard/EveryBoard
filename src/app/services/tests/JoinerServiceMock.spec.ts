@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { FirstPlayer, IJoiner, IJoinerId, PartStatus, PartType } from 'src/app/domain/ijoiner';
 import { JoinerDAO } from 'src/app/dao/JoinerDAO';
 import { display } from 'src/app/utils/utils';

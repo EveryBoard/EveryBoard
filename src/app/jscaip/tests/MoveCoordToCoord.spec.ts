@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { Coord } from '../Coord';
 import { Direction } from '../Direction';

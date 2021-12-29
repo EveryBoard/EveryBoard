@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { MGPOptional } from 'src/app/utils/MGPOptional';

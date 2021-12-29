@@ -229,7 +229,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
     }
     public getUpdateType(update: Part): UpdateType {
-        const currentPartDoc: IPart | null = this.currentPart ? this.currentPart.doc : null;
+        const currentPartDoc: IPart | null = this.currentPart != null ? this.currentPart.doc : null;
         const diff: ObjectDifference = ObjectDifference.from(currentPartDoc, update.doc);
         display(OnlineGameWrapperComponent.VERBOSE, { diff });
         const nbDiffs: number = diff.countChanges();
@@ -237,7 +237,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             return UpdateType.DUPLICATE;
         }
         if (update.doc.request) {
-            if (update.doc.request.code === 'TakeBackAccepted' && diff.removed['lastMoveTime']) {
+            if (update.doc.request.code === 'TakeBackAccepted' && diff.removed['lastMoveTime'] != null) {
                 return UpdateType.ACCEPT_TAKE_BACK_WITHOUT_TIME;
             } else {
                 return UpdateType.REQUEST;
@@ -275,7 +275,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         return UpdateType.STARTING_DOC;
     }
     public isMove(diff: ObjectDifference, nbDiffs: number): boolean {
-        if (diff.modified['listMoves'] && diff.modified['turn']) {
+        if (diff.modified['listMoves'] != null && diff.modified['turn'] != null) {
             const modifOnListMovesAndTurn: number = 2;
             const lastMoveTimeModified: number = diff.isPresent('lastMoveTime').present ? 1 : 0;
             const scoreZeroUpdated: number = diff.isPresent('scorePlayerZero').present ? 1 : 0;
@@ -774,10 +774,10 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         return true;
     }
     public ngOnDestroy(): void {
-        if (this.routerEventsSub && this.routerEventsSub.unsubscribe) {
+        if (this.routerEventsSub != null && this.routerEventsSub.unsubscribe != null) {
             this.routerEventsSub.unsubscribe();
         }
-        if (this.userSub && this.userSub.unsubscribe) {
+        if (this.userSub != null && this.userSub.unsubscribe != null) {
             this.userSub.unsubscribe();
         }
         if (this.gameStarted === true) {

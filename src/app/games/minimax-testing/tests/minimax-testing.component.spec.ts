@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 import { MinimaxTestingComponent } from '../minimax-testing.component';
 import { MinimaxTestingMove } from 'src/app/games/minimax-testing/MinimaxTestingMove';

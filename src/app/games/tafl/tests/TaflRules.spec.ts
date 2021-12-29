@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { Minimax } from 'src/app/jscaip/Minimax';
