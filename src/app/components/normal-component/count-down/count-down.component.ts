@@ -25,23 +25,12 @@ export class CountDownComponent implements OnInit, OnDestroy {
 
     @Output() outOfTimeAction: EventEmitter<void> = new EventEmitter<void>();
 
-    public readonly DANGER_TIME_EVEN: { [key: string]: string } = {
-        'color': 'red',
-        'font-weight': 'bold',
-    };
-    public readonly DANGER_TIME_ODD: { [key: string]: string } = {
-        'color': 'white',
-        'font-weight': 'bold',
-        'background-color': 'red',
-    };
-    public readonly PASSIVE_STYLE: { [key: string]: string } = {
-        'color': 'lightgrey',
-        'background-color': 'darkgrey',
-        'font-size': 'italic',
-    };
-    public readonly SAFE_TIME: { [key: string]: string } = { color: 'black' };
+    public readonly DANGER_TIME_EVEN: string = 'has-background-danger has-text-white';
+    public readonly DANGER_TIME_ODD: string = 'has-background-warning has-text-white';
+    public readonly PASSIVE_STYLE: string = 'has-text-passive is-italic';
+    public readonly SAFE_TIME: string = '';
 
-    public style: { [key: string]: string } = this.SAFE_TIME;
+    public style: string = this.SAFE_TIME;
 
     public ngOnInit(): void {
         display(CountDownComponent.VERBOSE, 'CountDownComponent.ngOnInit (' + this.debugName + ')');
@@ -132,7 +121,7 @@ export class CountDownComponent implements OnInit, OnDestroy {
     public isStarted(): boolean {
         return this.started;
     }
-    public getTimeStyle(): { [key: string]: string } {
+    public getTimeClass(): string {
         if (this.active === false) {
             return this.PASSIVE_STYLE;
         }
@@ -150,7 +139,7 @@ export class CountDownComponent implements OnInit, OnDestroy {
         const now: number = Date.now();
         this.remainingMs -= (now - this.startTime);
         this.changeDuration(this.remainingMs);
-        this.style = this.getTimeStyle();
+        this.style = this.getTimeClass();
         this.startTime = now;
         if (!this.isPaused) {
             this.countSeconds();

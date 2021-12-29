@@ -12,6 +12,7 @@ import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisp
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { ReversiTutorial } from './ReversiTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { assert } from 'src/app/utils/utils';
 
 @Component({
     selector: 'app-reversi',
@@ -93,6 +94,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
         return this.getPlayerClass(this.board[y][x]);
     }
     public async pass(): Promise<MGPValidation> {
+        assert(this.canPass, 'ReversiComponent: pass() can only be called if canPass is true');
         return this.onClick(ReversiMove.PASS.coord.x, ReversiMove.PASS.coord.y);
     }
 }

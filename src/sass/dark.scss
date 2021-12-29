@@ -75,8 +75,23 @@ $red-invert: white;
   }
 }
 
+.modal-card-head, .is-primary {
+    background-color: $primary;
+}
+
+.button.is-primary.is-light {
+    color: white;
+}
+
+.button[disabled], fieldset[disabled] .button {
+    background-color: #111;
+}
+
+.has-text-passive {
+    color: #555;
+}
+
 /* Show the page only after the CSS has been loaded */
 html, body {
     display: block;
 }
-

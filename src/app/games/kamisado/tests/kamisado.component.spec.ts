@@ -47,7 +47,7 @@ describe('KamisadoComponent', () => {
         expect(componentTestUtils.getComponent().chosen.isAbsent()).toBeTrue();
     }));
     it('should allow to pass if stuck position', fakeAsync(async() => {
-        // Given a board with a stuck piece being the one that has to play
+        // Given a board with a stuck piece being the one that has to move
         const board: Table<KamisadoPiece> = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -61,7 +61,7 @@ describe('KamisadoComponent', () => {
         const state: KamisadoState =
             new KamisadoState(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
 
-        // When displayign the board
+        // When displaying the board
         componentTestUtils.setupState(state);
 
         // Then the player can pass
