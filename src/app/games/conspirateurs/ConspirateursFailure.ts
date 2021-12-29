@@ -11,7 +11,7 @@ export class ConspirateursFailure {
 
     public static MUST_DROP_IN_CENTRAL_ZONE: Localized = () => $localize`A drop must occur in the central zone of the board.`;
 
-    public static INVALID_JUMP: Localized = () => $localize`This jump is invalid: to jump, a piece must go over another piece, and land two squares from its original position.`;
+    public static INVALID_JUMP: Localized = () => $localize`A jump must land two squares from its original positiond, and be done in a straight line in any direction.`;
 
     public static SAME_LOCATION_VISITED_IN_JUMP: Localized = () => $localize`You are visiting the same location twice in a jump, you are not allowed to do so.`;
 }

@@ -129,7 +129,7 @@ fdescribe('ConspirateursComponent', () => {
             await testUtils.expectClickSuccess('#click_5_2');
             // When clicking on an invalid jump target
             // Then the click fails
-            await testUtils.expectClickFailure('#click_5_0', ConspirateursFailure.INVALID_JUMP());
+            await testUtils.expectClickFailure('#click_5_0', ConspirateursFailure.MUST_JUMP_OVER_PIECES());
         }));
     });
 });

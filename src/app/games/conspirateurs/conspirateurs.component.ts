@@ -8,6 +8,7 @@ import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisp
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { assert } from 'src/app/utils/utils';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveEncoder, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
 import { ConspirateursRules } from './ConspirateursRules';
 import { ConspirateursState } from './ConspirateursState';
@@ -129,7 +130,8 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
             return this.selectNextCoord(coord);
         } else if (state.isDropPhase()) {
             const move: MGPFallible<ConspirateursMove> = ConspirateursMoveDrop.of(coord);
-            return this.tryMove(move);
+            assert(move.isSuccess(), 'ConspirateursMove should be valid by construction');
+            return this.chooseMove(move.get(), state);
         } else {
             if (state.getPieceAt(coord) === this.getCurrentPlayer()) {
                 this.selected = MGPOptional.of(coord);
@@ -172,7 +174,8 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         const selected: Coord = this.selected.get();
         if (selected.getDistance(coord) === 1) {
             const move: MGPFallible<ConspirateursMove> = ConspirateursMoveSimple.of(selected, coord);
-            return this.tryMove(move);
+            assert(move.isSuccess(), 'ConspirateursMove should be correct by construction');
+            return this.chooseMove(move.get(), this.getState());
         } else {
             const jump: MGPFallible<ConspirateursMoveJump> = ConspirateursMoveJump.of([selected, coord]);
             if (jump.isFailure()) {
@@ -180,11 +183,5 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
             }
             return this.updateJump(jump.get());
         }
-    }
-    private async tryMove(move: MGPFallible<ConspirateursMove>): Promise<MGPValidation> {
-        if (move.isFailure()) {
-            return this.cancelMove(move.getReason());
-        }
-        return this.chooseMove(move.get(), this.getState());
     }
 }

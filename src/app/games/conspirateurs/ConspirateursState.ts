@@ -9,6 +9,10 @@ export class ConspirateursState extends GameStateWithTable<Player> {
 
     public static readonly HEIGHT: number = 17;
 
+    public static readonly CENTRAL_ZONE_TOP_LEFT: Coord = new Coord(4, 6);
+
+    public static readonly CENTRAL_ZONE_BOTTOM_RIGHT: Coord = new Coord(12, 10);
+
     private static readonly SHELTERS_INDICES: readonly number[] = [0, 1, 3, 5, 7, 8, 9, 11, 13, 15, 16];
 
     public static ALL_SHELTERS: Coord[] =

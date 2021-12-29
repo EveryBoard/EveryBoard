@@ -5,6 +5,7 @@ import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { assert } from 'src/app/utils/utils';
 import { ConspirateursFailure } from './ConspirateursFailure';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
 import { ConspirateursState } from './ConspirateursState';
@@ -93,29 +94,40 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         }
         return MGPFallible.success(undefined);
     }
-    public nextJumpTargets(jump: ConspirateursMoveJump, state: ConspirateursState): ConspirateursMoveJump[] {
-        const ending: Coord = jump.getEndingCoord();
+    public jumpTargetsFrom(start: Coord): Coord[] {
         const targets: Coord[] = [
-            new Coord(ending.x + 1, ending.y),
-            new Coord(ending.x - 1, ending.y),
-            new Coord(ending.x, ending.y + 1),
-            new Coord(ending.x, ending.y - 1),
-            new Coord(ending.x + 1, ending.y + 1),
-            new Coord(ending.x + 1, ending.y - 1),
-            new Coord(ending.x - 1, ending.y + 1),
-            new Coord(ending.x - 1, ending.y - 1),
+            new Coord(start.x + 2, start.y),
+            new Coord(start.x - 2, start.y),
+            new Coord(start.x, start.y + 2),
+            new Coord(start.x, start.y - 2),
+            new Coord(start.x + 2, start.y + 2),
+            new Coord(start.x + 2, start.y - 2),
+            new Coord(start.x - 2, start.y + 2),
+            new Coord(start.x - 2, start.y - 2),
         ];
-        const nextJumps: ConspirateursMoveJump[] = [];
+        const validTargets: Coord[] = [];
         for (const target of targets) {
-            const move: MGPFallible<ConspirateursMoveJump> = jump.addJump(target);
+            const move: MGPFallible<ConspirateursMoveJump> = ConspirateursMoveJump.of([start, target]);
             if (move.isSuccess()) {
+                validTargets.push(target);
+            }
+        }
+        return validTargets;
+    }
+    public nextJumps(jump: ConspirateursMoveJump, state: ConspirateursState): ConspirateursMoveJump[] {
+        const ending: Coord = jump.getEndingCoord();
+        const nextJumps: ConspirateursMoveJump[] = [];
+        for (const target of this.jumpTargetsFrom(ending)) {
+            const move: MGPFallible<ConspirateursMoveJump> = jump.addJump(target);
+            assert(move.isSuccess(), 'move should be success by construction');
+            if (this.jumpLegality(move.get(), state).isSuccess()) {
                 nextJumps.push(move.get());
             }
         }
         return nextJumps;
     }
     public jumpHasPossibleNextTargets(jump: ConspirateursMoveJump, state: ConspirateursState): boolean {
-        return this.nextJumpTargets(jump, state).length > 0;
+        return this.nextJumps(jump, state).length > 0;
     }
     public getGameStatus(node: ConspirateursNode): GameStatus {
         const state: ConspirateursState = node.gameState;
