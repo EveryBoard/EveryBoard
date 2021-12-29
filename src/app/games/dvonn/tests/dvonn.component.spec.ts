@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { DvonnComponent } from '../dvonn.component';
 import { Coord } from 'src/app/jscaip/Coord';
 import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
@@ -27,14 +28,20 @@ describe('DvonnComponent', () => {
         expect(componentTestUtils.getComponent()).withContext('DvonnComponent should be created').toBeDefined();
     });
     it('should not allow to pass initially', fakeAsync(async() => {
-        expect((await componentTestUtils.getComponent().pass()).isFailure()).toBeTrue();
+        // Given the initial state
+        // Then the player cannot pass
+        componentTestUtils.expectPassToBeForbidden();
     }));
     it('should allow valid moves', fakeAsync(async() => {
+        // Given that the user has selected a valid piece
         await componentTestUtils.expectClickSuccess('#click_2_0');
+        // When the user selects a valid destination
+        // Then the move is made
         const move: DvonnMove = DvonnMove.of(new Coord(2, 0), new Coord(2, 1));
         await componentTestUtils.expectMoveSuccess('#click_2_1', move);
     }));
     it('should allow to pass if stuck position', fakeAsync(async() => {
+        // Given a state where the player can't make a move
         const board: Table<DvonnPieceStack> = [
             [__, __, WW, __, __, __, __, __, __, __, __],
             [__, __, D_, __, __, __, __, __, __, __, __],
@@ -43,9 +50,11 @@ describe('DvonnComponent', () => {
             [__, __, __, __, __, __, __, __, __, __, __],
         ];
         const state: DvonnState = new DvonnState(board, 0, false);
+        // When it is displayed
         componentTestUtils.setupState(state);
-        expect(componentTestUtils.getComponent().canPass).toBeTrue();
-        expect((await componentTestUtils.getComponent().pass()).isSuccess()).toBeTrue();
+        // Then the player can pass
+        const move: DvonnMove = DvonnMove.PASS;
+        componentTestUtils.expectPassSuccess(move);
     }));
     it('should forbid choosing an incorrect piece', fakeAsync(async() => {
         // select black piece (but white plays first)

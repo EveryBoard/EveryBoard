@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 import { QuixoComponent } from '../quixo.component';
 import { QuixoMove } from 'src/app/games/quixo/QuixoMove';

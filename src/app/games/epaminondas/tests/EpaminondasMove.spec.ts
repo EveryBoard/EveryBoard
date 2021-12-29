@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { Direction } from 'src/app/jscaip/Direction';
 import { EpaminondasState } from '../EpaminondasState';
 import { EpaminondasRules } from '../EpaminondasRules';

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { GoMove } from '../GoMove';
 import { Phase, GoState, GoPiece } from '../GoState';
 import { Table } from 'src/app/utils/ArrayUtils';

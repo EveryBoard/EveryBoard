@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { UserSettingsService } from '../UserSettingsService';
 

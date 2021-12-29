@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { ReversiComponent } from '../reversi.component';
 import { ReversiMove } from 'src/app/games/reversi/ReversiMove';
 import { ReversiState } from 'src/app/games/reversi/ReversiState';
@@ -53,7 +54,7 @@ describe('ReversiComponent', () => {
     }));
     it('should fake a click on ReversiMove.PASS.coord to pass', fakeAsync(async() => {
         // Given a fictitious board on which player can only pass
-        componentTestUtils.setupState(new ReversiState([
+        const state: ReversiState = new ReversiState([
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -62,9 +63,12 @@ describe('ReversiComponent', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [O, X, _, _, _, _, _, _],
-        ], 1));
+        ], 1);
 
-        // when passing, it should be legal
-        expect((await componentTestUtils.getComponent().pass()).isSuccess()).toBeTrue();
+        // when displaying the board
+        componentTestUtils.setupState(state);
+
+        // then the player can pass
+        await componentTestUtils.expectPassSuccess(ReversiMove.PASS, [1, 1]);
     }));
 });

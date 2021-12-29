@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement, Type } from '@angular/core';
 import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -76,7 +77,9 @@ export class SimpleComponentTestUtils<T> {
 
     private component: T;
 
-    public static async create<T>(componentType: Type<T>): Promise<SimpleComponentTestUtils<T>> {
+    public static async create<T>(componentType: Type<T>, activatedRouteStub?: ActivatedRouteStub)
+    : Promise<SimpleComponentTestUtils<T>>
+    {
         await TestBed.configureTestingModule({
             imports: [
                 RouterTestingModule.withRoutes([
@@ -96,6 +99,7 @@ export class SimpleComponentTestUtils<T> {
                 CUSTOM_ELEMENTS_SCHEMA,
             ],
             providers: [
+                { provide: ActivatedRoute, useValue: activatedRouteStub },
                 { provide: AuthenticationService, useClass: AuthenticationServiceMock },
                 { provide: PartDAO, useClass: PartDAOMock },
                 { provide: JoinerDAO, useClass: JoinerDAOMock },
@@ -189,7 +193,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
         testUtils.prepareSpies();
         return testUtils;
     }
-    public static async basic<T extends MyGameComponent>(game: string): Promise<ComponentTestUtils<T>> {
+    public static async basic<T extends MyGameComponent>(game?: string): Promise<ComponentTestUtils<T>> {
         const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub(game, 'joinerId');
         await TestBed.configureTestingModule({
             imports: [
@@ -226,6 +230,10 @@ export class ComponentTestUtils<T extends MyGameComponent> {
         this.chooseMoveSpy = spyOn(this.gameComponent, 'chooseMove').and.callThrough();
         this.onLegalUserMoveSpy = spyOn(this.wrapper, 'onLegalUserMove').and.callThrough();
         this.canUserPlaySpy = spyOn(this.gameComponent, 'canUserPlay').and.callThrough();
+    }
+    public expectToBeCreated(): void {
+        expect(this.wrapper).withContext('Wrapper should be created').toBeTruthy();
+        expect(this.getComponent()).withContext('Component should be created').toBeTruthy();
     }
     public detectChanges(): void {
         this.fixture.detectChanges();
@@ -360,6 +368,29 @@ export class ComponentTestUtils<T extends MyGameComponent> {
             this.cancelMoveSpy.calls.reset();
             expect(this.onLegalUserMoveSpy).not.toHaveBeenCalled();
             tick(3000); // needs to be >2999
+        }
+    }
+    public expectPassToBeForbidden(): void {
+        this.expectElementNotToExist('#passButton');
+    }
+    public async expectPassSuccess(move: Move, scores?: readonly [number, number]): Promise<void> {
+        const passButton: DebugElement = this.findElement('#passButton');
+        expect(passButton).withContext('Pass button is expected to be shown, but it is not').toBeTruthy();
+        if (passButton == null) {
+            return;
+        } else {
+            const state: GameState = this.gameComponent.rules.node.gameState;
+            passButton.triggerEventHandler('click', null);
+            await this.fixture.whenStable();
+            this.fixture.detectChanges();
+            if (scores) {
+                expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move, state, scores);
+            } else {
+                expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move, state);
+            }
+            this.chooseMoveSpy.calls.reset();
+            expect(this.onLegalUserMoveSpy).toHaveBeenCalledOnceWith(move, scores);
+            this.onLegalUserMoveSpy.calls.reset();
         }
     }
     public async clickElement(elementName: string): Promise<void> {

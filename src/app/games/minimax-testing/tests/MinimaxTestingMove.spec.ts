@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { MinimaxTestingRules } from '../MinimaxTestingRules';
 import { MinimaxTestingMove } from '../MinimaxTestingMove';
 import { MinimaxTestingState } from '../MinimaxTestingState';

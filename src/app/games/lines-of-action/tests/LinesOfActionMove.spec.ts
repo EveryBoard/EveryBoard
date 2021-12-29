@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 import { MGPFallible } from 'src/app/utils/MGPFallible';

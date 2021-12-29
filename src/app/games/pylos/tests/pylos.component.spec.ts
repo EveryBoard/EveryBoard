@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { PylosComponent } from '../pylos.component';
 import { PylosMove } from 'src/app/games/pylos/PylosMove';
 import { PylosCoord } from 'src/app/games/pylos/PylosCoord';

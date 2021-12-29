@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { PieceThreat } from 'src/app/jscaip/PieceThreat';

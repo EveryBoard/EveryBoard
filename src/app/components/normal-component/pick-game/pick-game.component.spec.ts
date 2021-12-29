@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
