@@ -1,6 +1,6 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 from selenium import webdriver
-
+import os
 from selenium.webdriver.chrome.options import Options
 
 options = Options()

@@ -231,6 +231,10 @@ export class ComponentTestUtils<T extends MyGameComponent> {
         this.onLegalUserMoveSpy = spyOn(this.wrapper, 'onLegalUserMove').and.callThrough();
         this.canUserPlaySpy = spyOn(this.gameComponent, 'canUserPlay').and.callThrough();
     }
+    public expectToBeCreated(): void {
+        expect(this.wrapper).withContext('Wrapper should be created').toBeTruthy();
+        expect(this.getComponent()).withContext('Component should be created').toBeTruthy();
+    }
     public detectChanges(): void {
         this.fixture.detectChanges();
     }
@@ -364,6 +368,29 @@ export class ComponentTestUtils<T extends MyGameComponent> {
             this.cancelMoveSpy.calls.reset();
             expect(this.onLegalUserMoveSpy).not.toHaveBeenCalled();
             tick(3000); // needs to be >2999
+        }
+    }
+    public expectPassToBeForbidden(): void {
+        this.expectElementNotToExist('#passButton');
+    }
+    public async expectPassSuccess(move: Move, scores?: readonly [number, number]): Promise<void> {
+        const passButton: DebugElement = this.findElement('#passButton');
+        expect(passButton).withContext('Pass button is expected to be shown, but it is not').toBeTruthy();
+        if (passButton == null) {
+            return;
+        } else {
+            const state: GameState = this.gameComponent.rules.node.gameState;
+            passButton.triggerEventHandler('click', null);
+            await this.fixture.whenStable();
+            this.fixture.detectChanges();
+            if (scores) {
+                expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move, state, scores);
+            } else {
+                expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move, state);
+            }
+            this.chooseMoveSpy.calls.reset();
+            expect(this.onLegalUserMoveSpy).toHaveBeenCalledOnceWith(move, scores);
+            this.onLegalUserMoveSpy.calls.reset();
         }
     }
     public async clickElement(elementName: string): Promise<void> {
