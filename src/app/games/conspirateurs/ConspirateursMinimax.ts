@@ -68,26 +68,44 @@ export class ConspirateursMinimax extends Minimax<ConspirateursMove, Conspirateu
         let moves: ConspirateursMoveJump[] = [];
         for (const firstTarget of ConspirateursRules.get().jumpTargetsFrom(start)) {
             const jump: ConspirateursMoveJump = ConspirateursMoveJump.of([start, firstTarget]).get();
-            moves.push(jump);
-            moves = moves.concat(this.getListJumpStartingFrom(state, jump));
+            if (ConspirateursRules.get().jumpLegality(jump, state).isSuccess()) {
+                moves.push(jump);
+                moves = moves.concat(this.getListJumpStartingFrom(state, jump));
+            }
         }
         return moves;
     }
     private getListJumpStartingFrom(state: ConspirateursState, jump: ConspirateursMoveJump): ConspirateursMoveJump[] {
         const nextJumps: ConspirateursMoveJump[] = ConspirateursRules.get().nextJumps(jump, state);
-        if (nextJumps === []) {
-            return nextJumps;
-        } else {
-            let jumps: ConspirateursMoveJump[] = [];
-            for (const nextJump of nextJumps) {
-                jumps.push(nextJump);
-                jumps = jumps.concat(this.getListJumpStartingFrom(state, nextJump));
-            }
-            return jumps;
+        let jumps: ConspirateursMoveJump[] = nextJumps;
+        for (const nextJump of nextJumps) {
+            jumps = jumps.concat(this.getListJumpStartingFrom(state, nextJump));
         }
+        return jumps;
     }
     public getBoardValue(node: ConspirateursNode): NodeUnheritance {
-        // Assign a higher value the closer the piece to the 
-        throw new Error('Method not implemented.');
+        const state: ConspirateursState = node.gameState;
+        let score: number = 0;
+        const piecesInShelters: [number, number] = [0, 0];
+        for (let y: number = 0; y < ConspirateursState.HEIGHT; y++) {
+            for (let x: number = 0; x < ConspirateursState.WIDTH; x++) {
+                const coord: Coord = new Coord(x, y);
+                const player: Player = state.getPieceAt(coord);
+                if (player !== Player.NONE) {
+                    const distanceToSide: number = Math.min(Math.min(x, y),
+                                                            Math.min(ConspirateursState.WIDTH - x,
+                                                                     ConspirateursState.HEIGHT - y));
+                    const multiplier: number = state.isShelter(coord) ? 4 : 1;
+                    score += player.getScoreModifier() * (ConspirateursState.WIDTH / 2 - distanceToSide) * multiplier;
+                    if (state.isShelter(coord)) {
+                        piecesInShelters[player.value] += 1;
+                        if (piecesInShelters[player.value] === 20) {
+                            return new NodeUnheritance(player.getVictoryValue());
+                        }
+                    }
+                }
+            }
+        }
+        return new NodeUnheritance(score);
     }
 }

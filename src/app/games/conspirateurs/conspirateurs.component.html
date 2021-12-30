@@ -13,6 +13,14 @@
                   [attr.width]="SPACE_SIZE"
                   [attr.height]="SPACE_SIZE"
             />
+            <rect *ngIf="square.isShelter"
+                  class="base no-fill mid-stroke"
+                  (click)="onClick(square.coord)"
+                  [attr.x]="STROKE_WIDTH * 2 + (SPACE_SIZE * square.coord.x) + STROKE_WIDTH"
+                  [attr.y]="STROKE_WIDTH * 2 + (SPACE_SIZE * square.coord.y) + STROKE_WIDTH"
+                  [attr.width]="SPACE_SIZE - STROKE_WIDTH * 4"
+                  [attr.height]="SPACE_SIZE - STROKE_WIDTH * 4"
+            />
             <circle *ngIf="square.hasPiece"
                     [ngClass]="square.pieceClasses"
                     class="base"
@@ -22,15 +30,6 @@
                     [attr.cy]="(SPACE_SIZE * y) + STROKE_WIDTH + (SPACE_SIZE / 2)"
             />
         </g>
-    </g>
-    <g *ngFor="let coord of viewInfo.shelters">
-        <rect (click)="onClick(coord)"
-              [attr.x]="STROKE_WIDTH * 2 + (SPACE_SIZE * coord.x) + STROKE_WIDTH"
-              [attr.y]="STROKE_WIDTH * 2 + (SPACE_SIZE * coord.y) + STROKE_WIDTH"
-              [attr.width]="SPACE_SIZE - STROKE_WIDTH * 4"
-              [attr.height]="SPACE_SIZE - STROKE_WIDTH * 4"
-              class="base no-fill mid-stroke"
-        />
     </g>
     <rect *ngIf="viewInfo.dropPhase"
           [attr.x]="(SPACE_SIZE * viewInfo.centralZoneStart.x) + STROKE_WIDTH"

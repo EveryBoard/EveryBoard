@@ -5,7 +5,6 @@ import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { assert } from 'src/app/utils/utils';
 import { ConspirateursFailure } from './ConspirateursFailure';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
 import { ConspirateursState } from './ConspirateursState';
@@ -119,8 +118,7 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         const nextJumps: ConspirateursMoveJump[] = [];
         for (const target of this.jumpTargetsFrom(ending)) {
             const move: MGPFallible<ConspirateursMoveJump> = jump.addJump(target);
-            assert(move.isSuccess(), 'move should be success by construction');
-            if (this.jumpLegality(move.get(), state).isSuccess()) {
+            if (move.isSuccess() && this.jumpLegality(move.get(), state).isSuccess()) {
                 nextJumps.push(move.get());
             }
         }

@@ -24,10 +24,43 @@ export class ConspirateursState extends GameStateWithTable<Player> {
         ]);
 
     public static getInitialState(): ConspirateursState {
+        const _: Player = Player.NONE;
+        const A: Player = Player.ZERO;
+        const B: Player = Player.ONE;
+        return new ConspirateursState([
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, A, A, A, A, A, A, A, A, A, _, _, _, _],
+            [_, _, _, _, A, A, A, A, A, A, A, A, A, _, _, _, _],
+            [_, _, _, _, A, A, _, _, _, _, _, B, B, _, _, _, _],
+            [_, _, _, _, B, B, B, B, B, B, B, B, B, _, _, _, _],
+            [_, _, _, _, B, B, B, B, B, B, B, B, B, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        ], 40);
+
         const board: Player[][] = ArrayUtils.createTable(ConspirateursState.WIDTH,
                                                          ConspirateursState.HEIGHT,
                                                          Player.NONE);
+        
         return new ConspirateursState(board, 0);
+    }
+    public isShelter(coord: Coord): boolean {
+        if (coord.x === 0 || coord.x === ConspirateursState.WIDTH-1) {
+            return ConspirateursState.SHELTERS_INDICES.some((y: number) => coord.y === y);
+        } else if (coord.y === 0 || coord.y === ConspirateursState.HEIGHT-1) {
+            return ConspirateursState.SHELTERS_INDICES.some((x: number) => coord.x === x);
+        } else {
+            return false;
+        }
     }
     public isCentralZone(coord: Coord): boolean {
         return coord.x >= 4 && coord.x <= 12 && coord.y >= 6 && coord.y <= 10;

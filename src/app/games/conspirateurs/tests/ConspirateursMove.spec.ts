@@ -13,20 +13,20 @@ fdescribe('ConspirateursMove', () => {
             const otherDrop: ConspirateursMoveDrop = ConspirateursMoveDrop.of(new Coord(8, 8)).get();
             expect(drop.equals(otherDrop)).toBeFalse();
         });
-        it('should redefine toString', () => {
+        it('should redefine toString for drops', () => {
             expect(drop.toString()).toBe('ConspirateursMoveDrop((7, 7))');
         });
-        it('should redefine type checks', () => {
+        it('should redefine type checks for drops', () => {
             expect(drop.isDrop()).toBeTrue();
             expect(drop.isSimple()).toBeFalse();
         });
-        it('should forbid creating a move out of the board', () => {
+        it('should forbid creating a drop out of the board', () => {
             expect(ConspirateursMoveDrop.of(new Coord(-1, -1)).isFailure()).toBeTrue();
         });
     });
     describe('simple', () => {
         const simpleMove: ConspirateursMoveSimple = ConspirateursMoveSimple.of(new Coord(7, 7), new Coord(7, 8)).get();
-        it('should redefine equality', () => {
+        it('should redefine equality for simple moves', () => {
             expect(simpleMove.equals(simpleMove)).toBeTrue();
 
             const sameSimpleMove: ConspirateursMoveSimple =
@@ -41,14 +41,14 @@ fdescribe('ConspirateursMove', () => {
                 ConspirateursMoveSimple.of(new Coord(7, 7), new Coord(6, 7)).get();
             expect(simpleMove.equals(yetAnotherSimpleMove)).toBeFalse();
         });
-        it('should redefine toString', () => {
+        it('should redefine toString for simple moves', () => {
             expect(simpleMove.toString()).toBe('ConspirateursMoveSimple((7, 7) -> (7, 8))');
         });
-        it('should redefine type checks', () => {
+        it('should redefine type checks for simple moves', () => {
             expect(simpleMove.isDrop()).toBeFalse();
             expect(simpleMove.isSimple()).toBeTrue();
         });
-        it('should forbid creating a move out of the board', () => {
+        it('should forbid creating a simple move out of the board', () => {
             expect(ConspirateursMoveSimple.of(new Coord(-1, 0), new Coord(0, 0)).isFailure()).toBeTrue();
             expect(ConspirateursMoveSimple.of(new Coord(0, 0), new Coord(-1, 0)).isFailure()).toBeTrue();
         });
@@ -62,7 +62,7 @@ fdescribe('ConspirateursMove', () => {
     describe('jump', () => {
         const jump: ConspirateursMoveJump =
             ConspirateursMoveJump.of([new Coord(7, 7), new Coord(7, 9), new Coord(7, 11)]).get();
-        it('should redefine equality', () => {
+        it('should redefine equality for jumps', () => {
             expect(jump.equals(jump)).toBeTrue();
 
             const sameJump: ConspirateursMoveJump =
@@ -77,10 +77,10 @@ fdescribe('ConspirateursMove', () => {
                 ConspirateursMoveJump.of([new Coord(7, 8), new Coord(7, 10), new Coord(7, 12)]).get();
             expect(jump.equals(yetAnotherJump)).toBeFalse();
         });
-        it('should redefine toString', () => {
+        it('should redefine toString for jumps', () => {
             expect(jump.toString()).toBe('ConspirateursMoveJump((7, 7) -> (7, 9) -> (7, 11))');
         });
-        it('should redefine type checks', () => {
+        it('should redefine type checks for jumps', () => {
             expect(jump.isDrop()).toBeFalse();
             expect(jump.isSimple()).toBeFalse();
         });
@@ -92,6 +92,9 @@ fdescribe('ConspirateursMove', () => {
         });
         it('should forbid creating a jump with an invalid direction', () => {
             expect(ConspirateursMoveJump.of([new Coord(1, 1), new Coord(3, 5)]).isFailure()).toBeTrue();
+        });
+        it('should forbid creating a jump out of the board', () => {
+            expect(ConspirateursMoveJump.of([new Coord(1, 1), new Coord(-1, 1)]).isFailure()).toBeTrue();
         });
     });
     describe('encoder', () => {

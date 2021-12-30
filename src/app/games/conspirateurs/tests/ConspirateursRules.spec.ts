@@ -8,6 +8,7 @@ import { ConspirateursFailure } from '../ConspirateursFailure';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from '../ConspirateursMove';
 import { ConspirateursNode, ConspirateursRules } from '../ConspirateursRules';
 import { ConspirateursState } from '../ConspirateursState';
+import { ConspirateursMinimax } from '../ConspirateursMinimax';
 
 fdescribe('ConspirateursRules', () => {
     const _: Player = Player.NONE;
@@ -21,7 +22,7 @@ fdescribe('ConspirateursRules', () => {
     beforeEach(() => {
         rules = ConspirateursRules.get();
         minimaxes = [
-            // TODO
+            new ConspirateursMinimax(rules, 'ConspirateursMinimax'),
         ];
     });
 

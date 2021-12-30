@@ -9,6 +9,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { assert } from 'src/app/utils/utils';
+import { ConspirateursMinimax } from './ConspirateursMinimax';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveEncoder, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
 import { ConspirateursRules } from './ConspirateursRules';
 import { ConspirateursState } from './ConspirateursState';
@@ -18,7 +19,6 @@ interface ViewInfo {
     centralZoneStart: Coord,
     centralZoneSize: Vector,
     dropPhase: boolean,
-    shelters: Coord[],
     victory: Coord[],
 }
 
@@ -27,6 +27,7 @@ interface SquareInfo {
     squareClasses: string[],
     pieceClasses: string[],
     hasPiece: boolean,
+    isShelter: boolean,
 }
 
 @Component({
@@ -40,7 +41,6 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         boardInfo: [],
         centralZoneStart: new Coord(4, 6),
         centralZoneSize: new Coord(9, 5),
-        shelters: ConspirateursState.ALL_SHELTERS,
         victory: [], // TODO: fill it in update board
     }
     private selected: MGPOptional<Coord> = MGPOptional.empty();
@@ -50,7 +50,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         super(messageDisplayer);
         this.rules = ConspirateursRules.get();
         this.availableMinimaxes = [
-            // TODO
+            new ConspirateursMinimax(this.rules, 'ConspirateursMinimax'),
         ];
         this.encoder = ConspirateursMoveEncoder;
         // TODO this.tutorial = new ConspirateursTutorial().tutorial;
@@ -77,9 +77,13 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
                     squareClasses: [],
                     pieceClasses: [this.getPlayerClass(piece)],
                     hasPiece: piece !== Player.NONE,
+                    isShelter: false,
                 };
                 this.viewInfo.boardInfo[y].push(squareInfo);
             }
+        }
+        for (const shelter of ConspirateursState.ALL_SHELTERS) {
+            this.viewInfo.boardInfo[shelter.y][shelter.x].isShelter = true;
         }
         if (this.selected.isPresent()) {
             if (this.jumpInConstruction.isPresent()) {
@@ -124,7 +128,11 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         }
 
         const state: ConspirateursState = this.getState();
-        if (this.jumpInConstruction.isPresent()) {
+        if (state.getPieceAt(coord) === this.getCurrentPlayer()) {
+            this.selected = MGPOptional.of(coord);
+            this.updateViewInfo();
+            return MGPValidation.SUCCESS;
+        } else if (this.jumpInConstruction.isPresent()) {
             return this.constructJump(coord);
         } else if (this.selected.isPresent()) {
             return this.selectNextCoord(coord);
@@ -133,13 +141,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
             assert(move.isSuccess(), 'ConspirateursMove should be valid by construction');
             return this.chooseMove(move.get(), state);
         } else {
-            if (state.getPieceAt(coord) === this.getCurrentPlayer()) {
-                this.selected = MGPOptional.of(coord);
-                this.updateViewInfo();
-                return MGPValidation.SUCCESS;
-            } else {
-                return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
-            }
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
     }
     private async constructJump(nextTarget: Coord): Promise<MGPValidation> {
@@ -172,9 +174,8 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
     }
     private async selectNextCoord(coord: Coord): Promise<MGPValidation> {
         const selected: Coord = this.selected.get();
-        if (selected.getDistance(coord) === 1) {
-            const move: MGPFallible<ConspirateursMove> = ConspirateursMoveSimple.of(selected, coord);
-            assert(move.isSuccess(), 'ConspirateursMove should be correct by construction');
+        const move: MGPFallible<ConspirateursMove> = ConspirateursMoveSimple.of(selected, coord);
+        if (move.isSuccess()) {
             return this.chooseMove(move.get(), this.getState());
         } else {
             const jump: MGPFallible<ConspirateursMoveJump> = ConspirateursMoveJump.of([selected, coord]);

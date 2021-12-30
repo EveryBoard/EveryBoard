@@ -29,8 +29,12 @@ export class ConspirateursMoveDrop extends MoveCoord {
     public toString(): string {
         return `ConspirateursMoveDrop(${this.coord.toString()})`;
     }
-    public equals(other: ConspirateursMoveDrop): boolean {
-        return this.coord.equals(other.coord);
+    public equals(other: ConspirateursMove): boolean {
+        if (other.isDrop()) {
+            return this.coord.equals(other.coord);
+        } else {
+            return false;
+        }
     }
     public isDrop(): this is ConspirateursMoveDrop {
         return true;
@@ -53,7 +57,7 @@ export class ConspirateursMoveSimple extends MoveCoordToCoord {
         if (end.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT) === false) {
             return MGPFallible.failure('Move out of board');
         }
-        if (start.getDistance(end) !== 1) {
+        if (start.isAlignedWith(end) === false || start.getDistance(end) !== 1) {
             return MGPFallible.failure(ConspirateursFailure.SIMPLE_MOVE_SHOULD_BE_OF_ONE_STEP());
         }
         return MGPFallible.success(new ConspirateursMoveSimple(start, end));
@@ -65,11 +69,15 @@ export class ConspirateursMoveSimple extends MoveCoordToCoord {
     public toString(): string {
         return `ConspirateursMoveSimple(${this.coord.toString()} -> ${this.end.toString()})`;
     }
-    public equals(other: this): boolean {
-        if (other === this) return true;
-        if (other.coord.equals(this.coord) === false) return false;
-        if (other.end.equals(this.end) === false) return false;
-        return true;
+    public equals(other: ConspirateursMove): boolean {
+        if (other.isSimple()) {
+            if (other === this) return true;
+            if (other.coord.equals(this.coord) === false) return false;
+            if (other.end.equals(this.end) === false) return false;
+            return true;
+        } else {
+            return false;
+        }
     }
     public isDrop(): this is ConspirateursMoveDrop {
         return false;
@@ -97,6 +105,11 @@ export class ConspirateursMoveJump extends Move {
     public static of(coords: readonly Coord[]): MGPFallible<ConspirateursMoveJump> {
         if (coords.length < 2) {
             return MGPFallible.failure('ConspirateursMoveJump requires at least one jump, so two coords');
+        }
+        for (const coord of coords) {
+            if (coord.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT) === false) {
+                return MGPFallible.failure('Move out of board');
+            }
         }
         for (let i: number = 1; i < coords.length; i++) {
             const jumpDirection: MGPFallible<Direction> = coords[i - 1].getDirectionToward(coords[i]);
@@ -146,12 +159,16 @@ export class ConspirateursMoveJump extends Move {
         return `ConspirateursMoveJump(${jumps})`;
     }
     public equals(other: ConspirateursMoveJump): boolean {
-        if (other === this) return true;
-        if (other.coords.length !== this.coords.length) return false;
-        for (let i: number = 0; i < this.coords.length; i++) {
-            if (other.coords[i].equals(this.coords[i]) === false) return false;
+        if (other.isSimple() || other.isDrop()) {
+            return false;
+        } else {
+            if (other === this) return true;
+            if (other.coords.length !== this.coords.length) return false;
+            for (let i: number = 0; i < this.coords.length; i++) {
+                if (other.coords[i].equals(this.coords[i]) === false) return false;
+            }
+            return true;
         }
-        return true;
     }
     public isDrop(): this is ConspirateursMoveDrop {
         return false;
