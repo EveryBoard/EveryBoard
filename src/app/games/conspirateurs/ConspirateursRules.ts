@@ -130,15 +130,11 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
     public getGameStatus(node: ConspirateursNode): GameStatus {
         const state: ConspirateursState = node.gameState;
         const protectedPawns: [number, number] = [0, 0];
-        console.log('checking status')
         for (const shelter of ConspirateursState.ALL_SHELTERS) {
             const content: Player = state.getPieceAt(shelter);
             if (content !== Player.NONE) {
                 protectedPawns[content.value] += 1;
-                if (content === Player.ZERO)
-                    console.log({shelter, player: content.value, howMany: protectedPawns[content.value]})
                 if (protectedPawns[content.value] === 20) {
-                    console.log('victory!')
                     return GameStatus.getVictory(content);
                 }
             }
