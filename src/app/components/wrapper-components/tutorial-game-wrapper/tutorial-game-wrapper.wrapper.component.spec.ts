@@ -62,6 +62,9 @@ import { EncapsuleState } from 'src/app/games/encapsule/EncapsuleState';
 import { EncapsuleTutorial } from 'src/app/games/encapsule/EncapsuleTutorial';
 import { EncapsuleMove } from 'src/app/games/encapsule/EncapsuleMove';
 import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
+import { ConspirateursTutorial } from 'src/app/games/conspirateurs/ConspirateursTutorial';
+import { ConspirateursRules } from 'src/app/games/conspirateurs/ConspirateursRules';
+import { ConspirateursMoveSimple, ConspirateursMoveJump } from 'src/app/games/conspirateurs/ConspirateursMove';
 
 describe('TutorialGameWrapperComponent (wrapper)', () => {
 
@@ -104,8 +107,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const expectedMessage: string = 'instruction';
             const currentMessage: string = componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
-            const actualState: QuartoState =
-                componentTestUtils.getComponent().rules.node.gameState as QuartoState;
+            const actualState: QuartoState = componentTestUtils.getComponent().rules.node.gameState;
             expect(actualState).toEqual(state);
         }));
         it('Should show previousMove when set', fakeAsync(async() => {
@@ -1002,6 +1004,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
     describe('Tutorials', () => {
         it('Should make sure that predicate step have healthy behaviors', fakeAsync(async() => {
             const apagosTutorial: TutorialStep[] = new ApagosTutorial().tutorial;
+            const conspirateursTutorial: TutorialStep[] = new ConspirateursTutorial().tutorial;
             const dvonnTutorial: TutorialStep[] = new DvonnTutorial().tutorial;
             const encapsuleTutorial: TutorialStep[] = new EncapsuleTutorial().tutorial;
             const epaminondasTutorial: TutorialStep[] = new EpaminondasTutorial().tutorial;
@@ -1028,6 +1031,18 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     apagosTutorial[3],
                     ApagosMove.transfer(ApagosCoord.THREE, ApagosCoord.TWO).get(),
                     MGPValidation.failure($localize`Wrong choice, your opponent will win in the next turn no matter which piece is dropped!`),
+                ],
+                [
+                    ConspirateursRules.get(),
+                    conspirateursTutorial[2],
+                    ConspirateursMoveJump.of([new Coord(4, 7), new Coord(4, 5)]).get(),
+                    MGPValidation.failure($localize`You have made a jump, not a simple move. Try again!`),
+                ],
+                [
+                    ConspirateursRules.get(),
+                    conspirateursTutorial[3],
+                    ConspirateursMoveSimple.of(new Coord(4, 6), new Coord(4, 5)).get(),
+                    MGPValidation.failure($localize`You have not performed a jump. Try again!`),
                 ],
                 [
                     new DvonnRules(DvonnState),

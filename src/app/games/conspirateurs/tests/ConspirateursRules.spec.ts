@@ -514,4 +514,9 @@ describe('ConspirateursRules', () => {
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
         });
     });
+    it('should not compute jumps that go out of the board', () => {
+        // When computing the jumps from the side of the board
+        // Then the jumps out of the board are not returned
+        expect(rules.jumpTargetsFrom(new Coord(1, 0)).length).toBe(3);
+    });
 });

@@ -132,4 +132,30 @@ describe('ConspirateursComponent', () => {
             await testUtils.expectClickFailure('#click_5_0', ConspirateursFailure.MUST_JUMP_OVER_PIECES());
         }));
     });
+    it('should highlight shelters upon victory', fakeAsync(async() => {
+        // Given a state where player 1 has sheltered all of its pieces
+        const state: ConspirateursState = new ConspirateursState([
+            [B, B, _, B, _, B, _, B, B, B, _, B, _, B, _, B, B],
+            [B, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [B, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [B, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [B, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [B, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [B, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [B, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [B, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [B, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [A, A, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        ], 60);
+        // When the state is displayed
+        testUtils.setupState(state);
+        // The the shelters are shown
+        testUtils.expectElementToExist('#victory');
+    }));
 });

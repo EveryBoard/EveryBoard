@@ -24,31 +24,6 @@ export class ConspirateursState extends GameStateWithTable<Player> {
         ]);
 
     public static getInitialState(): ConspirateursState {
-        if (false) {
-        const _: Player = Player.NONE;
-        const A: Player = Player.ZERO;
-        const B: Player = Player.ONE;
-        return new ConspirateursState([
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, A, A, A, A, A, A, A, A, A, _, _, _, _],
-            [_, _, _, _, A, A, A, A, A, A, A, A, A, _, _, _, _],
-            [_, _, _, _, A, A, _, _, _, _, _, B, B, _, _, _, _],
-            [_, _, _, _, B, B, B, B, B, B, B, B, B, _, _, _, _],
-            [_, _, _, _, B, B, B, B, B, B, B, B, B, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        ], 40);
-        }
-
         const board: Player[][] = ArrayUtils.createTable(ConspirateursState.WIDTH,
                                                          ConspirateursState.HEIGHT,
                                                          Player.NONE);

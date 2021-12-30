@@ -51,7 +51,7 @@ export class ConspirateursTutorial {
                 if (move.isSimple()) {
                     return MGPValidation.SUCCESS;
                 } else {
-                    return MGPValidation.failure($localize`You have made a jump, not a simple move. Try again`);
+                    return MGPValidation.failure($localize`You have made a jump, not a simple move. Try again!`);
                 }
 
             },
@@ -84,7 +84,7 @@ export class ConspirateursTutorial {
                 if (move.isJump()) {
                     return MGPValidation.SUCCESS;
                 } else {
-                    return MGPValidation.failure($localize`You have not performed a jump, try again!`);
+                    return MGPValidation.failure($localize`You have not performed a jump. Try again!`);
                 }
             },
             $localize`Congratulations!`,
@@ -112,8 +112,8 @@ export class ConspirateursTutorial {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 40),
             [ConspirateursMoveJump.of([new Coord(8, 6), new Coord(6, 4), new Coord(6, 2), new Coord(6, 0)]).get()],
-            $localize`Congratulations! You now know everything to play the game. Remember: to win, you have to place all of your pieces in shelters before your opponent does`,
-            $localize`You have not performed a triple jump, try again!`,
+            $localize`Congratulations! You now know everything to play the game. Remember: to win, you have to place all of your pieces in shelters before your opponent does.`,
+            $localize`You have not performed a triple jump. Try again!`,
         ),
     ];
 }

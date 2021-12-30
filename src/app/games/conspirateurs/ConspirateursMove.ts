@@ -29,7 +29,7 @@ export class ConspirateursMoveDrop extends MoveCoord {
     public toString(): string {
         return `ConspirateursMoveDrop(${this.coord.toString()})`;
     }
-    public equals(other: ConspirateursMove): boolean {
+    public equals(other: ConspirateursMoveDrop): boolean {
         if (other.isDrop()) {
             return this.coord.equals(other.coord);
         } else {
@@ -164,7 +164,7 @@ export class ConspirateursMoveJump extends Move {
             .reduce((coord1: string, coord2: string) => coord1 + ' -> ' + coord2);
         return `ConspirateursMoveJump(${jumps})`;
     }
-    public equals(other: ConspirateursMoveJump): boolean {
+    public equals(other: ConspirateursMove): boolean {
         if (other.isSimple() || other.isDrop()) {
             return false;
         } else {
