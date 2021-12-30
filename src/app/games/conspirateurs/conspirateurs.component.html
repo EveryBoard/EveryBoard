@@ -39,8 +39,7 @@
           class="base no-fill highlighted mid-stroke"
     />
     <g *ngFor="let coord of viewInfo.victory">
-        <rect (click)="onClick(coord)"
-              [attr.x] = "(SPACE_SIZE * coord.x) + STROKE_WIDTH"
+        <rect [attr.x] = "(SPACE_SIZE * coord.x) + STROKE_WIDTH"
               [attr.y] = "(SPACE_SIZE * coord.y) + STROKE_WIDTH"
               [attr.width]="SPACE_SIZE"
               [attr.height]="SPACE_SIZE"

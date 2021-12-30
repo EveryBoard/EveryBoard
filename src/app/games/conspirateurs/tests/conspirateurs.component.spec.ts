@@ -9,7 +9,7 @@ import { ConspirateursFailure } from '../ConspirateursFailure';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from '../ConspirateursMove';
 import { ConspirateursState } from '../ConspirateursState';
 
-fdescribe('ConspirateursComponent', () => {
+describe('ConspirateursComponent', () => {
     const _: Player = Player.NONE;
     const A: Player = Player.ZERO;
     const B: Player = Player.ONE;

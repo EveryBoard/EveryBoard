@@ -4,7 +4,7 @@ import { ConspirateursRules, ConspirateursNode } from '../ConspirateursRules';
 import { ConspirateursMinimax } from '../ConspirateursMinimax';
 import { Player } from 'src/app/jscaip/Player';
 
-fdescribe('ConspirateursMinimax', () => {
+describe('ConspirateursMinimax', () => {
     const _: Player = Player.NONE;
     const A: Player = Player.ZERO;
     const B: Player = Player.ONE;

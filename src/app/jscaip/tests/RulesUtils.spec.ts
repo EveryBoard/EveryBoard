@@ -119,7 +119,7 @@ export class RulesUtils {
             const node: MGPNode<Rules<M, S, L>, M, S, L> = new MGPNode(state,
                                                                        MGPOptional.empty(),
                                                                        MGPOptional.of(previousMove));
-            const value: number = minimax.getBoardNumericValue(node);
+            const value: number = minimax.getBoardValue(node).value;
             const expectedValue: number = player.getPreVictory();
             expect(MGPNode.getScoreStatus(value)).toBe(SCORE.PRE_VICTORY);
             expect(value).toBe(expectedValue);

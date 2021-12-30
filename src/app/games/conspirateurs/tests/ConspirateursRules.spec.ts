@@ -10,7 +10,7 @@ import { ConspirateursNode, ConspirateursRules } from '../ConspirateursRules';
 import { ConspirateursState } from '../ConspirateursState';
 import { ConspirateursMinimax } from '../ConspirateursMinimax';
 
-fdescribe('ConspirateursRules', () => {
+describe('ConspirateursRules', () => {
     const _: Player = Player.NONE;
     const A: Player = Player.ZERO;
     const B: Player = Player.ONE;

@@ -3,6 +3,7 @@ import { GameComponent } from 'src/app/components/game-components/game-component
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
+import { GameStatus } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
@@ -13,6 +14,7 @@ import { ConspirateursMinimax } from './ConspirateursMinimax';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveEncoder, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
 import { ConspirateursRules } from './ConspirateursRules';
 import { ConspirateursState } from './ConspirateursState';
+import { ConspirateursTutorial } from './ConspirateursTutorial';
 
 interface ViewInfo {
     boardInfo: SquareInfo[][],
@@ -41,7 +43,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         boardInfo: [],
         centralZoneStart: new Coord(4, 6),
         centralZoneSize: new Coord(9, 5),
-        victory: [], // TODO: fill it in update board
+        victory: [],
     }
     private selected: MGPOptional<Coord> = MGPOptional.empty();
     private jumpInConstruction: MGPOptional<ConspirateursMoveJump> = MGPOptional.empty();
@@ -53,7 +55,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
             new ConspirateursMinimax(this.rules, 'ConspirateursMinimax'),
         ];
         this.encoder = ConspirateursMoveEncoder;
-        // TODO this.tutorial = new ConspirateursTutorial().tutorial;
+        this.tutorial = new ConspirateursTutorial().tutorial;
         this.updateBoard();
     }
     public updateBoard(): void {
@@ -63,7 +65,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
             this.showLastMove();
         }
     }
-    private updateViewInfo() {
+    private updateViewInfo(): void {
         const state: ConspirateursState = this.getState();
         this.viewInfo.dropPhase = state.isDropPhase();
         this.viewInfo.boardInfo = [];
@@ -85,6 +87,10 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         for (const shelter of ConspirateursState.ALL_SHELTERS) {
             this.viewInfo.boardInfo[shelter.y][shelter.x].isShelter = true;
         }
+        this.updateSelected();
+        this.updateVictory();
+    }
+    private updateSelected(): void {
         if (this.selected.isPresent()) {
             if (this.jumpInConstruction.isPresent()) {
                 const jump: ConspirateursMoveJump = this.jumpInConstruction.get();
@@ -100,6 +106,17 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
             } else {
                 const selected: Coord = this.selected.get();
                 this.viewInfo.boardInfo[selected.y][selected.x].pieceClasses.push('selected');
+            }
+        }
+    }
+    private updateVictory(): void {
+        const state: ConspirateursState = this.getState();
+        const gameStatus: GameStatus = ConspirateursRules.get().getGameStatus(this.rules.node);
+        if (gameStatus.isEndGame === true) {
+            for (const shelter of ConspirateursState.ALL_SHELTERS) {
+                if (state.getPieceAt(shelter) === gameStatus.winner) {
+                    this.viewInfo.victory.push(shelter);
+                }
             }
         }
     }

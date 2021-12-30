@@ -5,7 +5,7 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { ConspirateursFailure } from '../ConspirateursFailure';
 import { ConspirateursMoveDrop, ConspirateursMoveEncoder, ConspirateursMoveJump, ConspirateursMoveSimple } from '../ConspirateursMove';
 
-fdescribe('ConspirateursMove', () => {
+describe('ConspirateursMove', () => {
     describe('drop', () => {
         const drop: ConspirateursMoveDrop = ConspirateursMoveDrop.of(new Coord(7, 7)).get();
         it('should redefine equality', () => {
