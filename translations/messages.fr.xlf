@@ -478,13 +478,13 @@
         <source>Learn</source>
         <target>Apprendre</target>
       </trans-unit>
-      <trans-unit id="3318133641595899163" datatype="html">
-        <source>AwesomBoard</source>
-        <target>AwesomBoard</target>
+      <trans-unit id="5723949445116321937" datatype="html">
+        <source>EveryBoard</source>
+        <target>EveryBoard</target>
       </trans-unit>
-      <trans-unit id="3620319853901130962" datatype="html">
-        <source>AwesomBoard is a website to play and learn the rules of various abstract strategy games with perfect information.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Such games are games that do not include any randomness, agility, or hidden information. These games are played by two players, turn by turn.</source>
-        <target>AwesomBoard est un site qui permet de jouer et d&apos;apprendre les règles de nombreux jeux de stratégie combinatoire à information parfaite.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> On comprends donc là dedans les jeux ne faisant intervenir ni hasard, ni agilité, ni informations cachées, et uniquement des jeux deux joueurs et tours par tours. </target>
+      <trans-unit id="6808393327735679948" datatype="html">
+        <source>EveryBoard is a website to play and learn the rules of various abstract strategy games with perfect information.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Such games are games that do not include any randomness, agility, or hidden information. These games are played by two players, turn by turn.</source>
+        <target>EveryBoard est un site qui permet de jouer et d&apos;apprendre les règles de nombreux jeux de stratégie combinatoire à information parfaite.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> On comprends donc là dedans les jeux ne faisant intervenir ni hasard, ni agilité, ni informations cachées, et uniquement des jeux deux joueurs et tours par tours. </target>
       </trans-unit>
       <trans-unit id="2129768251160483742" datatype="html">
         <source>It is not your turn!</source>
