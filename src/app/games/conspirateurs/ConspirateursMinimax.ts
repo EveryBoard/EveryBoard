@@ -9,10 +9,10 @@ import { ConspirateursState } from './ConspirateursState';
 
 export class ConspirateursMinimax extends Minimax<ConspirateursMove, ConspirateursState> {
     public getListMoves(node: ConspirateursNode): ConspirateursMove[] {
-        if (node.gameState.turn >= 40) {
-            return this.getListMovesAfterDrop(node.gameState);
-        } else {
+        if (node.gameState.turn < 40) {
             return this.getListMovesBeforeDrop(node.gameState);
+        } else {
+            return this.getListMovesAfterDrop(node.gameState);
         }
     }
     private getListMovesBeforeDrop(state: ConspirateursState): ConspirateursMoveDrop[] {

@@ -42,6 +42,9 @@ export class ConspirateursMoveDrop extends MoveCoord {
     public isSimple(): this is ConspirateursMoveSimple {
         return false;
     }
+    public isJump(): this is ConspirateursMoveJump {
+        return false;
+    }
 }
 
 export class ConspirateursMoveSimple extends MoveCoordToCoord {
@@ -84,6 +87,9 @@ export class ConspirateursMoveSimple extends MoveCoordToCoord {
     }
     public isSimple(): this is ConspirateursMoveSimple {
         return true;
+    }
+    public isJump(): this is ConspirateursMoveJump {
+        return false;
     }
 }
 export class ConspirateursMoveJump extends Move {
@@ -175,6 +181,9 @@ export class ConspirateursMoveJump extends Move {
     }
     public isSimple(): this is ConspirateursMoveSimple {
         return false;
+    }
+    public isJump(): this is ConspirateursMoveJump {
+        return true;
     }
 }
 

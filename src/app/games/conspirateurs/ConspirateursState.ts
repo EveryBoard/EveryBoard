@@ -13,7 +13,7 @@ export class ConspirateursState extends GameStateWithTable<Player> {
 
     public static readonly CENTRAL_ZONE_BOTTOM_RIGHT: Coord = new Coord(12, 10);
 
-    private static readonly SHELTERS_INDICES: readonly number[] = [0, 1, 3, 5, 7, 8, 9, 11, 13, 15, 16];
+    private static readonly SHELTERS_INDICES: readonly number[] = [0, 1, 3, 5, 7, 8, 9, 11, 13, 15];
 
     public static ALL_SHELTERS: Coord[] =
         ConspirateursState.SHELTERS_INDICES.flatMap((xOrY: number) => [
@@ -24,28 +24,30 @@ export class ConspirateursState extends GameStateWithTable<Player> {
         ]);
 
     public static getInitialState(): ConspirateursState {
-//         const _: Player = Player.NONE;
-//         const A: Player = Player.ZERO;
-//         const B: Player = Player.ONE;
-//         return new ConspirateursState([
-//             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-//             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-//             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-//             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-//             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-//             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-//             [_, _, _, _, A, A, A, A, A, A, A, A, A, _, _, _, _],
-//             [_, _, _, _, A, A, A, A, A, A, A, A, A, _, _, _, _],
-//             [_, _, _, _, A, A, _, _, _, _, _, B, B, _, _, _, _],
-//             [_, _, _, _, B, B, B, B, B, B, B, B, B, _, _, _, _],
-//             [_, _, _, _, B, B, B, B, B, B, B, B, B, _, _, _, _],
-//             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-//             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-//             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-//             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-//             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-//             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-//         ], 40);
+        if (false) {
+        const _: Player = Player.NONE;
+        const A: Player = Player.ZERO;
+        const B: Player = Player.ONE;
+        return new ConspirateursState([
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, A, A, A, A, A, A, A, A, A, _, _, _, _],
+            [_, _, _, _, A, A, A, A, A, A, A, A, A, _, _, _, _],
+            [_, _, _, _, A, A, _, _, _, _, _, B, B, _, _, _, _],
+            [_, _, _, _, B, B, B, B, B, B, B, B, B, _, _, _, _],
+            [_, _, _, _, B, B, B, B, B, B, B, B, B, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        ], 40);
+        }
 
         const board: Player[][] = ArrayUtils.createTable(ConspirateursState.WIDTH,
                                                          ConspirateursState.HEIGHT,
