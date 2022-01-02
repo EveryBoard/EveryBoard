@@ -2,6 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { Player } from 'src/app/jscaip/Player';
+import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
 import { ConspirateursNode, ConspirateursRules } from './ConspirateursRules';
@@ -17,12 +18,13 @@ export class ConspirateursMinimax extends Minimax<ConspirateursMove, Conspirateu
     }
     private getListMovesBeforeDrop(state: ConspirateursState): ConspirateursMoveDrop[] {
         const moves: ConspirateursMoveDrop[] = [];
-        for (let y: number = ConspirateursState.CENTRAL_ZONE_TOP_LEFT.y;
-            y <= ConspirateursState.CENTRAL_ZONE_BOTTOM_RIGHT.y;
-            y++) {
-            for (let x: number = ConspirateursState.CENTRAL_ZONE_TOP_LEFT.x;
-                x <= ConspirateursState.CENTRAL_ZONE_BOTTOM_RIGHT.x;
-                x++) {
+        for (let y: number = ConspirateursState.CENTRAL_ZONE_TOP_LEFT.y; // eslint-disable-next-line indent
+             y <= ConspirateursState.CENTRAL_ZONE_BOTTOM_RIGHT.y; // eslint-disable-next-line indent
+             y++)
+        {
+            for (let x: number = ConspirateursState.CENTRAL_ZONE_TOP_LEFT.x; // eslint-disable-next-line indent
+                 x <= ConspirateursState.CENTRAL_ZONE_BOTTOM_RIGHT.x; // eslint-disable-next-line indent
+                 x++) {
                 if (state.getPieceAtXY(x, y) === Player.NONE) {
                     moves.push(ConspirateursMoveDrop.of(new Coord(x, y)).get());
                 }
@@ -86,18 +88,21 @@ export class ConspirateursMinimax extends Minimax<ConspirateursMove, Conspirateu
     public getBoardValue(node: ConspirateursNode): NodeUnheritance {
         const state: ConspirateursState = node.gameState;
         let score: number = 0;
-        const piecesInShelters: [number, number] = [0, 0];
+        const piecesInShelters: MGPMap<Player, number> = new MGPMap();
+        piecesInShelters.set(Player.ZERO, 0);
+        piecesInShelters.set(Player.ONE, 0);
         for (let y: number = 0; y < ConspirateursState.HEIGHT; y++) {
             for (let x: number = 0; x < ConspirateursState.WIDTH; x++) {
                 const coord: Coord = new Coord(x, y);
                 const player: Player = state.getPieceAt(coord);
                 if (player !== Player.NONE) {
-                    const distanceToSide: number = Math.min(Math.min(x, y),
-                                                            Math.min(ConspirateursState.WIDTH - x,
-                                                                     ConspirateursState.HEIGHT - y));
-                    const multiplier: number = state.isShelter(coord) ? 4 : 1;
-                    score += player.getScoreModifier() * (ConspirateursState.WIDTH / 2 - distanceToSide) * multiplier;
+                    const minDistanceToLeftOrTop: number = Math.min(x, y);
+                    const minDistanceToRightOrBottom: number =
+                        Math.min(ConspirateursState.WIDTH - x, ConspirateursState.HEIGHT - y);
+                    const distanceToSide: number = Math.min(minDistanceToLeftOrTop, minDistanceToRightOrBottom);
+                    score -= player.getScoreModifier() * distanceToSide;
                     if (state.isShelter(coord)) {
+                        score += player.getScoreModifier() * 20;
                         piecesInShelters[player.value] += 1;
                         if (piecesInShelters[player.value] === 20) {
                             return new NodeUnheritance(player.getVictoryValue());

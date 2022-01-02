@@ -2,7 +2,7 @@ import { Comparable, comparableEquals, ComparableObject } from './Comparable';
 import { Sets } from './Sets';
 
 export class MGPSet<T extends Comparable> implements ComparableObject {
-    private values: T[];
+    private readonly values: T[];
 
     constructor(values?: readonly T[]) {
         if (values === undefined) {

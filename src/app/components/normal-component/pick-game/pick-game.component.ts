@@ -4,6 +4,7 @@ import { ApagosComponent } from 'src/app/games/apagos/apagos.component';
 import { AwaleComponent } from 'src/app/games/awale/awale.component';
 import { BrandhubComponent } from 'src/app/games/tafl/brandhub/brandhub.component';
 import { CoerceoComponent } from 'src/app/games/coerceo/coerceo.component';
+import { ConspirateursComponent } from 'src/app/games/conspirateurs/conspirateurs.component';
 import { DiamComponent } from 'src/app/games/diam/diam.component';
 import { DvonnComponent } from 'src/app/games/dvonn/dvonn.component';
 import { EncapsuleComponent } from 'src/app/games/encapsule/encapsule.component';
@@ -26,7 +27,6 @@ import { TablutComponent } from 'src/app/games/tafl/tablut/tablut.component';
 import { YinshComponent } from 'src/app/games/yinsh/yinsh.component';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { Localized } from 'src/app/utils/LocaleUtils';
-import { ConspirateursComponent } from 'src/app/games/conspirateurs/conspirateurs.component';
 
 class GameDescription {
 

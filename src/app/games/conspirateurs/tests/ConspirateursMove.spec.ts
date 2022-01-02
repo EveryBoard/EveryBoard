@@ -9,14 +9,11 @@ describe('ConspirateursMove', () => {
     describe('drop', () => {
         const drop: ConspirateursMoveDrop = ConspirateursMoveDrop.of(new Coord(7, 7)).get();
         it('should redefine equality', () => {
-            expect(drop.equals(drop)).toBeTrue();
-
             const otherDrop: ConspirateursMoveDrop = ConspirateursMoveDrop.of(new Coord(8, 8)).get();
-            expect(drop.equals(otherDrop)).toBeFalse();
-
             const notADrop: ConspirateursMove = ConspirateursMoveSimple.of(new Coord(7, 7), new Coord(7, 6)).get();
+            expect(drop.equals(drop)).toBeTrue();
+            expect(drop.equals(otherDrop)).toBeFalse();
             expect(drop.equals(notADrop)).toBeFalse();
-
         });
         it('should redefine toString for drops', () => {
             expect(drop.toString()).toBe('ConspirateursMoveDrop((7, 7))');
@@ -33,21 +30,17 @@ describe('ConspirateursMove', () => {
     describe('simple', () => {
         const simpleMove: ConspirateursMoveSimple = ConspirateursMoveSimple.of(new Coord(7, 7), new Coord(7, 8)).get();
         it('should redefine equality for simple moves', () => {
-            expect(simpleMove.equals(simpleMove)).toBeTrue();
-
             const sameSimpleMove: ConspirateursMoveSimple =
                 ConspirateursMoveSimple.of(new Coord(7, 7), new Coord(7, 8)).get();
-            expect(simpleMove.equals(sameSimpleMove)).toBeTrue();
-
             const otherSimpleMove: ConspirateursMoveSimple =
                 ConspirateursMoveSimple.of(new Coord(7, 8), new Coord(7, 7)).get();
-            expect(simpleMove.equals(otherSimpleMove)).toBeFalse();
-
             const yetAnotherSimpleMove: ConspirateursMoveSimple =
                 ConspirateursMoveSimple.of(new Coord(7, 7), new Coord(6, 7)).get();
-            expect(simpleMove.equals(yetAnotherSimpleMove)).toBeFalse();
-
             const notASimpleMove: ConspirateursMove = ConspirateursMoveDrop.of(new Coord(7, 7)).get();
+            expect(simpleMove.equals(simpleMove)).toBeTrue();
+            expect(simpleMove.equals(sameSimpleMove)).toBeTrue();
+            expect(simpleMove.equals(otherSimpleMove)).toBeFalse();
+            expect(simpleMove.equals(yetAnotherSimpleMove)).toBeFalse();
             expect(simpleMove.equals(notASimpleMove)).toBeFalse();
         });
         it('should redefine toString for simple moves', () => {
@@ -70,24 +63,20 @@ describe('ConspirateursMove', () => {
         });
     });
     describe('jump', () => {
-        const jump: ConspirateursMoveJump =
-            ConspirateursMoveJump.of([new Coord(7, 7), new Coord(7, 9), new Coord(7, 11)]).get();
+        const jumpCoords: Coord[] = [new Coord(7, 7), new Coord(7, 9), new Coord(7, 11)];
+        const jump: ConspirateursMoveJump = ConspirateursMoveJump.of(jumpCoords).get();
         it('should redefine equality for jumps', () => {
-            expect(jump.equals(jump)).toBeTrue();
-
-            const sameJump: ConspirateursMoveJump =
-                ConspirateursMoveJump.of([new Coord(7, 7), new Coord(7, 9), new Coord(7, 11)]).get();
-            expect(jump.equals(sameJump)).toBeTrue();
-
-            const otherJump: ConspirateursMoveJump =
-                ConspirateursMoveJump.of([new Coord(7, 7), new Coord(7, 9)]).get();
-            expect(jump.equals(otherJump)).toBeFalse();
-
-            const yetAnotherJump: ConspirateursMoveJump =
-                ConspirateursMoveJump.of([new Coord(7, 8), new Coord(7, 10), new Coord(7, 12)]).get();
-            expect(jump.equals(yetAnotherJump)).toBeFalse();
-
+            const sameJump: ConspirateursMoveJump = ConspirateursMoveJump.of(jumpCoords).get();
+            const otherCoords: Coord[] = [new Coord(7, 7), new Coord(7, 9)];
+            const otherJump: ConspirateursMoveJump = ConspirateursMoveJump.of(otherCoords).get();
+            const yetAnotherJumpCoords: Coord[] = [new Coord(7, 8), new Coord(7, 10), new Coord(7, 12)];
+            const yetAnotherJump: ConspirateursMoveJump = ConspirateursMoveJump.of(yetAnotherJumpCoords).get();
             const notAJump: ConspirateursMove = ConspirateursMoveDrop.of(new Coord(7, 7)).get();
+
+            expect(jump.equals(jump)).toBeTrue();
+            expect(jump.equals(sameJump)).toBeTrue();
+            expect(jump.equals(otherJump)).toBeFalse();
+            expect(jump.equals(yetAnotherJump)).toBeFalse();
             expect(jump.equals(notAJump)).toBeFalse();
         });
         it('should redefine toString for jumps', () => {

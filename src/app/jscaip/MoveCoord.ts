@@ -14,7 +14,7 @@ export abstract class MoveCoord extends Move {
 
 export class MoveCoordEncoder {
     public static getEncoder<T extends MoveCoord>(width: number, height: number,
-                                                  construct: (coord: Coord) => T): NumberEncoder<T> {
+                                                  generateMove: (coord: Coord) => T): NumberEncoder<T> {
         return new class extends NumberEncoder<T> {
             private readonly shiftX: number = height;
             public maxValue(): number {
@@ -29,7 +29,7 @@ export class MoveCoordEncoder {
                 encodedMove -= encodedMove % 1;
                 const x: number = encodedMove % width;
                 const coord: Coord = new Coord(x, y);
-                return construct(coord);
+                return generateMove(coord);
             }
         };
     }

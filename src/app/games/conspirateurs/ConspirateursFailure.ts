@@ -13,5 +13,5 @@ export class ConspirateursFailure {
 
     public static INVALID_JUMP: Localized = () => $localize`A jump must land two squares from its original position, and be done in a straight line in any direction.`;
 
-    public static SAME_LOCATION_VISITED_IN_JUMP: Localized = () => $localize`You are visiting the same location twice in a jump, you are not allowed to do so.`;
+    public static SAME_LOCATION_VISITED_IN_JUMP: Localized = () => $localize`You are visiting the same location twice in a move, you are not allowed to do so.`;
 }

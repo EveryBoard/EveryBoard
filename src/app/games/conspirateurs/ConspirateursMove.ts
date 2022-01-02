@@ -54,16 +54,15 @@ export class ConspirateursMoveSimple extends MoveCoordToCoord {
                                     (start: Coord, end: Coord) => ConspirateursMoveSimple.of(start, end).get());
 
     public static of(start: Coord, end: Coord): MGPFallible<ConspirateursMoveSimple> {
-        if (start.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT) === false) {
-            return MGPFallible.failure('Move out of board');
+        if (start.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT) &&
+            end.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT))
+            if (start.isAlignedWith(end) && start.getDistance(end) === 1) {
+                return MGPFallible.success(new ConspirateursMoveSimple(start, end));
+            } else {
+                return MGPFallible.failure(ConspirateursFailure.SIMPLE_MOVE_SHOULD_BE_OF_ONE_STEP());
+            } else {
+                return MGPFallible.failure('Move out of board');
         }
-        if (end.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT) === false) {
-            return MGPFallible.failure('Move out of board');
-        }
-        if (start.isAlignedWith(end) === false || start.getDistance(end) !== 1) {
-            return MGPFallible.failure(ConspirateursFailure.SIMPLE_MOVE_SHOULD_BE_OF_ONE_STEP());
-        }
-        return MGPFallible.success(new ConspirateursMoveSimple(start, end));
     }
 
     private constructor(start: Coord, end: Coord) {
@@ -98,7 +97,7 @@ export class ConspirateursMoveJump extends Move {
             Coord.numberEncoder(ConspirateursState.WIDTH, ConspirateursState.HEIGHT);
         public encodeMove(move: ConspirateursMoveJump): JSONValueWithoutArray {
             return {
-                'coords': move.coords.map(this.coordEncoder.encodeNumber),
+                coords: move.coords.map(this.coordEncoder.encodeNumber),
             };
         }
         public decodeMove(encoded: JSONValue): ConspirateursMoveJump {
@@ -128,10 +127,11 @@ export class ConspirateursMoveJump extends Move {
             }
         }
         const uniqueCoords: MGPSet<Coord> = new MGPSet(coords);
-        if (uniqueCoords.size() !== coords.length) {
+        if (uniqueCoords.size() === coords.length) {
+            return MGPFallible.success(new ConspirateursMoveJump(coords));
+        } else {
             return MGPFallible.failure(ConspirateursFailure.SAME_LOCATION_VISITED_IN_JUMP());
         }
-        return MGPFallible.success(new ConspirateursMoveJump(coords));
     }
     private constructor(public coords: readonly Coord[]) {
         super();

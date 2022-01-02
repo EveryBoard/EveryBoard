@@ -13,15 +13,15 @@ export class ConspirateursState extends GameStateWithTable<Player> {
 
     public static readonly CENTRAL_ZONE_BOTTOM_RIGHT: Coord = new Coord(12, 10);
 
-    private static readonly SHELTERS_INDICES: readonly number[] = [0, 1, 3, 5, 7, 8, 9, 11, 13, 15];
+    private static readonly SHELTERS_INDICES: readonly number[] = [0, 1, 3, 5, 7, 8, 9, 11, 13, 15, 16];
 
     public static ALL_SHELTERS: Coord[] =
-        ConspirateursState.SHELTERS_INDICES.flatMap((xOrY: number) => [
+        new MGPSet(ConspirateursState.SHELTERS_INDICES.flatMap((xOrY: number) => [
             new Coord(xOrY, 0),
             new Coord(xOrY, ConspirateursState.HEIGHT-1),
             new Coord(0, xOrY),
             new Coord(ConspirateursState.WIDTH-1, xOrY),
-        ]);
+        ])).getCopy();
 
     public static getInitialState(): ConspirateursState {
         const board: Player[][] = ArrayUtils.createTable(ConspirateursState.WIDTH,
@@ -39,7 +39,10 @@ export class ConspirateursState extends GameStateWithTable<Player> {
         }
     }
     public isCentralZone(coord: Coord): boolean {
-        return coord.x >= 4 && coord.x <= 12 && coord.y >= 6 && coord.y <= 10;
+        return coord.x >= ConspirateursState.CENTRAL_ZONE_TOP_LEFT.x &&
+            coord.x <= ConspirateursState.CENTRAL_ZONE_BOTTOM_RIGHT.x &&
+            coord.y >= ConspirateursState.CENTRAL_ZONE_TOP_LEFT.y &&
+            coord.y <= ConspirateursState.CENTRAL_ZONE_BOTTOM_RIGHT.y;
     }
     public isDropPhase(): boolean {
         return this.turn < 40;

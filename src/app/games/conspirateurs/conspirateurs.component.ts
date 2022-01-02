@@ -18,8 +18,6 @@ import { ConspirateursTutorial } from './ConspirateursTutorial';
 
 interface ViewInfo {
     boardInfo: SquareInfo[][],
-    centralZoneStart: Coord,
-    centralZoneSize: Vector,
     dropPhase: boolean,
     victory: Coord[],
 }
@@ -38,17 +36,21 @@ interface SquareInfo {
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 export class ConspirateursComponent extends GameComponent<ConspirateursRules, ConspirateursMove, ConspirateursState> {
+    public CENTRAL_ZONE_START: Coord = ConspirateursState.CENTRAL_ZONE_TOP_LEFT;
+    public CENTRAL_ZONE_SIZE: Coord = new Vector(
+        ConspirateursState.CENTRAL_ZONE_BOTTOM_RIGHT.x - ConspirateursState.CENTRAL_ZONE_TOP_LEFT.x,
+        ConspirateursState.CENTRAL_ZONE_BOTTOM_RIGHT.y - ConspirateursState.CENTRAL_ZONE_TOP_LEFT.y,
+    );
+
     public viewInfo: ViewInfo = {
         dropPhase: true,
         boardInfo: [],
-        centralZoneStart: new Coord(4, 6),
-        centralZoneSize: new Coord(9, 5),
         victory: [],
-    }
+    };
     private selected: MGPOptional<Coord> = MGPOptional.empty();
     private jumpInConstruction: MGPOptional<ConspirateursMoveJump> = MGPOptional.empty();
 
-    constructor(messageDisplayer: MessageDisplayer) {
+    public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.rules = ConspirateursRules.get();
         this.availableMinimaxes = [
