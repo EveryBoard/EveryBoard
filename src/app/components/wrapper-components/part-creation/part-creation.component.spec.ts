@@ -197,7 +197,7 @@ describe('PartCreationComponent:', () => {
             it('should remove candidate from lobby if it directly appears offline', fakeAsync(async() => {
                 spyOn(Utils, 'handleError').and.callFake(() => {});
                 // Given that the page is loaded and there is no candidate yet
-                testUtils.detectChanges()
+                testUtils.detectChanges();
                 await testUtils.whenStable();
 
                 // When the candidate joins but is directly offline
