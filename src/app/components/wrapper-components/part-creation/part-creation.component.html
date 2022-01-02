@@ -179,7 +179,7 @@
                 </div>
                 <ng-template #configProposal>
                     <div class="content">
-                        <p i18n>{{ viewInfo.creator }} proposes to play a {{ viewInfo.partTypeName }} game</p>
+                        <p i18n>{{ viewInfo.creator }} proposes to play a <span id="partTypeName">{{ viewInfo.partTypeName }}</span> game</p>
                         <ul>
                             <li>
                                 <span *ngIf="viewInfo.firstPlayer === 'CREATOR'" i18n
