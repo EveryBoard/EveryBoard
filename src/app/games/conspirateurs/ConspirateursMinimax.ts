@@ -7,16 +7,17 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
 import { ConspirateursNode, ConspirateursRules } from './ConspirateursRules';
 import { ConspirateursState } from './ConspirateursState';
+import { MGPSet } from 'src/app/utils/MGPSet';
 
 export class ConspirateursMinimax extends Minimax<ConspirateursMove, ConspirateursState> {
     public getListMoves(node: ConspirateursNode): ConspirateursMove[] {
         if (node.gameState.turn < 40) {
-            return this.getListMovesBeforeDrop(node.gameState);
+            return this.getListMovesDrop(node.gameState);
         } else {
             return this.getListMovesAfterDrop(node.gameState);
         }
     }
-    private getListMovesBeforeDrop(state: ConspirateursState): ConspirateursMoveDrop[] {
+    private getListMovesDrop(state: ConspirateursState): ConspirateursMoveDrop[] {
         const moves: ConspirateursMoveDrop[] = [];
         for (let y: number = ConspirateursState.CENTRAL_ZONE_TOP_LEFT.y; // eslint-disable-next-line indent
              y <= ConspirateursState.CENTRAL_ZONE_BOTTOM_RIGHT.y; // eslint-disable-next-line indent
@@ -67,21 +68,23 @@ export class ConspirateursMinimax extends Minimax<ConspirateursMove, Conspirateu
         return moves;
     }
     private getListJumps(state: ConspirateursState, start: Coord): ConspirateursMoveJump[] {
-        let moves: ConspirateursMoveJump[] = [];
+        const moves: MGPSet<ConspirateursMoveJump> = new MGPSet();
         for (const firstTarget of ConspirateursRules.get().jumpTargetsFrom(start)) {
             const jump: ConspirateursMoveJump = ConspirateursMoveJump.of([start, firstTarget]).get();
             if (ConspirateursRules.get().jumpLegality(jump, state).isSuccess()) {
-                moves.push(jump);
-                moves = moves.concat(this.getListJumpStartingFrom(state, jump));
+                moves.add(jump);
+                moves.union(this.getListJumpStartingFrom(state, jump));
             }
         }
-        return moves;
+        return moves.getCopy();
     }
-    private getListJumpStartingFrom(state: ConspirateursState, jump: ConspirateursMoveJump): ConspirateursMoveJump[] {
+    private getListJumpStartingFrom(state: ConspirateursState, jump: ConspirateursMoveJump)
+    : MGPSet<ConspirateursMoveJump>
+    {
         const nextJumps: ConspirateursMoveJump[] = ConspirateursRules.get().nextJumps(jump, state);
-        let jumps: ConspirateursMoveJump[] = nextJumps;
+        const jumps: MGPSet<ConspirateursMoveJump> = new MGPSet(nextJumps);
         for (const nextJump of nextJumps) {
-            jumps = jumps.concat(this.getListJumpStartingFrom(state, nextJump));
+            jumps.union(this.getListJumpStartingFrom(state, nextJump));
         }
         return jumps;
     }
@@ -103,8 +106,8 @@ export class ConspirateursMinimax extends Minimax<ConspirateursMove, Conspirateu
                     score -= player.getScoreModifier() * distanceToSide;
                     if (state.isShelter(coord)) {
                         score += player.getScoreModifier() * 20;
-                        piecesInShelters[player.value] += 1;
-                        if (piecesInShelters[player.value] === 20) {
+                        piecesInShelters.replace(player, piecesInShelters.get(player).get() + 1);
+                        if (piecesInShelters.get(player).get() === 20) {
                             return new NodeUnheritance(player.getVictoryValue());
                         }
                     }

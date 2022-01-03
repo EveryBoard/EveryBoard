@@ -55,13 +55,14 @@ export class ConspirateursMoveSimple extends MoveCoordToCoord {
 
     public static of(start: Coord, end: Coord): MGPFallible<ConspirateursMoveSimple> {
         if (start.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT) &&
-            end.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT))
+            end.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT)) {
             if (start.isAlignedWith(end) && start.getDistance(end) === 1) {
                 return MGPFallible.success(new ConspirateursMoveSimple(start, end));
             } else {
                 return MGPFallible.failure(ConspirateursFailure.SIMPLE_MOVE_SHOULD_BE_OF_ONE_STEP());
-            } else {
-                return MGPFallible.failure('Move out of board');
+            }
+        } else {
+            return MGPFallible.failure('Move out of board');
         }
     }
 
@@ -169,10 +170,9 @@ export class ConspirateursMoveJump extends Move {
             return false;
         } else {
             if (other === this) return true;
-            if (other.coords.length !== this.coords.length) return false;
-            for (let i: number = 0; i < this.coords.length; i++) {
-                if (other.coords[i].equals(this.coords[i]) === false) return false;
-            }
+            // Equality only needs to check the first and last coord
+            if (this.getStartingCoord().equals(other.getStartingCoord()) === false) return false;
+            if (this.getEndingCoord().equals(other.getEndingCoord()) === false) return false;
             return true;
         }
     }

@@ -37,7 +37,7 @@ interface SquareInfo {
 })
 export class ConspirateursComponent extends GameComponent<ConspirateursRules, ConspirateursMove, ConspirateursState> {
     public CENTRAL_ZONE_START: Coord = ConspirateursState.CENTRAL_ZONE_TOP_LEFT;
-    public CENTRAL_ZONE_SIZE: Coord = new Vector(
+    public CENTRAL_ZONE_SIZE: Vector = new Vector(
         ConspirateursState.CENTRAL_ZONE_BOTTOM_RIGHT.x - ConspirateursState.CENTRAL_ZONE_TOP_LEFT.x,
         ConspirateursState.CENTRAL_ZONE_BOTTOM_RIGHT.y - ConspirateursState.CENTRAL_ZONE_TOP_LEFT.y,
     );

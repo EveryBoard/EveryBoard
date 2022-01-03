@@ -2,6 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Player } from 'src/app/jscaip/Player';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { MGPSet } from 'src/app/utils/MGPSet';
 
 export class ConspirateursState extends GameStateWithTable<Player> {
 
