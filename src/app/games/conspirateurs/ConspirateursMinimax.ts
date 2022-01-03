@@ -99,17 +99,21 @@ export class ConspirateursMinimax extends Minimax<ConspirateursMove, Conspirateu
                 const coord: Coord = new Coord(x, y);
                 const player: Player = state.getPieceAt(coord);
                 if (player !== Player.NONE) {
-                    const minDistanceToLeftOrTop: number = Math.min(x, y);
-                    const minDistanceToRightOrBottom: number =
-                        Math.min(ConspirateursState.WIDTH - x, ConspirateursState.HEIGHT - y);
-                    const distanceToSide: number = Math.min(minDistanceToLeftOrTop, minDistanceToRightOrBottom);
-                    score -= player.getScoreModifier() * distanceToSide;
                     if (state.isShelter(coord)) {
                         score += player.getScoreModifier() * 20;
                         piecesInShelters.replace(player, piecesInShelters.get(player).get() + 1);
                         if (piecesInShelters.get(player).get() === 20) {
                             return new NodeUnheritance(player.getVictoryValue());
                         }
+                    } else {
+                        let minEmptyShelterDistance: number = 100;
+                        for (const shelter of ConspirateursState.ALL_SHELTERS) {
+                            if (state.getPieceAt(shelter) === Player.NONE) {
+                                const distance: number = coord.getOrthogonalDistance(shelter);
+                                minEmptyShelterDistance = Math.min(minEmptyShelterDistance, distance);
+                            }
+                        }
+                        score -= player.getScoreModifier() * minEmptyShelterDistance;
                     }
                 }
             }

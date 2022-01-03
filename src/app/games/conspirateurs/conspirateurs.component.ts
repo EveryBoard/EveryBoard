@@ -20,6 +20,7 @@ interface ViewInfo {
     boardInfo: SquareInfo[][],
     dropPhase: boolean,
     victory: Coord[],
+    lastMoveArrow: string,
 }
 
 interface SquareInfo {
@@ -38,14 +39,14 @@ interface SquareInfo {
 export class ConspirateursComponent extends GameComponent<ConspirateursRules, ConspirateursMove, ConspirateursState> {
     public CENTRAL_ZONE_START: Coord = ConspirateursState.CENTRAL_ZONE_TOP_LEFT;
     public CENTRAL_ZONE_SIZE: Vector = new Vector(
-        ConspirateursState.CENTRAL_ZONE_BOTTOM_RIGHT.x - ConspirateursState.CENTRAL_ZONE_TOP_LEFT.x,
-        ConspirateursState.CENTRAL_ZONE_BOTTOM_RIGHT.y - ConspirateursState.CENTRAL_ZONE_TOP_LEFT.y,
+        ConspirateursState.CENTRAL_ZONE_BOTTOM_RIGHT.x - ConspirateursState.CENTRAL_ZONE_TOP_LEFT.x + 1,
+        ConspirateursState.CENTRAL_ZONE_BOTTOM_RIGHT.y - ConspirateursState.CENTRAL_ZONE_TOP_LEFT.y + 1,
     );
-
     public viewInfo: ViewInfo = {
         dropPhase: true,
         boardInfo: [],
         victory: [],
+        lastMoveArrow: '',
     };
     private selected: MGPOptional<Coord> = MGPOptional.empty();
     private jumpInConstruction: MGPOptional<ConspirateursMoveJump> = MGPOptional.empty();
@@ -71,6 +72,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         const state: ConspirateursState = this.getState();
         this.viewInfo.dropPhase = state.isDropPhase();
         this.viewInfo.boardInfo = [];
+        this.viewInfo.lastMoveArrow = '';
         for (let y: number = 0; y < ConspirateursState.HEIGHT; y++) {
             this.viewInfo.boardInfo.push([]);
             for (let x: number = 0; x < ConspirateursState.WIDTH; x++) {
@@ -130,8 +132,13 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
             this.viewInfo.boardInfo[lastMove.coord.y][lastMove.coord.x].squareClasses.push('moved');
             this.viewInfo.boardInfo[lastMove.end.y][lastMove.end.x].squareClasses.push('moved');
         } else {
+            this.viewInfo.lastMoveArrow = '';
             for (const coord of lastMove.coords) {
                 this.viewInfo.boardInfo[coord.y][coord.x].squareClasses.push('moved');
+                this.viewInfo.lastMoveArrow += (coord.x * this.SPACE_SIZE) + this.SPACE_SIZE/2 + this.STROKE_WIDTH;
+                this.viewInfo.lastMoveArrow += ' ';
+                this.viewInfo.lastMoveArrow += (coord.y * this.SPACE_SIZE) + this.SPACE_SIZE/2 + this.STROKE_WIDTH;
+                this.viewInfo.lastMoveArrow += ' ';
             }
         }
     }
