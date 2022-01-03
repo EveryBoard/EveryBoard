@@ -24,6 +24,10 @@ describe('ActivesPartsService', () => {
             spyOn(service, 'getActiveParts').and.returnValue([{
                 id: 'joinerIdOrWhatever',
                 doc: {
+                    lastUpdate: {
+                        index: 0,
+                        player: 0,
+                    },
                     listMoves: [],
                     playerZero: 'creator',
                     playerOne: 'firstCandidate',
@@ -44,6 +48,10 @@ describe('ActivesPartsService', () => {
             spyOn(service, 'getActiveParts').and.returnValue([{
                 id: 'joinerIdOrWhatever',
                 doc: {
+                    lastUpdate: {
+                        index: 0,
+                        player: 0,
+                    },
                     listMoves: [],
                     playerZero: 'firstCandidate',
                     playerOne: 'creator',
@@ -64,6 +72,10 @@ describe('ActivesPartsService', () => {
             spyOn(service, 'getActiveParts').and.returnValue([{
                 id: 'joinerIdOrWhatever',
                 doc: {
+                    lastUpdate: {
+                        index: 0,
+                        player: 0,
+                    },
                     listMoves: [],
                     playerZero: 'jeanRoger',
                     playerOne: 'Charles Du Pied',

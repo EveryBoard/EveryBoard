@@ -39,17 +39,17 @@ export class GameService implements OnDestroy {
 
     private followedPartSub: Subscription;
 
-    private userNameSub: Subscription;
+    private readonly userNameSub: Subscription;
 
     private userName: MGPOptional<string>;
 
-    constructor(private partDAO: PartDAO,
-                private activesPartsService: ActivesPartsService,
-                private joinerService: JoinerService,
-                private chatService: ChatService,
-                private router: Router,
-                private messageDisplayer: MessageDisplayer,
-                private authenticationService: AuthenticationService)
+    constructor(private readonly partDAO: PartDAO,
+                private readonly activesPartsService: ActivesPartsService,
+                private readonly joinerService: JoinerService,
+                private readonly chatService: ChatService,
+                private readonly router: Router,
+                private readonly messageDisplayer: MessageDisplayer,
+                private readonly authenticationService: AuthenticationService)
     {
         display(GameService.VERBOSE, 'GameService.constructor');
         this.userNameSub = this.authenticationService.getUserObs()
@@ -95,6 +95,10 @@ export class GameService implements OnDestroy {
                 'GameService.createPart(' + creatorName + ', ' + typeGame + ')');
 
         const newPart: IPart = {
+            lastUpdate: {
+                index: 0,
+                player: 0,
+            },
             typeGame,
             playerZero: creatorName,
             turn: -1,
@@ -124,12 +128,10 @@ export class GameService implements OnDestroy {
 
         this.activesPartsService.stopObserving();
     }
-    // on Part Creation Component
-
-    private startGameWithConfig(partId: string, joiner: IJoiner): Promise<void> {
+    private startGameWithConfig(partId: string, user: Player, lastIndex: number, joiner: IJoiner): Promise<void> {
         display(GameService.VERBOSE, 'GameService.startGameWithConfig(' + partId + ', ' + JSON.stringify(joiner));
         const modification: StartingPartConfig = this.getStartingConfig(joiner);
-        return this.partDAO.update(partId, modification);
+        return this.partDAO.updateAndBumpIndex(partId, user, lastIndex, modification);
     }
     public getStartingConfig(joiner: IJoiner): StartingPartConfig
     {
@@ -167,10 +169,8 @@ export class GameService implements OnDestroy {
         display(GameService.VERBOSE, { gameService_acceptConfig: { partId, joiner } });
 
         await this.joinerService.acceptConfig();
-        return this.startGameWithConfig(partId, joiner);
+        return this.startGameWithConfig(partId, Player.ONE, 0, joiner); // TODO For Review: eeeeeeh
     }
-    // on OnlineGame Component
-
     public startObserving(partId: string, callback: (iPart: ICurrentPartId) => void): void {
         if (this.followedPartId.isAbsent()) {
             display(GameService.VERBOSE, '[start watching part ' + partId);
@@ -183,42 +183,51 @@ export class GameService implements OnDestroy {
             throw new Error('GameService.startObserving should not be called while already observing a game');
         }
     }
-    public resign(partId: string, winner: string, loser: string): Promise<void> {
-        return this.partDAO.update(partId, {
+    public resign(partId: string, user: Player, lastIndex: number, winner: string, loser: string): Promise<void> {
+        const modification: Partial<IPart> = {
             winner,
             loser,
             result: MGPResult.RESIGN.value,
             request: null,
-        }); // resign
+        };
+        return this.partDAO.updateAndBumpIndex(partId, user, lastIndex, modification); // resign
     }
-    public notifyTimeout(partId: string, winner: string, loser: string): Promise<void> {
-        return this.partDAO.update(partId, {
+    public notifyTimeout(partId: string,
+                         user: Player,
+                         lastIndex: number,
+                         winner: string,
+                         loser: string)
+    : Promise<void>
+    {
+        const modifications: Partial<IPart> = {
             winner,
             loser,
             result: MGPResult.TIMEOUT.value,
             request: null,
-        });
+        };
+        return this.partDAO.updateAndBumpIndex(partId, user, lastIndex, modifications);
     }
-    public sendRequest(partId: string, request: Request): Promise<void> {
-        return this.partDAO.update(partId, { request });
+    public sendRequest(partId: string, user: Player, lastIndex: number, request: Request): Promise<void> {
+        return this.partDAO.updateAndBumpIndex(partId, user, lastIndex, { request });
     }
-    public proposeDraw(partId: string, player: Player): Promise<void> {
-        return this.sendRequest(partId, Request.drawProposed(player));
+    public proposeDraw(partId: string, lastIndex: number, player: Player): Promise<void> {
+        return this.sendRequest(partId, player, lastIndex, Request.drawProposed(player));
     }
-    public acceptDraw(partId: string, as: Player): Promise<void> {
+    public acceptDraw(partId: string, lastIndex: number, as: Player): Promise<void> {
         const mgpResult: MGPResult = as === Player.ZERO ? MGPResult.AGREED_DRAW_BY_ZERO : MGPResult.AGREED_DRAW_BY_ONE;
-        return this.partDAO.update(partId, {
+        const modification: Partial<IPart> = {
             result: mgpResult.value,
             request: null,
-        });
+        };
+        return this.partDAO.updateAndBumpIndex(partId, as, lastIndex, modification);
     }
-    public refuseDraw(partId: string, player: Player): Promise<void> {
-        return this.sendRequest(partId, Request.drawRefused(player));
+    public refuseDraw(partId: string, lastIndex: number, player: Player): Promise<void> {
+        return this.sendRequest(partId, player, lastIndex, Request.drawRefused(player));
     }
-    public proposeRematch(partId: string, player: Player): Promise<void> {
-        return this.sendRequest(partId, Request.rematchProposed(player));
+    public proposeRematch(partId: string, lastIndex: number, player: Player): Promise<void> {
+        return this.sendRequest(partId, player, lastIndex, Request.rematchProposed(player));
     }
-    public async acceptRematch(part: ICurrentPartId): Promise<void> {
+    public async acceptRematch(part: ICurrentPartId, user: Player, lastIndex: number): Promise<void> {
         display(GameService.VERBOSE, { called: 'GameService.acceptRematch(', part });
 
         const iJoiner: IJoiner = await this.joinerService.readJoinerById(part.id);
@@ -230,15 +239,17 @@ export class GameService implements OnDestroy {
         }
         const newJoiner: IJoiner = {
             ...iJoiner, // 5 attributes unchanged
-
             candidates: [], // they'll join again when the component reload
-
             firstPlayer: firstPlayer.value, // first player changed so the other one starts
             partStatus: PartStatus.PART_STARTED.value, // game ready to start
         };
         const rematchId: string = await this.joinerService.createJoiner(newJoiner);
         const startingConfig: StartingPartConfig = this.getStartingConfig(newJoiner);
         const newPart: IPart = {
+            lastUpdate: {
+                index: 0,
+                player: user.value,
+            },
             typeGame: part.doc.typeGame,
             result: MGPResult.UNACHIEVED.value,
             listMoves: [],
@@ -246,10 +257,10 @@ export class GameService implements OnDestroy {
         };
         await this.partDAO.set(rematchId, newPart);
         await this.createChat(rematchId);
-        return this.sendRequest(part.id, Request.rematchAccepted(part.doc.typeGame, rematchId));
+        return this.sendRequest(part.id, user, lastIndex, Request.rematchAccepted(part.doc.typeGame, rematchId));
     }
-    public askTakeBack(partId: string, player: Player): Promise<void> {
-        return this.sendRequest(partId, Request.takeBackAsked(player));
+    public askTakeBack(partId: string, lastIndex: number, player: Player): Promise<void> {
+        return this.sendRequest(partId, player, lastIndex, Request.takeBackAsked(player));
     }
     public async acceptTakeBack(id: string, part: Part, observerRole: Player, msToSubstract: [number, number])
     : Promise<void>
@@ -272,17 +283,17 @@ export class GameService implements OnDestroy {
             remainingMsForZero: Utils.getNonNullable(part.doc.remainingMsForZero) - msToSubstract[0],
             remainingMsForOne: Utils.getNonNullable(part.doc.remainingMsForOne) - msToSubstract[1],
         };
-        return await this.partDAO.update(id, update);
+        const lastIndex: number = part.doc.lastUpdate.index;
+        return await this.partDAO.updateAndBumpIndex(id, observerRole, lastIndex, update);
     }
-    public refuseTakeBack(id: string, observerRole: Player): Promise<void> {
+    public refuseTakeBack(id: string, lastIndex: number, observerRole: Player): Promise<void> {
         assert(observerRole !== Player.NONE, 'Illegal for observer to make request');
 
         const request: Request = Request.takeBackRefused(observerRole);
-        return this.partDAO.update(id, {
-            request,
-        });
+        return this.partDAO.updateAndBumpIndex(id, observerRole, lastIndex, { request });
     }
     public async addGlobalTime(id: string,
+                               lastIndex: number,
                                part: Part,
                                observerRole: Player)
     : Promise<void>
@@ -303,10 +314,11 @@ export class GameService implements OnDestroy {
                 remainingMsForZero: Utils.getNonNullable(part.doc.remainingMsForZero) + 5 * 60 * 1000,
             };
         }
-        return await this.partDAO.update(id, update);
+        return await this.partDAO.updateAndBumpIndex(id, observerRole, lastIndex, update);
     }
-    public async addTurnTime(observerRole: Player, id: string): Promise<void> {
-        return await this.partDAO.update(id, { request: Request.turnTimeAdded(observerRole.getOpponent()) });
+    public async addTurnTime(observerRole: Player, lastIndex: number, id: string): Promise<void> {
+        const modification: Partial<IPart> = { request: Request.turnTimeAdded(observerRole.getOpponent()) };
+        return await this.partDAO.updateAndBumpIndex(id, observerRole, lastIndex, modification);
     }
     public stopObserving(): void {
         display(GameService.VERBOSE, 'GameService.stopObserving();');
@@ -320,6 +332,7 @@ export class GameService implements OnDestroy {
         this.followedPartObs = MGPOptional.empty();
     }
     public async updateDBBoard(partId: string,
+                               user: Player,
                                encodedMove: JSONValueWithoutArray,
                                msToSubstract: [number, number],
                                scores?: [number, number],
@@ -332,13 +345,12 @@ export class GameService implements OnDestroy {
             partId, encodedMove, scores, msToSubstract, notifyDraw, winner, loser } });
 
         const part: IPart = (await this.partDAO.read(partId)).get(); // TODO: optimise this
+        const lastIndex: number = part.lastUpdate.index;
         const turn: number = part.turn + 1;
         const listMoves: JSONValueWithoutArray[] = ArrayUtils.copyImmutableArray(part.listMoves);
         listMoves[listMoves.length] = encodedMove;
         let update: Partial<IPart> = {
-            listMoves,
-            turn,
-            request: null,
+            listMoves, turn, request: null,
             lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
         };
         if (scores !== undefined) {
@@ -363,9 +375,7 @@ export class GameService implements OnDestroy {
         if (winner != null) {
             update = {
                 ...update,
-                winner,
-                loser,
-                result: MGPResult.VICTORY.value,
+                winner, loser, result: MGPResult.VICTORY.value,
             };
         } else if (notifyDraw === true) {
             update = {
@@ -373,6 +383,6 @@ export class GameService implements OnDestroy {
                 result: MGPResult.HARD_DRAW.value,
             };
         }
-        return await this.partDAO.update(partId, update);
+        return await this.partDAO.updateAndBumpIndex(partId, user, lastIndex, update);
     }
 }

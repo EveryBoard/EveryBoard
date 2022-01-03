@@ -4,7 +4,12 @@ import { DomainWrapper } from './DomainWrapper';
 import { FirebaseTime } from './Time';
 import { MGPOptional } from '../utils/MGPOptional';
 
+interface LastUpdateInfo extends FirebaseJSONObject {
+    readonly index: number,
+    readonly player: number,
+}
 export interface IPart extends FirebaseJSONObject {
+    readonly lastUpdate: LastUpdateInfo,
     readonly typeGame: string, // the type of game
     readonly playerZero: string, // the id of the first player
     readonly turn: number, // -1 means the part has not started, 0 is the initial turn

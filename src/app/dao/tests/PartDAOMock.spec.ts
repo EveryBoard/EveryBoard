@@ -5,6 +5,7 @@ import { ObservableSubject } from 'src/app/utils/tests/ObservableSubject.spec';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 import { display } from 'src/app/utils/utils';
+import { Player } from 'src/app/jscaip/Player';
 
 type PartOS = ObservableSubject<ICurrentPartId>
 
@@ -23,6 +24,21 @@ export class PartDAOMock extends FirebaseFirestoreDAOMock<IPart> {
     }
     public resetStaticDB(): void {
         PartDAOMock.partDB = new MGPMap();
+    }
+    public async updateAndBumpIndex(id: string,
+                                    user: Player,
+                                    lastIndex: number,
+                                    modification: Partial<IPart>)
+    : Promise<void>
+    {
+        modification = {
+            ...modification,
+            lastUpdate: {
+                index: lastIndex + 1,
+                player: user.value,
+            },
+        };
+        return this.update(id, modification);
     }
     public observeActivesParts(callback: FirebaseCollectionObserver<IPart>): () => void {
         return this.observingWhere([['result', '==', MGPResult.UNACHIEVED.value]], callback);

@@ -24,7 +24,6 @@ import { Time } from 'src/app/domain/Time';
 import { getMillisecondsDifference } from 'src/app/utils/TimeUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameState } from 'src/app/jscaip/GameState';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 export class UpdateType {
@@ -233,7 +232,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         const diff: ObjectDifference = ObjectDifference.from(currentPartDoc, update.doc);
         display(OnlineGameWrapperComponent.VERBOSE, { diff });
         const nbDiffs: number = diff.countChanges();
-        if (diff == null || nbDiffs === 0) {
+        if (nbDiffs === 0) {
             return UpdateType.DUPLICATE;
         }
         if (update.doc.request) {
@@ -276,7 +275,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     }
     public isMove(diff: ObjectDifference, nbDiffs: number): boolean {
         if (diff.modified['listMoves'] != null && diff.modified['turn'] != null) {
-            const modifOnListMovesAndTurn: number = 2;
+            const modifOnListMovesTurnAndLastUpdateFields: number = 3;
             const lastMoveTimeModified: number = diff.isPresent('lastMoveTime').present ? 1 : 0;
             const scoreZeroUpdated: number = diff.isPresent('scorePlayerZero').present ? 1 : 0;
             const scoreOneUpdated: number = diff.isPresent('scorePlayerOne').present ? 1 : 0;
@@ -289,7 +288,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                                              remainingMsForZeroUpdated +
                                              remainingMsForOneUpdated +
                                              requestRemoved +
-                                             modifOnListMovesAndTurn;
+                                             modifOnListMovesTurnAndLastUpdateFields;
             return nbDiffs === nbValidMoveDiffs;
         } else {
             return false;
@@ -337,7 +336,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     private doNewMoves(part: Part) {
         this.switchPlayer();
         const listMoves: JSONValue[] = ArrayUtils.copyImmutableArray(part.doc.listMoves);
-        const rules: Rules<Move, GameState, unknown, NodeUnheritance> = this.gameComponent.rules;
+        const rules: Rules<Move, GameState, unknown> = this.gameComponent.rules;
         while (rules.node.gameState.turn < listMoves.length) {
             const currentPartTurn: number = rules.node.gameState.turn;
             const chosenMove: Move = this.gameComponent.encoder.decode(listMoves[currentPartTurn]);
@@ -398,16 +397,17 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     }
     public notifyDraw(encodedMove: JSONValueWithoutArray, scores?: [number, number]): Promise<void> {
         this.endGame = true;
-        return this.gameService.updateDBBoard(this.currentPartId, encodedMove, [0, 0], scores, true);
+        const user: Player = this.getPlayer();
+        return this.gameService.updateDBBoard(this.currentPartId, user, encodedMove, [0, 0], scores, true);
     }
-    public notifyTimeoutVictory(victoriousPlayer: string, loser: string): void {
+    public notifyTimeoutVictory(victoriousPlayer: string, user: Player, lastIndex: number, loser: string): void {
         this.endGame = true;
 
         // TODO: should the part be updated here? Or instead should we wait for the update from firestore?
         const wonPart: Part = this.currentPart.setWinnerAndLoser(victoriousPlayer, loser);
         this.currentPart = wonPart;
 
-        this.gameService.notifyTimeout(this.currentPartId, victoriousPlayer, loser);
+        this.gameService.notifyTimeout(this.currentPartId, user, lastIndex, victoriousPlayer, loser);
     }
     public notifyVictory(encodedMove: JSONValueWithoutArray, scores?: [number, number]): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.notifyVictory');
@@ -420,8 +420,10 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             this.currentPart = this.currentPart.setWinnerAndLoser(this.players[0].get(), this.players[1].get());
         }
         this.endGame = true;
+        const user: Player = this.getPlayer();
 
         return this.gameService.updateDBBoard(this.currentPartId,
+                                              user,
                                               encodedMove,
                                               [0, 0],
                                               scores,
@@ -622,74 +624,99 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             if (this.previousUpdateWasATakeBack === true) {
                 msToSubstract = [0, 0];
             }
+            const user: Player = this.getPlayer();
             return this.gameService.updateDBBoard(this.currentPartId,
+                                                  user,
                                                   encodedMove,
                                                   msToSubstract,
                                                   scores);
         }
     }
     public resign(): void {
+        const lastIndex: number = this.getLastIndex();
+        const user: Player = this.getPlayer();
         const resigner: string = this.players[this.observerRole % 2].get();
         const victoriousOpponent: string = this.players[(this.observerRole + 1) % 2].get();
-        this.gameService.resign(this.currentPartId, victoriousOpponent, resigner);
+        this.gameService.resign(this.currentPartId, user, lastIndex, victoriousOpponent, resigner);
+    }
+    private getLastIndex(): number {
+        return this.currentPart.doc.lastUpdate.index;
     }
     public reachedOutOfTime(player: 0 | 1): void {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.reachedOutOfTime(' + player + ')');
+        const lastIndex: number = this.getLastIndex();
+        const user: Player = this.getPlayer();
         this.stopCountdownsFor(Player.of(player));
         const opponent: IUserId = Utils.getNonNullable(this.opponent);
         if (player === this.observerRole) {
             // the player has run out of time, he'll notify his own defeat by time
-            this.notifyTimeoutVictory(Utils.getNonNullable(opponent.doc.username), this.getPlayerName());
+            this.notifyTimeoutVictory(Utils.getNonNullable(opponent.doc.username),
+                                      user,
+                                      lastIndex,
+                                      this.getPlayerName());
         } else {
             if (this.endGame) {
                 display(true, 'time might be better handled in the future');
             } else if (this.opponentIsOffline()) { // the other player has timed out
-                this.notifyTimeoutVictory(this.getPlayerName(), Utils.getNonNullable(opponent.doc.username));
+                this.notifyTimeoutVictory(this.getPlayerName(),
+                                          user,
+                                          player,
+                                          Utils.getNonNullable(opponent.doc.username));
                 this.endGame = true;
             }
         }
     }
     public acceptRematch(): boolean {
-        if (this.isPlaying() === false) {
+        if (this.isPlaying() === false) { // TODOTODO eeeeeh
             return false;
         }
         const currentPartId: ICurrentPartId = {
             id: this.currentPartId,
             doc: this.currentPart.doc,
         };
-        this.gameService.acceptRematch(currentPartId);
+        const user: Player = this.getPlayer();
+        const lastIndex: number = this.getLastIndex();
+        this.gameService.acceptRematch(currentPartId, user, lastIndex);
         return true;
     }
     public proposeRematch(): boolean {
-        if (this.isPlaying() === false) {
+        if (this.isPlaying() === false) { // TODOTODO eeeeh
             return false;
         }
-        this.gameService.proposeRematch(this.currentPartId, this.getPlayer());
+        const user: Player = this.getPlayer();
+        const lastIndex: number = this.getLastIndex();
+        this.gameService.proposeRematch(this.currentPartId, lastIndex, user);
         return true;
     }
     public proposeDraw(): void {
-        this.gameService.proposeDraw(this.currentPartId, this.getPlayer());
+        const user: Player = this.getPlayer();
+        const lastIndex: number = this.getLastIndex();
+        this.gameService.proposeDraw(this.currentPartId, lastIndex, user);
     }
     public acceptDraw(): void {
-        const user: Player = Player.of(this.observerRole);
-        this.gameService.acceptDraw(this.currentPartId, user);
+        const lastIndex: number = this.getLastIndex();
+        const user: Player = this.getPlayer();
+        this.gameService.acceptDraw(this.currentPartId, lastIndex, user);
     }
     public refuseDraw(): void {
-        const player: Player = Player.of(this.observerRole);
-        this.gameService.refuseDraw(this.currentPartId, player);
+        const user: Player = this.getPlayer();
+        const lastIndex: number = this.getLastIndex();
+        this.gameService.refuseDraw(this.currentPartId, lastIndex, user);
     }
     public askTakeBack(): void {
-        const player: Player = Player.of(this.observerRole);
-        this.gameService.askTakeBack(this.currentPartId, player);
+        const user: Player = this.getPlayer();
+        const lastIndex: number = this.getLastIndex();
+        this.gameService.askTakeBack(this.currentPartId, lastIndex, user);
     }
     public acceptTakeBack(): void {
-        const player: Player = Player.of(this.observerRole);
+        const player: Player = this.getPlayer();
         this.gameService.acceptTakeBack(this.currentPartId, this.currentPart, player, this.msToSubstract);
         this.msToSubstract = [0, 0];
     }
     public refuseTakeBack(): void {
-        const player: Player = Player.of(this.observerRole);
-        this.gameService.refuseTakeBack(this.currentPartId, player);
+        const user: Player = this.getPlayer();
+        const lastIndex: number = this.getLastIndex();
+        this.gameService.refuseTakeBack(this.currentPartId, lastIndex, user);
     }
     public startCountDownFor(player: Player): void {
         display(OnlineGameWrapperComponent.VERBOSE,
@@ -808,12 +835,14 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         return true;
     }
     public addGlobalTime(): Promise<void> {
-        const giver: Player = Player.of(this.observerRole);
-        return this.gameService.addGlobalTime(this.currentPartId, this.currentPart, giver);
+        const giver: Player = this.getPlayer();
+        const lastIndex: number = this.getLastIndex();
+        return this.gameService.addGlobalTime(this.currentPartId, lastIndex, this.currentPart, giver);
     }
     public addTurnTime(): Promise<void> {
-        const giver: Player = Player.of(this.observerRole);
-        return this.gameService.addTurnTime(giver, this.currentPartId);
+        const giver: Player = this.getPlayer();
+        const lastIndex: number = this.getLastIndex();
+        return this.gameService.addTurnTime(giver, lastIndex, this.currentPartId);
     }
     public addTurnTimeTo(player: Player, addedMs: number): void {
         const currentPlayer: Player = Player.fromTurn(this.currentPart.getTurn());

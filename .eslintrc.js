@@ -42,7 +42,6 @@ module.exports = {
             '@typescript-eslint/switch-exhaustiveness-check': ['warn'],
             '@typescript-eslint/no-unused-expressions': ['warn'],
             '@typescript-eslint/no-unused-vars': ['warn'],
-            '@typescript-eslint/no-use-before-define': ['warn'],
             '@typescript-eslint/no-useless-constructor': ['warn'],
             '@typescript-eslint/typedef': [
                 'error',

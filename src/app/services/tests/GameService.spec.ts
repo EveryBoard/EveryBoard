@@ -62,6 +62,10 @@ describe('GameService', () => {
             expect(iPart.id).toBe('partId');
         };
         spyOn(partDAO, 'getObsById').and.returnValue(of({ id: 'partId', doc: {
+            lastUpdate: {
+                index: 4,
+                player: 0,
+            },
             typeGame: 'Quarto',
             playerZero: 'creator',
             playerOne: 'joiner',
@@ -70,7 +74,7 @@ describe('GameService', () => {
             result: MGPResult.UNACHIEVED.value,
         } }));
         service.startObserving('partId', myCallback);
-        expect(partDAO.getObsById).toHaveBeenCalled();
+        expect(partDAO.getObsById).toHaveBeenCalledWith('partId');
     });
     it('startObserving should throw exception when called while observing ', fakeAsync(async() => {
         await partDAO.set('myJoinerId', PartMocks.INITIAL.doc);
@@ -83,11 +87,15 @@ describe('GameService', () => {
     it('should delegate delete to PartDAO', () => {
         spyOn(partDAO, 'delete');
         service.deletePart('partId');
-        expect(partDAO.delete).toHaveBeenCalled();
+        expect(partDAO.delete).toHaveBeenCalledOnceWith('partId');
     });
     it('should forbid to accept a take back that the player proposed himself', fakeAsync(async() => {
         for (const player of [Player.ZERO, Player.ONE]) {
             const part: Part = new Part({
+                lastUpdate: {
+                    index: 0,
+                    player: player.value,
+                },
                 typeGame: 'Quarto',
                 playerZero: 'creator',
                 playerOne: 'joiner',
@@ -108,7 +116,7 @@ describe('GameService', () => {
 
         await service.acceptConfig('partId', joiner);
 
-        expect(joinerService.acceptConfig).toHaveBeenCalled();
+        expect(joinerService.acceptConfig).toHaveBeenCalledOnceWith();
     }));
     describe('createGameAndRedirectOrShowError', () => {
         it('should show toast and navigate when creator is offline', fakeAsync(async() => {
@@ -198,7 +206,7 @@ describe('GameService', () => {
         it('should send request when proposing a rematch', fakeAsync(async() => {
             spyOn(service, 'sendRequest').and.resolveTo();
 
-            await service.proposeRematch('partId', Player.ZERO);
+            await service.proposeRematch('partId', 0, Player.ZERO);
 
             expect(service.sendRequest).toHaveBeenCalledTimes(1);
         }));
@@ -207,6 +215,10 @@ describe('GameService', () => {
             const lastPart: ICurrentPartId = {
                 id: 'partId',
                 doc: {
+                    lastUpdate: {
+                        index: 4,
+                        player: 0,
+                    },
                     listMoves: [MOVE_1, MOVE_2],
                     playerZero: 'creator',
                     playerOne: 'joiner',
@@ -231,7 +243,7 @@ describe('GameService', () => {
                 totalPartDuration: 25,
             };
             spyOn(service, 'sendRequest').and.resolveTo();
-            spyOn(joinerService, 'readJoinerById').and.returnValue(Promise.resolve(lastGameJoiner));
+            spyOn(joinerService, 'readJoinerById').and.resolveTo(lastGameJoiner);
             let called: boolean = false;
             spyOn(partDAO, 'set').and.callFake(async(_id: string, element: IPart) => {
                 expect(element.playerZero).toEqual(Utils.getNonNullable(lastPart.doc.playerOne));
@@ -240,7 +252,7 @@ describe('GameService', () => {
             });
 
             // when accepting rematch
-            await service.acceptRematch(lastPart);
+            await service.acceptRematch(lastPart, Player.ONE, 5);
 
             // then we should have a part created with playerOne and playerZero switched
             expect(called).toBeTrue();
@@ -250,6 +262,10 @@ describe('GameService', () => {
             const lastPart: ICurrentPartId = {
                 id: 'partId',
                 doc: {
+                    lastUpdate: {
+                        index: 4,
+                        player: 0,
+                    },
                     listMoves: [MOVE_1, MOVE_2],
                     playerZero: 'joiner',
                     playerOne: 'creator',
@@ -274,7 +290,7 @@ describe('GameService', () => {
                 totalPartDuration: 25,
             };
             spyOn(service, 'sendRequest').and.resolveTo();
-            spyOn(joinerService, 'readJoinerById').and.returnValue(Promise.resolve(lastGameJoiner));
+            spyOn(joinerService, 'readJoinerById').and.resolveTo(lastGameJoiner);
             let called: boolean = false;
             spyOn(partDAO, 'set').and.callFake(async(_id: string, element: IPart) => {
                 expect(element.playerZero).toEqual(Utils.getNonNullable(lastPart.doc.playerOne));
@@ -283,7 +299,7 @@ describe('GameService', () => {
             });
 
             // when accepting rematch
-            await service.acceptRematch(lastPart);
+            await service.acceptRematch(lastPart, Player.ONE, 5);
 
             // then we should have a part created with playerOne and playerZero switched
             expect(called).toBeTrue();
@@ -291,6 +307,10 @@ describe('GameService', () => {
     });
     describe('updateDBBoard', () => {
         const part: Part = new Part({
+            lastUpdate: {
+                index: 4,
+                player: 0,
+            },
             typeGame: 'Quarto',
             playerZero: 'creator',
             playerOne: 'joiner',
@@ -302,11 +322,12 @@ describe('GameService', () => {
         beforeEach(() => {
             spyOn(partDAO, 'read').and.resolveTo(MGPOptional.of(part.doc));
             spyOn(partDAO, 'update').and.resolveTo();
+            spyOn(partDAO, 'updateAndBumpIndex').and.callThrough();
         });
         it('should add scores to update when scores are present', fakeAsync(async() => {
             // when updating the board with scores
             const scores: [number, number] = [5, 0];
-            await service.updateDBBoard('partId', MOVE_2, [0, 0], scores);
+            await service.updateDBBoard('partId', Player.ONE, MOVE_2, [0, 0], scores);
             // then the update should contain the scores
             const expectedUpdate: Partial<IPart> = {
                 listMoves: [MOVE_1, MOVE_2],
@@ -316,13 +337,17 @@ describe('GameService', () => {
                 scorePlayerZero: 5,
                 scorePlayerOne: 0,
             };
-            expect(partDAO.update).toHaveBeenCalledWith('partId', expectedUpdate);
+            expect(partDAO.updateAndBumpIndex).toHaveBeenCalledOnceWith('partId', Player.ONE, 4, expectedUpdate);
         }));
         it('should include the draw notification if requested', fakeAsync(async() => {
             // when updating the board to notify of a draw
-            await service.updateDBBoard('partId', MOVE_2, [0, 0], undefined, true);
+            await service.updateDBBoard('partId', Player.ONE, MOVE_2, [0, 0], undefined, true);
             // then the result is set to draw in the update
             const expectedUpdate: Partial<IPart> = {
+                lastUpdate: {
+                    index: 5,
+                    player: Player.ONE.value,
+                },
                 listMoves: [MOVE_1, MOVE_2],
                 turn: 2,
                 request: null,
@@ -338,10 +363,14 @@ describe('GameService', () => {
             spyOn(partDAO, 'update');
 
             // When calling acceptDraw as Player.ONE
-            service.acceptDraw('joinerId', Player.ONE);
+            service.acceptDraw('joinerId', 5, Player.ONE);
 
             // Then PartDAO should have been called with AGREED_DRAW_BY_ONE
             expect(partDAO.update).toHaveBeenCalledOnceWith('joinerId', {
+                lastUpdate: {
+                    index: 6,
+                    player: Player.ONE.value,
+                },
                 request: null,
                 result: MGPResult.AGREED_DRAW_BY_ONE.value,
             });
@@ -351,10 +380,14 @@ describe('GameService', () => {
             spyOn(partDAO, 'update');
 
             // When calling acceptDraw as Player.ONE
-            service.acceptDraw('joinerId', Player.ZERO);
+            service.acceptDraw('joinerId', 5, Player.ZERO);
 
             // Then PartDAO should have been called with AGREED_DRAW_BY_ONE
             expect(partDAO.update).toHaveBeenCalledOnceWith('joinerId', {
+                lastUpdate: {
+                    index: 6,
+                    player: Player.ZERO.value,
+                },
                 request: null,
                 result: MGPResult.AGREED_DRAW_BY_ZERO.value,
             });
