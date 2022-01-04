@@ -59,7 +59,7 @@ export class ConspirateursTutorial {
         ),
         TutorialStep.fromPredicate(
             $localize`Jumps`,
-            $localize`The other type of move is a jump. A piece can jump over a neighboring piece in any direction, as long as it lands directly on the square after that piece, along the same direction.<br/><br/>You're playing Dark. Perform a jump by clicking on one of your piece that can perform a jump, and then on the target square. Click a second time on the target square to confirm your jump (we will see shortly why this is useful).`,
+            $localize`The other type of move is a jump. A piece can jump over a neighboring piece in any direction, as long as it lands directly on the square after that piece, along the same direction.<br/><br/>You're playing Dark. Perform a jump by clicking on one of your piece that can perform a jump, and then on the target square. You may need to click a second time on the target square to confirm your jump, in case your piece is still highlighted (we will see shortly why this is useful).`,
             new ConspirateursState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -91,7 +91,7 @@ export class ConspirateursTutorial {
         ),
         TutorialStep.fromMove(
             $localize`Chaining jumps in a single move`,
-            $localize`Jumps can be chained when possible. You can decide whether to continue a jump or to stop it at any time. To finish your jump, click a second time on your current location. Otherwise, simply keep clicking on your next location.<br/><br/>You're playing Dark and you can perform a triple jump! Do it.`,
+            $localize`Jumps can be chained when possible. You can decide whether to continue a jump or to stop it at any time. To finish your jump, click a second time on your current location. Otherwise, simply keep clicking on your next location. Once no more destination is possible, your move will end without you needing to click the piece a second time.<br/><br/>You're playing Dark and you can perform a triple jump! Do it.`,
             new ConspirateursState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, B, _, _, _, _, _, _, _, _, _, _],
