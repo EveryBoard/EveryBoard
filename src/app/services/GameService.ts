@@ -119,11 +119,6 @@ export class GameService implements OnDestroy {
     public canCreateGame(): boolean {
         return this.userName.isPresent() && this.activesPartsService.hasActivePart(this.userName.get()) === false;
     }
-    public unSubFromActivesPartsObs(): void {
-        display(GameService.VERBOSE, 'GameService.unSubFromActivesPartsObs()');
-
-        this.activesPartsService.stopObserving();
-    }
     // on Part Creation Component
 
     private startGameWithConfig(partId: string, joiner: IJoiner): Promise<void> {

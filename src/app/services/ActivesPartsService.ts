@@ -4,74 +4,75 @@ import { PartDAO } from '../dao/PartDAO';
 import { ICurrentPartId, IPart } from '../domain/icurrentpart';
 import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
 import { assert } from '../utils/utils';
+import { MGPOptional } from '../utils/MGPOptional';
 
 @Injectable({
     providedIn: 'root',
 })
+/*
+ * This service handles parts being played, and is used by the server component and game component.
+ */
 export class ActivesPartsService implements OnDestroy {
-    /* Actives Parts service
-     * this service is used by the Server Component
-     */
 
-    private activesPartsBS: BehaviorSubject<ICurrentPartId[]>;
+    private readonly activePartsBS: BehaviorSubject<ICurrentPartId[]>;
 
-    public activesPartsObs: Observable<ICurrentPartId[]>;
+    private readonly activePartsObs: Observable<ICurrentPartId[]>;
 
-    private activesParts: ICurrentPartId[] = [];
+    private activeParts: ICurrentPartId[] = []
 
-    private unsubscribe: () => void;
+    private unsubscribe: MGPOptional<() => void> = MGPOptional.empty();
 
-    constructor(public partDao: PartDAO) {
-        this.activesPartsBS = new BehaviorSubject<ICurrentPartId[]>([]);
-        this.activesPartsObs = this.activesPartsBS.asObservable();
+    constructor(private readonly partDao: PartDAO) {
+        this.activePartsBS = new BehaviorSubject<ICurrentPartId[]>([]);
+        this.activePartsObs = this.activePartsBS.asObservable();
         this.startObserving();
+    }
+    public getActivePartsObs(): Observable<ICurrentPartId[]> {
+        return this.activePartsObs;
     }
     public ngOnDestroy(): void {
         this.stopObserving();
     }
-    public getActiveParts(): ICurrentPartId[] {
-        return this.activesParts;
-    }
     public startObserving(): void {
         const onDocumentCreated: (createdParts: ICurrentPartId[]) => void = (createdParts: ICurrentPartId[]) => {
-            const result: ICurrentPartId[] = this.activesPartsBS.value.concat(...createdParts);
-            this.activesPartsBS.next(result);
+            const result: ICurrentPartId[] = this.activePartsBS.value.concat(...createdParts);
+            this.activePartsBS.next(result);
         };
         const onDocumentModified: (modifiedParts: ICurrentPartId[]) => void = (modifiedParts: ICurrentPartId[]) => {
-            const result: ICurrentPartId[] = this.activesPartsBS.value;
+            const result: ICurrentPartId[] = this.activePartsBS.value;
             for (const p of modifiedParts) {
                 result.forEach((part: ICurrentPartId) => {
                     if (part.id === p.id) part.doc = p.doc;
                 });
             }
-            this.activesPartsBS.next(result);
+            this.activePartsBS.next(result);
         };
         const onDocumentDeleted: (deletedDocs: ICurrentPartId[]) => void = (deletedDocs: ICurrentPartId[]) => {
             const result: ICurrentPartId[] = [];
             const deletedIds: string[] = deletedDocs.map((doc: ICurrentPartId) => doc.id);
-            for (const p of this.activesPartsBS.value) {
+            for (const p of this.activePartsBS.value) {
                 if (!deletedIds.includes(p.id)) {
                     result.push(p);
                 }
             }
-            this.activesPartsBS.next(result);
+            this.activePartsBS.next(result);
         };
         const partObserver: FirebaseCollectionObserver<IPart> =
             new FirebaseCollectionObserver(onDocumentCreated,
                                            onDocumentModified,
                                            onDocumentDeleted);
-        this.unsubscribe = this.partDao.observeActivesParts(partObserver);
-        this.activesPartsObs.subscribe((activesParts: ICurrentPartId[]) => {
-            this.activesParts = activesParts;
+        this.unsubscribe = MGPOptional.of(this.partDao.observeActivesParts(partObserver));
+        this.activePartsObs.subscribe((activesParts: ICurrentPartId[]) => {
+            this.activeParts = activesParts;
         });
     }
     public stopObserving(): void {
-        assert(this.unsubscribe != null, 'Cannot stop observing actives part when you have not started observing');
-        this.activesPartsBS.next([]);
-        this.unsubscribe();
+        assert(this.unsubscribe.isPresent(), 'Cannot stop observing actives part when you have not started observing');
+        this.activePartsBS.next([]);
+        this.unsubscribe.get()();
     }
     public hasActivePart(user: string): boolean {
-        for (const part of this.getActiveParts()) {
+        for (const part of this.activeParts) {
             const playerZero: string = part.doc.playerZero;
             const playerOne: string | undefined = part.doc.playerOne;
             if (user === playerZero || user === playerOne) {
@@ -79,6 +80,5 @@ export class ActivesPartsService implements OnDestroy {
             }
         }
         return false;
-
     }
 }

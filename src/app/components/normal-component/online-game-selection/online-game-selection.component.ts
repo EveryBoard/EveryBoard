@@ -9,7 +9,7 @@ export class OnlineGameSelectionComponent {
 
     public selectedGame: string;
 
-    public constructor(private gameService: GameService) {
+    public constructor(private readonly gameService: GameService) {
     }
     public pickGame(pickedGame: string): void {
         this.selectedGame = pickedGame;

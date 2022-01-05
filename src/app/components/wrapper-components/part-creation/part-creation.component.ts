@@ -286,7 +286,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         }
     }
     private isGameCancelled(joinerId: IJoinerId): boolean {
-        return (joinerId == null) || (joinerId.doc == null);
+        return joinerId.doc == null;
     }
     private onGameCancelled() {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.onGameCancelled');

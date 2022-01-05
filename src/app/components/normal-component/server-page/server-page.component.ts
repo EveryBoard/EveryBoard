@@ -4,7 +4,6 @@ import { Subscription } from 'rxjs';
 import { IUserId } from '../../../domain/iuser';
 import { ICurrentPartId } from '../../../domain/icurrentpart';
 import { UserService } from '../../../services/UserService';
-import { GameService } from '../../../services/GameService';
 import { display } from 'src/app/utils/utils';
 import { ActivesPartsService } from 'src/app/services/ActivesPartsService';
 
@@ -18,46 +17,39 @@ export class ServerPageComponent implements OnInit, OnDestroy {
 
     public static VERBOSE: boolean = false;
 
-    public activeUsers: IUserId[];
+    public activeUsers: IUserId[] = [];
 
-    public selectedGame: string;
+    public activeParts: ICurrentPartId[] = [];
 
-    private activesUsersSub: Subscription;
+    private activeUsersSub: Subscription;
+
+    private activePartsSub: Subscription;
 
     public currentTab: Tab = 'games';
 
     constructor(public router: Router,
-                private userService: UserService,
-                private gameService: GameService,
-                private activesPartsService: ActivesPartsService) {
+                private readonly userService: UserService,
+                private readonly activePartsService: ActivesPartsService) {
     }
     public ngOnInit(): void {
         display(ServerPageComponent.VERBOSE, 'serverPageComponent.ngOnInit');
-        this.activesUsersSub = this.userService.getActivesUsersObs()
+        this.activeUsersSub = this.userService.getActivesUsersObs()
             .subscribe((activeUsers: IUserId[]) => {
                 this.activeUsers = activeUsers;
+            });
+        this.activePartsSub = this.activePartsService.getActivePartsObs()
+            .subscribe((activeParts: ICurrentPartId[]) => {
+                this.activeParts = activeParts;
             });
     }
     public ngOnDestroy(): void {
         display(ServerPageComponent.VERBOSE, 'serverPageComponent.ngOnDestroy');
-        this.activesUsersSub.unsubscribe();
-        this.gameService.unSubFromActivesPartsObs();
+        this.activeUsersSub.unsubscribe();
+        this.activePartsSub.unsubscribe();
         this.userService.unSubFromActivesUsersObs();
-    }
-    public pickGame(pickedGame: string): void {
-        this.selectedGame = pickedGame;
     }
     public joinGame(partId: string, typeGame: string): void {
         this.router.navigate(['/play/' + typeGame, partId]);
-    }
-    public playLocally(): void {
-        this.router.navigate(['local/' + this.selectedGame]);
-    }
-    public async createGame(): Promise<boolean> {
-        return this.gameService.createGameAndRedirectOrShowError(this.selectedGame);
-    }
-    public getActiveParts(): ICurrentPartId[] {
-        return this.activesPartsService.getActiveParts();
     }
     public selectTab(tab: Tab): void {
         this.currentTab = tab;

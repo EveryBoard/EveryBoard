@@ -5,76 +5,64 @@ import { AuthUser } from 'src/app/services/AuthenticationService';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { Router } from '@angular/router';
-import { GameService } from 'src/app/services/GameService';
 import { ICurrentPartId } from 'src/app/domain/icurrentpart';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
+import { ActivesPartsService } from 'src/app/services/ActivesPartsService';
+import { BehaviorSubject } from 'rxjs';
 
 describe('ServerPageComponent', () => {
 
     let testUtils: SimpleComponentTestUtils<ServerPageComponent>;
-    let gameService: GameService;
     let component: ServerPageComponent;
 
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(ServerPageComponent);
         AuthenticationServiceMock.setUser(AuthUser.NOT_CONNECTED);
         component = testUtils.getComponent();
-        gameService = TestBed.inject(GameService);
     }));
     it('should create', fakeAsync(async() => {
         expect(component).toBeDefined();
         component.ngOnInit();
     }));
-    it('should rely on game service to create online games', fakeAsync(async() => {
-        const gameService: GameService = TestBed.inject(GameService);
-        spyOn(gameService, 'createGameAndRedirectOrShowError');
-        AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
-        component.ngOnInit();
-
-        component.pickGame('Awale');
-        component.createGame();
+    it('should rely on online-game-selection component to create online games', fakeAsync(async() => {
+        // When the component is loaded
         testUtils.detectChanges();
 
-        expect(gameService.createGameAndRedirectOrShowError).toHaveBeenCalledWith('Awale');
-    }));
-    it('Should be legal for unlogged user to create local game', fakeAsync(async() => {
-        const router: Router = TestBed.inject(Router);
-        AuthenticationServiceMock.setUser(AuthUser.NOT_CONNECTED);
-        spyOn(router, 'navigate');
-        component.ngOnInit();
+        // Clicking on the 'create game' tab
+        testUtils.clickElement('#tab-create');
+        await testUtils.whenStable();
 
-        component.playLocally();
-        testUtils.detectChanges();
-
-        expect(router.navigate).toHaveBeenCalledWith(['local/undefined']);
+        // Then online-game-selection component is on the page
+        testUtils.expectElementToExist('#online-game-selection');
     }));
+
     it('Should redirect to /play when clicking a game', fakeAsync(async() => {
-        // given a server page with one part
+        // Given a server with one active part
         const activePart: ICurrentPartId = {
             id: 'some-part-id',
             doc: PartMocks.INITIAL.doc,
         };
-        const compo: ServerPageComponent = component;
-        spyOn(compo.router, 'navigate').and.callThrough();
-        spyOn(compo, 'getActiveParts').and.returnValue([activePart]);
-
-        // when clicking on the first part
+        const activePartsService: ActivesPartsService = TestBed.inject(ActivesPartsService);
+        spyOn(activePartsService, 'getActivePartsObs').and.returnValue((new BehaviorSubject([activePart])).asObservable());
+        const router: Router = TestBed.inject(Router);
+        spyOn(router, 'navigate').and.resolveTo();
         testUtils.detectChanges();
+
+        // When clicking on the part
         testUtils.clickElement('#part_0');
 
-        // then router should have navigate
-        expect(compo.getActiveParts).toHaveBeenCalled();
-        expect(compo.router.navigate).toHaveBeenCalledOnceWith(['/play/Quarto', 'some-part-id']);
+        // Then the component navigates to the part
+        expect(router.navigate).toHaveBeenCalledOnceWith(['/play/Quarto', 'some-part-id']);
     }));
     it('should stop watching current part observable when destroying component', fakeAsync(async() => {
         // given a server page
-        spyOn(gameService, 'unSubFromActivesPartsObs').and.callThrough();
         testUtils.detectChanges();
+        spyOn(component['activePartsSub'], 'unsubscribe').and.callThrough();
 
         // when destroying the component
         component.ngOnDestroy();
 
         // then router should have navigate
-        expect(gameService.unSubFromActivesPartsObs).toHaveBeenCalledOnceWith();
+        expect(component['activePartsSub'].unsubscribe).toHaveBeenCalledOnceWith();
     }));
 });
