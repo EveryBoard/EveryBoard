@@ -72,7 +72,7 @@ describe('PartCreationComponent:', () => {
     }));
     describe('For creator', () => {
         beforeEach(fakeAsync(async() => {
-            // Given that the component is loaded by the creator
+            // Given a component that is loaded by the creator
             component.userName = 'creator';
             await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL.doc);
         }));
@@ -91,7 +91,7 @@ describe('PartCreationComponent:', () => {
                 expect(component).withContext('PartCreationComponent should have been created').toBeTruthy();
             }));
             it('should not start observing joiner if part does not exist', fakeAsync(async() => {
-                // Given that the part does not exist
+                // Given a part that does not exist
                 component.partId = 'does not exist';
                 spyOn(joinerDAOMock, 'read').and.resolveTo(MGPOptional.empty());
                 spyOn(joinerService, 'observe');
@@ -106,7 +106,7 @@ describe('PartCreationComponent:', () => {
         });
         describe('Candidate arrival', () => {
             it('should make candidate choice possible for creator when candidate arrives', fakeAsync(async() => {
-                // Given that the component is loaded and there is no candidate
+                // Given a component that is loaded and there is no candidate
                 testUtils.detectChanges();
                 await testUtils.whenStable();
                 testUtils.expectElementNotToExist('#chooseCandidate');
@@ -121,7 +121,7 @@ describe('PartCreationComponent:', () => {
         });
         describe('Candidate departure', () => {
             it('should go back to start when chosenPlayer leaves', fakeAsync(async() => {
-                // Given that the page has loaded, a candidate joined and has been chosen as opponent
+                // Given a page that has loaded, a candidate joined and has been chosen as opponent
                 testUtils.detectChanges();
                 await testUtils.whenStable();
                 await mockCandidateArrival();
@@ -141,7 +141,7 @@ describe('PartCreationComponent:', () => {
                 expect(component.currentJoiner).toEqual(JoinerMocks.INITIAL.doc);
             }));
             it('should go back to start when chosenPlayer goes offline', fakeAsync(async() => {
-                // Given that the page has loaded, a candidate joined and has been chosen as opponent
+                // Given a page that has loaded, a candidate joined and has been chosen as opponent
                 testUtils.detectChanges();
                 await testUtils.whenStable();
                 await mockCandidateArrival();
@@ -158,7 +158,7 @@ describe('PartCreationComponent:', () => {
                 expect(component.currentJoiner).toEqual(JoinerMocks.INITIAL.doc);
             }));
             it('should update candidate list when a non-chosen player leaves', fakeAsync(async() => {
-                // Given that the component is loaded and there is a non-chosen candidate
+                // Given a component that is loaded and there is a non-chosen candidate
                 testUtils.detectChanges();
                 await testUtils.whenStable();
                 await mockCandidateArrival();
@@ -196,7 +196,7 @@ describe('PartCreationComponent:', () => {
             }));
             it('should remove candidate from lobby if it directly appears offline', fakeAsync(async() => {
                 spyOn(Utils, 'handleError').and.callFake(() => {});
-                // Given that the page is loaded and there is no candidate yet
+                // Given a page that is loaded and there is no candidate yet
                 testUtils.detectChanges();
                 await testUtils.whenStable();
 
@@ -207,7 +207,7 @@ describe('PartCreationComponent:', () => {
                 await testUtils.whenStable();
 
                 // Then the candidate does not appear on the page
-                testUtils.expectElementNotToExist('#candidate_firstCandidate');
+                testUtils.expectElementNotToExist('#presenceOf_firstCandidate');
                 // and handleError was called as this is an unexpected situation
                 expect(Utils.handleError).toHaveBeenCalledWith('OnlineGameWrapper: firstCandidate is already offline!');
             }));
@@ -215,7 +215,7 @@ describe('PartCreationComponent:', () => {
                 spyOn(Utils, 'handleError').and.callFake(() => {});
                 // This could happen if we receive twice the same update to a user that needs to be removed
 
-                // Given a part creation with an candidate
+                // Given a part creation with a candidate
                 testUtils.detectChanges();
                 await testUtils.whenStable();
                 await mockCandidateArrival();
@@ -236,7 +236,7 @@ describe('PartCreationComponent:', () => {
                 expect(Utils.handleError).not.toHaveBeenCalled();
             }));
             it('should see candidate reappear if candidates disconnects and reconnects', fakeAsync(async() => {
-                // Given that the page has loaded, a candidate joined and has been chosen as opponent
+                // Given a page that has loaded, a candidate joined and has been chosen as opponent
                 testUtils.detectChanges();
                 await testUtils.whenStable();
                 await mockCandidateArrival();
@@ -522,7 +522,7 @@ describe('PartCreationComponent:', () => {
                 const router: Router = TestBed.inject(Router);
                 spyOn(router, 'navigate');
 
-                // Given that the component has loaded
+                // Given component that has loaded
                 testUtils.detectChanges();
                 await testUtils.whenStable();
 
