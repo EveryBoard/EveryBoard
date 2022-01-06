@@ -6,7 +6,6 @@ import { FirstPlayer, IJoiner, PartStatus, PartType } from 'src/app/domain/ijoin
 import { JoinerDAOMock } from 'src/app/dao/tests/JoinerDAOMock.spec';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Utils } from 'src/app/utils/utils';
 
 describe('JoinerService', () => {
 
