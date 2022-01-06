@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { IUserId, IUser } from '../domain/iuser';
+import { IUser, IUserId } from '../domain/iuser';
 import { UserDAO } from '../dao/UserDAO';
 import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
-import { display } from 'src/app/utils/utils';
+import { display, Utils } from 'src/app/utils/utils';
 
 @Injectable({
     providedIn: 'root',
@@ -11,7 +11,7 @@ import { display } from 'src/app/utils/utils';
 export class ActivesUsersService {
     public static VERBOSE: boolean = false;
 
-    private activesUsersBS: BehaviorSubject<IUserId[]> = new BehaviorSubject<IUserId[]>([]);
+    private readonly activesUsersBS: BehaviorSubject<IUserId[]> = new BehaviorSubject<IUserId[]>([]);
 
     public activesUsersObs: Observable<IUserId[]>;
 
@@ -39,9 +39,9 @@ export class ActivesUsersService {
             this.activesUsersBS.next(updatedUsers);
         };
         const onDocumentDeleted: (deletedUsers: IUserId[]) => void = (deletedUsers: IUserId[]) => {
-            const deletedUsersId: string[] = deletedUsers.map((u: IUserId) => u.id);
             const newUsersList: IUserId[] =
-                this.activesUsersBS.value.filter((u: IUserId) => !deletedUsersId.includes(u.id));
+                this.activesUsersBS.value.filter((u: IUserId) =>
+                    !deletedUsers.some((user: IUserId) => user.id === u.id));
             this.activesUsersBS.next(this.order(newUsersList));
         };
         const usersObserver: FirebaseCollectionObserver<IUser> =
@@ -56,8 +56,8 @@ export class ActivesUsersService {
     }
     public order(users: IUserId[]): IUserId[] {
         return users.sort((first: IUserId, second: IUserId) => {
-            const firstTimestamp: number = (first.doc.last_changed as {seconds: number}).seconds;
-            const secondTimestamp: number = (second.doc.last_changed as {seconds: number}).seconds;
+            const firstTimestamp: number = Utils.getNonNullable(Utils.getNonNullable(first.doc).last_changed).seconds;
+            const secondTimestamp: number = Utils.getNonNullable(Utils.getNonNullable(second.doc).last_changed).seconds;
             return firstTimestamp - secondTimestamp;
         });
     }

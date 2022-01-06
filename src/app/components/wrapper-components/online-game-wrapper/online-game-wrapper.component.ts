@@ -5,10 +5,10 @@ import { AuthenticationService, AuthUser } from 'src/app/services/Authentication
 import { GameService } from 'src/app/services/GameService';
 import { UserService } from 'src/app/services/UserService';
 import { Move } from '../../../jscaip/Move';
-import { ICurrentPartId, Part, MGPResult, IPart } from '../../../domain/icurrentpart';
+import { Part, MGPResult, IPart, IPartId } from '../../../domain/icurrentpart';
 import { CountDownComponent } from '../../normal-component/count-down/count-down.component';
 import { PartCreationComponent } from '../part-creation/part-creation.component';
-import { IUserId, IUser } from '../../../domain/iuser';
+import { IUser, IUserId } from '../../../domain/iuser';
 import { Request } from '../../../domain/request';
 import { GameWrapper } from '../GameWrapper';
 import { FirebaseCollectionObserver } from 'src/app/dao/FirebaseCollectionObserver';
@@ -70,7 +70,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     public currentPart: Part;
     public currentPartId: string;
     public gameStarted: boolean = false;
-    public opponent: IUserId | null = null;
+    public opponent: IUser | null = null;
     public playerName: string | null = null;
     public currentPlayer: string;
 
@@ -91,10 +91,10 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 
     constructor(componentFactoryResolver: ComponentFactoryResolver,
                 actRoute: ActivatedRoute,
-                private router: Router,
-                private userService: UserService,
+                private readonly router: Router,
+                private readonly userService: UserService,
                 authenticationService: AuthenticationService,
-                private gameService: GameService)
+                private readonly gameService: GameService)
     {
         super(componentFactoryResolver, actRoute, authenticationService);
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent constructed');
@@ -155,7 +155,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     public startGame(iJoiner: IJoiner): void {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.startGame');
 
-        assert(iJoiner != null, 'Cannot start Game of empty joiner doc');
         assert(this.gameStarted === false, 'Should not start already started game');
         this.joiner = iJoiner;
 
@@ -170,13 +169,14 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.startPart');
 
         // TODO: don't start count down for Observer.
-        this.gameService.startObserving(this.currentPartId, (iPart: ICurrentPartId) => {
-            this.onCurrentPartUpdate(iPart);
+        this.gameService.startObserving(this.currentPartId, (part: MGPOptional<IPart>) => {
+            assert(part.isPresent(), 'OnlineGameWrapper observed a part being deleted, this should not happen');
+            this.onCurrentPartUpdate(part.get());
         });
         return Promise.resolve();
     }
-    private async onCurrentPartUpdate(update: ICurrentPartId): Promise<void> {
-        const part: Part = new Part(update.doc);
+    private async onCurrentPartUpdate(update: IPart): Promise<void> {
+        const part: Part = new Part(update);
         display(OnlineGameWrapperComponent.VERBOSE, { OnlineGameWrapperComponent_onCurrentPartUpdate: {
             before: this.currentPart,
             then: update.doc,
@@ -185,7 +185,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             nbPlayedMoves: part.doc.listMoves.length,
         } });
         const updateType: UpdateType = this.getUpdateType(part);
-        const turn: number = update.doc.turn;
+        const turn: number = update.turn;
         if (updateType === UpdateType.REQUEST) {
             display(OnlineGameWrapperComponent.VERBOSE, 'UpdateType: Request(' + Utils.getNonNullable(part.doc.request).code + ') (' + turn + ')');
         } else {
@@ -557,14 +557,14 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
         if (opponentName.isPresent()) {
             const onDocumentCreated: (foundUser: IUserId[]) => void = (foundUser: IUserId[]) => {
-                this.opponent = foundUser[0];
+                this.opponent = foundUser[0].doc;
             };
             const onDocumentModified: (modifiedUsers: IUserId[]) => void = (modifiedUsers: IUserId[]) => {
-                this.opponent = modifiedUsers[0];
+                this.opponent = modifiedUsers[0].doc;
             };
-            const onDocumentDeleted: (deletedUsers: IUserId[]) => void = (deletedUsers: IUserId[]) => {
+            const onDocumentDeleted: (deletedUserIds: IUserId[]) => void = (deletedUsers: IUserId[]) => {
                 throw new Error('OnlineGameWrapper: Opponent was deleted, what sorcery is this: ' +
-                                JSON.stringify(deletedUsers));
+                    JSON.stringify(deletedUsers));
             };
             const callback: FirebaseCollectionObserver<IUser> =
                 new FirebaseCollectionObserver(onDocumentCreated,
@@ -616,15 +616,15 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     public reachedOutOfTime(player: 0 | 1): void {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.reachedOutOfTime(' + player + ')');
         this.stopCountdownsFor(Player.of(player));
-        const opponent: IUserId = Utils.getNonNullable(this.opponent);
+        const opponent: IUser = Utils.getNonNullable(this.opponent);
         if (player === this.observerRole) {
             // the player has run out of time, he'll notify his own defeat by time
-            this.notifyTimeoutVictory(Utils.getNonNullable(opponent.doc.username), this.getPlayerName());
+            this.notifyTimeoutVictory(Utils.getNonNullable(opponent.username), this.getPlayerName());
         } else {
             if (this.endGame) {
                 display(true, 'time might be better handled in the future');
             } else if (this.opponentIsOffline()) { // the other player has timed out
-                this.notifyTimeoutVictory(this.getPlayerName(), Utils.getNonNullable(opponent.doc.username));
+                this.notifyTimeoutVictory(this.getPlayerName(), Utils.getNonNullable(opponent.username));
                 this.endGame = true;
             }
         }
@@ -633,7 +633,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         if (this.isPlaying() === false) {
             return false;
         }
-        const currentPartId: ICurrentPartId = {
+        const currentPartId: IPartId = {
             id: this.currentPartId,
             doc: this.currentPart.doc,
         };
@@ -759,7 +759,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     }
     public opponentIsOffline(): boolean {
         return this.opponent != null &&
-               this.opponent.doc.state === 'offline';
+               this.opponent.state === 'offline';
     }
     public canResign(): boolean {
         if (this.isPlaying() === false) {

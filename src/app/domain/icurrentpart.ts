@@ -3,6 +3,9 @@ import { Request } from './request';
 import { DomainWrapper } from './DomainWrapper';
 import { FirebaseTime } from './Time';
 import { MGPOptional } from '../utils/MGPOptional';
+import { FirebaseDocumentWithId } from '../dao/FirebaseFirestoreDAO';
+
+export type IPartId = FirebaseDocumentWithId<IPart>
 
 export interface IPart extends FirebaseJSONObject {
     readonly typeGame: string, // the type of game
@@ -54,12 +57,7 @@ export class Part implements DomainWrapper<IPart> {
         return new Part({ ...this.doc, winner, loser });
     }
 }
-export interface ICurrentPartId {
 
-    id: string;
-
-    doc: IPart;
-}
 export type IMGPResult = number;
 export class MGPResult {
     public static readonly DRAW: MGPResult = new MGPResult(0);

@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
-import { IChat, IChatId } from '../domain/ichat';
+import { IChat } from '../domain/ichat';
 import { ChatDAO } from '../dao/ChatDAO';
 import { IMessage } from '../domain/imessage';
 import { display } from 'src/app/utils/utils';
@@ -8,7 +8,6 @@ import { MGPValidation } from '../utils/MGPValidation';
 import { ArrayUtils } from '../utils/ArrayUtils';
 import { Localized } from '../utils/LocaleUtils';
 import { MGPOptional } from '../utils/MGPOptional';
-import { FirebaseDocumentWithId } from '../dao/FirebaseFirestoreDAO';
 
 export class ChatMessages {
     public static readonly CANNOT_SEND_MESSAGE: Localized = () => $localize`You're not allowed to send a message here.`;
@@ -23,14 +22,14 @@ export class ChatService implements OnDestroy {
 
     private followedChatId: MGPOptional<string> = MGPOptional.empty();
 
-    private followedChatObs: MGPOptional<Observable<FirebaseDocumentWithId<IChat>>> = MGPOptional.empty();
+    private followedChatObs: MGPOptional<Observable<MGPOptional<IChat>>> = MGPOptional.empty();
 
     private followedChatSub: Subscription;
 
     constructor(private readonly chatDao: ChatDAO) {
         display(ChatService.VERBOSE, 'ChatService.constructor');
     }
-    public startObserving(chatId: string, callback: (iChat: IChatId) => void): void {
+    public startObserving(chatId: string, callback: (chat: MGPOptional<IChat>) => void): void {
         display(ChatService.VERBOSE, 'ChatService.startObserving ' + chatId);
 
         if (this.followedChatId.isAbsent()) {
@@ -38,8 +37,7 @@ export class ChatService implements OnDestroy {
 
             this.followedChatId = MGPOptional.of(chatId);
             this.followedChatObs = MGPOptional.of(this.chatDao.getObsById(chatId));
-            this.followedChatSub = this.followedChatObs.get()
-                .subscribe((onFullFilled: IChatId) => callback(onFullFilled));
+            this.followedChatSub = this.followedChatObs.get().subscribe(callback);
         } else if (this.followedChatId.equalsValue(chatId)) {
             throw new Error(`WTF :: Already observing chat '${chatId}'`);
         } else {

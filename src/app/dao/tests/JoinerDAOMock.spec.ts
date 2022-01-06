@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { IJoinerId, IJoiner } from 'src/app/domain/ijoiner';
+import { IJoiner, IJoinerId } from 'src/app/domain/ijoiner';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { ObservableSubject } from 'src/app/utils/tests/ObservableSubject.spec';
 import { display } from 'src/app/utils/utils';
@@ -8,7 +8,7 @@ import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 import { fakeAsync } from '@angular/core/testing';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-type JoinerOS = ObservableSubject<IJoinerId>
+type JoinerOS = ObservableSubject<MGPOptional<IJoinerId>>
 
 export class JoinerDAOMock extends FirebaseFirestoreDAOMock<IJoiner> {
 
@@ -47,9 +47,9 @@ describe('JoinerDAOMock', () => {
         expect(lastJoiner).toEqual(MGPOptional.empty());
         expect(callCount).toBe(0);
 
-        joinerDaoMock.getObsById('joinerId').subscribe((iJoinerId: IJoinerId) => {
+        joinerDaoMock.getObsById('joinerId').subscribe((joiner: MGPOptional<IJoiner>) => {
             callCount++;
-            lastJoiner = MGPOptional.of(iJoinerId.doc);
+            lastJoiner = joiner;
             expect(callCount).withContext('Should not have been called more than twice').toBeLessThanOrEqual(2);
             // TODO: REDO
         });
@@ -68,11 +68,11 @@ describe('JoinerDAOMock', () => {
         expect(callCount).toEqual(0);
         expect(lastJoiner).toEqual(MGPOptional.empty());
 
-        joinerDaoMock.getObsById('joinerId').subscribe((iJoinerId: IJoinerId) => {
-            callCount ++;
+        joinerDaoMock.getObsById('joinerId').subscribe((joiner: MGPOptional<IJoiner>) => {
+            callCount++;
             // TODO: REDO
             expect(callCount).withContext('Should not have been called more than twice').toBeLessThanOrEqual(2);
-            lastJoiner = MGPOptional.of(iJoinerId.doc);
+            lastJoiner = joiner;
         });
 
         expect(callCount).toEqual(1);

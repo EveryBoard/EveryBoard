@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { IUserId } from '../../../domain/iuser';
-import { ICurrentPartId } from '../../../domain/icurrentpart';
 import { UserService } from '../../../services/UserService';
 import { display } from 'src/app/utils/utils';
 import { ActivesPartsService } from 'src/app/services/ActivesPartsService';
+import { IPartId } from 'src/app/domain/icurrentpart';
+import { IUserId } from 'src/app/domain/iuser';
 
 type Tab = 'games' | 'create' | 'chat';
 
@@ -19,7 +19,7 @@ export class ServerPageComponent implements OnInit, OnDestroy {
 
     public activeUsers: IUserId[] = [];
 
-    public activeParts: ICurrentPartId[] = [];
+    public activeParts: IPartId[] = [];
 
     private activeUsersSub: Subscription;
 
@@ -38,7 +38,7 @@ export class ServerPageComponent implements OnInit, OnDestroy {
                 this.activeUsers = activeUsers;
             });
         this.activePartsSub = this.activePartsService.getActivePartsObs()
-            .subscribe((activeParts: ICurrentPartId[]) => {
+            .subscribe((activeParts: IPartId[]) => {
                 this.activeParts = activeParts;
             });
     }

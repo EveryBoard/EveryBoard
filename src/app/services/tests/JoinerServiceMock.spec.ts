@@ -8,7 +8,7 @@ export class JoinerServiceMock {
 
     public static emittedsJoiner: IJoinerId[];
 
-    public constructor(private joinerDAO: JoinerDAO) {
+    public constructor(private readonly joinerDAO: JoinerDAO) {
         display(JoinerServiceMock.VERBOSE, 'JoinerServiceMock.constructor');
     }
     public joinGame(): Promise<void> {
@@ -16,24 +16,6 @@ export class JoinerServiceMock {
         return new Promise((resolve: () => void) => {
             resolve();
         });
-    }
-    public stopObserving(): void {
-        display(JoinerServiceMock.VERBOSE, 'JoinerServiceMock.stopObserving');
-        // this.emittedsJoiner = [];
-        // TODO stop all timeout
-        return;
-    }
-    public startObserving(jId: string, callback: (iJ: IJoinerId) => void): void {
-        display(JoinerServiceMock.VERBOSE, 'JoinerServiceMock.startObserving');
-        let i: number = 0;
-        while (i<JoinerServiceMock.emittedsJoiner.length) {
-            setTimeout(
-                (index: number) => callback(JoinerServiceMock.emittedsJoiner[index]),
-                1000*(i+1),
-                i,
-            );
-            i++;
-        }
     }
     public async cancelJoining(): Promise<void> {
         display(JoinerServiceMock.VERBOSE, 'JoinerServiceMock.cancelJoining');

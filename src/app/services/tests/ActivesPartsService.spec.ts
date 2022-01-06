@@ -2,7 +2,7 @@
 import { ActivesPartsService } from '../ActivesPartsService';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { fakeAsync } from '@angular/core/testing';
-import { ICurrentPartId, IPart } from 'src/app/domain/icurrentpart';
+import { IPart, IPartId } from 'src/app/domain/icurrentpart';
 import { Subscription } from 'rxjs';
 import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
 import { Utils } from 'src/app/utils/utils';
@@ -79,9 +79,9 @@ describe('ActivesPartsService', () => {
     describe('getActivePartsObs', () => {
         it('should notify about new parts', async() => {
             // Given that we are observing active parts
-            let seenActiveParts: ICurrentPartId[] = [];
+            let seenActiveParts: IPartId[] = [];
             const activePartsSub: Subscription = service.getActivePartsObs()
-                .subscribe((activeParts: ICurrentPartId[]) => {
+                .subscribe((activeParts: IPartId[]) => {
                     seenActiveParts = activeParts;
                 });
 
@@ -113,9 +113,9 @@ describe('ActivesPartsService', () => {
                 typeGame: 'P4',
             };
             const partId: string = await partDAO.create(part);
-            let seenActiveParts: ICurrentPartId[] = [];
+            let seenActiveParts: IPartId[] = [];
             const activePartsSub: Subscription = service.getActivePartsObs()
-                .subscribe((activeParts: ICurrentPartId[]) => {
+                .subscribe((activeParts: IPartId[]) => {
                     seenActiveParts = activeParts;
                 });
 
@@ -139,9 +139,9 @@ describe('ActivesPartsService', () => {
             };
             const partId1: string = await partDAO.create(part);
             const partId2: string = await partDAO.create(part);
-            let seenActiveParts: ICurrentPartId[] = [];
+            let seenActiveParts: IPartId[] = [];
             const activePartsSub: Subscription = service.getActivePartsObs()
-                .subscribe((activeParts: ICurrentPartId[]) => {
+                .subscribe((activeParts: IPartId[]) => {
                     seenActiveParts = activeParts;
                 });
 
@@ -165,9 +165,9 @@ describe('ActivesPartsService', () => {
                 typeGame: 'P4',
             };
             const partId: string = await partDAO.create(part);
-            let seenActiveParts: ICurrentPartId[] = [];
+            let seenActiveParts: IPartId[] = [];
             const activePartsSub: Subscription = service.getActivePartsObs()
-                .subscribe((activeParts: ICurrentPartId[]) => {
+                .subscribe((activeParts: IPartId[]) => {
                     seenActiveParts = activeParts;
                 });
 
@@ -176,7 +176,7 @@ describe('ActivesPartsService', () => {
 
             // Then the new part has been observed
             expect(seenActiveParts.length).toBe(1);
-            expect(seenActiveParts[0].doc.turn).toBe(1);
+            expect(Utils.getNonNullable(seenActiveParts[0].doc).turn).toBe(1);
 
             activePartsSub.unsubscribe();
         }));
@@ -192,9 +192,9 @@ describe('ActivesPartsService', () => {
             };
             const partId1: string = await partDAO.create(part);
             const partId2: string = await partDAO.create(part);
-            let seenActiveParts: ICurrentPartId[] = [];
+            let seenActiveParts: IPartId[] = [];
             const activePartsSub: Subscription = service.getActivePartsObs()
-                .subscribe((activeParts: ICurrentPartId[]) => {
+                .subscribe((activeParts: IPartId[]) => {
                     seenActiveParts = activeParts;
                 });
 
@@ -203,13 +203,13 @@ describe('ActivesPartsService', () => {
 
             // Then the part has been updated
             expect(seenActiveParts.length).toBe(2);
-            const newPart1: ICurrentPartId = Utils.getNonNullable(seenActiveParts.find((part: ICurrentPartId) =>
+            const newPart1: IPartId = Utils.getNonNullable(seenActiveParts.find((part: IPartId) =>
                 part.id === partId1));
-            const newPart2: ICurrentPartId = Utils.getNonNullable(seenActiveParts.find((part: ICurrentPartId) =>
+            const newPart2: IPartId = Utils.getNonNullable(seenActiveParts.find((part: IPartId) =>
                 part.id === partId2));
-            expect(newPart1.doc.turn).toBe(1);
+            expect(Utils.getNonNullable(newPart1.doc).turn).toBe(1);
             // and the other one is still there and still the same
-            expect(newPart2.doc.turn).toBe(0);
+            expect(Utils.getNonNullable(newPart2.doc).turn).toBe(0);
 
             activePartsSub.unsubscribe();
         }));

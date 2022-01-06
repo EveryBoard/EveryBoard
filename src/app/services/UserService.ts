@@ -10,8 +10,8 @@ import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
 })
 export class UserService {
 
-    constructor(private activesUsersService: ActivesUsersService,
-                private joueursDao: UserDAO) {
+    constructor(private readonly activesUsersService: ActivesUsersService,
+                private readonly joueursDao: UserDAO) {
     }
 
     public getActivesUsersObs(): Observable<IUserId[]> {

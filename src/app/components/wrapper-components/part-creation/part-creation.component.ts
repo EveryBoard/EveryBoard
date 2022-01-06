@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { FirstPlayer, IFirstPlayer, IJoiner, IJoinerId, IPartType, PartStatus, PartType } from '../../../domain/ijoiner';
+import { FirstPlayer, IFirstPlayer, IJoiner, IPartType, PartStatus, PartType } from '../../../domain/ijoiner';
 import { Router } from '@angular/router';
 import { GameService } from '../../../services/GameService';
 import { JoinerService } from '../../../services/JoinerService';
@@ -13,6 +13,7 @@ import { FirebaseCollectionObserver } from 'src/app/dao/FirebaseCollectionObserv
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 interface PartCreationViewInfo {
     userIsCreator: boolean;
@@ -131,8 +132,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.joinerService
             .observe(this.partId)
             .pipe(takeUntil(this.ngUnsubscribe))
-            .subscribe((joinerId: IJoinerId) => {
-                this.onCurrentJoinerUpdate(joinerId);
+            .subscribe((joiner: MGPOptional<IJoiner>) => {
+                this.onCurrentJoinerUpdate(joiner);
             });
     }
     private getForm(name: string): AbstractControl {
@@ -172,8 +173,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 this.viewInfo.firstPlayer = firstPlayer;
             });
     }
-    private updateViewInfo(joinerId: IJoinerId): void {
-        const joiner: IJoiner = joinerId.doc;
+    private updateViewInfo(joiner: IJoiner): void {
 
         this.viewInfo.canReviewConfig = joiner.partStatus === PartStatus.CONFIG_PROPOSED.value;
         this.viewInfo.canEditConfig = joiner.partStatus !== PartStatus.CONFIG_PROPOSED.value;
@@ -267,26 +267,23 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 'PartCreationComponent.cancelGameCreation: game and joiner and chat deleted');
         return;
     }
-    private onCurrentJoinerUpdate(iJoinerId: IJoinerId) {
+    private onCurrentJoinerUpdate(joiner: MGPOptional<IJoiner>) {
         display(PartCreationComponent.VERBOSE,
                 { PartCreationComponent_onCurrentJoinerUpdate: {
                     before: JSON.stringify(this.currentJoiner),
-                    then: JSON.stringify(iJoinerId) } });
-        if (this.isGameCancelled(iJoinerId)) {
+                    then: JSON.stringify(joiner) } });
+        if (joiner.isAbsent()) {
             display(PartCreationComponent.VERBOSE, 'PartCreationComponent.onCurrentJoinerUpdate: LAST UPDATE : the game is cancelled');
             return this.onGameCancelled();
         } else {
-            this.observeNeededPlayers(iJoinerId.doc);
-            this.currentJoiner = iJoinerId.doc;
-            this.updateViewInfo(iJoinerId);
-            if (this.isGameStarted(iJoinerId.doc)) {
+            this.observeNeededPlayers(joiner.get());
+            this.currentJoiner = joiner.get();
+            this.updateViewInfo(joiner.get());
+            if (this.isGameStarted(joiner.get())) {
                 display(PartCreationComponent.VERBOSE, 'PartCreationComponent.onCurrentJoinerUpdate: the game has started');
-                this.onGameStarted(iJoinerId.doc);
+                this.onGameStarted(joiner.get());
             }
         }
-    }
-    private isGameCancelled(joinerId: IJoinerId): boolean {
-        return joinerId.doc == null;
     }
     private onGameCancelled() {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.onGameCancelled');

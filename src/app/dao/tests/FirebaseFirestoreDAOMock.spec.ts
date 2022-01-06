@@ -1,18 +1,19 @@
 /* eslint-disable max-lines-per-function */
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
-
+import { map } from 'rxjs/operators';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
-
 import { assert, display, FirebaseJSONObject, Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
-import { IFirebaseFirestoreDAO } from '../FirebaseFirestoreDAO';
+import { FirebaseDocumentWithId, IFirebaseFirestoreDAO } from '../FirebaseFirestoreDAO';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { ObservableSubject } from 'src/app/utils/tests/ObservableSubject.spec';
 import { Time } from 'src/app/domain/Time';
 
 type FirebaseCondition = [string, firebase.firestore.WhereFilterOp, unknown];
+
+type OS<T> = ObservableSubject<MGPOptional<FirebaseDocumentWithId<T>>>;
 
 export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> implements IFirebaseFirestoreDAO<T> {
 
@@ -32,7 +33,7 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
     ) {
         this.reset();
     }
-    public abstract getStaticDB(): MGPMap<string, ObservableSubject<{id: string, doc: T}>>;
+    public abstract getStaticDB(): MGPMap<string, OS<T>>;
 
     public abstract resetStaticDB(): void;
 
@@ -42,12 +43,14 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
 
         this.resetStaticDB();
     }
-    public getObsById(id: string): Observable<{id: string, doc: T}> {
+    public getObsById(id: string): Observable<MGPOptional<T>> {
         display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE, this.collectionName + '.getObsById(' + id + ')');
 
-        const optionalOS: MGPOptional<ObservableSubject<{id: string, doc: T}>> = this.getStaticDB().get(id);
+        const optionalOS: MGPOptional<OS<T>> = this.getStaticDB().get(id);
         if (optionalOS.isPresent()) {
-            return optionalOS.get().observable;
+            return optionalOS.get().observable
+                .pipe(map((subject: MGPOptional<FirebaseDocumentWithId<T>>) =>
+                    subject.map((subject: FirebaseDocumentWithId<T>) => subject.doc)));
         } else {
             throw new Error('No doc of id ' + id + ' to observe in ' + this.collectionName);
             // TODO: check that observing unexisting doc throws
@@ -73,9 +76,9 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
     public async read(id: string): Promise<MGPOptional<T>> {
         display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE, this.collectionName + '.read(' + id + ')');
 
-        const optionalOS: MGPOptional<ObservableSubject<{id: string, doc: T}>> = this.getStaticDB().get(id);
+        const optionalOS: MGPOptional<OS<T>> = this.getStaticDB().get(id);
         if (optionalOS.isPresent()) {
-            return MGPOptional.of(optionalOS.get().subject.getValue().doc);
+            return MGPOptional.of(Utils.getNonNullable(optionalOS.get().subject.getValue().get().doc));
         } else {
             return MGPOptional.empty();
         }
@@ -85,17 +88,18 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
                 this.collectionName + '.set(' + id + ', ' + JSON.stringify(doc) + ')');
 
         const mappedDoc: T = Utils.getNonNullable(this.getServerTimestampedObject(doc));
-        const optionalOS: MGPOptional<ObservableSubject<{id: string, doc: T}>> = this.getStaticDB().get(id);
-        const tid: {id: string, doc: T} = { id, doc: mappedDoc };
+        const optionalOS: MGPOptional<OS<T>> = this.getStaticDB().get(id);
+        const tid: FirebaseDocumentWithId<T> = { id, doc: mappedDoc };
         if (optionalOS.isPresent()) {
-            optionalOS.get().subject.next(tid);
+            optionalOS.get().subject.next(MGPOptional.of(tid));
         } else {
-            const subject: BehaviorSubject<{id: string, doc: T}> = new BehaviorSubject<{id: string, doc: T}>(tid);
-            const observable: Observable<{id: string, doc: T}> = subject.asObservable();
+            const subject: BehaviorSubject<MGPOptional<FirebaseDocumentWithId<T>>> =
+                new BehaviorSubject(MGPOptional.of(tid));
+            const observable: Observable<MGPOptional<FirebaseDocumentWithId<T>>> = subject.asObservable();
             this.getStaticDB().put(id, new ObservableSubject(subject, observable));
             for (const callback of this.callbacks) {
-                if (this.conditionsHold(callback[0], subject.value.doc)) {
-                    callback[1].onDocumentCreated([subject.value]);
+                if (this.conditionsHold(callback[0], subject.value.get().doc)) {
+                    callback[1].onDocumentCreated([subject.value.get()]);
                 }
             }
         }
@@ -105,16 +109,16 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
         display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE,
                 this.collectionName + '.update(' + id + ', ' + JSON.stringify(update) + ')');
 
-        const optionalOS: MGPOptional<ObservableSubject<{id: string, doc: T}>> = this.getStaticDB().get(id);
+        const optionalOS: MGPOptional<OS<T>> = this.getStaticDB().get(id);
         if (optionalOS.isPresent()) {
-            const observableSubject: ObservableSubject<{id: string, doc: T}> = optionalOS.get();
-            const oldDoc: T = observableSubject.subject.getValue().doc;
+            const observableSubject: OS<T> = optionalOS.get();
+            const oldDoc: T = observableSubject.subject.getValue().get().doc;
             const mappedUpdate: Partial<T> = Utils.getNonNullable(this.getServerTimestampedObject(update));
             const newDoc: T = { ...oldDoc, ...mappedUpdate };
-            observableSubject.subject.next({ id, doc: newDoc });
+            observableSubject.subject.next(MGPOptional.of({ id, doc: newDoc }));
             for (const callback of this.callbacks) {
-                if (this.conditionsHold(callback[0], observableSubject.subject.value.doc)) {
-                    callback[1].onDocumentModified([observableSubject.subject.value]);
+                if (this.conditionsHold(callback[0], observableSubject.subject.value.get().doc)) {
+                    callback[1].onDocumentModified([observableSubject.subject.value.get()]);
                 }
             }
             return Promise.resolve();
@@ -125,14 +129,14 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
     public async delete(id: string): Promise<void> {
         display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE, this.collectionName + '.delete(' + id + ')');
 
-        const optionalOS: MGPOptional<ObservableSubject<{id: string, doc?: T}>> = this.getStaticDB().get(id);
+        const optionalOS: MGPOptional<OS<T>> = this.getStaticDB().get(id);
         if (optionalOS.isPresent()) {
-            const removed: { id: string, doc?: T } = optionalOS.get().subject.value;
-            optionalOS.get().subject.next({ id: removed.id });
+            const removed: FirebaseDocumentWithId<T> = optionalOS.get().subject.value.get();
+            optionalOS.get().subject.next(MGPOptional.empty());
             this.getStaticDB().delete(id);
             for (const callback of this.callbacks) {
                 if (this.conditionsHold(callback[0], removed.doc)) {
-                    callback[1].onDocumentDeleted([{ id: removed.id, doc: Utils.getNonNullable(removed.doc) }]);
+                    callback[1].onDocumentDeleted([removed]);
                 }
             }
         } else {
@@ -159,16 +163,15 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
     private subscribeToMatchers(conditions: FirebaseCondition[],
                                 callback: FirebaseCollectionObserver<T>): Subscription | null
     {
-        const db: MGPMap<string, ObservableSubject<{id: string, doc: T}>> = this.getStaticDB();
+        const db: MGPMap<string, OS<T>> = this.getStaticDB();
         this.callbacks.push([conditions, callback]);
         for (let entryId: number = 0; entryId < db.size(); entryId++) {
-            const entry: ObservableSubject<{id: string, doc: T}> = db.getByIndex(entryId).value;
-            if (this.conditionsHold(conditions, entry.subject.value.doc)) {
-                callback.onDocumentCreated([entry.subject.value]);
+            const entry: OS<T> = db.getByIndex(entryId).value;
+            if (this.conditionsHold(conditions, entry.subject.value.get().doc)) {
+                callback.onDocumentCreated([entry.subject.value.get()]);
 
             }
         }
-
         return null;
     }
     private conditionsHold(conditions: FirebaseCondition[],

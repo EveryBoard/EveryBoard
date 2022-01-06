@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { PartDAO } from '../dao/PartDAO';
-import { MGPResult, ICurrentPartId, IPart, Part } from '../domain/icurrentpart';
+import { MGPResult, IPart, Part, IPartId } from '../domain/icurrentpart';
 import { FirstPlayer, IJoiner, PartStatus } from '../domain/ijoiner';
 import { JoinerService } from './JoinerService';
 import { ActivesPartsService } from './ActivesPartsService';
@@ -35,21 +35,21 @@ export class GameService implements OnDestroy {
 
     private followedPartId: MGPOptional<string> = MGPOptional.empty();
 
-    private followedPartObs: MGPOptional<Observable<ICurrentPartId>> = MGPOptional.empty();
+    private followedPartObs: MGPOptional<Observable<MGPOptional<IPart>>> = MGPOptional.empty();
 
     private followedPartSub: Subscription;
 
-    private userNameSub: Subscription;
+    private readonly userNameSub: Subscription;
 
     private userName: MGPOptional<string>;
 
-    constructor(private partDao: PartDAO,
-                private activesPartsService: ActivesPartsService,
-                private joinerService: JoinerService,
-                private chatService: ChatService,
-                private router: Router,
-                private messageDisplayer: MessageDisplayer,
-                private authenticationService: AuthenticationService)
+    constructor(private readonly partDao: PartDAO,
+                private readonly activesPartsService: ActivesPartsService,
+                private readonly joinerService: JoinerService,
+                private readonly chatService: ChatService,
+                private readonly router: Router,
+                private readonly messageDisplayer: MessageDisplayer,
+                private readonly authenticationService: AuthenticationService)
     {
         display(GameService.VERBOSE, 'GameService.constructor');
         this.userNameSub = this.authenticationService.getUserObs()
@@ -166,14 +166,13 @@ export class GameService implements OnDestroy {
     }
     // on OnlineGame Component
 
-    public startObserving(partId: string, callback: (iPart: ICurrentPartId) => void): void {
+    public startObserving(partId: string, callback: (part: MGPOptional<IPart>) => void): void {
         if (this.followedPartId.isAbsent()) {
             display(GameService.VERBOSE, '[start watching part ' + partId);
 
             this.followedPartId = MGPOptional.of(partId);
             this.followedPartObs = MGPOptional.of(this.partDao.getObsById(partId));
-            this.followedPartSub = this.followedPartObs.get()
-                .subscribe((onFullFilled: ICurrentPartId) => callback(onFullFilled));
+            this.followedPartSub = this.followedPartObs.get().subscribe(callback);
         } else {
             throw new Error('GameService.startObserving should not be called while already observing a game');
         }
@@ -212,12 +211,13 @@ export class GameService implements OnDestroy {
     public proposeRematch(partId: string, player: Player): Promise<void> {
         return this.sendRequest(partId, Request.rematchProposed(player));
     }
-    public async acceptRematch(part: ICurrentPartId): Promise<void> {
-        display(GameService.VERBOSE, { called: 'GameService.acceptRematch(', part });
+    public async acceptRematch(partWithId: IPartId): Promise<void> {
+        display(GameService.VERBOSE, { called: 'GameService.acceptRematch(', partWithId });
+        const part: IPart = Utils.getNonNullable(partWithId.doc);
 
-        const iJoiner: IJoiner = await this.joinerService.readJoinerById(part.id);
+        const iJoiner: IJoiner = await this.joinerService.readJoinerById(partWithId.id);
         let firstPlayer: FirstPlayer;
-        if (part.doc.playerZero === iJoiner.creator) {
+        if (part.playerZero === iJoiner.creator) {
             firstPlayer = FirstPlayer.CHOSEN_PLAYER; // so he won't start this one
         } else {
             firstPlayer = FirstPlayer.CREATOR;
@@ -233,14 +233,14 @@ export class GameService implements OnDestroy {
         const rematchId: string = await this.joinerService.createJoiner(newJoiner);
         const startingConfig: StartingPartConfig = this.getStartingConfig(newJoiner);
         const newPart: IPart = {
-            typeGame: part.doc.typeGame,
+            typeGame: part.typeGame,
             result: MGPResult.UNACHIEVED.value,
             listMoves: [],
             ...startingConfig,
         };
         await this.partDao.set(rematchId, newPart);
         await this.createChat(rematchId);
-        return this.sendRequest(part.id, Request.rematchAccepted(part.doc.typeGame, rematchId));
+        return this.sendRequest(partWithId.id, Request.rematchAccepted(part.typeGame, rematchId));
     }
     public askTakeBack(partId: string, player: Player): Promise<void> {
         return this.sendRequest(partId, Request.takeBackAsked(player));

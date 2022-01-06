@@ -1,5 +1,8 @@
+import { FirebaseDocumentWithId } from '../dao/FirebaseFirestoreDAO';
 import { assert, JSONObject } from '../utils/utils';
 import { DomainWrapper } from './DomainWrapper';
+
+export type IJoinerId = FirebaseDocumentWithId<IJoiner>
 
 export interface IJoiner extends JSONObject {
     readonly creator: string;
@@ -17,13 +20,9 @@ export class Joiner implements DomainWrapper<IJoiner> {
     public constructor(public readonly doc: IJoiner) {
     }
 }
-export interface IJoinerId {
 
-    id: string;
-
-    doc: IJoiner;
-}
 export type IFirstPlayer = 'CREATOR' | 'RANDOM' | 'CHOSEN_PLAYER';
+
 export class FirstPlayer {
 
     private constructor(public value: IFirstPlayer) {}
@@ -34,7 +33,6 @@ export class FirstPlayer {
 
     public static readonly CHOSEN_PLAYER: FirstPlayer = new FirstPlayer('CHOSEN_PLAYER');
 
-    // TODO: remove the need for this? (only used once)
     public static of(value: string): FirstPlayer {
         switch (value) {
             case 'CREATOR': return FirstPlayer.CREATOR;

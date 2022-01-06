@@ -9,7 +9,7 @@ import { MGPOptional } from '../utils/MGPOptional';
 
 export interface FirebaseDocumentWithId<T> {
     id: string
-    doc?: T
+    doc: T
 }
 
 export interface IFirebaseFirestoreDAO<T extends FirebaseJSONObject> {
@@ -22,7 +22,11 @@ export interface IFirebaseFirestoreDAO<T extends FirebaseJSONObject> {
 
     set(id: string, element: T): Promise<void>;
 
-    getObsById(id: string): Observable<FirebaseDocumentWithId<T>>;
+    /**
+     * Observes a specific document given its id.
+     * The observable gives an optional, set to empty when the document is deleted
+     */
+    getObsById(id: string): Observable<MGPOptional<T>>;
 
     observingWhere(conditions: [string,
                                 firebase.firestore.WhereFilterOp,
@@ -63,13 +67,10 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
     }
     // Collection Observer
 
-    public getObsById(id: string): Observable<FirebaseDocumentWithId<T>> {
+    public getObsById(id: string): Observable<MGPOptional<T>> {
         return this.afs.doc(this.collectionName + '/' + id).snapshotChanges()
             .pipe(map((actions: Action<DocumentSnapshot<T>>) => {
-                return {
-                    doc: actions.payload.data() as T,
-                    id,
-                };
+                return MGPOptional.ofNullable(actions.payload.data());
             }));
     }
     /**
@@ -96,14 +97,14 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
         }
         return Utils.getNonNullable(query)
             .onSnapshot((snapshot: firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>) => {
-                const createdDocs: {doc: T, id: string}[] = [];
-                const modifiedDocs: {doc: T, id: string}[] = [];
-                const deletedDocs: {doc: T, id: string}[] = [];
+                const createdDocs: FirebaseDocumentWithId<T>[] = [];
+                const modifiedDocs: FirebaseDocumentWithId<T>[] = [];
+                const deletedDocs: FirebaseDocumentWithId<T>[] = [];
                 snapshot.docChanges()
-                    .forEach((change: firebase.firestore.DocumentChange<firebase.firestore.DocumentData>) => {
+                    .forEach((change: firebase.firestore.DocumentChange<T>) => {
                         const doc: {doc: T, id: string} = {
                             id: change.doc.id,
-                            doc: change.doc.data() as T,
+                            doc: change.doc.data(),
                         };
                         switch (change.type) {
                             case 'added':

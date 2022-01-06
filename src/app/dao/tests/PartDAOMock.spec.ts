@@ -1,12 +1,13 @@
 /* eslint-disable max-lines-per-function */
-import { ICurrentPartId, IPart, MGPResult } from 'src/app/domain/icurrentpart';
+import { IPart, IPartId, MGPResult } from 'src/app/domain/icurrentpart';
 import { FirebaseFirestoreDAOMock } from './FirebaseFirestoreDAOMock.spec';
 import { ObservableSubject } from 'src/app/utils/tests/ObservableSubject.spec';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 import { display } from 'src/app/utils/utils';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-type PartOS = ObservableSubject<ICurrentPartId>
+type PartOS = ObservableSubject<MGPOptional<IPartId>>
 
 export class PartDAOMock extends FirebaseFirestoreDAOMock<IPart> {
 

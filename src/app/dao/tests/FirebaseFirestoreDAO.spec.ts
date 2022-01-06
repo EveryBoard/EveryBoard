@@ -61,8 +61,8 @@ describe('FirebaseFirestoreDAO', () => {
         it('should return an observable that can be used to see changes in objects', async() => {
             const id: string = await dao.create({ value: 'foo', otherValue: 1 });
             const allChangesSeenPromise: Promise<boolean> = new Promise((resolve: (value: boolean) => void) => {
-                dao.getObsById(id).subscribe((fooId: { id: string, doc: Foo }) => {
-                    if (fooId.doc.value === 'bar' && fooId.doc.otherValue === 2) {
+                dao.getObsById(id).subscribe((foo: MGPOptional<Foo>) => {
+                    if (foo.isPresent() && foo.get().value === 'bar' && foo.get().otherValue === 2) {
                         resolve(true);
                     }
                 });
@@ -122,18 +122,6 @@ describe('FirebaseFirestoreDAO', () => {
                 () => void { },
             );
             const unsubscribe: () => void = dao.observingWhere([['value', '==', 'bar']], callback);
-            await dao.create({ value: 'foo', otherValue: 1 });
-            await expectAsync(promise).toBePending();
-            unsubscribe();
-        });
-        it('should not observe document creation when the condition does not hold', async() => {
-            // This test is flaky: last failure on 22/10/2021
-            const callback: FirebaseCollectionObserver<Foo> = new FirebaseCollectionObserver(
-                callbackFunction,
-                () => void { },
-                () => void { },
-            );
-            const unsubscribe: () => void = dao.observingWhere([['value', '==', 'foo'], ['otherValue', '==', 2]], callback);
             await dao.create({ value: 'foo', otherValue: 1 });
             await expectAsync(promise).toBePending();
             unsubscribe();

@@ -6,6 +6,7 @@ import { FirstPlayer, IJoiner, PartStatus, PartType } from 'src/app/domain/ijoin
 import { JoinerDAOMock } from 'src/app/dao/tests/JoinerDAOMock.spec';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Utils } from 'src/app/utils/utils';
 
 describe('JoinerService', () => {
 
@@ -105,7 +106,7 @@ describe('JoinerService', () => {
             service.observe('joinerId');
 
             await service.cancelJoining('firstCandidate');
-            const currentJoiner: IJoiner = dao.getStaticDB().get('joinerId').get().subject.value.doc;
+            const currentJoiner: IJoiner = dao.getStaticDB().get('joinerId').get().subject.value.get().doc;
             expect(currentJoiner).withContext('should be as new').toEqual(JoinerMocks.INITIAL.doc);
         }));
         it('should throw when called by someone who is nor candidate nor chosenPlayer', fakeAsync(async() => {
@@ -113,7 +114,7 @@ describe('JoinerService', () => {
             service.observe('joinerId');
             await service.joinGame('joinerId', 'whoever');
 
-            await expectAsync(service.cancelJoining('who is that')).toBeRejectedWith(new Error('someone that was nor candidate nor chosenPlayer just left the chat: who is that'));
+            await expectAsync(service.cancelJoining('who is that')).toBeRejectedWith(new Error('someone that was not candidate nor chosenPlayer just left the chat: who is that'));
         }));
     });
     describe('updateCandidates', () => {

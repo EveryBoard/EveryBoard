@@ -5,10 +5,10 @@ import { AuthUser } from 'src/app/services/AuthenticationService';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { Router } from '@angular/router';
-import { ICurrentPartId } from 'src/app/domain/icurrentpart';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { ActivesPartsService } from 'src/app/services/ActivesPartsService';
 import { BehaviorSubject } from 'rxjs';
+import { IPartId } from 'src/app/domain/icurrentpart';
 
 describe('ServerPageComponent', () => {
 
@@ -38,7 +38,7 @@ describe('ServerPageComponent', () => {
 
     it('Should redirect to /play when clicking a game', fakeAsync(async() => {
         // Given a server with one active part
-        const activePart: ICurrentPartId = {
+        const activePart: IPartId = {
             id: 'some-part-id',
             doc: PartMocks.INITIAL.doc,
         };

@@ -1,9 +1,9 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { PartDAO } from '../dao/PartDAO';
-import { ICurrentPartId, IPart } from '../domain/icurrentpart';
+import { IPart, IPartId } from '../domain/icurrentpart';
 import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
-import { assert } from '../utils/utils';
+import { assert, Utils } from '../utils/utils';
 import { MGPOptional } from '../utils/MGPOptional';
 
 @Injectable({
@@ -14,44 +14,43 @@ import { MGPOptional } from '../utils/MGPOptional';
  */
 export class ActivesPartsService implements OnDestroy {
 
-    private readonly activePartsBS: BehaviorSubject<ICurrentPartId[]>;
+    private readonly activePartsBS: BehaviorSubject<IPartId[]>;
 
-    private readonly activePartsObs: Observable<ICurrentPartId[]>;
+    private readonly activePartsObs: Observable<IPartId[]>;
 
-    private activeParts: ICurrentPartId[] = []
+    private activeParts: IPartId[] = []
 
     private unsubscribe: MGPOptional<() => void> = MGPOptional.empty();
 
     constructor(private readonly partDao: PartDAO) {
-        this.activePartsBS = new BehaviorSubject<ICurrentPartId[]>([]);
+        this.activePartsBS = new BehaviorSubject<IPartId[]>([]);
         this.activePartsObs = this.activePartsBS.asObservable();
         this.startObserving();
     }
-    public getActivePartsObs(): Observable<ICurrentPartId[]> {
+    public getActivePartsObs(): Observable<IPartId[]> {
         return this.activePartsObs;
     }
     public ngOnDestroy(): void {
         this.stopObserving();
     }
     public startObserving(): void {
-        const onDocumentCreated: (createdParts: ICurrentPartId[]) => void = (createdParts: ICurrentPartId[]) => {
-            const result: ICurrentPartId[] = this.activePartsBS.value.concat(...createdParts);
+        const onDocumentCreated: (createdParts: IPartId[]) => void = (createdParts: IPartId[]) => {
+            const result: IPartId[] = this.activePartsBS.value.concat(...createdParts);
             this.activePartsBS.next(result);
         };
-        const onDocumentModified: (modifiedParts: ICurrentPartId[]) => void = (modifiedParts: ICurrentPartId[]) => {
-            const result: ICurrentPartId[] = this.activePartsBS.value;
+        const onDocumentModified: (modifiedParts: IPartId[]) => void = (modifiedParts: IPartId[]) => {
+            const result: IPartId[] = this.activePartsBS.value;
             for (const p of modifiedParts) {
-                result.forEach((part: ICurrentPartId) => {
+                result.forEach((part: IPartId) => {
                     if (part.id === p.id) part.doc = p.doc;
                 });
             }
             this.activePartsBS.next(result);
         };
-        const onDocumentDeleted: (deletedDocs: ICurrentPartId[]) => void = (deletedDocs: ICurrentPartId[]) => {
-            const result: ICurrentPartId[] = [];
-            const deletedIds: string[] = deletedDocs.map((doc: ICurrentPartId) => doc.id);
+        const onDocumentDeleted: (deletedDocIds: IPartId[]) => void = (deletedDocs: IPartId[]) => {
+            const result: IPartId[] = [];
             for (const p of this.activePartsBS.value) {
-                if (!deletedIds.includes(p.id)) {
+                if (!deletedDocs.some((part: IPartId) => part.id === p.id)) {
                     result.push(p);
                 }
             }
@@ -62,7 +61,7 @@ export class ActivesPartsService implements OnDestroy {
                                            onDocumentModified,
                                            onDocumentDeleted);
         this.unsubscribe = MGPOptional.of(this.partDao.observeActivesParts(partObserver));
-        this.activePartsObs.subscribe((activesParts: ICurrentPartId[]) => {
+        this.activePartsObs.subscribe((activesParts: IPartId[]) => {
             this.activeParts = activesParts;
         });
     }
@@ -73,8 +72,8 @@ export class ActivesPartsService implements OnDestroy {
     }
     public hasActivePart(user: string): boolean {
         for (const part of this.activeParts) {
-            const playerZero: string = part.doc.playerZero;
-            const playerOne: string | undefined = part.doc.playerOne;
+            const playerZero: string = Utils.getNonNullable(part.doc).playerZero;
+            const playerOne: string | undefined = Utils.getNonNullable(part.doc).playerOne;
             if (user === playerZero || user === playerOne) {
                 return true;
             }

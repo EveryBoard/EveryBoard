@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { FirstPlayer, IJoiner, IJoinerId, PartStatus, PartType } from '../domain/ijoiner';
+import { FirstPlayer, IJoiner, PartStatus, PartType } from '../domain/ijoiner';
 import { JoinerDAO } from '../dao/JoinerDAO';
 import { assert, display } from 'src/app/utils/utils';
 import { ArrayUtils } from '../utils/ArrayUtils';
@@ -14,10 +14,10 @@ export class JoinerService {
 
     private observedJoinerId: string;
 
-    constructor(private joinerDao: JoinerDAO) {
+    constructor(private readonly joinerDao: JoinerDAO) {
         display(JoinerService.VERBOSE, 'JoinerService.constructor');
     }
-    public observe(joinerId: string): Observable<IJoinerId> {
+    public observe(joinerId: string): Observable<MGPOptional<IJoiner>> {
         this.observedJoinerId = joinerId;
         return this.joinerDao.getObsById(joinerId);
     }
@@ -77,7 +77,7 @@ export class JoinerService {
                 chosenPlayer = null;
                 partStatus = PartStatus.PART_CREATED.value;
             } else if (indexLeaver === -1) {
-                throw new Error('someone that was nor candidate nor chosenPlayer just left the chat: ' + userName);
+                throw new Error('someone that was not candidate nor chosenPlayer just left the chat: ' + userName);
             }
             const modification: Partial<IJoiner> = {
                 chosenPlayer,

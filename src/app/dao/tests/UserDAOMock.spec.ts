@@ -1,12 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { ObservableSubject } from 'src/app/utils/tests/ObservableSubject.spec';
-import { IUserId, IUser } from 'src/app/domain/iuser';
+import { IUser, IUserId } from 'src/app/domain/iuser';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 import { display } from 'src/app/utils/utils';
 import { FirebaseFirestoreDAOMock } from './FirebaseFirestoreDAOMock.spec';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-type UserOS = ObservableSubject<IUserId>
+type UserOS = ObservableSubject<MGPOptional<IUserId>>
 
 export class UserDAOMock extends FirebaseFirestoreDAOMock<IUser> {
     public static VERBOSE: boolean = false;

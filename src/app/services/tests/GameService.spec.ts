@@ -3,7 +3,7 @@ import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { GameService, StartingPartConfig } from '../GameService';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { of } from 'rxjs';
-import { ICurrentPartId, IPart, MGPResult, Part } from 'src/app/domain/icurrentpart';
+import { IPart, IPartId, MGPResult, Part } from 'src/app/domain/icurrentpart';
 import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
 import { JoinerDAOMock } from 'src/app/dao/tests/JoinerDAOMock.spec';
 import { ChatDAOMock } from 'src/app/dao/tests/ChatDAOMock.spec';
@@ -58,32 +58,34 @@ describe('GameService', () => {
         expect(service).toBeTruthy();
     });
     it('startObserving should delegate callback to partDao', () => {
-        const myCallback: (iPart: ICurrentPartId) => void = (iPart: ICurrentPartId) => {
-            expect(iPart.id).toBe('partId');
-        };
-        spyOn(partDao, 'getObsById').and.returnValue(of({ id: 'partId', doc: {
+        const part: IPart = {
             typeGame: 'Quarto',
             playerZero: 'creator',
             playerOne: 'joiner',
             turn: 2,
             listMoves: [MOVE_1, MOVE_2],
             result: MGPResult.UNACHIEVED.value,
-        } }));
+        };
+        const myCallback: (part: MGPOptional<IPart>) => void = (observedPart: MGPOptional<IPart>) => {
+            expect(observedPart.isPresent()).toBeTrue();
+            expect(observedPart.get()).toEqual(part);
+        };
+        spyOn(partDao, 'getObsById').and.returnValue(of(MGPOptional.of(part)));
         service.startObserving('partId', myCallback);
-        expect(partDao.getObsById).toHaveBeenCalled();
+        expect(partDao.getObsById).toHaveBeenCalledWith('partId');
     });
     it('startObserving should throw exception when called while observing ', fakeAsync(async() => {
         await partDao.set('myJoinerId', PartMocks.INITIAL.doc);
 
         expect(() => {
-            service.startObserving('myJoinerId', (_iPart: ICurrentPartId) => {});
-            service.startObserving('myJoinerId', (_iPart: ICurrentPartId) => {});
+            service.startObserving('myJoinerId', (_part: MGPOptional<IPart>) => {});
+            service.startObserving('myJoinerId', (_part: MGPOptional<IPart>) => {});
         }).toThrowError('GameService.startObserving should not be called while already observing a game');
     }));
     it('should delegate delete to PartDAO', () => {
         spyOn(partDao, 'delete');
         service.deletePart('partId');
-        expect(partDao.delete).toHaveBeenCalled();
+        expect(partDao.delete).toHaveBeenCalledWith('partId');
     });
     it('should forbid to accept a take back that the player proposed himself', fakeAsync(async() => {
         for (const player of [Player.ZERO, Player.ONE]) {
@@ -108,7 +110,7 @@ describe('GameService', () => {
 
         await service.acceptConfig('partId', joiner);
 
-        expect(joinerService.acceptConfig).toHaveBeenCalled();
+        expect(joinerService.acceptConfig).toHaveBeenCalledWith();
     }));
     describe('createGameAndRedirectOrShowError', () => {
         it('should show toast and navigate when creator is offline', fakeAsync(async() => {
@@ -204,7 +206,7 @@ describe('GameService', () => {
         }));
         it('should start with the other player when first player mentionned in previous game', fakeAsync(async() => {
             // given a previous match with creator starting
-            const lastPart: ICurrentPartId = {
+            const lastPart: IPartId = {
                 id: 'partId',
                 doc: {
                     listMoves: [MOVE_1, MOVE_2],
@@ -231,7 +233,7 @@ describe('GameService', () => {
                 totalPartDuration: 25,
             };
             spyOn(service, 'sendRequest').and.resolveTo();
-            spyOn(joinerService, 'readJoinerById').and.returnValue(Promise.resolve(lastGameJoiner));
+            spyOn(joinerService, 'readJoinerById').and.resolveTo(lastGameJoiner);
             let called: boolean = false;
             spyOn(partDao, 'set').and.callFake(async(_id: string, element: IPart) => {
                 expect(element.playerZero).toEqual(Utils.getNonNullable(lastPart.doc.playerOne));
@@ -247,7 +249,7 @@ describe('GameService', () => {
         }));
         it('should start with the other player when first player was random', fakeAsync(async() => {
             // given a previous match with creator starting
-            const lastPart: ICurrentPartId = {
+            const lastPart: IPartId = {
                 id: 'partId',
                 doc: {
                     listMoves: [MOVE_1, MOVE_2],
@@ -274,7 +276,7 @@ describe('GameService', () => {
                 totalPartDuration: 25,
             };
             spyOn(service, 'sendRequest').and.resolveTo();
-            spyOn(joinerService, 'readJoinerById').and.returnValue(Promise.resolve(lastGameJoiner));
+            spyOn(joinerService, 'readJoinerById').and.resolveTo(lastGameJoiner);
             let called: boolean = false;
             spyOn(partDao, 'set').and.callFake(async(_id: string, element: IPart) => {
                 expect(element.playerZero).toEqual(Utils.getNonNullable(lastPart.doc.playerOne));

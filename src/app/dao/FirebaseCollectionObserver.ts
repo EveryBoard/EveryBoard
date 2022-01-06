@@ -1,12 +1,9 @@
-import { assert } from '../utils/utils';
+import { FirebaseDocumentWithId } from './FirebaseFirestoreDAO';
 
 export class FirebaseCollectionObserver<T> {
-    public constructor(public onDocumentCreated: (createdDocIds: {doc: T, id: string}[]) => void,
-                       public onDocumentModified: (modifiedDocIds: {doc: T, id: string}[]) => void,
-                       public onDocumentDeleted: (deletedDocIds: {doc: T, id: string}[]) => void,
+    public constructor(public onDocumentCreated: (createdDocs: FirebaseDocumentWithId<T>[]) => void,
+                       public onDocumentModified: (modifiedDocs: FirebaseDocumentWithId<T>[]) => void,
+                       public onDocumentDeleted: (deletedDocIds: FirebaseDocumentWithId<T>[]) => void,
     ) {
-        assert(onDocumentCreated != null, 'Method onDocumentCreated must be defined.');
-        assert(onDocumentModified != null, 'Method onDocumentModified must be defined.');
-        assert(onDocumentDeleted != null, 'Method onDocumentDeleted must be defined.');
     }
 }
