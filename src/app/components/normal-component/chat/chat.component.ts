@@ -2,11 +2,12 @@ import { Component, Input, OnDestroy, ElementRef, ViewChild, OnInit, AfterViewCh
 import { ChatService } from '../../../services/ChatService';
 import { IMessage } from '../../../domain/imessage';
 import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
-import { IChatId } from 'src/app/domain/ichat';
-import { assert, display } from 'src/app/utils/utils';
+import { assert, display, Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { faReply, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
+import { FirebaseDocumentWithId } from 'src/app/dao/FirebaseFirestoreDAO';
+import { IChat } from 'src/app/domain/ichat';
 
 @Component({
     selector: 'app-chat',
@@ -36,8 +37,8 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
 
     @ViewChild('chatDiv') chatDiv: ElementRef<HTMLElement>;
 
-    constructor(private chatService: ChatService,
-                private authenticationService: AuthenticationService) {
+    constructor(private readonly chatService: ChatService,
+                private readonly authenticationService: AuthenticationService) {
         display(ChatComponent.VERBOSE, 'ChatComponent constructor');
     }
     public ngOnInit(): void {
@@ -67,12 +68,12 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     public loadChatContent(): void {
         display(ChatComponent.VERBOSE, `User '${this.username}' logged, loading chat content`);
 
-        this.chatService.startObserving(this.chatId, (id: IChatId) => {
+        this.chatService.startObserving(this.chatId, (id: FirebaseDocumentWithId<IChat>) => {
             this.updateMessages(id);
         });
     }
-    public updateMessages(iChatId: IChatId): void {
-        this.chat = iChatId.doc.messages;
+    public updateMessages(iChatId: FirebaseDocumentWithId<IChat>): void {
+        this.chat = Utils.getNonNullable(iChatId.doc).messages;
         const nbMessages: number = this.chat.length;
         if (this.visible === true && this.isNearBottom === true) {
             this.readMessages = nbMessages;

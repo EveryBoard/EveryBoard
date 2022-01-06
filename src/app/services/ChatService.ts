@@ -8,6 +8,7 @@ import { MGPValidation } from '../utils/MGPValidation';
 import { ArrayUtils } from '../utils/ArrayUtils';
 import { Localized } from '../utils/LocaleUtils';
 import { MGPOptional } from '../utils/MGPOptional';
+import { FirebaseDocumentWithId } from '../dao/FirebaseFirestoreDAO';
 
 export class ChatMessages {
     public static readonly CANNOT_SEND_MESSAGE: Localized = () => $localize`You're not allowed to send a message here.`;
@@ -22,11 +23,11 @@ export class ChatService implements OnDestroy {
 
     private followedChatId: MGPOptional<string> = MGPOptional.empty();
 
-    private followedChatObs: MGPOptional<Observable<IChatId>> = MGPOptional.empty();
+    private followedChatObs: MGPOptional<Observable<FirebaseDocumentWithId<IChat>>> = MGPOptional.empty();
 
     private followedChatSub: Subscription;
 
-    constructor(private chatDao: ChatDAO) {
+    constructor(private readonly chatDao: ChatDAO) {
         display(ChatService.VERBOSE, 'ChatService.constructor');
     }
     public startObserving(chatId: string, callback: (iChat: IChatId) => void): void {

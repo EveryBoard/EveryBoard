@@ -7,6 +7,11 @@ import { assert, display, FirebaseJSONObject, Utils } from 'src/app/utils/utils'
 import { FirebaseCollectionObserver } from './FirebaseCollectionObserver';
 import { MGPOptional } from '../utils/MGPOptional';
 
+export interface FirebaseDocumentWithId<T> {
+    id: string
+    doc?: T
+}
+
 export interface IFirebaseFirestoreDAO<T extends FirebaseJSONObject> {
 
     create(newElement: T): Promise<string>;
@@ -17,7 +22,7 @@ export interface IFirebaseFirestoreDAO<T extends FirebaseJSONObject> {
 
     set(id: string, element: T): Promise<void>;
 
-    getObsById(id: string): Observable<{id: string, doc: T}>;
+    getObsById(id: string): Observable<FirebaseDocumentWithId<T>>;
 
     observingWhere(conditions: [string,
                                 firebase.firestore.WhereFilterOp,
@@ -47,18 +52,18 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
         return (await this.read(id)).isPresent();
     }
     public async update(id: string, modification: Partial<T>): Promise<void> {
-        return this.afs.collection(this.collectionName).doc<T>(id).ref.update(modification);
+        return this.afs.collection(this.collectionName).doc(id).ref.update(modification);
     }
     public delete(messageId: string): Promise<void> {
-        return this.afs.collection(this.collectionName).doc<T>(messageId).ref.delete();
+        return this.afs.collection(this.collectionName).doc(messageId).ref.delete();
     }
     public set(id: string, element: T): Promise<void> {
         display(FirebaseFirestoreDAO.VERBOSE, { called: this.collectionName + '.set', id, element });
-        return this.afs.collection(this.collectionName).doc<T>(id).set(element);
+        return this.afs.collection(this.collectionName).doc(id).set(element);
     }
     // Collection Observer
 
-    public getObsById(id: string): Observable<{ id: string, doc: T}> {
+    public getObsById(id: string): Observable<FirebaseDocumentWithId<T>> {
         return this.afs.doc(this.collectionName + '/' + id).snapshotChanges()
             .pipe(map((actions: Action<DocumentSnapshot<T>>) => {
                 return {

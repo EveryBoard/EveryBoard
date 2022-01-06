@@ -5,7 +5,4 @@ export interface IChat extends JSONObject {
     // the Id will always be the same as the joiner doc and part doc, or "server"
     messages: IMessage[];
 }
-export interface IChatId extends JSONObject {
-    id: string;
-    doc: IChat;
-}
+
