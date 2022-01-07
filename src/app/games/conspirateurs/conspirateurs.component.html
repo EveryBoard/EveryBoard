@@ -5,8 +5,8 @@
     <g *ngFor="let line of viewInfo.boardInfo; index as y">
         <g *ngFor="let square of line; index as x">
             <rect id="click_{{ x }}_{{ y }}"
-                  [ngClass]="square.squareClasses"
                   class="base"
+                  [ngClass]="square.squareClasses"
                   (click)="onClick(square.coord)"
                   [attr.x]="(SPACE_SIZE * x) + STROKE_WIDTH"
                   [attr.y]="(SPACE_SIZE * y) + STROKE_WIDTH"
@@ -32,6 +32,16 @@
             />
         </g>
     </g>
+    <g *ngFor="let shelter of ALL_SHELTERS">
+        <rect class="base no-fill mid-stroke"
+              [ngClass]="viewInfo.boardInfo[shelter.y][shelter.x].shelterClasses"
+              (click)="onClick(shelter)"
+              [attr.x]="(SPACE_SIZE * shelter.x) + STROKE_WIDTH"
+              [attr.y]="(SPACE_SIZE * shelter.y) + STROKE_WIDTH"
+              [attr.width]="SPACE_SIZE"
+              [attr.height]="SPACE_SIZE"
+         />
+    </g>
     <circle *ngFor="let y of range(viewInfo.sidePieces[0])"
             id="sidePiece_0_{{ y }}"
             [attr.cx]="-PIECE_RADIUS"
@@ -54,13 +64,4 @@
     <polyline id="lastJump"
               class="base no-fill"
               [attr.points]="viewInfo.lastMoveArrow" />
-    <g *ngFor="let coord of viewInfo.victory"
-       id="victory">
-        <rect [attr.x] = "(SPACE_SIZE * coord.x) + STROKE_WIDTH"
-              [attr.y] = "(SPACE_SIZE * coord.y) + STROKE_WIDTH"
-              [attr.width]="SPACE_SIZE"
-              [attr.height]="SPACE_SIZE"
-              class="no-fill mid-stroke victory-stroke"
-        />
-    </g>
 </svg>

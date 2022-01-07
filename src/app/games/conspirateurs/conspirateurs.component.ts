@@ -27,9 +27,11 @@ interface ViewInfo {
 interface SquareInfo {
     coord: Coord,
     squareClasses: string[],
+    shelterClasses: string[],
     pieceClasses: string[],
     hasPiece: boolean,
     isShelter: boolean,
+    isOccupiedShelter: boolean,
 }
 
 @Component({
@@ -39,6 +41,7 @@ interface SquareInfo {
 })
 export class ConspirateursComponent extends GameComponent<ConspirateursRules, ConspirateursMove, ConspirateursState> {
     public PIECE_RADIUS: number;
+    public ALL_SHELTERS: Coord[] = ConspirateursState.ALL_SHELTERS;
     public CENTRAL_ZONE_START: Coord = ConspirateursState.CENTRAL_ZONE_TOP_LEFT;
     public CENTRAL_ZONE_SIZE: Vector = new Vector(
         ConspirateursState.CENTRAL_ZONE_BOTTOM_RIGHT.x - ConspirateursState.CENTRAL_ZONE_TOP_LEFT.x + 1,
@@ -85,19 +88,28 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
                 const squareInfo: SquareInfo = {
                     coord,
                     squareClasses: [],
+                    shelterClasses: [],
                     pieceClasses: [this.getPlayerClass(piece)],
                     hasPiece: piece !== Player.NONE,
                     isShelter: false,
+                    isOccupiedShelter: false,
                 };
                 this.viewInfo.boardInfo[y].push(squareInfo);
             }
         }
-        for (const shelter of ConspirateursState.ALL_SHELTERS) {
-            this.viewInfo.boardInfo[shelter.y][shelter.x].isShelter = true;
-        }
         this.viewInfo.sidePieces = state.getSidePieces();
+        this.updateOccupiedShelters();
         this.updateSelected();
         this.updateVictory();
+    }
+    private updateOccupiedShelters(): void {
+        for (const shelter of ConspirateursState.ALL_SHELTERS) {
+            const squareInfo: SquareInfo = this.viewInfo.boardInfo[shelter.y][shelter.x];
+            squareInfo.isShelter = true;
+            if (squareInfo.hasPiece) {
+                squareInfo.shelterClasses.push('highlighted');
+            }
+        }
     }
     private updateSelected(): void {
         if (this.selected.isPresent()) {
@@ -124,7 +136,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         if (gameStatus.isEndGame === true) {
             for (const shelter of ConspirateursState.ALL_SHELTERS) {
                 if (state.getPieceAt(shelter) === gameStatus.winner) {
-                    this.viewInfo.victory.push(shelter);
+                    this.viewInfo.boardInfo[shelter.y][shelter.x].pieceClasses.push('victory-stroke');
                 }
             }
         }

@@ -180,7 +180,7 @@ describe('ConspirateursComponent', () => {
             testUtils.expectElementNotToExist('#sidePiece_1_0');
         }));
     });
-    it('should highlight shelters upon victory', fakeAsync(async() => {
+    it('should highlight victorious pieces upon victory', fakeAsync(async() => {
         // Given a state where player 1 has sheltered all of its pieces
         const state: ConspirateursState = new ConspirateursState([
             [B, B, _, B, _, B, _, B, B, B, _, B, _, B, _, B, B],
@@ -203,7 +203,7 @@ describe('ConspirateursComponent', () => {
         ], 60);
         // When the state is displayed
         testUtils.setupState(state);
-        // The the shelters should be shown
-        testUtils.expectElementToExist('#victory');
+        // The its pieces are highlighted
+        testUtils.expectElementToHaveClass('#piece_0_0', 'victory-stroke');
     }));
 });
