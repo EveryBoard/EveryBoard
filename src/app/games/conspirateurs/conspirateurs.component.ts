@@ -161,6 +161,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         const state: ConspirateursState = this.getState();
         if (state.getPieceAt(coord) === this.getCurrentPlayer()) {
             this.selected = MGPOptional.of(coord);
+            this.jumpInConstruction = MGPOptional.empty();
             this.updateViewInfo();
             return MGPValidation.SUCCESS;
         } else if (this.jumpInConstruction.isPresent()) {

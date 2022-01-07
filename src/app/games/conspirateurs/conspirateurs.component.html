@@ -22,6 +22,7 @@
                   [attr.height]="SPACE_SIZE - STROKE_WIDTH * 3"
             />
             <circle *ngIf="square.hasPiece"
+                    id="piece_{{ x }}_{{ y }}"
                     [ngClass]="square.pieceClasses"
                     class="base"
                     (click)="onClick(square.coord)"

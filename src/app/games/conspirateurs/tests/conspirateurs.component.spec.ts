@@ -83,7 +83,7 @@ describe('ConspirateursComponent', () => {
                 [_, _, _, _, _, _, B, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, B, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, A, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, B, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, B, _, A, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -98,6 +98,15 @@ describe('ConspirateursComponent', () => {
             ], 42);
             testUtils.setupState(state);
         });
+        it('should cancel jump when clicking on another piece of the player', fakeAsync(async() => {
+            // Given a jump being in construction
+            await testUtils.expectClickSuccess('#click_5_4');
+            await testUtils.expectClickSuccess('#click_5_2');
+            // When clicking on another piece of the current player
+            await testUtils.expectClickSuccess('#click_7_5');
+            // Then the new piece should be selected
+            testUtils.expectElementToHaveClass('#piece_7_5', 'selected');
+        }));
         it('should not allow selecting an empty space', fakeAsync(async() => {
             // When clicking on an empty space
             // Then the click should be rejected
