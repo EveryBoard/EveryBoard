@@ -18,10 +18,11 @@ export class ConspirateursMoveDrop extends MoveCoord {
                                     (coord: Coord) => ConspirateursMoveDrop.of(coord).get());
 
     public static of(coord: Coord): MGPFallible<ConspirateursMoveDrop> {
-        if (coord.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT) === false) {
+        if (coord.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT)) {
+            return MGPFallible.success(new ConspirateursMoveDrop(coord));
+        } else {
             return MGPFallible.failure('Move out of board');
         }
-        return MGPFallible.success(new ConspirateursMoveDrop(coord));
     }
     private constructor(coord: Coord) {
         super(coord.x, coord.y);
@@ -29,7 +30,7 @@ export class ConspirateursMoveDrop extends MoveCoord {
     public toString(): string {
         return `ConspirateursMoveDrop(${this.coord.toString()})`;
     }
-    public equals(other: ConspirateursMoveDrop): boolean {
+    public equals(other: ConspirateursMove): boolean {
         if (other.isDrop()) {
             return this.coord.equals(other.coord);
         } else {

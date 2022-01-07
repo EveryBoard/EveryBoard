@@ -1,7 +1,7 @@
 import { Localized } from 'src/app/utils/LocaleUtils';
 
 export class ConspirateursFailure {
-    public static SIMPLE_MOVE_SHOULD_BE_OF_ONE_STEP: Localized = () => $localize`Your move should be of only one step.`;
+    public static SIMPLE_MOVE_SHOULD_BE_OF_ONE_STEP: Localized = () => $localize`Your piece should land on a neighboring square.`;
 
     public static CANNOT_DROP_AFTER_TURN_40: Localized = () => $localize`You cannot drop a piece during the moving phase.`;
 

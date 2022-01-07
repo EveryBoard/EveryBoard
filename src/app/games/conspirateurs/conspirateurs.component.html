@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="auto"
-     viewBox="0 0 1715 1715"
+     viewBox="-100 0 1915 1715"
      preserveAspectRatio="xMidYMid meet">
     <g *ngFor="let line of viewInfo.boardInfo; index as y">
         <g *ngFor="let square of line; index as x">
@@ -25,12 +25,24 @@
                     [ngClass]="square.pieceClasses"
                     class="base"
                     (click)="onClick(square.coord)"
-                    [attr.r]="(SPACE_SIZE - (2 * STROKE_WIDTH)) * 0.5"
+                    [attr.r]="PIECE_RADIUS"
                     [attr.cx]="(SPACE_SIZE * x) + STROKE_WIDTH + (SPACE_SIZE / 2)"
                     [attr.cy]="(SPACE_SIZE * y) + STROKE_WIDTH + (SPACE_SIZE / 2)"
             />
         </g>
     </g>
+    <circle *ngFor="let y of range(viewInfo.sidePieces[0])"
+            id="sidePiece_0_{{ y }}"
+            [attr.cx]="-PIECE_RADIUS"
+            [attr.cy]="1670 - y * PIECE_RADIUS"
+            [attr.r]="PIECE_RADIUS - 5"
+            class="base mid-stroke player0" />
+    <circle *ngFor="let y of range(viewInfo.sidePieces[1])"
+            id="sidePiece_1_{{ y }}"
+            [attr.cx]="1715 + PIECE_RADIUS"
+            [attr.cy]="1670 - y * PIECE_RADIUS"
+            [attr.r]="PIECE_RADIUS - 5"
+            class="base mid-stroke player1" />
     <rect *ngIf="viewInfo.dropPhase"
           [attr.x]="(SPACE_SIZE * CENTRAL_ZONE_START.x) + STROKE_WIDTH"
           [attr.y]="(SPACE_SIZE * CENTRAL_ZONE_START.y) + STROKE_WIDTH"

@@ -1254,9 +1254,9 @@
         <target>Bravo ! Voyez, votre pièce n'a plus de case voisine libre après avoir récupéré la tuile, mais est restée car c&apos;était votre tour.
         Celle de l&apos;adversaire a disparu car la capture de la tuile lui a enlevé sa dernière case voisine libre !</target>
       </trans-unit>
-      <trans-unit id="2935247147843875525" datatype="html">
-        <source>Your move should be of only one step.</source>
-        <target>Votre mouvement doit avoir une distance de un.</target>
+      <trans-unit id="4237198021995785268" datatype="html">
+        <source>Your piece should land on a neighboring square.</source>
+        <target>Votre pièce doit atterrir sur la case voisine.</target>
       </trans-unit>
       <trans-unit id="6331318865941875967" datatype="html">
         <source>You cannot drop a piece during the moving phase.</source>
@@ -1264,7 +1264,7 @@
       </trans-unit>
       <trans-unit id="1634970085488730747" datatype="html">
         <source>You cannot move a piece before both players have dropped all of their pieces.</source>
-        <target>Vous ne pouvez pas déplacer une pièce avant queles deux joueurs aient déposés toutes leurs pièces.</target>
+        <target>Vous ne pouvez pas déplacer une pièce avant que les deux joueurs n'aient déposés toutes leurs pièces.</target>
       </trans-unit>
       <trans-unit id="320724128460521577" datatype="html">
         <source>A jump must be made over a piece, not over an empty square.</source>
@@ -1276,7 +1276,7 @@
       </trans-unit>
       <trans-unit id="8451838259581996755" datatype="html">
         <source>A jump must land two squares from its original position, and be done in a straight line in any direction.</source>
-        <target>Un saut doit aterrir à deux cases de sa position initiale, et doit être fait en ligne droite dans n'importe quelle direction.</target>
+        <target>Un saut doit atterrir à deux cases de sa position initiale, et doit être en ligne droite dans n'importe quelle direction.</target>
       </trans-unit>
       <trans-unit id="309495911608325428" datatype="html">
         <source>You are visiting the same location twice in a move, you are not allowed to do so.</source>
@@ -1316,7 +1316,7 @@
       </trans-unit>
       <trans-unit id="2921068171153120605" datatype="html">
         <source>The other type of move is a jump. A piece can jump over a neighboring piece in any direction, as long as it lands directly on the square after that piece, along the same direction.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Perform a jump by clicking on one of your piece that can perform a jump, and then on the target square. You may need to click a second time on the target square to confirm your jump, in case your piece is still highlighted (we will see shortly why this is useful).</source>
-        <target>L'autre type de mouvement est un saut. Une pièce peut sauter au dessus d'une pièce voisine dans n'importe quelle direction, tant qu'elle atterri directement sur la case après celle-ci, dans la même direction.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Effectuez un saut en cliquant sur l'une de vos pièces qui peut sauter, et ensuite sur la case de destination. Il est possible que vous deviez cliquer une seconde fois sur la case destination pour confirmer votre saut, si votre pièce est toujours éclairée (nous verrons ensuite pourquoi cela est utile).</target>
+        <target>L'autre type de mouvement est le saut. Une pièce peut sauter au dessus d'une pièce voisine dans n'importe quelle direction, tant qu'elle atterri directement sur la case après celle-ci, dans la même direction.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Effectuez un saut en cliquant sur l'une de vos pièces qui peut sauter, et ensuite sur la case de destination. Il est possible que vous deviez cliquer une seconde fois sur la case destination pour confirmer votre saut, si votre pièce est toujours éclairée (nous verrons ensuite pourquoi cela est utile).</target>
       </trans-unit>
       <trans-unit id="7444294966169001535" datatype="html">
         <source>You have not performed a jump. Try again!</source>
@@ -1332,7 +1332,7 @@
       </trans-unit>
       <trans-unit id="7823212119691946554" datatype="html">
         <source>Congratulations! You now know everything to play the game. Remember: to win, you have to place all of your pieces in shelters before your opponent does.</source>
-        <target>Bravo ! Vous connaissez maintenant tout ce qu'il faut pour jouer à ce jeu. Souvenez-vous: pour gagner, vous devez placer toutes vos pièces à l'abri avant votre adversaire.</target>
+        <target>Bravo ! Vous savez maintenant tout ce qu'il faut pour jouer à ce jeu. Souvenez-vous: pour gagner, vous devez placer toutes vos pièces à l'abri avant votre adversaire.</target>
       </trans-unit>
       <trans-unit id="5361555826660205972" datatype="html">
         <source>You have not performed a triple jump. Try again!</source>

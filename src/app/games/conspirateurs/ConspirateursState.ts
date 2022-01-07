@@ -48,4 +48,13 @@ export class ConspirateursState extends GameStateWithTable<Player> {
     public isDropPhase(): boolean {
         return this.turn < 40;
     }
+
+    public getSidePieces(): [number, number] {
+        if (this.turn % 2 === 0) {
+            return [20 - (this.turn / 2), 20 - (this.turn / 2)];
+        } else {
+            // Player 0 plays on even turn, so has one less piece on odd turns
+            return [20 - ((this.turn - 1) / 2) - 1, 20 - ((this.turn - 1) / 2)];
+        }
+    }
 }

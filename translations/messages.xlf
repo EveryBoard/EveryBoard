@@ -930,8 +930,8 @@
         <source>Congratulations! See, your piece no longer had any empty neighboring space after you have gained the tile, but it stayed on the board as it was your turn.
         However, the opponent&apos;s piece has disappeared because the tile&apos;s capture has removed its last empty neighboring space.</source>
       </trans-unit>
-      <trans-unit id="2935247147843875525" datatype="html">
-        <source>Your move should be of only one step.</source>
+      <trans-unit id="4237198021995785268" datatype="html">
+        <source>Your piece should land on a neighboring square.</source>
       </trans-unit>
       <trans-unit id="6331318865941875967" datatype="html">
         <source>You cannot drop a piece during the moving phase.</source>

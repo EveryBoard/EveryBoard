@@ -21,6 +21,7 @@ interface ViewInfo {
     dropPhase: boolean,
     victory: Coord[],
     lastMoveArrow: string,
+    sidePieces: [number, number],
 }
 
 interface SquareInfo {
@@ -37,6 +38,7 @@ interface SquareInfo {
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 export class ConspirateursComponent extends GameComponent<ConspirateursRules, ConspirateursMove, ConspirateursState> {
+    public PIECE_RADIUS: number;
     public CENTRAL_ZONE_START: Coord = ConspirateursState.CENTRAL_ZONE_TOP_LEFT;
     public CENTRAL_ZONE_SIZE: Vector = new Vector(
         ConspirateursState.CENTRAL_ZONE_BOTTOM_RIGHT.x - ConspirateursState.CENTRAL_ZONE_TOP_LEFT.x + 1,
@@ -47,12 +49,14 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         boardInfo: [],
         victory: [],
         lastMoveArrow: '',
+        sidePieces: [20, 20],
     };
     private selected: MGPOptional<Coord> = MGPOptional.empty();
     private jumpInConstruction: MGPOptional<ConspirateursMoveJump> = MGPOptional.empty();
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
+        this.PIECE_RADIUS = (this.SPACE_SIZE - (2 * this.STROKE_WIDTH)) * 0.5;
         this.rules = ConspirateursRules.get();
         this.availableMinimaxes = [
             new ConspirateursMinimax(this.rules, 'ConspirateursMinimax'),
@@ -91,6 +95,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         for (const shelter of ConspirateursState.ALL_SHELTERS) {
             this.viewInfo.boardInfo[shelter.y][shelter.x].isShelter = true;
         }
+        this.viewInfo.sidePieces = state.getSidePieces();
         this.updateSelected();
         this.updateVictory();
     }

@@ -23,7 +23,7 @@ describe('ConspirateursMinimax', () => {
         it('should propose 45 moves at first turn', () => {
             // Given the initial state
             const node: ConspirateursNode = new ConspirateursNode(ConspirateursState.getInitialState());
-            // Then there are 45 possible moves
+            // Then there should be 45 possible moves
             expect(minimax.getListMoves(node).length).toBe(45);
         });
         it('should propose 44 moves if there is already one piece placed', () => {
@@ -48,12 +48,12 @@ describe('ConspirateursMinimax', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
             const node: ConspirateursNode = new ConspirateursNode(state);
-            // Then there are 44 possible moves
+            // Then there should be 44 possible moves
             expect(minimax.getListMoves(node).length).toBe(44);
         });
     });
     describe('main phase', () => {
-        it('should propose 9 moves on a specific board', () => {
+        it('should list all types of moves', () => {
             // Given a fictitious state after the drop phase
             const state: ConspirateursState = new ConspirateursState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
