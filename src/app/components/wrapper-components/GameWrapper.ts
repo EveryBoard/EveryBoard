@@ -29,7 +29,7 @@ export abstract class GameWrapper {
     @ViewChild(GameIncluderComponent)
     public gameIncluder: GameIncluderComponent;
 
-    public gameComponent: AbstractGameComponent;
+    public gameComponent: AbstractGameComponent; // TODO should be optionalized
 
     public players: MGPOptional<string>[] = [MGPOptional.empty(), MGPOptional.empty()];
 
@@ -44,18 +44,16 @@ export abstract class GameWrapper {
                 protected authenticationService: AuthenticationService) {
         display(GameWrapper.VERBOSE, 'GameWrapper.constructed: ' + (this.gameIncluder != null));
     }
-    public getMatchingComponent(compoString: string) : Type<AbstractGameComponent> {
+    public getMatchingComponent(gameName: string) : Type<AbstractGameComponent> {
         display(GameWrapper.VERBOSE, 'GameWrapper.getMatchingComponent');
         const gameInfo: MGPOptional<GameInfo> =
-            MGPOptional.ofNullable(GameInfo.ALL_GAMES().find((gameInfo: GameInfo) => gameInfo.urlName === compoString));
+            MGPOptional.ofNullable(GameInfo.ALL_GAMES().find((gameInfo: GameInfo) => gameInfo.urlName === gameName));
         assert(gameInfo.isPresent(), 'Unknown Games are unwrappable');
         return gameInfo.get().component;
     }
     protected afterGameIncluderViewInit(): void {
         display(GameWrapper.VERBOSE, 'GameWrapper.afterGameIncluderViewInit');
-
         this.createGameComponent();
-
         this.gameComponent.rules.setInitialBoard();
     }
     protected createGameComponent(): void {
@@ -68,8 +66,7 @@ export abstract class GameWrapper {
             this.componentFactoryResolver.resolveComponentFactory(component);
         const componentRef: ComponentRef<AbstractGameComponent> =
             this.gameIncluder.viewContainerRef.createComponent(componentFactory);
-        this.gameComponent = <AbstractGameComponent>componentRef.instance;
-        // Shortent by T<S = Truc>
+        this.gameComponent = componentRef.instance;
 
         this.gameComponent.chooseMove = // so that when the game component do a move
             (m: Move, s: GameState, scores?: [number, number]): Promise<MGPValidation> => {
@@ -136,6 +133,10 @@ export abstract class GameWrapper {
     }
     public isPlayerTurn(): boolean {
         if (this.observerRole === Player.NONE.value) {
+            return false;
+        }
+        if (this.gameComponent == null) {
+            // This can happen if called before the component has been set up
             return false;
         }
         const turn: number = this.gameComponent.rules.node.gameState.turn;

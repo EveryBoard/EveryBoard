@@ -748,14 +748,10 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         if (this.endGame) {
             return ['endgame-bg'];
         }
-        if (this.isUserCurrentPlayer()) {
+        if (this.isPlayerTurn()) {
             return ['player' + this.getPlayer().value + '-bg'];
         }
         return [];
-    }
-    private isUserCurrentPlayer(): boolean {
-        return this.gameComponent != null &&
-               this.observerRole === this.gameComponent.rules.node.gameState.turn % 2;
     }
     public opponentIsOffline(): boolean {
         return this.opponent != null &&
