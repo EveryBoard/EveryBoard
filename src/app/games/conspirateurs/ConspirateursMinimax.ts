@@ -21,8 +21,7 @@ export class ConspirateursMinimax extends Minimax<ConspirateursMove, Conspirateu
         const moves: ConspirateursMoveDrop[] = [];
         const start: Coord = ConspirateursState.CENTRAL_ZONE_TOP_LEFT;
         const end: Coord = ConspirateursState.CENTRAL_ZONE_BOTTOM_RIGHT;
-        for (let y: number = start.y; y <= end.y; y++)
-        {
+        for (let y: number = start.y; y <= end.y; y++) {
             for (let x: number = start.x; x <= end.x; x++) {
                 if (state.getPieceAtXY(x, y) === Player.NONE) {
                     moves.push(ConspirateursMoveDrop.of(new Coord(x, y)).get());
