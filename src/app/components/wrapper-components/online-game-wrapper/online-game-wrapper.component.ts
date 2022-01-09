@@ -744,15 +744,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             }
         }
     }
-    public getBoardHighlight(): string[] {
-        if (this.endGame) {
-            return ['endgame-bg'];
-        }
-        if (this.isPlayerTurn()) {
-            return ['player' + this.getPlayer().value + '-bg'];
-        }
-        return [];
-    }
     public opponentIsOffline(): boolean {
         return this.opponent != null &&
                this.opponent.doc.state === 'offline';

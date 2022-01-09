@@ -158,4 +158,14 @@ export abstract class GameWrapper {
     }
     public abstract getPlayerName(): string
 
+    public getBoardHighlight(): string[] {
+        if (this.endGame) {
+            return ['endgame-bg'];
+        }
+        if (this.isPlayerTurn()) {
+            const turn: number = this.gameComponent.rules.node.gameState.turn;
+            return ['player' + (turn % 2) + '-bg'];
+        }
+        return [];
+    }
 }
