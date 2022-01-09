@@ -13,8 +13,6 @@ NodeUnheritance.ts,1
 online-game-wrapper.component.ts,9
 ObjectUtils.ts,2
 PieceThreat.ts,1
-Player.ts,2
-PylosState.ts,1
 PositionalEpaminondasMinimax.ts,1
 QuartoHasher.ts,1
 QuartoRules.ts,5
