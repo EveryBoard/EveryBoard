@@ -136,7 +136,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         if (gameStatus.isEndGame === true) {
             for (const shelter of ConspirateursState.ALL_SHELTERS) {
                 if (state.getPieceAt(shelter) === gameStatus.winner) {
-                    this.viewInfo.boardInfo[shelter.y][shelter.x].pieceClasses.push('victory-stroke');
+                    this.viewInfo.boardInfo[shelter.y][shelter.x].squareClasses.push('victory');
                 }
             }
         }
