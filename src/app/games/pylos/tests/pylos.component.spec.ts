@@ -24,7 +24,7 @@ describe('PylosComponent', () => {
         expect(componentTestUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
         expect(componentTestUtils.getComponent()).withContext('Component should be created').toBeTruthy();
     });
-    it('should allow droping piece on occupable case', fakeAsync(async() => {
+    it('should allow droping piece on occupable space', fakeAsync(async() => {
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 0), []);
         await componentTestUtils.expectMoveSuccess('#drop_0_0_0', move);
     }));

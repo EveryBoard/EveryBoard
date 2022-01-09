@@ -68,7 +68,7 @@ describe('AwaleRules', () => {
         // then the move is illegal
         RulesUtils.expectMoveFailure(rules, state, move, AwaleFailure.SHOULD_DISTRIBUTE());
     });
-    it('shoud distribute but not capture in case of would-starve move', () => {
+    it('shoud distribute but not capture in space of would-starve move', () => {
         // given a board in which the player could capture all opponents seeds
         const board: number[][] = [
             [1, 0, 0, 0, 0, 2],

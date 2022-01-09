@@ -54,7 +54,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         }
         if (this.chosenCoord.isAbsent()) { // Must select pyramid
             return this.choosePiece(x, y);
-        } else { // Must choose empty landing case
+        } else { // Must choose empty landing space
             return this.chooseLandingCoord(x, y);
         }
     }

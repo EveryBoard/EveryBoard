@@ -155,7 +155,7 @@ describe('ApagosComponent', () => {
             // When rendering the board
             componentTestUtils.setupState(state, previousState, previousMove);
 
-            // Then the second square should be filled on last case by Player.ONE
+            // Then the second square should be filled on last emplacement by Player.ONE
             componentTestUtils.expectElementToHaveClass('#square_1_piece_4_out_of_5', 'player1');
             componentTestUtils.expectElementToHaveClass('#square_1_piece_4_out_of_5', 'last-move');
         }));
@@ -264,7 +264,7 @@ describe('ApagosComponent', () => {
         ], 5, 5);
         componentTestUtils.setupState(state);
 
-        // when clicking on leftmost case
+        // when clicking on leftmost space
         // then move should be cancelled
         const reason: string = ApagosFailure.NO_POSSIBLE_TRANSFER_REMAINS();
         await componentTestUtils.expectClickFailure('#square_1', reason);

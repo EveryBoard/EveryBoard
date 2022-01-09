@@ -24,7 +24,7 @@ describe('P4Rules', () => {
         expect(rules).toBeTruthy();
         expect(minimax.getBoardValue(rules.node).value).toEqual(0);
     });
-    it('Should drop piece on the lowest case of the column', () => {
+    it('Should drop piece on the lowest space of the column', () => {
         const board: Player[][] = [
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
@@ -173,7 +173,7 @@ describe('P4Rules', () => {
                                                            state2, MGPOptional.empty(),
                                                            Player.ZERO);
     });
-    it('should know where the lowest case is', () => {
+    it('should know where the lowest space is', () => {
         const board: Player[][] = [
             [_, _, _, X, _, _, _],
             [_, _, O, O, _, _, _],

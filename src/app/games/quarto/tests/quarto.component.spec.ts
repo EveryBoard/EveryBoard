@@ -22,7 +22,7 @@ describe('QuartoComponent', () => {
         expect(componentTestUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
         expect(componentTestUtils.getComponent()).withContext('Component should be created').toBeTruthy();
     });
-    it('should forbid clicking on occupied case', fakeAsync(async() => {
+    it('should forbid clicking on occupied space', fakeAsync(async() => {
         const board: Table<QuartoPiece> = [
             [AAAA, NULL, NULL, NULL],
             [NULL, NULL, NULL, NULL],

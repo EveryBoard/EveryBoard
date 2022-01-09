@@ -13,7 +13,7 @@ describe('EncapsuleState', () => {
     const emptyBoard: EncapsuleCase[][] = ArrayUtils.createTable(3, 3, _);
 
     describe('getPieceAt', () => {
-        it('should return the expected case', () => {
+        it('should return the expected space', () => {
             const someCase: EncapsuleCase = new EncapsuleCase(Player.ONE, Player.NONE, Player.NONE);
             const board: EncapsuleCase[][] = [
                 [_, _, _],
@@ -42,7 +42,7 @@ describe('EncapsuleState', () => {
 describe('EncapsuleCase', () => {
 
     describe('isEmpty', () => {
-        it('should consider the empty case empty', () => {
+        it('should consider the empty space empty', () => {
             const empty: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.NONE);
             expect(empty.isEmpty()).toBeTrue();
         });
@@ -52,7 +52,7 @@ describe('EncapsuleCase', () => {
         });
     });
     describe('toList', () => {
-        it('should produce a list containing all pieces of the case', () => {
+        it('should produce a list containing all pieces of the space', () => {
             const someCase: EncapsuleCase = new EncapsuleCase(Player.ONE, Player.ZERO, Player.ZERO);
             const list: EncapsulePiece[] = someCase.toList();
             expect(list.length).toBe(3);
@@ -66,7 +66,7 @@ describe('EncapsuleCase', () => {
         });
     });
     describe('getBiggest', () => {
-        it('should return the biggest case', () => {
+        it('should return the biggest piece of the space', () => {
             const c: EncapsuleCase = new EncapsuleCase(Player.ZERO, Player.ONE, Player.ZERO);
             expect(c.getBiggest()).toBe(EncapsulePiece.BIG_BLACK);
         });
@@ -91,11 +91,11 @@ describe('EncapsuleCase', () => {
         });
     });
     describe('removeBiggest', () => {
-        it('should forbid to remove a piece from the empty case', () => {
+        it('should forbid to remove a piece from the empty space', () => {
             const c: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.NONE);
             expect(() => c.removeBiggest()).toThrow();
         });
-        it('should remove the biggest case', () => {
+        it('should remove the biggest piece of the space', () => {
             const c: EncapsuleCase = new EncapsuleCase(Player.ZERO, Player.ONE, Player.ZERO);
 
             const result: {removedCase: EncapsuleCase, removedPiece: EncapsulePiece} = c.removeBiggest();

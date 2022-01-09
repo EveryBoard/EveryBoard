@@ -134,7 +134,7 @@ describe('KamisadoRules:', () => {
         });
     });
     describe('Forbidden moves', () => {
-        it('should forbid moves landing on occupied case', () => {
+        it('should forbid moves landing on occupied space', () => {
             // Given any board
             const board: Table<KamisadoPiece> = [
                 [_, _, _, _, _, _, _, _],

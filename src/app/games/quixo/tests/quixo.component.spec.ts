@@ -84,7 +84,7 @@ describe('QuixoComponent', () => {
         expect(componentTestUtils.getComponent().getPieceClasses(3, 0)).toContain('victory-stroke');
         expect(componentTestUtils.getComponent().getPieceClasses(4, 0)).toContain('victory-stroke');
     }));
-    it('should show insertion directions when clicking on a border case', fakeAsync(async() => {
+    it('should show insertion directions when clicking on a border space', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_0_0');
         componentTestUtils.expectElementToExist('#chooseDirection_DOWN');
     }));
