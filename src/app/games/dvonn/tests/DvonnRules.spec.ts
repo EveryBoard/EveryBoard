@@ -80,7 +80,7 @@ describe('DvonnRules:', () => {
         const state: DvonnState = rules.node.gameState;
         const movablePieces: Coord[] = DvonnRules.getMovablePieces(state);
         for (const coord of movablePieces) {
-            expect(state.getPieceAt(coord).belongsTo(Player.ZERO));
+            expect(state.getPieceAt(coord).belongsTo(Player.ZERO)).toBeTrue();
         }
         const moves: DvonnMove[] = minimaxes[0].getListMoves(rules.node);
         const state2: DvonnState = rules.applyLegalMove(moves[0], state, undefined);
