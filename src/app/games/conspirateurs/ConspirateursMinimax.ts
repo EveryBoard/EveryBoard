@@ -19,13 +19,11 @@ export class ConspirateursMinimax extends Minimax<ConspirateursMove, Conspirateu
     }
     private getListMovesDrop(state: ConspirateursState): ConspirateursMoveDrop[] {
         const moves: ConspirateursMoveDrop[] = [];
-        for (let y: number = ConspirateursState.CENTRAL_ZONE_TOP_LEFT.y; // eslint-disable-next-line indent
-             y <= ConspirateursState.CENTRAL_ZONE_BOTTOM_RIGHT.y; // eslint-disable-next-line indent
-             y++)
+        const start: Coord = ConspirateursState.CENTRAL_ZONE_TOP_LEFT;
+        const end: Coord = ConspirateursState.CENTRAL_ZONE_BOTTOM_RIGHT;
+        for (let y: number = start.y; y <= end.y; y++)
         {
-            for (let x: number = ConspirateursState.CENTRAL_ZONE_TOP_LEFT.x; // eslint-disable-next-line indent
-                 x <= ConspirateursState.CENTRAL_ZONE_BOTTOM_RIGHT.x; // eslint-disable-next-line indent
-                 x++) {
+            for (let x: number = start.x; x <= end.x; x++) {
                 if (state.getPieceAtXY(x, y) === Player.NONE) {
                     moves.push(ConspirateursMoveDrop.of(new Coord(x, y)).get());
                 }

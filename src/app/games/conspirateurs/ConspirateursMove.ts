@@ -114,7 +114,7 @@ export class ConspirateursMoveJump extends Move {
             return MGPFallible.failure('ConspirateursMoveJump requires at least one jump, so two coords');
         }
         for (const coord of coords) {
-            if (coord.isInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT) === false) {
+            if (coord.isNotInRange(ConspirateursState.WIDTH, ConspirateursState.HEIGHT)) {
                 return MGPFallible.failure('Move out of board');
             }
         }
