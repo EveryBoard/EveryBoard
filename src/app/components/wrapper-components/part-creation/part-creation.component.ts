@@ -173,7 +173,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 this.viewInfo.firstPlayer = firstPlayer;
             });
     }
-    private updateViewInfo(joiner: IJoiner): void {
+    private updateViewInfo(): void {
+        const joiner: IJoiner = Utils.getNonNullable(this.currentJoiner);
 
         this.viewInfo.canReviewConfig = joiner.partStatus === PartStatus.CONFIG_PROPOSED.value;
         this.viewInfo.canEditConfig = joiner.partStatus !== PartStatus.CONFIG_PROPOSED.value;
@@ -276,12 +277,12 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             display(PartCreationComponent.VERBOSE, 'PartCreationComponent.onCurrentJoinerUpdate: LAST UPDATE : the game is cancelled');
             return this.onGameCancelled();
         } else {
-            this.observeNeededPlayers(joiner.get());
             this.currentJoiner = joiner.get();
-            this.updateViewInfo(joiner.get());
-            if (this.isGameStarted(joiner.get())) {
+            this.observeNeededPlayers();
+            this.updateViewInfo();
+            if (this.isGameStarted()) {
                 display(PartCreationComponent.VERBOSE, 'PartCreationComponent.onCurrentJoinerUpdate: the game has started');
-                this.onGameStarted(joiner.get());
+                this.onGameStarted();
             }
         }
     }
@@ -290,26 +291,29 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.messageDisplayer.infoMessage($localize`The game has been canceled!`);
         this.router.navigate(['server']);
     }
-    private isGameStarted(joiner: IJoiner): boolean {
+    private isGameStarted(): boolean {
+        const joiner: IJoiner = Utils.getNonNullable(this.currentJoiner);
         return joiner != null && joiner.partStatus === PartStatus.PART_STARTED.value;
     }
-    private onGameStarted(joiner: IJoiner) {
+    private onGameStarted() {
+        const joiner: IJoiner = Utils.getNonNullable(this.currentJoiner);
         display(PartCreationComponent.VERBOSE, { partCreationComponent_onGameStarted: { joiner } });
 
         this.gameStartNotification.emit(joiner);
         this.gameStarted = true;
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.onGameStarted finished');
     }
-    private observeNeededPlayers(joiner: IJoiner): void {
+    private observeNeededPlayers(): void {
+        const joiner: IJoiner = Utils.getNonNullable(this.currentJoiner);
         display(PartCreationComponent.VERBOSE, { PartCreationComponent_updateJoiner: { joiner } });
-
         if (this.userName === joiner.creator) {
-            this.observeCandidates(joiner);
+            this.observeCandidates();
         } else {
-            this.observeCreator(joiner);
+            this.observeCreator();
         }
     }
-    private observeCreator(joiner: IJoiner): void {
+    private observeCreator(): void {
+        const joiner: IJoiner = Utils.getNonNullable(this.currentJoiner);
         if (this.creatorSubscription != null) {
             // We are already observing the creator
             return;
@@ -332,7 +336,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
         this.creatorSubscription = this.userService.observeUserByUsername(joiner.creator, callback);
     }
-    private observeCandidates(joiner: IJoiner): void {
+    private observeCandidates(): void {
+        const joiner: IJoiner = Utils.getNonNullable(this.currentJoiner);
         display(PartCreationComponent.VERBOSE, { PartCreation_observeCandidates: joiner });
         const onDocumentCreated: (foundUser: IUserId[]) => void = (foundUsers: IUserId[]) => {
             for (const user of foundUsers) {
