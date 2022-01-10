@@ -146,6 +146,10 @@
         <source>Get rid of all of your opponent&apos;s pieces on a board that shrinks little by little!</source>
         <target>Éliminez tous vos ennemis sur un plateau qui rapetisse petit à petit !</target>
       </trans-unit>
+      <trans-unit id="1528017893097093154" datatype="html">
+        <source>Hide all of your pieces before your opponent does, or risk to be discovered!</source>
+        <target>Cachez toutes vos pièces avant votre adversaire, ou risquez d'être découvert !</target>
+      </trans-unit>
       <trans-unit id="1337301714912876574" datatype="html">
         <source>Drop your pieces and move them around to align two pieces of the same color across the board to win!</source>
         <target>Déposez vos pièces et déplacez les afin d'aligner deux pièces de la même couleur au travers du plateau pour gagner !</target>
@@ -313,6 +317,10 @@
       <trans-unit id="947579386294731197" datatype="html">
         <source>Brandhub</source>
         <target>Brandhub</target>
+      </trans-unit>
+      <trans-unit id="4214831981215024999" datatype="html">
+        <source>Conspirateurs</source>
+        <target>Conspirateurs</target>
       </trans-unit>
       <trans-unit id="2246994058243837093" datatype="html">
         <source>Diam</source>
@@ -1245,6 +1253,90 @@
         However, the opponent&apos;s piece has disappeared because the tile&apos;s capture has removed its last empty neighboring space.</source>
         <target>Bravo ! Voyez, votre pièce n'a plus de case voisine libre après avoir récupéré la tuile, mais est restée car c&apos;était votre tour.
         Celle de l&apos;adversaire a disparu car la capture de la tuile lui a enlevé sa dernière case voisine libre !</target>
+      </trans-unit>
+      <trans-unit id="4237198021995785268" datatype="html">
+        <source>Your piece should land on a neighboring square.</source>
+        <target>Votre pièce doit atterrir sur la case voisine.</target>
+      </trans-unit>
+      <trans-unit id="6331318865941875967" datatype="html">
+        <source>You cannot drop a piece during the moving phase.</source>
+        <target>Vous ne pouvez pas déposer une pièce pendant la phase de déplacement.</target>
+      </trans-unit>
+      <trans-unit id="1634970085488730747" datatype="html">
+        <source>You cannot move a piece before both players have dropped all of their pieces.</source>
+        <target>Vous ne pouvez pas déplacer une pièce avant que les deux joueurs n'aient déposés toutes leurs pièces.</target>
+      </trans-unit>
+      <trans-unit id="320724128460521577" datatype="html">
+        <source>A jump must be made over a piece, not over an empty square.</source>
+        <target>Un saut doit se faire au dessus d'une pièce, pas au dessus d'une case vide.</target>
+      </trans-unit>
+      <trans-unit id="6834108574871302489" datatype="html">
+        <source>A drop must occur in the central zone of the board.</source>
+        <target>Vous devez déposer votre pièce dans la zone centrale du plateau.</target>
+      </trans-unit>
+      <trans-unit id="8451838259581996755" datatype="html">
+        <source>A jump must land two squares from its original position, and be done in a straight line in any direction.</source>
+        <target>Un saut doit atterrir à deux cases de sa position initiale, et doit être en ligne droite dans n'importe quelle direction.</target>
+      </trans-unit>
+      <trans-unit id="309495911608325428" datatype="html">
+        <source>You are visiting the same location twice in a move, you are not allowed to do so.</source>
+        <target>Vous passez deux fois par la même case dans votre mouvement. Ce n'est pas autorisé.</target>
+      </trans-unit>
+      <trans-unit id="9123148140915098130" datatype="html">
+        <source>Board and aim of the game</source>
+        <target>Plateau et but du jeu</target>
+      </trans-unit>
+      <trans-unit id="3408052490903167189" datatype="html">
+        <source>Conspirateurs is played on a 17x17 board. The goal of the game is to place all of your pieces in shelters, which are the special squares on the edge of the board. Note the central zone in the middle of the board, where each player will put their pieces initially.</source>
+        <target>Conspirateurs se joue sur un plateau 17x17. Le but du jeu et de placer toutes vos pièces dans des cachettes, qui sont des cases spéciales sur les bords du plateau. Remarquez la zone centrale du plateau, où chaque joueur placera initialement ses pièces.</target>
+      </trans-unit>
+      <trans-unit id="5390926924373994130" datatype="html">
+        <source>Initial phase</source>
+        <target>Phase initiale</target>
+      </trans-unit>
+      <trans-unit id="2655986823906349764" datatype="html">
+        <source>In the initial phase of the game, each player drop their 20 pieces, one per turn consecutively, in the central zone of the board. This phase does not allow any other kind of move.&lt;br/&gt;&lt;br/&gt;Drop one of your piece in the central zone.</source>
+        <target>Dans la phase initiale du jeu, chaque joueur dépose ses 20 pièces, une à chaque tour, dans la zone centrale du plateau. Cette phase n'autorise aucun autre mouvement.&lt;br/&gt;&lt;br/&gt;Déposez l'une de vos pièces dans la zone centrale.</target>
+      </trans-unit>
+      <trans-unit id="6144661124534225012" datatype="html">
+        <source>Simple move</source>
+        <target>Mouvement simple</target>
+      </trans-unit>
+      <trans-unit id="8533679028139934991" datatype="html">
+        <source>Once all pieces have been placed, there are two kind of moves that can be performed. The first is a simple move in any direction, orthogonally or diagonally, of a single step.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Click on one of your piece and perform such a move.</source>
+        <target>Une fois que toutes les pièces ont été placées, deux types de déplacements peuvent être effectués. Le premier est un déplacement simple dans n'importe quelle direction, orthogonale ou diagonale, d'une distance de un.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Cliquez sur l'une de vos pièces pour effectuer un tel mouvement.</target>
+      </trans-unit>
+      <trans-unit id="2743282536649096025" datatype="html">
+        <source>You have made a jump, not a simple move. Try again!</source>
+        <target>Vous avez effectué un saut, et non un déplacement simple. Essayez à nouveau !</target>
+      </trans-unit>
+      <trans-unit id="5311709353029708811" datatype="html">
+        <source>Jumps</source>
+        <target>Sauts</target>
+      </trans-unit>
+      <trans-unit id="2921068171153120605" datatype="html">
+        <source>The other type of move is a jump. A piece can jump over a neighboring piece in any direction, as long as it lands directly on the square after that piece, along the same direction.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Perform a jump by clicking on one of your piece that can perform a jump, and then on the target square. You may need to click a second time on the target square to confirm your jump, in case your piece is still highlighted (we will see shortly why this is useful).</source>
+        <target>L'autre type de mouvement est le saut. Une pièce peut sauter au dessus d'une pièce voisine dans n'importe quelle direction, tant qu'elle atterri directement sur la case après celle-ci, dans la même direction.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Effectuez un saut en cliquant sur l'une de vos pièces qui peut sauter, et ensuite sur la case de destination. Il est possible que vous deviez cliquer une seconde fois sur la case destination pour confirmer votre saut, si votre pièce est toujours entourée (nous verrons ensuite pourquoi cela est utile).</target>
+      </trans-unit>
+      <trans-unit id="7444294966169001535" datatype="html">
+        <source>You have not performed a jump. Try again!</source>
+        <target>Vous n'avez pas effectué un saut. Essayez à nouveau !</target>
+      </trans-unit>
+      <trans-unit id="514608014907395319" datatype="html">
+        <source>Chaining jumps in a single move</source>
+        <target>Enchaîner les sauts en un seul mouvement</target>
+      </trans-unit>
+      <trans-unit id="2017314282165555162" datatype="html">
+        <source>Jumps can be chained when possible. You can decide whether to continue a jump or to stop it at any time. To finish your jump, click a second time on your current location. Otherwise, simply keep clicking on your next location. Once no more destination is possible, your move will end without you needing to click the piece a second time.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark and you can perform a triple jump! Do it.</source>
+        <target>Les sauts peuvent être enchaînés quand c'est possible. Vous pouvez décider s'il faut continuer un saut où l'arrêter à tout moment. Pour finir un saut, cliquez une seconde fois sur votre pièce. Sinon, continuez simplement à cliquer sur la case suivante. Une fois qu'il n'est plus possible de continuer à sauter, votre déplacement se termine sans avoir besoin de cliquer sur votre pièce une seconde fois.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé et vous pouvez effectuer un triple saut ! Faites-le.</target>
+      </trans-unit>
+      <trans-unit id="7823212119691946554" datatype="html">
+        <source>Congratulations! You now know everything to play the game. Remember: to win, you have to place all of your pieces in shelters before your opponent does.</source>
+        <target>Bravo ! Vous savez maintenant tout ce qu'il faut pour jouer à ce jeu. Souvenez-vous: pour gagner, vous devez placer toutes vos pièces à l'abri avant votre adversaire.</target>
+      </trans-unit>
+      <trans-unit id="5361555826660205972" datatype="html">
+        <source>You have not performed a triple jump. Try again!</source>
+        <target>Vous n'avez pas effectué un triple saut. Essayez à nouveau !</target>
       </trans-unit>
       <trans-unit id="3460005588993308010" datatype="html">
         <source>You do not have any pieces of this type anymore.</source>
@@ -2307,10 +2399,6 @@
       <trans-unit id="821589059503120913" datatype="html">
         <source>The goal at Pentago is to align 5 of your pieces. In the following board, Dark wins.</source>
         <target>Le but du Pentago est d&apos;aligner 5 de vos pièces. Dans le plateau ci-dessous, Foncé gagne.</target>
-      </trans-unit>
-      <trans-unit id="6144661124534225012" datatype="html">
-        <source>Simple move</source>
-        <target>Mouvement simple</target>
       </trans-unit>
       <trans-unit id="3238348765317457854" datatype="html">
         <source>At their turn, players put a piece on the board and possibly rotate one quadrant.

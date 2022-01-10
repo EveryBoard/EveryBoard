@@ -52,6 +52,7 @@ import { ApagosComponent } from './games/apagos/apagos.component';
 import { AwaleComponent } from './games/awale/awale.component';
 import { BrandhubComponent } from './games/tafl/brandhub/brandhub.component';
 import { CoerceoComponent } from './games/coerceo/coerceo.component';
+import { ConspirateursComponent } from './games/conspirateurs/conspirateurs.component';
 import { DiamComponent } from './games/diam/diam.component';
 import { DvonnComponent } from './games/dvonn/dvonn.component';
 import { EncapsuleComponent } from './games/encapsule/encapsule.component';
@@ -145,6 +146,7 @@ const routes: Route [] = [
         AwaleComponent,
         BrandhubComponent,
         CoerceoComponent,
+        ConspirateursComponent,
         DiamComponent,
         DvonnComponent,
         EncapsuleComponent,
