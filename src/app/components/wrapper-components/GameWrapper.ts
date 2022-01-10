@@ -29,7 +29,7 @@ export abstract class GameWrapper {
     @ViewChild(GameIncluderComponent)
     public gameIncluder: GameIncluderComponent;
 
-    public gameComponent: AbstractGameComponent; // TODO should be optionalized
+    public gameComponent: AbstractGameComponent;
 
     public players: MGPOptional<string>[] = [MGPOptional.empty(), MGPOptional.empty()];
 
