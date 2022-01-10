@@ -179,7 +179,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     }
     private async onCurrentPartUpdate(update: ICurrentPartId): Promise<void> {
         const part: Part = new Part(update.doc);
-        display(OnlineGameWrapperComponent.VERBOSE || true, { OnlineGameWrapperComponent_onCurrentPartUpdate: {
+        display(OnlineGameWrapperComponent.VERBOSE, { OnlineGameWrapperComponent_onCurrentPartUpdate: {
             before: this.currentPart, then: update.doc, before_part_turn: part.doc.turn,
             before_state_turn: this.gameComponent.rules.node.gameState.turn, nbPlayedMoves: part.doc.listMoves.length,
         } });
@@ -377,8 +377,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         const player: Player = Player.fromTurn(currentPart.doc.turn);
         this.endGame = true;
         const lastMoveResult: MGPResult[] = [MGPResult.VICTORY, MGPResult.HARD_DRAW];
-        const endGameIsMove: boolean = lastMoveResult.some((r: MGPResult) => r.value === currentPart.doc.result);
-        if (endGameIsMove) {
+        const finalUpdateIsMove: boolean = lastMoveResult.some((r: MGPResult) => r.value === currentPart.doc.result);
+        if (finalUpdateIsMove) {
             this.doNewMoves(this.currentPart);
         } else {
             const endGameResults: MGPResult[] = [

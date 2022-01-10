@@ -32,7 +32,7 @@ export class CountDownComponent implements OnInit, OnDestroy {
     public static readonly PASSIVE_STYLE: string = 'has-text-passive is-italic';
     public static readonly SAFE_TIME: string = '';
 
-    public style: string = CountDownComponent.SAFE_TIME;
+    public cssClasses: string = CountDownComponent.SAFE_TIME;
 
     public ngOnInit(): void {
         display(CountDownComponent.VERBOSE, 'CountDownComponent.ngOnInit (' + this.debugName + ')');
@@ -105,7 +105,8 @@ export class CountDownComponent implements OnInit, OnDestroy {
         }, 1000);
     }
     public isIdle(): boolean {
-        return this.started === false || this.isPaused;
+        const isUnstarted: boolean = this.started === false;
+        return isUnstarted || this.isPaused;
     }
     public pause(): void {
         display(CountDownComponent.VERBOSE, this.debugName + '.pause(' + this.remainingMs + 'ms)');
@@ -163,7 +164,7 @@ export class CountDownComponent implements OnInit, OnDestroy {
         const now: number = Date.now();
         this.remainingMs -= (now - this.startTime);
         this.displayDuration();
-        this.style = this.getTimeClass();
+        this.cssClasses = this.getTimeClass();
         this.startTime = now;
         if (this.isPaused === false) {
             this.countSeconds();
