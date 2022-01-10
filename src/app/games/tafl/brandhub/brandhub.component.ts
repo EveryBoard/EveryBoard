@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { BrandhubMove } from 'src/app/games/tafl/brandhub/BrandhubMove';
 import { BrandhubState } from './BrandhubState';
 import { BrandhubRules } from './BrandhubRules';
-import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TaflComponent } from '../tafl.component';
 import { TaflMinimax } from '../TaflMinimax';
 import { TaflPieceAndInfluenceMinimax } from '../TaflPieceAndInfluenceMinimax';

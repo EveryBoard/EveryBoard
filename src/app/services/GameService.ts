@@ -5,7 +5,7 @@ import { PartDAO } from '../dao/PartDAO';
 import { MGPResult, IPart, Part, IPartId } from '../domain/icurrentpart';
 import { FirstPlayer, IJoiner, PartStatus } from '../domain/ijoiner';
 import { JoinerService } from './JoinerService';
-import { ActivesPartsService } from './ActivesPartsService';
+import { ActivePartsService } from './ActivePartsService';
 import { ChatService } from './ChatService';
 import { Request } from '../domain/request';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
@@ -13,7 +13,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { assert, display, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 import { AuthenticationService, AuthUser } from './AuthenticationService';
-import { MessageDisplayer } from './message-displayer/MessageDisplayer';
+import { MessageDisplayer } from './MessageDisplayer';
 import { GameServiceMessages } from './GameServiceMessages';
 import { Time } from '../domain/Time';
 import firebase from 'firebase/app';
@@ -44,7 +44,7 @@ export class GameService implements OnDestroy {
     private userName: MGPOptional<string> = MGPOptional.empty();
 
     constructor(private readonly partDAO: PartDAO,
-                private readonly activePartsService: ActivesPartsService,
+                private readonly activePartsService: ActivePartsService,
                 private readonly joinerService: JoinerService,
                 private readonly chatService: ChatService,
                 private readonly router: Router,

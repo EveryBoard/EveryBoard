@@ -8,7 +8,7 @@ import { display, Utils } from 'src/app/utils/utils';
 @Injectable({
     providedIn: 'root',
 })
-export class ActivesUsersService {
+export class ActiveUsersService {
     public static VERBOSE: boolean = false;
 
     private readonly activesUsersBS: BehaviorSubject<IUserId[]> = new BehaviorSubject<IUserId[]>([]);
@@ -21,15 +21,15 @@ export class ActivesUsersService {
         this.activesUsersObs = this.activesUsersBS.asObservable();
     }
     public startObserving(): void {
-        display(ActivesUsersService.VERBOSE, 'ActivesUsersService.startObservingActivesUsers');
+        display(ActiveUsersService.VERBOSE, 'ActiveUsersService.startObservingActiveUsers');
         const onDocumentCreated: (newUsers: IUserId[]) => void = (newUsers: IUserId[]) => {
-            display(ActivesUsersService.VERBOSE, 'our DAO gave us ' + newUsers.length + ' new user(s)');
+            display(ActiveUsersService.VERBOSE, 'our DAO gave us ' + newUsers.length + ' new user(s)');
             const newUsersList: IUserId[] = this.activesUsersBS.value.concat(...newUsers);
             this.activesUsersBS.next(this.order(newUsersList));
         };
         const onDocumentModified: (modifiedUsers: IUserId[]) => void = (modifiedUsers: IUserId[]) => {
             let updatedUsers: IUserId[] = this.activesUsersBS.value;
-            display(ActivesUsersService.VERBOSE, 'our DAO updated ' + modifiedUsers.length + ' user(s)');
+            display(ActiveUsersService.VERBOSE, 'our DAO updated ' + modifiedUsers.length + ' user(s)');
             for (const u of modifiedUsers) {
                 updatedUsers.forEach((user: IUserId) => {
                     if (user.id === u.id) user.doc = u.doc;
@@ -48,7 +48,7 @@ export class ActivesUsersService {
             new FirebaseCollectionObserver(onDocumentCreated,
                                            onDocumentModified,
                                            onDocumentDeleted);
-        this.unsubscribe = this.userDAO.observeActivesUsers(usersObserver);
+        this.unsubscribe = this.userDAO.observeActiveUsers(usersObserver);
     }
     public stopObserving(): void {
         this.unsubscribe();

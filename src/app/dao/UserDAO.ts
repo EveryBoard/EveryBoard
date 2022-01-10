@@ -30,7 +30,7 @@ export class UserDAO extends FirebaseFirestoreDAO<IUser> {
     public observeUserByUsername(username: string, callback: FirebaseCollectionObserver<IUser>): () => void {
         return this.observingWhere([['username', '==', username], ['verified', '==', true]], callback);
     }
-    public observeActivesUsers(callback: FirebaseCollectionObserver<IUser>): () => void {
+    public observeActiveUsers(callback: FirebaseCollectionObserver<IUser>): () => void {
         return this.observingWhere([['state', '==', 'online'], ['verified', '==', true]], callback);
     }
 }

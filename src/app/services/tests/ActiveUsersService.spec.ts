@@ -1,16 +1,16 @@
 /* eslint-disable max-lines-per-function */
-import { ActivesUsersService } from '../ActivesUsersService';
+import { ActiveUsersService } from '../ActiveUsersService';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { UserDAOMock } from 'src/app/dao/tests/UserDAOMock.spec';
 import { IUser, IUserId } from 'src/app/domain/iuser';
 import { fakeAsync } from '@angular/core/testing';
 
-describe('ActivesUsersService', () => {
+describe('ActiveUsersService', () => {
 
-    let service: ActivesUsersService;
+    let service: ActiveUsersService;
 
     beforeEach(() => {
-        service = new ActivesUsersService(new UserDAOMock() as unknown as UserDAO);
+        service = new ActiveUsersService(new UserDAOMock() as unknown as UserDAO);
     });
     it('should create', () => {
         expect(service).toBeTruthy();

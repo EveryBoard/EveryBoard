@@ -34,7 +34,7 @@ describe('UserDAO', () => {
                                                             callback);
         });
     });
-    describe('observeActivesUsers', () => {
+    describe('observeActiveUsers', () => {
         it('should call observingWhere with the right condition', () => {
             const callback: FirebaseCollectionObserver<IUser> = new FirebaseCollectionObserver<IUser>(
                 () => void { },
@@ -42,7 +42,7 @@ describe('UserDAO', () => {
                 () => void { },
             );
             spyOn(dao, 'observingWhere');
-            dao.observeActivesUsers(callback);
+            dao.observeActiveUsers(callback);
             expect(dao.observingWhere).toHaveBeenCalledWith([
                 ['state', '==', 'online'],
                 ['verified', '==', true],

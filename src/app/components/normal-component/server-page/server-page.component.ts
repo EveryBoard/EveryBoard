@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserService } from '../../../services/UserService';
 import { display } from 'src/app/utils/utils';
-import { ActivesPartsService } from 'src/app/services/ActivesPartsService';
+import { ActivePartsService } from 'src/app/services/ActivePartsService';
 import { IPartId } from 'src/app/domain/icurrentpart';
 import { IUserId } from 'src/app/domain/iuser';
 
@@ -29,11 +29,11 @@ export class ServerPageComponent implements OnInit, OnDestroy {
 
     constructor(public router: Router,
                 private readonly userService: UserService,
-                private readonly activePartsService: ActivesPartsService) {
+                private readonly activePartsService: ActivePartsService) {
     }
     public ngOnInit(): void {
         display(ServerPageComponent.VERBOSE, 'serverPageComponent.ngOnInit');
-        this.activeUsersSub = this.userService.getActivesUsersObs()
+        this.activeUsersSub = this.userService.getActiveUsersObs()
             .subscribe((activeUsers: IUserId[]) => {
                 this.activeUsers = activeUsers;
             });
@@ -46,7 +46,7 @@ export class ServerPageComponent implements OnInit, OnDestroy {
         display(ServerPageComponent.VERBOSE, 'serverPageComponent.ngOnDestroy');
         this.activeUsersSub.unsubscribe();
         this.activePartsSub.unsubscribe();
-        this.userService.unSubFromActivesUsersObs();
+        this.userService.unSubFromActiveUsersObs();
     }
     public joinGame(partId: string, typeGame: string): void {
         this.router.navigate(['/play/' + typeGame, partId]);

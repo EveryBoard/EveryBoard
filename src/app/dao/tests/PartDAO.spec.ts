@@ -16,7 +16,7 @@ describe('PartDAO', () => {
     it('should be created', () => {
         expect(dao).toBeTruthy();
     });
-    describe('observeActivesParts', () => {
+    describe('observeActiveParts', () => {
         it('should call observingWhere with the right condition', () => {
             const callback: FirebaseCollectionObserver<IPart> = new FirebaseCollectionObserver<IPart>(
                 () => void { },
@@ -24,7 +24,7 @@ describe('PartDAO', () => {
                 () => void { },
             );
             spyOn(dao, 'observingWhere');
-            dao.observeActivesParts(callback);
+            dao.observeActiveParts(callback);
             expect(dao.observingWhere).toHaveBeenCalledWith([['result', '==', MGPResult.UNACHIEVED.value]], callback);
         });
     });

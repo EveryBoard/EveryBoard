@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { ActivesPartsService } from '../ActivesPartsService';
+import { ActivePartsService } from '../ActivePartsService';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { fakeAsync } from '@angular/core/testing';
 import { IPart, IPartId } from 'src/app/domain/icurrentpart';
@@ -7,15 +7,15 @@ import { Subscription } from 'rxjs';
 import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
 import { Utils } from 'src/app/utils/utils';
 
-describe('ActivesPartsService', () => {
+describe('ActivePartsService', () => {
 
-    let service: ActivesPartsService;
+    let service: ActivePartsService;
 
     let partDAO: PartDAO;
 
     beforeEach(async() => {
         partDAO = new PartDAOMock() as unknown as PartDAO;
-        service = new ActivesPartsService(partDAO);
+        service = new ActivePartsService(partDAO);
     });
     it('should create', () => {
         expect(service).toBeTruthy();

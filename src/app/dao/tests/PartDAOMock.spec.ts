@@ -25,7 +25,7 @@ export class PartDAOMock extends FirebaseFirestoreDAOMock<IPart> {
     public resetStaticDB(): void {
         PartDAOMock.partDB = new MGPMap();
     }
-    public observeActivesParts(callback: FirebaseCollectionObserver<IPart>): () => void {
+    public observeActiveParts(callback: FirebaseCollectionObserver<IPart>): () => void {
         return this.observingWhere([['result', '==', MGPResult.UNACHIEVED.value]], callback);
     }
 }

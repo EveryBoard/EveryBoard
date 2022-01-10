@@ -1,6 +1,6 @@
 AwaleRules.ts,1
 AuthenticationService.ts,3
-ActivesUsersService.ts,4
+ActiveUsersService.ts,4
 Coord.ts,1
 CoerceoPiecesThreatTilesMinimax.ts,1
 GameWrapper.ts,1

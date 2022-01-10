@@ -2,7 +2,7 @@ AttackEpaminondasMinimax.ts,1
 AwaleRules.ts,2
 AwaleMinimax.ts,2
 AuthenticationService.ts,1
-ActivesUsersService.ts,1
+ActiveUsersService.ts,1
 count-down.component.ts,1
 Coord.ts,1
 CoerceoPiecesThreatTilesMinimax.ts,3

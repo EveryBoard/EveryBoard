@@ -22,11 +22,11 @@ import { GameServiceMessages } from '../GameServiceMessages';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Utils } from 'src/app/utils/utils';
 import { Router } from '@angular/router';
-import { MessageDisplayer } from '../message-displayer/MessageDisplayer';
+import { MessageDisplayer } from '../MessageDisplayer';
 import { JoinerService } from '../JoinerService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import firebase from 'firebase/app';
-import { ActivesPartsService } from '../ActivesPartsService';
+import { ActivePartsService } from '../ActivePartsService';
 
 describe('GameService', () => {
 
@@ -120,7 +120,7 @@ describe('GameService', () => {
             const router: Router = TestBed.inject(Router);
             spyOn(router, 'navigate').and.callThrough();
             AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
-            const activePartsService: ActivesPartsService = TestBed.inject(ActivesPartsService);
+            const activePartsService: ActivePartsService = TestBed.inject(ActivePartsService);
             spyOn(activePartsService, 'hasActivePart').and.returnValue(false);
 
             // When calling the function

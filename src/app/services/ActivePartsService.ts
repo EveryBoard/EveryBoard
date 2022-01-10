@@ -13,7 +13,7 @@ import { MGPOptional } from '../utils/MGPOptional';
  * This service handles active parts (i.e., being played, waiting for a player, ...),
  * and is used by the server component and game component.
  */
-export class ActivesPartsService implements OnDestroy {
+export class ActivePartsService implements OnDestroy {
 
     private readonly activePartsBS: BehaviorSubject<IPartId[]>;
 
@@ -61,7 +61,7 @@ export class ActivesPartsService implements OnDestroy {
             new FirebaseCollectionObserver(onDocumentCreated,
                                            onDocumentModified,
                                            onDocumentDeleted);
-        this.unsubscribe = MGPOptional.of(this.partDAO.observeActivesParts(partObserver));
+        this.unsubscribe = MGPOptional.of(this.partDAO.observeActiveParts(partObserver));
         this.activePartsObs.subscribe((activesParts: IPartId[]) => {
             this.activeParts = activesParts;
         });

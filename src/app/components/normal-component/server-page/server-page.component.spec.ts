@@ -6,7 +6,7 @@ import { AuthenticationServiceMock } from 'src/app/services/tests/Authentication
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { Router } from '@angular/router';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
-import { ActivesPartsService } from 'src/app/services/ActivesPartsService';
+import { ActivePartsService } from 'src/app/services/ActivePartsService';
 import { BehaviorSubject } from 'rxjs';
 import { IPartId } from 'src/app/domain/icurrentpart';
 
@@ -42,7 +42,7 @@ describe('ServerPageComponent', () => {
             id: 'some-part-id',
             doc: PartMocks.INITIAL.doc,
         };
-        const activePartsService: ActivesPartsService = TestBed.inject(ActivesPartsService);
+        const activePartsService: ActivePartsService = TestBed.inject(ActivePartsService);
         spyOn(activePartsService, 'getActivePartsObs').and.returnValue((new BehaviorSubject([activePart])).asObservable());
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.resolveTo();
