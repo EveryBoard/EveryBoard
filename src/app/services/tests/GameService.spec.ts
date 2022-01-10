@@ -26,6 +26,7 @@ import { MessageDisplayer } from '../message-displayer/MessageDisplayer';
 import { JoinerService } from '../JoinerService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import firebase from 'firebase/app';
+import { ActivesPartsService } from '../ActivesPartsService';
 
 describe('GameService', () => {
 
@@ -118,9 +119,9 @@ describe('GameService', () => {
             const game: string = 'whatever-game';
             const router: Router = TestBed.inject(Router);
             spyOn(router, 'navigate').and.callThrough();
-            spyOn(service, 'isUserOffline').and.returnValue(false);
             AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
-            spyOn(service, 'canCreateGame').and.returnValue(true);
+            const activePartsService: ActivesPartsService = TestBed.inject(ActivesPartsService);
+            spyOn(activePartsService, 'hasActivePart').and.returnValue(false);
 
             // When calling the function
             const result: boolean = await service.createGameAndRedirectOrShowError(game);

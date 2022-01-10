@@ -62,7 +62,7 @@ export class GameService implements OnDestroy {
             this.messageDisplayer.infoMessage(GameServiceMessages.USER_OFFLINE());
             this.router.navigate(['/login']);
             return false;
-        } else if (this.canCreateGame() === true && this.userName.isPresent()) {
+        } else if (this.canCreateGame() === true) {
             const gameId: string = await this.createPartJoinerAndChat(this.userName.get(), game);
             // create Part and Joiner
             this.router.navigate(['/play/' + game, gameId]);

@@ -1,7 +1,6 @@
 AwaleRules.ts,1
 AuthenticationService.ts,3
-ActivesPartsService.ts,15
-ActivesUsersService.ts,5
+ActivesUsersService.ts,4
 Coord.ts,1
 CoerceoPiecesThreatTilesMinimax.ts,1
 GameWrapper.ts,1
@@ -19,6 +18,5 @@ PylosState.ts,2
 PositionalEpaminondasMinimax.ts,1
 QuartoHasher.ts,1
 QuartoRules.ts,5
-server-page.component.ts,1
 SixMinimax.ts,13
 SiamPiece.ts,1
