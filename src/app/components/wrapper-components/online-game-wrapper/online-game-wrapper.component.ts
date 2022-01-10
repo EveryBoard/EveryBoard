@@ -562,7 +562,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             const onDocumentModified: (modifiedUsers: IUserId[]) => void = (modifiedUsers: IUserId[]) => {
                 this.opponent = modifiedUsers[0].doc;
             };
-            const onDocumentDeleted: (deletedUserIds: IUserId[]) => void = (deletedUsers: IUserId[]) => {
+            const onDocumentDeleted: (deletedUsers: IUserId[]) => void = (deletedUsers: IUserId[]) => {
                 throw new Error('OnlineGameWrapper: Opponent was deleted, what sorcery is this: ' +
                     JSON.stringify(deletedUsers));
             };

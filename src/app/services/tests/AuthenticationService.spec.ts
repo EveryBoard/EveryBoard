@@ -35,7 +35,7 @@ export class AuthenticationServiceMock {
 
     private currentUser: MGPOptional<AuthUser> = MGPOptional.empty();
 
-    private userRS: ReplaySubject<AuthUser>;
+    private readonly userRS: ReplaySubject<AuthUser>;
 
     constructor() {
         this.userRS = new ReplaySubject<AuthUser>(1);

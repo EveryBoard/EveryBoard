@@ -11,7 +11,7 @@ import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
 export class UserService {
 
     constructor(private readonly activesUsersService: ActivesUsersService,
-                private readonly joueursDao: UserDAO) {
+                private readonly joueursDAO: UserDAO) {
     }
 
     public getActivesUsersObs(): Observable<IUserId[]> {
@@ -24,6 +24,6 @@ export class UserService {
     }
     public observeUserByUsername(username: string, callback: FirebaseCollectionObserver<IUser>): () => void {
         // the callback will be called on the foundUser
-        return this.joueursDao.observeUserByUsername(username, callback);
+        return this.joueursDAO.observeUserByUsername(username, callback);
     }
 }

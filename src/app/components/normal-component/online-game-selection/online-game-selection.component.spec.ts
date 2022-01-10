@@ -1,25 +1,29 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { Router } from '@angular/router';
+import { GameService } from 'src/app/services/GameService';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { OnlineGameSelectionComponent } from './online-game-selection.component';
 
 describe('OnlineGameSelectionComponent', () => {
 
     let testUtils: SimpleComponentTestUtils<OnlineGameSelectionComponent>;
-    let router: Router;
+    let gameService: GameService;
 
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(OnlineGameSelectionComponent);
         testUtils.detectChanges();
-        router = TestBed.inject(Router);
+        gameService = TestBed.inject(GameService);
     }));
-    it('should create and redirect to chosen game', fakeAsync(async() => {
+    it('should rely on GameService to create chosen game', fakeAsync(async() => {
+        // Given a chosen game
         testUtils.getComponent().pickGame('whateverGame');
-        spyOn(router, 'navigate');
+        spyOn(gameService, 'createGameAndRedirectOrShowError').and.resolveTo(true);
+
+        // When clicking on 'play'
         await testUtils.clickElement('#playOnline');
         tick();
-        expect(router.navigate)
-            .toHaveBeenCalledOnceWith(['/play/whateverGame', 'PartDAOMock0']);
+
+        // Then the user is redirected to the game
+        expect(gameService.createGameAndRedirectOrShowError).toHaveBeenCalledWith('whateverGame');
     }));
 });

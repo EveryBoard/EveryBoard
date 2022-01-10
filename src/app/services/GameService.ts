@@ -41,10 +41,10 @@ export class GameService implements OnDestroy {
 
     private readonly userNameSub: Subscription;
 
-    private userName: MGPOptional<string>;
+    private userName: MGPOptional<string> = MGPOptional.empty();
 
-    constructor(private readonly partDao: PartDAO,
-                private readonly activesPartsService: ActivesPartsService,
+    constructor(private readonly partDAO: PartDAO,
+                private readonly activePartsService: ActivesPartsService,
                 private readonly joinerService: JoinerService,
                 private readonly chatService: ChatService,
                 private readonly router: Router,
@@ -80,7 +80,7 @@ export class GameService implements OnDestroy {
         this.userNameSub.unsubscribe();
     }
     public async getPartValidity(partId: string, gameType: string): Promise<MGPValidation> {
-        const part: MGPOptional<IPart> = await this.partDao.read(partId);
+        const part: MGPOptional<IPart> = await this.partDAO.read(partId);
         if (part.isAbsent()) {
             return MGPValidation.failure('NONEXISTENT_PART');
         }
@@ -101,7 +101,7 @@ export class GameService implements OnDestroy {
             result: MGPResult.UNACHIEVED.value,
             listMoves: [],
         };
-        return this.partDao.create(newPart);
+        return this.partDAO.create(newPart);
     }
     protected createChat(chatId: string): Promise<void> {
         display(GameService.VERBOSE, 'GameService.createChat(' + chatId + ')');
@@ -117,14 +117,14 @@ export class GameService implements OnDestroy {
         return gameId;
     }
     public canCreateGame(): boolean {
-        return this.userName.isPresent() && this.activesPartsService.hasActivePart(this.userName.get()) === false;
+        return this.userName.isPresent() && this.activePartsService.hasActivePart(this.userName.get()) === false;
     }
     // on Part Creation Component
 
     private startGameWithConfig(partId: string, joiner: IJoiner): Promise<void> {
         display(GameService.VERBOSE, 'GameService.startGameWithConfig(' + partId + ', ' + JSON.stringify(joiner));
         const modification: StartingPartConfig = this.getStartingConfig(joiner);
-        return this.partDao.update(partId, modification);
+        return this.partDAO.update(partId, modification);
     }
     public getStartingConfig(joiner: IJoiner): StartingPartConfig
     {
@@ -156,7 +156,7 @@ export class GameService implements OnDestroy {
     }
     public async deletePart(partId: string): Promise<void> {
         display(GameService.VERBOSE, 'GameService.deletePart(' + partId + ')');
-        return this.partDao.delete(partId);
+        return this.partDAO.delete(partId);
     }
     public async acceptConfig(partId: string, joiner: IJoiner): Promise<void> {
         display(GameService.VERBOSE, { gameService_acceptConfig: { partId, joiner } });
@@ -171,14 +171,14 @@ export class GameService implements OnDestroy {
             display(GameService.VERBOSE, '[start watching part ' + partId);
 
             this.followedPartId = MGPOptional.of(partId);
-            this.followedPartObs = MGPOptional.of(this.partDao.getObsById(partId));
+            this.followedPartObs = MGPOptional.of(this.partDAO.getObsById(partId));
             this.followedPartSub = this.followedPartObs.get().subscribe(callback);
         } else {
             throw new Error('GameService.startObserving should not be called while already observing a game');
         }
     }
     public resign(partId: string, winner: string, loser: string): Promise<void> {
-        return this.partDao.update(partId, {
+        return this.partDAO.update(partId, {
             winner,
             loser,
             result: MGPResult.RESIGN.value,
@@ -186,7 +186,7 @@ export class GameService implements OnDestroy {
         }); // resign
     }
     public notifyTimeout(partId: string, winner: string, loser: string): Promise<void> {
-        return this.partDao.update(partId, {
+        return this.partDAO.update(partId, {
             winner,
             loser,
             result: MGPResult.TIMEOUT.value,
@@ -194,13 +194,13 @@ export class GameService implements OnDestroy {
         });
     }
     public sendRequest(partId: string, request: Request): Promise<void> {
-        return this.partDao.update(partId, { request });
+        return this.partDAO.update(partId, { request });
     }
     public proposeDraw(partId: string, player: Player): Promise<void> {
         return this.sendRequest(partId, Request.drawProposed(player));
     }
     public acceptDraw(partId: string): Promise<void> {
-        return this.partDao.update(partId, {
+        return this.partDAO.update(partId, {
             result: MGPResult.DRAW.value,
             request: null,
         });
@@ -238,7 +238,7 @@ export class GameService implements OnDestroy {
             listMoves: [],
             ...startingConfig,
         };
-        await this.partDao.set(rematchId, newPart);
+        await this.partDAO.set(rematchId, newPart);
         await this.createChat(rematchId);
         return this.sendRequest(partWithId.id, Request.rematchAccepted(part.typeGame, rematchId));
     }
@@ -266,13 +266,13 @@ export class GameService implements OnDestroy {
             remainingMsForZero: Utils.getNonNullable(part.doc.remainingMsForZero) - msToSubstract[0],
             remainingMsForOne: Utils.getNonNullable(part.doc.remainingMsForOne) - msToSubstract[1],
         };
-        return await this.partDao.update(id, update);
+        return await this.partDAO.update(id, update);
     }
     public refuseTakeBack(id: string, observerRole: Player): Promise<void> {
         assert(observerRole !== Player.NONE, 'Illegal for observer to make request');
 
         const request: Request = Request.takeBackRefused(observerRole);
-        return this.partDao.update(id, {
+        return this.partDAO.update(id, {
             request,
         });
     }
@@ -299,7 +299,7 @@ export class GameService implements OnDestroy {
         display(GameService.VERBOSE, { gameService_updateDBBoard: {
             partId, encodedMove, scores, msToSubstract, notifyDraw, winner, loser } });
 
-        const part: IPart = (await this.partDao.read(partId)).get(); // TODO: optimise this
+        const part: IPart = (await this.partDAO.read(partId)).get(); // TODO: optimise this
         const turn: number = part.turn + 1;
         const listMoves: JSONValueWithoutArray[] = ArrayUtils.copyImmutableArray(part.listMoves);
         listMoves[listMoves.length] = encodedMove;
@@ -341,6 +341,6 @@ export class GameService implements OnDestroy {
                 result: MGPResult.DRAW.value,
             };
         }
-        return await this.partDao.update(partId, update);
+        return await this.partDAO.update(partId, update);
     }
 }

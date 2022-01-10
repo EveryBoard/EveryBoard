@@ -30,24 +30,24 @@ export class JoinerDAOMock extends FirebaseFirestoreDAOMock<IJoiner> {
 
 describe('JoinerDAOMock', () => {
 
-    let joinerDaoMock: JoinerDAOMock;
+    let joinerDAOMock: JoinerDAOMock;
 
     let callCount: number;
 
     let lastJoiner: MGPOptional<IJoiner>;
 
     beforeEach(() => {
-        joinerDaoMock = new JoinerDAOMock();
+        joinerDAOMock = new JoinerDAOMock();
         callCount = 0;
         lastJoiner = MGPOptional.empty();
     });
     it('Total update should update', fakeAsync(async() => {
-        await joinerDaoMock.set('joinerId', JoinerMocks.INITIAL.doc);
+        await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL.doc);
 
         expect(lastJoiner).toEqual(MGPOptional.empty());
         expect(callCount).toBe(0);
 
-        joinerDaoMock.getObsById('joinerId').subscribe((joiner: MGPOptional<IJoiner>) => {
+        joinerDAOMock.getObsById('joinerId').subscribe((joiner: MGPOptional<IJoiner>) => {
             callCount++;
             lastJoiner = joiner;
             expect(callCount).withContext('Should not have been called more than twice').toBeLessThanOrEqual(2);
@@ -57,18 +57,18 @@ describe('JoinerDAOMock', () => {
         expect(callCount).toEqual(1);
         expect(lastJoiner.get()).toEqual(JoinerMocks.INITIAL.doc);
 
-        await joinerDaoMock.update('joinerId', JoinerMocks.WITH_FIRST_CANDIDATE.doc);
+        await joinerDAOMock.update('joinerId', JoinerMocks.WITH_FIRST_CANDIDATE.doc);
 
         expect(callCount).toEqual(2);
         expect(lastJoiner.get()).toEqual(JoinerMocks.WITH_FIRST_CANDIDATE.doc);
     }));
     it('Partial update should update', fakeAsync(async() => {
-        await joinerDaoMock.set('joinerId', JoinerMocks.INITIAL.doc);
+        await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL.doc);
 
         expect(callCount).toEqual(0);
         expect(lastJoiner).toEqual(MGPOptional.empty());
 
-        joinerDaoMock.getObsById('joinerId').subscribe((joiner: MGPOptional<IJoiner>) => {
+        joinerDAOMock.getObsById('joinerId').subscribe((joiner: MGPOptional<IJoiner>) => {
             callCount++;
             // TODO: REDO
             expect(callCount).withContext('Should not have been called more than twice').toBeLessThanOrEqual(2);
@@ -78,7 +78,7 @@ describe('JoinerDAOMock', () => {
         expect(callCount).toEqual(1);
         expect(lastJoiner.get()).toEqual(JoinerMocks.INITIAL.doc);
 
-        await joinerDaoMock.update('joinerId', { candidates: ['firstCandidate'] });
+        await joinerDAOMock.update('joinerId', { candidates: ['firstCandidate'] });
 
         expect(callCount).toEqual(2);
         expect(lastJoiner.get()).toEqual(JoinerMocks.WITH_FIRST_CANDIDATE.doc);

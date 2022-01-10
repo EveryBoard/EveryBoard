@@ -31,7 +31,7 @@ describe('GameService', () => {
 
     let service: GameService;
 
-    let partDao: PartDAO;
+    let partDAO: PartDAO;
 
     const MOVE_1: number = 161;
     const MOVE_2: number = 107;
@@ -52,12 +52,12 @@ describe('GameService', () => {
             ],
         }).compileComponents();
         service = TestBed.inject(GameService);
-        partDao = TestBed.inject(PartDAO);
+        partDAO = TestBed.inject(PartDAO);
     });
     it('should create', () => {
         expect(service).toBeTruthy();
     });
-    it('startObserving should delegate callback to partDao', () => {
+    it('startObserving should delegate callback to partDAO', () => {
         const part: IPart = {
             typeGame: 'Quarto',
             playerZero: 'creator',
@@ -66,16 +66,16 @@ describe('GameService', () => {
             listMoves: [MOVE_1, MOVE_2],
             result: MGPResult.UNACHIEVED.value,
         };
-        const myCallback: (part: MGPOptional<IPart>) => void = (observedPart: MGPOptional<IPart>) => {
+        const myCallback: (observedPart: MGPOptional<IPart>) => void = (observedPart: MGPOptional<IPart>) => {
             expect(observedPart.isPresent()).toBeTrue();
             expect(observedPart.get()).toEqual(part);
         };
-        spyOn(partDao, 'getObsById').and.returnValue(of(MGPOptional.of(part)));
+        spyOn(partDAO, 'getObsById').and.returnValue(of(MGPOptional.of(part)));
         service.startObserving('partId', myCallback);
-        expect(partDao.getObsById).toHaveBeenCalledWith('partId');
+        expect(partDAO.getObsById).toHaveBeenCalledOnceWith('partId');
     });
     it('startObserving should throw exception when called while observing ', fakeAsync(async() => {
-        await partDao.set('myJoinerId', PartMocks.INITIAL.doc);
+        await partDAO.set('myJoinerId', PartMocks.INITIAL.doc);
 
         expect(() => {
             service.startObserving('myJoinerId', (_part: MGPOptional<IPart>) => {});
@@ -83,9 +83,9 @@ describe('GameService', () => {
         }).toThrowError('GameService.startObserving should not be called while already observing a game');
     }));
     it('should delegate delete to PartDAO', () => {
-        spyOn(partDao, 'delete');
+        spyOn(partDAO, 'delete');
         service.deletePart('partId');
-        expect(partDao.delete).toHaveBeenCalledWith('partId');
+        expect(partDAO.delete).toHaveBeenCalledOnceWith('partId');
     });
     it('should forbid to accept a take back that the player proposed himself', fakeAsync(async() => {
         for (const player of [Player.ZERO, Player.ONE]) {
@@ -106,13 +106,30 @@ describe('GameService', () => {
         const joinerService: JoinerService = TestBed.inject(JoinerService);
         const joiner: IJoiner = JoinerMocks.WITH_PROPOSED_CONFIG.doc;
         spyOn(joinerService, 'acceptConfig').and.resolveTo();
-        spyOn(partDao, 'update').and.resolveTo();
+        spyOn(partDAO, 'update').and.resolveTo();
 
         await service.acceptConfig('partId', joiner);
 
-        expect(joinerService.acceptConfig).toHaveBeenCalledWith();
+        expect(joinerService.acceptConfig).toHaveBeenCalledOnceWith();
     }));
     describe('createGameAndRedirectOrShowError', () => {
+        it('should create and redirect to the game upon success', fakeAsync(async() => {
+            // Given an online user that can create a game
+            const game: string = 'whatever-game';
+            const router: Router = TestBed.inject(Router);
+            spyOn(router, 'navigate').and.callThrough();
+            spyOn(service, 'isUserOffline').and.returnValue(false);
+            AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
+            spyOn(service, 'canCreateGame').and.returnValue(true);
+
+            // When calling the function
+            const result: boolean = await service.createGameAndRedirectOrShowError(game);
+
+            // Then it succeeds and the user is redirected to the game
+            expect(result).toBeTrue();
+            expect(router.navigate)
+                .toHaveBeenCalledOnceWith(['/play/' + game, 'PartDAOMock0']);
+        }));
         it('should show toast and navigate when creator is offline', fakeAsync(async() => {
             const router: Router = TestBed.inject(Router);
             const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
@@ -192,10 +209,10 @@ describe('GameService', () => {
     });
     describe('rematch', () => {
         let joinerService: JoinerService;
-        let partDao: PartDAO;
+        let partDAO: PartDAO;
         beforeEach(() => {
             joinerService = TestBed.inject(JoinerService);
-            partDao = TestBed.inject(PartDAO);
+            partDAO = TestBed.inject(PartDAO);
         });
         it('should send request when proposing a rematch', fakeAsync(async() => {
             spyOn(service, 'sendRequest').and.resolveTo();
@@ -235,7 +252,7 @@ describe('GameService', () => {
             spyOn(service, 'sendRequest').and.resolveTo();
             spyOn(joinerService, 'readJoinerById').and.resolveTo(lastGameJoiner);
             let called: boolean = false;
-            spyOn(partDao, 'set').and.callFake(async(_id: string, element: IPart) => {
+            spyOn(partDAO, 'set').and.callFake(async(_id: string, element: IPart) => {
                 expect(element.playerZero).toEqual(Utils.getNonNullable(lastPart.doc.playerOne));
                 expect(element.playerOne).toEqual(Utils.getNonNullable(lastPart.doc.playerZero));
                 called = true;
@@ -278,7 +295,7 @@ describe('GameService', () => {
             spyOn(service, 'sendRequest').and.resolveTo();
             spyOn(joinerService, 'readJoinerById').and.resolveTo(lastGameJoiner);
             let called: boolean = false;
-            spyOn(partDao, 'set').and.callFake(async(_id: string, element: IPart) => {
+            spyOn(partDAO, 'set').and.callFake(async(_id: string, element: IPart) => {
                 expect(element.playerZero).toEqual(Utils.getNonNullable(lastPart.doc.playerOne));
                 expect(element.playerOne).toEqual(Utils.getNonNullable(lastPart.doc.playerZero));
                 called = true;
@@ -302,8 +319,8 @@ describe('GameService', () => {
             result: MGPResult.UNACHIEVED.value,
         });
         beforeEach(() => {
-            spyOn(partDao, 'read').and.resolveTo(MGPOptional.of(part.doc));
-            spyOn(partDao, 'update').and.resolveTo();
+            spyOn(partDAO, 'read').and.resolveTo(MGPOptional.of(part.doc));
+            spyOn(partDAO, 'update').and.resolveTo();
         });
         it('should add scores to update when scores are present', fakeAsync(async() => {
             // when updating the board with scores
@@ -318,7 +335,7 @@ describe('GameService', () => {
                 scorePlayerZero: 5,
                 scorePlayerOne: 0,
             };
-            expect(partDao.update).toHaveBeenCalledWith('partId', expectedUpdate);
+            expect(partDAO.update).toHaveBeenCalledOnceWith('partId', expectedUpdate);
         }));
         it('should include the draw notification if requested', fakeAsync(async() => {
             // when updating the board to notify of a draw
@@ -331,7 +348,7 @@ describe('GameService', () => {
                 lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
                 result: MGPResult.DRAW.value,
             };
-            expect(partDao.update).toHaveBeenCalledWith('partId', expectedUpdate);
+            expect(partDAO.update).toHaveBeenCalledOnceWith('partId', expectedUpdate);
         }));
     });
     afterEach(() => {

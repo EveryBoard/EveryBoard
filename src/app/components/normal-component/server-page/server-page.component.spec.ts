@@ -24,7 +24,7 @@ describe('ServerPageComponent', () => {
         expect(component).toBeDefined();
         component.ngOnInit();
     }));
-    it('should rely on online-game-selection component to create online games', fakeAsync(async() => {
+    it('should dispatch to online-game-selection component when switching to create game tab', fakeAsync(async() => {
         // When the component is loaded
         testUtils.detectChanges();
 
@@ -51,18 +51,18 @@ describe('ServerPageComponent', () => {
         // When clicking on the part
         testUtils.clickElement('#part_0');
 
-        // Then the component navigates to the part
+        // Then the component should navigate to the part
         expect(router.navigate).toHaveBeenCalledOnceWith(['/play/Quarto', 'some-part-id']);
     }));
     it('should stop watching current part observable when destroying component', fakeAsync(async() => {
-        // given a server page
+        // Given a server page
         testUtils.detectChanges();
         spyOn(component['activePartsSub'], 'unsubscribe').and.callThrough();
 
-        // when destroying the component
+        // When destroying the component
         component.ngOnDestroy();
 
-        // then router should have navigate
+        // Then the router active part observer should have been unsubscribed
         expect(component['activePartsSub'].unsubscribe).toHaveBeenCalledOnceWith();
     }));
 });

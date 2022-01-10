@@ -26,7 +26,7 @@ export class ChatService implements OnDestroy {
 
     private followedChatSub: Subscription;
 
-    constructor(private readonly chatDao: ChatDAO) {
+    constructor(private readonly chatDAO: ChatDAO) {
         display(ChatService.VERBOSE, 'ChatService.constructor');
     }
     public startObserving(chatId: string, callback: (chat: MGPOptional<IChat>) => void): void {
@@ -36,7 +36,7 @@ export class ChatService implements OnDestroy {
             display(ChatService.VERBOSE, '[start watching chat ' + chatId);
 
             this.followedChatId = MGPOptional.of(chatId);
-            this.followedChatObs = MGPOptional.of(this.chatDao.getObsById(chatId));
+            this.followedChatObs = MGPOptional.of(this.chatDAO.getObsById(chatId));
             this.followedChatSub = this.followedChatObs.get().subscribe(callback);
         } else if (this.followedChatId.equalsValue(chatId)) {
             throw new Error(`WTF :: Already observing chat '${chatId}'`);
@@ -58,10 +58,10 @@ export class ChatService implements OnDestroy {
     }
     public async deleteChat(chatId: string): Promise<void> {
         display(ChatService.VERBOSE, 'ChatService.deleteChat ' + chatId);
-        return this.chatDao.delete(chatId);
+        return this.chatDAO.delete(chatId);
     }
     public async createNewChat(id: string): Promise<void> {
-        return this.chatDao.set(id, {
+        return this.chatDAO.set(id, {
             messages: [],
         });
     }
@@ -77,7 +77,7 @@ export class ChatService implements OnDestroy {
         if (this.isForbiddenMessage(content)) {
             return MGPValidation.failure(ChatMessages.FORBIDDEN_MESSAGE());
         }
-        const chat: IChat = (await this.chatDao.read(chatId)).get();
+        const chat: IChat = (await this.chatDAO.read(chatId)).get();
         const messages: IMessage[] = ArrayUtils.copyImmutableArray(chat.messages);
         const newMessage: IMessage = {
             content,
@@ -86,7 +86,7 @@ export class ChatService implements OnDestroy {
             currentTurn,
         };
         messages.push(newMessage);
-        await this.chatDao.update(chatId, { messages });
+        await this.chatDAO.update(chatId, { messages });
         return MGPValidation.SUCCESS;
     }
     private userCanSendMessage(userName: string, _chatId: string): boolean {

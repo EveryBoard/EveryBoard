@@ -22,7 +22,7 @@ describe('ActivesPartsService', () => {
     });
     describe('hasActiveParts', () => {
         it('should return true when user is playerZero in a game', fakeAsync(async() => {
-            // Given a partDao including an active part whose playerZero is our user
+            // Given a partDAO including an active part whose playerZero is our user
             const user: string = 'creator';
             await partDAO.set('joinerId', {
                 listMoves: [],
@@ -40,7 +40,7 @@ describe('ActivesPartsService', () => {
             expect(hasUserActiveParts).toBeTrue();
         }));
         it('should return true when user is playerOne in a game', fakeAsync(async() => {
-            // Given a partDao including an active part whose playerZero is our user
+            // Given a partDAO including an active part whose playerZero is our user
             const user: string = 'creator';
             await partDAO.set('joinerId', {
                 listMoves: [],
@@ -58,7 +58,7 @@ describe('ActivesPartsService', () => {
             expect(hasUserActiveParts).toBeTrue();
         }));
         it('should return false when user is not in a game', fakeAsync(async() => {
-            // Given a partDao including active parts without our user
+            // Given a partDAO including active parts without our user
             const user: string = 'creator';
             await partDAO.set('joinerId', {
                 listMoves: [],
@@ -96,7 +96,7 @@ describe('ActivesPartsService', () => {
             };
             await partDAO.create(part);
 
-            // Then the new part has been observed
+            // Then the new part should have been observed
             expect(seenActiveParts.length).toBe(1);
             expect(seenActiveParts[0].doc).toEqual(part);
 
@@ -122,13 +122,13 @@ describe('ActivesPartsService', () => {
             // When an existing part is deleted
             await partDAO.delete(partId);
 
-            // Then the deleted part is not considered as an active part
+            // Then the deleted part should not be considered as an active part
             expect(seenActiveParts.length).toBe(0);
 
             activePartsSub.unsubscribe();
         }));
         it('should preserve non-deleted upon a deletion', fakeAsync(async() => {
-            // Given that we are observing active parts, and there are already multiple parts
+            // Given a service observing active parts, and there are already multiple parts
             const part: IPart = {
                 listMoves: [],
                 playerZero: 'creator',
@@ -148,7 +148,7 @@ describe('ActivesPartsService', () => {
             // When an (but not all) existing part is deleted
             await partDAO.delete(partId1);
 
-            // Then only the non-deleted part remains
+            // Then only the non-deleted part should remain
             expect(seenActiveParts.length).toBe(1);
             expect(seenActiveParts[0].id).toBe(partId2);
 
@@ -174,7 +174,7 @@ describe('ActivesPartsService', () => {
             // When an existing part is updated
             await partDAO.update(partId, { turn: 1 });
 
-            // Then the new part has been observed
+            // Then the new part should have been observed
             expect(seenActiveParts.length).toBe(1);
             expect(Utils.getNonNullable(seenActiveParts[0].doc).turn).toBe(1);
 
@@ -201,14 +201,14 @@ describe('ActivesPartsService', () => {
             // When an existing part is updated
             await partDAO.update(partId1, { turn: 1 });
 
-            // Then the part has been updated
+            // Then the part should have been updated
             expect(seenActiveParts.length).toBe(2);
             const newPart1: IPartId = Utils.getNonNullable(seenActiveParts.find((part: IPartId) =>
                 part.id === partId1));
             const newPart2: IPartId = Utils.getNonNullable(seenActiveParts.find((part: IPartId) =>
                 part.id === partId2));
             expect(Utils.getNonNullable(newPart1.doc).turn).toBe(1);
-            // and the other one is still there and still the same
+            // and the other one should still be there and still be the same
             expect(Utils.getNonNullable(newPart2.doc).turn).toBe(0);
 
             activePartsSub.unsubscribe();

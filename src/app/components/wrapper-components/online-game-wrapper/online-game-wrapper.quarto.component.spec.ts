@@ -762,7 +762,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 const ALTERNATIVE_MOVE_ENCODED: number = QuartoMove.encoder.encodeNumber(ALTERNATIVE_MOVE);
                 await doMove(ALTERNATIVE_MOVE, true);
 
-                // Then partDao should be updated without including remainingMsFor(any)
+                // Then partDAO should be updated without including remainingMsFor(any)
                 expect(partDAO.update).toHaveBeenCalledOnceWith('joinerId', {
                     turn: 1,
                     listMoves: [ALTERNATIVE_MOVE_ENCODED],
@@ -824,7 +824,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 const ALTERNATIVE_MOVE_ENCODED: number = QuartoMove.encoder.encodeNumber(ALTERNATIVE_MOVE);
                 await doMove(ALTERNATIVE_MOVE, true);
 
-                // Then partDao should be updated without including remainingMsFor(any)
+                // Then partDAO should be updated without including remainingMsFor(any)
                 expect(partDAO.update).toHaveBeenCalledOnceWith('joinerId', {
                     turn: 1,
                     listMoves: [ALTERNATIVE_MOVE_ENCODED],
