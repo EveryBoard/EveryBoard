@@ -9,6 +9,8 @@ export abstract class MGPFallible<T> {
         return new MGPFallibleFailure(reason);
     }
 
+    protected constructor() {
+    }
     public abstract isSuccess(): boolean
 
     public abstract isFailure(): boolean

@@ -17,11 +17,42 @@ import { Direction } from 'src/app/jscaip/Direction';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { Router } from '@angular/router';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { GameState } from 'src/app/jscaip/GameState';
+import { Utils } from 'src/app/utils/utils';
+import { Player } from 'src/app/jscaip/Player';
+import { MGPFallible } from 'src/app/utils/MGPFallible';
 
+import { ApagosTutorial } from 'src/app/games/apagos/ApagosTutorial';
+import { ApagosRules } from 'src/app/games/apagos/ApagosRules';
+import { ApagosState } from 'src/app/games/apagos/ApagosState';
+import { ApagosMove } from 'src/app/games/apagos/ApagosMove';
+import { ApagosCoord } from 'src/app/games/apagos/ApagosCoord';
+import { ConspirateursTutorial } from 'src/app/games/conspirateurs/ConspirateursTutorial';
+import { ConspirateursRules } from 'src/app/games/conspirateurs/ConspirateursRules';
+import { ConspirateursMoveSimple, ConspirateursMoveJump } from 'src/app/games/conspirateurs/ConspirateursMove';
+import { DvonnRules } from 'src/app/games/dvonn/DvonnRules';
+import { DvonnTutorial } from 'src/app/games/dvonn/DvonnTutorial';
+import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
+import { DvonnState } from 'src/app/games/dvonn/DvonnState';
+import { EncapsuleRules } from 'src/app/games/encapsule/EncapsuleRules';
+import { EncapsuleState } from 'src/app/games/encapsule/EncapsuleState';
+import { EncapsuleTutorial } from 'src/app/games/encapsule/EncapsuleTutorial';
+import { EncapsuleMove } from 'src/app/games/encapsule/EncapsuleMove';
+import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { EpaminondasRules } from 'src/app/games/epaminondas/EpaminondasRules';
 import { EpaminondasState } from 'src/app/games/epaminondas/EpaminondasState';
 import { EpaminondasTutorial } from '../../../games/epaminondas/EpaminondasTutorial';
 import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
+import { PentagoRules } from 'src/app/games/pentago/PentagoRules';
+import { PentagoState } from 'src/app/games/pentago/PentagoState';
+import { PentagoTutorial } from 'src/app/games/pentago/PentagoTutorial';
+import { PentagoMove } from 'src/app/games/pentago/PentagoMove';
+import { PylosRules } from 'src/app/games/pylos/PylosRules';
+import { PylosState } from 'src/app/games/pylos/PylosState';
+import { PylosTutorial } from 'src/app/games/pylos/PylosTutorial';
+import { PylosMove } from 'src/app/games/pylos/PylosMove';
+import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
 import { SaharaTutorial } from '../../../games/sahara/SaharaTutorial';
 import { SaharaRules } from 'src/app/games/sahara/SaharaRules';
 import { SaharaState } from 'src/app/games/sahara/SaharaState';
@@ -30,38 +61,10 @@ import { SixMove } from 'src/app/games/six/SixMove';
 import { SixRules } from 'src/app/games/six/SixRules';
 import { SixState } from 'src/app/games/six/SixState';
 import { SixTutorial, SixTutorialMessages } from '../../../games/six/SixTutorial';
-import { PentagoRules } from 'src/app/games/pentago/PentagoRules';
-import { PentagoState } from 'src/app/games/pentago/PentagoState';
-import { PentagoTutorial } from 'src/app/games/pentago/PentagoTutorial';
-import { PentagoMove } from 'src/app/games/pentago/PentagoMove';
 import { YinshRules } from 'src/app/games/yinsh/YinshRules';
 import { YinshState } from 'src/app/games/yinsh/YinshState';
 import { YinshTutorial, YinshTutorialMessages } from 'src/app/games/yinsh/YinshTutorial';
 import { YinshCapture, YinshMove } from 'src/app/games/yinsh/YinshMove';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { PylosRules } from 'src/app/games/pylos/PylosRules';
-import { PylosState } from 'src/app/games/pylos/PylosState';
-import { PylosTutorial } from 'src/app/games/pylos/PylosTutorial';
-import { PylosMove } from 'src/app/games/pylos/PylosMove';
-import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
-import { GameState } from 'src/app/jscaip/GameState';
-import { DvonnRules } from 'src/app/games/dvonn/DvonnRules';
-import { DvonnTutorial } from 'src/app/games/dvonn/DvonnTutorial';
-import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
-import { DvonnState } from 'src/app/games/dvonn/DvonnState';
-import { Utils } from 'src/app/utils/utils';
-import { ApagosTutorial } from 'src/app/games/apagos/ApagosTutorial';
-import { ApagosRules } from 'src/app/games/apagos/ApagosRules';
-import { ApagosState } from 'src/app/games/apagos/ApagosState';
-import { ApagosMove } from 'src/app/games/apagos/ApagosMove';
-import { ApagosCoord } from 'src/app/games/apagos/ApagosCoord';
-import { Player } from 'src/app/jscaip/Player';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { EncapsuleRules } from 'src/app/games/encapsule/EncapsuleRules';
-import { EncapsuleState } from 'src/app/games/encapsule/EncapsuleState';
-import { EncapsuleTutorial } from 'src/app/games/encapsule/EncapsuleTutorial';
-import { EncapsuleMove } from 'src/app/games/encapsule/EncapsuleMove';
-import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 
 describe('TutorialGameWrapperComponent (wrapper)', () => {
 
@@ -104,8 +107,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const expectedMessage: string = 'instruction';
             const currentMessage: string = componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
-            const actualState: QuartoState =
-                componentTestUtils.getComponent().rules.node.gameState as QuartoState;
+            const actualState: QuartoState = componentTestUtils.getComponent().rules.node.gameState;
             expect(actualState).toEqual(state);
         }));
         it('Should show previousMove when set', fakeAsync(async() => {
@@ -1002,6 +1004,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
     describe('Tutorials', () => {
         it('Should make sure that predicate step have healthy behaviors', fakeAsync(async() => {
             const apagosTutorial: TutorialStep[] = new ApagosTutorial().tutorial;
+            const conspirateursTutorial: TutorialStep[] = new ConspirateursTutorial().tutorial;
             const dvonnTutorial: TutorialStep[] = new DvonnTutorial().tutorial;
             const encapsuleTutorial: TutorialStep[] = new EncapsuleTutorial().tutorial;
             const epaminondasTutorial: TutorialStep[] = new EpaminondasTutorial().tutorial;
@@ -1015,19 +1018,31 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     new ApagosRules(ApagosState),
                     apagosTutorial[2],
                     ApagosMove.drop(ApagosCoord.ZERO, Player.ZERO),
-                    MGPValidation.failure($localize`This move is a drop, please do a transfer!`),
+                    MGPValidation.failure(`This move is a drop, please do a transfer!`),
                 ],
                 [
                     new ApagosRules(ApagosState),
                     apagosTutorial[3],
                     ApagosMove.drop(ApagosCoord.TWO, Player.ZERO),
-                    MGPValidation.failure($localize`You actively made your opponent win!`),
+                    MGPValidation.failure(`You actively made your opponent win!`),
                 ],
                 [
                     new ApagosRules(ApagosState),
                     apagosTutorial[3],
                     ApagosMove.transfer(ApagosCoord.THREE, ApagosCoord.TWO).get(),
-                    MGPValidation.failure($localize`Wrong choice, your opponent will win in the next turn no matter which piece is dropped!`),
+                    MGPValidation.failure(`Wrong choice, your opponent will win in the next turn no matter which piece is dropped!`),
+                ],
+                [
+                    ConspirateursRules.get(),
+                    conspirateursTutorial[2],
+                    ConspirateursMoveJump.of([new Coord(4, 7), new Coord(4, 5)]).get(),
+                    MGPValidation.failure(`You have made a jump, not a simple move. Try again!`),
+                ],
+                [
+                    ConspirateursRules.get(),
+                    conspirateursTutorial[3],
+                    ConspirateursMoveSimple.of(new Coord(4, 6), new Coord(4, 5)).get(),
+                    MGPValidation.failure(`You have not performed a jump. Try again!`),
                 ],
                 [
                     new DvonnRules(DvonnState),
@@ -1038,7 +1053,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     new DvonnRules(DvonnState),
                     dvonnTutorial[2],
                     DvonnMove.of(new Coord(2, 1), new Coord(1, 1)),
-                    MGPValidation.failure($localize`You have not taken possession of a source, try again.`),
+                    MGPValidation.failure(`You have not taken possession of a source, try again.`),
                 ], [
                     new EncapsuleRules(EncapsuleState),
                     encapsuleTutorial[3],
@@ -1068,12 +1083,12 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                     new PentagoRules(PentagoState),
                     pentagoTutorial[2],
                     PentagoMove.withRotation(0, 0, 0, true),
-                    MGPValidation.failure($localize`You have made a move with a rotation. This tutorial step is about moves without rotations!`),
+                    MGPValidation.failure(`You have made a move with a rotation. This tutorial step is about moves without rotations!`),
                 ], [
                     new PentagoRules(PentagoState),
                     pentagoTutorial[3],
                     PentagoMove.rotationless(0, 0),
-                    MGPValidation.failure($localize`You made a move without rotation, try again!`),
+                    MGPValidation.failure(`You made a move without rotation, try again!`),
                 ], [
                     new PylosRules(PylosState),
                     pylosTutorial[4],

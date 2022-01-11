@@ -115,7 +115,7 @@ export class Coord implements ComparableObject {
         const dy: number = Math.abs(c.y - this.y);
         return Math.max(dx, dy);
     }
-    public isHexagonalyAlignedWith(coord: Coord): boolean {
+    public isHexagonallyAlignedWith(coord: Coord): boolean {
         const sdx: number = this.x - coord.x;
         const sdy: number = this.y - coord.y;
         if (sdx === sdy) return false;

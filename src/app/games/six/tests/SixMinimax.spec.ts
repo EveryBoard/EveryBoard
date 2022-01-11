@@ -226,7 +226,7 @@ describe('SixMinimax', () => {
             ], 40);
             const move: SixMove = SixMove.fromDrop(new Coord(1, 1));
             const node: SixNode = new SixNode(state, MGPOptional.empty(), MGPOptional.of(move));
-            expect(minimax.getBoardNumericValue(node)).toBe(2);
+            expect(minimax.getBoardValue(node).value).toBe(2);
         });
     });
     describe('getListMove', () => {

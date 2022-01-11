@@ -60,7 +60,7 @@ describe('SixState', () => {
                 [X, O, X],
             ];
             expect(state.toRepresentation()).toEqual(expectedRepresentation);
-            expect(state.offset.equals(new Vector(-1, 0)));
+            expect(state.offset.equals(new Vector(-1, 0))).toBeTrue();
         });
         it('Should make 0 the left and upper indexes (vertical bug)', () => {
             const pieces: ReversibleMap<Coord, Player> = new ReversibleMap<Coord, Player>();

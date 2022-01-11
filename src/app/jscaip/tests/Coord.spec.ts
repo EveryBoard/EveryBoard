@@ -15,7 +15,7 @@ describe('Coord', () => {
         const bigCoord: Coord = new Coord(2, 2);
         expect(smallCoord.compareTo(bigCoord)).toBe(-1);
     });
-    it('should know wether A is between B and C', () => {
+    it('should know whether A is between B and C', () => {
         const upLeft: Coord = new Coord(1, 1);
         const middle: Coord = new Coord(3, 3);
         const downRight: Coord = new Coord(9, 9);
@@ -54,6 +54,13 @@ describe('Coord', () => {
         const unalignedCoord: Coord = new Coord(1, 2);
         expect(() => coord.getDistance(unalignedCoord))
             .toThrowError('Cannot calculate distance with non aligned coords.');
+    });
+    it('should compute hexagonal alignments with isHexagonallyAlignedWith', () => {
+        const coord: Coord = new Coord(1, 1);
+        expect(coord.isHexagonallyAlignedWith(new Coord(0, 0))).toBeFalse();
+        expect(coord.isHexagonallyAlignedWith(new Coord(0, 2))).toBeTrue();
+        expect(coord.isHexagonallyAlignedWith(new Coord(1, 4))).toBeTrue();
+        expect(coord.isHexagonallyAlignedWith(new Coord(5, 4))).toBeFalse();
     });
     describe('getDirectionToward', () => {
         it('Should give direction', () => {

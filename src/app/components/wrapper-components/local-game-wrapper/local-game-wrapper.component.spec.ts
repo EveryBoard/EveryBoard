@@ -83,7 +83,7 @@ describe('LocalGameWrapperComponent', () => {
     }));
     describe('restarting games', () => {
         it('should allow to restart game during the play', fakeAsync(async() => {
-            expect(componentTestUtils.findElement('#restartButton'));
+            componentTestUtils.expectElementToExist('#restartButton');
             await componentTestUtils.expectInterfaceClickSuccess('#restartButton');
         }));
         it('should allow to restart game at the end', fakeAsync(async() => {
