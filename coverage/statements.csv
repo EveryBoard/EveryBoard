@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 AwaleRules.ts,1
 ActivesPartsService.ts,15
 ActivesUsersService.ts,5
@@ -22,30 +21,3 @@ QuartoHasher.ts,1
 QuartoRules.ts,5
 server-page.component.ts,1
 SiamPiece.ts,1
-=======
-AwaleRules.ts,1
-AuthenticationService.ts,3
-ActivesPartsService.ts,15
-ActivesUsersService.ts,5
-Coord.ts,1
-CoerceoPiecesThreatTilesMinimax.ts,1
-GameWrapper.ts,1
-GoGroupsDatas.ts,4
-HexagonalGameState.ts,6
-LinesOfActionRules.ts,1
-MGPNode.ts,1
-Minimax.ts,2
-NodeUnheritance.ts,1
-online-game-wrapper.component.ts,9
-ObjectUtils.ts,2
-part-creation.component.ts,6
-PieceThreat.ts,1
-Player.ts,2
-PylosState.ts,2
-PositionalEpaminondasMinimax.ts,1
-QuartoHasher.ts,1
-QuartoRules.ts,5
-server-page.component.ts,1
-SixMinimax.ts,13
-SiamPiece.ts,1
->>>>>>> 1eef899a53f6ffbe2d6719584bf7db87f4a4b503
