@@ -19,6 +19,7 @@ import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisp
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GipfTutorial } from './GipfTutorial';
 import { Utils } from 'src/app/utils/utils';
+import { ErrorLogger } from 'src/app/services/ErrorLogger';
 
 @Component({
     selector: 'app-gipf',
@@ -33,10 +34,10 @@ export class GipfComponent
     public captured: Coord[] = [];
     public moved: Coord[] = [];
 
-    private static PHASE_INITIAL_CAPTURE: number = 0;
-    private static PHASE_PLACEMENT_COORD: number = 1;
-    private static PHASE_PLACEMENT_DIRECTION: number = 2;
-    private static PHASE_FINAL_CAPTURE: number = 3;
+    private static readonly PHASE_INITIAL_CAPTURE: number = 0;
+    private static readonly PHASE_PLACEMENT_COORD: number = 1;
+    private static readonly PHASE_PLACEMENT_DIRECTION: number = 2;
+    private static readonly PHASE_FINAL_CAPTURE: number = 3;
     private movePhase: number = GipfComponent.PHASE_PLACEMENT_COORD;
 
     // This state contains the board that is actually displayed
@@ -48,8 +49,8 @@ export class GipfComponent
     private placementEntrance: MGPOptional<Coord> = MGPOptional.empty();
     private finalCaptures: GipfCapture[] = [];
 
-    constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    constructor(messageDisplayer: MessageDisplayer, errorLogger: ErrorLogger) {
+        super(messageDisplayer, errorLogger);
         this.scores = MGPOptional.of([0, 0]);
         this.rules = new GipfRules(GipfState);
         this.availableMinimaxes = [

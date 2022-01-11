@@ -5,6 +5,9 @@ service cloud.firestore {
             // only used for testing purposes, do not push to production 
             allow read, write: if true;
         }
+        match /errors/{errorId} {
+            allow create: if true;
+        }
        // joueurs will be renamed to users
         match /joueurs/{userId} {
             // Anybody can create a user

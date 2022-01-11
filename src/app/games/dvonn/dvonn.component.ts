@@ -15,6 +15,7 @@ import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisp
 import { DvonnTutorial } from './DvonnTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/utils';
+import { ErrorLogger } from 'src/app/services/ErrorLogger';
 
 @Component({
     selector: 'app-dvonn',
@@ -29,8 +30,8 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
     public disconnecteds: { coord: Coord, caseContent: DvonnPieceStack }[] = [];
     public state: DvonnState;
 
-    constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    constructor(messageDisplayer: MessageDisplayer, errorLogger: ErrorLogger) {
+        super(messageDisplayer, errorLogger);
         this.rules = new DvonnRules(DvonnState);
         this.availableMinimaxes = [
             new DvonnMinimax(this.rules, 'DvonnMinimax'),

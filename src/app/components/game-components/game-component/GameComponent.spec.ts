@@ -1,83 +1,47 @@
 /* eslint-disable max-lines-per-function */
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
-import { AppModule } from 'src/app/app.module';
-import { ChatDAO } from 'src/app/dao/ChatDAO';
-import { JoinerDAO } from 'src/app/dao/JoinerDAO';
-import { UserDAO } from 'src/app/dao/UserDAO';
-import { PartDAO } from 'src/app/dao/PartDAO';
-import { ChatDAOMock } from 'src/app/dao/tests/ChatDAOMock.spec';
-import { JoinerDAOMock } from 'src/app/dao/tests/JoinerDAOMock.spec';
-import { UserDAOMock } from 'src/app/dao/tests/UserDAOMock.spec';
-import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { DiamPiece } from 'src/app/games/diam/DiamPiece';
 import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { Direction } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
-import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
-import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { ActivatedRouteStub } from 'src/app/utils/tests/TestUtils.spec';
+import { ActivatedRouteStub, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { GameInfo, PickGameComponent } from '../../normal-component/pick-game/pick-game.component';
 import { GameWrapperMessages } from '../../wrapper-components/GameWrapper';
 import { LocalGameWrapperComponent } from '../../wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { AbstractGameComponent } from './GameComponent';
-import { Utils } from 'src/app/utils/utils';
 import { Coord } from 'src/app/jscaip/Coord';
+import { ErrorLogger } from 'src/app/services/ErrorLogger';
 
 describe('GameComponent', () => {
 
     const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub();
 
-    let fixture: ComponentFixture<LocalGameWrapperComponent>;
-
-    let component: LocalGameWrapperComponent;
-
     const gameList: ReadonlyArray<string> = new PickGameComponent().gameNameList;
 
-    beforeEach(fakeAsync(async() => {
-        await TestBed.configureTestingModule({
-            imports: [
-                AppModule,
-                RouterTestingModule.withRoutes([
-                    { path: 'local', component: LocalGameWrapperComponent }]),
-            ],
-            declarations: [
-                LocalGameWrapperComponent,
-            ],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
-            providers: [
-                { provide: AuthenticationService, useClass: AuthenticationServiceMock },
-                { provide: PartDAO, useClass: PartDAOMock },
-                { provide: JoinerDAO, useClass: JoinerDAOMock },
-                { provide: ChatDAO, useClass: ChatDAOMock },
-                { provide: UserDAO, useClass: UserDAOMock },
-                { provide: ActivatedRoute, useValue: activatedRouteStub },
-            ],
-        }).compileComponents();
-        AuthenticationServiceMock.setUser(AuthUser.NOT_CONNECTED);
-    }));
     it('should fail if pass() is called on a game that does not support it', fakeAsync(async() => {
-        spyOn(Utils, 'handleError').and.returnValue(null);
         // given such a game, like Abalone
         activatedRouteStub.setRoute('compo', 'Abalone');
-        fixture = TestBed.createComponent(LocalGameWrapperComponent);
-        component = fixture.debugElement.componentInstance;
+        const testUtils: SimpleComponentTestUtils<LocalGameWrapperComponent> =
+            await SimpleComponentTestUtils.create(LocalGameWrapperComponent, activatedRouteStub);
+        const component: LocalGameWrapperComponent = testUtils.getComponent();
         component.observerRole = 1;
-        fixture.detectChanges();
+        testUtils.detectChanges();
         tick(1);
-        expect(component.gameComponent).toBeDefined();
+        expect(testUtils.getComponent().gameComponent).toBeDefined();
+
+        const errorLogger: ErrorLogger = TestBed.inject(ErrorLogger);
+        spyOn(errorLogger, 'logError').and.resolveTo();
+
 
         // when we try to pass
         const result: MGPValidation = await component.gameComponent.pass();
 
-        // then it gives an error and handleError is called
-        const error: string = 'GameComponent.pass() called on a game that does not redefine it';
+        // then it gives an error and logError is called
+        const errorMessage: string = 'pass() called on a game that does not redefine it';
         expect(result.isFailure()).toBeTrue();
-        expect(result.getReason()).toEqual(error);
-        expect(Utils.handleError).toHaveBeenCalledWith(error);
+        expect(result.getReason()).toEqual(errorMessage);
+        expect(errorLogger.logError).toHaveBeenCalledWith('GameComponent', errorMessage);
     }));
     it('Clicks method should refuse when observer click', fakeAsync(async() => {
         const clickableMethods: { [gameName: string]: { [methodName: string]: unknown[] } } = {
@@ -149,15 +113,16 @@ describe('GameComponent', () => {
         const refusal: MGPValidation = MGPValidation.failure(GameWrapperMessages.NO_CLONING_FEATURE());
 
         for (const gameName of gameList.concat('MinimaxTesting')) {
-            const game: { [methodName: string]: unknown[] } = clickableMethods[gameName];
+            const game : { [methodName: string]: unknown[] } = clickableMethods[gameName];
             if (game == null) {
                 throw new Error('Please define ' + gameName + ' clickable method in here to test them.');
             }
             activatedRouteStub.setRoute('compo', gameName);
-            fixture = TestBed.createComponent(LocalGameWrapperComponent);
-            component = fixture.debugElement.componentInstance;
+            const testUtils: SimpleComponentTestUtils<LocalGameWrapperComponent> =
+                await SimpleComponentTestUtils.create(LocalGameWrapperComponent, activatedRouteStub);
+            const component: LocalGameWrapperComponent = testUtils.getComponent();
             component.observerRole = 2;
-            fixture.detectChanges();
+            testUtils.detectChanges();
             tick(1);
             expect(component.gameComponent).toBeDefined();
             for (const methodName of Object.keys(game)) {

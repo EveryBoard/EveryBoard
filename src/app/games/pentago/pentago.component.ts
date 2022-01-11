@@ -15,6 +15,7 @@ import { PentagoTutorial } from './PentagoTutorial';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { ErrorLogger } from 'src/app/services/ErrorLogger';
 
 @Component({
     selector: 'app-pentago',
@@ -40,8 +41,8 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
 
     public ARROWS: [string, number, boolean][];
 
-    constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    constructor(messageDisplayer: MessageDisplayer, errorLogger: ErrorLogger) {
+        super(messageDisplayer, errorLogger);
         this.rules = new PentagoRules(PentagoState);
         this.availableMinimaxes = [
             new PentagoMinimax(this.rules, 'PentagoMinimax'),

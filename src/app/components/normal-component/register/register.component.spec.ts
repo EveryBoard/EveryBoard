@@ -108,7 +108,7 @@ describe('RegisterComponent', () => {
         expect(getShownError()).toBe(`There are missing fields in the registration form, please check that you filled in all fields.`);
         expect(router.navigate).not.toHaveBeenCalled();
     }));
-    it('should fail if the email is not given', fakeAsync(async() => {
+    it('should fail if the username is not given', fakeAsync(async() => {
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate');
 
@@ -124,7 +124,7 @@ describe('RegisterComponent', () => {
         expect(getShownError()).toBe(`There are missing fields in the registration form, please check that you filled in all fields.`);
         expect(router.navigate).not.toHaveBeenCalled();
     }));
-    it('should fail if the email is not given', fakeAsync(async() => {
+    it('should fail if the password is not given', fakeAsync(async() => {
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate');
 

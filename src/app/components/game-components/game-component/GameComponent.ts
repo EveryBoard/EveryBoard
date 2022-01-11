@@ -9,9 +9,8 @@ import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisp
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { GameState } from 'src/app/jscaip/GameState';
 import { Utils } from 'src/app/utils/utils';
-import { of } from 'rxjs';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-
+import { ErrorLogger } from 'src/app/services/ErrorLogger';
 
 /**
  * All method are to be implemented by the "final" GameComponent classes
@@ -64,7 +63,8 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
      *      - if it's offline, he'll tell the game-component what the bot have done
      */
 
-    constructor(public messageDisplayer: MessageDisplayer) {
+    constructor(public readonly messageDisplayer: MessageDisplayer,
+                public readonly errorLogger: ErrorLogger) {
     }
     public message(msg: string): void {
         this.messageDisplayer.gameMessage(msg);
@@ -94,9 +94,10 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
                 return '';
         }
     }
-    public pass(): Promise<MGPValidation> {
-        Utils.handleError('GameComponent.pass() called on a game that does not redefine it');
-        return of(MGPValidation.failure('GameComponent.pass() called on a game that does not redefine it')).toPromise();
+    public async pass(): Promise<MGPValidation> {
+        const error: string = 'pass() called on a game that does not redefine it';
+        await this.errorLogger.logError('GameComponent', error);
+        return MGPValidation.failure('GameComponent.pass() called on a game that does not redefine it');
     }
     public getTurn(): number {
         return this.rules.node.gameState.turn;

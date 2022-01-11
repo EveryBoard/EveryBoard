@@ -11,6 +11,7 @@ import { Utils } from 'src/app/utils/utils';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { ErrorLogger } from '../ErrorLogger';
 
 class RTDBSpec {
     public static setOfflineMock(): void {
@@ -35,7 +36,7 @@ export class AuthenticationServiceMock {
 
     private currentUser: MGPOptional<AuthUser> = MGPOptional.empty();
 
-    private userRS: ReplaySubject<AuthUser>;
+    private readonly userRS: ReplaySubject<AuthUser>;
 
     constructor() {
         this.userRS = new ReplaySubject<AuthUser>(1);
@@ -116,6 +117,8 @@ async function createGoogleUser(createInDB: boolean): Promise<firebase.auth.User
 describe('AuthenticationService', () => {
     let service: AuthenticationService;
 
+    let errorLogger: ErrorLogger;
+
     const username: string = 'jeanjaja';
     const email: string = 'jean@jaja.europe';
     const password: string = 'hunter2';
@@ -123,6 +126,7 @@ describe('AuthenticationService', () => {
     beforeEach(async() => {
         await setupAuthTestModule();
         service = TestBed.inject(AuthenticationService);
+        errorLogger = TestBed.inject(ErrorLogger);
     });
 
     it('should create', fakeAsync(async() => {
@@ -214,7 +218,7 @@ describe('AuthenticationService', () => {
             expect(result.getReason()).toBe('Your password is too weak, please use a stronger password.');
         });
     });
-    describe('sendVerificationEmail', () => {
+    describe('sendEmailVerification', () => {
         it('should send the email verification', async() => {
             // given a user that just registered and hence is not verified
             expect((await service.doRegister(username, email, password)).isSuccess()).toBeTrue();
@@ -231,15 +235,18 @@ describe('AuthenticationService', () => {
             expect(result).toBe(MGPValidation.SUCCESS);
             expect(user.sendEmailVerification).toHaveBeenCalled();
         });
-        it('should throw if there is no connected user', async() => {
+        it('should fail and log the error if there is no connected user', async() => {
             // given nothing
+            const errorLogger: ErrorLogger = TestBed.inject(ErrorLogger);
+            spyOn(errorLogger, 'logError').and.callThrough();
 
             // when the email verification is requested
-            const result: Promise<MGPValidation> = service.sendEmailVerification();
-            // then it throws because this is not a valid user interaction
+            const result: MGPValidation = await service.sendEmailVerification();
 
-            // then it fails
-            await expectAsync(result).toBeRejectedWithError('Encountered error: Unlogged users cannot request for email verification');
+            // then it fails because this is not a valid user interaction
+            expect(result.isFailure()).toBeTrue();
+            expect(result.getReason()).toBe('AuthenticationService: Unlogged users cannot request for email verification');
+            expect(errorLogger.logError).toHaveBeenCalledWith('AuthenticationService', 'Unlogged users cannot request for email verification');
         });
         it('should throw if the user already verified its email', async() => {
             // given a connected user that is registered and verified, for example through a google account
@@ -375,8 +382,8 @@ describe('AuthenticationService', () => {
         });
     });
     describe('mapFirebaseError', () => {
-        it('calls handleError when encountering an unsupported error', async() => {
-            spyOn(Utils, 'handleError').and.returnValue(null);
+        it('calls logError when encountering an unsupported error', async() => {
+            spyOn(errorLogger, 'logError');
 
             // given an unsupported error
             const error: firebase.FirebaseError = {
@@ -388,11 +395,11 @@ describe('AuthenticationService', () => {
             // when mapping it
             service.mapFirebaseError(error);
 
-            // then handleError is called
-            expect(Utils.handleError).toHaveBeenCalledWith('Unsupported firebase error: auth/unknown-error (Error message)');
+            // then logError is called
+            expect(errorLogger.logError).toHaveBeenCalledWith('AuthenticationService', 'Unsupported firebase error: auth/unknown-error (Error message)');
         });
         it('should map the errors encountered in the wild but that we cannot reproduce in a test environment', async() => {
-            spyOn(Utils, 'handleError').and.returnValue(null);
+            spyOn(errorLogger, 'logError');
             const errorCodes: string[] = [
                 'auth/too-many-requests',
                 'auth/popup-closed-by-user',
@@ -410,7 +417,7 @@ describe('AuthenticationService', () => {
                 service.mapFirebaseError(error);
 
                 // then it is properly handled
-                expect(Utils.handleError).not.toHaveBeenCalled();
+                expect(errorLogger.logError).not.toHaveBeenCalled();
             }
         });
     });
@@ -454,7 +461,7 @@ describe('AuthenticationService', () => {
             const error: firebase.FirebaseError = new Error('Error') as firebase.FirebaseError;
             error.code = 'unknown/error';
             spyOn(user, 'updateProfile').and.rejectWith(error);
-            spyOn(Utils, 'handleError').and.returnValue(null);
+            spyOn(errorLogger, 'logError');
             const result: MGPValidation = await service.setUsername(username);
 
             // then it fails
@@ -502,7 +509,7 @@ describe('AuthenticationService', () => {
             const error: firebase.FirebaseError = new Error('Error') as firebase.FirebaseError;
             error.code = 'unknown/error';
             spyOn(user, 'updateProfile').and.rejectWith(error);
-            spyOn(Utils, 'handleError').and.returnValue(null);
+            spyOn(errorLogger, 'logError');
             const result: MGPValidation = await service.setPicture('http://my.pic/foo.png');
 
             // then it fails

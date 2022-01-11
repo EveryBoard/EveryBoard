@@ -10,6 +10,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { P4Tutorial } from './P4Tutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { ErrorLogger } from 'src/app/services/ErrorLogger';
 
 @Component({
     selector: 'app-p4',
@@ -24,8 +25,8 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
     public last: MGPOptional<Coord>;
     public victoryCoords: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, errorLogger: ErrorLogger) {
+        super(messageDisplayer, errorLogger);
         this.rules = new P4Rules(P4State);
         this.availableMinimaxes = [
             new P4Minimax(this.rules, 'P4Minimax'),

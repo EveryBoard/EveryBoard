@@ -32,7 +32,7 @@ import { Rules } from 'src/app/jscaip/Rules';
 import { Utils } from '../utils';
 import { AutofocusDirective } from 'src/app/directives/autofocus.directive';
 import { ToggleVisibilityDirective } from 'src/app/directives/toggle-visibility.directive';
-import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFirestore, AngularFirestoreModule } from '@angular/fire/firestore';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { AngularFireModule } from '@angular/fire';
 import { USE_EMULATOR as USE_FIRESTORE_EMULATOR } from '@angular/fire/firestore';
@@ -41,6 +41,8 @@ import { USE_EMULATOR as USE_AUTH_EMULATOR } from '@angular/fire/auth';
 import { USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/functions';
 import { environment } from 'src/environments/environment';
 import { MGPOptional } from '../MGPOptional';
+import { ErrorDAO, ErrorLogger } from 'src/app/services/ErrorLogger';
+import { ErrorLoggerMock } from 'src/app/dao/tests/ErrorLoggerMock.spec';
 
 @Component({})
 export class BlankComponent {}
@@ -105,6 +107,7 @@ export class SimpleComponentTestUtils<T> {
                 { provide: JoinerDAO, useClass: JoinerDAOMock },
                 { provide: ChatDAO, useClass: ChatDAOMock },
                 { provide: UserDAO, useClass: UserDAOMock },
+                { provide: ErrorLogger, useClass: ErrorLoggerMock },
             ],
         }).compileComponents();
         AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
@@ -211,6 +214,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
                 { provide: ChatDAO, useClass: ChatDAOMock },
                 { provide: JoinerDAO, useClass: JoinerDAOMock },
                 { provide: PartDAO, useClass: PartDAOMock },
+                { provide: ErrorLogger, useClass: ErrorLoggerMock },
             ],
         }).compileComponents();
         return new ComponentTestUtils<T>(activatedRouteStub);

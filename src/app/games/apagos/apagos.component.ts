@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { GameComponent } from 'src/app/components/game-components/game-component/GameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
+import { ErrorLogger } from 'src/app/services/ErrorLogger';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -70,8 +71,8 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         return upLeft + ' ' + upRight + ' ' + middleMiddleRight + ' ' + middleExtremeRight + ' ' +
                lowCenter + ' ' + middleExtremeLeft + ' ' + middleMiddleLeft;
     }
-    constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    constructor(messageDisplayer: MessageDisplayer, errorLogger: ErrorLogger) {
+        super(messageDisplayer, errorLogger);
         this.rules = new ApagosRules(ApagosState);
         this.availableMinimaxes = [
             new ApagosDummyMinimax(this.rules, 'ApagosDummyMinimax'),

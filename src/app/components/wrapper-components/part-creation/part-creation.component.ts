@@ -13,6 +13,7 @@ import { FirebaseCollectionObserver } from 'src/app/dao/FirebaseCollectionObserv
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { ErrorLogger } from 'src/app/services/ErrorLogger';
 
 interface PartCreationViewInfo {
     userIsCreator: boolean;
@@ -86,13 +87,14 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
     public allDocDeleted: boolean = false;
 
-    public constructor(public router: Router,
-                       public gameService: GameService,
-                       public joinerService: JoinerService,
-                       public chatService: ChatService,
-                       public userService: UserService,
-                       public formBuilder: FormBuilder,
-                       public messageDisplayer: MessageDisplayer)
+    public constructor(private readonly router: Router,
+                       private readonly gameService: GameService,
+                       private readonly joinerService: JoinerService,
+                       private readonly chatService: ChatService,
+                       private readonly userService: UserService,
+                       private readonly formBuilder: FormBuilder,
+                       private readonly messageDisplayer: MessageDisplayer,
+                       private readonly errorLogger: ErrorLogger)
     {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent constructed for ' + this.userName);
     }
@@ -341,11 +343,11 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     private observeCandidates(): void {
         const joiner: IJoiner = Utils.getNonNullable(this.currentJoiner);
         display(PartCreationComponent.VERBOSE, { PartCreation_observeCandidates: joiner });
-        const onDocumentCreated: (foundUser: IUserId[]) => void = (foundUsers: IUserId[]) => {
+        const onDocumentCreated: (foundUser: IUserId[]) => void = async(foundUsers: IUserId[]) => {
             for (const user of foundUsers) {
                 if (user.doc.state === 'offline') {
                     this.removeUserFromLobby(Utils.getNonNullable(user.doc.username));
-                    Utils.handleError('OnlineGameWrapper: ' + user.doc.username + ' is already offline!');
+                    await this.errorLogger.logError('part-creation', user.doc.username + ' is already offline!');
                 }
             }
         };
@@ -356,11 +358,11 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 }
             }
         };
-        const onDocumentDeleted: (deletedUsers: IUserId[]) => void = (deletedUsers: IUserId[]) => {
+        const onDocumentDeleted: (deletedUsers: IUserId[]) => void = async(deletedUsers: IUserId[]) => {
             // This should not happen in practice, but if it does we can safely remove the user from the lobby
             for (const user of deletedUsers) {
                 this.removeUserFromLobby(Utils.getNonNullable(user.doc.username));
-                Utils.handleError('OnlineGameWrapper: ' + user.doc.username + ' was deleted (' + user.id + ')');
+                await this.errorLogger.logError('OnlineGameWrapper', user.doc.username + ' was deleted (' + user.id + ')');
             }
         };
         const callback: FirebaseCollectionObserver<IUser> =

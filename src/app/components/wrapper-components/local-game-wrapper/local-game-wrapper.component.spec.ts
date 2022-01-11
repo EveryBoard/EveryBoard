@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { fakeAsync, tick } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { P4State } from 'src/app/games/p4/P4State';
 import { Player } from 'src/app/jscaip/Player';
 import { P4Move } from 'src/app/games/p4/P4Move';
@@ -12,6 +12,7 @@ import { P4Minimax } from 'src/app/games/p4/P4Minimax';
 import { P4Rules } from 'src/app/games/p4/P4Rules';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { ErrorLogger } from 'src/app/services/ErrorLogger';
 
 describe('LocalGameWrapperComponent', () => {
 
@@ -203,18 +204,18 @@ describe('LocalGameWrapperComponent', () => {
 
             tick(1000);
         }));
-        it('Minimax proposing illegal move should throw', fakeAsync(async() => {
+        it('Minimax proposing illegal move should log error', fakeAsync(async() => {
             // given a board on which some illegal move are possible from the IA
 
+            const errorLogger: ErrorLogger = TestBed.inject(ErrorLogger);
+            spyOn(errorLogger, 'logError');
             spyOn(componentTestUtils.getComponent().rules, 'choose').and.returnValue(false);
             spyOn(componentTestUtils.getComponent().rules.node, 'findBestMove').and.returnValue(P4Move.ZERO);
 
-            // when it's bugged ai's turn to play (and do a illegal move)
-            // then we should get a error throwed
-            const localGameWrapper: LocalGameWrapperComponent = componentTestUtils.wrapper as LocalGameWrapperComponent;
-            const minimax: P4Minimax = new P4Minimax(new P4Rules(P4State), 'P4');
+            // when it's a bugged ai's turn to play (and do a illegal move)
+            // then an error should be logged
             const errorMessage: string = 'AI choosed illegal move (P4Move(0))';
-            expect(() => localGameWrapper.doAIMove(minimax)).toThrowError(errorMessage);
+            expect(errorLogger.logError).toHaveBeenCalledWith('local-game-wrapper', errorMessage);
             tick(1000);
         }));
         it('should not do an AI move when the game is finished', fakeAsync(async() => {

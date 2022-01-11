@@ -9,6 +9,7 @@ import { TaflPieceAndInfluenceMinimax } from '../TaflPieceAndInfluenceMinimax';
 import { TaflPieceAndControlMinimax } from '../TaflPieceAndControlMinimax';
 import { TaflEscapeThenPieceAndControlMinimax } from '../TaflEscapeThenPieceThenControl';
 import { BrandhubTutorial } from './BrandhubTutorial';
+import { ErrorLogger } from 'src/app/services/ErrorLogger';
 
 @Component({
     selector: 'app-brandhub',
@@ -17,8 +18,9 @@ import { BrandhubTutorial } from './BrandhubTutorial';
 })
 export class BrandhubComponent extends TaflComponent<BrandhubRules, BrandhubMove, BrandhubState> {
 
-    public constructor(messageDisplayer: MessageDisplayer) {
+    public constructor(messageDisplayer: MessageDisplayer, errorLogger: ErrorLogger) {
         super(messageDisplayer,
+              errorLogger,
               false,
               BrandhubMove.from);
         this.rules = BrandhubRules.get();

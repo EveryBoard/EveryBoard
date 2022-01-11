@@ -16,6 +16,7 @@ import { GameComponentUtils } from 'src/app/components/game-components/GameCompo
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { SiamFailure } from './SiamFailure';
+import { ErrorLogger } from 'src/app/services/ErrorLogger';
 
 @Component({
     selector: 'app-siam',
@@ -37,8 +38,8 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
     public chosenOrientation: MGPOptional<Orthogonal> = MGPOptional.empty();
     public movedPieces: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, errorLogger: ErrorLogger) {
+        super(messageDisplayer, errorLogger);
         this.rules = new SiamRules(SiamState);
         this.availableMinimaxes = [
             new SiamMinimax(this.rules, 'SiamMinimax'),

@@ -14,6 +14,7 @@ import { PylosFailure } from './PylosFailure';
 import { PylosTutorial } from './PylosTutorial';
 import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { ErrorLogger } from 'src/app/services/ErrorLogger';
 
 @Component({
     selector: 'app-pylos',
@@ -40,8 +41,8 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
 
     private remainingPieces: { [owner: number]: number } = { 0: 15, 1: 15 };
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, errorLogger: ErrorLogger) {
+        super(messageDisplayer, errorLogger);
         this.rules = new PylosRules(PylosState);
         this.availableMinimaxes = [
             new PylosMinimax(this.rules, 'PylosMinimax'),

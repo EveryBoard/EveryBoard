@@ -23,6 +23,7 @@ module.exports = {
             'plugin:jasmine/recommended',
         ],
         rules: {
+            'jasmine/no-spec-dupes': ['error', 'branch'],
             'jasmine/new-line-before-expect': ['off'],
             'jasmine/new-line-between-declarations': ['off'],
             'no-warning-comments': [

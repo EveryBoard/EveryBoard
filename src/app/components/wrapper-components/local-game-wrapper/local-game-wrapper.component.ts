@@ -11,6 +11,7 @@ import { AbstractMinimax } from 'src/app/jscaip/Minimax';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { ErrorLogger } from 'src/app/services/ErrorLogger';
 
 @Component({
     selector: 'app-local-game-wrapper',
@@ -32,7 +33,8 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
     constructor(componentFactoryResolver: ComponentFactoryResolver,
                 actRoute: ActivatedRoute,
                 authenticationService: AuthenticationService,
-                public cdr: ChangeDetectorRef)
+                public cdr: ChangeDetectorRef,
+                private readonly errorLogger: ErrorLogger)
     {
         super(componentFactoryResolver, actRoute, authenticationService);
         this.players = [MGPOptional.of(this.playerSelection[0]), MGPOptional.of(this.playerSelection[1])];
@@ -100,7 +102,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
                 return this.players[playerIndex].equalsValue(a.name);
             }));
     }
-    public doAIMove(playingMinimax: AbstractMinimax): void {
+    public async doAIMove(playingMinimax: AbstractMinimax): Promise<void> {
         // called only when it's AI's Turn
         const ruler: Rules<Move, GameState, unknown> = this.gameComponent.rules;
         const gameStatus: GameStatus = ruler.getGameStatus(ruler.node);
@@ -113,7 +115,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
             this.cdr.detectChanges();
             this.proposeAIToPlay();
         } else {
-            throw new Error('AI choosed illegal move (' + aiMove.toString() + ')');
+            await this.errorLogger.logError('local-game-wrapper', 'AI choosed illegal move (' + aiMove.toString() + ')');
         }
     }
     public canTakeBack(): boolean {

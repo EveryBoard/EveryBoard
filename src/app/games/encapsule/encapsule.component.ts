@@ -13,6 +13,7 @@ import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisp
 import { EncapsuleFailure } from './EncapsuleFailure';
 import { EncapsuleTutorial } from './EncapsuleTutorial';
 import { Utils } from 'src/app/utils/utils';
+import { ErrorLogger } from 'src/app/services/ErrorLogger';
 
 @Component({
     selector: 'app-encapsule',
@@ -25,7 +26,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
                                                                  EncapsuleCase,
                                                                  EncapsuleLegalityInformation>
 {
-    private INTER_PIECE_SPACE: number = 20;
+    private readonly INTER_PIECE_SPACE: number = 20;
     private lastLandingCoord: MGPOptional<Coord> = MGPOptional.empty();
     private lastStartingCoord: MGPOptional<Coord> = MGPOptional.empty();
     private chosenCoord: MGPOptional<Coord> = MGPOptional.empty();
@@ -33,8 +34,8 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     private chosenPieceIndex: number;
     public remainingPieceLeftX: number[][] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    public constructor(messageDisplayer: MessageDisplayer, errorLogger: ErrorLogger) {
+        super(messageDisplayer, errorLogger);
         this.rules = new EncapsuleRules(EncapsuleState);
         this.availableMinimaxes = [
             new EncapsuleMinimax(this.rules, 'EncapsuleMinimax'),

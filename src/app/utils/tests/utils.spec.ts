@@ -16,11 +16,6 @@ describe('utils', () => {
             expect(isJSONPrimitive(undefined)).toBeFalse(); // undefined is not valid in JSON!
         });
     });
-    describe('handleError', () => {
-        it('should throw an error when called', () => {
-            expect(() => Utils.handleError('error')).toThrowError('Encountered error: error');
-        });
-    });
     describe('expectToBe', () => {
         it('should fail when the default case has a different value than expected', () => {
             const value: number = 2;

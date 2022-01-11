@@ -4,6 +4,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { ErrorLogger } from 'src/app/services/ErrorLogger';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -51,7 +52,7 @@ interface LastMoved {
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState> implements OnInit {
-    private static CENTER: Coord[] = [
+    private static readonly CENTER: Coord[] = [
         new Coord(40, 160),
         new Coord(100, 50),
         new Coord(255, 2),
@@ -88,8 +89,8 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
         boardInfo: [],
         remainingPieces: [],
     };
-    constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    constructor(messageDisplayer: MessageDisplayer, errorLogger: ErrorLogger) {
+        super(messageDisplayer, errorLogger);
         this.rules = DiamRules.get();
         this.availableMinimaxes = [
             new DiamDummyMinimax(this.rules, 'DiamDummyMinimax'),

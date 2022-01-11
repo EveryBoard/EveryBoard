@@ -31,7 +31,7 @@ describe('WelcomeComponent', () => {
 
         expect(router.navigate).toHaveBeenCalledWith(['/local/Awale']);
     }));
-    it('should redirect to local game when clicking on the corresponding button', fakeAsync(async() => {
+    it('should redirect to tutorial when clicking on the corresponding button', fakeAsync(async() => {
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate');
 

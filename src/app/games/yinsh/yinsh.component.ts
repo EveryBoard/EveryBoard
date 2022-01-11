@@ -17,6 +17,7 @@ import { YinshLegalityInformation, YinshRules } from './YinshRules';
 import { YinshTutorial } from './YinshTutorial';
 import { Utils } from 'src/app/utils/utils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { ErrorLogger } from 'src/app/services/ErrorLogger';
 
 interface SpaceInfo {
     coord: Coord,
@@ -92,8 +93,8 @@ export class YinshComponent
         sideRings: [5, 5],
         sideRingClass: ['player0-stroke', 'player1-stroke'],
     };
-    constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    constructor(messageDisplayer: MessageDisplayer, errorLogger: ErrorLogger) {
+        super(messageDisplayer, errorLogger);
         this.scores = MGPOptional.of([0, 0]);
         this.rules = new YinshRules(YinshState);
         this.availableMinimaxes = [

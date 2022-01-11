@@ -126,7 +126,7 @@ describe('FirebaseFirestoreDAO', () => {
             await expectAsync(promise).toBePending();
             unsubscribe();
         });
-        it('should not observe document creation when the condition does not hold', async() => {
+        it('should not observe document creation when a double condition does not hold', async() => {
             // This test is flaky: last failure on 22/10/2021
             const callback: FirebaseCollectionObserver<Foo> = new FirebaseCollectionObserver(
                 callbackFunction,

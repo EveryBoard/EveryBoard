@@ -14,6 +14,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { CoerceoTutorial } from './CoerceoTutorial';
+import { ErrorLogger } from 'src/app/services/ErrorLogger';
 
 @Component({
     selector: 'app-coerceo',
@@ -37,8 +38,8 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
 
     public highlights: Coord[] = [];
 
-    constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer);
+    constructor(messageDisplayer: MessageDisplayer, errorLogger: ErrorLogger) {
+        super(messageDisplayer, errorLogger);
         this.scores = MGPOptional.of([0, 0]);
         this.rules = new CoerceoRules(CoerceoState);
         this.availableMinimaxes = [

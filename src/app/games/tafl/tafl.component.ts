@@ -4,6 +4,7 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
 import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { ErrorLogger } from 'src/app/services/ErrorLogger';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -27,10 +28,11 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
     public lastMove: MGPOptional<M> = MGPOptional.empty();
 
     public constructor(messageDisplayer: MessageDisplayer,
+                       errorLogger: ErrorLogger,
                        public VERBOSE: boolean,
                        public generateMove: (start: Coord, end: Coord) => MGPFallible<M>)
     {
-        super(messageDisplayer);
+        super(messageDisplayer, errorLogger);
     }
     public updateBoard(): void {
         display(this.VERBOSE, 'taflComponent.updateBoard');
