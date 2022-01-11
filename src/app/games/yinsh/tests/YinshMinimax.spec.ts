@@ -1,4 +1,4 @@
-import { Coord } from 'src/app/jscaip/Coord';
+/* eslint-disable max-lines-per-function */
 import { Player } from 'src/app/jscaip/Player';
 import { YinshState } from '../YinshState';
 import { YinshMinimax } from '../YinshMinimax';
@@ -147,9 +147,9 @@ describe('YinshMinimax', () => {
             rules.node = new YinshNode(state);
             for (const move of minimax.getListMoves(rules.node)) {
                 move.initialCaptures.forEach((capture: YinshCapture) =>
-                    expect(capture.ringTaken.equals(new Coord(-1, -1))).toBeFalse());
+                    expect(capture.ringTaken.isPresent()).toBeTrue());
                 move.finalCaptures.forEach((capture: YinshCapture) =>
-                    expect(capture.ringTaken.equals(new Coord(-1, -1))).toBeFalse());
+                    expect(capture.ringTaken.isPresent()).toBeTrue());
             }
         });
     });

@@ -40,8 +40,8 @@ import { GameIncluderComponent } from './components/game-components/game-include
 import { RegisterComponent } from './components/normal-component/register/register.component';
 import { LocalGameCreationComponent }
     from './components/normal-component/local-game-creation/local-game-creation.component';
-import { OnlineGameCreationComponent }
-    from './components/normal-component/online-game-creation/online-game-creation.component';
+import { OnlineGameSelectionComponent }
+    from './components/normal-component/online-game-selection/online-game-selection.component';
 import { TutorialGameCreationComponent }
     from './components/normal-component/tutorial-game-creation/tutorial-game-creation.component';
 import { HumanDuration } from './utils/TimeUtils';
@@ -52,6 +52,7 @@ import { ApagosComponent } from './games/apagos/apagos.component';
 import { AwaleComponent } from './games/awale/awale.component';
 import { BrandhubComponent } from './games/tafl/brandhub/brandhub.component';
 import { CoerceoComponent } from './games/coerceo/coerceo.component';
+import { ConspirateursComponent } from './games/conspirateurs/conspirateurs.component';
 import { DiamComponent } from './games/diam/diam.component';
 import { DvonnComponent } from './games/dvonn/dvonn.component';
 import { EncapsuleComponent } from './games/encapsule/encapsule.component';
@@ -90,6 +91,7 @@ import { ToggleVisibilityDirective } from './directives/toggle-visibility.direct
 import { ResetPasswordComponent } from './components/normal-component/reset-password/reset-password.component';
 import { ThemeService } from './services/ThemeService';
 import { SettingsComponent } from './components/normal-component/settings/settings.component';
+import { OnlineGameCreationComponent } from './components/normal-component/online-game-creation/online-game-creation.component';
 
 registerLocaleData(localeFr);
 
@@ -103,7 +105,8 @@ const routes: Route [] = [
     { path: 'nextGameLoading', component: NextGameLoadingComponent, canActivate: [VerifiedAccountGuard] },
     { path: 'verify-account', component: VerifyAccountComponent, canActivate: [ConnectedButNotVerifiedGuard] },
 
-    { path: 'play', component: OnlineGameCreationComponent, canActivate: [VerifiedAccountGuard] },
+    { path: 'play', component: OnlineGameSelectionComponent, canActivate: [VerifiedAccountGuard] },
+    { path: 'play/:compo', component: OnlineGameCreationComponent, canActivate: [VerifiedAccountGuard] },
     { path: 'play/:compo/:id', component: OnlineGameWrapperComponent, canActivate: [VerifiedAccountGuard] },
     { path: 'local', component: LocalGameCreationComponent },
     { path: 'local/:compo', component: LocalGameWrapperComponent },
@@ -132,7 +135,7 @@ const routes: Route [] = [
         TutorialGameWrapperComponent,
         GameIncluderComponent,
         LocalGameCreationComponent,
-        OnlineGameCreationComponent,
+        OnlineGameSelectionComponent,
         TutorialGameCreationComponent,
         VerifyAccountComponent,
         ResetPasswordComponent,
@@ -143,6 +146,7 @@ const routes: Route [] = [
         AwaleComponent,
         BrandhubComponent,
         CoerceoComponent,
+        ConspirateursComponent,
         DiamComponent,
         DvonnComponent,
         EncapsuleComponent,

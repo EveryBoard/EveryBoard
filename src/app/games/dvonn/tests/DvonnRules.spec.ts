@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { DvonnPieceStack } from '../DvonnPieceStack';
 import { DvonnState } from '../DvonnState';
 import { Coord } from 'src/app/jscaip/Coord';

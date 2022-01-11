@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { MGPFallible } from '../MGPFallible';
 import { MGPValidation } from '../MGPValidation';
 

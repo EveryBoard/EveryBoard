@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 import { QuartoComponent } from '../quarto.component';
 import { QuartoMove } from 'src/app/games/quarto/QuartoMove';

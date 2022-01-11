@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { PylosCoord } from '../PylosCoord';
 import { PylosMinimax } from '../PylosMinimax';
 import { PylosMove } from '../PylosMove';

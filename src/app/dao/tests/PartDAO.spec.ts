@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { TestBed } from '@angular/core/testing';
 import { IPart, MGPResult } from 'src/app/domain/icurrentpart';
 import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';

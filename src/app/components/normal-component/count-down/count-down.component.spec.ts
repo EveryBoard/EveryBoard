@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { DebugElement } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -135,17 +136,17 @@ describe('CountDownComponent', () => {
         it('Should be safe style when upper than limit', () => {
             component.dangerTimeLimit = 10 * 1000;
             component.setDuration(12 * 1000);
-            expect(component.getTimeStyle()).toEqual(component.SAFE_TIME);
+            expect(component.getTimeClass()).toEqual(component.SAFE_TIME);
         });
         it('Should be first danger style when lower than limit and even remaining second', () => {
             component.dangerTimeLimit = 10 * 1000;
             component.setDuration(9 * 1000);
-            expect(component.getTimeStyle()).toEqual(component.DANGER_TIME_EVEN);
+            expect(component.getTimeClass()).toEqual(component.DANGER_TIME_EVEN);
         });
         it('Should be second danger style when lower than limit and odd remaining second', () => {
             component.dangerTimeLimit = 10 * 1000;
             component.setDuration(8 * 1000);
-            expect(component.getTimeStyle()).toEqual(component.DANGER_TIME_ODD);
+            expect(component.getTimeClass()).toEqual(component.DANGER_TIME_ODD);
         });
         it('Should be in passive style when passive', () => {
             // given a chrono that could be in danger time style
@@ -155,7 +156,7 @@ describe('CountDownComponent', () => {
             component.active = false;
 
             // then it should still be in passive style
-            expect(component.getTimeStyle()).toEqual(component.PASSIVE_STYLE);
+            expect(component.getTimeClass()).toEqual(component.PASSIVE_STYLE);
         });
     });
 });

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { KamisadoState } from '../KamisadoState';
 import { KamisadoRules } from '../KamisadoRules';

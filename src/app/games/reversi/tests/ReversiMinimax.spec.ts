@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { Player } from 'src/app/jscaip/Player';
 import { ReversiMinimax } from '../ReversiMinimax';
 import { ReversiMove } from '../ReversiMove';
@@ -40,7 +41,7 @@ describe('ReversiMinimax', () => {
         const state: ReversiState = new ReversiState(board, 2);
         rules.node = new ReversiNode(state);
         const bestMove: ReversiMove = rules.node.findBestMove(2, minimax);
-        expect(bestMove.equals(new ReversiMove(0, 0)));
+        expect(bestMove.equals(new ReversiMove(0, 0))).toBeTrue();
     });
     it('Should propose passing move when no other moves are possible', () => {
         const board: Table<Player> = [

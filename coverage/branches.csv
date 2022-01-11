@@ -12,15 +12,12 @@ GoGroupsDatas.ts,5
 HexagonalGameState.ts,3
 LinesOfActionRules.ts,1
 MGPNode.ts,1
-Minimax.ts,1
 online-game-wrapper.component.ts,11
 ObjectUtils.ts,3
-part-creation.component.ts,3
 Player.ts,1
 PylosState.ts,1
 PositionalEpaminondasMinimax.ts,1
 QuartoHasher.ts,1
 QuartoRules.ts,3
-Rules.ts,1
 SixMinimax.ts,6
 SiamPiece.ts,1

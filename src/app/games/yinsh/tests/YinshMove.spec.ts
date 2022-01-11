@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { EncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -16,11 +17,14 @@ describe('YinshCapture', () => {
     });
     describe('of', () => {
         it('should return the capture with all coords from start to end', () => {
-            const capture: YinshCapture = new YinshCapture([
-                new Coord(2, 3), new Coord(3, 3),
-                new Coord(4, 3), new Coord(5, 3), new Coord(6, 3),
-            ],
-                                                           new Coord(4, 4));
+            const markers: Coord[] = [
+                new Coord(2, 3),
+                new Coord(3, 3),
+                new Coord(4, 3),
+                new Coord(5, 3),
+                new Coord(6, 3),
+            ];
+            const capture: YinshCapture = new YinshCapture(markers, new Coord(4, 4));
             expect(YinshCapture.of(new Coord(2, 3), new Coord(6, 3), new Coord(4, 4)).equals(capture)).toBeTrue();
         });
     });

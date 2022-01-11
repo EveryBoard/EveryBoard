@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { SiamRules, SiamNode } from '../SiamRules';
 import { SiamPiece } from '../SiamPiece';
 import { SiamState } from '../SiamState';

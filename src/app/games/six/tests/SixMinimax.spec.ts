@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
@@ -225,7 +226,7 @@ describe('SixMinimax', () => {
             ], 40);
             const move: SixMove = SixMove.fromDrop(new Coord(1, 1));
             const node: SixNode = new SixNode(state, MGPOptional.empty(), MGPOptional.of(move));
-            expect(minimax.getBoardNumericValue(node)).toBe(2);
+            expect(minimax.getBoardValue(node).value).toBe(2);
         });
     });
 });

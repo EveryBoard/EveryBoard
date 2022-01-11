@@ -1,13 +1,52 @@
-import { assert, JSONValue, JSONValueWithoutArray } from 'src/app/utils/utils';
+import { assert, JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 
 export abstract class Encoder<T> {
-
     public abstract encode(t: T): JSONValue;
 
     public abstract decode(encoded: JSONValue): T;
 }
 
 export abstract class MoveEncoder<T> extends Encoder<T> {
+
+    public static disjunction3<T1, T2, T3>(encoder1: MoveEncoder<T1>,
+                                           encoder2: MoveEncoder<T2>,
+                                           encoder3: MoveEncoder<T3>,
+                                           isT1: (v: T1 | T2 | T3) => v is T1,
+                                           isT2: (v: T1 | T2 | T3) => v is T2)
+    : MoveEncoder<T1 | T2 | T3> {
+        return new class extends MoveEncoder<T1 | T2 | T3> {
+            public encodeMove(value: T1 | T2 | T3): JSONValueWithoutArray {
+                if (isT1(value)) {
+                    return {
+                        type: 'T1',
+                        encoded: encoder1.encode(value),
+                    };
+                } else if (isT2(value)) {
+                    return {
+                        type: 'T2',
+                        encoded: encoder2.encode(value),
+                    };
+                } else {
+                    return {
+                        type: 'T3',
+                        encoded: encoder3.encode(value),
+                    };
+                }
+            }
+            public decodeMove(encoded: JSONValueWithoutArray): T1 | T2 | T3 {
+                const type_: string = Utils.getNonNullable(encoded)['type'];
+                const content: JSONValue = Utils.getNonNullable(encoded)['encoded'] as JSONValue;
+                if (type_ === 'T1') {
+                    return encoder1.decode(content);
+                } else if (type_ === 'T2') {
+                    return encoder2.decode(content);
+                } else {
+                    return encoder3.decode(content);
+                }
+            }
+        };
+    }
+
 
     public encode(t: T): JSONValue {
         return this.encodeMove(t);

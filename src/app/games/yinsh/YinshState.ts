@@ -35,6 +35,13 @@ export class YinshState extends HexagonalGameState<YinshPiece> {
     public isInitialPlacementPhase(): boolean {
         return this.turn < 10;
     }
+    public countScores(): [number, number] {
+        if (this.turn < 10) {
+            return [0, 0];
+        } else {
+            return this.sideRings;
+        }
+    }
     public equals(other: YinshState): boolean {
         if (this === other) return true;
         if (this.turn !== other.turn) return false;

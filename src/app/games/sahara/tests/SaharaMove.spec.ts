@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { SaharaRules } from '../SaharaRules';
 import { SaharaMinimax } from '../SaharaMinimax';
 import { SaharaMove } from '../SaharaMove';

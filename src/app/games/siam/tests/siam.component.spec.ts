@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { SiamComponent } from '../siam.component';
 import { SiamMove } from 'src/app/games/siam/SiamMove';
 import { Orthogonal } from 'src/app/jscaip/Direction';

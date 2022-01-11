@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { AwaleComponent } from '../awale.component';
 import { AwaleMove } from 'src/app/games/awale/AwaleMove';
 import { AwaleState } from 'src/app/games/awale/AwaleState';

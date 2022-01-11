@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { P4Move } from 'src/app/games/p4/P4Move';
 import { MGPNode } from '../MGPNode';
 import { GameStatus, Rules } from '../Rules';

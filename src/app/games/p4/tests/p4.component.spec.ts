@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 import { P4Component } from '../p4.component';
 import { P4Move } from 'src/app/games/p4/P4Move';

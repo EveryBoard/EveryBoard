@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
@@ -24,6 +25,7 @@ import { GameWrapperMessages } from '../../wrapper-components/GameWrapper';
 import { LocalGameWrapperComponent } from '../../wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { AbstractGameComponent } from './GameComponent';
 import { Utils } from 'src/app/utils/utils';
+import { Coord } from 'src/app/jscaip/Coord';
 
 describe('GameComponent', () => {
 
@@ -91,6 +93,7 @@ describe('GameComponent', () => {
             Awale: { onClick: [0, 0] },
             Brandhub: { onClick: [0, 0] },
             Coerceo: { onClick: [0, 0] },
+            Conspirateurs: { onClick: [new Coord(0, 0)] },
             Diam: {
                 onSpaceClick: [0],
                 onPieceInGameClick: [0, 0],

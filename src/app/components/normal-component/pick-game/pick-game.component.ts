@@ -4,6 +4,7 @@ import { ApagosComponent } from 'src/app/games/apagos/apagos.component';
 import { AwaleComponent } from 'src/app/games/awale/awale.component';
 import { BrandhubComponent } from 'src/app/games/tafl/brandhub/brandhub.component';
 import { CoerceoComponent } from 'src/app/games/coerceo/coerceo.component';
+import { ConspirateursComponent } from 'src/app/games/conspirateurs/conspirateurs.component';
 import { DiamComponent } from 'src/app/games/diam/diam.component';
 import { DvonnComponent } from 'src/app/games/dvonn/dvonn.component';
 import { EncapsuleComponent } from 'src/app/games/encapsule/encapsule.component';
@@ -38,6 +39,8 @@ class GameDescription {
     public static readonly BRANDHUB: Localized = () => $localize`The Irish version of the Tafl game family!`;
 
     public static readonly COERCEO: Localized = () => $localize`Get rid of all of your opponent's pieces on a board that shrinks little by little!`;
+
+    public static readonly CONSPIRATEURS: Localized = () => $localize`Hide all of your pieces before your opponent does, or risk to be discovered!`;
 
     public static readonly DIAM: Localized = () => $localize`Drop your pieces and move them around to align two pieces of the same color across the board to win!`;
 
@@ -111,6 +114,7 @@ export class GameInfo {
         new GameInfo($localize`Apagos`, 'Apagos', ApagosComponent, new Date('2021-11-04'), GameDescription.APAGOS()), // 4 month after Abalone
         new GameInfo($localize`Diam`, 'Diam', DiamComponent, new Date('2021-11-30'), GameDescription.DIAM()), // 4 months after Yinsh *Quentin
         new GameInfo($localize`Brandhub`, 'Brandhub', BrandhubComponent, new Date('2021-12-07'), GameDescription.BRANDHUB()), // 33 days after Apagos
+        new GameInfo($localize`Conspirateurs`, 'Conspirateurs', ConspirateursComponent, new Date('2021-12-30'), GameDescription.CONSPIRATEURS()), // 30 days after Diam *Quentin
     ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
     // After Apagos: median = 26d; average = 53d
     // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m

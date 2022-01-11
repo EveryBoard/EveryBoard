@@ -33,7 +33,7 @@
     <g *ngFor="let capture of possibleCaptures; index as i"
        pointer-events="fill"
        class="capturable">
-        <polyline *ngFor="let case of capture.capturedCases"
+        <polyline *ngFor="let case of capture.capturedSpaces"
                   [attr.points]="getHexaCoordsAt(case)"
                   (click)="onClick(case)"
                   class="no-fill"

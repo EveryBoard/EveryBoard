@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { GoPiece } from '../GoState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GoGroupDatas } from 'src/app/games/go/GoGroupsDatas';
