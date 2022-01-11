@@ -9,8 +9,9 @@ if len(sys.argv) < 2:
     print('Usage: %s [generate|check]' % sys.argv[0])
     exit(1)
 
-def sort_function(x):
-    return str.lower(x)
+def sort_function(file_and_coverage):
+    return str.lower(file_and_coverage[0])
+
 def to_missing(x):
     "Converts from the string AA/BB to the number BB-AA"
     [low, high] = x.split('/')
