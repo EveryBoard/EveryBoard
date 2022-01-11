@@ -4,7 +4,7 @@ import { Environment } from './environment-type';
 export const environment: Environment = {
     production: true,
     test: false,
-    root: '/board-dev/',
+    root: '/',
     firebaseConfig: firebaseConfig,
     emulatorConfig: {
         firestore: undefined,
