@@ -9,11 +9,9 @@ GoGroupsDatas.ts,4
 HexagonalGameState.ts,6
 LinesOfActionRules.ts,1
 MGPNode.ts,1
-Minimax.ts,2
 NodeUnheritance.ts,1
 online-game-wrapper.component.ts,9
 ObjectUtils.ts,2
-part-creation.component.ts,6
 PositionalEpaminondasMinimax.ts,1
 PylosState.ts,2
 PieceThreat.ts,1

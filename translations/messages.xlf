@@ -113,6 +113,9 @@
       <trans-unit id="2776505193142258762" datatype="html">
         <source>Get rid of all of your opponent&apos;s pieces on a board that shrinks little by little!</source>
       </trans-unit>
+      <trans-unit id="1528017893097093154" datatype="html">
+        <source>Hide all of your pieces before your opponent does, or risk to be discovered!</source>
+      </trans-unit>
       <trans-unit id="1337301714912876574" datatype="html">
         <source>Drop your pieces and move them around to align two pieces of the same color across the board to win!</source>
       </trans-unit>
@@ -242,6 +245,9 @@
       <trans-unit id="947579386294731197" datatype="html">
         <source>Brandhub</source>
       </trans-unit>
+      <trans-unit id="4214831981215024999" datatype="html">
+        <source>Conspirateurs</source>
+      </trans-unit>
       <trans-unit id="2218572265318708454" datatype="html">
         <source>Registering</source>
       </trans-unit>
@@ -356,11 +362,11 @@
       <trans-unit id="3862672024084051383" datatype="html">
         <source>You have not verified your email! Click on the link in the verification email.</source>
       </trans-unit>
-      <trans-unit id="3318133641595899163" datatype="html">
-        <source>AwesomBoard</source>
+      <trans-unit id="5723949445116321937" datatype="html">
+        <source>EveryBoard</source>
       </trans-unit>
-      <trans-unit id="3620319853901130962" datatype="html">
-        <source>AwesomBoard is a website to play and learn the rules of various abstract strategy games with perfect information.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Such games are games that do not include any randomness, agility, or hidden information. These games are played by two players, turn by turn.</source>
+      <trans-unit id="6808393327735679948" datatype="html">
+        <source>EveryBoard is a website to play and learn the rules of various abstract strategy games with perfect information.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Such games are games that do not include any randomness, agility, or hidden information. These games are played by two players, turn by turn.</source>
       </trans-unit>
       <trans-unit id="7079545056368231407" datatype="html">
         <source>See the game list</source>
@@ -935,6 +941,69 @@
       <trans-unit id="710072872152309867" datatype="html">
         <source>Congratulations! See, your piece no longer had any empty neighboring space after you have gained the tile, but it stayed on the board as it was your turn.
         However, the opponent&apos;s piece has disappeared because the tile&apos;s capture has removed its last empty neighboring space.</source>
+      </trans-unit>
+      <trans-unit id="4237198021995785268" datatype="html">
+        <source>Your piece should land on a neighboring square.</source>
+      </trans-unit>
+      <trans-unit id="6331318865941875967" datatype="html">
+        <source>You cannot drop a piece during the moving phase.</source>
+      </trans-unit>
+      <trans-unit id="1634970085488730747" datatype="html">
+        <source>You cannot move a piece before both players have dropped all of their pieces.</source>
+      </trans-unit>
+      <trans-unit id="320724128460521577" datatype="html">
+        <source>A jump must be made over a piece, not over an empty square.</source>
+      </trans-unit>
+      <trans-unit id="6834108574871302489" datatype="html">
+        <source>A drop must occur in the central zone of the board.</source>
+      </trans-unit>
+      <trans-unit id="8451838259581996755" datatype="html">
+        <source>A jump must land two squares from its original position, and be done in a straight line in any direction.</source>
+      </trans-unit>
+      <trans-unit id="309495911608325428" datatype="html">
+        <source>You are visiting the same location twice in a move, you are not allowed to do so.</source>
+      </trans-unit>
+      <trans-unit id="9123148140915098130" datatype="html">
+        <source>Board and aim of the game</source>
+      </trans-unit>
+      <trans-unit id="3408052490903167189" datatype="html">
+        <source>Conspirateurs is played on a 17x17 board. The goal of the game is to place all of your pieces in shelters, which are the special squares on the edge of the board. Note the central zone in the middle of the board, where each player will put their pieces initially.</source>
+      </trans-unit>
+      <trans-unit id="5390926924373994130" datatype="html">
+        <source>Initial phase</source>
+      </trans-unit>
+      <trans-unit id="2655986823906349764" datatype="html">
+        <source>In the initial phase of the game, each player drop their 20 pieces, one per turn consecutively, in the central zone of the board. This phase does not allow any other kind of move.&lt;br/&gt;&lt;br/&gt;Drop one of your piece in the central zone.</source>
+      </trans-unit>
+      <trans-unit id="6144661124534225012" datatype="html">
+        <source>Simple move</source>
+      </trans-unit>
+      <trans-unit id="8533679028139934991" datatype="html">
+        <source>Once all pieces have been placed, there are two kind of moves that can be performed. The first is a simple move in any direction, orthogonally or diagonally, of a single step.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Click on one of your piece and perform such a move.</source>
+      </trans-unit>
+      <trans-unit id="2743282536649096025" datatype="html">
+        <source>You have made a jump, not a simple move. Try again!</source>
+      </trans-unit>
+      <trans-unit id="5311709353029708811" datatype="html">
+        <source>Jumps</source>
+      </trans-unit>
+      <trans-unit id="2921068171153120605" datatype="html">
+        <source>The other type of move is a jump. A piece can jump over a neighboring piece in any direction, as long as it lands directly on the square after that piece, along the same direction.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Perform a jump by clicking on one of your piece that can perform a jump, and then on the target square. You may need to click a second time on the target square to confirm your jump, in case your piece is still highlighted (we will see shortly why this is useful).</source>
+      </trans-unit>
+      <trans-unit id="7444294966169001535" datatype="html">
+        <source>You have not performed a jump. Try again!</source>
+      </trans-unit>
+      <trans-unit id="514608014907395319" datatype="html">
+        <source>Chaining jumps in a single move</source>
+      </trans-unit>
+      <trans-unit id="2017314282165555162" datatype="html">
+        <source>Jumps can be chained when possible. You can decide whether to continue a jump or to stop it at any time. To finish your jump, click a second time on your current location. Otherwise, simply keep clicking on your next location. Once no more destination is possible, your move will end without you needing to click the piece a second time.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark and you can perform a triple jump! Do it.</source>
+      </trans-unit>
+      <trans-unit id="7823212119691946554" datatype="html">
+        <source>Congratulations! You now know everything to play the game. Remember: to win, you have to place all of your pieces in shelters before your opponent does.</source>
+      </trans-unit>
+      <trans-unit id="5361555826660205972" datatype="html">
+        <source>You have not performed a triple jump. Try again!</source>
       </trans-unit>
       <trans-unit id="3460005588993308010" datatype="html">
         <source>You do not have any pieces of this type anymore.</source>
@@ -1632,9 +1701,6 @@
       </trans-unit>
       <trans-unit id="821589059503120913" datatype="html">
         <source>The goal at Pentago is to align 5 of your pieces. In the following board, Dark wins.</source>
-      </trans-unit>
-      <trans-unit id="6144661124534225012" datatype="html">
-        <source>Simple move</source>
       </trans-unit>
       <trans-unit id="3238348765317457854" datatype="html">
         <source>At their turn, players put a piece on the board and possibly rotate one quadrant.

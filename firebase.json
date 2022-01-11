@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "pantheonsgame",
+    "public": "everyboard",
     "ignore": [
       "firebase.json",
       "**/.*",

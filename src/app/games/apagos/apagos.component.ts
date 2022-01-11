@@ -194,13 +194,6 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         xOffset += (x * this.SPACE_SIZE);
         return 'translate(' + xOffset + ', ' + yOffset + ')';
     }
-    public range(n: number): number[] {
-        const range: number[] = [];
-        for (let i: number = 0; i < n; i++) {
-            range.push(i);
-        }
-        return range;
-    }
     public getSquareClasses(x: number): string[] {
         const classes: string[] = ['base'];
         if (this.selectedPiece.isPresent() && this.selectedPiece.get().square === x) {
