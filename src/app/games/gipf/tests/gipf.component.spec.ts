@@ -46,13 +46,13 @@ describe('GipfComponent', () => {
         expect(componentTestUtils.getComponent().arrows.length).toBe(3);
         expect(componentTestUtils.getComponent().arrows.some((arrow: Arrow) => {
             return arrow.source.equals(new Coord(6, 3)) && arrow.destination.equals(new Coord(5, 3));
-        }));
+        })).toBeTrue();
         expect(componentTestUtils.getComponent().arrows.some((arrow: Arrow) => {
             return arrow.source.equals(new Coord(6, 3)) && arrow.destination.equals(new Coord(5, 4));
-        }));
+        })).toBeTrue();
         expect(componentTestUtils.getComponent().arrows.some((arrow: Arrow) => {
             return arrow.source.equals(new Coord(6, 3)) && arrow.destination.equals(new Coord(6, 2));
-        }));
+        })).toBeTrue();
     }));
     it('should not accept selecting something else than one of the proposed direction', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_6_3');
