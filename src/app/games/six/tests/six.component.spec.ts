@@ -39,7 +39,7 @@ describe('SixComponent', () => {
         const move: SixMove = SixMove.fromDrop(new Coord(0, 2));
         await componentTestUtils.expectMoveSuccess('#neighbor_0_2', move);
     }));
-    it('Should do deplacement after the 39th turn and show left coords', fakeAsync(async() => {
+    it('Should do movement after the 39th turn and show left coords', fakeAsync(async() => {
         const board: NumberTable = [
             [O],
             [X],
@@ -54,7 +54,7 @@ describe('SixComponent', () => {
         const gameComponent: SixComponent = componentTestUtils.getComponent();
         await componentTestUtils.expectClickSuccess('#piece_0_0');
         componentTestUtils.expectElementToExist('#selectedPiece_0_0');
-        const move: SixMove = SixMove.fromDeplacement(new Coord(0, 0), new Coord(0, 6));
+        const move: SixMove = SixMove.fromMovement(new Coord(0, 0), new Coord(0, 6));
         await componentTestUtils.expectMoveSuccess('#neighbor_0_6', move);
 
         componentTestUtils.expectElementToExist('#leftCoord_0_-1');
@@ -109,7 +109,7 @@ describe('SixComponent', () => {
         componentTestUtils.setupState(state);
 
         await componentTestUtils.expectClickSuccess('#piece_0_0');
-        const move: SixMove = SixMove.fromDeplacement(new Coord(0, 0), new Coord(-1, 1));
+        const move: SixMove = SixMove.fromMovement(new Coord(0, 0), new Coord(-1, 1));
         await componentTestUtils.expectMoveSuccess('#neighbor_-1_1', move);
         componentTestUtils.expectElementToExist('#victoryCoord_0_0');
         componentTestUtils.expectElementToExist('#victoryCoord_5_0');
@@ -137,7 +137,7 @@ describe('SixComponent', () => {
         componentTestUtils.expectElementToExist('#disconnected_2_3');
     }));
     it('should cancel move when clicking on piece before 40th turn', fakeAsync(async() => {
-        await componentTestUtils.expectClickFailure('#piece_0_0', SixFailure.NO_DEPLACEMENT_BEFORE_TURN_40());
+        await componentTestUtils.expectClickFailure('#piece_0_0', SixFailure.NO_MOVEMENT_BEFORE_TURN_40());
     }));
     it('should cancel move when clicking on empty case as first click after 40th turn', fakeAsync(async() => {
         const board: NumberTable = [
