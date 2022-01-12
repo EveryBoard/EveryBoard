@@ -252,7 +252,7 @@ describe('GameService', () => {
             });
 
             // when accepting rematch
-            await service.acceptRematch(lastPart, Player.ONE, 5);
+            await service.acceptRematch(lastPart, 5, Player.ONE);
 
             // then we should have a part created with playerOne and playerZero switched
             expect(called).toBeTrue();
@@ -299,7 +299,7 @@ describe('GameService', () => {
             });
 
             // when accepting rematch
-            await service.acceptRematch(lastPart, Player.ONE, 5);
+            await service.acceptRematch(lastPart, 5, Player.ONE);
 
             // then we should have a part created with playerOne and playerZero switched
             expect(called).toBeTrue();
@@ -358,40 +358,28 @@ describe('GameService', () => {
         }));
     });
     describe('acceptDraw', () => {
-        it('should send AGREED_DRAW_BY_ONE when call as Player.ONE', () => {
-            // Given any state of service
-            spyOn(partDAO, 'update');
+        for (const player of [Player.ZERO, Player.ONE]) {
+            it('should send AGREED_DRAW_BY_ZERO/ONE when call as ZERO/ONE', () => {
+                // Given any state of service
+                spyOn(partDAO, 'update');
 
-            // When calling acceptDraw as Player.ONE
-            service.acceptDraw('joinerId', 5, Player.ONE);
+                // When calling acceptDraw as Player.ONE
+                service.acceptDraw('joinerId', 5, player);
 
-            // Then PartDAO should have been called with AGREED_DRAW_BY_ONE
-            expect(partDAO.update).toHaveBeenCalledOnceWith('joinerId', {
-                lastUpdate: {
-                    index: 6,
-                    player: Player.ONE.value,
-                },
-                request: null,
-                result: MGPResult.AGREED_DRAW_BY_ONE.value,
+                // Then PartDAO should have been called with AGREED_DRAW_BY_ONE
+                const result: number = [
+                    MGPResult.AGREED_DRAW_BY_ZERO.value,
+                    MGPResult.AGREED_DRAW_BY_ONE.value][player.value];
+                expect(partDAO.update).toHaveBeenCalledOnceWith('joinerId', {
+                    lastUpdate: {
+                        index: 6,
+                        player: player.value,
+                    },
+                    request: null,
+                    result,
+                });
             });
-        });
-        it('should send AGREED_DRAW_BY_ZERO when call as Player.ZERO', () => {
-            // Given any state of service
-            spyOn(partDAO, 'update');
-
-            // When calling acceptDraw as Player.ONE
-            service.acceptDraw('joinerId', 5, Player.ZERO);
-
-            // Then PartDAO should have been called with AGREED_DRAW_BY_ONE
-            expect(partDAO.update).toHaveBeenCalledOnceWith('joinerId', {
-                lastUpdate: {
-                    index: 6,
-                    player: Player.ZERO.value,
-                },
-                request: null,
-                result: MGPResult.AGREED_DRAW_BY_ZERO.value,
-            });
-        });
+        }
     });
     afterEach(() => {
         service.ngOnDestroy();

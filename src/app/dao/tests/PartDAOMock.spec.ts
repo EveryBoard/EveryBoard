@@ -28,17 +28,17 @@ export class PartDAOMock extends FirebaseFirestoreDAOMock<IPart> {
     public async updateAndBumpIndex(id: string,
                                     user: Player,
                                     lastIndex: number,
-                                    modification: Partial<IPart>)
+                                    update: Partial<IPart>)
     : Promise<void>
     {
-        modification = {
-            ...modification,
+        update = {
+            ...update,
             lastUpdate: {
                 index: lastIndex + 1,
                 player: user.value,
             },
         };
-        return this.update(id, modification);
+        return this.update(id, update);
     }
     public observeActivesParts(callback: FirebaseCollectionObserver<IPart>): () => void {
         return this.observingWhere([['result', '==', MGPResult.UNACHIEVED.value]], callback);

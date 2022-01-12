@@ -149,17 +149,6 @@ export class CountDownComponent implements OnInit, OnDestroy {
             return CountDownComponent.SAFE_TIME;
         }
     }
-    public getBackgroundColor(): { [key: string]: string } {
-        if (this.active === false) {
-            return { 'background-color': 'darkgrey' };
-        }
-        if (this.remainingMs < this.dangerTimeLimit) {
-            if (this.remainingMs % 2000 < 1000) {
-                return { 'background-color': 'red' };
-            }
-        }
-        return {};
-    }
     private updateShownTime(): void {
         const now: number = Date.now();
         this.remainingMs -= (now - this.startTime);

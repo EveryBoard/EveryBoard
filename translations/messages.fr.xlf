@@ -607,7 +607,7 @@
         <target>Votre proposition de match nul a été acceptée.</target>
       </trans-unit>
       <trans-unit id="4530815769033051580" datatype="html">
-        <source>Agreed draw.</source>
+        <source>Players agreed to draw.</source>
         <target>Un match nul a été convenu.</target>
       </trans-unit>
       <trans-unit id="2826140657122926749" datatype="html">

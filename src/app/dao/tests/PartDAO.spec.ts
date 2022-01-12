@@ -33,22 +33,22 @@ describe('PartDAO', () => {
         it('Should delegate to update and bump index', () => {
             // Given a PartDAO and an update to make to the part
             spyOn(dao, 'update').and.resolveTo();
-            const modifications: Partial<IPart> = {
+            const update: Partial<IPart> = {
                 turn: 42,
             };
 
             // When calling updateAndBumpIndex
-            dao.updateAndBumpIndex('partId', Player.ZERO, 73, modifications);
+            dao.updateAndBumpIndex('partId', Player.ZERO, 73, update);
 
             // Then update should have been called with lastUpdate infos added to it
-            const expectedModifications: Partial<IPart> = {
+            const expectedUpdate: Partial<IPart> = {
                 lastUpdate: {
                     index: 74,
                     player: Player.ZERO.value,
                 },
                 turn: 42,
             };
-            expect(dao.update).toHaveBeenCalledOnceWith('partId', expectedModifications);
+            expect(dao.update).toHaveBeenCalledOnceWith('partId', expectedUpdate);
         });
     });
 });

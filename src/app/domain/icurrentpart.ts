@@ -69,7 +69,7 @@ export class Part implements DomainWrapper<IPart> {
         if (this.doc.result === MGPResult.AGREED_DRAW_BY_ZERO.value) {
             return this.doc.playerZero;
         } else {
-            assert(this.doc.result === MGPResult.AGREED_DRAW_BY_ONE.value, 'should not ask draw accepter when no draw accepted!');
+            assert(this.doc.result === MGPResult.AGREED_DRAW_BY_ONE.value, 'should not access getDrawAccepter when no draw accepted!');
             return Utils.getNonNullable(this.doc.playerOne);
         }
     }

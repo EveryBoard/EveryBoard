@@ -130,8 +130,8 @@ export class GameService implements OnDestroy {
     }
     private startGameWithConfig(partId: string, user: Player, lastIndex: number, joiner: IJoiner): Promise<void> {
         display(GameService.VERBOSE, 'GameService.startGameWithConfig(' + partId + ', ' + JSON.stringify(joiner));
-        const modification: StartingPartConfig = this.getStartingConfig(joiner);
-        return this.partDAO.updateAndBumpIndex(partId, user, lastIndex, modification);
+        const update: StartingPartConfig = this.getStartingConfig(joiner);
+        return this.partDAO.updateAndBumpIndex(partId, user, lastIndex, update);
     }
     public getStartingConfig(joiner: IJoiner): StartingPartConfig
     {
@@ -169,7 +169,7 @@ export class GameService implements OnDestroy {
         display(GameService.VERBOSE, { gameService_acceptConfig: { partId, joiner } });
 
         await this.joinerService.acceptConfig();
-        return this.startGameWithConfig(partId, Player.ONE, 0, joiner); // TODO For Review: eeeeeeh
+        return this.startGameWithConfig(partId, Player.ONE, 0, joiner);
     }
     public startObserving(partId: string, callback: (iPart: ICurrentPartId) => void): void {
         if (this.followedPartId.isAbsent()) {
@@ -183,14 +183,14 @@ export class GameService implements OnDestroy {
             throw new Error('GameService.startObserving should not be called while already observing a game');
         }
     }
-    public resign(partId: string, user: Player, lastIndex: number, winner: string, loser: string): Promise<void> {
-        const modification: Partial<IPart> = {
+    public resign(partId: string, lastIndex: number, user: Player, winner: string, loser: string): Promise<void> {
+        const update: Partial<IPart> = {
             winner,
             loser,
             result: MGPResult.RESIGN.value,
             request: null,
         };
-        return this.partDAO.updateAndBumpIndex(partId, user, lastIndex, modification); // resign
+        return this.partDAO.updateAndBumpIndex(partId, user, lastIndex, update); // resign
     }
     public notifyTimeout(partId: string,
                          user: Player,
@@ -199,13 +199,13 @@ export class GameService implements OnDestroy {
                          loser: string)
     : Promise<void>
     {
-        const modifications: Partial<IPart> = {
+        const update: Partial<IPart> = {
             winner,
             loser,
             result: MGPResult.TIMEOUT.value,
             request: null,
         };
-        return this.partDAO.updateAndBumpIndex(partId, user, lastIndex, modifications);
+        return this.partDAO.updateAndBumpIndex(partId, user, lastIndex, update);
     }
     public sendRequest(partId: string, user: Player, lastIndex: number, request: Request): Promise<void> {
         return this.partDAO.updateAndBumpIndex(partId, user, lastIndex, { request });
@@ -215,11 +215,11 @@ export class GameService implements OnDestroy {
     }
     public acceptDraw(partId: string, lastIndex: number, as: Player): Promise<void> {
         const mgpResult: MGPResult = as === Player.ZERO ? MGPResult.AGREED_DRAW_BY_ZERO : MGPResult.AGREED_DRAW_BY_ONE;
-        const modification: Partial<IPart> = {
+        const update: Partial<IPart> = {
             result: mgpResult.value,
             request: null,
         };
-        return this.partDAO.updateAndBumpIndex(partId, as, lastIndex, modification);
+        return this.partDAO.updateAndBumpIndex(partId, as, lastIndex, update);
     }
     public refuseDraw(partId: string, lastIndex: number, player: Player): Promise<void> {
         return this.sendRequest(partId, player, lastIndex, Request.drawRefused(player));
@@ -227,7 +227,7 @@ export class GameService implements OnDestroy {
     public proposeRematch(partId: string, lastIndex: number, player: Player): Promise<void> {
         return this.sendRequest(partId, player, lastIndex, Request.rematchProposed(player));
     }
-    public async acceptRematch(part: ICurrentPartId, user: Player, lastIndex: number): Promise<void> {
+    public async acceptRematch(part: ICurrentPartId, lastIndex: number, user: Player): Promise<void> {
         display(GameService.VERBOSE, { called: 'GameService.acceptRematch(', part });
 
         const iJoiner: IJoiner = await this.joinerService.readJoinerById(part.id);
@@ -301,7 +301,7 @@ export class GameService implements OnDestroy {
         assert(observerRole !== Player.NONE, 'Illegal for observer to make request');
 
         let update: Partial<IPart> = {
-            request: Request.globalTimeAdded(observerRole.getOpponent()),
+            request: Request.addGlobalTime(observerRole.getOpponent()),
         };
         if (observerRole === Player.ZERO) {
             update = {
@@ -317,8 +317,8 @@ export class GameService implements OnDestroy {
         return await this.partDAO.updateAndBumpIndex(id, observerRole, lastIndex, update);
     }
     public async addTurnTime(observerRole: Player, lastIndex: number, id: string): Promise<void> {
-        const modification: Partial<IPart> = { request: Request.turnTimeAdded(observerRole.getOpponent()) };
-        return await this.partDAO.updateAndBumpIndex(id, observerRole, lastIndex, modification);
+        const update: Partial<IPart> = { request: Request.addTurnTime(observerRole.getOpponent()) };
+        return await this.partDAO.updateAndBumpIndex(id, observerRole, lastIndex, update);
     }
     public stopObserving(): void {
         display(GameService.VERBOSE, 'GameService.stopObserving();');

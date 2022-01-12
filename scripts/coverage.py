@@ -10,8 +10,7 @@ if len(sys.argv) < 2:
     exit(1)
 
 def sort_function(x):
-    return str.lower(x[0]) # TypeError: descriptor 'lower' for 'str' objects doesn't apply to a 'tuple' object
-    # pâte en couque, check n'marche pas sans [0] !
+    return str.lower(x) # TypeError: descriptor 'lower' for 'str' objects doesn't apply to a 'tuple' object
 def to_missing(x):
     "Converts from the string AA/BB to the number BB-AA"
     [low, high] = x.split('/')

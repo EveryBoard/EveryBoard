@@ -145,14 +145,14 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 partStatus: PartStatus.PART_STARTED.value,
             });
         }
-        const modifications: Partial<IPart> = {
+        const update: Partial<IPart> = {
             playerOne: 'firstCandidate',
             turn: 0,
             remainingMsForZero: 1800 * 1000,
             remainingMsForOne: 1800 * 1000,
             beginning: firebase.firestore.FieldValue.serverTimestamp(),
         };
-        await partDAO.updateAndBumpIndex('joinerId', observerRole, 0, modifications);
+        await partDAO.updateAndBumpIndex('joinerId', observerRole, 0, update);
         componentTestUtils.detectChanges();
         return Promise.resolve();
     }
@@ -202,7 +202,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                                    remainingMsForOne: number)
     : Promise<void>
     {
-        const modifications: Partial<IPart> = {
+        const update: Partial<IPart> = {
             listMoves: ArrayUtils.copyImmutableArray(moves),
             turn: moves.length,
             request: null,
@@ -210,7 +210,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             remainingMsForZero, // TODO: only send one of the two time updated, since that's what happens
             lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
         };
-        return await receivePartDAOUpdate(modifications, lastIndex);
+        return await receivePartDAOUpdate(update, lastIndex);
     }
     async function prepareBoard(moves: QuartoMove[], player: Player = Player.ZERO): Promise<void> {
         let authUser: AuthUser = USER_CREATOR;
@@ -415,6 +415,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     }));
     it('Should not do anything when receiving duplicate', fakeAsync(async() => {
         // Given a board where its the opponent's (first) turn
+
         await prepareStartedGameFor(USER_CREATOR);
         tick(1);
         const CURRENT_PART: Part = wrapper.currentPart;
@@ -781,7 +782,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 spyOn(wrapper, 'resumeCountDownFor').and.callThrough();
                 spyOn(wrapper.chronoZeroGlobal, 'changeDuration').and.callThrough();
                 spyOn(partDAO, 'update').and.callThrough();
-                tick(73); // TODOTODO 73 le phoque
+
                 const beginningTime: Time = wrapper.currentPart.doc.beginning as Time;
                 const lastMoveTime: Time = wrapper.currentPart.doc.lastMoveTime as Time;
                 const usedTimeOfFirstTurn: number = getMillisecondsDifference(beginningTime, lastMoveTime);
@@ -852,7 +853,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 expect(wrapper.resetChronoFor).toHaveBeenCalledWith(Player.ZERO);
                 tick(wrapper.joiner.maximalMoveDuration * 1000);
             }));
-            it('should do alternative move afterwards without taking back move time off (during his turn)', fakeAsync(async() => {
+            it(`should do alternative move afterwards without taking back move time off (during user's turn)`, fakeAsync(async() => {
                 // Given an initial board where user was autorised to take back
                 await prepareStartedGameFor(USER_CREATOR);
                 tick(1);
@@ -1202,7 +1203,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                     index: 2,
                     player: Player.ZERO.value,
                 },
-                request: Request.turnTimeAdded(Player.ONE),
+                request: Request.addTurnTime(Player.ONE),
             });
             const msUntilTimeout: number = (wrapper.joiner.maximalMoveDuration + 30) * 1000;
             tick(msUntilTimeout);
@@ -1215,11 +1216,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             spyOn(wrapper.chronoZeroTurn, 'resume').and.callThrough();
 
             // When receiving a request to add local time to player zero
-            await receiveRequest(Request.turnTimeAdded(Player.ZERO), 1);
+            await receiveRequest(Request.addTurnTime(Player.ZERO), 1);
 
-            // Then both chrono of player zero should have been resumed
-            expect(wrapper.chronoZeroGlobal.resume).toHaveBeenCalledTimes(1); // he failed, was 0
-            expect(wrapper.chronoZeroTurn.resume).toHaveBeenCalledTimes(1); // he worked
+            // Then both chronos of player zero should have been resumed
+            expect(wrapper.chronoZeroGlobal.resume).toHaveBeenCalledTimes(1); // it failed, was 0
+            expect(wrapper.chronoZeroTurn.resume).toHaveBeenCalledTimes(1); // it worked
             const msUntilTimeout: number = (wrapper.joiner.maximalMoveDuration + 30) * 1000;
             tick(msUntilTimeout);
         }));
@@ -1230,9 +1231,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(1);
 
             // When receiving addTurnTime request
-            await receiveRequest(Request.turnTimeAdded(Player.ONE), 1);
+            await receiveRequest(Request.addTurnTime(Player.ONE), 1);
 
-            // Then chrono local of player one should be filled
+            // Then chrono local of player one should be increased
             const wrapper: OnlineGameWrapperComponent = componentTestUtils.wrapper as OnlineGameWrapperComponent;
             const msUntilTimeout: number = (wrapper.joiner.maximalMoveDuration + 30) * 1000;
             expect(wrapper.chronoOneTurn.remainingMs).toBe(msUntilTimeout); // initial 2 minutes + 30 sec
@@ -1245,10 +1246,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(1);
 
             // When receiving addTurnTime request
-            await receiveRequest(Request.turnTimeAdded(Player.ZERO), 1);
+            await receiveRequest(Request.addTurnTime(Player.ZERO), 1);
             // componentTestUtils.detectChanges(); // TODOTODO will we need this
 
-            // Then chrono local of player one should be filled
+            // Then chrono local of player one should be increased
             const wrapper: OnlineGameWrapperComponent = componentTestUtils.wrapper as OnlineGameWrapperComponent;
             const msUntilTimeout: number = (wrapper.joiner.maximalMoveDuration + 30) * 1000;
             expect(wrapper.chronoZeroTurn.remainingMs).toBe(msUntilTimeout); // initial 2 minutes + 30 sec
@@ -1263,13 +1264,13 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // When countDownComponent emit addGlobalTime
             await wrapper.addGlobalTime();
 
-            // Then a request to add global time to player one should be send
+            // Then a request to add global time to player one should be sent
             expect(partDAO.update).toHaveBeenCalledOnceWith('joinerId', {
                 lastUpdate: {
                     index: 2,
                     player: Player.ZERO.value,
                 },
-                request: Request.globalTimeAdded(Player.ONE),
+                request: Request.addGlobalTime(Player.ONE),
                 remainingMsForOne: (1800 * 1000) + (5 * 60 * 1000),
             });
             const msUntilTimeout: number = wrapper.joiner.maximalMoveDuration * 1000;
@@ -1285,13 +1286,13 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // When countDownComponent emit addGlobalTime
             await wrapper.addGlobalTime();
 
-            // Then a request to add global time to player zero should be send
+            // Then a request to add global time to player zero should be sent
             expect(partDAO.update).toHaveBeenCalledOnceWith('joinerId', {
                 lastUpdate: {
                     index: 2,
                     player: Player.ONE.value,
                 },
-                request: Request.globalTimeAdded(Player.ZERO),
+                request: Request.addGlobalTime(Player.ZERO),
                 remainingMsForZero: (1800 * 1000) + (5 * 60 * 1000),
             });
             const msUntilTimeout: number = wrapper.joiner.maximalMoveDuration * 1000;
@@ -1305,9 +1306,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(1);
 
             // When receiving addGlobalTime request
-            await receiveRequest(Request.globalTimeAdded(Player.ONE), 1);
+            await receiveRequest(Request.addGlobalTime(Player.ONE), 1);
 
-            // Then chrono global of player one should be filled with 5 new minutes
+            // Then chrono global of player one should be increased with 5 new minutes
             const wrapper: OnlineGameWrapperComponent = componentTestUtils.wrapper as OnlineGameWrapperComponent;
             expect(wrapper.chronoOneGlobal.remainingMs).toBe((30 * 60 * 1000) + (5 * 60 * 1000));
             tick(wrapper.joiner.maximalMoveDuration * 1000);
@@ -1319,9 +1320,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(1);
 
             // When receiving addGlobalTime request
-            await receiveRequest(Request.globalTimeAdded(Player.ZERO), 1);
+            await receiveRequest(Request.addGlobalTime(Player.ZERO), 1);
 
-            // Then chrono global of player one should be filled with 5 new minutes
+            // Then chrono global of player one should be increased with 5 new minutes
             const wrapper: OnlineGameWrapperComponent = componentTestUtils.wrapper as OnlineGameWrapperComponent;
             expect(wrapper.chronoZeroGlobal.remainingMs).toBe((30 * 60 * 1000) + (5 * 60 * 1000));
             tick(wrapper.joiner.maximalMoveDuration * 1000);
@@ -1332,10 +1333,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             spyOn(partDAO, 'update').and.callThrough();
             tick(1);
 
-            await receiveRequest(Request.turnTimeAdded(Player.ZERO), 1);
+            // When receiving a addTurnTime request
+            await receiveRequest(Request.addTurnTime(Player.ZERO), 1);
             componentTestUtils.detectChanges();
 
-            // Then endgame should happend later
+            // Then game should end by timeout only after new time has run out
             tick(wrapper.joiner.maximalMoveDuration * 1000);
             expect(componentTestUtils.wrapper.endGame).withContext('game should not be finished yet').toBeFalse();
             tick(30 * 1000);
@@ -1811,7 +1813,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 remainingMsForOne: 1800 * 1000,
                 beginning: FAKE_MOMENT,
                 // but
-                request: Request.globalTimeAdded(Player.ZERO),
+                request: Request.addGlobalTime(Player.ZERO),
                 remainingMsForZero: (1800 * 1000) + (5 * 60 * 1000),
             });
 
@@ -1919,7 +1921,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 'canResign',
             ];
             for (const name of forbiddenFunctionNames) {
-                expect(wrapper[name]()).toBeFalse();
+                expect(() => wrapper[name]()).toThrowError('Assertion failure: Non playing should not call ' + name);
             }
             tick(wrapper.joiner.maximalMoveDuration * 1000);
         }));
@@ -1936,7 +1938,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             }, 2);
 
             // When displaying the board
-            // Then the text should indicate player have agreed to draw
+            // Then the text should indicate players have agreed to draw
             componentTestUtils.expectElementToExist('#playersAgreedToDraw');
             expectGameToBeOver();
             tick(wrapper.joiner.maximalMoveDuration * 1000);

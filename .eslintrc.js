@@ -23,6 +23,7 @@ module.exports = {
             'plugin:jasmine/recommended',
         ],
         rules: {
+            'jasmine/expect-matcher': ['error'],
             'jasmine/new-line-before-expect': ['off'],
             'jasmine/new-line-between-declarations': ['off'],
             'no-warning-comments': [

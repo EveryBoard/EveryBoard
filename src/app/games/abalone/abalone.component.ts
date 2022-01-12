@@ -212,7 +212,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
             this.cancelMoveAttempt();
             return MGPValidation.SUCCESS;
         }
-        if (coord.isHexagonalyAlignedWith(firstPiece) === false) {
+        if (coord.isHexagonallyAlignedWith(firstPiece) === false) {
             this.cancelMoveAttempt();
             return this.firstClick(x, y);
         }

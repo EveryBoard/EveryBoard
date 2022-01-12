@@ -71,55 +71,57 @@
                 </app-count-down>
             </div>
             <hr/>
-            <button class="button is-fullwidth mb-1"
-                    id="resignButton"
-                    *ngIf="canResign()"
-                    (click)="resign()"
-                    i18n
-            >Resign</button>
-            <button class="button is-fullwidth mb-1"
-                    id="proposeDrawButton"
-                    *ngIf="canProposeDraw()"
-                    (click)="proposeDraw()"
-                    i18n
-            >Propose a draw</button>
-            <button class="button is-warning is-fullwidth mb-1"
-                    *ngIf="endGame === false && isOpponentWaitingForDrawResponse()"
-                    id="acceptDrawButton"
-                    (click)="acceptDraw()"
-                    i18n
-            >Accept draw</button>
-            <button class="button is-warning is-fullwidth mb-1"
-                    *ngIf="endGame === false && isOpponentWaitingForDrawResponse()"
-                    id="refuseDrawButton"
-                    (click)="refuseDraw()"
-                    i18n
-            >Reject draw</button>
-            <button class="button is-fullwidth mb-1"
-                    *ngIf="endGame === false && isPlaying() && gameComponent.canPass && (currentPlayer === getPlayerName())"
-                    id="passButton"
-                    (click)="gameComponent.pass()"
-                    i18n
-            >Pass a turn</button>
-            <button class="button is-warning is-fullwidth mb-1"
-                    *ngIf="endGame === false && isOpponentWaitingForTakeBackResponse()"
-                    id="acceptTakeBackButton"
-                    (click)="acceptTakeBack()"
-                    i18n
-            >Accept take back</button>
-            <button class="button is-warning is-fullwidth mb-1"
-                    *ngIf="endGame === false && isOpponentWaitingForTakeBackResponse()"
-                    color="warn"
-                    id="refuseTakeBackButton"
-                    (click)="refuseTakeBack()"
-                    i18n
-            >Reject take back</button>
-            <button class="button is-fullwidth"
-                    *ngIf="endGame === false && isOpponentWaitingForTakeBackResponse() === false && canAskTakeBack()"
-                    id="askTakeBackButton"
-                    (click)="askTakeBack()"
-                    i18n
-            >Ask to take back one move</button>
+            <ng-container *ngIf="isPlaying()">
+                <button class="button is-fullwidth mb-1"
+                        id="resignButton"
+                        *ngIf="canResign()"
+                        (click)="resign()"
+                        i18n
+                >Resign</button>
+                <button class="button is-fullwidth mb-1"
+                        id="proposeDrawButton"
+                        *ngIf="canProposeDraw()"
+                        (click)="proposeDraw()"
+                        i18n
+                >Propose a draw</button>
+                <button class="button is-warning is-fullwidth mb-1"
+                        *ngIf="endGame === false && isOpponentWaitingForDrawResponse()"
+                        id="acceptDrawButton"
+                        (click)="acceptDraw()"
+                        i18n
+                >Accept draw</button>
+                <button class="button is-warning is-fullwidth mb-1"
+                        *ngIf="endGame === false && isOpponentWaitingForDrawResponse()"
+                        id="refuseDrawButton"
+                        (click)="refuseDraw()"
+                        i18n
+                >Reject draw</button>
+                <button class="button is-fullwidth mb-1"
+                        *ngIf="endGame === false && isPlaying() && gameComponent.canPass && (currentPlayer === getPlayerName())"
+                        id="passButton"
+                        (click)="gameComponent.pass()"
+                        i18n
+                >Pass a turn</button>
+                <button class="button is-warning is-fullwidth mb-1"
+                        *ngIf="endGame === false && isOpponentWaitingForTakeBackResponse()"
+                        id="acceptTakeBackButton"
+                        (click)="acceptTakeBack()"
+                        i18n
+                >Accept take back</button>
+                <button class="button is-warning is-fullwidth mb-1"
+                        *ngIf="endGame === false && isOpponentWaitingForTakeBackResponse()"
+                        color="warn"
+                        id="refuseTakeBackButton"
+                        (click)="refuseTakeBack()"
+                        i18n
+                >Reject take back</button>
+                <button class="button is-fullwidth"
+                        *ngIf="endGame === false && isOpponentWaitingForTakeBackResponse() === false && canAskTakeBack()"
+                        id="askTakeBackButton"
+                        (click)="askTakeBack()"
+                        i18n
+                >Ask to take back one move</button>
+            </ng-container>
             <div class="block" id="winnerIndicator" *ngIf="endGame">
                 <hr/>
                 <div *ngIf="currentPart.isHardDraw()">
@@ -128,7 +130,7 @@
                 <div *ngIf="currentPart.isAgreedDraw()">
                     <p class="title" id="youAgreedToDrawIndicator" *ngIf="currentPart.getDrawAccepter() === getPlayerName()" i18n>You agreed to draw.</p>
                     <p class="title" id="yourOpponentAgreedToDrawIndicator" *ngIf="(currentPart.getDrawAccepter() !== getPlayerName()) && isPlaying()" i18n>Your draw proposal has been accepted.</p>
-                    <p class="title" id="playersAgreedToDraw" *ngIf="isPlaying() === false" i18n>Agreed draw.</p>
+                    <p class="title" id="playersAgreedToDraw" *ngIf="isPlaying() === false" i18n>Players agreed to draw.</p>
                 </div>
                 <div *ngIf="currentPart.isWin()">
                     <p class="title" id="youWonIndicator" *ngIf="currentPart.getWinner().get() === getPlayerName()" i18n>You won.</p>
