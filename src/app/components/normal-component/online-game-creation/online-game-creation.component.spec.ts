@@ -2,7 +2,6 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { PartDAO } from 'src/app/dao/PartDAO';
-import { AuthUser } from 'src/app/services/AuthenticationService';
 import { GameServiceMessages } from 'src/app/services/GameServiceMessages';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
@@ -19,7 +18,6 @@ describe('OnlineGameCreationComponent', () => {
     }));
     it('should create and redirect to the game upon success', fakeAsync(async() => {
         // Given that the page is loaded for a specific game by an online user that can create a game
-        const game: string = 'whatever-game';
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.callThrough();
         AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
@@ -28,9 +26,10 @@ describe('OnlineGameCreationComponent', () => {
 
         // When the page is rendered
         testUtils.detectChanges();
+        tick(3000); // needs to be >2999
 
         // Then the user is redirected to the game
-        expect(router.navigate).toHaveBeenCalledOnceWith(['/play/' + game, 'PartDAOMock0']);
+        expect(router.navigate).toHaveBeenCalledOnceWith(['/play/', game, 'PartDAOMock0']);
     }));
     it('should show toast and navigate to server when creator has active parts', fakeAsync(async() => {
         // Given that the page is loaded for a specific game by a connected user that already has an active part
@@ -39,10 +38,11 @@ describe('OnlineGameCreationComponent', () => {
         spyOn(router, 'navigate').and.callThrough();
         spyOn(messageDisplayer, 'infoMessage').and.callThrough();
         const partDAO: PartDAO = TestBed.inject(PartDAO);
-        spyOn(partDAO, 'userHasActivePart').and.resolveTo(false);
+        spyOn(partDAO, 'userHasActivePart').and.resolveTo(true);
 
         // When the page is rendered
         testUtils.detectChanges();
+        tick(3000); // needs to be >2999
 
         // It should toast, and navigate to server
         expect(messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(GameServiceMessages.ALREADY_INGAME());

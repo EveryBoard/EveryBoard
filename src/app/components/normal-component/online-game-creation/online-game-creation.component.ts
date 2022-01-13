@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
 import { GameService } from 'src/app/services/GameService';
@@ -12,9 +11,7 @@ import { assert, Utils } from 'src/app/utils/utils';
     selector: 'app-online-game-creation',
     template: '<p i18n>Creating online game, please wait, it should not take long.</p>',
 })
-export class OnlineGameCreationComponent implements OnInit, OnDestroy {
-
-    private readonly userNameSub: Subscription;
+export class OnlineGameCreationComponent implements OnInit {
 
     public constructor(private readonly route: ActivatedRoute,
                        private readonly router: Router,
@@ -25,9 +22,6 @@ export class OnlineGameCreationComponent implements OnInit, OnDestroy {
     }
     public async ngOnInit(): Promise<void> {
         await this.createGameAndRedirectOrShowError(this.extractGameFromURL());
-    }
-    public ngOnDestroy(): void {
-        this.userNameSub.unsubscribe();
     }
     private extractGameFromURL(): string {
         return Utils.getNonNullable(this.route.snapshot.paramMap.get('compo'));
@@ -40,10 +34,6 @@ export class OnlineGameCreationComponent implements OnInit, OnDestroy {
             // create Part and Joiner
             await this.router.navigate(['/play/', game, gameId]);
             return true;
-        } else if (user.isConnected() === false) {
-            this.messageDisplayer.infoMessage(GameServiceMessages.USER_OFFLINE());
-            await this.router.navigate(['/login']);
-            return false;
         } else {
             this.messageDisplayer.infoMessage(GameServiceMessages.ALREADY_INGAME());
             await this.router.navigate(['/server']);
