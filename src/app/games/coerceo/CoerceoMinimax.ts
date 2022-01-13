@@ -13,7 +13,7 @@ export class CoerceoMinimax extends Minimax<CoerceoMove, CoerceoState> {
 
     public getListMoves(node: CoerceoNode): CoerceoMove[] {
         let moves: CoerceoMove[] = this.getListExchanges(node);
-        moves = moves.concat(this.getListDeplacement(node));
+        moves = moves.concat(this.getListMovement(node));
         return this.putCaptureFirst(node, moves);
     }
     public getListExchanges(node: CoerceoNode): CoerceoMove[] {
@@ -35,8 +35,8 @@ export class CoerceoMinimax extends Minimax<CoerceoMove, CoerceoState> {
         }
         return exchanges;
     }
-    public getListDeplacement(node: CoerceoNode): CoerceoMove[] {
-        const deplacements: CoerceoMove[] = [];
+    public getListMovement(node: CoerceoNode): CoerceoMove[] {
+        const movements: CoerceoMove[] = [];
         const state: CoerceoState = node.gameState;
         const PLAYER: Player = state.getCurrentPlayer();
         for (let y: number = 0; y < 10; y++) {
@@ -46,12 +46,12 @@ export class CoerceoMinimax extends Minimax<CoerceoMove, CoerceoState> {
                     const legalLandings: Coord[] = state.getLegalLandings(start);
                     for (const end of legalLandings) {
                         const move: CoerceoMove = CoerceoMove.fromCoordToCoord(start, end);
-                        deplacements.push(move);
+                        movements.push(move);
                     }
                 }
             }
         }
-        return deplacements;
+        return movements;
     }
     public getBoardValue(node: CoerceoNode): NodeUnheritance {
         const gameStatus: GameStatus = CoerceoRules.getGameStatus(node);
@@ -88,9 +88,9 @@ export class CoerceoMinimax extends Minimax<CoerceoMove, CoerceoState> {
             return [move.capture.get()];
         } else {
             // Move the piece
-            const afterDeplacement: CoerceoState = node.gameState.applyLegalDeplacement(move);
+            const afterMovement: CoerceoState = node.gameState.applyLegalMovement(move);
             // removes emptied tiles
-            const afterTilesRemoved: CoerceoState = afterDeplacement.removeTilesIfNeeded(move.start.get(), true);
+            const afterTilesRemoved: CoerceoState = afterMovement.removeTilesIfNeeded(move.start.get(), true);
             return afterTilesRemoved.getCapturedNeighbors(move.landingCoord.get());
         }
     }

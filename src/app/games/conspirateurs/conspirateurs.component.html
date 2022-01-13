@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="100%" height="auto"
+     viewBox="-100 0 1915 1715"
+     preserveAspectRatio="xMidYMid meet">
+    <g *ngFor="let line of viewInfo.boardInfo; index as y">
+        <g *ngFor="let square of line; index as x">
+            <rect id="click_{{ x }}_{{ y }}"
+                  class="base"
+                  [ngClass]="square.squareClasses"
+                  (click)="onClick(square.coord)"
+                  [attr.x]="(SPACE_SIZE * x) + STROKE_WIDTH"
+                  [attr.y]="(SPACE_SIZE * y) + STROKE_WIDTH"
+                  [attr.width]="SPACE_SIZE"
+                  [attr.height]="SPACE_SIZE"
+            />
+            <rect *ngIf="square.isShelter"
+                  class="base no-fill mid-stroke"
+                  (click)="onClick(square.coord)"
+                  [attr.x]="STROKE_WIDTH * 1.5 + (SPACE_SIZE * square.coord.x) + STROKE_WIDTH"
+                  [attr.y]="STROKE_WIDTH * 1.5 + (SPACE_SIZE * square.coord.y) + STROKE_WIDTH"
+                  [attr.width]="SPACE_SIZE - STROKE_WIDTH * 3"
+                  [attr.height]="SPACE_SIZE - STROKE_WIDTH * 3"
+            />
+            <circle *ngIf="square.hasPiece"
+                    id="piece_{{ x }}_{{ y }}"
+                    [ngClass]="square.pieceClasses"
+                    class="base"
+                    (click)="onClick(square.coord)"
+                    [attr.r]="PIECE_RADIUS"
+                    [attr.cx]="(SPACE_SIZE * x) + STROKE_WIDTH + (SPACE_SIZE / 2)"
+                    [attr.cy]="(SPACE_SIZE * y) + STROKE_WIDTH + (SPACE_SIZE / 2)"
+            />
+        </g>
+    </g>
+    <g *ngFor="let shelter of ALL_SHELTERS">
+        <rect class="base no-fill mid-stroke"
+              [ngClass]="viewInfo.boardInfo[shelter.y][shelter.x].shelterClasses"
+              (click)="onClick(shelter)"
+              [attr.x]="(SPACE_SIZE * shelter.x) + STROKE_WIDTH"
+              [attr.y]="(SPACE_SIZE * shelter.y) + STROKE_WIDTH"
+              [attr.width]="SPACE_SIZE"
+              [attr.height]="SPACE_SIZE"
+         />
+    </g>
+    <circle *ngFor="let y of range(viewInfo.sidePieces[0])"
+            id="sidePiece_0_{{ y }}"
+            [attr.cx]="-PIECE_RADIUS"
+            [attr.cy]="1670 - y * PIECE_RADIUS"
+            [attr.r]="PIECE_RADIUS - 5"
+            class="base mid-stroke player0" />
+    <circle *ngFor="let y of range(viewInfo.sidePieces[1])"
+            id="sidePiece_1_{{ y }}"
+            [attr.cx]="1715 + PIECE_RADIUS"
+            [attr.cy]="1670 - y * PIECE_RADIUS"
+            [attr.r]="PIECE_RADIUS - 5"
+            class="base mid-stroke player1" />
+    <rect *ngIf="viewInfo.dropPhase"
+          [attr.x]="(SPACE_SIZE * CENTRAL_ZONE_START.x) + STROKE_WIDTH"
+          [attr.y]="(SPACE_SIZE * CENTRAL_ZONE_START.y) + STROKE_WIDTH"
+          [attr.width]="CENTRAL_ZONE_SIZE.x * SPACE_SIZE"
+          [attr.height]="CENTRAL_ZONE_SIZE.y * SPACE_SIZE"
+          class="base no-fill highlighted mid-stroke"
+    />
+    <polyline id="lastJump"
+              class="base no-fill"
+              [attr.points]="viewInfo.lastMoveArrow" />
+</svg>

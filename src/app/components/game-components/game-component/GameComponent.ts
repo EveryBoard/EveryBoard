@@ -110,6 +110,13 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
     public getPreviousState(): S {
         return this.rules.node.mother.get().gameState;
     }
+    public range(n: number): number[] {
+        const range: number[] = [];
+        for (let i: number = 0; i < n; i++) {
+            range.push(i);
+        }
+        return range;
+    }
 }
 
 export abstract class AbstractGameComponent extends GameComponent<Rules<Move, GameState, unknown>,

@@ -88,7 +88,7 @@ export class SixTutorial {
                 [X, X, X, X, _, _, _, _, _],
                 [_, O, _, X, _, _, _, _, _],
             ], 40),
-            SixMove.fromDeplacement(new Coord(6, 1), new Coord(5, 1)),
+            SixMove.fromMovement(new Coord(6, 1), new Coord(5, 1)),
             (_move: SixMove, resultingState: SixState) => {
                 const pieces: [number, number] = resultingState.countPieces();
                 if (pieces[0] === 19) {
@@ -118,7 +118,7 @@ export class SixTutorial {
                 [O, X, _, _, _, _],
                 [O, _, _, _, _, _],
             ], 40),
-            SixMove.fromDeplacement(new Coord(2, 3), new Coord(3, 3)),
+            SixMove.fromMovement(new Coord(2, 3), new Coord(3, 3)),
             (move: SixMove, _resultingState: SixState) => {
                 if (move.start.equalsValue(new Coord(2, 3))) {
                     return MGPValidation.SUCCESS;

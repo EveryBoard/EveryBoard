@@ -38,9 +38,14 @@ describe('SiamPiece:', () => {
         expect(names).toEqual(expectedNames);
         expect(pieces).toEqual(expectedPieces);
     });
-    it('Should consider moutains as belonging to no player and know which one do', () => {
+    it('Should consider moutains as belonging to no player and pieces to their respective players', () => {
         expect(SiamPiece.MOUNTAIN.belongTo(Player.NONE)).toBeFalse();
         expect(SiamPiece.BLACK_DOWN.belongTo(Player.ZERO)).toBeFalse();
         expect(SiamPiece.WHITE_RIGHT.belongTo(Player.ONE)).toBeFalse();
+    });
+    it('should give the owner of each piece with getOwner', () => {
+        expect(SiamPiece.MOUNTAIN.getOwner()).toBe(Player.NONE);
+        expect(SiamPiece.BLACK_DOWN.getOwner()).toBe(Player.ONE);
+        expect(SiamPiece.WHITE_RIGHT.getOwner()).toBe(Player.ZERO);
     });
 });

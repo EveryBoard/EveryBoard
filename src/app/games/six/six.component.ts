@@ -201,7 +201,7 @@ export class SixComponent
             return this.cancelMove(clickValidity.getReason());
         }
         if (this.state.turn < 40) {
-            return this.cancelMove(SixFailure.NO_DEPLACEMENT_BEFORE_TURN_40());
+            return this.cancelMove(SixFailure.NO_MOVEMENT_BEFORE_TURN_40());
         } else if (this.chosenLanding.isAbsent()) {
             if (this.state.getPieceAt(piece) === this.state.getCurrentOpponent()) {
                 return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
@@ -229,9 +229,9 @@ export class SixComponent
             if (this.selectedPiece.isAbsent()) {
                 return this.cancelMove(SixFailure.CAN_NO_LONGER_DROP());
             } else {
-                const deplacement: SixMove = SixMove.fromDeplacement(this.selectedPiece.get(), neighbor);
+                const movement: SixMove = SixMove.fromMovement(this.selectedPiece.get(), neighbor);
                 const legality: MGPFallible<SixLegalityInformation> =
-                    SixRules.isLegalPhaseTwoMove(deplacement, this.state);
+                    SixRules.isLegalPhaseTwoMove(movement, this.state);
                 if (this.neededCutting(legality)) {
                     this.chosenLanding = MGPOptional.of(neighbor);
                     this.moveVirtuallyPiece();
@@ -239,7 +239,7 @@ export class SixComponent
                     this.nextClickShouldSelectGroup = true;
                     return MGPValidation.SUCCESS;
                 } else {
-                    return this.chooseMove(deplacement, this.state);
+                    return this.chooseMove(movement, this.state);
                 }
             }
         }
@@ -253,10 +253,10 @@ export class SixComponent
         this.neighbors = this.getEmptyNeighbors();
     }
     private showCuttable(): void {
-        const deplacement: SixMove = SixMove.fromDeplacement(this.selectedPiece.get(), this.chosenLanding.get());
-        const piecesAfterDeplacement: ReversibleMap<Coord, Player> = SixState.deplacePiece(this.state, deplacement);
+        const movement: SixMove = SixMove.fromMovement(this.selectedPiece.get(), this.chosenLanding.get());
+        const piecesAfterDeplacement: ReversibleMap<Coord, Player> = SixState.deplacePiece(this.state, movement);
         const groupsAfterMove: MGPSet<MGPSet<Coord>> =
-            SixState.getGroups(piecesAfterDeplacement, deplacement.start.get());
+            SixState.getGroups(piecesAfterDeplacement, movement.start.get());
         const biggerGroups: MGPSet<MGPSet<Coord>> = SixRules.getBiggerGroups(groupsAfterMove);
         this.cuttableGroups = [];
         for (let i: number = 0; i < biggerGroups.size(); i++) {

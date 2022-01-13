@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPMap } from 'src/app/utils/MGPMap';
+import { MGPMap, ReversibleMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { SixState } from './SixState';
@@ -11,18 +11,9 @@ import { assert, display } from 'src/app/utils/utils';
 import { AlignementMinimax, BoardInfo } from 'src/app/jscaip/AlignementMinimax';
 import { SixVictorySource, SixNode, SixRules, SixLegalityInformation } from './SixRules';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
-import { MGPFallible } from 'src/app/utils/MGPFallible';
 
 export class SixNodeUnheritance extends NodeUnheritance {
 
-    public equals(_o: SixNodeUnheritance): boolean {
-        throw new Error('SixNodeUnheritance.equals not implemented.');
-    }
-    public toString(): string {
-        const preVictory: string = this.preVictory.isPresent() ? this.preVictory.get().toString() : 'none';
-        return 'value: ' + this.value + ', ' +
-               'preVictory: ' + preVictory;
-    }
     public constructor(public readonly value: number,
                        public readonly preVictory: MGPOptional<Coord>) {
         super(value);
@@ -40,7 +31,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
 
     public VERBOSE: boolean = false;
 
-    public static getInstance(): SixMinimax {
+    public static get(): SixMinimax {
         if (SixMinimax.INSTANCE == null) {
             const rules: SixRules = new SixRules(SixState);
             SixMinimax.INSTANCE = new SixMinimax(rules, 'SixMinimax');
@@ -50,7 +41,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
     private currentVictorySource: SixVictorySource;
 
     public getListMoves(node: SixNode): SixMove[] {
-        const minimax: SixMinimax = SixMinimax.getInstance();
+        const minimax: SixMinimax = SixMinimax.get();
         const unheritance: SixNodeUnheritance = node.getOwnValue(minimax);
         if (unheritance.preVictory.isPresent()) {
             if (node.gameState.turn < 40) {
@@ -61,7 +52,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         }
         const legalLandings: Coord[] = SixRules.getLegalLandings(node.gameState);
         if (node.gameState.turn < 40) {
-            return this.getListDrop(node.gameState, legalLandings);
+            return this.getListDrop(legalLandings);
         } else {
             return this.getListDeplacement(node.gameState, legalLandings);
         }
@@ -79,19 +70,23 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         const legalLandings: Coord[] = [unheritance.preVictory.get()];
         return this.getDeplacementFrom(node.gameState, possiblesStarts, legalLandings);
     }
-    private getDeplacementFrom(state: SixState,
-                               starts: MGPSet<Coord>,
-                               landings: Coord[])
-    : SixMove[]
-    {
+    private getDeplacementFrom(state: SixState, starts: MGPSet<Coord>, landings: Coord[]): SixMove[] {
         const deplacements: SixMove[] = [];
         for (let i: number = 0; i < starts.size(); i++) {
             const start: Coord = starts.get(i);
             for (const landing of landings) {
-                const move: SixMove = SixMove.fromDeplacement(start, landing);
+                const move: SixMove = SixMove.fromMovement(start, landing);
                 if (state.isCoordConnected(landing, MGPOptional.of(start))) {
-                    const legality: MGPFallible<SixLegalityInformation> = SixRules.isLegalPhaseTwoMove(move, state);
-                    if (legality.isSuccess()) { // TODO: cuttingMove
+                    const piecesAfterDeplacement: ReversibleMap<Coord, Player> = SixState.deplacePiece(state, move);
+                    const groupsAfterMove: MGPSet<MGPSet<Coord>> =
+                        SixState.getGroups(piecesAfterDeplacement, move.start.get());
+                    if (SixRules.isSplit(groupsAfterMove)) {
+                        for (let groupIndex: number = 0; groupIndex < groupsAfterMove.size(); groupIndex++) {
+                            const group: Coord = groupsAfterMove.get(0).get(0);
+                            const cut: SixMove = SixMove.fromCut(start, landing, group);
+                            deplacements.push(cut);
+                        }
+                    } else {
                         deplacements.push(move);
                     }
                 }
@@ -135,7 +130,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         }
         return false;
     }
-    public getListDrop(_state: SixState, legalLandings: Coord[]): SixMove[] {
+    public getListDrop(legalLandings: Coord[]): SixMove[] {
         const drops: SixMove[] = [];
         for (const landing of legalLandings) {
             const drop: SixMove = SixMove.fromDrop(landing);

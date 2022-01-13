@@ -32,6 +32,11 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
     {
         super(messageDisplayer);
     }
+    public getViewBox(): string {
+        const begin: number = - this.STROKE_WIDTH;
+        const width: number = (this.rules.config.WIDTH * this.SPACE_SIZE) + (2 * this.STROKE_WIDTH);
+        return begin + ' ' + begin + ' ' + width + ' ' + width;
+    }
     public updateBoard(): void {
         display(this.VERBOSE, 'taflComponent.updateBoard');
         this.lastMove = this.rules.node.move;
