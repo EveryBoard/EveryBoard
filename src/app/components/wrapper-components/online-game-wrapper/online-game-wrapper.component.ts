@@ -211,7 +211,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 this.currentPart = oldPart;
                 return;
             case UpdateType.MOVE:
-                this.msToSubstract = this.getLastMoveTime(oldPart, part, updateType);
+                this.msToSubstract = this.getLastUpdateTime(oldPart, part, updateType);
                 return this.doNewMoves(part);
             case UpdateType.PRE_START_DOC:
                 const oldPartHadNoBeginningTime: boolean = oldPart == null ||
@@ -237,7 +237,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             return UpdateType.DUPLICATE;
         }
         if (update.doc.request) {
-            if (update.doc.request.code === 'TakeBackAccepted' && diff.removed['lastMoveTime'] != null) {
+            if (update.doc.request.code === 'TakeBackAccepted' && diff.removed['lastUpdateTime'] != null) {
                 return UpdateType.ACCEPT_TAKE_BACK_WITHOUT_TIME;
             } else {
                 return UpdateType.REQUEST;
@@ -245,13 +245,13 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
         if (this.isMove(diff, nbDiffs)) {
             if (update.doc.turn === 1) {
-                if (update.doc.lastMoveTime == null) {
+                if (update.doc.lastUpdateTime == null) {
                     return UpdateType.MOVE_WITHOUT_TIME;
                 } else {
                     return UpdateType.MOVE;
                 }
             } else {
-                if (diff.modified['lastMoveTime'] == null) {
+                if (diff.modified['lastUpdateTime'] == null) {
                     return UpdateType.MOVE_WITHOUT_TIME;
                 } else {
                     return UpdateType.MOVE;
@@ -263,8 +263,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
         if (update.doc.result !== MGPResult.UNACHIEVED.value) {
             const turnModified: boolean = diff.modified['turn'] != null;
-            const lastMoveTimeMissing: boolean = diff.modified['lastMoveTime'] == null;
-            if (turnModified && lastMoveTimeMissing) {
+            const lastUpdateTimeMissing: boolean = diff.modified['lastUpdateTime'] == null;
+            if (turnModified && lastUpdateTimeMissing) {
                 return UpdateType.END_GAME_WITHOUT_TIME;
             } else {
                 return UpdateType.END_GAME;
@@ -277,13 +277,13 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     public isMove(diff: ObjectDifference, nbDiffs: number): boolean {
         if (diff.modified['listMoves'] != null && diff.modified['turn'] != null) {
             const modifOnListMovesAndTurn: number = 2;
-            const lastMoveTimeModified: number = diff.isPresent('lastMoveTime').present ? 1 : 0;
+            const lastUpdateTimeModified: number = diff.isPresent('lastUpdateTime').present ? 1 : 0;
             const scoreZeroUpdated: number = diff.isPresent('scorePlayerZero').present ? 1 : 0;
             const scoreOneUpdated: number = diff.isPresent('scorePlayerOne').present ? 1 : 0;
             const remainingMsForZeroUpdated: number = diff.isPresent('remainingMsForZero').present ? 1 : 0;
             const remainingMsForOneUpdated: number = diff.isPresent('remainingMsForOne').present ? 1 : 0;
             const requestRemoved: number = diff.removed['request'] == null ? 0 : 1;
-            const nbValidMoveDiffs: number = lastMoveTimeModified +
+            const nbValidMoveDiffs: number = lastUpdateTimeModified +
                                              scoreZeroUpdated +
                                              scoreOneUpdated +
                                              remainingMsForZeroUpdated +
@@ -295,7 +295,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             return false;
         }
     }
-    public getLastMoveTime(oldPart: Part, update: Part, type: UpdateType): [number, number] {
+    public getLastUpdateTime(oldPart: Part, update: Part, type: UpdateType): [number, number] {
         const oldTime: Time | null = this.getMoreRecentTime(oldPart);
         const updateTime: Time | null= this.getMoreRecentTime(update);
         assert(oldTime != null, 'TODO: OLD_TIME WAS NULL, UNDO COMMENT AND TEST!');
@@ -306,10 +306,10 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                                            type, last);
     }
     private getMoreRecentTime(part: Part): Time | null {
-        if (part.doc.lastMoveTime == null) {
+        if (part.doc.lastUpdateTime == null) {
             return part.doc.beginning as Time;
         } else {
-            return part.doc.lastMoveTime as Time;
+            return part.doc.lastUpdateTime as Time;
         }
     }
     private getTimeUsedForLastTurn(oldTime: Time,
@@ -599,9 +599,9 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 return this.notifyVictory(encodedMove, scores);
             }
         } else {
-            if (this.previousUpdateWasATakeBack === true) {
-                msToSubstract = [0, 0];
-            }
+            // if (this.previousUpdateWasATakeBack === true) {
+            //     msToSubstract = [0, 0];
+            // }
             return this.gameService.updateDBBoard(this.currentPartId,
                                                   encodedMove,
                                                   msToSubstract,

@@ -214,7 +214,7 @@ describe('GameService', () => {
                     turn: 2,
                     typeGame: 'laMarelle',
                     beginning: { seconds: 17001025123456, nanoseconds: 680000000 },
-                    lastMoveTime: { seconds: 2, nanoseconds: 3000000 },
+                    lastUpdateTime: { seconds: 2, nanoseconds: 3000000 },
                     loser: 'creator',
                     winner: 'joiner',
                     request: Request.rematchProposed(Player.ZERO),
@@ -257,7 +257,7 @@ describe('GameService', () => {
                     turn: 2,
                     typeGame: 'laMarelle',
                     beginning: { seconds: 17001025123456, nanoseconds: 680000000 },
-                    lastMoveTime: { seconds: 2, nanoseconds: 3000000 },
+                    lastUpdateTime: { seconds: 2, nanoseconds: 3000000 },
                     loser: 'creator',
                     winner: 'joiner',
                     request: Request.rematchProposed(Player.ZERO),
@@ -312,7 +312,7 @@ describe('GameService', () => {
                 listMoves: [MOVE_1, MOVE_2],
                 turn: 2,
                 request: null,
-                lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
+                lastUpdateTime: firebase.firestore.FieldValue.serverTimestamp(),
                 scorePlayerZero: 5,
                 scorePlayerOne: 0,
             };
@@ -326,7 +326,7 @@ describe('GameService', () => {
                 listMoves: [MOVE_1, MOVE_2],
                 turn: 2,
                 request: null,
-                lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
+                lastUpdateTime: firebase.firestore.FieldValue.serverTimestamp(),
                 result: MGPResult.DRAW.value,
             };
             expect(partDao.update).toHaveBeenCalledWith('partId', expectedUpdate);

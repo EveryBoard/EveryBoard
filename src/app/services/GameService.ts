@@ -267,7 +267,7 @@ export class GameService implements OnDestroy {
             request,
             listMoves,
             turn: listMoves.length,
-            lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
+            lastUpdateTime: firebase.firestore.FieldValue.serverTimestamp(),
             remainingMsForZero: Utils.getNonNullable(part.doc.remainingMsForZero) - msToSubstract[0],
             remainingMsForOne: Utils.getNonNullable(part.doc.remainingMsForOne) - msToSubstract[1],
         };
@@ -312,7 +312,7 @@ export class GameService implements OnDestroy {
             listMoves,
             turn,
             request: null,
-            lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
+            lastUpdateTime: firebase.firestore.FieldValue.serverTimestamp(),
         };
         if (scores !== undefined) {
             update = {
