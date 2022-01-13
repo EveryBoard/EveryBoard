@@ -10,7 +10,7 @@ import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 describe('CoerceoMove', () => {
 
     it('Should distinguish move and capture based on presence or not of capture', () => {
-        const move: CoerceoMove = CoerceoMove.fromDeplacement(new Coord(5, 5), CoerceoStep.UP_RIGHT);
+        const move: CoerceoMove = CoerceoMove.fromMovement(new Coord(5, 5), CoerceoStep.UP_RIGHT);
         expect(move.isTileExchange()).toBeFalse();
         const capture: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(6, 4));
         expect(capture.isTileExchange()).toBeTrue();
@@ -21,11 +21,11 @@ describe('CoerceoMove', () => {
                 .toThrowError(CoerceoFailure.INVALID_DISTANCE());
         });
         it('Should not allow out of range starting coord', () => {
-            expect(() => CoerceoMove.fromDeplacement(new Coord(-1, 0), CoerceoStep.LEFT))
+            expect(() => CoerceoMove.fromMovement(new Coord(-1, 0), CoerceoStep.LEFT))
                 .toThrowError('Starting coord cannot be out of range (width: 15, height: 10).');
         });
         it('Should not allow out of range landing coord', () => {
-            expect(() => CoerceoMove.fromDeplacement(new Coord(0, 0), CoerceoStep.LEFT))
+            expect(() => CoerceoMove.fromMovement(new Coord(0, 0), CoerceoStep.LEFT))
                 .toThrowError('Landing coord cannot be out of range (width: 15, height: 10).');
         });
     });
@@ -43,25 +43,25 @@ describe('CoerceoMove', () => {
             const d: Coord = new Coord(1, 1);
             const tileExchange: CoerceoMove = CoerceoMove.fromTilesExchange(a);
             const differentCapture: CoerceoMove = CoerceoMove.fromTilesExchange(b);
-            const deplacement: CoerceoMove = CoerceoMove.fromCoordToCoord(a, b);
+            const movement: CoerceoMove = CoerceoMove.fromCoordToCoord(a, b);
             const differentStart: CoerceoMove = CoerceoMove.fromCoordToCoord(c, b);
             const differentEnd: CoerceoMove = CoerceoMove.fromCoordToCoord(a, d);
 
             expect(tileExchange.equals(differentCapture)).toBeFalse();
             expect(tileExchange.equals(tileExchange)).toBeTrue();
 
-            expect(deplacement.equals(differentStart)).toBeFalse();
-            expect(deplacement.equals(differentEnd)).toBeFalse();
-            expect(deplacement.equals(deplacement)).toBeTrue();
+            expect(movement.equals(differentStart)).toBeFalse();
+            expect(movement.equals(differentEnd)).toBeFalse();
+            expect(movement.equals(movement)).toBeTrue();
         });
         it('Should forbid non integer number to decode', () => {
             expect(() => CoerceoMove.encoder.decode(0.5)).toThrowError('EncodedMove must be an integer.');
         });
         it('should stringify nicely', () => {
             const tileExchange: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(5, 5));
-            const deplacement: CoerceoMove = CoerceoMove.fromCoordToCoord(new Coord(5, 5), new Coord(7, 5));
+            const movement: CoerceoMove = CoerceoMove.fromCoordToCoord(new Coord(5, 5), new Coord(7, 5));
             expect(tileExchange.toString()).toBe('CoerceoMove((5, 5))');
-            expect(deplacement.toString()).toBe('CoerceoMove((5, 5) > RIGHT > (7, 5))');
+            expect(movement.toString()).toBe('CoerceoMove((5, 5) > RIGHT > (7, 5))');
         });
         describe('encoder', () => {
             it('should be correct with first turn moves', () => {

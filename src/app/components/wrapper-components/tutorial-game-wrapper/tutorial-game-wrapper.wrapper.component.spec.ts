@@ -1112,22 +1112,22 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 ], [
                     new SixRules(SixState),
                     sixTutorial[4],
-                    SixMove.fromDeplacement(new Coord(6, 1), new Coord(7, 1)),
+                    SixMove.fromMovement(new Coord(6, 1), new Coord(7, 1)),
                     MGPValidation.failure(SixTutorialMessages.MOVEMENT_NOT_DISCONNECTING()),
                 ], [
                     new SixRules(SixState),
                     sixTutorial[4],
-                    SixMove.fromDeplacement(new Coord(6, 1), new Coord(6, 0)),
+                    SixMove.fromMovement(new Coord(6, 1), new Coord(6, 0)),
                     MGPValidation.failure(SixTutorialMessages.MOVEMENT_SELF_DISCONNECTING()),
                 ], [
                     new SixRules(SixState),
                     sixTutorial[5],
-                    SixMove.fromDeplacement(new Coord(0, 6), new Coord(1, 6)),
+                    SixMove.fromMovement(new Coord(0, 6), new Coord(1, 6)),
                     MGPValidation.failure(`This move does not disconnect your opponent's pieces. Try again with another piece.`),
                 ], [
                     new SixRules(SixState),
                     sixTutorial[6],
-                    SixMove.fromDeplacement(new Coord(2, 3), new Coord(3, 3)),
+                    SixMove.fromMovement(new Coord(2, 3), new Coord(3, 3)),
                     MGPValidation.failure(`This move has not cut the board in two equal halves.`),
                 ], [
                     new SixRules(SixState),
