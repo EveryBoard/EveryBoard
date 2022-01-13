@@ -25,14 +25,14 @@ export class RTDB {
     public static setOffline(uid: string): Promise<void> {
         return firebase.database().ref('/status/' + uid).set(RTDB.OFFLINE);
     }
-    public static updatePresence(uid: string): void {
+    public static async updatePresence(uid: string): Promise<void> {
         const userStatusDatabaseRef: firebase.database.Reference = firebase.database().ref('/status/' + uid);
-        firebase.database().ref('.info/connected').on('value', function(snapshot: firebase.database.DataSnapshot) {
+        firebase.database().ref('.info/connected').on('value', async(snapshot: firebase.database.DataSnapshot) => {
             if (snapshot.val() === false) {
                 return;
             }
-            userStatusDatabaseRef.onDisconnect().set(RTDB.OFFLINE).then(function() {
-                userStatusDatabaseRef.set(RTDB.ONLINE);
+            await userStatusDatabaseRef.onDisconnect().set(RTDB.OFFLINE).then(async() => {
+                await userStatusDatabaseRef.set(RTDB.ONLINE);
             });
         });
     }
@@ -79,7 +79,7 @@ export class AuthenticationService implements OnDestroy {
     private registrationInProgress: MGPOptional<Promise<MGPFallible<firebase.User>>> = MGPOptional.empty();
 
     constructor(public afAuth: AngularFireAuth,
-                private userDAO: UserDAO) {
+                private readonly userDAO: UserDAO) {
         display(AuthenticationService.VERBOSE, '1 authService subscribe to Obs<User>');
 
         this.userRS = new ReplaySubject<AuthUser>(1);
@@ -95,7 +95,7 @@ export class AuthenticationService implements OnDestroy {
                     await this.registrationInProgress.get();
                     this.registrationInProgress = MGPOptional.empty();
                 }
-                RTDB.updatePresence(user.uid);
+                await RTDB.updatePresence(user.uid);
                 const userInDB: IUser = (await userDAO.read(user.uid)).get();
                 display(AuthenticationService.VERBOSE, `User ${userInDB.username} is connected, and the verified status is ${this.emailVerified(user)}`);
                 const userHasFinalizedVerification: boolean =
@@ -240,7 +240,7 @@ export class AuthenticationService implements OnDestroy {
         const user: MGPOptional<firebase.User> = MGPOptional.ofNullable(firebase.auth().currentUser);
         if (user.isPresent()) {
             const uid: string = user.get().uid;
-            RTDB.setOffline(uid);
+            await RTDB.setOffline(uid);
             await this.afAuth.signOut();
             return MGPValidation.SUCCESS;
         } else {
@@ -284,7 +284,9 @@ export class AuthenticationService implements OnDestroy {
         await currentUser.getIdToken(true);
         await currentUser.reload();
     }
-
+    public async getUser(): Promise<AuthUser> {
+        return this.userObs.toPromise();
+    }
     public ngOnDestroy(): void {
         this.authSub.unsubscribe();
     }

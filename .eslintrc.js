@@ -23,6 +23,7 @@ module.exports = {
             'plugin:jasmine/recommended',
         ],
         rules: {
+            '@typescript-eslint/no-floating-promises': ['error'],
             'jasmine/new-line-before-expect': ['off'],
             'jasmine/new-line-between-declarations': ['off'],
             'no-warning-comments': [

@@ -502,7 +502,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await componentTestUtils.clickElement('#playLocallyButton');
 
             // expect navigator to have been called
-            expect(router.navigate).toHaveBeenCalledWith(['local/Quarto']);
+            expect(router.navigate).toHaveBeenCalledWith(['/local/', 'Quarto']);
         }));
         it('Should redirect to online game when asking for it when finished and user is online', fakeAsync(async() => {
             // Given a finish tutorial
@@ -517,15 +517,14 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await componentTestUtils.clickElement('#nextButton');
 
             // when clicking play locally
-            const compo: TutorialGameWrapperComponent =
-                componentTestUtils.wrapper as TutorialGameWrapperComponent;
-            spyOn(compo.gameService, 'createGameAndRedirectOrShowError').and.callThrough();
+            const router: Router = TestBed.inject(Router);
+            spyOn(router, 'navigate');
             await componentTestUtils.clickElement('#playOnlineButton');
 
             // expect navigator to have been called
-            expect(compo.gameService.createGameAndRedirectOrShowError).toHaveBeenCalledWith('Quarto');
+            expect(router.navigate).toHaveBeenCalledWith(['/play/', 'Quarto']);
 
-            tick(3000); // needs to be >2999
+            // tick(3000); // needs to be >2999
         }));
     });
     describe('TutorialStep awaiting specific moves', () => {

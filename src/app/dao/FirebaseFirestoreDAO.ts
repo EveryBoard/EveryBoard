@@ -12,6 +12,8 @@ export interface FirebaseDocumentWithId<T> {
     doc: T
 }
 
+export type FirebaseCondition = [string, firebase.firestore.WhereFilterOp, unknown]
+
 export interface IFirebaseFirestoreDAO<T extends FirebaseJSONObject> {
 
     create(newElement: T): Promise<string>;
@@ -28,11 +30,12 @@ export interface IFirebaseFirestoreDAO<T extends FirebaseJSONObject> {
      */
     getObsById(id: string): Observable<MGPOptional<T>>;
 
-    observingWhere(conditions: [string,
-                                firebase.firestore.WhereFilterOp,
-                                unknown][],
+    observingWhere(conditions: FirebaseCondition[],
                    callback: FirebaseCollectionObserver<T>): () => void;
+
+    findWhere(conditions: FirebaseCondition[]): Promise<T[]>
 }
+
 
 export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> implements IFirebaseFirestoreDAO<T> {
     public static VERBOSE: boolean = false;
@@ -47,7 +50,7 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
         const docSnapshot: firebase.firestore.DocumentSnapshot<T> =
             await this.afs.collection<T>(this.collectionName).doc(id).ref.get();
         if (docSnapshot.exists) {
-            return MGPOptional.of(docSnapshot.data() as T);
+            return MGPOptional.of(Utils.getNonNullable(docSnapshot.data()));
         } else {
             return MGPOptional.empty();
         }
@@ -73,29 +76,23 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
                 return MGPOptional.ofNullable(actions.payload.data());
             }));
     }
+    public async findWhere(conditions: FirebaseCondition[]): Promise<T[]> {
+        const query: firebase.firestore.Query<T> = this.constructQuery(conditions);
+        const snapshot: firebase.firestore.QuerySnapshot<T> = await query.get();
+        return snapshot.docs.map((doc: firebase.firestore.QueryDocumentSnapshot<T>) => doc.data());
+    }
     /**
      * Observe the data according to the given conditions, where a condition consists of:
      * - a field
      * - a comparison
      * - a value that is matched against the field using the comparison
      **/
-    public observingWhere(conditions: [string,
-                                       firebase.firestore.WhereFilterOp,
-                                       unknown][],
+    public observingWhere(conditions: FirebaseCondition[],
                           callback: FirebaseCollectionObserver<T>)
     : () => void
     {
-        assert(conditions.length >= 1, 'observingWhere called without conditions');
-        let query: firebase.firestore.Query<unknown> | null = null;
-        for (const condition of conditions) {
-            if (query == null) {
-                query = this.afs.collection(this.collectionName).ref
-                    .where(condition[0], condition[1], condition[2]);
-            } else {
-                query = query.where(condition[0], condition[1], condition[2]);
-            }
-        }
-        return Utils.getNonNullable(query)
+        const query: firebase.firestore.Query<T> = this.constructQuery(conditions);
+        return query
             .onSnapshot((snapshot: firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>) => {
                 const createdDocs: FirebaseDocumentWithId<T>[] = [];
                 const modifiedDocs: FirebaseDocumentWithId<T>[] = [];
@@ -134,5 +131,18 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
                     callback.onDocumentDeleted(deletedDocs);
                 }
             });
+    }
+    private constructQuery(conditions: FirebaseCondition[]): firebase.firestore.Query<T> {
+        assert(conditions.length >= 1, 'constructQuery called without conditions');
+        let query: firebase.firestore.Query<T> | null = null;
+        for (const condition of conditions) {
+            if (query == null) {
+                query = this.afs.collection<T>(this.collectionName).ref
+                    .where(condition[0], condition[1], condition[2]);
+            } else {
+                query = query.where(condition[0], condition[1], condition[2]);
+            }
+        }
+        return Utils.getNonNullable(query);
     }
 }

@@ -19,6 +19,11 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
         }
         return MGPOptional.empty();
     }
+    public forEach(callback: (item: {key: K, value: V}) => void): void {
+        for (let i: number = 0; i < this.map.length; i++) {
+            callback(this.getByIndex(i));
+        }
+    }
     public getByIndex(index: number): {key: K, value: V} {
         return this.map[index];
     }

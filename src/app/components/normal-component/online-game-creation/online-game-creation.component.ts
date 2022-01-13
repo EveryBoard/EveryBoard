@@ -1,24 +1,57 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { PartDAO } from 'src/app/dao/PartDAO';
+import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
 import { GameService } from 'src/app/services/GameService';
-import { Utils } from 'src/app/utils/utils';
+import { GameServiceMessages } from 'src/app/services/GameServiceMessages';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+import { assert, Utils } from 'src/app/utils/utils';
 
 @Component({
     selector: 'app-online-game-creation',
     template: '<p i18n>Creating online game, please wait, it should not take long.</p>',
 })
-export class OnlineGameCreationComponent implements OnInit {
+export class OnlineGameCreationComponent implements OnInit, OnDestroy {
 
-    public constructor(private route: ActivatedRoute,
-                       private gameService: GameService) {
+    private readonly userNameSub: Subscription;
+
+    public constructor(private readonly route: ActivatedRoute,
+                       private readonly router: Router,
+                       private readonly authenticationService: AuthenticationService,
+                       private readonly messageDisplayer: MessageDisplayer,
+                       private readonly partDAO: PartDAO,
+                       private readonly gameService: GameService) {
     }
     public async ngOnInit(): Promise<void> {
-        await this.createGame(this.extractGameFromURL());
+        await this.createGameAndRedirectOrShowError(this.extractGameFromURL());
+    }
+    public ngOnDestroy(): void {
+        this.userNameSub.unsubscribe();
     }
     private extractGameFromURL(): string {
         return Utils.getNonNullable(this.route.snapshot.paramMap.get('compo'));
     }
-    private async createGame(game: string): Promise<boolean> {
-        return this.gameService.createGameAndRedirectOrShowError(game);
+    private async createGameAndRedirectOrShowError(game: string): Promise<boolean> {
+        const user: AuthUser = await this.authenticationService.getUser();
+        assert(user.isConnected(), 'User must be connected and have a username to reach this page');
+        if (await this.canCreateOnlineGame(user.username.get())) {
+            const gameId: string = await this.gameService.createPartJoinerAndChat(user.username.get(), game);
+            // create Part and Joiner
+            await this.router.navigate(['/play/', game, gameId]);
+            return true;
+        } else if (user.isConnected() === false) {
+            this.messageDisplayer.infoMessage(GameServiceMessages.USER_OFFLINE());
+            await this.router.navigate(['/login']);
+            return false;
+        } else {
+            this.messageDisplayer.infoMessage(GameServiceMessages.ALREADY_INGAME());
+            await this.router.navigate(['/server']);
+            return false;
+        }
+    }
+    private async canCreateOnlineGame(username: string): Promise<boolean> {
+        const hasActivePart: boolean = await this.partDAO.userHasActivePart(username);
+        return hasActivePart === false;
     }
 }

@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { fakeAsync, TestBed } from '@angular/core/testing';
 import { GameService, StartingPartConfig } from '../GameService';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { of } from 'rxjs';
@@ -18,15 +18,11 @@ import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 import { AuthenticationService } from '../AuthenticationService';
 import { AuthenticationServiceMock } from './AuthenticationService.spec';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
-import { GameServiceMessages } from '../GameServiceMessages';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Utils } from 'src/app/utils/utils';
-import { Router } from '@angular/router';
-import { MessageDisplayer } from '../MessageDisplayer';
 import { JoinerService } from '../JoinerService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import firebase from 'firebase/app';
-import { ActivePartsService } from '../ActivePartsService';
 
 describe('GameService', () => {
 
@@ -113,57 +109,6 @@ describe('GameService', () => {
 
         expect(joinerService.acceptConfig).toHaveBeenCalledOnceWith();
     }));
-    describe('createGameAndRedirectOrShowError', () => {
-        it('should create and redirect to the game upon success', fakeAsync(async() => {
-            // Given an online user that can create a game
-            const game: string = 'whatever-game';
-            const router: Router = TestBed.inject(Router);
-            spyOn(router, 'navigate').and.callThrough();
-            AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
-            const activePartsService: ActivePartsService = TestBed.inject(ActivePartsService);
-            spyOn(activePartsService, 'hasActivePart').and.returnValue(false);
-
-            // When calling the function
-            const result: boolean = await service.createGameAndRedirectOrShowError(game);
-
-            // Then it succeeds and the user is redirected to the game
-            expect(result).toBeTrue();
-            expect(router.navigate)
-                .toHaveBeenCalledOnceWith(['/play/' + game, 'PartDAOMock0']);
-        }));
-        it('should show toast and navigate when creator is offline', fakeAsync(async() => {
-            const router: Router = TestBed.inject(Router);
-            const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
-            spyOn(router, 'navigate').and.callThrough();
-            spyOn(messageDisplayer, 'infoMessage').and.callThrough();
-            spyOn(service, 'isUserOffline').and.returnValue(true);
-
-            // when calling it
-            expect(await service.createGameAndRedirectOrShowError('whatever')).toBeFalse();
-            tick(3000); // needs to be >2999
-
-            // it should toast, and navigate
-            expect(messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(GameServiceMessages.USER_OFFLINE());
-            expect(router.navigate).toHaveBeenCalledOnceWith(['/login']);
-
-        }));
-        it('should show toast and navigate when creator cannot create game', fakeAsync(async() => {
-            const router: Router = TestBed.inject(Router);
-            const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
-            spyOn(router, 'navigate').and.callThrough();
-            spyOn(messageDisplayer, 'infoMessage').and.callThrough();
-            spyOn(service, 'isUserOffline').and.returnValue(false);
-            spyOn(service, 'canCreateGame').and.returnValue(false);
-
-            // when calling it
-            expect(await service.createGameAndRedirectOrShowError('whatever')).toBeFalse();
-            tick(3000); // needs to be >2999
-
-            // it should toast, and navigate
-            expect(messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(GameServiceMessages.ALREADY_INGAME());
-            expect(router.navigate).toHaveBeenCalledOnceWith(['/server']);
-        }));
-    });
     describe('getStartingConfig', () => {
         it('should put creator first when math.random() is below 0.5', fakeAsync(async() => {
             // given a joiner config asking random start
@@ -351,8 +296,5 @@ describe('GameService', () => {
             };
             expect(partDAO.update).toHaveBeenCalledOnceWith('partId', expectedUpdate);
         }));
-    });
-    afterEach(() => {
-        service.ngOnDestroy();
     });
 });

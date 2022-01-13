@@ -6,12 +6,10 @@ import 'firebase/firestore';
 import { assert, display, FirebaseJSONObject, Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
-import { FirebaseDocumentWithId, IFirebaseFirestoreDAO } from '../FirebaseFirestoreDAO';
+import { FirebaseCondition, FirebaseDocumentWithId, IFirebaseFirestoreDAO } from '../FirebaseFirestoreDAO';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { ObservableSubject } from 'src/app/utils/tests/ObservableSubject.spec';
 import { Time } from 'src/app/domain/Time';
-
-type FirebaseCondition = [string, firebase.firestore.WhereFilterOp, unknown];
 
 type DocumentSubject<T> = ObservableSubject<MGPOptional<FirebaseDocumentWithId<T>>>;
 
@@ -173,9 +171,7 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
         }
         return null;
     }
-    private conditionsHold(conditions: FirebaseCondition[],
-                           doc?: T): boolean {
-        if (doc === undefined) return false;
+    private conditionsHold(conditions: FirebaseCondition[], doc: T): boolean {
         for (const condition of conditions) {
             assert(condition[1] === '==', 'FirebaseFirestoreDAOMock currently only supports == as a condition');
             if (doc[condition[0]] !== condition[2]) {
@@ -183,5 +179,15 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
             }
         }
         return true;
+    }
+    public async findWhere(conditions: FirebaseCondition[]): Promise<T[]> {
+        const matchingDocs: T[] = [];
+        this.getStaticDB().forEach((item: {key: string, value: DocumentSubject<T>}) => {
+            const doc: T = item.value.subject.value.get().doc;
+            if (this.conditionsHold(conditions, doc)) {
+                matchingDocs.push(doc);
+            }
+        });
+        return matchingDocs;
     }
 }

@@ -44,6 +44,9 @@ export class AuthenticationServiceMock {
         this.currentUser = MGPOptional.of(user);
         this.userRS.next(user);
     }
+    public async getUser(): Promise<AuthUser> {
+        return this.currentUser.get();
+    }
     public getUserObs(): Observable<AuthUser> {
         return this.userRS.asObservable();
     }

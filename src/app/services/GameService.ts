@@ -1,5 +1,4 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { PartDAO } from '../dao/PartDAO';
 import { MGPResult, IPart, Part, IPartId } from '../domain/icurrentpart';
@@ -12,9 +11,7 @@ import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { assert, display, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
-import { AuthenticationService, AuthUser } from './AuthenticationService';
-import { MessageDisplayer } from './MessageDisplayer';
-import { GameServiceMessages } from './GameServiceMessages';
+import { AuthenticationService } from './AuthenticationService';
 import { Time } from '../domain/Time';
 import firebase from 'firebase/app';
 import { MGPOptional } from '../utils/MGPOptional';
@@ -29,7 +26,7 @@ export interface StartingPartConfig extends Partial<IPart> {
 @Injectable({
     providedIn: 'root',
 })
-export class GameService implements OnDestroy {
+export class GameService {
 
     public static VERBOSE: boolean = false;
 
@@ -39,45 +36,11 @@ export class GameService implements OnDestroy {
 
     private followedPartSub: Subscription;
 
-    private readonly userNameSub: Subscription;
-
-    private userName: MGPOptional<string> = MGPOptional.empty();
-
     constructor(private readonly partDAO: PartDAO,
-                private readonly activePartsService: ActivePartsService,
                 private readonly joinerService: JoinerService,
-                private readonly chatService: ChatService,
-                private readonly router: Router,
-                private readonly messageDisplayer: MessageDisplayer,
-                private readonly authenticationService: AuthenticationService)
+                private readonly chatService: ChatService) 
     {
         display(GameService.VERBOSE, 'GameService.constructor');
-        this.userNameSub = this.authenticationService.getUserObs()
-            .subscribe((joueur: AuthUser) => {
-                this.userName = joueur.username;
-            });
-    }
-    public async createGameAndRedirectOrShowError(game: string): Promise<boolean> {
-        if (this.isUserOffline()) {
-            this.messageDisplayer.infoMessage(GameServiceMessages.USER_OFFLINE());
-            this.router.navigate(['/login']);
-            return false;
-        } else if (this.canCreateGame() === true) {
-            const gameId: string = await this.createPartJoinerAndChat(this.userName.get(), game);
-            // create Part and Joiner
-            this.router.navigate(['/play/' + game, gameId]);
-            return true;
-        } else {
-            this.messageDisplayer.infoMessage(GameServiceMessages.ALREADY_INGAME());
-            this.router.navigate(['/server']);
-            return false;
-        }
-    }
-    public isUserOffline(): boolean {
-        return this.userName.isAbsent();
-    }
-    public ngOnDestroy(): void {
-        this.userNameSub.unsubscribe();
     }
     public async getPartValidity(partId: string, gameType: string): Promise<MGPValidation> {
         const part: MGPOptional<IPart> = await this.partDAO.read(partId);
@@ -90,7 +53,7 @@ export class GameService implements OnDestroy {
             return MGPValidation.failure('WRONG_GAME_TYPE');
         }
     }
-    protected createUnstartedPart(creatorName: string, typeGame: string): Promise<string> {
+    private createUnstartedPart(creatorName: string, typeGame: string): Promise<string> {
         display(GameService.VERBOSE,
                 'GameService.createPart(' + creatorName + ', ' + typeGame + ')');
 
@@ -103,7 +66,7 @@ export class GameService implements OnDestroy {
         };
         return this.partDAO.create(newPart);
     }
-    protected createChat(chatId: string): Promise<void> {
+    private createChat(chatId: string): Promise<void> {
         display(GameService.VERBOSE, 'GameService.createChat(' + chatId + ')');
 
         return this.chatService.createNewChat(chatId);
@@ -115,9 +78,6 @@ export class GameService implements OnDestroy {
         await this.joinerService.createInitialJoiner(creatorName, gameId);
         await this.createChat(gameId);
         return gameId;
-    }
-    public canCreateGame(): boolean {
-        return this.userName.isPresent() && this.activePartsService.hasActivePart(this.userName.get()) === false;
     }
     // on Part Creation Component
 
