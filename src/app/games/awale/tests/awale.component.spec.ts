@@ -28,9 +28,9 @@ describe('AwaleComponent', () => {
         const move: AwaleMove = AwaleMove.FIVE;
         componentTestUtils.expectMoveSuccess('#click_5_0', move, undefined, [0, 0]);
         const awaleComponent: AwaleComponent = componentTestUtils.getComponent() as AwaleComponent;
-        expect(awaleComponent.getCaseClasses(5, 0)).toEqual(['moved', 'highlighted']);
-        expect(awaleComponent.getCaseClasses(5, 1)).toEqual(['moved']);
-        expect(awaleComponent.getCaseClasses(4, 1)).toEqual(['captured']);
+        expect(awaleComponent.getSquareClasses(5, 0)).toEqual(['moved', 'highlighted']);
+        expect(awaleComponent.getSquareClasses(5, 1)).toEqual(['moved']);
+        expect(awaleComponent.getSquareClasses(4, 1)).toEqual(['captured']);
     }));
     it('should tell to user empty house cannot be moved', fakeAsync(async() => {
         const board: number[][] = [

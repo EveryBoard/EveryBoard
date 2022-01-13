@@ -318,7 +318,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         }
         return MGPValidation.failure('not a direction');
     }
-    public getCaseClasses(x: number, y: number): string[] { // TODOTODO refactor as well
+    public getSquareClasses(x: number, y: number): string[] { // TODOTODO refactor as well
         const coord: Coord = new Coord(x, y);
         const classes: string[] = [];
         if (this.moveds.some((c: Coord) => c.equals(coord))) {

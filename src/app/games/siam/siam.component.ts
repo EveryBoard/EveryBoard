@@ -180,7 +180,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
     public getPieceClasses(c: SiamPiece): string[] {
         return [this.getPlayerClass(c.getOwner())];
     }
-    public getCaseClasses(x: number, y: number): string[] {
+    public getSquareClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
 
         if (this.movedPieces.some((c: Coord) => c.equals(coord))) {

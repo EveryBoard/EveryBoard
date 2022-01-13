@@ -363,10 +363,10 @@ describe('GameService', () => {
                 // Given any state of service
                 spyOn(partDAO, 'update');
 
-                // When calling acceptDraw as Player.ONE
+                // When calling acceptDraw as the player
                 service.acceptDraw('joinerId', 5, player);
 
-                // Then PartDAO should have been called with AGREED_DRAW_BY_ONE
+                // Then PartDAO should have been called with the appropriate MGPResult
                 const result: number = [
                     MGPResult.AGREED_DRAW_BY_ZERO.value,
                     MGPResult.AGREED_DRAW_BY_ONE.value][player.value];

@@ -140,7 +140,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         }
         return clickedCoord.isUpperThan(this.chosenStartingCoord.get()); // true if legal climbing (without capture)
     }
-    public getCaseClasses(x: number, y: number, z: number): string[] {
+    public getSquareClasses(x: number, y: number, z: number): string[] {
         const coord: PylosCoord = new PylosCoord(x, y, z);
         if (this.lastMove.isPresent()) {
             const move: PylosMove = this.lastMove.get();

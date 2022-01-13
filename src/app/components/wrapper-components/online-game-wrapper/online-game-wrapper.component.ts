@@ -558,7 +558,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         this.gameComponent.updateBoard();
     }
     public setPlayersDatas(updatedICurrentPart: Part): void {
-        display(OnlineGameWrapperComponent.VERBOSE ||true, { OnlineGameWrapper_setPlayersDatas: updatedICurrentPart });
+        display(OnlineGameWrapperComponent.VERBOSE, { OnlineGameWrapper_setPlayersDatas: updatedICurrentPart });
         this.players = [
             MGPOptional.of(updatedICurrentPart.doc.playerZero),
             MGPOptional.ofNullable(updatedICurrentPart.doc.playerOne),

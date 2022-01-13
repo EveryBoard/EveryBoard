@@ -134,9 +134,9 @@ describe('PylosComponent', () => {
 
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(1, 1, 0), captures);
         await componentTestUtils.expectMoveSuccess('#piece_0_1_0', move);
-        expect(pylosGameComponent.getCaseClasses(1, 1, 0)).toEqual(['moved']);
-        expect(pylosGameComponent.getCaseClasses(0, 0, 0)).toEqual(['captured']);
-        expect(pylosGameComponent.getCaseClasses(0, 1, 0)).toEqual(['captured']);
+        expect(pylosGameComponent.getSquareClasses(1, 1, 0)).toEqual(['moved']);
+        expect(pylosGameComponent.getSquareClasses(0, 0, 0)).toEqual(['captured']);
+        expect(pylosGameComponent.getSquareClasses(0, 1, 0)).toEqual(['captured']);
     }));
     it('should forbid piece to land lower than they started', fakeAsync(async() => {
         const initialBoard: Player[][][] = [

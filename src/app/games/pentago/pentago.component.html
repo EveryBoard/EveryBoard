@@ -31,7 +31,7 @@
                             [attr.cx]="blockX + (2 * STROKE_WIDTH) + ((localX + 0.5) * SPACE_SIZE)"
                             [attr.cy]="blockY + (2 * STROKE_WIDTH) + ((localY + 0.5) * SPACE_SIZE)"
                             [attr.r]="(SPACE_SIZE - STROKE_WIDTH) / 2"
-                            [ngClass]="getCaseClasses(3 * bx + localX, 3 * by + localY)"
+                            [ngClass]="getSquareClasses(3 * bx + localX, 3 * by + localY)"
                             class="base"
                             pointer-events="fill"
                     />
@@ -62,7 +62,7 @@
             [attr.cx]="getCenter(victoryCoord.x)"
             [attr.cy]="getCenter(victoryCoord.y)"
             [attr.r]="(SPACE_SIZE - STROKE_WIDTH) / 2"
-            [ngClass]="getCaseClasses(victoryCoord.x, victoryCoord.y)"
+            [ngClass]="getSquareClasses(victoryCoord.x, victoryCoord.y)"
             class="base victory-stroke"
             [attr.stroke-width]="STROKE_WIDTH"
     />

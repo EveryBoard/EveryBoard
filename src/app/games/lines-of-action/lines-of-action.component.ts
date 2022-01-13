@@ -99,7 +99,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
         this.selected = MGPOptional.empty();
         this.targets = [];
     }
-    public getCaseClasses(x: number, y: number): string[] {
+    public getSquareClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
 
         if (this.lastMove.isPresent()) {

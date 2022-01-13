@@ -69,8 +69,8 @@ describe('LinesOfActionComponent', () => {
         await componentTestUtils.expectMoveSuccess('#click_2_2', move);
 
         const component: LinesOfActionComponent = componentTestUtils.getComponent();
-        expect(component.getCaseClasses(2, 2)).toEqual(['moved']);
-        expect(component.getCaseClasses(2, 0)).toEqual(['moved']);
+        expect(component.getSquareClasses(2, 2)).toEqual(['moved']);
+        expect(component.getSquareClasses(2, 0)).toEqual(['moved']);
     }));
     it('should show captures', fakeAsync(async() => {
         const board: Table<Player> = [
@@ -91,6 +91,6 @@ describe('LinesOfActionComponent', () => {
         await componentTestUtils.expectMoveSuccess('#click_2_2', move);
 
         const component: LinesOfActionComponent = componentTestUtils.getComponent();
-        expect(component.getCaseClasses(2, 2)).toEqual(['captured']);
+        expect(component.getSquareClasses(2, 2)).toEqual(['captured']);
     }));
 });

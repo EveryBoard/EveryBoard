@@ -1308,7 +1308,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // When receiving addGlobalTime request
             await receiveRequest(Request.addGlobalTime(Player.ONE), 1);
 
-            // Then chrono global of player one should be increased with 5 new minutes
+            // Then chrono global of player one should be increased by 5 new minutes
             const wrapper: OnlineGameWrapperComponent = componentTestUtils.wrapper as OnlineGameWrapperComponent;
             expect(wrapper.chronoOneGlobal.remainingMs).toBe((30 * 60 * 1000) + (5 * 60 * 1000));
             tick(wrapper.joiner.maximalMoveDuration * 1000);
@@ -1322,7 +1322,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // When receiving addGlobalTime request
             await receiveRequest(Request.addGlobalTime(Player.ZERO), 1);
 
-            // Then chrono global of player one should be increased with 5 new minutes
+            // Then chrono global of player one should be increased by 5 new minutes
             const wrapper: OnlineGameWrapperComponent = componentTestUtils.wrapper as OnlineGameWrapperComponent;
             expect(wrapper.chronoZeroGlobal.remainingMs).toBe((30 * 60 * 1000) + (5 * 60 * 1000));
             tick(wrapper.joiner.maximalMoveDuration * 1000);
@@ -1777,7 +1777,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(wrapper.getUpdateType(update)).toBe(UpdateType.REQUEST);
             tick(wrapper.joiner.maximalMoveDuration * 1000 + 1);
         }));
-        it('Request.TurnTimeAdded + one remainingMs modified = UpdateType.REQUEST', fakeAsync(async() => {
+        it('Request.AddTurnTime + one remainingMs modified = UpdateType.REQUEST', fakeAsync(async() => {
             // Given a part with take back asked
             await prepareStartedGameFor(USER_CREATOR);
             wrapper.currentPart = new Part({

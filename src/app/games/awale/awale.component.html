@@ -16,7 +16,7 @@
                     [attr.cx]="50 + 100*x"
                     [attr.cy]="50 + 120*y"
                     r="46"
-                    [ngClass]="getCaseClasses(x, y)"
+                    [ngClass]="getSquareClasses(x, y)"
                     class="base"
             />
             <text (click)="onClick(x, y)"
