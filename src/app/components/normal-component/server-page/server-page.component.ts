@@ -30,6 +30,7 @@ export class ServerPageComponent implements OnInit, OnDestroy {
     constructor(public router: Router,
                 private readonly userService: UserService,
                 private readonly activePartsService: ActivePartsService) {
+        console.log('server page component')
     }
     public ngOnInit(): void {
         display(ServerPageComponent.VERBOSE, 'serverPageComponent.ngOnInit');
@@ -37,6 +38,7 @@ export class ServerPageComponent implements OnInit, OnDestroy {
             .subscribe((activeUsers: IUserId[]) => {
                 this.activeUsers = activeUsers;
             });
+        this.activePartsService.startObserving();
         this.activePartsSub = this.activePartsService.getActivePartsObs()
             .subscribe((activeParts: IPartId[]) => {
                 this.activeParts = activeParts;
@@ -45,11 +47,12 @@ export class ServerPageComponent implements OnInit, OnDestroy {
     public ngOnDestroy(): void {
         display(ServerPageComponent.VERBOSE, 'serverPageComponent.ngOnDestroy');
         this.activeUsersSub.unsubscribe();
+        this.activePartsService.stopObserving();
         this.activePartsSub.unsubscribe();
         this.userService.unSubFromActiveUsersObs();
     }
-    public joinGame(partId: string, typeGame: string): void {
-        this.router.navigate(['/play/' + typeGame, partId]);
+    public async joinGame(partId: string, typeGame: string): Promise<void> {
+        await this.router.navigate(['/play/' + typeGame, partId]);
     }
     public selectTab(tab: Tab): void {
         this.currentTab = tab;

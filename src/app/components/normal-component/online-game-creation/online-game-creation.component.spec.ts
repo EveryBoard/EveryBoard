@@ -2,11 +2,10 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { PartDAO } from 'src/app/dao/PartDAO';
-import { GameServiceMessages } from 'src/app/services/GameServiceMessages';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { ActivatedRouteStub, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { OnlineGameCreationComponent } from './online-game-creation.component';
+import { OnlineGameCreationComponent, OnlineGameCreationMessages } from './online-game-creation.component';
 
 describe('OnlineGameCreationComponent', () => {
 
@@ -45,7 +44,7 @@ describe('OnlineGameCreationComponent', () => {
         tick(3000); // needs to be >2999
 
         // It should toast, and navigate to server
-        expect(messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(GameServiceMessages.ALREADY_INGAME());
+        expect(messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(OnlineGameCreationMessages.ALREADY_INGAME());
         expect(router.navigate).toHaveBeenCalledOnceWith(['/server']);
     }));
 });

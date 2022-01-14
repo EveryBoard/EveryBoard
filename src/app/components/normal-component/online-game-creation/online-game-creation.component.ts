@@ -1,11 +1,15 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
 import { GameService } from 'src/app/services/GameService';
-import { GameServiceMessages } from 'src/app/services/GameServiceMessages';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+import { Localized } from 'src/app/utils/LocaleUtils';
 import { assert, Utils } from 'src/app/utils/utils';
+
+export class OnlineGameCreationMessages {
+    public static readonly ALREADY_INGAME: Localized = () => $localize`You are already in a game. Finish it or cancel it first.`;
+}
 
 @Component({
     selector: 'app-online-game-creation',
@@ -35,7 +39,7 @@ export class OnlineGameCreationComponent implements OnInit {
             await this.router.navigate(['/play/', game, gameId]);
             return true;
         } else {
-            this.messageDisplayer.infoMessage(GameServiceMessages.ALREADY_INGAME());
+            this.messageDisplayer.infoMessage(OnlineGameCreationMessages.ALREADY_INGAME());
             await this.router.navigate(['/server']);
             return false;
         }

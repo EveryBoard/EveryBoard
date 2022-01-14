@@ -11,6 +11,7 @@ import { Utils } from 'src/app/utils/utils';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { AngularFireAuth } from '@angular/fire/auth';
 
 class RTDBSpec {
     public static setOfflineMock(): void {
@@ -91,7 +92,7 @@ async function setupAuthTestModule(): Promise<unknown> {
         // Here we can't clear the DB because it breaks everything, but this is how it should be done:
         await firebase.database().ref().set(null);
     }
-    return Promise.resolve();
+    return;
 }
 
 export class AuthenticationServiceUnderTest extends AuthenticationService {
@@ -100,7 +101,14 @@ export class AuthenticationServiceUnderTest extends AuthenticationService {
     }
 }
 
+/**
+ * Creates a connected google user, which is required to do DB updates in the emulator.
+ * When using it, don't forget to sign out the user when the test is done, using:
+ * await firebase.auth().signOut();
+ */
 export async function createConnectedGoogleUser(createInDB: boolean): Promise<firebase.auth.UserCredential> {
+    // Need angular fire auth in order to create a user
+    TestBed.inject(AngularFireAuth);
     const credential: firebase.auth.UserCredential = await firebase.auth().signInWithCredential(firebase.auth.GoogleAuthProvider.credential('{"sub": "abc123", "email": "foo@example.com", "email_verified": true}'));
     if (createInDB) {
         await TestBed.inject(UserDAO).set(Utils.getNonNullable(credential.user).uid,

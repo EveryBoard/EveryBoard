@@ -12,6 +12,7 @@ export class UserService {
 
     constructor(private readonly activesUsersService: ActiveUsersService,
                 private readonly joueursDAO: UserDAO) {
+        console.log('user service')
     }
 
     public getActiveUsersObs(): Observable<IUserId[]> {

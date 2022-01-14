@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { PartDAO } from '../dao/PartDAO';
 import { IPart, IPartId } from '../domain/icurrentpart';
@@ -7,13 +7,17 @@ import { assert, Utils } from '../utils/utils';
 import { MGPOptional } from '../utils/MGPOptional';
 
 @Injectable({
-    providedIn: 'root',
+    // This ensures that any component using this service has its unique ActivePartsService
+    // It prevents multiple subscriptions/unsubscriptions issues.
+    providedIn: 'any',
 })
 /*
- * This service handles active parts (i.e., being played, waiting for a player, ...),
- * and is used by the server component and game component.
+ * This service handles active parts (i.e., being played, waiting for a player,
+ * ...), and is used by the server component and game component. You must start
+ * observing when you need to observe parts, and stop observing when you're
+ * done.
  */
-export class ActivePartsService implements OnDestroy {
+export class ActivePartsService {
 
     private readonly activePartsBS: BehaviorSubject<IPartId[]>;
 
@@ -26,15 +30,12 @@ export class ActivePartsService implements OnDestroy {
     constructor(private readonly partDAO: PartDAO) {
         this.activePartsBS = new BehaviorSubject<IPartId[]>([]);
         this.activePartsObs = this.activePartsBS.asObservable();
-        this.startObserving();
     }
     public getActivePartsObs(): Observable<IPartId[]> {
         return this.activePartsObs;
     }
-    public ngOnDestroy(): void {
-        this.stopObserving();
-    }
     public startObserving(): void {
+        assert(this.unsubscribe.isAbsent(), 'ActivePartsService: already observing');
         const onDocumentCreated: (createdParts: IPartId[]) => void = (createdParts: IPartId[]) => {
             const result: IPartId[] = this.activePartsBS.value.concat(...createdParts);
             this.activePartsBS.next(result);
@@ -67,7 +68,7 @@ export class ActivePartsService implements OnDestroy {
         });
     }
     public stopObserving(): void {
-        assert(this.unsubscribe.isPresent(), 'Cannot stop observing actives part when you have not started observing');
+        assert(this.unsubscribe.isPresent(), 'Cannot stop observing active parts when you have not started observing');
         this.activePartsBS.next([]);
         this.unsubscribe.get()();
     }

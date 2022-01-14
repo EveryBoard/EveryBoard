@@ -214,7 +214,4 @@ describe('ActivePartsService', () => {
             activePartsSub.unsubscribe();
         }));
     });
-    afterEach(() => {
-        service.ngOnDestroy();
-    });
 });

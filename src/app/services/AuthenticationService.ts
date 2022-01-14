@@ -72,6 +72,13 @@ export class AuthenticationService implements OnDestroy {
 
     public authSub: Subscription; // public for testing purposes only
 
+    /**
+     * This is the current user, if there is one.
+     * Components depending on an AccountGuard can safely assume it is defined and directly call .get() on it.
+     * (This is because the guard can't activate if there is no user, so if the guard was activated, there is a user)
+     */
+    public user: MGPOptional<AuthUser>;
+
     private userRS: ReplaySubject<AuthUser>;
 
     private userObs: Observable<AuthUser>;
@@ -104,9 +111,11 @@ export class AuthenticationService implements OnDestroy {
                     // The user has finalized verification but isn't yet marked as so in the DB, so we mark it.
                     await userDAO.markVerified(user.uid);
                 }
-                this.userRS.next(new AuthUser(MGPOptional.ofNullable(user.email),
-                                              MGPOptional.ofNullable(userInDB.username),
-                                              userHasFinalizedVerification));
+                const authUser: AuthUser = new AuthUser(MGPOptional.ofNullable(user.email),
+                                                        MGPOptional.ofNullable(userInDB.username),
+                                                        userHasFinalizedVerification)
+                this.user = MGPOptional.of(authUser);
+                this.userRS.next(authUser);
             }
         });
     }
@@ -285,6 +294,7 @@ export class AuthenticationService implements OnDestroy {
         await currentUser.reload();
     }
     public async getUser(): Promise<AuthUser> {
+        console.log('getting user')
         return this.userObs.toPromise();
     }
     public ngOnDestroy(): void {

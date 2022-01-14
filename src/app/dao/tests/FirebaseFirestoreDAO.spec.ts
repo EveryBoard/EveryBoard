@@ -88,7 +88,9 @@ describe('FirebaseFirestoreDAO', () => {
                 createdResolve(created.map((c: {doc: Foo, id: string}): Foo => c.doc));
             };
             callbackFunctionLog = (created: {doc: Foo, id: string}[]) => {
-                console.log({ created }); // Used to debug a flaky test
+                for (const docWithId of created) {
+                    console.log(docWithId);
+                }
                 createdResolve(created.map((c: {doc: Foo, id: string}): Foo => c.doc));
             };
         });
@@ -173,6 +175,20 @@ describe('FirebaseFirestoreDAO', () => {
             await dao.delete(id);
             await expectAsync(promise).toBePending();
             unsubscribe();
+        });
+    });
+    describe('findWhere', () => {
+        it('should return the matching documents', async() => {
+            // Given a DB with some documents
+            await dao.create({ value: 'foo', otherValue: 1 });
+            await dao.create({ value: 'foo', otherValue: 2 });
+
+            // When calling findWhere
+            const docs: Foo[] = await dao.findWhere([['otherValue', '==', 1]]);
+
+            // Then it should return the matching documents only
+            expect(docs.length).toBe(1);
+            expect(docs[0]).toEqual({ value: 'foo', otherValue: 1 });
         });
     });
 });

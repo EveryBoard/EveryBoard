@@ -6,6 +6,9 @@ import { UserDAO } from '../UserDAO';
 import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { createConnectedGoogleUser } from 'src/app/services/tests/AuthenticationService.spec';
 import { Utils } from 'src/app/utils/utils';
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import { AngularFireAuth } from '@angular/fire/auth';
 
 describe('UserDAO', () => {
 
@@ -52,8 +55,8 @@ describe('UserDAO', () => {
     });
     describe('setUsername', () => {
         xit('should change the username of a user', async() => {
-            // Test disabled due to being flaky, resulting in "invalid API key" errors randomly
             // given a google user
+            TestBed.inject(AngularFireAuth);
             const uid: string = Utils.getNonNullable((await createConnectedGoogleUser(true)).user).uid;
 
             // when its username is set
@@ -62,6 +65,8 @@ describe('UserDAO', () => {
             // then its username has changed
             const user: IUser = (await dao.read(uid)).get();
             expect(user.username).toEqual('foo');
+
+            await firebase.auth().signOut();
         });
     });
 });

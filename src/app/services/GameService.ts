@@ -1,17 +1,15 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { PartDAO } from '../dao/PartDAO';
 import { MGPResult, IPart, Part, IPartId } from '../domain/icurrentpart';
 import { FirstPlayer, IJoiner, PartStatus } from '../domain/ijoiner';
 import { JoinerService } from './JoinerService';
-import { ActivePartsService } from './ActivePartsService';
 import { ChatService } from './ChatService';
 import { Request } from '../domain/request';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { assert, display, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
-import { AuthenticationService } from './AuthenticationService';
 import { Time } from '../domain/Time';
 import firebase from 'firebase/app';
 import { MGPOptional } from '../utils/MGPOptional';
@@ -38,7 +36,7 @@ export class GameService {
 
     constructor(private readonly partDAO: PartDAO,
                 private readonly joinerService: JoinerService,
-                private readonly chatService: ChatService) 
+                private readonly chatService: ChatService)
     {
         display(GameService.VERBOSE, 'GameService.constructor');
     }
