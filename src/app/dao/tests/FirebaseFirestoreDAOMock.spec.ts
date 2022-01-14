@@ -150,15 +150,11 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
                 { 'FirebaseFirestoreDAOMock_observingWhere': {
                     collection: this.collectionName,
                     conditions } });
-        const subscription: Subscription | null = this.subscribeToMatchers(conditions, callback);
-        if (subscription == null) {
-            return () => {};
-        } else {
-            return () => subscription.unsubscribe();
-        }
+        const subscription: Subscription = this.subscribeToMatchers(conditions, callback);
+        return () => subscription.unsubscribe();
     }
     private subscribeToMatchers(conditions: FirebaseCondition[],
-                                callback: FirebaseCollectionObserver<T>): Subscription | null
+                                callback: FirebaseCollectionObserver<T>): Subscription
     {
         const db: MGPMap<string, DocumentSubject<T>> = this.getStaticDB();
         this.callbacks.push([conditions, callback]);
@@ -169,7 +165,12 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
 
             }
         }
-        return null;
+        return new Subscription(() => {
+            this.callbacks = this.callbacks.filter(
+                (value: [FirebaseCondition[], FirebaseCollectionObserver<T>]): boolean => {
+                    return value[0] !== conditions && value[1] !== callback;
+                });
+        });
     }
     private conditionsHold(conditions: FirebaseCondition[], doc: T): boolean {
         for (const condition of conditions) {

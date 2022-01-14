@@ -33,8 +33,8 @@ describe('GameService', () => {
     const MOVE_1: number = 161;
     const MOVE_2: number = 107;
 
-    beforeEach(() => {
-        TestBed.configureTestingModule({
+    beforeEach(fakeAsync(async() => {
+        await TestBed.configureTestingModule({
             imports: [
                 RouterTestingModule.withRoutes([
                     { path: '**', component: BlankComponent },
@@ -50,7 +50,7 @@ describe('GameService', () => {
         }).compileComponents();
         service = TestBed.inject(GameService);
         partDAO = TestBed.inject(PartDAO);
-    });
+    }));
     it('should create', () => {
         expect(service).toBeTruthy();
     });
@@ -79,11 +79,11 @@ describe('GameService', () => {
             service.startObserving('myJoinerId', (_part: MGPOptional<IPart>) => {});
         }).toThrowError('GameService.startObserving should not be called while already observing a game');
     }));
-    it('should delegate delete to PartDAO', () => {
+    it('should delegate delete to PartDAO', fakeAsync(async() => {
         spyOn(partDAO, 'delete');
-        service.deletePart('partId');
+        await service.deletePart('partId');
         expect(partDAO.delete).toHaveBeenCalledOnceWith('partId');
-    });
+    }));
     it('should forbid to accept a take back that the player proposed himself', fakeAsync(async() => {
         for (const player of [Player.ZERO, Player.ONE]) {
             const part: Part = new Part({

@@ -54,9 +54,8 @@ describe('UserDAO', () => {
         });
     });
     describe('setUsername', () => {
-        xit('should change the username of a user', async() => {
+        it('should change the username of a user', async() => {
             // given a google user
-            TestBed.inject(AngularFireAuth);
             const uid: string = Utils.getNonNullable((await createConnectedGoogleUser(true)).user).uid;
 
             // when its username is set

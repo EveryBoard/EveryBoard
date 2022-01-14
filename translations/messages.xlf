@@ -86,6 +86,9 @@
       <trans-unit id="5769704000858519890" datatype="html">
         <source>The game you tried to join does not exist anymore.</source>
       </trans-unit>
+      <trans-unit id="7463436103435995523" datatype="html">
+        <source>You are already in a game. Finish it or cancel it first.</source>
+      </trans-unit>
       <trans-unit id="7017932994058745268" datatype="html">
         <source>Creating online game, please wait, it should not take long.</source>
       </trans-unit>
@@ -2409,12 +2412,6 @@
       </trans-unit>
       <trans-unit id="4052977957517792171" datatype="html">
         <source>This message is forbidden.</source>
-      </trans-unit>
-      <trans-unit id="7463436103435995523" datatype="html">
-        <source>You are already in a game. Finish it or cancel it first.</source>
-      </trans-unit>
-      <trans-unit id="2112240517752406123" datatype="html">
-        <source>You are offline. Log in to join a game.</source>
       </trans-unit>
       <trans-unit id="682801679843744749" datatype="html">
         <source><x id="PH" equiv-text="hours"/> hours</source>

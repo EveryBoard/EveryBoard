@@ -21,7 +21,7 @@ describe('WelcomeComponent', () => {
 
         await testUtils.clickElement('#playOnline_Awale');
 
-        expect(router.navigate).toHaveBeenCalledWith(['/play/Awale']);
+        expect(router.navigate).toHaveBeenCalledWith(['/play/', 'Awale']);
     }));
     it('should redirect to local game when clicking on the corresponding button', fakeAsync(async() => {
         const router: Router = TestBed.inject(Router);
@@ -29,7 +29,7 @@ describe('WelcomeComponent', () => {
 
         await testUtils.clickElement('#playLocally_Awale');
 
-        expect(router.navigate).toHaveBeenCalledWith(['/local/Awale']);
+        expect(router.navigate).toHaveBeenCalledWith(['/local/', 'Awale']);
     }));
     it('should redirect to local game when clicking on the corresponding button', fakeAsync(async() => {
         const router: Router = TestBed.inject(Router);
@@ -37,7 +37,7 @@ describe('WelcomeComponent', () => {
 
         await testUtils.clickElement('#startTutorial_Awale');
 
-        expect(router.navigate).toHaveBeenCalledWith(['/tutorial/Awale']);
+        expect(router.navigate).toHaveBeenCalledWith(['/tutorial/', 'Awale']);
     }));
     describe('game list', () => {
         it('should open a modal dialog when clicking on a game image', fakeAsync(async() => {

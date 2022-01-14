@@ -34,7 +34,7 @@ export class AuthenticationServiceMock {
         (TestBed.inject(AuthenticationService) as unknown as AuthenticationServiceMock).setUser(user);
     }
 
-    private currentUser: MGPOptional<AuthUser> = MGPOptional.empty();
+    public user: MGPOptional<AuthUser> = MGPOptional.empty();
 
     private readonly userRS: ReplaySubject<AuthUser>;
 
@@ -42,11 +42,11 @@ export class AuthenticationServiceMock {
         this.userRS = new ReplaySubject<AuthUser>(1);
     }
     public setUser(user: AuthUser): void {
-        this.currentUser = MGPOptional.of(user);
+        this.user = MGPOptional.of(user);
         this.userRS.next(user);
     }
     public async getUser(): Promise<AuthUser> {
-        return this.currentUser.get();
+        return this.user.get();
     }
     public getUserObs(): Observable<AuthUser> {
         return this.userRS.asObservable();
@@ -73,8 +73,8 @@ export class AuthenticationServiceMock {
         return MGPValidation.failure('not mocked');
     }
     public async reloadUser(): Promise<void> {
-        if (this.currentUser.isPresent()) {
-            this.userRS.next(this.currentUser.get());
+        if (this.user.isPresent()) {
+            this.userRS.next(this.user.get());
         } else {
             throw new Error('AuthenticationServiceMock: cannot reload user without setting a user first');
         }
@@ -109,7 +109,14 @@ export class AuthenticationServiceUnderTest extends AuthenticationService {
 export async function createConnectedGoogleUser(createInDB: boolean): Promise<firebase.auth.UserCredential> {
     // Need angular fire auth in order to create a user
     TestBed.inject(AngularFireAuth);
+    TestBed.inject(AuthenticationService);
+    console.log('disconnecting user')
+    // Sign out current user in case there is one
+    await firebase.auth().signOut();
+    // Create a new google user
+    console.log('creating user')
     const credential: firebase.auth.UserCredential = await firebase.auth().signInWithCredential(firebase.auth.GoogleAuthProvider.credential('{"sub": "abc123", "email": "foo@example.com", "email_verified": true}'));
+    console.log('created user')
     if (createInDB) {
         await TestBed.inject(UserDAO).set(Utils.getNonNullable(credential.user).uid,
                                           // no username for google users initially!

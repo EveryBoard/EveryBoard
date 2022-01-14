@@ -130,7 +130,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             // note, option if WRONG_GAME_TYPE to redirect to another page
             const page: string = '/notFound';
             this.routerEventsSub.unsubscribe();
-            this.router.navigate([page]);
+            await this.router.navigate([page]);
         }
     }
     private async setCurrentPartIdOrRedirect(): Promise<void> {
@@ -152,26 +152,26 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             });
         await this.setCurrentPartIdOrRedirect();
     }
-    public startGame(iJoiner: IJoiner): void {
+    public async startGame(iJoiner: IJoiner): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.startGame');
 
         assert(this.gameStarted === false, 'Should not start already started game');
         this.joiner = iJoiner;
 
         this.gameStarted = true;
-        setTimeout(() => {
+        setTimeout(async() => {
             // the small waiting is there to make sur that the chronos are charged by view
             this.afterGameIncluderViewInit();
-            this.startPart();
+            await this.startPart();
         }, 1);
     }
     protected async startPart(): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.startPart');
 
         // TODO: don't start count down for Observer.
-        this.gameService.startObserving(this.currentPartId, (part: MGPOptional<IPart>) => {
+        this.gameService.startObserving(this.currentPartId, async(part: MGPOptional<IPart>) => {
             assert(part.isPresent(), 'OnlineGameWrapper observed a part being deleted, this should not happen');
-            this.onCurrentPartUpdate(part.get());
+            await this.onCurrentPartUpdate(part.get());
         });
         return Promise.resolve();
     }
@@ -390,14 +390,14 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         this.endGame = true;
         return this.gameService.updateDBBoard(this.currentPartId, encodedMove, [0, 0], scores, true);
     }
-    public notifyTimeoutVictory(victoriousPlayer: string, loser: string): void {
+    public async notifyTimeoutVictory(victoriousPlayer: string, loser: string): Promise<void> {
         this.endGame = true;
 
         // TODO: should the part be updated here? Or instead should we wait for the update from firestore?
         const wonPart: Part = this.currentPart.setWinnerAndLoser(victoriousPlayer, loser);
         this.currentPart = wonPart;
 
-        this.gameService.notifyTimeout(this.currentPartId, victoriousPlayer, loser);
+        await this.gameService.notifyTimeout(this.currentPartId, victoriousPlayer, loser);
     }
     public notifyVictory(encodedMove: JSONValueWithoutArray, scores?: [number, number]): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.notifyVictory');
@@ -513,7 +513,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 break;
             case 'RematchAccepted':
                 await this.router.navigate(['/nextGameLoading']);
-                await this.router.navigate(['/play/' + Request.getTypeGame(request) + '/' + Request.getPartId(request)]);
+                await this.router.navigate(['/play/', Request.getTypeGame(request), Request.getPartId(request)]);
                 break;
             case 'DrawProposed':
                 break;
@@ -608,28 +608,28 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                                                   scores);
         }
     }
-    public resign(): void {
+    public async resign(): Promise<void> {
         const resigner: string = this.players[this.observerRole % 2].get();
         const victoriousOpponent: string = this.players[(this.observerRole + 1) % 2].get();
-        this.gameService.resign(this.currentPartId, victoriousOpponent, resigner);
+        await this.gameService.resign(this.currentPartId, victoriousOpponent, resigner);
     }
-    public reachedOutOfTime(player: 0 | 1): void {
+    public async reachedOutOfTime(player: 0 | 1): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.reachedOutOfTime(' + player + ')');
         this.stopCountdownsFor(Player.of(player));
         const opponent: IUser = Utils.getNonNullable(this.opponent);
         if (player === this.observerRole) {
             // the player has run out of time, he'll notify his own defeat by time
-            this.notifyTimeoutVictory(Utils.getNonNullable(opponent.username), this.getPlayerName());
+            await this.notifyTimeoutVictory(Utils.getNonNullable(opponent.username), this.getPlayerName());
         } else {
             if (this.endGame) {
                 display(true, 'time might be better handled in the future');
             } else if (this.opponentIsOffline()) { // the other player has timed out
-                this.notifyTimeoutVictory(this.getPlayerName(), Utils.getNonNullable(opponent.username));
+                await this.notifyTimeoutVictory(this.getPlayerName(), Utils.getNonNullable(opponent.username));
                 this.endGame = true;
             }
         }
     }
-    public acceptRematch(): boolean {
+    public async acceptRematch(): Promise<boolean> {
         if (this.isPlaying() === false) {
             return false;
         }
@@ -637,38 +637,38 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             id: this.currentPartId,
             doc: this.currentPart.doc,
         };
-        this.gameService.acceptRematch(currentPartId);
+        await this.gameService.acceptRematch(currentPartId);
         return true;
     }
-    public proposeRematch(): boolean {
+    public async proposeRematch(): Promise<boolean> {
         if (this.isPlaying() === false) {
             return false;
         }
-        this.gameService.proposeRematch(this.currentPartId, this.getPlayer());
+        await this.gameService.proposeRematch(this.currentPartId, this.getPlayer());
         return true;
     }
-    public proposeDraw(): void {
-        this.gameService.proposeDraw(this.currentPartId, this.getPlayer());
+    public async proposeDraw(): Promise<void> {
+        await this.gameService.proposeDraw(this.currentPartId, this.getPlayer());
     }
-    public acceptDraw(): void {
-        this.gameService.acceptDraw(this.currentPartId);
+    public async acceptDraw(): Promise<void> {
+        await this.gameService.acceptDraw(this.currentPartId);
     }
-    public refuseDraw(): void {
+    public async refuseDraw(): Promise<void> {
         const player: Player = Player.of(this.observerRole);
-        this.gameService.refuseDraw(this.currentPartId, player);
+        await this.gameService.refuseDraw(this.currentPartId, player);
     }
-    public askTakeBack(): void {
+    public async askTakeBack(): Promise<void> {
         const player: Player = Player.of(this.observerRole);
-        this.gameService.askTakeBack(this.currentPartId, player);
+        await this.gameService.askTakeBack(this.currentPartId, player);
     }
-    public acceptTakeBack(): void {
+    public async acceptTakeBack(): Promise<void> {
         const player: Player = Player.of(this.observerRole);
-        this.gameService.acceptTakeBack(this.currentPartId, this.currentPart, player, this.msToSubstract);
+        await this.gameService.acceptTakeBack(this.currentPartId, this.currentPart, player, this.msToSubstract);
         this.msToSubstract = [0, 0];
     }
-    public refuseTakeBack(): void {
+    public async refuseTakeBack(): Promise<void> {
         const player: Player = Player.of(this.observerRole);
-        this.gameService.refuseTakeBack(this.currentPartId, player);
+        await this.gameService.refuseTakeBack(this.currentPartId, player);
     }
     public startCountDownFor(player: Player): void {
         display(OnlineGameWrapperComponent.VERBOSE,

@@ -113,7 +113,7 @@ export class AuthenticationService implements OnDestroy {
                 }
                 const authUser: AuthUser = new AuthUser(MGPOptional.ofNullable(user.email),
                                                         MGPOptional.ofNullable(userInDB.username),
-                                                        userHasFinalizedVerification)
+                                                        userHasFinalizedVerification);
                 this.user = MGPOptional.of(authUser);
                 this.userRS.next(authUser);
             }
@@ -292,10 +292,6 @@ export class AuthenticationService implements OnDestroy {
         const currentUser: firebase.User = Utils.getNonNullable(firebase.auth().currentUser);
         await currentUser.getIdToken(true);
         await currentUser.reload();
-    }
-    public async getUser(): Promise<AuthUser> {
-        console.log('getting user')
-        return this.userObs.toPromise();
     }
     public ngOnDestroy(): void {
         this.authSub.unsubscribe();

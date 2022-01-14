@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { PartDAO } from '../dao/PartDAO';
 import { IPart, IPartId } from '../domain/icurrentpart';
 import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
-import { assert, Utils } from '../utils/utils';
+import { assert } from '../utils/utils';
 import { MGPOptional } from '../utils/MGPOptional';
 
 @Injectable({
@@ -12,8 +12,8 @@ import { MGPOptional } from '../utils/MGPOptional';
     providedIn: 'any',
 })
 /*
- * This service handles active parts (i.e., being played, waiting for a player,
- * ...), and is used by the server component and game component. You must start
+ * This service handles active parts (i.e., being played, waiting for a player),
+ * and is used by the server component and game component. You must start
  * observing when you need to observe parts, and stop observing when you're
  * done.
  */
@@ -22,8 +22,6 @@ export class ActivePartsService {
     private readonly activePartsBS: BehaviorSubject<IPartId[]>;
 
     private readonly activePartsObs: Observable<IPartId[]>;
-
-    private activeParts: IPartId[] = []
 
     private unsubscribe: MGPOptional<() => void> = MGPOptional.empty();
 
@@ -37,6 +35,7 @@ export class ActivePartsService {
     public startObserving(): void {
         assert(this.unsubscribe.isAbsent(), 'ActivePartsService: already observing');
         const onDocumentCreated: (createdParts: IPartId[]) => void = (createdParts: IPartId[]) => {
+            console.log({createdPartsLength: createdParts.length})
             const result: IPartId[] = this.activePartsBS.value.concat(...createdParts);
             this.activePartsBS.next(result);
         };
@@ -63,23 +62,11 @@ export class ActivePartsService {
                                            onDocumentModified,
                                            onDocumentDeleted);
         this.unsubscribe = MGPOptional.of(this.partDAO.observeActiveParts(partObserver));
-        this.activePartsObs.subscribe((activesParts: IPartId[]) => {
-            this.activeParts = activesParts;
-        });
     }
     public stopObserving(): void {
         assert(this.unsubscribe.isPresent(), 'Cannot stop observing active parts when you have not started observing');
+        console.log('stopping')
         this.activePartsBS.next([]);
         this.unsubscribe.get()();
-    }
-    public hasActivePart(user: string): boolean {
-        for (const part of this.activeParts) {
-            const playerZero: string = Utils.getNonNullable(part.doc).playerZero;
-            const playerOne: string | undefined = Utils.getNonNullable(part.doc).playerOne;
-            if (user === playerZero || user === playerOne) {
-                return true;
-            }
-        }
-        return false;
     }
 }

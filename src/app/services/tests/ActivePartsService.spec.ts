@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { ActivePartsService } from '../ActivePartsService';
 import { PartDAO } from 'src/app/dao/PartDAO';
-import { fakeAsync } from '@angular/core/testing';
+import { fakeAsync, tick } from '@angular/core/testing';
 import { IPart, IPartId } from 'src/app/domain/icurrentpart';
 import { Subscription } from 'rxjs';
 import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
@@ -13,72 +13,20 @@ describe('ActivePartsService', () => {
 
     let partDAO: PartDAO;
 
+    let stoppedObserving: boolean;
+
     beforeEach(async() => {
         partDAO = new PartDAOMock() as unknown as PartDAO;
         service = new ActivePartsService(partDAO);
+        service.startObserving();
+        stoppedObserving = false;
     });
     it('should create', () => {
         expect(service).toBeTruthy();
     });
-    describe('hasActiveParts', () => {
-        it('should return true when user is playerZero in a game', fakeAsync(async() => {
-            // Given a partDAO including an active part whose playerZero is our user
-            const user: string = 'creator';
-            await partDAO.set('joinerId', {
-                listMoves: [],
-                playerZero: user,
-                playerOne: 'firstCandidate',
-                result: 5,
-                turn: 0,
-                typeGame: 'P4',
-            });
-
-            // when asking if the user has an active part
-            const hasUserActiveParts: boolean = service.hasActivePart(user);
-
-            // then the user has an active part
-            expect(hasUserActiveParts).toBeTrue();
-        }));
-        it('should return true when user is playerOne in a game', fakeAsync(async() => {
-            // Given a partDAO including an active part whose playerZero is our user
-            const user: string = 'creator';
-            await partDAO.set('joinerId', {
-                listMoves: [],
-                playerZero: 'firstCandidate',
-                playerOne: user,
-                result: 5,
-                turn: 0,
-                typeGame: 'P4',
-            });
-
-            // when asking hasActivePart('our user')
-            const hasUserActiveParts: boolean = service.hasActivePart(user);
-
-            // then we should learn that yes, he has some
-            expect(hasUserActiveParts).toBeTrue();
-        }));
-        it('should return false when user is not in a game', fakeAsync(async() => {
-            // Given a partDAO including active parts without our user
-            const user: string = 'creator';
-            await partDAO.set('joinerId', {
-                listMoves: [],
-                playerZero: 'someUser',
-                playerOne: 'someOtherUser',
-                result: 5,
-                turn: 0,
-                typeGame: 'P4',
-            });
-
-            // when asking hasActivePart('our user')
-            const hasUserActiveParts: boolean = service.hasActivePart(user);
-
-            // then we should learn that yes, he has some
-            expect(hasUserActiveParts).toBeFalse();
-        }));
-    });
     describe('getActivePartsObs', () => {
-        it('should notify about new parts', async() => {
-            // Given that we are observing active parts
+        it('should notify about new parts', fakeAsync(async() => {
+            // Given a service where we are observing active parts
             let seenActiveParts: IPartId[] = [];
             const activePartsSub: Subscription = service.getActivePartsObs()
                 .subscribe((activeParts: IPartId[]) => {
@@ -101,7 +49,34 @@ describe('ActivePartsService', () => {
             expect(seenActiveParts[0].doc).toEqual(part);
 
             activePartsSub.unsubscribe();
-        });
+        }));
+        it('should not notify about new parts when we stopped observing', fakeAsync(async() => {
+            // Given a service where we were observing active parts, but have stopped observing
+            let seenActiveParts: IPartId[] = [];
+            const activePartsSub: Subscription = service.getActivePartsObs()
+                .subscribe((activeParts: IPartId[]) => {
+                    seenActiveParts = activeParts;
+                });
+            service.stopObserving();
+            stoppedObserving = true;
+            tick(3000);
+
+            // When a new part is added
+            const part: IPart = {
+                listMoves: [],
+                playerZero: 'creator',
+                playerOne: 'firstCandidate',
+                result: 5,
+                turn: 0,
+                typeGame: 'P4',
+            };
+            await partDAO.create(part);
+
+            // Then the new part should not have been observed
+            expect(seenActiveParts.length).toBe(0);
+
+            activePartsSub.unsubscribe();
+        }));
         it('should notify about deleted parts', fakeAsync(async() => {
             // Given that we are observing active parts, and there is already one part
             const part: IPart = {
@@ -213,5 +188,10 @@ describe('ActivePartsService', () => {
 
             activePartsSub.unsubscribe();
         }));
+    });
+    afterEach(() => {
+        if (stoppedObserving === false) {
+            service.stopObserving();
+        }
     });
 });

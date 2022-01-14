@@ -31,7 +31,7 @@ describe('PartDAO', () => {
             expect(dao.observingWhere).toHaveBeenCalledWith([['result', '==', MGPResult.UNACHIEVED.value]], callback);
         });
     });
-    xdescribe('userHasActivePart', () => {
+    describe('userHasActivePart', () => {
         const part: IPart = {
             typeGame: 'P4',
             playerZero: 'foo',

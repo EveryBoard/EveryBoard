@@ -30,6 +30,10 @@ export class GameService {
 
     private followedPartId: MGPOptional<string> = MGPOptional.empty();
 
+    /**
+     * The outer optional is for when we haven't followed any part yet.
+     * The inner optional is for when the part gets deleted
+     */
     private followedPartObs: MGPOptional<Observable<MGPOptional<IPart>>> = MGPOptional.empty();
 
     private followedPartSub: Subscription;

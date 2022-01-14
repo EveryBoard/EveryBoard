@@ -30,7 +30,6 @@ export class ServerPageComponent implements OnInit, OnDestroy {
     constructor(public router: Router,
                 private readonly userService: UserService,
                 private readonly activePartsService: ActivePartsService) {
-        console.log('server page component')
     }
     public ngOnInit(): void {
         display(ServerPageComponent.VERBOSE, 'serverPageComponent.ngOnInit');
@@ -52,7 +51,7 @@ export class ServerPageComponent implements OnInit, OnDestroy {
         this.userService.unSubFromActiveUsersObs();
     }
     public async joinGame(partId: string, typeGame: string): Promise<void> {
-        await this.router.navigate(['/play/' + typeGame, partId]);
+        await this.router.navigate(['/play/', typeGame, partId]);
     }
     public selectTab(tab: Tab): void {
         this.currentTab = tab;

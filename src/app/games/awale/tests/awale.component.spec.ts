@@ -26,8 +26,8 @@ describe('AwaleComponent', () => {
         componentTestUtils.setupState(state);
 
         const move: AwaleMove = AwaleMove.FIVE;
-        componentTestUtils.expectMoveSuccess('#click_5_0', move, undefined, [0, 0]);
-        const awaleComponent: AwaleComponent = componentTestUtils.getComponent() as AwaleComponent;
+        await componentTestUtils.expectMoveSuccess('#click_5_0', move, undefined, [0, 0]);
+        const awaleComponent: AwaleComponent = componentTestUtils.getComponent();
         expect(awaleComponent.getCaseClasses(5, 0)).toEqual(['moved', 'highlighted']);
         expect(awaleComponent.getCaseClasses(5, 1)).toEqual(['moved']);
         expect(awaleComponent.getCaseClasses(4, 1)).toEqual(['captured']);

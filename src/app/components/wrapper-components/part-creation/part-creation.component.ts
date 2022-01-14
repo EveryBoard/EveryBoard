@@ -132,8 +132,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.joinerService
             .observe(this.partId)
             .pipe(takeUntil(this.ngUnsubscribe))
-            .subscribe((joiner: MGPOptional<IJoiner>) => {
-                this.onCurrentJoinerUpdate(joiner);
+            .subscribe(async(joiner: MGPOptional<IJoiner>) => {
+                await this.onCurrentJoinerUpdate(joiner);
             });
     }
     private getForm(name: string): AbstractControl {
@@ -286,10 +286,10 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             }
         }
     }
-    private onGameCancelled() {
+    private async onGameCancelled() {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.onGameCancelled');
         this.messageDisplayer.infoMessage($localize`The game has been canceled!`);
-        this.router.navigate(['server']);
+        await this.router.navigate(['server']);
     }
     private isGameStarted(): boolean {
         const joiner: IJoiner = Utils.getNonNullable(this.currentJoiner);
@@ -318,14 +318,14 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             // We are already observing the creator
             return;
         }
-        const destroyDocIfCreatorOffline: (modifiedUsers: IUserId[]) => void = (modifiedUsers: IUserId[]) => {
+        const destroyDocIfCreatorOffline: (modifiedUsers: IUserId[]) => void = async(modifiedUsers: IUserId[]) => {
             for (const user of modifiedUsers) {
                 assert(user.doc.username === joiner.creator, 'found non creator while observing creator!');
                 if (user.doc.state === 'offline' &&
                     this.allDocDeleted === false &&
                     joiner.partStatus !== PartStatus.PART_STARTED.value)
                 {
-                    this.cancelGameCreation();
+                    await this.cancelGameCreation();
                 }
             }
         };
@@ -339,25 +339,25 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     private observeCandidates(): void {
         const joiner: IJoiner = Utils.getNonNullable(this.currentJoiner);
         display(PartCreationComponent.VERBOSE, { PartCreation_observeCandidates: joiner });
-        const onDocumentCreated: (foundUser: IUserId[]) => void = (foundUsers: IUserId[]) => {
+        const onDocumentCreated: (foundUser: IUserId[]) => void = async(foundUsers: IUserId[]) => {
             for (const user of foundUsers) {
                 if (user.doc.state === 'offline') {
-                    this.removeUserFromLobby(Utils.getNonNullable(user.doc.username));
+                    await this.removeUserFromLobby(Utils.getNonNullable(user.doc.username));
                     Utils.handleError('OnlineGameWrapper: ' + user.doc.username + ' is already offline!');
                 }
             }
         };
-        const onDocumentModified: (modifiedUsers: IUserId[]) => void = (modifiedUsers: IUserId[]) => {
+        const onDocumentModified: (modifiedUsers: IUserId[]) => void = async(modifiedUsers: IUserId[]) => {
             for (const user of modifiedUsers) {
                 if (user.doc.state === 'offline') {
-                    this.removeUserFromLobby(Utils.getNonNullable(user.doc.username));
+                    await this.removeUserFromLobby(Utils.getNonNullable(user.doc.username));
                 }
             }
         };
-        const onDocumentDeleted: (deletedUsers: IUserId[]) => void = (deletedUsers: IUserId[]) => {
+        const onDocumentDeleted: (deletedUsers: IUserId[]) => void = async(deletedUsers: IUserId[]) => {
             // This should not happen in practice, but if it does we can safely remove the user from the lobby
             for (const user of deletedUsers) {
-                this.removeUserFromLobby(Utils.getNonNullable(user.doc.username));
+                await this.removeUserFromLobby(Utils.getNonNullable(user.doc.username));
                 Utils.handleError('OnlineGameWrapper: ' + user.doc.username + ' was deleted (' + user.id + ')');
             }
         };
@@ -381,11 +381,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     private removeUserFromLobby(username: string): Promise<void> {
         const joiner: IJoiner = Utils.getNonNullable(this.currentJoiner);
         const index: number = joiner.candidates.indexOf(username);
-        if (index === -1) {
-            display(true, username + ' is not in the lobby!');
-            // User already not in the lobby (could be caused by two updates to the same offline user)
-            return Promise.resolve();
-        }
+        // The user must be in the lobby, otherwise we would have unsubscribed from its updates
+        assert(index !== -1, 'PartCreationComponent: attempting to remove a user not in the lobby');
         const beforeUser: string[] = joiner.candidates.slice(0, index);
         const afterUser: string[] = joiner.candidates.slice(index + 1);
         const candidates: string[] = beforeUser.concat(afterUser);

@@ -123,7 +123,7 @@ describe('FirebaseFirestoreDAO', () => {
                 () => void { },
                 () => void { },
             );
-            const unsubscribe: () => void = dao.observingWhere([['value', '==', 'bar']], callback);
+            const unsubscribe: () => void = dao.observingWhere([['value', '==', 'baz']], callback);
             await dao.create({ value: 'foo', otherValue: 1 });
             await expectAsync(promise).toBePending();
             unsubscribe();
@@ -146,7 +146,7 @@ describe('FirebaseFirestoreDAO', () => {
                 callbackFunction,
                 () => void { },
             );
-            const unsubscribe: () => void = dao.observingWhere([['value', '==', 'bar']], callback);
+            const unsubscribe: () => void = dao.observingWhere([['value', '==', 'baz']], callback);
             const id: string = await dao.create({ value: 'foo', otherValue: 1 });
             await dao.update(id, { otherValue: 42 });
             await expectAsync(promise).toBePending();

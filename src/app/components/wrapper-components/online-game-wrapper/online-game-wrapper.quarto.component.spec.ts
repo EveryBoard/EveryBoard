@@ -233,7 +233,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     }));
     it('Should be able to prepare a started game for creator', fakeAsync(async() => {
         await prepareStartedGameFor(USER_CREATOR);
-        spyOn(wrapper, 'reachedOutOfTime').and.callFake(() => {});
+        spyOn(wrapper, 'reachedOutOfTime').and.callFake(async() => {});
         // Should not even been called but:
         // reachedOutOfTime is called (in test) after tick(1) even though there is still remainingTime
         tick(1);
@@ -350,7 +350,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await doMove(FIRST_MOVE, true);
 
         // then the player cannot play
-        componentTestUtils.clickElement('#chooseCoord_0_0');
+        await componentTestUtils.clickElement('#chooseCoord_0_0');
         expect(messageDisplayer.gameMessage).toHaveBeenCalledWith(GameWrapperMessages.NOT_YOUR_TURN());
 
         tick(wrapper.joiner.maximalMoveDuration * 1000);
@@ -1055,7 +1055,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await prepareStartedGameFor(USER_CREATOR);
             tick(1);
             expect(wrapper.getPlayerNameClass(1)).toEqual('has-text-black');
-            userDAO.update('firstCandidateDocId', { state: 'offline' });
+            await userDAO.update('firstCandidateDocId', { state: 'offline' });
             componentTestUtils.detectChanges();
             tick();
             expect(wrapper.getPlayerNameClass(1)).toBe('has-text-grey-light');
@@ -1454,10 +1454,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await receiveRequest(Request.rematchAccepted('Quarto', 'nextPartId'));
 
             // then it should redirect to new part
-            const first: string = '/nextGameLoading';
-            const second: string = '/play/Quarto/nextPartId';
-            expect(router.navigate).toHaveBeenCalledWith([first]);
-            expect(router.navigate).toHaveBeenCalledWith([second]);
+            expect(router.navigate).toHaveBeenCalledWith(['/nextGameLoading']);
+            expect(router.navigate).toHaveBeenCalledWith(['/play/', 'Quarto', 'nextPartId']);
         }));
     });
     describe('Non Player Experience', () => {
@@ -1474,8 +1472,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 'proposeRematch',
                 'canResign',
             ];
-            for (const name of forbiddenFunctionNames) {
-                expect(wrapper[name]()).toBeFalse();
+            for (const functionName of forbiddenFunctionNames) {
+                const result: boolean = await wrapper[functionName]();
+                expect(result).toBe(false);
             }
             tick(wrapper.joiner.maximalMoveDuration * 1000);
         }));

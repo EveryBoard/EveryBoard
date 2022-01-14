@@ -24,12 +24,12 @@ describe('ServerPageComponent', () => {
         expect(component).toBeDefined();
         component.ngOnInit();
     }));
-    it('should dispatch to online-game-selection component when switching to create game tab', fakeAsync(async() => {
+    it('should display online-game-selection component when clicking on tab-create element', fakeAsync(async() => {
         // When the component is loaded
         testUtils.detectChanges();
 
         // Clicking on the 'create game' tab
-        testUtils.clickElement('#tab-create');
+        await testUtils.clickElement('#tab-create');
         await testUtils.whenStable();
 
         // Then online-game-selection component is on the page
@@ -49,20 +49,24 @@ describe('ServerPageComponent', () => {
         testUtils.detectChanges();
 
         // When clicking on the part
-        testUtils.clickElement('#part_0');
+        await testUtils.clickElement('#part_0');
 
         // Then the component should navigate to the part
-        expect(router.navigate).toHaveBeenCalledOnceWith(['/play/Quarto', 'some-part-id']);
+        expect(router.navigate).toHaveBeenCalledOnceWith(['/play/', 'Quarto', 'some-part-id']);
     }));
-    it('should stop watching current part observable when destroying component', fakeAsync(async() => {
+    it('should stop watching current part observable and part list when destroying component', fakeAsync(async() => {
         // Given a server page
         testUtils.detectChanges();
         spyOn(component['activePartsSub'], 'unsubscribe').and.callThrough();
+        const activePartsService: ActivePartsService = TestBed.inject(ActivePartsService);
+        spyOn(activePartsService, 'stopObserving').and.callThrough();
 
         // When destroying the component
         component.ngOnDestroy();
 
         // Then the router active part observer should have been unsubscribed
         expect(component['activePartsSub'].unsubscribe).toHaveBeenCalledOnceWith();
+        // and ActivePartsService should have been told to stop observing
+        expect(activePartsService.stopObserving).toHaveBeenCalledOnceWith();
     }));
 });

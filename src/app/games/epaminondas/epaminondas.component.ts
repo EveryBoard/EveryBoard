@@ -323,7 +323,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     private async moveFirstPiece(player: Player): Promise<MGPValidation> {
         this.firstPiece = MGPOptional.of(this.firstPiece.get().getNext(this.phalanxDirection.get(), 1));
         if (this.firstPiece.equals(this.lastPiece)) {
-            this.moveOnlyPiece(player);
+            await this.moveOnlyPiece(player);
         } else {
             this.phalanxMiddles = this.phalanxMiddles.slice(1);
             this.validExtensions = this.getPhalanxValidExtensions(player);

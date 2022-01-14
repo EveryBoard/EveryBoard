@@ -35,6 +35,7 @@ describe('OnlineGameCreationComponent', () => {
         const router: Router = TestBed.inject(Router);
         const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
         spyOn(router, 'navigate').and.callThrough();
+        AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
         spyOn(messageDisplayer, 'infoMessage').and.callThrough();
         const partDAO: PartDAO = TestBed.inject(PartDAO);
         spyOn(partDAO, 'userHasActivePart').and.resolveTo(true);

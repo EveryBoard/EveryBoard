@@ -172,7 +172,7 @@ describe('ApagosComponent', () => {
         // When clicking on that square
         // Then move should fail
         const reason: string = ApagosFailure.NO_PIECE_OF_YOU_IN_CHOSEN_SQUARE();
-        componentTestUtils.expectClickFailure('#square_2', reason);
+        await componentTestUtils.expectClickFailure('#square_2', reason);
     }));
     it('should drop when clicking on arrow above square', fakeAsync(async() => {
         // Given the initial board

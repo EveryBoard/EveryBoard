@@ -273,7 +273,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
             }
         }
         const legality: MGPValidation = this.cancelMove(AbaloneFailure.LINE_AND_COORD_NOT_ALIGNED());
-        this.firstClick(clicked.x, clicked.y);
+        await this.firstClick(clicked.x, clicked.y);
         return legality;
     }
     private async deselectExtremity(first: boolean): Promise<MGPValidation> {
