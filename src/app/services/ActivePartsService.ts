@@ -35,7 +35,6 @@ export class ActivePartsService {
     public startObserving(): void {
         assert(this.unsubscribe.isAbsent(), 'ActivePartsService: already observing');
         const onDocumentCreated: (createdParts: IPartId[]) => void = (createdParts: IPartId[]) => {
-            console.log({createdPartsLength: createdParts.length})
             const result: IPartId[] = this.activePartsBS.value.concat(...createdParts);
             this.activePartsBS.next(result);
         };
@@ -65,7 +64,6 @@ export class ActivePartsService {
     }
     public stopObserving(): void {
         assert(this.unsubscribe.isPresent(), 'Cannot stop observing active parts when you have not started observing');
-        console.log('stopping')
         this.activePartsBS.next([]);
         this.unsubscribe.get()();
     }

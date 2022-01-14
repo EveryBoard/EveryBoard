@@ -110,13 +110,10 @@ export async function createConnectedGoogleUser(createInDB: boolean): Promise<fi
     // Need angular fire auth in order to create a user
     TestBed.inject(AngularFireAuth);
     TestBed.inject(AuthenticationService);
-    console.log('disconnecting user')
     // Sign out current user in case there is one
     await firebase.auth().signOut();
     // Create a new google user
-    console.log('creating user')
     const credential: firebase.auth.UserCredential = await firebase.auth().signInWithCredential(firebase.auth.GoogleAuthProvider.credential('{"sub": "abc123", "email": "foo@example.com", "email_verified": true}'));
-    console.log('created user')
     if (createInDB) {
         await TestBed.inject(UserDAO).set(Utils.getNonNullable(credential.user).uid,
                                           // no username for google users initially!
