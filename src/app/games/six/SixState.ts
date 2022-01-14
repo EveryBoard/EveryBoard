@@ -195,7 +195,4 @@ export class SixState extends GameState implements ComparableObject {
     public equals(o: SixState): boolean {
         return this.turn === o.turn && this.pieces.equals(o.pieces);
     }
-    public toString(): string {
-        throw new Error('Method not implemented.');
-    }
 }

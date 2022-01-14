@@ -37,9 +37,6 @@ export class FourStatePiece implements ComparableObject {
     public equals(o: ComparableObject): boolean {
         return this === o;
     }
-    public toString(): string {
-        throw new Error('Method not implemented.');
-    }
     public is(player: Player): boolean {
         return this.value === player.value;
     }
