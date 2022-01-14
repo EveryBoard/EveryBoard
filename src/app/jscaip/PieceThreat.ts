@@ -11,9 +11,6 @@ export class PieceThreat implements ComparableObject {
         return o.direct.equals(this.direct) &&
                o.mover.equals(this.mover);
     }
-    public toString(): string {
-        throw new Error('Method not implemented.');
-    }
 }
 
 export class SandwichThreat extends PieceThreat {
