@@ -8,7 +8,6 @@ import { createConnectedGoogleUser } from 'src/app/services/tests/Authentication
 import { Utils } from 'src/app/utils/utils';
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import { AngularFireAuth } from '@angular/fire/auth';
 
 describe('UserDAO', () => {
 
