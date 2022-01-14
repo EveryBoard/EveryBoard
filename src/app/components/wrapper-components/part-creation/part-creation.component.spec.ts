@@ -118,6 +118,21 @@ describe('PartCreationComponent:', () => {
                 expect(component.currentJoiner).toEqual(JoinerMocks.WITH_FIRST_CANDIDATE.doc);
                 testUtils.expectElementToExist('#chooseCandidate');
             }));
+            it('should not see candidate change if it is modified', fakeAsync(async() => {
+                // Given a page that has loaded, a candidate joined and has been chosen as opponent
+                testUtils.detectChanges();
+                await testUtils.whenStable();
+                await mockCandidateArrival();
+                testUtils.expectElementToExist('#candidate_firstCandidate');
+
+                // When the candidate user's document changes
+                await joueursDAOMock.update('opponent', { last_changed: { seconds: 42, nanoseconds: 31415 } });
+                testUtils.detectChanges();
+                tick(3000); // needs to be >2999
+
+                // Then it is in the list of candidates
+                testUtils.expectElementToExist('#candidate_firstCandidate');
+            }));
         });
         describe('Candidate departure', () => {
             it('should go back to start when chosenPlayer leaves', fakeAsync(async() => {
