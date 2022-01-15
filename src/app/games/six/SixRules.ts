@@ -71,17 +71,17 @@ export class SixRules extends Rules<SixMove,
     }
     public isLegalDrop(move: SixMove, state: SixState): MGPFallible<SixLegalityInformation> {
         if (move.isDrop() === false) {
-            return MGPFallible.failure('Cannot do deplacement before 42th turn!');
+            return MGPFallible.failure(SixFailure.NO_MOVEMENT_BEFORE_TURN_40());
         }
         return MGPFallible.success(state.pieces.getKeySet());
     }
     public static isLegalPhaseTwoMove(move: SixMove, state: SixState): MGPFallible<SixLegalityInformation> {
         if (move.isDrop()) {
-            return MGPFallible.failure('Can no longer drop after 40th turn!');
+            return MGPFallible.failure(SixFailure.CAN_NO_LONGER_DROP());
         }
         switch (state.getPieceAt(move.start.get())) {
             case Player.NONE:
-                return MGPFallible.failure('Cannot move empty coord!');
+                return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
             case state.getCurrentOpponent():
                 return MGPFallible.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
         }

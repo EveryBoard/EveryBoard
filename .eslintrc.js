@@ -24,6 +24,7 @@ module.exports = {
         ],
         rules: {
             'jasmine/no-spec-dupes': ['error', 'branch'],
+            'jasmine/expect-matcher': ['error'],
             'jasmine/new-line-before-expect': ['off'],
             'jasmine/new-line-between-declarations': ['off'],
             'no-warning-comments': [

@@ -18,8 +18,8 @@ describe('P4Component', () => {
         componentTestUtils = await ComponentTestUtils.forGame<P4Component>('P4');
     }));
     it('should create', () => {
-        expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');
-        expect(componentTestUtils.getComponent()).toBeTruthy('Component should be created');
+        expect(componentTestUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
+        expect(componentTestUtils.getComponent()).withContext('Component should be created').toBeTruthy();
     });
     it('should accept simple move', fakeAsync(async() => {
         const move: P4Move = P4Move.THREE;

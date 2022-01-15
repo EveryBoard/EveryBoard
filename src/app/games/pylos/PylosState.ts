@@ -19,9 +19,6 @@ export class PylosState extends GameState {
     {
         super(turn);
     }
-    public isOnBoard(coord: PylosCoord): boolean {
-        return this.getPieceAt(coord) != null;
-    }
     public getPieceAt(coord: PylosCoord): Player {
         return this.boards[coord.z][coord.y][coord.x];
     }

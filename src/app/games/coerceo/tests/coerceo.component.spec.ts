@@ -51,7 +51,7 @@ describe('CoerceoComponent', () => {
         expect(component.highlights).toContain(new Coord(5, 3));
         expect(component.highlights).toContain(new Coord(4, 2));
     }));
-    it('Should accept deplacement', fakeAsync(async() => {
+    it('Should accept movement', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_6_2');
         const move: CoerceoMove = CoerceoMove.fromCoordToCoord(new Coord(6, 2), new Coord(7, 3));
         await componentTestUtils.expectMoveSuccess('#click_7_3', move, undefined, getScores());
@@ -64,7 +64,7 @@ describe('CoerceoComponent', () => {
     it('Should cancelMove when first click is on empty case', fakeAsync(async() => {
         await componentTestUtils.expectClickFailure('#click_5_5', CoerceoFailure.FIRST_CLICK_SHOULD_NOT_BE_NULL());
     }));
-    it('Should refuse invalid deplacement', fakeAsync(async() => {
+    it('Should refuse invalid movement', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_6_2');
         await componentTestUtils.expectClickFailure('#click_8_4', CoerceoFailure.INVALID_DISTANCE());
     }));
@@ -118,7 +118,7 @@ describe('CoerceoComponent', () => {
         componentTestUtils.expectElementToExist('#tilesCountZero');
         componentTestUtils.expectElementNotToExist('#tilesCountOne');
     }));
-    it('Should show removed tiles, and captured piece (after deplacement)', fakeAsync(async() => {
+    it('Should show removed tiles, and captured piece (after movement)', fakeAsync(async() => {
         // given a board with just removed pieces
         const previousBoard: Table<FourStatePiece> = [
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],

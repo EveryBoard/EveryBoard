@@ -116,9 +116,9 @@ describe('SiamComponent', () => {
         const move: SiamMove = new SiamMove(5, 4, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT);
         await expectMoveLegality(move);
 
-        expect(componentTestUtils.expectElementToHaveClasses('#insertAt_4_4', ['base', 'moved']));
-        expect(componentTestUtils.expectElementToHaveClasses('#insertAt_3_4', ['base', 'moved']));
-        expect(componentTestUtils.expectElementToHaveClasses('#insertAt_2_4', ['base']));
+        componentTestUtils.expectElementToHaveClasses('#insertAt_4_4', ['base', 'moved']);
+        componentTestUtils.expectElementToHaveClasses('#insertAt_3_4', ['base', 'moved']);
+        componentTestUtils.expectElementToHaveClasses('#insertAt_2_4', ['base']);
     }));
     it('should decide outing orientation automatically', fakeAsync(async() => {
         const board: Table<SiamPiece> = [

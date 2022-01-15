@@ -6,33 +6,33 @@ import { P4Move } from '../P4Move';
 import { P4Minimax } from '../P4Minimax';
 import { P4Failure } from '../P4Failure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Minimax } from 'src/app/jscaip/Minimax';
 
 describe('P4Rules', () => {
 
     let rules: P4Rules;
-    let minimax: P4Minimax;
+    let minimaxes: Minimax<P4Move, P4State>[];
     const O: Player = Player.ZERO;
     const X: Player = Player.ONE;
     const _: Player = Player.NONE;
 
     beforeEach(() => {
         rules = new P4Rules(P4State);
-        minimax = new P4Minimax(rules, 'P4Minimax');
+        minimaxes = [
+            new P4Minimax(rules, 'P4Minimax'),
+        ];
     });
     it('should be created', () => {
         expect(rules).toBeTruthy();
-        expect(minimax.getBoardValue(rules.node).value).toEqual(0);
     });
     it('Should drop piece on the lowest case of the column', () => {
-        const board: Player[][] = [
-            [_, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _],
-        ];
+        // Given the initial board
+        const state: P4State = P4State.getInitialState();
+
+        // When playing in column 3
+        const move: P4Move = P4Move.of(3);
+
+        // Then the move should be a success
         const expectedBoard: Player[][] = [
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
@@ -41,62 +41,69 @@ describe('P4Rules', () => {
             [_, _, _, _, _, _, _],
             [_, _, _, O, _, _, _],
         ];
-        const state: P4State = new P4State(board, 0);
-        const move: P4Move = P4Move.of(3);
         const expectedState: P4State = new P4State(expectedBoard, 1);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
     });
     it('First player should win vertically', () => {
+        // Given a board with 3 aligned pieces
         const board: Player[][] = [
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, O, _, _, _],
             [_, _, _, O, _, _, _],
-            [_, _, _, O, _, _, _],
+            [_, _, X, O, X, _, X],
         ];
+        const state: P4State = new P4State(board, 6);
+
+        // when aligning a fourth piece
+        const move: P4Move = P4Move.of(3);
+
+        // Then the move should be legal and player zero winner
         const expectedBoard: Player[][] = [
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, O, _, _, _],
             [_, _, _, O, _, _, _],
             [_, _, _, O, _, _, _],
-            [_, _, _, O, _, _, _],
+            [_, _, X, O, X, _, X],
         ];
-        const state: P4State = new P4State(board, 0);
-        rules.node = new P4Node(state);
-        const move: P4Move = P4Move.of(3);
-        expect(rules.choose(move)).toBeTrue();
-        expect(rules.node.gameState.board).toEqual(expectedBoard);
-        expect(rules.node.getOwnValue(minimax).value).toEqual(Number.MIN_SAFE_INTEGER);
-        expect(rules.getGameStatus(rules.node).isEndGame).toBeTrue();
+        const expectedState: P4State = new P4State(expectedBoard, 7);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        const node: P4Node = new P4Node(expectedState);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
     it('Second player should win vertically', () => {
+        // Given a board with 3 aligned pieces
         const board: Player[][] = [
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, X, _, _, _],
             [_, _, _, X, _, _, _],
-            [_, _, _, X, _, _, _],
+            [_, O, O, X, O, O, _],
         ];
+        const state: P4State = new P4State(board, 7);
+
+        // when aligning a fourth piece
+        const move: P4Move = P4Move.of(3);
+
+        // Then the move should be legal and player zero winner
         const expectedBoard: Player[][] = [
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, X, _, _, _],
             [_, _, _, X, _, _, _],
             [_, _, _, X, _, _, _],
-            [_, _, _, X, _, _, _],
+            [_, O, O, X, O, O, _],
         ];
-        const state: P4State = new P4State(board, 1);
-        rules.node = new P4Node(state);
-        const move: P4Move = P4Move.of(3);
-        expect(rules.choose(move)).toBeTrue();
-        expect(rules.node.gameState.board).toEqual(expectedBoard);
-        expect(rules.node.getOwnValue(minimax).value).toEqual(Number.MAX_SAFE_INTEGER);
-        expect(rules.getGameStatus(rules.node).isEndGame).toBeTrue();
+        const expectedState: P4State = new P4State(expectedBoard, 8);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        const node: P4Node = new P4Node(expectedState);
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
     });
     it('Should be a draw', () => {
+        // Given a penultian board without victory
         const board: Player[][] = [
             [O, O, O, _, O, O, O],
             [X, X, X, O, X, X, X],
@@ -105,6 +112,12 @@ describe('P4Rules', () => {
             [O, O, O, X, O, O, O],
             [X, X, X, O, X, X, X],
         ];
+        const state: P4State = new P4State(board, 41);
+
+        // When doing the last move
+        const move: P4Move = P4Move.of(3);
+
+        // Then the game should be a hard draw
         const expectedBoard: Player[][] = [
             [O, O, O, X, O, O, O],
             [X, X, X, O, X, X, X],
@@ -113,29 +126,13 @@ describe('P4Rules', () => {
             [O, O, O, X, O, O, O],
             [X, X, X, O, X, X, X],
         ];
-        const state: P4State = new P4State(board, 41);
-        rules.node = new P4Node(state);
-        const move: P4Move = P4Move.of(3);
-        expect(rules.choose(move)).toBeTrue();
-        const resultingState: P4State = rules.node.gameState;
-        expect(resultingState.board).toEqual(expectedBoard);
-        expect(rules.getGameStatus(rules.node).isEndGame).toBeTrue();
-        expect(rules.node.getOwnValue(minimax).value).toBe(0);
-    });
-    it('Should know when a column is full or not', () => {
-        const board: Player[][] = [
-            [X, _, _, _, _, _, _],
-            [O, _, _, _, _, _, _],
-            [X, _, _, _, _, _, _],
-            [O, _, _, _, _, _, _],
-            [X, _, _, _, _, _, _],
-            [O, O, X, O, X, O, X],
-        ];
-        const state: P4State = new P4State(board, 12);
-        const node: P4Node = new P4Node(state);
-        expect(minimax.getListMoves(node).length).toBe(6);
+        const expectedState: P4State = new P4State(expectedBoard, 42);
+        RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
+        const node: P4Node = new P4Node(expectedState);
+        RulesUtils.expectToBeDraw(rules, node, minimaxes);
     });
     it('should forbid placing a piece on a full column', () => {
+        // Given a board with a full column
         const board: Player[][] = [
             [X, _, _, _, _, _, _],
             [O, _, _, _, _, _, _],
@@ -145,33 +142,12 @@ describe('P4Rules', () => {
             [O, O, X, O, X, O, X],
         ];
         const state: P4State = new P4State(board, 12);
-        const move: P4Move = P4Move.of(0);
-        RulesUtils.expectMoveFailure(rules, state, move, P4Failure.COLUMN_IS_FULL());
-    });
-    it('should assign greater score to center column', () => {
-        const board1: Player[][] = [
-            [_, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _],
-            [_, _, _, _, _, _, O],
-        ];
-        const state1: P4State = new P4State(board1, 0);
-        const board2: Player[][] = [
-            [_, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _],
-            [_, _, _, O, _, _, _],
-        ];
-        const state2: P4State = new P4State(board2, 0);
 
-        RulesUtils.expectSecondStateToBeBetterThanFirstFor(minimax,
-                                                           state1, MGPOptional.empty(),
-                                                           state2, MGPOptional.empty(),
-                                                           Player.ZERO);
+        // When playing on the full column
+        const move: P4Move = P4Move.of(0);
+
+        // Then the move should be deemed illegal
+        RulesUtils.expectMoveFailure(rules, state, move, P4Failure.COLUMN_IS_FULL());
     });
     it('should know where the lowest case is', () => {
         const board: Player[][] = [

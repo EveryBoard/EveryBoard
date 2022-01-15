@@ -70,8 +70,8 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
     {
         super(board, turn);
     }
-    public applyLegalDeplacement(move: CoerceoMove): CoerceoState {
-        display(CoerceoState.VERBOSE, { coerceoState_applyLegalDeplacement: { object: this, move } });
+    public applyLegalMovement(move: CoerceoMove): CoerceoState {
+        display(CoerceoState.VERBOSE, { coerceoState_applyLegalMovement: { object: this, move } });
         const start: Coord = move.start.get();
         const landing: Coord = move.landingCoord.get();
         const newBoard: FourStatePiece[][] = this.getCopiedBoard();
@@ -80,8 +80,8 @@ export class CoerceoState extends TriangularGameState<FourStatePiece> {
 
         return new CoerceoState(newBoard, this.turn, this.tiles, this.captures);
     }
-    public doDeplacementCaptures(move: CoerceoMove): CoerceoState {
-        display(CoerceoState.VERBOSE, { coerceoState_doDeplacementCaptures: { object: this, move } });
+    public doMovementCaptures(move: CoerceoMove): CoerceoState {
+        display(CoerceoState.VERBOSE, { coerceoState_doMovementCaptures: { object: this, move } });
         const captureds: Coord[] = this.getCapturedNeighbors(move.landingCoord.get());
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         let resultingState: CoerceoState = this;
