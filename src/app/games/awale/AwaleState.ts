@@ -1,5 +1,5 @@
 import { GameStateWithTable } from '../../jscaip/GameStateWithTable';
-import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 
 export class AwaleState extends GameStateWithTable<number> {
 
@@ -7,7 +7,7 @@ export class AwaleState extends GameStateWithTable<number> {
         const board: number[][] = ArrayUtils.createTable(6, 2, 4);
         return new AwaleState(board, 0, [0, 0]);
     }
-    constructor(b: number[][], turn: number, public readonly captured: readonly [number, number]) {
+    constructor(b: Table<number>, turn: number, public readonly captured: readonly [number, number]) {
         super(b, turn);
     }
     public getCapturedCopy(): [number, number] {
