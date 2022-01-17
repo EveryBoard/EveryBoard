@@ -4,8 +4,6 @@ import { ThemeService } from 'src/app/services/ThemeService';
 import { GameInfo } from '../pick-game/pick-game.component';
 import { faNetworkWired, faDesktop, faBookOpen, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { IPart } from 'src/app/domain/icurrentpart';
-import { PartDAO } from 'src/app/dao/PartDAO';
 
 @Component({
     selector: 'app-welcome',
