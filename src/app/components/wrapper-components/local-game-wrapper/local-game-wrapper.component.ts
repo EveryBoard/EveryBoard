@@ -12,6 +12,7 @@ import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ErrorLogger } from 'src/app/services/ErrorLogger';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 
 @Component({
     selector: 'app-local-game-wrapper',
@@ -47,9 +48,11 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         return MGPNodeStats.minimaxTime;
     }
     public ngAfterViewInit(): void {
-        this.afterGameIncluderViewInit();
-        this.restartGame();
-        this.cdr.detectChanges();
+        setTimeout(() => {
+            this.afterGameIncluderViewInit();
+            this.restartGame();
+            this.cdr.detectChanges();
+        }, 1);
     }
     public updatePlayer(player: 0|1): void {
         this.players[player] = MGPOptional.of(this.playerSelection[player]);
@@ -97,7 +100,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
                 return this.players[playerIndex].equalsValue(a.name);
             }));
     }
-    public async doAIMove(playingMinimax: AbstractMinimax): Promise<void> {
+    public async doAIMove(playingMinimax: AbstractMinimax): Promise<MGPValidation> {
         // called only when it's AI's Turn
         const ruler: Rules<Move, GameState, unknown> = this.gameComponent.rules;
         const gameStatus: GameStatus = ruler.getGameStatus(ruler.node);
@@ -109,8 +112,9 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
             this.updateBoard();
             this.cdr.detectChanges();
             this.proposeAIToPlay();
+            return MGPValidation.SUCCESS;
         } else {
-            await this.errorLogger.logError('local-game-wrapper', 'AI choosed illegal move (' + aiMove.toString() + ')');
+            return this.errorLogger.logError('LocalGameWrapper', 'AI chose illegal move (' + aiMove.toString() + ')');
         }
     }
     public canTakeBack(): boolean {

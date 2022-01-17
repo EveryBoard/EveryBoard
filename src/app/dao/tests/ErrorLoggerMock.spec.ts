@@ -9,7 +9,6 @@ export class ErrorLoggerMock {
             message,
             time: null,
         });
-        console.log('1')
         return MGPValidation.failure(component + ': ' + message);
     }
 }

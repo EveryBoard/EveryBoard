@@ -347,7 +347,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             for (const user of foundUsers) {
                 if (user.doc.state === 'offline') {
                     this.removeUserFromLobby(Utils.getNonNullable(user.doc.username));
-                    await this.errorLogger.logError('part-creation', user.doc.username + ' is already offline!');
+                    await this.errorLogger.logError('PartCreation', user.doc.username + ' is already offline!');
                 }
             }
         };

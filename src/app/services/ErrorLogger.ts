@@ -38,7 +38,6 @@ export class ErrorLogger {
             time: firebase.firestore.FieldValue.serverTimestamp(),
         };
         await this.errorDAO.create(error);
-        console.log('2')
         return MGPValidation.failure(component + ': ' + message);
     }
 }

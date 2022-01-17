@@ -212,7 +212,7 @@ describe('PartCreationComponent:', () => {
                 // Then the candidate does not appear on the page
                 testUtils.expectElementNotToExist('#presenceOf_firstCandidate');
                 // and logError was called as this is an unexpected situation
-                expect(errorLogger.logError).toHaveBeenCalledWith('OnlineGameWrapper', 'firstCandidate is already offline!');
+                expect(errorLogger.logError).toHaveBeenCalledWith('PartCreation', 'firstCandidate is already offline!');
             }));
             it('should not fail if an user has to be removed from the lobby but is not in it', fakeAsync(async() => {
                 spyOn(errorLogger, 'logError');

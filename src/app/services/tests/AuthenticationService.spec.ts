@@ -248,14 +248,19 @@ describe('AuthenticationService', () => {
             expect(result.getReason()).toBe('AuthenticationService: Unlogged users cannot request for email verification');
             expect(errorLogger.logError).toHaveBeenCalledWith('AuthenticationService', 'Unlogged users cannot request for email verification');
         });
-        it('should throw if the user already verified its email', async() => {
+        it('should fail if the user already verified its email', async() => {
             // given a connected user that is registered and verified, for example through a google account
             await createConnectedGoogleUser(true);
+            const errorLogger: ErrorLogger = TestBed.inject(ErrorLogger);
+            spyOn(errorLogger, 'logError').and.callThrough();
 
             // when the email verification is requested
-            const result: Promise<MGPValidation> = service.sendEmailVerification();
-            // then it throws because this is not a valid user interaction
-            await expectAsync(result).toBeRejectedWithError('Encountered error: Verified users should not ask email verification twice');
+            const result: MGPValidation = await service.sendEmailVerification();
+
+            // then it fails because this is not a valid user interaction
+            expect(result.isFailure()).toBeTrue();
+            expect(result.getReason()).toBe('AuthenticationService: Verified users should not ask email verification twice');
+            expect(errorLogger.logError).toHaveBeenCalledWith('AuthenticationService', 'Verified users should not ask email verification twice');
         });
         it('should fail if there is a genuine error in the email verification process from firebase', async() => {
             // given a user that just registered and hence is not verified

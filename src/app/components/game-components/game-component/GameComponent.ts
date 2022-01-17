@@ -96,8 +96,7 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
     }
     public async pass(): Promise<MGPValidation> {
         const error: string = 'pass() called on a game that does not redefine it';
-        await this.errorLogger.logError('GameComponent', error);
-        return MGPValidation.failure('GameComponent.pass() called on a game that does not redefine it');
+        return this.errorLogger.logError('GameComponent', error);
     }
     public getTurn(): number {
         return this.rules.node.gameState.turn;

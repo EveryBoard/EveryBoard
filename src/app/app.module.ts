@@ -12,14 +12,6 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
 
-import { PartDAO } from './dao/PartDAO';
-
-import { ChatService } from './services/ChatService';
-import { UserService } from './services/UserService';
-import { AuthenticationService } from './services/AuthenticationService';
-import { GameService } from './services/GameService';
-import { JoinerService } from './services/JoinerService';
-
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/normal-component/header/header.component';
 import { WelcomeComponent } from './components/normal-component/welcome/welcome.component';

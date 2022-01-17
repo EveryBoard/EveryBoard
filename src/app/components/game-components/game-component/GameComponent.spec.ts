@@ -5,13 +5,14 @@ import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { Direction } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { ActivatedRouteStub, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { ActivatedRouteStub, ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { GameInfo, PickGameComponent } from '../../normal-component/pick-game/pick-game.component';
 import { GameWrapperMessages } from '../../wrapper-components/GameWrapper';
 import { LocalGameWrapperComponent } from '../../wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { AbstractGameComponent } from './GameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { ErrorLogger } from 'src/app/services/ErrorLogger';
+import { AbaloneComponent } from 'src/app/games/abalone/abalone.component';
 
 describe('GameComponent', () => {
 
@@ -19,28 +20,31 @@ describe('GameComponent', () => {
 
     const gameList: ReadonlyArray<string> = new PickGameComponent().gameNameList;
 
+    beforeEach(fakeAsync(async() => {
+        await ComponentTestUtils.configureTestModule(activatedRouteStub);
+    }));
+
     it('should fail if pass() is called on a game that does not support it', fakeAsync(async() => {
         // given such a game, like Abalone
         activatedRouteStub.setRoute('compo', 'Abalone');
-        const testUtils: SimpleComponentTestUtils<LocalGameWrapperComponent> =
-            await SimpleComponentTestUtils.create(LocalGameWrapperComponent, activatedRouteStub);
-        const component: LocalGameWrapperComponent = testUtils.getComponent();
-        component.observerRole = 1;
+        const testUtils: ComponentTestUtils<AbaloneComponent> = await ComponentTestUtils.forGame('Abalone');
+        const component: AbstractGameComponent = testUtils.getComponent();
+        expect(component).toBeDefined();
+        testUtils.wrapper.observerRole = 1;
         testUtils.detectChanges();
         tick(1);
-        expect(testUtils.getComponent().gameComponent).toBeDefined();
+
 
         const errorLogger: ErrorLogger = TestBed.inject(ErrorLogger);
-        spyOn(errorLogger, 'logError').and.resolveTo();
+        spyOn(errorLogger, 'logError').and.callThrough();
 
+        // when the player tries to pass
+        const result: MGPValidation = await component.pass();
 
-        // when we try to pass
-        const result: MGPValidation = await component.gameComponent.pass();
-
-        // then it gives an error and logError is called
+        // then should fail and call logError
         const errorMessage: string = 'pass() called on a game that does not redefine it';
         expect(result.isFailure()).toBeTrue();
-        expect(result.getReason()).toEqual(errorMessage);
+        expect(result.getReason()).toEqual('GameComponent: ' + errorMessage);
         expect(errorLogger.logError).toHaveBeenCalledWith('GameComponent', errorMessage);
     }));
     it('Clicks method should refuse when observer click', fakeAsync(async() => {
@@ -111,38 +115,43 @@ describe('GameComponent', () => {
             Yinsh: { onClick: [0, 0] },
         };
         const refusal: MGPValidation = MGPValidation.failure(GameWrapperMessages.NO_CLONING_FEATURE());
-
         for (const gameName of gameList.concat('MinimaxTesting')) {
             const game : { [methodName: string]: unknown[] } = clickableMethods[gameName];
             if (game == null) {
                 throw new Error('Please define ' + gameName + ' clickable method in here to test them.');
             }
             activatedRouteStub.setRoute('compo', gameName);
-            const testUtils: SimpleComponentTestUtils<LocalGameWrapperComponent> =
-                await SimpleComponentTestUtils.create(LocalGameWrapperComponent, activatedRouteStub);
-            const component: LocalGameWrapperComponent = testUtils.getComponent();
-            component.observerRole = 2;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const testUtils: ComponentTestUtils<any> =
+                await ComponentTestUtils.forGame(gameName, LocalGameWrapperComponent, false);
+            const component: AbstractGameComponent = testUtils.getComponent();
+            testUtils.wrapper.observerRole = 2;
             testUtils.detectChanges();
             tick(1);
-            expect(component.gameComponent).toBeDefined();
+            expect(component).toBeDefined();
             for (const methodName of Object.keys(game)) {
-                expect(component.gameComponent[methodName]).withContext(`click method ${methodName} should be defined for game ${gameName}`).toBeDefined();
-                const clickResult: MGPValidation = await component.gameComponent[methodName](...game[methodName]);
+                expect(component[methodName]).withContext(`click method ${methodName} should be defined for game ${gameName}`).toBeDefined();
+                const clickResult: MGPValidation = await component[methodName](...game[methodName]);
                 expect(clickResult).toEqual(refusal);
             }
         }
         tick(3000); // needs to be >2999
     }));
-    it('Component should have an encoder and a tutorial', fakeAsync(async() =>{
+    it('should have an encoder and a tutorial for every game', fakeAsync(async() =>{
         for (const gameInfo of GameInfo.ALL_GAMES()) {
             if (gameInfo.display === false) {
                 continue;
             }
-            const gameComponent: AbstractGameComponent =
-                TestBed.createComponent(gameInfo.component).debugElement.componentInstance;
-            expect(gameComponent.encoder).withContext('Encoder missing for ' + gameInfo.urlName).toBeTruthy();
-            expect(gameComponent.tutorial).withContext('tutorial missing for ' + gameInfo.urlName).toBeTruthy();
-            expect(gameComponent.tutorial.length).withContext('tutorial empty for ' + gameInfo.urlName).toBeGreaterThan(0);
+            activatedRouteStub.setRoute('compo', gameInfo.urlName);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const testUtils: ComponentTestUtils<any> =
+                await ComponentTestUtils.forGame(gameInfo.urlName, LocalGameWrapperComponent, false);
+            const component: AbstractGameComponent = testUtils.getComponent();
+            testUtils.detectChanges();
+            tick(1);
+            expect(component.encoder).withContext('Encoder missing for ' + gameInfo.urlName).toBeTruthy();
+            expect(component.tutorial).withContext('tutorial missing for ' + gameInfo.urlName).toBeTruthy();
+            expect(component.tutorial.length).withContext('tutorial empty for ' + gameInfo.urlName).toBeGreaterThan(0);
         }
     }));
 });

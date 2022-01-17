@@ -191,7 +191,6 @@ export class AuthenticationService implements OnDestroy {
             }
         } else {
             // This should not be reachable from a component
-            console.log(this.errorLogger)
             return this.errorLogger.logError('AuthenticationService', 'Unlogged users cannot request for email verification');
         }
     }

@@ -32,7 +32,7 @@ import { Rules } from 'src/app/jscaip/Rules';
 import { Utils } from '../utils';
 import { AutofocusDirective } from 'src/app/directives/autofocus.directive';
 import { ToggleVisibilityDirective } from 'src/app/directives/toggle-visibility.directive';
-import { AngularFirestore, AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { AngularFireModule } from '@angular/fire';
 import { USE_EMULATOR as USE_FIRESTORE_EMULATOR } from '@angular/fire/firestore';
@@ -41,7 +41,7 @@ import { USE_EMULATOR as USE_AUTH_EMULATOR } from '@angular/fire/auth';
 import { USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/functions';
 import { environment } from 'src/environments/environment';
 import { MGPOptional } from '../MGPOptional';
-import { ErrorDAO, ErrorLogger } from 'src/app/services/ErrorLogger';
+import { ErrorLogger } from 'src/app/services/ErrorLogger';
 import { ErrorLoggerMock } from 'src/app/dao/tests/ErrorLoggerMock.spec';
 
 @Component({})
@@ -184,10 +184,11 @@ export class ComponentTestUtils<T extends MyGameComponent> {
     private onLegalUserMoveSpy: jasmine.Spy;
 
     public static async forGame<T extends MyGameComponent>(game: string,
-                                                           wrapperKind: Type<GameWrapper> = LocalGameWrapperComponent)
+                                                           wrapperKind: Type<GameWrapper> = LocalGameWrapperComponent,
+                                                           configureTestModule: boolean = true)
     : Promise<ComponentTestUtils<T>>
     {
-        const testUtils: ComponentTestUtils<T> = await ComponentTestUtils.basic(game);
+        const testUtils: ComponentTestUtils<T> = await ComponentTestUtils.basic(game, configureTestModule);
         AuthenticationServiceMock.setUser(AuthUser.NOT_CONNECTED);
         testUtils.prepareFixture(wrapperKind);
         testUtils.detectChanges();
@@ -196,8 +197,17 @@ export class ComponentTestUtils<T extends MyGameComponent> {
         testUtils.prepareSpies();
         return testUtils;
     }
-    public static async basic<T extends MyGameComponent>(game?: string): Promise<ComponentTestUtils<T>> {
+    public static async basic<T extends MyGameComponent>(game?: string,
+                                                         configureTestModule: boolean = true)
+    : Promise<ComponentTestUtils<T>>
+    {
         const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub(game, 'joinerId');
+        if (configureTestModule) {
+            ComponentTestUtils.configureTestModule(activatedRouteStub);
+        }
+        return new ComponentTestUtils<T>(activatedRouteStub);
+    }
+    public static async configureTestModule(activatedRouteStub: ActivatedRouteStub): Promise<void> {
         await TestBed.configureTestingModule({
             imports: [
                 AppModule,
@@ -217,9 +227,9 @@ export class ComponentTestUtils<T extends MyGameComponent> {
                 { provide: ErrorLogger, useClass: ErrorLoggerMock },
             ],
         }).compileComponents();
-        return new ComponentTestUtils<T>(activatedRouteStub);
     }
-    private constructor(private readonly activatedRouteStub: ActivatedRouteStub) {}
+
+    public constructor(private readonly activatedRouteStub: ActivatedRouteStub) {}
 
     public prepareFixture(wrapperKind: Type<GameWrapper>): void {
         this.fixture = TestBed.createComponent(wrapperKind);
