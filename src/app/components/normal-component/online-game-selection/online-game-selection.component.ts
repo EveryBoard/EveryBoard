@@ -14,7 +14,7 @@ export class OnlineGameSelectionComponent {
     public pickGame(pickedGame: string): void {
         this.selectedGame = pickedGame;
     }
-    public async createGame(): Promise<void> {
+    public async navigateToOnlineGameCreation(): Promise<void> {
         await this.router.navigate(['/play/', this.selectedGame]);
     }
 }

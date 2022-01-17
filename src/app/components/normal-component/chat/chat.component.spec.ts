@@ -68,7 +68,7 @@ describe('ChatComponent', () => {
             // chatService.stopObserving should not have been called neither
             expect(chatService.stopObserving).not.toHaveBeenCalled();
             // but the auth subscription needs to be cancelled!
-            expect(component['authSubscription'].unsubscribe).toHaveBeenCalled();
+            expect(component['authSubscription'].unsubscribe).toHaveBeenCalledOnceWith();
         }));
     });
     describe('connected chat', () => {
@@ -187,7 +187,7 @@ describe('ChatComponent', () => {
             await testUtils.whenStable();
 
             // then the view is scrolled to the bottom
-            expect(component.scrollToBottom).toHaveBeenCalled();
+            expect(component.scrollToBottom).toHaveBeenCalledOnceWith();
             // and the indicator has disappeared
             testUtils.expectElementNotToExist('#scrollToBottomIndicator');
         }));
@@ -256,7 +256,7 @@ describe('ChatComponent', () => {
             component.ngOnDestroy();
             await testUtils.whenStable();
             // For the connected chat, the subscription need to be properly closed
-            expect(chatService.stopObserving).toHaveBeenCalledWith();
+            expect(chatService.stopObserving).toHaveBeenCalledOnceWith();
         }));
     });
 });

@@ -21,12 +21,12 @@ export class PartDAO extends FirebaseFirestoreDAO<IPart> {
     }
     public async userHasActivePart(username: string): Promise<boolean> {
         // This can be simplified into a simple query once part.playerZero and part.playerOne are in an array
-        const partsAsPlayerZero: IPart[] = await this.findWhere([
+        const userIsFirstPlayer: IPart[] = await this.findWhere([
             ['playerZero', '==', username],
             ['result', '==', MGPResult.UNACHIEVED.value]]);
-        const partsAsPlayerOne: IPart[] = await this.findWhere([
+        const userIsSecondPlayer: IPart[] = await this.findWhere([
             ['playerOne', '==', username],
             ['result', '==', MGPResult.UNACHIEVED.value]]);
-        return partsAsPlayerZero.length > 0 || partsAsPlayerOne.length > 0;
+        return userIsFirstPlayer.length > 0 || userIsSecondPlayer.length > 0;
     }
 }

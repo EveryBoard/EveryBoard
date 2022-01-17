@@ -25,10 +25,10 @@ describe('ServerPageComponent', () => {
         component.ngOnInit();
     }));
     it('should display online-game-selection component when clicking on tab-create element', fakeAsync(async() => {
-        // When the component is loaded
+        // Given a server page
         testUtils.detectChanges();
 
-        // Clicking on the 'create game' tab
+        // When clicking on the 'create game' tab
         await testUtils.clickElement('#tab-create');
         await testUtils.whenStable();
 

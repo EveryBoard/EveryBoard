@@ -46,7 +46,7 @@ describe('ConnectedButNotVerifiedGuard', () => {
         await expectAsync(guard.canActivate()).toBeResolvedTo(router.parseUrl('/'));
     }));
     it('should unsubscribe from userSub upon destruction', fakeAsync(async() => {
-        // Given a guard that has executed
+        // Given a guard that has resolved
         AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
         await guard.canActivate();
         spyOn(guard['userSub'], 'unsubscribe');

@@ -16,7 +16,7 @@ describe('OnlineGameCreationComponent', () => {
         testUtils = await SimpleComponentTestUtils.create(OnlineGameCreationComponent, new ActivatedRouteStub(game));
     }));
     it('should create and redirect to the game upon success', fakeAsync(async() => {
-        // Given that the page is loaded for a specific game by an online user that can create a game
+        // Given a page that is loaded for a specific game by an online user that can create a game
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.callThrough();
         AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
@@ -27,11 +27,11 @@ describe('OnlineGameCreationComponent', () => {
         testUtils.detectChanges();
         tick(3000); // needs to be >2999
 
-        // Then the user is redirected to the game
+        // Then the user should be redirected to the game
         expect(router.navigate).toHaveBeenCalledOnceWith(['/play/', game, 'PartDAOMock0']);
     }));
     it('should show toast and navigate to server when creator has active parts', fakeAsync(async() => {
-        // Given that the page is loaded for a specific game by a connected user that already has an active part
+        // Given a page that is loaded for a specific game by a connected user that already has an active part
         const router: Router = TestBed.inject(Router);
         const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
         spyOn(router, 'navigate').and.callThrough();
@@ -44,7 +44,7 @@ describe('OnlineGameCreationComponent', () => {
         testUtils.detectChanges();
         tick(3000); // needs to be >2999
 
-        // It should toast, and navigate to server
+        // Then it should toast, and navigate to server
         expect(messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(OnlineGameCreationMessages.ALREADY_INGAME());
         expect(router.navigate).toHaveBeenCalledOnceWith(['/server']);
     }));

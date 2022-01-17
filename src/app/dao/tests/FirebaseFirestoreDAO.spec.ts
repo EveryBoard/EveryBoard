@@ -116,7 +116,7 @@ describe('FirebaseFirestoreDAO', () => {
             await expectAsync(promise).toBeResolvedTo([{ value: 'foo', otherValue: 1 }]);
             unsubscribe();
         });
-        it('should not observe document creation when the condition does not hold', async() => {
+        it('should not observe document creation when the simple condition does not hold', async() => {
             // This test is flaky: it fails from time to time. Check the output log when it fails.
             const callback: FirebaseCollectionObserver<Foo> = new FirebaseCollectionObserver(
                 callbackFunctionLog,
@@ -124,6 +124,18 @@ describe('FirebaseFirestoreDAO', () => {
                 () => void { },
             );
             const unsubscribe: () => void = dao.observingWhere([['value', '==', 'baz']], callback);
+            await dao.create({ value: 'foo', otherValue: 1 });
+            await expectAsync(promise).toBePending();
+            unsubscribe();
+        });
+        it('should not observe document creation when the complex condition does not hold', async() => {
+            // This test is flaky: it fails from time to time. Check the output log when it fails.
+            const callback: FirebaseCollectionObserver<Foo> = new FirebaseCollectionObserver(
+                callbackFunctionLog,
+                () => void { },
+                () => void { },
+            );
+            const unsubscribe: () => void = dao.observingWhere([['value', '==', 'baz'], ['otherValue', '==', 2]], callback);
             await dao.create({ value: 'foo', otherValue: 1 });
             await expectAsync(promise).toBePending();
             unsubscribe();

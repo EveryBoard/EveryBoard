@@ -33,8 +33,9 @@ export class OnlineGameCreationComponent implements OnInit {
     private async createGameAndRedirectOrShowError(game: string): Promise<boolean> {
         const user: AuthUser = this.authenticationService.user.get();
         assert(user.isConnected(), 'User must be connected and have a username to reach this page');
-        if (await this.canCreateOnlineGame(user.username.get())) {
-            const gameId: string = await this.gameService.createPartJoinerAndChat(user.username.get(), game);
+        const username: string = user.username.get();
+        if (await this.canCreateOnlineGame(username)) {
+            const gameId: string = await this.gameService.createPartJoinerAndChat(username, game);
             // create Part and Joiner
             await this.router.navigate(['/play/', game, gameId]);
             return true;

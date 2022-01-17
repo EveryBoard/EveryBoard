@@ -525,8 +525,6 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
 
             // expect navigator to have been called
             expect(router.navigate).toHaveBeenCalledWith(['/play/', 'Quarto']);
-
-            // tick(3000); // needs to be >2999
         }));
     });
     describe('TutorialStep awaiting specific moves', () => {

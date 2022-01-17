@@ -26,7 +26,8 @@ export interface IFirebaseFirestoreDAO<T extends FirebaseJSONObject> {
 
     /**
      * Observes a specific document given its id.
-     * The observable gives an optional, set to empty when the document is deleted
+     * The observable gives an optional, set to empty when the document is deleted.
+     * If the document does not exist initially, the optional is also empty.
      */
     getObsById(id: string): Observable<MGPOptional<T>>;
 

@@ -112,8 +112,8 @@ describe('ActivePartsService', () => {
                 turn: 0,
                 typeGame: 'P4',
             };
-            const partId1: string = await partDAO.create(part);
-            const partId2: string = await partDAO.create(part);
+            const partToBeDeleted: string = await partDAO.create(part);
+            const partThatWillRemain: string = await partDAO.create(part);
             let seenActiveParts: IPartId[] = [];
             const activePartsSub: Subscription = service.getActivePartsObs()
                 .subscribe((activeParts: IPartId[]) => {
@@ -121,11 +121,11 @@ describe('ActivePartsService', () => {
                 });
 
             // When an (but not all) existing part is deleted
-            await partDAO.delete(partId1);
+            await partDAO.delete(partToBeDeleted);
 
             // Then only the non-deleted part should remain
             expect(seenActiveParts.length).toBe(1);
-            expect(seenActiveParts[0].id).toBe(partId2);
+            expect(seenActiveParts[0].id).toBe(partThatWillRemain);
 
             activePartsSub.unsubscribe();
         }));
@@ -165,8 +165,8 @@ describe('ActivePartsService', () => {
                 turn: 0,
                 typeGame: 'P4',
             };
-            const partId1: string = await partDAO.create(part);
-            const partId2: string = await partDAO.create(part);
+            const partToBeModified: string = await partDAO.create(part);
+            const partThatWontChange: string = await partDAO.create(part);
             let seenActiveParts: IPartId[] = [];
             const activePartsSub: Subscription = service.getActivePartsObs()
                 .subscribe((activeParts: IPartId[]) => {
@@ -174,14 +174,14 @@ describe('ActivePartsService', () => {
                 });
 
             // When an existing part is updated
-            await partDAO.update(partId1, { turn: 1 });
+            await partDAO.update(partToBeModified, { turn: 1 });
 
             // Then the part should have been updated
             expect(seenActiveParts.length).toBe(2);
             const newPart1: IPartId = Utils.getNonNullable(seenActiveParts.find((part: IPartId) =>
-                part.id === partId1));
+                part.id === partToBeModified));
             const newPart2: IPartId = Utils.getNonNullable(seenActiveParts.find((part: IPartId) =>
-                part.id === partId2));
+                part.id === partThatWontChange));
             expect(Utils.getNonNullable(newPart1.doc).turn).toBe(1);
             // and the other one should still be there and still be the same
             expect(Utils.getNonNullable(newPart2.doc).turn).toBe(0);

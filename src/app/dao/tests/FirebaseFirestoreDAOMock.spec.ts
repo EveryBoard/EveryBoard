@@ -158,13 +158,14 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
     {
         const db: MGPMap<string, DocumentSubject<T>> = this.getStaticDB();
         this.callbacks.push([conditions, callback]);
+        const matchingDocs: FirebaseDocumentWithId<T>[] = [];
         for (let entryId: number = 0; entryId < db.size(); entryId++) {
             const entry: DocumentSubject<T> = db.getByIndex(entryId).value;
             if (this.conditionsHold(conditions, entry.subject.value.get().doc)) {
-                callback.onDocumentCreated([entry.subject.value.get()]);
-
+                matchingDocs.push(entry.subject.value.get());
             }
         }
+        callback.onDocumentCreated(matchingDocs);
         return new Subscription(() => {
             this.callbacks = this.callbacks.filter(
                 (value: [FirebaseCondition[], FirebaseCollectionObserver<T>]): boolean => {
