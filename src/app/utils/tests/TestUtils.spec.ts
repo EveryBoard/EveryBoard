@@ -42,7 +42,7 @@ import { USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/functions'
 import { environment } from 'src/environments/environment';
 import { MGPOptional } from '../MGPOptional';
 import { ErrorLogger } from 'src/app/services/ErrorLogger';
-import { ErrorLoggerMock } from 'src/app/dao/tests/ErrorLoggerMock.spec';
+import { ErrorLoggerMock } from 'src/app/services/tests/ErrorLoggerMock.spec';
 
 @Component({})
 export class BlankComponent {}
