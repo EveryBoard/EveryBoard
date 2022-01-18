@@ -15,24 +15,20 @@ export class QuartoState extends GameStateWithTable<QuartoPiece> {
         if (piece === pieceInHand) {
             return false;
         }
-        return QuartoState.isPlacable(piece, board);
+        return QuartoState.isAlreadyOnBoard(piece, board) === false;
     }
-    public static isPlacable(piece: QuartoPiece, board: Table<QuartoPiece>): boolean {
-        // return true if the pawn is not already placed on the board
-        let found: boolean = false;
-        let indexY: number = 0;
-        let indexX: number;
-        while (!found && (indexY < 4)) {
-            indexX = 0;
-            while (!found && (indexX < 4)) {
-                found = board[indexY][indexX] === piece;
-                indexX++;
+    public static isAlreadyOnBoard(piece: QuartoPiece, board: Table<QuartoPiece>): boolean {
+        // return true if the piece is already placed on the board
+        for (let indexY: number = 0; indexY < 4; indexY++) {
+            for (let indexX: number = 0; indexX < 4; indexX++) {
+                if (board[indexY][indexX] === piece) {
+                    return true;
+                }
             }
-            indexY++;
         }
-        return !found;
+        return false;
     }
-    public getRemainingPawns(): Array<QuartoPiece> {
+    public getRemainingPieces(): Array<QuartoPiece> {
         // return the pawn that are nor on the board nor the one that you have in your hand
         // (hence, the one that your about to put on the board)
         const allPawn: ReadonlyArray<QuartoPiece> = QuartoPiece.pieces;
