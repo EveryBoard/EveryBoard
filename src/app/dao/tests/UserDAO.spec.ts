@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { TestBed } from '@angular/core/testing';
-import { IUser } from 'src/app/domain/iuser';
+import { User } from 'src/app/domain/iuser';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 import { UserDAO } from '../UserDAO';
 import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
@@ -22,7 +22,7 @@ describe('UserDAO', () => {
     });
     describe('observeUserByUsername', () => {
         it('should call observingWhere with the right condition', () => {
-            const callback: FirebaseCollectionObserver<IUser> = new FirebaseCollectionObserver<IUser>(
+            const callback: FirebaseCollectionObserver<User> = new FirebaseCollectionObserver<User>(
                 () => void { },
                 () => void { },
                 () => void { },
@@ -38,7 +38,7 @@ describe('UserDAO', () => {
     });
     describe('observeActiveUsers', () => {
         it('should call observingWhere with the right condition', () => {
-            const callback: FirebaseCollectionObserver<IUser> = new FirebaseCollectionObserver<IUser>(
+            const callback: FirebaseCollectionObserver<User> = new FirebaseCollectionObserver<User>(
                 () => void { },
                 () => void { },
                 () => void { },
@@ -61,7 +61,7 @@ describe('UserDAO', () => {
             await dao.setUsername(uid, 'foo');
 
             // then its username has changed
-            const user: IUser = (await dao.read(uid)).get();
+            const user: User = (await dao.read(uid)).get();
             expect(user.username).toEqual('foo');
 
             await firebase.auth().signOut();

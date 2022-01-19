@@ -1,12 +1,12 @@
 import { Component, Input, OnDestroy, ElementRef, ViewChild, OnInit, AfterViewChecked } from '@angular/core';
 import { ChatService } from '../../../services/ChatService';
-import { IMessage } from '../../../domain/imessage';
+import { Message } from '../../../domain/imessage';
 import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
 import { assert, display } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { faReply, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
-import { IChat } from 'src/app/domain/ichat';
+import { Chat } from 'src/app/domain/ichat';
 
 @Component({
     selector: 'app-chat',
@@ -21,7 +21,7 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     public username: MGPOptional<string> = MGPOptional.empty();
 
     public connected: boolean = false;
-    public chat: IMessage[] = [];
+    public chat: Message[] = [];
     public readMessages: number = 0;
     public unreadMessagesText: string = '';
     public showUnreadMessagesButton: boolean = false;
@@ -67,12 +67,12 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     public loadChatContent(): void {
         display(ChatComponent.VERBOSE, `User '${this.username}' logged, loading chat content`);
 
-        this.chatService.startObserving(this.chatId, (chat: MGPOptional<IChat>) => {
+        this.chatService.startObserving(this.chatId, (chat: MGPOptional<Chat>) => {
             assert(chat.isPresent(), 'ChatComponent observed a chat being deleted, this should not happen');
             this.updateMessages(chat.get());
         });
     }
-    public updateMessages(chat: IChat): void {
+    public updateMessages(chat: Chat): void {
         this.chat = chat.messages;
         const nbMessages: number = this.chat.length;
         if (this.visible === true && this.isNearBottom === true) {

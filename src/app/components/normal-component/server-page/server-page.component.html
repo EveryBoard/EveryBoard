@@ -28,14 +28,14 @@
             <tbody>
                 <tr *ngFor="let part of activeParts; index as i"
                     id="part_{{ i }}"
-                    (click)="joinGame(part.id, part.doc.typeGame)">
-                    <td class="td">{{ part.doc.typeGame }}</td>
-                    <td class="td">{{ part.doc.playerZero }}</td>
+                    (click)="joinGame(part.id, part.data.typeGame)">
+                    <td class="td">{{ part.data.typeGame }}</td>
+                    <td class="td">{{ part.data.playerZero }}</td>
                     <td class="td">
-                        <ng-container *ngIf="part.doc.playerOne else waitingForOpponent">{{ part.doc.playerOne }}</ng-container>
+                        <ng-container *ngIf="part.data.playerOne else waitingForOpponent">{{ part.data.playerOne }}</ng-container>
                         <ng-template #waitingForOpponent i18n>Waiting for opponent</ng-template>
                     </td>
-                    <td class="td">{{ part.doc.turn }}</td>
+                    <td class="td">{{ part.data.turn }}</td>
                 </tr>
             </tbody>
         </table>
@@ -60,9 +60,9 @@
             <p i18n>Connected users:</p>
             <ul>
                 <li *ngFor="let user of activeUsers">
-                    <ng-container *ngIf="user.doc.last_changed">
-                        {{ user.doc.username }}:
-                        {{ (1000*user.doc.last_changed.seconds) | date:'HH:mm:ss':'+0100'}}
+                    <ng-container *ngIf="user.data.last_changed">
+                        {{ user.data.username }}:
+                        {{ (1000*user.data.last_changed.seconds) | date:'HH:mm:ss':'+0100'}}
                     </ng-container>
                 </li>
             </ul>

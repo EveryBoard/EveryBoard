@@ -4,8 +4,8 @@ import { Subscription } from 'rxjs';
 import { UserService } from '../../../services/UserService';
 import { display } from 'src/app/utils/utils';
 import { ActivePartsService } from 'src/app/services/ActivePartsService';
-import { IPartId } from 'src/app/domain/icurrentpart';
-import { IUserId } from 'src/app/domain/iuser';
+import { PartDocument } from 'src/app/domain/icurrentpart';
+import { UserDocument } from 'src/app/domain/iuser';
 
 type Tab = 'games' | 'create' | 'chat';
 
@@ -17,9 +17,9 @@ export class ServerPageComponent implements OnInit, OnDestroy {
 
     public static VERBOSE: boolean = false;
 
-    public activeUsers: IUserId[] = [];
+    public activeUsers: UserDocument[] = [];
 
-    public activeParts: IPartId[] = [];
+    public activeParts: PartDocument[] = [];
 
     private activeUsersSub: Subscription;
 
@@ -34,12 +34,12 @@ export class ServerPageComponent implements OnInit, OnDestroy {
     public ngOnInit(): void {
         display(ServerPageComponent.VERBOSE, 'serverPageComponent.ngOnInit');
         this.activeUsersSub = this.userService.getActiveUsersObs()
-            .subscribe((activeUsers: IUserId[]) => {
+            .subscribe((activeUsers: UserDocument[]) => {
                 this.activeUsers = activeUsers;
             });
         this.activePartsService.startObserving();
         this.activePartsSub = this.activePartsService.getActivePartsObs()
-            .subscribe((activeParts: IPartId[]) => {
+            .subscribe((activeParts: PartDocument[]) => {
                 this.activeParts = activeParts;
             });
     }

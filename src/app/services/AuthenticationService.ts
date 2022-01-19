@@ -10,7 +10,7 @@ import { assert, display, Utils } from 'src/app/utils/utils';
 import { MGPValidation } from '../utils/MGPValidation';
 import { MGPFallible } from '../utils/MGPFallible';
 import { UserDAO } from '../dao/UserDAO';
-import { IUser } from '../domain/iuser';
+import { User } from '../domain/iuser';
 import { MGPOptional } from '../utils/MGPOptional';
 
 export class RTDB {
@@ -103,7 +103,7 @@ export class AuthenticationService implements OnDestroy {
                     this.registrationInProgress = MGPOptional.empty();
                 }
                 await RTDB.updatePresence(user.uid);
-                const userInDB: IUser = (await userDAO.read(user.uid)).get();
+                const userInDB: User = (await userDAO.read(user.uid)).get();
                 display(AuthenticationService.VERBOSE, `User ${userInDB.username} is connected, and the verified status is ${this.emailVerified(user)}`);
                 const userHasFinalizedVerification: boolean =
                     this.emailVerified(user) === true && userInDB.username !== null;

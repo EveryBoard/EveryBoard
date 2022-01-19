@@ -3,11 +3,9 @@ import { Request } from './request';
 import { DomainWrapper } from './DomainWrapper';
 import { FirebaseTime } from './Time';
 import { MGPOptional } from '../utils/MGPOptional';
-import { FirebaseDocumentWithId } from '../dao/FirebaseFirestoreDAO';
+import { FirebaseDocument } from '../dao/FirebaseFirestoreDAO';
 
-export type IPartId = FirebaseDocumentWithId<IPart>
-
-export interface IPart extends FirebaseJSONObject {
+export interface Part extends FirebaseJSONObject {
     readonly typeGame: string, // the type of game
     readonly playerZero: string, // the id of the first player
     readonly turn: number, // -1 means the part has not started, 0 is the initial turn
@@ -29,32 +27,33 @@ export interface IPart extends FirebaseJSONObject {
     readonly request?: Request | null, // can be null because we should be able to remove a request
 }
 
-export class Part implements DomainWrapper<IPart> {
-    public constructor(public readonly doc: IPart) {
+export class PartDocument implements FirebaseDocument<Part> {
+    public constructor(public readonly id: string,
+                       public data: Part) {
     }
     public getTurn(): number {
-        return this.doc.turn;
+        return this.data.turn;
     }
     public isDraw(): boolean {
-        return this.doc.result === MGPResult.DRAW.value;
+        return this.data.result === MGPResult.DRAW.value;
     }
     public isWin(): boolean {
-        return this.doc.result === MGPResult.VICTORY.value;
+        return this.data.result === MGPResult.VICTORY.value;
     }
     public isTimeout(): boolean {
-        return this.doc.result === MGPResult.TIMEOUT.value;
+        return this.data.result === MGPResult.TIMEOUT.value;
     }
     public isResign(): boolean {
-        return this.doc.result === MGPResult.RESIGN.value;
+        return this.data.result === MGPResult.RESIGN.value;
     }
     public getWinner(): MGPOptional<string> {
-        return MGPOptional.ofNullable(this.doc.winner);
+        return MGPOptional.ofNullable(this.data.winner);
     }
     public getLoser(): MGPOptional<string> {
-        return MGPOptional.ofNullable(this.doc.loser);
+        return MGPOptional.ofNullable(this.data.loser);
     }
-    public setWinnerAndLoser(winner: string, loser: string): Part {
-        return new Part({ ...this.doc, winner, loser });
+    public setWinnerAndLoser(winner: string, loser: string): PartDocument {
+        return new PartDocument(this.id, { ...this.data, winner, loser });
     }
 }
 

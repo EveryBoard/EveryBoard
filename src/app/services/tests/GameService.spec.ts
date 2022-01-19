@@ -3,7 +3,7 @@ import { fakeAsync, TestBed } from '@angular/core/testing';
 import { GameService, StartingPartConfig } from '../GameService';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { of } from 'rxjs';
-import { IPart, IPartId, MGPResult, Part } from 'src/app/domain/icurrentpart';
+import { Part, PartDocument, MGPResult } from 'src/app/domain/icurrentpart';
 import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
 import { JoinerDAOMock } from 'src/app/dao/tests/JoinerDAOMock.spec';
 import { ChatDAOMock } from 'src/app/dao/tests/ChatDAOMock.spec';
@@ -11,7 +11,7 @@ import { ChatDAO } from 'src/app/dao/ChatDAO';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { Request } from 'src/app/domain/request';
-import { IJoiner, PartType } from 'src/app/domain/ijoiner';
+import { Joiner, PartType } from 'src/app/domain/ijoiner';
 import { JoinerDAO } from 'src/app/dao/JoinerDAO';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
@@ -55,7 +55,7 @@ describe('GameService', () => {
         expect(service).toBeTruthy();
     });
     it('startObserving should delegate callback to partDAO', () => {
-        const part: IPart = {
+        const part: Part = {
             typeGame: 'Quarto',
             playerZero: 'creator',
             playerOne: 'joiner',
@@ -63,7 +63,7 @@ describe('GameService', () => {
             listMoves: [MOVE_1, MOVE_2],
             result: MGPResult.UNACHIEVED.value,
         };
-        const myCallback: (observedPart: MGPOptional<IPart>) => void = (observedPart: MGPOptional<IPart>) => {
+        const myCallback: (observedPart: MGPOptional<Part>) => void = (observedPart: MGPOptional<Part>) => {
             expect(observedPart.isPresent()).toBeTrue();
             expect(observedPart.get()).toEqual(part);
         };
@@ -72,11 +72,11 @@ describe('GameService', () => {
         expect(partDAO.getObsById).toHaveBeenCalledOnceWith('partId');
     });
     it('startObserving should throw exception when called while observing ', fakeAsync(async() => {
-        await partDAO.set('myJoinerId', PartMocks.INITIAL.doc);
+        await partDAO.set('myJoinerId', PartMocks.INITIAL);
 
         expect(() => {
-            service.startObserving('myJoinerId', (_part: MGPOptional<IPart>) => {});
-            service.startObserving('myJoinerId', (_part: MGPOptional<IPart>) => {});
+            service.startObserving('myJoinerId', (_part: MGPOptional<Part>) => {});
+            service.startObserving('myJoinerId', (_part: MGPOptional<Part>) => {});
         }).toThrowError('GameService.startObserving should not be called while already observing a game');
     }));
     it('should delegate delete to PartDAO', fakeAsync(async() => {
@@ -86,7 +86,7 @@ describe('GameService', () => {
     }));
     it('should forbid to accept a take back that the player proposed himself', fakeAsync(async() => {
         for (const player of [Player.ZERO, Player.ONE]) {
-            const part: Part = new Part({
+            const part: PartDocument = new PartDocument('joinerId', {
                 typeGame: 'Quarto',
                 playerZero: 'creator',
                 playerOne: 'joiner',
@@ -101,7 +101,7 @@ describe('GameService', () => {
     }));
     it('acceptConfig should delegate to joinerService and call startGameWithConfig', fakeAsync(async() => {
         const joinerService: JoinerService = TestBed.inject(JoinerService);
-        const joiner: IJoiner = JoinerMocks.WITH_PROPOSED_CONFIG.doc;
+        const joiner: Joiner = JoinerMocks.WITH_PROPOSED_CONFIG;
         spyOn(joinerService, 'acceptConfig').and.resolveTo();
         spyOn(partDAO, 'update').and.resolveTo();
 
@@ -112,7 +112,7 @@ describe('GameService', () => {
     describe('getStartingConfig', () => {
         it('should put creator first when math.random() is below 0.5', fakeAsync(async() => {
             // given a joiner config asking random start
-            const joiner: IJoiner = {
+            const joiner: Joiner = {
                 candidates: ['joiner'],
                 chosenPlayer: 'joiner',
                 creator: 'creator',
@@ -133,7 +133,7 @@ describe('GameService', () => {
         }));
         it('should put chosen player first when math.random() is over 0.5', fakeAsync(async() => {
             // given a joiner config asking random start
-            const joiner: IJoiner = {
+            const joiner: Joiner = {
                 candidates: ['joiner'],
                 chosenPlayer: 'joiner',
                 creator: 'creator',
@@ -169,23 +169,20 @@ describe('GameService', () => {
         }));
         it('should start with the other player when first player mentionned in previous game', fakeAsync(async() => {
             // given a previous match with creator starting
-            const lastPart: IPartId = {
-                id: 'partId',
-                doc: {
-                    listMoves: [MOVE_1, MOVE_2],
-                    playerZero: 'creator',
-                    playerOne: 'joiner',
-                    result: MGPResult.VICTORY.value,
-                    turn: 2,
-                    typeGame: 'laMarelle',
-                    beginning: { seconds: 17001025123456, nanoseconds: 680000000 },
-                    lastMoveTime: { seconds: 2, nanoseconds: 3000000 },
-                    loser: 'creator',
-                    winner: 'joiner',
-                    request: Request.rematchProposed(Player.ZERO),
-                },
-            };
-            const lastGameJoiner: IJoiner = {
+            const lastPart: PartDocument = new PartDocument('partId', {
+                listMoves: [MOVE_1, MOVE_2],
+                playerZero: 'creator',
+                playerOne: 'joiner',
+                result: MGPResult.VICTORY.value,
+                turn: 2,
+                typeGame: 'laMarelle',
+                beginning: { seconds: 17001025123456, nanoseconds: 680000000 },
+                lastMoveTime: { seconds: 2, nanoseconds: 3000000 },
+                loser: 'creator',
+                winner: 'joiner',
+                request: Request.rematchProposed(Player.ZERO),
+            });
+            const lastGameJoiner: Joiner = {
                 candidates: ['joiner'],
                 chosenPlayer: 'joiner',
                 creator: 'creator',
@@ -198,9 +195,9 @@ describe('GameService', () => {
             spyOn(service, 'sendRequest').and.resolveTo();
             spyOn(joinerService, 'readJoinerById').and.resolveTo(lastGameJoiner);
             let called: boolean = false;
-            spyOn(partDAO, 'set').and.callFake(async(_id: string, element: IPart) => {
-                expect(element.playerZero).toEqual(Utils.getNonNullable(lastPart.doc.playerOne));
-                expect(element.playerOne).toEqual(Utils.getNonNullable(lastPart.doc.playerZero));
+            spyOn(partDAO, 'set').and.callFake(async(_id: string, element: Part) => {
+                expect(element.playerZero).toEqual(Utils.getNonNullable(lastPart.data.playerOne));
+                expect(element.playerOne).toEqual(Utils.getNonNullable(lastPart.data.playerZero));
                 called = true;
             });
 
@@ -212,23 +209,20 @@ describe('GameService', () => {
         }));
         it('should start with the other player when first player was random', fakeAsync(async() => {
             // given a previous match with creator starting
-            const lastPart: IPartId = {
-                id: 'partId',
-                doc: {
-                    listMoves: [MOVE_1, MOVE_2],
-                    playerZero: 'joiner',
-                    playerOne: 'creator',
-                    result: MGPResult.VICTORY.value,
-                    turn: 2,
-                    typeGame: 'laMarelle',
-                    beginning: { seconds: 17001025123456, nanoseconds: 680000000 },
-                    lastMoveTime: { seconds: 2, nanoseconds: 3000000 },
-                    loser: 'creator',
-                    winner: 'joiner',
-                    request: Request.rematchProposed(Player.ZERO),
-                },
-            };
-            const lastGameJoiner: IJoiner = {
+            const lastPart: PartDocument = new PartDocument('partId', {
+                listMoves: [MOVE_1, MOVE_2],
+                playerZero: 'joiner',
+                playerOne: 'creator',
+                result: MGPResult.VICTORY.value,
+                turn: 2,
+                typeGame: 'laMarelle',
+                beginning: { seconds: 17001025123456, nanoseconds: 680000000 },
+                lastMoveTime: { seconds: 2, nanoseconds: 3000000 },
+                loser: 'creator',
+                winner: 'joiner',
+                request: Request.rematchProposed(Player.ZERO),
+            });
+            const lastGameJoiner: Joiner = {
                 candidates: ['joiner'],
                 chosenPlayer: 'joiner',
                 creator: 'creator',
@@ -241,9 +235,9 @@ describe('GameService', () => {
             spyOn(service, 'sendRequest').and.resolveTo();
             spyOn(joinerService, 'readJoinerById').and.resolveTo(lastGameJoiner);
             let called: boolean = false;
-            spyOn(partDAO, 'set').and.callFake(async(_id: string, element: IPart) => {
-                expect(element.playerZero).toEqual(Utils.getNonNullable(lastPart.doc.playerOne));
-                expect(element.playerOne).toEqual(Utils.getNonNullable(lastPart.doc.playerZero));
+            spyOn(partDAO, 'set').and.callFake(async(_id: string, element: Part) => {
+                expect(element.playerZero).toEqual(Utils.getNonNullable(lastPart.data.playerOne));
+                expect(element.playerOne).toEqual(Utils.getNonNullable(lastPart.data.playerZero));
                 called = true;
             });
 
@@ -255,7 +249,7 @@ describe('GameService', () => {
         }));
     });
     describe('updateDBBoard', () => {
-        const part: Part = new Part({
+        const part: Part = {
             typeGame: 'Quarto',
             playerZero: 'creator',
             playerOne: 'joiner',
@@ -263,9 +257,9 @@ describe('GameService', () => {
             listMoves: [MOVE_1],
             request: null,
             result: MGPResult.UNACHIEVED.value,
-        });
+        };
         beforeEach(() => {
-            spyOn(partDAO, 'read').and.resolveTo(MGPOptional.of(part.doc));
+            spyOn(partDAO, 'read').and.resolveTo(MGPOptional.of(part));
             spyOn(partDAO, 'update').and.resolveTo();
         });
         it('should add scores to update when scores are present', fakeAsync(async() => {
@@ -273,7 +267,7 @@ describe('GameService', () => {
             const scores: [number, number] = [5, 0];
             await service.updateDBBoard('partId', MOVE_2, [0, 0], scores);
             // then the update should contain the scores
-            const expectedUpdate: Partial<IPart> = {
+            const expectedUpdate: Partial<Part> = {
                 listMoves: [MOVE_1, MOVE_2],
                 turn: 2,
                 request: null,
@@ -287,7 +281,7 @@ describe('GameService', () => {
             // when updating the board to notify of a draw
             await service.updateDBBoard('partId', MOVE_2, [0, 0], undefined, true);
             // then the result is set to draw in the update
-            const expectedUpdate: Partial<IPart> = {
+            const expectedUpdate: Partial<Part> = {
                 listMoves: [MOVE_1, MOVE_2],
                 turn: 2,
                 request: null,

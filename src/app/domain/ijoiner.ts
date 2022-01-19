@@ -1,10 +1,7 @@
-import { FirebaseDocumentWithId } from '../dao/FirebaseFirestoreDAO';
+import { FirebaseDocument } from '../dao/FirebaseFirestoreDAO';
 import { assert, JSONObject } from '../utils/utils';
-import { DomainWrapper } from './DomainWrapper';
 
-export type IJoinerId = FirebaseDocumentWithId<IJoiner>
-
-export interface IJoiner extends JSONObject {
+export interface Joiner extends JSONObject {
     readonly creator: string;
     readonly candidates: Array<string>;
     readonly chosenPlayer: string | null;
@@ -16,10 +13,8 @@ export interface IJoiner extends JSONObject {
     readonly totalPartDuration: number;
 }
 
-export class Joiner implements DomainWrapper<IJoiner> {
-    public constructor(public readonly doc: IJoiner) {
-    }
-}
+
+export type JoinerDocument = FirebaseDocument<Joiner>
 
 export type IFirstPlayer = 'CREATOR' | 'RANDOM' | 'CHOSEN_PLAYER';
 

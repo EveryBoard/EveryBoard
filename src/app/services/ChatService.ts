@@ -1,8 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
-import { IChat } from '../domain/ichat';
+import { Chat } from '../domain/ichat';
 import { ChatDAO } from '../dao/ChatDAO';
-import { IMessage } from '../domain/imessage';
+import { Message } from '../domain/imessage';
 import { display } from 'src/app/utils/utils';
 import { MGPValidation } from '../utils/MGPValidation';
 import { ArrayUtils } from '../utils/ArrayUtils';
@@ -22,14 +22,14 @@ export class ChatService implements OnDestroy {
 
     private followedChatId: MGPOptional<string> = MGPOptional.empty();
 
-    private followedChatObs: MGPOptional<Observable<MGPOptional<IChat>>> = MGPOptional.empty();
+    private followedChatObs: MGPOptional<Observable<MGPOptional<Chat>>> = MGPOptional.empty();
 
     private followedChatSub: Subscription;
 
     constructor(private readonly chatDAO: ChatDAO) {
         display(ChatService.VERBOSE, 'ChatService.constructor');
     }
-    public startObserving(chatId: string, callback: (chat: MGPOptional<IChat>) => void): void {
+    public startObserving(chatId: string, callback: (chat: MGPOptional<Chat>) => void): void {
         display(ChatService.VERBOSE, 'ChatService.startObserving ' + chatId);
 
         if (this.followedChatId.isAbsent()) {
@@ -77,9 +77,9 @@ export class ChatService implements OnDestroy {
         if (this.isForbiddenMessage(content)) {
             return MGPValidation.failure(ChatMessages.FORBIDDEN_MESSAGE());
         }
-        const chat: IChat = (await this.chatDAO.read(chatId)).get();
-        const messages: IMessage[] = ArrayUtils.copyImmutableArray(chat.messages);
-        const newMessage: IMessage = {
+        const chat: Chat = (await this.chatDAO.read(chatId)).get();
+        const messages: Message[] = ArrayUtils.copyImmutableArray(chat.messages);
+        const newMessage: Message = {
             content,
             sender: userName,
             postedTime: Date.now(),

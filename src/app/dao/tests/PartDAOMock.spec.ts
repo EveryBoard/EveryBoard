@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { IPart, IPartId, MGPResult } from 'src/app/domain/icurrentpart';
+import { Part, PartDocument, MGPResult } from 'src/app/domain/icurrentpart';
 import { FirebaseFirestoreDAOMock } from './FirebaseFirestoreDAOMock.spec';
 import { ObservableSubject } from 'src/app/utils/tests/ObservableSubject.spec';
 import { MGPMap } from 'src/app/utils/MGPMap';
@@ -7,9 +7,9 @@ import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 import { display } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-type PartOS = ObservableSubject<MGPOptional<IPartId>>
+type PartOS = ObservableSubject<MGPOptional<PartDocument>>
 
-export class PartDAOMock extends FirebaseFirestoreDAOMock<IPart> {
+export class PartDAOMock extends FirebaseFirestoreDAOMock<Part> {
 
     public static VERBOSE: boolean = false;
 
@@ -25,14 +25,14 @@ export class PartDAOMock extends FirebaseFirestoreDAOMock<IPart> {
     public resetStaticDB(): void {
         PartDAOMock.partDB = new MGPMap();
     }
-    public observeActiveParts(callback: FirebaseCollectionObserver<IPart>): () => void {
+    public observeActiveParts(callback: FirebaseCollectionObserver<Part>): () => void {
         return this.observingWhere([['result', '==', MGPResult.UNACHIEVED.value]], callback);
     }
     public async userHasActivePart(username: string): Promise<boolean> {
-        const partsAsPlayerZero: IPart[] = await this.findWhere([
+        const partsAsPlayerZero: Part[] = await this.findWhere([
             ['playerZero', '==', username],
             ['result', '==', MGPResult.UNACHIEVED.value]]);
-        const partsAsPlayerOne: IPart[] = await this.findWhere([
+        const partsAsPlayerOne: Part[] = await this.findWhere([
             ['playerOne', '==', username],
             ['result', '==', MGPResult.UNACHIEVED.value]]);
         return partsAsPlayerZero.length > 0 || partsAsPlayerOne.length > 0;

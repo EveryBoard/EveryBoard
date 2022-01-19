@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { FirstPlayer, IFirstPlayer, IJoiner, IPartType, PartStatus, PartType } from '../../../domain/ijoiner';
+import { FirstPlayer, IFirstPlayer, Joiner, IPartType, PartStatus, PartType } from '../../../domain/ijoiner';
 import { Router } from '@angular/router';
 import { GameService } from '../../../services/GameService';
 import { JoinerService } from '../../../services/JoinerService';
@@ -8,7 +8,7 @@ import { ChatService } from '../../../services/ChatService';
 import { assert, display, Utils } from 'src/app/utils/utils';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { UserService } from 'src/app/services/UserService';
-import { IUser, IUserId } from 'src/app/domain/iuser';
+import { User, UserDocument } from 'src/app/domain/iuser';
 import { FirebaseCollectionObserver } from 'src/app/dao/FirebaseCollectionObserver';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -61,7 +61,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     @Input() partId: string;
     @Input() userName: string;
 
-    @Output('gameStartNotification') gameStartNotification: EventEmitter<IJoiner> = new EventEmitter<IJoiner>();
+    @Output('gameStartNotification') gameStartNotification: EventEmitter<Joiner> = new EventEmitter<Joiner>();
     public gameStarted: boolean = false;
     // notify that the game has started, a thing evaluated with the joiner doc game status
 
@@ -76,7 +76,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         candidateClasses: {},
         candidates: [],
     }
-    public currentJoiner: IJoiner | null = null;
+    public currentJoiner: Joiner | null = null;
 
     // Subscription
     private candidateSubscription: MGPMap<string, () => void> = new MGPMap();
@@ -132,7 +132,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.joinerService
             .observe(this.partId)
             .pipe(takeUntil(this.ngUnsubscribe))
-            .subscribe(async(joiner: MGPOptional<IJoiner>) => {
+            .subscribe(async(joiner: MGPOptional<Joiner>) => {
                 await this.onCurrentJoinerUpdate(joiner);
             });
     }
@@ -174,7 +174,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             });
     }
     private updateViewInfo(): void {
-        const joiner: IJoiner = Utils.getNonNullable(this.currentJoiner);
+        const joiner: Joiner = Utils.getNonNullable(this.currentJoiner);
 
         this.viewInfo.canReviewConfig = joiner.partStatus === PartStatus.CONFIG_PROPOSED.value;
         this.viewInfo.canEditConfig = joiner.partStatus !== PartStatus.CONFIG_PROPOSED.value;
@@ -208,7 +208,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 break;
         }
     }
-    private setDataForCreator(joiner: IJoiner): void {
+    private setDataForCreator(joiner: Joiner): void {
         this.viewInfo.maximalMoveDuration = this.viewInfo.maximalMoveDuration || joiner.maximalMoveDuration;
         this.viewInfo.totalPartDuration = this.viewInfo.totalPartDuration || joiner.totalPartDuration;
         let opponent: string | undefined = this.viewInfo.chosenOpponent;
@@ -268,7 +268,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 'PartCreationComponent.cancelGameCreation: game and joiner and chat deleted');
         return;
     }
-    private onCurrentJoinerUpdate(joiner: MGPOptional<IJoiner>) {
+    private onCurrentJoinerUpdate(joiner: MGPOptional<Joiner>) {
         display(PartCreationComponent.VERBOSE,
                 { PartCreationComponent_onCurrentJoinerUpdate: {
                     before: JSON.stringify(this.currentJoiner),
@@ -292,11 +292,11 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         await this.router.navigate(['server']);
     }
     private isGameStarted(): boolean {
-        const joiner: IJoiner = Utils.getNonNullable(this.currentJoiner);
+        const joiner: Joiner = Utils.getNonNullable(this.currentJoiner);
         return joiner != null && joiner.partStatus === PartStatus.PART_STARTED.value;
     }
     private onGameStarted() {
-        const joiner: IJoiner = Utils.getNonNullable(this.currentJoiner);
+        const joiner: Joiner = Utils.getNonNullable(this.currentJoiner);
         display(PartCreationComponent.VERBOSE, { partCreationComponent_onGameStarted: { joiner } });
 
         this.gameStartNotification.emit(joiner);
@@ -304,7 +304,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.onGameStarted finished');
     }
     private observeNeededPlayers(): void {
-        const joiner: IJoiner = Utils.getNonNullable(this.currentJoiner);
+        const joiner: Joiner = Utils.getNonNullable(this.currentJoiner);
         display(PartCreationComponent.VERBOSE, { PartCreationComponent_updateJoiner: { joiner } });
         if (this.userName === joiner.creator) {
             this.observeCandidates();
@@ -313,23 +313,24 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         }
     }
     private observeCreator(): void {
-        const joiner: IJoiner = Utils.getNonNullable(this.currentJoiner);
+        const joiner: Joiner = Utils.getNonNullable(this.currentJoiner);
         if (this.creatorSubscription != null) {
             // We are already observing the creator
             return;
         }
-        const destroyDocIfCreatorOffline: (modifiedUsers: IUserId[]) => void = async(modifiedUsers: IUserId[]) => {
-            for (const user of modifiedUsers) {
-                assert(user.doc.username === joiner.creator, 'found non creator while observing creator!');
-                if (user.doc.state === 'offline' &&
-                    this.allDocDeleted === false &&
-                    joiner.partStatus !== PartStatus.PART_STARTED.value)
-                {
-                    await this.cancelGameCreation();
+        const destroyDocIfCreatorOffline: (modifiedUsers: UserDocument[]) => void =
+            async(modifiedUsers: UserDocument[]) => {
+                for (const user of modifiedUsers) {
+                    assert(user.data.username === joiner.creator, 'found non creator while observing creator!');
+                    if (user.data.state === 'offline' &&
+                        this.allDocDeleted === false &&
+                        joiner.partStatus !== PartStatus.PART_STARTED.value)
+                    {
+                        await this.cancelGameCreation();
+                    }
                 }
-            }
-        };
-        const callback: FirebaseCollectionObserver<IUser> =
+            };
+        const callback: FirebaseCollectionObserver<User> =
             new FirebaseCollectionObserver(destroyDocIfCreatorOffline,
                                            destroyDocIfCreatorOffline,
                                            destroyDocIfCreatorOffline);
@@ -337,31 +338,31 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.creatorSubscription = this.userService.observeUserByUsername(joiner.creator, callback);
     }
     private observeCandidates(): void {
-        const joiner: IJoiner = Utils.getNonNullable(this.currentJoiner);
+        const joiner: Joiner = Utils.getNonNullable(this.currentJoiner);
         display(PartCreationComponent.VERBOSE, { PartCreation_observeCandidates: joiner });
-        const onDocumentCreated: (foundUser: IUserId[]) => void = async(foundUsers: IUserId[]) => {
+        const onDocumentCreated: (foundUser: UserDocument[]) => void = async(foundUsers: UserDocument[]) => {
             for (const user of foundUsers) {
-                if (user.doc.state === 'offline') {
-                    await this.removeUserFromLobby(Utils.getNonNullable(user.doc.username));
-                    Utils.handleError('OnlineGameWrapper: ' + user.doc.username + ' is already offline!');
+                if (user.data.state === 'offline') {
+                    await this.removeUserFromLobby(Utils.getNonNullable(user.data.username));
+                    Utils.handleError('OnlineGameWrapper: ' + user.data.username + ' is already offline!');
                 }
             }
         };
-        const onDocumentModified: (modifiedUsers: IUserId[]) => void = async(modifiedUsers: IUserId[]) => {
+        const onDocumentModified: (modifiedUsers: UserDocument[]) => void = async(modifiedUsers: UserDocument[]) => {
             for (const user of modifiedUsers) {
-                if (user.doc.state === 'offline') {
-                    await this.removeUserFromLobby(Utils.getNonNullable(user.doc.username));
+                if (user.data.state === 'offline') {
+                    await this.removeUserFromLobby(Utils.getNonNullable(user.data.username));
                 }
             }
         };
-        const onDocumentDeleted: (deletedUsers: IUserId[]) => void = async(deletedUsers: IUserId[]) => {
+        const onDocumentDeleted: (deletedUsers: UserDocument[]) => void = async(deletedUsers: UserDocument[]) => {
             // This should not happen in practice, but if it does we can safely remove the user from the lobby
             for (const user of deletedUsers) {
-                await this.removeUserFromLobby(Utils.getNonNullable(user.doc.username));
-                Utils.handleError('OnlineGameWrapper: ' + user.doc.username + ' was deleted (' + user.id + ')');
+                await this.removeUserFromLobby(Utils.getNonNullable(user.data.username));
+                Utils.handleError('OnlineGameWrapper: ' + user.data.username + ' was deleted (' + user.id + ')');
             }
         };
-        const callback: FirebaseCollectionObserver<IUser> =
+        const callback: FirebaseCollectionObserver<User> =
             new FirebaseCollectionObserver(onDocumentCreated, onDocumentModified, onDocumentDeleted);
         for (const candidateName of joiner.candidates) {
             if (this.candidateSubscription.get(candidateName).isAbsent()) {
@@ -379,7 +380,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         }
     }
     private removeUserFromLobby(username: string): Promise<void> {
-        const joiner: IJoiner = Utils.getNonNullable(this.currentJoiner);
+        const joiner: Joiner = Utils.getNonNullable(this.currentJoiner);
         const index: number = joiner.candidates.indexOf(username);
         // The user must be in the lobby, otherwise we would have unsubscribed from its updates
         assert(index !== -1, 'PartCreationComponent: attempting to remove a user not in the lobby');

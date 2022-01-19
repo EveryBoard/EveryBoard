@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { PartDAO } from '../dao/PartDAO';
-import { MGPResult, IPart, Part, IPartId } from '../domain/icurrentpart';
-import { FirstPlayer, IJoiner, PartStatus } from '../domain/ijoiner';
+import { MGPResult, Part, PartDocument } from '../domain/icurrentpart';
+import { FirstPlayer, Joiner, PartStatus } from '../domain/ijoiner';
 import { JoinerService } from './JoinerService';
 import { ChatService } from './ChatService';
 import { Request } from '../domain/request';
@@ -14,7 +14,7 @@ import { Time } from '../domain/Time';
 import firebase from 'firebase/app';
 import { MGPOptional } from '../utils/MGPOptional';
 
-export interface StartingPartConfig extends Partial<IPart> {
+export interface StartingPartConfig extends Partial<Part> {
     playerZero: string,
     playerOne: string,
     turn: number,
@@ -34,7 +34,7 @@ export class GameService {
      * The outer optional is for when we haven't followed any part yet.
      * The inner optional is for when the part gets deleted
      */
-    private followedPartObs: MGPOptional<Observable<MGPOptional<IPart>>> = MGPOptional.empty();
+    private followedPartObs: MGPOptional<Observable<MGPOptional<Part>>> = MGPOptional.empty();
 
     private followedPartSub: Subscription;
 
@@ -45,7 +45,7 @@ export class GameService {
         display(GameService.VERBOSE, 'GameService.constructor');
     }
     public async getPartValidity(partId: string, gameType: string): Promise<MGPValidation> {
-        const part: MGPOptional<IPart> = await this.partDAO.read(partId);
+        const part: MGPOptional<Part> = await this.partDAO.read(partId);
         if (part.isAbsent()) {
             return MGPValidation.failure('NONEXISTENT_PART');
         }
@@ -59,7 +59,7 @@ export class GameService {
         display(GameService.VERBOSE,
                 'GameService.createPart(' + creatorName + ', ' + typeGame + ')');
 
-        const newPart: IPart = {
+        const newPart: Part = {
             typeGame,
             playerZero: creatorName,
             turn: -1,
@@ -81,14 +81,13 @@ export class GameService {
         await this.createChat(gameId);
         return gameId;
     }
-    // on Part Creation Component
 
-    private startGameWithConfig(partId: string, joiner: IJoiner): Promise<void> {
+    private startGameWithConfig(partId: string, joiner: Joiner): Promise<void> {
         display(GameService.VERBOSE, 'GameService.startGameWithConfig(' + partId + ', ' + JSON.stringify(joiner));
         const modification: StartingPartConfig = this.getStartingConfig(joiner);
         return this.partDAO.update(partId, modification);
     }
-    public getStartingConfig(joiner: IJoiner): StartingPartConfig
+    public getStartingConfig(joiner: Joiner): StartingPartConfig
     {
         let whoStarts: FirstPlayer = FirstPlayer.of(joiner.firstPlayer);
         if (whoStarts === FirstPlayer.RANDOM) {
@@ -120,7 +119,7 @@ export class GameService {
         display(GameService.VERBOSE, 'GameService.deletePart(' + partId + ')');
         return this.partDAO.delete(partId);
     }
-    public async acceptConfig(partId: string, joiner: IJoiner): Promise<void> {
+    public async acceptConfig(partId: string, joiner: Joiner): Promise<void> {
         display(GameService.VERBOSE, { gameService_acceptConfig: { partId, joiner } });
 
         await this.joinerService.acceptConfig();
@@ -128,7 +127,7 @@ export class GameService {
     }
     // on OnlineGame Component
 
-    public startObserving(partId: string, callback: (part: MGPOptional<IPart>) => void): void {
+    public startObserving(partId: string, callback: (part: MGPOptional<Part>) => void): void {
         if (this.followedPartId.isAbsent()) {
             display(GameService.VERBOSE, '[start watching part ' + partId);
 
@@ -173,18 +172,18 @@ export class GameService {
     public proposeRematch(partId: string, player: Player): Promise<void> {
         return this.sendRequest(partId, Request.rematchProposed(player));
     }
-    public async acceptRematch(partWithId: IPartId): Promise<void> {
-        display(GameService.VERBOSE, { called: 'GameService.acceptRematch(', partWithId });
-        const part: IPart = Utils.getNonNullable(partWithId.doc);
+    public async acceptRematch(partDocument: PartDocument): Promise<void> {
+        display(GameService.VERBOSE, { called: 'GameService.acceptRematch(', partDocument });
+        const part: Part = Utils.getNonNullable(partDocument.data);
 
-        const iJoiner: IJoiner = await this.joinerService.readJoinerById(partWithId.id);
+        const iJoiner: Joiner = await this.joinerService.readJoinerById(partDocument.id);
         let firstPlayer: FirstPlayer;
         if (part.playerZero === iJoiner.creator) {
             firstPlayer = FirstPlayer.CHOSEN_PLAYER; // so he won't start this one
         } else {
             firstPlayer = FirstPlayer.CREATOR;
         }
-        const newJoiner: IJoiner = {
+        const newJoiner: Joiner = {
             ...iJoiner, // 5 attributes unchanged
 
             candidates: [], // they'll join again when the component reload
@@ -194,7 +193,7 @@ export class GameService {
         };
         const rematchId: string = await this.joinerService.createJoiner(newJoiner);
         const startingConfig: StartingPartConfig = this.getStartingConfig(newJoiner);
-        const newPart: IPart = {
+        const newPart: Part = {
             typeGame: part.typeGame,
             result: MGPResult.UNACHIEVED.value,
             listMoves: [],
@@ -202,31 +201,31 @@ export class GameService {
         };
         await this.partDAO.set(rematchId, newPart);
         await this.createChat(rematchId);
-        return this.sendRequest(partWithId.id, Request.rematchAccepted(part.typeGame, rematchId));
+        return this.sendRequest(partDocument.id, Request.rematchAccepted(part.typeGame, rematchId));
     }
     public askTakeBack(partId: string, player: Player): Promise<void> {
         return this.sendRequest(partId, Request.takeBackAsked(player));
     }
-    public async acceptTakeBack(id: string, part: Part, observerRole: Player, msToSubstract: [number, number])
+    public async acceptTakeBack(id: string, part: PartDocument, observerRole: Player, msToSubstract: [number, number])
     : Promise<void>
     {
         assert(observerRole !== Player.NONE, 'Illegal for observer to make request');
-        const requester: Player = Request.getPlayer(Utils.getNonNullable(part.doc.request));
+        const requester: Player = Request.getPlayer(Utils.getNonNullable(part.data.request));
         assert(requester !== observerRole, 'Illegal to accept your own request.');
 
         const request: Request = Request.takeBackAccepted(observerRole);
-        let listMoves: JSONValueWithoutArray[] = part.doc.listMoves.slice(0, part.doc.listMoves.length - 1);
+        let listMoves: JSONValueWithoutArray[] = part.data.listMoves.slice(0, part.data.listMoves.length - 1);
         if (listMoves.length % 2 === observerRole.value) {
             // Deleting a second move
             listMoves = listMoves.slice(0, listMoves.length - 1);
         }
-        const update: Partial<IPart> = {
+        const update: Partial<Part> = {
             request,
             listMoves,
             turn: listMoves.length,
             lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
-            remainingMsForZero: Utils.getNonNullable(part.doc.remainingMsForZero) - msToSubstract[0],
-            remainingMsForOne: Utils.getNonNullable(part.doc.remainingMsForOne) - msToSubstract[1],
+            remainingMsForZero: Utils.getNonNullable(part.data.remainingMsForZero) - msToSubstract[0],
+            remainingMsForOne: Utils.getNonNullable(part.data.remainingMsForOne) - msToSubstract[1],
         };
         return await this.partDAO.update(id, update);
     }
@@ -261,11 +260,11 @@ export class GameService {
         display(GameService.VERBOSE, { gameService_updateDBBoard: {
             partId, encodedMove, scores, msToSubstract, notifyDraw, winner, loser } });
 
-        const part: IPart = (await this.partDAO.read(partId)).get(); // TODO: optimise this
+        const part: Part = (await this.partDAO.read(partId)).get(); // TODO: optimise this
         const turn: number = part.turn + 1;
         const listMoves: JSONValueWithoutArray[] = ArrayUtils.copyImmutableArray(part.listMoves);
         listMoves[listMoves.length] = encodedMove;
-        let update: Partial<IPart> = {
+        let update: Partial<Part> = {
             listMoves,
             turn,
             request: null,

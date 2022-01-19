@@ -2,7 +2,7 @@
 import { ActivePartsService } from '../ActivePartsService';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { fakeAsync, tick } from '@angular/core/testing';
-import { IPart, IPartId } from 'src/app/domain/icurrentpart';
+import { Part, PartDocument } from 'src/app/domain/icurrentpart';
 import { Subscription } from 'rxjs';
 import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
 import { Utils } from 'src/app/utils/utils';
@@ -27,14 +27,14 @@ describe('ActivePartsService', () => {
     describe('getActivePartsObs', () => {
         it('should notify about new parts', fakeAsync(async() => {
             // Given a service where we are observing active parts
-            let seenActiveParts: IPartId[] = [];
+            let seenActiveParts: PartDocument[] = [];
             const activePartsSub: Subscription = service.getActivePartsObs()
-                .subscribe((activeParts: IPartId[]) => {
+                .subscribe((activeParts: PartDocument[]) => {
                     seenActiveParts = activeParts;
                 });
 
             // When a new part is added
-            const part: IPart = {
+            const part: Part = {
                 listMoves: [],
                 playerZero: 'creator',
                 playerOne: 'firstCandidate',
@@ -46,15 +46,15 @@ describe('ActivePartsService', () => {
 
             // Then the new part should have been observed
             expect(seenActiveParts.length).toBe(1);
-            expect(seenActiveParts[0].doc).toEqual(part);
+            expect(seenActiveParts[0].data).toEqual(part);
 
             activePartsSub.unsubscribe();
         }));
         it('should not notify about new parts when we stopped observing', fakeAsync(async() => {
             // Given a service where we were observing active parts, but have stopped observing
-            let seenActiveParts: IPartId[] = [];
+            let seenActiveParts: PartDocument[] = [];
             const activePartsSub: Subscription = service.getActivePartsObs()
-                .subscribe((activeParts: IPartId[]) => {
+                .subscribe((activeParts: PartDocument[]) => {
                     seenActiveParts = activeParts;
                 });
             service.stopObserving();
@@ -62,7 +62,7 @@ describe('ActivePartsService', () => {
             tick(3000);
 
             // When a new part is added
-            const part: IPart = {
+            const part: Part = {
                 listMoves: [],
                 playerZero: 'creator',
                 playerOne: 'firstCandidate',
@@ -79,7 +79,7 @@ describe('ActivePartsService', () => {
         }));
         it('should notify about deleted parts', fakeAsync(async() => {
             // Given that we are observing active parts, and there is already one part
-            const part: IPart = {
+            const part: Part = {
                 listMoves: [],
                 playerZero: 'creator',
                 playerOne: 'firstCandidate',
@@ -88,9 +88,9 @@ describe('ActivePartsService', () => {
                 typeGame: 'P4',
             };
             const partId: string = await partDAO.create(part);
-            let seenActiveParts: IPartId[] = [];
+            let seenActiveParts: PartDocument[] = [];
             const activePartsSub: Subscription = service.getActivePartsObs()
-                .subscribe((activeParts: IPartId[]) => {
+                .subscribe((activeParts: PartDocument[]) => {
                     seenActiveParts = activeParts;
                 });
 
@@ -104,7 +104,7 @@ describe('ActivePartsService', () => {
         }));
         it('should preserve non-deleted upon a deletion', fakeAsync(async() => {
             // Given a service observing active parts, and there are already multiple parts
-            const part: IPart = {
+            const part: Part = {
                 listMoves: [],
                 playerZero: 'creator',
                 playerOne: 'firstCandidate',
@@ -114,13 +114,13 @@ describe('ActivePartsService', () => {
             };
             const partToBeDeleted: string = await partDAO.create(part);
             const partThatWillRemain: string = await partDAO.create(part);
-            let seenActiveParts: IPartId[] = [];
+            let seenActiveParts: PartDocument[] = [];
             const activePartsSub: Subscription = service.getActivePartsObs()
-                .subscribe((activeParts: IPartId[]) => {
+                .subscribe((activeParts: PartDocument[]) => {
                     seenActiveParts = activeParts;
                 });
 
-            // When an (but not all) existing part is deleted
+            // When one existing part is deleted
             await partDAO.delete(partToBeDeleted);
 
             // Then only the non-deleted part should remain
@@ -131,7 +131,7 @@ describe('ActivePartsService', () => {
         }));
         it('should update when a part is modified', fakeAsync(async() => {
             // Given that we are observing active parts, and there is already one part
-            const part: IPart = {
+            const part: Part = {
                 listMoves: [],
                 playerZero: 'creator',
                 playerOne: 'firstCandidate',
@@ -140,9 +140,9 @@ describe('ActivePartsService', () => {
                 typeGame: 'P4',
             };
             const partId: string = await partDAO.create(part);
-            let seenActiveParts: IPartId[] = [];
+            let seenActiveParts: PartDocument[] = [];
             const activePartsSub: Subscription = service.getActivePartsObs()
-                .subscribe((activeParts: IPartId[]) => {
+                .subscribe((activeParts: PartDocument[]) => {
                     seenActiveParts = activeParts;
                 });
 
@@ -151,13 +151,13 @@ describe('ActivePartsService', () => {
 
             // Then the new part should have been observed
             expect(seenActiveParts.length).toBe(1);
-            expect(Utils.getNonNullable(seenActiveParts[0].doc).turn).toBe(1);
+            expect(Utils.getNonNullable(seenActiveParts[0].data).turn).toBe(1);
 
             activePartsSub.unsubscribe();
         }));
         it('should update only the modified part', fakeAsync(async() => {
             // Given that we are observing active parts, and there is already one part
-            const part: IPart = {
+            const part: Part = {
                 listMoves: [],
                 playerZero: 'creator',
                 playerOne: 'firstCandidate',
@@ -167,9 +167,9 @@ describe('ActivePartsService', () => {
             };
             const partToBeModified: string = await partDAO.create(part);
             const partThatWontChange: string = await partDAO.create(part);
-            let seenActiveParts: IPartId[] = [];
+            let seenActiveParts: PartDocument[] = [];
             const activePartsSub: Subscription = service.getActivePartsObs()
-                .subscribe((activeParts: IPartId[]) => {
+                .subscribe((activeParts: PartDocument[]) => {
                     seenActiveParts = activeParts;
                 });
 
@@ -178,13 +178,13 @@ describe('ActivePartsService', () => {
 
             // Then the part should have been updated
             expect(seenActiveParts.length).toBe(2);
-            const newPart1: IPartId = Utils.getNonNullable(seenActiveParts.find((part: IPartId) =>
+            const newPart1: PartDocument = Utils.getNonNullable(seenActiveParts.find((part: PartDocument) =>
                 part.id === partToBeModified));
-            const newPart2: IPartId = Utils.getNonNullable(seenActiveParts.find((part: IPartId) =>
+            const newPart2: PartDocument = Utils.getNonNullable(seenActiveParts.find((part: PartDocument) =>
                 part.id === partThatWontChange));
-            expect(Utils.getNonNullable(newPart1.doc).turn).toBe(1);
+            expect(Utils.getNonNullable(newPart1.data).turn).toBe(1);
             // and the other one should still be there and still be the same
-            expect(Utils.getNonNullable(newPart2.doc).turn).toBe(0);
+            expect(Utils.getNonNullable(newPart2.data).turn).toBe(0);
 
             activePartsSub.unsubscribe();
         }));

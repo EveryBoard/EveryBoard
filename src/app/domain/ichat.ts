@@ -1,11 +1,11 @@
-import { FirebaseDocumentWithId } from '../dao/FirebaseFirestoreDAO';
+import { FirebaseDocument } from '../dao/FirebaseFirestoreDAO';
 import { JSONObject } from '../utils/utils';
-import { IMessage } from './imessage';
+import { Message } from './imessage';
 
-export type IChatId = FirebaseDocumentWithId<IChat>
+export type ChatDocument = FirebaseDocument<Chat>
 
-export interface IChat extends JSONObject {
+export interface Chat extends JSONObject {
     // the Id will always be the same as the joiner doc and part doc, or "server"
-    messages: IMessage[];
+    messages: Message[];
 }
 

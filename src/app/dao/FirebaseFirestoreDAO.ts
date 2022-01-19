@@ -7,9 +7,9 @@ import { assert, display, FirebaseJSONObject, Utils } from 'src/app/utils/utils'
 import { FirebaseCollectionObserver } from './FirebaseCollectionObserver';
 import { MGPOptional } from '../utils/MGPOptional';
 
-export interface FirebaseDocumentWithId<T> {
+export interface FirebaseDocument<T> {
     id: string
-    doc: T
+    data: T
 }
 
 export type FirebaseCondition = [string, firebase.firestore.WhereFilterOp, unknown]
@@ -95,14 +95,14 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
         const query: firebase.firestore.Query<T> = this.constructQuery(conditions);
         return query
             .onSnapshot((snapshot: firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>) => {
-                const createdDocs: FirebaseDocumentWithId<T>[] = [];
-                const modifiedDocs: FirebaseDocumentWithId<T>[] = [];
-                const deletedDocs: FirebaseDocumentWithId<T>[] = [];
+                const createdDocs: FirebaseDocument<T>[] = [];
+                const modifiedDocs: FirebaseDocument<T>[] = [];
+                const deletedDocs: FirebaseDocument<T>[] = [];
                 snapshot.docChanges()
                     .forEach((change: firebase.firestore.DocumentChange<T>) => {
-                        const doc: {doc: T, id: string} = {
+                        const doc: FirebaseDocument<T> = {
                             id: change.doc.id,
-                            doc: change.doc.data(),
+                            data: change.doc.data(),
                         };
                         switch (change.type) {
                             case 'added':

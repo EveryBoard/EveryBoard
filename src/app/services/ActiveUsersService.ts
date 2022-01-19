@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { IUser, IUserId } from '../domain/iuser';
+import { User, UserDocument } from '../domain/iuser';
 import { UserDAO } from '../dao/UserDAO';
 import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
 import { display, Utils } from 'src/app/utils/utils';
@@ -11,9 +11,9 @@ import { display, Utils } from 'src/app/utils/utils';
 export class ActiveUsersService {
     public static VERBOSE: boolean = false;
 
-    private readonly activesUsersBS: BehaviorSubject<IUserId[]> = new BehaviorSubject<IUserId[]>([]);
+    private readonly activesUsersBS: BehaviorSubject<UserDocument[]> = new BehaviorSubject<UserDocument[]>([]);
 
-    public activesUsersObs: Observable<IUserId[]>;
+    public activesUsersObs: Observable<UserDocument[]>;
 
     private unsubscribe: () => void;
 
@@ -22,29 +22,29 @@ export class ActiveUsersService {
     }
     public startObserving(): void {
         display(ActiveUsersService.VERBOSE, 'ActiveUsersService.startObservingActiveUsers');
-        const onDocumentCreated: (newUsers: IUserId[]) => void = (newUsers: IUserId[]) => {
+        const onDocumentCreated: (newUsers: UserDocument[]) => void = (newUsers: UserDocument[]) => {
             display(ActiveUsersService.VERBOSE, 'our DAO gave us ' + newUsers.length + ' new user(s)');
-            const newUsersList: IUserId[] = this.activesUsersBS.value.concat(...newUsers);
+            const newUsersList: UserDocument[] = this.activesUsersBS.value.concat(...newUsers);
             this.activesUsersBS.next(this.order(newUsersList));
         };
-        const onDocumentModified: (modifiedUsers: IUserId[]) => void = (modifiedUsers: IUserId[]) => {
-            let updatedUsers: IUserId[] = this.activesUsersBS.value;
+        const onDocumentModified: (modifiedUsers: UserDocument[]) => void = (modifiedUsers: UserDocument[]) => {
+            let updatedUsers: UserDocument[] = this.activesUsersBS.value;
             display(ActiveUsersService.VERBOSE, 'our DAO updated ' + modifiedUsers.length + ' user(s)');
             for (const u of modifiedUsers) {
-                updatedUsers.forEach((user: IUserId) => {
-                    if (user.id === u.id) user.doc = u.doc;
+                updatedUsers.forEach((user: UserDocument) => {
+                    if (user.id === u.id) user.data = u.data;
                 });
                 updatedUsers = this.order(updatedUsers);
             }
             this.activesUsersBS.next(updatedUsers);
         };
-        const onDocumentDeleted: (deletedUsers: IUserId[]) => void = (deletedUsers: IUserId[]) => {
-            const newUsersList: IUserId[] =
-                this.activesUsersBS.value.filter((u: IUserId) =>
-                    !deletedUsers.some((user: IUserId) => user.id === u.id));
+        const onDocumentDeleted: (deletedUsers: UserDocument[]) => void = (deletedUsers: UserDocument[]) => {
+            const newUsersList: UserDocument[] =
+                this.activesUsersBS.value.filter((u: UserDocument) =>
+                    !deletedUsers.some((user: UserDocument) => user.id === u.id));
             this.activesUsersBS.next(this.order(newUsersList));
         };
-        const usersObserver: FirebaseCollectionObserver<IUser> =
+        const usersObserver: FirebaseCollectionObserver<User> =
             new FirebaseCollectionObserver(onDocumentCreated,
                                            onDocumentModified,
                                            onDocumentDeleted);
@@ -54,10 +54,12 @@ export class ActiveUsersService {
         this.unsubscribe();
         this.activesUsersBS.next([]);
     }
-    public order(users: IUserId[]): IUserId[] {
-        return users.sort((first: IUserId, second: IUserId) => {
-            const firstTimestamp: number = Utils.getNonNullable(Utils.getNonNullable(first.doc).last_changed).seconds;
-            const secondTimestamp: number = Utils.getNonNullable(Utils.getNonNullable(second.doc).last_changed).seconds;
+    public order(users: UserDocument[]): UserDocument[] {
+        return users.sort((first: UserDocument, second: UserDocument) => {
+            const firstTimestamp: number =
+                Utils.getNonNullable(Utils.getNonNullable(first.data).last_changed).seconds;
+            const secondTimestamp: number =
+                Utils.getNonNullable(Utils.getNonNullable(second.data).last_changed).seconds;
             return firstTimestamp - secondTimestamp;
         });
     }

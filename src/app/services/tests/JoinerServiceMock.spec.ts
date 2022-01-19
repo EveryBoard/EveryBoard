@@ -1,12 +1,12 @@
 /* eslint-disable max-lines-per-function */
-import { FirstPlayer, IJoiner, IJoinerId, PartStatus, PartType } from 'src/app/domain/ijoiner';
+import { FirstPlayer, Joiner, JoinerDocument, PartStatus, PartType } from 'src/app/domain/ijoiner';
 import { JoinerDAO } from 'src/app/dao/JoinerDAO';
 import { display } from 'src/app/utils/utils';
 
 export class JoinerServiceMock {
     public static VERBOSE: boolean = false;
 
-    public static emittedsJoiner: IJoinerId[];
+    public static emittedsJoiner: JoinerDocument[];
 
     public constructor(private readonly joinerDAO: JoinerDAO) {
         display(JoinerServiceMock.VERBOSE, 'JoinerServiceMock.constructor');
@@ -23,9 +23,9 @@ export class JoinerServiceMock {
             resolve();
         }); // DO REAL MOCK
     }
-    public readJoinerById(partId: string): Promise<IJoiner> {
+    public readJoinerById(partId: string): Promise<Joiner> {
         display(JoinerServiceMock.VERBOSE, 'JoinerServiceMock.readJoinerById');
-        return new Promise((resolve: (j: IJoiner) => void) => {
+        return new Promise((resolve: (j: Joiner) => void) => {
             resolve({
                 candidates: ['uniqueCandidate'],
                 creator: 'creator',

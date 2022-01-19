@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { ActivePartsService } from 'src/app/services/ActivePartsService';
 import { BehaviorSubject } from 'rxjs';
-import { IPartId } from 'src/app/domain/icurrentpart';
+import { PartDocument } from 'src/app/domain/icurrentpart';
 
 describe('ServerPageComponent', () => {
 
@@ -38,10 +38,7 @@ describe('ServerPageComponent', () => {
 
     it('Should redirect to /play when clicking a game', fakeAsync(async() => {
         // Given a server with one active part
-        const activePart: IPartId = {
-            id: 'some-part-id',
-            doc: PartMocks.INITIAL.doc,
-        };
+        const activePart: PartDocument = new PartDocument('some-part-id', PartMocks.INITIAL);
         const activePartsService: ActivePartsService = TestBed.inject(ActivePartsService);
         spyOn(activePartsService, 'getActivePartsObs').and.returnValue((new BehaviorSubject([activePart])).asObservable());
         const router: Router = TestBed.inject(Router);

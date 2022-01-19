@@ -76,22 +76,22 @@ describe('FirebaseFirestoreDAO', () => {
 
         let promise: Promise<Foo[]>; // This promise will be resolved when the callback function is called
 
-        let callbackFunction: (created: {doc: Foo, id: string}[]) => void;
-        let callbackFunctionLog: (created: {doc: Foo, id: string}[]) => void;
+        let callbackFunction: (created: {data: Foo, id: string}[]) => void;
+        let callbackFunctionLog: (created: {data: Foo, id: string}[]) => void;
 
         beforeEach(() => {
             let createdResolve: (value: Foo[]) => void;
             promise = new Promise((resolve: (value: Foo[]) => void) => {
                 createdResolve = resolve;
             });
-            callbackFunction = (created: {doc: Foo, id: string}[]) => {
-                createdResolve(created.map((c: {doc: Foo, id: string}): Foo => c.doc));
+            callbackFunction = (created: {data: Foo, id: string}[]) => {
+                createdResolve(created.map((c: {data: Foo, id: string}): Foo => c.data));
             };
-            callbackFunctionLog = (created: {doc: Foo, id: string}[]) => {
-                for (const docWithId of created) {
-                    console.log(docWithId);
+            callbackFunctionLog = (created: {data: Foo, id: string}[]) => {
+                for (const doc of created) {
+                    console.log(doc);
                 }
-                createdResolve(created.map((c: {doc: Foo, id: string}): Foo => c.doc));
+                createdResolve(created.map((c: {data: Foo, id: string}): Foo => c.data));
             };
         });
         it('should observe document creation with the given condition', async() => {

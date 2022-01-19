@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { TestBed } from '@angular/core/testing';
-import { IPart, MGPResult } from 'src/app/domain/icurrentpart';
+import { Part, MGPResult } from 'src/app/domain/icurrentpart';
 import { createConnectedGoogleUser } from 'src/app/services/tests/AuthenticationService.spec';
 import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
@@ -21,7 +21,7 @@ describe('PartDAO', () => {
     });
     describe('observeActiveParts', () => {
         it('should call observingWhere with the right condition', () => {
-            const callback: FirebaseCollectionObserver<IPart> = new FirebaseCollectionObserver<IPart>(
+            const callback: FirebaseCollectionObserver<Part> = new FirebaseCollectionObserver<Part>(
                 () => void { },
                 () => void { },
                 () => void { },
@@ -32,7 +32,7 @@ describe('PartDAO', () => {
         });
     });
     describe('userHasActivePart', () => {
-        const part: IPart = {
+        const part: Part = {
             typeGame: 'P4',
             playerZero: 'foo',
             turn: 0,

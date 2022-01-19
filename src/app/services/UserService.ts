@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UserDAO } from '../dao/UserDAO';
-import { IUser, IUserId } from '../domain/iuser';
+import { User, UserDocument } from '../domain/iuser';
 import { ActiveUsersService } from './ActiveUsersService';
 import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
 
@@ -14,7 +14,7 @@ export class UserService {
                 private readonly joueursDAO: UserDAO) {
     }
 
-    public getActiveUsersObs(): Observable<IUserId[]> {
+    public getActiveUsersObs(): Observable<UserDocument[]> {
         // TODO: unsubscriptions from other user services
         this.activeUsersService.startObserving();
         return this.activeUsersService.activesUsersObs;
@@ -22,7 +22,7 @@ export class UserService {
     public unSubFromActiveUsersObs(): void {
         this.activeUsersService.stopObserving();
     }
-    public observeUserByUsername(username: string, callback: FirebaseCollectionObserver<IUser>): () => void {
+    public observeUserByUsername(username: string, callback: FirebaseCollectionObserver<User>): () => void {
         // the callback will be called on the foundUser
         return this.joueursDAO.observeUserByUsername(username, callback);
     }

@@ -5,10 +5,10 @@ import { AuthUser } from 'src/app/services/AuthenticationService';
 import { ChatService } from 'src/app/services/ChatService';
 import { ChatDAO } from 'src/app/dao/ChatDAO';
 import { DebugElement } from '@angular/core';
-import { IChat } from 'src/app/domain/ichat';
+import { Chat } from 'src/app/domain/ichat';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { IMessage } from 'src/app/domain/imessage';
+import { Message } from 'src/app/domain/imessage';
 
 describe('ChatComponent', () => {
 
@@ -20,16 +20,16 @@ describe('ChatComponent', () => {
 
     let chatDAO: ChatDAO;
 
-    const MSG: IMessage = { sender: 'foo', content: 'hello', currentTurn: 0, postedTime: 5 };
-    function generateMessages(n: number): IMessage[] {
-        const messages: IMessage[] = [];
+    const MSG: Message = { sender: 'foo', content: 'hello', currentTurn: 0, postedTime: 5 };
+    function generateMessages(n: number): Message[] {
+        const messages: Message[] = [];
         for (let i: number = 0; i < n; i++) {
             messages.push(MSG);
         }
         return messages;
     }
     // needed to have a scrollable chat
-    const LOTS_OF_MESSAGES: IMessage[] = generateMessages(100);
+    const LOTS_OF_MESSAGES: Message[] = generateMessages(100);
 
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(ChatComponent);
@@ -197,7 +197,7 @@ describe('ChatComponent', () => {
             testUtils.detectChanges();
             await testUtils.clickElement('#switchChatVisibilityButton');
             testUtils.detectChanges();
-            const chat: Partial<IChat> = { messages: [{ sender: 'roger', content: 'Saluuuut', currentTurn: 0, postedTime: 5 }] };
+            const chat: Partial<Chat> = { messages: [{ sender: 'roger', content: 'Saluuuut', currentTurn: 0, postedTime: 5 }] };
             await chatDAO.update('fauxChat', chat);
             testUtils.detectChanges();
             let switchButton: DebugElement = testUtils.findElement('#switchChatVisibilityButton');

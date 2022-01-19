@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { IJoiner, IJoinerId } from 'src/app/domain/ijoiner';
+import { Joiner, JoinerDocument } from 'src/app/domain/ijoiner';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { ObservableSubject } from 'src/app/utils/tests/ObservableSubject.spec';
 import { display } from 'src/app/utils/utils';
@@ -8,9 +8,9 @@ import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 import { fakeAsync } from '@angular/core/testing';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
-type JoinerOS = ObservableSubject<MGPOptional<IJoinerId>>
+type JoinerOS = ObservableSubject<MGPOptional<JoinerDocument>>
 
-export class JoinerDAOMock extends FirebaseFirestoreDAOMock<IJoiner> {
+export class JoinerDAOMock extends FirebaseFirestoreDAOMock<Joiner> {
 
     public static VERBOSE: boolean = false;
 
@@ -34,7 +34,7 @@ describe('JoinerDAOMock', () => {
 
     let callCount: number;
 
-    let lastJoiner: MGPOptional<IJoiner>;
+    let lastJoiner: MGPOptional<Joiner>;
 
     beforeEach(() => {
         joinerDAOMock = new JoinerDAOMock();
@@ -42,12 +42,12 @@ describe('JoinerDAOMock', () => {
         lastJoiner = MGPOptional.empty();
     });
     it('Total update should update', fakeAsync(async() => {
-        await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL.doc);
+        await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL);
 
         expect(lastJoiner).toEqual(MGPOptional.empty());
         expect(callCount).toBe(0);
 
-        joinerDAOMock.getObsById('joinerId').subscribe((joiner: MGPOptional<IJoiner>) => {
+        joinerDAOMock.getObsById('joinerId').subscribe((joiner: MGPOptional<Joiner>) => {
             callCount++;
             lastJoiner = joiner;
             expect(callCount).withContext('Should not have been called more than twice').toBeLessThanOrEqual(2);
@@ -55,20 +55,20 @@ describe('JoinerDAOMock', () => {
         });
 
         expect(callCount).toEqual(1);
-        expect(lastJoiner.get()).toEqual(JoinerMocks.INITIAL.doc);
+        expect(lastJoiner.get()).toEqual(JoinerMocks.INITIAL);
 
-        await joinerDAOMock.update('joinerId', JoinerMocks.WITH_FIRST_CANDIDATE.doc);
+        await joinerDAOMock.update('joinerId', JoinerMocks.WITH_FIRST_CANDIDATE);
 
         expect(callCount).toEqual(2);
-        expect(lastJoiner.get()).toEqual(JoinerMocks.WITH_FIRST_CANDIDATE.doc);
+        expect(lastJoiner.get()).toEqual(JoinerMocks.WITH_FIRST_CANDIDATE);
     }));
     it('Partial update should update', fakeAsync(async() => {
-        await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL.doc);
+        await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL);
 
         expect(callCount).toEqual(0);
         expect(lastJoiner).toEqual(MGPOptional.empty());
 
-        joinerDAOMock.getObsById('joinerId').subscribe((joiner: MGPOptional<IJoiner>) => {
+        joinerDAOMock.getObsById('joinerId').subscribe((joiner: MGPOptional<Joiner>) => {
             callCount++;
             // TODO: REDO
             expect(callCount).withContext('Should not have been called more than twice').toBeLessThanOrEqual(2);
@@ -76,11 +76,11 @@ describe('JoinerDAOMock', () => {
         });
 
         expect(callCount).toEqual(1);
-        expect(lastJoiner.get()).toEqual(JoinerMocks.INITIAL.doc);
+        expect(lastJoiner.get()).toEqual(JoinerMocks.INITIAL);
 
         await joinerDAOMock.update('joinerId', { candidates: ['firstCandidate'] });
 
         expect(callCount).toEqual(2);
-        expect(lastJoiner.get()).toEqual(JoinerMocks.WITH_FIRST_CANDIDATE.doc);
+        expect(lastJoiner.get()).toEqual(JoinerMocks.WITH_FIRST_CANDIDATE);
     }));
 });
