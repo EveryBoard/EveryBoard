@@ -42,7 +42,7 @@ describe('GameComponent', () => {
         const result: MGPValidation = await component.pass();
 
         // then should fail and call logError
-        const errorMessage: string = 'pass() called on a game that does not redefine it';
+        const errorMessage: string = 'pass() called on a game that does not redefine it (AbaloneComponent)';
         expect(result.isFailure()).toBeTrue();
         expect(result.getReason()).toEqual('GameComponent: ' + errorMessage);
         expect(errorLogger.logError).toHaveBeenCalledWith('GameComponent', errorMessage);
@@ -116,13 +116,12 @@ describe('GameComponent', () => {
         };
         const refusal: MGPValidation = MGPValidation.failure(GameWrapperMessages.NO_CLONING_FEATURE());
         for (const gameName of gameList.concat('MinimaxTesting')) {
-            const game : { [methodName: string]: unknown[] } = clickableMethods[gameName];
+            const game: { [methodName: string]: unknown[] } = clickableMethods[gameName];
             if (game == null) {
                 throw new Error('Please define ' + gameName + ' clickable method in here to test them.');
             }
             activatedRouteStub.setRoute('compo', gameName);
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const testUtils: ComponentTestUtils<any> =
+            const testUtils: ComponentTestUtils<AbstractGameComponent> =
                 await ComponentTestUtils.forGame(gameName, LocalGameWrapperComponent, false);
             const component: AbstractGameComponent = testUtils.getComponent();
             testUtils.wrapper.observerRole = 2;
@@ -130,7 +129,8 @@ describe('GameComponent', () => {
             tick(1);
             expect(component).toBeDefined();
             for (const methodName of Object.keys(game)) {
-                expect(component[methodName]).withContext(`click method ${methodName} should be defined for game ${gameName}`).toBeDefined();
+                const context: string = `click method ${methodName} should be defined for game ${gameName}`;
+                expect(component[methodName]).withContext(context).toBeDefined();
                 const clickResult: MGPValidation = await component[methodName](...game[methodName]);
                 expect(clickResult).toEqual(refusal);
             }
@@ -139,16 +139,20 @@ describe('GameComponent', () => {
     }));
     it('should have an encoder and a tutorial for every game', fakeAsync(async() =>{
         for (const gameInfo of GameInfo.ALL_GAMES()) {
+            // Given a displayable game
             if (gameInfo.display === false) {
                 continue;
             }
             activatedRouteStub.setRoute('compo', gameInfo.urlName);
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const testUtils: ComponentTestUtils<any> =
+            const testUtils: ComponentTestUtils<AbstractGameComponent> =
                 await ComponentTestUtils.forGame(gameInfo.urlName, LocalGameWrapperComponent, false);
+
+            // When displaying the game
             const component: AbstractGameComponent = testUtils.getComponent();
             testUtils.detectChanges();
             tick(1);
+
+            // Then it should have an encoder and a non-empty tutorial
             expect(component.encoder).withContext('Encoder missing for ' + gameInfo.urlName).toBeTruthy();
             expect(component.tutorial).withContext('tutorial missing for ' + gameInfo.urlName).toBeTruthy();
             expect(component.tutorial.length).withContext('tutorial empty for ' + gameInfo.urlName).toBeGreaterThan(0);

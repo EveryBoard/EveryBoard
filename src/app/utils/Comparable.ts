@@ -67,6 +67,6 @@ export function comparableEquals<T>(a: T, b: T): boolean {
     if (isComparableValue(a) && isComparableValue(b)) {
         return comparableEqualsStrict(a, b);
     } else {
-        throw new Error('Comparing non comparable objects');
+        throw new Error(`Comparing non comparable objects: ${a} and ${b}`);
     }
 }

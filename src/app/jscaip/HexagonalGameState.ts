@@ -119,6 +119,6 @@ export abstract class HexagonalGameState<P> extends GameStateWithTable<P> {
             }
             coord = coord.getNext(dir);
         }
-        throw new Error('could not find a board entrance, board must be invalid');
+        throw new Error('HexagonalGameState.findEntranceFrom: could not find a board entrance, board must be invalid (line: ${line}, start: ${start})');
     }
 }

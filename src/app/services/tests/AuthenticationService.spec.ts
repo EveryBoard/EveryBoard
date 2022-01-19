@@ -259,8 +259,8 @@ describe('AuthenticationService', () => {
 
             // then it fails because this is not a valid user interaction
             expect(result.isFailure()).toBeTrue();
-            expect(result.getReason()).toBe('AuthenticationService: Verified users should not ask email verification twice');
-            expect(errorLogger.logError).toHaveBeenCalledWith('AuthenticationService', 'Verified users should not ask email verification twice');
+            expect(result.getReason()).toBe('AuthenticationService: Verified users should not ask email verification after being verified');
+            expect(errorLogger.logError).toHaveBeenCalledWith('AuthenticationService', 'Verified users should not ask email verification after being verified');
         });
         it('should fail if there is a genuine error in the email verification process from firebase', async() => {
             // given a user that just registered and hence is not verified

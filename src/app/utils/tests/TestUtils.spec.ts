@@ -6,7 +6,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { GameComponent } from '../../components/game-components/game-component/GameComponent';
 import { GameState } from '../../jscaip/GameState';
 import { Move } from '../../jscaip/Move';
 import { MGPValidation } from '../MGPValidation';
@@ -28,7 +27,6 @@ import { PartDAOMock } from '../../dao/tests/PartDAOMock.spec';
 import { LocalGameWrapperComponent }
     from '../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { HumanDuration } from '../TimeUtils';
-import { Rules } from 'src/app/jscaip/Rules';
 import { Utils } from '../utils';
 import { AutofocusDirective } from 'src/app/directives/autofocus.directive';
 import { ToggleVisibilityDirective } from 'src/app/directives/toggle-visibility.directive';
@@ -43,6 +41,7 @@ import { environment } from 'src/environments/environment';
 import { MGPOptional } from '../MGPOptional';
 import { ErrorLogger } from 'src/app/services/ErrorLogger';
 import { ErrorLoggerMock } from 'src/app/services/tests/ErrorLoggerMock.spec';
+import { AbstractGameComponent } from 'src/app/components/game-components/game-component/GameComponent';
 
 @Component({})
 export class BlankComponent {}
@@ -170,22 +169,22 @@ export class SimpleComponentTestUtils<T> {
         element.nativeElement.dispatchEvent(new Event('input'));
     }
 }
-type MyGameComponent = GameComponent<Rules<Move, GameState, unknown>, Move, GameState, unknown>;
 
-export class ComponentTestUtils<T extends MyGameComponent> {
+export class ComponentTestUtils<T extends AbstractGameComponent> {
     public fixture: ComponentFixture<GameWrapper>;
     public wrapper: GameWrapper;
     private debugElement: DebugElement;
-    private gameComponent: MyGameComponent;
+    private gameComponent: AbstractGameComponent;
 
     private canUserPlaySpy: jasmine.Spy;
     private cancelMoveSpy: jasmine.Spy;
     private chooseMoveSpy: jasmine.Spy;
     private onLegalUserMoveSpy: jasmine.Spy;
 
-    public static async forGame<T extends MyGameComponent>(game: string,
-                                                           wrapperKind: Type<GameWrapper> = LocalGameWrapperComponent,
-                                                           configureTestModule: boolean = true)
+    public static async forGame<T extends AbstractGameComponent>
+        (game: string,
+         wrapperKind: Type<GameWrapper> = LocalGameWrapperComponent,
+         configureTestModule: boolean = true)
     : Promise<ComponentTestUtils<T>>
     {
         const testUtils: ComponentTestUtils<T> = await ComponentTestUtils.basic(game, configureTestModule);
@@ -197,8 +196,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
         testUtils.prepareSpies();
         return testUtils;
     }
-    public static async basic<T extends MyGameComponent>(game?: string,
-                                                         configureTestModule: boolean = true)
+    public static async basic<T extends AbstractGameComponent>(game?: string, configureTestModule = true)
     : Promise<ComponentTestUtils<T>>
     {
         const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub(game, 'joinerId');

@@ -1,5 +1,6 @@
 import { EncounteredError } from 'src/app/services/ErrorLogger';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import firebase from 'firebase/app';
 
 export class ErrorLoggerMock {
     public loggedErrors: EncounteredError[] = [];
@@ -7,7 +8,7 @@ export class ErrorLoggerMock {
         this.loggedErrors.push({
             component,
             message,
-            time: null,
+            time: firebase.firestore.FieldValue.serverTimestamp(),
         });
         return MGPValidation.failure(component + ': ' + message);
     }

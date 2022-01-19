@@ -181,7 +181,7 @@ export class AuthenticationService implements OnDestroy {
         if (user.isPresent()) {
             if (this.emailVerified(user.get())) {
                 // This should not be reachable from a component
-                return this.errorLogger.logError('AuthenticationService', 'Verified users should not ask email verification twice');
+                return this.errorLogger.logError('AuthenticationService', 'Verified users should not ask email verification after being verified');
             }
             try {
                 await user.get().sendEmailVerification();
