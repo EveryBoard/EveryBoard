@@ -29,6 +29,7 @@
                                 [dangerTimeLimit]="60*1000"
                                 [active]="(currentPart == null) ? false : currentPart.getTurn() % 2 === 0"
                                 [canAddTime]='observerRole === 1 && endGame === false'
+                                [timeToAdd]="globalTimeMessage"
                                 debugName="ZERO Global"
                                 (outOfTimeAction)="reachedOutOfTime(0)"
                                 (addTimeToOpponent)="addGlobalTime()"
@@ -38,6 +39,7 @@
                                 [dangerTimeLimit]="15*1000"
                                 [active]="(currentPart == null) ? false : currentPart.getTurn() % 2 === 0"
                                 [canAddTime]='observerRole === 1 && endGame === false'
+                                [timeToAdd]="turnTimeMessage"
                                 debugName="ZERO Turn"
                                 (outOfTimeAction)="reachedOutOfTime(0)"
                                 (addTimeToOpponent)="addTurnTime()"
@@ -55,6 +57,7 @@
                                 [dangerTimeLimit]="60*1000"
                                 [active]="(currentPart == null) ? false : currentPart.getTurn() % 2 === 1"
                                 [canAddTime]='observerRole === 0 && endGame === false'
+                                [timeToAdd]="globalTimeMessage"
                                 debugName="ONE Global"
                                 (outOfTimeAction)="reachedOutOfTime(1)"
                                 (addTimeToOpponent)="addGlobalTime()"
@@ -64,6 +67,7 @@
                                 [dangerTimeLimit]="15*1000"
                                 [active]="(currentPart == null) ? false : currentPart.getTurn() % 2 === 1"
                                 [canAddTime]='observerRole === 0 && endGame === false'
+                                [timeToAdd]="turnTimeMessage"
                                 debugName="ONE Turn"
                                 (outOfTimeAction)="reachedOutOfTime(1)"
                                 (addTimeToOpponent)="addTurnTime()"

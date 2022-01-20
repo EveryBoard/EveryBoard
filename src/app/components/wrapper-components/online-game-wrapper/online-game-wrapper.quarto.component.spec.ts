@@ -1187,162 +1187,161 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it('when resigning, lastMoveTime must be upToDate then remainingMs');
         it('when winning move is done, remainingMs at last turn of opponent must be');
     });
-    describe('AddTime functionnalities', () => {
-        it('should allow to add local time to opponent', fakeAsync(async() => {
-            // Given an onlineGameComponent
-            await prepareStartedGameFor(USER_CREATOR);
-            spyOn(partDAO, 'update').and.callThrough();
-            tick(1);
+    describe('AddTime feature', () => {
+        describe('creator', () => {
+            async function prepareStartedGameForCreator() {
+                await prepareStartedGameFor(USER_CREATOR);
+                tick(1);
+            }
+            it('should allow to add local time to opponent', fakeAsync(async() => {
+                // Given an onlineGameComponent
+                await prepareStartedGameForCreator();
+                spyOn(partDAO, 'update').and.callThrough();
 
-            // When local countDownComponent emit addTime
-            await wrapper.addTurnTime();
+                // When local countDownComponent emit addTime
+                await wrapper.addTurnTime();
 
-            // Then partDAO should be updated with a Request.turnTimeAdded
-            expect(partDAO.update).toHaveBeenCalledOnceWith('joinerId', {
-                lastUpdate: {
-                    index: 2,
-                    player: Player.ZERO.value,
-                },
-                request: Request.addTurnTime(Player.ONE),
-            });
-            const msUntilTimeout: number = (wrapper.joiner.maximalMoveDuration + 30) * 1000;
-            tick(msUntilTimeout);
-        }));
-        it('should resume for both chrono at once when adding time to one', fakeAsync(async() => {
-            // Given an onlineGameComponent
-            await prepareStartedGameFor(USER_CREATOR);
-            tick(1);
-            spyOn(wrapper.chronoZeroGlobal, 'resume').and.callThrough();
-            spyOn(wrapper.chronoZeroTurn, 'resume').and.callThrough();
+                // Then partDAO should be updated with a Request.turnTimeAdded
+                expect(partDAO.update).toHaveBeenCalledOnceWith('joinerId', {
+                    lastUpdate: {
+                        index: 2,
+                        player: Player.ZERO.value,
+                    },
+                    request: Request.addTurnTime(Player.ONE),
+                });
+                const msUntilTimeout: number = (wrapper.joiner.maximalMoveDuration + 30) * 1000;
+                tick(msUntilTimeout);
+            }));
+            it('should resume for both chrono at once when adding time to one', fakeAsync(async() => {
+                // Given an onlineGameComponent
+                await prepareStartedGameForCreator();
+                spyOn(wrapper.chronoZeroGlobal, 'resume').and.callThrough();
+                spyOn(wrapper.chronoZeroTurn, 'resume').and.callThrough();
 
-            // When receiving a request to add local time to player zero
-            await receiveRequest(Request.addTurnTime(Player.ZERO), 1);
+                // When receiving a request to add local time to player zero
+                await receiveRequest(Request.addTurnTime(Player.ZERO), 1);
 
-            // Then both chronos of player zero should have been resumed
-            expect(wrapper.chronoZeroGlobal.resume).toHaveBeenCalledTimes(1); // it failed, was 0
-            expect(wrapper.chronoZeroTurn.resume).toHaveBeenCalledTimes(1); // it worked
-            const msUntilTimeout: number = (wrapper.joiner.maximalMoveDuration + 30) * 1000;
-            tick(msUntilTimeout);
-        }));
-        it('should add time to chrono local when receiving the addTurnTime request (Player.ONE)', fakeAsync(async() => {
-            // Given an onlineGameComponent
-            await prepareStartedGameFor(USER_CREATOR);
-            spyOn(partDAO, 'update').and.callThrough();
-            tick(1);
+                // Then both chronos of player zero should have been resumed
+                expect(wrapper.chronoZeroGlobal.resume).toHaveBeenCalledTimes(1); // it failed, was 0
+                expect(wrapper.chronoZeroTurn.resume).toHaveBeenCalledTimes(1); // it worked
+                const msUntilTimeout: number = (wrapper.joiner.maximalMoveDuration + 30) * 1000;
+                tick(msUntilTimeout);
+            }));
+            it('should add time to chrono local when receiving the addTurnTime request (Player.ONE)', fakeAsync(async() => {
+                // Given an onlineGameComponent
+                await prepareStartedGameForCreator();
+                spyOn(partDAO, 'update').and.callThrough();
 
-            // When receiving addTurnTime request
-            await receiveRequest(Request.addTurnTime(Player.ONE), 1);
+                // When receiving addTurnTime request
+                await receiveRequest(Request.addTurnTime(Player.ONE), 1);
 
-            // Then chrono local of player one should be increased
-            const wrapper: OnlineGameWrapperComponent = componentTestUtils.wrapper as OnlineGameWrapperComponent;
-            const msUntilTimeout: number = (wrapper.joiner.maximalMoveDuration + 30) * 1000;
-            expect(wrapper.chronoOneTurn.remainingMs).toBe(msUntilTimeout); // initial 2 minutes + 30 sec
-            tick(msUntilTimeout);
-        }));
-        it('should add time to local chrono when receiving the addTurnTime request (Player.ZERO)', fakeAsync(async() => {
-            // Given an onlineGameComponent on user turn
-            await prepareStartedGameFor(USER_CREATOR);
-            spyOn(partDAO, 'update').and.callThrough();
-            tick(1);
+                // Then chrono local of player one should be increased
+                const wrapper: OnlineGameWrapperComponent = componentTestUtils.wrapper as OnlineGameWrapperComponent;
+                const msUntilTimeout: number = (wrapper.joiner.maximalMoveDuration + 30) * 1000;
+                expect(wrapper.chronoOneTurn.remainingMs).toBe(msUntilTimeout); // initial 2 minutes + 30 sec
+                tick(msUntilTimeout);
+            }));
+            it('should add time to local chrono when receiving the addTurnTime request (Player.ZERO)', fakeAsync(async() => {
+                // Given an onlineGameComponent on user turn
+                await prepareStartedGameForCreator();
+                spyOn(partDAO, 'update').and.callThrough();
 
-            // When receiving addTurnTime request
-            await receiveRequest(Request.addTurnTime(Player.ZERO), 1);
-            // componentTestUtils.detectChanges(); // TODOTODO will we need this
+                // When receiving addTurnTime request
+                await receiveRequest(Request.addTurnTime(Player.ZERO), 1);
 
-            // Then chrono local of player one should be increased
-            const wrapper: OnlineGameWrapperComponent = componentTestUtils.wrapper as OnlineGameWrapperComponent;
-            const msUntilTimeout: number = (wrapper.joiner.maximalMoveDuration + 30) * 1000;
-            expect(wrapper.chronoZeroTurn.remainingMs).toBe(msUntilTimeout); // initial 2 minutes + 30 sec
-            tick(msUntilTimeout);
-        }));
-        it('should allow to add global time to opponent (as Player.ZERO)', fakeAsync(async() => {
-            // Given an onlineGameComponent on user's turn
-            await prepareStartedGameFor(USER_CREATOR);
-            spyOn(partDAO, 'update').and.callThrough();
-            tick(1);
+                // Then chrono local of player one should be increased
+                const wrapper: OnlineGameWrapperComponent = componentTestUtils.wrapper as OnlineGameWrapperComponent;
+                const msUntilTimeout: number = (wrapper.joiner.maximalMoveDuration + 30) * 1000;
+                expect(wrapper.chronoZeroTurn.remainingMs).toBe(msUntilTimeout); // initial 2 minutes + 30 sec
+                tick(msUntilTimeout);
+            }));
+            it('should allow to add global time to opponent (as Player.ZERO)', fakeAsync(async() => {
+                // Given an onlineGameComponent on user's turn
+                await prepareStartedGameForCreator();
+                spyOn(partDAO, 'update').and.callThrough();
 
-            // When countDownComponent emit addGlobalTime
-            await wrapper.addGlobalTime();
+                // When countDownComponent emit addGlobalTime
+                await wrapper.addGlobalTime();
 
-            // Then a request to add global time to player one should be sent
-            expect(partDAO.update).toHaveBeenCalledOnceWith('joinerId', {
-                lastUpdate: {
-                    index: 2,
-                    player: Player.ZERO.value,
-                },
-                request: Request.addGlobalTime(Player.ONE),
-                remainingMsForOne: (1800 * 1000) + (5 * 60 * 1000),
-            });
-            const msUntilTimeout: number = wrapper.joiner.maximalMoveDuration * 1000;
-            expect(wrapper.chronoOneTurn.remainingMs).toBe(msUntilTimeout); // initial 2 minutes
-            tick(msUntilTimeout);
-        }));
-        it('should allow to add global time to opponent (as Player.ONE)', fakeAsync(async() => {
-            // Given an onlineGameComponent on opponent's turn
-            await prepareStartedGameFor(USER_OPPONENT);
-            spyOn(partDAO, 'update').and.callThrough();
-            tick(1);
+                // Then a request to add global time to player one should be sent
+                expect(partDAO.update).toHaveBeenCalledOnceWith('joinerId', {
+                    lastUpdate: {
+                        index: 2,
+                        player: Player.ZERO.value,
+                    },
+                    request: Request.addGlobalTime(Player.ONE),
+                    remainingMsForOne: (1800 * 1000) + (5 * 60 * 1000),
+                });
+                const msUntilTimeout: number = wrapper.joiner.maximalMoveDuration * 1000;
+                expect(wrapper.chronoOneTurn.remainingMs).toBe(msUntilTimeout); // initial 2 minutes
+                tick(msUntilTimeout);
+            }));
+            it('should add time to global chrono when receiving the addGlobalTime request (Player.ONE)', fakeAsync(async() => {
+                // Given an onlineGameComponent on user's turn
+                await prepareStartedGameForCreator();
+                spyOn(partDAO, 'update').and.callThrough();
 
-            // When countDownComponent emit addGlobalTime
-            await wrapper.addGlobalTime();
+                // When receiving addGlobalTime request
+                await receiveRequest(Request.addGlobalTime(Player.ONE), 1);
 
-            // Then a request to add global time to player zero should be sent
-            expect(partDAO.update).toHaveBeenCalledOnceWith('joinerId', {
-                lastUpdate: {
-                    index: 2,
-                    player: Player.ONE.value,
-                },
-                request: Request.addGlobalTime(Player.ZERO),
-                remainingMsForZero: (1800 * 1000) + (5 * 60 * 1000),
-            });
-            const msUntilTimeout: number = wrapper.joiner.maximalMoveDuration * 1000;
-            expect(wrapper.chronoOneTurn.remainingMs).toBe(msUntilTimeout); // initial 2 minutes
-            tick(msUntilTimeout);
-        }));
-        it('should add time to global chrono when receiving the addGlobalTime request (Player.ONE)', fakeAsync(async() => {
-            // Given an onlineGameComponent on user's turn
-            await prepareStartedGameFor(USER_CREATOR);
-            spyOn(partDAO, 'update').and.callThrough();
-            tick(1);
+                // Then chrono global of player one should be increased by 5 new minutes
+                const wrapper: OnlineGameWrapperComponent = componentTestUtils.wrapper as OnlineGameWrapperComponent;
+                expect(wrapper.chronoOneGlobal.remainingMs).toBe((30 * 60 * 1000) + (5 * 60 * 1000));
+                tick(wrapper.joiner.maximalMoveDuration * 1000);
+            }));
+            it('should add time to global chrono when receiving the addGlobalTime request (Player.ZERO)', fakeAsync(async() => {
+                // Given an onlineGameComponent
+                await prepareStartedGameForCreator();
+                spyOn(partDAO, 'update').and.callThrough();
 
-            // When receiving addGlobalTime request
-            await receiveRequest(Request.addGlobalTime(Player.ONE), 1);
+                // When receiving addGlobalTime request
+                await receiveRequest(Request.addGlobalTime(Player.ZERO), 1);
 
-            // Then chrono global of player one should be increased by 5 new minutes
-            const wrapper: OnlineGameWrapperComponent = componentTestUtils.wrapper as OnlineGameWrapperComponent;
-            expect(wrapper.chronoOneGlobal.remainingMs).toBe((30 * 60 * 1000) + (5 * 60 * 1000));
-            tick(wrapper.joiner.maximalMoveDuration * 1000);
-        }));
-        it('should add time to global chrono when receiving the addGlobalTime request (Player.ZERO)', fakeAsync(async() => {
-            // Given an onlineGameComponent
-            await prepareStartedGameFor(USER_CREATOR);
-            spyOn(partDAO, 'update').and.callThrough();
-            tick(1);
+                // Then chrono global of player one should be increased by 5 new minutes
+                const wrapper: OnlineGameWrapperComponent = componentTestUtils.wrapper as OnlineGameWrapperComponent;
+                expect(wrapper.chronoZeroGlobal.remainingMs).toBe((30 * 60 * 1000) + (5 * 60 * 1000));
+                tick(wrapper.joiner.maximalMoveDuration * 1000);
+            }));
+            it('should postpone the timeout of chrono and not only change displayed time', fakeAsync(async() => {
+                // Given an onlineGameComponent
+                await prepareStartedGameForCreator();
+                spyOn(partDAO, 'update').and.callThrough();
 
-            // When receiving addGlobalTime request
-            await receiveRequest(Request.addGlobalTime(Player.ZERO), 1);
+                // When receiving a addTurnTime request
+                await receiveRequest(Request.addTurnTime(Player.ZERO), 1);
+                componentTestUtils.detectChanges();
 
-            // Then chrono global of player one should be increased by 5 new minutes
-            const wrapper: OnlineGameWrapperComponent = componentTestUtils.wrapper as OnlineGameWrapperComponent;
-            expect(wrapper.chronoZeroGlobal.remainingMs).toBe((30 * 60 * 1000) + (5 * 60 * 1000));
-            tick(wrapper.joiner.maximalMoveDuration * 1000);
-        }));
-        it('should postpone the timeout of chrono and not only change displayed time', fakeAsync(async() => {
-            // Given an onlineGameComponent
-            await prepareStartedGameFor(USER_CREATOR);
-            spyOn(partDAO, 'update').and.callThrough();
-            tick(1);
+                // Then game should end by timeout only after new time has run out
+                tick(wrapper.joiner.maximalMoveDuration * 1000);
+                expect(componentTestUtils.wrapper.endGame).withContext('game should not be finished yet').toBeFalse();
+                tick(30 * 1000);
+                expectGameToBeOver();
+            }));
+        });
+        describe('oppoent', () => {
+            it('should allow to add global time to opponent (as Player.ONE)', fakeAsync(async() => {
+                // Given an onlineGameComponent on opponent's turn
+                await prepareStartedGameFor(USER_OPPONENT);
+                spyOn(partDAO, 'update').and.callThrough();
+                tick(1);
 
-            // When receiving a addTurnTime request
-            await receiveRequest(Request.addTurnTime(Player.ZERO), 1);
-            componentTestUtils.detectChanges();
+                // When countDownComponent emit addGlobalTime
+                await wrapper.addGlobalTime();
 
-            // Then game should end by timeout only after new time has run out
-            tick(wrapper.joiner.maximalMoveDuration * 1000);
-            expect(componentTestUtils.wrapper.endGame).withContext('game should not be finished yet').toBeFalse();
-            tick(30 * 1000);
-            expectGameToBeOver();
-        }));
+                // Then a request to add global time to player zero should be sent
+                expect(partDAO.update).toHaveBeenCalledOnceWith('joinerId', {
+                    lastUpdate: {
+                        index: 2,
+                        player: Player.ONE.value,
+                    },
+                    request: Request.addGlobalTime(Player.ZERO),
+                    remainingMsForZero: (1800 * 1000) + (5 * 60 * 1000),
+                });
+                const msUntilTimeout: number = wrapper.joiner.maximalMoveDuration * 1000;
+                expect(wrapper.chronoOneTurn.remainingMs).toBe(msUntilTimeout); // initial 2 minutes
+                tick(msUntilTimeout);
+            }));
+        });
     });
     describe('User "handshake"', () => {
         it(`Should make opponent's name lightgrey when he is absent`, fakeAsync(async() => {
@@ -1418,10 +1417,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
     });
     describe('getUpdateType', () => {
-        it('Move + Time_updated + Request_removed = UpdateType.MOVE', fakeAsync(async() => {
-            // Given a part with lastMoveTime set and a take back just accepted
+        it('Nothing changed = UpdateType.DUPLICATA', fakeAsync(async() => {
+            // Given any part
             await prepareStartedGameFor(USER_CREATOR);
-            wrapper.currentPart = new Part({
+            const initialPart: IPart = {
                 lastUpdate: {
                     index: 3,
                     player: 0,
@@ -1437,25 +1436,52 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 beginning: FAKE_MOMENT,
                 lastMoveTime: { seconds: 333, nanoseconds: 333000000 },
                 request: Request.takeBackAccepted(Player.ZERO),
+            };
+            wrapper.currentPart = new Part(initialPart);
+
+            // When making a move changing nothing
+            const update: Part = new Part({
+                ...initialPart,
             });
 
-            // When making a move changing: turn, listMove and lastMoveTime
-            const update: Part = new Part({
+            // Then the update should be detected as a Duplicata
+            expect(wrapper.getUpdateType(update)).toBe(UpdateType.DUPLICATE);
+            tick(wrapper.joiner.maximalMoveDuration * 1000 + 1);
+        }));
+        it('Move + Time_updated + Request_removed = UpdateType.MOVE', fakeAsync(async() => {
+            // Given a part with lastMoveTime set and a take back just accepted
+            await prepareStartedGameFor(USER_CREATOR);
+            const initialPart: IPart = {
                 lastUpdate: {
-                    index: 4,
-                    player: 1,
+                    index: 3,
+                    player: 0,
                 },
                 typeGame: 'P4',
                 playerZero: 'who is it from who cares',
-                turn: 4,
-                listMoves: [1, 2, 3, 4],
+                turn: 3,
+                listMoves: [1, 2, 3],
                 result: MGPResult.UNACHIEVED.value,
                 playerOne: 'Sir Meryn Trant',
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
                 beginning: FAKE_MOMENT,
+                lastMoveTime: { seconds: 333, nanoseconds: 333000000 },
+                request: Request.takeBackAccepted(Player.ZERO),
+            };
+            wrapper.currentPart = new Part(initialPart);
+
+            // When making a move changing: turn, listMove and lastMoveTime
+            const update: Part = new Part({
+                ...initialPart,
+                lastUpdate: {
+                    index: 4,
+                    player: 1,
+                },
+                turn: 4,
+                listMoves: [1, 2, 3, 4],
                 lastMoveTime: { seconds: 444, nanoseconds: 444000000 },
                 // And obviously, no longer the previous request code
+                request: null,
             });
 
             // Then the update should be detected as a Move
@@ -1465,7 +1491,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it('First Move + Time_added + Score_added = UpdateType.MOVE', fakeAsync(async() => {
             // Given a part where no move has been done
             await prepareStartedGameFor(USER_CREATOR);
-            wrapper.currentPart = new Part({
+            const initialPart: IPart = {
                 lastUpdate: {
                     index: 1,
                     player: 0,
@@ -1479,23 +1505,18 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
                 beginning: FAKE_MOMENT,
-            });
+            };
+            wrapper.currentPart = new Part(initialPart);
 
             // When doing the first move update (turn, listMove) add (scores, lastMoveTime)
             const update: Part = new Part({
+                ...initialPart,
                 lastUpdate: {
                     index: 2,
                     player: 0,
                 },
-                typeGame: 'P4',
-                playerZero: 'who is it from who cares',
                 turn: 1,
                 listMoves: [1],
-                result: MGPResult.UNACHIEVED.value,
-                playerOne: 'Sir Meryn Trant',
-                remainingMsForZero: 1800 * 1000,
-                remainingMsForOne: 1800 * 1000,
-                beginning: FAKE_MOMENT,
                 // And obviously, the added score and time
                 scorePlayerZero: 0,
                 scorePlayerOne: 0,
@@ -1509,7 +1530,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it('First Move After Tack Back + Time_modified = UpdateType.MOVE', fakeAsync(async() => {
             // Given a "second" first move
             await prepareStartedGameFor(USER_CREATOR);
-            wrapper.currentPart = new Part({
+            const initialPart: IPart = {
                 lastUpdate: {
                     index: 3,
                     player: 0,
@@ -1524,23 +1545,18 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 remainingMsForOne: 1800 * 1000,
                 beginning: FAKE_MOMENT,
                 lastMoveTime: { seconds: 1111, nanoseconds: 111000000 },
-            });
+            };
+            wrapper.currentPart = new Part(initialPart);
 
             // When doing a move again, modifying (turn, listMoves, lasMoveTime)
             const update: Part = new Part({
+                ...initialPart,
                 lastUpdate: {
                     index: 4,
                     player: 0,
                 },
-                typeGame: 'P4',
-                playerZero: 'who is it from who cares',
                 turn: 1,
                 listMoves: [1],
-                result: MGPResult.UNACHIEVED.value,
-                playerOne: 'Sir Meryn Trant',
-                remainingMsForZero: 1800 * 1000,
-                remainingMsForOne: 1800 * 1000,
-                beginning: FAKE_MOMENT,
                 // And obviously, the modified time
                 lastMoveTime: { seconds: 2222, nanoseconds: 222000000 },
             });
@@ -1552,7 +1568,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it('Move + Time_modified + Score_modified = UpdateType.MOVE', fakeAsync(async() => {
             // Gvien a part with present scores
             await prepareStartedGameFor(USER_CREATOR);
-            wrapper.currentPart = new Part({
+            const initialPart: IPart = {
                 lastUpdate: {
                     index: 3,
                     player: 0,
@@ -1569,23 +1585,18 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 lastMoveTime: { seconds: 1111, nanoseconds: 111000000 },
                 scorePlayerZero: 1,
                 scorePlayerOne: 1,
-            });
+            };
+            wrapper.currentPart = new Part(initialPart);
 
             // When doing an update modifying the score (turn, listMoves, scores, lastMoveTime)
             const update: Part = new Part({
+                ...initialPart,
                 lastUpdate: {
                     index: 4,
                     player: 1,
                 },
-                typeGame: 'P4',
-                playerZero: 'who is it from who cares',
                 turn: 2,
                 listMoves: [1, 2],
-                result: MGPResult.UNACHIEVED.value,
-                playerOne: 'Sir Meryn Trant',
-                remainingMsForZero: 1800 * 1000,
-                remainingMsForOne: 1800 * 1000,
-                beginning: FAKE_MOMENT,
                 lastMoveTime: { seconds: 2222, nanoseconds: 222000000 },
                 scorePlayerZero: 1,
                 // And obviously, the score update and time added
@@ -1599,7 +1610,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it('Move + Time_removed + Score_added = UpdateType.MOVE_WITHOUT_TIME', fakeAsync(async() => {
             // Given a part without score yet
             await prepareStartedGameFor(USER_CREATOR);
-            wrapper.currentPart = new Part({
+            const initialPart: IPart = {
                 lastUpdate: {
                     index: 3,
                     player: 0,
@@ -1614,23 +1625,18 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 remainingMsForOne: 1800 * 1000,
                 beginning: FAKE_MOMENT,
                 lastMoveTime: { seconds: 1111, nanoseconds: 111000000 },
-            });
+            };
+            wrapper.currentPart = new Part(initialPart);
 
             // When doing a move creating score but removing lastMoveTime
             const update: Part = new Part({
+                ...initialPart,
                 lastUpdate: {
                     index: 4,
                     player: 1,
                 },
-                typeGame: 'P4',
-                playerZero: 'who is it from who cares',
                 turn: 2,
                 listMoves: [1, 2],
-                result: MGPResult.UNACHIEVED.value,
-                playerOne: 'Sir Meryn Trant',
-                remainingMsForZero: 1800 * 1000,
-                remainingMsForOne: 1800 * 1000,
-                beginning: FAKE_MOMENT,
                 // And obviously, the added score
                 scorePlayerZero: 0,
                 scorePlayerOne: 0,
@@ -1644,7 +1650,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it('Move + Time_removed + Score_modified = UpdateType.MOVE_WITHOUT_TIME', fakeAsync(async() => {
             // Given a part with scores
             await prepareStartedGameFor(USER_CREATOR);
-            wrapper.currentPart = new Part({
+            const initialPart: IPart = {
                 lastUpdate: {
                     index: 3,
                     player: 0,
@@ -1661,23 +1667,18 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 lastMoveTime: { seconds: 1111, nanoseconds: 111000000 },
                 scorePlayerZero: 1,
                 scorePlayerOne: 1,
-            });
+            };
+            wrapper.currentPart = new Part(initialPart);
 
             // When updating part with a move, score, but removing time
             const update: Part = new Part({
+                ...initialPart,
                 lastUpdate: {
                     index: 4,
                     player: 1,
                 },
-                typeGame: 'P4',
-                playerZero: 'who is it from who cares',
                 turn: 2,
                 listMoves: [1, 2],
-                result: MGPResult.UNACHIEVED.value,
-                playerOne: 'Sir Meryn Trant',
-                remainingMsForZero: 1800 * 1000,
-                remainingMsForOne: 1800 * 1000,
-                beginning: FAKE_MOMENT,
                 scorePlayerZero: 1,
                 // lastMoveTime is removed
                 scorePlayerOne: 4, // modified
@@ -1690,7 +1691,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it('AcceptTakeBack + Time_removed = UpdateType.ACCEPT_TAKE_BACK_WITHOUT_TIME', fakeAsync(async() => {
             // Given a part where take back as been requested
             await prepareStartedGameFor(USER_CREATOR);
-            wrapper.currentPart = new Part({
+            const initialPart: IPart = {
                 lastUpdate: {
                     index: 3,
                     player: 0,
@@ -1706,26 +1707,20 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 beginning: FAKE_MOMENT,
                 lastMoveTime: { seconds: 125, nanoseconds: 456000000 },
                 request: Request.takeBackAsked(Player.ZERO),
-            });
+            };
+            wrapper.currentPart = new Part(initialPart);
 
             // When accepting it, without sending time update
             const update: Part = new Part({
+                ...initialPart,
                 lastUpdate: {
                     index: 4,
                     player: 1,
                 },
-                typeGame: 'P4',
-                playerZero: 'who is it from who cares',
-                turn: 1,
-                listMoves: [1],
-                result: MGPResult.UNACHIEVED.value,
-                playerOne: 'Sir Meryn Trant',
-                remainingMsForZero: 1800 * 1000,
-                remainingMsForOne: 1800 * 1000,
-                beginning: FAKE_MOMENT,
                 // but
                 request: Request.takeBackAccepted(Player.ONE),
                 // and no longer lastMoveTime
+                lastMoveTime: null,
             });
 
             // Then the update should be seen as a ACCEPT_TAKE_BACK_WITHOUT_TIME
@@ -1735,7 +1730,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it('AcceptTakeBack + Time_updated = UpdateType.REQUEST', fakeAsync(async() => {
             // Given a board with take back asked
             await prepareStartedGameFor(USER_CREATOR);
-            wrapper.currentPart = new Part({
+            const initialPart: IPart = {
                 lastUpdate: {
                     index: 3,
                     player: 0,
@@ -1751,23 +1746,16 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 beginning: FAKE_MOMENT,
                 lastMoveTime: { seconds: 125, nanoseconds: 456000000 },
                 request: Request.takeBackAsked(Player.ZERO),
-            });
+            };
+            wrapper.currentPart = new Part(initialPart);
 
             // When accepting it and updating lastMoveTime
             const update: Part = new Part({
+                ...initialPart,
                 lastUpdate: {
                     index: 4,
                     player: 1,
                 },
-                typeGame: 'P4',
-                playerZero: 'who is it from who cares',
-                turn: 1,
-                listMoves: [1],
-                result: MGPResult.UNACHIEVED.value,
-                playerOne: 'Sir Meryn Trant',
-                remainingMsForZero: 1800 * 1000,
-                remainingMsForOne: 1800 * 1000,
-                beginning: FAKE_MOMENT,
                 // but
                 lastMoveTime: { seconds: 127, nanoseconds: 456000000 },
                 request: Request.takeBackAccepted(Player.ONE),
@@ -1780,7 +1768,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it('Request.AddTurnTime + one remainingMs modified = UpdateType.REQUEST', fakeAsync(async() => {
             // Given a part with take back asked
             await prepareStartedGameFor(USER_CREATOR);
-            wrapper.currentPart = new Part({
+            const initialPart: IPart = {
                 lastUpdate: {
                     index: 3,
                     player: 0,
@@ -1796,22 +1784,16 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 beginning: FAKE_MOMENT,
                 lastMoveTime: { seconds: 125, nanoseconds: 456000000 },
                 request: Request.takeBackAsked(Player.ZERO),
-            });
+            };
+            wrapper.currentPart = new Part(initialPart);
 
             // When time added, and remaining time updated
             const update: Part = new Part({
+                ...initialPart,
                 lastUpdate: {
                     index: 4,
                     player: 1,
                 },
-                typeGame: 'P4',
-                playerZero: 'who is it from who cares',
-                turn: 1,
-                listMoves: [1],
-                result: MGPResult.UNACHIEVED.value,
-                playerOne: 'Sir Meryn Trant',
-                remainingMsForOne: 1800 * 1000,
-                beginning: FAKE_MOMENT,
                 // but
                 request: Request.addGlobalTime(Player.ZERO),
                 remainingMsForZero: (1800 * 1000) + (5 * 60 * 1000),

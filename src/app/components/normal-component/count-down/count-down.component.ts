@@ -10,6 +10,7 @@ export class CountDownComponent implements OnInit, OnDestroy {
     public static VERBOSE: boolean = false;
 
     @Input() debugName: string;
+    @Input() timeToAdd: string;
     @Input() dangerTimeLimit: number;
     @Input() active: boolean;
     @Input() canAddTime: boolean;

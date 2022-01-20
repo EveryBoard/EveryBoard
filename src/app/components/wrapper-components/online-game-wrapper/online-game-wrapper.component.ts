@@ -91,6 +91,9 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 
     public readonly OFFLINE_FONT_COLOR: { [key: string]: string} = { color: 'lightgrey' };
 
+    public readonly globalTimeMessage: string = $localize`5 minutes`;
+    public readonly turnTimeMessage: string = $localize`30 seconds`;
+
     constructor(componentFactoryResolver: ComponentFactoryResolver,
                 actRoute: ActivatedRoute,
                 private readonly router: Router,
@@ -230,13 +233,15 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     public getUpdateType(update: Part): UpdateType {
         const currentPartDoc: IPart | null = this.currentPart != null ? this.currentPart.doc : null;
         const diff: ObjectDifference = ObjectDifference.from(currentPartDoc, update.doc);
+        console.log(diff)
         display(OnlineGameWrapperComponent.VERBOSE, { diff });
         const nbDiffs: number = diff.countChanges();
         if (nbDiffs === 0) {
             return UpdateType.DUPLICATE;
         }
         if (update.doc.request) {
-            if (update.doc.request.code === 'TakeBackAccepted' && diff.removed['lastMoveTime'] != null) {
+            const lastMoveTimeIsRemoved: boolean = diff.removed['lastMoveTime'] != null;
+            if (update.doc.request.code === 'TakeBackAccepted' && lastMoveTimeIsRemoved) {
                 return UpdateType.ACCEPT_TAKE_BACK_WITHOUT_TIME;
             } else {
                 return UpdateType.REQUEST;

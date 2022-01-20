@@ -1,12 +1,12 @@
-<div class="block level-left"
+<div class="level"
      [ngClass]="getTimeClass()"
 >
     <p id="remainingTime"
-       class="level-item remainingTime"
+       class="level-item"
     >{{ displayedMinute }}:{{ displayedSec | number:'2.0-0' }}</p>
     <button id="addTimeButton"
             class="button level-item is-small"
             *ngIf="canAddTime"
             (click)="addTime()"
-            i18n> + </button>
+            i18n>Add {{ timeToAdd }} to chrono</button>
 </div>
