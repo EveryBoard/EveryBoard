@@ -1,6 +1,5 @@
 import { FirebaseJSONObject, JSONValueWithoutArray } from 'src/app/utils/utils';
 import { Request } from './request';
-import { DomainWrapper } from './DomainWrapper';
 import { FirebaseTime } from './Time';
 import { MGPOptional } from '../utils/MGPOptional';
 import { FirebaseDocument } from '../dao/FirebaseFirestoreDAO';
