@@ -19,8 +19,7 @@ describe('QuartoComponent', () => {
         componentTestUtils = await ComponentTestUtils.forGame<QuartoComponent>('Quarto');
     }));
     it('should create', () => {
-        expect(componentTestUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
-        expect(componentTestUtils.getComponent()).withContext('Component should be created').toBeTruthy();
+        componentTestUtils.expectToBeCreated();
     });
     it('should forbid clicking on occupied square', fakeAsync(async() => {
         // Given a board with at least one piece
