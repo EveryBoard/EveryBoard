@@ -61,7 +61,7 @@ describe('AwaleRules', () => {
             [0, 0, 0, 0, 1, 1],
         ];
         const state: AwaleState = new AwaleState(board, 0, [1, 2]);
-        // When performing a move that will capture 3+2 seeds
+        // When performing a move that will capture
         const move: AwaleMove = AwaleMove.FIVE;
         // Then the capture should be performed
         const expectedBoard: Table<number> = [
@@ -78,7 +78,7 @@ describe('AwaleRules', () => {
             [1, 1, 0, 0, 0, 0],
         ];
         const state: AwaleState = new AwaleState(board, 1, [1, 2]);
-        // When performing a move that will capture 3+2 seeds
+        // When performing a move that will capture
         const move: AwaleMove = AwaleMove.ZERO;
         // Then the capture should be performed
         const expectedBoard: Table<number> = [
