@@ -54,7 +54,7 @@ def load_stored_coverage():
 
 def generate_in_file(data, path):
     f = open(path, mode='w', encoding='utf8')
-    for directory in sorted(data, key=sort_function):
+    for directory in dict(sorted(data.items(), key=sort_function)):
         if data[directory] > 0:
             # Only store if coverage is > 0
             f.write('%s,%d\n' % (directory, data[directory]))

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { AwaleLegalityInformation, AwaleRules } from './AwaleRules';
+import { AwaleRules } from './AwaleRules';
 import { AwaleMinimax } from './AwaleMinimax';
 import { AwaleMove } from 'src/app/games/awale/AwaleMove';
 import { AwaleState } from './AwaleState';
@@ -19,8 +19,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 export class AwaleComponent extends RectangularGameComponent<AwaleRules,
                                                              AwaleMove,
                                                              AwaleState,
-                                                             number,
-                                                             AwaleLegalityInformation>
+                                                             number>
 {
     public last: MGPOptional<Coord> = MGPOptional.empty();
 
