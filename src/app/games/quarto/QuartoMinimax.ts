@@ -1,3 +1,4 @@
+// QuartoHasher has been deleted in commit 81ae90ac28010516a3fe13d259836ce756297984
 import { QuartoState } from './QuartoState';
 import { QuartoMove } from './QuartoMove';
 import { QuartoPiece } from './QuartoPiece';
