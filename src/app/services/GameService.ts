@@ -5,7 +5,7 @@ import { MGPResult, Part, PartDocument } from '../domain/Part';
 import { FirstPlayer, Joiner, PartStatus } from '../domain/Joiner';
 import { JoinerService } from './JoinerService';
 import { ChatService } from './ChatService';
-import { Request } from '../domain/request';
+import { Request } from '../domain/Request';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';

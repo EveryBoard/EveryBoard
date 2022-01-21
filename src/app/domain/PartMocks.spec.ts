@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import firebase from 'firebase';
-import { MGPResult, Part } from './icurrentpart';
+import { MGPResult, Part } from './Part';
 
 export class PartMocks {
     public static readonly INITIAL: Part = {

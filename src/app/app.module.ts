@@ -24,7 +24,7 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/normal-component/header/header.component';
 import { WelcomeComponent } from './components/normal-component/welcome/welcome.component';
 import { LoginComponent } from './components/normal-component/login/login.component';
-import { LobbyComponent } from './components/normal-component/server-page/server-page.component';
+import { LobbyComponent } from './components/normal-component/lobby/lobby.component';
 import { PickGameComponent } from './components/normal-component/pick-game/pick-game.component';
 import { PartCreationComponent } from './components/wrapper-components/part-creation/part-creation.component';
 import { NotFoundComponent } from './components/normal-component/not-found/not-found.component';

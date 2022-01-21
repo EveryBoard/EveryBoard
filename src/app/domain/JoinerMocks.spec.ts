@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { FirstPlayer, Joiner, PartStatus, PartType } from './ijoiner';
+import { FirstPlayer, Joiner, PartStatus, PartType } from './Joiner';
 
 export class JoinerMocks {
     public static readonly INITIAL: Joiner = {

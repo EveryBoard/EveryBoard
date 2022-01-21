@@ -10,7 +10,7 @@ import { ChatDAOMock } from 'src/app/dao/tests/ChatDAOMock.spec';
 import { ChatDAO } from 'src/app/dao/ChatDAO';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { Player } from 'src/app/jscaip/Player';
-import { Request } from 'src/app/domain/request';
+import { Request } from 'src/app/domain/Request';
 import { Joiner, PartType } from 'src/app/domain/Joiner';
 import { JoinerDAO } from 'src/app/dao/JoinerDAO';
 import { RouterTestingModule } from '@angular/router/testing';

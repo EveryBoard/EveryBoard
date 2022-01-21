@@ -1,6 +1,6 @@
 import { FirebaseDocument } from '../dao/FirebaseFirestoreDAO';
 import { JSONObject } from '../utils/utils';
-import { Message } from './imessage';
+import { Message } from './Message';
 
 export type ChatDocument = FirebaseDocument<Chat>
 

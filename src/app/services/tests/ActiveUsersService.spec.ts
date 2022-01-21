@@ -73,7 +73,7 @@ describe('ActiveUsersService', () => {
             { id: 'third', data: THIRD_USER },
             { id: 'fourth', data: FOURTH_USER },
         ];
-        const orderedJoueursId: UserDocument[] = service.order(joueurIds);
+        const orderedJoueursId: UserDocument[] = service.sort(joueurIds);
         expect(expectedOrder).toEqual(orderedJoueursId);
     });
 });
