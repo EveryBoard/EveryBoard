@@ -335,7 +335,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 await this.cancelGameCreation();
             }
         }
-    };
+    }
     private observeCandidates(): void {
         const joiner: Joiner = Utils.getNonNullable(this.currentJoiner);
         display(PartCreationComponent.VERBOSE, { PartCreation_observeCandidates: joiner });
