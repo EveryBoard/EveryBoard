@@ -25,7 +25,7 @@ export class ActiveUsersService {
         const onDocumentCreated: (newUsers: UserDocument[]) => void = (newUsers: UserDocument[]) => {
             display(ActiveUsersService.VERBOSE, 'our DAO gave us ' + newUsers.length + ' new user(s)');
             const newUsersList: UserDocument[] = this.activesUsersBS.value.concat(...newUsers);
-            this.activesUsersBS.next(this.order(newUsersList));
+            this.activesUsersBS.next(this.sort(newUsersList));
         };
         const onDocumentModified: (modifiedUsers: UserDocument[]) => void = (modifiedUsers: UserDocument[]) => {
             let updatedUsers: UserDocument[] = this.activesUsersBS.value;
@@ -34,7 +34,7 @@ export class ActiveUsersService {
                 updatedUsers.forEach((user: UserDocument) => {
                     if (user.id === u.id) user.data = u.data;
                 });
-                updatedUsers = this.order(updatedUsers);
+                updatedUsers = this.sort(updatedUsers);
             }
             this.activesUsersBS.next(updatedUsers);
         };
@@ -42,7 +42,7 @@ export class ActiveUsersService {
             const newUsersList: UserDocument[] =
                 this.activesUsersBS.value.filter((u: UserDocument) =>
                     !deletedUsers.some((user: UserDocument) => user.id === u.id));
-            this.activesUsersBS.next(this.order(newUsersList));
+            this.activesUsersBS.next(this.sort(newUsersList));
         };
         const usersObserver: FirebaseCollectionObserver<User> =
             new FirebaseCollectionObserver(onDocumentCreated,
@@ -54,7 +54,7 @@ export class ActiveUsersService {
         this.unsubscribe();
         this.activesUsersBS.next([]);
     }
-    public order(users: UserDocument[]): UserDocument[] {
+    public sort(users: UserDocument[]): UserDocument[] {
         return users.sort((first: UserDocument, second: UserDocument) => {
             const firstTimestamp: number =
                 Utils.getNonNullable(Utils.getNonNullable(first.data).last_changed).seconds;

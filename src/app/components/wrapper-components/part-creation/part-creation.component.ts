@@ -318,25 +318,24 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             // We are already observing the creator
             return;
         }
-        const destroyDocIfCreatorOffline: (modifiedUsers: UserDocument[]) => void =
-            async(modifiedUsers: UserDocument[]) => {
-                for (const user of modifiedUsers) {
-                    assert(user.data.username === joiner.creator, 'found non creator while observing creator!');
-                    if (user.data.state === 'offline' &&
-                        this.allDocDeleted === false &&
-                        joiner.partStatus !== PartStatus.PART_STARTED.value)
-                    {
-                        await this.cancelGameCreation();
-                    }
-                }
-            };
-        const callback: FirebaseCollectionObserver<User> =
-            new FirebaseCollectionObserver(destroyDocIfCreatorOffline,
-                                           destroyDocIfCreatorOffline,
-                                           destroyDocIfCreatorOffline);
-
-        this.creatorSubscription = this.userService.observeUserByUsername(joiner.creator, callback);
+        const callback: (modifiedUsers: UserDocument[]) => void = async(modifiedUsers: UserDocument[]) => {
+            await this.destroyDocIfCreatorOffline(modifiedUsers);
+        };
+        const observer: FirebaseCollectionObserver<User> = new FirebaseCollectionObserver(callback, callback, callback);
+        this.creatorSubscription = this.userService.observeUserByUsername(joiner.creator, observer);
     }
+    private async destroyDocIfCreatorOffline(modifiedUsers: UserDocument[]): Promise<void> {
+        const joiner: Joiner = Utils.getNonNullable(this.currentJoiner);
+        for (const user of modifiedUsers) {
+            assert(user.data.username === joiner.creator, 'found non creator while observing creator!');
+            if (user.data.state === 'offline' &&
+                this.allDocDeleted === false &&
+                joiner.partStatus !== PartStatus.PART_STARTED.value)
+            {
+                await this.cancelGameCreation();
+            }
+        }
+    };
     private observeCandidates(): void {
         const joiner: Joiner = Utils.getNonNullable(this.currentJoiner);
         display(PartCreationComponent.VERBOSE, { PartCreation_observeCandidates: joiner });
