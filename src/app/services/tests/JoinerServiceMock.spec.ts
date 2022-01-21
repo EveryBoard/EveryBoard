@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { FirstPlayer, Joiner, JoinerDocument, PartStatus, PartType } from 'src/app/domain/ijoiner';
+import { FirstPlayer, Joiner, JoinerDocument, PartStatus, PartType } from 'src/app/domain/Joiner';
 import { JoinerDAO } from 'src/app/dao/JoinerDAO';
 import { display } from 'src/app/utils/utils';
 

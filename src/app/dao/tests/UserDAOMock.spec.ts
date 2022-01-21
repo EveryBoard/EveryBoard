@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { ObservableSubject } from 'src/app/utils/tests/ObservableSubject.spec';
-import { User, UserDocument } from 'src/app/domain/iuser';
+import { User, UserDocument } from 'src/app/domain/User';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 import { display } from 'src/app/utils/utils';
 import { FirebaseFirestoreDAOMock } from './FirebaseFirestoreDAOMock.spec';

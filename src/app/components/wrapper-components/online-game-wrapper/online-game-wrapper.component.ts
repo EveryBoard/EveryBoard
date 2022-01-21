@@ -5,14 +5,14 @@ import { AuthenticationService, AuthUser } from 'src/app/services/Authentication
 import { GameService } from 'src/app/services/GameService';
 import { UserService } from 'src/app/services/UserService';
 import { Move } from '../../../jscaip/Move';
-import { Part, MGPResult, PartDocument } from '../../../domain/icurrentpart';
+import { Part, MGPResult, PartDocument } from '../../../domain/Part';
 import { CountDownComponent } from '../../normal-component/count-down/count-down.component';
 import { PartCreationComponent } from '../part-creation/part-creation.component';
-import { User, UserDocument } from '../../../domain/iuser';
-import { Request } from '../../../domain/request';
+import { User, UserDocument } from '../../../domain/User';
+import { Request } from '../../../domain/Request';
 import { GameWrapper } from '../GameWrapper';
 import { FirebaseCollectionObserver } from 'src/app/dao/FirebaseCollectionObserver';
-import { Joiner } from 'src/app/domain/ijoiner';
+import { Joiner } from 'src/app/domain/Joiner';
 import { ChatComponent } from '../../normal-component/chat/chat.component';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';

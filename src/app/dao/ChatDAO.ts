@@ -1,4 +1,4 @@
-import { Chat } from '../domain/ichat';
+import { Chat } from '../domain/Chat';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { FirebaseFirestoreDAO } from './FirebaseFirestoreDAO';
 import { Injectable } from '@angular/core';

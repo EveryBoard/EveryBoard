@@ -1,12 +1,12 @@
 import { Component, Input, OnDestroy, ElementRef, ViewChild, OnInit, AfterViewChecked } from '@angular/core';
 import { ChatService } from '../../../services/ChatService';
-import { Message } from '../../../domain/imessage';
+import { Message } from '../../../domain/Message';
 import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
 import { assert, display } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { faReply, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
-import { Chat } from 'src/app/domain/ichat';
+import { Chat } from 'src/app/domain/Chat';
 
 @Component({
     selector: 'app-chat',

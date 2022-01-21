@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed } from '@angular/core/testing';
-import { ServerPageComponent } from './server-page.component';
+import { LobbyComponent } from './lobby.component';
 import { AuthUser } from 'src/app/services/AuthenticationService';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
@@ -8,15 +8,15 @@ import { Router } from '@angular/router';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { ActivePartsService } from 'src/app/services/ActivePartsService';
 import { BehaviorSubject } from 'rxjs';
-import { PartDocument } from 'src/app/domain/icurrentpart';
+import { PartDocument } from 'src/app/domain/Part';
 
-describe('ServerPageComponent', () => {
+describe('LobbyComponent', () => {
 
-    let testUtils: SimpleComponentTestUtils<ServerPageComponent>;
-    let component: ServerPageComponent;
+    let testUtils: SimpleComponentTestUtils<LobbyComponent>;
+    let component: LobbyComponent;
 
     beforeEach(fakeAsync(async() => {
-        testUtils = await SimpleComponentTestUtils.create(ServerPageComponent);
+        testUtils = await SimpleComponentTestUtils.create(LobbyComponent);
         AuthenticationServiceMock.setUser(AuthUser.NOT_CONNECTED);
         component = testUtils.getComponent();
     }));

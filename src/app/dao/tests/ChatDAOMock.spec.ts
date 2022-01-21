@@ -2,7 +2,7 @@
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { ObservableSubject } from 'src/app/utils/tests/ObservableSubject.spec';
 import { FirebaseFirestoreDAOMock } from './FirebaseFirestoreDAOMock.spec';
-import { Chat, ChatDocument } from 'src/app/domain/ichat';
+import { Chat, ChatDocument } from 'src/app/domain/Chat';
 import { display } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 

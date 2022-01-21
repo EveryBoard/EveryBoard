@@ -5,10 +5,10 @@ import { AuthUser } from 'src/app/services/AuthenticationService';
 import { ChatService } from 'src/app/services/ChatService';
 import { ChatDAO } from 'src/app/dao/ChatDAO';
 import { DebugElement } from '@angular/core';
-import { Chat } from 'src/app/domain/ichat';
+import { Chat } from 'src/app/domain/Chat';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { Message } from 'src/app/domain/imessage';
+import { Message } from 'src/app/domain/Message';
 
 describe('ChatComponent', () => {
 

@@ -4,16 +4,16 @@ import { Subscription } from 'rxjs';
 import { UserService } from '../../../services/UserService';
 import { display } from 'src/app/utils/utils';
 import { ActivePartsService } from 'src/app/services/ActivePartsService';
-import { PartDocument } from 'src/app/domain/icurrentpart';
-import { UserDocument } from 'src/app/domain/iuser';
+import { PartDocument } from 'src/app/domain/Part';
+import { UserDocument } from 'src/app/domain/User';
 
 type Tab = 'games' | 'create' | 'chat';
 
 @Component({
-    selector: 'app-server-page',
-    templateUrl: './server-page.component.html',
+    selector: 'app-lobby',
+    templateUrl: './lobby.component.html',
 })
-export class ServerPageComponent implements OnInit, OnDestroy {
+export class LobbyComponent implements OnInit, OnDestroy {
 
     public static VERBOSE: boolean = false;
 
@@ -32,7 +32,7 @@ export class ServerPageComponent implements OnInit, OnDestroy {
                 private readonly activePartsService: ActivePartsService) {
     }
     public ngOnInit(): void {
-        display(ServerPageComponent.VERBOSE, 'serverPageComponent.ngOnInit');
+        display(LobbyComponent.VERBOSE, 'lobbyComponent.ngOnInit');
         this.activeUsersSub = this.userService.getActiveUsersObs()
             .subscribe((activeUsers: UserDocument[]) => {
                 this.activeUsers = activeUsers;
@@ -44,7 +44,7 @@ export class ServerPageComponent implements OnInit, OnDestroy {
             });
     }
     public ngOnDestroy(): void {
-        display(ServerPageComponent.VERBOSE, 'serverPageComponent.ngOnDestroy');
+        display(LobbyComponent.VERBOSE, 'lobbyComponent.ngOnDestroy');
         this.activeUsersSub.unsubscribe();
         this.activePartsService.stopObserving();
         this.activePartsSub.unsubscribe();

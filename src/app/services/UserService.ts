@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UserDAO } from '../dao/UserDAO';
-import { User, UserDocument } from '../domain/iuser';
+import { User, UserDocument } from '../domain/User';
 import { ActiveUsersService } from './ActiveUsersService';
 import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
 

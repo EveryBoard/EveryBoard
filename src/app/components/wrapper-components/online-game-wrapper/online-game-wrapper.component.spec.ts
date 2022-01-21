@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { OnlineGameWrapperComponent } from './online-game-wrapper.component';
 import { JoinerService } from 'src/app/services/JoinerService';
 import { JoinerDAO } from 'src/app/dao/JoinerDAO';
-import { Joiner } from 'src/app/domain/ijoiner';
+import { Joiner } from 'src/app/domain/Joiner';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
@@ -13,7 +13,7 @@ import { ChatDAO } from 'src/app/dao/ChatDAO';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { P4Component } from 'src/app/games/p4/p4.component';
-import { Part } from 'src/app/domain/icurrentpart';
+import { Part } from 'src/app/domain/Part';
 
 describe('OnlineGameWrapperComponent Lifecycle', () => {
 

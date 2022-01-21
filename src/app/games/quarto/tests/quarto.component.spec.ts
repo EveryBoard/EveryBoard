@@ -19,10 +19,10 @@ describe('QuartoComponent', () => {
         componentTestUtils = await ComponentTestUtils.forGame<QuartoComponent>('Quarto');
     }));
     it('should create', () => {
-        expect(componentTestUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
-        expect(componentTestUtils.getComponent()).withContext('Component should be created').toBeTruthy();
+        componentTestUtils.expectToBeCreated();
     });
-    it('should forbid clicking on occupied case', fakeAsync(async() => {
+    it('should forbid clicking on occupied square', fakeAsync(async() => {
+        // Given a board with at least one piece
         const board: Table<QuartoPiece> = [
             [AAAA, NULL, NULL, NULL],
             [NULL, NULL, NULL, NULL],
@@ -31,21 +31,30 @@ describe('QuartoComponent', () => {
         ];
         const state: QuartoState = new QuartoState(board, 1, QuartoPiece.AAAB);
         componentTestUtils.setupState(state);
+        // When clicking on an occupied square
+        // Then the move should be rejected
         await componentTestUtils.expectClickFailure('#chooseCoord_0_0', RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
     }));
     it('should accept move when choosing piece then choosing coord', fakeAsync(async() => {
-        const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.AAAB);
-
+        // Given any state where user has clicked a piece
         await componentTestUtils.expectClickSuccess('#choosePiece_1');
+
+        // When clicking on a square
+        // Then the move should be accepted
+        const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.AAAB);
         await componentTestUtils.expectMoveSuccess('#chooseCoord_0_0', move);
     }));
     it('should accept move when choosing coord then choosing piece', fakeAsync(async() => {
-        const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.AAAB);
-
+        // Given any state where the user has selected a coord
         await componentTestUtils.expectClickSuccess('#chooseCoord_0_0');
+
+        // When clicking on a piece
+        // Then the move should be accepted
+        const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.AAAB);
         await componentTestUtils.expectMoveSuccess('#choosePiece_1', move);
     }));
     it('should allow to make last move', fakeAsync(async() => {
+        // Given a state at the last turn
         const board: QuartoPiece[][] = [
             [QuartoPiece.AABB, QuartoPiece.AAAB, QuartoPiece.ABBA, QuartoPiece.BBAA],
             [QuartoPiece.BBAB, QuartoPiece.BAAA, QuartoPiece.BBBA, QuartoPiece.ABBB],
@@ -53,9 +62,11 @@ describe('QuartoComponent', () => {
             [QuartoPiece.AAAA, QuartoPiece.ABAB, QuartoPiece.BABB, QuartoPiece.NONE],
         ];
         const pieceInHand: QuartoPiece = QuartoPiece.BAAB;
-        const initialState: QuartoState = new QuartoState(board, 15, pieceInHand);
-        componentTestUtils.setupState(initialState);
+        const state: QuartoState = new QuartoState(board, 15, pieceInHand);
+        componentTestUtils.setupState(state);
 
+        // When clicking on the last empty square
+        // Then the move should be accepted
         const move: QuartoMove = new QuartoMove(3, 3, QuartoPiece.NONE);
         await componentTestUtils.expectMoveSuccess('#chooseCoord_3_3', move);
     }));

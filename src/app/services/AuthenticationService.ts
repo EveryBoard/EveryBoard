@@ -10,7 +10,7 @@ import { assert, display, Utils } from 'src/app/utils/utils';
 import { MGPValidation } from '../utils/MGPValidation';
 import { MGPFallible } from '../utils/MGPFallible';
 import { UserDAO } from '../dao/UserDAO';
-import { User } from '../domain/iuser';
+import { User } from '../domain/User';
 import { MGPOptional } from '../utils/MGPOptional';
 
 export class RTDB {

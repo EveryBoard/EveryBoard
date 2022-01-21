@@ -1,5 +1,5 @@
 import { FirebaseFirestoreDAO } from './FirebaseFirestoreDAO';
-import { MGPResult, Part } from '../domain/icurrentpart';
+import { MGPResult, Part } from '../domain/Part';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Injectable } from '@angular/core';
 import { FirebaseCollectionObserver } from './FirebaseCollectionObserver';

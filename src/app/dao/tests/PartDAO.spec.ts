@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { TestBed } from '@angular/core/testing';
-import { Part, MGPResult } from 'src/app/domain/icurrentpart';
+import { Part, MGPResult } from 'src/app/domain/Part';
 import { createConnectedGoogleUser } from 'src/app/services/tests/AuthenticationService.spec';
 import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';

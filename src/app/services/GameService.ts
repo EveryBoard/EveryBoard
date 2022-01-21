@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { PartDAO } from '../dao/PartDAO';
-import { MGPResult, Part, PartDocument } from '../domain/icurrentpart';
-import { FirstPlayer, Joiner, PartStatus } from '../domain/ijoiner';
+import { MGPResult, Part, PartDocument } from '../domain/Part';
+import { FirstPlayer, Joiner, PartStatus } from '../domain/Joiner';
 import { JoinerService } from './JoinerService';
 import { ChatService } from './ChatService';
 import { Request } from '../domain/request';

@@ -1,8 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
-import { Chat } from '../domain/ichat';
+import { Chat } from '../domain/Chat';
 import { ChatDAO } from '../dao/ChatDAO';
-import { Message } from '../domain/imessage';
+import { Message } from '../domain/Message';
 import { display } from 'src/app/utils/utils';
 import { MGPValidation } from '../utils/MGPValidation';
 import { ArrayUtils } from '../utils/ArrayUtils';

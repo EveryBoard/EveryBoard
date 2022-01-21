@@ -2,7 +2,7 @@
 import { ActivePartsService } from '../ActivePartsService';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { fakeAsync, tick } from '@angular/core/testing';
-import { Part, PartDocument } from 'src/app/domain/icurrentpart';
+import { Part, PartDocument } from 'src/app/domain/Part';
 import { Subscription } from 'rxjs';
 import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
 import { Utils } from 'src/app/utils/utils';

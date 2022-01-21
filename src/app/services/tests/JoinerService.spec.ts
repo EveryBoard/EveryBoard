@@ -2,7 +2,7 @@
 import { fakeAsync } from '@angular/core/testing';
 import { JoinerService } from '../JoinerService';
 import { JoinerDAO } from 'src/app/dao/JoinerDAO';
-import { FirstPlayer, Joiner, PartStatus, PartType } from 'src/app/domain/ijoiner';
+import { FirstPlayer, Joiner, PartStatus, PartType } from 'src/app/domain/Joiner';
 import { JoinerDAOMock } from 'src/app/dao/tests/JoinerDAOMock.spec';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';

@@ -2,7 +2,7 @@
 import { ActiveUsersService } from '../ActiveUsersService';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { UserDAOMock } from 'src/app/dao/tests/UserDAOMock.spec';
-import { User, UserDocument } from 'src/app/domain/iuser';
+import { User, UserDocument } from 'src/app/domain/User';
 import { fakeAsync } from '@angular/core/testing';
 
 describe('ActiveUsersService', () => {

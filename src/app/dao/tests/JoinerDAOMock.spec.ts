@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Joiner, JoinerDocument } from 'src/app/domain/ijoiner';
+import { Joiner, JoinerDocument } from 'src/app/domain/Joiner';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { ObservableSubject } from 'src/app/utils/tests/ObservableSubject.spec';
 import { display } from 'src/app/utils/utils';

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { User, UserDocument } from '../domain/iuser';
+import { User, UserDocument } from '../domain/User';
 import { UserDAO } from '../dao/UserDAO';
 import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
 import { display, Utils } from 'src/app/utils/utils';

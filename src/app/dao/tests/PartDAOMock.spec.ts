@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Part, PartDocument, MGPResult } from 'src/app/domain/icurrentpart';
+import { Part, PartDocument, MGPResult } from 'src/app/domain/Part';
 import { FirebaseFirestoreDAOMock } from './FirebaseFirestoreDAOMock.spec';
 import { ObservableSubject } from 'src/app/utils/tests/ObservableSubject.spec';
 import { MGPMap } from 'src/app/utils/MGPMap';
