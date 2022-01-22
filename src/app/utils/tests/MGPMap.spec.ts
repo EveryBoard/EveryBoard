@@ -135,4 +135,19 @@ describe('MGPMap', () => {
             expect(map1.equals(map2)).toBeFalse();
         });
     });
+    describe('forEach', () => {
+        it('should iterate over all elements of the map', () => {
+            // Given a map with elements
+            const map: MGPMap<string, number> = new MGPMap();
+            map.set('first', 1);
+            map.set('second', 2);
+
+            // When calling forEach
+            let sum: number = 0;
+            map.forEach((item: {key: string, value: number}) => sum += item.value);
+
+            // Then all elements should have been iterated over
+            expect(sum).toBe(3);
+        });
+    });
 });

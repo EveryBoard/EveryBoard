@@ -24,6 +24,8 @@ module.exports = {
         ],
         rules: {
             'jasmine/no-spec-dupes': ['error', 'branch'],
+            '@typescript-eslint/no-floating-promises': ['error'],
+            'jasmine/no-expect-in-setup-teardown': ['off'],
             'jasmine/expect-matcher': ['error'],
             'jasmine/new-line-before-expect': ['off'],
             'jasmine/new-line-between-declarations': ['off'],

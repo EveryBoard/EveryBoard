@@ -1,11 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import { TestBed } from '@angular/core/testing';
-import { IUser } from 'src/app/domain/iuser';
+import { User } from 'src/app/domain/User';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 import { UserDAO } from '../UserDAO';
 import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { createConnectedGoogleUser } from 'src/app/services/tests/AuthenticationService.spec';
 import { Utils } from 'src/app/utils/utils';
+import firebase from 'firebase/app';
+import 'firebase/auth';
 
 describe('UserDAO', () => {
 
@@ -20,7 +22,7 @@ describe('UserDAO', () => {
     });
     describe('observeUserByUsername', () => {
         it('should call observingWhere with the right condition', () => {
-            const callback: FirebaseCollectionObserver<IUser> = new FirebaseCollectionObserver<IUser>(
+            const callback: FirebaseCollectionObserver<User> = new FirebaseCollectionObserver<User>(
                 () => void { },
                 () => void { },
                 () => void { },
@@ -34,15 +36,15 @@ describe('UserDAO', () => {
                                                             callback);
         });
     });
-    describe('observeActivesUsers', () => {
+    describe('observeActiveUsers', () => {
         it('should call observingWhere with the right condition', () => {
-            const callback: FirebaseCollectionObserver<IUser> = new FirebaseCollectionObserver<IUser>(
+            const callback: FirebaseCollectionObserver<User> = new FirebaseCollectionObserver<User>(
                 () => void { },
                 () => void { },
                 () => void { },
             );
             spyOn(dao, 'observingWhere');
-            dao.observeActivesUsers(callback);
+            dao.observeActiveUsers(callback);
             expect(dao.observingWhere).toHaveBeenCalledWith([
                 ['state', '==', 'online'],
                 ['verified', '==', true],
@@ -51,8 +53,7 @@ describe('UserDAO', () => {
         });
     });
     describe('setUsername', () => {
-        xit('should change the username of a user', async() => {
-            // Test disabled due to being flaky, resulting in "invalid API key" errors randomly
+        it('should change the username of a user', async() => {
             // given a google user
             const uid: string = Utils.getNonNullable((await createConnectedGoogleUser(true)).user).uid;
 
@@ -60,8 +61,10 @@ describe('UserDAO', () => {
             await dao.setUsername(uid, 'foo');
 
             // then its username has changed
-            const user: IUser = (await dao.read(uid)).get();
+            const user: User = (await dao.read(uid)).get();
             expect(user.username).toEqual('foo');
+
+            await firebase.auth().signOut();
         });
     });
 });

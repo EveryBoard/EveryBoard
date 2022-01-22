@@ -9,7 +9,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { EncapsuleFailure } from './EncapsuleFailure';
 import { EncapsuleTutorial } from './EncapsuleTutorial';
 import { Utils } from 'src/app/utils/utils';

@@ -9,7 +9,7 @@ import { assert, display } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GroupDatas } from 'src/app/jscaip/BoardDatas';
-import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { GoTutorial } from './GoTutorial';
 import { ErrorLogger } from 'src/app/services/ErrorLogger';
 

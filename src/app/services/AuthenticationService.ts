@@ -10,7 +10,7 @@ import { assert, display, Utils } from 'src/app/utils/utils';
 import { MGPValidation } from '../utils/MGPValidation';
 import { MGPFallible } from '../utils/MGPFallible';
 import { UserDAO } from '../dao/UserDAO';
-import { IUser } from '../domain/iuser';
+import { User } from '../domain/User';
 import { MGPOptional } from '../utils/MGPOptional';
 import { ErrorLogger } from './ErrorLogger';
 
@@ -26,14 +26,14 @@ export class RTDB {
     public static setOffline(uid: string): Promise<void> {
         return firebase.database().ref('/status/' + uid).set(RTDB.OFFLINE);
     }
-    public static updatePresence(uid: string): void {
+    public static async updatePresence(uid: string): Promise<void> {
         const userStatusDatabaseRef: firebase.database.Reference = firebase.database().ref('/status/' + uid);
-        firebase.database().ref('.info/connected').on('value', function(snapshot: firebase.database.DataSnapshot) {
+        firebase.database().ref('.info/connected').on('value', async(snapshot: firebase.database.DataSnapshot) => {
             if (snapshot.val() === false) {
                 return;
             }
-            userStatusDatabaseRef.onDisconnect().set(RTDB.OFFLINE).then(function() {
-                userStatusDatabaseRef.set(RTDB.ONLINE);
+            await userStatusDatabaseRef.onDisconnect().set(RTDB.OFFLINE).then(async() => {
+                await userStatusDatabaseRef.set(RTDB.ONLINE);
             });
         });
     }
@@ -75,6 +75,13 @@ export class AuthenticationService implements OnDestroy {
 
     public authSub: Subscription; // public for testing purposes only
 
+    /**
+     * This is the current user, if there is one.
+     * Components depending on an AccountGuard can safely assume it is defined and directly call .get() on it.
+     * (This is because the guard can't activate if there is no user, so if the guard was activated, there is a user)
+     */
+    public user: MGPOptional<AuthUser>;
+
     private userRS: ReplaySubject<AuthUser>;
 
     private userObs: Observable<AuthUser>;
@@ -99,8 +106,8 @@ export class AuthenticationService implements OnDestroy {
                     await this.registrationInProgress.get();
                     this.registrationInProgress = MGPOptional.empty();
                 }
-                RTDB.updatePresence(user.uid);
-                const userInDB: IUser = (await userDAO.read(user.uid)).get();
+                await RTDB.updatePresence(user.uid);
+                const userInDB: User = (await userDAO.read(user.uid)).get();
                 display(AuthenticationService.VERBOSE, `User ${userInDB.username} is connected, and the verified status is ${this.emailVerified(user)}`);
                 const userHasFinalizedVerification: boolean =
                     this.emailVerified(user) === true && userInDB.username != null;
@@ -108,9 +115,11 @@ export class AuthenticationService implements OnDestroy {
                     // The user has finalized verification but isn't yet marked as so in the DB, so we mark it.
                     await userDAO.markVerified(user.uid);
                 }
-                this.userRS.next(new AuthUser(MGPOptional.ofNullable(user.email),
-                                              MGPOptional.ofNullable(userInDB.username),
-                                              userHasFinalizedVerification));
+                const authUser: AuthUser = new AuthUser(MGPOptional.ofNullable(user.email),
+                                                        MGPOptional.ofNullable(userInDB.username),
+                                                        userHasFinalizedVerification);
+                this.user = MGPOptional.of(authUser);
+                this.userRS.next(authUser);
             }
         });
     }
@@ -244,7 +253,7 @@ export class AuthenticationService implements OnDestroy {
         const user: MGPOptional<firebase.User> = MGPOptional.ofNullable(firebase.auth().currentUser);
         if (user.isPresent()) {
             const uid: string = user.get().uid;
-            RTDB.setOffline(uid);
+            await RTDB.setOffline(uid);
             await this.afAuth.signOut();
             return MGPValidation.SUCCESS;
         } else {
@@ -288,7 +297,6 @@ export class AuthenticationService implements OnDestroy {
         await currentUser.getIdToken(true);
         await currentUser.reload();
     }
-
     public ngOnDestroy(): void {
         this.authSub.unsubscribe();
     }

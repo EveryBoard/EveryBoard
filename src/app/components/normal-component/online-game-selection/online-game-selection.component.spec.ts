@@ -7,19 +7,22 @@ import { OnlineGameSelectionComponent } from './online-game-selection.component'
 describe('OnlineGameSelectionComponent', () => {
 
     let testUtils: SimpleComponentTestUtils<OnlineGameSelectionComponent>;
-    let router: Router;
 
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(OnlineGameSelectionComponent);
         testUtils.detectChanges();
-        router = TestBed.inject(Router);
     }));
-    it('should create and redirect to chosen game', fakeAsync(async() => {
+    it('should redirect to OnlineGameSelection to create chosen game', fakeAsync(async() => {
+        // Given a chosen game
         testUtils.getComponent().pickGame('whateverGame');
+        const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate');
+
+        // When clicking on 'play'
         await testUtils.clickElement('#playOnline');
         tick();
-        expect(router.navigate)
-            .toHaveBeenCalledOnceWith(['/play/whateverGame', 'PartDAOMock0']);
+
+        // Then the user is redirected to the game
+        expect(router.navigate).toHaveBeenCalledWith(['/play/', 'whateverGame']);
     }));
 });

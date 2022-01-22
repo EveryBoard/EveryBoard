@@ -10,7 +10,6 @@ import { assert, display, Utils } from 'src/app/utils/utils';
 import { TutorialStep, TutorialStepMove, TutorialStepWithSolution } from './TutorialStep';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { TutorialFailure } from './TutorialFailure';
-import { GameService } from 'src/app/services/GameService';
 import { GameState } from 'src/app/jscaip/GameState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
@@ -38,8 +37,7 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
                 actRoute: ActivatedRoute,
                 public router: Router,
                 authenticationService: AuthenticationService,
-                public cdr: ChangeDetectorRef,
-                public gameService: GameService)
+                public cdr: ChangeDetectorRef)
     {
         super(componentFactoryResolver, actRoute, authenticationService);
         display(TutorialGameWrapperComponent.VERBOSE, 'TutorialGameWrapperComponent.constructor');
@@ -211,13 +209,13 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
         this.currentMessage = solutionStep.getSuccessMessage();
         this.cdr.detectChanges();
     }
-    public playLocally(): void {
+    public async playLocally(): Promise<void> {
         const game: string = Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));
-        this.router.navigate(['local/' + game]);
+        await this.router.navigate(['/local/', game]);
     }
-    public createGame(): void {
+    public async createGame(): Promise<void> {
         const game: string = Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));
-        this.gameService.createGameAndRedirectOrShowError(game);
+        await this.router.navigate(['/play/', game]);
     }
     public getPlayerName(): string {
         return ''; // Not important for tutorial

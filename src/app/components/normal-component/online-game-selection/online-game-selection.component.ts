@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { GameService } from 'src/app/services/GameService';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-online-game-selection',
@@ -9,12 +9,12 @@ export class OnlineGameSelectionComponent {
 
     public selectedGame: string;
 
-    public constructor(private gameService: GameService) {
+    public constructor(private readonly router: Router) {
     }
     public pickGame(pickedGame: string): void {
         this.selectedGame = pickedGame;
     }
-    public async createGame(): Promise<void> {
-        this.gameService.createGameAndRedirectOrShowError(this.selectedGame);
+    public async navigateToOnlineGameCreation(): Promise<void> {
+        await this.router.navigate(['/play/', this.selectedGame]);
     }
 }

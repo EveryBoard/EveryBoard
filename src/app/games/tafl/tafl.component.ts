@@ -5,7 +5,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ErrorLogger } from 'src/app/services/ErrorLogger';
-import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';

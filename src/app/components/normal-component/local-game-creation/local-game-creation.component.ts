@@ -14,7 +14,7 @@ export class LocalGameCreationComponent {
     public pickGame(pickedGame: string): void {
         this.selectedGame = pickedGame;
     }
-    public playLocally(): void {
-        this.router.navigate(['local/' + this.selectedGame]);
+    public async playLocally(): Promise<void> {
+        await this.router.navigate(['local/' + this.selectedGame]);
     }
 }

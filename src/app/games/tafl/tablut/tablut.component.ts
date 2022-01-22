@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { TablutMove } from 'src/app/games/tafl/tablut/TablutMove';
 import { TablutState } from './TablutState';
 import { TablutRules } from './TablutRules';
-import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TablutTutorial } from './TablutTutorial';
 import { TaflComponent } from '../tafl.component';
 import { TaflMinimax } from '../TaflMinimax';

@@ -10,7 +10,7 @@ import { PentagoMinimax } from './PentagoMinimax';
 import { PentagoMove } from './PentagoMove';
 import { PentagoRules } from './PentagoRules';
 import { PentagoState } from './PentagoState';
-import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { PentagoTutorial } from './PentagoTutorial';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Utils } from 'src/app/utils/utils';

@@ -464,7 +464,7 @@ export class TestUtils {
 }
 
 export async function setupEmulators(): Promise<unknown> {
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
         imports: [
             AngularFirestoreModule,
             HttpClientModule,

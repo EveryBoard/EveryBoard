@@ -1,7 +1,10 @@
+import { FirebaseDocument } from '../dao/FirebaseFirestoreDAO';
 import { JSONObject } from '../utils/utils';
 import { Time } from './Time';
 
-export interface IUser extends JSONObject {
+export type UserDocument = FirebaseDocument<User>
+
+export interface User extends JSONObject {
     username?: string; // may not be set initially for google users
     // eslint-disable-next-line camelcase
     last_changed?: Time;
@@ -9,7 +12,3 @@ export interface IUser extends JSONObject {
     verified: boolean,
 }
 
-export interface IUserId extends JSONObject {
-    id: string;
-    doc: IUser;
-}
