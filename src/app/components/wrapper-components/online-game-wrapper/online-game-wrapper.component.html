@@ -8,7 +8,7 @@
 <div id="game"
      class="tile is-ancestor"
      *ngIf="gameStarted">
-    <div class="tile is-3 is-parent">
+    <div class="tile is-parent">
         <div class="tile is-child box has-text-centered">
             <div class="block" id="turnIndicator" *ngIf="currentPart">
                 <p class="subtitle" i18n>Turn n°{{ currentPart.getTurn() + 1 }}</p>

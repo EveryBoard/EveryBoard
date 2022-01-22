@@ -26,8 +26,8 @@
       <trans-unit id="5075342719298110640" datatype="html">
         <source><x id="PH" equiv-text="unreadMessages"/> new messages</source>
       </trans-unit>
-      <trans-unit id="3202776461633058864" datatype="html">
-        <source>Add <x id="INTERPOLATION" equiv-text="{{ timeToAdd }}"/> to chrono</source>
+      <trans-unit id="1260099573097287890" datatype="html">
+        <source>Add <x id="INTERPOLATION" equiv-text="{{ timeToAdd }}"/></source>
       </trans-unit>
       <trans-unit id="2821179408673282599" datatype="html">
         <source>Home</source>

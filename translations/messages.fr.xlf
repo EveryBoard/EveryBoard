@@ -35,8 +35,8 @@
         <target><x id="PH" equiv-text="unreadMessages"/> nouveaux messages</target>
       </trans-unit>
       <trans-unit id="3202776461633058864" datatype="html">
-        <source>Add <x id="INTERPOLATION" equiv-text="{{ timeToAdd }}"/> to chrono</source>
-        <target>Ajoutez <x id="INTERPOLATION" equiv-text="{{ timeToAdd }}"/> au chrono</target>
+        <source>Add <x id="INTERPOLATION" equiv-text="{{ timeToAdd }}"/></source>
+        <target>Ajoutez <x id="INTERPOLATION" equiv-text="{{ timeToAdd }}"/></target>
       </trans-unit>
       <trans-unit id="2821179408673282599" datatype="html">
         <source>Home</source>

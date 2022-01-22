@@ -233,7 +233,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     public getUpdateType(update: Part): UpdateType {
         const currentPartDoc: IPart | null = this.currentPart != null ? this.currentPart.doc : null;
         const diff: ObjectDifference = ObjectDifference.from(currentPartDoc, update.doc);
-        console.log(diff)
         display(OnlineGameWrapperComponent.VERBOSE, { diff });
         const nbDiffs: number = diff.countChanges();
         if (nbDiffs === 0) {
