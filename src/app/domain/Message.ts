@@ -1,6 +1,6 @@
 import { JSONObject } from '../utils/utils';
 
-export interface IMessage extends JSONObject {
+export interface Message extends JSONObject {
     // This model is not a collection/table in DB, it's a model contained in a chat
     content: string;
     sender: string;

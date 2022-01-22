@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BrandhubMove } from 'src/app/games/tafl/brandhub/BrandhubMove';
 import { BrandhubState } from './BrandhubState';
 import { BrandhubRules } from './BrandhubRules';
-import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TaflComponent } from '../tafl.component';
 import { TaflMinimax } from '../TaflMinimax';
 import { TaflPieceAndInfluenceMinimax } from '../TaflPieceAndInfluenceMinimax';
@@ -15,7 +15,7 @@ import { BrandhubTutorial } from './BrandhubTutorial';
     templateUrl: '../tafl.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
 })
-export class BrandhubComponent extends TaflComponent<BrandhubRules, BrandhubMove, BrandhubState> {
+export class BrandhubComponent extends TaflComponent<BrandhubRules, BrandhubMove, BrandhubState> implements OnInit {
 
     public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer,
@@ -30,6 +30,8 @@ export class BrandhubComponent extends TaflComponent<BrandhubRules, BrandhubMove
         ];
         this.encoder = BrandhubMove.encoder;
         this.tutorial = new BrandhubTutorial().tutorial;
+    }
+    public ngOnInit() {
         this.updateBoard();
     }
 }

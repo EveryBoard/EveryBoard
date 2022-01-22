@@ -16,6 +16,6 @@ describe('TutorialGameCreationComponent', () => {
         testUtils.getComponent().pickGame('whateverGame');
         spyOn(testUtils.getComponent().router, 'navigate');
         await testUtils.clickElement('#launchTutorial');
-        expect(testUtils.getComponent().router.navigate).toHaveBeenCalledOnceWith(['tutorial/whateverGame']);
+        expect(testUtils.getComponent().router.navigate).toHaveBeenCalledOnceWith(['/tutorial/', 'whateverGame']);
     }));
 });

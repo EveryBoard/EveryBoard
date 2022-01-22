@@ -1,5 +1,4 @@
-ActivesPartsService.ts,15
-ActivesUsersService.ts,5
+ActiveUsersService.ts,4
 AuthenticationService.ts,3
 CoerceoPiecesThreatTilesMinimax.ts,1
 GameWrapper.ts,1
@@ -11,4 +10,3 @@ ObjectUtils.ts,2
 online-game-wrapper.component.ts,9
 PositionalEpaminondasMinimax.ts,1
 PylosState.ts,1
-server-page.component.ts,1

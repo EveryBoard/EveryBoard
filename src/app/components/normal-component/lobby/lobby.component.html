@@ -1,13 +1,13 @@
 <div class="tabs is-centered">
     <ul>
         <li ngClass="if (currentTab === 'games') 'is-active'">
-            <a (click)="selectTab('games')" i18n>Games</a>
+            <a id="tab-games" (click)="selectTab('games')" i18n>Games</a>
         </li>
         <li ngClass="if (currentTab === 'create') 'is-active'">
-            <a (click)="selectTab('create')" i18n>Create</a>
+            <a id="tab-create" (click)="selectTab('create')" i18n>Create</a>
         </li>
         <li ngClass="if (currentTab === 'chat') 'is-active'">
-            <a (click)="selectTab('chat')" i18n>Chat</a>
+            <a id="tab-chat" (click)="selectTab('chat')" i18n>Chat</a>
         </li>
     </ul>
 </div>
@@ -26,16 +26,16 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let part of getActiveParts(); index as i"
+                <tr *ngFor="let part of activeParts; index as i"
                     id="part_{{ i }}"
-                    (click)="joinGame(part.id, part.doc.typeGame)">
-                    <td class="td">{{ part.doc.typeGame }}</td>
-                    <td class="td">{{ part.doc.playerZero }}</td>
+                    (click)="joinGame(part.id, part.data.typeGame)">
+                    <td class="td">{{ part.data.typeGame }}</td>
+                    <td class="td">{{ part.data.playerZero }}</td>
                     <td class="td">
-                        <ng-container *ngIf="part.doc.playerOne else waitingForOpponent">{{ part.doc.playerOne }}</ng-container>
+                        <ng-container *ngIf="part.data.playerOne else waitingForOpponent">{{ part.data.playerOne }}</ng-container>
                         <ng-template #waitingForOpponent i18n>Waiting for opponent</ng-template>
                     </td>
-                    <td class="td">{{ part.doc.turn }}</td>
+                    <td class="td">{{ part.data.turn }}</td>
                 </tr>
             </tbody>
         </table>
@@ -45,10 +45,7 @@
 <div *ngIf="currentTab === 'create'"
      id="gameCreator"
      class="box">
-    <app-pick-game (pickGame)="pickGame($event)"></app-pick-game>
-    <button class="button is-medium is-fullwidth is-primary mb-1"
-            [disabled]="!selectedGame"
-            (click)="createGame()" i18n>Create an online game</button>
+    <app-online-game-selection id="online-game-selection"></app-online-game-selection>
 </div>
 <div *ngIf="currentTab === 'chat'"
      id="chatTab"
@@ -63,9 +60,9 @@
             <p i18n>Connected users:</p>
             <ul>
                 <li *ngFor="let user of activeUsers">
-                    <ng-container *ngIf="user.doc.last_changed">
-                        {{ user.doc.username }}:
-                        {{ (1000*user.doc.last_changed.seconds) | date:'HH:mm:ss':'+0100'}}
+                    <ng-container *ngIf="user.data.last_changed">
+                        {{ user.data.username }}:
+                        {{ (1000*user.data.last_changed.seconds) | date:'HH:mm:ss':'+0100'}}
                     </ng-container>
                 </li>
             </ul>

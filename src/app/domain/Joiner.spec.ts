@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { FirstPlayer } from './ijoiner';
+import { FirstPlayer } from './Joiner';
 
 describe('FirstPlayer', () => {
 

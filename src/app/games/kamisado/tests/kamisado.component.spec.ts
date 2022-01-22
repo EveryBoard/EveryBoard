@@ -65,7 +65,7 @@ describe('KamisadoComponent', () => {
         componentTestUtils.setupState(state);
 
         // Then the player can pass
-        componentTestUtils.expectPassSuccess(KamisadoMove.PASS);
+        await componentTestUtils.expectPassSuccess(KamisadoMove.PASS);
     }));
     it('should forbid all click in stuck position and ask to pass', fakeAsync(async() => {
         // given a board where the piece that must move is stuck

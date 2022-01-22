@@ -10,7 +10,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { PositionalEpaminondasMinimax } from './PositionalEpaminondasMinimax';
 import { AttackEpaminondasMinimax } from './AttackEpaminondasMinimax';
-import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { EpaminondasFailure } from './EpaminondasFailure';
 import { EpaminondasTutorial } from './EpaminondasTutorial';
@@ -323,7 +323,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     private async moveFirstPiece(player: Player): Promise<MGPValidation> {
         this.firstPiece = MGPOptional.of(this.firstPiece.get().getNext(this.phalanxDirection.get(), 1));
         if (this.firstPiece.equals(this.lastPiece)) {
-            this.moveOnlyPiece(player);
+            await this.moveOnlyPiece(player);
         } else {
             this.phalanxMiddles = this.phalanxMiddles.slice(1);
             this.validExtensions = this.getPhalanxValidExtensions(player);

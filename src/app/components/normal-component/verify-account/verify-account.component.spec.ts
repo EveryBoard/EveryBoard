@@ -39,7 +39,7 @@ describe('VerifyAccountComponent', () => {
             spyOn(authService, 'setUsername').and.resolveTo(MGPValidation.SUCCESS);
             testUtils.fillInput('#username', username);
             testUtils.detectChanges();
-            testUtils.clickElement('#pickUsername');
+            await testUtils.clickElement('#pickUsername');
             await testUtils.whenStable();
 
             // then the success message is shown
@@ -53,7 +53,7 @@ describe('VerifyAccountComponent', () => {
             spyOn(authService, 'setUsername').and.resolveTo(MGPValidation.failure(failure));
             testUtils.fillInput('#username', 'jeanjiji');
             testUtils.detectChanges();
-            testUtils.clickElement('#pickUsername');
+            await testUtils.clickElement('#pickUsername');
             await testUtils.whenStable();
 
             // then the failure message is shown

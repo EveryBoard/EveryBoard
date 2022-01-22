@@ -30,7 +30,7 @@ describe('AwaleComponent', () => {
         const move: AwaleMove = AwaleMove.FIVE;
 
         // Then the move should be performed
-        componentTestUtils.expectMoveSuccess('#click_5_0', move, undefined, [0, 0]);
+        await componentTestUtils.expectMoveSuccess('#click_5_0', move, undefined, [0, 0]);
         const awaleComponent: AwaleComponent = componentTestUtils.getComponent();
         // and the moved spaces should be shown
         expect(awaleComponent.getCaseClasses(5, 0)).toEqual(['moved', 'highlighted']);

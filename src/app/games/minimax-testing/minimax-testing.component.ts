@@ -6,7 +6,7 @@ import { MinimaxTestingMove } from 'src/app/games/minimax-testing/MinimaxTesting
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MinimaxTestingMinimax } from './MinimaxTestingMinimax';
-import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 
 @Component({
     selector: 'app-minimax-testing',
