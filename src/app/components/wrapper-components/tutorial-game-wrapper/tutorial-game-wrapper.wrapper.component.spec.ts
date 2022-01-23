@@ -4,7 +4,7 @@ import { TutorialStep } from './TutorialStep';
 import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
 import { QuartoState } from 'src/app/games/quarto/QuartoState';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
-import { ComponentTestUtils, TestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { ComponentTestUtils, expectValidRouting, TestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { QuartoComponent } from '../../../games/quarto/quarto.component';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -65,6 +65,8 @@ import { YinshRules } from 'src/app/games/yinsh/YinshRules';
 import { YinshState } from 'src/app/games/yinsh/YinshState';
 import { YinshTutorial, YinshTutorialMessages } from 'src/app/games/yinsh/YinshTutorial';
 import { YinshCapture, YinshMove } from 'src/app/games/yinsh/YinshMove';
+import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrapper.component';
+import { OnlineGameCreationComponent } from '../../normal-component/online-game-creation/online-game-creation.component';
 
 describe('TutorialGameWrapperComponent (wrapper)', () => {
 
@@ -504,7 +506,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await componentTestUtils.clickElement('#playLocallyButton');
 
             // expect navigator to have been called
-            expect(router.navigate).toHaveBeenCalledOnceWith(['/local/', 'Quarto']);
+            expectValidRouting(router, ['/local', 'Quarto'], LocalGameWrapperComponent);
         }));
         it('Should redirect to online game when asking for it when finished and user is online', fakeAsync(async() => {
             // Given a finish tutorial
@@ -524,7 +526,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await componentTestUtils.clickElement('#playOnlineButton');
 
             // expect navigator to have been called
-            expect(router.navigate).toHaveBeenCalledOnceWith(['/play/', 'Quarto']);
+            expectValidRouting(router, ['/play', 'Quarto'], OnlineGameCreationComponent);
         }));
     });
     describe('TutorialStep awaiting specific moves', () => {

@@ -1,7 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { expectValidRouting, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { OnlineGameCreationComponent } from '../online-game-creation/online-game-creation.component';
 import { OnlineGameSelectionComponent } from './online-game-selection.component';
 
 describe('OnlineGameSelectionComponent', () => {
@@ -23,6 +24,6 @@ describe('OnlineGameSelectionComponent', () => {
         tick();
 
         // Then the user is redirected to the game
-        expect(router.navigate).toHaveBeenCalledWith(['/play/', 'whateverGame']);
+        expectValidRouting(router, ['/play', 'whateverGame'], OnlineGameCreationComponent);
     }));
 });

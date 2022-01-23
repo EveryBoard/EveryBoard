@@ -4,7 +4,9 @@ import { Router } from '@angular/router';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
-import { ActivatedRouteStub, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { ActivatedRouteStub, expectValidRouting, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { OnlineGameWrapperComponent } from '../../wrapper-components/online-game-wrapper/online-game-wrapper.component';
+import { LobbyComponent } from '../lobby/lobby.component';
 import { OnlineGameCreationComponent, OnlineGameCreationMessages } from './online-game-creation.component';
 
 describe('OnlineGameCreationComponent', () => {
@@ -28,7 +30,7 @@ describe('OnlineGameCreationComponent', () => {
         tick(3000); // needs to be >2999
 
         // Then the user should be redirected to the game
-        expect(router.navigate).toHaveBeenCalledOnceWith(['/play/', game, 'PartDAOMock0']);
+        expectValidRouting(router, ['/play', game, 'PartDAOMock0'], OnlineGameWrapperComponent);
     }));
     it('should show toast and navigate to server when creator has active parts', fakeAsync(async() => {
         // Given a page that is loaded for a specific game by a connected user that already has an active part
@@ -46,6 +48,6 @@ describe('OnlineGameCreationComponent', () => {
 
         // Then it should toast, and navigate to server
         expect(messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(OnlineGameCreationMessages.ALREADY_INGAME());
-        expect(router.navigate).toHaveBeenCalledOnceWith(['/server']);
+        expectValidRouting(router, ['/lobby'], LobbyComponent);
     }));
 });
