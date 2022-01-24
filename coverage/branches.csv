@@ -1,5 +1,3 @@
-ActivesPartsService.ts,3
-ActivesUsersService.ts,1
 ActiveUsersService.ts,1
 AttackEpaminondasMinimax.ts,1
 AuthenticationService.ts,1
@@ -13,4 +11,3 @@ ObjectUtils.ts,3
 online-game-wrapper.component.ts,13
 PositionalEpaminondasMinimax.ts,1
 PylosState.ts,1
-QuartoHasher.ts,1

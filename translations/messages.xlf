@@ -59,6 +59,33 @@
       <trans-unit id="2336550011721758066" datatype="html">
         <source>Log in</source>
       </trans-unit>
+      <trans-unit id="7656395805241225659" datatype="html">
+        <source>Games</source>
+      </trans-unit>
+      <trans-unit id="5674286808255988565" datatype="html">
+        <source>Create</source>
+      </trans-unit>
+      <trans-unit id="2299187798995800780" datatype="html">
+        <source>Chat</source>
+      </trans-unit>
+      <trans-unit id="4643591148728960560" datatype="html">
+        <source>Game</source>
+      </trans-unit>
+      <trans-unit id="3710582909570607859" datatype="html">
+        <source>First player</source>
+      </trans-unit>
+      <trans-unit id="4060021930998903329" datatype="html">
+        <source>Second player</source>
+      </trans-unit>
+      <trans-unit id="8503767092684163333" datatype="html">
+        <source>Turn</source>
+      </trans-unit>
+      <trans-unit id="689957366051097321" datatype="html">
+        <source>Waiting for opponent</source>
+      </trans-unit>
+      <trans-unit id="1670632975695309948" datatype="html">
+        <source>Connected users:</source>
+      </trans-unit>
       <trans-unit id="4768749765465246664" datatype="html">
         <source>Email</source>
       </trans-unit>
@@ -289,33 +316,6 @@
       </trans-unit>
       <trans-unit id="1519954996184640001" datatype="html">
         <source>Error</source>
-      </trans-unit>
-      <trans-unit id="7656395805241225659" datatype="html">
-        <source>Games</source>
-      </trans-unit>
-      <trans-unit id="5674286808255988565" datatype="html">
-        <source>Create</source>
-      </trans-unit>
-      <trans-unit id="2299187798995800780" datatype="html">
-        <source>Chat</source>
-      </trans-unit>
-      <trans-unit id="4643591148728960560" datatype="html">
-        <source>Game</source>
-      </trans-unit>
-      <trans-unit id="3710582909570607859" datatype="html">
-        <source>First player</source>
-      </trans-unit>
-      <trans-unit id="4060021930998903329" datatype="html">
-        <source>Second player</source>
-      </trans-unit>
-      <trans-unit id="8503767092684163333" datatype="html">
-        <source>Turn</source>
-      </trans-unit>
-      <trans-unit id="689957366051097321" datatype="html">
-        <source>Waiting for opponent</source>
-      </trans-unit>
-      <trans-unit id="1670632975695309948" datatype="html">
-        <source>Connected users:</source>
       </trans-unit>
       <trans-unit id="6153797048311741939" datatype="html">
         <source>User settings</source>
