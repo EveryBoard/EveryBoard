@@ -5,8 +5,7 @@ import { Vector } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { ErrorLogger } from 'src/app/services/ErrorLogger';
-import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -61,8 +60,8 @@ export class ConspirateursComponent
     private selected: MGPOptional<Coord> = MGPOptional.empty();
     private jumpInConstruction: MGPOptional<ConspirateursMoveJump> = MGPOptional.empty();
 
-    public constructor(messageDisplayer: MessageDisplayer, errorLogger: ErrorLogger) {
-        super(messageDisplayer, errorLogger);
+    public constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.PIECE_RADIUS = (this.SPACE_SIZE - (2 * this.STROKE_WIDTH)) * 0.5;
         this.rules = ConspirateursRules.get();
         this.availableMinimaxes = [

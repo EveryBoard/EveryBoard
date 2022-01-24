@@ -1,3 +1,4 @@
+import { ErrorLoggerService } from '../services/ErrorLogger';
 import { isJSONPrimitive, JSONPrimitive } from './utils';
 
 export interface ComparableObject {
@@ -24,7 +25,6 @@ function comparableEqualsStrict<T extends Comparable>(a: T, b: T): boolean {
             const bJSON: ComparableJSON = b as ComparableJSON;
             for (const key of Object.keys(aJSON)) {
                 if (key in bJSON) {
-                    // eslint-disable-next-line @typescript-eslint/no-use-before-define
                     if (comparableEqualsStrict(aJSON[key], bJSON[key]) === false) {
                         return false;
                     }
@@ -47,7 +47,6 @@ export function isComparableObject(value: unknown): value is ComparableObject {
 export function isComparableJSON(value: any): value is ComparableJSON {
     if (typeof value === 'object') {
         for (const key in value) {
-            // eslint-disable-next-line @typescript-eslint/no-use-before-define
             if (value[key] != null && isComparableValue(value[key]) === false) {
                 return false;
             }
@@ -67,6 +66,7 @@ export function comparableEquals<T>(a: T, b: T): boolean {
     if (isComparableValue(a) && isComparableValue(b)) {
         return comparableEqualsStrict(a, b);
     } else {
-        throw new Error(`Comparing non comparable objects: ${a} and ${b}`);
+        // eslint-disable-next-line @typescript-eslint/ban-types
+        throw new Error(`Comparing non comparable objects: ${(a as Object).constructor.name} and ${( b as Object).constructor.name}`);
     }
 }

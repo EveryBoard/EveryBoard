@@ -9,7 +9,6 @@ import { TaflMinimax } from '../TaflMinimax';
 import { TaflPieceAndInfluenceMinimax } from '../TaflPieceAndInfluenceMinimax';
 import { TaflPieceAndControlMinimax } from '../TaflPieceAndControlMinimax';
 import { TaflEscapeThenPieceAndControlMinimax } from '../TaflEscapeThenPieceThenControl';
-import { ErrorLogger } from 'src/app/services/ErrorLogger';
 
 @Component({
     selector: 'app-tablut',
@@ -18,9 +17,8 @@ import { ErrorLogger } from 'src/app/services/ErrorLogger';
 })
 export class TablutComponent extends TaflComponent<TablutRules, TablutMove, TablutState> {
 
-    public constructor(messageDisplayer: MessageDisplayer, errorLogger: ErrorLogger) {
+    public constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer,
-              errorLogger,
               false,
               TablutMove.from);
         this.rules = TablutRules.get();

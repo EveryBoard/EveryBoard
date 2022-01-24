@@ -16,7 +16,6 @@ import { EpaminondasFailure } from './EpaminondasFailure';
 import { EpaminondasTutorial } from './EpaminondasTutorial';
 import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { ErrorLogger } from 'src/app/services/ErrorLogger';
 
 @Component({
     selector: 'app-epaminondas',
@@ -47,8 +46,8 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
 
     private captureds: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer, errorLogger: ErrorLogger) {
-        super(messageDisplayer, errorLogger);
+    public constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.rules = new EpaminondasRules(EpaminondasState);
         this.availableMinimaxes = [
             new EpaminondasMinimax(this.rules, 'Normal'),

@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { AngularFirestore } from '@angular/fire/firestore';
 import 'firebase/firestore';
 import { Injectable } from '@angular/core';
-import { FirebaseFirestoreDAO } from '../FirebaseFirestoreDAO';
+import { FirebaseDocument, FirebaseFirestoreDAO } from '../FirebaseFirestoreDAO';
 import { FirebaseJSONObject } from 'src/app/utils/utils';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
@@ -196,11 +196,11 @@ describe('FirebaseFirestoreDAO', () => {
             await dao.create({ value: 'foo', otherValue: 2 });
 
             // When calling findWhere
-            const docs: Foo[] = await dao.findWhere([['otherValue', '==', 1]]);
+            const docs: FirebaseDocument<Foo>[] = await dao.findWhere([['otherValue', '==', 1]]);
 
             // Then it should return the matching documents only
             expect(docs.length).toBe(1);
-            expect(docs[0]).toEqual({ value: 'foo', otherValue: 1 });
+            expect(docs[0].data).toEqual({ value: 'foo', otherValue: 1 });
         });
     });
 });

@@ -15,7 +15,6 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { KamisadoTutorial } from './KamisadoTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/utils';
-import { ErrorLogger } from 'src/app/services/ErrorLogger';
 
 @Component({
     selector: 'app-kamisado',
@@ -33,8 +32,8 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
     public chosen: MGPOptional<Coord> = MGPOptional.empty();
     public chosenAutomatically: boolean = false;
 
-    public constructor(messageDisplayer: MessageDisplayer, errorLogger: ErrorLogger) {
-        super(messageDisplayer, errorLogger);
+    public constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.rules = new KamisadoRules(KamisadoState);
         this.availableMinimaxes = [
             new KamisadoMinimax(this.rules, 'KamisadoMinimax'),

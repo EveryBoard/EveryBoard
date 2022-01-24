@@ -39,8 +39,8 @@ import { USE_EMULATOR as USE_AUTH_EMULATOR } from '@angular/fire/auth';
 import { USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/functions';
 import { environment } from 'src/environments/environment';
 import { MGPOptional } from '../MGPOptional';
-import { ErrorLogger } from 'src/app/services/ErrorLogger';
-import { ErrorLoggerMock } from 'src/app/services/tests/ErrorLoggerMock.spec';
+import { ErrorLoggerService } from 'src/app/services/ErrorLogger';
+import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerMock.spec';
 import { AbstractGameComponent } from 'src/app/components/game-components/game-component/GameComponent';
 
 @Component({})
@@ -106,7 +106,7 @@ export class SimpleComponentTestUtils<T> {
                 { provide: JoinerDAO, useClass: JoinerDAOMock },
                 { provide: ChatDAO, useClass: ChatDAOMock },
                 { provide: UserDAO, useClass: UserDAOMock },
-                { provide: ErrorLogger, useClass: ErrorLoggerMock },
+                { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
             ],
         }).compileComponents();
         AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
@@ -181,10 +181,10 @@ export class ComponentTestUtils<T extends AbstractGameComponent> {
     private chooseMoveSpy: jasmine.Spy;
     private onLegalUserMoveSpy: jasmine.Spy;
 
-    public static async forGame<T extends AbstractGameComponent>
-        (game: string,
-         wrapperKind: Type<GameWrapper> = LocalGameWrapperComponent,
-         configureTestModule: boolean = true)
+    public static async forGame<T extends AbstractGameComponent>(
+        game: string,
+        wrapperKind: Type<GameWrapper> = LocalGameWrapperComponent,
+        configureTestModule: boolean = true)
     : Promise<ComponentTestUtils<T>>
     {
         const testUtils: ComponentTestUtils<T> = await ComponentTestUtils.basic(game, configureTestModule);
@@ -196,12 +196,12 @@ export class ComponentTestUtils<T extends AbstractGameComponent> {
         testUtils.prepareSpies();
         return testUtils;
     }
-    public static async basic<T extends AbstractGameComponent>(game?: string, configureTestModule = true)
+    public static async basic<T extends AbstractGameComponent>(game?: string, configureTestModule: boolean = true)
     : Promise<ComponentTestUtils<T>>
     {
         const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub(game, 'joinerId');
         if (configureTestModule) {
-            ComponentTestUtils.configureTestModule(activatedRouteStub);
+            await ComponentTestUtils.configureTestModule(activatedRouteStub);
         }
         return new ComponentTestUtils<T>(activatedRouteStub);
     }
@@ -222,7 +222,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent> {
                 { provide: ChatDAO, useClass: ChatDAOMock },
                 { provide: JoinerDAO, useClass: JoinerDAOMock },
                 { provide: PartDAO, useClass: PartDAOMock },
-                { provide: ErrorLogger, useClass: ErrorLoggerMock },
+                { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
             ],
         }).compileComponents();
     }

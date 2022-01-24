@@ -17,7 +17,6 @@ import { YinshLegalityInformation, YinshRules } from './YinshRules';
 import { YinshTutorial } from './YinshTutorial';
 import { Utils } from 'src/app/utils/utils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { ErrorLogger } from 'src/app/services/ErrorLogger';
 
 interface SpaceInfo {
     coord: Coord,
@@ -53,11 +52,11 @@ interface ViewInfo {
 export class YinshComponent
     extends HexagonalGameComponent<YinshRules, YinshMove, YinshState, YinshPiece, YinshLegalityInformation> {
 
-    private static RING_OUTER_SIZE: number = 40;
-    private static RING_MID_SIZE: number = 34;
-    private static RING_INNER_SIZE: number = 28;
-    private static MARKER_SIZE: number = YinshComponent.RING_INNER_SIZE;
-    private static INDICATOR_SIZE: number = 10;
+    private static readonly RING_OUTER_SIZE: number = 40;
+    private static readonly RING_MID_SIZE: number = 34;
+    private static readonly RING_INNER_SIZE: number = 28;
+    private static readonly MARKER_SIZE: number = YinshComponent.RING_INNER_SIZE;
+    private static readonly INDICATOR_SIZE: number = 10;
 
     private constructedState: YinshState;
 
@@ -93,8 +92,8 @@ export class YinshComponent
         sideRings: [5, 5],
         sideRingClass: ['player0-stroke', 'player1-stroke'],
     };
-    constructor(messageDisplayer: MessageDisplayer, errorLogger: ErrorLogger) {
-        super(messageDisplayer, errorLogger);
+    constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.scores = MGPOptional.of([0, 0]);
         this.rules = new YinshRules(YinshState);
         this.availableMinimaxes = [

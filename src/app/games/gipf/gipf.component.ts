@@ -19,7 +19,6 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GipfTutorial } from './GipfTutorial';
 import { Utils } from 'src/app/utils/utils';
-import { ErrorLogger } from 'src/app/services/ErrorLogger';
 
 @Component({
     selector: 'app-gipf',
@@ -49,8 +48,8 @@ export class GipfComponent
     private placementEntrance: MGPOptional<Coord> = MGPOptional.empty();
     private finalCaptures: GipfCapture[] = [];
 
-    constructor(messageDisplayer: MessageDisplayer, errorLogger: ErrorLogger) {
-        super(messageDisplayer, errorLogger);
+    constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.scores = MGPOptional.of([0, 0]);
         this.rules = new GipfRules(GipfState);
         this.availableMinimaxes = [

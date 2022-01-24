@@ -6,8 +6,7 @@ import { MinimaxTestingMove } from 'src/app/games/minimax-testing/MinimaxTesting
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MinimaxTestingMinimax } from './MinimaxTestingMinimax';
-import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
-import { ErrorLogger } from 'src/app/services/ErrorLogger';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 
 @Component({
     selector: 'app-minimax-testing',
@@ -21,8 +20,8 @@ export class MinimaxTestingComponent extends RectangularGameComponent<MinimaxTes
 {
     public coord: Coord = new Coord(-1, -1);
 
-    public constructor(messageDisplayer: MessageDisplayer, errorLogger: ErrorLogger) {
-        super(messageDisplayer, errorLogger);
+    public constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.rules = new MinimaxTestingRules(MinimaxTestingState);
         this.availableMinimaxes = [
             new MinimaxTestingMinimax(this.rules, 'MinimaxTestingMinimax'),

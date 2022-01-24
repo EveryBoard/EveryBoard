@@ -15,7 +15,6 @@ import { SaharaFailure } from './SaharaFailure';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { SaharaTutorial } from './SaharaTutorial';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { ErrorLogger } from 'src/app/services/ErrorLogger';
 
 @Component({
     selector: 'app-sahara',
@@ -35,8 +34,8 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
 
     public chosenCoord: MGPOptional<Coord> = MGPOptional.empty();
 
-    public constructor(messageDisplayer: MessageDisplayer, errorLogger: ErrorLogger) {
-        super(messageDisplayer, errorLogger);
+    public constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.rules = new SaharaRules(SaharaState);
         this.availableMinimaxes = [
             new SaharaMinimax(this.rules, 'SaharaMinimax'),

@@ -12,8 +12,9 @@ import { User, UserDocument } from 'src/app/domain/User';
 import { FirebaseCollectionObserver } from 'src/app/dao/FirebaseCollectionObserver';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
-import { ErrorLogger } from 'src/app/services/ErrorLogger';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { ErrorLoggerService } from 'src/app/services/ErrorLogger';
 
 interface PartCreationViewInfo {
     userIsCreator: boolean;
@@ -93,8 +94,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                        private readonly chatService: ChatService,
                        private readonly userService: UserService,
                        private readonly formBuilder: FormBuilder,
-                       private readonly messageDisplayer: MessageDisplayer,
-                       private readonly errorLogger: ErrorLogger)
+                       private readonly messageDisplayer: MessageDisplayer)
     {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent constructed for ' + this.userName);
     }
@@ -344,7 +344,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             for (const user of foundUsers) {
                 if (user.data.state === 'offline') {
                     await this.removeUserFromLobby(Utils.getNonNullable(user.data.username));
-                    await this.errorLogger.logError('OnlineGameWrapper: ' + user.data.username + ' is already offline!');
+                    await ErrorLoggerService.logError('PartCreationComponent', 'user is already offline', { username: user.data.username, userId: user.id });
                 }
             }
         };
@@ -359,7 +359,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             // This should not happen in practice, but if it does we can safely remove the user from the lobby
             for (const user of deletedUsers) {
                 await this.removeUserFromLobby(Utils.getNonNullable(user.data.username));
-                await this.errorLogger.logError('OnlineGameWrapper: ' + user.data.username + ' was deleted (' + user.id + ')');
+                await ErrorLoggerService.logError('PartCreationComponent', 'user was deleted', { username: user.data.username, userId: user.id });
             }
         };
         const callback: FirebaseCollectionObserver<User> =

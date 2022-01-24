@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import firebase from 'firebase/app';
-import { FirebaseFirestoreDAO } from '../dao/FirebaseFirestoreDAO';
+import { FirebaseDocument, FirebaseFirestoreDAO } from '../dao/FirebaseFirestoreDAO';
 import { FirebaseTime } from '../domain/Time';
+import { MGPOptional } from '../utils/MGPOptional';
 import { MGPValidation } from '../utils/MGPValidation';
-import { FirebaseJSONObject, JSONValue } from '../utils/utils';
+import { assert, FirebaseJSONObject, JSONValue } from '../utils/utils';
 
 export interface EncounteredError extends FirebaseJSONObject {
     // The component in which the error occured
@@ -36,14 +37,27 @@ export class ErrorDAO extends FirebaseFirestoreDAO<EncounteredError> {
 @Injectable({
     providedIn: 'root',
 })
-export class ErrorLogger {
+export class ErrorLoggerService {
+    private static singleton: MGPOptional<ErrorLoggerService> = MGPOptional.empty();
+    private static setSingletonInstance(service: ErrorLoggerService) {
+        ErrorLoggerService.singleton = MGPOptional.of(service);
+    }
+    public static logError(component: string, message: string, data?: JSONValue): MGPValidation {
+        assert(this.singleton.isPresent(), 'ErrorLoggerService singleton should be present if properly initialized');
+        // This can be done in parallel, we don't care about awaiting the result
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+        this.singleton.get().logError(component, message, data);
+        return MGPValidation.failure(component + ': ' + message);
+    }
+
     // The DAO used to log the errors within firebase
     public constructor(private readonly errorDAO: ErrorDAO,
                        private readonly router: Router) {
+        ErrorLoggerService.setSingletonInstance(this);
     }
-    public async logError(component: string, message: string, data?: JSONValue): Promise<MGPValidation> {
+    private async logError(component: string, message: string, data?: JSONValue): Promise<void> {
         const route: string = this.router.url;
-        const previousErrors: { id: string, doc: EncounteredError }[] =
+        const previousErrors: FirebaseDocument<EncounteredError>[] =
             await this.errorDAO.findWhere([['component', '==', component], ['message', '==', message], ['data', '==', data]]);
         if (previousErrors === []) {
             const error: EncounteredError = {
@@ -59,12 +73,11 @@ export class ErrorLogger {
         } else {
             // There should a single matching error, but it doesn't really matter, we add it to the first one
             const previousErrorId: string = previousErrors[0].id;
-            const previousError: EncounteredError = previousErrors[0].doc;
+            const previousError: EncounteredError = previousErrors[0].data;
             await this.errorDAO.update(previousErrorId, {
                 lastEncounter: firebase.firestore.FieldValue.serverTimestamp(),
                 occurences: previousError.occurences + 1,
             });
         }
-        return MGPValidation.failure(component + ': ' + message);
     }
 }

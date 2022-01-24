@@ -18,7 +18,6 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { SixTutorial } from './SixTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { ErrorLogger } from 'src/app/services/ErrorLogger';
 
 interface Scale {
     minX: number;
@@ -58,8 +57,8 @@ export class SixComponent
 
     private nextClickShouldSelectGroup: boolean = false;
 
-    constructor(messageDisplayer: MessageDisplayer, errorLogger: ErrorLogger) {
-        super(messageDisplayer, errorLogger);
+    constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.rules = new SixRules(SixState);
         this.availableMinimaxes = [
             new SixMinimax(this.rules, 'SixMinimax'),

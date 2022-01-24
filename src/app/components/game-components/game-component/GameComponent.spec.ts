@@ -11,8 +11,10 @@ import { GameWrapperMessages } from '../../wrapper-components/GameWrapper';
 import { LocalGameWrapperComponent } from '../../wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { AbstractGameComponent } from './GameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
-import { ErrorLogger } from 'src/app/services/ErrorLogger';
+import { ErrorLoggerService } from 'src/app/services/ErrorLogger';
 import { AbaloneComponent } from 'src/app/games/abalone/abalone.component';
+import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerMock.spec';
+import { JSONValue } from 'src/app/utils/utils';
 
 describe('GameComponent', () => {
 
@@ -35,17 +37,17 @@ describe('GameComponent', () => {
         tick(1);
 
 
-        const errorLogger: ErrorLogger = TestBed.inject(ErrorLogger);
-        spyOn(errorLogger, 'logError').and.callThrough();
+        spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
 
         // when the player tries to pass
         const result: MGPValidation = await component.pass();
 
         // then should fail and call logError
-        const errorMessage: string = 'pass() called on a game that does not redefine it (AbaloneComponent)';
+        const errorMessage: string = 'pass() called on a game that does not redefine it';
+        const errorData: JSONValue = { gameName: 'AbaloneComponent' };
         expect(result.isFailure()).toBeTrue();
         expect(result.getReason()).toEqual('GameComponent: ' + errorMessage);
-        expect(errorLogger.logError).toHaveBeenCalledWith('GameComponent', errorMessage);
+        expect(ErrorLoggerService.logError).toHaveBeenCalledWith('GameComponent', errorMessage, errorData);
     }));
     it('Clicks method should refuse when observer click', fakeAsync(async() => {
         const clickableMethods: { [gameName: string]: { [methodName: string]: unknown[] } } = {

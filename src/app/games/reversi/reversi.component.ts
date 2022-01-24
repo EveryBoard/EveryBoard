@@ -13,7 +13,6 @@ import { RectangularGameComponent } from 'src/app/components/game-components/rec
 import { ReversiTutorial } from './ReversiTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert } from 'src/app/utils/utils';
-import { ErrorLogger } from 'src/app/services/ErrorLogger';
 
 @Component({
     selector: 'app-reversi',
@@ -31,8 +30,8 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
 
     private captureds: Coord[] = [];
 
-    constructor(messageDisplayer: MessageDisplayer, errorLogger: ErrorLogger) {
-        super(messageDisplayer, errorLogger);
+    constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.scores = MGPOptional.of([2, 2]);
         this.rules = new ReversiRules(ReversiState);
         this.availableMinimaxes = [

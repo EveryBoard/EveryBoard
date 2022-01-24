@@ -11,8 +11,8 @@ import { AbstractMinimax } from 'src/app/jscaip/Minimax';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { ErrorLogger } from 'src/app/services/ErrorLogger';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { ErrorLoggerService } from 'src/app/services/ErrorLogger';
 
 @Component({
     selector: 'app-local-game-wrapper',
@@ -34,8 +34,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
     constructor(componentFactoryResolver: ComponentFactoryResolver,
                 actRoute: ActivatedRoute,
                 authenticationService: AuthenticationService,
-                public cdr: ChangeDetectorRef,
-                private readonly errorLogger: ErrorLogger)
+                public cdr: ChangeDetectorRef)
     {
         super(componentFactoryResolver, actRoute, authenticationService);
         this.players = [MGPOptional.of(this.playerSelection[0]), MGPOptional.of(this.playerSelection[1])];
@@ -114,7 +113,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
             this.proposeAIToPlay();
             return MGPValidation.SUCCESS;
         } else {
-            return this.errorLogger.logError('LocalGameWrapper', 'AI chose illegal move (' + aiMove.toString() + ')');
+            return ErrorLoggerService.logError('LocalGameWrapper', 'AI chose illegal move', { aiMove: aiMove.toString() });
         }
     }
     public canTakeBack(): boolean {

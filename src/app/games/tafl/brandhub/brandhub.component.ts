@@ -9,7 +9,6 @@ import { TaflPieceAndInfluenceMinimax } from '../TaflPieceAndInfluenceMinimax';
 import { TaflPieceAndControlMinimax } from '../TaflPieceAndControlMinimax';
 import { TaflEscapeThenPieceAndControlMinimax } from '../TaflEscapeThenPieceThenControl';
 import { BrandhubTutorial } from './BrandhubTutorial';
-import { ErrorLogger } from 'src/app/services/ErrorLogger';
 
 @Component({
     selector: 'app-brandhub',
@@ -18,11 +17,8 @@ import { ErrorLogger } from 'src/app/services/ErrorLogger';
 })
 export class BrandhubComponent extends TaflComponent<BrandhubRules, BrandhubMove, BrandhubState> implements OnInit {
 
-    public constructor(messageDisplayer: MessageDisplayer, errorLogger: ErrorLogger) {
-        super(messageDisplayer,
-              errorLogger,
-              false,
-              BrandhubMove.from);
+    public constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer, false, BrandhubMove.from);
         this.rules = BrandhubRules.get();
         this.availableMinimaxes = [
             new TaflMinimax(this.rules, 'DummyBot'),

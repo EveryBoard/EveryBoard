@@ -12,7 +12,7 @@ import { MGPFallible } from '../utils/MGPFallible';
 import { UserDAO } from '../dao/UserDAO';
 import { User } from '../domain/User';
 import { MGPOptional } from '../utils/MGPOptional';
-import { ErrorLogger } from './ErrorLogger';
+import { ErrorLoggerService } from './ErrorLogger';
 
 export class RTDB {
     public static OFFLINE: ConnectivityStatus = {
@@ -89,8 +89,8 @@ export class AuthenticationService implements OnDestroy {
     private registrationInProgress: MGPOptional<Promise<MGPFallible<firebase.User>>> = MGPOptional.empty();
 
     constructor(public afAuth: AngularFireAuth,
-                private readonly userDAO: UserDAO,
-                private readonly errorLogger: ErrorLogger) {
+                private readonly userDAO: UserDAO)
+    {
         display(AuthenticationService.VERBOSE, '1 authService subscribe to Obs<User>');
 
         this.userRS = new ReplaySubject<AuthUser>(1);
@@ -161,7 +161,7 @@ export class AuthenticationService implements OnDestroy {
             return MGPFallible.failure(await this.mapFirebaseError(e));
         }
     }
-    public async mapFirebaseError(error: firebase.FirebaseError): Promise<string> {
+    public mapFirebaseError(error: firebase.FirebaseError): string {
         switch (error.code) {
             case 'auth/email-already-in-use':
                 return $localize`This email address is already in use.`;
@@ -180,7 +180,7 @@ export class AuthenticationService implements OnDestroy {
             case 'auth/popup-closed-by-user':
                 return $localize`You closed the authentication popup without finalizing your log in.`;
             default:
-                await this.errorLogger.logError('AuthenticationService', 'Unsupported firebase error: ' + error.code + ' (' + error.message + ')');
+                ErrorLoggerService.logError('AuthenticationService', 'Unsupported firebase error', { errorCode: error.code, errorMessage: error.message });
                 return error.message;
         }
     }
@@ -190,17 +190,17 @@ export class AuthenticationService implements OnDestroy {
         if (user.isPresent()) {
             if (this.emailVerified(user.get())) {
                 // This should not be reachable from a component
-                return this.errorLogger.logError('AuthenticationService', 'Verified users should not ask email verification after being verified');
+                return ErrorLoggerService.logError('AuthenticationService', 'Verified users should not ask email verification after being verified');
             }
             try {
                 await user.get().sendEmailVerification();
                 return MGPValidation.SUCCESS;
             } catch (e) {
-                return MGPValidation.failure(await this.mapFirebaseError(e));
+                return MGPValidation.failure(this.mapFirebaseError(e));
             }
         } else {
             // This should not be reachable from a component
-            return this.errorLogger.logError('AuthenticationService', 'Unlogged users cannot request for email verification');
+            return ErrorLoggerService.logError('AuthenticationService', 'Unlogged users cannot request for email verification');
         }
     }
 

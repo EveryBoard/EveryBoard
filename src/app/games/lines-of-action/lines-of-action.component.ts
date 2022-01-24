@@ -13,7 +13,6 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { LinesOfActionTutorial } from './LinesOfActionTutorial';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { ErrorLogger } from 'src/app/services/ErrorLogger';
 
 @Component({
     selector: 'app-linesofaction',
@@ -33,8 +32,8 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
     private lastMove: MGPOptional<LinesOfActionMove> = MGPOptional.empty();
     private captured: MGPOptional<Coord> = MGPOptional.empty();
 
-    public constructor(messageDisplayer: MessageDisplayer, errorLogger: ErrorLogger) {
-        super(messageDisplayer, errorLogger);
+    public constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.rules = new LinesOfActionRules(LinesOfActionState);
         this.availableMinimaxes = [
             new LinesOfActionMinimax(this.rules, 'LinesOfActionMinimax'),

@@ -19,7 +19,6 @@ import { AbaloneMove } from './AbaloneMove';
 import { AbaloneLegalityInformation, AbaloneRules } from './AbaloneRules';
 import { AbaloneTutorial } from './AbaloneTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { ErrorLogger } from 'src/app/services/ErrorLogger';
 
 export class HexaDirArrow {
     public constructor(public startCenter: Coord,
@@ -48,8 +47,8 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
     public selecteds: Coord[] = [];
 
 
-    constructor(messageDisplayer: MessageDisplayer, errorLogger: ErrorLogger) {
-        super(messageDisplayer, errorLogger);
+    constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.rules = new AbaloneRules(AbaloneState);
         this.availableMinimaxes = [
             new AbaloneDummyMinimax(this.rules, 'Dummy'),

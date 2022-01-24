@@ -11,7 +11,6 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GroupDatas } from 'src/app/jscaip/BoardDatas';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { GoTutorial } from './GoTutorial';
-import { ErrorLogger } from 'src/app/services/ErrorLogger';
 
 @Component({
     selector: 'app-go',
@@ -34,8 +33,8 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
 
     public GoPiece: typeof GoPiece = GoPiece;
 
-    constructor(messageDisplayer: MessageDisplayer, errorLogger: ErrorLogger) {
-        super(messageDisplayer, errorLogger);
+    constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.scores = MGPOptional.of([0, 0]);
         this.rules = new GoRules(GoState);
         this.availableMinimaxes = [

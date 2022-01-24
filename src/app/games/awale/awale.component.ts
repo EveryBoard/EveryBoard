@@ -10,7 +10,6 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { AwaleFailure } from './AwaleFailure';
 import { AwaleTutorial } from './AwaleTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { ErrorLogger } from 'src/app/services/ErrorLogger';
 
 @Component({
     selector: 'app-awale-component',
@@ -28,8 +27,8 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
 
     private moved: Coord[] = [];
 
-    constructor(messageDisplayer: MessageDisplayer, errorLogger: ErrorLogger) {
-        super(messageDisplayer, errorLogger);
+    constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.scores = MGPOptional.of([0, 0]);
         this.rules = new AwaleRules(AwaleState);
         this.availableMinimaxes = [

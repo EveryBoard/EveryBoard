@@ -13,7 +13,6 @@ import { Player } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { QuixoTutorial } from './QuixoTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { ErrorLogger } from 'src/app/services/ErrorLogger';
 
 @Component({
     selector: 'app-quixo',
@@ -34,8 +33,8 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules, QuixoMo
 
     public victoriousCoords: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer, errorLogger: ErrorLogger) {
-        super(messageDisplayer, errorLogger);
+    public constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.rules = new QuixoRules(QuixoState);
         this.availableMinimaxes = [
             new QuixoMinimax(this.rules, 'QuixoMinimax'),
