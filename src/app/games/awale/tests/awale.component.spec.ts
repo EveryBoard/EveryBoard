@@ -33,10 +33,10 @@ describe('AwaleComponent', () => {
         await componentTestUtils.expectMoveSuccess('#click_5_0', move, undefined, [0, 0]);
         const awaleComponent: AwaleComponent = componentTestUtils.getComponent();
         // and the moved spaces should be shown
-        expect(awaleComponent.getCaseClasses(5, 0)).toEqual(['moved', 'highlighted']);
-        expect(awaleComponent.getCaseClasses(5, 1)).toEqual(['moved']);
+        expect(awaleComponent.getSquareClasses(5, 0)).toEqual(['moved', 'highlighted']);
+        expect(awaleComponent.getSquareClasses(5, 1)).toEqual(['moved']);
         // as well as the captured spaces
-        expect(awaleComponent.getCaseClasses(4, 1)).toEqual(['captured']);
+        expect(awaleComponent.getSquareClasses(4, 1)).toEqual(['captured']);
     }));
     it('should tell to user empty house cannot be moved', fakeAsync(async() => {
         // Given a state with an empty house

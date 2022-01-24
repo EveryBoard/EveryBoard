@@ -61,7 +61,7 @@ describe('CoerceoComponent', () => {
         await componentTestUtils.expectClickSuccess('#click_6_2');
         expect(componentTestUtils.getComponent().highlights).toEqual([]);
     }));
-    it('Should cancelMove when first click is on empty case', fakeAsync(async() => {
+    it('Should cancelMove when first click is on empty space', fakeAsync(async() => {
         await componentTestUtils.expectClickFailure('#click_5_5', CoerceoFailure.FIRST_CLICK_SHOULD_NOT_BE_NULL());
     }));
     it('Should refuse invalid movement', fakeAsync(async() => {

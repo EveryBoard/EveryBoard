@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { TestBed } from '@angular/core/testing';
 import { Part, MGPResult } from 'src/app/domain/Part';
+import { Player } from 'src/app/jscaip/Player';
 import { createConnectedGoogleUser } from 'src/app/services/tests/AuthenticationService.spec';
 import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
@@ -31,8 +32,34 @@ describe('PartDAO', () => {
             expect(dao.observingWhere).toHaveBeenCalledWith([['result', '==', MGPResult.UNACHIEVED.value]], callback);
         });
     });
+    describe('updateAndBumpIndex', () => {
+        it('Should delegate to update and bump index', async() => {
+            // Given a PartDAO and an update to make to the part
+            spyOn(dao, 'update').and.resolveTo();
+            const update: Partial<Part> = {
+                turn: 42,
+            };
+
+            // When calling updateAndBumpIndex
+            await dao.updateAndBumpIndex('partId', Player.ZERO, 73, update);
+
+            // Then update should have been called with lastUpdate infos added to it
+            const expectedUpdate: Partial<Part> = {
+                lastUpdate: {
+                    index: 74,
+                    player: Player.ZERO.value,
+                },
+                turn: 42,
+            };
+            expect(dao.update).toHaveBeenCalledOnceWith('partId', expectedUpdate);
+        });
+    });
     describe('userHasActivePart', () => {
         const part: Part = {
+            lastUpdate: {
+                index: 0,
+                player: 0,
+            },
             typeGame: 'P4',
             playerZero: 'foo',
             turn: 0,

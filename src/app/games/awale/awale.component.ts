@@ -90,7 +90,7 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
         // let's confirm on java-server-side that the move is legal
         return this.chooseMove(chosenMove, this.rules.node.gameState, this.scores.get());
     }
-    public getCaseClasses(x: number, y: number): string[] {
+    public getSquareClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
         if (this.captured.some((c: Coord) => c.equals(coord))) {
             return ['captured'];

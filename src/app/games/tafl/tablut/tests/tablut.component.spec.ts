@@ -41,7 +41,7 @@ describe('TablutComponent', () => {
         // Then the move should be illegal
         await componentTestUtils.expectClickFailure('#click_4_4', RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
     }));
-    it('Should cancel move when first click on empty case', fakeAsync( async() => {
+    it('Should cancel move when first click on empty space', fakeAsync( async() => {
         await componentTestUtils.expectClickFailure('#click_0_0', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
     }));
     it('Should allow simple move', fakeAsync(async() => {

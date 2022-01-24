@@ -65,11 +65,11 @@ describe('AbaloneRules', () => {
         // Then the movement should be refused
         RulesUtils.expectMoveFailure(rules, state, move, RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
     });
-    it('should refuse move starting by empty case', () => {
+    it('should refuse move starting by empty space', () => {
         // Given an initial board (for simplicity)
         const state: AbaloneState = AbaloneState.getInitialState();
 
-        // When moving one empty case
+        // When moving one empty space
         const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(4, 4), HexaDirection.DOWN).get();
 
         // Then the movement should be refused

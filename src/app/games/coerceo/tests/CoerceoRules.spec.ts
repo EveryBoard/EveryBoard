@@ -237,7 +237,7 @@ describe('CoerceoRules', () => {
             const move: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(6, 6));
             RulesUtils.expectMoveFailure(rules, state, move, CoerceoFailure.CANNOT_CAPTURE_OWN_PIECES());
         });
-        it('Should forbid capturing empty case', () => {
+        it('Should forbid capturing empty space', () => {
             const board: FourStatePiece[][] = [
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],

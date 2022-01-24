@@ -79,19 +79,19 @@ export class JoinerService {
             } else if (indexLeaver === -1) {
                 throw new Error('someone that was not candidate nor chosenPlayer just left the chat: ' + userName);
             }
-            const modification: Partial<Joiner> = {
+            const update: Partial<Joiner> = {
                 chosenPlayer,
                 partStatus,
                 candidates,
             };
-            return this.joinerDAO.update(this.observedJoinerId, modification);
+            return this.joinerDAO.update(this.observedJoinerId, update);
         }
     }
     public async updateCandidates(candidates: string[]): Promise<void> {
         display(JoinerService.VERBOSE, 'JoinerService.reviewConfig');
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
-        const modification: Partial<Joiner> = { candidates };
-        return this.joinerDAO.update(this.observedJoinerId, modification);
+        const update: Partial<Joiner> = { candidates };
+        return this.joinerDAO.update(this.observedJoinerId, update);
     }
     public async deleteJoiner(): Promise<void> {
         display(JoinerService.VERBOSE,

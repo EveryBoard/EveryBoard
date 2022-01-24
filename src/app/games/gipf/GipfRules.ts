@@ -120,7 +120,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
             assert(stateAfterCapture.isOnBoard(cur) &&
                    stateAfterCapture.getPieceAt(cur) === FourStatePiece.EMPTY,
                    'getPiecesMoved called with an invalid placement performed on a full line');
-            // This is the case filled by the last pushed piece
+            // This is the space filled by the last pushed piece
             moved.push(cur);
             return moved;
         }

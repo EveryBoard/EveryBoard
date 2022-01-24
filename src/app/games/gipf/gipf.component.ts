@@ -260,7 +260,7 @@ export class GipfComponent
 
         this.moveToInitialCaptureOrPlacementPhase();
     }
-    public getCaseClass(coord: Coord): string {
+    public getSpaceClass(coord: Coord): string {
         if (this.captured.some((c: Coord) => c.equals(coord))) {
             return 'captured';
         } else if (this.moved.some((c: Coord) => c.equals(coord))) {

@@ -69,6 +69,6 @@ export function display(verbose: boolean, message: unknown): void {
 
 export function assert(condition: boolean, message: string): void {
     if (condition === false) {
-        throw new Error('Assertion failure: ' + message);
+        Utils.handleError('Assertion failure: ' + message);
     }
 }

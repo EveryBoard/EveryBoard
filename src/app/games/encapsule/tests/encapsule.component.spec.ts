@@ -90,7 +90,7 @@ describe('EncapsuleComponent', () => {
         const move: EncapsuleMove = EncapsuleMove.fromMove(new Coord(0, 1), new Coord(0, 2));
         await componentTestUtils.expectMoveSuccess('#click_0_2', move);
     }));
-    it('should forbid moving from a case that the player is not controlling', fakeAsync(async() => {
+    it('should forbid moving from a space that the player is not controlling', fakeAsync(async() => {
         const x: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.ONE, Player.NONE);
         const board: EncapsuleCase[][] = [
             [_, _, _],

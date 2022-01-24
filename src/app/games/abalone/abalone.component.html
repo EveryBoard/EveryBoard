@@ -8,7 +8,7 @@
             <g *ngIf="isBoard(c)">
                 <polyline id="case_{{ x }}_{{ y }}"
                           (click)="onCaseClick(x, y)"
-                          [ngClass]="getCaseClasses(x, y)"
+                          [ngClass]="getSquareClasses(x, y)"
                           class="base"
                           [attr.points]="getHexaCoordsBy(x, y)"
                           stroke-linecap="round"
