@@ -1,18 +1,28 @@
+import { Injectable, OnDestroy } from '@angular/core';
 import { CanActivate, UrlTree } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { AuthenticationService, AuthUser } from '../services/AuthenticationService';
 
+@Injectable({
+    providedIn: 'root',
+})
 /**
  * This abstract guard can be used to implement guards based on the current user
  */
-export abstract class AccountGuard implements CanActivate {
-    constructor(private authService: AuthenticationService) {
+export abstract class AccountGuard implements CanActivate, OnDestroy {
+    private userSub!: Subscription; // always bound in canActivate
+    constructor(private readonly authService: AuthenticationService) {
     }
-    public canActivate(): Promise<boolean | UrlTree > {
+    public async canActivate(): Promise<boolean | UrlTree > {
         return new Promise((resolve: (value: boolean | UrlTree) => void) => {
-            this.authService.getUserObs().subscribe((user: AuthUser): void => {
-                this.evaluateUserPermission(user).then(resolve);
+            this.userSub = this.authService.getUserObs().subscribe(async(user: AuthUser) => {
+                await this.evaluateUserPermission(user).then(resolve);
             });
         });
     }
     protected abstract evaluateUserPermission(user: AuthUser): Promise<boolean | UrlTree>
+
+    public ngOnDestroy(): void {
+        this.userSub.unsubscribe();
+    }
 }

@@ -9,7 +9,7 @@ import { LinesOfActionRules } from './LinesOfActionRules';
 import { LinesOfActionMinimax } from './LinesOfActionMinimax';
 import { LinesOfActionFailure } from './LinesOfActionFailure';
 import { LinesOfActionState } from './LinesOfActionState';
-import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { LinesOfActionTutorial } from './LinesOfActionTutorial';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';

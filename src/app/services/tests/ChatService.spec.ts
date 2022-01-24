@@ -4,18 +4,19 @@ import { ChatDAO } from 'src/app/dao/ChatDAO';
 import { ChatDAOMock } from 'src/app/dao/tests/ChatDAOMock.spec';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { IChat, IChatId } from 'src/app/domain/ichat';
+import { Chat } from 'src/app/domain/Chat';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('ChatService', () => {
 
     let service: ChatService;
     let chatDAO: ChatDAO;
 
-    const EMPTY_CHAT: IChat = {
+    const EMPTY_CHAT: Chat = {
         messages: [],
     };
-    const NON_EMPTY_CHAT: IChat = {
+    const NON_EMPTY_CHAT: Chat = {
         messages: [{
             content: 'foo',
             sender: 'sender',
@@ -41,13 +42,13 @@ describe('ChatService', () => {
     });
     describe('observable', () => {
         it('should follow updates after startObserving is called', fakeAsync(async() => {
-            let resolvePromise: (chat: IChatId) => void;
-            const promise: Promise<IChatId> = new Promise((resolve: (chat: IChatId) => void) => {
+            let resolvePromise: (chat: Chat) => void;
+            const promise: Promise<Chat> = new Promise((resolve: (chat: Chat) => void) => {
                 resolvePromise = resolve;
             });
-            const callback: (chat: IChatId) => void = (chat: IChatId) => {
-                if (chat.doc.messages.length > 0) {
-                    resolvePromise(chat);
+            const callback: (chat: MGPOptional<Chat>) => void = (chat: MGPOptional<Chat>) => {
+                if (chat.isPresent() && chat.get().messages.length > 0) {
+                    resolvePromise(chat.get());
                 }
             };
             expect(service.isObserving()).toBe(false);
@@ -60,30 +61,30 @@ describe('ChatService', () => {
             await chatDAO.set('id', NON_EMPTY_CHAT);
 
             // then the update has been observed by the callback
-            await expectAsync(promise).toBeResolvedTo({ id: 'id', doc: NON_EMPTY_CHAT });
+            await expectAsync(promise).toBeResolvedTo(NON_EMPTY_CHAT);
         }));
         it('should throw when observing the same chat twice', fakeAsync(async() => {
             // given a chat that is observed
             await chatDAO.set('id', EMPTY_CHAT);
-            service.startObserving('id', (_: IChatId) => { });
+            service.startObserving('id', (_: MGPOptional<Chat>) => { });
             // when trying to observe it again, then an error is thrown
-            expect(() => service.startObserving('id', (_: IChatId) => { })).toThrowError(`WTF :: Already observing chat 'id'`);
+            expect(() => service.startObserving('id', (_: MGPOptional<Chat>) => { })).toThrowError(`WTF :: Already observing chat 'id'`);
         }));
         it('should throw when observing a second chat while a first one is already being observed', fakeAsync(async() => {
             await chatDAO.set('id', EMPTY_CHAT);
             // given a chat that is observed
-            service.startObserving('id', (_: IChatId) => { });
+            service.startObserving('id', (_: MGPOptional<Chat>) => { });
             // when trying to observe another chat, then an error is thrown
-            expect(() => service.startObserving('id2', (_: IChatId) => { })).toThrowError(`Cannot ask to watch 'id2' while watching 'id'`);
+            expect(() => service.startObserving('id2', (_: MGPOptional<Chat>) => { })).toThrowError(`Cannot ask to watch 'id2' while watching 'id'`);
         }));
         it('should stop following updates after stopObserving is called', fakeAsync(async() => {
-            let resolvePromise: (chat: IChatId) => void;
-            const promise: Promise<IChatId> = new Promise((resolve: (chat: IChatId) => void) => {
+            let resolvePromise: (chat: Chat) => void;
+            const promise: Promise<Chat> = new Promise((resolve: (chat: Chat) => void) => {
                 resolvePromise = resolve;
             });
-            const callback: (chat: IChatId) => void = (chat: IChatId) => {
-                if (chat.doc.messages.length > 0) {
-                    resolvePromise(chat);
+            const callback: (chat: MGPOptional<Chat>) => void = (chat: MGPOptional<Chat>) => {
+                if (chat.isPresent() && chat.get().messages.length > 0) {
+                    resolvePromise(chat.get());
                 }
             };
             expect(service.isObserving()).toBe(false);
@@ -107,7 +108,7 @@ describe('ChatService', () => {
             spyOn(service, 'stopObserving');
             await chatDAO.set('id', EMPTY_CHAT);
             // given a chat that we're observing
-            service.startObserving('id', (_: IChatId) => { });
+            service.startObserving('id', (_: MGPOptional<Chat>) => { });
 
             // when the service is destroyed
             service.ngOnDestroy();
@@ -169,7 +170,7 @@ describe('ChatService', () => {
             spyOn(chatDAO, 'update');
             // given an empty chat that is observed
             await chatDAO.set('id', EMPTY_CHAT);
-            service.startObserving('id', (_: IChatId) => { });
+            service.startObserving('id', (_: MGPOptional<Chat>) => { });
 
             // when a message is sent on that chat
             await service.sendMessage('sender', 'foo', 2);

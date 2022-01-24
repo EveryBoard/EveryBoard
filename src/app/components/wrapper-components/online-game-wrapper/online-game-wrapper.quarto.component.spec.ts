@@ -6,7 +6,7 @@ import firebase from 'firebase/app';
 
 import { OnlineGameWrapperComponent, UpdateType } from './online-game-wrapper.component';
 import { JoinerDAO } from 'src/app/dao/JoinerDAO';
-import { IJoiner, PartStatus } from 'src/app/domain/ijoiner';
+import { Joiner, PartStatus } from 'src/app/domain/Joiner';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
@@ -15,11 +15,11 @@ import { ChatDAO } from 'src/app/dao/ChatDAO';
 import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
 import { QuartoState } from 'src/app/games/quarto/QuartoState';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
-import { Request } from 'src/app/domain/request';
-import { IPart, MGPResult, Part } from 'src/app/domain/icurrentpart';
+import { Request } from 'src/app/domain/Request';
+import { MGPResult, Part, PartDocument } from 'src/app/domain/Part';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player } from 'src/app/jscaip/Player';
-import { IUser } from 'src/app/domain/iuser';
+import { User } from 'src/app/domain/User';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { QuartoComponent } from 'src/app/games/quarto/quarto.component';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
@@ -28,8 +28,8 @@ import { Time } from 'src/app/domain/Time';
 import { getMillisecondsDifference } from 'src/app/utils/TimeUtils';
 import { Router } from '@angular/router';
 import { GameWrapperMessages } from '../GameWrapper';
-import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
-import { Utils } from 'src/app/utils/utils';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+import { assert, Utils } from 'src/app/utils/utils';
 import { GameService } from 'src/app/services/GameService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
@@ -58,15 +58,13 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     let chatDAO: ChatDAO;
 
     const USER_CREATOR: AuthUser = new AuthUser(MGPOptional.of('cre@tor'), MGPOptional.of('creator'), true);
-
-    const PLAYER_CREATOR: IUser = {
+    const PLAYER_CREATOR: User = {
         username: 'creator',
         state: 'online',
         verified: true,
     };
     const USER_OPPONENT: AuthUser = new AuthUser(MGPOptional.of('firstCandidate@mgp.team'), MGPOptional.of('firstCandidate'), true);
-
-    const PLAYER_OPPONENT: IUser = {
+    const PLAYER_OPPONENT: User = {
         username: 'firstCandidate',
         last_changed: {
             seconds: Date.now() / 1000,
@@ -75,7 +73,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         state: 'online',
         verified: true,
     };
-    const OBSERVER: IUser = {
+    const OBSERVER: User = {
         username: 'jeanJaja',
         last_changed: {
             seconds: Date.now() / 1000,
@@ -86,7 +84,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     };
     const FAKE_MOMENT: Time = { seconds: 123, nanoseconds: 456000000 };
 
-    const BASE_TAKE_BACK_REQUEST: Partial<IPart> = {
+    const BASE_TAKE_BACK_REQUEST: Partial<Part> = {
         request: Request.takeBackAccepted(Player.ONE),
         listMoves: [],
         turn: 0,
@@ -94,13 +92,13 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     };
     let observerRole: Player;
 
-    async function prepareMockDBContent(initialJoiner: IJoiner): Promise<void> {
+    async function prepareMockDBContent(initialJoiner: Joiner): Promise<void> {
         partDAO = TestBed.inject(PartDAO);
         joinerDAO = TestBed.inject(JoinerDAO);
         userDAO = TestBed.inject(UserDAO);
         chatDAO = TestBed.inject(ChatDAO);
         await joinerDAO.set('joinerId', initialJoiner);
-        await partDAO.set('joinerId', PartMocks.INITIAL.doc);
+        await partDAO.set('joinerId', PartMocks.INITIAL);
         await userDAO.set('firstCandidateDocId', PLAYER_OPPONENT);
         await userDAO.set('creatorDocId', PLAYER_CREATOR);
         await userDAO.set(Utils.getNonNullable(OBSERVER.username), OBSERVER);
@@ -108,7 +106,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         return Promise.resolve();
     }
     async function prepareStartedGameFor(user: AuthUser, shorterGlobalChrono?: boolean): Promise<void> {
-        await prepareMockDBContent(JoinerMocks.INITIAL.doc);
+        await prepareMockDBContent(JoinerMocks.INITIAL);
         AuthenticationServiceMock.setUser(user);
         observerRole = user === USER_CREATOR ? Player.ZERO : Player.ONE;
         componentTestUtils.prepareFixture(OnlineGameWrapperComponent);
@@ -145,7 +143,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 partStatus: PartStatus.PART_STARTED.value,
             });
         }
-        const update: Partial<IPart> = {
+        const update: Partial<Part> = {
             playerOne: 'firstCandidate',
             turn: 0,
             remainingMsForZero: 1800 * 1000,
@@ -181,7 +179,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     async function receiveRequest(request: Request, lastIndex: number): Promise<void> {
         await receivePartDAOUpdate({ request }, lastIndex);
     }
-    async function receivePartDAOUpdate(update: Partial<IPart>, lastIndex: number): Promise<void> {
+    async function receivePartDAOUpdate(update: Partial<Part>, lastIndex: number): Promise<void> {
         const user: Player = observerRole;
         await partDAO.updateAndBumpIndex('joinerId', user, lastIndex, update);
         componentTestUtils.detectChanges();
@@ -202,7 +200,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                                    remainingMsForOne: number)
     : Promise<void>
     {
-        const update: Partial<IPart> = {
+        const update: Partial<Part> = {
             listMoves: ArrayUtils.copyImmutableArray(moves),
             turn: moves.length,
             request: null,
@@ -256,12 +254,12 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     }));
     it('Should be able to prepare a started game for creator', fakeAsync(async() => {
         await prepareStartedGameFor(USER_CREATOR);
-        spyOn(wrapper, 'reachedOutOfTime').and.callFake(() => {});
+        spyOn(wrapper, 'reachedOutOfTime').and.callFake(async() => {});
         // Should not even been called but:
         // reachedOutOfTime is called (in test) after tick(1) even though there is still remainingTime
         tick(1);
-        expect(wrapper.currentPart.doc.listMoves).toEqual([]);
-        expect(wrapper.currentPart.doc.listMoves).toEqual([]);
+        expect(wrapper.currentPart.data.listMoves).toEqual([]);
+        expect(wrapper.currentPart.data.listMoves).toEqual([]);
         expect(wrapper.currentPlayer).toEqual('creator');
         wrapper.pauseCountDownsFor(Player.ZERO);
     }));
@@ -298,16 +296,16 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         await doMove(FIRST_MOVE, true);
 
-        expect(wrapper.currentPart.doc.listMoves).toEqual([FIRST_MOVE_ENCODED]);
-        expect(wrapper.currentPart.doc.turn).toEqual(1);
+        expect(wrapper.currentPart.data.listMoves).toEqual([FIRST_MOVE_ENCODED]);
+        expect(wrapper.currentPart.data.turn).toEqual(1);
 
         // Receive second move
-        const remainingMsForZero: number = Utils.getNonNullable(wrapper.currentPart.doc.remainingMsForZero);
-        const remainingMsForOne: number = Utils.getNonNullable(wrapper.currentPart.doc.remainingMsForOne);
+        const remainingMsForZero: number = Utils.getNonNullable(wrapper.currentPart.data.remainingMsForZero);
+        const remainingMsForOne: number = Utils.getNonNullable(wrapper.currentPart.data.remainingMsForOne);
         await receiveNewMoves([FIRST_MOVE_ENCODED, 166], 2, remainingMsForZero, remainingMsForOne);
 
-        expect(wrapper.currentPart.doc.turn).toEqual(2);
-        expect(wrapper.currentPart.doc.listMoves).toEqual([FIRST_MOVE_ENCODED, 166]);
+        expect(wrapper.currentPart.data.turn).toEqual(2);
+        expect(wrapper.currentPart.data.listMoves).toEqual([FIRST_MOVE_ENCODED, 166]);
         tick(wrapper.joiner.maximalMoveDuration * 1000);
     }));
     it('should show player names', fakeAsync(async() => {
@@ -331,15 +329,15 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         // Receive first move
         await receiveNewMoves([FIRST_MOVE_ENCODED], 1, 1800 * 1000, 1800 * 1000);
 
-        expect(wrapper.currentPart.doc.listMoves).toEqual([FIRST_MOVE_ENCODED]);
-        expect(wrapper.currentPart.doc.turn).toEqual(1);
+        expect(wrapper.currentPart.data.listMoves).toEqual([FIRST_MOVE_ENCODED]);
+        expect(wrapper.currentPart.data.turn).toEqual(1);
 
         // Do second move
         const move: QuartoMove = new QuartoMove(1, 1, QuartoPiece.BBBA);
         await doMove(move, true);
         const expectedListMove: number[] = [FIRST_MOVE_ENCODED, QuartoMove.encoder.encodeNumber(move)];
-        expect(wrapper.currentPart.doc.listMoves).toEqual(expectedListMove);
-        expect(wrapper.currentPart.doc.turn).toEqual(2);
+        expect(wrapper.currentPart.data.listMoves).toEqual(expectedListMove);
+        expect(wrapper.currentPart.data.turn).toEqual(2);
 
         tick(wrapper.joiner.maximalMoveDuration * 1000);
     }));
@@ -348,8 +346,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         tick(1);
         spyOn(partDAO, 'update').and.callThrough();
         await doMove(FIRST_MOVE, true);
-        expect(wrapper.currentPart.doc.listMoves).toEqual([QuartoMove.encoder.encodeNumber(FIRST_MOVE)]);
-        const expectedUpdate: Partial<IPart> = {
+        expect(wrapper.currentPart.data.listMoves).toEqual([QuartoMove.encoder.encodeNumber(FIRST_MOVE)]);
+        const expectedUpdate: Partial<Part> = {
             lastUpdate: {
                 index: 2,
                 player: observerRole.value,
@@ -376,7 +374,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await doMove(FIRST_MOVE, true);
 
         // Then the player cannot play
-        componentTestUtils.clickElement('#chooseCoord_0_0');
+        await componentTestUtils.clickElement('#chooseCoord_0_0');
         expect(messageDisplayer.gameMessage).toHaveBeenCalledWith(GameWrapperMessages.NOT_YOUR_TURN());
 
         tick(wrapper.joiner.maximalMoveDuration * 1000);
@@ -400,7 +398,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         // Given a board where its the opponent's (first) turn
         await prepareStartedGameFor(USER_CREATOR);
         tick(1);
-        const CURRENT_PART: Part = wrapper.currentPart;
+        const CURRENT_PART: PartDocument = wrapper.currentPart;
 
         // When receiving a move time being null
         await receivePartDAOUpdate({
@@ -418,11 +416,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         await prepareStartedGameFor(USER_CREATOR);
         tick(1);
-        const CURRENT_PART: Part = wrapper.currentPart;
+        const CURRENT_PART: PartDocument = wrapper.currentPart;
 
         // When receiving the same move
         await receivePartDAOUpdate({
-            ...CURRENT_PART.doc,
+            ...CURRENT_PART.data,
         }, 0); // 0 so that even when bumped, the lastUpdate stays the same
 
         // Then currentPart should not be updated
@@ -783,8 +781,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 spyOn(wrapper.chronoZeroGlobal, 'changeDuration').and.callThrough();
                 spyOn(partDAO, 'update').and.callThrough();
 
-                const beginningTime: Time = wrapper.currentPart.doc.beginning as Time;
-                const lastMoveTime: Time = wrapper.currentPart.doc.lastMoveTime as Time;
+                const beginningTime: Time = wrapper.currentPart.data.beginning as Time;
+                const lastMoveTime: Time = wrapper.currentPart.data.lastMoveTime as Time;
                 const usedTimeOfFirstTurn: number = getMillisecondsDifference(beginningTime, lastMoveTime);
                 const remainingMsForZero: number = (1800 * 1000) - usedTimeOfFirstTurn;
                 await acceptTakeBack();
@@ -1151,18 +1149,18 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await prepareStartedGameFor(USER_OPPONENT);
             tick(1);
             await receiveNewMoves([FIRST_MOVE_ENCODED], 1, 1800 * 1000, 1800 * 1000);
-            const beginning: Time = wrapper.currentPart.doc.beginning as Time;
-            const firstMoveTime: Time = wrapper.currentPart.doc.lastMoveTime as Time;
+            const beginning: Time = wrapper.currentPart.data.beginning as Time;
+            const firstMoveTime: Time = wrapper.currentPart.data.lastMoveTime as Time;
             const msUsedForFirstMove: number = getMillisecondsDifference(beginning, firstMoveTime);
 
             // When doing the next move
-            expect(wrapper.currentPart.doc.remainingMsForZero).toEqual(1800 * 1000);
+            expect(wrapper.currentPart.data.remainingMsForZero).toEqual(1800 * 1000);
             await doMove(SECOND_MOVE, true);
 
             // Then the update sent should have calculated time between creation and first move
             // and should have removed it from remainingMsForZero
             const remainingMsForZero: number = (1800 * 1000) - msUsedForFirstMove;
-            expect(wrapper.currentPart.doc.remainingMsForZero)
+            expect(wrapper.currentPart.data.remainingMsForZero)
                 .withContext(`Should have sent the opponent its updated remainingTime`)
                 .toEqual(remainingMsForZero);
             tick(wrapper.joiner.maximalMoveDuration * 1000);
@@ -1173,7 +1171,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(1);
             spyOn(wrapper.chronoZeroGlobal, 'changeDuration').and.callThrough();
             await doMove(FIRST_MOVE, true);
-            expect(wrapper.currentPart.doc.remainingMsForZero).toEqual(1800 * 1000);
+            expect(wrapper.currentPart.data.remainingMsForZero).toEqual(1800 * 1000);
 
             // When receiving new move
             await receiveNewMoves([FIRST_MOVE_ENCODED, SECOND_MOVE_ENCODED], 2, 1799999, 1800 * 1000);
@@ -1181,7 +1179,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Then the global chrono of update-player should be updated
             expect(wrapper.chronoZeroGlobal.changeDuration)
                 .withContext(`Chrono.ChangeDuration should have been refreshed with update's datas`)
-                .toHaveBeenCalledWith(Utils.getNonNullable(wrapper.currentPart.doc.remainingMsForZero));
+                .toHaveBeenCalledWith(Utils.getNonNullable(wrapper.currentPart.data.remainingMsForZero));
             tick(wrapper.joiner.maximalMoveDuration * 1000);
         }));
         it('when resigning, lastMoveTime must be upToDate then remainingMs');
@@ -1348,7 +1346,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await prepareStartedGameFor(USER_CREATOR);
             tick(1);
             expect(wrapper.getPlayerNameClass(1)).toEqual('has-text-black');
-            userDAO.update('firstCandidateDocId', { state: 'offline' });
+            await userDAO.update('firstCandidateDocId', { state: 'offline' });
             componentTestUtils.detectChanges();
             tick();
             expect(wrapper.getPlayerNameClass(1)).toBe('has-text-grey-light');
@@ -1420,7 +1418,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it('Nothing changed = UpdateType.DUPLICATA', fakeAsync(async() => {
             // Given any part
             await prepareStartedGameFor(USER_CREATOR);
-            const initialPart: IPart = {
+            const initialPart: Part = {
                 lastUpdate: {
                     index: 3,
                     player: 0,
@@ -1437,12 +1435,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 lastMoveTime: { seconds: 333, nanoseconds: 333000000 },
                 request: Request.takeBackAccepted(Player.ZERO),
             };
-            wrapper.currentPart = new Part(initialPart);
+            wrapper.currentPart = new PartDocument('joinerId', initialPart);
 
             // When making a move changing nothing
-            const update: Part = new Part({
-                ...initialPart,
-            });
+            const update: PartDocument = new PartDocument('joinerId', initialPart);
 
             // Then the update should be detected as a Duplicata
             expect(wrapper.getUpdateType(update)).toBe(UpdateType.DUPLICATE);
@@ -1451,7 +1447,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it('Move + Time_updated + Request_removed = UpdateType.MOVE', fakeAsync(async() => {
             // Given a part with lastMoveTime set and a take back just accepted
             await prepareStartedGameFor(USER_CREATOR);
-            const initialPart: IPart = {
+            const initialPart: Part = {
                 lastUpdate: {
                     index: 3,
                     player: 0,
@@ -1468,10 +1464,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 lastMoveTime: { seconds: 333, nanoseconds: 333000000 },
                 request: Request.takeBackAccepted(Player.ZERO),
             };
-            wrapper.currentPart = new Part(initialPart);
+            wrapper.currentPart = new PartDocument('joinerId', initialPart);
 
             // When making a move changing: turn, listMove and lastMoveTime
-            const update: Part = new Part({
+            const update: PartDocument = new PartDocument('joinerId', {
                 ...initialPart,
                 lastUpdate: {
                     index: 4,
@@ -1491,7 +1487,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it('First Move + Time_added + Score_added = UpdateType.MOVE', fakeAsync(async() => {
             // Given a part where no move has been done
             await prepareStartedGameFor(USER_CREATOR);
-            const initialPart: IPart = {
+            const initialPart: Part = {
                 lastUpdate: {
                     index: 1,
                     player: 0,
@@ -1506,10 +1502,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 remainingMsForOne: 1800 * 1000,
                 beginning: FAKE_MOMENT,
             };
-            wrapper.currentPart = new Part(initialPart);
+            wrapper.currentPart = new PartDocument('joinerId', initialPart);
 
             // When doing the first move update (turn, listMove) add (scores, lastMoveTime)
-            const update: Part = new Part({
+            const update: PartDocument = new PartDocument('joinerId', {
                 ...initialPart,
                 lastUpdate: {
                     index: 2,
@@ -1530,7 +1526,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it('First Move After Tack Back + Time_modified = UpdateType.MOVE', fakeAsync(async() => {
             // Given a "second" first move
             await prepareStartedGameFor(USER_CREATOR);
-            const initialPart: IPart = {
+            const initialPart: Part = {
                 lastUpdate: {
                     index: 3,
                     player: 0,
@@ -1546,10 +1542,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 beginning: FAKE_MOMENT,
                 lastMoveTime: { seconds: 1111, nanoseconds: 111000000 },
             };
-            wrapper.currentPart = new Part(initialPart);
+            wrapper.currentPart = new PartDocument('joinerId', initialPart);
 
             // When doing a move again, modifying (turn, listMoves, lasMoveTime)
-            const update: Part = new Part({
+            const update: PartDocument = new PartDocument('joinerId', {
                 ...initialPart,
                 lastUpdate: {
                     index: 4,
@@ -1568,7 +1564,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it('Move + Time_modified + Score_modified = UpdateType.MOVE', fakeAsync(async() => {
             // Gvien a part with present scores
             await prepareStartedGameFor(USER_CREATOR);
-            const initialPart: IPart = {
+            const initialPart: Part = {
                 lastUpdate: {
                     index: 3,
                     player: 0,
@@ -1586,10 +1582,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 scorePlayerZero: 1,
                 scorePlayerOne: 1,
             };
-            wrapper.currentPart = new Part(initialPart);
+            wrapper.currentPart = new PartDocument('joinerId', initialPart);
 
             // When doing an update modifying the score (turn, listMoves, scores, lastMoveTime)
-            const update: Part = new Part({
+            const update: PartDocument = new PartDocument('joinerId', {
                 ...initialPart,
                 lastUpdate: {
                     index: 4,
@@ -1610,7 +1606,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it('Move + Time_removed + Score_added = UpdateType.MOVE_WITHOUT_TIME', fakeAsync(async() => {
             // Given a part without score yet
             await prepareStartedGameFor(USER_CREATOR);
-            const initialPart: IPart = {
+            const initialPart: Part = {
                 lastUpdate: {
                     index: 3,
                     player: 0,
@@ -1626,10 +1622,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 beginning: FAKE_MOMENT,
                 lastMoveTime: { seconds: 1111, nanoseconds: 111000000 },
             };
-            wrapper.currentPart = new Part(initialPart);
+            wrapper.currentPart = new PartDocument('joinerId', initialPart);
 
             // When doing a move creating score but removing lastMoveTime
-            const update: Part = new Part({
+            const update: PartDocument = new PartDocument('joinerId', {
                 ...initialPart,
                 lastUpdate: {
                     index: 4,
@@ -1650,7 +1646,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it('Move + Time_removed + Score_modified = UpdateType.MOVE_WITHOUT_TIME', fakeAsync(async() => {
             // Given a part with scores
             await prepareStartedGameFor(USER_CREATOR);
-            const initialPart: IPart = {
+            const initialPart: Part = {
                 lastUpdate: {
                     index: 3,
                     player: 0,
@@ -1668,10 +1664,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 scorePlayerZero: 1,
                 scorePlayerOne: 1,
             };
-            wrapper.currentPart = new Part(initialPart);
+            wrapper.currentPart = new PartDocument('joinerId', initialPart);
 
             // When updating part with a move, score, but removing time
-            const update: Part = new Part({
+            const update: PartDocument = new PartDocument('joinerId', {
                 ...initialPart,
                 lastUpdate: {
                     index: 4,
@@ -1691,7 +1687,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it('AcceptTakeBack + Time_removed = UpdateType.ACCEPT_TAKE_BACK_WITHOUT_TIME', fakeAsync(async() => {
             // Given a part where take back as been requested
             await prepareStartedGameFor(USER_CREATOR);
-            const initialPart: IPart = {
+            const initialPart: Part = {
                 lastUpdate: {
                     index: 3,
                     player: 0,
@@ -1708,10 +1704,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 lastMoveTime: { seconds: 125, nanoseconds: 456000000 },
                 request: Request.takeBackAsked(Player.ZERO),
             };
-            wrapper.currentPart = new Part(initialPart);
+            wrapper.currentPart = new PartDocument('joinerId', initialPart);
 
             // When accepting it, without sending time update
-            const update: Part = new Part({
+            const update: PartDocument = new PartDocument('joinerId', {
                 ...initialPart,
                 lastUpdate: {
                     index: 4,
@@ -1730,7 +1726,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it('AcceptTakeBack + Time_updated = UpdateType.REQUEST', fakeAsync(async() => {
             // Given a board with take back asked
             await prepareStartedGameFor(USER_CREATOR);
-            const initialPart: IPart = {
+            const initialPart: Part = {
                 lastUpdate: {
                     index: 3,
                     player: 0,
@@ -1747,10 +1743,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 lastMoveTime: { seconds: 125, nanoseconds: 456000000 },
                 request: Request.takeBackAsked(Player.ZERO),
             };
-            wrapper.currentPart = new Part(initialPart);
+            wrapper.currentPart = new PartDocument('joinerId', initialPart);
 
             // When accepting it and updating lastMoveTime
-            const update: Part = new Part({
+            const update: PartDocument = new PartDocument('joinerId', {
                 ...initialPart,
                 lastUpdate: {
                     index: 4,
@@ -1768,7 +1764,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it('Request.AddTurnTime + one remainingMs modified = UpdateType.REQUEST', fakeAsync(async() => {
             // Given a part with take back asked
             await prepareStartedGameFor(USER_CREATOR);
-            const initialPart: IPart = {
+            const initialPart: Part = {
                 lastUpdate: {
                     index: 3,
                     player: 0,
@@ -1785,10 +1781,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 lastMoveTime: { seconds: 125, nanoseconds: 456000000 },
                 request: Request.takeBackAsked(Player.ZERO),
             };
-            wrapper.currentPart = new Part(initialPart);
+            wrapper.currentPart = new PartDocument('joinerId', initialPart);
 
             // When time added, and remaining time updated
-            const update: Part = new Part({
+            const update: PartDocument = new PartDocument('joinerId', {
                 ...initialPart,
                 lastUpdate: {
                     index: 4,
@@ -1882,10 +1878,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await receiveRequest(Request.rematchAccepted('Quarto', 'nextPartId'), 3);
 
             // Then it should redirect to new part
-            const first: string = '/nextGameLoading';
-            const second: string = '/play/Quarto/nextPartId';
-            expect(router.navigate).toHaveBeenCalledWith([first]);
-            expect(router.navigate).toHaveBeenCalledWith([second]);
+            expect(router.navigate).toHaveBeenCalledWith(['/nextGameLoading']);
+            expect(router.navigate).toHaveBeenCalledWith(['/play/', 'Quarto', 'nextPartId']);
         }));
     });
     describe('Non Player Experience', () => {
@@ -1896,14 +1890,22 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             spyOn(componentTestUtils.wrapper as OnlineGameWrapperComponent, 'startCountDownFor').and.callFake(() => null);
 
             const forbiddenFunctionNames: string[] = [
-                'canProposeDraw',
-                'canAskTakeBack',
+                'canProposeDraw', // non async
+                'canAskTakeBack', // non async
                 'acceptRematch',
                 'proposeRematch',
-                'canResign',
+                'canResign', // non async
             ];
             for (const name of forbiddenFunctionNames) {
-                expect(() => wrapper[name]()).toThrowError('Assertion failure: Non playing should not call ' + name);
+                let failed: boolean = false;
+                const expectedError: string = 'Encountered error: Assertion failure: Non playing should not call ' + name;
+                try {
+                    await wrapper[name]();
+                } catch (error) {
+                    failed = true;
+                    expect(error.message).toBe(expectedError);
+                }
+                expect(failed).toBeTrue();
             }
             tick(wrapper.joiner.maximalMoveDuration * 1000);
         }));

@@ -3515,10 +3515,6 @@
         <source>You are already in a game. Finish it or cancel it first.</source>
         <target>Vous avez déjà une partie en cours. Terminez-la ou annulez-la d&apos;abord.</target>
       </trans-unit>
-      <trans-unit id="2112240517752406123" datatype="html">
-        <source>You are offline. Log in to join a game.</source>
-        <target>Vous êtes hors ligne. Connectez-vous pour rejoindre une partie.</target>
-      </trans-unit>
       <trans-unit id="682801679843744749" datatype="html">
         <source><x id="PH" equiv-text="hours"/> hours</source>
         <target><x id="PH" equiv-text="hours"/> heures</target>

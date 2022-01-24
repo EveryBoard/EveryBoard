@@ -1,14 +1,14 @@
 import { assert, FirebaseJSONObject, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 import { Request } from './request';
-import { DomainWrapper } from './DomainWrapper';
 import { FirebaseTime } from './Time';
 import { MGPOptional } from '../utils/MGPOptional';
+import { FirebaseDocument } from '../dao/FirebaseFirestoreDAO';
 
 interface LastUpdateInfo extends FirebaseJSONObject {
     readonly index: number,
     readonly player: number,
 }
-export interface IPart extends FirebaseJSONObject {
+export interface Part extends FirebaseJSONObject {
     readonly lastUpdate: LastUpdateInfo,
     readonly typeGame: string, // the type of game
     readonly playerZero: string, // the id of the first player
@@ -51,51 +51,46 @@ export class MGPResult {
     private constructor(public readonly value: IMGPResult) {}
 }
 
-export class Part implements DomainWrapper<IPart> {
-
-    public constructor(public readonly doc: IPart) {
+export class PartDocument implements FirebaseDocument<Part> {
+    public constructor(public readonly id: string,
+                       public data: Part) {
     }
     public getTurn(): number {
-        return this.doc.turn;
+        return this.data.turn;
     }
     public isHardDraw(): boolean {
-        return this.doc.result === MGPResult.HARD_DRAW.value;
+        return this.data.result === MGPResult.HARD_DRAW.value;
     }
     public isAgreedDraw(): boolean {
-        return this.doc.result === MGPResult.AGREED_DRAW_BY_ZERO.value ||
-               this.doc.result === MGPResult.AGREED_DRAW_BY_ONE.value;
+        return this.data.result === MGPResult.AGREED_DRAW_BY_ZERO.value ||
+               this.data.result === MGPResult.AGREED_DRAW_BY_ONE.value;
     }
     public getDrawAccepter(): string {
-        if (this.doc.result === MGPResult.AGREED_DRAW_BY_ZERO.value) {
-            return this.doc.playerZero;
+        if (this.data.result === MGPResult.AGREED_DRAW_BY_ZERO.value) {
+            return this.data.playerZero;
         } else {
-            assert(this.doc.result === MGPResult.AGREED_DRAW_BY_ONE.value, 'should not access getDrawAccepter when no draw accepted!');
-            return Utils.getNonNullable(this.doc.playerOne);
+            assert(this.data.result === MGPResult.AGREED_DRAW_BY_ONE.value, 'should not access getDrawAccepter when no draw accepted!');
+            return Utils.getNonNullable(this.data.playerOne);
         }
     }
     public isWin(): boolean {
-        return this.doc.result === MGPResult.VICTORY.value;
+        return this.data.result === MGPResult.VICTORY.value;
     }
     public isTimeout(): boolean {
-        return this.doc.result === MGPResult.TIMEOUT.value;
+        return this.data.result === MGPResult.TIMEOUT.value;
     }
     public isResign(): boolean {
-        return this.doc.result === MGPResult.RESIGN.value;
+        return this.data.result === MGPResult.RESIGN.value;
     }
     public getWinner(): MGPOptional<string> {
-        return MGPOptional.ofNullable(this.doc.winner);
+        return MGPOptional.ofNullable(this.data.winner);
     }
     public getLoser(): MGPOptional<string> {
-        return MGPOptional.ofNullable(this.doc.loser);
+        return MGPOptional.ofNullable(this.data.loser);
     }
-    public setWinnerAndLoser(winner: string, loser: string): Part {
-        return new Part({ ...this.doc, winner, loser });
+    public setWinnerAndLoser(winner: string, loser: string): PartDocument {
+        return new PartDocument(this.id, { ...this.data, winner, loser });
     }
 }
-export interface ICurrentPartId {
 
-    id: string;
-
-    doc: IPart;
-}
 export type IMGPResult = number;

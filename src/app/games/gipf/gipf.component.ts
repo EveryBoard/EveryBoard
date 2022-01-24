@@ -15,7 +15,7 @@ import { GipfCapture, GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMov
 import { GipfState } from 'src/app/games/gipf/GipfState';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Arrow } from 'src/app/jscaip/Arrow';
-import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { GipfTutorial } from './GipfTutorial';
 import { Utils } from 'src/app/utils/utils';
@@ -260,7 +260,7 @@ export class GipfComponent
 
         this.moveToInitialCaptureOrPlacementPhase();
     }
-    public getCaseClass(coord: Coord): string {
+    public getSpaceClass(coord: Coord): string {
         if (this.captured.some((c: Coord) => c.equals(coord))) {
             return 'captured';
         } else if (this.moved.some((c: Coord) => c.equals(coord))) {

@@ -14,7 +14,7 @@ export class TutorialGameCreationComponent {
     public pickGame(pickedGame: string): void {
         this.selectedGame = pickedGame;
     }
-    public launchTutorial(): void {
-        this.router.navigate(['tutorial/' + this.selectedGame]);
+    public async launchTutorial(): Promise<void> {
+        await this.router.navigate(['/tutorial/', this.selectedGame]);
     }
 }

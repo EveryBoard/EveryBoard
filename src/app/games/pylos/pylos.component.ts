@@ -8,7 +8,7 @@ import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { PylosOrderedMinimax } from './PylosOrderedMinimax';
-import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PylosFailure } from './PylosFailure';
 import { PylosTutorial } from './PylosTutorial';

@@ -23,7 +23,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
         const coords: Coord[] = [];
         for (let x: number = 0; x < 7; x++) {
             for (let y: number = 5; y !== -1 && state.board[y][x] !== Player.NONE; y--) {
-                const caseScore: number = P4Rules.getCaseScore(state.board, new Coord(x, y));
+                const caseScore: number = P4Rules.getSquareScore(state.board, new Coord(x, y));
                 if (caseScore === Player.ZERO.getVictoryValue() ||
                     caseScore === Player.ONE.getVictoryValue())
                 {
@@ -41,7 +41,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
             // for every column, starting from the bottom of each column
             for (let y: number = 5; y !== -1 && state.board[y][x] !== Player.NONE; y--) {
                 // while we haven't reached the top or an empty space
-                const tmpScore: number = P4Rules.getCaseScore(state.board, new Coord(x, y));
+                const tmpScore: number = P4Rules.getSquareScore(state.board, new Coord(x, y));
                 if (MGPNode.getScoreStatus(tmpScore) !== SCORE.DEFAULT) {
                     // if we find a pre-victory
                     display(P4Rules.VERBOSE, { preVictoryOrVictory: { state, tmpScore, coord: { x, y } } });
@@ -101,10 +101,10 @@ export class P4Rules extends Rules<P4Move, P4State> {
         assert(c !== Player.NONE, 'getOpponent should not be called with Player.NONE');
         return (c === Player.ONE) ? Player.ZERO : Player.ONE;
     }
-    public static getCaseScore(board: Table<Player>, coord: Coord): number {
-        display(P4Rules.VERBOSE, 'getCaseScore(board, ' + coord.x + ', ' + coord.y + ') called');
+    public static getSquareScore(board: Table<Player>, coord: Coord): number {
+        display(P4Rules.VERBOSE, 'getSquareScore(board, ' + coord.x + ', ' + coord.y + ') called');
         display(P4Rules.VERBOSE, board);
-        assert(board[coord.y][coord.x] !== Player.NONE, 'getCaseScore should not be called on an empty space');
+        assert(board[coord.y][coord.x] !== Player.NONE, 'getSquareScore should not be called on an empty space');
 
         let score: number = 0; // final result, count the theoretical victorys possibility
 
@@ -189,7 +189,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
             // for every column, starting from the bottom of each column
             for (let y: number = 5; y !== -1 && state.board[y][x] !== Player.NONE; y--) {
                 // while we haven't reached the top or an empty space
-                const tmpScore: number = P4Rules.getCaseScore(state.board, new Coord(x, y));
+                const tmpScore: number = P4Rules.getSquareScore(state.board, new Coord(x, y));
                 if (MGPNode.getScoreStatus(tmpScore) === SCORE.VICTORY) {
                     return GameStatus.getVictory(state.getCurrentOpponent());
                 }

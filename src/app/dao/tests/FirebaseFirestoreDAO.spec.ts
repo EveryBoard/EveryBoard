@@ -61,8 +61,8 @@ describe('FirebaseFirestoreDAO', () => {
         it('should return an observable that can be used to see changes in objects', async() => {
             const id: string = await dao.create({ value: 'foo', otherValue: 1 });
             const allChangesSeenPromise: Promise<boolean> = new Promise((resolve: (value: boolean) => void) => {
-                dao.getObsById(id).subscribe((fooId: { id: string, doc: Foo }) => {
-                    if (fooId.doc.value === 'bar' && fooId.doc.otherValue === 2) {
+                dao.getObsById(id).subscribe((foo: MGPOptional<Foo>) => {
+                    if (foo.isPresent() && foo.get().value === 'bar' && foo.get().otherValue === 2) {
                         resolve(true);
                     }
                 });
@@ -76,20 +76,22 @@ describe('FirebaseFirestoreDAO', () => {
 
         let promise: Promise<Foo[]>; // This promise will be resolved when the callback function is called
 
-        let callbackFunction: (created: {doc: Foo, id: string}[]) => void;
-        let callbackFunctionLog: (created: {doc: Foo, id: string}[]) => void;
+        let callbackFunction: (created: {data: Foo, id: string}[]) => void;
+        let callbackFunctionLog: (created: {data: Foo, id: string}[]) => void;
 
         beforeEach(() => {
             let createdResolve: (value: Foo[]) => void;
             promise = new Promise((resolve: (value: Foo[]) => void) => {
                 createdResolve = resolve;
             });
-            callbackFunction = (created: {doc: Foo, id: string}[]) => {
-                createdResolve(created.map((c: {doc: Foo, id: string}): Foo => c.doc));
+            callbackFunction = (created: {data: Foo, id: string}[]) => {
+                createdResolve(created.map((c: {data: Foo, id: string}): Foo => c.data));
             };
-            callbackFunctionLog = (created: {doc: Foo, id: string}[]) => {
-                console.log({ created }); // Used to debug a flaky test
-                createdResolve(created.map((c: {doc: Foo, id: string}): Foo => c.doc));
+            callbackFunctionLog = (created: {data: Foo, id: string}[]) => {
+                for (const doc of created) {
+                    console.log(doc);
+                }
+                createdResolve(created.map((c: {data: Foo, id: string}): Foo => c.data));
             };
         });
         it('should observe document creation with the given condition', async() => {
@@ -121,19 +123,19 @@ describe('FirebaseFirestoreDAO', () => {
                 () => void { },
                 () => void { },
             );
-            const unsubscribe: () => void = dao.observingWhere([['value', '==', 'bar']], callback);
+            const unsubscribe: () => void = dao.observingWhere([['value', '==', 'baz']], callback);
             await dao.create({ value: 'foo', otherValue: 1 });
             await expectAsync(promise).toBePending();
             unsubscribe();
         });
         it('should not observe document creation when the condition does not hold (complexe)', async() => {
-            // This test is flaky: last failure on 22/10/2021
+            // This test is flaky: it fails from time to time. Check the output log when it fails.
             const callback: FirebaseCollectionObserver<Foo> = new FirebaseCollectionObserver(
-                callbackFunction,
+                callbackFunctionLog,
                 () => void { },
                 () => void { },
             );
-            const unsubscribe: () => void = dao.observingWhere([['value', '==', 'foo'], ['otherValue', '==', 2]], callback);
+            const unsubscribe: () => void = dao.observingWhere([['value', '==', 'baz'], ['otherValue', '==', 2]], callback);
             await dao.create({ value: 'foo', otherValue: 1 });
             await expectAsync(promise).toBePending();
             unsubscribe();
@@ -156,7 +158,7 @@ describe('FirebaseFirestoreDAO', () => {
                 callbackFunction,
                 () => void { },
             );
-            const unsubscribe: () => void = dao.observingWhere([['value', '==', 'bar']], callback);
+            const unsubscribe: () => void = dao.observingWhere([['value', '==', 'baz']], callback);
             const id: string = await dao.create({ value: 'foo', otherValue: 1 });
             await dao.update(id, { otherValue: 42 });
             await expectAsync(promise).toBePending();
@@ -185,6 +187,20 @@ describe('FirebaseFirestoreDAO', () => {
             await dao.delete(id);
             await expectAsync(promise).toBePending();
             unsubscribe();
+        });
+    });
+    describe('findWhere', () => {
+        it('should return the matching documents', async() => {
+            // Given a DB with some documents
+            await dao.create({ value: 'foo', otherValue: 1 });
+            await dao.create({ value: 'foo', otherValue: 2 });
+
+            // When calling findWhere
+            const docs: Foo[] = await dao.findWhere([['otherValue', '==', 1]]);
+
+            // Then it should return the matching documents only
+            expect(docs.length).toBe(1);
+            expect(docs[0]).toEqual({ value: 'foo', otherValue: 1 });
         });
     });
 });

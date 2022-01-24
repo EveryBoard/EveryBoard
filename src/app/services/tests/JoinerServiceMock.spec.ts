@@ -1,14 +1,14 @@
 /* eslint-disable max-lines-per-function */
-import { FirstPlayer, IJoiner, IJoinerId, PartStatus, PartType } from 'src/app/domain/ijoiner';
+import { FirstPlayer, Joiner, JoinerDocument, PartStatus, PartType } from 'src/app/domain/Joiner';
 import { JoinerDAO } from 'src/app/dao/JoinerDAO';
 import { display } from 'src/app/utils/utils';
 
 export class JoinerServiceMock {
     public static VERBOSE: boolean = false;
 
-    public static emittedsJoiner: IJoinerId[];
+    public static emittedsJoiner: JoinerDocument[];
 
-    public constructor(private joinerDAO: JoinerDAO) {
+    public constructor(private readonly joinerDAO: JoinerDAO) {
         display(JoinerServiceMock.VERBOSE, 'JoinerServiceMock.constructor');
     }
     public joinGame(): Promise<void> {
@@ -17,33 +17,15 @@ export class JoinerServiceMock {
             resolve();
         });
     }
-    public stopObserving(): void {
-        display(JoinerServiceMock.VERBOSE, 'JoinerServiceMock.stopObserving');
-        // this.emittedsJoiner = [];
-        // TODO stop all timeout
-        return;
-    }
-    public startObserving(jId: string, callback: (iJ: IJoinerId) => void): void {
-        display(JoinerServiceMock.VERBOSE, 'JoinerServiceMock.startObserving');
-        let i: number = 0;
-        while (i<JoinerServiceMock.emittedsJoiner.length) {
-            setTimeout(
-                (index: number) => callback(JoinerServiceMock.emittedsJoiner[index]),
-                1000*(i+1),
-                i,
-            );
-            i++;
-        }
-    }
     public async cancelJoining(): Promise<void> {
         display(JoinerServiceMock.VERBOSE, 'JoinerServiceMock.cancelJoining');
         return new Promise((resolve: () => void) => {
             resolve();
         }); // DO REAL MOCK
     }
-    public readJoinerById(partId: string): Promise<IJoiner> {
+    public readJoinerById(partId: string): Promise<Joiner> {
         display(JoinerServiceMock.VERBOSE, 'JoinerServiceMock.readJoinerById');
-        return new Promise((resolve: (j: IJoiner) => void) => {
+        return new Promise((resolve: (j: Joiner) => void) => {
             resolve({
                 candidates: ['uniqueCandidate'],
                 creator: 'creator',

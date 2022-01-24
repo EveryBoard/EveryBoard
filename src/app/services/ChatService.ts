@@ -1,8 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
-import { IChat, IChatId } from '../domain/ichat';
+import { Chat } from '../domain/Chat';
 import { ChatDAO } from '../dao/ChatDAO';
-import { IMessage } from '../domain/imessage';
+import { Message } from '../domain/Message';
 import { display } from 'src/app/utils/utils';
 import { MGPValidation } from '../utils/MGPValidation';
 import { ArrayUtils } from '../utils/ArrayUtils';
@@ -22,23 +22,22 @@ export class ChatService implements OnDestroy {
 
     private followedChatId: MGPOptional<string> = MGPOptional.empty();
 
-    private followedChatObs: MGPOptional<Observable<IChatId>> = MGPOptional.empty();
+    private followedChatObs: MGPOptional<Observable<MGPOptional<Chat>>> = MGPOptional.empty();
 
     private followedChatSub: Subscription;
 
-    constructor(private chatDao: ChatDAO) {
+    constructor(private readonly chatDAO: ChatDAO) {
         display(ChatService.VERBOSE, 'ChatService.constructor');
     }
-    public startObserving(chatId: string, callback: (iChat: IChatId) => void): void {
+    public startObserving(chatId: string, callback: (chat: MGPOptional<Chat>) => void): void {
         display(ChatService.VERBOSE, 'ChatService.startObserving ' + chatId);
 
         if (this.followedChatId.isAbsent()) {
             display(ChatService.VERBOSE, '[start watching chat ' + chatId);
 
             this.followedChatId = MGPOptional.of(chatId);
-            this.followedChatObs = MGPOptional.of(this.chatDao.getObsById(chatId));
-            this.followedChatSub = this.followedChatObs.get()
-                .subscribe((onFullFilled: IChatId) => callback(onFullFilled));
+            this.followedChatObs = MGPOptional.of(this.chatDAO.getObsById(chatId));
+            this.followedChatSub = this.followedChatObs.get().subscribe(callback);
         } else if (this.followedChatId.equalsValue(chatId)) {
             throw new Error(`WTF :: Already observing chat '${chatId}'`);
         } else {
@@ -59,10 +58,10 @@ export class ChatService implements OnDestroy {
     }
     public async deleteChat(chatId: string): Promise<void> {
         display(ChatService.VERBOSE, 'ChatService.deleteChat ' + chatId);
-        return this.chatDao.delete(chatId);
+        return this.chatDAO.delete(chatId);
     }
     public async createNewChat(id: string): Promise<void> {
-        return this.chatDao.set(id, {
+        return this.chatDAO.set(id, {
             messages: [],
         });
     }
@@ -78,16 +77,16 @@ export class ChatService implements OnDestroy {
         if (this.isForbiddenMessage(content)) {
             return MGPValidation.failure(ChatMessages.FORBIDDEN_MESSAGE());
         }
-        const chat: IChat = (await this.chatDao.read(chatId)).get();
-        const messages: IMessage[] = ArrayUtils.copyImmutableArray(chat.messages);
-        const newMessage: IMessage = {
+        const chat: Chat = (await this.chatDAO.read(chatId)).get();
+        const messages: Message[] = ArrayUtils.copyImmutableArray(chat.messages);
+        const newMessage: Message = {
             content,
             sender: userName,
             postedTime: Date.now(),
             currentTurn,
         };
         messages.push(newMessage);
-        await this.chatDao.update(chatId, { messages });
+        await this.chatDAO.update(chatId, { messages });
         return MGPValidation.SUCCESS;
     }
     private userCanSendMessage(userName: string, _chatId: string): boolean {

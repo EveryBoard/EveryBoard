@@ -54,7 +54,7 @@ describe('DvonnComponent', () => {
         componentTestUtils.setupState(state);
         // Then the player can pass
         const move: DvonnMove = DvonnMove.PASS;
-        componentTestUtils.expectPassSuccess(move);
+        await componentTestUtils.expectPassSuccess(move);
     }));
     it('should forbid choosing an incorrect piece', fakeAsync(async() => {
         // select black piece (but white plays first)

@@ -33,13 +33,13 @@ export class WelcomeComponent {
         }
     }
     public async createGame(game: string): Promise<boolean> {
-        return this.router.navigate(['/play/' + game]);
+        return this.router.navigate(['/play/', game]);
     }
-    public createLocalGame(game: string): void {
-        this.router.navigate(['/local/' + game]);
+    public createLocalGame(game: string): Promise<boolean> {
+        return this.router.navigate(['/local/', game]);
     }
-    public createTutorial(game: string): void {
-        this.router.navigate(['/tutorial/' + game]);
+    public createTutorial(game: string): Promise<boolean> {
+        return this.router.navigate(['/tutorial/', game]);
     }
     public openInfo(gameInfo: GameInfo): void {
         this.gameInfoDetails = MGPOptional.of(gameInfo);

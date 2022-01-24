@@ -19,6 +19,11 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
         }
         return MGPOptional.empty();
     }
+    public forEach(callback: (item: {key: K, value: V}) => void): void {
+        for (let i: number = 0; i < this.map.length; i++) {
+            callback(this.getByIndex(i));
+        }
+    }
     public getByIndex(index: number): {key: K, value: V} {
         return this.map[index];
     }
@@ -35,11 +40,10 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
     }
     public put(key: K, value: V): MGPOptional<V> {
         this.checkImmutability('put');
-        for (let i: number = 0; i < this.map.length; i++) {
-            const entry: {key: K, value: V} = this.map[i];
+        for (const entry of this.map) {
             if (comparableEquals(entry.key, key)) {
-                const oldValue: V = this.map[i].value;
-                this.map[i].value = value;
+                const oldValue: V = entry.value;
+                entry.value = value;
                 return MGPOptional.of(oldValue);
             }
         }
@@ -69,15 +73,13 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
     }
     public replace(key: K, newValue: V): V {
         this.checkImmutability('replace');
-        for (let i: number = 0; i < this.map.length; i++) {
-            const entry: {key: K, value: V} = this.map[i];
-            if (comparableEquals(entry.key, key)) {
-                const oldValue: V = this.map[i].value;
-                this.map[i].value = newValue;
-                return oldValue;
-            }
+        const oldValue: MGPOptional<V> = this.get(key);
+        if (oldValue.isAbsent()) {
+            throw new Error('No Value to replace for key '+ key.toString() + '!');
+        } else {
+            this.put(key, newValue);
+            return newValue;
         }
-        throw new Error('No Value to replace for key '+ key.toString() + '!');
     }
     public set(key: K, firstValue: V): void {
         this.checkImmutability('set');

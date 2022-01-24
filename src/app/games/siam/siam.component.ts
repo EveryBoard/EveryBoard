@@ -13,7 +13,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { display } from 'src/app/utils/utils';
 import { GameComponentUtils } from 'src/app/components/game-components/GameComponentUtils';
-import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { SiamFailure } from './SiamFailure';
 

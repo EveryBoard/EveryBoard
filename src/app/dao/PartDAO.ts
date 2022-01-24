@@ -1,5 +1,5 @@
 import { FirebaseFirestoreDAO } from './FirebaseFirestoreDAO';
-import { MGPResult, IPart } from '../domain/icurrentpart';
+import { MGPResult, Part } from '../domain/Part';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Injectable } from '@angular/core';
 import { FirebaseCollectionObserver } from './FirebaseCollectionObserver';
@@ -9,7 +9,7 @@ import { Player } from '../jscaip/Player';
 @Injectable({
     providedIn: 'root',
 })
-export class PartDAO extends FirebaseFirestoreDAO<IPart> {
+export class PartDAO extends FirebaseFirestoreDAO<Part> {
 
     public static VERBOSE: boolean = false;
 
@@ -20,7 +20,7 @@ export class PartDAO extends FirebaseFirestoreDAO<IPart> {
     public async updateAndBumpIndex(id: string,
                                     user: Player,
                                     lastIndex: number,
-                                    update: Partial<IPart>)
+                                    update: Partial<Part>)
     : Promise<void>
     {
         update = {
@@ -32,7 +32,17 @@ export class PartDAO extends FirebaseFirestoreDAO<IPart> {
         };
         return this.update(id, update);
     }
-    public observeActivesParts(callback: FirebaseCollectionObserver<IPart>): () => void {
+    public observeActiveParts(callback: FirebaseCollectionObserver<Part>): () => void { // TODOTODO activeParts
         return this.observingWhere([['result', '==', MGPResult.UNACHIEVED.value]], callback);
+    }
+    public async userHasActivePart(username: string): Promise<boolean> {
+        // This can be simplified into a simple query once part.playerZero and part.playerOne are in an array
+        const userIsFirstPlayer: Part[] = await this.findWhere([
+            ['playerZero', '==', username],
+            ['result', '==', MGPResult.UNACHIEVED.value]]);
+        const userIsSecondPlayer: Part[] = await this.findWhere([
+            ['playerOne', '==', username],
+            ['result', '==', MGPResult.UNACHIEVED.value]]);
+        return userIsFirstPlayer.length > 0 || userIsSecondPlayer.length > 0;
     }
 }

@@ -9,7 +9,7 @@ import { assert, display } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GroupDatas } from 'src/app/jscaip/BoardDatas';
-import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { GoTutorial } from './GoTutorial';
 
 @Component({
@@ -98,7 +98,7 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
                'GoComponent: pass() must be called only in playing, passed, counting, or accept phases');
         return this.onClick(GoMove.ACCEPT.coord.x, GoMove.ACCEPT.coord.y);
     }
-    public getCaseClass(x: number, y: number): string {
+    public getSpaceClass(x: number, y: number): string {
         const piece: GoPiece = this.rules.node.gameState.getPieceAtXY(x, y);
         return this.getPlayerClass(piece.getOwner());
     }

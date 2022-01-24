@@ -5,7 +5,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player } from 'src/app/jscaip/Player';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
-import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { GameState } from 'src/app/jscaip/GameState';
 import { Utils } from 'src/app/utils/utils';

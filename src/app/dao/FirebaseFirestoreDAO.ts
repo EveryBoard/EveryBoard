@@ -7,6 +7,13 @@ import { assert, display, FirebaseJSONObject, Utils } from 'src/app/utils/utils'
 import { FirebaseCollectionObserver } from './FirebaseCollectionObserver';
 import { MGPOptional } from '../utils/MGPOptional';
 
+export interface FirebaseDocument<T> {
+    id: string
+    data: T
+}
+
+export type FirebaseCondition = [string, firebase.firestore.WhereFilterOp, unknown]
+
 export interface IFirebaseFirestoreDAO<T extends FirebaseJSONObject> {
 
     create(newElement: T): Promise<string>;
@@ -17,15 +24,19 @@ export interface IFirebaseFirestoreDAO<T extends FirebaseJSONObject> {
 
     set(id: string, element: T): Promise<void>;
 
-    getObsById(id: string): Observable<{id: string, doc: T}>;
+    /**
+     * Observes a specific document given its id.
+     * The observable gives an optional, set to empty when the document is deleted.
+     * If the document does not exist initially, the optional is also empty.
+     */
+    getObsById(id: string): Observable<MGPOptional<T>>;
 
-    observingWhere(conditions: [string,
-                                firebase.firestore.WhereFilterOp,
-                                unknown][],
+    observingWhere(conditions: FirebaseCondition[],
                    callback: FirebaseCollectionObserver<T>): () => void;
+
+    findWhere(conditions: FirebaseCondition[]): Promise<T[]>
 }
 
-type FirebaseDocumentData = firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>;
 export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> implements IFirebaseFirestoreDAO<T> {
 
     public static VERBOSE: boolean = false;
@@ -40,7 +51,7 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
         const docSnapshot: firebase.firestore.DocumentSnapshot<T> =
             await this.afs.collection<T>(this.collectionName).doc(id).ref.get();
         if (docSnapshot.exists) {
-            return MGPOptional.of(docSnapshot.data() as T);
+            return MGPOptional.of(Utils.getNonNullable(docSnapshot.data()));
         } else {
             return MGPOptional.empty();
         }
@@ -60,14 +71,16 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
     }
     // Collection Observer
 
-    public getObsById(id: string): Observable<{ id: string, doc: T}> {
+    public getObsById(id: string): Observable<MGPOptional<T>> {
         return this.afs.doc(this.collectionName + '/' + id).snapshotChanges()
             .pipe(map((actions: Action<DocumentSnapshot<T>>) => {
-                return {
-                    doc: actions.payload.data() as T,
-                    id,
-                };
+                return MGPOptional.ofNullable(actions.payload.data());
             }));
+    }
+    public async findWhere(conditions: FirebaseCondition[]): Promise<T[]> {
+        const query: firebase.firestore.Query<T> = this.constructQuery(conditions);
+        const snapshot: firebase.firestore.QuerySnapshot<T> = await query.get();
+        return snapshot.docs.map((doc: firebase.firestore.QueryDocumentSnapshot<T>) => doc.data());
     }
     /**
      * Observe the data according to the given conditions, where a condition consists of:
@@ -75,61 +88,62 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
      * - a comparison
      * - a value that is matched against the field using the comparison
      **/
-    public observingWhere(conditions: [string,
-                                       firebase.firestore.WhereFilterOp,
-                                       unknown][],
+    public observingWhere(conditions: FirebaseCondition[],
                           callback: FirebaseCollectionObserver<T>)
     : () => void
     {
-        assert(conditions.length >= 1, 'observingWhere called without conditions');
-        let query: firebase.firestore.Query<unknown> | null = null;
+        const query: firebase.firestore.Query<T> = this.constructQuery(conditions);
+        return query
+            .onSnapshot((snapshot: firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>) => {
+                const createdDocs: FirebaseDocument<T>[] = [];
+                const modifiedDocs: FirebaseDocument<T>[] = [];
+                const deletedDocs: FirebaseDocument<T>[] = [];
+                snapshot.docChanges()
+                    .forEach((change: firebase.firestore.DocumentChange<T>) => {
+                        const doc: FirebaseDocument<T> = {
+                            id: change.doc.id,
+                            data: change.doc.data(),
+                        };
+                        switch (change.type) {
+                            case 'added':
+                                createdDocs.push(doc);
+                                break;
+                            case 'modified':
+                                modifiedDocs.push(doc);
+                                break;
+                            case 'removed':
+                                deletedDocs.push(doc);
+                                break;
+                        }
+                    });
+                if (createdDocs.length > 0) {
+                    display(FirebaseFirestoreDAO.VERBOSE,
+                            'firebase gave us ' + createdDocs.length + ' NEW ' + this.collectionName);
+                    callback.onDocumentCreated(createdDocs);
+                }
+                if (modifiedDocs.length > 0) {
+                    display(FirebaseFirestoreDAO.VERBOSE,
+                            'firebase gave us ' + modifiedDocs.length + ' MODIFIED ' + this.collectionName);
+                    callback.onDocumentModified(modifiedDocs);
+                }
+                if (deletedDocs.length > 0) {
+                    display(FirebaseFirestoreDAO.VERBOSE,
+                            'firebase gave us ' + deletedDocs.length + ' DELETED ' + this.collectionName);
+                    callback.onDocumentDeleted(deletedDocs);
+                }
+            });
+    }
+    private constructQuery(conditions: FirebaseCondition[]): firebase.firestore.Query<T> {
+        assert(conditions.length >= 1, 'constructQuery called without conditions');
+        let query: firebase.firestore.Query<T> | null = null;
         for (const condition of conditions) {
             if (query == null) {
-                query = this.afs.collection(this.collectionName).ref
+                query = this.afs.collection<T>(this.collectionName).ref
                     .where(condition[0], condition[1], condition[2]);
             } else {
                 query = query.where(condition[0], condition[1], condition[2]);
             }
         }
-        return Utils.getNonNullable(query)
-            .onSnapshot((snapshot: FirebaseDocumentData) => this.useCallBacks(snapshot, callback));
-    }
-    private useCallBacks(snapshot: FirebaseDocumentData, callback: FirebaseCollectionObserver<T>): void {
-        const createdDocs: {doc: T, id: string}[] = [];
-        const modifiedDocs: {doc: T, id: string}[] = [];
-        const deletedDocs: {doc: T, id: string}[] = [];
-        snapshot.docChanges()
-            .forEach((change: firebase.firestore.DocumentChange<firebase.firestore.DocumentData>) => {
-                const doc: {doc: T, id: string} = {
-                    id: change.doc.id,
-                    doc: change.doc.data() as T,
-                };
-                switch (change.type) {
-                    case 'added':
-                        createdDocs.push(doc);
-                        break;
-                    case 'modified':
-                        modifiedDocs.push(doc);
-                        break;
-                    case 'removed':
-                        deletedDocs.push(doc);
-                        break;
-                }
-            });
-        if (createdDocs.length > 0) {
-            display(FirebaseFirestoreDAO.VERBOSE,
-                    'firebase gave us ' + createdDocs.length + ' NEW ' + this.collectionName);
-            callback.onDocumentCreated(createdDocs);
-        }
-        if (modifiedDocs.length > 0) {
-            display(FirebaseFirestoreDAO.VERBOSE,
-                    'firebase gave us ' + modifiedDocs.length + ' MODIFIED ' + this.collectionName);
-            callback.onDocumentModified(modifiedDocs);
-        }
-        if (deletedDocs.length > 0) {
-            display(FirebaseFirestoreDAO.VERBOSE,
-                    'firebase gave us ' + deletedDocs.length + ' DELETED ' + this.collectionName);
-            callback.onDocumentDeleted(deletedDocs);
-        }
+        return Utils.getNonNullable(query);
     }
 }
