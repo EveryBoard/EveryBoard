@@ -34,7 +34,7 @@
         <source><x id="PH" equiv-text="unreadMessages"/> new messages</source>
         <target><x id="PH" equiv-text="unreadMessages"/> nouveaux messages</target>
       </trans-unit>
-      <trans-unit id="3202776461633058864" datatype="html">
+      <trans-unit id="1260099573097287890" datatype="html">
         <source>Add <x id="INTERPOLATION" equiv-text="{{ timeToAdd }}"/></source>
         <target>Ajouter <x id="INTERPOLATION" equiv-text="{{ timeToAdd }}"/></target>
       </trans-unit>

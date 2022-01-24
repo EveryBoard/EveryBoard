@@ -29,7 +29,7 @@ import { getMillisecondsDifference } from 'src/app/utils/TimeUtils';
 import { Router } from '@angular/router';
 import { GameWrapperMessages } from '../GameWrapper';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { assert, Utils } from 'src/app/utils/utils';
+import { Utils } from 'src/app/utils/utils';
 import { GameService } from 'src/app/services/GameService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
