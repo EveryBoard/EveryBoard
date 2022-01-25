@@ -531,7 +531,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 break;
             case 'RematchAccepted':
                 await this.router.navigate(['/nextGameLoading']);
-                await this.router.navigate(['/play/', Request.getTypeGame(request), Request.getPartId(request)]);
+                await this.router.navigate(['/play', Request.getTypeGame(request), Request.getPartId(request)]);
                 break;
             case 'DrawProposed':
                 break;

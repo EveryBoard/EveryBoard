@@ -22,7 +22,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { User } from 'src/app/domain/User';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { QuartoComponent } from 'src/app/games/quarto/quarto.component';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { ComponentTestUtils, expectValidRouting } from 'src/app/utils/tests/TestUtils.spec';
 import { AuthUser } from 'src/app/services/AuthenticationService';
 import { Time } from 'src/app/domain/Time';
 import { getMillisecondsDifference } from 'src/app/utils/TimeUtils';
@@ -32,6 +32,7 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Utils } from 'src/app/utils/utils';
 import { GameService } from 'src/app/services/GameService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { NextGameLoadingComponent } from '../../normal-component/next-game-loading/next-game-loading.component';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 
 describe('OnlineGameWrapperComponent of Quarto:', () => {
@@ -1878,8 +1879,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await receiveRequest(Request.rematchAccepted('Quarto', 'nextPartId'), 3);
 
             // Then it should redirect to new part
-            expect(router.navigate).toHaveBeenCalledWith(['/nextGameLoading']);
-            expect(router.navigate).toHaveBeenCalledWith(['/play/', 'Quarto', 'nextPartId']);
+            expectValidRouting(router, ['/nextGameLoading'], NextGameLoadingComponent, true);
+            expectValidRouting(router, ['/play', 'Quarto', 'nextPartId'], OnlineGameWrapperComponent, true);
         }));
     });
     describe('Non Player Experience', () => {

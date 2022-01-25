@@ -10,10 +10,11 @@ import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { ChatDAO } from 'src/app/dao/ChatDAO';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { ComponentTestUtils, expectValidRouting } from 'src/app/utils/tests/TestUtils.spec';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { P4Component } from 'src/app/games/p4/p4.component';
 import { Part } from 'src/app/domain/Part';
+import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
 
 describe('OnlineGameWrapperComponent Lifecycle', () => {
 
@@ -182,6 +183,6 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         componentTestUtils.detectChanges();
         tick();
 
-        expect(router.navigate).toHaveBeenCalledOnceWith(['/notFound']);
+        expectValidRouting(router, ['/notFound'], NotFoundComponent);
     }));
 });

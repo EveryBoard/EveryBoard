@@ -3,12 +3,13 @@ import { fakeAsync, TestBed } from '@angular/core/testing';
 import { LobbyComponent } from './lobby.component';
 import { AuthUser } from 'src/app/services/AuthenticationService';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
-import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { expectValidRouting, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { Router } from '@angular/router';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { ActivePartsService } from 'src/app/services/ActivePartsService';
 import { BehaviorSubject } from 'rxjs';
 import { PartDocument } from 'src/app/domain/Part';
+import { OnlineGameWrapperComponent } from '../../wrapper-components/online-game-wrapper/online-game-wrapper.component';
 
 describe('LobbyComponent', () => {
 
@@ -49,7 +50,7 @@ describe('LobbyComponent', () => {
         await testUtils.clickElement('#part_0');
 
         // Then the component should navigate to the part
-        expect(router.navigate).toHaveBeenCalledOnceWith(['/play/', 'Quarto', 'some-part-id']);
+        expectValidRouting(router, ['/play', 'Quarto', 'some-part-id'], OnlineGameWrapperComponent);
     }));
     it('should stop watching current part observable and part list when destroying component', fakeAsync(async() => {
         // Given a server page
