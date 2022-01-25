@@ -3,7 +3,7 @@ import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement, Typ
 import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Route, Router } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';
@@ -41,6 +41,7 @@ import { USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/compat/fun
 import { environment } from 'src/environments/environment';
 import { MGPOptional } from '../MGPOptional';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { findMatchingRoute } from 'src/app/app.module.spec';
 
 @Component({})
 export class BlankComponent {}
@@ -472,4 +473,57 @@ export async function setupEmulators(): Promise<unknown> {
     // Clear the auth data before each test
     await http.delete('http://localhost:9099/emulator/v1/projects/my-project/accounts').toPromise();
     return;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function getComponentClassName(component: Type<any>): string {
+    // We need to match their string representations, as it is the only way to get the name from a Type<any>
+    const matches: RegExpMatchArray | null = component.toString().match(/class ([a-zA-Z0-9]+)/);
+    expect(matches).withContext(`getComponentClassName should find a match in the component string representation: ${component.toString().substring(0, 40)})`).not.toBeNull();
+    return Utils.getNonNullable(matches)[1];
+}
+
+/**
+ * Tests that we routes are used as expected. The router.navigate method should
+ * be spyed on. This function will match the route that is navigated to with
+ * the declared routes of the application, and ensure that the component that is
+ * routed to matches `component`. In case multiple router.navigate calls happen,
+ * set otherRoutes to true.
+ */
+export function expectValidRouting(router: Router,
+                                   path: string[],
+                                   component: Type<any>, // eslint-disable-line @typescript-eslint/no-explicit-any
+                                   otherRoutes: boolean = false)
+: void
+{
+    expect(path[0][0]).withContext('Routings should start with /').toBe('/');
+    for (const pathPart of path) {
+        expect(pathPart[pathPart.length-1]).withContext('Routing should not include superfluous / at the end').not.toBe('/');
+    }
+    const fullPath: string = path.join('/');
+    const matchingRoute: MGPOptional<Route> = findMatchingRoute(fullPath);
+    expect(matchingRoute.isPresent()).withContext(`Expected route to be present for path: ${path}`).toBeTrue();
+    const routedToComponent: string = getComponentClassName(Utils.getNonNullable(matchingRoute.get().component));
+    const expectedComponent: string = getComponentClassName(component);
+    expect(routedToComponent).withContext('It should route to the expected component').toEqual(expectedComponent);
+    if (otherRoutes) {
+        expect(router.navigate).toHaveBeenCalledWith(path);
+    } else {
+        expect(router.navigate).toHaveBeenCalledOnceWith(path);
+    }
+}
+
+/**
+ * Similar to expectValidRouting, but for checking HTML elements that provide a routerLink.
+ */
+export function expectValidRoutingLink(element: DebugElement, fullPath: string, component: Type<any>): void {
+    expect(fullPath[0]).withContext('Routings should start with /').toBe('/');
+
+    expect(element.attributes.routerLink).withContext('Routing links should have a routerLink').toBeDefined();
+    expect(element.attributes.routerLink).toEqual(fullPath);
+    const matchingRoute: MGPOptional<Route> = findMatchingRoute(fullPath);
+    expect(matchingRoute.isPresent()).withContext(`Expected route to be present for path: ${fullPath}`).toBeTrue();
+    const routedToComponent: string = getComponentClassName(Utils.getNonNullable(matchingRoute.get().component));
+    const expectedComponent: string = getComponentClassName(component);
+    expect(routedToComponent).withContext('It should route to the expected component').toEqual(expectedComponent);
 }

@@ -2,11 +2,12 @@
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { LoginComponent } from './login.component';
 import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
-import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { expectValidRouting, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { Router } from '@angular/router';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Observable, ReplaySubject } from 'rxjs';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
+import { LobbyComponent } from '../lobby/lobby.component';
 
 describe('LoginComponent', () => {
     let testUtils: SimpleComponentTestUtils<LoginComponent>;
@@ -47,7 +48,7 @@ describe('LoginComponent', () => {
             testUtils.detectChanges();
 
             // then a redirection happens
-            expect(router.navigate).toHaveBeenCalledWith(['/server']);
+            expectValidRouting(router, ['/lobby'], LobbyComponent);
         }));
         it('should not redirect if it sees a non logged-in user', fakeAsync(async() => {
             spyOn(router, 'navigate').and.callFake(async() => true);

@@ -287,7 +287,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     private async onGameCancelled() {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.onGameCancelled');
         this.messageDisplayer.infoMessage($localize`The game has been canceled!`);
-        await this.router.navigate(['server']);
+        await this.router.navigate(['/lobby']);
     }
     private isGameStarted(): boolean {
         const joiner: Joiner = Utils.getNonNullable(this.currentJoiner);
