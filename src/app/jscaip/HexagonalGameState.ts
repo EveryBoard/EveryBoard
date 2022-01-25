@@ -1,4 +1,4 @@
-import { ErrorLoggerService } from '../services/ErrorLogger';
+import { ErrorLoggerService } from '../services/ErrorLoggerService';
 import { Table } from '../utils/ArrayUtils';
 import { Coord } from './Coord';
 import { GameStateWithTable } from './GameStateWithTable';

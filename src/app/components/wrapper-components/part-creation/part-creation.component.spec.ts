@@ -17,8 +17,8 @@ import { GameService } from 'src/app/services/GameService';
 import { ChatService } from 'src/app/services/ChatService';
 import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { ErrorLoggerService } from 'src/app/services/ErrorLogger';
-import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerMock.spec';
+import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
+import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 
 describe('PartCreationComponent:', () => {
 

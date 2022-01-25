@@ -12,7 +12,7 @@ import { MGPFallible } from '../utils/MGPFallible';
 import { UserDAO } from '../dao/UserDAO';
 import { User } from '../domain/User';
 import { MGPOptional } from '../utils/MGPOptional';
-import { ErrorLoggerService } from './ErrorLogger';
+import { ErrorLoggerService } from './ErrorLoggerService';
 
 export class RTDB {
     public static OFFLINE: ConnectivityStatus = {

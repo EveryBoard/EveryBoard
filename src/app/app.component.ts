@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ErrorLoggerService } from './services/ErrorLogger';
+import { ErrorLoggerService } from './services/ErrorLoggerService';
 import { ThemeService } from './services/ThemeService';
 
 @Component({

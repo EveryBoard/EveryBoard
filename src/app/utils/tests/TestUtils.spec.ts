@@ -39,8 +39,8 @@ import { USE_EMULATOR as USE_AUTH_EMULATOR } from '@angular/fire/auth';
 import { USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/functions';
 import { environment } from 'src/environments/environment';
 import { MGPOptional } from '../MGPOptional';
-import { ErrorLoggerService } from 'src/app/services/ErrorLogger';
-import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerMock.spec';
+import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
+import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { AbstractGameComponent } from 'src/app/components/game-components/game-component/GameComponent';
 
 @Component({})

@@ -10,7 +10,7 @@ import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/Tut
 import { GameState } from 'src/app/jscaip/GameState';
 import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { ErrorLoggerService } from 'src/app/services/ErrorLogger';
+import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 
 /**
  * All method are to be implemented by the "final" GameComponent classes

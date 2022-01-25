@@ -58,8 +58,8 @@ export class ErrorLoggerService {
     private async logError(component: string, message: string, data?: JSONValue): Promise<void> {
         const route: string = this.router.url;
         const previousErrors: FirebaseDocument<EncounteredError>[] =
-            await this.errorDAO.findWhere([['component', '==', component], ['message', '==', message], ['data', '==', data]]);
-        if (previousErrors === []) {
+            await this.errorDAO.findWhere([['component', '==', component], ['route', '==', route], ['message', '==', message], ['data', '==', data]]);
+        if (previousErrors.length === 0) {
             const error: EncounteredError = {
                 component,
                 route,

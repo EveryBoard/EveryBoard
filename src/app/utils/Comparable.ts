@@ -1,4 +1,3 @@
-import { ErrorLoggerService } from '../services/ErrorLogger';
 import { isJSONPrimitive, JSONPrimitive } from './utils';
 
 export interface ComparableObject {

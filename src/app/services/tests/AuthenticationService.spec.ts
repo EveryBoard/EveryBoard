@@ -12,8 +12,8 @@ import { UserDAO } from 'src/app/dao/UserDAO';
 import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { ErrorLoggerService } from '../ErrorLogger';
-import { ErrorLoggerServiceMock } from './ErrorLoggerMock.spec';
+import { ErrorLoggerService } from '../ErrorLoggerService';
+import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
 
 class RTDBSpec {
     public static setOfflineMock(): void {

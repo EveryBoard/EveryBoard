@@ -12,9 +12,9 @@ import { P4Minimax } from 'src/app/games/p4/P4Minimax';
 import { P4Rules } from 'src/app/games/p4/P4Rules';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { ErrorLoggerService } from 'src/app/services/ErrorLogger';
+import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerMock.spec';
+import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { JSONValue } from 'src/app/utils/utils';
 
 describe('LocalGameWrapperComponent', () => {

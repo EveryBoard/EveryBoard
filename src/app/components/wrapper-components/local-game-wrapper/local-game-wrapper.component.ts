@@ -12,7 +12,7 @@ import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { ErrorLoggerService } from 'src/app/services/ErrorLogger';
+import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 
 @Component({
     selector: 'app-local-game-wrapper',

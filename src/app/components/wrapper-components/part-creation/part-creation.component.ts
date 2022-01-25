@@ -14,7 +14,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { ErrorLoggerService } from 'src/app/services/ErrorLogger';
+import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 
 interface PartCreationViewInfo {
     userIsCreator: boolean;

@@ -11,9 +11,9 @@ import { GameWrapperMessages } from '../../wrapper-components/GameWrapper';
 import { LocalGameWrapperComponent } from '../../wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { AbstractGameComponent } from './GameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
-import { ErrorLoggerService } from 'src/app/services/ErrorLogger';
+import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { AbaloneComponent } from 'src/app/games/abalone/abalone.component';
-import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerMock.spec';
+import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { JSONValue } from 'src/app/utils/utils';
 
 describe('GameComponent', () => {

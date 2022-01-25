@@ -1,11 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { ActivePartsService } from '../ActivePartsService';
 import { PartDAO } from 'src/app/dao/PartDAO';
-import { fakeAsync, tick } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Part, PartDocument } from 'src/app/domain/Part';
 import { Subscription } from 'rxjs';
 import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
 import { Utils } from 'src/app/utils/utils';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('ActivePartsService', () => {
 
@@ -15,12 +16,19 @@ describe('ActivePartsService', () => {
 
     let stoppedObserving: boolean;
 
-    beforeEach(async() => {
-        partDAO = new PartDAOMock() as unknown as PartDAO;
+    beforeEach(fakeAsync(async() => {
+        await TestBed.configureTestingModule({
+            imports: [],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
+            providers: [
+                { provide: PartDAO, useClass: PartDAOMock },
+            ],
+        }).compileComponents();
+        partDAO = TestBed.inject(PartDAO);
         service = new ActivePartsService(partDAO);
         service.startObserving();
         stoppedObserving = false;
-    });
+    }));
     it('should create', () => {
         expect(service).toBeTruthy();
     });
