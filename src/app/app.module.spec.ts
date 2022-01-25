@@ -41,7 +41,7 @@ export const routingSpecification: [string, Type<any>][] = [
 
 export function findMatchingRoute(url: string): MGPOptional<Route> {
     if (url[0] === '/') {
-        // Drop the first / if it is present
+        // Drop the first '/' if it is present
         url = url.substring(1);
     }
     const urlParts: string[] = url.split('/');

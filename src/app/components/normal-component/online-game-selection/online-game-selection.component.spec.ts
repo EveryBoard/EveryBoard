@@ -13,7 +13,7 @@ describe('OnlineGameSelectionComponent', () => {
         testUtils = await SimpleComponentTestUtils.create(OnlineGameSelectionComponent);
         testUtils.detectChanges();
     }));
-    it('should redirect to OnlineGameSelection to create chosen game', fakeAsync(async() => {
+    it('should redirect to OnlineGameCreation to create chosen game', fakeAsync(async() => {
         // Given a chosen game
         testUtils.getComponent().pickGame('whateverGame');
         const router: Router = TestBed.inject(Router);
