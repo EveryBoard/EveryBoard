@@ -117,9 +117,10 @@
                                     "with": "src/environments/environment.local.ts"
                                 }
                             ]
-                        }
+                        },
+                        "development": {}
                     },
-                    "defaultConfiguration": ""
+                    "defaultConfiguration": "production"
                 },
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
@@ -203,14 +204,17 @@
                 "e2e": {
                     "builder": "@angular-devkit/build-angular:protractor",
                     "options": {
-                        "protractorConfig": "e2e/protractor.conf.js",
-                        "devServerTarget": "everyboard:serve"
+                        "protractorConfig": "e2e/protractor.conf.js"
                     },
                     "configurations": {
                         "production": {
                             "devServerTarget": "everyboard:serve:production"
+                        },
+                        "development": {
+                            "devServerTarget": "everyboard:serve:development"
                         }
-                    }
+                    },
+                    "defaultConfiguration": "development"
                 },
                 "lint": {
                     "builder": "@angular-devkit/build-angular:tslint",
