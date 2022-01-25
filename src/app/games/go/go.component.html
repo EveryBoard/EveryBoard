@@ -13,7 +13,7 @@
                 <circle [attr.cx]="25 + 50*x" [attr.cy]="25 + 50*y"
                         [attr.r]="22"
                         (click)="onClick(x, y)"
-                        [ngClass]="getCaseClass(x, y)"
+                        [ngClass]="getSpaceClass(x, y)"
                         class="base mid-stroke"
                 />
                 <circle *ngIf="isLastCase(x, y)"

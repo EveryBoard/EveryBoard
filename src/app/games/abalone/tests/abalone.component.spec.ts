@@ -131,12 +131,12 @@ describe('AbaloneComponent', () => {
             // Given the initial board with one piece selected
             await componentTestUtils.expectClickSuccess('#piece_0_7');
 
-            // when clicking 3 case on the right
+            // when clicking 3 space on the right
             await componentTestUtils.expectClickFailure('#piece_3_7', AbaloneFailure.CANNOT_MOVE_MORE_THAN_THREE_PIECES());
 
             // then piece should no longer be selected
             const compo: AbaloneComponent = componentTestUtils.getComponent();
-            expect(compo.getCaseClasses(0, 7)).toEqual([]);
+            expect(compo.getSquareClasses(0, 7)).toEqual([]);
         }));
     });
     describe('third click', () => {
@@ -229,13 +229,13 @@ describe('AbaloneComponent', () => {
 
             // then three pieces should be selected
             const compo: AbaloneComponent = componentTestUtils.getComponent();
-            expect(compo.getCaseClasses(1, 6)).toEqual(['moved']);
-            expect(compo.getCaseClasses(2, 6)).toEqual(['moved']);
-            expect(compo.getCaseClasses(3, 6)).toEqual(['moved']);
-            expect(compo.getCaseClasses(4, 6)).toEqual(['moved']);
+            expect(compo.getSquareClasses(1, 6)).toEqual(['moved']);
+            expect(compo.getSquareClasses(2, 6)).toEqual(['moved']);
+            expect(compo.getSquareClasses(3, 6)).toEqual(['moved']);
+            expect(compo.getSquareClasses(4, 6)).toEqual(['moved']);
         }));
         it('should refuse too long extension', fakeAsync(async() => {
-            // Given the initial board with two case selected
+            // Given the initial board with two space selected
             await componentTestUtils.expectClickSuccess('#piece_0_7');
             await componentTestUtils.expectClickSuccess('#piece_1_7');
 
@@ -256,11 +256,11 @@ describe('AbaloneComponent', () => {
             await componentTestUtils.expectMoveSuccess('#direction_UP', move, state, [0, 0]);
         }));
     });
-    it('should allow clicking on arrow landing coord as if it was the arrow (case)', fakeAsync(async() => {
-        // Given the initial board with first case clicked
+    it('should allow clicking on arrow landing coord as if it was the arrow (space)', fakeAsync(async() => {
+        // Given the initial board with first space clicked
         await componentTestUtils.expectClickSuccess('#piece_2_6');
 
-        // when clicking on the case marked by the direction instead of it's arrow
+        // when clicking on the space marked by the direction instead of it's arrow
         // then the move should have been done
         const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(2, 6), HexaDirection.LEFT).get();
         const state: AbaloneState = AbaloneState.getInitialState();
@@ -284,16 +284,16 @@ describe('AbaloneComponent', () => {
         await componentTestUtils.expectClickSuccess('#piece_2_6');
         await componentTestUtils.expectClickSuccess('#piece_2_7');
 
-        // when clicking on the case marked by the direction instead of it's arrow
+        // when clicking on the space marked by the direction instead of it's arrow
         // then the move should have been done
         const move: AbaloneMove = AbaloneMove.fromSingleCoord(new Coord(2, 7), HexaDirection.UP).get();
         await componentTestUtils.expectMoveSuccess('#piece_2_5', move, state, [0, 0]);
     }));
-    it('should not do anything when clicking case that are not below a direction arrow', fakeAsync(async() => {
-        // Given the initial board with first case clicked
+    it('should not do anything when clicking space that is not below a direction arrow', fakeAsync(async() => {
+        // Given the initial board with first space clicked
         await componentTestUtils.expectClickSuccess('#case_1_6');
 
-        // when clicking on the case marked by the direction instead of it's arrow
+        // when clicking on the space marked by the direction instead of it's arrow
         // then expect nothing, just want this line covered!
     }));
     describe('showLastMove', () => {
@@ -317,10 +317,10 @@ describe('AbaloneComponent', () => {
             const state: AbaloneState = AbaloneState.getInitialState();
             await componentTestUtils.expectMoveSuccess('#direction_DOWN', move, state, [0, 0]);
 
-            // when ? then expect to see left and moved case
+            // when ? then expect to see left and moved space
             const compo: AbaloneComponent = componentTestUtils.getComponent();
-            expect(compo.getCaseClasses(0, 7)).toEqual(['moved']);
-            expect(compo.getCaseClasses(0, 8)).toEqual(['moved']);
+            expect(compo.getSquareClasses(0, 7)).toEqual(['moved']);
+            expect(compo.getSquareClasses(0, 8)).toEqual(['moved']);
         }));
     });
 });

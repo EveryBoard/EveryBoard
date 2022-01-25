@@ -68,7 +68,7 @@ describe('LocalGameWrapperComponent', () => {
         componentTestUtils.setupState(state);
 
         await componentTestUtils.expectMoveSuccess('#click_3', P4Move.THREE);
-        expect(componentTestUtils.findElement('#draw')).withContext('Draw indicator should be present').toBeTruthy();
+        componentTestUtils.expectElementToExist('#draw');
     }));
     it('should show score if needed', fakeAsync(async() => {
         componentTestUtils.getComponent().scores = MGPOptional.empty();
@@ -100,13 +100,12 @@ describe('LocalGameWrapperComponent', () => {
 
             await componentTestUtils.expectMoveSuccess('#click_3', P4Move.THREE);
 
-            expect(componentTestUtils.findElement('#restartButton'))
-                .withContext('Restart button should be present after end game').toBeTruthy();
+            componentTestUtils.expectElementToExist('#restartButton');
 
             await componentTestUtils.expectInterfaceClickSuccess('#restartButton');
 
             expect(componentTestUtils.getComponent().rules.node.gameState.turn).toBe(0);
-            expect(componentTestUtils.findElement('#draw')).withContext('Draw indicator should be removed').toBeFalsy();
+            componentTestUtils.expectElementNotToExist('#draw');
             tick(1000);
         }));
     });

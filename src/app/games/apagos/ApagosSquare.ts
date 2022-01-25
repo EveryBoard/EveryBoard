@@ -7,7 +7,7 @@ export class ApagosSquare {
 
     public static from(nbZero: number, nbOne: number, nbTotal: number): MGPFallible<ApagosSquare> {
         if (nbZero + nbOne > nbTotal) {
-            return MGPFallible.failure('invalid starting case');
+            return MGPFallible.failure('invalid starting space');
         }
         const containing: MGPMap<Player, number> = new MGPMap();
         containing.set(Player.ZERO, nbZero);

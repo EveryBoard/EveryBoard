@@ -74,7 +74,7 @@ describe('SixComponent', () => {
         // Choosing piece
         await componentTestUtils.expectClickSuccess('#piece_1_2');
 
-        // Choosing landing case
+        // Choosing landing space
         await componentTestUtils.expectClickSuccess('#neighbor_2_3');
         componentTestUtils.expectElementNotToExist('#piece_2_3'); // Landing coord should be filled
         componentTestUtils.expectElementToExist('#chosenLanding_2_3'); // Landing coord should be filled
@@ -127,7 +127,7 @@ describe('SixComponent', () => {
         // Choosing piece
         await componentTestUtils.expectClickSuccess('#piece_1_2');
 
-        // Choosing landing case
+        // Choosing landing space
         await componentTestUtils.expectClickSuccess('#neighbor_2_3');
         const move: SixMove = SixMove.fromCut(new Coord(1, 2), new Coord(2, 3), new Coord(0, 0));
         await componentTestUtils.expectMoveSuccess('#piece_0_0', move);
@@ -139,7 +139,7 @@ describe('SixComponent', () => {
     it('should cancel move when clicking on piece before 40th turn', fakeAsync(async() => {
         await componentTestUtils.expectClickFailure('#piece_0_0', SixFailure.NO_MOVEMENT_BEFORE_TURN_40());
     }));
-    it('should cancel move when clicking on empty case as first click after 40th turn', fakeAsync(async() => {
+    it('should cancel move when clicking on empty space as first click after 40th turn', fakeAsync(async() => {
         const board: NumberTable = [
             [O],
             [X],
@@ -184,7 +184,7 @@ describe('SixComponent', () => {
         componentTestUtils.setupState(state);
         await componentTestUtils.expectClickSuccess('#piece_0_2');
         await componentTestUtils.expectClickSuccess('#neighbor_0_-1');
-        // when the user clicks on an empty case instead of selecting a group
+        // when the user clicks on an empty space instead of selecting a group
         // then the move is cancelled and the board is back to its initial state
         await componentTestUtils.expectClickFailure('#neighbor_1_-1', SixFailure.MUST_CUT());
         componentTestUtils.expectElementToExist('#piece_0_2');

@@ -320,7 +320,7 @@ describe('DvonnRules:', () => {
     describe('isMovablePiece', () => {
         it('should fail if the coord is not on the board', () => {
             expect(() => rules.isMovablePiece(DvonnState.getInitialState(), new Coord(-1, -1)))
-                .toThrowError('Assertion failure: piece is not on the board');
+                .toThrowError('Encountered error: Assertion failure: piece is not on the board');
         });
     });
 });

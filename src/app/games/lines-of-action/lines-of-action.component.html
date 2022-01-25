@@ -11,7 +11,7 @@
                       [attr.y]="y * SPACE_SIZE"
                       [attr.width]="SPACE_SIZE"
                       [attr.height]="SPACE_SIZE"
-                      [ngClass]="getCaseClasses(x, y)"
+                      [ngClass]="getSquareClasses(x, y)"
                       class="base" />
                 <!-- Piece -->
                 <circle *ngIf="caseContent !== EMPTY"

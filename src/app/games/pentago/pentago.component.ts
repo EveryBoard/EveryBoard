@@ -165,7 +165,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         }
         return [];
     }
-    public getCaseClasses(x: number, y: number): string[] {
+    public getSquareClasses(x: number, y: number): string[] {
         const classes: string[] = [];
         const player: string = this.getPlayerClass(this.board[y][x]);
         classes.push(player);

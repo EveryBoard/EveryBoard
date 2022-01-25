@@ -8,6 +8,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { assert } from 'src/app/utils/utils';
 
 const __: DvonnPieceStack = DvonnPieceStack.EMPTY;
+const NN: DvonnPieceStack = DvonnPieceStack.NONE;
 const SO: DvonnPieceStack = DvonnPieceStack.SOURCE;
 const O1: DvonnPieceStack = DvonnPieceStack.PLAYER_ZERO;
 const X1: DvonnPieceStack = DvonnPieceStack.PLAYER_ONE;
@@ -42,11 +43,11 @@ export class DvonnTutorial {
         When a stack is not directly nor indirectly connected to a source, it is removed from the board.<br/><br/>
         You're playing Dark, try to disconnect the stack of 4 pieces from your opponent. There are two ways of doing that, one is better than the other: try to find that one!`,
             new DvonnState([
-                [__, __, X1, SO, __, __, __, __, __, __, __],
-                [__, __, O1, __, __, __, __, __, __, __, __],
+                [NN, NN, X1, SO, __, __, __, __, __, __, __],
+                [NN, __, O1, __, __, __, __, __, __, __, __],
                 [__, __, X4, __, __, __, __, X1, SO, __, __],
-                [__, __, __, __, __, __, __, __, __, __, __],
-                [__, __, __, __, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __, __, __, NN],
+                [__, __, __, __, __, __, __, __, __, NN, NN],
             ], 0, false),
             DvonnMove.of(new Coord(2, 1), new Coord(2, 0)),
             (move: DvonnMove, _state: DvonnState) => {
@@ -68,11 +69,11 @@ export class DvonnTutorial {
         This way, you know that this stack may never be disconnected, as it contains a source.<br/><br/>
         You're playing Dark and you can take control of a source, do it!`,
             new DvonnState([
-                [__, O1, SO, X1, __, __, __, __, __, __, __],
-                [__, O1, O1, __, __, __, __, __, __, __, __],
+                [NN, NN, SO, X1, __, __, __, __, __, __, __],
+                [NN, O1, O1, __, __, __, __, __, __, __, __],
                 [__, X1, O1, X1, __, __, O1, X2, SO, __, __],
-                [__, __, X1, __, __, __, __, __, __, __, __],
-                [__, __, __, __, __, __, __, __, __, __, __],
+                [__, __, X1, __, __, __, __, __, __, __, NN],
+                [__, __, __, __, __, __, __, __, __, NN, NN],
             ], 0, false),
             DvonnMove.of(new Coord(2, 1), new Coord(2, 0)),
             (move: DvonnMove, _state: DvonnState) => {
@@ -90,11 +91,11 @@ export class DvonnTutorial {
         If this is the case, and if your opponent can still move, you must pass your turn.<br/><br/>
         This is a situation that occurs here for Dark.`,
             new DvonnState([
-                [__, __, SO, __, __, __, __, __, __, __, __],
-                [__, __, O2, __, __, __, __, __, __, __, __],
+                [NN, NN, SO, __, __, __, __, __, __, __, __],
+                [NN, __, O2, __, __, __, __, __, __, __, __],
                 [__, __, X2, __, __, __, __, X2, SO, O4, __],
-                [__, __, __, __, __, __, __, __, __, __, __],
-                [__, __, __, __, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __, __, __, NN],
+                [__, __, __, __, __, __, __, __, __, NN, NN],
             ], 0, false),
         ),
         TutorialStep.fromMove(
@@ -102,11 +103,11 @@ export class DvonnTutorial {
             $localize`When no more move is possible for both players, the game ends and the player with the most points wins.<br/><br/>
         Make your last move.`,
             new DvonnState([
-                [__, __, SO, __, __, __, __, __, __, __, __],
-                [__, __, O1, __, __, __, __, __, __, __, __],
+                [NN, NN, SO, __, __, __, __, __, __, __, __],
+                [NN, __, O1, __, __, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __, __, SO, O4, __],
-                [__, __, __, __, __, __, __, __, __, __, __],
-                [__, __, __, __, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __, __, __, NN],
+                [__, __, __, __, __, __, __, __, __, NN, NN],
             ], 0, false),
             [DvonnMove.of(new Coord(2, 1), new Coord(2, 0))],
             $localize`Congratulations, you won 6 - 0!`,

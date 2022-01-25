@@ -88,7 +88,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             const chatTag: DebugElement = componentTestUtils.querySelector('app-chat');
 
             expect(wrapper.gameStarted).toBeFalse();
-            expect(partCreationTag).withContext('app-part-creation tag should be present at start').toBeFalsy();
+            expect(partCreationTag).withContext('app-part-creation tag should be absent at start').toBeFalsy();
             expect(gameIncluderTag).withContext('app-game-includer tag should be absent at start').toBeFalsy();
             expect(p4Tag).withContext('app-p4 tag should be absent at start').toBeFalsy();
             expect(chatTag).withContext('app-chat tag should be present at start').toBeTruthy();

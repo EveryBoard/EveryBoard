@@ -8,7 +8,7 @@ describe('PentagoMove', () => {
         const expectedError: string = 'This block do not exist: -1';
         expect(() => PentagoMove.withRotation(0, 0, -1, true)).toThrowError(expectedError);
     });
-    it('should throw when case not in range', () => {
+    it('should throw when space not in range', () => {
         const expectedError: string = 'The board is a 6 cas wide square, invalid coord: (-1, 6)';
         expect(() => PentagoMove.rotationless(-1, 6)).toThrowError(expectedError);
     });
