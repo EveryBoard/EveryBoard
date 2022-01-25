@@ -21,7 +21,7 @@ export interface Part extends FirebaseJSONObject {
      * so firebase write the server time and send us back a timestamp in the form of Time
      */
     readonly beginning?: FirebaseTime,
-    readonly lastMoveTime?: FirebaseTime,
+    readonly lastUpdateTime?: FirebaseTime,
     readonly remainingMsForZero?: number;
     readonly remainingMsForOne?: number;
     readonly winner?: string,
