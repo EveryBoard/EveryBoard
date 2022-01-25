@@ -79,8 +79,8 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         const playingMinimax: MGPOptional<AbstractMinimax> = this.getPlayingAI();
         if (playingMinimax.isPresent()) {
             // bot's turn
-            setTimeout(() => {
-                this.doAIMove(playingMinimax.get());
+            setTimeout(async() => {
+                await this.doAIMove(playingMinimax.get());
             }, this.botTimeOut);
         }
     }

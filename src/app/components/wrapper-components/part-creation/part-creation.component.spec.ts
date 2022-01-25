@@ -31,7 +31,6 @@ describe('PartCreationComponent:', () => {
     let joinerService: JoinerService;
     let gameService: GameService;
     let chatService: ChatService;
-    let errorLogger: ErrorLoggerService;
 
     async function selectCustomGameAndChangeConfig(): Promise<void> {
         await testUtils.clickElement('#partTypeCustom');

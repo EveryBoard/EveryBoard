@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { fakeAsync, tick } from '@angular/core/testing';
 import { DiamPiece } from 'src/app/games/diam/DiamPiece';
 import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { Direction } from 'src/app/jscaip/Direction';
