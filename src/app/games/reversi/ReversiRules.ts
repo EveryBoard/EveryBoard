@@ -92,7 +92,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
                 return sandwichedsCoord;
             }
             if (testedCoordContent === Player.NONE) {
-                // we found the emptyness before a capturer, so there won't be a next case
+                // we found the emptyness before a capturer, so there won't be a next space
                 return [];
             } // we found a switched/captured
             sandwichedsCoord.push(testedCoord); // we add it
@@ -134,7 +134,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
                     nextBoard = state.getCopiedBoard();
                     const opponentNeighboors: Coord[] = ReversiState.getNeighbooringPawnLike(nextBoard, opponent, x, y);
                     if (opponentNeighboors.length > 0) {
-                        // if one of the 8 neighbooring case is an opponent then, there could be a switch,
+                        // if one of the 8 neighbooring space is an opponent then, there could be a switch,
                         // and hence a legal move
                         const move: ReversiMove = new ReversiMove(x, y);
                         const result: Coord[] = ReversiRules.getAllSwitcheds(move, player, nextBoard);
@@ -171,7 +171,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
             }
         }
         if (board[move.coord.y][move.coord.x] !== Player.NONE) {
-            display(ReversiRules.VERBOSE, 'ReversiRules.isLegal: you cannot play on a busy case');
+            display(ReversiRules.VERBOSE, 'ReversiRules.isLegal: you cannot play on a busy space');
             return MGPFallible.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
         }
         const switched: Coord[] = ReversiRules.getAllSwitcheds(move, state.getCurrentPlayer(), board);

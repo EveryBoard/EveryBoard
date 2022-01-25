@@ -149,7 +149,7 @@ describe('P4Rules', () => {
         // Then the move should be deemed illegal
         RulesUtils.expectMoveFailure(rules, state, move, P4Failure.COLUMN_IS_FULL());
     });
-    it('should know where the lowest case is', () => {
+    it('should know where the lowest space is', () => {
         const board: Player[][] = [
             [_, _, _, X, _, _, _],
             [_, _, O, O, _, _, _],

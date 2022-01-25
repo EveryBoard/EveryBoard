@@ -25,7 +25,7 @@ describe('PentagoRules', () => {
             new PentagoMinimax(rules, 'PentagoMinimax'),
         ];
     });
-    it('it should be illegal to drop piece on occupied case', () => {
+    it('it should be illegal to drop piece on occupied space', () => {
         const board: Table<Player> = [
             [_, _, _, _, _, _],
             [_, O, _, _, _, _],

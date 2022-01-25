@@ -43,6 +43,10 @@ describe('ActivePartsService', () => {
 
             // When a new part is added
             const part: Part = {
+                lastUpdate: {
+                    index: 0,
+                    player: 0,
+                },
                 listMoves: [],
                 playerZero: 'creator',
                 playerOne: 'firstCandidate',
@@ -71,6 +75,10 @@ describe('ActivePartsService', () => {
 
             // When a new part is added
             const part: Part = {
+                lastUpdate: {
+                    index: 0,
+                    player: 0,
+                },
                 listMoves: [],
                 playerZero: 'creator',
                 playerOne: 'firstCandidate',
@@ -88,6 +96,10 @@ describe('ActivePartsService', () => {
         it('should notify about deleted parts', fakeAsync(async() => {
             // Given that we are observing active parts, and there is already one part
             const part: Part = {
+                lastUpdate: {
+                    index: 0,
+                    player: 0,
+                },
                 listMoves: [],
                 playerZero: 'creator',
                 playerOne: 'firstCandidate',
@@ -113,6 +125,10 @@ describe('ActivePartsService', () => {
         it('should preserve non-deleted upon a deletion', fakeAsync(async() => {
             // Given a service observing active parts, and there are already multiple parts
             const part: Part = {
+                lastUpdate: {
+                    index: 0,
+                    player: 0,
+                },
                 listMoves: [],
                 playerZero: 'creator',
                 playerOne: 'firstCandidate',
@@ -140,6 +156,10 @@ describe('ActivePartsService', () => {
         it('should update when a part is modified', fakeAsync(async() => {
             // Given that we are observing active parts, and there is already one part
             const part: Part = {
+                lastUpdate: {
+                    index: 0,
+                    player: 0,
+                },
                 listMoves: [],
                 playerZero: 'creator',
                 playerOne: 'firstCandidate',
@@ -166,6 +186,10 @@ describe('ActivePartsService', () => {
         it('should update only the modified part', fakeAsync(async() => {
             // Given that we are observing active parts, and there is already one part
             const part: Part = {
+                lastUpdate: {
+                    index: 0,
+                    player: 0,
+                },
                 listMoves: [],
                 playerZero: 'creator',
                 playerOne: 'firstCandidate',

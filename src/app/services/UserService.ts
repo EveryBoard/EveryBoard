@@ -17,7 +17,7 @@ export class UserService {
     public getActiveUsersObs(): Observable<UserDocument[]> {
         // TODO: unsubscriptions from other user services
         this.activeUsersService.startObserving();
-        return this.activeUsersService.activesUsersObs;
+        return this.activeUsersService.activeUsersObs;
     }
     public unSubFromActiveUsersObs(): void {
         this.activeUsersService.stopObserving();

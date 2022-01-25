@@ -14,7 +14,7 @@
                       [attr.y]="SPACE_SIZE * y"
                       [attr.width]="SPACE_SIZE"
                       [attr.height]="SPACE_SIZE"
-                      [ngClass]="getCaseClasses(x, y)"
+                      [ngClass]="getSquareClasses(x, y)"
                       class="base"
                 />
                 <g *ngIf="caseContent !== EMPTY">

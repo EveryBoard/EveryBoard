@@ -23,7 +23,7 @@ describe('ActiveUsersService', () => {
         });
         service.startObserving();
         let observerCalls: number = 0;
-        service.activesUsersObs.subscribe((users: UserDocument[]) => {
+        service.activeUsersObs.subscribe((users: UserDocument[]) => {
             if (observerCalls === 1) {
                 expect(users).toEqual([{
                     id: 'playerDocId',

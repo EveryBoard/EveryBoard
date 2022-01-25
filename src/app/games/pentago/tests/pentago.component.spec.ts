@@ -76,7 +76,7 @@ describe('PentagoComponent', () => {
         await componentTestUtils.expectMoveSuccess('#rotate_3_clockwise', move);
         const component: PentagoComponent = componentTestUtils.getComponent();
         expect(component.getBlockClasses(1, 1)).toEqual(['moved']);
-        expect(component.getCaseClasses(3, 5)).toEqual(['player0', 'last-move']);
+        expect(component.getSquareClasses(3, 5)).toEqual(['player0', 'last-move']);
     }));
     it('Should highlight last move (with rotation of last drop, counterclockwise)', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_0_5');
@@ -84,7 +84,7 @@ describe('PentagoComponent', () => {
         await componentTestUtils.expectMoveSuccess('#rotate_2_counterclockwise', move);
         const component: PentagoComponent = componentTestUtils.getComponent();
         expect(component.getBlockClasses(0, 1)).toEqual(['moved']);
-        expect(component.getCaseClasses(2, 5)).toEqual(['player0', 'last-move']);
+        expect(component.getSquareClasses(2, 5)).toEqual(['player0', 'last-move']);
     }));
     it('Should highlight last move (with rotation, but not of last drop)', fakeAsync(async() => {
         const board: Table<Player> = [
@@ -102,7 +102,7 @@ describe('PentagoComponent', () => {
         await componentTestUtils.expectMoveSuccess('#rotate_1_counterclockwise', move);
         const component: PentagoComponent = componentTestUtils.getComponent();
         expect(component.getBlockClasses(1, 0)).toEqual(['moved']);
-        expect(component.getCaseClasses(0, 1)).toEqual(['player1', 'last-move']);
+        expect(component.getSquareClasses(0, 1)).toEqual(['player1', 'last-move']);
     }));
     it('should not accept click on pieces', fakeAsync(async() => {
         // Given an initial state with a piece on it

@@ -22,7 +22,7 @@ describe('GoMinimax', () => {
     });
 
     describe('getListMove', () => {
-        it('should count as many move as empty case in Phase.PLAYING turn, + PASS', () => {
+        it('should count as many move as empty space in Phase.PLAYING turn, + PASS', () => {
             const board: Table<GoPiece> = [
                 [_, X, _, _, _],
                 [X, _, _, _, _],

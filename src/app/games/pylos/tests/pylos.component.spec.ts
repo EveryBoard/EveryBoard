@@ -24,7 +24,7 @@ describe('PylosComponent', () => {
         expect(componentTestUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
         expect(componentTestUtils.getComponent()).withContext('Component should be created').toBeTruthy();
     });
-    it('should allow droping piece on occupable case', fakeAsync(async() => {
+    it('should allow droping piece on occupable space', fakeAsync(async() => {
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 0), []);
         await componentTestUtils.expectMoveSuccess('#drop_0_0_0', move);
     }));
@@ -134,9 +134,9 @@ describe('PylosComponent', () => {
 
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(1, 1, 0), captures);
         await componentTestUtils.expectMoveSuccess('#piece_0_1_0', move);
-        expect(pylosGameComponent.getCaseClasses(1, 1, 0)).toEqual(['moved']);
-        expect(pylosGameComponent.getCaseClasses(0, 0, 0)).toEqual(['captured']);
-        expect(pylosGameComponent.getCaseClasses(0, 1, 0)).toEqual(['captured']);
+        expect(pylosGameComponent.getSquareClasses(1, 1, 0)).toEqual(['moved']);
+        expect(pylosGameComponent.getSquareClasses(0, 0, 0)).toEqual(['captured']);
+        expect(pylosGameComponent.getSquareClasses(0, 1, 0)).toEqual(['captured']);
     }));
     it('should forbid piece to land lower than they started', fakeAsync(async() => {
         const initialBoard: Player[][][] = [

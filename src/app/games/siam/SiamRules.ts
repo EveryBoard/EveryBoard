@@ -360,14 +360,11 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         let missingForce: number = 0;
         while (testedCoord.isInRange(5, 5) && pusherFound === false) {
             const currentPiece: SiamPiece = state.getPieceAt(testedCoord);
-            display(SiamRules.VERBOSE, { testedCoord: testedCoord.toString(), currentDistance, currentPiece });
             if (currentPiece.isEmptyOrMountain()) {
                 if (currentPiece === SiamPiece.MOUNTAIN) {
-                    display(SiamRules.VERBOSE, 'found mountain');
                     missingForce += 0.9;
                     mountainEncountered = true;
-                } else { // Encountered empty case
-                    display(SiamRules.VERBOSE, 'found empty place');
+                } else { // Encountered empty space
                     currentDistance++;
                 }
             } else { // Player found
@@ -376,36 +373,24 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
                     if (mountainEncountered) {
                         missingForce -= 1; // We count her as active pusher
                         // We found a piece pushing right in the good direction
-                        if (missingForce > 0) { // But she can't push by herself
-                            display(SiamRules.VERBOSE, 'found WEEAAK pushing player');
-                            // weakPusher are the one counsidered as winner in case of victory, whoever played
-                        } else { // And she has enough force to push
-                            display(SiamRules.VERBOSE, 'found STRRRONG pushing player at ' + testedCoord.toString());
+                        if (missingForce <= 0) {// And she has enough force to push
                             pusherFound = true;
                             testedCoord = testedCoord.getNext(direction);
                         }
-                    } else {
-                        display(SiamRules.VERBOSE, 'found pushing player that might be pushed out before the mountain');
                     }
-                } else if (playerOrientation === resistance) {
-                    display(SiamRules.VERBOSE, 'found resisting player');
-                    // We found a piece resisting the pushing direction
+                } else if (playerOrientation === resistance) { // We found a piece resisting the pushing direction
                     missingForce += 1;
                     if (!mountainEncountered) {
-                        display(SiamRules.VERBOSE, `he his before the mountain, we'll have to push longer`);
                         currentDistance++;
                     }
                 } else {
-                    display(SiamRules.VERBOSE, 'found a sideway almost-pusher');
                     if (mountainEncountered) {
                         almostPusher = MGPOptional.of(testedCoord.getCopy());
                         if (previousPiece !== SiamPiece.EMPTY) {
-                            display(SiamRules.VERBOSE, 'his orientation will slow him down');
                             currentDistance++;
                         }
                     } else {
                         currentDistance++;
-                        display(SiamRules.VERBOSE, `he'll get pushed out before the mountain`);
                     }
                 }
             }
@@ -413,27 +398,21 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
             previousPiece = currentPiece;
             testedCoord = testedCoord.getPrevious(direction);
         }
-        display(SiamRules.VERBOSE, { testedCoord: testedCoord.toString(), loopResultingDistance: currentDistance });
         if (pusherFound === false && almostPusher.isPresent()) {
             currentDistance++;
             missingForce -= 1;
-            display(SiamRules.VERBOSE, 'no pusher found but found one sideway guy');
             while (testedCoord.equals(almostPusher.get()) === false) {
-                display(SiamRules.VERBOSE, 'he was one piece backward');
                 testedCoord = testedCoord.getNext(direction);
                 currentDistance--;
             }
         }
         if (testedCoord.isNotInRange(5, 5)) {
             missingForce -= 1;
-            display(SiamRules.VERBOSE, 'we end up out of the board');
             if (state.countPlayerPawn() === 5) {
-                display(SiamRules.VERBOSE, 'and we cannot insert');
                 return MGPOptional.empty();
             }
         }
         if (missingForce > 0) {
-            display(SiamRules.VERBOSE, 'we end up with not enough force to push');
             return MGPOptional.empty();
         }
         return MGPOptional.of({ distance: currentDistance, coord: testedCoord });

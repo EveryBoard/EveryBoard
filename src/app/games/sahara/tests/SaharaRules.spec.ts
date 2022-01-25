@@ -65,7 +65,7 @@ describe('SaharaRules', () => {
         expect(rules.choose(SaharaMove.from(new Coord(1, 4), new Coord(2, 4)).get())).toBeTrue();
         expect(rules.node.getOwnValue(minimax).value).withContext('Should be victory').toBe(Number.MIN_SAFE_INTEGER);
     });
-    it('Bouncing on occupied case should be illegal', () => {
+    it('Bouncing on occupied space should be illegal', () => {
         expect(rules.choose(SaharaMove.from(new Coord(7, 0), new Coord(8, 1)).get())).toBeFalse();
     });
     it('Should forbid moving opponent piece', () => {

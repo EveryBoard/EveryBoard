@@ -28,10 +28,10 @@
 /.sass-cache
 /connect.lock
 /coverage
-! coverage/branches.csv
-! coverage/functions.csv
-! coverage/statements.csv
-! coverage/lines.csv
+! /coverage/branches.csv
+! /coverage/functions.csv
+! /coverage/statements.csv
+! /coverage/lines.csv
 /typings
 *.log
 

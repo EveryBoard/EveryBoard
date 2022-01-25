@@ -131,11 +131,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
         const colorToPlay: KamisadoColor = state.colorToPlay;
 
         if (move === KamisadoMove.PASS) {
-            if (this.mustPass(state) && !state.alreadyPassed) {
-                return MGPFallible.success(undefined);
-            } else {
-                return MGPFallible.failure(RulesFailure.CANNOT_PASS());
-            }
+            return this.isLegalPass(state);
         }
 
         if (KamisadoRules.isVictory(state)) {
@@ -149,11 +145,11 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
         if (!piece.belongsTo(state.getCurrentPlayer())) {
             return MGPFallible.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
-        //  - start case should contain a piece of the right color (or any color can be played)
+        //  - start space should contain a piece of the right color (or any color can be played)
         if (colorToPlay !== KamisadoColor.ANY && piece.color !== colorToPlay) {
             return MGPFallible.failure(KamisadoFailure.NOT_RIGHT_COLOR());
         }
-        //  - end case should be empty
+        //  - end space should be empty
         const endPiece: KamisadoPiece = state.getPieceAt(end);
         if (!endPiece.isEmpty()) {
             return MGPFallible.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
@@ -177,6 +173,13 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
             }
         }
         return MGPFallible.success(undefined);
+    }
+    private static isLegalPass(state: KamisadoState): MGPFallible<void> {
+        if (this.mustPass(state) && !state.alreadyPassed) {
+            return MGPFallible.success(undefined);
+        } else {
+            return MGPFallible.failure(RulesFailure.CANNOT_PASS());
+        }
     }
     private static isVictory(state: KamisadoState): boolean {
         const [furthest0, furthest1]: [number, number] = this.getFurthestPiecePositions(state);

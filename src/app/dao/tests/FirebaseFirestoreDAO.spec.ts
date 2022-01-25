@@ -116,7 +116,7 @@ describe('FirebaseFirestoreDAO', () => {
             await expectAsync(promise).toBeResolvedTo([{ value: 'foo', otherValue: 1 }]);
             unsubscribe();
         });
-        it('should not observe document creation when the simple condition does not hold', async() => {
+        it('should not observe document creation when the condition does not hold (simple)', async() => {
             // This test is flaky: it fails from time to time. Check the output log when it fails.
             const callback: FirebaseCollectionObserver<Foo> = new FirebaseCollectionObserver(
                 callbackFunctionLog,
@@ -128,7 +128,7 @@ describe('FirebaseFirestoreDAO', () => {
             await expectAsync(promise).toBePending();
             unsubscribe();
         });
-        it('should not observe document creation when the complex condition does not hold', async() => {
+        it('should not observe document creation when the condition does not hold (complexe)', async() => {
             // This test is flaky: it fails from time to time. Check the output log when it fails.
             const callback: FirebaseCollectionObserver<Foo> = new FirebaseCollectionObserver(
                 callbackFunctionLog,
@@ -140,7 +140,7 @@ describe('FirebaseFirestoreDAO', () => {
             await expectAsync(promise).toBePending();
             unsubscribe();
         });
-        it('should observe document modification with the given condition', async() => {
+        it('should observe document update with the given condition', async() => {
             const callback: FirebaseCollectionObserver<Foo> = new FirebaseCollectionObserver(
                 () => void { },
                 callbackFunction,
@@ -152,7 +152,7 @@ describe('FirebaseFirestoreDAO', () => {
             await expectAsync(promise).toBeResolvedTo([{ value: 'foo', otherValue: 42 }]);
             unsubscribe();
         });
-        it('should not observe document modification when the condition does not hold', async() => {
+        it('should not observe document update when the condition does not hold', async() => {
             const callback: FirebaseCollectionObserver<Foo> = new FirebaseCollectionObserver(
                 () => void { },
                 callbackFunction,

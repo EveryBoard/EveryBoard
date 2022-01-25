@@ -4,6 +4,10 @@ import { MGPResult, Part } from './Part';
 
 export class PartMocks {
     public static readonly INITIAL: Part = {
+        lastUpdate: {
+            index: 0,
+            player: 0,
+        },
         typeGame: 'Quarto',
         playerZero: 'creator',
         turn: -1,
@@ -12,6 +16,10 @@ export class PartMocks {
     };
 
     public static readonly STARTING: Part = {
+        lastUpdate: {
+            index: 1,
+            player: 1,
+        },
         typeGame: 'Quarto',
         playerZero: 'creator',
         turn: 0,

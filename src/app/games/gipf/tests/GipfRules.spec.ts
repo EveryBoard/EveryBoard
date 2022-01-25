@@ -61,7 +61,7 @@ describe('GipfRules:', () => {
 
             RulesUtils.expectMoveFailure(rules, state, move, GipfFailure.PLACEMENT_NOT_ON_BORDER());
         });
-        it('should require a direction when placing a piece on an occupied case', () => {
+        it('should require a direction when placing a piece on an occupied space', () => {
             const state: GipfState = GipfState.getInitialState();
             const placement: GipfPlacement = new GipfPlacement(new Coord(3, 0), MGPOptional.empty());
             const move: GipfMove = new GipfMove(placement, [], []);
