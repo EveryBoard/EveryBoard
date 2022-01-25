@@ -83,7 +83,7 @@ export class CoerceoMove extends Move {
                 return CoerceoMove.fromMovement(new Coord(cx, cy), CoerceoStep.STEPS[encodedMove - 1]);
             }
         }
-    }
+    };
     public static fromMovement(start: Coord,
                                step: CoerceoStep): CoerceoMove
     {

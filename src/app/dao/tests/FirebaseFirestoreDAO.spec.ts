@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { TestBed } from '@angular/core/testing';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 import 'firebase/firestore';
 import { Injectable } from '@angular/core';
 import { FirebaseFirestoreDAO } from '../FirebaseFirestoreDAO';
@@ -18,8 +18,8 @@ interface Foo extends FirebaseJSONObject {
     providedIn: 'root',
 })
 class FooDAO extends FirebaseFirestoreDAO<Foo> {
-    constructor(protected afs: AngularFirestore) {
-        super('foo', afs);
+    constructor() {
+        super('foo');
     }
 }
 
@@ -57,11 +57,11 @@ describe('FirebaseFirestoreDAO', () => {
         expect(stored.value).toBe('bar');
         expect(stored.otherValue).toBe(2);
     });
-    describe('getObsById', () => {
+    describe('subscribeToChanges', () => {
         it('should return an observable that can be used to see changes in objects', async() => {
             const id: string = await dao.create({ value: 'foo', otherValue: 1 });
             const allChangesSeenPromise: Promise<boolean> = new Promise((resolve: (value: boolean) => void) => {
-                dao.getObsById(id).subscribe((foo: MGPOptional<Foo>) => {
+                dao.subscribeToChanges((foo: MGPOptional<Foo>) => {
                     if (foo.isPresent() && foo.get().value === 'bar' && foo.get().otherValue === 2) {
                         resolve(true);
                     }

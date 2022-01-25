@@ -1,4 +1,4 @@
-import firebase from 'firebase';
+import { FieldValue } from 'firebase/firestore';
 
 // These are the datatypes supported by firestore. Arrays of arrays are not
 // supported, but arrays containing objects containing arrays are, which is what
@@ -17,7 +17,7 @@ export function isJSONPrimitive(value: unknown): value is JSONPrimitive {
     return false;
 }
 
-export type FirebaseJSONPrimitive = JSONPrimitive | firebase.firestore.FieldValue;
+export type FirebaseJSONPrimitive = JSONPrimitive | FieldValue;
 export type FirebaseJSONValue =
     FirebaseJSONPrimitive |
     FirebaseJSONObject |

@@ -13,6 +13,11 @@
         "alwaysStrict": true,
         "noImplicitThis": true,
         "strictBindCallApply": true,
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "strictPropertyInitialization": false,
+        "skipLibCheck": true,
         // The following options still need to be set to true
         // For now, we'll use the ts-strict plugin to do that file by file before enabling it globally
         "strictNullChecks": true,

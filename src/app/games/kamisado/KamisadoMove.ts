@@ -28,7 +28,7 @@ export class KamisadoMove extends MoveCoordToCoord {
             const x1: number = encodedMove % 16;
             return new KamisadoMove(new Coord(x1, y1), new Coord(x2, y2));
         }
-    }
+    };
     private constructor(start: Coord, end: Coord) {
         super(start, end);
     }

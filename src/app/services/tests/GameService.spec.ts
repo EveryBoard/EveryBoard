@@ -22,7 +22,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Utils } from 'src/app/utils/utils';
 import { JoinerService } from '../JoinerService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import firebase from 'firebase/app';
+import { serverTimestamp } from 'firebase/firestore';
 
 describe('GameService', () => {
 
@@ -71,7 +71,7 @@ describe('GameService', () => {
             expect(observedPart.isPresent()).toBeTrue();
             expect(observedPart.get()).toEqual(part);
         };
-        spyOn(partDAO, 'getObsById').and.returnValue(of(MGPOptional.of(part)));
+        spyOn(partDAO, 'subscribeToChanges').and.returnValue(of(MGPOptional.of(part)));
         service.startObserving('partId', myCallback);
         expect(partDAO.getObsById).toHaveBeenCalledWith('partId');
     });
@@ -292,7 +292,7 @@ describe('GameService', () => {
                 listMoves: [MOVE_1, MOVE_2],
                 turn: 2,
                 request: null,
-                lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
+                lastMoveTime: serverTimestamp(),
                 scorePlayerZero: 5,
                 scorePlayerOne: 0,
             };
@@ -310,7 +310,7 @@ describe('GameService', () => {
                 listMoves: [MOVE_1, MOVE_2],
                 turn: 2,
                 request: null,
-                lastMoveTime: firebase.firestore.FieldValue.serverTimestamp(),
+                lastMoveTime: serverTimestamp(),
                 result: MGPResult.HARD_DRAW.value,
             };
             expect(partDAO.update).toHaveBeenCalledWith('partId', expectedUpdate);

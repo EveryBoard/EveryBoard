@@ -1,5 +1,4 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
 import { Chat } from '../domain/Chat';
 import { ChatDAO } from '../dao/ChatDAO';
 import { Message } from '../domain/Message';
@@ -8,6 +7,7 @@ import { MGPValidation } from '../utils/MGPValidation';
 import { ArrayUtils } from '../utils/ArrayUtils';
 import { Localized } from '../utils/LocaleUtils';
 import { MGPOptional } from '../utils/MGPOptional';
+import { Unsubscribe } from 'firebase/firestore';
 
 export class ChatMessages {
     public static readonly CANNOT_SEND_MESSAGE: Localized = () => $localize`You're not allowed to send a message here.`;
@@ -22,9 +22,7 @@ export class ChatService implements OnDestroy {
 
     private followedChatId: MGPOptional<string> = MGPOptional.empty();
 
-    private followedChatObs: MGPOptional<Observable<MGPOptional<Chat>>> = MGPOptional.empty();
-
-    private followedChatSub: Subscription;
+    private followedChatUnsubscribe: Unsubscribe;
 
     constructor(private readonly chatDAO: ChatDAO) {
         display(ChatService.VERBOSE, 'ChatService.constructor');
@@ -36,8 +34,7 @@ export class ChatService implements OnDestroy {
             display(ChatService.VERBOSE, '[start watching chat ' + chatId);
 
             this.followedChatId = MGPOptional.of(chatId);
-            this.followedChatObs = MGPOptional.of(this.chatDAO.getObsById(chatId));
-            this.followedChatSub = this.followedChatObs.get().subscribe(callback);
+            this.followedChatUnsubscribe = this.chatDAO.subscribeToChanges(chatId, callback);
         } else if (this.followedChatId.equalsValue(chatId)) {
             throw new Error(`WTF :: Already observing chat '${chatId}'`);
         } else {
@@ -50,8 +47,8 @@ export class ChatService implements OnDestroy {
         }
         display(ChatService.VERBOSE, 'stopped watching chat ' + this.followedChatId + ']');
         this.followedChatId = MGPOptional.empty();
-        this.followedChatSub.unsubscribe();
-        this.followedChatObs = MGPOptional.empty();
+        this.followedChatUnsubscribe();
+
     }
     public isObserving(): boolean {
         return this.followedChatId.isPresent();

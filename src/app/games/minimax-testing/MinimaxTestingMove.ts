@@ -15,7 +15,7 @@ export class MinimaxTestingMove extends Move {
         public encodeNumber(move: MinimaxTestingMove): number {
             return move.right ? 0 : 1;
         }
-    }
+    };
 
     public readonly right: boolean;
 

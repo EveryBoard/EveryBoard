@@ -91,7 +91,7 @@ describe('JoinerService', () => {
         }));
         it('should delegate update to DAO', fakeAsync(async() => {
             await dao.set('joinerId', JoinerMocks.INITIAL);
-            service.observe('joinerId');
+            service.subscribeToChanges('joinerId', (doc: MGPOptional<Joiner>): void => {});
             await service.joinGame('joinerId', 'someone totally new');
 
             spyOn(dao, 'update');
@@ -102,7 +102,7 @@ describe('JoinerService', () => {
         }));
         it('should start as new when chosenPlayer leaves', fakeAsync(async() => {
             await dao.set('joinerId', JoinerMocks.WITH_CHOSEN_PLAYER);
-            service.observe('joinerId');
+            service.subscribeToChanges('joinerId', (doc: MGPOptional<Joiner>): void => {});
 
             await service.cancelJoining('firstCandidate');
             const currentJoiner: Joiner = dao.getStaticDB().get('joinerId').get().subject.value.get().data;
@@ -110,7 +110,7 @@ describe('JoinerService', () => {
         }));
         it('should throw when called by someone who is nor candidate nor chosenPlayer', fakeAsync(async() => {
             await dao.set('joinerId', JoinerMocks.INITIAL);
-            service.observe('joinerId');
+            service.subscribeToChanges('joinerId', (doc: MGPOptional<Joiner>): void => {});
             await service.joinGame('joinerId', 'whoever');
 
             await expectAsync(service.cancelJoining('who is that')).toBeRejectedWith(new Error('someone that was not candidate nor chosenPlayer just left the chat: who is that'));
@@ -119,7 +119,7 @@ describe('JoinerService', () => {
     describe('updateCandidates', () => {
         it('should delegate to DAO for current joiner', fakeAsync(async() => {
             await dao.set('joinerId', JoinerMocks.INITIAL);
-            service.observe('joinerId');
+            service.subscribeToChanges('joinerId', (doc: MGPOptional<Joiner>): void => {});
 
             spyOn(dao, 'update');
 
@@ -133,7 +133,7 @@ describe('JoinerService', () => {
     describe('deleteJoiner', () => {
         it('should delegate deletion to DAO', fakeAsync(async() => {
             await dao.set('joinerId', JoinerMocks.INITIAL);
-            service.observe('joinerId');
+            service.subscribeToChanges('joinerId', (doc: MGPOptional<Joiner>): void => {});
 
             spyOn(dao, 'delete');
 
@@ -145,7 +145,7 @@ describe('JoinerService', () => {
     describe('reviewConfig', () => {
         it('should change part status with DAO', fakeAsync(async() => {
             await dao.set('joinerId', JoinerMocks.INITIAL);
-            service.observe('joinerId');
+            service.subscribeToChanges('joinerId', (doc: MGPOptional<Joiner>): void => {});
 
             spyOn(dao, 'update');
 
@@ -159,7 +159,7 @@ describe('JoinerService', () => {
     describe('reviewConfigRemoveChosenPlayerAndUpdateCandidates', () => {
         it('should change part status, chosen player and candidates with DAO', fakeAsync(async() => {
             await dao.set('joinerId', JoinerMocks.INITIAL);
-            service.observe('joinerId');
+            service.subscribeToChanges('joinerId', (doc: MGPOptional<Joiner>): void => {});
 
             spyOn(dao, 'update');
 
@@ -175,7 +175,7 @@ describe('JoinerService', () => {
     describe('acceptConfig', () => {
         it('should change part status with DAO', fakeAsync(async() => {
             await dao.set('joinerId', JoinerMocks.INITIAL);
-            service.observe('joinerId');
+            service.subscribeToChanges('joinerId', (doc: MGPOptional<Joiner>): void => {});
 
             spyOn(dao, 'update');
 

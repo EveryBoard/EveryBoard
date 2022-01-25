@@ -3,9 +3,9 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import firebase from 'firebase/app';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { faEye, IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import { User as FirebaseUser } from 'firebase/auth';
 
 @Component({
     selector: 'app-register',
@@ -33,7 +33,7 @@ export class RegisterComponent {
         if (username == null || email == null || password == null) {
             this.errorMessage = $localize`There are missing fields in the registration form, please check that you filled in all fields.`;
         } else {
-            const registrationResult: MGPFallible<firebase.User> =
+            const registrationResult: MGPFallible<FirebaseUser> =
                 await this.authService.doRegister(username, email, password);
             if (registrationResult.isSuccess()) {
                 const emailResult: MGPValidation =

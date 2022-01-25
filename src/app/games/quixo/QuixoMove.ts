@@ -23,7 +23,7 @@ export class QuixoMove extends MoveCoord {
             encodedMove -= encodedMove % 5; encodedMove /= 5;
             return new QuixoMove(encodedMove, y, direction);
         }
-    }
+    };
     public static isValidCoord(coord: Coord): MGPValidation {
         if (coord.isNotInRange(5, 5)) {
             return MGPValidation.failure('Invalid coord for QuixoMove: ' + coord.toString() + ' is outside the board.');

@@ -32,21 +32,21 @@ import { Rules } from 'src/app/jscaip/Rules';
 import { Utils } from '../utils';
 import { AutofocusDirective } from 'src/app/directives/autofocus.directive';
 import { ToggleVisibilityDirective } from 'src/app/directives/toggle-visibility.directive';
-import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { AngularFireModule } from '@angular/fire';
-import { USE_EMULATOR as USE_FIRESTORE_EMULATOR } from '@angular/fire/firestore';
-import { USE_EMULATOR as USE_DATABASE_EMULATOR } from '@angular/fire/database';
-import { USE_EMULATOR as USE_AUTH_EMULATOR } from '@angular/fire/auth';
-import { USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/functions';
+import { USE_EMULATOR as USE_FIRESTORE_EMULATOR } from '@angular/fire/compat/firestore';
+import { USE_EMULATOR as USE_DATABASE_EMULATOR } from '@angular/fire/compat/database';
+import { USE_EMULATOR as USE_AUTH_EMULATOR } from '@angular/fire/compat/auth';
+import { USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/compat/functions';
 import { environment } from 'src/environments/environment';
 import { MGPOptional } from '../MGPOptional';
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 
 @Component({})
 export class BlankComponent {}
 
 export class ActivatedRouteStub {
-    private route: {[key: string]: string} = {}
+    private route: {[key: string]: string} = {};
     public snapshot: { paramMap: { get: (str: string) => string } };
     public constructor(compo?: string, id?: string) {
         this.snapshot = {
@@ -455,7 +455,7 @@ export async function setupEmulators(): Promise<unknown> {
         imports: [
             AngularFirestoreModule,
             HttpClientModule,
-            AngularFireModule.initializeApp(environment.firebaseConfig),
+            provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
         ],
         providers: [
             { provide: USE_AUTH_EMULATOR, useValue: environment.emulatorConfig.auth },

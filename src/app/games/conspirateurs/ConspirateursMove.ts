@@ -108,7 +108,7 @@ export class ConspirateursMoveJump extends Move {
             const decoded: Coord[] = coords.map(this.coordEncoder.decodeNumber);
             return ConspirateursMoveJump.of(decoded).get();
         }
-    }
+    };
     public static of(coords: readonly Coord[]): MGPFallible<ConspirateursMoveJump> {
         if (coords.length < 2) {
             return MGPFallible.failure('ConspirateursMoveJump requires at least one jump, so two coords');

@@ -6,8 +6,7 @@ import { UserDAO } from '../UserDAO';
 import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { createConnectedGoogleUser } from 'src/app/services/tests/AuthenticationService.spec';
 import { Utils } from 'src/app/utils/utils';
-import firebase from 'firebase/app';
-import 'firebase/auth';
+import { getAuth, signOut } from 'firebase/auth';
 
 describe('UserDAO', () => {
 
@@ -64,7 +63,7 @@ describe('UserDAO', () => {
             const user: User = (await dao.read(uid)).get();
             expect(user.username).toEqual('foo');
 
-            await firebase.auth().signOut();
+            await signOut(getAuth());
         });
     });
 });

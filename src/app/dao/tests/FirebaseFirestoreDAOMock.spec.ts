@@ -1,8 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
-import firebase from 'firebase/app';
-import 'firebase/firestore';
 import { assert, display, FirebaseJSONObject, Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
@@ -10,6 +8,7 @@ import { FirebaseCondition, FirebaseDocument, IFirebaseFirestoreDAO } from '../F
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { ObservableSubject } from 'src/app/utils/tests/ObservableSubject.spec';
 import { Time } from 'src/app/domain/Time';
+import { FieldValue, UpdateData } from 'firebase/firestore';
 
 type DocumentSubject<T> = ObservableSubject<MGPOptional<FirebaseDocument<T>>>;
 
@@ -63,7 +62,7 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
     public getServerTimestampedObject<N extends FirebaseJSONObject>(elementWithFieldValue: N): N {
         const elementWithTime: FirebaseJSONObject = {};
         for (const key of Object.keys(elementWithFieldValue)) {
-            if (elementWithFieldValue[key] instanceof firebase.firestore.FieldValue) {
+            if (elementWithFieldValue[key] instanceof FieldValue) {
                 elementWithTime[key] = FirebaseFirestoreDAOMock.mockServerTime();
             } else {
                 elementWithTime[key] = elementWithFieldValue[key];
@@ -103,7 +102,7 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
         }
         return Promise.resolve();
     }
-    public async update(id: string, update: Partial<T>): Promise<void> {
+    public async update(id: string, update: UpdateData<T>): Promise<void> {
         display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE,
                 this.collectionName + '.update(' + id + ', ' + JSON.stringify(update) + ')');
 

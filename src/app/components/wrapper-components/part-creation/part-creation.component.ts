@@ -75,7 +75,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         firstPlayerClasses: { 'CREATOR': [], 'RANDOM': ['is-selected', 'is-primary'], 'CHOSEN_PLAYER': [] },
         candidateClasses: {},
         candidates: [],
-    }
+    };
     public currentJoiner: Joiner | null = null;
 
     // Subscription
@@ -129,12 +129,10 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         });
     }
     private subscribeToJoinerDoc(): void {
-        this.joinerService
-            .observe(this.partId)
-            .pipe(takeUntil(this.ngUnsubscribe))
-            .subscribe(async(joiner: MGPOptional<Joiner>) => {
-                await this.onCurrentJoinerUpdate(joiner);
-            });
+        this.joinerService.subscribeToChanges(this.partId,
+                                              async(joiner: MGPOptional<Joiner>) => {
+                                                  await this.onCurrentJoinerUpdate(joiner);
+                                              });
     }
     private getForm(name: string): AbstractControl {
         return Utils.getNonNullable(this.configFormGroup.get(name));
@@ -411,6 +409,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
 
+        this.joinerService.unsubscribe();
         for (const candidateName of this.candidateSubscription.listKeys()) {
             this.unsubscribeFrom(candidateName);
         }

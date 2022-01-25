@@ -2,8 +2,6 @@
 import { AuthenticationService, AuthUser, RTDB } from '../AuthenticationService';
 import { Observable, ReplaySubject, Subscription } from 'rxjs';
 import { fakeAsync, TestBed } from '@angular/core/testing';
-import firebase from 'firebase/app';
-import 'firebase/auth';
 import { Injectable } from '@angular/core';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
@@ -11,7 +9,9 @@ import { Utils } from 'src/app/utils/utils';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { AngularFireAuth } from '@angular/fire/auth';
+import { getAuth, GoogleAuthProvider, signInWithCredential, signOut, UserCredential, User as FirebaseUser } from 'firebase/auth';
+import { getDatabase, ref, remove } from 'firebase/database';
+import { FirebaseError } from 'firebase/app';
 
 class RTDBSpec {
     public static setOfflineMock(): void {
@@ -54,7 +54,7 @@ export class AuthenticationServiceMock {
     public async disconnect(): Promise<MGPValidation> {
         return MGPValidation.failure('not mocked');
     }
-    public async doRegister(_username: string, _email: string, _password: string): Promise<MGPFallible<firebase.User>> {
+    public async doRegister(_username: string, _email: string, _password: string): Promise<MGPFallible<FirebaseUser>> {
         return MGPFallible.failure('not mocked');
     }
     public async sendEmailVerification(): Promise<MGPValidation> {
@@ -90,7 +90,7 @@ async function setupAuthTestModule(): Promise<unknown> {
     const useFirebaseDatabase: boolean = false;
     if (useFirebaseDatabase) {
         // Here we can't clear the DB because it breaks everything, but this is how it should be done:
-        await firebase.database().ref().set(null);
+        await remove(ref(getDatabase()));
     }
     return;
 }
@@ -106,14 +106,13 @@ export class AuthenticationServiceUnderTest extends AuthenticationService {
  * When using it, don't forget to sign out the user when the test is done, using:
  * await firebase.auth().signOut();
  */
-export async function createConnectedGoogleUser(createInDB: boolean): Promise<firebase.auth.UserCredential> {
+export async function createConnectedGoogleUser(createInDB: boolean): Promise<UserCredential> {
     // Need angular fire auth in order to create a user
-    TestBed.inject(AngularFireAuth);
     TestBed.inject(AuthenticationService);
     // Sign out current user in case there is one
-    await firebase.auth().signOut();
+    await signOut(getAuth());
     // Create a new google user
-    const credential: firebase.auth.UserCredential = await firebase.auth().signInWithCredential(firebase.auth.GoogleAuthProvider.credential('{"sub": "abc123", "email": "foo@example.com", "email_verified": true}'));
+    const credential: UserCredential = await signInWithCredential(getAuth(), GoogleAuthProvider.credential('{"sub": "abc123", "email": "foo@example.com", "email_verified": true}'));
     if (createInDB) {
         await TestBed.inject(UserDAO).set(Utils.getNonNullable(credential.user).uid,
                                           // no username for google users initially!
@@ -122,9 +121,9 @@ export async function createConnectedGoogleUser(createInDB: boolean): Promise<fi
     return credential;
 }
 
-async function createGoogleUser(createInDB: boolean): Promise<firebase.auth.UserCredential> {
-    const credential: firebase.auth.UserCredential = await createConnectedGoogleUser(createInDB);
-    await firebase.auth().signOut();
+async function createGoogleUser(createInDB: boolean): Promise<UserCredential> {
+    const credential: UserCredential = await createConnectedGoogleUser(createInDB);
+    await signOut(getAuth());
     return credential;
 }
 
@@ -148,10 +147,10 @@ describe('AuthenticationService', () => {
         spyOn(userDAO, 'markVerified');
 
         // given a registered user that has finalized all steps to verify its account
-        const result: MGPFallible<firebase.User> = await service.doRegister(username, email, password);
+        const result: MGPFallible<FirebaseUser> = await service.doRegister(username, email, password);
         expect(result.isSuccess()).toBeTrue();
         const uid: string = result.get().uid;
-        await firebase.auth().signOut();
+        await signOut(getAuth());
         spyOn(service, 'emailVerified').and.returnValue(true);
 
         // when the user appears again
@@ -178,7 +177,7 @@ describe('AuthenticationService', () => {
             // given an user that does not exist
 
             // when the user is registered
-            const result: MGPFallible<firebase.User> = await service.doRegister(username, email, password);
+            const result: MGPFallible<FirebaseUser> = await service.doRegister(username, email, password);
 
             // then the user is successfully registered and created
             expect(result.isSuccess()).toBeTrue();
@@ -189,7 +188,7 @@ describe('AuthenticationService', () => {
             expect((await service.doRegister(username, email, password)).isSuccess()).toBeTrue();
 
             // when an user with the same email is registered
-            const result: MGPFallible<firebase.User> = await service.doRegister('blibli', email, password);
+            const result: MGPFallible<FirebaseUser> = await service.doRegister('blibli', email, password);
 
             // then an error is thrown
             expect(result.isFailure()).toBeTrue();
@@ -200,7 +199,7 @@ describe('AuthenticationService', () => {
             expect((await service.doRegister(username, email, password)).isSuccess()).toBeTrue();
 
             // when an user with the same email is registered
-            const result: MGPFallible<firebase.User> = await service.doRegister(username, 'bli@blah.com', password);
+            const result: MGPFallible<FirebaseUser> = await service.doRegister(username, 'bli@blah.com', password);
 
             // then an error is thrown
             expect(result.isFailure()).toBeTrue();
@@ -211,7 +210,7 @@ describe('AuthenticationService', () => {
             const invalidEmail: string = 'blibli';
 
             // when an user registers with that email
-            const result: MGPFallible<firebase.User> = await service.doRegister(username, invalidEmail, password);
+            const result: MGPFallible<FirebaseUser> = await service.doRegister(username, invalidEmail, password);
 
             // then an error is thrown
             expect(result.isFailure()).toBeTrue();
@@ -222,7 +221,7 @@ describe('AuthenticationService', () => {
             const password: string = '1';
 
             // when an user registers with that password
-            const result: MGPFallible<firebase.User> = await service.doRegister(username, email, password);
+            const result: MGPFallible<FirebaseUser> = await service.doRegister(username, email, password);
 
             // then an error is thrown
             expect(result.isFailure()).toBeTrue();
@@ -235,7 +234,7 @@ describe('AuthenticationService', () => {
             expect((await service.doRegister(username, email, password)).isSuccess()).toBeTrue();
             // and that the user is connected
             expect(await service.doEmailLogin(email, password)).toBe(MGPValidation.SUCCESS);
-            const user: firebase.User = Utils.getNonNullable(firebase.auth().currentUser);
+            const user: FirebaseUser = Utils.getNonNullable(getAuth().currentUser);
 
             spyOn(user, 'sendEmailVerification');
 
@@ -270,11 +269,10 @@ describe('AuthenticationService', () => {
             expect((await service.doRegister(username, email, password)).isSuccess()).toBeTrue();
             // and that the user is connected
             expect(await service.doEmailLogin(email, password)).toBe(MGPValidation.SUCCESS);
-            const user: firebase.User = Utils.getNonNullable(firebase.auth().currentUser);
+            const user: FirebaseUser = Utils.getNonNullable(getAuth().currentUser);
 
             // when the email verification is requested but fails
-            const error: firebase.FirebaseError = new Error('Error') as firebase.FirebaseError;
-            error.code = 'auth/too-many-requests';
+            const error: FirebaseError = new FirebaseError('auth/too-many-requests', 'Error');
             spyOn(user, 'sendEmailVerification').and.rejectWith(error);
             const result: MGPValidation = await service.sendEmailVerification();
 
@@ -292,7 +290,7 @@ describe('AuthenticationService', () => {
 
             // then the login succeeds and the current user is set
             expect(result.isSuccess()).toBeTrue();
-            expect(Utils.getNonNullable(firebase.auth().currentUser).email).toBe(email);
+            expect(Utils.getNonNullable(getAuth().currentUser).email).toBe(email);
         });
         it('should update userObs when successfully logging in', async() => {
             // given that a listener is waiting for user updates
@@ -334,7 +332,7 @@ describe('AuthenticationService', () => {
     describe('google login', () => {
         it('should delegate to signInPopup', async() => {
             // given a google user
-            const user: firebase.auth.UserCredential = await createGoogleUser(false);
+            const user: UserCredential = await createGoogleUser(false);
             spyOn(service.afAuth, 'signInWithPopup').and.resolveTo(user);
 
             // when the user connects with google
@@ -342,15 +340,14 @@ describe('AuthenticationService', () => {
 
             // then it succeeded
             expect(result.isSuccess()).toBeTrue();
-            const provider: firebase.auth.GoogleAuthProvider = new firebase.auth.GoogleAuthProvider();
+            const provider: GoogleAuthProvider = new GoogleAuthProvider();
             provider.addScope('profile');
             provider.addScope('email');
             expect(service.afAuth.signInWithPopup).toHaveBeenCalledWith(provider);
         });
         it('should fail if google login also fails', async() => {
             // given a google user that will fail to connect
-            const error: firebase.FirebaseError = new Error('Invalid credential') as firebase.FirebaseError;
-            error.code = 'auth/invalid-credential';
+            const error: FirebaseError = new FirebaseError('auth/invalid-credential', 'Invalid credential');
             spyOn(service.afAuth, 'signInWithPopup').and.rejectWith(error);
 
             // when the user tries to connect but fails
@@ -373,7 +370,7 @@ describe('AuthenticationService', () => {
         });
         it('should succeed if a user is connected, and result in the user being disconnected', async() => {
             // given a registered and connected user
-            const registrationResult: MGPFallible<firebase.User> = await service.doRegister(username, email, password);
+            const registrationResult: MGPFallible<FirebaseUser> = await service.doRegister(username, email, password);
             expect(registrationResult.isSuccess()).toBeTrue();
             await service.doEmailLogin(email, password);
 
@@ -386,7 +383,7 @@ describe('AuthenticationService', () => {
             expect(result).toBe(MGPValidation.SUCCESS);
 
             // and there is no current user
-            expect(firebase.auth().currentUser).toBeNull();
+            expect(getAuth().currentUser).toBeNull();
         });
     });
     describe('mapFirebaseError', () => {
@@ -394,11 +391,7 @@ describe('AuthenticationService', () => {
             spyOn(Utils, 'handleError').and.returnValue(null);
 
             // given an unsupported error
-            const error: firebase.FirebaseError = {
-                name: 'FirebaseError',
-                code: 'auth/unknown-error',
-                message: 'Error message',
-            };
+            const error: FirebaseError = new FirebaseError('auth/unknown-error', 'Error message');
 
             // when mapping it
             service.mapFirebaseError(error);
@@ -415,11 +408,7 @@ describe('AuthenticationService', () => {
 
             for (const code of errorCodes) {
                 // given an error
-                const error: firebase.FirebaseError = {
-                    name: 'FirebaseError',
-                    code,
-                    message: 'Error message',
-                };
+                const error: FirebaseError = new FirebaseError(code, 'Error message');
 
                 // when mapping it
                 service.mapFirebaseError(error);
@@ -434,23 +423,23 @@ describe('AuthenticationService', () => {
             spyOn(RTDB, 'updatePresence').and.callThrough();
 
             // given a registered user
-            const result: MGPFallible<firebase.User> = await service.doRegister(username, email, password);
+            const result: MGPFallible<FirebaseUser> = await service.doRegister(username, email, password);
             expect(result.isSuccess()).toBeTrue();
-            const user: firebase.User = result.get();
+            const user: FirebaseUser = result.get();
 
             // when the user logs in
             await service.doEmailLogin(email, password);
 
             // and logs out
-            await firebase.auth().signOut();
+            await getAuth().signOut();
 
             // Then updatePresence is called
             expect(RTDB.updatePresence).toHaveBeenCalledWith(user.uid);
         });
     });
     describe('setUsername', () => {
-        let credential: firebase.auth.UserCredential;
-        let user: firebase.User;
+        let credential: UserCredential;
+        let user: FirebaseUser;
         beforeEach(async() => {
             // given a registered and logged in user
             credential = await createConnectedGoogleUser(true);
@@ -466,8 +455,7 @@ describe('AuthenticationService', () => {
         });
         it('should not throw upon failure', async() => {
             // when the username is set but fails
-            const error: firebase.FirebaseError = new Error('Error') as firebase.FirebaseError;
-            error.code = 'unknown/error';
+            const error: FirebaseError = new FirebaseError('unkown/error', 'Error');
             spyOn(user, 'updateProfile').and.rejectWith(error);
             spyOn(Utils, 'handleError').and.returnValue(null);
             const result: MGPValidation = await service.setUsername(username);
@@ -506,16 +494,15 @@ describe('AuthenticationService', () => {
 
             // then the picture is updated
             expect(result.isSuccess()).toBeTrue();
-            expect(Utils.getNonNullable(firebase.auth().currentUser).photoURL).toEqual(photoURL);
+            expect(Utils.getNonNullable(getAuth().currentUser).photoURL).toEqual(photoURL);
         });
         it('should not throw upon failure', async() => {
             // given a registered and logged in user
-            const credential: firebase.auth.UserCredential = await createConnectedGoogleUser(true);
-            const user: firebase.User = Utils.getNonNullable(credential.user);
+            const credential: UserCredential = await createConnectedGoogleUser(true);
+            const user: FirebaseUser = Utils.getNonNullable(credential.user);
 
             // when the picture is set but fails
-            const error: firebase.FirebaseError = new Error('Error') as firebase.FirebaseError;
-            error.code = 'unknown/error';
+            const error: FirebaseError = new FirebaseError('unknown/error', 'Error');
             spyOn(user, 'updateProfile').and.rejectWith(error);
             spyOn(Utils, 'handleError').and.returnValue(null);
             const result: MGPValidation = await service.setPicture('http://my.pic/foo.png');
@@ -527,7 +514,7 @@ describe('AuthenticationService', () => {
     });
     describe('sendPasswordResetEmail', () => {
         it('should delegate to the corresponding firebase method', async() => {
-            spyOn(firebase.auth(), 'sendPasswordResetEmail').and.resolveTo();
+            spyOn(getAuth(), 'sendPasswordResetEmail').and.resolveTo();
             // given a registered user
             expect((await service.doRegister(username, email, password)).isSuccess()).toBeTrue();
 
@@ -536,14 +523,13 @@ describe('AuthenticationService', () => {
 
             // then it should have delegated and succeeded
             expect(result.isSuccess()).toBeTrue();
-            expect(firebase.auth().sendPasswordResetEmail).toHaveBeenCalledWith(email);
+            expect(getAuth().sendPasswordResetEmail).toHaveBeenCalledWith(email);
         });
         it('should properly map errors', async() => {
             // given a user that doesn't exist
             const email: string = 'foo@jaja.com';
-            const error: firebase.FirebaseError = new Error('Error') as firebase.FirebaseError;
-            error.code = 'auth/user-not-found';
-            spyOn(firebase.auth(), 'sendPasswordResetEmail').and.rejectWith(error);
+            const error: FirebaseError = new FirebaseError('auth/user-not-found', 'Error');
+            spyOn(getAuth(), 'sendPasswordResetEmail').and.rejectWith(error);
             // when asking for password reset
             const result: MGPValidation = await service.sendPasswordResetEmail(email);
             // then it should fail
@@ -561,6 +547,6 @@ describe('AuthenticationService', () => {
         expect(service.authSub.unsubscribe).toHaveBeenCalledWith();
     });
     afterEach(async() => {
-        await firebase.auth().signOut();
+        await signOut(getAuth());
     });
 });
