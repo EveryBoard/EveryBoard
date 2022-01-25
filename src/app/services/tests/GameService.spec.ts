@@ -104,7 +104,7 @@ describe('GameService', () => {
                 result: MGPResult.UNACHIEVED.value,
             });
             const result: Promise<void> = service.acceptTakeBack('joinerId', part, player, [0, 1]);
-            await expectAsync(result).toBeRejectedWithError('Encountered error: Assertion failure: Illegal to accept your own request.');
+            await expectAsync(result).toBeRejectedWithError('Assertion failure: Illegal to accept your own request.');
         }
     }));
     it('acceptConfig should delegate to joinerService and call startGameWithConfig', fakeAsync(async() => {

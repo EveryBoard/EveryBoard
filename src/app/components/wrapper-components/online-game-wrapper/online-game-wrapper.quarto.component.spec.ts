@@ -1898,7 +1898,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             ];
             for (const name of forbiddenFunctionNames) {
                 let failed: boolean = false;
-                const expectedError: string = 'Encountered error: Assertion failure: Non playing should not call ' + name;
+                const expectedError: string = 'Assertion failure: Non playing should not call ' + name;
                 try {
                     await wrapper[name]();
                 } catch (error) {
