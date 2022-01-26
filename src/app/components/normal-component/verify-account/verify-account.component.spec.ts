@@ -1,12 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
-import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { expectValidRouting, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { VerifyAccountComponent } from './verify-account.component';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Router } from '@angular/router';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { LobbyComponent } from '../lobby/lobby.component';
 
 describe('VerifyAccountComponent', () => {
     let testUtils: SimpleComponentTestUtils<VerifyAccountComponent>;
@@ -106,14 +107,14 @@ describe('VerifyAccountComponent', () => {
             spyOn(router, 'navigate').and.resolveTo(true);
 
             // ... and given a user that verified its email
-            AuthenticationServiceMock.setUser(new AuthUser(MGPOptional.of('jean@jaja.europe'), MGPOptional.of('jeanjaja'), true));
+            AuthenticationServiceMock.setUser(new AuthUser(MGPOptional.of('jean@jaja.europe'), MGPOptional.of('jeanjaja'), true), false);
 
             // when the user clicks on "finalize" without having verified its account
             await testUtils.clickElement('#finalizeVerification');
 
             // then a failure message is shown
             testUtils.expectElementNotToExist('#errorMessage');
-            expect(router.navigate).toHaveBeenCalledWith(['/server']);
+            expectValidRouting(router, ['/lobby'], LobbyComponent);
         }));
 
     });

@@ -211,11 +211,11 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
     }
     public async playLocally(): Promise<void> {
         const game: string = Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));
-        await this.router.navigate(['/local/', game]);
+        await this.router.navigate(['/local', game]);
     }
     public async createGame(): Promise<void> {
         const game: string = Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));
-        await this.router.navigate(['/play/', game]);
+        await this.router.navigate(['/play', game]);
     }
     public getPlayerName(): string {
         return ''; // Not important for tutorial

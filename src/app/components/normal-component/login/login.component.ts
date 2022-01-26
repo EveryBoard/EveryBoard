@@ -44,7 +44,7 @@ export class LoginComponent implements OnInit {
         }
     }
     private async redirect(): Promise<boolean> {
-        return this.router.navigate(['/server']);
+        return this.router.navigate(['/lobby']);
     }
     public canLogin(): boolean {
         const email: string = this.loginForm.value.email || '';
