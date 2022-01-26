@@ -83,7 +83,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 
     private hasUserPlayed: [boolean, boolean] = [false, false];
     private msToSubstract: [number, number] = [0, 0];
-    private previousUpdateWasATakeBack: boolean = false;
 
     protected routerEventsSub!: Subscription; // Initialized in ngOnInit
     protected userSub!: Subscription; // Initialized in ngOnInit
@@ -518,7 +517,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             case 'TakeBackRefused':
                 break;
             case 'TakeBackAccepted':
-                this.previousUpdateWasATakeBack = true;
                 this.takeBackTo(this.currentPart.data.turn);
                 break;
             case 'RematchProposed':
@@ -628,9 +626,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             }
         } else {
             const user: Player = this.getPlayer();
-            // if (this.previousUpdateWasATakeBack === true) {
-            //     msToSubstract = [0, 0];
-            // }
             return this.gameService.updateDBBoard(this.currentPartId,
                                                   user,
                                                   encodedMove,
