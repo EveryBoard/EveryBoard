@@ -16,7 +16,7 @@ export class HexaLayout {
         const angle: number = 2 * Math.PI * (this.orientation.startAngle + corner) / 6;
         return new Coord(this.size * Math.cos(angle), this.size * Math.sin(angle));
     }
-    public getHexaCoordsAt(coord: Coord): ReadonlyArray<Coord> {
+    public getHexaCoordsAt(coord: Coord): Coord[] {
         const center: Coord = this.getCenterAt(coord);
         const corners: Coord[] = [];
         for (let i: number = 0; i < 6; i += 1) {

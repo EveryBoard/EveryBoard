@@ -19,7 +19,7 @@ import { SixTutorial } from './SixTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 
-interface Extremes {
+interface Limits {
     minX: number;
     minY: number;
     maxX: number;
@@ -89,30 +89,25 @@ export class SixComponent
         this.viewBox = this.getViewBox();
     }
     private getViewBox(): string {
-        const hexaCoords: Coord[] = this.mapAbstractCoordToHexaCoord();
-        const extremes: Extremes = this.getExtremes(hexaCoords);
-        const left: number = extremes.minX - this.STROKE_WIDTH;
-        const up: number = extremes.minY - this.STROKE_WIDTH;
-        const width: number = (2 * this.STROKE_WIDTH) + extremes.maxX - extremes.minX;
-        const height: number = (2 * this.STROKE_WIDTH) + extremes.maxY - extremes.minY;
+        const hexaCoords: Coord[] = this.mapAbstractCoordToCornerCoords();
+        const limits: Limits = this.getLimits(hexaCoords);
+        const left: number = limits.minX - (this.STROKE_WIDTH / 2);
+        const up: number = limits.minY - (this.STROKE_WIDTH / 2);
+        const width: number = this.STROKE_WIDTH + limits.maxX - limits.minX;
+        const height: number = this.STROKE_WIDTH + limits.maxY - limits.minY;
         return left + ' ' + up + ' ' + width + ' ' + height;
     }
-    private mapAbstractCoordToHexaCoord(): Coord[] {
+    private mapAbstractCoordToCornerCoords(): Coord[] {
         const abstractCoords: Coord[] = this.pieces.concat(this.disconnecteds).concat(this.neighbors);
-        const hexaCoordsAsString: string[] = abstractCoords.map((coord: Coord) => this.getHexaCoordsAt(coord));
-        const hexaCoords: Coord[] = [];
-        for (const hexaString of hexaCoordsAsString) {
-            const hexaSubStrings: string[] = hexaString.split(' ');
-            for (let i: number = 0; i < 12; i += 2) {
-                const x: number = Number.parseFloat(hexaSubStrings[i]);
-                const y: number = Number.parseFloat(hexaSubStrings[i + 1]);
-                const newCoord: Coord = new Coord(x, y);
-                hexaCoords.push(newCoord);
-            }
+        const pieceCornersGrouped: Coord[][] =
+            abstractCoords.map((coord: Coord) => this.hexaLayout.getHexaCoordsAt(coord));
+        let cornerCoords: Coord[] = [];
+        for (const pieceCornerGroup of pieceCornersGrouped) {
+            cornerCoords = cornerCoords.concat(pieceCornerGroup);
         }
-        return hexaCoords;
+        return cornerCoords;
     }
-    private getExtremes(coords: Coord[]): Extremes {
+    private getLimits(coords: Coord[]): Limits {
         let maxX: number = Number.MIN_SAFE_INTEGER;
         let maxY: number = Number.MIN_SAFE_INTEGER;
         let minX: number = Number.MAX_SAFE_INTEGER;
@@ -124,8 +119,8 @@ export class SixComponent
             if (coord.y < minY) {
                 minY = coord.y;
             }
-            maxX = Math.max(maxX, coord.x + 1);
-            maxY = Math.max(maxY, coord.y + 2);
+            maxX = Math.max(maxX, coord.x);
+            maxY = Math.max(maxY, coord.y);
         }
         return { minX, minY, maxX, maxY };
     }
