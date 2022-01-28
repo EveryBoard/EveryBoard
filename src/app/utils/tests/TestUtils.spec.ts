@@ -32,16 +32,14 @@ import { Rules } from 'src/app/jscaip/Rules';
 import { Utils } from '../utils';
 import { AutofocusDirective } from 'src/app/directives/autofocus.directive';
 import { ToggleVisibilityDirective } from 'src/app/directives/toggle-visibility.directive';
-import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { USE_EMULATOR as USE_FIRESTORE_EMULATOR } from '@angular/fire/compat/firestore';
-import { USE_EMULATOR as USE_DATABASE_EMULATOR } from '@angular/fire/compat/database';
-import { USE_EMULATOR as USE_AUTH_EMULATOR } from '@angular/fire/compat/auth';
-import { USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/compat/functions';
 import { environment } from 'src/environments/environment';
 import { MGPOptional } from '../MGPOptional';
-import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { findMatchingRoute } from 'src/app/app.module.spec';
+import * as Firebase from '@angular/fire/app';
+import * as Firestore from '@angular/fire/firestore';
+import * as Auth from '@angular/fire/auth';
+import * as Functions from '@angular/fire/functions';
 
 @Component({})
 export class BlankComponent {}
@@ -454,21 +452,40 @@ export class TestUtils {
 export async function setupEmulators(): Promise<unknown> {
     await TestBed.configureTestingModule({
         imports: [
-            AngularFirestoreModule,
             HttpClientModule,
-            provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
+            Firebase.provideFirebaseApp(() => {
+                console.log('firebaseapp')
+                return Firebase.initializeApp(environment.firebaseConfig)
+            }),
+            Firestore.provideFirestore(() => {
+                const firestore = Firestore.getFirestore();
+                const host = (firestore.toJSON() as any).settings.host
+                if (host !== 'localhost:8080') {
+                    Firestore.connectFirestoreEmulator(firestore, 'localhost', 8080);
+                }
+                return firestore;
+            }),
+            Auth.provideAuth(() => {
+                const fireauth = Auth.getAuth();
+                if (fireauth.config['emulator'] == null) {
+                    Auth.connectAuthEmulator(fireauth, 'http://localhost:9099', { disableWarnings: true });
+                }
+                return fireauth;
+            }),
+            Functions.provideFunctions(() => {
+                const firefunctions = Functions.getFunctions();
+                Functions.connectFunctionsEmulator(firefunctions, 'localhost', 5001);
+                return firefunctions;
+            }),
         ],
         providers: [
-            { provide: USE_AUTH_EMULATOR, useValue: environment.emulatorConfig.auth },
-            { provide: USE_DATABASE_EMULATOR, useValue: environment.emulatorConfig.database },
-            { provide: USE_FIRESTORE_EMULATOR, useValue: environment.emulatorConfig.firestore },
-            { provide: USE_FUNCTIONS_EMULATOR, useValue: environment.emulatorConfig.functions },
             AuthenticationService,
         ],
-        schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
+    TestBed.inject(Firestore.Firestore)
+    TestBed.inject(Auth.Auth)
     const http: HttpClient = TestBed.inject(HttpClient);
-    // Clear the firestore data before each test
+    // Clear the content of the firestore database
     await http.delete('http://localhost:8080/emulator/v1/projects/my-project/databases/(default)/documents').toPromise();
     // Clear the auth data before each test
     await http.delete('http://localhost:9099/emulator/v1/projects/my-project/accounts').toPromise();

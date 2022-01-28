@@ -80,7 +80,7 @@ describe('PartCreationComponent:', () => {
         describe('Creator arrival on component', () => {
             it('should call joinGame and observe', fakeAsync(async() => {
                 spyOn(joinerService, 'joinGame').and.callThrough();
-                spyOn(joinerService, 'observe').and.callThrough();
+                spyOn(joinerService, 'subscribeToChanges').and.callThrough();
 
                 // When the component is loaded
                 testUtils.detectChanges();
@@ -88,21 +88,21 @@ describe('PartCreationComponent:', () => {
 
                 // Then joinGame and observe are called
                 expect(joinerService.joinGame).toHaveBeenCalledTimes(1);
-                expect(joinerService.observe).toHaveBeenCalledTimes(1);
+                expect(joinerService.subscribeToChanges).toHaveBeenCalledTimes(1);
                 expect(component).withContext('PartCreationComponent should have been created').toBeTruthy();
             }));
             it('should not start observing joiner if part does not exist', fakeAsync(async() => {
                 // Given a part that does not exist
                 component.partId = 'does not exist';
                 spyOn(joinerDAOMock, 'read').and.resolveTo(MGPOptional.empty());
-                spyOn(joinerService, 'observe');
+                spyOn(joinerService, 'subscribeToChanges');
 
                 // When the component is loaded
                 testUtils.detectChanges();
                 await testUtils.whenStable();
 
                 // Then observe is not called
-                expect(joinerService.observe).not.toHaveBeenCalled();
+                expect(joinerService.subscribeToChanges).not.toHaveBeenCalled();
             }));
         });
         describe('Candidate arrival', () => {

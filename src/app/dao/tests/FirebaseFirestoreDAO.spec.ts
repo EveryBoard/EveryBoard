@@ -1,7 +1,5 @@
 /* eslint-disable max-lines-per-function */
 import { TestBed } from '@angular/core/testing';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
-import 'firebase/firestore';
 import { Injectable } from '@angular/core';
 import { FirebaseFirestoreDAO } from '../FirebaseFirestoreDAO';
 import { FirebaseJSONObject } from 'src/app/utils/utils';
@@ -61,7 +59,7 @@ describe('FirebaseFirestoreDAO', () => {
         it('should return an observable that can be used to see changes in objects', async() => {
             const id: string = await dao.create({ value: 'foo', otherValue: 1 });
             const allChangesSeenPromise: Promise<boolean> = new Promise((resolve: (value: boolean) => void) => {
-                dao.subscribeToChanges((foo: MGPOptional<Foo>) => {
+                dao.subscribeToChanges(id, (foo: MGPOptional<Foo>) => {
                     if (foo.isPresent() && foo.get().value === 'bar' && foo.get().otherValue === 2) {
                         resolve(true);
                     }

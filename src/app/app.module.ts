@@ -71,10 +71,6 @@ import { TablutComponent } from './games/tafl/tablut/tablut.component';
 import { YinshComponent } from './games/yinsh/yinsh.component';
 
 import { environment } from 'src/environments/environment';
-import { USE_EMULATOR as USE_FIRESTORE_EMULATOR } from '@angular/fire/compat/firestore';
-import { USE_EMULATOR as USE_DATABASE_EMULATOR } from '@angular/fire/compat/database';
-import { USE_EMULATOR as USE_AUTH_EMULATOR } from '@angular/fire/compat/auth';
-import { USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/compat/functions';
 import { LocaleUtils } from './utils/LocaleUtils';
 
 import { VerifiedAccountGuard } from './guard/verified-account.guard';
@@ -90,6 +86,8 @@ import { SettingsComponent } from './components/normal-component/settings/settin
 import { OnlineGameCreationComponent } from './components/normal-component/online-game-creation/online-game-creation.component';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { getAuth, provideAuth } from '@angular/fire/auth';
+import { getFunctions, provideFunctions } from '@angular/fire/functions';
 
 registerLocaleData(localeFr);
 
@@ -171,21 +169,25 @@ export const routes: Route[] = [
         ToggleVisibilityDirective,
     ],
     imports: [
+        provideFirebaseApp(() => {
+            console.log('firebase app')
+            return initializeApp(environment.firebaseConfig)
+        }),
+        provideFirestore(() => {
+            console.log('firestore!')
+            return getFirestore()
+        }),
+        provideAuth(() => getAuth()),
+        provideFunctions(() => getFunctions()),
         BrowserModule,
         HttpClientModule,
         RouterModule.forRoot(routes, { useHash: false }),
         ReactiveFormsModule,
         FormsModule,
-        provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
-        provideFirestore(() => getFirestore()),
         BrowserAnimationsModule,
         FontAwesomeModule,
     ],
     providers: [
-        { provide: USE_AUTH_EMULATOR, useValue: environment.emulatorConfig.auth },
-        { provide: USE_DATABASE_EMULATOR, useValue: environment.emulatorConfig.database },
-        { provide: USE_FIRESTORE_EMULATOR, useValue: environment.emulatorConfig.firestore },
-        { provide: USE_FUNCTIONS_EMULATOR, useValue: environment.emulatorConfig.functions },
         AuthenticationService,
         GameService,
         JoinerService,
@@ -195,7 +197,6 @@ export const routes: Route[] = [
         ThemeService,
         { provide: LOCALE_ID, useValue: LocaleUtils.getLocale() },
     ],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
     bootstrap: [AppComponent],
 })
 export class AppModule { }

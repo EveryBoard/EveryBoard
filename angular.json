@@ -133,6 +133,9 @@
                         },
                         "local": {
                             "browserTarget": "everyboard:build:local"
+                        },
+                        "production": {
+                            "browserTarget": "everyboard:build"
                         }
                     }
                 },

@@ -1,6 +1,5 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnInit, OnDestroy } from '@angular/core';
 import { Observable, ReplaySubject } from 'rxjs';
-
 import { assert, display, Utils } from 'src/app/utils/utils';
 import { MGPValidation } from '../utils/MGPValidation';
 import { MGPFallible } from '../utils/MGPFallible';
@@ -9,8 +8,8 @@ import { User } from '../domain/User';
 import { MGPOptional } from '../utils/MGPOptional';
 import { serverTimestamp, Unsubscribe } from 'firebase/firestore';
 import { DatabaseReference, DataSnapshot, getDatabase, onDisconnect, onValue, ref, set } from 'firebase/database';
-import { createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, onAuthStateChanged, sendEmailVerification, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, updateProfile, User as FirebaseUser, UserCredential } from 'firebase/auth';
 import { FirebaseError } from 'firebase/app';
+import * as FireAuth from 'firebase/auth';
 
 export class RTDB {
     public static OFFLINE: ConnectivityStatus = {
@@ -34,6 +33,32 @@ export class RTDB {
                 await set(userStatusDatabaseRef, RTDB.ONLINE);
             });
         });
+    }
+}
+
+// This class is an indirection to Firebase's auth methods, to support spyOn on them in the test code.
+export class Auth {
+    public static createUserWithEmailAndPassword(email: string, password: string)
+    : Promise<FireAuth.UserCredential>
+    {
+        return FireAuth.createUserWithEmailAndPassword(FireAuth.getAuth(), email, password);
+    }
+    public static sendEmailVerification(user: FireAuth.User): Promise<void> {
+        return FireAuth.sendEmailVerification(user);
+    }
+    public static sendPasswordResetEmail(email: string): Promise<void> {
+        return FireAuth.sendPasswordResetEmail(FireAuth.getAuth(), email);
+    }
+    public static async signInWithEmailAndPassword(email: string, password: string): Promise<FireAuth.User> {
+        return (await FireAuth.signInWithEmailAndPassword(FireAuth.getAuth(), email, password)).user;
+    }
+    public static async signInWithPopup(provider: FireAuth.AuthProvider): Promise<FireAuth.User> {
+        return (await FireAuth.signInWithPopup(FireAuth.getAuth(), provider)).user;
+    }
+    public static updateProfile(user: FireAuth.User, profile: { displayName?: string, photoURL?: string })
+    : Promise<void>
+    {
+        return FireAuth.updateProfile(user, profile);
     }
 }
 
@@ -66,10 +91,10 @@ export class AuthUser {
 }
 
 @Injectable()
-export class AuthenticationService implements OnDestroy {
+export class AuthenticationService implements OnInit, OnDestroy {
     public static VERBOSE: boolean = false;
 
-    public unsubscribeFromAuth: Unsubscribe; // public for testing purposes only
+    public unsubscribeFromAuth!: Unsubscribe; // public for testing purposes only, initialized on init
 
     /**
      * This is the current user, if there is one.
@@ -82,48 +107,56 @@ export class AuthenticationService implements OnDestroy {
 
     private userObs: Observable<AuthUser>;
 
-    private registrationInProgress: MGPOptional<Promise<MGPFallible<FirebaseUser>>> = MGPOptional.empty();
+    private registrationInProgress: MGPOptional<Promise<MGPFallible<FireAuth.User>>> = MGPOptional.empty();
 
     constructor(private readonly userDAO: UserDAO) {
-        display(AuthenticationService.VERBOSE, '1 authService subscribe to Obs<User>');
+        display(AuthenticationService.VERBOSE || true, 'AuthenticationService constructor');
 
         this.userRS = new ReplaySubject<AuthUser>(1);
         this.userObs = this.userRS.asObservable();
-        this.unsubscribeFromAuth = onAuthStateChanged(getAuth(), async(user: FirebaseUser) => {
+    }
+    public ngOnInit() {
+        this.unsubscribeFromAuth = FireAuth.onAuthStateChanged(FireAuth.getAuth(), async(user: FireAuth.User) => {
+            console.log(`[authState] new user`)
             if (user == null) { // user logged out
-                display(AuthenticationService.VERBOSE, 'User is not connected');
+                display(AuthenticationService.VERBOSE || true, 'User is not connected');
                 this.userRS.next(AuthUser.NOT_CONNECTED);
             } else { // user logged in
+                console.log(`[authState] user is connected, is registration in progress? ${this.registrationInProgress}, info: : ${user.email}, verified: ${user.emailVerified}`)
                 if (this.registrationInProgress.isPresent()) {
                     // We need to wait for the entire registration process to finish,
                     // otherwise we risk reading an empty username before the user is fully created
                     await this.registrationInProgress.get();
+                    console.log('[authState] registration done, promise awaited, clearing it');
                     this.registrationInProgress = MGPOptional.empty();
                 }
+                console.log('[authState] registration finished, continuing')
                 await RTDB.updatePresence(user.uid);
-                const userInDB: User = (await userDAO.read(user.uid)).get();
-                display(AuthenticationService.VERBOSE, `User ${userInDB.username} is connected, and the verified status is ${this.emailVerified(user)}`);
+                console.log('[authState] reading user in DB')
+                const userInDB: User = (await this.userDAO.read(user.uid)).get();
+                display(AuthenticationService.VERBOSE || true, `User ${userInDB.username} is connected, and the verified status is ${this.emailVerified(user)}`);
                 const userHasFinalizedVerification: boolean =
                     this.emailVerified(user) === true && userInDB.username !== null;
                 if (userHasFinalizedVerification === true && userInDB.verified === false) {
                     // The user has finalized verification but isn't yet marked as so in the DB, so we mark it.
-                    await userDAO.markVerified(user.uid);
+                    await this.userDAO.markVerified(user.uid);
                 }
                 const authUser: AuthUser = new AuthUser(MGPOptional.ofNullable(user.email),
                                                         MGPOptional.ofNullable(userInDB.username),
                                                         userHasFinalizedVerification);
                 this.user = MGPOptional.of(authUser);
+                console.log('Generating next AuthUser : ' + authUser.email) 
                 this.userRS.next(authUser);
             }
         });
     }
-    public emailVerified(user: FirebaseUser): boolean {
+    public emailVerified(user: FireAuth.User): boolean {
         // Only needed for mocking purposes
         return user.emailVerified;
     }
     public async sendPasswordResetEmail(email: string): Promise<MGPValidation> {
         try {
-            await sendPasswordResetEmail(getAuth(), email);
+            await Auth.sendPasswordResetEmail(email);
             return MGPValidation.SUCCESS;
         } catch (e) {
             return MGPValidation.failure(this.mapFirebaseError(e));
@@ -133,23 +166,34 @@ export class AuthenticationService implements OnDestroy {
      * Registers an user given its username, email, and password.
      * Returns the firebase user upon success, or a failure otherwise.
      */
-    public async doRegister(username: string, email: string, password: string): Promise<MGPFallible<FirebaseUser>> {
-        display(AuthenticationService.VERBOSE, 'AuthenticationService.doRegister(' + email + ')');
+    public async doRegister(username: string, email: string, password: string): Promise<MGPFallible<FireAuth.User>> {
+        display(AuthenticationService.VERBOSE || true, 'AuthenticationService.doRegister(' + email + ')');
         if (await this.userDAO.usernameIsAvailable(username)) {
-            this.registrationInProgress = MGPOptional.of(this.registerAfterUsernameCheck(username, email, password));
+            console.log('[doRegister] setting promise')
+            this.registrationInProgress = MGPOptional.of(new Promise((resolve: (value: MGPFallible<FireAuth.User>) => void, reject: () => void) => {
+                console.log('[doRegister] in promise')
+                this.registerAfterUsernameCheck(username, email, password).then((value) => {
+                    console.log('[doRegister] resolved with ' + value)
+                    resolve(value)
+                }).catch(reject);
+            }));
+            console.log('[doRegister] promise set to ' + this.registrationInProgress)
             return this.registrationInProgress.get();
         } else {
             return MGPFallible.failure($localize`This username is already in use.`);
         }
     }
     private async registerAfterUsernameCheck(username: string, email: string, password: string)
-    : Promise<MGPFallible<FirebaseUser>>
+    : Promise<MGPFallible<FireAuth.User>>
     {
         try {
-            const userCredential: UserCredential =
-                await createUserWithEmailAndPassword(getAuth(), email, password);
-            const user: FirebaseUser = Utils.getNonNullable(userCredential.user);
+            console.log('create user with email and password')
+            const userCredential: FireAuth.UserCredential =
+                await Auth.createUserWithEmailAndPassword(email, password);
+            const user: FireAuth.User = Utils.getNonNullable(userCredential.user);
+            console.log('creating user in DB')
             await this.createUser(user.uid, username);
+            console.log('created')
             return MGPFallible.success(user);
         } catch (e) {
             return MGPFallible.failure(this.mapFirebaseError(e));
@@ -180,14 +224,14 @@ export class AuthenticationService implements OnDestroy {
     }
     public async sendEmailVerification(): Promise<MGPValidation> {
         display(AuthenticationService.VERBOSE, 'AuthenticationService.sendEmailVerification()');
-        const user: MGPOptional<FirebaseUser> = MGPOptional.ofNullable(getAuth().currentUser);
+        const user: MGPOptional<FireAuth.User> = MGPOptional.ofNullable(FireAuth.getAuth().currentUser);
         if (user.isPresent()) {
             if (this.emailVerified(user.get()) === true) {
                 // This should not be reachable from a component
                 return Utils.handleError('Verified users should not ask email verification twice');
             }
             try {
-                await sendEmailVerification(user.get());
+                await Auth.sendEmailVerification(user.get());
                 return MGPValidation.SUCCESS;
             } catch (e) {
                 return MGPValidation.failure(this.mapFirebaseError(e));
@@ -203,10 +247,10 @@ export class AuthenticationService implements OnDestroy {
      * either success, or failure with a specific error.
      */
     public async doEmailLogin(email: string, password: string): Promise<MGPValidation> {
-        display(AuthenticationService.VERBOSE, 'AuthenticationService.doEmailLogin(' + email + ')');
+        display(AuthenticationService.VERBOSE || true, 'AuthenticationService.doEmailLogin(' + email + ')');
         try {
             // Login through firebase. If the login is incorrect or fails for some reason, an error is thrown.
-            await signInWithEmailAndPassword(getAuth(), email, password);
+            await Auth.signInWithEmailAndPassword(email, password);
             return MGPValidation.SUCCESS;
         } catch (e) {
             return MGPValidation.failure(this.mapFirebaseError(e));
@@ -216,6 +260,7 @@ export class AuthenticationService implements OnDestroy {
      * Create the user doc in firestore. Google accounts initially have no username.
      */
     public async createUser(uid: string, username?: string): Promise<void> {
+        console.log(`creating user with uid ${uid} and username ${username}`)
         assert(await this.userDAO.exists(uid) === false, 'createUser should only be called for new users');
         if (username == null) {
             await this.userDAO.set(uid, { verified: false });
@@ -224,18 +269,29 @@ export class AuthenticationService implements OnDestroy {
         }
     }
     public async doGoogleLogin(): Promise<MGPValidation> {
-        this.registrationInProgress = MGPOptional.of(this.registerOrLoginWithGoogle());
-        const result: MGPFallible<FirebaseUser> = await this.registrationInProgress.get();
+        console.log('[doGoogleLogin] setting promise')
+        this.registrationInProgress = MGPOptional.of(new Promise((resolve: (value: MGPFallible<FireAuth.User>) => void, reject: () => void) => {
+            console.log('[doGoogleLogin] in promise')
+            this.registerOrLoginWithGoogle().then((value) => {
+                console.log('[doGoogleLogin] resolved with ' + value);
+                resolve(value)
+            }).catch(reject);
+        }));
+        console.log('[doGoogleLogin] promise set to ' + this.registrationInProgress);
+        const result: MGPFallible<FireAuth.User> = await this.registrationInProgress.get();
         return MGPValidation.ofFallible(result);
     }
-    private async registerOrLoginWithGoogle(): Promise<MGPFallible<FirebaseUser>> {
+    private async registerOrLoginWithGoogle(): Promise<MGPFallible<FireAuth.User>> {
         try {
-            const provider: GoogleAuthProvider = new GoogleAuthProvider();
+            const provider: FireAuth.GoogleAuthProvider = new FireAuth.GoogleAuthProvider();
             provider.addScope('profile');
             provider.addScope('email');
-            const userCredential: UserCredential = await signInWithPopup(getAuth(), provider);
-            const user: FirebaseUser = Utils.getNonNullable(userCredential.user);
-            await this.createUser(user.uid);
+            const user: FireAuth.User = await Auth.signInWithPopup(provider);
+            if (await this.userDAO.exists(user.uid) === false) {
+                console.log('create user')
+                await this.createUser(user.uid);
+            }
+            console.log('registered or logged in with google')
             return MGPFallible.success(user);
         } catch (e) {
             return MGPFallible.failure(this.mapFirebaseError(e));
@@ -243,11 +299,11 @@ export class AuthenticationService implements OnDestroy {
 
     }
     public async disconnect(): Promise<MGPValidation> {
-        const user: MGPOptional<FirebaseUser> = MGPOptional.ofNullable(getAuth().currentUser);
+        const user: MGPOptional<FireAuth.User> = MGPOptional.ofNullable(FireAuth.getAuth().currentUser);
         if (user.isPresent()) {
             const uid: string = user.get().uid;
             await RTDB.setOffline(uid);
-            await getAuth().signOut();
+            await FireAuth.getAuth().signOut();
             return MGPValidation.SUCCESS;
         } else {
             return MGPValidation.failure('Cannot disconnect a non-connected user');
@@ -265,8 +321,8 @@ export class AuthenticationService implements OnDestroy {
             if (available === false) {
                 return MGPValidation.failure($localize`This username is already in use, please select a different one.`);
             }
-            const currentUser: FirebaseUser = Utils.getNonNullable(getAuth().currentUser);
-            await updateProfile(currentUser, { displayName: username });
+            const currentUser: FireAuth.User = Utils.getNonNullable(FireAuth.getAuth().currentUser);
+            await Auth.updateProfile(currentUser, { displayName: username });
             await this.userDAO.setUsername(currentUser.uid, username);
             // Only gmail accounts can set their username, and they become finalized once they do
             await this.userDAO.markVerified(currentUser.uid);
@@ -279,19 +335,20 @@ export class AuthenticationService implements OnDestroy {
     }
     public async setPicture(url: string): Promise<MGPValidation> {
         try {
-            const currentUser: FirebaseUser = Utils.getNonNullable(getAuth().currentUser);
-            await updateProfile(currentUser, { photoURL: url });
+            const currentUser: FireAuth.User = Utils.getNonNullable(FireAuth.getAuth().currentUser);
+            await Auth.updateProfile(currentUser, { photoURL: url });
             return MGPValidation.SUCCESS;
         } catch (e) {
             return MGPValidation.failure(this.mapFirebaseError(e));
         }
     }
     public async reloadUser(): Promise<void> {
-        const currentUser: FirebaseUser = Utils.getNonNullable(getAuth().currentUser);
+        const currentUser: FireAuth.User = Utils.getNonNullable(FireAuth.getAuth().currentUser);
         await currentUser.getIdToken(true);
         await currentUser.reload();
     }
     public ngOnDestroy(): void {
+        console.log('--------- unsubscribing')
         this.unsubscribeFromAuth();
     }
 

@@ -1,8 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { fakeAsync, TestBed } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { GameService, StartingPartConfig } from '../GameService';
 import { PartDAO } from 'src/app/dao/PartDAO';
-import { of } from 'rxjs';
 import { Part, PartDocument, MGPResult } from 'src/app/domain/Part';
 import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
 import { JoinerDAOMock } from 'src/app/dao/tests/JoinerDAOMock.spec';
@@ -54,7 +53,7 @@ describe('GameService', () => {
     it('should create', () => {
         expect(service).toBeTruthy();
     });
-    it('startObserving should delegate callback to partDAO', () => {
+    it('startObserving should delegate callback to partDAO', fakeAsync(async() => {
         const part: Part = {
             lastUpdate: {
                 index: 4,
@@ -67,14 +66,18 @@ describe('GameService', () => {
             listMoves: [MOVE_1, MOVE_2],
             result: MGPResult.UNACHIEVED.value,
         };
+        await partDAO.set('partId', part);
+        let calledCallback: boolean = false;
         const myCallback: (observedPart: MGPOptional<Part>) => void = (observedPart: MGPOptional<Part>) => {
             expect(observedPart.isPresent()).toBeTrue();
             expect(observedPart.get()).toEqual(part);
+            calledCallback = true;
         };
-        spyOn(partDAO, 'subscribeToChanges').and.returnValue(of(MGPOptional.of(part)));
+        spyOn(partDAO, 'subscribeToChanges').and.callThrough();
         service.startObserving('partId', myCallback);
-        expect(partDAO.getObsById).toHaveBeenCalledWith('partId');
-    });
+        expect(partDAO.subscribeToChanges).toHaveBeenCalledWith('partId', myCallback);
+        expect(calledCallback).toBeTrue();
+    }));
     it('startObserving should throw exception when called while observing ', fakeAsync(async() => {
         await partDAO.set('myJoinerId', PartMocks.INITIAL);
 

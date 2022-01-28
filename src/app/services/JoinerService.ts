@@ -22,8 +22,10 @@ export class JoinerService {
     public subscribeToChanges(joinerId: string, callback: (doc: MGPOptional<Joiner>) => void): void {
         this.observedJoinerId = joinerId;
         this.joinerUnsubscribe = MGPOptional.of(this.joinerDAO.subscribeToChanges(joinerId, callback));
+        console.log('subscribing to changes')
     }
     public unsubscribe(): void {
+        console.log('unsubscribing')
         assert(this.joinerUnsubscribe.isPresent(), 'JoinerService cannot unsubscribe if no joiner is observed');
         this.joinerUnsubscribe.get()();
         this.joinerUnsubscribe = MGPOptional.empty();

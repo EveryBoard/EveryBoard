@@ -54,7 +54,7 @@ describe('UserDAO', () => {
     describe('setUsername', () => {
         it('should change the username of a user', async() => {
             // given a google user
-            const uid: string = Utils.getNonNullable((await createConnectedGoogleUser(true)).user).uid;
+            const uid: string = (await createConnectedGoogleUser(true)).uid;
 
             // when its username is set
             await dao.setUsername(uid, 'foo');

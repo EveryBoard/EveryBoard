@@ -1,7 +1,7 @@
 import { assert, display, FirebaseJSONObject, Utils } from 'src/app/utils/utils';
 import { FirebaseCollectionObserver } from './FirebaseCollectionObserver';
 import { MGPOptional } from '../utils/MGPOptional';
-import { addDoc, collection, CollectionReference, deleteDoc, doc, DocumentChange, DocumentReference, DocumentSnapshot, FirestoreDataConverter, getDoc, getDocs, getFirestore, onSnapshot, PartialWithFieldValue, Query, query, QueryDocumentSnapshot, QuerySnapshot, setDoc, Unsubscribe, UpdateData, updateDoc, where, WhereFilterOp } from 'firebase/firestore';
+import { addDoc, collection, CollectionReference, deleteDoc, doc, DocumentChange, DocumentReference, DocumentSnapshot, Firestore, FirestoreDataConverter, getDoc, getDocs, getFirestore, onSnapshot, PartialWithFieldValue, Query, query, QueryDocumentSnapshot, QuerySnapshot, setDoc, Unsubscribe, UpdateData, updateDoc, where, WhereFilterOp } from 'firebase/firestore';
 
 export interface FirebaseDocument<T> {
     id: string
@@ -37,26 +37,36 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
 
     public static VERBOSE: boolean = false;
 
-    private readonly collection: CollectionReference<T>;
+    private collection: MGPOptional<CollectionReference<T>> = MGPOptional.empty();
 
     constructor(public readonly collectionName: string) {
-        const genericConverter: FirestoreDataConverter<T> = {
-            fromFirestore(snapshot: QueryDocumentSnapshot): T {
-                return snapshot.data() as T;
-            },
-            toFirestore(data: PartialWithFieldValue<T>) {
-                return data;
-            },
-        };
-        this.collection = collection(getFirestore(), this.collectionName).withConverter<T>(genericConverter);
+    }
+    private getCollection() {
+        if (this.collection.isAbsent()) {
+            const genericConverter: FirestoreDataConverter<T> = {
+                fromFirestore(snapshot: QueryDocumentSnapshot): T {
+                    return snapshot.data() as T;
+                },
+                toFirestore(data: PartialWithFieldValue<T>) {
+                    return data;
+                },
+            };
+            // It is necessary to not bind this.collection in the constructor,
+            // as it depends on getFirestore(), which is not instantiated when
+            // this DAO is constructed.
+            this.collection = MGPOptional.of(
+                collection(getFirestore(), this.collectionName)
+                    .withConverter<T>(genericConverter));
+        }
+        return this.collection.get();
     }
 
     public async create(newElement: T): Promise<string> {
-        const docRef: DocumentReference = await addDoc(this.collection, { ...newElement });
+        const docRef: DocumentReference = await addDoc(this.getCollection(), { ...newElement });
         return docRef.id;
     }
     public async read(id: string): Promise<MGPOptional<T>> {
-        const docSnapshot: DocumentSnapshot<T> = await getDoc(doc(this.collection, id));
+        const docSnapshot: DocumentSnapshot<T> = await getDoc(doc(this.getCollection(), id));
         if (docSnapshot.exists()) {
             return MGPOptional.of(Utils.getNonNullable(docSnapshot.data()));
         } else {
@@ -67,18 +77,18 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
         return (await this.read(id)).isPresent();
     }
     public async update(id: string, update: UpdateData<T>): Promise<void> {
-        return updateDoc(doc(this.collection, id), update);
+        return updateDoc(doc(this.getCollection(), id), update);
     }
     public delete(id: string): Promise<void> {
-        return deleteDoc(doc(this.collection, id));
+        return deleteDoc(doc(this.getCollection(), id));
     }
     public set(id: string, element: T): Promise<void> {
         display(FirebaseFirestoreDAO.VERBOSE, { called: this.collectionName + '.set', id, element });
-        return setDoc(doc(this.collection, id), element);
+        return setDoc(doc(this.getCollection(), id), element);
     }
 
     public subscribeToChanges(id: string, callback: (doc: MGPOptional<T>) => void): Unsubscribe {
-        return onSnapshot(doc(this.collection, id), (doc: DocumentSnapshot<T>) => {
+        return onSnapshot(doc(this.getCollection(), id), (doc: DocumentSnapshot<T>) => {
             callback(MGPOptional.ofNullable(doc.data()));
         });
     }
@@ -137,7 +147,7 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
     }
     private constructQuery(conditions: FirebaseCondition[]): Query<T> {
         assert(conditions.length >= 1, 'constructQuery called without conditions');
-        let constructedQuery : Query<T> = query(this.collection);
+        let constructedQuery : Query<T> = query(this.getCollection());
         for (const condition of conditions) {
             constructedQuery = query(constructedQuery, where(condition[0], condition[1], condition[2]));
         }

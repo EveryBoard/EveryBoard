@@ -61,9 +61,11 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     @Input() partId: string;
     @Input() userName: string;
 
+    // notify that the game has started, a thing evaluated with the joiner doc game status
     @Output('gameStartNotification') gameStartNotification: EventEmitter<Joiner> = new EventEmitter<Joiner>();
     public gameStarted: boolean = false;
-    // notify that the game has started, a thing evaluated with the joiner doc game status
+
+    private gameExists: boolean = false;
 
     public viewInfo: PartCreationViewInfo = {
         userIsCreator: false,
@@ -102,8 +104,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
         this.checkInputs();
         this.createForms();
-        const gameExists: boolean = await this.joinerService.joinGame(this.partId, this.userName);
-        if (gameExists === false) {
+        this.gameExists = await this.joinerService.joinGame(this.partId, this.userName);
+        if (this.gameExists === false) {
             // We will be redirected by the GameWrapper
             return;
         }
@@ -409,7 +411,9 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
 
-        this.joinerService.unsubscribe();
+        if (this.gameExists) {
+            this.joinerService.unsubscribe();
+        }
         for (const candidateName of this.candidateSubscription.listKeys()) {
             this.unsubscribeFrom(candidateName);
         }
