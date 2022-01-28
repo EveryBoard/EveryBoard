@@ -28,10 +28,10 @@
 /.sass-cache
 /connect.lock
 /coverage
-! coverage/branches.csv
-! coverage/functions.csv
-! coverage/statements.csv
-! coverage/lines.csv
+! /coverage/branches.csv
+! /coverage/functions.csv
+! /coverage/statements.csv
+! /coverage/lines.csv
 /typings
 *.log
 
@@ -42,4 +42,6 @@ Thumbs.db
 # firebase config file
 /src/app/firebaseConfig.ts
 
-package-lock.json
+
+# Local Netlify folder
+.netlify

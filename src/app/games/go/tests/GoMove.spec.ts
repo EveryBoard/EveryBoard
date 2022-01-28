@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { GoRules } from '../GoRules';
 import { GoMinimax } from '../GoMinimax';
 import { GoState } from '../GoState';
@@ -16,5 +17,10 @@ describe('GoMove', () => {
             const move: GoMove = firstTurnMoves[i];
             NumberEncoderTestUtils.expectToBeCorrect(GoMove.encoder, move);
         }
+    });
+    it('Should stringify nicely', () => {
+        expect(GoMove.PASS.toString()).toBe('GoMove.PASS');
+        expect(GoMove.ACCEPT.toString()).toBe('GoMove.ACCEPT');
+        expect(new GoMove(0, 1).toString()).toBe('GoMove(0, 1)');
     });
 });

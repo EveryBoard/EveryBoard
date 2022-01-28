@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { AwaleLegalityInformation, AwaleRules } from './AwaleRules';
+import { AwaleRules } from './AwaleRules';
 import { AwaleMinimax } from './AwaleMinimax';
 import { AwaleMove } from 'src/app/games/awale/AwaleMove';
 import { AwaleState } from './AwaleState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { AwaleFailure } from './AwaleFailure';
 import { AwaleTutorial } from './AwaleTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -19,8 +19,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 export class AwaleComponent extends RectangularGameComponent<AwaleRules,
                                                              AwaleMove,
                                                              AwaleState,
-                                                             number,
-                                                             AwaleLegalityInformation>
+                                                             number>
 {
     public last: MGPOptional<Coord> = MGPOptional.empty();
 
@@ -91,7 +90,7 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
         // let's confirm on java-server-side that the move is legal
         return this.chooseMove(chosenMove, this.rules.node.gameState, this.scores.get());
     }
-    public getCaseClasses(x: number, y: number): string[] {
+    public getSquareClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
         if (this.captured.some((c: Coord) => c.equals(coord))) {
             return ['captured'];

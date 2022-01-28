@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 import { Player } from 'src/app/jscaip/Player';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
@@ -154,7 +155,7 @@ describe('ApagosComponent', () => {
             // When rendering the board
             componentTestUtils.setupState(state, previousState, previousMove);
 
-            // Then the second square should be filled on last case by Player.ONE
+            // Then the second square should be filled on last emplacement by Player.ONE
             componentTestUtils.expectElementToHaveClass('#square_1_piece_4_out_of_5', 'player1');
             componentTestUtils.expectElementToHaveClass('#square_1_piece_4_out_of_5', 'last-move');
         }));
@@ -171,7 +172,7 @@ describe('ApagosComponent', () => {
         // When clicking on that square
         // Then move should fail
         const reason: string = ApagosFailure.NO_PIECE_OF_YOU_IN_CHOSEN_SQUARE();
-        componentTestUtils.expectClickFailure('#square_2', reason);
+        await componentTestUtils.expectClickFailure('#square_2', reason);
     }));
     it('should drop when clicking on arrow above square', fakeAsync(async() => {
         // Given the initial board
@@ -263,7 +264,7 @@ describe('ApagosComponent', () => {
         ], 5, 5);
         componentTestUtils.setupState(state);
 
-        // when clicking on leftmost case
+        // when clicking on leftmost space
         // then move should be cancelled
         const reason: string = ApagosFailure.NO_POSSIBLE_TRANSFER_REMAINS();
         await componentTestUtils.expectClickFailure('#square_1', reason);

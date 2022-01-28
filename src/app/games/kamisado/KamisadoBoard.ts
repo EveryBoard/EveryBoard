@@ -5,8 +5,11 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 
 export class KamisadoBoard {
+
     public static INITIAL: Table<KamisadoPiece> = KamisadoBoard.getInitialBoard();
+
     public static SIZE: number = 8;
+
     private static COLORS: Table<KamisadoColor> = ArrayUtils.mapBiArray([
         [1, 2, 3, 4, 5, 6, 7, 8],
         [6, 1, 4, 7, 2, 5, 8, 3],

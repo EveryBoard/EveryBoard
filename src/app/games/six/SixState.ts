@@ -10,8 +10,10 @@ import { SixFailure } from './SixFailure';
 import { SixMove } from './SixMove';
 import { GameState } from 'src/app/jscaip/GameState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { ComparableObject } from 'src/app/utils/Comparable';
 
-export class SixState extends GameState {
+export class SixState extends GameState implements ComparableObject {
 
     public readonly width: number;
 
@@ -130,7 +132,7 @@ export class SixState extends GameState {
     }
     public isIllegalLandingZone(landing: Coord, start: MGPOptional<Coord>): MGPValidation {
         if (this.pieces.containsKey(landing)) {
-            return MGPValidation.failure('Cannot land on occupied coord!');
+            return MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
         if (this.isCoordConnected(landing, start)) {
             return MGPValidation.SUCCESS;
@@ -189,5 +191,8 @@ export class SixState extends GameState {
         const oldValue: Player = this.getPieceAt(coord);
         newPieces.replace(coord, oldValue.getOpponent());
         return new SixState(newPieces, this.turn, this.offset);
+    }
+    public equals(o: SixState): boolean {
+        return this.turn === o.turn && this.pieces.equals(o.pieces);
     }
 }

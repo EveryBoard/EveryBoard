@@ -4,7 +4,7 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
 import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -31,6 +31,11 @@ export abstract class TaflComponent<R extends TaflRules<M, S>, M extends TaflMov
                        public generateMove: (start: Coord, end: Coord) => MGPFallible<M>)
     {
         super(messageDisplayer);
+    }
+    public getViewBox(): string {
+        const begin: number = - this.STROKE_WIDTH;
+        const width: number = (this.rules.config.WIDTH * this.SPACE_SIZE) + (2 * this.STROKE_WIDTH);
+        return begin + ' ' + begin + ' ' + width + ' ' + width;
     }
     public updateBoard(): void {
         display(this.VERBOSE, 'taflComponent.updateBoard');

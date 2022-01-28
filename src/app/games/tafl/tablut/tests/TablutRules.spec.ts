@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { TablutNode, TablutRules } from '../TablutRules';
 import { TaflMinimax } from '../../TaflMinimax';
 import { TablutMove } from '../TablutMove';

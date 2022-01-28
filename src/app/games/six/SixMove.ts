@@ -25,7 +25,7 @@ export class SixMove extends Move {
             }
             const decodedStart: Coord = Coord.encoder.decode(casted.start);
             if (casted.keep == null) {
-                return SixMove.fromDeplacement(decodedStart, decodedLanding);
+                return SixMove.fromMovement(decodedStart, decodedLanding);
             } else {
                 const decodedKeep: Coord = Coord.encoder.decode(casted.keep);
                 return SixMove.fromCut(decodedStart, decodedLanding, decodedKeep);
@@ -35,7 +35,7 @@ export class SixMove extends Move {
     public static fromDrop(landing: Coord): SixMove {
         return new SixMove(MGPOptional.empty(), landing, MGPOptional.empty());
     }
-    public static fromDeplacement(start: Coord, landing: Coord): SixMove {
+    public static fromMovement(start: Coord, landing: Coord): SixMove {
         return new SixMove(MGPOptional.of(start), landing, MGPOptional.empty());
     }
     public static fromCut(start: Coord, landing: Coord, keep: Coord): SixMove {

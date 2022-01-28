@@ -8,7 +8,7 @@
             <g *ngIf="isBoard(c)">
                 <polyline id="case_{{ x }}_{{ y }}"
                           (click)="onCaseClick(x, y)"
-                          [ngClass]="getCaseClasses(x, y)"
+                          [ngClass]="getSquareClasses(x, y)"
                           class="base"
                           [attr.points]="getHexaCoordsBy(x, y)"
                           stroke-linecap="round"
@@ -50,11 +50,11 @@
               [attr.x2]="arrow.landingCenter.x"
               [attr.y2]="arrow.landingCenter.y"
         />
-        <polyline id="direction_{{ arrow.dir.toString() }}"
-                  points="-10 -5, 10 -5, 0 15, -10 -5"
-                  fill="black"
-                  [attr.transform]="arrow.transformation"
-                  (click)="chooseDirection(arrow.dir)"
+        <polygon id="direction_{{ arrow.dir.toString() }}"
+                 points="-10 -5, 10 -5, 0 15, -10 -5"
+                 class="arrow"
+                 [attr.transform]="arrow.transformation"
+                 (click)="chooseDirection(arrow.dir)"
         />
     </g>
 </svg>

@@ -13,10 +13,10 @@ export class YinshCapture extends GipfCapture {
     public static encoder: Encoder<YinshCapture> = new class extends Encoder<YinshCapture> {
         public encode(capture: YinshCapture): JSONValue {
             return {
-                captured: capture.capturedCases.map((coord: Coord): JSONValueWithoutArray => {
+                captured: capture.capturedSpaces.map((coord: Coord): JSONValueWithoutArray => {
                     return Coord.encoder.encode(coord) as JSONValueWithoutArray;
                 }),
-                ringTaken: Coord.encoder.encode(capture.ringTaken),
+                ringTaken: Coord.encoder.encode(capture.ringTaken.get()),
             };
         }
         public decode(encoded: JSONValue): YinshCapture {
@@ -29,7 +29,7 @@ export class YinshCapture extends GipfCapture {
                 Coord.encoder.decode(casted.ringTaken));
         }
     };
-    public static of(start: Coord, end: Coord, ringTaken: Coord): YinshCapture {
+    public static of(start: Coord, end: Coord, ringTaken?: Coord): YinshCapture {
         const coords: Coord[] = [];
         const dir: HexaDirection = HexaDirection.factory.fromMove(start, end).get();
         for (let cur: Coord = start; cur.equals(end) === false; cur = cur.getNext(dir)) {
@@ -38,15 +38,18 @@ export class YinshCapture extends GipfCapture {
         coords.push(end);
         return new YinshCapture(coords, ringTaken);
     }
+    public readonly ringTaken: MGPOptional<Coord>;
+
     public constructor(captured: ReadonlyArray<Coord>,
-                       public readonly ringTaken: Coord) {
+                       ringTaken?: Coord) {
         super(captured);
         if (captured.length !== 5) {
             throw new Error('YinshCapture must capture exactly 5 pieces');
         }
+        this.ringTaken = MGPOptional.ofNullable(ringTaken);
     }
-    public setRingTaken(coord: Coord): YinshCapture {
-        return new YinshCapture(this.capturedCases, coord);
+    public setRingTaken(ringTaken: Coord): YinshCapture {
+        return new YinshCapture(this.capturedSpaces, ringTaken);
     }
     public equals(other: YinshCapture): boolean {
         if (super.equals(other) === false) return false;

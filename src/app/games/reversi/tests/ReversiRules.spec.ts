@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { ReversiLegalityInformation, ReversiNode, ReversiRules } from '../ReversiRules';
 import { ReversiMinimax } from '../ReversiMinimax';
 import { ReversiMove } from '../ReversiMove';
@@ -43,7 +44,7 @@ describe('ReversiRules', () => {
 
         expect(moveLegality).toBeFalse();
     });
-    it('should forbid choosing occupied case', () => {
+    it('should forbid choosing occupied space', () => {
         const moveLegality: boolean = rules.choose(new ReversiMove(3, 3));
 
         expect(moveLegality).toBeFalse();

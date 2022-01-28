@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GoMinimax } from '../GoMinimax';
@@ -21,7 +22,7 @@ describe('GoMinimax', () => {
     });
 
     describe('getListMove', () => {
-        it('should count as many move as empty case in Phase.PLAYING turn, + PASS', () => {
+        it('should count as many move as empty space in Phase.PLAYING turn, + PASS', () => {
             const board: Table<GoPiece> = [
                 [_, X, _, _, _],
                 [X, _, _, _, _],

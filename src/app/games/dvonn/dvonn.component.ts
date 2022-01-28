@@ -11,10 +11,10 @@ import { PointyHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { HexagonalGameComponent }
     from 'src/app/components/game-components/game-component/HexagonalGameComponent';
 import { MaxStacksDvonnMinimax } from './MaxStacksDvonnMinimax';
-import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { DvonnTutorial } from './DvonnTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { assert } from 'src/app/utils/utils';
 
 @Component({
     selector: 'app-dvonn',
@@ -87,11 +87,8 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         this.chosen = MGPOptional.empty();
     }
     public async pass(): Promise<MGPValidation> {
-        if (this.canPass) {
-            return await this.chooseMove(DvonnMove.PASS, this.rules.node.gameState);
-        } else {
-            return MGPValidation.failure(RulesFailure.CANNOT_PASS());
-        }
+        assert(this.canPass, 'DvonnComponent: pass() can only be called if canPass is true');
+        return await this.chooseMove(DvonnMove.PASS, this.rules.node.gameState);
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);

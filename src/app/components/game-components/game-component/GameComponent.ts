@@ -5,7 +5,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player } from 'src/app/jscaip/Player';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
-import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { GameState } from 'src/app/jscaip/GameState';
 import { Utils } from 'src/app/utils/utils';
@@ -72,11 +72,11 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
     public cancelMove(reason?: string): MGPValidation {
         this.cancelMoveAttempt();
         this.cancelMoveOnWrapper(reason);
-        if (reason) {
+        if (reason == null) {
+            return MGPValidation.SUCCESS;
+        } else {
             this.messageDisplayer.gameMessage(reason);
             return MGPValidation.failure(reason);
-        } else {
-            return MGPValidation.SUCCESS;
         }
     }
     public cancelMoveAttempt(): void {
@@ -109,6 +109,13 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
     }
     public getPreviousState(): S {
         return this.rules.node.mother.get().gameState;
+    }
+    public range(n: number): number[] {
+        const range: number[] = [];
+        for (let i: number = 0; i < n; i++) {
+            range.push(i);
+        }
+        return range;
     }
 }
 

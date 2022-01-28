@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { FirstPlayer, IJoiner, IJoinerId, PartStatus, PartType } from '../domain/ijoiner';
+import { FirstPlayer, Joiner, PartStatus, PartType } from '../domain/Joiner';
 import { JoinerDAO } from '../dao/JoinerDAO';
 import { assert, display } from 'src/app/utils/utils';
 import { ArrayUtils } from '../utils/ArrayUtils';
@@ -14,17 +14,17 @@ export class JoinerService {
 
     private observedJoinerId: string;
 
-    constructor(private joinerDao: JoinerDAO) {
+    constructor(private readonly joinerDAO: JoinerDAO) {
         display(JoinerService.VERBOSE, 'JoinerService.constructor');
     }
-    public observe(joinerId: string): Observable<IJoinerId> {
+    public observe(joinerId: string): Observable<MGPOptional<Joiner>> {
         this.observedJoinerId = joinerId;
-        return this.joinerDao.getObsById(joinerId);
+        return this.joinerDAO.getObsById(joinerId);
     }
     public async createInitialJoiner(creatorName: string, joinerId: string): Promise<void> {
         display(JoinerService.VERBOSE, 'JoinerService.createInitialJoiner(' + creatorName + ', ' + joinerId + ')');
 
-        const newJoiner: IJoiner = {
+        const newJoiner: Joiner = {
             candidates: [],
             chosenPlayer: null,
             firstPlayer: FirstPlayer.RANDOM.value,
@@ -39,7 +39,7 @@ export class JoinerService {
     public async joinGame(partId: string, userName: string): Promise<boolean> {
         display(JoinerService.VERBOSE, 'JoinerService.joinGame(' + partId + ', ' + userName + ')');
 
-        const joiner: MGPOptional<IJoiner> = await this.joinerDao.read(partId);
+        const joiner: MGPOptional<Joiner> = await this.joinerDAO.read(partId);
         if (joiner.isAbsent()) {
             return false;
         }
@@ -50,7 +50,7 @@ export class JoinerService {
             return true;
         } else {
             joinerList[joinerList.length] = userName;
-            await this.joinerDao.update(partId, { candidates: joinerList });
+            await this.joinerDAO.update(partId, { candidates: joinerList });
             return true;
         }
     }
@@ -61,12 +61,12 @@ export class JoinerService {
         if (this.observedJoinerId == null) {
             throw new Error('cannot cancel joining when not observing a joiner');
         }
-        const joinerOpt: MGPOptional<IJoiner> = await this.joinerDao.read(this.observedJoinerId);
+        const joinerOpt: MGPOptional<Joiner> = await this.joinerDAO.read(this.observedJoinerId);
         if (joinerOpt.isAbsent()) {
             // The part does not exist, so we can consider that we succesfully cancelled joining
             return;
         } else {
-            const joiner: IJoiner = joinerOpt.get();
+            const joiner: Joiner = joinerOpt.get();
             const candidates: string[] = ArrayUtils.copyImmutableArray(joiner.candidates);
             const indexLeaver: number = candidates.indexOf(userName);
             let chosenPlayer: string | null = joiner.chosenPlayer;
@@ -77,27 +77,27 @@ export class JoinerService {
                 chosenPlayer = null;
                 partStatus = PartStatus.PART_CREATED.value;
             } else if (indexLeaver === -1) {
-                throw new Error('someone that was nor candidate nor chosenPlayer just left the chat: ' + userName);
+                throw new Error('someone that was not candidate nor chosenPlayer just left the chat: ' + userName);
             }
-            const modification: Partial<IJoiner> = {
+            const update: Partial<Joiner> = {
                 chosenPlayer,
                 partStatus,
                 candidates,
             };
-            return this.joinerDao.update(this.observedJoinerId, modification);
+            return this.joinerDAO.update(this.observedJoinerId, update);
         }
     }
     public async updateCandidates(candidates: string[]): Promise<void> {
         display(JoinerService.VERBOSE, 'JoinerService.reviewConfig');
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
-        const modification: Partial<IJoiner> = { candidates };
-        return this.joinerDao.update(this.observedJoinerId, modification);
+        const update: Partial<Joiner> = { candidates };
+        return this.joinerDAO.update(this.observedJoinerId, update);
     }
     public async deleteJoiner(): Promise<void> {
         display(JoinerService.VERBOSE,
                 'JoinerService.deleteJoiner(); this.observedJoinerId = ' + this.observedJoinerId);
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
-        return this.joinerDao.delete(this.observedJoinerId);
+        return this.joinerDAO.delete(this.observedJoinerId);
     }
     public async proposeConfig(chosenPlayer: string,
                                partType: PartType,
@@ -111,7 +111,7 @@ export class JoinerService {
         display(JoinerService.VERBOSE, 'this.followedJoinerId: ' + this.observedJoinerId);
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
 
-        return this.joinerDao.update(this.observedJoinerId, {
+        return this.joinerDAO.update(this.observedJoinerId, {
             partStatus: PartStatus.CONFIG_PROPOSED.value,
             chosenPlayer,
             partType: partType.value,
@@ -124,7 +124,7 @@ export class JoinerService {
         display(JoinerService.VERBOSE, `JoinerService.setChosenPlayer(${player})`);
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
 
-        return this.joinerDao.update(this.observedJoinerId, {
+        return this.joinerDAO.update(this.observedJoinerId, {
             chosenPlayer: player,
         });
     }
@@ -132,7 +132,7 @@ export class JoinerService {
         display(JoinerService.VERBOSE, 'JoinerService.reviewConfig');
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
 
-        return this.joinerDao.update(this.observedJoinerId, {
+        return this.joinerDAO.update(this.observedJoinerId, {
             partStatus: PartStatus.PART_CREATED.value,
         });
     }
@@ -140,7 +140,7 @@ export class JoinerService {
         display(JoinerService.VERBOSE, 'JoinerService.reviewConfig');
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
 
-        return this.joinerDao.update(this.observedJoinerId, {
+        return this.joinerDAO.update(this.observedJoinerId, {
             partStatus: PartStatus.PART_CREATED.value,
             chosenPlayer: null,
             candidates,
@@ -150,26 +150,26 @@ export class JoinerService {
         display(JoinerService.VERBOSE, 'JoinerService.acceptConfig');
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
 
-        return this.joinerDao.update(this.observedJoinerId, { partStatus: PartStatus.PART_STARTED.value });
+        return this.joinerDAO.update(this.observedJoinerId, { partStatus: PartStatus.PART_STARTED.value });
     }
-    public async createJoiner(joiner: IJoiner): Promise<string> {
+    public async createJoiner(joiner: Joiner): Promise<string> {
         display(JoinerService.VERBOSE, 'JoinerService.create(' + JSON.stringify(joiner) + ')');
 
-        return this.joinerDao.create(joiner);
+        return this.joinerDAO.create(joiner);
     }
-    public async readJoinerById(partId: string): Promise<IJoiner> {
+    public async readJoinerById(partId: string): Promise<Joiner> {
         display(JoinerService.VERBOSE, 'JoinerService.readJoinerById(' + partId + ')');
 
-        return (await this.joinerDao.read(partId)).get();
+        return (await this.joinerDAO.read(partId)).get();
     }
-    public async set(partId: string, joiner: IJoiner): Promise<void> {
+    public async set(partId: string, joiner: Joiner): Promise<void> {
         display(JoinerService.VERBOSE, 'JoinerService.set(' + partId + ', ' + JSON.stringify(joiner) + ')');
 
-        return this.joinerDao.set(partId, joiner);
+        return this.joinerDAO.set(partId, joiner);
     }
-    public async updateJoinerById(partId: string, update: Partial<IJoiner>): Promise<void> {
+    public async updateJoinerById(partId: string, update: Partial<Joiner>): Promise<void> {
         display(JoinerService.VERBOSE, { joinerService_updateJoinerById: { partId, update } });
 
-        return this.joinerDao.update(partId, update);
+        return this.joinerDAO.update(partId, update);
     }
 }

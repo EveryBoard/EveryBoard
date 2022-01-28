@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
 import { EpaminondasState } from 'src/app/games/epaminondas/EpaminondasState';
 import { Direction } from 'src/app/jscaip/Direction';
@@ -36,7 +37,7 @@ describe('EpaminondasComponent', () => {
         expect(componentTestUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
         expect(componentTestUtils.getComponent()).withContext('EpaminondasComponent should be created').toBeTruthy();
     });
-    it('Should cancelMove when clicking on empty case at first', fakeAsync(async() => {
+    it('Should cancelMove when clicking on empty space at first', fakeAsync(async() => {
         await componentTestUtils.expectClickFailure('#click_5_5', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
     }));
     it('Should not accept opponent click as a move first click', fakeAsync(async() => {
@@ -400,7 +401,7 @@ describe('EpaminondasComponent', () => {
         expect(epaminondasComponent.firstPiece.get()).toEqual(new Coord(0, 10));
         expect(epaminondasComponent.lastPiece.get()).toEqual(new Coord(2, 10));
     }));
-    it('End: Should show last move when no move is ongoing (captures, left case, moved phalanx)', fakeAsync(async() => {
+    it('End: Should show last move when no move is ongoing (captures, left space, moved phalanx)', fakeAsync(async() => {
         const initialBoard: Table<Player> = [
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],

@@ -9,21 +9,45 @@ module.exports = {
         parserOptions: {
             ecmaVersion: 12,
             sourceType: 'module',
-            //        project: 'tsconfig.json',
+            project: 'tsconfig.json',
         },
         plugins: [
             '@typescript-eslint',
+            'jasmine',
         ],
         extends: [
             'eslint:recommended',
             'google',
             'plugin:@typescript-eslint/recommended',
-            // 'plugin:@angular-eslint/recommended',
+            'plugin:@angular-eslint/recommended',
+            'plugin:jasmine/recommended',
         ],
         rules: {
-            'complexity': ['error', 20],
-            '@typescript-eslint/typedef': [
+            '@typescript-eslint/no-floating-promises': ['error'],
+            'jasmine/no-expect-in-setup-teardown': ['off'],
+            'jasmine/expect-matcher': ['error'],
+            'jasmine/new-line-before-expect': ['off'],
+            'jasmine/new-line-between-declarations': ['off'],
+            'no-warning-comments': [
                 'warn',
+                { 'terms': ['todo', 'fixme', 'xxx'], 'location': 'start' }
+            ],
+            'complexity': ['error', 20],
+            '@angular-eslint/no-output-rename': ['warn'],
+            '@angular-eslint/component-class-suffix': ['warn'],
+            '@typescript-eslint/no-unnecessary-condition': ['warn'],
+            '@typescript-eslint/no-unnecessary-type-arguments': ['warn'],
+            '@typescript-eslint/no-unnecessary-type-assertion': ['warn'],
+            '@typescript-eslint/no-unnecessary-type-constraint': ['warn'],
+            '@typescript-eslint/prefer-for-of': ['warn'],
+            '@typescript-eslint/prefer-nullish-coalescing': ['warn'],
+            '@typescript-eslint/prefer-readonly': ['warn'],
+            '@typescript-eslint/switch-exhaustiveness-check': ['warn'],
+            '@typescript-eslint/no-unused-expressions': ['warn'],
+            '@typescript-eslint/no-unused-vars': ['warn'],
+            '@typescript-eslint/no-useless-constructor': ['warn'],
+            '@typescript-eslint/typedef': [
+                'error',
                 {
                     'arrowParameter': true,
                     'memberVariableDeclaration': true,
@@ -32,21 +56,21 @@ module.exports = {
                     'parameter': true,
                 },
             ],
-            //        '@typescript-eslint/strict-boolean-expressions': ['error'],
+            '@typescript-eslint/strict-boolean-expressions': ['warn'],
             '@typescript-eslint/no-empty-function': ['off'],
             '@typescript-eslint/no-namespace': ['off'],
             '@typescript-eslint/ban-types': [
                 'error',
                 { 'types': { 'String': { 'message': 'Use string instead', 'fixWith': 'string' } } },
             ],
-            '@typescript-eslint/no-this-alias': ['warn'],
+            '@typescript-eslint/no-this-alias': ['error'],
             '@typescript-eslint/no-inferrable-types': ['off'],
             '@typescript-eslint/no-redeclare': [
                 'error',
                 { 'ignoreDeclarationMerge': true },
             ],
-            'max-len': ['warn', { 'code': 120, 'ignoreStrings': true, 'ignoreTemplateLiterals': true }],
-            'require-jsdoc': ['warn', { 'require': {
+            'max-len': ['error', { 'code': 120, 'ignoreStrings': true, 'ignoreTemplateLiterals': true }],
+            'require-jsdoc': ['error', { 'require': {
                 'FunctionDeclaration': false,
                 'MethodDefinition': false,
                 'ClassDeclaration': false,
@@ -81,7 +105,7 @@ module.exports = {
             'eqeqeq': ['error', 'always', {
                 'null': 'ignore',
             }],
-            'max-lines-per-function': ['off', 20]
+            'max-lines-per-function': ['warn', 50]
         },
     }, {
         files: ['*.html'],

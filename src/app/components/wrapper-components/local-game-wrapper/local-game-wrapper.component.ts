@@ -45,14 +45,9 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         return MGPNodeStats.minimaxTime;
     }
     public ngAfterViewInit(): void {
-        display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapperComponent.ngAfterViewInit');
-        setTimeout(() => {
-            display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapper.ngAfterViewInit inside timeout');
-            display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapper AfterViewInit: '+(this.gameComponent!=null));
-            this.afterGameIncluderViewInit();
-            this.restartGame();
-            this.cdr.detectChanges();
-        }, 1);
+        this.afterGameIncluderViewInit();
+        this.restartGame();
+        this.cdr.detectChanges();
     }
     public updatePlayer(player: 0|1): void {
         this.players[player] = MGPOptional.of(this.playerSelection[player]);

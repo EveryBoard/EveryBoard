@@ -1,4 +1,3 @@
-import { Type } from '@angular/core';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
@@ -15,16 +14,16 @@ export class DiamNode extends MGPNode<DiamRules, DiamMove, DiamState> {}
 
 export class DiamRules extends Rules<DiamMove, DiamState> {
 
-    private static singleton: MGPOptional<DiamRules> = MGPOptional.empty()
+    private static singleton: MGPOptional<DiamRules> = MGPOptional.empty();
     public static get(): DiamRules {
         if (DiamRules.singleton.isAbsent()) {
-            DiamRules.singleton = MGPOptional.of(new DiamRules(DiamState));
+            DiamRules.singleton = MGPOptional.of(new DiamRules());
         }
         return DiamRules.singleton.get();
     }
 
-    private constructor(state: Type<DiamState>) {
-        super(state);
+    private constructor() {
+        super(DiamState);
     }
 
     public applyLegalMove(move: DiamMove, state: DiamState, _info: void): DiamState {

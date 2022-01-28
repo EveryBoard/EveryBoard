@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { EncapsuleComponent } from '../encapsule.component';
 import { EncapsuleMove } from 'src/app/games/encapsule/EncapsuleMove';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -89,7 +90,7 @@ describe('EncapsuleComponent', () => {
         const move: EncapsuleMove = EncapsuleMove.fromMove(new Coord(0, 1), new Coord(0, 2));
         await componentTestUtils.expectMoveSuccess('#click_0_2', move);
     }));
-    it('should forbid moving from a case that the player is not controlling', fakeAsync(async() => {
+    it('should forbid moving from a space that the player is not controlling', fakeAsync(async() => {
         const x: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.ONE, Player.NONE);
         const board: EncapsuleCase[][] = [
             [_, _, _],
@@ -148,8 +149,9 @@ describe('EncapsuleComponent', () => {
         const component: EncapsuleComponent = componentTestUtils.getComponent();
         const minimax: EncapsuleMinimax = new EncapsuleMinimax(component.rules, 'EncapsuleMinimax');
 
-        const node: EncapsuleNode =
-            new EncapsuleNode(component.rules.node.gameState, MGPOptional.empty(), MGPOptional.of(move));
+        const node: EncapsuleNode = new EncapsuleNode(component.rules.node.gameState,
+                                                      MGPOptional.empty(),
+                                                      MGPOptional.of(move));
         expect(minimax.getBoardValue(node).value).toBe(Number.MIN_SAFE_INTEGER);
     }));
     it('should forbid selecting the same coord for destination and origin', fakeAsync(async() => {

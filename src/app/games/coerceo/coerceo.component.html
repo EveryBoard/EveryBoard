@@ -1,57 +1,54 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="auto"
-     [attr.viewBox]="'-5 -5 ' + (SPACE_SIZE * 8) + ' ' + (10 + SPACE_SIZE * 10)"
+     [attr.viewBox]="'-5 -5 ' + (10 + SPACE_SIZE * 8) + ' ' + (10 + SPACE_SIZE * 10)"
      preserveAspectRatio="xMidYMid meet">
     <g *ngFor="let line of board; index as y">
         <g *ngFor="let caseContent of line; index as x"
            id="click_{{x}}_{{y}}"
            (click)="onClick(x, y)"
         >
-            <polyline *ngIf="isPyramid(x, y) else emptyCase"
+            <polygon *ngIf="isPyramid(x, y) else emptyCase"
                       [attr.points]="getPyramidCoordinate(x, y)"
                       [ngClass]="getPyramidClass(x, y)"
                       class="base mid-stroke"
                       stroke-linecap="round"
             />
             <ng-template #emptyCase>
-                <polyline *ngIf="isEmptyCase(x, y)"
+                <polygon *ngIf="isEmptyCase(x, y)"
                           [attr.points]="getTriangleCoordinate(x, y)"
                           [ngClass]="getEmptyClass(x, y)"
                           class="base small-stroke"
                           stroke-linecap="round"
                 />
             </ng-template>
-            <polyline *ngIf="caseContent !== NONE"
+            <polygon *ngIf="caseContent !== NONE"
                       id="dark_line_{{ x }}_{{ y }}"
                       [attr.points]="getLineCoordinate(x, y)"
-                      stroke-linecap="round"
-                      stroke="black"
-                      stroke-width="10"
+                      class="base"
             />
-            <polyline *ngIf="caseContent !== NONE"
+            <polygon *ngIf="caseContent !== NONE"
                       id="dark_line_{{ x }}_{{ y }}"
                       [attr.points]="getLineCoordinate(x, y)"
-                      stroke-linecap="round"
-                      stroke="white"
+                      class="white-stroke"
             />
         </g>
     </g>
-    <polyline *ngFor="let hl of highlights"
+    <polygon *ngFor="let hl of highlights"
               [attr.points]="getTriangleCoordinate(hl.x, hl.y)"
               class="base no-fill highlighted" />
-    <polyline *ngIf="lastStart.isPresent()"
+    <polygon *ngIf="lastStart.isPresent()"
               [attr.points]="getTriangleCoordinate(lastStart.get().x, lastStart.get().y)"
               class="base no-fill last-move" />
-    <polyline *ngIf="lastEnd.isPresent()"
+    <polygon *ngIf="lastEnd.isPresent()"
               [attr.points]="getTriangleCoordinate(lastEnd.get().x, lastEnd.get().y)"
               class="base no-fill last-move" />
-    <polyline *ngIf="chosenCoord.isPresent()"
+    <polygon *ngIf="chosenCoord.isPresent()"
               [attr.points]="getTriangleCoordinate(chosenCoord.get().x, chosenCoord.get().y)"
               class="base no-fill selected" />
     <g *ngIf="mustShowTilesOf(0)"
         id="tilesCountZero"
     >
-        <polyline [attr.points]="getTilesCountCoordinate(0, 0)"
+        <polygon [attr.points]="getTilesCountCoordinate(0, 0)"
                   [attr.stroke]="lastTurnWasTilesExchange(0) ? 'yellow' : 'black'"
                   class="base player0"
                   stroke-linecap="round"
@@ -60,14 +57,14 @@
               [attr.x]="(SPACE_SIZE / 2) + SPACE_SIZE * 0"
               [attr.y]="16 + (SPACE_SIZE / 2) + SPACE_SIZE * 0"
               text-anchor="middle"
-              stroke="black"
+              class="text"
               [attr.font-size]="SPACE_SIZE / 2"
         >{{ tiles[0] }}</text>
     </g>
     <g *ngIf="mustShowTilesOf(1)"
         id="tilesCountOne"
     >
-        <polyline [attr.points]="getTilesCountCoordinate(0, 9)"
+        <polygon [attr.points]="getTilesCountCoordinate(0, 9)"
                   [attr.stroke]="lastTurnWasTilesExchange(1) ? 'yellow' : 'black'"
                   class="base player1"
                   stroke-linecap="round"
@@ -76,7 +73,7 @@
               [attr.x]="(SPACE_SIZE / 2) + SPACE_SIZE * 0"
               [attr.y]="16 + (SPACE_SIZE / 2) + SPACE_SIZE * 9"
               text-anchor="middle"
-              stroke="black"
+              class="text"
               [attr.font-size]="SPACE_SIZE / 2"
         >{{ tiles[1] }}</text>
     </g>

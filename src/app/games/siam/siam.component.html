@@ -25,7 +25,7 @@
                   [attr.y]="SPACE_SIZE * (y + 1)"
                   [attr.width]="SPACE_SIZE"
                   [attr.height]="SPACE_SIZE"
-                  [ngClass]="getCaseClasses(x, y)"
+                  [ngClass]="getSquareClasses(x, y)"
                   class="base"
             />
             <g *ngIf="c.isPiece()">

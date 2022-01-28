@@ -1,3 +1,4 @@
+// QuartoHasher has been deleted in commit 81ae90ac28010516a3fe13d259836ce756297984
 import { QuartoState } from './QuartoState';
 import { QuartoMove } from './QuartoMove';
 import { QuartoPiece } from './QuartoPiece';
@@ -6,6 +7,7 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { QuartoNode, BoardStatus, QuartoRules } from './QuartoRules';
 import { Player } from 'src/app/jscaip/Player';
+import { MGPSet } from 'src/app/utils/MGPSet';
 
 export class QuartoMinimax extends Minimax<QuartoMove, QuartoState> {
 
@@ -27,7 +29,7 @@ export class QuartoMinimax extends Minimax<QuartoMove, QuartoState> {
         const state: QuartoState = node.gameState;
 
         const board: QuartoPiece[][] = state.getCopiedBoard();
-        const pawns: Array<QuartoPiece> = state.getRemainingPawns();
+        const pawns: Array<QuartoPiece> = state.getRemainingPieces();
         const inHand: QuartoPiece = state.pieceInHand;
 
         let nextBoard: QuartoPiece[][];
@@ -56,12 +58,12 @@ export class QuartoMinimax extends Minimax<QuartoMove, QuartoState> {
         const state: QuartoState = node.gameState;
         let boardStatus: BoardStatus = {
             score: SCORE.DEFAULT,
-            sensitiveSquares: [],
+            sensitiveSquares: new MGPSet(),
         };
         for (const line of QuartoRules.lines) {
             boardStatus = QuartoRules.updateBoardStatus(line, state, boardStatus);
             if (boardStatus.score === SCORE.VICTORY) {
-                return QuartoMinimax.scoreToBoardValue(boardStatus.score, state.turn);
+                break;
             }
         }
         return QuartoMinimax.scoreToBoardValue(boardStatus.score, state.turn);

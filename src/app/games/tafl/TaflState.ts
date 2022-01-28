@@ -11,8 +11,11 @@ export abstract class TaflState extends GameStateWithTable<TaflPawn> {
     public abstract from(board: Table<TaflPawn>, turn: number): this;
 
     public isCentralThrone(coord: Coord): boolean {
+        return coord.equals(this.getCentralThrone());
+    }
+    public getCentralThrone(): Coord {
         const center: number = (this.board.length - 1) / 2;
-        return coord.equals(new Coord(center, center));
+        return new Coord(center, center);
     }
     public getRelativeOwner(player: Player, coord: Coord): RelativePlayer {
         const owner: Player = this.getAbsoluteOwner(coord);

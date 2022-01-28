@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { SiamComponent } from '../siam.component';
 import { SiamMove } from 'src/app/games/siam/SiamMove';
 import { Orthogonal } from 'src/app/jscaip/Direction';
@@ -115,9 +116,9 @@ describe('SiamComponent', () => {
         const move: SiamMove = new SiamMove(5, 4, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT);
         await expectMoveLegality(move);
 
-        expect(componentTestUtils.expectElementToHaveClasses('#insertAt_4_4', ['base', 'moved']));
-        expect(componentTestUtils.expectElementToHaveClasses('#insertAt_3_4', ['base', 'moved']));
-        expect(componentTestUtils.expectElementToHaveClasses('#insertAt_2_4', ['base']));
+        componentTestUtils.expectElementToHaveClasses('#insertAt_4_4', ['base', 'moved']);
+        componentTestUtils.expectElementToHaveClasses('#insertAt_3_4', ['base', 'moved']);
+        componentTestUtils.expectElementToHaveClasses('#insertAt_2_4', ['base']);
     }));
     it('should decide outing orientation automatically', fakeAsync(async() => {
         const board: Table<SiamPiece> = [

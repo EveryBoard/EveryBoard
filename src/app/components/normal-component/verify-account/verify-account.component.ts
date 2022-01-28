@@ -33,7 +33,7 @@ export class VerifyAccountComponent implements OnInit, OnDestroy {
         username: new FormControl(),
     });
 
-    constructor(private authService: AuthenticationService,
+    constructor(private readonly authService: AuthenticationService,
                 public router: Router) {}
 
     public async ngOnInit(): Promise<void> {
@@ -53,7 +53,7 @@ export class VerifyAccountComponent implements OnInit, OnDestroy {
                     }
                     if (user.verified === true) {
                         // The user is now verified
-                        await this.router.navigate(['/server']);
+                        await this.router.navigate(['/lobby']);
                     }
                 }
             });
@@ -79,7 +79,7 @@ export class VerifyAccountComponent implements OnInit, OnDestroy {
         await this.authService.reloadUser();
     }
     public ngOnDestroy(): void {
-        if (this.userSub && this.userSub.unsubscribe) {
+        if (this.userSub != null && this.userSub.unsubscribe != null) {
             this.userSub.unsubscribe();
         }
     }

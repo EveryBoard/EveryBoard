@@ -10,7 +10,7 @@ import { PentagoMinimax } from './PentagoMinimax';
 import { PentagoMove } from './PentagoMove';
 import { PentagoRules } from './PentagoRules';
 import { PentagoState } from './PentagoState';
-import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { PentagoTutorial } from './PentagoTutorial';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Utils } from 'src/app/utils/utils';
@@ -165,7 +165,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         }
         return [];
     }
-    public getCaseClasses(x: number, y: number): string[] {
+    public getSquareClasses(x: number, y: number): string[] {
         const classes: string[] = [];
         const player: string = this.getPlayerClass(this.board[y][x]);
         classes.push(player);

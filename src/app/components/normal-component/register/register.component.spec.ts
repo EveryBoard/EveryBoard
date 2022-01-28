@@ -1,11 +1,13 @@
+/* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { expectValidRouting, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { RegisterComponent } from './register.component';
 import firebase from 'firebase/app';
+import { VerifyAccountComponent } from '../verify-account/verify-account.component';
 
 describe('RegisterComponent', () => {
     let testUtils: SimpleComponentTestUtils<RegisterComponent>;
@@ -52,7 +54,7 @@ describe('RegisterComponent', () => {
         await testUtils.clickElement('#registerButton');
 
         // then the services are called and the user is registered
-        expect(router.navigate).toHaveBeenCalledWith(['/verify-account']);
+        expectValidRouting(router, ['/verify-account'], VerifyAccountComponent);
         expect(authService.sendEmailVerification).toHaveBeenCalledWith();
         expect(authService.doRegister).toHaveBeenCalledWith(username, email, password);
     }));

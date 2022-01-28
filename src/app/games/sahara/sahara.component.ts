@@ -10,7 +10,7 @@ import { SaharaMinimax } from 'src/app/games/sahara/SaharaMinimax';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
-import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { SaharaFailure } from './SaharaFailure';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { SaharaTutorial } from './SaharaTutorial';
@@ -54,7 +54,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         }
         if (this.chosenCoord.isAbsent()) { // Must select pyramid
             return this.choosePiece(x, y);
-        } else { // Must choose empty landing case
+        } else { // Must choose empty landing space
             return this.chooseLandingCoord(x, y);
         }
     }

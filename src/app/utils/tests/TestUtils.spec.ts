@@ -1,8 +1,9 @@
+/* eslint-disable max-lines-per-function */
 import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement, Type } from '@angular/core';
 import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Route, Router } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';
@@ -40,6 +41,7 @@ import { USE_EMULATOR as USE_AUTH_EMULATOR } from '@angular/fire/auth';
 import { USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/functions';
 import { environment } from 'src/environments/environment';
 import { MGPOptional } from '../MGPOptional';
+import { findMatchingRoute } from 'src/app/app.module.spec';
 
 @Component({})
 export class BlankComponent {}
@@ -76,7 +78,9 @@ export class SimpleComponentTestUtils<T> {
 
     private component: T;
 
-    public static async create<T>(componentType: Type<T>): Promise<SimpleComponentTestUtils<T>> {
+    public static async create<T>(componentType: Type<T>, activatedRouteStub?: ActivatedRouteStub)
+    : Promise<SimpleComponentTestUtils<T>>
+    {
         await TestBed.configureTestingModule({
             imports: [
                 RouterTestingModule.withRoutes([
@@ -96,6 +100,7 @@ export class SimpleComponentTestUtils<T> {
                 CUSTOM_ELEMENTS_SCHEMA,
             ],
             providers: [
+                { provide: ActivatedRoute, useValue: activatedRouteStub },
                 { provide: AuthenticationService, useClass: AuthenticationServiceMock },
                 { provide: PartDAO, useClass: PartDAOMock },
                 { provide: JoinerDAO, useClass: JoinerDAOMock },
@@ -155,7 +160,6 @@ export class SimpleComponentTestUtils<T> {
         expect(element).withContext(elementName + ' should exist').toBeTruthy();
         return element;
     }
-
     public fillInput(elementName: string, value: string): void {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(elementName + ' should exist in order to fill its value').toBeTruthy();
@@ -189,7 +193,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
         testUtils.prepareSpies();
         return testUtils;
     }
-    public static async basic<T extends MyGameComponent>(game: string): Promise<ComponentTestUtils<T>> {
+    public static async basic<T extends MyGameComponent>(game?: string): Promise<ComponentTestUtils<T>> {
         const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub(game, 'joinerId');
         await TestBed.configureTestingModule({
             imports: [
@@ -227,6 +231,10 @@ export class ComponentTestUtils<T extends MyGameComponent> {
         this.onLegalUserMoveSpy = spyOn(this.wrapper, 'onLegalUserMove').and.callThrough();
         this.canUserPlaySpy = spyOn(this.gameComponent, 'canUserPlay').and.callThrough();
     }
+    public expectToBeCreated(): void {
+        expect(this.wrapper).withContext('Wrapper should be created').toBeTruthy();
+        expect(this.getComponent()).withContext('Component should be created').toBeTruthy();
+    }
     public detectChanges(): void {
         this.fixture.detectChanges();
     }
@@ -246,7 +254,8 @@ export class ComponentTestUtils<T extends MyGameComponent> {
             state,
             MGPOptional.ofNullable(previousState).map((previousState: GameState) =>
                 new MGPNode(previousState)),
-            MGPOptional.ofNullable(previousMove));
+            MGPOptional.ofNullable(previousMove),
+        );
         this.gameComponent.updateBoard();
         this.forceChangeDetection();
     }
@@ -301,7 +310,7 @@ export class ComponentTestUtils<T extends MyGameComponent> {
             this.canUserPlaySpy.calls.reset();
             expect(this.chooseMoveSpy).not.toHaveBeenCalled();
             expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(clickValidity.reason);
-            tick(3000); // needs to be >2999
+            tick(3000); // needs to be > 2999
         }
     }
     public async expectMoveSuccess(elementName: string,
@@ -359,6 +368,29 @@ export class ComponentTestUtils<T extends MyGameComponent> {
             this.cancelMoveSpy.calls.reset();
             expect(this.onLegalUserMoveSpy).not.toHaveBeenCalled();
             tick(3000); // needs to be >2999
+        }
+    }
+    public expectPassToBeForbidden(): void {
+        this.expectElementNotToExist('#passButton');
+    }
+    public async expectPassSuccess(move: Move, scores?: readonly [number, number]): Promise<void> {
+        const passButton: DebugElement = this.findElement('#passButton');
+        expect(passButton).withContext('Pass button is expected to be shown, but it is not').toBeTruthy();
+        if (passButton == null) {
+            return;
+        } else {
+            const state: GameState = this.gameComponent.rules.node.gameState;
+            passButton.triggerEventHandler('click', null);
+            await this.fixture.whenStable();
+            this.fixture.detectChanges();
+            if (scores) {
+                expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move, state, scores);
+            } else {
+                expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move, state);
+            }
+            this.chooseMoveSpy.calls.reset();
+            expect(this.onLegalUserMoveSpy).toHaveBeenCalledOnceWith(move, scores);
+            this.onLegalUserMoveSpy.calls.reset();
         }
     }
     public async clickElement(elementName: string): Promise<void> {
@@ -420,7 +452,7 @@ export class TestUtils {
 }
 
 export async function setupEmulators(): Promise<unknown> {
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
         imports: [
             AngularFirestoreModule,
             HttpClientModule,
@@ -441,4 +473,57 @@ export async function setupEmulators(): Promise<unknown> {
     // Clear the auth data before each test
     await http.delete('http://localhost:9099/emulator/v1/projects/my-project/accounts').toPromise();
     return;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function getComponentClassName(component: Type<any>): string {
+    // We need to match their string representations, as it is the only way to get the name from a Type<any>
+    const matches: RegExpMatchArray | null = component.toString().match(/class ([a-zA-Z0-9]+)/);
+    expect(matches).withContext(`getComponentClassName should find a match in the component string representation: ${component.toString().substring(0, 40)})`).not.toBeNull();
+    return Utils.getNonNullable(matches)[1];
+}
+
+/**
+ * Tests that we routes are used as expected. The router.navigate method should
+ * be spyed on. This function will match the route that is navigated to with
+ * the declared routes of the application, and ensure that the component that is
+ * routed to matches `component`. In case multiple router.navigate calls happen,
+ * set otherRoutes to true.
+ */
+export function expectValidRouting(router: Router,
+                                   path: string[],
+                                   component: Type<any>, // eslint-disable-line @typescript-eslint/no-explicit-any
+                                   otherRoutes: boolean = false)
+: void
+{
+    expect(path[0][0]).withContext('Routings should start with /').toBe('/');
+    for (const pathPart of path) {
+        expect(pathPart[pathPart.length-1]).withContext('Routing should not include superfluous / at the end').not.toBe('/');
+    }
+    const fullPath: string = path.join('/');
+    const matchingRoute: MGPOptional<Route> = findMatchingRoute(fullPath);
+    expect(matchingRoute.isPresent()).withContext(`Expected route to be present for path: ${path}`).toBeTrue();
+    const routedToComponent: string = getComponentClassName(Utils.getNonNullable(matchingRoute.get().component));
+    const expectedComponent: string = getComponentClassName(component);
+    expect(routedToComponent).withContext('It should route to the expected component').toEqual(expectedComponent);
+    if (otherRoutes) {
+        expect(router.navigate).toHaveBeenCalledWith(path);
+    } else {
+        expect(router.navigate).toHaveBeenCalledOnceWith(path);
+    }
+}
+
+/**
+ * Similar to expectValidRouting, but for checking HTML elements that provide a routerLink.
+ */
+export function expectValidRoutingLink(element: DebugElement, fullPath: string, component: Type<any>): void {
+    expect(fullPath[0]).withContext('Routings should start with /').toBe('/');
+
+    expect(element.attributes.routerLink).withContext('Routing links should have a routerLink').toBeDefined();
+    expect(element.attributes.routerLink).toEqual(fullPath);
+    const matchingRoute: MGPOptional<Route> = findMatchingRoute(fullPath);
+    expect(matchingRoute.isPresent()).withContext(`Expected route to be present for path: ${fullPath}`).toBeTrue();
+    const routedToComponent: string = getComponentClassName(Utils.getNonNullable(matchingRoute.get().component));
+    const expectedComponent: string = getComponentClassName(component);
+    expect(routedToComponent).withContext('It should route to the expected component').toEqual(expectedComponent);
 }

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
 import { Router } from '@angular/router';
 import { fakeAsync, TestBed } from '@angular/core/testing';
@@ -13,8 +14,8 @@ describe('NotConnectedGuard', () => {
 
     let router: Router;
 
-    beforeEach(() => {
-        TestBed.configureTestingModule({
+    beforeEach(fakeAsync(async() => {
+        await TestBed.configureTestingModule({
             imports: [
                 RouterTestingModule.withRoutes([
                     { path: '**', component: BlankComponent },
@@ -28,7 +29,7 @@ describe('NotConnectedGuard', () => {
         spyOn(router, 'navigate');
         authService = TestBed.inject(AuthenticationService);
         guard = new NotConnectedGuard(authService, router);
-    });
+    }));
     it('should create', () => {
         expect(guard).toBeDefined();
     });
@@ -43,5 +44,17 @@ describe('NotConnectedGuard', () => {
     it('should move verified user to the main page', fakeAsync(async() => {
         AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
         await expectAsync(guard.canActivate()).toBeResolvedTo(router.parseUrl('/'));
+    }));
+    it('should unsubscribe from userSub upon destruction', fakeAsync(async() => {
+        // Given a guard that has executed
+        AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
+        await guard.canActivate();
+        spyOn(guard['userSub'], 'unsubscribe');
+
+        // When destroying the guard
+        guard.ngOnDestroy();
+
+        // Then unsubscribe is called
+        expect(guard['userSub'].unsubscribe).toHaveBeenCalledWith();
     }));
 });

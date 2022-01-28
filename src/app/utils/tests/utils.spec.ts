@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { assert, display, isJSONPrimitive, Utils } from '../utils';
 
 describe('utils', () => {
@@ -75,7 +76,7 @@ describe('utils', () => {
     });
     describe('assert', () => {
         it('Should throw when condition is false', () => {
-            expect(() => assert(false, 'error')).toThrowError('Assertion failure: error');
+            expect(() => assert(false, 'error')).toThrowError('Encountered error: Assertion failure: error');
         });
     });
 });

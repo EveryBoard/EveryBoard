@@ -77,18 +77,6 @@ export class MGPNode<R extends Rules<M, S, L>,
         display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'DEFAULT');
         return SCORE.DEFAULT;
     }
-    public static getFirstNode<R extends Rules<M, S, L>,
-                               M extends Move,
-                               S extends GameState,
-                               L,
-                               U extends NodeUnheritance>(initialBoard: S, gameRuler: R)
-    : MGPNode<R, M, S, L, U>
-    {
-        MGPNode.ruler = gameRuler; // for all nodes, gameRuler is the ruler
-        return new MGPNode<R, M, S, L, U>(initialBoard);
-    }
-    // instance methods:
-
     constructor(public readonly gameState: S,
                 public readonly mother: MGPOptional<MGPNode<R, M, S, L, U>> = MGPOptional.empty(),
                 public readonly move: MGPOptional<M> = MGPOptional.empty(),
@@ -218,6 +206,7 @@ export class MGPNode<R extends Rules<M, S, L>,
         return MGPOptional.empty();
     }
     public getInitialNode(): MGPNode<R, M, S, L, U> {
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
         let almightyMom: MGPNode<R, M, S, L, U> = this;
         while (almightyMom.mother.isPresent()) {
             almightyMom = almightyMom.mother.get();
@@ -239,6 +228,7 @@ export class MGPNode<R extends Rules<M, S, L>,
     }
     public myToString(): string {
         let genealogy: string = '';
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
         let node: MGPNode<R, M, S, L, U> = this;
         if (node.mother.isAbsent()) {
             const turn: number = node.gameState.turn;

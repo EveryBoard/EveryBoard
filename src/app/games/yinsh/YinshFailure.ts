@@ -19,7 +19,7 @@ export class YinshFailure {
 
     public static readonly MOVE_SHOULD_NOT_PASS_ABOVE_RING: Localized = () => $localize`A ring can only jump over markers or empty spaces, not over another ring.`;
 
-    public static readonly MOVE_SHOULD_END_AT_FIRST_EMPTY_CASE_AFTER_MARKERS: Localized = () => $localize`Your ring must land on the first empty space after a group of markers.`;
+    public static readonly MOVE_SHOULD_END_AT_FIRST_EMPTY_SPACE_AFTER_MARKERS: Localized = () => $localize`Your ring must land on the first empty space after a group of markers.`;
 
     public static readonly AMBIGUOUS_CAPTURE_COORD: Localized = GipfFailure.AMBIGUOUS_CAPTURE_COORD;
 

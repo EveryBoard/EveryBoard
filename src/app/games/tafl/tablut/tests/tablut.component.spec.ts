@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { TablutComponent } from '../tablut.component';
 import { TablutMove } from 'src/app/games/tafl/tablut/TablutMove';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -12,6 +13,7 @@ import { TablutRules } from '../TablutRules';
 import { MoveEncoder, NumberEncoder } from 'src/app/jscaip/Encoder';
 import { TaflMinimax } from '../../TaflMinimax';
 import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
+import { TaflFailure } from '../../TaflFailure';
 
 describe('TablutComponent', () => {
 
@@ -39,7 +41,7 @@ describe('TablutComponent', () => {
         // Then the move should be illegal
         await componentTestUtils.expectClickFailure('#click_4_4', RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
     }));
-    it('Should cancel move when first click on empty case', fakeAsync( async() => {
+    it('Should cancel move when first click on empty space', fakeAsync( async() => {
         await componentTestUtils.expectClickFailure('#click_0_0', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
     }));
     it('Should allow simple move', fakeAsync(async() => {
@@ -61,7 +63,7 @@ describe('TablutComponent', () => {
 
         // When attempting diagonal move
         await componentTestUtils.expectClickSuccess('#click_3_0');
-        const message: string = 'TaflMove cannot be diagonal.';
+        const message: string = TaflFailure.MOVE_MUST_BE_ORTHOGONAL();
 
         // Then it should not have throwed
         expect(async() => await componentTestUtils.expectClickFailure('#click_4_1', message)).not.toThrow();

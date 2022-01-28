@@ -109,7 +109,8 @@ export abstract class Rules<M extends Move,
     public setInitialBoard(): void {
         if (this.node == null) {
             const initialState: S = this.stateType['getInitialState']();
-            this.node = MGPNode.getFirstNode(initialState, this);
+            MGPNode.ruler = this;
+            this.node = new MGPNode(initialState);
         } else {
             this.node = this.node.getInitialNode();
         }
@@ -119,9 +120,7 @@ export abstract class Rules<M extends Move,
         for (const encodedMove of encodedMoves) {
             const move: M = moveDecoder(encodedMove);
             const legality: MGPFallible<L> = this.isLegal(move, state);
-            if (legality.isFailure()) {
-                throw new Error(`Can't create state from invalid moves (` + i + '): ' + legality.getReason() + '.');
-            }
+            assert(legality.isSuccess(), `Can't create state from invalid moves (` + i + '): ' + legality.toString() + '.');
             state = this.applyLegalMove(move, state, legality.get());
             i++;
         }

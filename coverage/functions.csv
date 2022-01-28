@@ -1,11 +1,3 @@
-ActivesPartsService.ts,5
-ActivesUsersService.ts,3
+ActiveUsersService.ts,3
 AuthenticationService.ts,2
-Minimax.ts,1
-NodeUnheritance.ts,1
-online-game-wrapper.component.ts,2
-PylosState.ts,1
-PieceThreat.ts,1
-QuartoRules.ts,3
-server-page.component.ts,1
-SixMinimax.ts,3
+online-game-wrapper.component.ts,1

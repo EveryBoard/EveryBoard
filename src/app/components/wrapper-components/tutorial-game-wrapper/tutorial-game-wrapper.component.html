@@ -1,6 +1,7 @@
-<div class="columns">
-    <div class="column is-5">
-        <div id="infos" class="box">
+<div class="tile is-ancestor">
+    <div class="tile is-5 is-vertical is-parent">
+        <div id="infos"
+             class="tile is-child box">
             <progress class="progress is-primary" [attr.value]="successfulSteps" [attr.max]="getNumberOfSteps()"></progress>
             <div class="content is-medium">
                 <p class="title">{{ getCurrentStepTitle() }} [{{stepIndex + 1}}/{{ getNumberOfSteps() }}]</p>
@@ -73,9 +74,10 @@
             </div>
         </div>
     </div>
-    <div class="column is-7">
-        <div class="box"
-             id="board">
+    <div class="tile is-parent is-7 is-vcentered"
+         [ngClass]="getBoardHighlight()">
+        <div id="board"
+             class="tile is-child box">
             <app-game-includer></app-game-includer>
         </div>
     </div>

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PentagoFailure } from '../PentagoFailure';
@@ -24,7 +25,7 @@ describe('PentagoRules', () => {
             new PentagoMinimax(rules, 'PentagoMinimax'),
         ];
     });
-    it('it should be illegal to drop piece on occupied case', () => {
+    it('it should be illegal to drop piece on occupied space', () => {
         const board: Table<Player> = [
             [_, _, _, _, _, _],
             [_, O, _, _, _, _],

@@ -7,7 +7,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { P4Move } from 'src/app/games/p4/P4Move';
 import { Player } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { P4Tutorial } from './P4Tutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
@@ -63,17 +63,7 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
     private hideLastMove() {
         this.last = MGPOptional.empty();
     }
-    public getCaseClasses(x: number, y: number): string[] {
-        const coord: Coord = new Coord(x, y);
-        const classes: string[] = [];
-        if (this.victoryCoords.some((c: Coord): boolean => c.equals(coord))) {
-            classes.push('victory-stroke');
-        } else if (this.last.equalsValue(coord)) {
-            classes.push('last-move');
-        }
-        return classes;
-    }
-    public getCaseFillClass(x: number, y: number): string[] {
+    public getSquareFillClass(x: number, y: number): string[] {
         const content: Player = this.board[y][x];
         return [this.getPlayerClass(content)];
     }

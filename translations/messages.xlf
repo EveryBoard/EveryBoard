@@ -26,6 +26,9 @@
       <trans-unit id="5075342719298110640" datatype="html">
         <source><x id="PH" equiv-text="unreadMessages"/> new messages</source>
       </trans-unit>
+      <trans-unit id="1260099573097287890" datatype="html">
+        <source>Add <x id="INTERPOLATION" equiv-text="{{ timeToAdd }}"/></source>
+      </trans-unit>
       <trans-unit id="2821179408673282599" datatype="html">
         <source>Home</source>
       </trans-unit>
@@ -44,6 +47,9 @@
       <trans-unit id="3468367367164457633" datatype="html">
         <source>Learn the rules</source>
       </trans-unit>
+      <trans-unit id="4930506384627295710" datatype="html">
+        <source>Settings</source>
+      </trans-unit>
       <trans-unit id="7507948636555938109" datatype="html">
         <source>Log out</source>
       </trans-unit>
@@ -52,6 +58,33 @@
       </trans-unit>
       <trans-unit id="2336550011721758066" datatype="html">
         <source>Log in</source>
+      </trans-unit>
+      <trans-unit id="7656395805241225659" datatype="html">
+        <source>Games</source>
+      </trans-unit>
+      <trans-unit id="5674286808255988565" datatype="html">
+        <source>Create</source>
+      </trans-unit>
+      <trans-unit id="2299187798995800780" datatype="html">
+        <source>Chat</source>
+      </trans-unit>
+      <trans-unit id="4643591148728960560" datatype="html">
+        <source>Game</source>
+      </trans-unit>
+      <trans-unit id="3710582909570607859" datatype="html">
+        <source>First player</source>
+      </trans-unit>
+      <trans-unit id="4060021930998903329" datatype="html">
+        <source>Second player</source>
+      </trans-unit>
+      <trans-unit id="8503767092684163333" datatype="html">
+        <source>Turn</source>
+      </trans-unit>
+      <trans-unit id="689957366051097321" datatype="html">
+        <source>Waiting for opponent</source>
+      </trans-unit>
+      <trans-unit id="1670632975695309948" datatype="html">
+        <source>Connected users:</source>
       </trans-unit>
       <trans-unit id="4768749765465246664" datatype="html">
         <source>Email</source>
@@ -83,6 +116,12 @@
       <trans-unit id="5769704000858519890" datatype="html">
         <source>The game you tried to join does not exist anymore.</source>
       </trans-unit>
+      <trans-unit id="7463436103435995523" datatype="html">
+        <source>You are already in a game. Finish it or cancel it first.</source>
+      </trans-unit>
+      <trans-unit id="7017932994058745268" datatype="html">
+        <source>Creating online game, please wait, it should not take long.</source>
+      </trans-unit>
       <trans-unit id="2009811124619716606" datatype="html">
         <source>Create an online game</source>
       </trans-unit>
@@ -103,6 +142,9 @@
       </trans-unit>
       <trans-unit id="2776505193142258762" datatype="html">
         <source>Get rid of all of your opponent&apos;s pieces on a board that shrinks little by little!</source>
+      </trans-unit>
+      <trans-unit id="1528017893097093154" datatype="html">
+        <source>Hide all of your pieces before your opponent does, or risk to be discovered!</source>
       </trans-unit>
       <trans-unit id="1337301714912876574" datatype="html">
         <source>Drop your pieces and move them around to align two pieces of the same color across the board to win!</source>
@@ -233,6 +275,9 @@
       <trans-unit id="947579386294731197" datatype="html">
         <source>Brandhub</source>
       </trans-unit>
+      <trans-unit id="4214831981215024999" datatype="html">
+        <source>Conspirateurs</source>
+      </trans-unit>
       <trans-unit id="2218572265318708454" datatype="html">
         <source>Registering</source>
       </trans-unit>
@@ -272,32 +317,20 @@
       <trans-unit id="1519954996184640001" datatype="html">
         <source>Error</source>
       </trans-unit>
-      <trans-unit id="7656395805241225659" datatype="html">
-        <source>Games</source>
+      <trans-unit id="6153797048311741939" datatype="html">
+        <source>User settings</source>
       </trans-unit>
-      <trans-unit id="5674286808255988565" datatype="html">
-        <source>Create</source>
+      <trans-unit id="7103588127254721505" datatype="html">
+        <source>Theme</source>
       </trans-unit>
-      <trans-unit id="2299187798995800780" datatype="html">
-        <source>Chat</source>
+      <trans-unit id="2826581353496868063" datatype="html">
+        <source>Language</source>
       </trans-unit>
-      <trans-unit id="4643591148728960560" datatype="html">
-        <source>Game</source>
+      <trans-unit id="413116577994876478" datatype="html">
+        <source>Light</source>
       </trans-unit>
-      <trans-unit id="3710582909570607859" datatype="html">
-        <source>First player</source>
-      </trans-unit>
-      <trans-unit id="4060021930998903329" datatype="html">
-        <source>Second player</source>
-      </trans-unit>
-      <trans-unit id="8503767092684163333" datatype="html">
-        <source>Turn</source>
-      </trans-unit>
-      <trans-unit id="689957366051097321" datatype="html">
-        <source>Waiting for opponent</source>
-      </trans-unit>
-      <trans-unit id="1670632975695309948" datatype="html">
-        <source>Connected users:</source>
+      <trans-unit id="3892161059518616136" datatype="html">
+        <source>Dark</source>
       </trans-unit>
       <trans-unit id="6996804354508674341" datatype="html">
         <source>Account verification</source>
@@ -327,16 +360,16 @@
         <source>Pick username</source>
       </trans-unit>
       <trans-unit id="7631774219107043658" datatype="html">
-        <source>Your account has now been finalized, you can go back to the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;[&apos;/server&apos;]&quot;&gt;"/>list of games<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
+        <source>Your account has now been finalized, you can go back to the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;[&apos;/lobby&apos;]&quot;&gt;"/>list of games<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
       </trans-unit>
       <trans-unit id="3862672024084051383" datatype="html">
         <source>You have not verified your email! Click on the link in the verification email.</source>
       </trans-unit>
-      <trans-unit id="3318133641595899163" datatype="html">
-        <source>AwesomBoard</source>
+      <trans-unit id="5723949445116321937" datatype="html">
+        <source>EveryBoard</source>
       </trans-unit>
-      <trans-unit id="3620319853901130962" datatype="html">
-        <source>AwesomBoard is a website to play and learn the rules of various abstract strategy games with perfect information.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Such games are games that do not include any randomness, agility, or hidden information. These games are played by two players, turn by turn.</source>
+      <trans-unit id="6808393327735679948" datatype="html">
+        <source>EveryBoard is a website to play and learn the rules of various abstract strategy games with perfect information.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Such games are games that do not include any randomness, agility, or hidden information. These games are played by two players, turn by turn.</source>
       </trans-unit>
       <trans-unit id="7079545056368231407" datatype="html">
         <source>See the game list</source>
@@ -419,6 +452,15 @@
       <trans-unit id="7003355968351203755" datatype="html">
         <source>Ask to take back one move</source>
       </trans-unit>
+      <trans-unit id="4830863788651301313" datatype="html">
+        <source>You agreed to draw.</source>
+      </trans-unit>
+      <trans-unit id="5730736324595001106" datatype="html">
+        <source>Your draw proposal has been accepted.</source>
+      </trans-unit>
+      <trans-unit id="5277703651684233917" datatype="html">
+        <source>Players agreed to draw.</source>
+      </trans-unit>
       <trans-unit id="7815479892408473764" datatype="html">
         <source>You won.</source>
       </trans-unit>
@@ -451,6 +493,12 @@
       </trans-unit>
       <trans-unit id="4237132455292972929" datatype="html">
         <source>Accept to play again</source>
+      </trans-unit>
+      <trans-unit id="1487672983218679675" datatype="html">
+        <source>5 minutes</source>
+      </trans-unit>
+      <trans-unit id="7078290923964101744" datatype="html">
+        <source>30 seconds</source>
       </trans-unit>
       <trans-unit id="353130366888208691" datatype="html">
         <source>Game creation</source>
@@ -902,6 +950,69 @@
       <trans-unit id="710072872152309867" datatype="html">
         <source>Congratulations! See, your piece no longer had any empty neighboring space after you have gained the tile, but it stayed on the board as it was your turn.
         However, the opponent&apos;s piece has disappeared because the tile&apos;s capture has removed its last empty neighboring space.</source>
+      </trans-unit>
+      <trans-unit id="4237198021995785268" datatype="html">
+        <source>Your piece should land on a neighboring square.</source>
+      </trans-unit>
+      <trans-unit id="6331318865941875967" datatype="html">
+        <source>You cannot drop a piece during the moving phase.</source>
+      </trans-unit>
+      <trans-unit id="1634970085488730747" datatype="html">
+        <source>You cannot move a piece before both players have dropped all of their pieces.</source>
+      </trans-unit>
+      <trans-unit id="320724128460521577" datatype="html">
+        <source>A jump must be made over a piece, not over an empty square.</source>
+      </trans-unit>
+      <trans-unit id="6834108574871302489" datatype="html">
+        <source>A drop must occur in the central zone of the board.</source>
+      </trans-unit>
+      <trans-unit id="8451838259581996755" datatype="html">
+        <source>A jump must land two squares from its original position, and be done in a straight line in any direction.</source>
+      </trans-unit>
+      <trans-unit id="309495911608325428" datatype="html">
+        <source>You are visiting the same location twice in a move, you are not allowed to do so.</source>
+      </trans-unit>
+      <trans-unit id="9123148140915098130" datatype="html">
+        <source>Board and aim of the game</source>
+      </trans-unit>
+      <trans-unit id="3408052490903167189" datatype="html">
+        <source>Conspirateurs is played on a 17x17 board. The goal of the game is to place all of your pieces in shelters, which are the special squares on the edge of the board. Note the central zone in the middle of the board, where each player will put their pieces initially.</source>
+      </trans-unit>
+      <trans-unit id="5390926924373994130" datatype="html">
+        <source>Initial phase</source>
+      </trans-unit>
+      <trans-unit id="2655986823906349764" datatype="html">
+        <source>In the initial phase of the game, each player drop their 20 pieces, one per turn consecutively, in the central zone of the board. This phase does not allow any other kind of move.&lt;br/&gt;&lt;br/&gt;Drop one of your piece in the central zone.</source>
+      </trans-unit>
+      <trans-unit id="6144661124534225012" datatype="html">
+        <source>Simple move</source>
+      </trans-unit>
+      <trans-unit id="8533679028139934991" datatype="html">
+        <source>Once all pieces have been placed, there are two kind of moves that can be performed. The first is a simple move in any direction, orthogonally or diagonally, of a single step.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Click on one of your piece and perform such a move.</source>
+      </trans-unit>
+      <trans-unit id="2743282536649096025" datatype="html">
+        <source>You have made a jump, not a simple move. Try again!</source>
+      </trans-unit>
+      <trans-unit id="5311709353029708811" datatype="html">
+        <source>Jumps</source>
+      </trans-unit>
+      <trans-unit id="2921068171153120605" datatype="html">
+        <source>The other type of move is a jump. A piece can jump over a neighboring piece in any direction, as long as it lands directly on the square after that piece, along the same direction.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Perform a jump by clicking on one of your piece that can perform a jump, and then on the target square. You may need to click a second time on the target square to confirm your jump, in case your piece is still highlighted (we will see shortly why this is useful).</source>
+      </trans-unit>
+      <trans-unit id="7444294966169001535" datatype="html">
+        <source>You have not performed a jump. Try again!</source>
+      </trans-unit>
+      <trans-unit id="514608014907395319" datatype="html">
+        <source>Chaining jumps in a single move</source>
+      </trans-unit>
+      <trans-unit id="2017314282165555162" datatype="html">
+        <source>Jumps can be chained when possible. You can decide whether to continue a jump or to stop it at any time. To finish your jump, click a second time on your current location. Otherwise, simply keep clicking on your next location. Once no more destination is possible, your move will end without you needing to click the piece a second time.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark and you can perform a triple jump! Do it.</source>
+      </trans-unit>
+      <trans-unit id="7823212119691946554" datatype="html">
+        <source>Congratulations! You now know everything to play the game. Remember: to win, you have to place all of your pieces in shelters before your opponent does.</source>
+      </trans-unit>
+      <trans-unit id="5361555826660205972" datatype="html">
+        <source>You have not performed a triple jump. Try again!</source>
       </trans-unit>
       <trans-unit id="3460005588993308010" datatype="html">
         <source>You do not have any pieces of this type anymore.</source>
@@ -1600,9 +1711,6 @@
       <trans-unit id="821589059503120913" datatype="html">
         <source>The goal at Pentago is to align 5 of your pieces. In the following board, Dark wins.</source>
       </trans-unit>
-      <trans-unit id="6144661124534225012" datatype="html">
-        <source>Simple move</source>
-      </trans-unit>
       <trans-unit id="3238348765317457854" datatype="html">
         <source>At their turn, players put a piece on the board and possibly rotate one quadrant.
         As long as there are neutral quadrants, i.e., quadrants that would not change after being rotated, a player may skip rotating a quadrant.
@@ -2084,6 +2192,9 @@
       <trans-unit id="5525790446318724698" datatype="html">
         <source>Something is in the way.</source>
       </trans-unit>
+      <trans-unit id="6790757046240382671" datatype="html">
+        <source>Tafl moves must be orthogonal.</source>
+      </trans-unit>
       <trans-unit id="1634828513961256784" datatype="html">
         <source>Brandhub is the Irish version of the family of viking strategy game called Tafl. The goal of the game is different for each player. The attacker plays first. Their pieces (dark) are close to the edges. Their goal is to capture the king, which is in the center of the board. The defender plays second. Their pieces (light) are in the middle. Their goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
       </trans-unit>
@@ -2319,12 +2430,6 @@
       </trans-unit>
       <trans-unit id="4052977957517792171" datatype="html">
         <source>This message is forbidden.</source>
-      </trans-unit>
-      <trans-unit id="7463436103435995523" datatype="html">
-        <source>You are already in a game. Finish it or cancel it first.</source>
-      </trans-unit>
-      <trans-unit id="2112240517752406123" datatype="html">
-        <source>You are offline. Log in to join a game.</source>
       </trans-unit>
       <trans-unit id="682801679843744749" datatype="html">
         <source><x id="PH" equiv-text="hours"/> hours</source>

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { BrandhubComponent } from '../brandhub.component';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
@@ -12,6 +13,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { TaflPawn } from '../../TaflPawn';
+import { TaflFailure } from '../../TaflFailure';
 
 describe('BrandhubComponent', () => {
 
@@ -39,7 +41,7 @@ describe('BrandhubComponent', () => {
         // Then the move should be illegal
         await componentTestUtils.expectClickFailure('#click_3_3', RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
     }));
-    it('Should cancel move when first click on empty case', fakeAsync( async() => {
+    it('Should cancel move when first click on empty space', fakeAsync( async() => {
         await componentTestUtils.expectClickFailure('#click_0_0', RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
     }));
     it('Should allow simple move', fakeAsync(async() => {
@@ -61,7 +63,7 @@ describe('BrandhubComponent', () => {
 
         // When attempting diagonal move
         await componentTestUtils.expectClickSuccess('#click_3_0');
-        const message: string = 'TaflMove cannot be diagonal.';
+        const message: string = TaflFailure.MOVE_MUST_BE_ORTHOGONAL();
 
         // Then it should not have throwed
         expect(async() => await componentTestUtils.expectClickFailure('#click_4_1', message)).not.toThrow();

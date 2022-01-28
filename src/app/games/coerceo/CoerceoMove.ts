@@ -57,7 +57,7 @@ export class CoerceoMove extends Move {
         }
         public encodeNumber(move: CoerceoMove): number {
             // tileExchange: cx, cy
-            // deplacements: step, cx, cy
+            // movements: step, cx, cy
             if (move.isTileExchange()) {
                 const cy: number = move.capture.get().y; // [0, 9]
                 const cx: number = move.capture.get().x; // [0, 14]
@@ -80,12 +80,12 @@ export class CoerceoMove extends Move {
             if (encodedMove === 0) {
                 return CoerceoMove.fromTilesExchange(new Coord(cx, cy));
             } else {
-                return CoerceoMove.fromDeplacement(new Coord(cx, cy), CoerceoStep.STEPS[encodedMove - 1]);
+                return CoerceoMove.fromMovement(new Coord(cx, cy), CoerceoStep.STEPS[encodedMove - 1]);
             }
         }
     }
-    public static fromDeplacement(start: Coord,
-                                  step: CoerceoStep): CoerceoMove
+    public static fromMovement(start: Coord,
+                               step: CoerceoStep): CoerceoMove
     {
         if (start.isNotInRange(15, 10)) {
             throw new Error('Starting coord cannot be out of range (width: 15, height: 10).');
@@ -110,7 +110,7 @@ export class CoerceoMove extends Move {
     }
     public static fromCoordToCoord(start: Coord, end: Coord): CoerceoMove {
         const step: CoerceoStep = CoerceoStep.fromCoords(start, end);
-        return CoerceoMove.fromDeplacement(start, step);
+        return CoerceoMove.fromMovement(start, step);
     }
     private constructor(public readonly start: MGPOptional<Coord>,
                         public readonly step: MGPOptional<CoerceoStep>,

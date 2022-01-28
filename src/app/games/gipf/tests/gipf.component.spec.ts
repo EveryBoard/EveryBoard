@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { GipfComponent } from '../gipf.component';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GipfFailure } from 'src/app/games/gipf/GipfFailure';
@@ -45,13 +46,13 @@ describe('GipfComponent', () => {
         expect(componentTestUtils.getComponent().arrows.length).toBe(3);
         expect(componentTestUtils.getComponent().arrows.some((arrow: Arrow) => {
             return arrow.source.equals(new Coord(6, 3)) && arrow.destination.equals(new Coord(5, 3));
-        }));
+        })).toBeTrue();
         expect(componentTestUtils.getComponent().arrows.some((arrow: Arrow) => {
             return arrow.source.equals(new Coord(6, 3)) && arrow.destination.equals(new Coord(5, 4));
-        }));
+        })).toBeTrue();
         expect(componentTestUtils.getComponent().arrows.some((arrow: Arrow) => {
             return arrow.source.equals(new Coord(6, 3)) && arrow.destination.equals(new Coord(6, 2));
-        }));
+        })).toBeTrue();
     }));
     it('should not accept selecting something else than one of the proposed direction', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_6_3');
@@ -206,9 +207,9 @@ describe('GipfComponent', () => {
         await componentTestUtils.expectClickSuccess('#click_1_6');
         await componentTestUtils.expectMoveSuccess('#click_2_5', move, undefined, [0, 0]);
 
-        expect(componentTestUtils.getComponent().getCaseClass(new Coord(1, 6))).toEqual('moved');
-        expect(componentTestUtils.getComponent().getCaseClass(new Coord(2, 5))).toEqual('moved');
-        expect(componentTestUtils.getComponent().getCaseClass(new Coord(3, 4))).not.toEqual('moved');
+        expect(componentTestUtils.getComponent().getSpaceClass(new Coord(1, 6))).toEqual('moved');
+        expect(componentTestUtils.getComponent().getSpaceClass(new Coord(2, 5))).toEqual('moved');
+        expect(componentTestUtils.getComponent().getSpaceClass(new Coord(3, 4))).not.toEqual('moved');
     }));
     it('should highlight capturable pieces', fakeAsync(async() => {
         const board: Table<FourStatePiece> = [

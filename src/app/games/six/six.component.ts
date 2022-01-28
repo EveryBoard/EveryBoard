@@ -14,18 +14,16 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { HexagonalGameComponent }
     from '../../components/game-components/game-component/HexagonalGameComponent';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { SixTutorial } from './SixTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 
-interface Scale {
+interface Limits {
     minX: number;
     minY: number;
     maxX: number;
     maxY: number
-    upperPiece: Coord,
-    lefterPiece: Coord,
 }
 @Component({
     selector: 'app-six',
@@ -35,8 +33,6 @@ interface Scale {
 export class SixComponent
     extends HexagonalGameComponent<SixRules, SixMove, SixState, Player, SixLegalityInformation> {
 
-    public readonly CONCRETE_WIDTH: number = 1000;
-    public readonly CONCRETE_HEIGHT: number = 800;
     public state: SixState;
 
     public pieces: Coord[];
@@ -51,9 +47,6 @@ export class SixComponent
     public chosenLanding: MGPOptional<Coord> = MGPOptional.empty();
 
     public viewBox: string;
-    public pointScale: Scale;
-    public coordScale: Scale;
-    public Y_OFFSET: number;
 
     private nextClickShouldSelectGroup: boolean = false;
 
@@ -69,15 +62,7 @@ export class SixComponent
         this.hexaLayout = new HexaLayout(this.SPACE_SIZE * 1.50,
                                          new Coord(this.SPACE_SIZE * 2, 0),
                                          FlatHexaOrientation.INSTANCE);
-        this.setPieceSize(25);
         this.updateBoard();
-    }
-    private setPieceSize(rayon: number): void {
-        this.SPACE_SIZE = 2 * rayon;
-        this.hexaLayout = new HexaLayout(rayon,
-                                         new Coord(0, 0),
-                                         FlatHexaOrientation.INSTANCE);
-        this.Y_OFFSET = this.hexaLayout.getYOffset();
     }
     public cancelMoveAttempt(): void {
         this.selectedPiece = MGPOptional.empty();
@@ -102,6 +87,42 @@ export class SixComponent
         this.pieces = this.state.pieces.listKeys();
         this.neighbors = this.getEmptyNeighbors();
         this.viewBox = this.getViewBox();
+    }
+    private getViewBox(): string {
+        const hexaCoords: Coord[] = this.mapAbstractCoordToCornerCoords();
+        const limits: Limits = this.getLimits(hexaCoords);
+        const left: number = limits.minX - (this.STROKE_WIDTH / 2);
+        const up: number = limits.minY - (this.STROKE_WIDTH / 2);
+        const width: number = this.STROKE_WIDTH + limits.maxX - limits.minX;
+        const height: number = this.STROKE_WIDTH + limits.maxY - limits.minY;
+        return left + ' ' + up + ' ' + width + ' ' + height;
+    }
+    private mapAbstractCoordToCornerCoords(): Coord[] {
+        const abstractCoords: Coord[] = this.pieces.concat(this.disconnecteds).concat(this.neighbors);
+        const pieceCornersGrouped: Coord[][] =
+            abstractCoords.map((coord: Coord) => this.hexaLayout.getHexaCoordsAt(coord));
+        let cornerCoords: Coord[] = [];
+        for (const pieceCornerGroup of pieceCornersGrouped) {
+            cornerCoords = cornerCoords.concat(pieceCornerGroup);
+        }
+        return cornerCoords;
+    }
+    private getLimits(coords: Coord[]): Limits {
+        let maxX: number = Number.MIN_SAFE_INTEGER;
+        let maxY: number = Number.MIN_SAFE_INTEGER;
+        let minX: number = Number.MAX_SAFE_INTEGER;
+        let minY: number = Number.MAX_SAFE_INTEGER;
+        for (const coord of coords) {
+            if (coord.x < minX) {
+                minX = coord.x;
+            }
+            if (coord.y < minY) {
+                minY = coord.y;
+            }
+            maxX = Math.max(maxX, coord.x);
+            maxY = Math.max(maxY, coord.y);
+        }
+        return { minX, minY, maxX, maxY };
     }
     public showLastMove(): void {
         const lastMove: SixMove = this.rules.node.move.get();
@@ -145,52 +166,6 @@ export class SixComponent
         }
         return legalLandings;
     }
-    private getViewBox(): string {
-        const abstractScale: Scale = this.getAbstractBoardUse(this.pieces, this.neighbors, this.disconnecteds);
-        const abstractWidth: number = abstractScale.maxX - abstractScale.minX;
-        const abstractHeight: number = abstractScale.maxY - abstractScale.minY;
-
-        const verticalSize: number = this.CONCRETE_HEIGHT / (Math.sin(Math.PI/3) * abstractHeight);
-        const horizontalSize: number = this.CONCRETE_WIDTH / ((1.5 * abstractWidth) + 0.5);
-        const commonSize: number = Math.min(verticalSize, horizontalSize);
-
-        this.setPieceSize(commonSize);
-        const lefterPiece: Coord = this.hexaLayout.getCenterAt(abstractScale.lefterPiece);
-        const left: number = lefterPiece.x - this.hexaLayout.size;
-        const upperPiece: Coord = this.hexaLayout.getCenterAt(abstractScale.upperPiece);
-        const up: number = upperPiece.y - this.hexaLayout.getYOffset();
-        return (left - 10) + ' ' + (up - 10) + ' ' +
-               (this.CONCRETE_WIDTH + 20) + ' ' +
-               (this.CONCRETE_HEIGHT + 20);
-    }
-    public getAbstractBoardUse(pieces: Coord[], neighbors: Coord[], disconnecteds: Coord[]): Scale {
-        const coords: Coord[] = pieces.concat(neighbors).concat(disconnecteds);
-        let upperPiece: MGPOptional<Coord> = MGPOptional.empty();
-        let lefterPiece: MGPOptional<Coord> = MGPOptional.empty();
-        let maxX: number = Number.MIN_SAFE_INTEGER;
-        let maxY: number = Number.MIN_SAFE_INTEGER;
-        let minX: number = Number.MAX_SAFE_INTEGER;
-        let minY: number = Number.MAX_SAFE_INTEGER;
-        for (const coord of coords) {
-            const coordY: number = (2 * coord.y) + coord.x; // in half Y_OFFSETs
-            const coordX: number = coord.x; // in number of columns
-            if (coordX < minX) {
-                minX = coordX;
-                lefterPiece = MGPOptional.of(coord);
-            }
-            if (coordY < minY) {
-                minY = coordY;
-                upperPiece = MGPOptional.of(coord);
-            }
-            maxX = Math.max(maxX, coordX + 1);
-            maxY = Math.max(maxY, coordY + 2);
-        }
-        return {
-            minX, minY, maxX, maxY,
-            upperPiece: upperPiece.get(),
-            lefterPiece: lefterPiece.get(),
-        };
-    }
     public getPieceClass(coord: Coord): string {
         const player: Player = this.rules.node.gameState.getPieceAt(coord);
         return this.getPlayerClass(player);
@@ -201,7 +176,7 @@ export class SixComponent
             return this.cancelMove(clickValidity.getReason());
         }
         if (this.state.turn < 40) {
-            return this.cancelMove(SixFailure.NO_DEPLACEMENT_BEFORE_TURN_40());
+            return this.cancelMove(SixFailure.NO_MOVEMENT_BEFORE_TURN_40());
         } else if (this.chosenLanding.isAbsent()) {
             if (this.state.getPieceAt(piece) === this.state.getCurrentOpponent()) {
                 return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
@@ -229,9 +204,9 @@ export class SixComponent
             if (this.selectedPiece.isAbsent()) {
                 return this.cancelMove(SixFailure.CAN_NO_LONGER_DROP());
             } else {
-                const deplacement: SixMove = SixMove.fromDeplacement(this.selectedPiece.get(), neighbor);
+                const movement: SixMove = SixMove.fromMovement(this.selectedPiece.get(), neighbor);
                 const legality: MGPFallible<SixLegalityInformation> =
-                    SixRules.isLegalPhaseTwoMove(deplacement, this.state);
+                    SixRules.isLegalPhaseTwoMove(movement, this.state);
                 if (this.neededCutting(legality)) {
                     this.chosenLanding = MGPOptional.of(neighbor);
                     this.moveVirtuallyPiece();
@@ -239,7 +214,7 @@ export class SixComponent
                     this.nextClickShouldSelectGroup = true;
                     return MGPValidation.SUCCESS;
                 } else {
-                    return this.chooseMove(deplacement, this.state);
+                    return this.chooseMove(movement, this.state);
                 }
             }
         }
@@ -253,10 +228,10 @@ export class SixComponent
         this.neighbors = this.getEmptyNeighbors();
     }
     private showCuttable(): void {
-        const deplacement: SixMove = SixMove.fromDeplacement(this.selectedPiece.get(), this.chosenLanding.get());
-        const piecesAfterDeplacement: ReversibleMap<Coord, Player> = SixState.deplacePiece(this.state, deplacement);
+        const movement: SixMove = SixMove.fromMovement(this.selectedPiece.get(), this.chosenLanding.get());
+        const piecesAfterDeplacement: ReversibleMap<Coord, Player> = SixState.deplacePiece(this.state, movement);
         const groupsAfterMove: MGPSet<MGPSet<Coord>> =
-            SixState.getGroups(piecesAfterDeplacement, deplacement.start.get());
+            SixState.getGroups(piecesAfterDeplacement, movement.start.get());
         const biggerGroups: MGPSet<MGPSet<Coord>> = SixRules.getBiggerGroups(groupsAfterMove);
         this.cuttableGroups = [];
         for (let i: number = 0; i < biggerGroups.size(); i++) {

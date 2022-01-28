@@ -8,7 +8,7 @@ import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { PointyHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -212,7 +212,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
             this.cancelMoveAttempt();
             return MGPValidation.SUCCESS;
         }
-        if (coord.isHexagonalyAlignedWith(firstPiece) === false) {
+        if (coord.isHexagonallyAlignedWith(firstPiece) === false) {
             this.cancelMoveAttempt();
             return this.firstClick(x, y);
         }
@@ -273,7 +273,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
             }
         }
         const legality: MGPValidation = this.cancelMove(AbaloneFailure.LINE_AND_COORD_NOT_ALIGNED());
-        this.firstClick(clicked.x, clicked.y);
+        await this.firstClick(clicked.x, clicked.y);
         return legality;
     }
     private async deselectExtremity(first: boolean): Promise<MGPValidation> {
@@ -318,7 +318,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         }
         return MGPValidation.failure('not a direction');
     }
-    public getCaseClasses(x: number, y: number): string[] {
+    public getSquareClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
         const classes: string[] = [];
         if (this.moveds.some((c: Coord) => c.equals(coord))) {

@@ -24,7 +24,7 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/normal-component/header/header.component';
 import { WelcomeComponent } from './components/normal-component/welcome/welcome.component';
 import { LoginComponent } from './components/normal-component/login/login.component';
-import { ServerPageComponent } from './components/normal-component/server-page/server-page.component';
+import { LobbyComponent } from './components/normal-component/lobby/lobby.component';
 import { PickGameComponent } from './components/normal-component/pick-game/pick-game.component';
 import { PartCreationComponent } from './components/wrapper-components/part-creation/part-creation.component';
 import { NotFoundComponent } from './components/normal-component/not-found/not-found.component';
@@ -40,8 +40,8 @@ import { GameIncluderComponent } from './components/game-components/game-include
 import { RegisterComponent } from './components/normal-component/register/register.component';
 import { LocalGameCreationComponent }
     from './components/normal-component/local-game-creation/local-game-creation.component';
-import { OnlineGameCreationComponent }
-    from './components/normal-component/online-game-creation/online-game-creation.component';
+import { OnlineGameSelectionComponent }
+    from './components/normal-component/online-game-selection/online-game-selection.component';
 import { TutorialGameCreationComponent }
     from './components/normal-component/tutorial-game-creation/tutorial-game-creation.component';
 import { HumanDuration } from './utils/TimeUtils';
@@ -52,6 +52,7 @@ import { ApagosComponent } from './games/apagos/apagos.component';
 import { AwaleComponent } from './games/awale/awale.component';
 import { BrandhubComponent } from './games/tafl/brandhub/brandhub.component';
 import { CoerceoComponent } from './games/coerceo/coerceo.component';
+import { ConspirateursComponent } from './games/conspirateurs/conspirateurs.component';
 import { DiamComponent } from './games/diam/diam.component';
 import { DvonnComponent } from './games/dvonn/dvonn.component';
 import { EncapsuleComponent } from './games/encapsule/encapsule.component';
@@ -88,19 +89,24 @@ import { AutofocusDirective } from './directives/autofocus.directive';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ToggleVisibilityDirective } from './directives/toggle-visibility.directive';
 import { ResetPasswordComponent } from './components/normal-component/reset-password/reset-password.component';
+import { ThemeService } from './services/ThemeService';
+import { SettingsComponent } from './components/normal-component/settings/settings.component';
+import { OnlineGameCreationComponent } from './components/normal-component/online-game-creation/online-game-creation.component';
 
 registerLocaleData(localeFr);
 
-const routes: Route [] = [
+export const routes: Route[] = [
     { path: 'login', component: LoginComponent },
-    { path: 'server', component: ServerPageComponent, canActivate: [VerifiedAccountGuard] },
+    { path: 'lobby', component: LobbyComponent, canActivate: [VerifiedAccountGuard] },
+    { path: 'settings', component: SettingsComponent },
     { path: 'register', component: RegisterComponent, canActivate: [NotConnectedGuard] },
     { path: 'reset-password', component: ResetPasswordComponent, canActivate: [NotConnectedGuard] },
-    { path: 'notFound', component: NotFoundComponent, canActivate: [VerifiedAccountGuard] },
+    { path: 'notFound', component: NotFoundComponent },
     { path: 'nextGameLoading', component: NextGameLoadingComponent, canActivate: [VerifiedAccountGuard] },
     { path: 'verify-account', component: VerifyAccountComponent, canActivate: [ConnectedButNotVerifiedGuard] },
 
-    { path: 'play', component: OnlineGameCreationComponent, canActivate: [VerifiedAccountGuard] },
+    { path: 'play', component: OnlineGameSelectionComponent, canActivate: [VerifiedAccountGuard] },
+    { path: 'play/:compo', component: OnlineGameCreationComponent, canActivate: [VerifiedAccountGuard] },
     { path: 'play/:compo/:id', component: OnlineGameWrapperComponent, canActivate: [VerifiedAccountGuard] },
     { path: 'local', component: LocalGameCreationComponent },
     { path: 'local/:compo', component: LocalGameWrapperComponent },
@@ -116,7 +122,7 @@ const routes: Route [] = [
         HeaderComponent,
         WelcomeComponent,
         LoginComponent,
-        ServerPageComponent,
+        LobbyComponent,
         PickGameComponent,
         ChatComponent,
         PartCreationComponent,
@@ -129,16 +135,18 @@ const routes: Route [] = [
         TutorialGameWrapperComponent,
         GameIncluderComponent,
         LocalGameCreationComponent,
-        OnlineGameCreationComponent,
+        OnlineGameSelectionComponent,
         TutorialGameCreationComponent,
         VerifyAccountComponent,
         ResetPasswordComponent,
+        SettingsComponent,
 
         AbaloneComponent,
         ApagosComponent,
         AwaleComponent,
         BrandhubComponent,
         CoerceoComponent,
+        ConspirateursComponent,
         DiamComponent,
         DvonnComponent,
         EncapsuleComponent,
@@ -187,6 +195,7 @@ const routes: Route [] = [
         ChatService,
         PartDAO,
         AngularFireAuth,
+        ThemeService,
         { provide: LOCALE_ID, useValue: LocaleUtils.getLocale() },
     ],
     bootstrap: [AppComponent],

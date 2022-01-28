@@ -13,7 +13,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { display } from 'src/app/utils/utils';
 import { GameComponentUtils } from 'src/app/components/game-components/GameComponentUtils';
-import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { SiamFailure } from './SiamFailure';
 
@@ -180,7 +180,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
     public getPieceClasses(c: SiamPiece): string[] {
         return [this.getPlayerClass(c.getOwner())];
     }
-    public getCaseClasses(x: number, y: number): string[] {
+    public getSquareClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
 
         if (this.movedPieces.some((c: Coord) => c.equals(coord))) {

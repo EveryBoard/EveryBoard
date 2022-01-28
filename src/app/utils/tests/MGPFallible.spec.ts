@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { MGPFallible } from '../MGPFallible';
 import { MGPOptional } from '../MGPOptional';
 
@@ -27,6 +28,9 @@ describe('MGPFallible', () => {
             expect(value.equals(MGPFallible.success(41))).toBeFalse();
             expect(value.equals(MGPFallible.failure('foo'))).toBeFalse();
         });
+        it('should be convertible to string', () => {
+            expect(value.toString()).toBe('MGPFallible.success(42)');
+        });
     });
     describe('failure', () => {
         const value: MGPFallible<number> = MGPFallible.failure('reason');
@@ -50,6 +54,9 @@ describe('MGPFallible', () => {
             expect(value.equals(value)).toBeTrue();
             expect(value.equals(MGPFallible.success(41))).toBeFalse();
             expect(value.equals(MGPFallible.failure('other reason'))).toBeFalse();
+        });
+        it('should give the reason with toString', () => {
+            expect(value.toString()).toBe('MGPFallible.failure(reason)');
         });
     });
 });

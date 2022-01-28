@@ -9,6 +9,8 @@ export abstract class MGPFallible<T> {
         return new MGPFallibleFailure(reason);
     }
 
+    protected constructor() {
+    }
     public abstract isSuccess(): boolean
 
     public abstract isFailure(): boolean
@@ -57,6 +59,9 @@ class MGPFallibleSuccess<T> extends MGPFallible<T> {
     public toOptional(): MGPOptional<T> {
         return MGPOptional.of(this.value);
     }
+    public toString(): string {
+        return `MGPFallible.success(${this.value})`;
+    }
 }
 
 class MGPFallibleFailure<T> extends MGPFallible<T> {
@@ -83,5 +88,8 @@ class MGPFallibleFailure<T> extends MGPFallible<T> {
     }
     public toOptional(): MGPOptional<T> {
         return MGPOptional.empty();
+    }
+    public toString(): string {
+        return `MGPFallible.failure(${this.reason})`;
     }
 }

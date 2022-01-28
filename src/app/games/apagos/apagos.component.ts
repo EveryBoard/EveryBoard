@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { GameComponent } from 'src/app/components/game-components/game-component/GameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
-import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ApagosCoord } from './ApagosCoord';
@@ -193,13 +193,6 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         let xOffset: number = player === Player.ZERO ? 0 : (this.SPACE_SIZE * 0.5);
         xOffset += (x * this.SPACE_SIZE);
         return 'translate(' + xOffset + ', ' + yOffset + ')';
-    }
-    public range(n: number): number[] {
-        const range: number[] = [];
-        for (let i: number = 0; i < n; i++) {
-            range.push(i);
-        }
-        return range;
     }
     public getSquareClasses(x: number): string[] {
         const classes: string[] = ['base'];

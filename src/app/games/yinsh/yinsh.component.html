@@ -2,66 +2,68 @@
      width="100%" height="auto"
      viewBox="0 250 1065 1060"
      preserveAspectRatio="xMidYMid meet">
-    <g *ngFor="let line of viewInfo.caseInfo; index as y">
-        <g *ngFor="let caseInfo of viewInfo.caseInfo[y]; index as x">
-            <g *ngIf="caseInfo != null"
-               (click)="onClick(caseInfo.coord)"
-               id="click_{{ x }}_{{ y }}"
+    <g *ngFor="let line of viewInfo.spaceInfo; index as y">
+        <g *ngFor="let spaceInfo of line; index as x">
+            <g id="click_{{ x }}_{{ y }}"
+               *ngIf="spaceInfo != null"
+               (click)="onClick(spaceInfo.coord)"
             >
-                <polyline [attr.points]="caseInfo.coordinates"
-                          id="case_{{ x }}_{{ y }}"
-                          [ngClass]="caseInfo.caseClasses"
+                <polyline id="space_{{ x }}_{{ y }}"
+                          [attr.points]="spaceInfo.coordinates"
+                          [ngClass]="spaceInfo.spaceClasses"
                           class="base"
                           stroke-linecap="round"/>
                 <g id="pieceGroup_{{ x }}_{{ y }}"
-                    [ngClass]="caseInfo.removedClass" >
-                    <circle *ngIf="caseInfo.isRing"
-                            [attr.cx]="caseInfo.center.x"
-                            [attr.cy]="caseInfo.center.y"
+                   [ngClass]="spaceInfo.removedClass"
+                >
+                    <circle *ngIf="spaceInfo.isRing"
+                            [attr.cx]="spaceInfo.center.x"
+                            [attr.cy]="spaceInfo.center.y"
                             [attr.r]="viewInfo.ringOuterSize"
                             class="base no-fill mid-stroke"/>
-                    <circle *ngIf="caseInfo.isRing"
-                            id="ring_{{ x }}_{{ y }}"
-                            [attr.cx]="caseInfo.center.x"
-                            [attr.cy]="caseInfo.center.y"
+                    <circle id="ring_{{ x }}_{{ y }}"
+                            *ngIf="spaceInfo.isRing"
+                            [attr.cx]="spaceInfo.center.x"
+                            [attr.cy]="spaceInfo.center.y"
                             [attr.r]="viewInfo.ringMidSize"
-                            [ngClass]="caseInfo.ringClasses"
+                            [ngClass]="spaceInfo.ringClasses"
                             class="base no-fill" />
-                    <circle *ngIf="caseInfo.isRing"
-                            [attr.cx]="caseInfo.center.x"
-                            [attr.cy]="caseInfo.center.y"
+                    <circle *ngIf="spaceInfo.isRing"
+                            [attr.cx]="spaceInfo.center.x"
+                            [attr.cy]="spaceInfo.center.y"
                             [attr.r]="viewInfo.ringInnerSize"
                             class="base no-fill mid-stroke" />
-                    <circle *ngIf="caseInfo.isMarker"
-                            id="marker_{{ x }}_{{ y }}"
-                            [attr.cx]="caseInfo.center.x"
-                            [attr.cy]="caseInfo.center.y"
+                    <circle id="marker_{{ x }}_{{ y }}"
+                            *ngIf="spaceInfo.isMarker"
+                            [attr.cx]="spaceInfo.center.x"
+                            [attr.cy]="spaceInfo.center.y"
                             [attr.r]="viewInfo.markerSize"
-                            [ngClass]="caseInfo.markerClasses"
+                            [ngClass]="spaceInfo.markerClasses"
                             class="base mid-stroke"/>
                 </g>
             </g>
         </g>
     </g>
-    <g *ngFor="let coord of viewInfo.selectedCoords; index as i">
-        <polyline [attr.points]="viewInfo.caseInfo[coord.y][coord.x].coordinates"
+    <g *ngFor="let coord of viewInfo.selectedCoords">
+        <polyline [attr.points]="viewInfo.spaceInfo[coord.y][coord.x].coordinates"
                   id="selected_{{ coord.x }}_{{ coord.y }}"
                   (click)="onClick(coord)"
                   pointer-events="fill"
                   class="base no-fill selected"
                   stroke-linecap="round" />
     </g>
-    <g *ngFor="let coord of viewInfo.selectableCoords; index as i">
-        <polyline [attr.points]="viewInfo.caseInfo[coord.y][coord.x].coordinates"
-                  id="selectable_{{ coord.x }}_{{ coord.y }}"
+    <g *ngFor="let coord of viewInfo.selectableCoords">
+        <polyline id="selectable_{{ coord.x }}_{{ coord.y }}"
+                  *ngIf="isPlayerTurn()"
+                  [attr.points]="viewInfo.spaceInfo[coord.y][coord.x].coordinates"
                   (click)="onClick(coord)"
                   pointer-events="fill"
                   class="base no-fill capturable"
                   stroke-linecap="round" />
     </g>
     <g *ngFor="let coord of viewInfo.targets">
-        <rect [attr.x]="viewInfo.caseInfo[coord.y][coord.x].center.x-viewInfo.indicatorSize/2"
-              [attr.y]="viewInfo.caseInfo[coord.y][coord.x].center.y-viewInfo.indicatorSize/2"
+        <rect [attr.x]="viewInfo.spaceInfo[coord.y][coord.x].center.x - viewInfo.indicatorSize/2"
+              [attr.y]="viewInfo.spaceInfo[coord.y][coord.x].center.y - viewInfo.indicatorSize/2"
               [attr.width]="viewInfo.indicatorSize"
               [attr.height]="viewInfo.indicatorSize"
               (click)="onClick(coord)"

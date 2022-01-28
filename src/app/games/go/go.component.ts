@@ -5,12 +5,11 @@ import { GoLegalityInformation, GoRules } from 'src/app/games/go/GoRules';
 import { GoMinimax } from 'src/app/games/go/GoMinimax';
 import { GoState, Phase, GoPiece } from 'src/app/games/go/GoState';
 import { Coord } from 'src/app/jscaip/Coord';
-import { display } from 'src/app/utils/utils';
+import { assert, display } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GroupDatas } from 'src/app/jscaip/BoardDatas';
-import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { GoTutorial } from './GoTutorial';
 
 @Component({
@@ -95,13 +94,11 @@ export class GoComponent extends RectangularGameComponent<GoRules, GoMove, GoSta
         if (phase === Phase.PLAYING || phase === Phase.PASSED) {
             return this.onClick(GoMove.PASS.coord.x, GoMove.PASS.coord.y);
         }
-        if (phase === Phase.COUNTING || phase === Phase.ACCEPT) {
-            return this.onClick(GoMove.ACCEPT.coord.x, GoMove.ACCEPT.coord.y);
-        } else {
-            return this.cancelMove(RulesFailure.CANNOT_PASS());
-        }
+        assert(phase === Phase.COUNTING || phase === Phase.ACCEPT,
+               'GoComponent: pass() must be called only in playing, passed, counting, or accept phases');
+        return this.onClick(GoMove.ACCEPT.coord.x, GoMove.ACCEPT.coord.y);
     }
-    public getCaseClass(x: number, y: number): string {
+    public getSpaceClass(x: number, y: number): string {
         const piece: GoPiece = this.rules.node.gameState.getPieceAtXY(x, y);
         return this.getPlayerClass(piece.getOwner());
     }

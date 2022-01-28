@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { ArrayUtils, NumberTable } from 'src/app/utils/ArrayUtils';
 import { Coord } from '../Coord';
 import { HexagonalGameState } from '../HexagonalGameState';
@@ -118,7 +119,7 @@ describe('HexagonalGameState', () => {
         it('should fail when setting a coord not on board', () => {
             expect(() => state.setAt(new Coord(10, 5), 5)).toThrow();
         });
-        it('should return updated board upon modification', () => {
+        it('should return updated board upon update', () => {
             const coord: Coord = new Coord(4, 3);
             const updatedState: TestingHexagonalState = state.setAt(coord, 42);
             expect(updatedState.getPieceAt(coord)).toEqual(42);

@@ -1,7 +1,9 @@
+/* eslint-disable max-lines-per-function */
 import { TaflMove } from '../TaflMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MyTaflMove } from './MyTaflMove.spec';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { TaflFailure } from '../TaflFailure';
 
 describe('TaflMove', () => {
 
@@ -18,8 +20,13 @@ describe('TaflMove', () => {
         expect(() => MyTaflMove.from(inRange, outOfRange))
             .toThrowError('Landing coord of TaflMove must be on the board, not at (-1, -1).');
     });
-    it('TaflMove must throw if created non-orthogonally', () => {
-        expect(() => MyTaflMove.from(new Coord(0, 0), new Coord(1, 1))).toThrowError('TaflMove cannot be diagonal.');
+    it('TaflMove must throw move instruction message when diagonal', () => {
+        const error: string = TaflFailure.MOVE_MUST_BE_ORTHOGONAL();
+        expect(() => MyTaflMove.from(new Coord(0, 0), new Coord(1, 1))).toThrowError(error);
+    });
+    it('TaflMove must throw move instruction message when non linear', () => {
+        const error: string = TaflFailure.MOVE_MUST_BE_ORTHOGONAL();
+        expect(() => MyTaflMove.from(new Coord(0, 0), new Coord(2, 5))).toThrowError(error);
     });
     it('Should override equals and toString correctly', () => {
         const a: Coord = new Coord(0, 0);

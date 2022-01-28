@@ -10,10 +10,11 @@ import { KamisadoMinimax } from 'src/app/games/kamisado/KamisadoMinimax';
 import { KamisadoFailure } from 'src/app/games/kamisado/KamisadoFailure';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { KamisadoTutorial } from './KamisadoTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { assert } from 'src/app/utils/utils';
 
 @Component({
     selector: 'app-kamisado',
@@ -69,11 +70,8 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
         }
     }
     public async pass(): Promise<MGPValidation> {
-        if (this.canPass) {
-            return this.chooseMove(KamisadoMove.PASS, this.rules.node.gameState);
-        } else {
-            return this.cancelMove(RulesFailure.CANNOT_PASS());
-        }
+        assert(this.canPass, 'KamisadoComponent: pass() must be called only if canPass is true');
+        return this.chooseMove(KamisadoMove.PASS, this.rules.node.gameState);
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { Player } from 'src/app/jscaip/Player';
 import { GoPiece } from '../GoState';
 
@@ -15,7 +16,7 @@ describe('GoState', () => {
             });
         });
         it('Should throw when GoPiece.pieceBelongTo is called with Player.NONE', () => {
-            const error: string = 'Assertion failure: Owner must be Player.ZERO or Player.ONE, got Player.NONE.';
+            const error: string = 'Encountered error: Assertion failure: Owner must be Player.ZERO or Player.ONE, got Player.NONE.';
             expect(() => GoPiece.pieceBelongTo(GoPiece.BLACK, Player.NONE)).toThrowError(error);
         });
     });
