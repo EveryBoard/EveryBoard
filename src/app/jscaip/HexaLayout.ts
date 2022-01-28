@@ -25,7 +25,4 @@ export class HexaLayout {
         }
         return corners;
     }
-    public getYOffset(): number {
-        return this.size * Math.sin(Math.PI / 3);
-    }
 }

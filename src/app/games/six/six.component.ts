@@ -19,13 +19,11 @@ import { SixTutorial } from './SixTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 
-interface Scale {
+interface Extremes {
     minX: number;
     minY: number;
     maxX: number;
     maxY: number
-    upperPiece: Coord,
-    lefterPiece: Coord,
 }
 @Component({
     selector: 'app-six',
@@ -35,8 +33,6 @@ interface Scale {
 export class SixComponent
     extends HexagonalGameComponent<SixRules, SixMove, SixState, Player, SixLegalityInformation> {
 
-    public readonly CONCRETE_WIDTH: number = 1000;
-    public readonly CONCRETE_HEIGHT: number = 800;
     public state: SixState;
 
     public pieces: Coord[];
@@ -51,9 +47,6 @@ export class SixComponent
     public chosenLanding: MGPOptional<Coord> = MGPOptional.empty();
 
     public viewBox: string;
-    public pointScale: Scale;
-    public coordScale: Scale;
-    public Y_OFFSET: number;
 
     private nextClickShouldSelectGroup: boolean = false;
 
@@ -69,15 +62,7 @@ export class SixComponent
         this.hexaLayout = new HexaLayout(this.SPACE_SIZE * 1.50,
                                          new Coord(this.SPACE_SIZE * 2, 0),
                                          FlatHexaOrientation.INSTANCE);
-        this.setPieceSize(25);
         this.updateBoard();
-    }
-    private setPieceSize(rayon: number): void {
-        this.SPACE_SIZE = 2 * rayon;
-        this.hexaLayout = new HexaLayout(rayon,
-                                         new Coord(0, 0),
-                                         FlatHexaOrientation.INSTANCE);
-        this.Y_OFFSET = this.hexaLayout.getYOffset();
     }
     public cancelMoveAttempt(): void {
         this.selectedPiece = MGPOptional.empty();
@@ -102,6 +87,47 @@ export class SixComponent
         this.pieces = this.state.pieces.listKeys();
         this.neighbors = this.getEmptyNeighbors();
         this.viewBox = this.getViewBox();
+    }
+    private getViewBox(): string {
+        const hexaCoords: Coord[] = this.mapAbstractCoordToHexaCoord();
+        const extremes: Extremes = this.getExtremes(hexaCoords);
+        const left: number = extremes.minX - this.STROKE_WIDTH;
+        const up: number = extremes.minY - this.STROKE_WIDTH;
+        const width: number = (2 * this.STROKE_WIDTH) + extremes.maxX - extremes.minX;
+        const height: number = (2 * this.STROKE_WIDTH) + extremes.maxY - extremes.minY;
+        return left + ' ' + up + ' ' + width + ' ' + height;
+    }
+    private mapAbstractCoordToHexaCoord(): Coord[] {
+        const abstractCoords: Coord[] = this.pieces.concat(this.disconnecteds).concat(this.neighbors);
+        const hexaCoordsAsString: string[] = abstractCoords.map((coord: Coord) => this.getHexaCoordsAt(coord));
+        const hexaCoords: Coord[] = [];
+        for (const hexaString of hexaCoordsAsString) {
+            const hexaSubStrings: string[] = hexaString.split(' ');
+            for (let i: number = 0; i < 12; i += 2) {
+                const x: number = Number.parseFloat(hexaSubStrings[i]);
+                const y: number = Number.parseFloat(hexaSubStrings[i + 1]);
+                const newCoord: Coord = new Coord(x, y);
+                hexaCoords.push(newCoord);
+            }
+        }
+        return hexaCoords;
+    }
+    private getExtremes(coords: Coord[]): Extremes {
+        let maxX: number = Number.MIN_SAFE_INTEGER;
+        let maxY: number = Number.MIN_SAFE_INTEGER;
+        let minX: number = Number.MAX_SAFE_INTEGER;
+        let minY: number = Number.MAX_SAFE_INTEGER;
+        for (const coord of coords) {
+            if (coord.x < minX) {
+                minX = coord.x;
+            }
+            if (coord.y < minY) {
+                minY = coord.y;
+            }
+            maxX = Math.max(maxX, coord.x + 1);
+            maxY = Math.max(maxY, coord.y + 2);
+        }
+        return { minX, minY, maxX, maxY };
     }
     public showLastMove(): void {
         const lastMove: SixMove = this.rules.node.move.get();
@@ -144,52 +170,6 @@ export class SixComponent
             legalLandings = legalLandings.filter((c: Coord) => c.equals(chosenLanding) === false);
         }
         return legalLandings;
-    }
-    private getViewBox(): string {
-        const abstractScale: Scale = this.getAbstractBoardUse(this.pieces, this.neighbors, this.disconnecteds);
-        const abstractWidth: number = abstractScale.maxX - abstractScale.minX;
-        const abstractHeight: number = abstractScale.maxY - abstractScale.minY;
-
-        const verticalSize: number = this.CONCRETE_HEIGHT / (Math.sin(Math.PI/3) * abstractHeight);
-        const horizontalSize: number = this.CONCRETE_WIDTH / ((1.5 * abstractWidth) + 0.5);
-        const commonSize: number = Math.min(verticalSize, horizontalSize);
-
-        this.setPieceSize(commonSize);
-        const lefterPiece: Coord = this.hexaLayout.getCenterAt(abstractScale.lefterPiece);
-        const left: number = lefterPiece.x - this.hexaLayout.size;
-        const upperPiece: Coord = this.hexaLayout.getCenterAt(abstractScale.upperPiece);
-        const up: number = upperPiece.y - this.hexaLayout.getYOffset();
-        return (left - 10) + ' ' + (up - 10) + ' ' +
-               (this.CONCRETE_WIDTH + 20) + ' ' +
-               (this.CONCRETE_HEIGHT + 20);
-    }
-    public getAbstractBoardUse(pieces: Coord[], neighbors: Coord[], disconnecteds: Coord[]): Scale {
-        const coords: Coord[] = pieces.concat(neighbors).concat(disconnecteds);
-        let upperPiece: MGPOptional<Coord> = MGPOptional.empty();
-        let lefterPiece: MGPOptional<Coord> = MGPOptional.empty();
-        let maxX: number = Number.MIN_SAFE_INTEGER;
-        let maxY: number = Number.MIN_SAFE_INTEGER;
-        let minX: number = Number.MAX_SAFE_INTEGER;
-        let minY: number = Number.MAX_SAFE_INTEGER;
-        for (const coord of coords) {
-            const coordY: number = (2 * coord.y) + coord.x; // in half Y_OFFSETs
-            const coordX: number = coord.x; // in number of columns
-            if (coordX < minX) {
-                minX = coordX;
-                lefterPiece = MGPOptional.of(coord);
-            }
-            if (coordY < minY) {
-                minY = coordY;
-                upperPiece = MGPOptional.of(coord);
-            }
-            maxX = Math.max(maxX, coordX + 1);
-            maxY = Math.max(maxY, coordY + 2);
-        }
-        return {
-            minX, minY, maxX, maxY,
-            upperPiece: upperPiece.get(),
-            lefterPiece: lefterPiece.get(),
-        };
     }
     public getPieceClass(coord: Coord): string {
         const player: Player = this.rules.node.gameState.getPieceAt(coord);
