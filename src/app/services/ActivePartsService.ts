@@ -65,5 +65,6 @@ export class ActivePartsService {
         assert(this.unsubscribe.isPresent(), 'Cannot stop observing active parts when you have not started observing');
         this.activePartsBS.next([]);
         this.unsubscribe.get()();
+        this.unsubscribe = MGPOptional.empty();
     }
 }
