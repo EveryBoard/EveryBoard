@@ -101,7 +101,7 @@ describe('JoinerService', () => {
             expect(dao.update).toHaveBeenCalled();
         }));
         it('should start as new when chosenPlayer leaves', fakeAsync(async() => {
-            await dao.set('joinerId', JoinerMocks.WITH_CHOSEN_PLAYER);
+            await dao.set('joinerId', JoinerMocks.WITH_CHOSEN_OPPONENT);
             service.observe('joinerId');
 
             await service.cancelJoining('firstCandidate');

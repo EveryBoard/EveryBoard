@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
+import firebase from 'firebase/app';
 import { FirebaseFirestoreDAO } from './FirebaseFirestoreDAO';
 import { FirebaseCollectionObserver } from './FirebaseCollectionObserver';
 import { display } from 'src/app/utils/utils';
@@ -9,13 +10,14 @@ import { User } from '../domain/User';
     providedIn: 'root',
 })
 export class UserDAO extends FirebaseFirestoreDAO<User> {
+
     public static VERBOSE: boolean = false;
 
     public static COLLECTION_NAME: string = 'joueurs';
 
     constructor(protected afs: AngularFirestore) {
         super(UserDAO.COLLECTION_NAME, afs);
-        display(UserDAO.VERBOSE, 'JoueursDAO.constructor');
+        display(UserDAO.VERBOSE, 'UserDAO.constructor');
     }
     public async usernameIsAvailable(username: string): Promise<boolean> {
         return (await this.afs.collection<User>(UserDAO.COLLECTION_NAME).ref
@@ -32,5 +34,10 @@ export class UserDAO extends FirebaseFirestoreDAO<User> {
     }
     public observeActiveUsers(callback: FirebaseCollectionObserver<User>): () => void {
         return this.observingWhere([['state', '==', 'online'], ['verified', '==', true]], callback);
+    }
+    public updatePresenceToken(username: string): Promise<void> {
+        return this.update(username, {
+            last_changed: firebase.firestore.FieldValue.serverTimestamp(),
+        });
     }
 }

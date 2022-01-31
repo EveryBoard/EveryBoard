@@ -55,7 +55,7 @@ export class JoinerService {
         }
     }
     public async cancelJoining(userName: string): Promise<void> {
-        display(JoinerService.VERBOSE,
+        display(JoinerService.VERBOSE || true,
                 'JoinerService.cancelJoining(' + userName + '); this.observedJoinerId = ' + this.observedJoinerId);
 
         if (this.observedJoinerId == null) {
@@ -67,6 +67,7 @@ export class JoinerService {
             return;
         } else {
             const joiner: Joiner = joinerOpt.get();
+            console.log({ joiner })
             const candidates: string[] = ArrayUtils.copyImmutableArray(joiner.candidates);
             const indexLeaver: number = candidates.indexOf(userName);
             let chosenPlayer: string | null = joiner.chosenPlayer;

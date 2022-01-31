@@ -56,6 +56,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
      */
     public static VERBOSE: boolean = false;
 
+    public static TOKEN_INTERVAL: number = 5 * 1000;
+
     public partType: typeof PartType = PartType;
 
     @Input() partId: string;
@@ -79,13 +81,15 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     public currentJoiner: Joiner | null = null;
 
     // Subscription
-    private candidateSubscription: MGPMap<string, () => void> = new MGPMap();
+    private readonly candidateSubscription: MGPMap<string, () => void> = new MGPMap();
     private creatorSubscription: (() => void) | null = null;
-    private ngUnsubscribe: Subject<void> = new Subject<void>();
+    private readonly ngUnsubscribe: Subject<void> = new Subject<void>();
 
     public configFormGroup: FormGroup;
 
     public allDocDeleted: boolean = false;
+
+    private tokenTimeout: MGPOptional<number> = MGPOptional.empty();
 
     public constructor(public router: Router,
                        public gameService: GameService,
@@ -107,6 +111,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             // We will be redirected by the GameWrapper
             return;
         }
+        await this.notifyUserDocOfPartObservation();
         this.subscribeToJoinerDoc();
         this.subscribeToFormElements();
 
@@ -114,10 +119,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         return;
     }
     private checkInputs() {
-        assert(this.userName != null && this.userName !== '',
-               'PartCreationComponent should not be created with an empty userName');
-        assert(this.partId != null && this.partId !== '',
-               'PartCreationComponent should not be created with an empty partId');
+        assert(this.userName !== '', 'PartCreationComponent should not be created with an empty userName');
+        assert(this.partId !== '', 'PartCreationComponent should not be created with an empty partId');
     }
     private createForms() {
         this.configFormGroup = this.formBuilder.group({
@@ -127,6 +130,9 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             totalPartDuration: [PartType.NORMAL_PART_DURATION, Validators.required],
             chosenOpponent: ['', Validators.required],
         });
+    }
+    private notifyUserDocOfPartObservation(): Promise<void> {
+        return this.userService.updateObservedPart(this.userName, this.partId);
     }
     private subscribeToJoinerDoc(): void {
         this.joinerService
@@ -209,15 +215,19 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         }
     }
     private setDataForCreator(joiner: Joiner): void {
-        this.viewInfo.maximalMoveDuration = this.viewInfo.maximalMoveDuration || joiner.maximalMoveDuration;
-        this.viewInfo.totalPartDuration = this.viewInfo.totalPartDuration || joiner.totalPartDuration;
+        if (this.viewInfo.maximalMoveDuration == null) {
+            this.viewInfo.maximalMoveDuration = joiner.maximalMoveDuration;
+        }
+        if (this.viewInfo.totalPartDuration == null) {
+            this.viewInfo.totalPartDuration = joiner.totalPartDuration;
+        }
         let opponent: string | undefined = this.viewInfo.chosenOpponent;
-        if (opponent) {
+        if (opponent == null) {
+            opponent = joiner.chosenPlayer || '';
+        } else {
             if (joiner.candidates.indexOf(opponent) === -1) {
                 opponent = ''; // chosenOppoent left
             }
-        } else {
-            opponent = joiner.chosenPlayer || '';
         }
         this.getForm('chosenOpponent').setValue(opponent);
     }
@@ -268,7 +278,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 'PartCreationComponent.cancelGameCreation: game and joiner and chat deleted');
         return;
     }
-    private onCurrentJoinerUpdate(joiner: MGPOptional<Joiner>) {
+    private async onCurrentJoinerUpdate(joiner: MGPOptional<Joiner>) {
         display(PartCreationComponent.VERBOSE,
                 { PartCreationComponent_onCurrentJoinerUpdate: {
                     before: JSON.stringify(this.currentJoiner),
@@ -284,6 +294,11 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 display(PartCreationComponent.VERBOSE, 'PartCreationComponent.onCurrentJoinerUpdate: the game has started');
                 this.onGameStarted();
             }
+            if (this.isSelectedAsOpponent()) {
+                await this.startSendingPresenceTokensIfNotDone();
+            } else {
+                this.stopSendingPresenceTokensIfNeeded();
+            }
         }
     }
     private async onGameCancelled() {
@@ -293,7 +308,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     }
     private isGameStarted(): boolean {
         const joiner: Joiner = Utils.getNonNullable(this.currentJoiner);
-        return joiner != null && joiner.partStatus === PartStatus.PART_STARTED.value;
+        return joiner.partStatus === PartStatus.PART_STARTED.value;
     }
     private onGameStarted() {
         const joiner: Joiner = Utils.getNonNullable(this.currentJoiner);
@@ -339,21 +354,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     private observeCandidates(): void {
         const joiner: Joiner = Utils.getNonNullable(this.currentJoiner);
         display(PartCreationComponent.VERBOSE, { PartCreation_observeCandidates: joiner });
-        const onDocumentCreated: (foundUser: UserDocument[]) => void = async(foundUsers: UserDocument[]) => {
-            for (const user of foundUsers) {
-                if (user.data.state === 'offline') {
-                    await this.removeUserFromLobby(Utils.getNonNullable(user.data.username));
-                    Utils.handleError('OnlineGameWrapper: ' + user.data.username + ' is already offline!');
-                }
-            }
-        };
-        const onDocumentModified: (modifiedUsers: UserDocument[]) => void = async(modifiedUsers: UserDocument[]) => {
-            for (const user of modifiedUsers) {
-                if (user.data.state === 'offline') {
-                    await this.removeUserFromLobby(Utils.getNonNullable(user.data.username));
-                }
-            }
-        };
+        const onDocumentCreated: (foundUser: UserDocument[]) => void = (foundUsers: UserDocument[]) => {};
+        const onDocumentModified: (modifiedUsers: UserDocument[]) => void = async(modifiedUsers: UserDocument[]) => {};
         const onDocumentDeleted: (deletedUsers: UserDocument[]) => void = async(deletedUsers: UserDocument[]) => {
             // This should not happen in practice, but if it does we can safely remove the user from the lobby
             for (const user of deletedUsers) {
@@ -376,6 +378,24 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                     this.unsubscribeFrom(oldCandidate);
                 }
             }
+        }
+    }
+    private isSelectedAsOpponent(): boolean {
+        return Utils.getNonNullable(this.currentJoiner).chosenPlayer === this.userName;
+    }
+    public async startSendingPresenceTokensIfNotDone(): Promise<void> {
+        if (this.tokenTimeout.isAbsent()) {
+            await this.userService.sendPresenceToken(this.userName);
+            this.tokenTimeout = MGPOptional.of(window.setInterval(() => {
+                // eslint-disable-next-line @typescript-eslint/no-floating-promises
+                this.userService.sendPresenceToken(this.userName);
+            }, PartCreationComponent.TOKEN_INTERVAL));
+        }
+    }
+    public stopSendingPresenceTokensIfNeeded(): void {
+        if (this.tokenTimeout.isPresent()) {
+            clearInterval(this.tokenTimeout.get());
+            this.tokenTimeout = MGPOptional.empty();
         }
     }
     private removeUserFromLobby(username: string): Promise<void> {
@@ -411,6 +431,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
 
+        this.stopSendingPresenceTokensIfNeeded();
         for (const candidateName of this.candidateSubscription.listKeys()) {
             this.unsubscribeFrom(candidateName);
         }

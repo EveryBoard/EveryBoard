@@ -61,7 +61,7 @@ describe('ActiveUsersService', () => {
             verified: true,
             last_changed: { seconds: 4, nanoseconds: 3000000 },
         };
-        const joueurIds: UserDocument[] = [
+        const userDocs: UserDocument[] = [
             { id: 'second', data: SECOND_USER },
             { id: 'first', data: FIRST_USER },
             { id: 'fourth', data: FOURTH_USER },
@@ -73,7 +73,7 @@ describe('ActiveUsersService', () => {
             { id: 'third', data: THIRD_USER },
             { id: 'fourth', data: FOURTH_USER },
         ];
-        const orderedJoueursId: UserDocument[] = service.sort(joueurIds);
-        expect(expectedOrder).toEqual(orderedJoueursId);
+        const orderedUserDocs: UserDocument[] = service.sort(userDocs);
+        expect(expectedOrder).toEqual(orderedUserDocs);
     });
 });

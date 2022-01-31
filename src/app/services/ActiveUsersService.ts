@@ -4,6 +4,7 @@ import { User, UserDocument } from '../domain/User';
 import { UserDAO } from '../dao/UserDAO';
 import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
 import { display, Utils } from 'src/app/utils/utils';
+import { Time } from '../domain/Time';
 
 @Injectable({
     providedIn: 'root',
@@ -56,10 +57,10 @@ export class ActiveUsersService {
     }
     public sort(users: UserDocument[]): UserDocument[] {
         return users.sort((first: UserDocument, second: UserDocument) => {
-            const firstTimestamp: number =
-                Utils.getNonNullable(Utils.getNonNullable(first.data).last_changed).seconds;
-            const secondTimestamp: number =
-                Utils.getNonNullable(Utils.getNonNullable(second.data).last_changed).seconds;
+            const firstData: Time = Utils.getNonNullable(first.data).last_changed as Time;
+            const firstTimestamp: number = Utils.getNonNullable(firstData).seconds;
+            const secondData: Time = Utils.getNonNullable(second.data).last_changed as Time;
+            const secondTimestamp: number = Utils.getNonNullable(secondData).seconds;
             return firstTimestamp - secondTimestamp;
         });
     }

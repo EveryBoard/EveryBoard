@@ -26,7 +26,7 @@ describe('PartCreationComponent:', () => {
 
     let joinerDAOMock: JoinerDAO;
     let partDAOMock: PartDAO;
-    let joueursDAOMock: UserDAO;
+    let userDAOMock: UserDAO;
     let joinerService: JoinerService;
     let gameService: GameService;
     let chatService: ChatService;
@@ -60,15 +60,15 @@ describe('PartCreationComponent:', () => {
         const chatDAOMock: ChatDAO = TestBed.inject(ChatDAO);
         partDAOMock = TestBed.inject(PartDAO);
         joinerDAOMock = TestBed.inject(JoinerDAO);
-        joueursDAOMock = TestBed.inject(UserDAO);
+        userDAOMock = TestBed.inject(UserDAO);
         joinerService = TestBed.inject(JoinerService);
         gameService = TestBed.inject(GameService);
         chatService = TestBed.inject(ChatService);
         component = testUtils.getComponent();
         component.partId = 'joinerId';
         await chatDAOMock.set('joinerId', { messages: [], status: 'dummy status' });
-        await joueursDAOMock.set('creator', CREATOR);
-        await joueursDAOMock.set('opponent', OPPONENT);
+        await userDAOMock.set('creator', CREATOR);
+        await userDAOMock.set('opponent', OPPONENT);
         await partDAOMock.set('joinerId', PartMocks.INITIAL);
     }));
     describe('For creator', () => {
@@ -127,7 +127,7 @@ describe('PartCreationComponent:', () => {
                 testUtils.expectElementToExist('#candidate_firstCandidate');
 
                 // When the candidate user's document changes
-                await joueursDAOMock.update('opponent', { last_changed: { seconds: 42, nanoseconds: 31415 } });
+                await userDAOMock.update('opponent', { last_changed: { seconds: 42, nanoseconds: 31415 } });
                 testUtils.detectChanges();
                 tick(3000); // needs to be >2999
 
@@ -135,7 +135,7 @@ describe('PartCreationComponent:', () => {
                 testUtils.expectElementToExist('#candidate_firstCandidate');
             }));
         });
-        describe('Candidate departure', () => {
+        describe('Candidate departure (exit, disconnection and removal)', () => {
             it('should go back to start when chosenPlayer leaves', fakeAsync(async() => {
                 // Given a page that has loaded, a candidate joined and has been chosen as opponent
                 testUtils.detectChanges();
@@ -156,7 +156,7 @@ describe('PartCreationComponent:', () => {
                 testUtils.expectElementNotToExist('#selected_firstCandidate');
                 expect(component.currentJoiner).toEqual(JoinerMocks.INITIAL);
             }));
-            it('should go back to start when chosenPlayer goes offline', fakeAsync(async() => {
+            it('should not go back to start when chosenPlayer goes offline', fakeAsync(async() => {
                 // Given a page that has loaded, a candidate joined and has been chosen as opponent
                 testUtils.detectChanges();
                 await testUtils.whenStable();
@@ -165,28 +165,28 @@ describe('PartCreationComponent:', () => {
                 testUtils.expectElementToExist('#selected_firstCandidate');
 
                 // When the candidate goes offline
-                await joueursDAOMock.update('opponent', { state: 'offline' });
+                await userDAOMock.update('opponent', { state: 'offline' });
                 testUtils.detectChanges();
                 tick(3000); // needs to be >2999
 
-                // Then it is not selected anymore
-                testUtils.expectElementNotToExist('#selected_firstCandidate');
-                expect(component.currentJoiner).toEqual(JoinerMocks.INITIAL);
+                // Then it is still selected
+                testUtils.expectElementToExist('#selected_firstCandidate');
+                expect(component.currentJoiner).toEqual(JoinerMocks.WITH_CHOSEN_OPPONENT);
             }));
-            it('should update candidate list when a non-chosen player leaves', fakeAsync(async() => {
+            it('should not remove disconnected candidates from the list', fakeAsync(async() => {
                 // Given a component that is loaded and there is a non-chosen candidate
                 testUtils.detectChanges();
                 await testUtils.whenStable();
                 await mockCandidateArrival();
                 testUtils.expectElementToExist('#candidate_firstCandidate');
 
-                // When the candidate leaves
-                await joueursDAOMock.update('opponent', { state: 'offline' });
+                // When the candidate goes "offline"
+                await userDAOMock.update('opponent', { state: 'offline' });
                 testUtils.detectChanges();
 
-                // Then the candidate has disappeared and the joiner has been updated
-                testUtils.expectElementNotToExist('#candidate_firstCandidate');
-                expect(component.currentJoiner).toEqual(JoinerMocks.INITIAL);
+                // Then the candidate has not disappeared and the joiner has been updated
+                testUtils.expectElementToExist('#candidate_firstCandidate');
+                expect(component.currentJoiner).toEqual(JoinerMocks.WITH_FIRST_CANDIDATE);
             }));
             it('should deselect candidate, remove it, and call handleError when a candidate is removed from db', fakeAsync(async() => {
                 spyOn(Utils, 'handleError').and.callFake(() => {});
@@ -199,7 +199,7 @@ describe('PartCreationComponent:', () => {
                 testUtils.expectElementToExist('#selected_firstCandidate');
 
                 // When the candidate is deleted
-                await joueursDAOMock.delete('opponent');
+                await userDAOMock.delete('opponent');
                 testUtils.detectChanges();
                 tick(3000); // needs to be >2999
 
@@ -210,65 +210,46 @@ describe('PartCreationComponent:', () => {
                 // and the candidate has been removed from the lobby
                 expect(component.currentJoiner).toEqual(JoinerMocks.INITIAL);
             }));
-            it('should remove candidate from lobby if it directly appears offline', fakeAsync(async() => {
+            it('should not remove candidate from lobby if it directly appears offline', fakeAsync(async() => {
                 spyOn(Utils, 'handleError').and.callFake(() => {});
                 // Given a page that is loaded and there is no candidate yet
                 testUtils.detectChanges();
                 await testUtils.whenStable();
 
                 // When the candidate joins but is directly offline
-                await joueursDAOMock.set('opponent', { ...OPPONENT, state: 'offline' });
+                await userDAOMock.set('opponent', { ...OPPONENT, state: 'offline' });
                 await mockCandidateArrival();
                 testUtils.detectChanges();
                 await testUtils.whenStable();
 
-                // Then the candidate does not appear on the page
-                testUtils.expectElementNotToExist('#presenceOf_firstCandidate');
-                // and handleError was called as this is an unexpected situation
-                expect(Utils.handleError).toHaveBeenCalledWith('OnlineGameWrapper: firstCandidate is already offline!');
+                // Then the candidate does appear on the page
+                testUtils.expectElementToExist('#presenceOf_firstCandidate');
+                // and handleError was not called as this is an expected situation
+                expect(Utils.handleError).not.toHaveBeenCalled();
             }));
-            it('should not fail if an user has to be removed from the lobby but is not in it', fakeAsync(async() => {
+            it(`should not fail when receiving twice an 'offline' update`, fakeAsync(async() => {
                 spyOn(Utils, 'handleError').and.callFake(() => {});
-                // This could happen if we receive twice the same update to a user that needs to be removed
 
                 // Given a part creation with a candidate
                 testUtils.detectChanges();
                 await testUtils.whenStable();
                 await mockCandidateArrival();
 
-                // If the candidate updates twice with the offline status
-                await joueursDAOMock.update('opponent', { state: 'offline' });
+                // When the candidate updates twice with the offline status
+                await userDAOMock.update('opponent', { state: 'offline' });
                 testUtils.detectChanges();
-                testUtils.expectElementNotToExist('#candidate_firstCandidate');
-                expect(component.currentJoiner).toEqual(JoinerMocks.INITIAL);
-
-                await joueursDAOMock.update('opponent', { state: 'offline', dummyField: true });
-                testUtils.detectChanges();
-                testUtils.expectElementNotToExist('#candidate_firstCandidate');
-                expect(component.currentJoiner).toEqual(JoinerMocks.INITIAL);
-
-                // Then it is not displayed among the candidates, and no error has been produced
-                testUtils.expectElementNotToExist('#candidate_firstCandidate');
-                expect(Utils.handleError).not.toHaveBeenCalled();
-            }));
-            it('should see candidate reappear if candidates disconnects and reconnects', fakeAsync(async() => {
-                // Given a page that has loaded, a candidate joined and has been chosen as opponent
-                testUtils.detectChanges();
-                await testUtils.whenStable();
-                await mockCandidateArrival();
                 testUtils.expectElementToExist('#candidate_firstCandidate');
+                expect(component.currentJoiner).toEqual(JoinerMocks.WITH_FIRST_CANDIDATE);
 
-                // When the candidate goes offline and then back online
-                await joueursDAOMock.update('opponent', { state: 'offline' });
+                await userDAOMock.update('opponent', { state: 'offline', dummyField: true });
                 testUtils.detectChanges();
-                tick(3000); // needs to be >2999
-                await joueursDAOMock.update('opponent', { state: 'online' });
-                testUtils.detectChanges();
-                tick(3000); // needs to be >2999
+                testUtils.expectElementToExist('#candidate_firstCandidate');
+                expect(component.currentJoiner).toEqual(JoinerMocks.WITH_FIRST_CANDIDATE);
 
-                // Then it is in the list of candidates
-                testUtils.expectElementNotToExist('#candidate_firstCandidate');
-                expect(component.currentJoiner).toEqual(JoinerMocks.INITIAL);
+                // Then it is still displayed amongst the candidates, and no error has been produced
+                // this is because we don't put too many trust in offline/online status since we had issue in the past
+                testUtils.expectElementToExist('#candidate_firstCandidate');
+                expect(Utils.handleError).not.toHaveBeenCalled();
             }));
         });
         describe('Config proposal', () => {
@@ -298,6 +279,7 @@ describe('PartCreationComponent:', () => {
             it('should support blitz part', fakeAsync(async() => {
                 // Given a component with a candidate where blitz is selected
                 testUtils.detectChanges();
+                await testUtils.whenStable();
                 await mockCandidateArrival();
                 await chooseOpponent();
                 await testUtils.clickElement('#partTypeBlitz');
@@ -348,7 +330,7 @@ describe('PartCreationComponent:', () => {
                 await chooseOpponent();
 
                 // Then joiner doc should be updated
-                expect(component.currentJoiner).toEqual(JoinerMocks.WITH_CHOSEN_PLAYER);
+                expect(component.currentJoiner).toEqual(JoinerMocks.WITH_CHOSEN_OPPONENT);
                 // and proposal should now be possible
                 expect(testUtils.findElement('#proposeConfig').nativeElement.disabled)
                     .withContext('Proposing config should become possible after chosenPlayer is set')
@@ -476,10 +458,15 @@ describe('PartCreationComponent:', () => {
         beforeEach(fakeAsync(async() => {
             // Given a component where user is a candidate
             component.userName = 'firstCandidate';
+            await userDAOMock.set(component.userName, {
+                verified: true,
+                username: component.userName,
+                state: 'online',
+            });
             await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL);
         }));
         describe('Arrival', () => {
-            it('should change joiner doc', fakeAsync(async() => {
+            it('should add user to joiner doc', fakeAsync(async() => {
                 spyOn(joinerDAOMock, 'update').and.callThrough();
 
                 // When candidate arrives
@@ -492,35 +479,25 @@ describe('PartCreationComponent:', () => {
                 });
                 expect(component.currentJoiner).toEqual(JoinerMocks.WITH_FIRST_CANDIDATE);
             }));
-        });
-        describe('Creator leaves', () => {
-            it('should delete part when observer sees that creator leaves', fakeAsync(async() => {
-                spyOn(gameService, 'deletePart');
-                spyOn(joinerService, 'deleteJoiner');
-                spyOn(chatService, 'deleteChat');
-
-                // Given a component with creator and candidate present
+            it('should add partObserved to user doc', fakeAsync(async() => {
+                // Given a partCreation
+                spyOn(userDAOMock, 'update').and.callThrough();
+                // When candidate arrives
                 testUtils.detectChanges();
-                await testUtils.whenStable();
-                await mockCandidateArrival();
+                tick();
 
-                // When the creator goes offline
-                await joueursDAOMock.update('creator', { state: 'offline' });
-                testUtils.detectChanges();
-                await testUtils.whenStable();
-
-                // Then the part is deleted
-                expect(gameService.deletePart).toHaveBeenCalledWith('joinerId');
-                expect(joinerService.deleteJoiner).toHaveBeenCalledWith();
-                expect(chatService.deleteChat).toHaveBeenCalledWith('joinerId');
+                // Then observedPart in user doc should be set
+                expect(userDAOMock.update).toHaveBeenCalledOnceWith('firstCandidate', {
+                    observedPart: 'joinerId',
+                });
             }));
-            it('should delete part when creator is not there', fakeAsync(async() => {
+            it('should delete part when finding a disconnected creator', fakeAsync(async() => {
                 spyOn(gameService, 'deletePart').and.callThrough();
                 spyOn(joinerService, 'deleteJoiner').and.callThrough();
                 spyOn(chatService, 'deleteChat').and.callThrough();
 
                 // Given a component where creator is offline
-                await joueursDAOMock.update('creator', { state: 'offline' });
+                await userDAOMock.update('creator', { state: 'offline' });
                 await partDAOMock.set('joinerId', PartMocks.INITIAL);
 
                 // When arriving on that component
@@ -533,7 +510,7 @@ describe('PartCreationComponent:', () => {
                 expect(chatService.deleteChat).toHaveBeenCalledWith('joinerId');
             }));
         });
-        describe('Waiting for config', () => {
+        describe('Hoping to get chosen', () => {
             it('should reroute to server when game is cancelled', fakeAsync(async() => {
                 const router: Router = TestBed.inject(Router);
                 spyOn(router, 'navigate');
@@ -550,17 +527,61 @@ describe('PartCreationComponent:', () => {
                 tick(3000); // needs to be >2999
                 expectValidRouting(router, ['/lobby'], LobbyComponent);
             }));
+            it('should delete part when observer seeing that creator goes offline', fakeAsync(async() => {
+                spyOn(gameService, 'deletePart');
+                spyOn(joinerService, 'deleteJoiner');
+                spyOn(chatService, 'deleteChat');
+
+                // Given a component with creator and candidate present
+                testUtils.detectChanges();
+                await testUtils.whenStable();
+                await mockCandidateArrival();
+
+                // When the creator goes offline
+                await userDAOMock.update('creator', { state: 'offline' });
+                testUtils.detectChanges();
+                await testUtils.whenStable();
+
+                // Then the part is deleted
+                expect(gameService.deletePart).toHaveBeenCalledWith('joinerId');
+                expect(joinerService.deleteJoiner).toHaveBeenCalledWith();
+                expect(chatService.deleteChat).toHaveBeenCalledWith('joinerId');
+            }));
+            it('should start sending presence token once selected as chosen opponent', fakeAsync(async() => {
+                // Given a partCreation where user is candidate
+                spyOn(component, 'startSendingPresenceTokensIfNotDone').and.callThrough();
+                testUtils.detectChanges();
+                await testUtils.whenStable();
+
+                // When user is selected as chosen opponent
+                await joinerDAOMock.update('joinerId', JoinerMocks.WITH_CHOSEN_OPPONENT);
+                testUtils.detectChanges();
+
+                // Then "start sending token" should have been called
+                expect(component.startSendingPresenceTokensIfNotDone).toHaveBeenCalledOnceWith();
+                component.stopSendingPresenceTokensIfNeeded(); // To avoid finishing test with periodic timer in queue
+            }));
         });
-        describe('Receiving config', () => {
+        describe('As the Chosen opponent', () => {
+            it('each 5 second a presence token should be sent', fakeAsync(async() => {
+                // Given a partCreation were you are already chosen as candidate
+                testUtils.detectChanges();
+                tick();
+                await joinerDAOMock.update('joinerId', JoinerMocks.WITH_CHOSEN_OPPONENT);
+
+                // When 5 sec pass
+                spyOn(userDAOMock, 'updatePresenceToken').and.callThrough();
+                tick(PartCreationComponent.TOKEN_INTERVAL * 2);
+
+                // Then a presence token should be emitted
+                expect(userDAOMock.updatePresenceToken).toHaveBeenCalledTimes(2);
+                component.stopSendingPresenceTokensIfNeeded(); // To avoid finishing test with periodic timer in queue
+            }));
             it('should make config acceptation possible for joiner when config is proposed', fakeAsync(async() => {
                 // Given a part in creation where the candidate is chosen
                 testUtils.detectChanges();
                 await testUtils.whenStable();
-                await joinerDAOMock.update('joinerId', {
-                    partStatus: PartStatus.PART_CREATED.value,
-                    candidates: [],
-                    chosenPlayer: 'firstCandidate',
-                });
+                await joinerDAOMock.update('joinerId', JoinerMocks.WITH_CHOSEN_OPPONENT);
                 testUtils.detectChanges();
                 testUtils.expectElementNotToExist('#acceptConfig');
 
@@ -575,31 +596,19 @@ describe('PartCreationComponent:', () => {
 
                 // Then the candidate can accept the config
                 testUtils.expectElementToExist('#acceptConfig');
+                component.stopSendingPresenceTokensIfNeeded(); // To avoid finishing test with periodic timer in queue
             }));
-        });
-        describe('Accepting config', () => {
-            it('shoud change joiner and part', fakeAsync(async() => {
+            it('accepting config shoud change joiner and part', fakeAsync(async() => {
                 spyOn(component.gameStartNotification, 'emit');
                 // Given a part where the config has been proposed
                 testUtils.detectChanges();
                 await testUtils.whenStable();
-                await joinerDAOMock.update('joinerId', {
-                    partStatus: PartStatus.PART_CREATED.value,
-                    candidates: ['firstCandidate'],
-                    chosenPlayer: 'firstCandidate',
-                });
-                await testUtils.whenStable();
-                await joinerDAOMock.update('joinerId', {
-                    partStatus: PartStatus.CONFIG_PROPOSED.value,
-                    maximalMoveDuration: 120,
-                    totalPartDuration: 1800,
-                    firstPlayer: FirstPlayer.CREATOR.value,
-                });
-                await testUtils.whenStable();
+                await joinerDAOMock.update('joinerId', JoinerMocks.WITH_PROPOSED_CONFIG);
                 testUtils.detectChanges();
 
                 // When accepting the config
                 await component.acceptConfig();
+                await testUtils.whenStable();
 
                 // Then the game start notification is emitted
                 expect(component.gameStartNotification.emit).toHaveBeenCalledWith({
@@ -615,6 +624,22 @@ describe('PartCreationComponent:', () => {
                 const currentPart: Part = (await partDAOMock.read('joinerId')).get();
                 const expectedPart: Part = { ...PartMocks.STARTING, beginning: currentPart.beginning };
                 expect(currentPart).toEqual(expectedPart);
+                component.stopSendingPresenceTokensIfNeeded(); // To avoid finishing test with periodic timer in queue
+            }));
+            it('should stop sending token when no longer chosen opponent', fakeAsync(async() => {
+                // Given a component where user is chosen opponent
+                testUtils.detectChanges();
+                await testUtils.whenStable();
+                await joinerDAOMock.update('joinerId', JoinerMocks.WITH_CHOSEN_OPPONENT);
+                testUtils.detectChanges();
+
+                // When an update notify user that he is no longer chosen opponent
+                spyOn(component, 'stopSendingPresenceTokensIfNeeded').and.callThrough();
+                await joinerDAOMock.update('joinerId', JoinerMocks.WITH_FIRST_CANDIDATE);
+                testUtils.detectChanges();
+
+                // Then stopSendingPresenceTokensIfNeeded should have been called
+                expect(component.stopSendingPresenceTokensIfNeeded).toHaveBeenCalledOnceWith();
             }));
         });
     });

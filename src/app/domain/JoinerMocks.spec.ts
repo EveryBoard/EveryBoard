@@ -35,7 +35,7 @@ export class JoinerMocks {
         totalPartDuration: 1800,
     };
 
-    public static readonly WITH_CHOSEN_PLAYER: Joiner = {
+    public static readonly WITH_CHOSEN_OPPONENT: Joiner = {
         candidates: ['firstCandidate'],
         creator: 'creator',
         chosenPlayer: 'firstCandidate',
