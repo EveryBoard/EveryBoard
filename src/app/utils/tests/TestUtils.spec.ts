@@ -10,7 +10,7 @@ import { GameComponent } from '../../components/game-components/game-component/G
 import { GameState } from '../../jscaip/GameState';
 import { Move } from '../../jscaip/Move';
 import { MGPValidation } from '../MGPValidation';
-import { AppModule } from '../../app.module';
+import { AppModule, FirebaseProviders } from '../../app.module';
 import { UserDAO } from '../../dao/UserDAO';
 import { AuthenticationService, AuthUser } from '../../services/AuthenticationService';
 import { MGPNode } from '../../jscaip/MGPNode';
@@ -38,6 +38,7 @@ import { MGPOptional } from '../MGPOptional';
 import { findMatchingRoute } from 'src/app/app.module.spec';
 import * as Firebase from '@angular/fire/app';
 import * as Firestore from '@angular/fire/firestore';
+import * as Database from '@angular/fire/database';
 import * as Auth from '@angular/fire/auth';
 import * as Functions from '@angular/fire/functions';
 
@@ -453,37 +454,17 @@ export async function setupEmulators(): Promise<unknown> {
     await TestBed.configureTestingModule({
         imports: [
             HttpClientModule,
-            Firebase.provideFirebaseApp(() => {
-                console.log('firebaseapp')
-                return Firebase.initializeApp(environment.firebaseConfig)
-            }),
-            Firestore.provideFirestore(() => {
-                const firestore = Firestore.getFirestore();
-                const host = (firestore.toJSON() as any).settings.host
-                if (host !== 'localhost:8080') {
-                    Firestore.connectFirestoreEmulator(firestore, 'localhost', 8080);
-                }
-                return firestore;
-            }),
-            Auth.provideAuth(() => {
-                const fireauth = Auth.getAuth();
-                if (fireauth.config['emulator'] == null) {
-                    Auth.connectAuthEmulator(fireauth, 'http://localhost:9099', { disableWarnings: true });
-                }
-                return fireauth;
-            }),
-            Functions.provideFunctions(() => {
-                const firefunctions = Functions.getFunctions();
-                Functions.connectFunctionsEmulator(firefunctions, 'localhost', 5001);
-                return firefunctions;
-            }),
+            FirebaseProviders.app(),
+            FirebaseProviders.firestore(),
+            FirebaseProviders.auth(),
+            FirebaseProviders.functions(),
         ],
         providers: [
             AuthenticationService,
         ],
     }).compileComponents();
-    TestBed.inject(Firestore.Firestore)
-    TestBed.inject(Auth.Auth)
+    TestBed.inject(Firestore.Firestore);
+    TestBed.inject(Auth.Auth);
     const http: HttpClient = TestBed.inject(HttpClient);
     // Clear the content of the firestore database
     await http.delete('http://localhost:8080/emulator/v1/projects/my-project/databases/(default)/documents').toPromise();

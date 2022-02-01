@@ -1,5 +1,6 @@
 ActiveUsersService.ts,4
-AuthenticationService.ts,3
+app.module.ts,8
+AuthenticationService.ts,4
 CoerceoPiecesThreatTilesMinimax.ts,1
 GameWrapper.ts,1
 GoGroupsDatas.ts,4

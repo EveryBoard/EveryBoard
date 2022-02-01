@@ -6,10 +6,5 @@ export const environment : Environment = {
     test: false,
     root: '/',
     firebaseConfig: firebaseConfig,
-    emulatorConfig: {
-        firestore: undefined,
-        auth: undefined,
-        database: undefined,
-        functions: undefined,
-    },
+    useEmulators: false,
 };

@@ -19,6 +19,12 @@ import { TutorialGameWrapperComponent } from './components/wrapper-components/tu
 import { MGPOptional } from './utils/MGPOptional';
 import { Utils } from './utils/utils';
 
+import * as Firebase from '@angular/fire/app';
+import * as Firestore from '@angular/fire/firestore';
+import * as Database from '@angular/fire/database';
+import * as Auth from '@angular/fire/auth';
+import * as Functions from '@angular/fire/functions';
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const routingSpecification: [string, Type<any>][] = [
     ['login', LoginComponent],
@@ -67,8 +73,13 @@ export function findMatchingRoute(url: string): MGPOptional<Route> {
     return MGPOptional.empty();
 }
 
-describe('app module router', () => {
-    it('should map all urls to their expected components', () => {
+describe('app module', () => {
+    it('should provide all necessary firebase components', () => {
+        expect(Auth.getAuth()).toBeDefined();
+        expect(Firestore.getFirestore()).toBeDefined();
+        expect(Database.getDatabase()).toBeDefined();
+    });
+    it('router should map all urls to their expected components', () => {
         for (const [url, expectedComponent] of routingSpecification) {
             const matchingRoute: MGPOptional<Route> = findMatchingRoute(url);
             expect(matchingRoute.isPresent()).withContext(`Expected route to be present for url: ${url}`).toBeTrue();

@@ -31,7 +31,7 @@ export class PartDAO extends FirebaseFirestoreDAO<Part> {
         };
         return this.update(id, update);
     }
-    public observeActiveParts(callback: FirebaseCollectionObserver<Part>): () => void { // TODOTODO activeParts
+    public observeActiveParts(callback: FirebaseCollectionObserver<Part>): () => void {
         return this.observingWhere([['result', '==', MGPResult.UNACHIEVED.value]], callback);
     }
     public async userHasActivePart(username: string): Promise<boolean> {

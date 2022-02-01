@@ -113,24 +113,18 @@ export class AuthenticationServiceUnderTest extends AuthenticationService {
  * await firebase.auth().signOut();
  */
 export async function createConnectedGoogleUser(createInDB: boolean): Promise<FireAuth.User> {
-    const authService: AuthenticationService = TestBed.inject(AuthenticationService);
+    TestBed.inject(AuthenticationService);
     // Sign out current user in case there is one
     await FireAuth.signOut(FireAuth.getAuth());
     // Create a new google user
-    console.log('Create a connected google user')
     const token: string = '{"sub": "abc123", "email": "foo@example.com", "email_verified": true}';
-    authService['registrationInProgress'] = MGPOptional.of(new Promise((resolve: (value: MGPFallible<FireAuth.User>) => void, reject: () => void) => {
-        const credential: FireAuth.OAuthCredential = FireAuth.GoogleAuthProvider.credential(token);
-        FireAuth.signInWithCredential(FireAuth.getAuth(), credential).then((credential: FireAuth.UserCredential) => {
-            if (createInDB) {
-                TestBed.inject(UserDAO).set(Utils.getNonNullable(credential.user).uid, { verified: true })
-                    .then((_: void) => resolve(MGPFallible.success(credential.user))).catch(reject);
-            } else {
-                resolve(MGPFallible.success(credential.user));
-            }
-        }).catch(reject);
-    }));
-    return (await authService['registrationInProgress'].get()).get();
+    const credential: FireAuth.UserCredential =
+        await FireAuth.signInWithCredential(FireAuth.getAuth(),
+                                            FireAuth.GoogleAuthProvider.credential(token));
+    if (createInDB) {
+        await TestBed.inject(UserDAO).set(Utils.getNonNullable(credential.user).uid, { verified: true });
+    }
+    return credential.user;
 }
 
 async function createGoogleUser(createInDB: boolean): Promise<FireAuth.User> {
@@ -151,7 +145,6 @@ describe('AuthenticationService', () => {
     beforeEach(async() => {
         await setupAuthTestModule();
         service = TestBed.inject(AuthenticationService);
-        service.ngOnInit();
     });
 
     it('should create', fakeAsync(async() => {
@@ -186,7 +179,7 @@ describe('AuthenticationService', () => {
         subscription.unsubscribe();
     });
     describe('register', () => {
-        it('should create user upon successful registration', async() => { 
+        it('should create user upon successful registration', async() => {
             spyOn(service, 'createUser').and.callThrough();
             // given an user that does not exist
 
@@ -251,7 +244,7 @@ describe('AuthenticationService', () => {
             // and that the user is connected
             expect(await service.doEmailLogin(email, password)).toBe(MGPValidation.SUCCESS);
 
-            spyOn(Auth, 'sendEmailVerification');
+            spyOn(Auth, 'sendEmailVerification').and.callThrough();
 
             // when the email verification is requested
             const result: MGPValidation = await service.sendEmailVerification();
@@ -299,7 +292,7 @@ describe('AuthenticationService', () => {
         it('should succeed when the password is correct', async() => {
             // given a registered user
             expect((await service.doRegister(username, email, password)).isSuccess()).toBeTrue();
-            console.log('registered')
+            await FireAuth.getAuth().signOut();
 
             // when logging in with email with the right password
             const result: MGPValidation = await service.doEmailLogin(email, password);
@@ -309,10 +302,9 @@ describe('AuthenticationService', () => {
             expect(Utils.getNonNullable(FireAuth.getAuth().currentUser).email).toBe(email);
         });
         it('should update user when successfully logging in', async() => {
-            console.log('test 2')
             // given a registered user and a listener waiting for user updates
             expect((await service.doRegister(username, email, password)).isSuccess()).toBeTrue();
-            console.log('registered')
+            await FireAuth.getAuth().signOut();
 
             let subscription!: Subscription;
             const updateSeen: Promise<void> = new Promise((resolve: () => void) => {
@@ -324,7 +316,7 @@ describe('AuthenticationService', () => {
             });
             await expectAsync(updateSeen).toBePending();
 
-            // when a user is logged in
+            // when the user is logged in
             expect((await service.doEmailLogin(email, password)).isSuccess()).toBeTrue();
 
             // then the update has been seen
@@ -334,6 +326,7 @@ describe('AuthenticationService', () => {
         it('should fail when the password is incorrect', async() => {
             // given a registered user
             expect((await service.doRegister(username, email, password)).isSuccess()).toBeTrue();
+            await FireAuth.getAuth().signOut();
 
             // when logging in with email with an incorrect password,
             const result: MGPValidation = await service.doEmailLogin(email, 'helaba');
@@ -354,9 +347,26 @@ describe('AuthenticationService', () => {
         });
     });
     describe('google login', () => {
-        it('should delegate to signInPopup', async() => {
-            console.log('test 1')
+        it('should delegate to signInPopup and create the user if it does not exist', async() => {
+            // given a non-existing google user
+            spyOn(service, 'createUser').and.callThrough();
+            const user: FireAuth.User = await createGoogleUser(false);
+            spyOn(Auth, 'signInWithPopup').and.resolveTo(user);
+
+            // when the user registers and connects with google
+            const result: MGPValidation = await service.doGoogleLogin();
+
+            // then it succeeded and created the user
+            expect(result.isSuccess()).toBeTrue();
+            const provider: FireAuth.GoogleAuthProvider = new FireAuth.GoogleAuthProvider();
+            provider.addScope('profile');
+            provider.addScope('email');
+            expect(Auth.signInWithPopup).toHaveBeenCalledWith(provider);
+            expect(service.createUser).toHaveBeenCalledWith(user.uid);
+        });
+        it('should not create the user if it already exists', async() => {
             // given a google user
+            spyOn(service, 'createUser');
             const user: FireAuth.User = await createGoogleUser(true);
             spyOn(Auth, 'signInWithPopup').and.resolveTo(user);
 
@@ -369,6 +379,7 @@ describe('AuthenticationService', () => {
             provider.addScope('profile');
             provider.addScope('email');
             expect(Auth.signInWithPopup).toHaveBeenCalledWith(provider);
+            expect(service.createUser).not.toHaveBeenCalled();
         });
         it('should fail if google login also fails', async() => {
             // given a google user that will fail to connect
@@ -536,7 +547,7 @@ describe('AuthenticationService', () => {
     });
     describe('sendPasswordResetEmail', () => {
         it('should delegate to Auth.sendPasswordResetEmail', async() => {
-            spyOn(Auth, 'sendPasswordResetEmail').and.resolveTo();
+            spyOn(Auth, 'sendPasswordResetEmail').and.callThrough();
             // given a registered user
             expect((await service.doRegister(username, email, password)).isSuccess()).toBeTrue();
 

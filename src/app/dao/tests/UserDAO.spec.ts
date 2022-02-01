@@ -5,7 +5,6 @@ import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 import { UserDAO } from '../UserDAO';
 import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { createConnectedGoogleUser } from 'src/app/services/tests/AuthenticationService.spec';
-import { Utils } from 'src/app/utils/utils';
 import { getAuth, signOut } from 'firebase/auth';
 
 describe('UserDAO', () => {

@@ -1,6 +1,5 @@
 /* eslint-disable max-lines-per-function */
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { assert, display, FirebaseJSONObject, Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
@@ -45,7 +44,7 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
 
         const optionalOS: MGPOptional<DocumentSubject<T>> = this.getStaticDB().get(id);
         if (optionalOS.isPresent()) {
-            const subscription: Subscription = 
+            const subscription: Subscription =
                 optionalOS.get().observable.subscribe((subject: MGPOptional<FirebaseDocument<T>>) =>
                     callback(subject.map((doc: FirebaseDocument<T>) => doc.data)));
             return () => {

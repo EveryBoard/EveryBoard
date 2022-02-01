@@ -1,13 +1,10 @@
-ActiveUsersService.ts,1
-AttackEpaminondasMinimax.ts,1
-AuthenticationService.ts,1
-CoerceoPiecesThreatTilesMinimax.ts,3
+app.module.ts,2
+CoerceoPiecesThreatTilesMinimax.ts,1
 GameWrapper.ts,1
 GoGroupsDatas.ts,5
 HexagonalGameState.ts,3
 LinesOfActionRules.ts,1
 MGPNode.ts,1
-ObjectUtils.ts,3
-online-game-wrapper.component.ts,13
-PositionalEpaminondasMinimax.ts,1
+ObjectUtils.ts,2
+online-game-wrapper.component.ts,10
 PylosState.ts,1

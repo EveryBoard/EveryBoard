@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { CUSTOM_ELEMENTS_SCHEMA, LOCALE_ID, NgModule } from '@angular/core';
+import { LOCALE_ID, ModuleWithProviders, NgModule } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -84,10 +84,12 @@ import { ResetPasswordComponent } from './components/normal-component/reset-pass
 import { ThemeService } from './services/ThemeService';
 import { SettingsComponent } from './components/normal-component/settings/settings.component';
 import { OnlineGameCreationComponent } from './components/normal-component/online-game-creation/online-game-creation.component';
-import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
-import { getFirestore, provideFirestore } from '@angular/fire/firestore';
-import { getAuth, provideAuth } from '@angular/fire/auth';
-import { getFunctions, provideFunctions } from '@angular/fire/functions';
+
+import * as Firebase from '@angular/fire/app';
+import * as Firestore from '@angular/fire/firestore';
+import * as Database from '@angular/fire/database';
+import * as Auth from '@angular/fire/auth';
+import * as Functions from '@angular/fire/functions';
 
 registerLocaleData(localeFr);
 
@@ -111,6 +113,40 @@ export const routes: Route[] = [
     { path: '', component: WelcomeComponent },
     { path: '**', component: WelcomeComponent },
 ];
+
+export class FirebaseProviders {
+    public static app(): ModuleWithProviders<Firebase.FirebaseAppModule> {
+        return Firebase.provideFirebaseApp(() => Firebase.initializeApp(environment.firebaseConfig));
+    }
+    public static firestore(): ModuleWithProviders<Firestore.FirestoreModule> {
+        return Firestore.provideFirestore(() => {
+            const firestore: Firestore.Firestore = Firestore.getFirestore();
+            const host: string = firestore.toJSON()['settings'].host;
+            if (environment.useEmulators && host !== 'localhost:8080') {
+                Firestore.connectFirestoreEmulator(firestore, 'localhost', 8080);
+            }
+            return firestore;
+        });
+    }
+    public static database(): ModuleWithProviders<Database.DatabaseModule> {
+        return Database.provideDatabase(() => {
+            const database: Database.Database = Database.getDatabase();
+            if (environment.useEmulators) {
+                Database.connectDatabaseEmulator(database, 'localhost', 9000);
+            }
+            return database;
+        });
+    }
+    public static auth(): ModuleWithProviders<Auth.AuthModule> {
+        return Auth.provideAuth(() => {
+            const fireauth: Auth.Auth = Auth.getAuth();
+            if (environment.useEmulators && fireauth.config['emulator'] == null) {
+                Auth.connectAuthEmulator(fireauth, 'http://localhost:9099', { disableWarnings: true });
+            }
+            return fireauth;
+        });
+    }
+}
 
 @NgModule({
     declarations: [
@@ -169,16 +205,10 @@ export const routes: Route[] = [
         ToggleVisibilityDirective,
     ],
     imports: [
-        provideFirebaseApp(() => {
-            console.log('firebase app')
-            return initializeApp(environment.firebaseConfig)
-        }),
-        provideFirestore(() => {
-            console.log('firestore!')
-            return getFirestore()
-        }),
-        provideAuth(() => getAuth()),
-        provideFunctions(() => getFunctions()),
+        FirebaseProviders.app(),
+        FirebaseProviders.firestore(),
+        FirebaseProviders.auth(),
+        FirebaseProviders.database(),
         BrowserModule,
         HttpClientModule,
         RouterModule.forRoot(routes, { useHash: false }),
