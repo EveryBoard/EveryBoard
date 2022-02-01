@@ -88,7 +88,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         request: Request.takeBackAccepted(Player.ONE),
         listMoves: [],
         turn: 0,
-        lastMoveTime: FAKE_MOMENT,
+        lastUpdateTime: FAKE_MOMENT,
     };
     let observerRole: Player;
 
@@ -206,7 +206,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             request: null,
             remainingMsForOne,
             remainingMsForZero, // TODO: only send one of the two time updated, since that's what happens
-            lastMoveTime: serverTimestamp(),
+            lastUpdateTime: serverTimestamp(),
         };
         return await receivePartDAOUpdate(update, lastIndex);
     }
@@ -356,7 +356,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             turn: 1,
             // remaining times not updated on first turn of the component
             request: null,
-            lastMoveTime: serverTimestamp(),
+            lastUpdateTime: serverTimestamp(),
         };
         // TODO: should receive somewhere some kind of Timestamp written by DB
         expect(partDAO.update).toHaveBeenCalledOnceWith('joinerId', expectedUpdate );
@@ -402,7 +402,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         // When receiving a move time being null
         await receivePartDAOUpdate({
-            lastMoveTime: null,
+            lastUpdateTime: null,
             listMoves: [FIRST_MOVE_ENCODED],
             turn: 1,
         }, 1);
@@ -453,7 +453,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 turn: 5,
                 // remainingTimes are not present on the first move of a current board
                 request: null,
-                lastMoveTime: serverTimestamp(),
+                lastUpdateTime: serverTimestamp(),
                 winner: 'creator',
                 loser: 'firstCandidate',
                 result: MGPResult.VICTORY.value,
@@ -503,7 +503,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 turn: 16,
                 // TODO: investigate on why remainingTimes is not changed
                 request: null,
-                lastMoveTime: serverTimestamp(),
+                lastUpdateTime: serverTimestamp(),
                 result: MGPResult.HARD_DRAW.value,
             });
             componentTestUtils.expectElementToExist('#hardDrawIndicator');
@@ -641,7 +641,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                     turn: 3,
                     remainingMsForOne: 1799999,
                     request: null,
-                    lastMoveTime: serverTimestamp(),
+                    lastUpdateTime: serverTimestamp(),
                 });
 
                 tick(wrapper.joiner.maximalMoveDuration * 1000);
@@ -664,14 +664,14 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
                 await doMove(FIRST_MOVE, true);
 
-                // When opponent accepts take back but lastMoveTime is not yet updated
+                // When opponent accepts take back but lastUpdateTime is not yet updated
                 spyOn(wrapper, 'takeBackTo').and.callThrough();
                 await receivePartDAOUpdate({
                     request: Request.takeBackAccepted(Player.ONE),
                     listMoves: [],
                     turn: 0,
                     remainingMsForZero: 179999,
-                    lastMoveTime: null,
+                    lastUpdateTime: null,
                 }, 2);
 
                 // Then 'takeBackFor' should not be called
@@ -742,7 +742,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                     turn: 0,
                     remainingMsForZero: 1799999,
                     remainingMsForOne: 1799999,
-                    lastMoveTime: serverTimestamp(),
+                    lastUpdateTime: serverTimestamp(),
                 });
                 tick(wrapper.joiner.maximalMoveDuration * 1000);
             }));
@@ -782,8 +782,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 spyOn(partDAO, 'update').and.callThrough();
 
                 const beginningTime: Time = wrapper.currentPart.data.beginning as Time;
-                const lastMoveTime: Time = wrapper.currentPart.data.lastMoveTime as Time;
-                const usedTimeOfFirstTurn: number = getMillisecondsDifference(beginningTime, lastMoveTime);
+                const lastUpdateTime: Time = wrapper.currentPart.data.lastUpdateTime as Time;
+                const usedTimeOfFirstTurn: number = getMillisecondsDifference(beginningTime, lastUpdateTime);
                 const remainingMsForZero: number = (1800 * 1000) - usedTimeOfFirstTurn;
                 await acceptTakeBack();
 
@@ -798,7 +798,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                     request: Request.takeBackAccepted(Player.ONE),
                     remainingMsForZero,
                     remainingMsForOne: 1800 * 1000,
-                    lastMoveTime: serverTimestamp(),
+                    lastUpdateTime: serverTimestamp(),
                 });
                 expect(wrapper.chronoZeroGlobal.changeDuration).toHaveBeenCalledWith(remainingMsForZero);
 
@@ -877,8 +877,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                     },
                     turn: 1,
                     listMoves: [ALTERNATIVE_MOVE_ENCODED],
+                    remainingMsForOne: 1799998,
                     request: null,
-                    lastMoveTime: serverTimestamp(),
+                    lastUpdateTime: serverTimestamp(),
                 });
                 tick(wrapper.joiner.maximalMoveDuration * 1000);
             }));
@@ -943,8 +944,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                     },
                     turn: 1,
                     listMoves: [ALTERNATIVE_MOVE_ENCODED],
+                    remainingMsForZero: 1799999,
                     request: null,
-                    lastMoveTime: serverTimestamp(),
+                    lastUpdateTime: serverTimestamp(),
                 });
                 tick(wrapper.joiner.maximalMoveDuration * 1000);
             }));
@@ -1068,7 +1070,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             spyOn(wrapper.chronoZeroGlobal, 'stop').and.callThrough();
             tick(wrapper.joiner.maximalMoveDuration * 1000);
             expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(0);
-            expect(wrapper.chronoZeroGlobal.stop).toHaveBeenCalled();
+            expect(wrapper.chronoZeroGlobal.stop).toHaveBeenCalledOnceWith();
         }));
         it(`should stop player's local chrono when global chrono reach end`, fakeAsync(async() => {
             await prepareStartedGameFor(USER_CREATOR, true);
@@ -1077,7 +1079,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             spyOn(wrapper.chronoZeroTurn, 'stop').and.callThrough();
             tick(wrapper.joiner.maximalMoveDuration * 1000);
             expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(0);
-            expect(wrapper.chronoZeroTurn.stop).toHaveBeenCalled();
+            expect(wrapper.chronoZeroTurn.stop).toHaveBeenCalledOnceWith();
         }));
         it(`should stop offline opponent's global chrono when local reach end`, fakeAsync(async() => {
             // Given an online game where it's the opponent's turn
@@ -1092,7 +1094,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // Then it shoud be considered as a timeout
             expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(1);
-            expect(wrapper.chronoOneGlobal.stop).toHaveBeenCalled();
+            expect(wrapper.chronoOneGlobal.stop).toHaveBeenCalledOnceWith();
         }));
         it(`should stop offline opponent's local chrono when global chrono reach end`, fakeAsync(async() => {
             // Given an online game where it's the opponent's turn
@@ -1107,7 +1109,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // Then it shoud be considered as a timeout
             expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(1);
-            expect(wrapper.chronoOneTurn.stop).toHaveBeenCalled();
+            expect(wrapper.chronoOneTurn.stop).toHaveBeenCalledOnceWith();
         }));
         it(`should not notifyTimeout for online opponent`, fakeAsync(async() => {
             // Given an online game where it's the opponent's; opponent is online
@@ -1127,7 +1129,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(wrapper.notifyTimeoutVictory).not.toHaveBeenCalled();
         }));
         it(`should notifyTimeout for offline opponent`, fakeAsync(async() => {
-            // Given an online game where it's the opponent's; opponent is online
+            // Given an online game where it's the opponent's turn and opponent is offline
             await prepareStartedGameFor(USER_CREATOR);
             tick(1);
             await doMove(FIRST_MOVE, true);
@@ -1136,13 +1138,15 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             spyOn(wrapper, 'notifyTimeoutVictory').and.callThrough();
             spyOn(wrapper, 'opponentIsOffline').and.returnValue(true);
 
-            // When he reach time out
+            // When opponent reach time out locally
             tick(wrapper.joiner.maximalMoveDuration * 1000);
 
             // Then it shoud be considered as a timeout
             expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(1);
-            expect(wrapper.chronoOneGlobal.stop).toHaveBeenCalled();
-            expect(wrapper.notifyTimeoutVictory).toHaveBeenCalled();
+            expect(wrapper.chronoOneGlobal.stop).toHaveBeenCalledOnceWith();
+            const winner: string = USER_CREATOR.username.get();
+            const looser: string = USER_OPPONENT.username.get();
+            expect(wrapper.notifyTimeoutVictory).toHaveBeenCalledOnceWith(winner, Player.ZERO, 1, looser);
         }));
         it(`should send opponent his remainingTime after first move`, fakeAsync(async() => {
             // Given a board where a first move has been made
@@ -1150,7 +1154,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(1);
             await receiveNewMoves([FIRST_MOVE_ENCODED], 1, 1800 * 1000, 1800 * 1000);
             const beginning: Time = wrapper.currentPart.data.beginning as Time;
-            const firstMoveTime: Time = wrapper.currentPart.data.lastMoveTime as Time;
+            const firstMoveTime: Time = wrapper.currentPart.data.lastUpdateTime as Time;
             const msUsedForFirstMove: number = getMillisecondsDifference(beginning, firstMoveTime);
 
             // When doing the next move
@@ -1182,7 +1186,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 .toHaveBeenCalledWith(Utils.getNonNullable(wrapper.currentPart.data.remainingMsForZero));
             tick(wrapper.joiner.maximalMoveDuration * 1000);
         }));
-        it('when resigning, lastMoveTime must be upToDate then remainingMs');
+        it('when resigning, lastUpdateTime must be upToDate then remainingMs');
         it('when winning move is done, remainingMs at last turn of opponent must be');
     });
     describe('AddTime feature', () => {
@@ -1432,7 +1436,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
                 beginning: FAKE_MOMENT,
-                lastMoveTime: { seconds: 333, nanoseconds: 333000000 },
+                lastUpdateTime: { seconds: 333, nanoseconds: 333000000 },
                 request: Request.takeBackAccepted(Player.ZERO),
             };
             wrapper.currentPart = new PartDocument('joinerId', initialPart);
@@ -1445,7 +1449,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             tick(wrapper.joiner.maximalMoveDuration * 1000 + 1);
         }));
         it('Move + Time_updated + Request_removed = UpdateType.MOVE', fakeAsync(async() => {
-            // Given a part with lastMoveTime set and a take back just accepted
+            // Given a part with lastUpdateTime set and a take back just accepted
             await prepareStartedGameFor(USER_CREATOR);
             const initialPart: Part = {
                 lastUpdate: {
@@ -1461,12 +1465,12 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
                 beginning: FAKE_MOMENT,
-                lastMoveTime: { seconds: 333, nanoseconds: 333000000 },
+                lastUpdateTime: { seconds: 333, nanoseconds: 333000000 },
                 request: Request.takeBackAccepted(Player.ZERO),
             };
             wrapper.currentPart = new PartDocument('joinerId', initialPart);
 
-            // When making a move changing: turn, listMove and lastMoveTime
+            // When making a move changing: turn, listMove and lastUpdateTime
             const update: PartDocument = new PartDocument('joinerId', {
                 ...initialPart,
                 lastUpdate: {
@@ -1475,7 +1479,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 },
                 turn: 4,
                 listMoves: [1, 2, 3, 4],
-                lastMoveTime: { seconds: 444, nanoseconds: 444000000 },
+                lastUpdateTime: { seconds: 444, nanoseconds: 444000000 },
                 // And obviously, no longer the previous request code
                 request: null,
             });
@@ -1504,7 +1508,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             };
             wrapper.currentPart = new PartDocument('joinerId', initialPart);
 
-            // When doing the first move update (turn, listMove) add (scores, lastMoveTime)
+            // When doing the first move update (turn, listMove) add (scores, lastUpdateTime)
             const update: PartDocument = new PartDocument('joinerId', {
                 ...initialPart,
                 lastUpdate: {
@@ -1516,7 +1520,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 // And obviously, the added score and time
                 scorePlayerZero: 0,
                 scorePlayerOne: 0,
-                lastMoveTime: { seconds: 1111, nanoseconds: 111000000 },
+                lastUpdateTime: { seconds: 1111, nanoseconds: 111000000 },
             });
 
             // Then the update should be seen as a move
@@ -1540,7 +1544,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
                 beginning: FAKE_MOMENT,
-                lastMoveTime: { seconds: 1111, nanoseconds: 111000000 },
+                lastUpdateTime: { seconds: 1111, nanoseconds: 111000000 },
             };
             wrapper.currentPart = new PartDocument('joinerId', initialPart);
 
@@ -1554,7 +1558,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 turn: 1,
                 listMoves: [1],
                 // And obviously, the modified time
-                lastMoveTime: { seconds: 2222, nanoseconds: 222000000 },
+                lastUpdateTime: { seconds: 2222, nanoseconds: 222000000 },
             });
 
             // Then the update should be seen as a Move
@@ -1578,13 +1582,13 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
                 beginning: FAKE_MOMENT,
-                lastMoveTime: { seconds: 1111, nanoseconds: 111000000 },
+                lastUpdateTime: { seconds: 1111, nanoseconds: 111000000 },
                 scorePlayerZero: 1,
                 scorePlayerOne: 1,
             };
             wrapper.currentPart = new PartDocument('joinerId', initialPart);
 
-            // When doing an update modifying the score (turn, listMoves, scores, lastMoveTime)
+            // When doing an update modifying the score (turn, listMoves, scores, lastUpdateTime)
             const update: PartDocument = new PartDocument('joinerId', {
                 ...initialPart,
                 lastUpdate: {
@@ -1593,7 +1597,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 },
                 turn: 2,
                 listMoves: [1, 2],
-                lastMoveTime: { seconds: 2222, nanoseconds: 222000000 },
+                lastUpdateTime: { seconds: 2222, nanoseconds: 222000000 },
                 scorePlayerZero: 1,
                 // And obviously, the score update and time added
                 scorePlayerOne: 4,
@@ -1620,11 +1624,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
                 beginning: FAKE_MOMENT,
-                lastMoveTime: { seconds: 1111, nanoseconds: 111000000 },
+                lastUpdateTime: { seconds: 1111, nanoseconds: 111000000 },
             };
             wrapper.currentPart = new PartDocument('joinerId', initialPart);
 
-            // When doing a move creating score but removing lastMoveTime
+            // When doing a move creating score but removing lastUpdateTime
             const update: PartDocument = new PartDocument('joinerId', {
                 ...initialPart,
                 lastUpdate: {
@@ -1636,7 +1640,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 // And obviously, the added score
                 scorePlayerZero: 0,
                 scorePlayerOne: 0,
-                // of course, no more lastMoveTime
+                // of course, no more lastUpdateTime
             });
 
             // Then the update should be recognised as a move without time
@@ -1660,7 +1664,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
                 beginning: FAKE_MOMENT,
-                lastMoveTime: { seconds: 1111, nanoseconds: 111000000 },
+                lastUpdateTime: { seconds: 1111, nanoseconds: 111000000 },
                 scorePlayerZero: 1,
                 scorePlayerOne: 1,
             };
@@ -1676,7 +1680,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 turn: 2,
                 listMoves: [1, 2],
                 scorePlayerZero: 1,
-                // lastMoveTime is removed
+                // lastUpdateTime is removed
                 scorePlayerOne: 4, // modified
             });
 
@@ -1701,7 +1705,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
                 beginning: FAKE_MOMENT,
-                lastMoveTime: { seconds: 125, nanoseconds: 456000000 },
+                lastUpdateTime: { seconds: 125, nanoseconds: 456000000 },
                 request: Request.takeBackAsked(Player.ZERO),
             };
             wrapper.currentPart = new PartDocument('joinerId', initialPart);
@@ -1715,8 +1719,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 },
                 // but
                 request: Request.takeBackAccepted(Player.ONE),
-                // and no longer lastMoveTime
-                lastMoveTime: null,
+                // and no longer lastUpdateTime
+                lastUpdateTime: null,
             });
 
             // Then the update should be seen as a ACCEPT_TAKE_BACK_WITHOUT_TIME
@@ -1740,12 +1744,12 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
                 beginning: FAKE_MOMENT,
-                lastMoveTime: { seconds: 125, nanoseconds: 456000000 },
+                lastUpdateTime: { seconds: 125, nanoseconds: 456000000 },
                 request: Request.takeBackAsked(Player.ZERO),
             };
             wrapper.currentPart = new PartDocument('joinerId', initialPart);
 
-            // When accepting it and updating lastMoveTime
+            // When accepting it and updating lastUpdateTime
             const update: PartDocument = new PartDocument('joinerId', {
                 ...initialPart,
                 lastUpdate: {
@@ -1753,7 +1757,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                     player: 1,
                 },
                 // but
-                lastMoveTime: { seconds: 127, nanoseconds: 456000000 },
+                lastUpdateTime: { seconds: 127, nanoseconds: 456000000 },
                 request: Request.takeBackAccepted(Player.ONE),
             });
 
@@ -1778,7 +1782,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 remainingMsForZero: 1800 * 1000,
                 remainingMsForOne: 1800 * 1000,
                 beginning: FAKE_MOMENT,
-                lastMoveTime: { seconds: 125, nanoseconds: 456000000 },
+                lastUpdateTime: { seconds: 125, nanoseconds: 456000000 },
                 request: Request.takeBackAsked(Player.ZERO),
             };
             wrapper.currentPart = new PartDocument('joinerId', initialPart);
@@ -1793,6 +1797,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 // but
                 request: Request.addGlobalTime(Player.ZERO),
                 remainingMsForZero: (1800 * 1000) + (5 * 60 * 1000),
+                lastUpdateTime: { seconds: 127, nanoseconds: 456000000 },
             });
 
             // Then the update should be seen as a request

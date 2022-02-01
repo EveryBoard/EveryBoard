@@ -83,7 +83,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 
     private hasUserPlayed: [boolean, boolean] = [false, false];
     private msToSubstract: [number, number] = [0, 0];
-    private previousUpdateWasATakeBack: boolean = false;
 
     protected routerEventsSub!: Subscription; // Initialized in ngOnInit
     protected userSub!: Subscription; // Initialized in ngOnInit
@@ -182,7 +181,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     private async onCurrentPartUpdate(update: Part): Promise<void> {
         const part: PartDocument = new PartDocument(this.currentPartId, update);
         display(OnlineGameWrapperComponent.VERBOSE, { OnlineGameWrapperComponent_onCurrentPartUpdate: {
-            before: this.currentPart, then: update.doc, before_part_turn: part.data.turn,
+            before: this.currentPart, then: update.data, before_part_turn: part.data.turn,
             before_state_turn: this.gameComponent.rules.node.gameState.turn, nbPlayedMoves: part.data.listMoves.length,
         } });
         const updateType: UpdateType = this.getUpdateType(part);
@@ -212,7 +211,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 this.currentPart = oldPart;
                 return;
             case UpdateType.MOVE:
-                this.msToSubstract = this.getLastMoveTime(oldPart, part, updateType);
+                this.msToSubstract = this.getLastUpdateTime(oldPart, part, updateType);
                 return this.doNewMoves(part);
             case UpdateType.PRE_START_DOC:
                 const oldPartHadNoBeginningTime: boolean = oldPart == null ||
@@ -238,7 +237,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             return UpdateType.DUPLICATE;
         }
         if (update.data.request) {
-            const lastMoveTimeIsRemoved: boolean = diff.removed['lastMoveTime'] != null;
+            const lastMoveTimeIsRemoved: boolean = diff.removed['lastUpdateTime'] != null;
             if (update.data.request.code === 'TakeBackAccepted' && lastMoveTimeIsRemoved) {
                 return UpdateType.ACCEPT_TAKE_BACK_WITHOUT_TIME;
             } else {
@@ -247,13 +246,13 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
         if (this.isMove(diff, nbDiffs)) {
             if (update.data.turn === 1) {
-                if (update.data.lastMoveTime == null) {
+                if (update.data.lastUpdateTime == null) {
                     return UpdateType.MOVE_WITHOUT_TIME;
                 } else {
                     return UpdateType.MOVE;
                 }
             } else {
-                if (diff.modified['lastMoveTime'] == null) {
+                if (diff.modified['lastUpdateTime'] == null) {
                     return UpdateType.MOVE_WITHOUT_TIME;
                 } else {
                     return UpdateType.MOVE;
@@ -265,8 +264,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
         if (update.data.result !== MGPResult.UNACHIEVED.value) {
             const turnModified: boolean = diff.modified['turn'] != null;
-            const lastMoveTimeMissing: boolean = diff.modified['lastMoveTime'] == null;
-            if (turnModified && lastMoveTimeMissing) {
+            const lastUpdateTimeMissing: boolean = diff.modified['lastUpdateTime'] == null;
+            if (turnModified && lastUpdateTimeMissing) {
                 return UpdateType.END_GAME_WITHOUT_TIME;
             } else {
                 return UpdateType.END_GAME;
@@ -279,13 +278,13 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     public isMove(diff: ObjectDifference, nbDiffs: number): boolean {
         if (diff.modified['listMoves'] != null && diff.modified['turn'] != null) {
             const modifOnListMovesTurnAndLastUpdateFields: number = 3;
-            const lastMoveTimeModified: number = diff.isPresent('lastMoveTime').present ? 1 : 0;
+            const lastUpdateTimeModified: number = diff.isPresent('lastUpdateTime').present ? 1 : 0;
             const scoreZeroUpdated: number = diff.isPresent('scorePlayerZero').present ? 1 : 0;
             const scoreOneUpdated: number = diff.isPresent('scorePlayerOne').present ? 1 : 0;
             const remainingMsForZeroUpdated: number = diff.isPresent('remainingMsForZero').present ? 1 : 0;
             const remainingMsForOneUpdated: number = diff.isPresent('remainingMsForOne').present ? 1 : 0;
             const requestRemoved: number = diff.removed['request'] == null ? 0 : 1;
-            const nbValidMoveDiffs: number = lastMoveTimeModified +
+            const nbValidMoveDiffs: number = lastUpdateTimeModified +
                                              scoreZeroUpdated +
                                              scoreOneUpdated +
                                              remainingMsForZeroUpdated +
@@ -297,7 +296,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             return false;
         }
     }
-    public getLastMoveTime(oldPart: PartDocument, update: PartDocument, type: UpdateType): [number, number] {
+    public getLastUpdateTime(oldPart: PartDocument, update: PartDocument, type: UpdateType): [number, number] {
         const oldTime: Time | null = this.getMoreRecentTime(oldPart);
         const updateTime: Time | null= this.getMoreRecentTime(update);
         assert(oldTime != null, 'TODO: OLD_TIME WAS NULL, UNDO COMMENT AND TEST!');
@@ -308,10 +307,10 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                                            type, last);
     }
     private getMoreRecentTime(part: PartDocument): Time | null {
-        if (part.data.lastMoveTime == null) {
+        if (part.data.lastUpdateTime == null) {
             return part.data.beginning as Time;
         } else {
-            return part.data.lastMoveTime as Time;
+            return part.data.lastUpdateTime as Time;
         }
     }
     private getTimeUsedForLastTurn(oldTime: Time,
@@ -518,7 +517,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             case 'TakeBackRefused':
                 break;
             case 'TakeBackAccepted':
-                this.previousUpdateWasATakeBack = true;
                 this.takeBackTo(this.currentPart.data.turn);
                 break;
             case 'RematchProposed':
@@ -627,9 +625,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 return this.notifyVictory(encodedMove, scores);
             }
         } else {
-            if (this.previousUpdateWasATakeBack === true) {
-                msToSubstract = [0, 0];
-            }
             const user: Player = this.getPlayer();
             return this.gameService.updateDBBoard(this.currentPartId,
                                                   user,

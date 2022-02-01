@@ -228,7 +228,7 @@ export class GameService {
             request,
             listMoves,
             turn: listMoves.length,
-            lastMoveTime: serverTimestamp(),
+            lastUpdateTime: serverTimestamp(),
             remainingMsForZero: Utils.getNonNullable(part.data.remainingMsForZero) - msToSubstract[0],
             remainingMsForOne: Utils.getNonNullable(part.data.remainingMsForOne) - msToSubstract[1],
         };
@@ -298,15 +298,19 @@ export class GameService {
         const listMoves: JSONValueWithoutArray[] = ArrayUtils.copyImmutableArray(part.listMoves);
         listMoves[listMoves.length] = encodedMove;
         let update: Partial<Part> = {
-            listMoves, turn, request: null,
-            lastMoveTime: serverTimestamp(),
+            listMoves,
+            turn,
+            request: null,
+            lastUpdateTime: serverTimestamp(),
         };
         update = this.updateScore(update, scores);
         update = this.substractMs(update, part, msToSubstract);
         if (winner != null) {
             update = {
                 ...update,
-                winner, loser, result: MGPResult.VICTORY.value,
+                winner,
+                loser,
+                result: MGPResult.VICTORY.value,
             };
         } else if (notifyDraw === true) {
             update = {
