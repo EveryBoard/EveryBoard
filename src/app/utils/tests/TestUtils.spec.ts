@@ -457,7 +457,6 @@ export async function setupEmulators(): Promise<unknown> {
             FirebaseProviders.app(),
             FirebaseProviders.firestore(),
             FirebaseProviders.auth(),
-            FirebaseProviders.functions(),
         ],
         providers: [
             AuthenticationService,
