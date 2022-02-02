@@ -34,6 +34,7 @@ import { GameService } from 'src/app/services/GameService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { NextGameLoadingComponent } from '../../normal-component/next-game-loading/next-game-loading.component';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { UserService } from 'src/app/services/UserService';
 
 describe('OnlineGameWrapperComponent of Quarto:', () => {
 
@@ -58,13 +59,13 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     let userDAO: UserDAO;
     let chatDAO: ChatDAO;
 
-    const USER_CREATOR: AuthUser = new AuthUser(MGPOptional.of('cre@tor'), MGPOptional.of('creator'), true);
+    const USER_CREATOR: AuthUser = new AuthUser('creator921', MGPOptional.of('cre@tor'), MGPOptional.of('creator'), true);
     const PLAYER_CREATOR: User = {
         username: 'creator',
         state: 'online',
         verified: true,
     };
-    const USER_OPPONENT: AuthUser = new AuthUser(MGPOptional.of('firstCandidate@mgp.team'), MGPOptional.of('firstCandidate'), true);
+    const USER_OPPONENT: AuthUser = new AuthUser('124reg57g89r4', MGPOptional.of('firstCandidate@mgp.team'), MGPOptional.of('firstCandidate'), true);
     const PLAYER_OPPONENT: User = {
         username: 'firstCandidate',
         last_changed: {
@@ -83,6 +84,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         state: 'online',
         verified: true,
     };
+    const USER_OBSERVER: AuthUser = new AuthUser('obs3rv3eDu8012',
+                                                 MGPOptional.ofNullable(OBSERVER.username),
+                                                 MGPOptional.of('observer@home'),
+                                                 true);
     const FAKE_MOMENT: Time = { seconds: 123, nanoseconds: 456000000 };
 
     const BASE_TAKE_BACK_REQUEST: Partial<Part> = {
@@ -100,16 +105,17 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         chatDAO = TestBed.inject(ChatDAO);
         await joinerDAO.set('joinerId', initialJoiner);
         await partDAO.set('joinerId', PartMocks.INITIAL);
-        await userDAO.set('firstCandidateDocId', PLAYER_OPPONENT);
-        await userDAO.set('creatorDocId', PLAYER_CREATOR);
-        await userDAO.set(Utils.getNonNullable(OBSERVER.username), OBSERVER);
+        await userDAO.set(USER_OPPONENT.userId, PLAYER_OPPONENT);
+        await userDAO.set(USER_CREATOR.userId, PLAYER_CREATOR);
+        await userDAO.set(USER_OBSERVER.userId, OBSERVER);
         await chatDAO.set('joinerId', { messages: [], status: `I don't have a clue` });
         return Promise.resolve();
     }
     async function prepareStartedGameFor(user: AuthUser, shorterGlobalChrono?: boolean): Promise<void> {
+        TestBed.inject(UserService).startObservingAuthUser(user.userId);
         await prepareMockDBContent(JoinerMocks.INITIAL);
         AuthenticationServiceMock.setUser(user);
-        observerRole = user === USER_CREATOR ? Player.ZERO : Player.ONE;
+        observerRole = user === USER_CREATOR ? Player.ZERO : (user === USER_OPPONENT ? Player.ONE : Player.NONE);
         componentTestUtils.prepareFixture(OnlineGameWrapperComponent);
         wrapper = componentTestUtils.wrapper as OnlineGameWrapperComponent;
         componentTestUtils.detectChanges();
@@ -1351,7 +1357,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await prepareStartedGameFor(USER_CREATOR);
             tick(1);
             expect(wrapper.getPlayerNameClass(1)).toEqual('has-text-black');
-            await userDAO.update('firstCandidateDocId', { state: 'offline' });
+            await userDAO.update(USER_OPPONENT.userId, { state: 'offline' });
             componentTestUtils.detectChanges();
             tick();
             expect(wrapper.getPlayerNameClass(1)).toBe('has-text-grey-light');
@@ -1890,9 +1896,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     });
     describe('Non Player Experience', () => {
         it('Should not be able to do anything', fakeAsync(async() => {
-            await prepareStartedGameFor(new AuthUser(MGPOptional.ofNullable(OBSERVER.username),
-                                                     MGPOptional.of('observer@home'),
-                                                     true));
+            await prepareStartedGameFor(USER_OBSERVER);
             spyOn(componentTestUtils.wrapper as OnlineGameWrapperComponent, 'startCountDownFor').and.callFake(() => null);
 
             const forbiddenFunctionNames: string[] = [
@@ -1917,9 +1921,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
         it('should display that the game is a draw', fakeAsync(async() => {
             // Given a part that the two player agreed to draw
-            await prepareStartedGameFor(new AuthUser(MGPOptional.ofNullable(OBSERVER.username),
-                                                     MGPOptional.of('observer@home'),
-                                                     true));
+            await prepareStartedGameFor(USER_OBSERVER);
             spyOn(componentTestUtils.wrapper as OnlineGameWrapperComponent, 'startCountDownFor').and.callFake(() => null);
             await receiveRequest(Request.drawProposed(Player.ONE), 1);
             await receivePartDAOUpdate({

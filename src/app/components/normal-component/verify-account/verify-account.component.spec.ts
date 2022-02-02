@@ -24,7 +24,7 @@ describe('VerifyAccountComponent', () => {
     describe('google user', () => {
         beforeEach(() => {
             // given a user that registered through google
-            AuthenticationServiceMock.setUser(new AuthUser(MGPOptional.of('jeanjaja@gmail.com'), MGPOptional.empty(), true));
+            AuthenticationServiceMock.setUser(new AuthUser('kd5457d', MGPOptional.of('jeanjaja@gmail.com'), MGPOptional.empty(), true));
             testUtils.detectChanges();
         });
         it('should ask the username if the user has none', fakeAsync(async() => {
@@ -66,7 +66,11 @@ describe('VerifyAccountComponent', () => {
     describe('email user', () => {
         beforeEach(() => {
             // given a user that registered through its email
-            AuthenticationServiceMock.setUser(new AuthUser(MGPOptional.of('jean@jaja.europe'), MGPOptional.of('jeanjaja'), false));
+            const user: AuthUser = new AuthUser('jeanjaja8946sd54q',
+                                                MGPOptional.of('jean@jaja.europe'),
+                                                MGPOptional.of('jeanjaja'),
+                                                false);
+            AuthenticationServiceMock.setUser(user);
             testUtils.detectChanges();
         });
         it('should resend email verification if asked by the user and show that it succeeded', fakeAsync(async() => {
@@ -107,7 +111,7 @@ describe('VerifyAccountComponent', () => {
             spyOn(router, 'navigate').and.resolveTo(true);
 
             // ... and given a user that verified its email
-            AuthenticationServiceMock.setUser(new AuthUser(MGPOptional.of('jean@jaja.europe'), MGPOptional.of('jeanjaja'), true), false);
+            AuthenticationServiceMock.setUser(new AuthUser('5d8t6d', MGPOptional.of('jean@jaja.europe'), MGPOptional.of('jeanjaja'), true), false);
 
             // when the user clicks on "finalize" without having verified its account
             await testUtils.clickElement('#finalizeVerification');

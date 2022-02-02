@@ -15,6 +15,8 @@ import { AuthenticationServiceMock } from 'src/app/services/tests/Authentication
 import { P4Component } from 'src/app/games/p4/p4.component';
 import { Part } from 'src/app/domain/Part';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
+import { UserDAO } from 'src/app/dao/UserDAO';
+import { UserService } from 'src/app/services/UserService';
 
 describe('OnlineGameWrapperComponent Lifecycle', () => {
 
@@ -36,11 +38,15 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         await TestBed.inject(JoinerDAO).set('joinerId', initialJoiner);
         await TestBed.inject(PartDAO).set('joinerId', initialPart);
         await TestBed.inject(ChatDAO).set('joinerId', { messages: [], status: `I don't have a clue` });
+        await TestBed.inject(UserDAO).set(AuthenticationServiceMock.CONNECTED.userId,
+                                          { verified: true, username: 'Jean Jaja' });
         return Promise.resolve();
     }
     beforeEach(async() => {
         componentTestUtils = await ComponentTestUtils.basic('P4');
         AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
+
+        (TestBed.inject(UserService)).startObservingAuthUser(AuthenticationServiceMock.CONNECTED.userId);
         componentTestUtils.prepareFixture(OnlineGameWrapperComponent);
         wrapper = componentTestUtils.wrapper as OnlineGameWrapperComponent;
     });

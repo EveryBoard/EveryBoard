@@ -22,11 +22,13 @@ class RTDBSpec {
 
 @Injectable()
 export class AuthenticationServiceMock {
-    public static CONNECTED_UNVERIFIED: AuthUser = new AuthUser(MGPOptional.of('jean@jaja.europe'),
+    public static CONNECTED_UNVERIFIED: AuthUser = new AuthUser('jeanjaja123',
+                                                                MGPOptional.of('jean@jaja.europe'),
                                                                 MGPOptional.of('Jean Jaja'),
                                                                 false);
 
-    public static CONNECTED: AuthUser = new AuthUser(MGPOptional.of('jean@jaja.europe'),
+    public static CONNECTED: AuthUser = new AuthUser('jeanjaja13jajaj',
+                                                     MGPOptional.of('jean@jaja.europe'),
                                                      MGPOptional.of('Jean Jaja'),
                                                      true);
 

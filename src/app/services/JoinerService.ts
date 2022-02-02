@@ -121,12 +121,12 @@ export class JoinerService {
             firstPlayer: firstPlayer.value,
         });
     }
-    public setChosenPlayer(player: string): Promise<void> {
-        display(JoinerService.VERBOSE, `JoinerService.setChosenPlayer(${player})`);
+    public setChosenPlayer(chosenPlayerName: string): Promise<void> {
+        display(JoinerService.VERBOSE, `JoinerService.setChosenPlayer(${chosenPlayerName})`);
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
 
         return this.joinerDAO.update(this.observedJoinerId, {
-            chosenPlayer: player,
+            chosenPlayer: chosenPlayerName,
         });
     }
     public async reviewConfig(): Promise<void> {

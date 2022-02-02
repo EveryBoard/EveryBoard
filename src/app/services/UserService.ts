@@ -5,6 +5,7 @@ import { User, UserDocument } from '../domain/User';
 import { ActiveUsersService } from './ActiveUsersService';
 import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
 import { assert } from '../utils/utils';
+import { MGPOptional } from '../utils/MGPOptional';
 
 @Injectable({
     providedIn: 'root',
@@ -18,6 +19,8 @@ export class UserService {
      *         3. Your opponent when you are playing
      *     B. subscribe to yourself in the header for multitab purpose
      */
+    private currentUserId: MGPOptional<string> = MGPOptional.empty();
+
     constructor(private readonly activeUsersService: ActiveUsersService,
                 private readonly userDAO: UserDAO) {
     }
@@ -33,14 +36,15 @@ export class UserService {
         // the callback will be called on the foundUser
         return this.userDAO.observeUserByUsername(username, callback);
     }
-    public updateObservedPart(temporarlyCurrentName: string, observedPart: string): Promise<void> {
-        const currentUserName: string = temporarlyCurrentName; // TODOTODO PUT THAT ELSEWHERE AND BETTERLY
-        assert(currentUserName != null, 'Should be subscribe to yourself when connected');
-        return this.userDAO.update(currentUserName, { observedPart });
+    public startObservingAuthUser(authUserId: string) {
+        this.currentUserId = MGPOptional.of(authUserId);
     }
-    public sendPresenceToken(temporarlyCurrentName: string): Promise<void> {
-        const currentUserName: string = temporarlyCurrentName; // TODOTODO PUT THAT ELSEWHERE AND BETTERLY
-        assert(currentUserName != null, 'Should be subscribe to yourself when connected');
-        return this.userDAO.updatePresenceToken(currentUserName);
+    public updateObservedPart(observedPart: string): Promise<void> {
+        assert(this.currentUserId.isPresent(), 'Should be subscribe to yourself when connected');
+        return this.userDAO.update(this.currentUserId.get(), { observedPart });
+    }
+    public sendPresenceToken(): Promise<void> {
+        assert(this.currentUserId.isPresent(), 'Should be subscribe to yourself when connected');
+        return this.userDAO.updatePresenceToken(this.currentUserId.get());
     }
 }

@@ -48,7 +48,7 @@ export class AuthUser {
     /**
      * Represents the fact the user is not connected
      */
-    public static NOT_CONNECTED: AuthUser = new AuthUser(MGPOptional.empty(), MGPOptional.empty(), false);
+    public static NOT_CONNECTED: AuthUser = new AuthUser('', MGPOptional.empty(), MGPOptional.empty(), false);
 
     /**
      * Constructs an AuthUser.
@@ -57,7 +57,8 @@ export class AuthUser {
      * - the username of the user, which may be null if the user hasn't chosen a username yet
      * - a boolean indicating whether the user is verified
      */
-    constructor(public email: MGPOptional<string>,
+    constructor(public userId: string,
+                public email: MGPOptional<string>,
                 public username: MGPOptional<string>,
                 public verified: boolean) {
     }
@@ -68,6 +69,7 @@ export class AuthUser {
 
 @Injectable()
 export class AuthenticationService implements OnDestroy {
+
     public static VERBOSE: boolean = false;
 
     public authSub: Subscription; // public for testing purposes only
@@ -79,9 +81,9 @@ export class AuthenticationService implements OnDestroy {
      */
     public user: MGPOptional<AuthUser>;
 
-    private userRS: ReplaySubject<AuthUser>;
+    private readonly userRS: ReplaySubject<AuthUser>;
 
-    private userObs: Observable<AuthUser>;
+    private readonly userObs: Observable<AuthUser>;
 
     private registrationInProgress: MGPOptional<Promise<MGPFallible<firebase.User>>> = MGPOptional.empty();
 
@@ -111,7 +113,8 @@ export class AuthenticationService implements OnDestroy {
                     // The user has finalized verification but isn't yet marked as so in the DB, so we mark it.
                     await userDAO.markVerified(user.uid);
                 }
-                const authUser: AuthUser = new AuthUser(MGPOptional.ofNullable(user.email),
+                const authUser: AuthUser = new AuthUser(user.uid,
+                                                        MGPOptional.ofNullable(user.email),
                                                         MGPOptional.ofNullable(userInDB.username),
                                                         userHasFinalizedVerification);
                 this.user = MGPOptional.of(authUser);

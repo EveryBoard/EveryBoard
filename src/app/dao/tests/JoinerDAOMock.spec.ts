@@ -12,7 +12,7 @@ type JoinerOS = ObservableSubject<MGPOptional<JoinerDocument>>
 
 export class JoinerDAOMock extends FirebaseFirestoreDAOMock<Joiner> {
 
-    public static VERBOSE: boolean = true;
+    public static VERBOSE: boolean = false;
 
     private static joinerDB: MGPMap<string, JoinerOS>;
 

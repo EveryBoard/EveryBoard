@@ -73,7 +73,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     public currentPartId: string;
     public gameStarted: boolean = false;
     public opponent: User | null = null;
-    public playerName: string | null = null;
+    public authUser: AuthUser;
     public currentPlayer: string;
 
     public rematchProposed: boolean = false;
@@ -118,7 +118,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         return Player.of(this.observerRole);
     }
     public getPlayerName(): string {
-        return Utils.getNonNullable(this.playerName);
+        return Utils.getNonNullable(this.authUser.username.get());
     }
     private isPlayer(player: Player): boolean {
         return this.observerRole === player.value;
@@ -152,7 +152,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         this.userSub = this.authenticationService.getUserObs()
             .subscribe((user: AuthUser) => {
                 // player should be authenticated and have a username to be here
-                this.playerName = user.username.get();
+                this.authUser = user;
             });
         await this.setCurrentPartIdOrRedirect();
     }

@@ -1,7 +1,7 @@
 <app-part-creation id="partCreation" #partCreation
                    *ngIf="gameStarted === false"
                    [partId]="currentPartId"
-                   [userName]="getPlayerName()"
+                   [authUser]="this.authUser"
                    (gameStartNotification)="startGame($event)">
 </app-part-creation>
 

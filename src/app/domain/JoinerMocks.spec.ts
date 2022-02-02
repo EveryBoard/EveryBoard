@@ -2,6 +2,7 @@
 import { FirstPlayer, Joiner, PartStatus, PartType } from './Joiner';
 
 export class JoinerMocks {
+
     public static readonly INITIAL: Joiner = {
         candidates: [],
         creator: 'creator',
@@ -12,7 +13,6 @@ export class JoinerMocks {
         maximalMoveDuration: 120,
         totalPartDuration: 1800,
     };
-
     public static readonly WITH_FIRST_CANDIDATE: Joiner = {
         candidates: ['firstCandidate'],
         creator: 'creator',
@@ -23,7 +23,6 @@ export class JoinerMocks {
         maximalMoveDuration: 120,
         totalPartDuration: 1800,
     };
-
     public static readonly WITH_SECOND_CANDIDATE: Joiner = {
         candidates: ['firstCandidate', 'secondCandidate'],
         creator: 'creator',
@@ -34,7 +33,6 @@ export class JoinerMocks {
         maximalMoveDuration: 120,
         totalPartDuration: 1800,
     };
-
     public static readonly WITH_CHOSEN_OPPONENT: Joiner = {
         candidates: ['firstCandidate'],
         creator: 'creator',
@@ -45,7 +43,6 @@ export class JoinerMocks {
         maximalMoveDuration: 120,
         totalPartDuration: 1800,
     };
-
     public static readonly WITH_PROPOSED_CONFIG: Joiner = {
         candidates: ['firstCandidate'],
         creator: 'creator',
@@ -56,7 +53,6 @@ export class JoinerMocks {
         maximalMoveDuration: 120,
         totalPartDuration: 1800,
     };
-
     public static readonly WITH_ACCEPTED_CONFIG: Joiner = {
         candidates: ['firstCandidate'],
         creator: 'creator',

@@ -8,6 +8,7 @@ import { display } from 'src/app/utils/utils';
     providedIn: 'root',
 })
 export class JoinerDAO extends FirebaseFirestoreDAO<Joiner> {
+
     public static VERBOSE: boolean = false;
 
     constructor(protected afs: AngularFirestore) {
