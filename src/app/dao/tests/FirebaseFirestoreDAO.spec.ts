@@ -6,6 +6,7 @@ import { FirebaseJSONObject } from 'src/app/utils/utils';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Firestore } from '@angular/fire/firestore';
 
 interface Foo extends FirebaseJSONObject {
     value: string,
@@ -16,8 +17,8 @@ interface Foo extends FirebaseJSONObject {
     providedIn: 'root',
 })
 class FooDAO extends FirebaseFirestoreDAO<Foo> {
-    constructor() {
-        super('foo');
+    constructor(firestore: Firestore) {
+        super('foo', firestore);
     }
 }
 

@@ -7,7 +7,7 @@ import { FirebaseFirestoreDAOMock } from './FirebaseFirestoreDAOMock.spec';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 import { fakeAsync } from '@angular/core/testing';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Unsubscribe } from 'firebase/firestore';
+import { Unsubscribe } from '@angular/fire/firestore';
 
 type JoinerOS = ObservableSubject<MGPOptional<JoinerDocument>>
 

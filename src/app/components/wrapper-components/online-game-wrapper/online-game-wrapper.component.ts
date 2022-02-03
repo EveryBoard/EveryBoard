@@ -163,7 +163,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         this.joiner = iJoiner;
 
         this.gameStarted = true;
-        setTimeout(async() => {
+        setTimeout(() => {
             // the small waiting is there to make sur that the chronos are charged by view
             this.afterGameIncluderViewInit();
             this.startPart();

@@ -21,7 +21,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Utils } from 'src/app/utils/utils';
 import { JoinerService } from '../JoinerService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { serverTimestamp } from 'firebase/firestore';
+import { serverTimestamp } from '@angular/fire/firestore';
 
 describe('GameService', () => {
 
@@ -54,6 +54,7 @@ describe('GameService', () => {
         expect(service).toBeTruthy();
     });
     it('startObserving should delegate callback to partDAO', fakeAsync(async() => {
+        // Given an existing part
         const part: Part = {
             lastUpdate: {
                 index: 4,
@@ -67,6 +68,7 @@ describe('GameService', () => {
             result: MGPResult.UNACHIEVED.value,
         };
         await partDAO.set('partId', part);
+
         let calledCallback: boolean = false;
         const myCallback: (observedPart: MGPOptional<Part>) => void = (observedPart: MGPOptional<Part>) => {
             expect(observedPart.isPresent()).toBeTrue();
@@ -74,7 +76,11 @@ describe('GameService', () => {
             calledCallback = true;
         };
         spyOn(partDAO, 'subscribeToChanges').and.callThrough();
+
+        // When observing the part
         service.startObserving('partId', myCallback);
+
+        // Then subscribeToChanges should be called and the part should be observed
         expect(partDAO.subscribeToChanges).toHaveBeenCalledWith('partId', myCallback);
         expect(calledCallback).toBeTrue();
     }));

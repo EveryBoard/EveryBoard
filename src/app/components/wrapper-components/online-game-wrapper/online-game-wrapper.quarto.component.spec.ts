@@ -32,7 +32,7 @@ import { GameService } from 'src/app/services/GameService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { NextGameLoadingComponent } from '../../normal-component/next-game-loading/next-game-loading.component';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { serverTimestamp } from 'firebase/firestore';
+import * as Firestore from '@angular/fire/firestore';
 
 describe('OnlineGameWrapperComponent of Quarto:', () => {
 
@@ -148,7 +148,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             turn: 0,
             remainingMsForZero: 1800 * 1000,
             remainingMsForOne: 1800 * 1000,
-            beginning: serverTimestamp(),
+            beginning: Firestore.serverTimestamp(),
         };
         await partDAO.updateAndBumpIndex('joinerId', observerRole, 0, update);
         componentTestUtils.detectChanges();
@@ -206,7 +206,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             request: null,
             remainingMsForOne,
             remainingMsForZero, // TODO: only send one of the two time updated, since that's what happens
-            lastUpdateTime: serverTimestamp(),
+            lastUpdateTime: Firestore.serverTimestamp(),
         };
         return await receivePartDAOUpdate(update, lastIndex);
     }
@@ -356,7 +356,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             turn: 1,
             // remaining times not updated on first turn of the component
             request: null,
-            lastUpdateTime: serverTimestamp(),
+            lastUpdateTime: Firestore.serverTimestamp(),
         };
         // TODO: should receive somewhere some kind of Timestamp written by DB
         expect(partDAO.update).toHaveBeenCalledOnceWith('joinerId', expectedUpdate );
@@ -453,7 +453,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 turn: 5,
                 // remainingTimes are not present on the first move of a current board
                 request: null,
-                lastUpdateTime: serverTimestamp(),
+                lastUpdateTime: Firestore.serverTimestamp(),
                 winner: 'creator',
                 loser: 'firstCandidate',
                 result: MGPResult.VICTORY.value,
@@ -503,7 +503,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 turn: 16,
                 // TODO: investigate on why remainingTimes is not changed
                 request: null,
-                lastUpdateTime: serverTimestamp(),
+                lastUpdateTime: Firestore.serverTimestamp(),
                 result: MGPResult.HARD_DRAW.value,
             });
             componentTestUtils.expectElementToExist('#hardDrawIndicator');
@@ -641,7 +641,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                     turn: 3,
                     remainingMsForOne: 1799999,
                     request: null,
-                    lastUpdateTime: serverTimestamp(),
+                    lastUpdateTime: Firestore.serverTimestamp(),
                 });
 
                 tick(wrapper.joiner.maximalMoveDuration * 1000);
@@ -742,7 +742,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                     turn: 0,
                     remainingMsForZero: 1799999,
                     remainingMsForOne: 1799999,
-                    lastUpdateTime: serverTimestamp(),
+                    lastUpdateTime: Firestore.serverTimestamp(),
                 });
                 tick(wrapper.joiner.maximalMoveDuration * 1000);
             }));
@@ -798,7 +798,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                     request: Request.takeBackAccepted(Player.ONE),
                     remainingMsForZero,
                     remainingMsForOne: 1800 * 1000,
-                    lastUpdateTime: serverTimestamp(),
+                    lastUpdateTime: Firestore.serverTimestamp(),
                 });
                 expect(wrapper.chronoZeroGlobal.changeDuration).toHaveBeenCalledWith(remainingMsForZero);
 
@@ -879,7 +879,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                     listMoves: [ALTERNATIVE_MOVE_ENCODED],
                     remainingMsForOne: 1799998,
                     request: null,
-                    lastUpdateTime: serverTimestamp(),
+                    lastUpdateTime: Firestore.serverTimestamp(),
                 });
                 tick(wrapper.joiner.maximalMoveDuration * 1000);
             }));
@@ -946,7 +946,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                     listMoves: [ALTERNATIVE_MOVE_ENCODED],
                     remainingMsForZero: 1799999,
                     request: null,
-                    lastUpdateTime: serverTimestamp(),
+                    lastUpdateTime: Firestore.serverTimestamp(),
                 });
                 tick(wrapper.joiner.maximalMoveDuration * 1000);
             }));

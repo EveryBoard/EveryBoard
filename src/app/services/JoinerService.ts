@@ -4,7 +4,7 @@ import { JoinerDAO } from '../dao/JoinerDAO';
 import { assert, display } from 'src/app/utils/utils';
 import { ArrayUtils } from '../utils/ArrayUtils';
 import { MGPOptional } from '../utils/MGPOptional';
-import { Unsubscribe } from 'firebase/firestore';
+import { Unsubscribe } from '@angular/fire/firestore';
 
 @Injectable({
     providedIn: 'root',

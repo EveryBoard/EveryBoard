@@ -89,7 +89,6 @@ import * as Firebase from '@angular/fire/app';
 import * as Firestore from '@angular/fire/firestore';
 import * as Database from '@angular/fire/database';
 import * as Auth from '@angular/fire/auth';
-import * as Functions from '@angular/fire/functions';
 
 registerLocaleData(localeFr);
 
@@ -116,7 +115,12 @@ export const routes: Route[] = [
 
 export class FirebaseProviders {
     public static app(): ModuleWithProviders<Firebase.FirebaseAppModule> {
-        return Firebase.provideFirebaseApp(() => Firebase.initializeApp(environment.firebaseConfig));
+        return Firebase.provideFirebaseApp(() => {
+            if (environment.useEmulators) {
+                environment.firebaseConfig.databaseURL = 'http://localhost:9000?ns=default';
+            }
+            return Firebase.initializeApp(environment.firebaseConfig);
+        });
     }
     public static firestore(): ModuleWithProviders<Firestore.FirestoreModule> {
         return Firestore.provideFirestore(() => {
@@ -131,7 +135,8 @@ export class FirebaseProviders {
     public static database(): ModuleWithProviders<Database.DatabaseModule> {
         return Database.provideDatabase(() => {
             const database: Database.Database = Database.getDatabase();
-            if (environment.useEmulators) {
+
+            if (environment.useEmulators && database['_instanceStarted'] === false) {
                 Database.connectDatabaseEmulator(database, 'localhost', 9000);
             }
             return database;

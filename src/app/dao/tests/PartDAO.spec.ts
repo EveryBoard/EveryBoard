@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { TestBed } from '@angular/core/testing';
-import { getAuth, signOut } from 'firebase/auth';
+import { Auth, signOut } from '@angular/fire/auth';
 import { Part, MGPResult } from 'src/app/domain/Part';
 import { Player } from 'src/app/jscaip/Player';
 import { createConnectedGoogleUser } from 'src/app/services/tests/AuthenticationService.spec';
@@ -96,7 +96,7 @@ describe('PartDAO', () => {
 
         });
         afterEach(async() => {
-            await signOut(getAuth());
+            await signOut(TestBed.inject(Auth));
         });
     });
 });

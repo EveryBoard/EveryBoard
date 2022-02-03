@@ -11,7 +11,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { assert, display, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 import { Time } from '../domain/Time';
 import { MGPOptional } from '../utils/MGPOptional';
-import { FieldValue, serverTimestamp, Unsubscribe } from 'firebase/firestore';
+import { FieldValue, serverTimestamp, Unsubscribe } from '@angular/fire/firestore';
 
 export interface StartingPartConfig extends Partial<Part> {
     playerZero: string,

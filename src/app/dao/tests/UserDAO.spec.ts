@@ -5,7 +5,7 @@ import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 import { UserDAO } from '../UserDAO';
 import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { createConnectedGoogleUser } from 'src/app/services/tests/AuthenticationService.spec';
-import { getAuth, signOut } from 'firebase/auth';
+import * as FireAuth from '@angular/fire/auth';
 
 describe('UserDAO', () => {
 
@@ -53,16 +53,17 @@ describe('UserDAO', () => {
     describe('setUsername', () => {
         it('should change the username of a user', async() => {
             // given a google user
-            const uid: string = (await createConnectedGoogleUser(true)).uid;
+            const user: FireAuth.User = await createConnectedGoogleUser(true);
+            const uid: string = user.uid;
 
             // when its username is set
             await dao.setUsername(uid, 'foo');
 
             // then its username has changed
-            const user: User = (await dao.read(uid)).get();
-            expect(user.username).toEqual('foo');
+            const userWithUsername: User = (await dao.read(uid)).get();
+            expect(userWithUsername.username).toEqual('foo');
 
-            await signOut(getAuth());
+            await FireAuth.signOut(TestBed.inject(FireAuth.Auth));
         });
     });
 });

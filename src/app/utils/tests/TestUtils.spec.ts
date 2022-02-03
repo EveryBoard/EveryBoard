@@ -33,14 +33,10 @@ import { Utils } from '../utils';
 import { AutofocusDirective } from 'src/app/directives/autofocus.directive';
 import { ToggleVisibilityDirective } from 'src/app/directives/toggle-visibility.directive';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
 import { MGPOptional } from '../MGPOptional';
 import { findMatchingRoute } from 'src/app/app.module.spec';
-import * as Firebase from '@angular/fire/app';
 import * as Firestore from '@angular/fire/firestore';
-import * as Database from '@angular/fire/database';
 import * as Auth from '@angular/fire/auth';
-import * as Functions from '@angular/fire/functions';
 
 @Component({})
 export class BlankComponent {}
@@ -457,6 +453,7 @@ export async function setupEmulators(): Promise<unknown> {
             FirebaseProviders.app(),
             FirebaseProviders.firestore(),
             FirebaseProviders.auth(),
+            FirebaseProviders.database(),
         ],
         providers: [
             AuthenticationService,
@@ -465,9 +462,9 @@ export async function setupEmulators(): Promise<unknown> {
     TestBed.inject(Firestore.Firestore);
     TestBed.inject(Auth.Auth);
     const http: HttpClient = TestBed.inject(HttpClient);
-    // Clear the content of the firestore database
+    // Clear the content of the firestore database in the emulator
     await http.delete('http://localhost:8080/emulator/v1/projects/my-project/databases/(default)/documents').toPromise();
-    // Clear the auth data before each test
+    // Clear the auth data in the emulator before each test
     await http.delete('http://localhost:9099/emulator/v1/projects/my-project/accounts').toPromise();
     return;
 }

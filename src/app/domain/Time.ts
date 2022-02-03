@@ -1,4 +1,4 @@
-import { FieldValue } from 'firebase/firestore';
+import * as Firestore from '@angular/fire/firestore';
 import { JSONObject } from '../utils/utils';
 
 export interface Time extends JSONObject {
@@ -8,4 +8,4 @@ export interface Time extends JSONObject {
     nanoseconds: number;
 }
 
-export type FirebaseTime = FieldValue | Time | null;
+export type FirebaseTime = Firestore.FieldValue | Time | null;

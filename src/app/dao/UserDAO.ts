@@ -3,6 +3,7 @@ import { FirebaseFirestoreDAO } from './FirebaseFirestoreDAO';
 import { FirebaseCollectionObserver } from './FirebaseCollectionObserver';
 import { display } from 'src/app/utils/utils';
 import { User } from '../domain/User';
+import { Firestore } from '@angular/fire/firestore';
 
 @Injectable({
     providedIn: 'root',
@@ -12,8 +13,8 @@ export class UserDAO extends FirebaseFirestoreDAO<User> {
 
     public static COLLECTION_NAME: string = 'joueurs';
 
-    constructor() {
-        super(UserDAO.COLLECTION_NAME);
+    constructor(firestore: Firestore) {
+        super(UserDAO.COLLECTION_NAME, firestore);
         display(UserDAO.VERBOSE, 'JoueursDAO.constructor');
     }
     public async usernameIsAvailable(username: string): Promise<boolean> {

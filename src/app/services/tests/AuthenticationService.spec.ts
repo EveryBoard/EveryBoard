@@ -9,16 +9,9 @@ import { Utils } from 'src/app/utils/utils';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { getDatabase, ref, remove } from 'firebase/database';
-import { FirebaseError } from 'firebase/app';
-import * as FireAuth from 'firebase/auth';
-
-class RTDBSpec {
-    public static setOfflineMock(): void {
-        // We mock setOffline as it should trigger an RTDB function in practice
-        spyOn(RTDB, 'setOffline').and.resolveTo();
-    }
-}
+import { Database, ref, remove } from '@angular/fire/database';
+import { FirebaseError } from '@angular/fire/app';
+import * as FireAuth from '@angular/fire/auth';
 
 @Injectable()
 export class AuthenticationServiceMock {
@@ -93,11 +86,8 @@ export class AuthenticationServiceMock {
 async function setupAuthTestModule(): Promise<unknown> {
     await setupEmulators();
     // Clear the rtdb data before each test
-    const useFirebaseDatabase: boolean = false;
-    if (useFirebaseDatabase) {
-        // Here we can't clear the DB because it breaks everything, but this is how it should be done:
-        await remove(ref(getDatabase()));
-    }
+    const db: Database = TestBed.inject(Database);
+    await remove(ref(db));
     return;
 }
 
@@ -115,11 +105,11 @@ export class AuthenticationServiceUnderTest extends AuthenticationService {
 export async function createConnectedGoogleUser(createInDB: boolean): Promise<FireAuth.User> {
     TestBed.inject(AuthenticationService);
     // Sign out current user in case there is one
-    await FireAuth.signOut(FireAuth.getAuth());
+    await FireAuth.signOut(TestBed.inject(FireAuth.Auth));
     // Create a new google user
     const token: string = '{"sub": "abc123", "email": "foo@example.com", "email_verified": true}';
     const credential: FireAuth.UserCredential =
-        await FireAuth.signInWithCredential(FireAuth.getAuth(),
+        await FireAuth.signInWithCredential(TestBed.inject(FireAuth.Auth),
                                             FireAuth.GoogleAuthProvider.credential(token));
     if (createInDB) {
         await TestBed.inject(UserDAO).set(Utils.getNonNullable(credential.user).uid, { verified: true });
@@ -129,11 +119,12 @@ export async function createConnectedGoogleUser(createInDB: boolean): Promise<Fi
 
 async function createGoogleUser(createInDB: boolean): Promise<FireAuth.User> {
     const user: FireAuth.User = await createConnectedGoogleUser(createInDB);
-    await FireAuth.signOut(FireAuth.getAuth());
+    await FireAuth.signOut(TestBed.inject(FireAuth.Auth));
     return user;
 }
 
 describe('AuthenticationService', () => {
+    let auth: FireAuth.Auth;
     let service: AuthenticationService;
 
     const username: string = 'jeanjaja';
@@ -145,6 +136,7 @@ describe('AuthenticationService', () => {
     beforeEach(async() => {
         await setupAuthTestModule();
         service = TestBed.inject(AuthenticationService);
+        auth = TestBed.inject(FireAuth.Auth);
     });
 
     it('should create', fakeAsync(async() => {
@@ -158,7 +150,7 @@ describe('AuthenticationService', () => {
         const result: MGPFallible<FireAuth.User> = await service.doRegister(username, email, password);
         expect(result.isSuccess()).toBeTrue();
         const uid: string = result.get().uid;
-        await FireAuth.signOut(FireAuth.getAuth());
+        await FireAuth.signOut(auth);
         spyOn(service, 'emailVerified').and.returnValue(true);
 
         // when the user appears again
@@ -250,7 +242,7 @@ describe('AuthenticationService', () => {
             const result: MGPValidation = await service.sendEmailVerification();
 
             // then the email verification has been sent
-            const user: FireAuth.User = Utils.getNonNullable(FireAuth.getAuth().currentUser);
+            const user: FireAuth.User = Utils.getNonNullable(auth.currentUser);
             expect(result).toBe(MGPValidation.SUCCESS);
             expect(Auth.sendEmailVerification).toHaveBeenCalledOnceWith(user);
         });
@@ -292,19 +284,19 @@ describe('AuthenticationService', () => {
         it('should succeed when the password is correct', async() => {
             // given a registered user
             expect((await service.doRegister(username, email, password)).isSuccess()).toBeTrue();
-            await FireAuth.getAuth().signOut();
+            await FireAuth.signOut(auth);
 
             // when logging in with email with the right password
             const result: MGPValidation = await service.doEmailLogin(email, password);
 
             // then the login succeeds and the current user is set
             expect(result.isSuccess()).toBeTrue();
-            expect(Utils.getNonNullable(FireAuth.getAuth().currentUser).email).toBe(email);
+            expect(Utils.getNonNullable(auth.currentUser).email).toBe(email);
         });
         it('should update user when successfully logging in', async() => {
             // given a registered user and a listener waiting for user updates
             expect((await service.doRegister(username, email, password)).isSuccess()).toBeTrue();
-            await FireAuth.getAuth().signOut();
+            await auth.signOut();
 
             let subscription!: Subscription;
             const updateSeen: Promise<void> = new Promise((resolve: () => void) => {
@@ -326,7 +318,7 @@ describe('AuthenticationService', () => {
         it('should fail when the password is incorrect', async() => {
             // given a registered user
             expect((await service.doRegister(username, email, password)).isSuccess()).toBeTrue();
-            await FireAuth.getAuth().signOut();
+            await auth.signOut();
 
             // when logging in with email with an incorrect password,
             const result: MGPValidation = await service.doEmailLogin(email, 'helaba');
@@ -361,7 +353,7 @@ describe('AuthenticationService', () => {
             const provider: FireAuth.GoogleAuthProvider = new FireAuth.GoogleAuthProvider();
             provider.addScope('profile');
             provider.addScope('email');
-            expect(Auth.signInWithPopup).toHaveBeenCalledWith(provider);
+            expect(Auth.signInWithPopup).toHaveBeenCalledWith(auth, provider);
             expect(service.createUser).toHaveBeenCalledWith(user.uid);
         });
         it('should not create the user if it already exists', async() => {
@@ -378,7 +370,7 @@ describe('AuthenticationService', () => {
             const provider: FireAuth.GoogleAuthProvider = new FireAuth.GoogleAuthProvider();
             provider.addScope('profile');
             provider.addScope('email');
-            expect(Auth.signInWithPopup).toHaveBeenCalledWith(provider);
+            expect(Auth.signInWithPopup).toHaveBeenCalledWith(auth, provider);
             expect(service.createUser).not.toHaveBeenCalled();
         });
         it('should fail if google login also fails', async() => {
@@ -410,8 +402,6 @@ describe('AuthenticationService', () => {
             expect(registrationResult.isSuccess()).toBeTrue();
             await service.doEmailLogin(email, password);
 
-            RTDBSpec.setOfflineMock();
-
             // when trying to disconnect
             const result: MGPValidation = await service.disconnect();
 
@@ -419,7 +409,7 @@ describe('AuthenticationService', () => {
             expect(result).toBe(MGPValidation.SUCCESS);
 
             // and there is no current user
-            expect(FireAuth.getAuth().currentUser).toBeNull();
+            expect(auth.currentUser).toBeNull();
         });
     });
     describe('mapFirebaseError', () => {
@@ -467,10 +457,10 @@ describe('AuthenticationService', () => {
             await service.doEmailLogin(email, password);
 
             // and logs out
-            await FireAuth.getAuth().signOut();
+            await auth.signOut();
 
             // Then updatePresence is called
-            expect(RTDB.updatePresence).toHaveBeenCalledWith(user.uid);
+            expect(RTDB.updatePresence).toHaveBeenCalledWith(TestBed.inject(Database), user.uid);
         });
     });
     describe('setUsername', () => {
@@ -528,7 +518,7 @@ describe('AuthenticationService', () => {
 
             // then the picture is updated
             expect(result.isSuccess()).toBeTrue();
-            expect(Utils.getNonNullable(FireAuth.getAuth().currentUser).photoURL).toEqual(photoURL);
+            expect(Utils.getNonNullable(auth.currentUser).photoURL).toEqual(photoURL);
         });
         it('should not throw upon failure', async() => {
             // given a registered and logged in user
@@ -556,7 +546,7 @@ describe('AuthenticationService', () => {
 
             // then it should have delegated and succeeded
             expect(result.isSuccess()).toBeTrue();
-            expect(Auth.sendPasswordResetEmail).toHaveBeenCalledWith(email);
+            expect(Auth.sendPasswordResetEmail).toHaveBeenCalledWith(auth, email);
         });
         it('should properly map errors', async() => {
             // given a user that doesn't exist
@@ -584,6 +574,6 @@ describe('AuthenticationService', () => {
         if (alreadyDestroyed === false) {
             service.ngOnDestroy();
         }
-        await FireAuth.signOut(FireAuth.getAuth());
+        await auth.signOut();
     });
 });
