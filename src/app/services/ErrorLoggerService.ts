@@ -6,7 +6,7 @@ import { FirebaseDocument, FirebaseFirestoreDAO } from '../dao/FirebaseFirestore
 import { FirebaseTime } from '../domain/Time';
 import { MGPOptional } from '../utils/MGPOptional';
 import { MGPValidation } from '../utils/MGPValidation';
-import { assert, FirebaseJSONObject, JSONValue } from '../utils/utils';
+import { FirebaseJSONObject, JSONValue } from '../utils/utils';
 
 export interface MGPError extends FirebaseJSONObject {
     // The component in which the error occured
