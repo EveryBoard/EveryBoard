@@ -66,6 +66,6 @@ export function comparableEquals<T>(a: T, b: T): boolean {
         return comparableEqualsStrict(a, b);
     } else {
         // eslint-disable-next-line @typescript-eslint/ban-types
-        throw new Error(`Comparing non comparable objects: ${(a as Object).constructor.name} and ${( b as Object).constructor.name}`);
+        throw new Error(`Comparing non comparable objects: ${(a as Object).constructor.name} and ${(b as Object).constructor.name}`);
     }
 }

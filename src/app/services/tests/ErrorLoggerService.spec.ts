@@ -6,14 +6,14 @@ import { FirebaseFirestoreDAOMock } from 'src/app/dao/tests/FirebaseFirestoreDAO
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ObservableSubject } from 'src/app/utils/tests/ObservableSubject.spec';
-import { BlankComponent, setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
+import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 import { JSONValue } from 'src/app/utils/utils';
-import { EncounteredError, ErrorDAO, ErrorLoggerService } from '../ErrorLoggerService';
+import { MGPError, ErrorDAO, ErrorLoggerService } from '../ErrorLoggerService';
 import firebase from 'firebase/app';
 import { RouterTestingModule } from '@angular/router/testing';
 
-type ErrorOS = ObservableSubject<MGPOptional<FirebaseDocument<EncounteredError>>>
-class ErrorDAOMock extends FirebaseFirestoreDAOMock<EncounteredError> {
+type ErrorOS = ObservableSubject<MGPOptional<FirebaseDocument<MGPError>>>
+class ErrorDAOMock extends FirebaseFirestoreDAOMock<MGPError> {
 
     public static errorDB: MGPMap<string, ErrorOS>;
 
@@ -27,19 +27,6 @@ class ErrorDAOMock extends FirebaseFirestoreDAOMock<EncounteredError> {
         ErrorDAOMock.errorDB = new MGPMap();
     }
 }
-
-describe('ErrorDAO', () => {
-
-    let dao: ErrorDAO;
-
-    beforeEach(async() => {
-        await setupEmulators();
-        dao = TestBed.inject(ErrorDAO);
-    });
-    it('should be created', () => {
-        expect(dao).toBeTruthy();
-    });
-});
 
 describe('ErrorLoggerService', () => {
 
@@ -76,7 +63,7 @@ describe('ErrorLoggerService', () => {
         tick(1000);
 
         // Then the error is stored in the DAO with all expected fields
-        const expectedError: EncounteredError = {
+        const expectedError: MGPError = {
             component,
             route: '/',
             message,
@@ -95,7 +82,7 @@ describe('ErrorLoggerService', () => {
         const data: JSONValue = { foo: 'bar' };
         ErrorLoggerService.logError(component, message, data);
         tick(1000);
-        const errors: FirebaseDocument<EncounteredError>[] = await errorDAO.findWhere([['component', '==', component], ['route', '==', '/'], ['message', '==', message], ['data', '==', data]]);
+        const errors: FirebaseDocument<MGPError>[] = await errorDAO.findWhere([['component', '==', component], ['route', '==', '/'], ['message', '==', message], ['data', '==', data]]);
         expect(errors.length).toBe(1);
         const id: string = errors[0].id;
 
@@ -105,7 +92,7 @@ describe('ErrorLoggerService', () => {
         tick(1000);
 
         // Then the error is updated in the DAO with all expected fields
-        const update: Partial<EncounteredError> = {
+        const update: Partial<MGPError> = {
             lastEncounter: firebase.firestore.FieldValue.serverTimestamp(),
             occurences: 2,
         };

@@ -43,7 +43,10 @@ describe('Comparable', () => {
             expect(comparableEquals(object1, object3)).toBeFalse();
         });
         it('should fail if objects are not comparable', () => {
-            expect(() => comparableEquals(new DummyNonComparableObject(5), new DummyNonComparableObject(5))).toThrowError('Comparing non comparable objects: DummyNonComparableObject and DummyNonComparableObject');
+            const expectedError: string = 'Comparing non comparable objects: DummyNonComparableObject and DummyNonComparableObject';
+            const nonComparable: DummyNonComparableObject = new DummyNonComparableObject(5);
+            const otherNonComparable: DummyNonComparableObject = new DummyNonComparableObject(5);
+            expect(() => comparableEquals(nonComparable, otherNonComparable)).toThrowError(expectedError);
         });
 
     });

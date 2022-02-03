@@ -221,7 +221,7 @@ describe('LocalGameWrapperComponent', () => {
             // then it should fail and an error should be logged
             expect(result.isFailure()).toBeTrue();
             const errorMessage: string = 'AI chose illegal move';
-            const errorData: JSONValue = { aiMove: 'P4Move(0)' };
+            const errorData: JSONValue = { name: 'P4', move: 'P4Move(0)' };
             expect(ErrorLoggerService.logError).toHaveBeenCalledWith('LocalGameWrapper', errorMessage, errorData);
             tick(1000);
         }));

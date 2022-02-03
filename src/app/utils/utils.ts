@@ -1,4 +1,5 @@
 import firebase from 'firebase';
+import { ErrorLoggerService } from '../services/ErrorLoggerService';
 
 // These are the datatypes supported by firestore. Arrays of arrays are not
 // supported, but arrays containing objects containing arrays are, which is what
@@ -64,6 +65,11 @@ export function display(verbose: boolean, message: unknown): void {
 
 export function assert(condition: boolean, message: string): void {
     if (condition === false) {
+        // We log the error but we also throw an exception
+        // This is because if an assertion fails,
+        // we don't want to execute the code after the assertion.
+        // Otherwise, this could result in potentially very serious issues.
+        ErrorLoggerService.logError('Assertion failure', message);
         throw new Error(`Assertion failure: ${message}`);
     }
 }

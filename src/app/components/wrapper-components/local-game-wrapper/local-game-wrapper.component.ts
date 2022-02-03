@@ -113,7 +113,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
             this.proposeAIToPlay();
             return MGPValidation.SUCCESS;
         } else {
-            return ErrorLoggerService.logError('LocalGameWrapper', 'AI chose illegal move', { aiMove: aiMove.toString() });
+            return ErrorLoggerService.logError('LocalGameWrapper', 'AI chose illegal move', { name: playingMinimax.name, move: aiMove.toString() });
         }
     }
     public canTakeBack(): boolean {

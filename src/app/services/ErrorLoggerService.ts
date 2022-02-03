@@ -8,7 +8,7 @@ import { MGPOptional } from '../utils/MGPOptional';
 import { MGPValidation } from '../utils/MGPValidation';
 import { assert, FirebaseJSONObject, JSONValue } from '../utils/utils';
 
-export interface EncounteredError extends FirebaseJSONObject {
+export interface MGPError extends FirebaseJSONObject {
     // The component in which the error occured
     component: string,
     // Route on which the error occured
@@ -28,7 +28,7 @@ export interface EncounteredError extends FirebaseJSONObject {
 @Injectable({
     providedIn: 'root',
 })
-export class ErrorDAO extends FirebaseFirestoreDAO<EncounteredError> {
+export class ErrorDAO extends FirebaseFirestoreDAO<MGPError> {
     private constructor(afs: AngularFirestore) {
         super('errors', afs);
     }
@@ -43,7 +43,12 @@ export class ErrorLoggerService {
         ErrorLoggerService.singleton = MGPOptional.of(service);
     }
     public static logError(component: string, message: string, data?: JSONValue): MGPValidation {
-        assert(this.singleton.isPresent(), 'ErrorLoggerService singleton should be present if properly initialized');
+        if (this.singleton.isAbsent()) {
+            // The error logger service has not been initialized, so we cannot log the error.
+            // This can only happen in the test environment, or if something went wrong in the dependency injection.
+            // In any case, we don't want to remain silent about it.
+            throw new Error(`${component}: ${message} (extra data: ${data})`);
+        }
         // This can be done in parallel, we don't care about awaiting the result
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
         this.singleton.get().logError(component, message, data);
@@ -57,10 +62,10 @@ export class ErrorLoggerService {
     }
     private async logError(component: string, message: string, data?: JSONValue): Promise<void> {
         const route: string = this.router.url;
-        const previousErrors: FirebaseDocument<EncounteredError>[] =
+        const previousErrors: FirebaseDocument<MGPError>[] =
             await this.errorDAO.findWhere([['component', '==', component], ['route', '==', route], ['message', '==', message], ['data', '==', data]]);
         if (previousErrors.length === 0) {
-            const error: EncounteredError = {
+            const error: MGPError = {
                 component,
                 route,
                 message,
@@ -73,7 +78,7 @@ export class ErrorLoggerService {
         } else {
             // There should a single matching error, but it doesn't really matter, we add it to the first one
             const previousErrorId: string = previousErrors[0].id;
-            const previousError: EncounteredError = previousErrors[0].data;
+            const previousError: MGPError = previousErrors[0].data;
             await this.errorDAO.update(previousErrorId, {
                 lastEncounter: firebase.firestore.FieldValue.serverTimestamp(),
                 occurences: previousError.occurences + 1,
