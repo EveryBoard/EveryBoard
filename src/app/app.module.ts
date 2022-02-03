@@ -86,13 +86,13 @@ import { OnlineGameCreationComponent } from './components/normal-component/onlin
 
 registerLocaleData(localeFr);
 
-const routes: Route [] = [
+export const routes: Route[] = [
     { path: 'login', component: LoginComponent },
     { path: 'lobby', component: LobbyComponent, canActivate: [VerifiedAccountGuard] },
     { path: 'settings', component: SettingsComponent },
     { path: 'register', component: RegisterComponent, canActivate: [NotConnectedGuard] },
     { path: 'reset-password', component: ResetPasswordComponent, canActivate: [NotConnectedGuard] },
-    { path: 'notFound', component: NotFoundComponent, canActivate: [VerifiedAccountGuard] },
+    { path: 'notFound', component: NotFoundComponent },
     { path: 'nextGameLoading', component: NextGameLoadingComponent, canActivate: [VerifiedAccountGuard] },
     { path: 'verify-account', component: VerifyAccountComponent, canActivate: [ConnectedButNotVerifiedGuard] },
 

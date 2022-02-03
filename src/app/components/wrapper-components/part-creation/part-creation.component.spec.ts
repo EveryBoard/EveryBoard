@@ -10,7 +10,7 @@ import { ChatDAO } from 'src/app/dao/ChatDAO';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { Part } from 'src/app/domain/Part';
 import { User } from 'src/app/domain/User';
-import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { expectValidRouting, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { FirstPlayer, PartStatus, PartType } from 'src/app/domain/Joiner';
 import { Router } from '@angular/router';
 import { GameService } from 'src/app/services/GameService';
@@ -19,6 +19,7 @@ import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
+import { LobbyComponent } from '../../normal-component/lobby/lobby.component';
 
 describe('PartCreationComponent:', () => {
 
@@ -549,7 +550,7 @@ describe('PartCreationComponent:', () => {
                 // Then the user is rerouted to the server
                 testUtils.detectChanges();
                 tick(3000); // needs to be >2999
-                expect(router.navigate).toHaveBeenCalledWith(['server']);
+                expectValidRouting(router, ['/lobby'], LobbyComponent);
             }));
         });
         describe('Receiving config', () => {

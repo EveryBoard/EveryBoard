@@ -360,7 +360,7 @@
         <source>Pick username</source>
       </trans-unit>
       <trans-unit id="7631774219107043658" datatype="html">
-        <source>Your account has now been finalized, you can go back to the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;[&apos;/server&apos;]&quot;&gt;"/>list of games<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
+        <source>Your account has now been finalized, you can go back to the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;[&apos;/lobby&apos;]&quot;&gt;"/>list of games<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
       </trans-unit>
       <trans-unit id="3862672024084051383" datatype="html">
         <source>You have not verified your email! Click on the link in the verification email.</source>

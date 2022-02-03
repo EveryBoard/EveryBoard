@@ -32,8 +32,8 @@ export class AuthenticationServiceMock {
                                                      MGPOptional.of('Jean Jaja'),
                                                      true);
 
-    public static setUser(user: AuthUser): void {
-        (TestBed.inject(AuthenticationService) as unknown as AuthenticationServiceMock).setUser(user);
+    public static setUser(user: AuthUser, notifyObservers: boolean = true): void {
+        (TestBed.inject(AuthenticationService) as unknown as AuthenticationServiceMock).setUser(user, notifyObservers);
     }
 
     public user: MGPOptional<AuthUser> = MGPOptional.empty();
@@ -43,9 +43,13 @@ export class AuthenticationServiceMock {
     constructor() {
         this.userRS = new ReplaySubject<AuthUser>(1);
     }
-    public setUser(user: AuthUser): void {
+    public setUser(user: AuthUser, notifyObservers: boolean = true): void {
         this.user = MGPOptional.of(user);
-        this.userRS.next(user);
+        // In some very specific cases, changing the status of a user in firebase does not notify the observers.
+        // This is the case if a user becomes verified.
+        if (notifyObservers) {
+            this.userRS.next(user);
+        }
     }
     public async getUser(): Promise<AuthUser> {
         return this.user.get();
