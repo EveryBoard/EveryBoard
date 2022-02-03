@@ -7,6 +7,7 @@ service cloud.firestore {
         }
         match /errors/{errorId} {
             allow create: if true;
+            allow update: if true;
         }
        // joueurs will be renamed to users
         match /joueurs/{userId} {
