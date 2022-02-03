@@ -44,10 +44,16 @@ describe('PartCreationComponent:', () => {
         await joinerDAOMock.update('joinerId', { candidates: [OPPONENT.username as string] });
         testUtils.detectChanges();
     }
+    async function acceptConfig(): Promise<void> {
+        await testUtils.clickElement('#acceptConfig');
+        testUtils.detectChanges();
+    }
+    async function proposeConfig(): Promise<void> {
+        await testUtils.clickElement('#proposeConfig');
+        testUtils.detectChanges();
+    }
     async function chooseOpponent(): Promise<void> {
-        console.log('>>>>let us clickElement ' + OPPONENT.username)
         await testUtils.clickElement('#presenceOf_' + OPPONENT.username);
-        console.log('>>>>let us detechChange after click')
         testUtils.detectChanges();
     }
     const CREATOR: User = {
@@ -146,7 +152,7 @@ describe('PartCreationComponent:', () => {
                 testUtils.expectElementToExist('#candidate_firstCandidate');
             }));
         });
-        describe('Candidate departure (exit, disconnection and removal)', () => {
+        describe('Candidate/chosen player departure (exit, disconnection and removal)', () => {
             it('should go back to start when chosenPlayer leaves', fakeAsync(async() => {
                 // Given a page that has loaded, a candidate joined and has been chosen as opponent
                 testUtils.detectChanges();
@@ -280,7 +286,7 @@ describe('PartCreationComponent:', () => {
                 await mockCandidateArrival();
                 await chooseOpponent();
                 spyOn(joinerDAOMock, 'update').and.callThrough();
-                await component.proposeConfig();
+                await proposeConfig();
 
                 // Then the data sent should be what creator saw
                 expect(joinerDAOMock.update).toHaveBeenCalledOnceWith('joinerId', {
@@ -303,7 +309,7 @@ describe('PartCreationComponent:', () => {
                 spyOn(joinerDAOMock, 'update').and.callThrough();
 
                 // When proposing the config
-                await component.proposeConfig();
+                await proposeConfig();
                 testUtils.detectChanges();
 
                 // The blitz should be part of it
@@ -320,12 +326,11 @@ describe('PartCreationComponent:', () => {
                 // Given a component where creator selected a config and chose an opponent
                 testUtils.detectChanges();
                 await testUtils.whenStable();
-                // TODOTODO somewhere we subscribe to (username === <blbl> && verfied === true) the second condition is too much ?
                 await mockCandidateArrival();
                 await chooseOpponent();
 
                 // When proposing config
-                await component.proposeConfig();
+                await proposeConfig();
 
                 // Then currentJoiner should be updated with the proposed config
                 expect(component.currentJoiner).toEqual(JoinerMocks.WITH_PROPOSED_CONFIG);
@@ -623,7 +628,7 @@ describe('PartCreationComponent:', () => {
                 testUtils.detectChanges();
 
                 // When accepting the config
-                await component.acceptConfig(); // TODOTODO accepting by click you FUCKING POOP
+                await acceptConfig();
                 await testUtils.whenStable();
 
                 // Then the game start notification is emitted

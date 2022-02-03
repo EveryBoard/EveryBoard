@@ -33,7 +33,7 @@ export class UserDAOMock extends FirebaseFirestoreDAOMock<User> {
     public updatePresenceToken(username: string): Promise<void> {
         return this.update(username, {
             last_changed: firebase.firestore.FieldValue.serverTimestamp(),
-            // TODOTODO mock the real way, by sending that update without timestamp - then with it
+            // TODO FOR REVIEW: should we mock the real way, by sending that update without timestamp, then with it ?
         });
     }
 }

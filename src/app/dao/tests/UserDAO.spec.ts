@@ -67,4 +67,16 @@ describe('UserDAO', () => {
             await firebase.auth().signOut();
         });
     });
+    describe('updatePresenceToken', () => {
+        it('should delegate to update', async() => {
+            // Given any situation
+            spyOn(dao, 'update');
+
+            // When calling updatePresenceToken
+            await dao.updatePresenceToken('joser');
+
+            // Then update should be called
+            expect(dao.update).toHaveBeenCalledOnceWith('joser', { last_changed: firebase.firestore.FieldValue.serverTimestamp() });
+        });
+    });
 });

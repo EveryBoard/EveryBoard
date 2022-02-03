@@ -100,12 +100,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                        public formBuilder: FormBuilder,
                        public messageDisplayer: MessageDisplayer)
     {
-        const username: string = this.authUser == null ?
-            'null' :
-            this.authUser.username.isPresent() ?
-                this.authUser.username.get() :
-                ('anonymous ' + this.authUser.userId);
-        display(PartCreationComponent.VERBOSE, 'PartCreationComponent constructed for ' + username);
+        display(PartCreationComponent.VERBOSE, 'PartCreationComponent constructed');
     }
     public async ngOnInit(): Promise<void> {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.ngOnInit for ' + this.authUser.username.get());
@@ -158,7 +153,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                     this.viewInfo.candidateClasses[this.viewInfo.chosenOpponent] = [];
                 }
                 this.viewInfo.candidateClasses[opponent] = ['is-selected'];
-                console.log('was', this.viewInfo.chosenOpponent, 'and become', opponent, 'during subscripture because of user click ?')
                 this.viewInfo.chosenOpponent = opponent;
                 this.viewInfo.canProposeConfig =
                     Utils.getNonNullable(this.currentJoiner).partStatus !== PartStatus.CONFIG_PROPOSED.value &&
@@ -192,7 +186,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.viewInfo.canReviewConfig = joiner.partStatus === PartStatus.CONFIG_PROPOSED.value;
         this.viewInfo.canEditConfig = joiner.partStatus !== PartStatus.CONFIG_PROPOSED.value;
         this.viewInfo.userIsCreator = this.authUser.username.get() === joiner.creator;
-        this.viewInfo.userIsChosenOpponent = this.authUser.username.get() === joiner.chosenPlayer; // TODOTODO use that instead of what I did
+        this.viewInfo.userIsChosenOpponent = this.authUser.username.get() === joiner.chosenPlayer;
         this.viewInfo.userIsObserver =
                 this.viewInfo.userIsChosenOpponent === false && this.viewInfo.userIsCreator === false;
         this.viewInfo.creatorIsModifyingConfig = joiner.partStatus !== PartStatus.CONFIG_PROPOSED.value;
@@ -206,7 +200,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             this.viewInfo.maximalMoveDuration = joiner.maximalMoveDuration;
             this.viewInfo.totalPartDuration = joiner.totalPartDuration;
             this.viewInfo.partType = joiner.partType;
-            console.log('was', this.viewInfo.chosenOpponent, 'will become', joiner.chosenPlayer, ' or undefined inside updateViewInfo')
             this.viewInfo.chosenOpponent = joiner.chosenPlayer || undefined;
             this.viewInfo.firstPlayer = joiner.firstPlayer;
         }
@@ -236,7 +229,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.getForm('chosenOpponent').setValue(opponent);
     }
     public selectFirstPlayer(firstPlayer: IFirstPlayer): void {
-        console.log('PartCreationComponent.selectFirstPlayer(' + firstPlayer + ')')
         this.getForm('firstPlayer').setValue(firstPlayer);
     }
     public selectPartType(partType: IPartType): void {
@@ -258,7 +250,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     }
     public async proposeConfig(): Promise<void> {
         const chosenPlayer: string = this.getForm('chosenOpponent').value;
-        console.log('now getting', chosenPlayer, 'out of the form')
         const partType: string = this.getForm('partType').value;
         const maxMoveDur: number = this.getForm('maximalMoveDuration').value;
         const firstPlayer: string = this.getForm('firstPlayer').value;
@@ -285,7 +276,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         return;
     }
     private async onCurrentJoinerUpdate(joiner: MGPOptional<Joiner>) {
-        display(PartCreationComponent.VERBOSE || true,
+        display(PartCreationComponent.VERBOSE,
                 { PartCreationComponent_onCurrentJoinerUpdate: {
                     before: JSON.stringify(this.currentJoiner),
                     then: JSON.stringify(joiner) } });
@@ -300,7 +291,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 display(PartCreationComponent.VERBOSE, 'PartCreationComponent.onCurrentJoinerUpdate: the game has started');
                 this.onGameStarted();
             }
-            if (this.isSelectedAsOpponent()) {
+            if (this.viewInfo.userIsChosenOpponent) {
                 await this.startSendingPresenceTokensIfNotDone();
             } else {
                 this.stopSendingPresenceTokensIfNeeded();
@@ -386,10 +377,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             }
         }
     }
-    private isSelectedAsOpponent(): boolean {
-        console.log('joiner chosenPlayer is now', Utils.getNonNullable(this.currentJoiner).chosenPlayer)
-        return Utils.getNonNullable(this.currentJoiner).chosenPlayer === this.authUser.username.get();
-    }
     public async startSendingPresenceTokensIfNotDone(): Promise<void> {
         if (this.tokenTimeout.isAbsent()) {
             await this.userService.sendPresenceToken();
@@ -413,13 +400,10 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         const beforeUser: string[] = joiner.candidates.slice(0, index);
         const afterUser: string[] = joiner.candidates.slice(index + 1);
         const candidates: string[] = beforeUser.concat(afterUser);
-        if (username === joiner.chosenPlayer) {
-            // The chosen player has been removed, the user will have to review the config
-            this.messageDisplayer.infoMessage($localize`${username} left the game, please pick another opponent.`);
-            return this.joinerService.reviewConfigRemoveChosenPlayerAndUpdateCandidates(candidates);
-        } else {
-            return this.joinerService.updateCandidates(candidates);
-        }
+        assert(username === joiner.chosenPlayer, 'Should only remove chosenUser from creation room, since candidate should are not polled and should remove themselves');
+        // The chosen player has been removed, the user will have to review the config
+        this.messageDisplayer.infoMessage($localize`${username} left the game, please pick another opponent.`);
+        return this.joinerService.reviewConfigRemoveChosenPlayerAndUpdateCandidates(candidates);
     }
     private unsubscribeFrom(username: string): void {
         const subscription: () => void = this.candidateSubscription.delete(username);
