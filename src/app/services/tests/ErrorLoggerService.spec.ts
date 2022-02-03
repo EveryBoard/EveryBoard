@@ -33,69 +33,75 @@ describe('ErrorLoggerService', () => {
     let service: ErrorLoggerService;
     let errorDAO: ErrorDAO;
 
-    beforeEach(fakeAsync(async() => {
-        await TestBed.configureTestingModule({
-            imports: [
-                RouterTestingModule.withRoutes([
-                    { path: '**', component: BlankComponent },
-                ]),
-            ],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
-            providers: [
-                { provide: ErrorDAO, useClass: ErrorDAOMock },
-            ],
-        }).compileComponents();
-        service = TestBed.inject(ErrorLoggerService);
-        errorDAO = TestBed.inject(ErrorDAO);
-    }));
-    it('should create', fakeAsync(async() => {
-        expect(service).toBeTruthy();
-    }));
-    it('should add new errors to the DB', fakeAsync(async() => {
-        // Given an error in a component which has not already been encountered
-        const component: string = 'Some component';
-        const message: string = 'my new error message';
-        const data: JSONValue = { foo: 'bar' };
-        spyOn(errorDAO, 'create');
+    describe('without initialization', () => {
+        it('should throw instead of logging the error', () => {
+            expect(() => ErrorLoggerService.logError('component', 'error')).toThrowError('component: error (extra data: undefined)');
+        });
+    });
+    describe('with proper initialization', () => {
+        beforeEach(fakeAsync(async() => {
+            await TestBed.configureTestingModule({
+                imports: [
+                    RouterTestingModule.withRoutes([
+                        { path: '**', component: BlankComponent },
+                    ]),
+                ],
+                schemas: [CUSTOM_ELEMENTS_SCHEMA],
+                providers: [
+                    { provide: ErrorDAO, useClass: ErrorDAOMock },
+                ],
+            }).compileComponents();
+            service = TestBed.inject(ErrorLoggerService);
+            errorDAO = TestBed.inject(ErrorDAO);
+        }));
+        it('should create', fakeAsync(async() => {
+            expect(service).toBeTruthy();
+        }));
+        it('should add new errors to the DB', fakeAsync(async() => {
+            // Given an error in a component which has not already been encountered
+            const component: string = 'Some component';
+            const message: string = 'my new error message';
+            const data: JSONValue = { foo: 'bar' };
+            spyOn(errorDAO, 'create');
 
-        // When logging it
-        ErrorLoggerService.logError(component, message, data);
-        tick(1000);
+            // When logging it
+            ErrorLoggerService.logError(component, message, data);
+            tick(1000);
 
-        // Then the error is stored in the DAO with all expected fields
-        const expectedError: MGPError = {
-            component,
-            route: '/',
-            message,
-            data,
-            firstEncounter: firebase.firestore.FieldValue.serverTimestamp(),
-            lastEncounter: firebase.firestore.FieldValue.serverTimestamp(),
-            occurences: 1,
-        };
-        expect(errorDAO.create).toHaveBeenCalledOnceWith(expectedError);
-    }));
-    it('should increment count of already encountered errors', fakeAsync(async() => {
-        spyOn(errorDAO, 'update');
-        // Given an error in a component which has already been encountered
-        const component: string = 'Some component';
-        const message: string = 'my new error message';
-        const data: JSONValue = { foo: 'bar' };
-        ErrorLoggerService.logError(component, message, data);
-        tick(1000);
-        const errors: FirebaseDocument<MGPError>[] = await errorDAO.findWhere([['component', '==', component], ['route', '==', '/'], ['message', '==', message], ['data', '==', data]]);
-        expect(errors.length).toBe(1);
-        const id: string = errors[0].id;
+            // Then the error is stored in the DAO with all expected fields
+            const expectedError: MGPError = {
+                component,
+                route: '/',
+                message,
+                data,
+                firstEncounter: firebase.firestore.FieldValue.serverTimestamp(),
+                lastEncounter: firebase.firestore.FieldValue.serverTimestamp(),
+                occurences: 1,
+            };
+            expect(errorDAO.create).toHaveBeenCalledOnceWith(expectedError);
+        }));
+        it('should increment count of already encountered errors', fakeAsync(async() => {
+            spyOn(errorDAO, 'update');
+            // Given an error in a component which has already been encountered
+            const component: string = 'Some component';
+            const message: string = 'my new error message';
+            const data: JSONValue = { foo: 'bar' };
+            ErrorLoggerService.logError(component, message, data);
+            tick(1000);
+            const errors: FirebaseDocument<MGPError>[] = await errorDAO.findWhere([['component', '==', component], ['route', '==', '/'], ['message', '==', message], ['data', '==', data]]);
+            expect(errors.length).toBe(1);
+            const id: string = errors[0].id;
 
+            // When logging it a second time
+            ErrorLoggerService.logError(component, message, data);
+            tick(1000);
 
-        // When logging it a second time
-        ErrorLoggerService.logError(component, message, data);
-        tick(1000);
-
-        // Then the error is updated in the DAO with all expected fields
-        const update: Partial<MGPError> = {
-            lastEncounter: firebase.firestore.FieldValue.serverTimestamp(),
-            occurences: 2,
-        };
-        expect(errorDAO.update).toHaveBeenCalledOnceWith(id, update);
-    }));
+            // Then the error is updated in the DAO with all expected fields
+            const update: Partial<MGPError> = {
+                lastEncounter: firebase.firestore.FieldValue.serverTimestamp(),
+                occurences: 2,
+            };
+            expect(errorDAO.update).toHaveBeenCalledOnceWith(id, update);
+        }));
+    });
 });
