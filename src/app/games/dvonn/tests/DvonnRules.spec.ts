@@ -13,6 +13,7 @@ import { MaxStacksDvonnMinimax } from '../MaxStacksDvonnMinimax';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 
 describe('DvonnRules:', () => {
 
@@ -319,8 +320,10 @@ describe('DvonnRules:', () => {
     });
     describe('isMovablePiece', () => {
         it('should fail if the coord is not on the board', () => {
+            spyOn(ErrorLoggerService, 'logError');
             expect(() => rules.isMovablePiece(DvonnState.getInitialState(), new Coord(-1, -1)))
                 .toThrowError('Assertion failure: piece is not on the board');
+            expect(ErrorLoggerService.logError).toHaveBeenCalledWith('Assertion failure', 'piece is not on the board');
         });
     });
 });
