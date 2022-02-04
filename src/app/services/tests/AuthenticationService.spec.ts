@@ -91,12 +91,6 @@ async function setupAuthTestModule(): Promise<unknown> {
     return;
 }
 
-export class AuthenticationServiceUnderTest extends AuthenticationService {
-    public updatePresence(): Promise<void> {
-        throw new Error('updatePresence not mocked');
-    }
-}
-
 /**
  * Creates a connected google user, which is required to do DB updates in the emulator.
  * When using it, don't forget to sign out the user when the test is done, using:

@@ -57,7 +57,7 @@ describe('LobbyComponent', () => {
         testUtils.detectChanges();
         spyOn(component['activePartsSub'], 'unsubscribe').and.callThrough();
         const activePartsService: ActivePartsService = TestBed.inject(ActivePartsService);
-        spyOn(activePartsService, 'stopObserving').and.callThrough();
+        spyOn(activePartsService, 'stopObserving');
 
         // When destroying the component
         component.ngOnDestroy();
