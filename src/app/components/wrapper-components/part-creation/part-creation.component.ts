@@ -14,6 +14,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 
 interface PartCreationViewInfo {
     userIsCreator: boolean;
@@ -102,8 +103,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
         this.checkInputs();
         this.createForms();
-        const gameExists: boolean = await this.joinerService.joinGame(this.partId, this.userName);
-        if (gameExists === false) {
+        const joinResult: MGPValidation = await this.joinerService.joinGame(this.partId, this.userName);
+        if (joinResult.isFailure()) {
             // We will be redirected by the GameWrapper
             return;
         }
