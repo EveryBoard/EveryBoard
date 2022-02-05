@@ -94,9 +94,9 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
                 return '';
         }
     }
-    public pass(): Promise<MGPValidation> {
+    public async pass(): Promise<MGPValidation> {
         Utils.handleError('GameComponent.pass() called on a game that does not redefine it');
-        return of(MGPValidation.failure('GameComponent.pass() called on a game that does not redefine it')).toPromise();
+        return MGPValidation.failure('GameComponent.pass() called on a game that does not redefine it');
     }
     public getTurn(): number {
         return this.rules.node.gameState.turn;
