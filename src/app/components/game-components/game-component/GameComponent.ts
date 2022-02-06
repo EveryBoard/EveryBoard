@@ -9,7 +9,6 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { GameState } from 'src/app/jscaip/GameState';
 import { Utils } from 'src/app/utils/utils';
-import { of } from 'rxjs';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 
