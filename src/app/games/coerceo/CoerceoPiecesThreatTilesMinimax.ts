@@ -12,6 +12,8 @@ import { CoerceoStep } from './CoerceoMove';
 import { CoerceoState } from './CoerceoState';
 import { CoerceoNode, CoerceoRules } from './CoerceoRules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { CoordSet } from 'src/app/utils/OptimizedSet';
+import { assert } from 'src/app/utils/utils';
 
 export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
 
@@ -30,7 +32,7 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
         const filteredThreatMap: MGPMap<Coord, PieceThreat> = this.filterThreatMap(threatMap, state);
         let score: number = 0;
         for (const owner of [Player.ZERO, Player.ONE]) {
-            for (const coord of pieceMap.get(owner).get().getCopy()) {
+            for (const coord of pieceMap.get(owner).get()) {
                 if (filteredThreatMap.get(coord).isPresent()) {
                     score += owner.getScoreModifier() * CoerceoPiecesThreatTilesMinimax.SCORE_BY_THREATENED_PIECE;
                 } else {
@@ -66,7 +68,7 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
     {
         const threatMap: MGPMap<Coord, PieceThreat> = new MGPMap();
         for (const player of [Player.ZERO, Player.ONE]) {
-            for (const piece of pieces.get(player).get().getCopy()) {
+            for (const piece of pieces.get(player).get()) {
                 const threat: MGPOptional<PieceThreat> = this.getThreat(piece, state);
                 if (threat.isPresent()) {
                     threatMap.set(piece, threat.get());
@@ -109,7 +111,7 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
                 }
             }
             if (movingThreats.length > 0) {
-                return MGPOptional.of(new PieceThreat(new MGPSet(directThreats), new MGPSet(movingThreats)));
+                return MGPOptional.of(new PieceThreat(new CoordSet(directThreats), new CoordSet(movingThreats)));
             }
         }
         return MGPOptional.empty();
@@ -123,16 +125,17 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
         const threatenedPlayerPieces: Coord[] = threateneds.filter((coord: Coord) => {
             return state.getPieceAt(coord).is(state.getCurrentPlayer());
         });
-        const threatenedOpponentPieces: MGPSet<Coord> = new MGPSet(threateneds.filter((coord: Coord) => {
+        const threatenedOpponentPieces: MGPSet<Coord> = new CoordSet(threateneds.filter((coord: Coord) => {
             return state.getPieceAt(coord).is(state.getCurrentOpponent());
         }));
         for (const threatenedPiece of threatenedPlayerPieces) {
             const oldThreat: PieceThreat = threatMap.get(threatenedPiece).get();
+            assert(oldThreat.direct.size() === 1, 'oldThreat must contain only one direct threat');
             let newThreat: MGPOptional<PieceThreat> = MGPOptional.empty();
-            if (threatenedOpponentPieces.contains(oldThreat.direct.get(0)) === false) {
+            if (threatenedOpponentPieces.contains(oldThreat.firstDirectThreat().get()) === false) {
                 // if the direct threat of this piece is not a false threat
                 const newMover: Coord[] = [];
-                for (const mover of oldThreat.mover.getCopy()) {
+                for (const mover of oldThreat.mover) {
                     if (threatenedOpponentPieces.contains(mover) === false) {
                         // if the moving threat of this piece is real
                         newMover.push(mover);
@@ -146,7 +149,7 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
                 filteredThreatMap.set(threatenedPiece, newThreat.get());
             }
         }
-        for (const threatenedOpponentPiece of threatenedOpponentPieces.getCopy()) {
+        for (const threatenedOpponentPiece of threatenedOpponentPieces) {
             const threatSet: PieceThreat = threatMap.get(threatenedOpponentPiece).get();
             filteredThreatMap.set(threatenedOpponentPiece, threatSet);
         }

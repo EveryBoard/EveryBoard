@@ -67,7 +67,7 @@ export class SixRules extends Rules<SixMove,
                 }
             }
         }
-        return neighboors.getCopy();
+        return neighboors.toList();
     }
     public isLegalDrop(move: SixMove, state: SixState): MGPFallible<SixLegalityInformation> {
         if (move.isDrop() === false) {
@@ -94,7 +94,7 @@ export class SixRules extends Rules<SixMove,
                 if (move.keep.isPresent()) {
                     return MGPFallible.failure(SixFailure.CANNOT_CHOOSE_TO_KEEP());
                 } else {
-                    return MGPFallible.success(biggerGroups.get(0));
+                    return MGPFallible.success(biggerGroups.getAnyElement().get());
                 }
             } else {
                 return this.moveKeepBiggerGroup(move.keep, biggerGroups, piecesAfterDeplacement);
@@ -109,8 +109,7 @@ export class SixRules extends Rules<SixMove,
     public static getBiggerGroups(groups: MGPSet<MGPSet<Coord>>): MGPSet<MGPSet<Coord>> {
         let biggerSize: number = 0;
         let biggerGroups: MGPSet<MGPSet<Coord>> = new MGPSet();
-        for (let i: number = 0; i < groups.size(); i++) {
-            const group: MGPSet<Coord> = groups.get(i);
+        for (const group of groups) {
             const groupSize: number = group.size();
             if (groupSize > biggerSize) {
                 biggerSize = groupSize;
@@ -133,8 +132,7 @@ export class SixRules extends Rules<SixMove,
             return MGPFallible.failure(SixFailure.CANNOT_KEEP_EMPTY_COORD());
         }
         const keptCoord: Coord = keep.get();
-        for (let i: number = 0; i < biggerGroups.size(); i++) {
-            const subGroup: MGPSet<Coord> = biggerGroups.get(i);
+        for (const subGroup of biggerGroups) {
             if (subGroup.contains(keptCoord)) {
                 return MGPFallible.success(subGroup);
             }

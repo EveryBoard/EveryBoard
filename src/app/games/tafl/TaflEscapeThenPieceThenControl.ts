@@ -47,7 +47,7 @@ export class TaflEscapeThenPieceAndControlMinimax extends TaflPieceAndControlMin
         const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = this.filterThreatMap(threatMap, state);
         for (const owner of [Player.ZERO, Player.ONE]) {
             const controlledSquares: MGPSet<Coord> = new MGPSet();
-            for (const coord of pieceMap.get(owner).get().getCopy()) {
+            for (const coord of pieceMap.get(owner).get()) {
                 if (filteredThreatMap.get(coord).isPresent()) {
                     threatenedScore += owner.getScoreModifier();
                 } else {
@@ -61,7 +61,7 @@ export class TaflEscapeThenPieceAndControlMinimax extends TaflPieceAndControlMin
                     }
                 }
             }
-            for (const controlled of controlledSquares.getCopy()) {
+            for (const controlled of controlledSquares) {
                 const controlledValue: number =
                     TaflPieceAndControlMinimax.CONTROL_VALUE[controlled.y][controlled.x];
                 controlScore += owner.getScoreModifier() * controlledValue;

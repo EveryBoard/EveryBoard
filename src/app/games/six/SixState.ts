@@ -12,6 +12,7 @@ import { GameState } from 'src/app/jscaip/GameState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ComparableObject } from 'src/app/utils/Comparable';
+import { CoordSet } from 'src/app/utils/OptimizedSet';
 
 export class SixState extends GameState implements ComparableObject {
 
@@ -37,7 +38,8 @@ export class SixState extends GameState implements ComparableObject {
         return new SixState(pieces, turn, offset);
     }
     public static deplacePiece(state: SixState, move: SixMove): ReversibleMap<Coord, Player> {
-        const pieces: ReversibleMap<Coord, Player> = state.pieces.getCopy();
+        const pieces: ReversibleMap<Coord, Player> = state.pieces.getCopy()
+;
         pieces.delete(move.start.get());
         pieces.set(move.landing, state.getCurrentPlayer());
         return pieces;
@@ -171,8 +173,7 @@ export class SixState extends GameState implements ComparableObject {
         let newPieces: ReversibleMap<Coord, Player> = new ReversibleMap<Coord, Player>();
         if (kept.size() > 0) {
             newPieces = new ReversibleMap<Coord, Player>();
-            for (let i: number = 0; i < kept.size(); i++) {
-                const coord: Coord = kept.get(i);
+            for (const coord of kept) {
                 newPieces.set(coord, afterDeplacementPieces.get(coord).get());
             }
         } else {
@@ -182,8 +183,8 @@ export class SixState extends GameState implements ComparableObject {
     }
     public countPieces(): [number, number] {
         const pieces: ReversibleMap<Player, MGPSet<Coord>> = this.pieces.reverse();
-        const zeroPieces: MGPSet<Coord> = pieces.get(Player.ZERO).getOrElse(new MGPSet());
-        const onePieces: MGPSet<Coord> = pieces.get(Player.ONE).getOrElse(new MGPSet());
+        const zeroPieces: MGPSet<Coord> = pieces.get(Player.ZERO).getOrElse(new CoordSet());
+        const onePieces: MGPSet<Coord> = pieces.get(Player.ONE).getOrElse(new CoordSet());
         return [zeroPieces.size(), onePieces.size()];
     }
     public switchPiece(coord: Coord): SixState {

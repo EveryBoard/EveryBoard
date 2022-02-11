@@ -44,7 +44,7 @@ export class TaflPieceAndControlMinimax extends TaflPieceAndInfluenceMinimax {
         const filteredThreatMap: MGPMap<Coord, MGPSet<PieceThreat>> = this.filterThreatMap(threatMap, state);
         for (const owner of [Player.ZERO, Player.ONE]) {
             const controlledSquares: MGPSet<Coord> = new MGPSet();
-            for (const coord of pieceMap.get(owner).get().getCopy()) {
+            for (const coord of pieceMap.get(owner).get()) {
                 if (filteredThreatMap.get(coord).isPresent()) {
                     score += owner.getScoreModifier() * TaflPieceAndControlMinimax.SCORE_BY_THREATENED_PIECE;
                 } else {
@@ -60,7 +60,7 @@ export class TaflPieceAndControlMinimax extends TaflPieceAndInfluenceMinimax {
                     }
                 }
             }
-            for (const controlled of controlledSquares.getCopy()) {
+            for (const controlled of controlledSquares) {
                 const controlledValue: number = TaflPieceAndControlMinimax.CONTROL_VALUE[controlled.y][controlled.x];
                 score += owner.getScoreModifier() * controlledValue;
             }

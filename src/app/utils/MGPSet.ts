@@ -1,8 +1,9 @@
 import { Comparable, comparableEquals, ComparableObject } from './Comparable';
+import { MGPOptional } from './MGPOptional';
 import { Sets } from './Sets';
 
 export class MGPSet<T extends Comparable> implements ComparableObject {
-    private readonly values: T[];
+    protected values: T[];
 
     constructor(values?: readonly T[]) {
         if (values === undefined) {
@@ -15,9 +16,8 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
         if (other.size() !== this.size()) {
             return false;
         }
-        for (let i: number = 0; i < this.size(); i++) {
-            const thisElement: T = this.values[i];
-            if (other.contains(thisElement) === false) {
+        for (const coord of this) {
+            if (other.contains(coord) === false) {
                 return false;
             }
         }
@@ -25,7 +25,7 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
     }
     public toString(): string {
         let result: string = '';
-        for (const element of this.values) {
+        for (const element of this) {
             if (element == null) {
                 result += 'null, ';
             } else {
@@ -43,7 +43,7 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
         }
     }
     public union(otherSet: MGPSet<T>): void {
-        for (const element of otherSet.getCopy()) {
+        for (const element of otherSet) {
             this.add(element);
         }
     }
@@ -58,18 +58,25 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
     public size(): number {
         return this.values.length;
     }
-    public get(index: number): T {
-        return this.values[index];
-    }
-    public getCopy(): T[] {
+    public toList(): T[] {
         const result: T[] = [];
-        for (const value of this.values) {
+        for (const value of this) {
             result.push(value);
         }
         return result;
     }
+    public getAnyElement(): MGPOptional<T> {
+        if (this.size() > 0) {
+            return MGPOptional.of(this.values[0]);
+        } else {
+            return MGPOptional.empty();
+        }
+    }
     public removeAndCopy(element: T): MGPSet<T> {
-        const filtered: T[] = this.getCopy().filter((value: T) => comparableEquals(value, element) === false);
+        const filtered: T[] = this.toList().filter((value: T) => comparableEquals(value, element) === false);
         return new MGPSet(filtered);
+    }
+    [Symbol.iterator](): IterableIterator<T> {
+        return this.values.values();
     }
 }
