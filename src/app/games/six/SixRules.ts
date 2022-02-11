@@ -14,6 +14,7 @@ import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { SixNodeUnheritance } from './SixMinimax';
+import { CoordSet } from 'src/app/utils/OptimizedSet';
 
 export type SixLegalityInformation = MGPSet<Coord>;
 
@@ -58,7 +59,7 @@ export class SixRules extends Rules<SixMove,
         }
     }
     public static getLegalLandings(state: SixState): Coord[] {
-        const neighboors: MGPSet<Coord> = new MGPSet();
+        const neighboors: MGPSet<Coord> = new CoordSet();
         for (const piece of state.pieces.listKeys()) {
             for (const dir of HexaDirection.factory.all) {
                 const neighboor: Coord = piece.getNext(dir, 1);
@@ -100,7 +101,7 @@ export class SixRules extends Rules<SixMove,
                 return this.moveKeepBiggerGroup(move.keep, biggerGroups, piecesAfterDeplacement);
             }
         } else {
-            return MGPFallible.success(new MGPSet());
+            return MGPFallible.success(new CoordSet());
         }
     }
     public static isSplit(groups: MGPSet<MGPSet<Coord>>): boolean {

@@ -8,6 +8,7 @@ import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { QuartoNode, BoardStatus, QuartoRules } from './QuartoRules';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPSet } from 'src/app/utils/MGPSet';
+import { CoordSet } from 'src/app/utils/OptimizedSet';
 
 export class QuartoMinimax extends Minimax<QuartoMove, QuartoState> {
 
@@ -58,7 +59,7 @@ export class QuartoMinimax extends Minimax<QuartoMove, QuartoState> {
         const state: QuartoState = node.gameState;
         let boardStatus: BoardStatus = {
             score: SCORE.DEFAULT,
-            sensitiveSquares: new MGPSet(),
+            sensitiveSquares: new CoordSet(),
         };
         for (const line of QuartoRules.lines) {
             boardStatus = QuartoRules.updateBoardStatus(line, state, boardStatus);

@@ -2,6 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { ComparableObject } from 'src/app/utils/Comparable';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { MGPOptional } from '../utils/MGPOptional';
+import { CoordSet } from '../utils/OptimizedSet';
 
 export class PieceThreat implements ComparableObject {
 
@@ -25,6 +26,6 @@ export class SandwichThreat extends PieceThreat {
     public constructor(direct: Coord,
                        public readonly mover: MGPSet<Coord>)
     {
-        super(new MGPSet([direct]), mover);
+        super(new CoordSet([direct]), mover);
     }
 }

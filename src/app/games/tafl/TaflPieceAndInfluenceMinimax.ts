@@ -11,6 +11,7 @@ import { TaflMinimax, TaflNode } from './TaflMinimax';
 import { TaflRules } from './TaflRules';
 import { TaflState } from './TaflState';
 import { TaflMove } from './TaflMove';
+import { CoordSet } from 'src/app/utils/OptimizedSet';
 
 export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
 
@@ -82,8 +83,8 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
                 }
             }
         }
-        map.set(Player.ZERO, new MGPSet(zeroPieces));
-        map.set(Player.ONE, new MGPSet(onePieces));
+        map.set(Player.ZERO, new CoordSet(zeroPieces));
+        map.set(Player.ONE, new CoordSet(onePieces));
         return map;
     }
     public getThreatMap(state: TaflState,
@@ -125,7 +126,7 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
                         movingThreats.push(futureCapturer);
                     }
                 }
-                threats.push(new SandwichThreat(directThreat, new MGPSet(movingThreats)));
+                threats.push(new SandwichThreat(directThreat, new CoordSet(movingThreats)));
             }
         }
         return threats;
@@ -170,7 +171,7 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
         const threatenedPlayerPieces: Coord[] = threateneds.filter((coord: Coord) => {
             return state.getAbsoluteOwner(coord) === state.getCurrentPlayer();
         });
-        const threatenedOpponentPieces: MGPSet<Coord> = new MGPSet(threateneds.filter((coord: Coord) => {
+        const threatenedOpponentPieces: MGPSet<Coord> = new CoordSet(threateneds.filter((coord: Coord) => {
             return state.getAbsoluteOwner(coord) === state.getCurrentOpponent();
         }));
         for (const threatenedPiece of threatenedPlayerPieces) {
@@ -187,7 +188,7 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
                         }
                     }
                     if (newMover.length > 0) {
-                        newThreatSet.push(new SandwichThreat(threat.firstDirectThreat().get(), new MGPSet(newMover)));
+                        newThreatSet.push(new SandwichThreat(threat.firstDirectThreat().get(), new CoordSet(newMover)));
                     }
                 }
             }

@@ -58,8 +58,8 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
                 }
             }
         }
-        map.set(Player.ZERO, new MGPSet(zeroPieces));
-        map.set(Player.ONE, new MGPSet(onePieces));
+        map.set(Player.ZERO, new CoordSet(zeroPieces));
+        map.set(Player.ONE, new CoordSet(onePieces));
         return map;
     }
     public getThreatMap(state: CoerceoState,
@@ -142,7 +142,7 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
                     }
                 }
                 if (newMover.length > 0) {
-                    newThreat = MGPOptional.of(new PieceThreat(oldThreat.direct, new MGPSet(newMover)));
+                    newThreat = MGPOptional.of(new PieceThreat(oldThreat.direct, new CoordSet(newMover)));
                 }
             }
             if (newThreat.isPresent()) {

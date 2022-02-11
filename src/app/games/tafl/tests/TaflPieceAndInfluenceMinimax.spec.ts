@@ -12,6 +12,7 @@ import { SandwichThreat } from '../../../jscaip/PieceThreat';
 import { TablutNode, TablutRules } from '../tablut/TablutRules';
 import { TablutMove } from '../tablut/TablutMove';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { CoordSet } from 'src/app/utils/OptimizedSet';
 
 describe('TablutPieceAndInfluenceMinimax', () => {
 
@@ -267,8 +268,8 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.filterThreatMap(threatMap, state);
             const expectedMap: MGPMap<Coord, MGPSet<SandwichThreat>> = new MGPMap();
             const expectedThreats: SandwichThreat[] = [
-                new SandwichThreat(new Coord(4, 3), new MGPSet([new Coord(2, 4)])),
-                new SandwichThreat(new Coord(3, 4), new MGPSet([new Coord(4, 2)])),
+                new SandwichThreat(new Coord(4, 3), new CoordSet([new Coord(2, 4)])),
+                new SandwichThreat(new Coord(3, 4), new CoordSet([new Coord(4, 2)])),
             ];
             expectedMap.set(new Coord(3, 3), new MGPSet(expectedThreats));
             expect(filteredThreatMap.equals(expectedMap)).toBeTrue();

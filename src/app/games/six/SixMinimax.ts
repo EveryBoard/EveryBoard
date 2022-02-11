@@ -11,6 +11,7 @@ import { assert, display } from 'src/app/utils/utils';
 import { AlignementMinimax, BoardInfo } from 'src/app/jscaip/AlignementMinimax';
 import { SixVictorySource, SixNode, SixRules, SixLegalityInformation } from './SixRules';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
+import { CoordSet } from 'src/app/utils/OptimizedSet';
 
 export class SixNodeUnheritance extends NodeUnheritance {
 
@@ -107,9 +108,9 @@ export class SixMinimax extends AlignementMinimax<SixMove,
             }
         }
         if (safePieces.length === 0) {
-            return new MGPSet<Coord>([firstPiece]);
+            return new CoordSet([firstPiece]);
         } else {
-            return new MGPSet<Coord>(safePieces);
+            return new CoordSet(safePieces);
         }
     }
     private isPieceBlockingAVictory(state: SixState, playerPiece: Coord): boolean {

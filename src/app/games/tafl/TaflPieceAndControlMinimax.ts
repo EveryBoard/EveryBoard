@@ -11,6 +11,7 @@ import { TaflState } from './TaflState';
 import { TaflPieceAndInfluenceMinimax } from './TaflPieceAndInfluenceMinimax';
 import { PieceThreat } from '../../jscaip/PieceThreat';
 import { TaflNode } from './TaflMinimax';
+import { CoordSet } from 'src/app/utils/OptimizedSet';
 
 export class TaflPieceAndControlMinimax extends TaflPieceAndInfluenceMinimax {
 
@@ -43,7 +44,7 @@ export class TaflPieceAndControlMinimax extends TaflPieceAndInfluenceMinimax {
         const threatMap: MGPMap<Coord, MGPSet<PieceThreat>> = this.getThreatMap(state, pieceMap);
         const filteredThreatMap: MGPMap<Coord, MGPSet<PieceThreat>> = this.filterThreatMap(threatMap, state);
         for (const owner of [Player.ZERO, Player.ONE]) {
-            const controlledSquares: MGPSet<Coord> = new MGPSet();
+            const controlledSquares: MGPSet<Coord> = new CoordSet();
             for (const coord of pieceMap.get(owner).get()) {
                 if (filteredThreatMap.get(coord).isPresent()) {
                     score += owner.getScoreModifier() * TaflPieceAndControlMinimax.SCORE_BY_THREATENED_PIECE;
