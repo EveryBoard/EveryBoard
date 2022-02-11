@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PartDAO } from 'src/app/dao/PartDAO';
+import { MinimalUser } from 'src/app/domain/Joiner';
 import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
 import { GameService } from 'src/app/services/GameService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
@@ -31,11 +32,11 @@ export class OnlineGameCreationComponent implements OnInit {
         return Utils.getNonNullable(this.route.snapshot.paramMap.get('compo'));
     }
     private async createGameAndRedirectOrShowError(game: string): Promise<boolean> {
-        const user: AuthUser = this.authenticationService.user.get();
-        assert(user.isConnected(), 'User must be connected and have a username to reach this page');
-        const username: string = user.username.get();
-        if (await this.canCreateOnlineGame(username)) {
-            const gameId: string = await this.gameService.createPartJoinerAndChat(username, game);
+        const authUser: AuthUser = this.authenticationService.user.get();
+        assert(authUser.isConnected(), 'User must be connected and have a username to reach this page');
+        const user: MinimalUser = { id: authUser.userId, name: authUser.username.get() };
+        if (await this.canCreateOnlineGame(user.name)) {
+            const gameId: string = await this.gameService.createPartJoinerAndChat(user, game);
             // create Part and Joiner
             await this.router.navigate(['/play', game, gameId]);
             return true;

@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { fakeAsync } from '@angular/core/testing';
+import { fakeAsync, tick } from '@angular/core/testing';
 import { AuthUser } from 'src/app/services/AuthenticationService';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -13,7 +13,6 @@ describe('HeaderComponent', () => {
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(HeaderComponent);
     }));
-
     it('should create', fakeAsync(async() => {
         AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
         testUtils.detectChanges();
@@ -27,8 +26,12 @@ describe('HeaderComponent', () => {
         expect(testUtils.getComponent().authenticationService.disconnect).toHaveBeenCalledTimes(1);
     }));
     it('should have empty username when user is not connected', fakeAsync(async() => {
+        console.log('>>>> let us set user on mock')
         AuthenticationServiceMock.setUser(AuthUser.NOT_CONNECTED);
+        console.log('>>>> let us detect change')
         testUtils.detectChanges();
+        console.log('>>>> let us tick null')
+        tick();
         expect(testUtils.getComponent().username).toEqual('');
     }));
     it('should show user email if the user has not set its username yet', fakeAsync(async() => {

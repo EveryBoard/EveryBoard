@@ -12,7 +12,7 @@ type JoinerOS = ObservableSubject<MGPOptional<JoinerDocument>>
 
 export class JoinerDAOMock extends FirebaseFirestoreDAOMock<Joiner> {
 
-    public static VERBOSE: boolean = false;
+    public static VERBOSE: boolean = true;
 
     private static joinerDB: MGPMap<string, JoinerOS>;
 
@@ -78,7 +78,7 @@ describe('JoinerDAOMock', () => {
         expect(callCount).toEqual(1);
         expect(lastJoiner.get()).toEqual(JoinerMocks.INITIAL);
 
-        await joinerDAOMock.update('joinerId', { candidates: ['firstCandidate'] });
+        await joinerDAOMock.update('joinerId', { candidates: [{ id: 'firstCandidate-user-doc-id', name: 'firstCandidate' }] });
 
         expect(callCount).toEqual(2);
         expect(lastJoiner.get()).toEqual(JoinerMocks.WITH_FIRST_CANDIDATE);

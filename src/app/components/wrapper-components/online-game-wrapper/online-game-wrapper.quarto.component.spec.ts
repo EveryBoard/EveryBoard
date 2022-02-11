@@ -6,7 +6,7 @@ import firebase from 'firebase/app';
 
 import { OnlineGameWrapperComponent, UpdateType } from './online-game-wrapper.component';
 import { JoinerDAO } from 'src/app/dao/JoinerDAO';
-import { Joiner, PartStatus } from 'src/app/domain/Joiner';
+import { Joiner, MinimalUser, PartStatus } from 'src/app/domain/Joiner';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
@@ -75,6 +75,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         state: 'online',
         verified: true,
     };
+    const OPPONENT_MINIMAL_USER: MinimalUser = { id: USER_OPPONENT.userId, name: USER_OPPONENT.username.get() };
     const OBSERVER: User = {
         username: 'jeanJaja',
         last_changed: {
@@ -112,7 +113,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         return Promise.resolve();
     }
     async function prepareStartedGameFor(user: AuthUser, shorterGlobalChrono?: boolean): Promise<void> {
-        TestBed.inject(UserService).startObservingAuthUser(user.userId);
+        TestBed.inject(UserService).setObservedUserId(user.userId);
         await prepareMockDBContent(JoinerMocks.INITIAL);
         AuthenticationServiceMock.setUser(user);
         observerRole = user === USER_CREATOR ? Player.ZERO : (user === USER_OPPONENT ? Player.ONE : Player.NONE);
@@ -129,11 +130,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(wrapper.partCreation)
             .withContext('partCreation field should also be present')
             .toBeTruthy();
-        await joinerDAO.update('joinerId', { candidates: ['firstCandidate'] });
+        await joinerDAO.update('joinerId', { candidates: [OPPONENT_MINIMAL_USER] });
         componentTestUtils.detectChanges();
         await joinerDAO.update('joinerId', {
             partStatus: PartStatus.PART_CREATED.value,
-            candidates: ['firstCandidate'],
+            candidates: [OPPONENT_MINIMAL_USER],
             chosenPlayer: 'firstCandidate',
         });
         // TODO: replace by real actor action (chooseCandidate)

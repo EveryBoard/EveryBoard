@@ -149,7 +149,7 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
             }
             return MGPValidation.SUCCESS;
         } else if (currentStep.isMove() || currentStep.isPredicate() || currentStep.isAnyMove()) {
-            setTimeout(() => {
+            window.setTimeout(() => {
                 this.cdr.detectChanges();
             }, 10);
             return MGPValidation.SUCCESS;

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { PartDAO } from '../dao/PartDAO';
 import { MGPResult, Part, PartDocument } from '../domain/Part';
-import { FirstPlayer, Joiner, PartStatus } from '../domain/Joiner';
+import { FirstPlayer, Joiner, MinimalUser, PartStatus } from '../domain/Joiner';
 import { JoinerService } from './JoinerService';
 import { ChatService } from './ChatService';
 import { Request } from '../domain/Request';
@@ -55,9 +55,9 @@ export class GameService {
             return MGPValidation.failure('WRONG_GAME_TYPE');
         }
     }
-    private createUnstartedPart(creatorName: string, typeGame: string): Promise<string> {
+    private createUnstartedPart(creator: MinimalUser, typeGame: string): Promise<string> {
         display(GameService.VERBOSE,
-                'GameService.createPart(' + creatorName + ', ' + typeGame + ')');
+                'GameService.createPart(' + creator + ', ' + typeGame + ')');
 
         const newPart: Part = {
             lastUpdate: {
@@ -65,7 +65,7 @@ export class GameService {
                 player: 0,
             },
             typeGame,
-            playerZero: creatorName,
+            playerZero: creator.name,
             turn: -1,
             result: MGPResult.UNACHIEVED.value,
             listMoves: [],
@@ -77,11 +77,11 @@ export class GameService {
 
         return this.chatService.createNewChat(chatId);
     }
-    public async createPartJoinerAndChat(creatorName: string, typeGame: string): Promise<string> {
-        display(GameService.VERBOSE, 'GameService.createGame(' + creatorName + ', ' + typeGame + ')');
+    public async createPartJoinerAndChat(creator: MinimalUser, typeGame: string): Promise<string> {
+        display(GameService.VERBOSE, 'GameService.createGame(' + creator + ', ' + typeGame + ')');
 
-        const gameId: string = await this.createUnstartedPart(creatorName, typeGame);
-        await this.joinerService.createInitialJoiner(creatorName, gameId);
+        const gameId: string = await this.createUnstartedPart(creator, typeGame);
+        await this.joinerService.createInitialJoiner(creator, gameId);
         await this.createChat(gameId);
         return gameId;
     }
@@ -103,11 +103,11 @@ export class GameService {
         let playerZero: string;
         let playerOne: string;
         if (whoStarts === FirstPlayer.CREATOR) {
-            playerZero = joiner.creator;
+            playerZero = joiner.creator.name;
             playerOne = Utils.getNonNullable(joiner.chosenPlayer);
         } else {
             playerZero = Utils.getNonNullable(joiner.chosenPlayer);
-            playerOne = joiner.creator;
+            playerOne = joiner.creator.name;
         }
         return {
             playerZero,
@@ -189,7 +189,7 @@ export class GameService {
 
         const iJoiner: Joiner = await this.joinerService.readJoinerById(partDocument.id);
         let firstPlayer: FirstPlayer;
-        if (part.playerZero === iJoiner.creator) {
+        if (part.playerZero === iJoiner.creator.name) {
             firstPlayer = FirstPlayer.CHOSEN_PLAYER; // so he won't start this one
         } else {
             firstPlayer = FirstPlayer.CREATOR;

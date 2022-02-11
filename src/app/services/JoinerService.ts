@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { FirstPlayer, Joiner, PartStatus, PartType } from '../domain/Joiner';
+import { FirstPlayer, Joiner, MinimalUser, PartStatus, PartType } from '../domain/Joiner';
 import { JoinerDAO } from '../dao/JoinerDAO';
 import { assert, display } from 'src/app/utils/utils';
 import { ArrayUtils } from '../utils/ArrayUtils';
@@ -21,8 +21,8 @@ export class JoinerService {
         this.observedJoinerId = joinerId;
         return this.joinerDAO.getObsById(joinerId);
     }
-    public async createInitialJoiner(creatorName: string, joinerId: string): Promise<void> {
-        display(JoinerService.VERBOSE, 'JoinerService.createInitialJoiner(' + creatorName + ', ' + joinerId + ')');
+    public async createInitialJoiner(creator: MinimalUser, joinerId: string): Promise<void> {
+        display(JoinerService.VERBOSE, 'JoinerService.createInitialJoiner(' + creator + ', ' + joinerId + ')');
 
         const newJoiner: Joiner = {
             candidates: [],
@@ -32,24 +32,24 @@ export class JoinerService {
             partStatus: PartStatus.PART_CREATED.value,
             maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
             totalPartDuration: PartType.NORMAL_PART_DURATION,
-            creator: creatorName,
+            creator,
         };
         return this.set(joinerId, newJoiner);
     }
-    public async joinGame(partId: string, userName: string): Promise<boolean> {
-        display(JoinerService.VERBOSE, 'JoinerService.joinGame(' + partId + ', ' + userName + ')');
+    public async joinGame(partId: string, user: MinimalUser): Promise<boolean> {
+        display(JoinerService.VERBOSE, 'JoinerService.joinGame(' + partId + ', ' + user + ')');
 
         const joiner: MGPOptional<Joiner> = await this.joinerDAO.read(partId);
         if (joiner.isAbsent()) {
             return false;
         }
-        const joinerList: string[] = ArrayUtils.copyImmutableArray(joiner.get().candidates);
-        if (joinerList.includes(userName)) {
+        const joinerList: MinimalUser[] = ArrayUtils.copyImmutableArray(joiner.get().candidates);
+        if (joinerList.some((minimalUser: MinimalUser) => minimalUser.id === user.id)) {
             throw new Error('JoinerService.joinGame was called by a user already in the game');
-        } else if (userName === joiner.get().creator) {
+        } else if (user.id === joiner.get().creator.id) {
             return true;
         } else {
-            joinerList[joinerList.length] = userName;
+            joinerList[joinerList.length] = user;
             await this.joinerDAO.update(partId, { candidates: joinerList });
             return true;
         }
@@ -67,8 +67,8 @@ export class JoinerService {
             return;
         } else {
             const joiner: Joiner = joinerOpt.get();
-            const candidates: string[] = ArrayUtils.copyImmutableArray(joiner.candidates);
-            const indexLeaver: number = candidates.indexOf(userName);
+            const candidates: MinimalUser[] = ArrayUtils.copyImmutableArray(joiner.candidates);
+            const indexLeaver: number = candidates.findIndex((user: MinimalUser) => user.name === userName);
             let chosenPlayer: string | null = joiner.chosenPlayer;
             let partStatus: number = joiner.partStatus;
             candidates.splice(indexLeaver, 1); // remove player from candidates list
@@ -87,7 +87,7 @@ export class JoinerService {
             return this.joinerDAO.update(this.observedJoinerId, update);
         }
     }
-    public async updateCandidates(candidates: string[]): Promise<void> {
+    public async updateCandidates(candidates: MinimalUser[]): Promise<void> {
         display(JoinerService.VERBOSE, 'JoinerService.reviewConfig');
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
         const update: Partial<Joiner> = { candidates };
@@ -136,7 +136,7 @@ export class JoinerService {
             partStatus: PartStatus.PART_CREATED.value,
         });
     }
-    public async reviewConfigRemoveChosenPlayerAndUpdateCandidates(candidates: string[]): Promise<void> {
+    public async reviewConfigRemoveChosenPlayerAndUpdateCandidates(candidates: MinimalUser[]): Promise<void> {
         display(JoinerService.VERBOSE, 'JoinerService.reviewConfig');
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
 

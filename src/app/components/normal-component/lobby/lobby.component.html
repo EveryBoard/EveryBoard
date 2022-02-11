@@ -62,7 +62,7 @@
                 <li *ngFor="let user of activeUsers">
                     <ng-container *ngIf="user.data.last_changed">
                         {{ user.data.username }}:
-                        {{ (1000*user.data.last_changed.seconds) | date:'HH:mm:ss':'+0100'}}
+                        {{ firebaseTimeAsTimestamp(user.data.last_changed) | date:'HH:mm:ss':'+0100'}}
                     </ng-container>
                 </li>
             </ul>

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { UserDAO } from '../dao/UserDAO';
 import { User, UserDocument } from '../domain/User';
 import { ActiveUsersService } from './ActiveUsersService';
@@ -33,15 +33,34 @@ export class UserService {
         this.activeUsersService.stopObserving();
     }
     public observeUserByUsername(username: string, callback: FirebaseCollectionObserver<User>): () => void {
+        // TODOTODO: make this unused
         // the callback will be called on the foundUser
         return this.userDAO.observeUserByUsername(username, callback);
     }
-    public startObservingAuthUser(authUserId: string) {
+    public observeUser(userId: string, callback: (user: MGPOptional<User>) => void): () => void {
+        const observable: Observable<MGPOptional<User>> = this.userDAO.getObsById(userId);
+        const subscription: Subscription = observable.subscribe((value: MGPOptional<User>) => {
+            callback(value);
+        });
+        return () => {
+            console.log('UserService.unsubscribing from ' +userId)
+            subscription.unsubscribe();
+        };
+    }
+    public setObservedUserId(authUserId: string) {
+        // TODO FOR REVIEW: on a changé un truc, il se plaint pas du non typage de la fonction !
         this.currentUserId = MGPOptional.of(authUserId);
+    }
+    public removeObservedUserId() {
+        this.currentUserId = MGPOptional.empty();
     }
     public updateObservedPart(observedPart: string): Promise<void> {
         assert(this.currentUserId.isPresent(), 'Should be subscribe to yourself when connected');
         return this.userDAO.update(this.currentUserId.get(), { observedPart });
+    }
+    public removeObservedPart(): Promise<void> {
+        assert(this.currentUserId.isPresent(), 'Should be subscribe to yourself when connected');
+        return this.userDAO.update(this.currentUserId.get(), { observedPart: undefined });
     }
     public sendPresenceToken(): Promise<void> {
         assert(this.currentUserId.isPresent(), 'Should be subscribe to yourself when connected');

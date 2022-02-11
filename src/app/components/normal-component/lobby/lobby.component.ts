@@ -6,6 +6,7 @@ import { display } from 'src/app/utils/utils';
 import { ActivePartsService } from 'src/app/services/ActivePartsService';
 import { PartDocument } from 'src/app/domain/Part';
 import { UserDocument } from 'src/app/domain/User';
+import { FirebaseTime, Time } from 'src/app/domain/Time';
 
 type Tab = 'games' | 'create' | 'chat';
 
@@ -55,5 +56,8 @@ export class LobbyComponent implements OnInit, OnDestroy {
     }
     public selectTab(tab: Tab): void {
         this.currentTab = tab;
+    }
+    public firebaseTimeAsTimestamp(firebaseTime: FirebaseTime): number {
+        return (firebaseTime as Time).seconds * 1000;
     }
 }

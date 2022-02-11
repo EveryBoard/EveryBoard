@@ -46,7 +46,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         componentTestUtils = await ComponentTestUtils.basic('P4');
         AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
 
-        (TestBed.inject(UserService)).startObservingAuthUser(AuthenticationServiceMock.CONNECTED.userId);
+        (TestBed.inject(UserService)).setObservedUserId(AuthenticationServiceMock.CONNECTED.userId);
         componentTestUtils.prepareFixture(OnlineGameWrapperComponent);
         wrapper = componentTestUtils.wrapper as OnlineGameWrapperComponent;
     });

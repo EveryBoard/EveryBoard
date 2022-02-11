@@ -2,7 +2,7 @@
 import { fakeAsync } from '@angular/core/testing';
 import { JoinerService } from '../JoinerService';
 import { JoinerDAO } from 'src/app/dao/JoinerDAO';
-import { FirstPlayer, Joiner, PartStatus, PartType } from 'src/app/domain/Joiner';
+import { FirstPlayer, Joiner, MinimalUser, PartStatus, PartType } from 'src/app/domain/Joiner';
 import { JoinerDAOMock } from 'src/app/dao/tests/JoinerDAOMock.spec';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -12,6 +12,8 @@ describe('JoinerService', () => {
     let dao: JoinerDAOMock;
 
     let service: JoinerService;
+
+    const CREATOR_MINIMAL_USER: MinimalUser = { id: 'creator-user-doc-id', name: 'creator' };
 
     beforeEach(() => {
         dao = new JoinerDAOMock();
@@ -37,7 +39,7 @@ describe('JoinerService', () => {
     }));
     it('createInitialJoiner should delegate to the DAO set method', fakeAsync(async() => {
         spyOn(dao, 'set');
-        await service.createInitialJoiner('creator', 'id');
+        await service.createInitialJoiner(CREATOR_MINIMAL_USER, 'id');
         expect(dao.set).toHaveBeenCalledWith('id', {
             candidates: [],
             chosenPlayer: null,
@@ -46,7 +48,7 @@ describe('JoinerService', () => {
             partStatus: PartStatus.PART_CREATED.value,
             maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
             totalPartDuration: PartType.NORMAL_PART_DURATION,
-            creator: 'creator',
+            creator: CREATOR_MINIMAL_USER,
         });
     }));
     describe('joinGame', () => {
@@ -55,9 +57,9 @@ describe('JoinerService', () => {
             // if the candidate opens two tabs to the same part,
             // its JS console should not be filled with errors, he should see the same page!
             await dao.set('joinerId', JoinerMocks.WITH_FIRST_CANDIDATE);
-            const candidateName: string = JoinerMocks.WITH_FIRST_CANDIDATE.candidates[0];
+            const candidate: MinimalUser = JoinerMocks.WITH_FIRST_CANDIDATE.candidates[0];
             const expectedError: Error = new Error('JoinerService.joinGame was called by a user already in the game');
-            await expectAsync(service.joinGame('joinerId', candidateName)).toBeRejectedWith(expectedError);
+            await expectAsync(service.joinGame('joinerId', candidate)).toBeRejectedWith(expectedError);
         }));
         it('should not update joiner when called by the creator', fakeAsync(async() => {
             await dao.set('joinerId', JoinerMocks.INITIAL);
@@ -75,13 +77,13 @@ describe('JoinerService', () => {
             await dao.set('joinerId', JoinerMocks.INITIAL);
             spyOn(dao, 'update');
 
-            await service.joinGame('joinerId', 'some totally new user');
+            await service.joinGame('joinerId', { id: '8d456r465sd', name: 'some totally new user' });
 
             expect(dao.update).toHaveBeenCalled();
         }));
         it('should return false when joining an invalid joiner', fakeAsync(async() => {
             spyOn(dao, 'read').and.resolveTo(MGPOptional.empty());
-            await expectAsync(service.joinGame('invalidJoinerId', 'creator')).toBeResolvedTo(false);
+            await expectAsync(service.joinGame('invalidJoinerId', CREATOR_MINIMAL_USER)).toBeResolvedTo(false);
         }));
     });
     describe('cancelJoining', () => {
@@ -92,7 +94,7 @@ describe('JoinerService', () => {
         it('should delegate update to DAO', fakeAsync(async() => {
             await dao.set('joinerId', JoinerMocks.INITIAL);
             service.observe('joinerId');
-            await service.joinGame('joinerId', 'someone totally new');
+            await service.joinGame('joinerId', { id: '7sf857erf87d', name: 'someone totally new' });
 
             spyOn(dao, 'update');
 
@@ -111,7 +113,7 @@ describe('JoinerService', () => {
         it('should throw when called by someone who is nor candidate nor chosenPlayer', fakeAsync(async() => {
             await dao.set('joinerId', JoinerMocks.INITIAL);
             service.observe('joinerId');
-            await service.joinGame('joinerId', 'whoever');
+            await service.joinGame('joinerId', { id: 's577f8e79', name: 'whoever' });
 
             await expectAsync(service.cancelJoining('who is that')).toBeRejectedWith(new Error('someone that was not candidate nor chosenPlayer just left the chat: who is that'));
         }));
@@ -123,10 +125,14 @@ describe('JoinerService', () => {
 
             spyOn(dao, 'update');
 
-            await service.updateCandidates(['candidate1', 'candidate2']);
+            const candidates: MinimalUser[] = [
+                { id: 'odfpkerpo', name: 'candidate1' },
+                { id: 'irfjoerif', name: 'candidate2' },
+            ];
+            await service.updateCandidates(candidates);
 
             expect(dao.update).toHaveBeenCalledWith('joinerId', {
-                candidates: ['candidate1', 'candidate2'],
+                candidates,
             });
         }));
     });
@@ -163,12 +169,13 @@ describe('JoinerService', () => {
 
             spyOn(dao, 'update');
 
-            await service.reviewConfigRemoveChosenPlayerAndUpdateCandidates(['candidate1']);
+            const candidates: MinimalUser[] = [{ id: 'candidate-doc-id', name: 'candidate1' }];
+            await service.reviewConfigRemoveChosenPlayerAndUpdateCandidates(candidates);
 
             expect(dao.update).toHaveBeenCalledWith('joinerId', {
                 partStatus: PartStatus.PART_CREATED.value,
                 chosenPlayer: null,
-                candidates: ['candidate1'],
+                candidates,
             });
         }));
     });

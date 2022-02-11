@@ -163,10 +163,10 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         this.joiner = iJoiner;
 
         this.gameStarted = true;
-        setTimeout(async() => {
+        window.setTimeout(async() => {
             // the small waiting is there to make sur that the chronos are charged by view
             this.afterGameIncluderViewInit();
-            await this.startPart();
+            this.startPart();
         }, 1);
     }
     protected startPart(): void {
@@ -596,8 +596,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 new FirebaseCollectionObserver(onDocumentCreated,
                                                onDocumentModified,
                                                onDocumentDeleted);
-            this.opponentSubscription =
-                MGPOptional.of(this.userService.observeUserByUsername(opponentName.get(), callback));
+            const subscription: () => void = this.userService.observeUserByUsername(opponentName.get(), callback);
+            this.opponentSubscription = MGPOptional.of(subscription);
         }
     }
     public async onLegalUserMove(move: Move, scores?: [number, number]): Promise<void> {

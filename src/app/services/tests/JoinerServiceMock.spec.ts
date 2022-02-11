@@ -4,6 +4,7 @@ import { JoinerDAO } from 'src/app/dao/JoinerDAO';
 import { display } from 'src/app/utils/utils';
 
 export class JoinerServiceMock {
+
     public static VERBOSE: boolean = false;
 
     public static emittedsJoiner: JoinerDocument[];
@@ -27,8 +28,8 @@ export class JoinerServiceMock {
         display(JoinerServiceMock.VERBOSE, 'JoinerServiceMock.readJoinerById');
         return new Promise((resolve: (j: Joiner) => void) => {
             resolve({
-                candidates: ['uniqueCandidate'],
-                creator: 'creator',
+                candidates: [{ id: '24854rf', name: 'uniqueCandidate' }],
+                creator: { id: 'doc-creator', name: 'creator' },
                 chosenPlayer: 'uniqueCandidate',
                 firstPlayer: FirstPlayer.CREATOR.value,
                 partType: PartType.STANDARD.value,

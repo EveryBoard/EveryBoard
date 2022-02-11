@@ -15,7 +15,7 @@ type DocumentSubject<T> = ObservableSubject<MGPOptional<FirebaseDocument<T>>>;
 
 export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> implements IFirebaseFirestoreDAO<T> {
 
-    public static VERBOSE: boolean = false;
+    public static VERBOSE: boolean = true;
 
     public static mockServerTime(): Time {
         const dateNow: number = Date.now();
@@ -24,8 +24,8 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
         const nanoseconds: number = ms * 1000 * 1000;
         return { seconds, nanoseconds };
     }
-
     public callbacks: [FirebaseCondition[], FirebaseCollectionObserver<T>][] = [];
+
     constructor(public readonly collectionName: string,
                 public VERBOSE: boolean,
     ) {

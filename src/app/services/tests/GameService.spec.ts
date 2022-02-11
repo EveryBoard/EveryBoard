@@ -11,7 +11,7 @@ import { ChatDAO } from 'src/app/dao/ChatDAO';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { Request } from 'src/app/domain/Request';
-import { Joiner, PartType } from 'src/app/domain/Joiner';
+import { Joiner, MinimalUser, PartType } from 'src/app/domain/Joiner';
 import { JoinerDAO } from 'src/app/dao/JoinerDAO';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
@@ -32,6 +32,9 @@ describe('GameService', () => {
 
     const MOVE_1: number = 161;
     const MOVE_2: number = 107;
+
+    const CANDIDATES: MinimalUser[] = [{ id: 'joiner-user-doc-id', name: 'joiner' }];
+    const CREATOR: MinimalUser = { id: 'creator-user-doc-id', name: 'creator' };
 
     beforeEach(fakeAsync(async() => {
         await TestBed.configureTestingModule({
@@ -121,9 +124,9 @@ describe('GameService', () => {
         it('should put creator first when math.random() is below 0.5', fakeAsync(async() => {
             // given a joiner config asking random start
             const joiner: Joiner = {
-                candidates: ['joiner'],
+                candidates: CANDIDATES,
                 chosenPlayer: 'joiner',
-                creator: 'creator',
+                creator: CREATOR,
                 firstPlayer: 'RANDOM',
                 maximalMoveDuration: 10,
                 partStatus: 3,
@@ -136,15 +139,15 @@ describe('GameService', () => {
             const startConfig: StartingPartConfig = service.getStartingConfig(joiner);
 
             // then we should have a creator starting the game
-            expect(startConfig.playerZero).toBe(joiner.creator);
+            expect(startConfig.playerZero).toBe(joiner.creator.name);
             expect(startConfig.playerOne).toBe(Utils.getNonNullable(joiner.chosenPlayer));
         }));
         it('should put chosen player first when math.random() is over 0.5', fakeAsync(async() => {
             // given a joiner config asking random start
             const joiner: Joiner = {
-                candidates: ['joiner'],
+                candidates: CANDIDATES,
                 chosenPlayer: 'joiner',
-                creator: 'creator',
+                creator: CREATOR,
                 firstPlayer: 'RANDOM',
                 maximalMoveDuration: 10,
                 partStatus: 3,
@@ -158,7 +161,7 @@ describe('GameService', () => {
 
             // then we should have a creator starting the game
             expect(startConfig.playerZero).toBe(Utils.getNonNullable(joiner.chosenPlayer));
-            expect(startConfig.playerOne).toBe(joiner.creator);
+            expect(startConfig.playerOne).toBe(joiner.creator.name);
         }));
     });
     describe('rematch', () => {
@@ -195,9 +198,9 @@ describe('GameService', () => {
                 request: Request.rematchProposed(Player.ZERO),
             });
             const lastGameJoiner: Joiner = {
-                candidates: ['joiner'],
+                candidates: CANDIDATES,
                 chosenPlayer: 'joiner',
-                creator: 'creator',
+                creator: CREATOR,
                 firstPlayer: 'CREATOR',
                 maximalMoveDuration: 10,
                 partStatus: 3,
@@ -239,9 +242,9 @@ describe('GameService', () => {
                 request: Request.rematchProposed(Player.ZERO),
             });
             const lastGameJoiner: Joiner = {
-                candidates: ['joiner'],
+                candidates: CANDIDATES,
                 chosenPlayer: 'joiner',
-                creator: 'creator',
+                creator: CREATOR,
                 firstPlayer: 'RANDOM',
                 maximalMoveDuration: 10,
                 partStatus: 3,
