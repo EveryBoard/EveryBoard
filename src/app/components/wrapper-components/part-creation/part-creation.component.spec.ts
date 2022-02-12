@@ -31,6 +31,8 @@ describe('PartCreationComponent:', () => {
     let gameService: GameService;
     let chatService: ChatService;
 
+    let destroyed: boolean = false;
+
     async function selectCustomGameAndChangeConfig(): Promise<void> {
         await testUtils.clickElement('#partTypeCustom');
         Utils.getNonNullable(component.configFormGroup.get('maximalMoveDuration')).setValue(100);
@@ -70,6 +72,24 @@ describe('PartCreationComponent:', () => {
         await joueursDAOMock.set('creator', CREATOR);
         await joueursDAOMock.set('opponent', OPPONENT);
         await partDAOMock.set('joinerId', PartMocks.INITIAL);
+    }));
+    it('should unsubscribe from joiner service upon destruction', fakeAsync(async() => {
+        // Given a component that is loaded by anyone (here, the creator)
+        component.userName = 'creator';
+        await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL);
+        testUtils.detectChanges();
+        await testUtils.whenStable();
+        spyOn(joinerService, 'unsubscribe');
+        spyOn(component, 'cancelGameCreation'); // spied in order to avoid calling it
+
+        // When the component is destroyed
+        destroyed = true;
+        await component.ngOnDestroy();
+        tick(3000);
+        await testUtils.whenStable();
+
+        // Then the component unsubscribes from the joiner service
+        expect(joinerService.unsubscribe).toHaveBeenCalledWith();
     }));
     describe('For creator', () => {
         beforeEach(fakeAsync(async() => {
@@ -619,10 +639,11 @@ describe('PartCreationComponent:', () => {
         });
     });
     afterEach(fakeAsync(async() => {
-        testUtils.destroy();
-        tick(3000);
-        await testUtils.whenStable();
-        tick();
+        if (destroyed === false) {
+            testUtils.destroy();
+            tick(3000);
+            await testUtils.whenStable();
+        }
     }));
 });
 

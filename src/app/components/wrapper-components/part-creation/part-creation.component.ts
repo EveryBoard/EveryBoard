@@ -110,6 +110,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             // We will be redirected by the GameWrapper
             return;
         }
+        this.gameExists = true;
         this.subscribeToJoinerDoc();
         this.subscribeToFormElements();
 
