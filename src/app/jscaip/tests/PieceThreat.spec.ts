@@ -10,8 +10,8 @@ describe('PieceThreat', () => {
                                                              new MGPSet([new Coord(1, 2)]));
         const otherDifferentThreat: PieceThreat = new PieceThreat(new MGPSet(),
                                                                   new MGPSet([new Coord(3, 2)]));
-        expect(threat.equals(differentThreat)).toBeTrue();
-        expect(threat.equals(otherDifferentThreat)).toBeTrue();
+        expect(threat.equals(differentThreat)).toBeFalse();
+        expect(threat.equals(otherDifferentThreat)).toBeFalse();
     });
 });
 
@@ -21,7 +21,7 @@ describe('SandwichThreat', () => {
         const differentThreat: SandwichThreat = new SandwichThreat(new Coord(3, 2), new MGPSet([new Coord(1, 2)]));
 
         const otherDifferentThreat: SandwichThreat = new SandwichThreat(new Coord(2, 2), new MGPSet([new Coord(3, 2)]));
-        expect(threat.equals(differentThreat)).toBeTrue();
-        expect(threat.equals(otherDifferentThreat)).toBeTrue();
+        expect(threat.equals(differentThreat)).toBeFalse();
+        expect(threat.equals(otherDifferentThreat)).toBeFalse();
     });
 });

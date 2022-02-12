@@ -9,7 +9,7 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 import { TaflPawn } from './TaflPawn';
 import { TaflState } from './TaflState';
 import { TaflPieceAndInfluenceMinimax } from './TaflPieceAndInfluenceMinimax';
-import { PieceThreat, SandwichThreat } from '../../jscaip/PieceThreat';
+import { SandwichThreat } from '../../jscaip/PieceThreat';
 import { TaflNode } from './TaflMinimax';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
 
