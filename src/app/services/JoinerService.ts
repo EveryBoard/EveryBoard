@@ -5,6 +5,7 @@ import { assert, display } from 'src/app/utils/utils';
 import { ArrayUtils } from '../utils/ArrayUtils';
 import { MGPOptional } from '../utils/MGPOptional';
 import { Unsubscribe } from '@angular/fire/firestore';
+import { MGPValidation } from '../utils/MGPValidation';
 
 @Injectable({
     providedIn: 'root',
@@ -43,22 +44,22 @@ export class JoinerService {
         };
         return this.set(joinerId, newJoiner);
     }
-    public async joinGame(partId: string, userName: string): Promise<boolean> {
+    public async joinGame(partId: string, userName: string): Promise<MGPValidation> {
         display(JoinerService.VERBOSE, 'JoinerService.joinGame(' + partId + ', ' + userName + ')');
 
         const joiner: MGPOptional<Joiner> = await this.joinerDAO.read(partId);
         if (joiner.isAbsent()) {
-            return false;
+            return MGPValidation.failure('Game does not exist');
         }
         const joinerList: string[] = ArrayUtils.copyImmutableArray(joiner.get().candidates);
         if (joinerList.includes(userName)) {
-            throw new Error('JoinerService.joinGame was called by a user already in the game');
+            return MGPValidation.failure('User already in the game');
         } else if (userName === joiner.get().creator) {
-            return true;
+            return MGPValidation.SUCCESS;
         } else {
             joinerList[joinerList.length] = userName;
             await this.joinerDAO.update(partId, { candidates: joinerList });
-            return true;
+            return MGPValidation.SUCCESS;
         }
     }
     public async cancelJoining(userName: string): Promise<void> {
