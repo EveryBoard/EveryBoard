@@ -620,6 +620,7 @@ describe('PartCreationComponent:', () => {
     });
     afterEach(fakeAsync(async() => {
         testUtils.destroy();
+        tick(3000);
         await testUtils.whenStable();
         tick();
     }));
