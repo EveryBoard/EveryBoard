@@ -130,9 +130,10 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
         }));
         for (const threatenedPiece of threatenedPlayerPieces) {
             const oldThreat: PieceThreat = threatMap.get(threatenedPiece).get();
-            assert(oldThreat.direct.size() === 1, 'oldThreat must contain only one direct threat');
+            assert(oldThreat.direct.size() === 1, 'oldThreat must contain exactly one direct threat');
+            const onlyDirectOldThreat: Coord = oldThreat.direct.getAnyElement().get();
             let newThreat: MGPOptional<PieceThreat> = MGPOptional.empty();
-            if (threatenedOpponentPieces.contains(oldThreat.firstDirectThreat().get()) === false) {
+            if (threatenedOpponentPieces.contains(onlyDirectOldThreat) === false) {
                 // if the direct threat of this piece is not a false threat
                 const newMover: Coord[] = [];
                 for (const mover of oldThreat.mover) {

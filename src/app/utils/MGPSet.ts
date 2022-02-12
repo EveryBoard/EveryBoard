@@ -72,10 +72,6 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
             return MGPOptional.empty();
         }
     }
-    public removeAndCopy(element: T): MGPSet<T> {
-        const filtered: T[] = this.toList().filter((value: T) => comparableEquals(value, element) === false);
-        return new MGPSet(filtered);
-    }
     [Symbol.iterator](): IterableIterator<T> {
         return this.values.values();
     }

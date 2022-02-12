@@ -57,18 +57,6 @@ describe('MGPSet', () => {
             expect(set.add(new Coord(0, 0))).toBeFalse();
         });
     });
-    describe('removeAndCopy', () => {
-        it('should remove the element from the set', () => {
-            const set: MGPSet<number> = new MGPSet([1, 2]);
-            const withoutElement: MGPSet<number> = set.removeAndCopy(2);
-            expect(withoutElement.contains(2)).toBeFalse();
-        });
-        it('should not modify the initial set', () => {
-            const set: MGPSet<number> = new MGPSet([1, 2]);
-            set.removeAndCopy(2);
-            expect(set.contains(2)).toBeTrue();
-        });
-    });
     describe('getAnyElement', () => {
         it('should return an element from the set', () => {
             const set: MGPSet<number> = new MGPSet([1, 2]);

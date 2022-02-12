@@ -178,7 +178,7 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
             const oldThreatSet: MGPSet<SandwichThreat> = threatMap.get(threatenedPiece).get();
             const newThreatSet: SandwichThreat[] = [];
             for (const threat of oldThreatSet) {
-                if (threatenedOpponentPieces.contains(threat.firstDirectThreat().get()) === false) {
+                if (threatenedOpponentPieces.contains(threat.direct) === false) {
                     // if the direct threat of this piece is not a false threat
                     const newMover: Coord[] = [];
                     for (const mover of threat.mover) {
@@ -188,7 +188,7 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
                         }
                     }
                     if (newMover.length > 0) {
-                        newThreatSet.push(new SandwichThreat(threat.firstDirectThreat().get(), new CoordSet(newMover)));
+                        newThreatSet.push(new SandwichThreat(threat.direct, new CoordSet(newMover)));
                     }
                 }
             }

@@ -1,8 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { ComparableObject } from 'src/app/utils/Comparable';
 import { MGPSet } from 'src/app/utils/MGPSet';
-import { MGPOptional } from '../utils/MGPOptional';
-import { CoordSet } from '../utils/OptimizedSet';
 
 export class PieceThreat implements ComparableObject {
 
@@ -13,19 +11,15 @@ export class PieceThreat implements ComparableObject {
         return o.direct.equals(this.direct) &&
                o.mover.equals(this.mover);
     }
-    public firstDirectThreat(): MGPOptional<Coord> {
-        for (const threat of this.direct) {
-            return MGPOptional.of(threat);
-        }
-        return MGPOptional.empty();
-    }
 }
 
-export class SandwichThreat extends PieceThreat {
+export class SandwichThreat implements ComparableObject {
 
-    public constructor(direct: Coord,
-                       public readonly mover: MGPSet<Coord>)
-    {
-        super(new CoordSet([direct]), mover);
+    public constructor(public readonly direct: Coord,
+                       public readonly mover: MGPSet<Coord>) {
+    }
+    public equals(o: SandwichThreat): boolean {
+        return o.direct.equals(this.direct) &&
+               o.mover.equals(this.mover);
     }
 }
