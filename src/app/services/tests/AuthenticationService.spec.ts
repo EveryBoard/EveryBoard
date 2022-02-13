@@ -438,9 +438,9 @@ describe('AuthenticationService', () => {
             }
         });
     });
-    describe('updatePresence', () => {
+    describe('launchAutomaticPresenceUpdate', () => {
         it('should be called and update user presence when user gets connected', async() => {
-            spyOn(RTDB, 'updatePresence').and.callThrough();
+            spyOn(RTDB, 'launchAutomaticPresenceUpdate').and.callThrough();
 
             // given a registered user
             const result: MGPFallible<FireAuth.User> = await service.doRegister(username, email, password);
@@ -453,8 +453,8 @@ describe('AuthenticationService', () => {
             // and logs out
             await auth.signOut();
 
-            // Then updatePresence is called
-            expect(RTDB.updatePresence).toHaveBeenCalledWith(TestBed.inject(Database), user.uid);
+            // Then launchAutomaticPresenceUpdate is called
+            expect(RTDB.launchAutomaticPresenceUpdate).toHaveBeenCalledWith(TestBed.inject(Database), user.uid);
         });
     });
     describe('setUsername', () => {

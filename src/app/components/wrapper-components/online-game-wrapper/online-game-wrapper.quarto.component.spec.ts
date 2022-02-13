@@ -32,7 +32,6 @@ import { GameService } from 'src/app/services/GameService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { NextGameLoadingComponent } from '../../normal-component/next-game-loading/next-game-loading.component';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import * as Firestore from '@angular/fire/firestore';
 import { serverTimestamp } from 'firebase/firestore';
 
 describe('OnlineGameWrapperComponent of Quarto:', () => {

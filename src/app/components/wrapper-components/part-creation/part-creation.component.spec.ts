@@ -31,7 +31,7 @@ describe('PartCreationComponent:', () => {
     let gameService: GameService;
     let chatService: ChatService;
 
-    let destroyed: boolean = false;
+    let destroyed: boolean;
 
     async function selectCustomGameAndChangeConfig(): Promise<void> {
         await testUtils.clickElement('#partTypeCustom');
@@ -59,6 +59,7 @@ describe('PartCreationComponent:', () => {
     };
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(PartCreationComponent);
+        destroyed = false;
         const chatDAOMock: ChatDAO = TestBed.inject(ChatDAO);
         partDAOMock = TestBed.inject(PartDAO);
         joinerDAOMock = TestBed.inject(JoinerDAO);

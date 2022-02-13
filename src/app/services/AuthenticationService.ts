@@ -24,7 +24,7 @@ export class RTDB {
     public static setOffline(db: Database, uid: string): Promise<void> {
         return set(ref(db, '/status/' + uid), RTDB.OFFLINE);
     }
-    public static async updatePresence(db: Database, uid: string): Promise<void> {
+    public static async launchAutomaticPresenceUpdate(db: Database, uid: string): Promise<void> {
         const userStatusDatabaseRef: DatabaseReference = ref(db, '/status/' + uid);
         await set(userStatusDatabaseRef, RTDB.ONLINE);
         await onDisconnect(userStatusDatabaseRef).set(RTDB.OFFLINE);
@@ -131,7 +131,7 @@ export class AuthenticationService implements OnDestroy {
                 } else { // new user logged in
                     assert(this.uid.isAbsent(), 'AuthenticationService received a double update for an user, this is unexpected');
                     this.uid = MGPOptional.of(user.uid);
-                    await RTDB.updatePresence(this.db, user.uid);
+                    await RTDB.launchAutomaticPresenceUpdate(this.db, user.uid);
                     this.userUnsubscribe = MGPOptional.of(
                         this.userDAO.subscribeToChanges(user.uid, (doc: MGPOptional<User>) => {
                             if (doc.isPresent()) {
