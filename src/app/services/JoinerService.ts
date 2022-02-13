@@ -5,6 +5,7 @@ import { JoinerDAO } from '../dao/JoinerDAO';
 import { assert, display } from 'src/app/utils/utils';
 import { ArrayUtils } from '../utils/ArrayUtils';
 import { MGPOptional } from '../utils/MGPOptional';
+import { MGPValidation } from '../utils/MGPValidation';
 
 @Injectable({
     providedIn: 'root',
@@ -36,22 +37,22 @@ export class JoinerService {
         };
         return this.set(joinerId, newJoiner);
     }
-    public async joinGame(partId: string, user: MinimalUser): Promise<boolean> {
+    public async joinGame(partId: string, user: MinimalUser): Promise<MGPValidation> {
         display(JoinerService.VERBOSE, 'JoinerService.joinGame(' + partId + ', ' + user + ')');
 
         const joiner: MGPOptional<Joiner> = await this.joinerDAO.read(partId);
         if (joiner.isAbsent()) {
-            return false;
+            return MGPValidation.failure('Game does not exist');
         }
         const joinerList: MinimalUser[] = ArrayUtils.copyImmutableArray(joiner.get().candidates);
         if (joinerList.some((minimalUser: MinimalUser) => minimalUser.id === user.id)) {
-            throw new Error('JoinerService.joinGame was called by a user already in the game');
+            return MGPValidation.failure('User already in the game');
         } else if (user.id === joiner.get().creator.id) {
-            return true;
+            return MGPValidation.SUCCESS;
         } else {
             joinerList[joinerList.length] = user;
             await this.joinerDAO.update(partId, { candidates: joinerList });
-            return true;
+            return MGPValidation.SUCCESS;
         }
     }
     public async cancelJoining(userName: string): Promise<void> {

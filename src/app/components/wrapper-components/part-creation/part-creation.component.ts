@@ -14,6 +14,7 @@ import { Subject } from 'rxjs';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { AuthUser } from 'src/app/services/AuthenticationService';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 
 interface PartCreationViewInfo {
     userIsCreator: boolean;
@@ -107,8 +108,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.checkInputs();
         this.createForms();
         const authMinimalUser: MinimalUser = { id: this.authUser.userId, name: this.authUser.username.get() };
-        const gameExists: boolean = await this.joinerService.joinGame(this.partId, authMinimalUser);
-        if (gameExists === false) {
+        const joinResult: MGPValidation = await this.joinerService.joinGame(this.partId, authMinimalUser);
+        if (joinResult.isFailure()) {
             // We will be redirected by the GameWrapper
             return;
         }
@@ -350,8 +351,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         // subscribe to user
         const onUserUpdate: (user: MGPOptional<User>) => void = (userOptional: MGPOptional<User>) => {
             assert(userOptional.isPresent(), 'found no user while observing ' + userId + ' !'); // TODOTODO note that THIS happens when there is user deletion
-            const user: User = userOptional.get();
-
             const oldTimeout: MGPOptional<number> = this.usersTimeouts.get(userId);
             if (oldTimeout.isPresent()) {
                 console.log('CLEARING TIMEOUT ' + oldTimeout.get() + ' FOR ' + userId + ' (restart)')

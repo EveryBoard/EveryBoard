@@ -12,8 +12,8 @@ export class JoinerMocks {
         firstPlayer: FirstPlayer.RANDOM.value,
         partType: PartType.STANDARD.value,
         partStatus: PartStatus.PART_CREATED.value,
-        maximalMoveDuration: 120,
-        totalPartDuration: 1800,
+        maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
+        totalPartDuration: PartType.NORMAL_PART_DURATION,
     };
     public static readonly WITH_FIRST_CANDIDATE: Joiner = {
         candidates: [FIRST_CANDIDATE],
@@ -22,8 +22,8 @@ export class JoinerMocks {
         firstPlayer: FirstPlayer.RANDOM.value,
         partType: PartType.STANDARD.value,
         partStatus: PartStatus.PART_CREATED.value,
-        maximalMoveDuration: 120,
-        totalPartDuration: 1800,
+        maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
+        totalPartDuration: PartType.NORMAL_PART_DURATION,
     };
     public static readonly WITH_SECOND_CANDIDATE: Joiner = {
         candidates: [
@@ -35,8 +35,8 @@ export class JoinerMocks {
         firstPlayer: FirstPlayer.RANDOM.value,
         partType: PartType.STANDARD.value,
         partStatus: PartStatus.PART_CREATED.value,
-        maximalMoveDuration: 120,
-        totalPartDuration: 1800,
+        maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
+        totalPartDuration: PartType.NORMAL_PART_DURATION,
     };
     public static readonly WITH_CHOSEN_OPPONENT: Joiner = {
         candidates: [FIRST_CANDIDATE],
@@ -45,8 +45,8 @@ export class JoinerMocks {
         firstPlayer: FirstPlayer.RANDOM.value,
         partType: PartType.STANDARD.value,
         partStatus: PartStatus.PART_CREATED.value,
-        maximalMoveDuration: 120,
-        totalPartDuration: 1800,
+        maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
+        totalPartDuration: PartType.NORMAL_PART_DURATION,
     };
     public static readonly WITH_PROPOSED_CONFIG: Joiner = {
         candidates: [FIRST_CANDIDATE],
@@ -55,8 +55,8 @@ export class JoinerMocks {
         firstPlayer: FirstPlayer.RANDOM.value,
         partType: PartType.STANDARD.value,
         partStatus: PartStatus.CONFIG_PROPOSED.value,
-        maximalMoveDuration: 120,
-        totalPartDuration: 1800,
+        maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
+        totalPartDuration: PartType.NORMAL_PART_DURATION,
     };
     public static readonly WITH_ACCEPTED_CONFIG: Joiner = {
         candidates: [FIRST_CANDIDATE],
@@ -65,7 +65,7 @@ export class JoinerMocks {
         firstPlayer: FirstPlayer.RANDOM.value,
         partType: PartType.STANDARD.value,
         partStatus: PartStatus.PART_STARTED.value,
-        maximalMoveDuration: 120,
-        totalPartDuration: 1800,
+        maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
+        totalPartDuration: PartType.NORMAL_PART_DURATION,
     };
 }
