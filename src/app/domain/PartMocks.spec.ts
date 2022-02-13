@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import * as Firestore from '@angular/fire/firestore';
+import { serverTimestamp } from 'firebase/firestore';
 import { MGPResult, Part } from './Part';
 
 export class PartMocks {
@@ -15,21 +15,19 @@ export class PartMocks {
         listMoves: [],
     };
 
-    public static readonly STARTING: () => Part = () => {
-        return {
-            lastUpdate: {
-                index: 1,
-                player: 1,
-            },
-            typeGame: 'Quarto',
-            playerZero: 'creator',
-            turn: 0,
-            listMoves: [],
-            result: MGPResult.UNACHIEVED.value,
-            playerOne: 'firstCandidate',
-            remainingMsForOne: 1800 * 1000,
-            remainingMsForZero: 1800 * 1000,
-            beginning: Firestore.serverTimestamp(),
-        };
+    public static readonly STARTING: Part = {
+        lastUpdate: {
+            index: 1,
+            player: 1,
+        },
+        typeGame: 'Quarto',
+        playerZero: 'creator',
+        turn: 0,
+        listMoves: [],
+        result: MGPResult.UNACHIEVED.value,
+        playerOne: 'firstCandidate',
+        remainingMsForOne: 1800 * 1000,
+        remainingMsForZero: 1800 * 1000,
+        beginning: serverTimestamp(),
     };
 }

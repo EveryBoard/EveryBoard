@@ -21,7 +21,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Utils } from 'src/app/utils/utils';
 import { JoinerService } from '../JoinerService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { serverTimestamp } from '@angular/fire/firestore';
+import { serverTimestamp } from 'firebase/firestore';
 
 describe('GameService', () => {
 

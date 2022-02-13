@@ -633,7 +633,7 @@ describe('PartCreationComponent:', () => {
                 });
                 // and the part is set to starting
                 const currentPart: Part = (await partDAOMock.read('joinerId')).get();
-                const expectedPart: Part = { ...PartMocks.STARTING(), beginning: currentPart.beginning };
+                const expectedPart: Part = { ...PartMocks.STARTING, beginning: currentPart.beginning };
                 expect(currentPart).toEqual(expectedPart);
             }));
         });

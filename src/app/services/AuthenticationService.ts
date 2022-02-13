@@ -6,37 +6,28 @@ import { MGPFallible } from '../utils/MGPFallible';
 import { UserDAO } from '../dao/UserDAO';
 import { User } from '../domain/User';
 import { MGPOptional } from '../utils/MGPOptional';
-import { serverTimestamp, Unsubscribe } from '@angular/fire/firestore';
-import { Database, DatabaseReference, DataSnapshot, onDisconnect, onValue, ref, set } from '@angular/fire/database';
+import { Unsubscribe } from '@angular/fire/firestore';
+import { Database, DatabaseReference, onDisconnect, ref, set } from '@angular/fire/database';
 import { FirebaseError } from '@angular/fire/app';
 import * as FireAuth from '@angular/fire/auth';
+import { serverTimestamp } from 'firebase/firestore';
 
 export class RTDB {
-    public static OFFLINE: () => ConnectivityStatus = () => {
-        return {
-            state: 'offline',
-            last_changed: serverTimestamp(),
-        };
+    public static OFFLINE: ConnectivityStatus = {
+        state: 'offline',
+        last_changed: serverTimestamp(),
     };
-    public static ONLINE: () => ConnectivityStatus = () => {
-        return {
-            state: 'online',
-            last_changed: serverTimestamp(),
-        };
+    public static ONLINE: ConnectivityStatus = {
+        state: 'online',
+        last_changed: serverTimestamp(),
     };
     public static setOffline(db: Database, uid: string): Promise<void> {
-        return set(ref(db, '/status/' + uid), RTDB.OFFLINE());
+        return set(ref(db, '/status/' + uid), RTDB.OFFLINE);
     }
     public static async updatePresence(db: Database, uid: string): Promise<void> {
         const userStatusDatabaseRef: DatabaseReference = ref(db, '/status/' + uid);
-        onValue(ref(db, '.info/connected'), async(snapshot: DataSnapshot) => {
-            if (snapshot.val() === false) {
-                return;
-            }
-            await onDisconnect(userStatusDatabaseRef).set(RTDB.OFFLINE()).then(async() => {
-                await set(userStatusDatabaseRef, RTDB.ONLINE());
-            });
-        });
+        await set(userStatusDatabaseRef, RTDB.ONLINE);
+        await onDisconnect(userStatusDatabaseRef).set(RTDB.OFFLINE);
     }
 }
 
