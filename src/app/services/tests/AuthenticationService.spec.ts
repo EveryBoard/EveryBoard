@@ -395,7 +395,7 @@ describe('AuthenticationService', () => {
     });
     describe('mapFirebaseError', () => {
         it('calls handleError when encountering an unsupported error', async() => {
-            spyOn(Utils, 'handleError').and.returnValue(null);
+            spyOn(Utils, 'handleError');
 
             // given an unsupported error
             const error: firebase.FirebaseError = {
@@ -411,7 +411,7 @@ describe('AuthenticationService', () => {
             expect(Utils.handleError).toHaveBeenCalledWith('Unsupported firebase error: auth/unknown-error (Error message)');
         });
         it('should map the errors encountered in the wild but that we cannot reproduce in a test environment', async() => {
-            spyOn(Utils, 'handleError').and.returnValue(null);
+            spyOn(Utils, 'handleError');
             const errorCodes: string[] = [
                 'auth/too-many-requests',
                 'auth/popup-closed-by-user',
@@ -473,7 +473,7 @@ describe('AuthenticationService', () => {
             const error: firebase.FirebaseError = new Error('Error') as firebase.FirebaseError;
             error.code = 'unknown/error';
             spyOn(user, 'updateProfile').and.rejectWith(error);
-            spyOn(Utils, 'handleError').and.returnValue(null);
+            spyOn(Utils, 'handleError');
             const result: MGPValidation = await service.setUsername(username);
 
             // then it fails
@@ -521,7 +521,7 @@ describe('AuthenticationService', () => {
             const error: firebase.FirebaseError = new Error('Error') as firebase.FirebaseError;
             error.code = 'unknown/error';
             spyOn(user, 'updateProfile').and.rejectWith(error);
-            spyOn(Utils, 'handleError').and.returnValue(null);
+            spyOn(Utils, 'handleError');
             const result: MGPValidation = await service.setPicture('http://my.pic/foo.png');
 
             // then it fails

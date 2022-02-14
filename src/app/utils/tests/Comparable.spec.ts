@@ -44,7 +44,7 @@ describe('Comparable', () => {
             expect(comparableEquals(object1, object3)).toBeFalse();
         });
         it('should fail if objects are not comparable', () => {
-            spyOn(Utils, 'handleError').and.returnValue(null);
+            spyOn(Utils, 'handleError');
             comparableEquals(new DummyNonComparableObject(5), new DummyNonComparableObject(5));
             expect(Utils.handleError).toHaveBeenCalledWith('Comparing non comparable objects');
         });

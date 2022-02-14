@@ -189,7 +189,7 @@ describe('PartCreationComponent:', () => {
                 expect(component.currentJoiner).toEqual(JoinerMocks.INITIAL);
             }));
             it('should deselect candidate, remove it, and call handleError when a candidate is removed from db', fakeAsync(async() => {
-                spyOn(Utils, 'handleError').and.callFake(() => {});
+                spyOn(Utils, 'handleError');
 
                 // Given a part with a candidate that has been chosen
                 testUtils.detectChanges();
@@ -211,7 +211,7 @@ describe('PartCreationComponent:', () => {
                 expect(component.currentJoiner).toEqual(JoinerMocks.INITIAL);
             }));
             it('should remove candidate from lobby if it directly appears offline', fakeAsync(async() => {
-                spyOn(Utils, 'handleError').and.callFake(() => {});
+                spyOn(Utils, 'handleError');
                 // Given a page that is loaded and there is no candidate yet
                 testUtils.detectChanges();
                 await testUtils.whenStable();
@@ -228,7 +228,7 @@ describe('PartCreationComponent:', () => {
                 expect(Utils.handleError).toHaveBeenCalledWith('OnlineGameWrapper: firstCandidate is already offline!');
             }));
             it('should not fail if an user has to be removed from the lobby but is not in it', fakeAsync(async() => {
-                spyOn(Utils, 'handleError').and.callFake(() => {});
+                spyOn(Utils, 'handleError');
                 // This could happen if we receive twice the same update to a user that needs to be removed
 
                 // Given a part creation with a candidate

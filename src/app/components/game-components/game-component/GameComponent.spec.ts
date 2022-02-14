@@ -60,7 +60,7 @@ describe('GameComponent', () => {
         AuthenticationServiceMock.setUser(AuthUser.NOT_CONNECTED);
     }));
     it('should fail if pass() is called on a game that does not support it', fakeAsync(async() => {
-        spyOn(Utils, 'handleError').and.returnValue(null);
+        spyOn(Utils, 'handleError');
         // given such a game, like Abalone
         activatedRouteStub.setRoute('compo', 'Abalone');
         fixture = TestBed.createComponent(LocalGameWrapperComponent);

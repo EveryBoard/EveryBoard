@@ -85,6 +85,11 @@ describe('HexagonalGameState', () => {
         it('should consider a board equal to itself', () => {
             expect(state.equals(state)).toBeTrue();
         });
+        it('should consider two boards equal when everything matches', () => {
+            const board: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1], 0);
+            const sameBoard: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1], 0);
+            expect(board.equals(sameBoard)).toBeTrue();
+        });
         it('should distinguish different boards due to different contents', () => {
             const otherState: TestingHexagonalState = state.setAt(new Coord(4, 4), 73);
             expect(state.equals(otherState)).toBeFalse();
@@ -103,6 +108,13 @@ describe('HexagonalGameState', () => {
             const board1: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1], 0);
             const board2: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1], 1);
             expect(board1.equals(board2)).toBeFalse();
+        });
+        it('should distinguish different boards due to different excluded cases', () => {
+            const board: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1], 0);
+            const otherBoard: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [2], 0);
+            const yetAnotherBoard: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1, 2], 0);
+            expect(board.equals(otherBoard)).toBeFalse();
+            expect(board.equals(yetAnotherBoard)).toBeFalse();
         });
     });
     describe('getPieceAt', () => {
@@ -172,6 +184,11 @@ describe('HexagonalGameState', () => {
 
             const line2: HexaLine = HexaLine.constantS(8);
             expect(state.getEntranceOnLine(line2).equals(new Coord(6, 2))).toBeTrue();
+        });
+        it('should throw when unable to find an entrance', () => {
+            const invalidState: TestingHexagonalState = TestingHexagonalState.empty(0, 0, [], 0);
+            const line: HexaLine = HexaLine.constantS(0);
+            expect(() => invalidState.getEntranceOnLine(line)).toThrowError('Encountered error: could not find a board entrance, board must be invalid');
         });
     });
 });
