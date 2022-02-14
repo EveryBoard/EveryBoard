@@ -16,6 +16,7 @@ import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { JSONValue } from 'src/app/utils/utils';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 
 describe('LocalGameWrapperComponent', () => {
 
@@ -207,7 +208,9 @@ describe('LocalGameWrapperComponent', () => {
 
             tick(1000);
         }));
-        it('Minimax proposing illegal move should log error', fakeAsync(async() => {
+        it('Minimax proposing illegal move should log error and show it to the user', fakeAsync(async() => {
+            const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
+            spyOn(messageDisplayer, 'criticalMessage');
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             // given a board on which some illegal move are possible from the IA
             const localGameWrapper: LocalGameWrapperComponent = componentTestUtils.wrapper as LocalGameWrapperComponent;
@@ -223,6 +226,7 @@ describe('LocalGameWrapperComponent', () => {
             const errorMessage: string = 'AI chose illegal move';
             const errorData: JSONValue = { name: 'P4', move: 'P4Move(0)' };
             expect(ErrorLoggerService.logError).toHaveBeenCalledWith('LocalGameWrapper', errorMessage, errorData);
+            expect(messageDisplayer.criticalMessage).toHaveBeenCalledWith('The AI chose an illegal move! This is an unexpected situation that we logged, we will try to solve this as soon as possible.');
             tick(1000);
         }));
         it('should not do an AI move when the game is finished', fakeAsync(async() => {

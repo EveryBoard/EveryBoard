@@ -13,6 +13,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 
 @Component({
     selector: 'app-local-game-wrapper',
@@ -34,7 +35,8 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
     constructor(componentFactoryResolver: ComponentFactoryResolver,
                 actRoute: ActivatedRoute,
                 authenticationService: AuthenticationService,
-                public cdr: ChangeDetectorRef)
+                public cdr: ChangeDetectorRef,
+                private readonly messageDisplayer: MessageDisplayer)
     {
         super(componentFactoryResolver, actRoute, authenticationService);
         this.players = [MGPOptional.of(this.playerSelection[0]), MGPOptional.of(this.playerSelection[1])];
@@ -113,6 +115,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
             this.proposeAIToPlay();
             return MGPValidation.SUCCESS;
         } else {
+            this.messageDisplayer.criticalMessage($localize`The AI chose an illegal move! This is an unexpected situation that we logged, we will try to solve this as soon as possible.`);
             return ErrorLoggerService.logError('LocalGameWrapper', 'AI chose illegal move', { name: playingMinimax.name, move: aiMove.toString() });
         }
     }
