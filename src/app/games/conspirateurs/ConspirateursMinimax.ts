@@ -73,7 +73,7 @@ export class ConspirateursMinimax extends Minimax<ConspirateursMove, Conspirateu
                 moves.union(this.getListJumpStartingFrom(state, jump));
             }
         }
-        return moves.getCopy();
+        return moves.toList();
     }
     private getListJumpStartingFrom(state: ConspirateursState, jump: ConspirateursMoveJump)
     : MGPSet<ConspirateursMoveJump>

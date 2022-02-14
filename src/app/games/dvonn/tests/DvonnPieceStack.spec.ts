@@ -54,12 +54,6 @@ describe('DvonnPieceStack', () => {
             expect(stack2.getOwner()).toBe(Player.ONE);
         });
     });
-    describe('belongsTo', () => {
-        it('should identify that piece belongs to the right player', () => {
-            expect(stack1.belongsTo(Player.ZERO)).toBeTrue();
-            expect(stack1.belongsTo(Player.ONE)).toBeFalse();
-        });
-    });
     describe('isEmpty', () => {
         it('should identify whether the stack is empty', () => {
             expect(DvonnPieceStack.EMPTY.isEmpty()).toBeTrue();
