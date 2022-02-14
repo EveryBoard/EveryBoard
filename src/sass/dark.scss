@@ -31,6 +31,14 @@ $red-invert: white;
 @import "../../node_modules/@creativebulma/bulma-tooltip/dist/bulma-tooltip.css";
 @import "./mystyles.scss";
 
+.hero {
+    background-color: #000;
+}
+
+.card {
+    margin-bottom: 24px; // Matches the side space between two cards
+}
+
 .select select {
     background-color: #111;
     border-color: #363636;
