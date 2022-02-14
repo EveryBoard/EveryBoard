@@ -130,8 +130,8 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
         }));
         for (const threatenedPiece of threatenedPlayerPieces) {
             const oldThreat: PieceThreat = threatMap.get(threatenedPiece).get();
-            assert(oldThreat.direct.size() === 1, 'oldThreat must contain exactly one direct threat');
-            const onlyDirectOldThreat: Coord = oldThreat.direct.getAnyElement().get();
+            assert(oldThreat.directThreats.size() === 1, 'oldThreat must contain exactly one direct threat');
+            const onlyDirectOldThreat: Coord = oldThreat.directThreats.getAnyElement().get();
             let newThreat: MGPOptional<PieceThreat> = MGPOptional.empty();
             if (threatenedOpponentPieces.contains(onlyDirectOldThreat) === false) {
                 // if the direct threat of this piece is not a false threat
@@ -143,7 +143,7 @@ export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
                     }
                 }
                 if (newMover.length > 0) {
-                    newThreat = MGPOptional.of(new PieceThreat(oldThreat.direct, new CoordSet(newMover)));
+                    newThreat = MGPOptional.of(new PieceThreat(oldThreat.directThreats, new CoordSet(newMover)));
                 }
             }
             if (newThreat.isPresent()) {

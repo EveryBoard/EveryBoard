@@ -4,19 +4,19 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 
 export class PieceThreat implements ComparableObject {
 
-    public constructor(public readonly directs: MGPSet<Coord>,
+    public constructor(public readonly directThreats: MGPSet<Coord>,
                        public readonly mover: MGPSet<Coord>) { }
 
     public equals(o: PieceThreat): boolean {
-        return o.directs.equals(this.directs) &&
+        return o.directThreats.equals(this.directThreats) &&
                o.mover.equals(this.mover);
     }
 }
 
 export class SandwichThreat extends PieceThreat {
 
-    public constructor(public readonly direct: Coord,
+    public constructor(public readonly directThreat: Coord,
                        public readonly mover: MGPSet<Coord>) {
-        super(new MGPSet([direct]), mover);
+        super(new MGPSet([directThreat]), mover);
     }
 }
