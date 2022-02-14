@@ -210,7 +210,7 @@ describe('LocalGameWrapperComponent', () => {
         }));
         it('Minimax proposing illegal move should log error and show it to the user', fakeAsync(async() => {
             const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
-            spyOn(messageDisplayer, 'criticalMessage');
+            spyOn(messageDisplayer, 'criticalMessage').and.callThrough();
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             // given a board on which some illegal move are possible from the IA
             const localGameWrapper: LocalGameWrapperComponent = componentTestUtils.wrapper as LocalGameWrapperComponent;
@@ -227,7 +227,7 @@ describe('LocalGameWrapperComponent', () => {
             const errorData: JSONValue = { name: 'P4', move: 'P4Move(0)' };
             expect(ErrorLoggerService.logError).toHaveBeenCalledWith('LocalGameWrapper', errorMessage, errorData);
             expect(messageDisplayer.criticalMessage).toHaveBeenCalledWith('The AI chose an illegal move! This is an unexpected situation that we logged, we will try to solve this as soon as possible.');
-            tick(1000);
+            tick(3000);
         }));
         it('should not do an AI move when the game is finished', fakeAsync(async() => {
             const localGameWrapper: LocalGameWrapperComponent = componentTestUtils.wrapper as LocalGameWrapperComponent;
