@@ -182,7 +182,7 @@ export class MGPNode<R extends Rules<M, S, L>,
             this.possibleMoves.set(minimax.name, new MGPSet(moves));
             return moves;
         } else {
-            return currentMoves.get().getCopy();
+            return currentMoves.get().toList();
         }
     }
     private getOrCreateChild(move: M, minimax: Minimax<M, S, L, U>): MGPNode<R, M, S, L, U> {

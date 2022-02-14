@@ -95,19 +95,19 @@ describe('HexagonalGameState', () => {
             expect(state.equals(otherState)).toBeFalse();
         });
         it('should distinguish different boards due to different width', () => {
-            const board1: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1], 0);
-            const board2: TestingHexagonalState = TestingHexagonalState.empty(5, 3, [1], 0);
-            expect(board1.equals(board2)).toBeFalse();
+            const board: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1], 0);
+            const otherBoard: TestingHexagonalState = TestingHexagonalState.empty(5, 3, [1], 0);
+            expect(board.equals(otherBoard)).toBeFalse();
         });
-        it('should distinguish different boards due to different width', () => {
-            const board1: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1], 0);
-            const board2: TestingHexagonalState = TestingHexagonalState.empty(3, 5, [1], 0);
-            expect(board1.equals(board2)).toBeFalse();
+        it('should distinguish different boards due to different height', () => {
+            const board: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1], 0);
+            const otherBoard: TestingHexagonalState = TestingHexagonalState.empty(3, 5, [1], 0);
+            expect(board.equals(otherBoard)).toBeFalse();
         });
         it('should distinguish different boards due to different empty coords', () => {
-            const board1: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1], 0);
-            const board2: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1], 1);
-            expect(board1.equals(board2)).toBeFalse();
+            const board: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1], 0);
+            const otherBoard: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1], 1);
+            expect(board.equals(otherBoard)).toBeFalse();
         });
         it('should distinguish different boards due to different excluded cases', () => {
             const board: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1], 0);

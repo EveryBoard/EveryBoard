@@ -11,6 +11,7 @@ import { TaflMinimax, TaflNode } from './TaflMinimax';
 import { TaflRules } from './TaflRules';
 import { TaflState } from './TaflState';
 import { TaflMove } from './TaflMove';
+import { CoordSet } from 'src/app/utils/OptimizedSet';
 
 export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
 
@@ -42,7 +43,7 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
         const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = this.getThreatMap(state, pieceMap);
         const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = this.filterThreatMap(threatMap, state);
         for (const owner of [Player.ZERO, Player.ONE]) {
-            for (const coord of pieceMap.get(owner).get().getCopy()) {
+            for (const coord of pieceMap.get(owner).get()) {
                 if (filteredThreatMap.get(coord).isPresent()) {
                     score += owner.getScoreModifier() * this.scoreByThreatenedPiece;
                 } else {
@@ -82,8 +83,8 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
                 }
             }
         }
-        map.set(Player.ZERO, new MGPSet(zeroPieces));
-        map.set(Player.ONE, new MGPSet(onePieces));
+        map.set(Player.ZERO, new CoordSet(zeroPieces));
+        map.set(Player.ONE, new CoordSet(onePieces));
         return map;
     }
     public getThreatMap(state: TaflState,
@@ -92,7 +93,7 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
     {
         const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = new MGPMap();
         for (const player of [Player.ZERO, Player.ONE]) {
-            for (const piece of pieces.get(player).get().getCopy()) {
+            for (const piece of pieces.get(player).get()) {
                 const threats: SandwichThreat[] = this.getThreats(piece, state);
                 if (this.isThreatReal(piece, state, threats)) {
                     threatMap.set(piece, new MGPSet(threats));
@@ -125,7 +126,7 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
                         movingThreats.push(futureCapturer);
                     }
                 }
-                threats.push(new SandwichThreat(directThreat, new MGPSet(movingThreats)));
+                threats.push(new SandwichThreat(directThreat, new CoordSet(movingThreats)));
             }
         }
         return threats;
@@ -170,24 +171,24 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
         const threatenedPlayerPieces: Coord[] = threateneds.filter((coord: Coord) => {
             return state.getAbsoluteOwner(coord) === state.getCurrentPlayer();
         });
-        const threatenedOpponentPieces: MGPSet<Coord> = new MGPSet(threateneds.filter((coord: Coord) => {
+        const threatenedOpponentPieces: MGPSet<Coord> = new CoordSet(threateneds.filter((coord: Coord) => {
             return state.getAbsoluteOwner(coord) === state.getCurrentOpponent();
         }));
         for (const threatenedPiece of threatenedPlayerPieces) {
-            const oldThreatSet: SandwichThreat[] = threatMap.get(threatenedPiece).get().getCopy();
+            const oldThreatSet: MGPSet<SandwichThreat> = threatMap.get(threatenedPiece).get();
             const newThreatSet: SandwichThreat[] = [];
             for (const threat of oldThreatSet) {
-                if (threatenedOpponentPieces.contains(threat.direct.get(0)) === false) {
+                if (threatenedOpponentPieces.contains(threat.directThreat) === false) {
                     // if the direct threat of this piece is not a false threat
                     const newMover: Coord[] = [];
-                    for (const mover of threat.mover.getCopy()) {
+                    for (const mover of threat.mover) {
                         if (threatenedOpponentPieces.contains(mover) === false) {
                             // if the moving threat of this piece is real
                             newMover.push(mover);
                         }
                     }
                     if (newMover.length > 0) {
-                        newThreatSet.push(new SandwichThreat(threat.direct.get(0), new MGPSet(newMover)));
+                        newThreatSet.push(new SandwichThreat(threat.directThreat, new CoordSet(newMover)));
                     }
                 }
             }
@@ -195,7 +196,7 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
                 filteredThreatMap.set(threatenedPiece, new MGPSet(newThreatSet));
             }
         }
-        for (const threatenedOpponentPiece of threatenedOpponentPieces.getCopy()) {
+        for (const threatenedOpponentPiece of threatenedOpponentPieces) {
             const threatSet: MGPSet<SandwichThreat> = threatMap.get(threatenedOpponentPiece).get();
             filteredThreatMap.set(threatenedOpponentPiece, threatSet);
         }

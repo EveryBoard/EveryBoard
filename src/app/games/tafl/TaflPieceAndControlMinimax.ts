@@ -9,8 +9,9 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 import { TaflPawn } from './TaflPawn';
 import { TaflState } from './TaflState';
 import { TaflPieceAndInfluenceMinimax } from './TaflPieceAndInfluenceMinimax';
-import { PieceThreat } from '../../jscaip/PieceThreat';
+import { SandwichThreat } from '../../jscaip/PieceThreat';
 import { TaflNode } from './TaflMinimax';
+import { CoordSet } from 'src/app/utils/OptimizedSet';
 
 export class TaflPieceAndControlMinimax extends TaflPieceAndInfluenceMinimax {
 
@@ -40,11 +41,11 @@ export class TaflPieceAndControlMinimax extends TaflPieceAndInfluenceMinimax {
 
         let score: number = 0;
         const pieceMap: MGPMap<Player, MGPSet<Coord>> = this.getPiecesMap(state);
-        const threatMap: MGPMap<Coord, MGPSet<PieceThreat>> = this.getThreatMap(state, pieceMap);
-        const filteredThreatMap: MGPMap<Coord, MGPSet<PieceThreat>> = this.filterThreatMap(threatMap, state);
+        const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = this.getThreatMap(state, pieceMap);
+        const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = this.filterThreatMap(threatMap, state);
         for (const owner of [Player.ZERO, Player.ONE]) {
-            const controlledSquares: MGPSet<Coord> = new MGPSet();
-            for (const coord of pieceMap.get(owner).get().getCopy()) {
+            const controlledSquares: MGPSet<Coord> = new CoordSet();
+            for (const coord of pieceMap.get(owner).get()) {
                 if (filteredThreatMap.get(coord).isPresent()) {
                     score += owner.getScoreModifier() * TaflPieceAndControlMinimax.SCORE_BY_THREATENED_PIECE;
                 } else {
@@ -60,7 +61,7 @@ export class TaflPieceAndControlMinimax extends TaflPieceAndInfluenceMinimax {
                     }
                 }
             }
-            for (const controlled of controlledSquares.getCopy()) {
+            for (const controlled of controlledSquares) {
                 const controlledValue: number = TaflPieceAndControlMinimax.CONTROL_VALUE[controlled.y][controlled.x];
                 score += owner.getScoreModifier() * controlledValue;
             }
