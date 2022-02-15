@@ -81,7 +81,7 @@ describe('YinshMove', () => {
             const move2: YinshMove = new YinshMove([capture], new Coord(2, 3), MGPOptional.empty(), []);
             expect(move.equals(move2)).toBeFalse();
         });
-        it('should consider moves with different initial captures different', () => {
+        it('should consider moves with different final captures different', () => {
             const move2: YinshMove = new YinshMove([], new Coord(2, 3), MGPOptional.empty(), [capture]);
             expect(move.equals(move2)).toBeFalse();
         });

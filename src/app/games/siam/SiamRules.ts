@@ -353,7 +353,7 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         const resistance: Orthogonal = direction.getOpposite();
         let currentDistance: number = 1;
         let previousPiece: SiamPiece = state.getPieceAt(fallingCoord);
-        let testedCoord: Coord = fallingCoord.getCopy();
+        let testedCoord: Coord = fallingCoord;
         let almostPusher: MGPOptional<Coord> = MGPOptional.empty();
         let pusherFound: boolean = false;
         let mountainEncountered: boolean = false;
@@ -385,7 +385,7 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
                     }
                 } else {
                     if (mountainEncountered) {
-                        almostPusher = MGPOptional.of(testedCoord.getCopy());
+                        almostPusher = MGPOptional.of(testedCoord);
                         if (previousPiece !== SiamPiece.EMPTY) {
                             currentDistance++;
                         }

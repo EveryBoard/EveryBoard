@@ -66,10 +66,7 @@ export class Coord implements ComparableObject {
         return new Coord(newX, newY);
     }
     public getOpposite(): Coord {
-        return new Coord( -this.x, -this.y);
-    }
-    public getCopy(): Coord {
-        return new Coord(this.x, this.y);
+        return new Coord(-this.x, -this.y);
     }
     public isInRange(sizeX: number, sizeY: number): boolean {
         if (this.x < 0) {
