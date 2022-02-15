@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Auth, AuthenticationService, AuthUser, RTDB } from '../AuthenticationService';
+import { Auth, AuthenticationService, AuthUser } from '../AuthenticationService';
 import { Observable, ReplaySubject, Subscription } from 'rxjs';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { Injectable } from '@angular/core';
@@ -12,6 +12,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Database, ref, remove } from '@angular/fire/database';
 import { FirebaseError } from '@angular/fire/app';
 import * as FireAuth from '@angular/fire/auth';
+import { ConnectivityDAO } from 'src/app/dao/ConnectivityDAO';
 
 @Injectable()
 export class AuthenticationServiceMock {
@@ -440,7 +441,8 @@ describe('AuthenticationService', () => {
     });
     describe('launchAutomaticPresenceUpdate', () => {
         it('should be called and update user presence when user gets connected', async() => {
-            spyOn(RTDB, 'launchAutomaticPresenceUpdate').and.callThrough();
+            const connectivityDAO: ConnectivityDAO = TestBed.inject(ConnectivityDAO);
+            spyOn(connectivityDAO, 'launchAutomaticPresenceUpdate').and.callThrough();
 
             // given a registered user
             const result: MGPFallible<FireAuth.User> = await service.doRegister(username, email, password);
@@ -454,7 +456,7 @@ describe('AuthenticationService', () => {
             await auth.signOut();
 
             // Then launchAutomaticPresenceUpdate is called
-            expect(RTDB.launchAutomaticPresenceUpdate).toHaveBeenCalledWith(TestBed.inject(Database), user.uid);
+            expect(connectivityDAO.launchAutomaticPresenceUpdate).toHaveBeenCalledWith(user.uid);
         });
     });
     describe('setUsername', () => {

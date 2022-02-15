@@ -7,29 +7,9 @@ import { UserDAO } from '../dao/UserDAO';
 import { User } from '../domain/User';
 import { MGPOptional } from '../utils/MGPOptional';
 import { Unsubscribe } from '@angular/fire/firestore';
-import { Database, DatabaseReference, onDisconnect, ref, set } from '@angular/fire/database';
 import { FirebaseError } from '@angular/fire/app';
 import * as FireAuth from '@angular/fire/auth';
-import { serverTimestamp } from 'firebase/firestore';
-
-export class RTDB {
-    public static OFFLINE: ConnectivityStatus = {
-        state: 'offline',
-        last_changed: serverTimestamp(),
-    };
-    public static ONLINE: ConnectivityStatus = {
-        state: 'online',
-        last_changed: serverTimestamp(),
-    };
-    public static setOffline(db: Database, uid: string): Promise<void> {
-        return set(ref(db, '/status/' + uid), RTDB.OFFLINE);
-    }
-    public static async launchAutomaticPresenceUpdate(db: Database, uid: string): Promise<void> {
-        const userStatusDatabaseRef: DatabaseReference = ref(db, '/status/' + uid);
-        await set(userStatusDatabaseRef, RTDB.ONLINE);
-        await onDisconnect(userStatusDatabaseRef).set(RTDB.OFFLINE);
-    }
-}
+import { ConnectivityDAO } from '../dao/ConnectivityDAO';
 
 // This class is an indirection to Firebase's auth methods, to support spyOn on them in the test code.
 export class Auth {
@@ -59,12 +39,6 @@ export class Auth {
     {
         return FireAuth.updateProfile(user, profile);
     }
-}
-
-interface ConnectivityStatus {
-    state: string,
-    // eslint-disable-next-line camelcase
-    last_changed: unknown,
 }
 
 export class AuthUser {
@@ -116,7 +90,8 @@ export class AuthenticationService implements OnDestroy {
 
     constructor(private readonly userDAO: UserDAO,
                 private readonly auth: FireAuth.Auth,
-                private readonly db: Database) {
+                private readonly connectivityDAO: ConnectivityDAO)
+    {
         display(AuthenticationService.VERBOSE, 'AuthenticationService constructor');
 
         this.userRS = new ReplaySubject<AuthUser>(1);
@@ -125,13 +100,16 @@ export class AuthenticationService implements OnDestroy {
             FireAuth.onAuthStateChanged(this.auth, async(user: FireAuth.User | null) => {
                 if (user == null) { // user logged out
                     display(AuthenticationService.VERBOSE, 'User is not connected');
+                    if (this.userUnsubscribe.isPresent()) {
+                        this.userUnsubscribe.get()();
+                    }
                     this.userRS.next(AuthUser.NOT_CONNECTED);
                     this.user = MGPOptional.empty();
                     this.uid = MGPOptional.empty();
                 } else { // new user logged in
                     assert(this.uid.isAbsent(), 'AuthenticationService received a double update for an user, this is unexpected');
                     this.uid = MGPOptional.of(user.uid);
-                    await RTDB.launchAutomaticPresenceUpdate(this.db, user.uid);
+                    await this.connectivityDAO.launchAutomaticPresenceUpdate(user.uid);
                     this.userUnsubscribe = MGPOptional.of(
                         this.userDAO.subscribeToChanges(user.uid, (doc: MGPOptional<User>) => {
                             if (doc.isPresent()) {
@@ -281,7 +259,7 @@ export class AuthenticationService implements OnDestroy {
         const user: MGPOptional<FireAuth.User> = MGPOptional.ofNullable(this.auth.currentUser);
         if (user.isPresent()) {
             const uid: string = user.get().uid;
-            await RTDB.setOffline(this.db, uid);
+            await this.connectivityDAO.setOffline(uid);
             await this.auth.signOut();
             return MGPValidation.SUCCESS;
         } else {
@@ -327,6 +305,9 @@ export class AuthenticationService implements OnDestroy {
         await currentUser.reload();
     }
     public ngOnDestroy(): void {
+        if (this.userUnsubscribe.isPresent()) {
+            this.userUnsubscribe.get()();
+        }
         this.unsubscribeFromAuth();
     }
 
