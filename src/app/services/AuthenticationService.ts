@@ -10,6 +10,7 @@ import { Unsubscribe } from '@angular/fire/firestore';
 import { FirebaseError } from '@angular/fire/app';
 import * as FireAuth from '@angular/fire/auth';
 import { ConnectivityDAO } from '../dao/ConnectivityDAO';
+import { ErrorLoggerService } from './ErrorLoggerService';
 
 // This class is an indirection to Firebase's auth methods, to support spyOn on them in the test code.
 export class Auth {
@@ -63,7 +64,9 @@ export class AuthUser {
     }
 }
 
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+})
 export class AuthenticationService implements OnDestroy {
     public static VERBOSE: boolean = false;
 
@@ -188,7 +191,7 @@ export class AuthenticationService implements OnDestroy {
             case 'auth/popup-closed-by-user':
                 return $localize`You closed the authentication popup without finalizing your log in.`;
             default:
-                Utils.handleError('Unsupported firebase error: ' + error.code + ' (' + error.message + ')');
+                ErrorLoggerService.logError('AuthenticationService', 'Unsupported firebase error', { errorCode: error.code, errorMessage: error.message });
                 return error.message;
         }
     }
@@ -196,9 +199,9 @@ export class AuthenticationService implements OnDestroy {
         display(AuthenticationService.VERBOSE, 'AuthenticationService.sendEmailVerification()');
         const user: MGPOptional<FireAuth.User> = MGPOptional.ofNullable(this.auth.currentUser);
         if (user.isPresent()) {
-            if (this.emailVerified(user.get()) === true) {
+            if (this.emailVerified(user.get())) {
                 // This should not be reachable from a component
-                return Utils.handleError('Verified users should not ask email verification twice');
+                return ErrorLoggerService.logError('AuthenticationService', 'Verified users should not ask email verification after being verified');
             }
             try {
                 await Auth.sendEmailVerification(user.get());
@@ -208,7 +211,7 @@ export class AuthenticationService implements OnDestroy {
             }
         } else {
             // This should not be reachable from a component
-            return Utils.handleError('Unlogged users cannot request for email verification');
+            return ErrorLoggerService.logError('AuthenticationService', 'Unlogged users cannot request for email verification');
         }
     }
 

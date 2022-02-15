@@ -10,7 +10,7 @@ import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/Tut
 import { GameState } from 'src/app/jscaip/GameState';
 import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-
+import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 
 /**
  * All method are to be implemented by the "final" GameComponent classes
@@ -63,7 +63,7 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
      *      - if it's offline, he'll tell the game-component what the bot have done
      */
 
-    constructor(public messageDisplayer: MessageDisplayer) {
+    constructor(public readonly messageDisplayer: MessageDisplayer) {
     }
     public message(msg: string): void {
         this.messageDisplayer.gameMessage(msg);
@@ -94,8 +94,9 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
         }
     }
     public async pass(): Promise<MGPValidation> {
-        Utils.handleError('GameComponent.pass() called on a game that does not redefine it');
-        return MGPValidation.failure('GameComponent.pass() called on a game that does not redefine it');
+        const gameName: string = this.constructor.name;
+        const error: string = `pass() called on a game that does not redefine it`;
+        return ErrorLoggerService.logError('GameComponent', error, { gameName });
     }
     public getTurn(): number {
         return this.rules.node.gameState.turn;

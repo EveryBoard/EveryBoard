@@ -217,7 +217,7 @@ export class GameService {
     {
         assert(observerRole !== Player.NONE, 'Illegal for observer to make request');
         const requester: Player = Request.getPlayer(Utils.getNonNullable(part.data.request));
-        assert(requester !== observerRole, 'Illegal to accept your own request.');
+        assert(requester !== observerRole, 'Illegal to accept your own request');
 
         const request: Request = Request.takeBackAccepted(observerRole);
         let listMoves: JSONValueWithoutArray[] = part.data.listMoves.slice(0, part.data.listMoves.length - 1);

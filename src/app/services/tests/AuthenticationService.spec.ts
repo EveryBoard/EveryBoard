@@ -13,6 +13,8 @@ import { Database, ref, remove } from '@angular/fire/database';
 import { FirebaseError } from '@angular/fire/app';
 import * as FireAuth from '@angular/fire/auth';
 import { ConnectivityDAO } from 'src/app/dao/ConnectivityDAO';
+import { ErrorLoggerService } from '../ErrorLoggerService';
+import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
 
 @Injectable()
 export class AuthenticationServiceMock {
@@ -222,7 +224,7 @@ describe('AuthenticationService', () => {
             expect(result.getReason()).toBe('Your password is too weak, please use a stronger password.');
         });
     });
-    describe('sendVerificationEmail', () => {
+    describe('sendEmailVerification', () => {
         it('should send the email verification', async() => {
             // given a user that just registered and hence is not verified
             const userRegistrationResult: MGPFallible<FireAuth.User> =
@@ -241,24 +243,30 @@ describe('AuthenticationService', () => {
             expect(result).toBe(MGPValidation.SUCCESS);
             expect(Auth.sendEmailVerification).toHaveBeenCalledOnceWith(user);
         });
-        it('should throw if there is no connected user', async() => {
+        it('should fail and log the error if there is no connected user', async() => {
             // given nothing
+            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
 
             // when the email verification is requested
-            const result: Promise<MGPValidation> = service.sendEmailVerification();
-            // then it throws because this is not a valid user interaction
+            const result: MGPValidation = await service.sendEmailVerification();
 
-            // then it fails
-            await expectAsync(result).toBeRejectedWithError('Encountered error: Unlogged users cannot request for email verification');
+            // then it fails because this is not a valid user interaction
+            expect(result.isFailure()).toBeTrue();
+            expect(result.getReason()).toBe('AuthenticationService: Unlogged users cannot request for email verification');
+            expect(ErrorLoggerService.logError).toHaveBeenCalledWith('AuthenticationService', 'Unlogged users cannot request for email verification');
         });
-        it('should throw if the user already verified its email', async() => {
+        it('should fail if the user already verified its email', async() => {
             // given a connected user that is registered and verified, for example through a google account
             await createConnectedGoogleUser(true);
+            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
 
             // when the email verification is requested
-            const result: Promise<MGPValidation> = service.sendEmailVerification();
-            // then it throws because this is not a valid user interaction
-            await expectAsync(result).toBeRejectedWithError('Encountered error: Verified users should not ask email verification twice');
+            const result: MGPValidation = await service.sendEmailVerification();
+
+            // then it fails because this is not a valid user interaction
+            expect(result.isFailure()).toBeTrue();
+            expect(result.getReason()).toBe('AuthenticationService: Verified users should not ask email verification after being verified');
+            expect(ErrorLoggerService.logError).toHaveBeenCalledWith('AuthenticationService', 'Verified users should not ask email verification after being verified');
         });
         it('should fail if there is a genuine error in the email verification process from firebase', async() => {
             // given a user that just registered and hence is not verified
@@ -408,8 +416,8 @@ describe('AuthenticationService', () => {
         });
     });
     describe('mapFirebaseError', () => {
-        it('calls handleError when encountering an unsupported error', async() => {
-            spyOn(Utils, 'handleError').and.returnValue(null);
+        it('calls logError when encountering an unsupported error', async() => {
+            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
 
             // given an unsupported error
             const error: FirebaseError = new FirebaseError('auth/unknown-error', 'Error message');
@@ -417,11 +425,11 @@ describe('AuthenticationService', () => {
             // when mapping it
             service.mapFirebaseError(error);
 
-            // then handleError is called
-            expect(Utils.handleError).toHaveBeenCalledWith('Unsupported firebase error: auth/unknown-error (Error message)');
+            // then logError is called
+            expect(ErrorLoggerService.logError).toHaveBeenCalledWith('AuthenticationService', 'Unsupported firebase error', { errorCode: 'auth/unknown-error', errorMessage: 'Error message' });
         });
         it('should map the errors encountered in the wild but that we cannot reproduce in a test environment', async() => {
-            spyOn(Utils, 'handleError').and.returnValue(null);
+            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             const errorCodes: string[] = [
                 'auth/too-many-requests',
                 'auth/popup-closed-by-user',
@@ -435,7 +443,7 @@ describe('AuthenticationService', () => {
                 service.mapFirebaseError(error);
 
                 // then it is properly handled
-                expect(Utils.handleError).not.toHaveBeenCalled();
+                expect(ErrorLoggerService.logError).not.toHaveBeenCalled();
             }
         });
     });
@@ -473,16 +481,17 @@ describe('AuthenticationService', () => {
             expect(result.isSuccess()).toBeTrue();
         });
         it('should not throw upon failure', async() => {
+            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
+
             // when the username is set but fails
-            const error: FirebaseError = new FirebaseError('unkown/error', 'Error');
+            const error: FirebaseError = new FirebaseError('unknown/error', 'Error');
             spyOn(Auth, 'updateProfile').and.rejectWith(error);
-            // àspyOn(Auth, 'updateProfile').and.rejectWith(error);
-            spyOn(Utils, 'handleError').and.returnValue(null);
             const result: MGPValidation = await service.setUsername(username);
 
             // then it fails
             expect(result.isFailure()).toBeTrue();
             expect(result.getReason()).toEqual('Error');
+            expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('AuthenticationService', 'Unsupported firebase error', { errorCode: 'unknown/error', errorMessage: 'Error' });
         });
         it('should reject empty usernames', async() => {
             // when the username is set to an empty username
@@ -517,18 +526,19 @@ describe('AuthenticationService', () => {
             expect(Utils.getNonNullable(auth.currentUser).photoURL).toEqual(photoURL);
         });
         it('should not throw upon failure', async() => {
+            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             // given a registered and logged in user
             await createConnectedGoogleUser(true);
 
             // when the picture is set but fails
             const error: FirebaseError = new FirebaseError('unknown/error', 'Error');
             spyOn(Auth, 'updateProfile').and.rejectWith(error);
-            spyOn(Utils, 'handleError').and.returnValue(null);
             const result: MGPValidation = await service.setPicture('http://my.pic/foo.png');
 
-            // then it fails
+            // then it fails and logs the error
             expect(result.isFailure()).toBeTrue();
             expect(result.getReason()).toEqual('Error');
+            expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('AuthenticationService', 'Unsupported firebase error', { errorCode: 'unknown/error', errorMessage: 'Error' });
         });
     });
     describe('sendPasswordResetEmail', () => {

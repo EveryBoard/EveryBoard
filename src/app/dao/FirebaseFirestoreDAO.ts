@@ -30,7 +30,7 @@ export interface IFirebaseFirestoreDAO<T extends FirebaseJSONObject> {
     observingWhere(conditions: FirebaseCondition[],
                    callback: FirebaseCollectionObserver<T>): () => void;
 
-    findWhere(conditions: FirebaseCondition[]): Promise<T[]>
+    findWhere(conditions: FirebaseCondition[]): Promise<FirebaseDocument<T>[]>
 }
 
 export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> implements IFirebaseFirestoreDAO<T> {
@@ -82,9 +82,14 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
             callback(MGPOptional.ofNullable(doc.data()));
         });
     }
-    public async findWhere(conditions: FirebaseCondition[]): Promise<T[]> {
+    public async findWhere(conditions: FirebaseCondition[]): Promise<FirebaseDocument<T>[]> {
         const snapshot: QuerySnapshot<T> = await getDocs(this.constructQuery(conditions));
-        return snapshot.docs.map((doc: QueryDocumentSnapshot<T>) => doc.data());
+        return snapshot.docs.map((doc: QueryDocumentSnapshot<T>) => {
+            return {
+                id: doc.id,
+                data: doc.data(),
+            };
+        });
     }
     /**
      * Observe the data according to the given conditions, where a condition consists of:

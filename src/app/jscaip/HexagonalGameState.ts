@@ -1,5 +1,5 @@
+import { ErrorLoggerService } from '../services/ErrorLoggerService';
 import { Table } from '../utils/ArrayUtils';
-import { Utils } from '../utils/utils';
 import { Coord } from './Coord';
 import { GameStateWithTable } from './GameStateWithTable';
 import { HexaDirection } from './HexaDirection';
@@ -120,7 +120,9 @@ export abstract class HexagonalGameState<P> extends GameStateWithTable<P> {
             }
             coord = coord.getNext(dir);
         }
-        Utils.handleError('could not find a board entrance, board must be invalid');
+        ErrorLoggerService.logError('HexagonalGameState.findEntranceFrom',
+                                    'could not find a board entrance, board must be invalid',
+                                    { start: start.toString(), line: line.toString() });
         return new Coord(-1, -1);
     }
 }

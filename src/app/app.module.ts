@@ -81,7 +81,6 @@ import { AutofocusDirective } from './directives/autofocus.directive';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ToggleVisibilityDirective } from './directives/toggle-visibility.directive';
 import { ResetPasswordComponent } from './components/normal-component/reset-password/reset-password.component';
-import { ThemeService } from './services/ThemeService';
 import { SettingsComponent } from './components/normal-component/settings/settings.component';
 import { OnlineGameCreationComponent } from './components/normal-component/online-game-creation/online-game-creation.component';
 
@@ -89,6 +88,7 @@ import * as Firebase from '@angular/fire/app';
 import * as Firestore from '@angular/fire/firestore';
 import * as Database from '@angular/fire/database';
 import * as Auth from '@angular/fire/auth';
+import { ThemeService } from './services/ThemeService';
 
 registerLocaleData(localeFr);
 

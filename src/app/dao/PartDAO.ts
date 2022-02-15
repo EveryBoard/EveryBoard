@@ -1,4 +1,4 @@
-import { FirebaseFirestoreDAO } from './FirebaseFirestoreDAO';
+import { FirebaseDocument, FirebaseFirestoreDAO } from './FirebaseFirestoreDAO';
 import { MGPResult, Part } from '../domain/Part';
 import { Injectable } from '@angular/core';
 import { FirebaseCollectionObserver } from './FirebaseCollectionObserver';
@@ -37,10 +37,10 @@ export class PartDAO extends FirebaseFirestoreDAO<Part> {
     }
     public async userHasActivePart(username: string): Promise<boolean> {
         // This can be simplified into a simple query once part.playerZero and part.playerOne are in an array
-        const userIsFirstPlayer: Part[] = await this.findWhere([
+        const userIsFirstPlayer: FirebaseDocument<Part>[] = await this.findWhere([
             ['playerZero', '==', username],
             ['result', '==', MGPResult.UNACHIEVED.value]]);
-        const userIsSecondPlayer: Part[] = await this.findWhere([
+        const userIsSecondPlayer: FirebaseDocument<Part>[] = await this.findWhere([
             ['playerOne', '==', username],
             ['result', '==', MGPResult.UNACHIEVED.value]]);
         return userIsFirstPlayer.length > 0 || userIsSecondPlayer.length > 0;

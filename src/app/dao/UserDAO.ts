@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FirebaseFirestoreDAO } from './FirebaseFirestoreDAO';
+import { FirebaseDocument, FirebaseFirestoreDAO } from './FirebaseFirestoreDAO';
 import { FirebaseCollectionObserver } from './FirebaseCollectionObserver';
 import { display } from 'src/app/utils/utils';
 import { User } from '../domain/User';
@@ -18,7 +18,7 @@ export class UserDAO extends FirebaseFirestoreDAO<User> {
         display(UserDAO.VERBOSE, 'JoueursDAO.constructor');
     }
     public async usernameIsAvailable(username: string): Promise<boolean> {
-        const usersWithSameUsername: User[] = await this.findWhere([['username', '==', username]]);
+        const usersWithSameUsername: FirebaseDocument<User>[] = await this.findWhere([['username', '==', username]]);
         return usersWithSameUsername.length === 0;
     }
     public async setUsername(uid: string, username: string): Promise<void> {

@@ -18,9 +18,7 @@ import { BrandhubTutorial } from './BrandhubTutorial';
 export class BrandhubComponent extends TaflComponent<BrandhubRules, BrandhubMove, BrandhubState> implements OnInit {
 
     public constructor(messageDisplayer: MessageDisplayer) {
-        super(messageDisplayer,
-              false,
-              BrandhubMove.from);
+        super(messageDisplayer, false, BrandhubMove.from);
         this.rules = BrandhubRules.get();
         this.availableMinimaxes = [
             new TaflMinimax(this.rules, 'DummyBot'),
