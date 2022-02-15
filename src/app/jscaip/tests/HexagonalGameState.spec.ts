@@ -90,19 +90,19 @@ describe('HexagonalGameState', () => {
             expect(state.equals(otherState)).toBeFalse();
         });
         it('should distinguish different boards due to different width', () => {
-            const squareBoard: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1], 0);
-            const rectangularBoard: TestingHexagonalState = TestingHexagonalState.empty(5, 3, [1], 0);
-            expect(squareBoard.equals(rectangularBoard)).toBeFalse();
+            const board: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1], 0);
+            const otherBoard: TestingHexagonalState = TestingHexagonalState.empty(5, 3, [1], 0);
+            expect(board.equals(otherBoard)).toBeFalse();
         });
         it('should distinguish different boards due to different height', () => {
-            const squareBoard: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1], 0);
-            const rectangularBoard: TestingHexagonalState = TestingHexagonalState.empty(3, 5, [1], 0);
-            expect(squareBoard.equals(rectangularBoard)).toBeFalse();
+            const board: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1], 0);
+            const otherBoard: TestingHexagonalState = TestingHexagonalState.empty(3, 5, [1], 0);
+            expect(board.equals(otherBoard)).toBeFalse();
         });
         it('should distinguish different boards due to different empty coords', () => {
-            const squareBoard: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1], 0);
-            const rectangularBoard: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1], 1);
-            expect(squareBoard.equals(rectangularBoard)).toBeFalse();
+            const board: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1], 0);
+            const otherBoard: TestingHexagonalState = TestingHexagonalState.empty(3, 3, [1], 1);
+            expect(board.equals(otherBoard)).toBeFalse();
         });
     });
     describe('getPieceAt', () => {
