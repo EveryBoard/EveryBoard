@@ -226,7 +226,7 @@ describe('LocalGameWrapperComponent', () => {
             const errorMessage: string = 'AI chose illegal move';
             const errorData: JSONValue = { name: 'P4', move: 'P4Move(0)' };
             expect(ErrorLoggerService.logError).toHaveBeenCalledWith('LocalGameWrapper', errorMessage, errorData);
-            expect(messageDisplayer.criticalMessage).toHaveBeenCalledWith('The AI chose an illegal move! This is an unexpected situation that we logged, we will try to solve this as soon as possible.');
+            expect(messageDisplayer.criticalMessage).toHaveBeenCalledWith('The AI chose an illegal move! This is an unexpected situation that we logged, we will try to solve this as soon as possible. In the meantime, consider that you won!');
             tick(3000);
         }));
         it('should not do an AI move when the game is finished', fakeAsync(async() => {
