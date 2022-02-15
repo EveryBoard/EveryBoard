@@ -115,7 +115,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
             this.proposeAIToPlay();
             return MGPValidation.SUCCESS;
         } else {
-            this.messageDisplayer.criticalMessage($localize`The AI chose an illegal move! This is an unexpected situation that we logged, we will try to solve this as soon as possible.`);
+            this.messageDisplayer.criticalMessage($localize`The AI chose an illegal move! This is an unexpected situation that we logged, we will try to solve this as soon as possible. In the meantime, consider that you won!`);
             return ErrorLoggerService.logError('LocalGameWrapper', 'AI chose illegal move', { name: playingMinimax.name, move: aiMove.toString() });
         }
     }

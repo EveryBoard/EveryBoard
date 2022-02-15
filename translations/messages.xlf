@@ -422,8 +422,8 @@
       <trans-unit id="5675185658977082941" datatype="html">
         <source>Player <x id="PH" equiv-text="gameStatus.winner.value + 1"/></source>
       </trans-unit>
-      <trans-unit id="4630874812431732247" datatype="html">
-        <source>The AI chose an illegal move! This is an unexpected situation that we logged, we will try to solve this as soon as possible.</source>
+      <trans-unit id="7464693809033181033" datatype="html">
+        <source>The AI chose an illegal move! This is an unexpected situation that we logged, we will try to solve this as soon as possible. In the meantime, consider that you won!</source>
       </trans-unit>
       <trans-unit id="5468318552081538104" datatype="html">
         <source>It is your turn.</source>

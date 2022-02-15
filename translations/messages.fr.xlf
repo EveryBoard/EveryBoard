@@ -538,9 +538,9 @@
         <source>Start a new game</source>
         <target>Commencer une nouvelle partie</target>
       </trans-unit>
-      <trans-unit id="4630874812431732247" datatype="html">
-        <source>The AI chose an illegal move! This is an unexpected situation that we logged, we will try to solve this as soon as possible.</source>
-        <target>L'IA a effectué un mouvement illégal ! C'est une situation inattendue que nous avons noté. Nous essayons de résoudre cela au plus vite.</target>
+      <trans-unit id="7464693809033181033" datatype="html">
+        <source>The AI chose an illegal move! This is an unexpected situation that we logged, we will try to solve this as soon as possible. In the meantime, consider that you won!</source>
+        <target>L'IA a effectué un mouvement illégal ! C'est une situation inattendue dont nous avons pris note. Nous essayons de résoudre cela au plus vite. En attendant, considérez que vous avez gagné !</target>
       </trans-unit>
       <trans-unit id="6267418979719843573" datatype="html">
         <source>Pass a turn</source>
