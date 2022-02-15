@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ErrorLoggerService } from './services/ErrorLoggerService';
 import { ThemeService } from './services/ThemeService';
 
 @Component({
@@ -6,5 +7,6 @@ import { ThemeService } from './services/ThemeService';
     templateUrl: './app.component.html',
 })
 export class AppComponent {
-    constructor(private _themeService: ThemeService) {}
+    constructor(private readonly _themeService: ThemeService,
+                private readonly _errorLoggerService: ErrorLoggerService) {}
 }

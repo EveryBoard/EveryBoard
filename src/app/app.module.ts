@@ -12,14 +12,6 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
 
-import { PartDAO } from './dao/PartDAO';
-
-import { ChatService } from './services/ChatService';
-import { UserService } from './services/UserService';
-import { AuthenticationService } from './services/AuthenticationService';
-import { GameService } from './services/GameService';
-import { JoinerService } from './services/JoinerService';
-
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/normal-component/header/header.component';
 import { WelcomeComponent } from './components/normal-component/welcome/welcome.component';
@@ -89,7 +81,6 @@ import { AutofocusDirective } from './directives/autofocus.directive';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ToggleVisibilityDirective } from './directives/toggle-visibility.directive';
 import { ResetPasswordComponent } from './components/normal-component/reset-password/reset-password.component';
-import { ThemeService } from './services/ThemeService';
 import { SettingsComponent } from './components/normal-component/settings/settings.component';
 import { OnlineGameCreationComponent } from './components/normal-component/online-game-creation/online-game-creation.component';
 
@@ -188,15 +179,8 @@ export const routes: Route[] = [
         { provide: USE_DATABASE_EMULATOR, useValue: environment.emulatorConfig.database },
         { provide: USE_FIRESTORE_EMULATOR, useValue: environment.emulatorConfig.firestore },
         { provide: USE_FUNCTIONS_EMULATOR, useValue: environment.emulatorConfig.functions },
-        AuthenticationService,
-        GameService,
-        JoinerService,
-        UserService,
-        ChatService,
-        PartDAO,
-        AngularFireAuth,
-        ThemeService,
         { provide: LOCALE_ID, useValue: LocaleUtils.getLocale() },
+        AngularFireAuth,
     ],
     bootstrap: [AppComponent],
 })

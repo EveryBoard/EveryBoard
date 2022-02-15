@@ -14,6 +14,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 
 interface PartCreationViewInfo {
@@ -88,13 +89,13 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
     public allDocDeleted: boolean = false;
 
-    public constructor(public router: Router,
-                       public gameService: GameService,
-                       public joinerService: JoinerService,
-                       public chatService: ChatService,
-                       public userService: UserService,
-                       public formBuilder: FormBuilder,
-                       public messageDisplayer: MessageDisplayer)
+    public constructor(private readonly router: Router,
+                       private readonly gameService: GameService,
+                       private readonly joinerService: JoinerService,
+                       private readonly chatService: ChatService,
+                       private readonly userService: UserService,
+                       private readonly formBuilder: FormBuilder,
+                       private readonly messageDisplayer: MessageDisplayer)
     {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent constructed for ' + this.userName);
     }
@@ -344,7 +345,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             for (const user of foundUsers) {
                 if (user.data.state === 'offline') {
                     await this.removeUserFromLobby(Utils.getNonNullable(user.data.username));
-                    Utils.handleError('OnlineGameWrapper: ' + user.data.username + ' is already offline!');
+                    await ErrorLoggerService.logError('PartCreationComponent', 'user is already offline', { username: user.data.username, userId: user.id });
                 }
             }
         };
@@ -359,7 +360,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             // This should not happen in practice, but if it does we can safely remove the user from the lobby
             for (const user of deletedUsers) {
                 await this.removeUserFromLobby(Utils.getNonNullable(user.data.username));
-                Utils.handleError('OnlineGameWrapper: ' + user.data.username + ' was deleted (' + user.id + ')');
+                await ErrorLoggerService.logError('PartCreationComponent', 'user was deleted', { username: user.data.username, userId: user.id });
             }
         };
         const callback: FirebaseCollectionObserver<User> =

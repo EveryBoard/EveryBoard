@@ -6,13 +6,14 @@ import { toast, ToastType } from 'bulma-toast';
 })
 export class MessageDisplayer {
 
-    constructor() {
-    }
     public infoMessage(msg: string): void {
         this.message(msg, 'is-info');
     }
     public gameMessage(msg: string): void {
         this.message(msg, 'is-warning');
+    }
+    public criticalMessage(msg: string): void {
+        this.message(msg, 'is-danger');
     }
     private message(msg: string, cssClass: ToastType): void {
         toast({

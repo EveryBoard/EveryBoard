@@ -16,7 +16,7 @@ export class MGPOptional<T> {
                 if (encoded === null) {
                     return MGPOptional.empty();
                 } else {
-                    return MGPOptional.of(encoderT.decode(encoded) as T);
+                    return MGPOptional.of(encoderT.decode(encoded));
                 }
             }
         };
@@ -26,7 +26,7 @@ export class MGPOptional<T> {
     }
     public static ofNullable<T>(value: T | null | undefined): MGPOptional<T> {
         if (value == null) return MGPOptional.empty();
-        return MGPOptional.of(value as T);
+        return MGPOptional.of(value);
     }
     public static empty<T>(): MGPOptional<T> {
         return new MGPOptional(null as T | null);

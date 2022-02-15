@@ -17,6 +17,8 @@ import { GameService } from 'src/app/services/GameService';
 import { ChatService } from 'src/app/services/ChatService';
 import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
+import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { LobbyComponent } from '../../normal-component/lobby/lobby.component';
 
 describe('PartCreationComponent:', () => {
@@ -188,8 +190,8 @@ describe('PartCreationComponent:', () => {
                 testUtils.expectElementNotToExist('#candidate_firstCandidate');
                 expect(component.currentJoiner).toEqual(JoinerMocks.INITIAL);
             }));
-            it('should deselect candidate, remove it, and call handleError when a candidate is removed from db', fakeAsync(async() => {
-                spyOn(Utils, 'handleError').and.callFake(() => {});
+            it('should deselect candidate, remove it, and call logError when a candidate is removed from db', fakeAsync(async() => {
+                spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
 
                 // Given a part with a candidate that has been chosen
                 testUtils.detectChanges();
@@ -203,15 +205,15 @@ describe('PartCreationComponent:', () => {
                 testUtils.detectChanges();
                 tick(3000); // needs to be >2999
 
-                // Then handleError has been called as this is an unusual situation
-                expect(Utils.handleError).toHaveBeenCalledOnceWith('OnlineGameWrapper: firstCandidate was deleted (opponent)');
+                // Then logError has been called as this is an unusual situation
+                expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('PartCreationComponent', 'user was deleted', { username: 'firstCandidate', userId: 'opponent' });
                 // and the candidate has been deselected
                 testUtils.expectElementNotToExist('#selected_firstCandidate');
                 // and the candidate has been removed from the lobby
                 expect(component.currentJoiner).toEqual(JoinerMocks.INITIAL);
             }));
             it('should remove candidate from lobby if it directly appears offline', fakeAsync(async() => {
-                spyOn(Utils, 'handleError').and.callFake(() => {});
+                spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
                 // Given a page that is loaded and there is no candidate yet
                 testUtils.detectChanges();
                 await testUtils.whenStable();
@@ -224,11 +226,11 @@ describe('PartCreationComponent:', () => {
 
                 // Then the candidate does not appear on the page
                 testUtils.expectElementNotToExist('#presenceOf_firstCandidate');
-                // and handleError was called as this is an unexpected situation
-                expect(Utils.handleError).toHaveBeenCalledWith('OnlineGameWrapper: firstCandidate is already offline!');
+                // and logError was called as this is an unexpected situation
+                expect(ErrorLoggerService.logError).toHaveBeenCalledWith('PartCreationComponent', 'user is already offline', { username: 'firstCandidate', userId: 'opponent' });
             }));
             it('should not fail if an user has to be removed from the lobby but is not in it', fakeAsync(async() => {
-                spyOn(Utils, 'handleError').and.callFake(() => {});
+                spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
                 // This could happen if we receive twice the same update to a user that needs to be removed
 
                 // Given a part creation with a candidate
@@ -249,7 +251,7 @@ describe('PartCreationComponent:', () => {
 
                 // Then it is not displayed among the candidates, and no error has been produced
                 testUtils.expectElementNotToExist('#candidate_firstCandidate');
-                expect(Utils.handleError).not.toHaveBeenCalled();
+                expect(ErrorLoggerService.logError).not.toHaveBeenCalled();
             }));
             it('should see candidate reappear if candidates disconnects and reconnects', fakeAsync(async() => {
                 // Given a page that has loaded, a candidate joined and has been chosen as opponent
