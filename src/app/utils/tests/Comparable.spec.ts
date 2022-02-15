@@ -1,6 +1,5 @@
 /* eslint-disable max-lines-per-function */
 import { comparableEquals, ComparableJSON, ComparableObject, isComparableJSON, isComparableObject, isComparableValue } from '../Comparable';
-import { Utils } from '../utils';
 
 class DummyComparableObject implements ComparableObject {
     public constructor(readonly value: number) {}
@@ -44,9 +43,10 @@ describe('Comparable', () => {
             expect(comparableEquals(object1, object3)).toBeFalse();
         });
         it('should fail if objects are not comparable', () => {
-            spyOn(Utils, 'handleError');
-            comparableEquals(new DummyNonComparableObject(5), new DummyNonComparableObject(5));
-            expect(Utils.handleError).toHaveBeenCalledWith('Comparing non comparable objects');
+            const expectedError: string = 'Comparing non comparable objects: DummyNonComparableObject and DummyNonComparableObject';
+            const nonComparable: DummyNonComparableObject = new DummyNonComparableObject(5);
+            const otherNonComparable: DummyNonComparableObject = new DummyNonComparableObject(5);
+            expect(() => comparableEquals(nonComparable, otherNonComparable)).toThrowError(expectedError);
         });
 
     });

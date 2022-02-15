@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { fakeAsync, tick } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { P4State } from 'src/app/games/p4/P4State';
 import { Player } from 'src/app/jscaip/Player';
 import { P4Move } from 'src/app/games/p4/P4Move';
@@ -12,6 +12,11 @@ import { P4Minimax } from 'src/app/games/p4/P4Minimax';
 import { P4Rules } from 'src/app/games/p4/P4Rules';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
+import { JSONValue } from 'src/app/utils/utils';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 
 describe('LocalGameWrapperComponent', () => {
 
@@ -23,6 +28,7 @@ describe('LocalGameWrapperComponent', () => {
     beforeEach(fakeAsync(async() => {
         componentTestUtils = await ComponentTestUtils.forGame<P4Component>('P4', LocalGameWrapperComponent);
         AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
+        TestBed.inject(ErrorLoggerService);
     }));
     it('should create', () => {
         expect(componentTestUtils.getComponent()).toBeTruthy();
@@ -202,19 +208,26 @@ describe('LocalGameWrapperComponent', () => {
 
             tick(1000);
         }));
-        it('Minimax proposing illegal move should throw', fakeAsync(async() => {
+        it('Minimax proposing illegal move should log error and show it to the user', fakeAsync(async() => {
+            const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
+            spyOn(messageDisplayer, 'criticalMessage').and.callThrough();
+            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             // given a board on which some illegal move are possible from the IA
-
+            const localGameWrapper: LocalGameWrapperComponent = componentTestUtils.wrapper as LocalGameWrapperComponent;
             spyOn(componentTestUtils.getComponent().rules, 'choose').and.returnValue(false);
             spyOn(componentTestUtils.getComponent().rules.node, 'findBestMove').and.returnValue(P4Move.ZERO);
 
-            // when it's bugged ai's turn to play (and do a illegal move)
-            // then we should get a error throwed
-            const localGameWrapper: LocalGameWrapperComponent = componentTestUtils.wrapper as LocalGameWrapperComponent;
+            // when it is the turn of the bugged AI (that performs an illegal move)
             const minimax: P4Minimax = new P4Minimax(new P4Rules(P4State), 'P4');
-            const errorMessage: string = 'AI choosed illegal move (P4Move(0))';
-            expect(() => localGameWrapper.doAIMove(minimax)).toThrowError(errorMessage);
-            tick(1000);
+            const result: MGPValidation = await localGameWrapper.doAIMove(minimax);
+
+            // then it should fail and an error should be logged
+            expect(result.isFailure()).toBeTrue();
+            const errorMessage: string = 'AI chose illegal move';
+            const errorData: JSONValue = { name: 'P4', move: 'P4Move(0)' };
+            expect(ErrorLoggerService.logError).toHaveBeenCalledWith('LocalGameWrapper', errorMessage, errorData);
+            expect(messageDisplayer.criticalMessage).toHaveBeenCalledWith('The AI chose an illegal move! This is an unexpected situation that we logged, we will try to solve this as soon as possible. In the meantime, consider that you won!');
+            tick(3000);
         }));
         it('should not do an AI move when the game is finished', fakeAsync(async() => {
             const localGameWrapper: LocalGameWrapperComponent = componentTestUtils.wrapper as LocalGameWrapperComponent;

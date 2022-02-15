@@ -1,4 +1,5 @@
 import firebase from 'firebase';
+import { ErrorLoggerService } from '../services/ErrorLoggerService';
 
 // These are the datatypes supported by firestore. Arrays of arrays are not
 // supported, but arrays containing objects containing arrays are, which is what
@@ -27,11 +28,6 @@ export type FirebaseJSONValueWithoutArray = FirebaseJSONPrimitive | FirebaseJSON
 export type FirebaseJSONObject = { [member: string]: FirebaseJSONValue };
 
 export class Utils {
-    // Returns never because we don't want the code to continue after an error has been encountered
-    // (never = it never returns)
-    public static handleError(message: string): never {
-        throw new Error('Encountered error: ' + message);
-    }
     public static expectToBe<T>(value: T, expected: T, message?: string): void {
         if (value !== expected) {
             if (message !== undefined) {
@@ -69,6 +65,11 @@ export function display(verbose: boolean, message: unknown): void {
 
 export function assert(condition: boolean, message: string): void {
     if (condition === false) {
-        Utils.handleError('Assertion failure: ' + message);
+        // We log the error but we also throw an exception
+        // This is because if an assertion fails,
+        // we don't want to execute the code after the assertion.
+        // Otherwise, this could result in potentially very serious issues.
+        ErrorLoggerService.logError('Assertion failure', message);
+        throw new Error(`Assertion failure: ${message}`);
     }
 }

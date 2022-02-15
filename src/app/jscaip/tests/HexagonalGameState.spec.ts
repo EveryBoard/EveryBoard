@@ -3,6 +3,8 @@ import { ArrayUtils, NumberTable } from 'src/app/utils/ArrayUtils';
 import { Coord } from '../Coord';
 import { HexagonalGameState } from '../HexagonalGameState';
 import { HexaLine } from '../HexaLine';
+import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
+import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 
 export class TestingHexagonalState extends HexagonalGameState<number> {
 
@@ -185,10 +187,15 @@ describe('HexagonalGameState', () => {
             const line2: HexaLine = HexaLine.constantS(8);
             expect(state.getEntranceOnLine(line2).equals(new Coord(6, 2))).toBeTrue();
         });
-        it('should throw when unable to find an entrance', () => {
+        it('should call logError when unable to find an entrance', () => {
+            spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             const invalidState: TestingHexagonalState = TestingHexagonalState.empty(0, 0, [], 0);
             const line: HexaLine = HexaLine.constantS(0);
-            expect(() => invalidState.getEntranceOnLine(line)).toThrowError('Encountered error: could not find a board entrance, board must be invalid');
+            expect(invalidState.getEntranceOnLine(line)).toEqual(new Coord(-1, -1));
+            expect(ErrorLoggerService.logError)
+                .toHaveBeenCalledWith('HexagonalGameState.findEntranceFrom',
+                                      'could not find a board entrance, board must be invalid',
+                                      { start: '(-1, 1)', line: line.toString() });
         });
     });
 });

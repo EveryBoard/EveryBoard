@@ -12,6 +12,7 @@ import { MGPFallible } from '../utils/MGPFallible';
 import { UserDAO } from '../dao/UserDAO';
 import { User } from '../domain/User';
 import { MGPOptional } from '../utils/MGPOptional';
+import { ErrorLoggerService } from './ErrorLoggerService';
 
 export class RTDB {
     public static OFFLINE: ConnectivityStatus = {
@@ -66,7 +67,9 @@ export class AuthUser {
     }
 }
 
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+})
 export class AuthenticationService implements OnDestroy {
     public static VERBOSE: boolean = false;
 
@@ -86,12 +89,13 @@ export class AuthenticationService implements OnDestroy {
     private registrationInProgress: MGPOptional<Promise<MGPFallible<firebase.User>>> = MGPOptional.empty();
 
     constructor(public afAuth: AngularFireAuth,
-                private readonly userDAO: UserDAO) {
+                private readonly userDAO: UserDAO)
+    {
         display(AuthenticationService.VERBOSE, '1 authService subscribe to Obs<User>');
 
         this.userRS = new ReplaySubject<AuthUser>(1);
         this.userObs = this.userRS.asObservable();
-        this.authSub = this.afAuth.user.subscribe(async(user: firebase.User) => {
+        this.authSub = this.afAuth.user.subscribe(async(user: firebase.User | null) => {
             if (user == null) { // user logged out
                 display(AuthenticationService.VERBOSE, 'User is not connected');
                 this.userRS.next(AuthUser.NOT_CONNECTED);
@@ -106,7 +110,7 @@ export class AuthenticationService implements OnDestroy {
                 const userInDB: User = (await userDAO.read(user.uid)).get();
                 display(AuthenticationService.VERBOSE, `User ${userInDB.username} is connected, and the verified status is ${this.emailVerified(user)}`);
                 const userHasFinalizedVerification: boolean =
-                    this.emailVerified(user) === true && userInDB.username !== null;
+                    this.emailVerified(user) === true && userInDB.username != null;
                 if (userHasFinalizedVerification === true && userInDB.verified === false) {
                     // The user has finalized verification but isn't yet marked as so in the DB, so we mark it.
                     await userDAO.markVerified(user.uid);
@@ -128,7 +132,7 @@ export class AuthenticationService implements OnDestroy {
             await firebase.auth().sendPasswordResetEmail(email);
             return MGPValidation.SUCCESS;
         } catch (e) {
-            return MGPValidation.failure(this.mapFirebaseError(e));
+            return MGPValidation.failure(await this.mapFirebaseError(e));
         }
     }
     /**
@@ -154,7 +158,7 @@ export class AuthenticationService implements OnDestroy {
             await this.createUser(user.uid, username);
             return MGPFallible.success(user);
         } catch (e) {
-            return MGPFallible.failure(this.mapFirebaseError(e));
+            return MGPFallible.failure(await this.mapFirebaseError(e));
         }
     }
     public mapFirebaseError(error: firebase.FirebaseError): string {
@@ -176,7 +180,7 @@ export class AuthenticationService implements OnDestroy {
             case 'auth/popup-closed-by-user':
                 return $localize`You closed the authentication popup without finalizing your log in.`;
             default:
-                Utils.handleError('Unsupported firebase error: ' + error.code + ' (' + error.message + ')');
+                ErrorLoggerService.logError('AuthenticationService', 'Unsupported firebase error', { errorCode: error.code, errorMessage: error.message });
                 return error.message;
         }
     }
@@ -184,9 +188,9 @@ export class AuthenticationService implements OnDestroy {
         display(AuthenticationService.VERBOSE, 'AuthenticationService.sendEmailVerification()');
         const user: MGPOptional<firebase.User> = MGPOptional.ofNullable(firebase.auth().currentUser);
         if (user.isPresent()) {
-            if (this.emailVerified(user.get()) === true) {
+            if (this.emailVerified(user.get())) {
                 // This should not be reachable from a component
-                return Utils.handleError('Verified users should not ask email verification twice');
+                return ErrorLoggerService.logError('AuthenticationService', 'Verified users should not ask email verification after being verified');
             }
             try {
                 await user.get().sendEmailVerification();
@@ -196,7 +200,7 @@ export class AuthenticationService implements OnDestroy {
             }
         } else {
             // This should not be reachable from a component
-            return Utils.handleError('Unlogged users cannot request for email verification');
+            return ErrorLoggerService.logError('AuthenticationService', 'Unlogged users cannot request for email verification');
         }
     }
 
@@ -211,7 +215,7 @@ export class AuthenticationService implements OnDestroy {
             await firebase.auth().signInWithEmailAndPassword(email, password);
             return MGPValidation.SUCCESS;
         } catch (e) {
-            return MGPValidation.failure(this.mapFirebaseError(e));
+            return MGPValidation.failure(await this.mapFirebaseError(e));
         }
     }
     /**
@@ -241,7 +245,7 @@ export class AuthenticationService implements OnDestroy {
             await this.createUser(user.uid);
             return MGPFallible.success(user);
         } catch (e) {
-            return MGPFallible.failure(this.mapFirebaseError(e));
+            return MGPFallible.failure(await this.mapFirebaseError(e));
         }
 
     }
@@ -277,7 +281,7 @@ export class AuthenticationService implements OnDestroy {
             await this.reloadUser();
             return MGPValidation.SUCCESS;
         } catch (e) {
-            return MGPValidation.failure(this.mapFirebaseError(e));
+            return MGPValidation.failure(await this.mapFirebaseError(e));
         }
     }
     public async setPicture(url: string): Promise<MGPValidation> {
@@ -285,7 +289,7 @@ export class AuthenticationService implements OnDestroy {
             await Utils.getNonNullable(firebase.auth().currentUser).updateProfile({ photoURL: url });
             return MGPValidation.SUCCESS;
         } catch (e) {
-            return MGPValidation.failure(this.mapFirebaseError(e));
+            return MGPValidation.failure(await this.mapFirebaseError(e));
         }
     }
     public async reloadUser(): Promise<void> {

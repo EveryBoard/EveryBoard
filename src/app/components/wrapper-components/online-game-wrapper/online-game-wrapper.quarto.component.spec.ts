@@ -34,6 +34,7 @@ import { GameService } from 'src/app/services/GameService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { NextGameLoadingComponent } from '../../normal-component/next-game-loading/next-game-loading.component';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 
 describe('OnlineGameWrapperComponent of Quarto:', () => {
 
@@ -1890,6 +1891,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     });
     describe('Non Player Experience', () => {
         it('Should not be able to do anything', fakeAsync(async() => {
+            spyOn(ErrorLoggerService, 'logError');
             await prepareStartedGameFor(new AuthUser(MGPOptional.ofNullable(OBSERVER.username),
                                                      MGPOptional.of('observer@home'),
                                                      true));
@@ -1904,14 +1906,15 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             ];
             for (const name of forbiddenFunctionNames) {
                 let failed: boolean = false;
-                const expectedError: string = 'Encountered error: Assertion failure: Non playing should not call ' + name;
+                const expectedError: string = 'Non playing should not call ' + name;
                 try {
                     await wrapper[name]();
                 } catch (error) {
+                    expect(error.message).toBe('Assertion failure: ' + expectedError);
                     failed = true;
-                    expect(error.message).toBe(expectedError);
                 }
                 expect(failed).toBeTrue();
+                expect(ErrorLoggerService.logError).toHaveBeenCalledWith('Assertion failure', expectedError);
             }
             tick(wrapper.joiner.maximalMoveDuration * 1000);
         }));

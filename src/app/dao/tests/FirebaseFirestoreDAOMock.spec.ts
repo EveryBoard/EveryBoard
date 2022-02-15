@@ -182,12 +182,13 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
         }
         return true;
     }
-    public async findWhere(conditions: FirebaseCondition[]): Promise<T[]> {
-        const matchingDocs: T[] = [];
+    public async findWhere(conditions: FirebaseCondition[]): Promise<FirebaseDocument<T>[]> {
+        const matchingDocs: FirebaseDocument<T>[] = [];
         this.getStaticDB().forEach((item: {key: string, value: DocumentSubject<T>}) => {
-            const doc: T = item.value.subject.value.get().data;
-            if (this.conditionsHold(conditions, doc)) {
-                matchingDocs.push(doc);
+            const id: string = item.value.subject.value.get().id;
+            const data: T = item.value.subject.value.get().data;
+            if (this.conditionsHold(conditions, data)) {
+                matchingDocs.push({ id, data });
             }
         });
         return matchingDocs;

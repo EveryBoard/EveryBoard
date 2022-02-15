@@ -23,6 +23,7 @@ import { Utils } from 'src/app/utils/utils';
 import { JoinerService } from '../JoinerService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import firebase from 'firebase/app';
+import { ErrorLoggerService } from '../ErrorLoggerService';
 
 describe('GameService', () => {
 
@@ -89,6 +90,8 @@ describe('GameService', () => {
         expect(partDAO.delete).toHaveBeenCalledOnceWith('partId');
     }));
     it('should forbid to accept a take back that the player proposed himself', fakeAsync(async() => {
+        spyOn(ErrorLoggerService, 'logError');
+        const error: string = 'Illegal to accept your own request';
         for (const player of [Player.ZERO, Player.ONE]) {
             const part: PartDocument = new PartDocument('joinerId', {
                 lastUpdate: {
@@ -103,8 +106,9 @@ describe('GameService', () => {
                 request: Request.takeBackAsked(player),
                 result: MGPResult.UNACHIEVED.value,
             });
-            const result: Promise<void> = service.acceptTakeBack('joinerId', part, player, [0, 1]);
-            await expectAsync(result).toBeRejectedWithError('Encountered error: Assertion failure: Illegal to accept your own request.');
+            await expectAsync(service.acceptTakeBack('joinerId', part, player, [0, 1]))
+                .toBeRejectedWithError('Assertion failure: ' + error);
+            expect(ErrorLoggerService.logError).toHaveBeenCalledWith('Assertion failure', error);
         }
     }));
     it('acceptConfig should delegate to joinerService and call startGameWithConfig', fakeAsync(async() => {

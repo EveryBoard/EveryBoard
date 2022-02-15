@@ -25,7 +25,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
                                                                  EncapsuleCase,
                                                                  EncapsuleLegalityInformation>
 {
-    private INTER_PIECE_SPACE: number = 20;
+    private readonly INTER_PIECE_SPACE: number = 20;
     private lastLandingCoord: MGPOptional<Coord> = MGPOptional.empty();
     private lastStartingCoord: MGPOptional<Coord> = MGPOptional.empty();
     private chosenCoord: MGPOptional<Coord> = MGPOptional.empty();
