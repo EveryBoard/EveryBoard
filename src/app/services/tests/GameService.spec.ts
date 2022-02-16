@@ -2,7 +2,6 @@
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { GameService, StartingPartConfig } from '../GameService';
 import { PartDAO } from 'src/app/dao/PartDAO';
-import { of } from 'rxjs';
 import { Part, PartDocument, MGPResult } from 'src/app/domain/Part';
 import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
 import { JoinerDAOMock } from 'src/app/dao/tests/JoinerDAOMock.spec';
@@ -22,7 +21,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Utils } from 'src/app/utils/utils';
 import { JoinerService } from '../JoinerService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import firebase from 'firebase/app';
+import { serverTimestamp } from 'firebase/firestore';
 import { ErrorLoggerService } from '../ErrorLoggerService';
 
 describe('GameService', () => {
@@ -55,7 +54,8 @@ describe('GameService', () => {
     it('should create', () => {
         expect(service).toBeTruthy();
     });
-    it('startObserving should delegate callback to partDAO', () => {
+    it('startObserving should delegate callback to partDAO', fakeAsync(async() => {
+        // Given an existing part
         const part: Part = {
             lastUpdate: {
                 index: 4,
@@ -68,14 +68,23 @@ describe('GameService', () => {
             listMoves: [MOVE_1, MOVE_2],
             result: MGPResult.UNACHIEVED.value,
         };
+        await partDAO.set('partId', part);
+
+        let calledCallback: boolean = false;
         const myCallback: (observedPart: MGPOptional<Part>) => void = (observedPart: MGPOptional<Part>) => {
             expect(observedPart.isPresent()).toBeTrue();
             expect(observedPart.get()).toEqual(part);
+            calledCallback = true;
         };
-        spyOn(partDAO, 'getObsById').and.returnValue(of(MGPOptional.of(part)));
+        spyOn(partDAO, 'subscribeToChanges').and.callThrough();
+
+        // When observing the part
         service.startObserving('partId', myCallback);
-        expect(partDAO.getObsById).toHaveBeenCalledWith('partId');
-    });
+
+        // Then subscribeToChanges should be called and the part should be observed
+        expect(partDAO.subscribeToChanges).toHaveBeenCalledWith('partId', myCallback);
+        expect(calledCallback).toBeTrue();
+    }));
     it('startObserving should throw exception when called while observing ', fakeAsync(async() => {
         await partDAO.set('myJoinerId', PartMocks.INITIAL);
 
@@ -296,7 +305,7 @@ describe('GameService', () => {
                 listMoves: [MOVE_1, MOVE_2],
                 turn: 2,
                 request: null,
-                lastUpdateTime: firebase.firestore.FieldValue.serverTimestamp(),
+                lastUpdateTime: serverTimestamp(),
                 scorePlayerZero: 5,
                 scorePlayerOne: 0,
             };
@@ -314,7 +323,7 @@ describe('GameService', () => {
                 listMoves: [MOVE_1, MOVE_2],
                 turn: 2,
                 request: null,
-                lastUpdateTime: firebase.firestore.FieldValue.serverTimestamp(),
+                lastUpdateTime: serverTimestamp(),
                 result: MGPResult.HARD_DRAW.value,
             };
             expect(partDAO.update).toHaveBeenCalledWith('partId', expectedUpdate);

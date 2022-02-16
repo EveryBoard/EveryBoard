@@ -26,7 +26,7 @@ export class GoMove extends MoveCoord {
             const y: number = (encodedMove - x) / 19;
             return new GoMove(x, y);
         }
-    }
+    };
     public equals(o: GoMove): boolean {
         if (this === o) return true;
         return this.coord.equals(o.coord);

@@ -1,13 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { TestBed } from '@angular/core/testing';
-import { AngularFirestore } from '@angular/fire/firestore';
-import 'firebase/firestore';
 import { Injectable } from '@angular/core';
 import { FirebaseDocument, FirebaseFirestoreDAO } from '../FirebaseFirestoreDAO';
 import { FirebaseJSONObject } from 'src/app/utils/utils';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Firestore } from '@angular/fire/firestore';
 
 interface Foo extends FirebaseJSONObject {
     value: string,
@@ -18,8 +17,8 @@ interface Foo extends FirebaseJSONObject {
     providedIn: 'root',
 })
 class FooDAO extends FirebaseFirestoreDAO<Foo> {
-    constructor(protected afs: AngularFirestore) {
-        super('foo', afs);
+    constructor(firestore: Firestore) {
+        super('foo', firestore);
     }
 }
 
@@ -57,11 +56,11 @@ describe('FirebaseFirestoreDAO', () => {
         expect(stored.value).toBe('bar');
         expect(stored.otherValue).toBe(2);
     });
-    describe('getObsById', () => {
+    describe('subscribeToChanges', () => {
         it('should return an observable that can be used to see changes in objects', async() => {
             const id: string = await dao.create({ value: 'foo', otherValue: 1 });
             const allChangesSeenPromise: Promise<boolean> = new Promise((resolve: (value: boolean) => void) => {
-                dao.getObsById(id).subscribe((foo: MGPOptional<Foo>) => {
+                dao.subscribeToChanges(id, (foo: MGPOptional<Foo>) => {
                     if (foo.isPresent() && foo.get().value === 'bar' && foo.get().otherValue === 2) {
                         resolve(true);
                     }

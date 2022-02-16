@@ -33,7 +33,7 @@ export class PentagoMove extends MoveCoord {
                 return PentagoMove.rotationless(coord.x, coord.y);
             }
         }
-    }
+    };
 
     public static withRotation(x: number,
                                y: number,

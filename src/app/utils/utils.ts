@@ -1,4 +1,4 @@
-import firebase from 'firebase';
+import { FieldValue } from '@angular/fire/firestore';
 import { ErrorLoggerService } from '../services/ErrorLoggerService';
 
 // These are the datatypes supported by firestore. Arrays of arrays are not
@@ -18,7 +18,7 @@ export function isJSONPrimitive(value: unknown): value is JSONPrimitive {
     return false;
 }
 
-export type FirebaseJSONPrimitive = JSONPrimitive | firebase.firestore.FieldValue;
+export type FirebaseJSONPrimitive = JSONPrimitive | FieldValue;
 export type FirebaseJSONValue =
     FirebaseJSONPrimitive |
     FirebaseJSONObject |

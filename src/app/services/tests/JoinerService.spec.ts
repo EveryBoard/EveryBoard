@@ -109,8 +109,8 @@ describe('JoinerService', () => {
         it('should delegate update to DAO', fakeAsync(async() => {
             // Given a joiner that we are observing and that we joined
             await dao.set('joinerId', JoinerMocks.INITIAL);
-            service.observe('joinerId');
             const user: string = 'someone totally new';
+            service.subscribeToChanges('joinerId', (doc: MGPOptional<Joiner>): void => {});
             await service.joinGame('joinerId', user);
 
             spyOn(dao, 'update');
@@ -128,7 +128,7 @@ describe('JoinerService', () => {
         it('should start as new when chosenPlayer leaves', fakeAsync(async() => {
             // Given a joiner that we are observing, with a chosen player
             await dao.set('joinerId', JoinerMocks.WITH_CHOSEN_PLAYER);
-            service.observe('joinerId');
+            service.subscribeToChanges('joinerId', (doc: MGPOptional<Joiner>): void => {});
 
             // When the chosen player leaves
             await service.cancelJoining('firstCandidate');
@@ -140,7 +140,7 @@ describe('JoinerService', () => {
         it('should throw when called by someone who is nor candidate nor chosenPlayer', fakeAsync(async() => {
             // Given a joiner that we are observing and that we joined
             await dao.set('joinerId', JoinerMocks.INITIAL);
-            service.observe('joinerId');
+            service.subscribeToChanges('joinerId', (doc: MGPOptional<Joiner>): void => {});
             await service.joinGame('joinerId', 'whoever');
 
             // When cancelling the join of a non-candidate
@@ -153,7 +153,7 @@ describe('JoinerService', () => {
         it('should delegate to DAO for current joiner', fakeAsync(async() => {
             // Given a joiner that we are observing
             await dao.set('joinerId', JoinerMocks.INITIAL);
-            service.observe('joinerId');
+            service.subscribeToChanges('joinerId', (doc: MGPOptional<Joiner>): void => {});
 
             spyOn(dao, 'update');
 
@@ -170,7 +170,7 @@ describe('JoinerService', () => {
         it('should delegate deletion to DAO', fakeAsync(async() => {
             // Given a joiner that we are observing
             await dao.set('joinerId', JoinerMocks.INITIAL);
-            service.observe('joinerId');
+            service.subscribeToChanges('joinerId', (doc: MGPOptional<Joiner>): void => {});
 
             spyOn(dao, 'delete');
 
@@ -185,7 +185,7 @@ describe('JoinerService', () => {
         it('should change part status with DAO', fakeAsync(async() => {
             // Given a joiner that we are observing
             await dao.set('joinerId', JoinerMocks.INITIAL);
-            service.observe('joinerId');
+            service.subscribeToChanges('joinerId', (doc: MGPOptional<Joiner>): void => {});
 
             spyOn(dao, 'update');
 
@@ -203,7 +203,7 @@ describe('JoinerService', () => {
             const candidate: string = 'firstCandidate';
             // Given a joiner that we are observing
             await dao.set('joinerId', JoinerMocks.INITIAL);
-            service.observe('joinerId');
+            service.subscribeToChanges('joinerId', (doc: MGPOptional<Joiner>): void => {});
 
             spyOn(dao, 'update');
 
@@ -222,7 +222,7 @@ describe('JoinerService', () => {
         it('should change part status with DAO to start it', fakeAsync(async() => {
             // Given a joiner that we are observing
             await dao.set('joinerId', JoinerMocks.INITIAL);
-            service.observe('joinerId');
+            service.subscribeToChanges('joinerId', (doc: MGPOptional<Joiner>): void => {});
 
             spyOn(dao, 'update');
 

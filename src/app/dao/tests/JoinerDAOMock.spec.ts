@@ -7,6 +7,7 @@ import { FirebaseFirestoreDAOMock } from './FirebaseFirestoreDAOMock.spec';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 import { fakeAsync } from '@angular/core/testing';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Unsubscribe } from '@angular/fire/firestore';
 
 type JoinerOS = ObservableSubject<MGPOptional<JoinerDocument>>
 
@@ -47,7 +48,7 @@ describe('JoinerDAOMock', () => {
         expect(lastJoiner).toEqual(MGPOptional.empty());
         expect(callCount).toBe(0);
 
-        joinerDAOMock.getObsById('joinerId').subscribe((joiner: MGPOptional<Joiner>) => {
+        const unsubscribe: Unsubscribe = joinerDAOMock.subscribeToChanges('joinerId', (joiner: MGPOptional<Joiner>) => {
             callCount++;
             lastJoiner = joiner;
             expect(callCount).withContext('Should not have been called more than twice').toBeLessThanOrEqual(2);
@@ -61,6 +62,7 @@ describe('JoinerDAOMock', () => {
 
         expect(callCount).toEqual(2);
         expect(lastJoiner.get()).toEqual(JoinerMocks.WITH_FIRST_CANDIDATE);
+        unsubscribe();
     }));
     it('Partial update should update', fakeAsync(async() => {
         await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL);
@@ -68,7 +70,7 @@ describe('JoinerDAOMock', () => {
         expect(callCount).toEqual(0);
         expect(lastJoiner).toEqual(MGPOptional.empty());
 
-        joinerDAOMock.getObsById('joinerId').subscribe((joiner: MGPOptional<Joiner>) => {
+        const unsubscribe: Unsubscribe = joinerDAOMock.subscribeToChanges('joinerId', (joiner: MGPOptional<Joiner>) => {
             callCount++;
             // TODO: REDO
             expect(callCount).withContext('Should not have been called more than twice').toBeLessThanOrEqual(2);
@@ -82,5 +84,6 @@ describe('JoinerDAOMock', () => {
 
         expect(callCount).toEqual(2);
         expect(lastJoiner.get()).toEqual(JoinerMocks.WITH_FIRST_CANDIDATE);
+        unsubscribe();
     }));
 });

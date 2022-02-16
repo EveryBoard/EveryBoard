@@ -9,7 +9,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GameState } from '../../jscaip/GameState';
 import { Move } from '../../jscaip/Move';
 import { MGPValidation } from '../MGPValidation';
-import { AppModule } from '../../app.module';
+import { AppModule, FirebaseProviders } from '../../app.module';
 import { UserDAO } from '../../dao/UserDAO';
 import { AuthenticationService, AuthUser } from '../../services/AuthenticationService';
 import { MGPNode } from '../../jscaip/MGPNode';
@@ -30,25 +30,20 @@ import { HumanDuration } from '../TimeUtils';
 import { Utils } from '../utils';
 import { AutofocusDirective } from 'src/app/directives/autofocus.directive';
 import { ToggleVisibilityDirective } from 'src/app/directives/toggle-visibility.directive';
-import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { AngularFireModule } from '@angular/fire';
-import { USE_EMULATOR as USE_FIRESTORE_EMULATOR } from '@angular/fire/firestore';
-import { USE_EMULATOR as USE_DATABASE_EMULATOR } from '@angular/fire/database';
-import { USE_EMULATOR as USE_AUTH_EMULATOR } from '@angular/fire/auth';
-import { USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/functions';
-import { environment } from 'src/environments/environment';
 import { MGPOptional } from '../MGPOptional';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { AbstractGameComponent } from 'src/app/components/game-components/game-component/GameComponent';
 import { findMatchingRoute } from 'src/app/app.module.spec';
+import * as Firestore from '@angular/fire/firestore';
+import * as Auth from '@angular/fire/auth';
 
 @Component({})
 export class BlankComponent {}
 
 export class ActivatedRouteStub {
-    private route: {[key: string]: string} = {}
+    private route: {[key: string]: string} = {};
     public snapshot: { paramMap: { get: (str: string) => string } };
     public constructor(compo?: string, id?: string) {
         this.snapshot = {
@@ -466,23 +461,22 @@ export class TestUtils {
 export async function setupEmulators(): Promise<unknown> {
     await TestBed.configureTestingModule({
         imports: [
-            AngularFirestoreModule,
             HttpClientModule,
-            AngularFireModule.initializeApp(environment.firebaseConfig),
+            FirebaseProviders.app(),
+            FirebaseProviders.firestore(),
+            FirebaseProviders.auth(),
+            FirebaseProviders.database(),
         ],
         providers: [
-            { provide: USE_AUTH_EMULATOR, useValue: environment.emulatorConfig.auth },
-            { provide: USE_DATABASE_EMULATOR, useValue: environment.emulatorConfig.database },
-            { provide: USE_FIRESTORE_EMULATOR, useValue: environment.emulatorConfig.firestore },
-            { provide: USE_FUNCTIONS_EMULATOR, useValue: environment.emulatorConfig.functions },
             AuthenticationService,
         ],
-        schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
+    TestBed.inject(Firestore.Firestore);
+    TestBed.inject(Auth.Auth);
     const http: HttpClient = TestBed.inject(HttpClient);
-    // Clear the firestore data before each test
+    // Clear the content of the firestore database in the emulator
     await http.delete('http://localhost:8080/emulator/v1/projects/my-project/databases/(default)/documents').toPromise();
-    // Clear the auth data before each test
+    // Clear the auth data in the emulator before each test
     await http.delete('http://localhost:9099/emulator/v1/projects/my-project/accounts').toPromise();
     return;
 }

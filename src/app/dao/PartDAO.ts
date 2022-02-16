@@ -1,10 +1,10 @@
 import { FirebaseDocument, FirebaseFirestoreDAO } from './FirebaseFirestoreDAO';
 import { MGPResult, Part } from '../domain/Part';
-import { AngularFirestore } from '@angular/fire/firestore';
 import { Injectable } from '@angular/core';
 import { FirebaseCollectionObserver } from './FirebaseCollectionObserver';
 import { display } from 'src/app/utils/utils';
 import { Player } from '../jscaip/Player';
+import { Firestore } from '@angular/fire/firestore';
 
 @Injectable({
     providedIn: 'root',
@@ -13,8 +13,8 @@ export class PartDAO extends FirebaseFirestoreDAO<Part> {
 
     public static VERBOSE: boolean = false;
 
-    constructor(protected afs: AngularFirestore) {
-        super('parties', afs);
+    constructor(firestore: Firestore) {
+        super('parties', firestore);
         display(PartDAO.VERBOSE, 'PartDAO.constructor');
     }
     public async updateAndBumpIndex(id: string,

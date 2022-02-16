@@ -4,10 +4,6 @@ import { HexagonalGameState } from '../HexagonalGameState';
 import { FlatHexaOrientation } from '../HexaOrientation';
 import { TestingHexagonalState } from './HexagonalGameState.spec';
 
-describe('PointyHexaOrientation', () => {
-
-});
-
 describe('FlatHexaOrientation', () => {
 
     describe('on a 7x5 board', () => {

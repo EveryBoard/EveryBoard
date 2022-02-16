@@ -62,5 +62,5 @@ export class DiamTutorial {
             $localize`Congratulations!`,
             $localize`Failed, try to shift a stack of pieces to the left.`,
         ),
-    ]
+    ];
 }

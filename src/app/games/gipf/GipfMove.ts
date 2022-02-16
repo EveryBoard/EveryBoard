@@ -18,7 +18,7 @@ export class GipfCapture {
             const casted: Array<JSONValue> = encoded as Array<JSONValue>;
             return new GipfCapture(casted.map((x: JSONValue) => Coord.encoder.decode(x)));
         }
-    }
+    };
 
     public readonly capturedSpaces: ReadonlyArray<Coord>;
 
@@ -108,7 +108,7 @@ export class GipfPlacement {
             return new GipfPlacement(Coord.encoder.decode(casted.coord),
                                      this.optionalDirectionEncoder.decode(casted.direction));
         }
-    }
+    };
     public constructor(public readonly coord: Coord,
                        public readonly direction: MGPOptional<HexaDirection>) {
     }
@@ -156,7 +156,7 @@ export class GipfMove extends Move {
             }
             return array;
         }
-    }
+    };
     public constructor(public readonly placement: GipfPlacement,
                        public readonly initialCaptures: ReadonlyArray<GipfCapture>,
                        public readonly finalCaptures: ReadonlyArray<GipfCapture>) {

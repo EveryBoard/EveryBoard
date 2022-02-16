@@ -34,7 +34,7 @@ export class SaharaMove extends MoveCoordToCoord {
             const sx: number = encodedMove;
             return SaharaMove.from(new Coord(sx, sy), new Coord(ex, ey)).get();
         }
-    }
+    };
     public static checkDistanceAndLocation(start: Coord, end: Coord): MGPValidation {
         const dx: number = Math.abs(start.x - end.x);
         const dy: number = Math.abs(start.y - end.y);
