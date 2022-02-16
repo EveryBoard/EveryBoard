@@ -1,5 +1,6 @@
 import { ErrorLoggerService } from '../services/ErrorLoggerService';
 import { Table } from '../utils/ArrayUtils';
+import { MGPValidation } from '../utils/MGPValidation';
 import { assert } from '../utils/utils';
 import { Coord } from './Coord';
 import { GameStateWithTable } from './GameStateWithTable';
@@ -119,9 +120,10 @@ export abstract class HexagonalGameState<P> extends GameStateWithTable<P> {
             }
             coord = coord.getNext(dir);
         }
-        ErrorLoggerService.logError('HexagonalGameState.findEntranceFrom',
-                                    'could not find a board entrance, board must be invalid',
-                                    { start: start.toString(), line: line.toString() });
-        return new Coord(-1, -1);
+        const failure: MGPValidation =
+            ErrorLoggerService.logError('HexagonalGameState.findEntranceFrom',
+                                        'could not find a board entrance, board must be invalid',
+                                        { start: start.toString(), line: line.toString() });
+        throw new Error(failure.getReason());
     }
 }
