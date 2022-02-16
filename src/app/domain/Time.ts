@@ -1,5 +1,5 @@
+import * as Firestore from '@angular/fire/firestore';
 import { JSONObject } from '../utils/utils';
-import firebase from 'firebase';
 
 export interface Time extends JSONObject {
 
@@ -8,4 +8,4 @@ export interface Time extends JSONObject {
     nanoseconds: number;
 }
 
-export type FirebaseTime = firebase.firestore.FieldValue | Time | null;
+export type FirebaseTime = Firestore.FieldValue | Time | null;

@@ -6,8 +6,8 @@ import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { expectValidRouting, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { RegisterComponent } from './register.component';
-import firebase from 'firebase/app';
 import { VerifyAccountComponent } from '../verify-account/verify-account.component';
+import * as FireAuth from '@angular/fire/auth';
 
 describe('RegisterComponent', () => {
     let testUtils: SimpleComponentTestUtils<RegisterComponent>;
@@ -19,7 +19,7 @@ describe('RegisterComponent', () => {
     const username: string = 'jeanjaja';
     const email: string = 'jean@jaja.europe';
     const password: string = 'hunter2';
-    const user: firebase.User = { displayName: 'jeanjaja', email: 'jean@jaja.europe' } as firebase.User;
+    const user: FireAuth.User = { displayName: 'jeanjaja', email: 'jean@jaja.europe' } as FireAuth.User;
 
     function fillInUserDetails() {
         testUtils.fillInput('#email', email);

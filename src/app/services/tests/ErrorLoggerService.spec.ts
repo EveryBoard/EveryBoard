@@ -9,8 +9,8 @@ import { ObservableSubject } from 'src/app/utils/tests/ObservableSubject.spec';
 import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 import { JSONValue } from 'src/app/utils/utils';
 import { MGPError, ErrorDAO, ErrorLoggerService } from '../ErrorLoggerService';
-import firebase from 'firebase/app';
 import { RouterTestingModule } from '@angular/router/testing';
+import { serverTimestamp } from 'firebase/firestore';
 
 type ErrorOS = ObservableSubject<MGPOptional<FirebaseDocument<MGPError>>>
 class ErrorDAOMock extends FirebaseFirestoreDAOMock<MGPError> {
@@ -75,8 +75,8 @@ describe('ErrorLoggerService', () => {
             route: '/',
             message,
             data,
-            firstEncounter: firebase.firestore.FieldValue.serverTimestamp(),
-            lastEncounter: firebase.firestore.FieldValue.serverTimestamp(),
+            firstEncounter: serverTimestamp(),
+            lastEncounter: serverTimestamp(),
             occurences: 1,
         };
         expect(errorDAO.create).toHaveBeenCalledOnceWith(expectedError);
@@ -99,7 +99,7 @@ describe('ErrorLoggerService', () => {
 
         // Then the error is updated in the DAO with all expected fields
         const update: Partial<MGPError> = {
-            lastEncounter: firebase.firestore.FieldValue.serverTimestamp(),
+            lastEncounter: serverTimestamp(),
             occurences: 2,
         };
         expect(errorDAO.update).toHaveBeenCalledOnceWith(id, update);

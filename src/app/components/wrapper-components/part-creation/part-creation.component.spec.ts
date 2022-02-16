@@ -33,6 +33,8 @@ describe('PartCreationComponent:', () => {
     let gameService: GameService;
     let chatService: ChatService;
 
+    let destroyed: boolean;
+
     async function selectCustomGameAndChangeConfig(): Promise<void> {
         await testUtils.clickElement('#partTypeCustom');
         Utils.getNonNullable(component.configFormGroup.get('maximalMoveDuration')).setValue(100);
@@ -59,6 +61,7 @@ describe('PartCreationComponent:', () => {
     };
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(PartCreationComponent);
+        destroyed = false;
         const chatDAOMock: ChatDAO = TestBed.inject(ChatDAO);
         partDAOMock = TestBed.inject(PartDAO);
         joinerDAOMock = TestBed.inject(JoinerDAO);
@@ -73,6 +76,24 @@ describe('PartCreationComponent:', () => {
         await joueursDAOMock.set('opponent', OPPONENT);
         await partDAOMock.set('joinerId', PartMocks.INITIAL);
     }));
+    it('should unsubscribe from joiner service upon destruction', fakeAsync(async() => {
+        // Given a component that is loaded by anyone (here, the creator)
+        component.userName = 'creator';
+        await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL);
+        testUtils.detectChanges();
+        await testUtils.whenStable();
+        spyOn(joinerService, 'unsubscribe');
+        spyOn(component, 'cancelGameCreation'); // spied in order to avoid calling it
+
+        // When the component is destroyed
+        destroyed = true;
+        await component.ngOnDestroy();
+        tick(3000);
+        await testUtils.whenStable();
+
+        // Then the component unsubscribes from the joiner service
+        expect(joinerService.unsubscribe).toHaveBeenCalledWith();
+    }));
     describe('For creator', () => {
         beforeEach(fakeAsync(async() => {
             // Given a component that is loaded by the creator
@@ -82,7 +103,7 @@ describe('PartCreationComponent:', () => {
         describe('Creator arrival on component', () => {
             it('should call joinGame and observe', fakeAsync(async() => {
                 spyOn(joinerService, 'joinGame').and.callThrough();
-                spyOn(joinerService, 'observe').and.callThrough();
+                spyOn(joinerService, 'subscribeToChanges').and.callThrough();
 
                 // When the component is loaded
                 testUtils.detectChanges();
@@ -90,21 +111,21 @@ describe('PartCreationComponent:', () => {
 
                 // Then joinGame and observe are called
                 expect(joinerService.joinGame).toHaveBeenCalledTimes(1);
-                expect(joinerService.observe).toHaveBeenCalledTimes(1);
+                expect(joinerService.subscribeToChanges).toHaveBeenCalledTimes(1);
                 expect(component).withContext('PartCreationComponent should have been created').toBeTruthy();
             }));
             it('should not start observing joiner if part does not exist', fakeAsync(async() => {
                 // Given a part that does not exist
                 component.partId = 'does not exist';
                 spyOn(joinerDAOMock, 'read').and.resolveTo(MGPOptional.empty());
-                spyOn(joinerService, 'observe');
+                spyOn(joinerService, 'subscribeToChanges');
 
                 // When the component is loaded
                 testUtils.detectChanges();
                 await testUtils.whenStable();
 
                 // Then observe is not called
-                expect(joinerService.observe).not.toHaveBeenCalled();
+                expect(joinerService.subscribeToChanges).not.toHaveBeenCalled();
             }));
         });
         describe('Candidate arrival', () => {
@@ -621,9 +642,11 @@ describe('PartCreationComponent:', () => {
         });
     });
     afterEach(fakeAsync(async() => {
-        testUtils.destroy();
-        await testUtils.whenStable();
-        tick();
+        if (destroyed === false) {
+            testUtils.destroy();
+            tick(3000);
+            await testUtils.whenStable();
+        }
     }));
 });
 

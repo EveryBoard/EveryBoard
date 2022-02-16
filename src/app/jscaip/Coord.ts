@@ -16,7 +16,7 @@ export class Coord implements ComparableObject {
                 casted.y != null && typeof casted.y === 'number', 'Invalid encoded coord');
             return new Coord(casted.x as number, casted.y as number);
         }
-    }
+    };
     public static numberEncoder(width: number, height: number): NumberEncoder<Coord> {
         return NumberEncoder.tuple(
             [NumberEncoder.numberEncoder(width), NumberEncoder.numberEncoder(height)],

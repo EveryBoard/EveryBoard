@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { Firestore } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
-import firebase from 'firebase/app';
+import { serverTimestamp } from 'firebase/firestore';
 import { FirebaseDocument, FirebaseFirestoreDAO } from '../dao/FirebaseFirestoreDAO';
 import { FirebaseTime } from '../domain/Time';
 import { MGPOptional } from '../utils/MGPOptional';
@@ -29,8 +29,8 @@ export interface MGPError extends FirebaseJSONObject {
     providedIn: 'root',
 })
 export class ErrorDAO extends FirebaseFirestoreDAO<MGPError> {
-    private constructor(afs: AngularFirestore) {
-        super('errors', afs);
+    private constructor(firestore: Firestore) {
+        super('errors', firestore);
     }
 }
 
@@ -70,8 +70,8 @@ export class ErrorLoggerService {
                 route,
                 message,
                 data,
-                firstEncounter: firebase.firestore.FieldValue.serverTimestamp(),
-                lastEncounter: firebase.firestore.FieldValue.serverTimestamp(),
+                firstEncounter: serverTimestamp(),
+                lastEncounter: serverTimestamp(),
                 occurences: 1,
             };
             await this.errorDAO.create(error);
@@ -80,7 +80,7 @@ export class ErrorLoggerService {
             const previousErrorId: string = previousErrors[0].id;
             const previousError: MGPError = previousErrors[0].data;
             await this.errorDAO.update(previousErrorId, {
-                lastEncounter: firebase.firestore.FieldValue.serverTimestamp(),
+                lastEncounter: serverTimestamp(),
                 occurences: previousError.occurences + 1,
             });
         }

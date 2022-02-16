@@ -91,7 +91,7 @@ export class YinshMove extends Move {
             }
             return array;
         }
-    }
+    };
     public constructor(public readonly initialCaptures: ReadonlyArray<YinshCapture>,
                        public readonly start: Coord,
                        public readonly end: MGPOptional<Coord>,

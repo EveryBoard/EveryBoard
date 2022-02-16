@@ -67,8 +67,8 @@ export class YinshComponent
                        'MOVE_END' |
                        'FINAL_CAPTURE_SELECT_FIRST' |
                        'FINAL_CAPTURE_SELECT_LAST' |
-                       'FINAL_CAPTURE_SELECT_RING'
-        = 'MOVE_START';
+                       'FINAL_CAPTURE_SELECT_RING' =
+            'MOVE_START';
 
     private moveStart: MGPOptional<Coord> = MGPOptional.empty();
     private moveEnd: MGPOptional<Coord> = MGPOptional.empty();

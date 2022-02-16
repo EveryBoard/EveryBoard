@@ -41,7 +41,7 @@ export class AwaleMove extends Move {
         public decodeNumber(encoded: number): AwaleMove {
             return AwaleMove.from(encoded);
         }
-    }
+    };
     public equals(o: AwaleMove): boolean {
         if (o === this) return true;
         return o.x === this.x;

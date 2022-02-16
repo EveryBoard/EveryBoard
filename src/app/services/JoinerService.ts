@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import { FirstPlayer, Joiner, PartStatus, PartType } from '../domain/Joiner';
 import { JoinerDAO } from '../dao/JoinerDAO';
 import { assert, display } from 'src/app/utils/utils';
 import { ArrayUtils } from '../utils/ArrayUtils';
 import { MGPOptional } from '../utils/MGPOptional';
+import { Unsubscribe } from '@angular/fire/firestore';
 import { MGPValidation } from '../utils/MGPValidation';
 
 @Injectable({
@@ -15,12 +15,19 @@ export class JoinerService {
 
     private observedJoinerId: string;
 
+    private joinerUnsubscribe: MGPOptional<Unsubscribe> = MGPOptional.empty();
+
     constructor(private readonly joinerDAO: JoinerDAO) {
         display(JoinerService.VERBOSE, 'JoinerService.constructor');
     }
-    public observe(joinerId: string): Observable<MGPOptional<Joiner>> {
+    public subscribeToChanges(joinerId: string, callback: (doc: MGPOptional<Joiner>) => void): void {
         this.observedJoinerId = joinerId;
-        return this.joinerDAO.getObsById(joinerId);
+        this.joinerUnsubscribe = MGPOptional.of(this.joinerDAO.subscribeToChanges(joinerId, callback));
+    }
+    public unsubscribe(): void {
+        assert(this.joinerUnsubscribe.isPresent(), 'JoinerService cannot unsubscribe if no joiner is observed');
+        this.joinerUnsubscribe.get()();
+        this.joinerUnsubscribe = MGPOptional.empty();
     }
     public async createInitialJoiner(creatorName: string, joinerId: string): Promise<void> {
         display(JoinerService.VERBOSE, 'JoinerService.createInitialJoiner(' + creatorName + ', ' + joinerId + ')');

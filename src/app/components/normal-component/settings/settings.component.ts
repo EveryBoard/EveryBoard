@@ -12,11 +12,11 @@ export class SettingsComponent {
     public readonly availableLanguages: SettingOption[] = [
         { value: 'fr', name: 'Français' },
         { value: 'en', name: 'English' },
-    ]
+    ];
     public readonly availableThemes: SettingOption[] = [
         { value: 'light', name: $localize`Light` },
         { value: 'dark', name: $localize`Dark` },
-    ]
+    ];
 
     public currentTheme: string;
     public currentLanguage: string;

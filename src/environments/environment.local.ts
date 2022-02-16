@@ -12,10 +12,5 @@ export const environment: Environment = {
         storageBucket: 'unknown',
         messagingSenderId: 'unknown',
     },
-    emulatorConfig: {
-        firestore: ['localhost', 8080],
-        auth: ['localhost', 9099],
-        database: ['localhost', 9000],
-        functions: ['localhost', 5001],
-    },
+    useEmulators: true,
 };

@@ -16,7 +16,7 @@ export class ReversiMove extends MoveCoord {
             const y: number = (encodedMove - x) / ReversiState.BOARD_WIDTH;
             return new ReversiMove(x, y);
         }
-    }
+    };
     public static readonly PASS: ReversiMove = new ReversiMove(-1, -1);
 
     public static readonly PASS_NUMBER: number = ReversiMove.encoder.encodeNumber(ReversiMove.PASS);
