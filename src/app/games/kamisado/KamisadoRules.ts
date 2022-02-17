@@ -12,7 +12,7 @@ import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { KamisadoFailure } from './KamisadoFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { assert } from 'src/app/utils/utils';
+import { assert } from 'src/app/utils/assert';
 
 export class KamisadoNode extends MGPNode<KamisadoRules, KamisadoMove, KamisadoState> { }
 

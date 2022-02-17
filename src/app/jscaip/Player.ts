@@ -1,4 +1,5 @@
-import { assert, Utils } from 'src/app/utils/utils';
+import { Utils } from 'src/app/utils/utils';
+import { assert } from 'src/app/utils/assert';
 import { ComparableObject } from 'src/app/utils/Comparable';
 import { NumberEncoder } from './Encoder';
 

@@ -2,31 +2,14 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { FirebaseDocument } from 'src/app/dao/FirebaseFirestoreDAO';
-import { FirebaseFirestoreDAOMock } from 'src/app/dao/tests/FirebaseFirestoreDAOMock.spec';
-import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { ObservableSubject } from 'src/app/utils/tests/ObservableSubject.spec';
 import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 import { JSONValue } from 'src/app/utils/utils';
-import { MGPError, ErrorDAO, ErrorLoggerService } from '../ErrorLoggerService';
+import { ErrorLoggerService } from '../ErrorLoggerService';
 import { RouterTestingModule } from '@angular/router/testing';
 import { serverTimestamp } from 'firebase/firestore';
-
-type ErrorOS = ObservableSubject<MGPOptional<FirebaseDocument<MGPError>>>
-class ErrorDAOMock extends FirebaseFirestoreDAOMock<MGPError> {
-
-    public static errorDB: MGPMap<string, ErrorOS>;
-
-    public constructor() {
-        super('ErrorDAOMock', false);
-    }
-    public getStaticDB(): MGPMap<string, ErrorOS> {
-        return ErrorDAOMock.errorDB;
-    }
-    public resetStaticDB(): void {
-        ErrorDAOMock.errorDB = new MGPMap();
-    }
-}
+import { ErrorDAO, MGPError } from 'src/app/dao/ErrorDAO';
+import { ErrorDAOMock } from 'src/app/dao/tests/ErrorDAOMock.spec';
 
 describe('ErrorLoggerService', () => {
 

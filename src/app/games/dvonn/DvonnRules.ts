@@ -11,7 +11,7 @@ import { HexagonalGameState } from 'src/app/jscaip/HexagonalGameState';
 import { DvonnFailure } from './DvonnFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
-import { assert } from 'src/app/utils/utils';
+import { assert } from 'src/app/utils/assert';
 
 export class DvonnNode extends MGPNode<DvonnRules, DvonnMove, DvonnState> { }
 

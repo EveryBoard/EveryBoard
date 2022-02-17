@@ -12,7 +12,7 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { ReversiTutorial } from './ReversiTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { assert } from 'src/app/utils/utils';
+import { assert } from 'src/app/utils/assert';
 
 @Component({
     selector: 'app-reversi',

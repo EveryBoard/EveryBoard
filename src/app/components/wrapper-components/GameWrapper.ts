@@ -4,7 +4,8 @@ import { GameIncluderComponent } from '../game-components/game-includer/game-inc
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { Move } from '../../jscaip/Move';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { assert, display, Utils } from 'src/app/utils/utils';
+import { display, Utils } from 'src/app/utils/utils';
+import { assert } from 'src/app/utils/assert';
 import { GameInfo } from '../normal-component/pick-game/pick-game.component';
 import { Player } from 'src/app/jscaip/Player';
 import { Localized } from 'src/app/utils/LocaleUtils';

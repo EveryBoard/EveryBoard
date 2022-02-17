@@ -1,5 +1,6 @@
 import { FirebaseDocument } from '../dao/FirebaseFirestoreDAO';
-import { assert, JSONObject } from '../utils/utils';
+import { JSONObject } from '../utils/utils';
+import { assert } from 'src/app/utils/assert';
 
 export interface Joiner extends JSONObject {
     readonly creator: string;

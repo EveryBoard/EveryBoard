@@ -3,7 +3,8 @@ import { EncapsulePiece, Size } from 'src/app/games/encapsule/EncapsulePiece';
 import { Player } from 'src/app/jscaip/Player';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { assert, Utils } from 'src/app/utils/utils';
+import { Utils } from 'src/app/utils/utils';
+import { assert } from 'src/app/utils/assert';
 
 export class EncapsuleState extends GameStateWithTable<EncapsuleCase> {
 

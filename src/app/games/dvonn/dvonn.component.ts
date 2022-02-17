@@ -14,7 +14,7 @@ import { MaxStacksDvonnMinimax } from './MaxStacksDvonnMinimax';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { DvonnTutorial } from './DvonnTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { assert } from 'src/app/utils/utils';
+import { assert } from 'src/app/utils/assert';
 
 @Component({
     selector: 'app-dvonn',

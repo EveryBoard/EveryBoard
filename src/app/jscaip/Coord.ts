@@ -1,5 +1,6 @@
 import { Direction, Vector } from 'src/app/jscaip/Direction';
-import { assert, JSONObject, JSONValue, JSONValueWithoutArray } from 'src/app/utils/utils';
+import { JSONObject, JSONValue, JSONValueWithoutArray } from 'src/app/utils/utils';
+import { assert } from 'src/app/utils/assert';
 import { ComparableObject } from '../utils/Comparable';
 import { MGPFallible } from '../utils/MGPFallible';
 import { Encoder, NumberEncoder } from './Encoder';

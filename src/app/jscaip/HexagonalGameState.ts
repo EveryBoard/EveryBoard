@@ -1,7 +1,7 @@
 import { ErrorLoggerService } from '../services/ErrorLoggerService';
 import { Table } from '../utils/ArrayUtils';
 import { MGPValidation } from '../utils/MGPValidation';
-import { assert } from '../utils/utils';
+import { assert } from '../utils/assert';
 import { Coord } from './Coord';
 import { GameStateWithTable } from './GameStateWithTable';
 import { HexaDirection } from './HexaDirection';

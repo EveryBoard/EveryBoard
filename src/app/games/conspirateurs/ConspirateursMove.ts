@@ -8,7 +8,8 @@ import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
-import { assert, JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
+import { JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
+import { assert } from 'src/app/utils/assert';
 import { ConspirateursFailure } from './ConspirateursFailure';
 import { ConspirateursState } from './ConspirateursState';
 

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { assert } from 'src/app/utils/utils';
+import { assert } from 'src/app/utils/assert';
 
 @Component({
     selector: 'app-reset-password',
