@@ -41,7 +41,7 @@ describe('ErrorLoggerService', () => {
         // Then it throws instead
         expect(() => ErrorLoggerService.logError('component', 'error')).toThrowError('component: error (extra data: undefined)');
     });
-    it('should add new errors to the DB', fakeAsync(async() => {
+    it('should add new error to the DB', fakeAsync(async() => {
         // Given an error in a component which has not already been encountered
         const component: string = 'Some component';
         const message: string = 'my new error message';
@@ -64,6 +64,27 @@ describe('ErrorLoggerService', () => {
         };
         expect(errorDAO.create).toHaveBeenCalledOnceWith(expectedError);
     }));
+    it('should not include data field of an error if it is not provided', fakeAsync(async() => {
+        // Given an error in a component which has not already been encountered
+        const component: string = 'Some component';
+        const message: string = 'my new error message';
+        spyOn(errorDAO, 'create');
+
+        // When logging it
+        ErrorLoggerService.logError(component, message);
+        tick(1000);
+
+        // Then the error is stored in the DAO with all expected fields
+        const expectedError: MGPError = {
+            component,
+            route: '/',
+            message,
+            firstEncounter: serverTimestamp(),
+            lastEncounter: serverTimestamp(),
+            occurences: 1,
+        };
+        expect(errorDAO.create).toHaveBeenCalledOnceWith(expectedError);
+    }));
     it('should increment count of already encountered errors', fakeAsync(async() => {
         spyOn(errorDAO, 'update');
         // Given an error in a component which has already been encountered
@@ -72,7 +93,7 @@ describe('ErrorLoggerService', () => {
         const data: JSONValue = { foo: 'bar' };
         ErrorLoggerService.logError(component, message, data);
         tick(1000);
-        const errors: FirebaseDocument<MGPError>[] = await errorDAO.findWhere([['component', '==', component], ['route', '==', '/'], ['message', '==', message], ['data', '==', data]]);
+        const errors: FirebaseDocument<MGPError>[] = await errorDAO.findErrors(component, '/', message, data);
         expect(errors.length).toBe(1);
         const id: string = errors[0].id;
 
