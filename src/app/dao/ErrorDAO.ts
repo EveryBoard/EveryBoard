@@ -20,6 +20,7 @@ export interface MGPError extends FirebaseJSONObject {
     // Number of times the error occured
     occurences: number,
 }
+export type ErrorDocument = FirebaseDocument<MGPError>;
 
 @Injectable({
     providedIn: 'root',
@@ -29,9 +30,7 @@ export class ErrorDAO extends FirebaseFirestoreDAO<MGPError> {
     public constructor(firestore: Firestore) {
         super('errors', firestore);
     }
-    public findErrors(component: string, route: string, message: string, data?: JSONValue)
-    : Promise<FirebaseDocument<MGPError>[]>
-    {
+    public findErrors(component: string, route: string, message: string, data?: JSONValue): Promise<ErrorDocument[]> {
         if (data === undefined) {
             return this.findWhere([['component', '==', component], ['route', '==', route], ['message', '==', message]]);
         } else {

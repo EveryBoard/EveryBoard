@@ -21,7 +21,7 @@ describe('ErrorDAO', () => {
             // Given no matching error
             // When looking for matching errors
             const errors: FirebaseDocument<MGPError>[] = await dao.findErrors('test', '', 'dummy message');
-            // Then no matching error is found
+            // Then no matching error should be found
             expect(errors.length).toBe(0);
         });
         it('should find a corresponding error if there is one (with attached data)', async() => {
@@ -39,7 +39,7 @@ describe('ErrorDAO', () => {
             // When looking for matching errors
             const errors: FirebaseDocument<MGPError>[] =
                 await dao.findErrors(error.component, error.route, error.message, error.data);
-            // Then we found the matching error
+            // Then we should find the matching error
             expect(errors.length).toBe(1);
             expect(errors[0].id).toBe(errorId);
         });
@@ -57,7 +57,7 @@ describe('ErrorDAO', () => {
             // When looking for matching errors (without data)
             const errors: FirebaseDocument<MGPError>[] =
                 await dao.findErrors(error.component, error.route, error.message);
-            // Then we found the matching error
+            // Then we should find the matching error
             expect(errors.length).toBe(1);
             expect(errors[0].id).toEqual(errorId);
         });

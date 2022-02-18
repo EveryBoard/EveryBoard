@@ -182,11 +182,19 @@ describe('HexagonalGameState', () => {
             expect(state.getEntranceOnLine(otherLine).equals(new Coord(0, 4))).toBeTrue();
         });
         it('should return the correct entrance for lines with a constant s', () => {
+            // Given a line
             const line: HexaLine = HexaLine.constantS(4);
-            expect(state.getEntranceOnLine(line).equals(new Coord(4, 0))).toBeTrue();
+            // When computing the entrance
+            const entrance: Coord = state.getEntranceOnLine(line);
+            // Then it should provide the expected entrance
+            expect(entrance.equals(new Coord(4, 0))).toBeTrue();
 
+            // Given another line
             const otherLine: HexaLine = HexaLine.constantS(8);
-            expect(state.getEntranceOnLine(otherLine).equals(new Coord(6, 2))).toBeTrue();
+            // When computing the entrance
+            const otherEntrance: Coord = state.getEntranceOnLine(otherLine);
+            // Then it should provide the expected entrance
+            expect(otherEntrance.equals(new Coord(6, 2))).toBeTrue();
         });
         it('should call logError and throw when unable to find an entrance', () => {
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);

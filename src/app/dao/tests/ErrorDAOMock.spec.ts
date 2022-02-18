@@ -3,10 +3,9 @@ import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ObservableSubject } from 'src/app/utils/tests/ObservableSubject.spec';
 import { JSONValue } from 'src/app/utils/utils';
-import { MGPError } from '../ErrorDAO';
-import { FirebaseDocument } from '../FirebaseFirestoreDAO';
+import { ErrorDocument, MGPError } from '../ErrorDAO';
 
-type ErrorOS = ObservableSubject<MGPOptional<FirebaseDocument<MGPError>>>
+type ErrorOS = ObservableSubject<MGPOptional<ErrorDocument>>
 export class ErrorDAOMock extends FirebaseFirestoreDAOMock<MGPError> {
 
     public static errorDB: MGPMap<string, ErrorOS>;
@@ -14,9 +13,7 @@ export class ErrorDAOMock extends FirebaseFirestoreDAOMock<MGPError> {
     public constructor() {
         super('ErrorDAOMock', false);
     }
-    public findErrors(component: string, route: string, message: string, data?: JSONValue)
-    : Promise<FirebaseDocument<MGPError>[]>
-    {
+    public findErrors(component: string, route: string, message: string, data?: JSONValue): Promise<ErrorDocument[]> {
         if (data === undefined) {
             return this.findWhere([['component', '==', component], ['route', '==', route], ['message', '==', message]]);
         } else {
