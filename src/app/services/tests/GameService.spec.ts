@@ -23,6 +23,7 @@ import { Utils } from 'src/app/utils/utils';
 import { JoinerService } from '../JoinerService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import firebase from 'firebase/app';
+import { UserMocks } from 'src/app/domain/UserMocks.spec';
 
 describe('GameService', () => {
 
@@ -34,7 +35,6 @@ describe('GameService', () => {
     const MOVE_2: number = 107;
 
     const CANDIDATES: MinimalUser[] = [{ id: 'joiner-user-doc-id', name: 'joiner' }];
-    const CREATOR: MinimalUser = { id: 'creator-user-doc-id', name: 'creator' };
 
     beforeEach(fakeAsync(async() => {
         await TestBed.configureTestingModule({
@@ -126,7 +126,7 @@ describe('GameService', () => {
             const joiner: Joiner = {
                 candidates: CANDIDATES,
                 chosenPlayer: 'joiner',
-                creator: CREATOR,
+                creator: UserMocks.CREATOR_MINIMAL_USER,
                 firstPlayer: 'RANDOM',
                 maximalMoveDuration: 10,
                 partStatus: 3,
@@ -147,7 +147,7 @@ describe('GameService', () => {
             const joiner: Joiner = {
                 candidates: CANDIDATES,
                 chosenPlayer: 'joiner',
-                creator: CREATOR,
+                creator: UserMocks.CREATOR_MINIMAL_USER,
                 firstPlayer: 'RANDOM',
                 maximalMoveDuration: 10,
                 partStatus: 3,
@@ -200,7 +200,7 @@ describe('GameService', () => {
             const lastGameJoiner: Joiner = {
                 candidates: CANDIDATES,
                 chosenPlayer: 'joiner',
-                creator: CREATOR,
+                creator: UserMocks.CREATOR_MINIMAL_USER,
                 firstPlayer: 'CREATOR',
                 maximalMoveDuration: 10,
                 partStatus: 3,
@@ -244,7 +244,7 @@ describe('GameService', () => {
             const lastGameJoiner: Joiner = {
                 candidates: CANDIDATES,
                 chosenPlayer: 'joiner',
-                creator: CREATOR,
+                creator: UserMocks.CREATOR_MINIMAL_USER,
                 firstPlayer: 'RANDOM',
                 maximalMoveDuration: 10,
                 partStatus: 3,

@@ -7,14 +7,13 @@ import { JoinerDAOMock } from 'src/app/dao/tests/JoinerDAOMock.spec';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { UserMocks } from 'src/app/domain/UserMocks.spec';
 
 describe('JoinerService', () => {
 
     let dao: JoinerDAOMock;
 
     let service: JoinerService;
-
-    const CREATOR_MINIMAL_USER: MinimalUser = { id: 'creator-user-doc-id', name: 'creator' };
 
     beforeEach(() => {
         dao = new JoinerDAOMock();
@@ -52,7 +51,7 @@ describe('JoinerService', () => {
         spyOn(dao, 'set');
 
         // When creating the initial joiner
-        await service.createInitialJoiner(CREATOR_MINIMAL_USER, 'id');
+        await service.createInitialJoiner(UserMocks.CREATOR_MINIMAL_USER, 'id');
 
         // Then it should delegate to the DAO and create the initial joiner
         expect(dao.set).toHaveBeenCalledWith('id', JoinerMocks.INITIAL);
@@ -100,7 +99,7 @@ describe('JoinerService', () => {
             // When trying to join an invalid joiner
             // Then it should fail
             const failure: MGPValidation = MGPValidation.failure('Game does not exist');
-            await expectAsync(service.joinGame('invalidJoinerId', CREATOR_MINIMAL_USER)).toBeResolvedTo(failure);
+            await expectAsync(service.joinGame('invalidJoinerId', UserMocks.CREATOR_MINIMAL_USER)).toBeResolvedTo(failure);
         }));
     });
     describe('cancelJoining', () => {

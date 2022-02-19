@@ -1,5 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { fakeAsync, tick } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { UserDAO } from 'src/app/dao/UserDAO';
+import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { AuthUser } from 'src/app/services/AuthenticationService';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -12,25 +14,29 @@ describe('HeaderComponent', () => {
 
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(HeaderComponent);
+        const userDAO: UserDAO = TestBed.inject(UserDAO);
+        await userDAO.set(UserMocks.CREATOR_AUTH_USER.userId, UserMocks.CREATOR);
     }));
-    it('should create', fakeAsync(async() => {
-        AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
+    it('should create', fakeAsync(() => {
+        AuthenticationServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
         testUtils.detectChanges();
-        expect(testUtils.getComponent()).toBeTruthy();
+        const component: HeaderComponent = testUtils.getComponent();
+        expect(component).toBeTruthy();
+        component.subscribeToLoggedUserDoc();
     }));
     it('should disconnect when connected user clicks  on the logout button', fakeAsync(async() => {
-        AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
+        AuthenticationServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
         testUtils.detectChanges();
         spyOn(testUtils.getComponent().authenticationService, 'disconnect');
-        await testUtils.clickElement('#logout');
-        expect(testUtils.getComponent().authenticationService.disconnect).toHaveBeenCalledTimes(1);
+        void testUtils.clickElement('#logout');
+        tick();
+        const component: HeaderComponent = testUtils.getComponent();
+        expect(component.authenticationService.disconnect).toHaveBeenCalledTimes(1);
+        component.subscribeToLoggedUserDoc();
     }));
     it('should have empty username when user is not connected', fakeAsync(async() => {
-        console.log('>>>> let us set user on mock')
         AuthenticationServiceMock.setUser(AuthUser.NOT_CONNECTED);
-        console.log('>>>> let us detect change')
         testUtils.detectChanges();
-        console.log('>>>> let us tick null')
         tick();
         expect(testUtils.getComponent().username).toEqual('');
     }));

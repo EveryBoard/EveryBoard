@@ -15,7 +15,7 @@ type DocumentSubject<T> = ObservableSubject<MGPOptional<FirebaseDocument<T>>>;
 
 export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> implements IFirebaseFirestoreDAO<T> {
 
-    public static VERBOSE: boolean = true;
+    public static VERBOSE: boolean = false;
 
     public static mockServerTime(): Time {
         const dateNow: number = Date.now();

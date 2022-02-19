@@ -127,7 +127,7 @@
                                             [ngClass]="viewInfo.candidateClasses[candidate]"
                                             id="presenceOf_{{ candidate }}">
                                             <td class="td"
-                                                [id]="viewInfo.chosenOpponent === candidate && ('selected_' + candidate) || 'candidate_' + candidate"
+                                                [id]="viewInfo.chosenOpponent === candidate ? ('selected_' + candidate) : ('candidate_' + candidate)"
                                                 >{{ candidate }}</td>
                                             <td class="td">
                                                 <button *ngIf="viewInfo.chosenOpponent !== candidate"

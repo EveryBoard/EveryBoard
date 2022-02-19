@@ -43,7 +43,6 @@ export class UserService {
             callback(value);
         });
         return () => {
-            console.log('UserService.unsubscribing from ' +userId)
             subscription.unsubscribe();
         };
     }

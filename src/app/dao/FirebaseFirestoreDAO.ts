@@ -39,7 +39,7 @@ export interface IFirebaseFirestoreDAO<T extends FirebaseJSONObject> {
 
 export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> implements IFirebaseFirestoreDAO<T> {
 
-    public static VERBOSE: boolean = false;
+    public static VERBOSE: boolean = true;
 
     constructor(public readonly collectionName: string, protected afs: AngularFirestore) {}
 
@@ -65,7 +65,7 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
     public delete(messageId: string): Promise<void> {
         return this.afs.collection(this.collectionName).doc(messageId).ref.delete();
     }
-    public set(id: string, element: T): Promise<void> {
+    public set(id: string, element: T): Promise<void> { // TODOTODO FOR REVIEW: should we assert this id does not exist already?
         display(FirebaseFirestoreDAO.VERBOSE, { called: this.collectionName + '.set', id, element });
         return this.afs.collection(this.collectionName).doc(id).set(element);
     }

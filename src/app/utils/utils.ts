@@ -30,6 +30,7 @@ export class Utils {
     // Returns any because in the future it may return a MGPValidation/MGPFallible in production
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     public static handleError(message: string): any {
+        console.log('HANDLE ERROR CALLED')
         throw new Error('Encountered error: ' + message);
     }
     public static expectToBe<T>(value: T, expected: T, message?: string): void {

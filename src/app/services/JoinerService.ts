@@ -11,7 +11,8 @@ import { MGPValidation } from '../utils/MGPValidation';
     providedIn: 'root',
 })
 export class JoinerService {
-    public static VERBOSE: boolean = false;
+
+    public static VERBOSE: boolean = true;
 
     private observedJoinerId: string;
 
@@ -38,7 +39,7 @@ export class JoinerService {
         return this.set(joinerId, newJoiner);
     }
     public async joinGame(partId: string, user: MinimalUser): Promise<MGPValidation> {
-        display(JoinerService.VERBOSE, 'JoinerService.joinGame(' + partId + ', ' + user + ')');
+        display(JoinerService.VERBOSE, 'JoinerService.joinGame(' + partId + ', ' + user.id + ')');
 
         const joiner: MGPOptional<Joiner> = await this.joinerDAO.read(partId);
         if (joiner.isAbsent()) {
@@ -78,6 +79,7 @@ export class JoinerService {
                 chosenPlayer = null;
                 partStatus = PartStatus.PART_CREATED.value;
             } else if (indexLeaver === -1) {
+                console.log('ERROR::: someone that was not candidate nor chosenPlayer just left the chat: ' + userName);
                 throw new Error('someone that was not candidate nor chosenPlayer just left the chat: ' + userName);
             }
             const update: Partial<Joiner> = {
