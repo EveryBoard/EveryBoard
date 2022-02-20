@@ -549,7 +549,7 @@ describe('PartCreationComponent:', () => {
                 // Then user's name taken out of the candidate list
                 expect(joinerService.cancelJoining).toHaveBeenCalledOnceWith(UserMocks.OPPONENT_MINIMAL_USER.name);
             }));
-            it('should set observedPart as empty when leaving the room', fakeAsync(() => {
+            it('should remove observedPart when leaving the room', fakeAsync(() => {
                 // Given a partCreation where user is but candidate
                 awaitComponentInitialisation();
                 expect(component.currentJoiner).toEqual(JoinerMocks.WITH_FIRST_CANDIDATE);

@@ -53,11 +53,11 @@ export class UserService {
     public removeObservedUserId() {
         this.currentUserId = MGPOptional.empty();
     }
-    public updateObservedPart(observedPart: string): Promise<void> {
+    public updateObservedPart(observedPart: string): Promise<void> { // TODOTOD: TEST IN ITSELF, NOT JUST TESTING ITS CALLED
         assert(this.currentUserId.isPresent(), 'Should be subscribe to yourself when connected');
         return this.userDAO.update(this.currentUserId.get(), { observedPart });
     }
-    public removeObservedPart(): Promise<void> {
+    public removeObservedPart(): Promise<void> { // TODOTOD: TEST IN ITSELF, NOT JUST TESTING ITS CALLED
         assert(this.currentUserId.isPresent(), 'Should be subscribe to yourself when connected');
         return this.userDAO.update(this.currentUserId.get(), { observedPart: undefined });
     }

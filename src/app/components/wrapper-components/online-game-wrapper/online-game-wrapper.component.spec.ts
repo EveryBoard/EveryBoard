@@ -48,7 +48,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
     }
     beforeEach(async() => {
         testUtils = await ComponentTestUtils.basic('P4');
-        AuthenticationServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
+        AuthenticationServiceMock.setUser(UserMocks.CREATOR_AUTH_USER); // TODOTODO: do only that for creator tests !
 
         // Normally, the header does that
         (TestBed.inject(UserService)).setObservedUserId(UserMocks.CREATOR_AUTH_USER.userId);

@@ -20,9 +20,7 @@ describe('HeaderComponent', () => {
     it('should create', fakeAsync(() => {
         AuthenticationServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
         testUtils.detectChanges();
-        const component: HeaderComponent = testUtils.getComponent();
-        expect(component).toBeTruthy();
-        component.subscribeToLoggedUserDoc();
+        expect(testUtils.getComponent()).toBeTruthy();
     }));
     it('should disconnect when connected user clicks  on the logout button', fakeAsync(async() => {
         AuthenticationServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
@@ -32,7 +30,6 @@ describe('HeaderComponent', () => {
         tick();
         const component: HeaderComponent = testUtils.getComponent();
         expect(component.authenticationService.disconnect).toHaveBeenCalledTimes(1);
-        component.subscribeToLoggedUserDoc();
     }));
     it('should have empty username when user is not connected', fakeAsync(async() => {
         AuthenticationServiceMock.setUser(AuthUser.NOT_CONNECTED);
