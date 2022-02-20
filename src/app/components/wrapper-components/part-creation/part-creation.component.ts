@@ -368,7 +368,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             }, 2 * PartCreationComponent.TOKEN_INTERVAL);
             this.usersTimeouts.set(userId, newTimeout);
         };
-        // TODOTODO: search by id please
         if (this.usersSubscriptions.get(userId).isAbsent()) {
             const userSubscription: () => void = this.userService.observeUser(userId, onUserUpdate);
             this.usersSubscriptions.set(userId, userSubscription);

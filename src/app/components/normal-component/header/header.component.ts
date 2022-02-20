@@ -42,7 +42,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
                     this.username = '';
                     if (this.subscriptionToLoggedUser.isPresent()) {
                         this.userService.removeObservedUserId();
-                        this.subscriptionToLoggedUser.get()();
+                        const unsubscribe: () => void = this.subscriptionToLoggedUser.get();
+                        unsubscribe();
                         this.subscriptionToLoggedUser = MGPOptional.empty();
                     }
                 }
