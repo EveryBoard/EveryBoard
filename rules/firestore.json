@@ -1,15 +1,31 @@
 rules_version = "2";
 service cloud.firestore {
     match /databases/{database}/documents {
+        match /{document=**} {
+            // by default, nothing can be read or written unless explicitly authorized
+            allow read, write: if true; // TODO: should be if false
+        }
         match /foo/{document=**} {
-            // only used for testing purposes, do not push to production 
+            // only used for testing purposes, do not push to production
             allow read, write: if true;
         }
         match /errors/{errorId} {
+            // Anybody can read, create and update errors
             allow create: if true;
             allow update: if true;
+            allow read: if true;
         }
-       // joueurs will be renamed to users
+        match /chats/{id} {
+            allow create: if canCreateChat(id)
+            allow read: if canReadChat(id)
+        }
+        function canCreateChat(id) {
+            return userVerified() && id == 'lobby';
+        }
+        function canReadChat(id) {
+            return false; // userVerified();
+        }
+        // joueurs will be renamed to users
         match /joueurs/{userId} {
             // Anybody can create a user
             allow create: if true;
@@ -25,10 +41,6 @@ service cloud.firestore {
             allow update: if isOwner(userId);
             // Anybody can read the fields of a user
             allow read: if true;
-        }
-        match /{databases}/{docId} {
-            allow read: if true;
-            allow write: if isAllowed();
         }
         function isAllowed() {
             return userVerified() ||

@@ -25,6 +25,7 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
     }
 
     public callbacks: [FirebaseCondition[], FirebaseCollectionObserver<T>][] = [];
+    private readonly subDAOs: MGPMap<string, IFirebaseFirestoreDAO<FirebaseJSONObject>> = new MGPMap();
     constructor(public readonly collectionName: string,
                 public VERBOSE: boolean,
     ) {
@@ -87,18 +88,22 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
         display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE,
                 this.collectionName + '.set(' + id + ', ' + JSON.stringify(doc) + ')');
 
+        console.log(`${this.collectionName} setting ${id}`)
         const mappedDoc: T = Utils.getNonNullable(this.getServerTimestampedObject(doc));
         const optionalOS: MGPOptional<DocumentSubject<T>> = this.getStaticDB().get(id);
         const tid: FirebaseDocument<T> = { id, data: mappedDoc };
         if (optionalOS.isPresent()) {
+            console.log('already existing document')
             optionalOS.get().subject.next(MGPOptional.of(tid));
         } else {
+            console.log(`${this.collectionName} new doc, there are ${this.callbacks.length} callbacks`)
             const subject: BehaviorSubject<MGPOptional<FirebaseDocument<T>>> =
                 new BehaviorSubject(MGPOptional.of(tid));
             const observable: Observable<MGPOptional<FirebaseDocument<T>>> = subject.asObservable();
             this.getStaticDB().put(id, new ObservableSubject(subject, observable));
             for (const callback of this.callbacks) {
                 if (this.conditionsHold(callback[0], subject.value.get().data)) {
+                    console.log(`${this.collectionName} calling a callback`)
                     callback[1].onDocumentCreated([subject.value.get()]);
                 }
             }
@@ -157,6 +162,7 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
                                 callback: FirebaseCollectionObserver<T>): Subscription
     {
         const db: MGPMap<string, DocumentSubject<T>> = this.getStaticDB();
+        console.log(`${this.collectionName} registering callback`)
         this.callbacks.push([conditions, callback]);
         const matchingDocs: FirebaseDocument<T>[] = [];
         for (let entryId: number = 0; entryId < db.size(); entryId++) {
@@ -167,6 +173,7 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
         }
         callback.onDocumentCreated(matchingDocs);
         return new Subscription(() => {
+            // Upon unsubscription, remove this callback from the callbacks
             this.callbacks = this.callbacks.filter(
                 (value: [FirebaseCondition[], FirebaseCollectionObserver<T>]): boolean => {
                     return (value[0] === conditions && value[1] === callback) === false;
@@ -176,6 +183,7 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
     private conditionsHold(conditions: FirebaseCondition[], doc: T): boolean {
         for (const condition of conditions) {
             assert(condition[1] === '==', 'FirebaseFirestoreDAOMock currently only supports == as a condition');
+            console.log(`checking doc[${condition[0]}] (= ${doc[condition[0]]}) !== ${condition[2]}`)
             if (doc[condition[0]] !== condition[2]) {
                 return false;
             }
@@ -192,5 +200,30 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
             }
         });
         return matchingDocs;
+    }
+    public subCollectionDAO<T extends FirebaseJSONObject>(id: string, name: string): IFirebaseFirestoreDAO<T> {
+        if (this.subDAOs.containsKey(name)) {
+            console.log('reusing collection')
+            return this.subDAOs.get(name).get() as IFirebaseFirestoreDAO<T>;
+        } else {
+            const superName: string = this.collectionName;
+            const verbosity: boolean = this.VERBOSE;
+            type OS = ObservableSubject<MGPOptional<FirebaseDocument<T>>>;
+            class CustomMock extends FirebaseFirestoreDAOMock<T> {
+                private static db: MGPMap<string, OS>;
+                public getStaticDB(): MGPMap<string, OS> {
+                    return CustomMock.db;
+                }
+                public resetStaticDB(): void {
+                    CustomMock.db = new MGPMap();
+                }
+                constructor() {
+                    super(`${superName}/${id}/${name}`, verbosity);
+                }
+            }
+            const mock: FirebaseFirestoreDAOMock<T> = new CustomMock();
+            this.subDAOs.set(name, mock);
+            return mock;
+        }
     }
 }

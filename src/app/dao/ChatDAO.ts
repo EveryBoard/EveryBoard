@@ -1,8 +1,10 @@
-import { Chat } from '../domain/Chat';
 import { FirebaseFirestoreDAO } from './FirebaseFirestoreDAO';
 import { Injectable } from '@angular/core';
 import { display } from 'src/app/utils/utils';
-import { Firestore } from '@angular/fire/firestore';
+import * as Firestore from '@angular/fire/firestore';
+import { Message, MessageDocument } from '../domain/Message';
+import { Chat } from '../domain/Chat';
+import { FirebaseCollectionObserver } from './FirebaseCollectionObserver';
 
 @Injectable({
     providedIn: 'root',
@@ -10,8 +12,17 @@ import { Firestore } from '@angular/fire/firestore';
 export class ChatDAO extends FirebaseFirestoreDAO<Chat> {
     public static VERBOSE: boolean = false;
 
-    constructor(firestore: Firestore) {
+    constructor(firestore: Firestore.Firestore) {
         super('chats', firestore);
         display(ChatDAO.VERBOSE, 'ChatDAO.constructor');
+    }
+    public async addMessage(chatId: string, message: Message): Promise<string> {
+        return this.subCollectionDAO(chatId, 'messages').create(message);
+    }
+    public async getLastMessages(chatId: string, limit: number): Promise<MessageDocument[]> {
+        return this.subCollectionDAO<Message>(chatId, 'messages').findWhere([], 'postedTime', limit);
+    }
+    public subscribeToMessages(chatId: string, callback: FirebaseCollectionObserver<Message>): Firestore.Unsubscribe {
+        return this.subCollectionDAO<Message>(chatId, 'messages').observingWhere([], callback, 'postedTime');
     }
 }

@@ -9,6 +9,7 @@ import { Chat } from 'src/app/domain/Chat';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { Message } from 'src/app/domain/Message';
+import { serverTimestamp } from 'firebase/firestore';
 
 describe('ChatComponent', () => {
 
@@ -20,16 +21,12 @@ describe('ChatComponent', () => {
 
     let chatDAO: ChatDAO;
 
-    const MSG: Message = { sender: 'foo', content: 'hello', currentTurn: 0, postedTime: 5 };
-    function generateMessages(n: number): Message[] {
-        const messages: Message[] = [];
+    const MSG: Message = { senderId: 'foo', sender: 'foo', content: 'hello', currentTurn: 0, postedTime: serverTimestamp() };
+    async function addMessages(chatId: string, n: number): Promise<void> {
         for (let i: number = 0; i < n; i++) {
-            messages.push(MSG);
+            await chatDAO.addMessage(chatId, MSG);
         }
-        return messages;
     }
-    // needed to have a scrollable chat
-    const LOTS_OF_MESSAGES: Message[] = generateMessages(100);
 
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(ChatComponent);
@@ -122,8 +119,8 @@ describe('ChatComponent', () => {
             let switchButton: DebugElement = testUtils.findElement('#switchChatVisibilityButton');
             expect(switchButton.nativeElement.innerText).toEqual('Show chat (no new message)'.toUpperCase());
 
-            // when a new message is received
-            await chatDAO.update('fauxChat', { messages: [MSG, MSG, MSG] });
+            // when new messages are received
+            await addMessages('fauxChat', 3);
             testUtils.detectChanges();
 
             // then the button shows how many new messages there are
@@ -134,7 +131,7 @@ describe('ChatComponent', () => {
             // Given a visible chat with multiple messages
             AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
             spyOn(component, 'scrollTo');
-            await chatDAO.update('fauxChat', { messages: LOTS_OF_MESSAGES });
+            await addMessages('fauxChat', 100);
 
             // when the chat is initialized
             testUtils.detectChanges();
@@ -147,7 +144,7 @@ describe('ChatComponent', () => {
             // Given a visible chat with multiple messages, that has been scrolled up
             AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
             testUtils.detectChanges();
-            await chatDAO.update('fauxChat', { messages: LOTS_OF_MESSAGES });
+            await addMessages('fauxChat', 100);
             testUtils.detectChanges();
 
             const chatDiv: DebugElement = testUtils.findElement('#chatDiv');
@@ -156,7 +153,7 @@ describe('ChatComponent', () => {
             testUtils.detectChanges();
 
             // when a new message is received
-            await chatDAO.update('fauxChat', { messages: LOTS_OF_MESSAGES.concat(MSG) });
+            await addMessages('fauxChat', 1);
             testUtils.detectChanges();
 
             // then the scroll value did not change
@@ -169,7 +166,7 @@ describe('ChatComponent', () => {
             // Given a visible chat with the indicator
             AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
             testUtils.detectChanges();
-            await chatDAO.update('fauxChat', { messages: LOTS_OF_MESSAGES });
+            await addMessages('fauxChat', 100);
             testUtils.detectChanges();
 
             const chatDiv: DebugElement = testUtils.findElement('#chatDiv');
@@ -177,7 +174,7 @@ describe('ChatComponent', () => {
             chatDiv.nativeElement.dispatchEvent(new Event('scroll'));
             testUtils.detectChanges();
 
-            await chatDAO.update('fauxChat', { messages: LOTS_OF_MESSAGES.concat(MSG) }); // new message has been received
+            await addMessages('fauxChat', 1); // new message has been received
             testUtils.detectChanges();
 
             // when the indicator is clicked
@@ -231,14 +228,14 @@ describe('ChatComponent', () => {
 
             // then the message is sent
             const username: string = AuthenticationServiceMock.CONNECTED.username.get();
-            expect(chatService.sendMessage).toHaveBeenCalledWith(username, 'hello', 2);
+            expect(chatService.sendMessage).toHaveBeenCalledWith('userId', username, 'hello', 2);
             //  and the form is cleared
             expect(messageInput.nativeElement.value).toBe('');
         }));
         it('should scroll to bottom when sending a message', fakeAsync(async() => {
             // given a chat with many messages
             AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
-            await chatDAO.update('fauxChat', { messages: LOTS_OF_MESSAGES.concat(MSG) }); // new message has been received
+            await addMessages('fauxChat', 100);
             testUtils.detectChanges();
             spyOn(component, 'scrollTo');
 

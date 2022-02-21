@@ -1,11 +1,6 @@
 import { FirebaseDocument } from '../dao/FirebaseFirestoreDAO';
-import { JSONObject } from '../utils/utils';
-import { Message } from './Message';
+import { FirebaseJSONObject } from '../utils/utils';
+
+export type Chat = FirebaseJSONObject
 
 export type ChatDocument = FirebaseDocument<Chat>
-
-export interface Chat extends JSONObject {
-    // the Id will always be the same as the joiner doc and part doc, or "server"
-    messages: Message[];
-}
-
