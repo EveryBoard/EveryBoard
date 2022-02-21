@@ -1,6 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, ReplaySubject } from 'rxjs';
-import { assert, display, Utils } from 'src/app/utils/utils';
+import { display, Utils } from 'src/app/utils/utils';
+import { assert } from 'src/app/utils/assert';
 import { MGPValidation } from '../utils/MGPValidation';
 import { MGPFallible } from '../utils/MGPFallible';
 import { UserDAO } from '../dao/UserDAO';

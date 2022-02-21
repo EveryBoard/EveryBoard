@@ -44,11 +44,13 @@ describe('Comparable', () => {
         });
         it('should fail if objects are not comparable', () => {
             const expectedError: string = 'Comparing non comparable objects: DummyNonComparableObject and DummyNonComparableObject';
+            // Given two non-comparable objects
             const nonComparable: DummyNonComparableObject = new DummyNonComparableObject(5);
             const otherNonComparable: DummyNonComparableObject = new DummyNonComparableObject(5);
+            // When comparing them
+            // Then it should fail
             expect(() => comparableEquals(nonComparable, otherNonComparable)).toThrowError(expectedError);
         });
-
     });
     describe('isComparableObject', () => {
         it('should return true only for objects that implement the Comparable interface ', () => {

@@ -1,7 +1,8 @@
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Move } from './Move';
 import { Type } from '@angular/core';
-import { assert, display } from '../utils/utils';
+import { display } from '../utils/utils';
+import { assert } from 'src/app/utils/assert';
 import { Player } from './Player';
 import { GameState } from './GameState';
 import { MGPOptional } from '../utils/MGPOptional';

@@ -1,4 +1,4 @@
-import { assert } from 'src/app/utils/utils';
+import { assert } from 'src/app/utils/assert';
 
 export class ApagosCoord {
 

@@ -5,7 +5,7 @@ import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
-import { assert } from 'src/app/utils/utils';
+import { assert } from 'src/app/utils/assert';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { GipfCapture, GipfMove, GipfPlacement } from './GipfMove';

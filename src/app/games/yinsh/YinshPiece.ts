@@ -1,7 +1,8 @@
 import { NumberEncoder } from 'src/app/jscaip/Encoder';
 import { Player } from 'src/app/jscaip/Player';
 import { ComparableObject } from 'src/app/utils/Comparable';
-import { assert, Utils } from 'src/app/utils/utils';
+import { Utils } from 'src/app/utils/utils';
+import { assert } from 'src/app/utils/assert';
 
 export class YinshPiece implements ComparableObject {
 

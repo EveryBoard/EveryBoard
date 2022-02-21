@@ -4,7 +4,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { ComparableObject } from 'src/app/utils/Comparable';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { assert } from 'src/app/utils/utils';
+import { assert } from 'src/app/utils/assert';
 
 type PieceType = 'alive' | 'dead' | 'territory' | 'empty';
 export class GoPiece implements ComparableObject {

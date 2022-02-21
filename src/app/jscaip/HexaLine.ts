@@ -43,6 +43,9 @@ export class HexaLine {
     private constructor(public readonly offset: number,
                         public readonly constant: 'q' | 'r' | 's') {
     }
+    public toString(): string {
+        return `Line(${this.constant}, ${this.offset})`;
+    }
     public equals(other: HexaLine): boolean {
         if (this === other) return true;
         if (this.offset !== other.offset) return false;

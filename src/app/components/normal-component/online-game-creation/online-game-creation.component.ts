@@ -6,7 +6,8 @@ import { AuthenticationService, AuthUser } from 'src/app/services/Authentication
 import { GameService } from 'src/app/services/GameService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Localized } from 'src/app/utils/LocaleUtils';
-import { assert, Utils } from 'src/app/utils/utils';
+import { Utils } from 'src/app/utils/utils';
+import { assert } from 'src/app/utils/assert';
 
 export class OnlineGameCreationMessages {
     public static readonly ALREADY_INGAME: Localized = () => $localize`You are already in a game. Finish it or cancel it first.`;

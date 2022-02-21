@@ -1,4 +1,4 @@
-import { assert } from './utils';
+import { assert } from './assert';
 
 export class Combinatorics {
     public static getCombinations<T>(elements: T[], size: number): T[][] {

@@ -4,8 +4,10 @@ import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { HexaLine } from 'src/app/jscaip/HexaLine';
 import { Move } from 'src/app/jscaip/Move';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { assert, JSONObject, JSONValue, JSONValueWithoutArray } from 'src/app/utils/utils';
+import { JSONObject, JSONValue, JSONValueWithoutArray } from 'src/app/utils/utils';
+import { assert } from 'src/app/utils/assert';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPOptionalEncoder } from 'src/app/utils/MGPOptionalEncoder';
 
 export class GipfCapture {
     public static encoder: Encoder<GipfCapture> = new class extends Encoder<GipfCapture> {
@@ -95,7 +97,7 @@ export class GipfCapture {
 export class GipfPlacement {
     public static encoder: Encoder<GipfPlacement> = new class extends Encoder<GipfPlacement> {
         public optionalDirectionEncoder: Encoder<MGPOptional<HexaDirection>> =
-            MGPOptional.encoder(HexaDirection.encoder);
+            MGPOptionalEncoder(HexaDirection.encoder);
         public encode(placement: GipfPlacement): JSONValue {
             return {
                 coord: Coord.encoder.encode(placement.coord),
