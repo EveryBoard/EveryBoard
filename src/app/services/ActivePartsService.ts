@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { PartDAO } from '../dao/PartDAO';
 import { Part, PartDocument } from '../domain/Part';
 import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
-import { assert } from '../utils/utils';
+import { assert } from 'src/app/utils/assert';
 import { MGPOptional } from '../utils/MGPOptional';
 
 @Injectable({

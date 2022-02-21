@@ -5,7 +5,7 @@ import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-gam
 import { DvonnPieceStack } from 'src/app/games/dvonn/DvonnPieceStack';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { assert } from 'src/app/utils/utils';
+import { assert } from 'src/app/utils/assert';
 
 const __: DvonnPieceStack = DvonnPieceStack.EMPTY;
 const NN: DvonnPieceStack = DvonnPieceStack.NONE;

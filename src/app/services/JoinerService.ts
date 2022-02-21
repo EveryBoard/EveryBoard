@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FirstPlayer, Joiner, PartStatus, PartType } from '../domain/Joiner';
 import { JoinerDAO } from '../dao/JoinerDAO';
-import { assert, display } from 'src/app/utils/utils';
+import { display } from 'src/app/utils/utils';
+import { assert } from 'src/app/utils/assert';
 import { ArrayUtils } from '../utils/ArrayUtils';
 import { MGPOptional } from '../utils/MGPOptional';
 import { Unsubscribe } from '@angular/fire/firestore';

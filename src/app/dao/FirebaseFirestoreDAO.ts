@@ -1,4 +1,4 @@
-import { assert, display, FirebaseJSONObject, Utils } from 'src/app/utils/utils';
+import { display, FirebaseJSONObject, Utils } from 'src/app/utils/utils';
 import { FirebaseCollectionObserver } from './FirebaseCollectionObserver';
 import { MGPOptional } from '../utils/MGPOptional';
 import { addDoc, collection, CollectionReference, deleteDoc, doc, DocumentChange, DocumentReference, DocumentSnapshot, Firestore, FirestoreDataConverter, getDoc, getDocs, onSnapshot, PartialWithFieldValue, Query, query, QueryDocumentSnapshot, QuerySnapshot, setDoc, Unsubscribe, UpdateData, updateDoc, where, WhereFilterOp } from '@angular/fire/firestore';
@@ -141,7 +141,6 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
         });
     }
     private constructQuery(conditions: FirebaseCondition[]): Query<T> {
-        assert(conditions.length >= 1, 'constructQuery called without conditions');
         let constructedQuery: Query<T> = query(this.collection);
         for (const condition of conditions) {
             constructedQuery = query(constructedQuery, where(condition[0], condition[1], condition[2]));

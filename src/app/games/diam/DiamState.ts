@@ -1,6 +1,7 @@
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { assert, Utils } from 'src/app/utils/utils';
+import { Utils } from 'src/app/utils/utils';
+import { assert } from 'src/app/utils/assert';
 import { DiamPiece } from './DiamPiece';
 
 export class DiamState extends GameStateWithTable<DiamPiece> {

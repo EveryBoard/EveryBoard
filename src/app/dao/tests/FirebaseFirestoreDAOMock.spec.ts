@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
-import { assert, display, FirebaseJSONObject, Utils } from 'src/app/utils/utils';
+import { display, FirebaseJSONObject, Utils } from 'src/app/utils/utils';
+import { assert } from 'src/app/utils/assert';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 import { FirebaseCondition, FirebaseDocument, IFirebaseFirestoreDAO } from '../FirebaseFirestoreDAO';

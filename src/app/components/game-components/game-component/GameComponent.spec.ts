@@ -36,7 +36,6 @@ describe('GameComponent', () => {
         testUtils.detectChanges();
         tick(1);
 
-
         spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
 
         // when the player tries to pass

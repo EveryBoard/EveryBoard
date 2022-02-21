@@ -1,4 +1,5 @@
-import { assert, FirebaseJSONObject, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
+import { FirebaseJSONObject, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
+import { assert } from '../utils/assert';
 import { Request } from './Request';
 import { FirebaseTime } from './Time';
 import { MGPOptional } from '../utils/MGPOptional';

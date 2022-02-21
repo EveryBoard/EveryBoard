@@ -1,6 +1,6 @@
 import { NumberEncoder } from 'src/app/jscaip/Encoder';
 import { Move } from 'src/app/jscaip/Move';
-import { assert } from 'src/app/utils/utils';
+import { assert } from 'src/app/utils/assert';
 
 export class AwaleMove extends Move {
 
