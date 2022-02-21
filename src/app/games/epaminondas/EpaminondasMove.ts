@@ -47,7 +47,7 @@ export class EpaminondasMove extends MoveCoord {
             const direction: MGPFallible<Direction> = Direction.factory.fromInt(encodedDirection);
             return new EpaminondasMove(cx, cy, movedPieces + 1, stepSize + 1, direction.get());
         }
-    }
+    };
     public constructor(x: number,
                        y: number,
                        public readonly movedPieces: number,

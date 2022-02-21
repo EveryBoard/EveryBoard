@@ -23,8 +23,12 @@ module.exports = {
             'plugin:jasmine/recommended',
         ],
         rules: {
+            'jasmine/no-spec-dupes': ['error', 'branch'],
             '@typescript-eslint/no-floating-promises': ['error'],
+            'jasmine/no-unsafe-spy': ['off'],
             'jasmine/no-expect-in-setup-teardown': ['off'],
+            'jasmine/no-spec-dupes': ['error', 'branch'],
+            'jasmine/no-suite-dupes': ['error', 'branch'],
             'jasmine/expect-matcher': ['error'],
             'jasmine/new-line-before-expect': ['off'],
             'jasmine/new-line-between-declarations': ['off'],

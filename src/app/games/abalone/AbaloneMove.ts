@@ -53,7 +53,7 @@ export class AbaloneMove extends MoveCoord {
                 return moveOptional.get();
             }
         }
-    }
+    };
     public static fromSingleCoord(coord: Coord, dir: HexaDirection): MGPFallible<AbaloneMove> {
         try {
             return MGPFallible.success(new AbaloneMove(coord, dir, MGPOptional.empty()));

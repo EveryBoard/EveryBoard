@@ -7,6 +7,7 @@ import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPSet } from 'src/app/utils/MGPSet';
+import { CoordSet } from 'src/app/utils/OptimizedSet';
 import { assert, JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 import { ConspirateursFailure } from './ConspirateursFailure';
 import { ConspirateursState } from './ConspirateursState';
@@ -108,7 +109,7 @@ export class ConspirateursMoveJump extends Move {
             const decoded: Coord[] = coords.map(this.coordEncoder.decodeNumber);
             return ConspirateursMoveJump.of(decoded).get();
         }
-    }
+    };
     public static of(coords: readonly Coord[]): MGPFallible<ConspirateursMoveJump> {
         if (coords.length < 2) {
             return MGPFallible.failure('ConspirateursMoveJump requires at least one jump, so two coords');
@@ -128,7 +129,7 @@ export class ConspirateursMoveJump extends Move {
                 return MGPFallible.failure(ConspirateursFailure.INVALID_JUMP());
             }
         }
-        const uniqueCoords: MGPSet<Coord> = new MGPSet(coords);
+        const uniqueCoords: MGPSet<Coord> = new CoordSet(coords);
         if (uniqueCoords.size() === coords.length) {
             return MGPFallible.success(new ConspirateursMoveJump(coords));
         } else {

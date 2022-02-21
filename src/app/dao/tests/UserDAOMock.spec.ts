@@ -1,4 +1,4 @@
-import firebase from 'firebase/app';
+import { serverTimestamp } from 'firebase/firestore';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { ObservableSubject } from 'src/app/utils/tests/ObservableSubject.spec';
 import { User, UserDocument } from 'src/app/domain/User';
@@ -32,7 +32,7 @@ export class UserDAOMock extends FirebaseFirestoreDAOMock<User> {
     }
     public updatePresenceToken(username: string): Promise<void> {
         return this.update(username, {
-            last_changed: firebase.firestore.FieldValue.serverTimestamp(),
+            last_changed: serverTimestamp(),
             // TODO FOR REVIEW: should we mock the real way, by sending that update without timestamp, then with it ?
         });
     }

@@ -31,7 +31,7 @@ export class SixMove extends Move {
                 return SixMove.fromCut(decodedStart, decodedLanding, decodedKeep);
             }
         }
-    }
+    };
     public static fromDrop(landing: Coord): SixMove {
         return new SixMove(MGPOptional.empty(), landing, MGPOptional.empty());
     }

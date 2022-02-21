@@ -117,8 +117,7 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
         if (thisKeySet.equals(otherKeySet) === false) {
             return false;
         }
-        for (let i: number = 0; i < thisKeySet.size(); i++) {
-            const key: K = thisKeySet.get(i);
+        for (const key of thisKeySet) {
             const thisValue: V = this.get(key).get();
             const otherValue: MGPOptional<V> = other.get(key);
             assert(otherValue.isPresent(), 'value is absent in a map even though its key is present!');

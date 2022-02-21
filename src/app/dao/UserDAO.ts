@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
-import firebase from 'firebase/app';
-import { FirebaseFirestoreDAO } from './FirebaseFirestoreDAO';
+import { serverTimestamp } from 'firebase/firestore';
+import { FirebaseDocument, FirebaseFirestoreDAO } from './FirebaseFirestoreDAO';
 import { FirebaseCollectionObserver } from './FirebaseCollectionObserver';
 import { display } from 'src/app/utils/utils';
 import { User } from '../domain/User';
+import { Firestore } from '@angular/fire/firestore';
 
 @Injectable({
     providedIn: 'root',
@@ -15,13 +15,13 @@ export class UserDAO extends FirebaseFirestoreDAO<User> {
 
     public static COLLECTION_NAME: string = 'joueurs';
 
-    constructor(protected afs: AngularFirestore) {
-        super(UserDAO.COLLECTION_NAME, afs);
+    constructor(firestore: Firestore) {
+        super(UserDAO.COLLECTION_NAME, firestore);
         display(UserDAO.VERBOSE, 'UserDAO.constructor');
     }
     public async usernameIsAvailable(username: string): Promise<boolean> {
-        return (await this.afs.collection<User>(UserDAO.COLLECTION_NAME).ref
-            .where('username', '==', username).limit(1).get()).empty;
+        const usersWithSameUsername: FirebaseDocument<User>[] = await this.findWhere([['username', '==', username]]);
+        return usersWithSameUsername.length === 0;
     }
     public async setUsername(uid: string, username: string): Promise<void> {
         await this.update(uid, { username: username });
@@ -38,7 +38,7 @@ export class UserDAO extends FirebaseFirestoreDAO<User> {
     }
     public updatePresenceToken(username: string): Promise<void> {
         return this.update(username, {
-            last_changed: firebase.firestore.FieldValue.serverTimestamp(),
+            last_changed: serverTimestamp(),
         });
     }
 }

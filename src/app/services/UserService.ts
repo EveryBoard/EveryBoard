@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Unsubscribe } from 'firebase/auth';
+import { Observable } from 'rxjs';
 import { UserDAO } from '../dao/UserDAO';
 import { User, UserDocument } from '../domain/User';
 import { ActiveUsersService } from './ActiveUsersService';
@@ -37,14 +38,8 @@ export class UserService {
         // the callback will be called on the foundUser
         return this.userDAO.observeUserByUsername(username, callback);
     }
-    public observeUser(userId: string, callback: (user: MGPOptional<User>) => void): () => void {
-        const observable: Observable<MGPOptional<User>> = this.userDAO.getObsById(userId);
-        const subscription: Subscription = observable.subscribe((value: MGPOptional<User>) => {
-            callback(value);
-        });
-        return () => {
-            subscription.unsubscribe();
-        };
+    public observeUser(userId: string, callback: (user: MGPOptional<User>) => void): Unsubscribe {
+        return this.userDAO.subscribeToChanges(userId, callback);
     }
     public setObservedUserId(authUserId: string) {
         // TODO FOR REVIEW: on a changé un truc, il se plaint pas du non typage de la fonction !
@@ -53,7 +48,8 @@ export class UserService {
     public removeObservedUserId() {
         this.currentUserId = MGPOptional.empty();
     }
-    public updateObservedPart(observedPart: string): Promise<void> { // TODOTOD: TEST IN ITSELF, NOT JUST TESTING ITS CALLED
+    public updateObservedPart(observedPart: string): Promise<void> {
+        // TODOTOD: TEST IN ITSELF, NOT JUST TESTING ITS CALLED
         assert(this.currentUserId.isPresent(), 'Should be subscribe to yourself when connected');
         return this.userDAO.update(this.currentUserId.get(), { observedPart });
     }

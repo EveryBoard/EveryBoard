@@ -14,6 +14,7 @@ import { Subject } from 'rxjs';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { AuthUser } from 'src/app/services/AuthenticationService';
+import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 
 interface PartCreationViewInfo {
@@ -64,9 +65,11 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     @Input() partId: string;
     @Input() authUser: AuthUser;
 
+    // notify that the game has started, a thing evaluated with the joiner doc game status
     @Output('gameStartNotification') gameStartNotification: EventEmitter<Joiner> = new EventEmitter<Joiner>();
     public gameStarted: boolean = false;
-    // notify that the game has started, a thing evaluated with the joiner doc game status
+
+    private gameExists: boolean = false;
 
     public viewInfo: PartCreationViewInfo = {
         userIsCreator: false,
@@ -78,7 +81,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         firstPlayerClasses: { 'CREATOR': [], 'RANDOM': ['is-selected', 'is-primary'], 'CHOSEN_PLAYER': [] },
         candidateClasses: {},
         candidates: [],
-    }
+    };
     public currentJoiner: Joiner | null = null;
 
     // Subscription
@@ -92,13 +95,13 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
     private selfTokenInterval: MGPOptional<number> = MGPOptional.empty();
 
-    public constructor(public router: Router,
-                       public gameService: GameService,
-                       public joinerService: JoinerService,
-                       public chatService: ChatService,
-                       public userService: UserService,
-                       public formBuilder: FormBuilder,
-                       public messageDisplayer: MessageDisplayer)
+    public constructor(public readonly router: Router,
+                       public readonly gameService: GameService,
+                       public readonly joinerService: JoinerService,
+                       public readonly chatService: ChatService,
+                       public readonly userService: UserService,
+                       public readonly formBuilder: FormBuilder,
+                       public readonly messageDisplayer: MessageDisplayer)
     {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent constructed');
     }
@@ -114,6 +117,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             return;
         }
         await this.notifyUserDocOfPartObservation();
+        this.gameExists = true;
         this.subscribeToJoinerDoc();
         this.subscribeToFormElements();
 
@@ -138,18 +142,15 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         return this.userService.updateObservedPart(this.partId);
     }
     private subscribeToJoinerDoc(): void {
-        this.joinerService
-            .observe(this.partId)
-            .pipe(takeUntil(this.ngUnsubscribe))
-            .subscribe(async(joiner: MGPOptional<Joiner>) => {
-                await this.onCurrentJoinerUpdate(joiner);
-            });
+        const callback: (joiner: MGPOptional<Joiner>) => void = async(joiner: MGPOptional<Joiner>) => {
+            await this.onCurrentJoinerUpdate(joiner);
+        };
+        this.joinerService.subscribeToChanges(this.partId, callback);
     }
     private getForm(name: string): AbstractControl {
         return Utils.getNonNullable(this.configFormGroup.get(name));
     }
     private subscribeToFormElements(): void {
-
         this.getForm('chosenOpponent').valueChanges
             .pipe(takeUntil(this.ngUnsubscribe)).subscribe((opponent: string) => {
                 if (this.viewInfo.chosenOpponent !== undefined) {
@@ -335,7 +336,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             await this.destroyDocIfPartDidNotStart();
         };
         this.observeUser(joiner.creator.id, callback);
-
     }
     private async destroyDocIfPartDidNotStart(): Promise<void> {
         const joiner: Joiner = Utils.getNonNullable(this.currentJoiner);
@@ -354,7 +354,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 // TODOTODO note that THIS happens when there is user deletion
                 this.unsubscribeFrom(userId);
                 await this.removeUserFromLobby(userId, true);
-                return Utils.handleError('found no user while observing ' + userId + ' !');
+                return ErrorLoggerService.logError('PartCreationComponent', 'found no user while observing ' + userId + ' !');
             }
             const oldTimeout: MGPOptional<number> = this.usersTimeouts.get(userId);
             if (oldTimeout.isPresent()) {
@@ -419,7 +419,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         const beforeUser: MinimalUser[] = joiner.candidates.slice(0, index);
         const afterUser: MinimalUser[] = joiner.candidates.slice(index + 1);
         const candidates: MinimalUser[] = beforeUser.concat(afterUser);
-        assert(userId === joiner.chosenPlayer || userWasDeleted, 'Should only remove chosenUser from creation room, since candidate are not polled and should remove themselves');
         // The chosen player has been removed, the user will have to review the config
         this.messageDisplayer.infoMessage($localize`${userId} left the game, please pick another opponent.`);
         return this.joinerService.reviewConfigRemoveChosenPlayerAndUpdateCandidates(candidates);
@@ -447,6 +446,9 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.ngUnsubscribe.complete();
 
         this.stopSendingPresenceTokensAndObservingUsersIfNeeded();
+        if (this.gameExists) {
+            this.joinerService.unsubscribe();
+        }
         if (this.gameStarted === true) {
             return;
         }

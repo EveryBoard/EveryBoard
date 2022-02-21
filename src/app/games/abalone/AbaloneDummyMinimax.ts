@@ -48,7 +48,7 @@ export class AbaloneDummyMinimax extends Minimax<AbaloneMove, AbaloneState, Abal
                 }
             }
         }
-        return new MGPSet(moves).getCopy();
+        return new MGPSet(moves).toList();
     }
     private isAcceptablePush(move: AbaloneMove, state: AbaloneState): boolean {
         const scores: [number, number] = state.getScores();

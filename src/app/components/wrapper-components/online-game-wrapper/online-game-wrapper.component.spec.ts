@@ -62,10 +62,10 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             const joinerService: JoinerService = TestBed.inject(JoinerService);
 
             spyOn(joinerService, 'joinGame').and.callThrough();
-            spyOn(joinerService, 'observe').and.callThrough();
+            spyOn(joinerService, 'subscribeToChanges').and.callThrough();
             expect(wrapper.currentPartId).not.toBeDefined();
             expect(joinerService.joinGame).not.toHaveBeenCalled();
-            expect(joinerService.observe).not.toHaveBeenCalled();
+            expect(joinerService.subscribeToChanges).not.toHaveBeenCalled();
 
             // When ngOnInit start and finish
             testUtils.detectChanges();
@@ -74,7 +74,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             // Then joinGame and observe should have been called
             expect(wrapper.currentPartId).withContext('currentPartId should be defined').toBeDefined();
             expect(joinerService.joinGame).toHaveBeenCalledOnceWith('joinerId', UserMocks.CREATOR_MINIMAL_USER);
-            expect(joinerService.observe).toHaveBeenCalledOnceWith('joinerId')
+            expect(joinerService.subscribeToChanges).toHaveBeenCalledTimes(1);
 
             // finish the game to have no timeout still running
             void joinerDAO.set('joinerId', JoinerMocks.WITH_ACCEPTED_CONFIG);

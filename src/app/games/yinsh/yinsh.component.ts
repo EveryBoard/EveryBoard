@@ -52,11 +52,11 @@ interface ViewInfo {
 export class YinshComponent
     extends HexagonalGameComponent<YinshRules, YinshMove, YinshState, YinshPiece, YinshLegalityInformation> {
 
-    private static RING_OUTER_SIZE: number = 40;
-    private static RING_MID_SIZE: number = 34;
-    private static RING_INNER_SIZE: number = 28;
-    private static MARKER_SIZE: number = YinshComponent.RING_INNER_SIZE;
-    private static INDICATOR_SIZE: number = 10;
+    private static readonly RING_OUTER_SIZE: number = 40;
+    private static readonly RING_MID_SIZE: number = 34;
+    private static readonly RING_INNER_SIZE: number = 28;
+    private static readonly MARKER_SIZE: number = YinshComponent.RING_INNER_SIZE;
+    private static readonly INDICATOR_SIZE: number = 10;
 
     private constructedState: YinshState;
 
@@ -67,8 +67,8 @@ export class YinshComponent
                        'MOVE_END' |
                        'FINAL_CAPTURE_SELECT_FIRST' |
                        'FINAL_CAPTURE_SELECT_LAST' |
-                       'FINAL_CAPTURE_SELECT_RING'
-        = 'MOVE_START';
+                       'FINAL_CAPTURE_SELECT_RING' =
+            'MOVE_START';
 
     private moveStart: MGPOptional<Coord> = MGPOptional.empty();
     private moveEnd: MGPOptional<Coord> = MGPOptional.empty();

@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import firebase from 'firebase';
+import { serverTimestamp } from 'firebase/firestore';
 import { MGPResult, Part } from './Part';
 
 export class PartMocks {
@@ -28,6 +28,6 @@ export class PartMocks {
         playerOne: 'firstCandidate',
         remainingMsForOne: 1800 * 1000,
         remainingMsForZero: 1800 * 1000,
-        beginning: firebase.firestore.FieldValue.serverTimestamp(),
+        beginning: serverTimestamp(),
     };
 }

@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import 'firebase/auth';
 
 /**
  * Component to verify an account.

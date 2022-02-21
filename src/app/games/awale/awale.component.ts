@@ -27,7 +27,6 @@ export class AwaleComponent extends RectangularGameComponent<AwaleRules,
 
     private moved: Coord[] = [];
 
-
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.scores = MGPOptional.of([0, 0]);

@@ -35,7 +35,7 @@ export class WelcomeComponent {
     public async createGame(game: string): Promise<boolean> {
         return this.router.navigate(['/play', game]);
     }
-    public createLocalGame(game: string): Promise<boolean> {
+    public async createLocalGame(game: string): Promise<boolean> {
         return this.router.navigate(['/local', game]);
     }
     public createTutorial(game: string): Promise<boolean> {

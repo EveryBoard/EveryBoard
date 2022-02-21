@@ -1,4 +1,5 @@
 /* eslint-disable max-lines-per-function */
+import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { assert, display, isJSONPrimitive, Utils } from '../utils';
 
 describe('utils', () => {
@@ -14,11 +15,6 @@ describe('utils', () => {
             expect(isJSONPrimitive([1, 2, 3])).toBeFalse();
             expect(isJSONPrimitive({})).toBeFalse();
             expect(isJSONPrimitive(undefined)).toBeFalse(); // undefined is not valid in JSON!
-        });
-    });
-    describe('handleError', () => {
-        it('should throw an error when called', () => {
-            expect(() => Utils.handleError('error')).toThrowError('Encountered error: error');
         });
     });
     describe('expectToBe', () => {
@@ -75,8 +71,10 @@ describe('utils', () => {
         });
     });
     describe('assert', () => {
-        it('Should throw when condition is false', () => {
-            expect(() => assert(false, 'error')).toThrowError('Encountered error: Assertion failure: error');
+        it('Should log error and throw when condition is false', () => {
+            spyOn(ErrorLoggerService, 'logError');
+            expect(() => assert(false, 'error')).toThrowError('Assertion failure: error');
+            expect(ErrorLoggerService.logError).toHaveBeenCalledWith('Assertion failure', 'error');
         });
     });
 });

@@ -16,7 +16,7 @@ export class Coord implements ComparableObject {
                 casted.y != null && typeof casted.y === 'number', 'Invalid encoded coord');
             return new Coord(casted.x as number, casted.y as number);
         }
-    }
+    };
     public static numberEncoder(width: number, height: number): NumberEncoder<Coord> {
         return NumberEncoder.tuple(
             [NumberEncoder.numberEncoder(width), NumberEncoder.numberEncoder(height)],
@@ -66,10 +66,7 @@ export class Coord implements ComparableObject {
         return new Coord(newX, newY);
     }
     public getOpposite(): Coord {
-        return new Coord( -this.x, -this.y);
-    }
-    public getCopy(): Coord {
-        return new Coord(this.x, this.y);
+        return new Coord(-this.x, -this.y);
     }
     public isInRange(sizeX: number, sizeY: number): boolean {
         if (this.x < 0) {
