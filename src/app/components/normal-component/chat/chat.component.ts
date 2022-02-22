@@ -14,7 +14,8 @@ import { Chat } from 'src/app/domain/Chat';
     templateUrl: './chat.component.html',
 })
 export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
-    public static VERBOSE: boolean = false;
+
+    public static VERBOSE: boolean = true;
 
     @Input() public chatId!: string;
     @Input() public turn?: number;
@@ -42,17 +43,17 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
         display(ChatComponent.VERBOSE, 'ChatComponent constructor');
     }
     public ngOnInit(): void {
-        display(ChatComponent.VERBOSE, `ChatComponent.ngOnInit for chat ${this.chatId}`);
+        display(ChatComponent.VERBOSE || true, `ChatComponent.ngOnInit for chat ${this.chatId}`);
 
         assert(this.chatId != null && this.chatId !== '', 'No chat to join mentionned');
         this.authSubscription = this.authenticationService.getUserObs()
             .subscribe((user: AuthUser) => {
-                if (this.isConnectedUser(user)) {
+                if (this.userJustConnected(user)) {
                     display(ChatComponent.VERBOSE, JSON.stringify(user) + ' just connected');
                     this.username = user.username;
                     this.connected = true;
                     this.loadChatContent();
-                } else {
+                } else if (this.userDisconnected(user)) {
                     display(ChatComponent.VERBOSE, 'No User Logged');
                     this.username = MGPOptional.empty();
                     this.connected = false;
@@ -62,11 +63,17 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     public ngAfterViewChecked(): void {
         this.scrollToBottomIfNeeded();
     }
-    public isConnectedUser(user: AuthUser): boolean {
-        return user.username.isPresent() && user.username.get() !== '';
+    private userJustConnected(user: AuthUser): boolean {
+        const wasNotConnected: boolean = this.connected === false;
+        const isConnected: boolean = user.username.isPresent() && user.username.get() !== '';
+        return wasNotConnected && isConnected;
+    }
+    private userDisconnected(user: AuthUser): boolean {
+        const isConnected: boolean = user.username.isPresent() && user.username.get() !== '';
+        return isConnected === false;
     }
     public loadChatContent(): void {
-        display(ChatComponent.VERBOSE, `User '${this.username}' logged, loading chat content`);
+        display(ChatComponent.VERBOSE || true, `User '${this.username.getOrElse('empty')}' logged, loading chat content`);
 
         this.chatService.startObserving(this.chatId, (chat: MGPOptional<Chat>) => {
             assert(chat.isPresent(), 'ChatComponent observed a chat being deleted, this should not happen');

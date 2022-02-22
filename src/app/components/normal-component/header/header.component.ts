@@ -35,7 +35,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
                     this.username = user.username.get();
                     this.userId = user.userId;
                     this.userService.setObservedUserId(user.userId);
-                    this.subscriptionToLoggedUser = MGPOptional.of(this.subscribeToLoggedUserDoc());
+                    this.subscribeToLoggedUserDoc();
                 } else if (user.email.isPresent()) {
                     this.username = user.email.get();
                 } else {
@@ -49,11 +49,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
                 }
             });
     }
-    public subscribeToLoggedUserDoc(): () => void {
+    public subscribeToLoggedUserDoc(): void {
         const subscription: () => void = this.userService.observeUser(this.userId, (user: MGPOptional<User>) => {
-            console.log('reçu puté', user);
         });
-        return subscription;
+        this.subscriptionToLoggedUser = MGPOptional.of(subscription);
     }
     public async logout(): Promise<void> {
         await this.authenticationService.disconnect();

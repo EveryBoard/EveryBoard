@@ -218,7 +218,6 @@ export class AuthenticationService implements OnDestroy {
             return ErrorLoggerService.logError('AuthenticationService', 'Unlogged users cannot request for email verification');
         }
     }
-
     /**
      * Logs in using an email and a password. Returns a validation to indicate
      * either success, or failure with a specific error.
@@ -317,5 +316,4 @@ export class AuthenticationService implements OnDestroy {
         }
         this.unsubscribeFromAuth();
     }
-
 }

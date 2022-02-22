@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { fakeAsync, TestBed } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { ChatComponent } from './chat.component';
 import { AuthUser } from 'src/app/services/AuthenticationService';
 import { ChatService } from 'src/app/services/ChatService';
@@ -9,6 +9,8 @@ import { Chat } from 'src/app/domain/Chat';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { Message } from 'src/app/domain/Message';
+import { UserMocks } from 'src/app/domain/UserMocks.spec';
+import { UserDAO } from 'src/app/dao/UserDAO';
 
 describe('ChatComponent', () => {
 
@@ -251,6 +253,29 @@ describe('ChatComponent', () => {
             // then we scroll to the bottom
             const chatDiv: DebugElement = testUtils.findElement('#chatDiv');
             expect(component.scrollTo).toHaveBeenCalledWith(chatDiv.nativeElement.scrollHeight);
+        }));
+        it('should not loadChatContent each time user is updated twice', fakeAsync(() => {
+            // Given a chat component, hence subscribed to the current user
+            const userDAO: UserDAO = TestBed.inject(UserDAO);
+            console.log('>>>> (1) les us set creator')
+            void userDAO.set(UserMocks.CREATOR_MINIMAL_USER.id, UserMocks.CREATOR);
+            console.log('>>>> (2) let us tick')
+            tick();
+            console.log('>>>> (3) let us setUser')
+            AuthenticationServiceMock.setUser(UserMocks.CREATOR_AUTH_USER, true);
+            console.log('>>>> (4) let us detectChange for the chat to init');
+            testUtils.detectChanges();
+
+            // When the user update to change its last_changed time
+            spyOn(component, 'loadChatContent').and.callThrough();
+            console.log('>>>> (5) let us update user')
+            AuthenticationServiceMock.setUser(UserMocks.CREATOR_AUTH_USER, true);
+            console.log('>>>> (6) let us tick')
+            tick();
+
+            // Then loadChatContent should not have been called again
+            expect(component.loadChatContent).not.toHaveBeenCalled();
+            console.log('>>>> (7) let us finish the test')
         }));
         afterEach(fakeAsync(async() => {
             component.ngOnDestroy();

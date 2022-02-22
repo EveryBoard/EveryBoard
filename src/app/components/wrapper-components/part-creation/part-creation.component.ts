@@ -57,7 +57,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
      * they need common data so that the parent calculates/retrieves the data then share it
      * with the part creation component
      */
-    public static VERBOSE: boolean = true;
+    public static VERBOSE: boolean = false;
 
     public static TOKEN_INTERVAL: number = 5 * 1000;
 
@@ -118,6 +118,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             return;
         }
         await this.notifyUserDocOfPartObservation();
+        await this.startSendingPresenceTokensIfNotDone();
         this.gameExists = true;
         this.subscribeToJoinerDoc();
         this.subscribeToFormElements();
@@ -297,12 +298,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 display(PartCreationComponent.VERBOSE, 'PartCreationComponent.onCurrentJoinerUpdate: the game has started');
                 this.onGameStarted();
             }
-            if (this.viewInfo.userIsObserver) {
-                this.stopSendingPresenceTokensAndObservingUsersIfNeeded();
-                // TODOTODO just in case, if I'm observer I should keep observing user until the creation !
-            } else {
-                await this.startSendingPresenceTokensIfNotDone();
-            }
         }
     }
     private async onGameCancelled() {
@@ -339,6 +334,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.observeUser(joiner.creator.id, callback);
     }
     private async destroyDocIfPartDidNotStart(): Promise<void> {
+        console.log('destroyDocIfPartDidNotStart called')
         const joiner: Joiner = Utils.getNonNullable(this.currentJoiner);
         const partStatusStarted: boolean = joiner.partStatus === PartStatus.PART_STARTED.value ||
                                            joiner.partStatus === PartStatus.PART_FINISHED.value;
@@ -349,30 +345,49 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         }
     }
     private observeUser(userId: string, onMissedHeartbeats: () => void): void {
+        console.log('let us start observing ' + userId)
         // subscribe to user
-        const onUserUpdate: (user: MGPOptional<User>) => void = async(userOptional: MGPOptional<User>) => {
-            if (userOptional.isAbsent()) {
-                // TODOTODO note that THIS happens when there is user deletion
-                this.unsubscribeFrom(userId);
-                await this.removeUserFromLobby(userId, true);
-                return ErrorLoggerService.logError('PartCreationComponent', 'found no user while observing ' + userId + ' !');
-            }
-            const oldTimeout: MGPOptional<number> = this.usersTimeouts.get(userId);
-            if (oldTimeout.isPresent()) {
-                window.clearTimeout(oldTimeout.get());
-                this.usersTimeouts.delete(userId);
-            }
-            const newTimeout: number = window.setTimeout(() => {
-                onMissedHeartbeats();
-                // unsubscribe to the user since he is off
-                this.unsubscribeFrom(userId);
-            }, 2 * PartCreationComponent.TOKEN_INTERVAL);
-            this.usersTimeouts.set(userId, newTimeout);
+        const onUserUpdate: (userOptional: MGPOptional<User>) => void = async(userOptional: MGPOptional<User>) => {
+            console.log('onUserUpdate triggered!')
+            await this.onUserUpdate(userOptional,
+                                    userId,
+                                    onMissedHeartbeats);
         };
         if (this.usersSubscriptions.get(userId).isAbsent()) {
             const userSubscription: () => void = this.userService.observeUser(userId, onUserUpdate);
             this.usersSubscriptions.set(userId, userSubscription);
         }
+    }
+    public async onUserUpdate(userOptional: MGPOptional<User>,
+                              userId: string,
+                              onMissedHeartbeats: () => void)
+    : Promise<void>
+    {
+        console.log(userId + ' user update')
+        if (userOptional.isAbsent()) {
+            console.log(userId + ' is now absent')
+            // TODOTODO note that THIS happens when there is user deletion
+            this.unsubscribeFrom(userId);
+            await this.removeUserFromLobby(userId);
+            ErrorLoggerService.logError('PartCreationComponent', 'found no user while observing ' + userId + ' !');
+            return;
+        }
+        console.log(userId + ' is now present')
+        const oldTimeout: MGPOptional<number> = this.usersTimeouts.get(userId);
+        if (oldTimeout.isPresent()) {
+            console.log('hence we clean its timeout')
+            window.clearTimeout(oldTimeout.get());
+            this.usersTimeouts.delete(userId);
+        }
+        console.log('we [re] sent his timeout ' + Date.now())
+        const newTimeout: number = window.setTimeout(() => {
+            console.log('timeout finished for ' + userId + ' at ' + Date.now())
+            onMissedHeartbeats();
+            // unsubscribe to the user since he is off
+            this.unsubscribeFrom(userId);
+        }, 2 * PartCreationComponent.TOKEN_INTERVAL);
+        this.usersTimeouts.set(userId, newTimeout);
+        console.log(userId + ' userUpdate finished')
     }
     private observeCandidates(): void {
         const joiner: Joiner = Utils.getNonNullable(this.currentJoiner);
@@ -412,7 +427,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             this.unsubscribeFrom(userId);
         }
     }
-    private removeUserFromLobby(userId: string, userWasDeleted: boolean = false): Promise<void> {
+    private removeUserFromLobby(userId: string): Promise<void> {
+        console.log('removeUserFromLobby(' + userId + ') was called')
         const joiner: Joiner = Utils.getNonNullable(this.currentJoiner);
         const index: number = joiner.candidates.findIndex((minimalUser: MinimalUser) => minimalUser.id === userId);
         // The user must be in the lobby, otherwise we would have unsubscribed from its updates

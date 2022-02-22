@@ -23,6 +23,8 @@ import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServic
 import { LobbyComponent } from '../../normal-component/lobby/lobby.component';
 import { UserService } from 'src/app/services/UserService';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
+import { User } from 'src/app/domain/User';
+import { serverTimestamp } from 'firebase/firestore';
 
 describe('PartCreationComponent', () => {
 
@@ -547,7 +549,7 @@ describe('PartCreationComponent', () => {
                     candidates: [UserMocks.OPPONENT_MINIMAL_USER],
                 });
                 expect(component.currentJoiner).toEqual(JoinerMocks.WITH_FIRST_CANDIDATE);
-                component.unsubscribeFrom(UserMocks.CREATOR_AUTH_USER.userId);
+                component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
             it('should add observedPart to user doc', fakeAsync(() => {
                 // Given a partCreation
@@ -557,10 +559,28 @@ describe('PartCreationComponent', () => {
                 awaitComponentInitialisation();
 
                 // Then observedPart in user doc should be set
-                expect(userDAO.update).toHaveBeenCalledOnceWith(UserMocks.OPPONENT_AUTH_USER.userId, {
+                const firstCall: Partial<User> = {
                     observedPart: 'joinerId',
-                });
-                component.unsubscribeFrom(UserMocks.CREATOR_AUTH_USER.userId);
+                };
+                const secondCall: Partial<User> = {
+                    last_changed: serverTimestamp(),
+                };
+                expect(userDAO.update).toHaveBeenCalledTimes(2);
+                expect(userDAO.update).toHaveBeenCalledWith(UserMocks.OPPONENT_AUTH_USER.userId, firstCall);
+                expect(userDAO.update).toHaveBeenCalledWith(UserMocks.OPPONENT_AUTH_USER.userId, secondCall);
+                component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
+            }));
+            it('should start sending presence token', fakeAsync(() => {
+                // Given a partCreation where user is not opponent
+                // When user is selected as chosen opponent
+                spyOn(component, 'startSendingPresenceTokensIfNotDone').and.callThrough();
+                awaitComponentInitialisation();
+
+                // Then "start sending token" should have been called
+                expect(component.startSendingPresenceTokensIfNotDone).toHaveBeenCalledOnceWith();
+
+                // To avoid finishing test with periodic timer in queue
+                component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
             it('should not delete part when finding a disconnected creator', fakeAsync(() => {
                 spyOn(gameService, 'deletePart').and.callThrough();
@@ -579,7 +599,7 @@ describe('PartCreationComponent', () => {
                 expect(gameService.deletePart).not.toHaveBeenCalled();
                 expect(joinerService.deleteJoiner).not.toHaveBeenCalled();
                 expect(chatService.deleteChat).not.toHaveBeenCalled();
-                component.unsubscribeFrom(UserMocks.CREATOR_AUTH_USER.userId);
+                component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
         });
         describe('Leaving', () => {
@@ -628,7 +648,7 @@ describe('PartCreationComponent', () => {
 
                 // Then the user is rerouted to the server
                 expectValidRouting(router, ['/lobby'], LobbyComponent);
-                component.unsubscribeFrom(UserMocks.CREATOR_AUTH_USER.userId);
+                component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
             it('should not delete part when observer seeing that creator goes offline', fakeAsync(() => {
                 spyOn(gameService, 'deletePart');
@@ -645,18 +665,18 @@ describe('PartCreationComponent', () => {
                 expect(gameService.deletePart).not.toHaveBeenCalled();
                 expect(joinerService.deleteJoiner).not.toHaveBeenCalled();
                 expect(chatService.deleteChat).not.toHaveBeenCalled();
-                component.unsubscribeFrom(UserMocks.CREATOR_AUTH_USER.userId);
+                component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
-            it('should start sending presence token once selected as chosen opponent', fakeAsync(() => {
+            it('should not start sending presence token once selected as chosen opponent', fakeAsync(() => {
                 // Given a partCreation where user is candidate
-                spyOn(component, 'startSendingPresenceTokensIfNotDone').and.callThrough();
                 awaitComponentInitialisation();
 
                 // When user is selected as chosen opponent
+                spyOn(component, 'startSendingPresenceTokensIfNotDone').and.callThrough();
                 receiveJoinerUpdate(JoinerMocks.WITH_CHOSEN_OPPONENT);
 
                 // Then "start sending token" should have been called
-                expect(component.startSendingPresenceTokensIfNotDone).toHaveBeenCalledOnceWith();
+                expect(component.startSendingPresenceTokensIfNotDone).not.toHaveBeenCalled();
                 // To avoid finishing test with periodic timer in queue
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
@@ -728,7 +748,7 @@ describe('PartCreationComponent', () => {
                 // To avoid finishing test with periodic timer in queue
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
-            it('should stop sending token when no longer chosen opponent', fakeAsync(() => {
+            it('should not stop sending token when no longer chosen opponent', fakeAsync(() => {
                 // Given a component where user is chosen opponent
                 awaitComponentInitialisation();
                 receiveJoinerUpdate(JoinerMocks.WITH_CHOSEN_OPPONENT);
@@ -738,7 +758,8 @@ describe('PartCreationComponent', () => {
                 receiveJoinerUpdate(JoinerMocks.WITH_FIRST_CANDIDATE);
 
                 // Then stopSendingPresenceTokensAndObservingCreatorIfNeeded should have been called
-                expect(component.stopSendingPresenceTokensAndObservingUsersIfNeeded).toHaveBeenCalledOnceWith();
+                expect(component.stopSendingPresenceTokensAndObservingUsersIfNeeded).not.toHaveBeenCalled();
+                component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
         });
     });

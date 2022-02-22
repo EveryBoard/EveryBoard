@@ -11,5 +11,5 @@ export interface User extends FirebaseJSONObject {
     last_changed?: FirebaseTime,
     state?: 'online' | 'offline';
     verified: boolean,
-    observedPart?: string,
+    observedPart?: string | null,
 }

@@ -5,7 +5,7 @@ import { UserDAO } from '../dao/UserDAO';
 import { User, UserDocument } from '../domain/User';
 import { ActiveUsersService } from './ActiveUsersService';
 import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
-import { assert } from '../utils/utils';
+import { assert } from '../utils/assert';
 import { MGPOptional } from '../utils/MGPOptional';
 
 @Injectable({
@@ -55,7 +55,7 @@ export class UserService {
     }
     public removeObservedPart(): Promise<void> { // TODOTOD: TEST IN ITSELF, NOT JUST TESTING ITS CALLED
         assert(this.currentUserId.isPresent(), 'Should be subscribe to yourself when connected');
-        return this.userDAO.update(this.currentUserId.get(), { observedPart: undefined });
+        return this.userDAO.update(this.currentUserId.get(), { observedPart: null });
     }
     public sendPresenceToken(): Promise<void> {
         assert(this.currentUserId.isPresent(), 'Should be subscribe to yourself when connected');
