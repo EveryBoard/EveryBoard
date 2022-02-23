@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, ElementRef, ViewChild, OnInit, AfterViewChecked } from '@angular/core';
 import { ChatService } from '../../../services/ChatService';
 import { Message, MessageDocument } from '../../../domain/Message';
-import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
+import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { display } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { faReply, IconDefinition } from '@fortawesome/free-solid-svg-icons';
@@ -40,16 +40,12 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
         display(ChatComponent.VERBOSE, `ChatComponent.ngOnInit for chat ${this.chatId}`);
 
         assert(this.chatId != null && this.chatId !== '', 'No chat to join mentionned');
+        this.loadChatContent();
     }
     public ngAfterViewChecked(): void {
         this.scrollToBottomIfNeeded();
     }
-    public isConnectedUser(user: AuthUser): boolean {
-        return user.username.isPresent() && user.username.get() !== '';
-    }
     public loadChatContent(): void {
-        display(ChatComponent.VERBOSE, `User '${this.authenticationService.user.get().username.get()}' logged, loading chat content`);
-
         const callback: FirebaseCollectionObserver<Message> =
             new FirebaseCollectionObserver<Message>(
                 (messages: MessageDocument[]) => {
@@ -63,8 +59,8 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
                 });
         this.chatService.startObserving(this.chatId, callback);
     }
-    public updateMessages(messages: Message[]): void {
-        this.chat = messages;
+    public updateMessages(newMessages: Message[]): void {
+        this.chat = this.chat.concat(newMessages);
         const nbMessages: number = this.chat.length;
         if (this.visible === true && this.isNearBottom === true) {
             this.readMessages = nbMessages;
@@ -81,6 +77,7 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
             this.showUnreadMessagesButton = false;
         }
 
+        console.log('unread messages: ' + unreadMessages)
         if (unreadMessages === 0) {
             this.unreadMessagesText = $localize`no new message`;
             this.showUnreadMessagesButton = false;
@@ -91,7 +88,7 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
         }
     }
     private scrollToBottomIfNeeded(): void {
-        if (this.connected && this.visible) {
+        if (this.visible) {
             if (this.isNearBottom || this.notYetScrolled) {
                 this.scrollToBottom();
             }
@@ -119,11 +116,16 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
         });
     }
     public async sendMessage(): Promise<void> {
+        console.log('sending message')
         const content: string = this.userMessage;
         this.userMessage = ''; // clears it first to seem more responsive
+        console.log('calling sendMessage')
+        console.log('uid' + this.authenticationService.uid);
+        console.log('username' + this.authenticationService.user.get().username.get());
         await this.chatService.sendMessage(this.authenticationService.uid.get(),
                                            this.authenticationService.user.get().username.get(),
                                            content, this.turn);
+        console.log('done')
     }
     public ngOnDestroy(): void {
         if (this.chatService.isObserving()) {
@@ -131,9 +133,12 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
         }
     }
     public switchChatVisibility(): void {
+        console.log('switching visibility')
         if (this.visible === true) {
+            console.log('was visible')
             this.visible = false;
         } else {
+            console.log('was not visible')
             this.visible = true;
             this.updateUnreadMessagesText(0);
             this.scrollToBottom();

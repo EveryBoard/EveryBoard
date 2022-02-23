@@ -1,11 +1,9 @@
 /* eslint-disable max-lines-per-function */
-import { fakeAsync, TestBed } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { ChatComponent } from './chat.component';
-import { AuthUser } from 'src/app/services/AuthenticationService';
 import { ChatService } from 'src/app/services/ChatService';
 import { ChatDAO } from 'src/app/dao/ChatDAO';
 import { DebugElement } from '@angular/core';
-import { Chat } from 'src/app/domain/Chat';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { Message } from 'src/app/domain/Message';
@@ -43,31 +41,6 @@ describe('ChatComponent', () => {
         testUtils.detectChanges();
         expect(component).toBeTruthy();
     }));
-    describe('disconnected chat', () => {
-        it('should not observe (load messages) and show disconnected chat for unlogged user', fakeAsync(async() => {
-            spyOn(chatService, 'startObserving');
-            spyOn(component, 'loadChatContent');
-            // given a user that is not connected
-            AuthenticationServiceMock.setUser(AuthUser.NOT_CONNECTED);
-
-            // when the component is initialized
-            component.ngOnInit();
-            testUtils.detectChanges();
-            spyOn(component['authSubscription'], 'unsubscribe');
-
-            // It should not observe, not load the chat content, and show the disconnected chat
-            expect(chatService.startObserving).not.toHaveBeenCalled();
-            expect(component.loadChatContent).not.toHaveBeenCalled();
-            testUtils.expectElementToExist('#disconnected-chat');
-
-            component.ngOnDestroy();
-            await testUtils.whenStable();
-            // chatService.stopObserving should not have been called neither
-            expect(chatService.stopObserving).not.toHaveBeenCalled();
-            // but the auth subscription needs to be cancelled!
-            expect(component['authSubscription'].unsubscribe).toHaveBeenCalledOnceWith();
-        }));
-    });
     describe('connected chat', () => {
         it('should propose to hide chat when chat is visible, and work', fakeAsync(async() => {
             // Given a user that is connected
@@ -194,8 +167,7 @@ describe('ChatComponent', () => {
             testUtils.detectChanges();
             await testUtils.clickElement('#switchChatVisibilityButton');
             testUtils.detectChanges();
-            const chat: Partial<Chat> = { messages: [{ sender: 'roger', content: 'Saluuuut', currentTurn: 0, postedTime: 5 }] };
-            await chatDAO.update('fauxChat', chat);
+            await chatDAO.addMessage('fauxChat', { senderId: 'rogerId', sender: 'roger', content: 'Saluuuut', currentTurn: 0, postedTime: serverTimestamp() });
             testUtils.detectChanges();
             let switchButton: DebugElement = testUtils.findElement('#switchChatVisibilityButton');
             expect(switchButton.nativeElement.innerText).toEqual('Show chat (1 new message)'.toUpperCase());
