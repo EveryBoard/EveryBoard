@@ -15,6 +15,7 @@ import * as FireAuth from '@angular/fire/auth';
 import { ConnectivityDAO } from 'src/app/dao/ConnectivityDAO';
 import { ErrorLoggerService } from '../ErrorLoggerService';
 import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
+import { User } from 'src/app/domain/User';
 
 @Injectable()
 export class AuthenticationServiceMock {
@@ -102,7 +103,7 @@ async function setupAuthTestModule(): Promise<unknown> {
  * When using it, don't forget to sign out the user when the test is done, using:
  * await firebase.auth().signOut();
  */
-export async function createConnectedGoogleUser(createInDB: boolean): Promise<FireAuth.User> {
+export async function createConnectedGoogleUser(createInDB: boolean, username?: string): Promise<FireAuth.User> {
     TestBed.inject(AuthenticationService);
     // Sign out current user in case there is one
     await FireAuth.signOut(TestBed.inject(FireAuth.Auth));
@@ -112,7 +113,11 @@ export async function createConnectedGoogleUser(createInDB: boolean): Promise<Fi
         await FireAuth.signInWithCredential(TestBed.inject(FireAuth.Auth),
                                             FireAuth.GoogleAuthProvider.credential(token));
     if (createInDB) {
-        await TestBed.inject(UserDAO).set(Utils.getNonNullable(credential.user).uid, { verified: true });
+        const user: User = { verified: true };
+        if (username != null) {
+            user['username'] = username;
+        }
+        await TestBed.inject(UserDAO).set(Utils.getNonNullable(credential.user).uid, user);
     }
     return credential.user;
 }

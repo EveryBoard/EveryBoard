@@ -3,7 +3,7 @@ service cloud.firestore {
     match /databases/{database}/documents {
         match /{document=**} {
             // by default, nothing can be read or written unless explicitly authorized
-            allow read, write: if true; // TODO: should be if false
+            allow read, write: if false; // TODO: should be if false
         }
         match /foo/{document=**} {
             // only used for testing purposes, do not push to production
@@ -15,9 +15,30 @@ service cloud.firestore {
             allow update: if true;
             allow read: if true;
         }
-        match /chats/{id} {
-            allow create: if canCreateChat(id)
-            allow read: if canReadChat(id)
+        match /chats/lobby {
+            allow create: if userVerified();
+            allow read: if userVerified();
+        }
+        match /chats/lobby/messages/{id} {
+            allow create: if userVerified() && isValidMessage(request.resource.data);
+            allow delete: if userVerified() && isMessageAuthor(resource.data);
+            allow update: if userVerified() && isMessageAuthor(resource.data) && isValidMessage(request.resource.data);
+            allow read: if userVerified();
+        }
+        function isValidMessage(message) {
+            return hasField(message, 'content') &&
+                   hasField(message, 'senderId') && isMessageAuthor(message) &&
+                   hasField(message, 'sender') && usernameOf(message.senderId) == message.sender &&
+                   hasField(message, 'postedTime');
+        }
+        function hasField(data, field) {
+            return data[field] != null;
+        }
+        function isMessageAuthor(message) {
+            return request.auth.uid == message.senderId
+        }
+        function usernameOf(uid) {
+            return get(/databases/$(database)/documents/joueurs/$(uid)).data.username
         }
         function canCreateChat(id) {
             return userVerified() && id == 'lobby';

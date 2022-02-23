@@ -14,6 +14,8 @@ export interface IFirebaseFirestoreDAO<T extends FirebaseJSONObject> {
 
     create(newElement: T): Promise<string>;
 
+    read(id: string): Promise<MGPOptional<T>>;
+
     update(id: string, update: Firestore.UpdateData<T>): Promise<void>;
 
     delete(messageId: string): Promise<void>;

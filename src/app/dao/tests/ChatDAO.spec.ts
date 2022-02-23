@@ -13,7 +13,7 @@ import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 import { JoinerDAO } from '../JoinerDAO';
 
-describe('ChatDAO', () => {
+fdescribe('ChatDAO', () => {
 
     let chatDAO: ChatDAO;
     let partDAO: PartDAO;
@@ -21,12 +21,6 @@ describe('ChatDAO', () => {
 
     function signOut(): Promise<void> {
         return TestBed.inject(FireAuth.Auth).signOut();
-    }
-    async function createChat(id: string): Promise<void> {
-        // We need an authenticated user to create a chat
-        await createConnectedGoogleUser(false);
-        await chatDAO.set(id, {});
-        await signOut();
     }
     async function createPartAndJoiner(creatorId: string): Promise<string> {
         const id: string = await partDAO.create(PartMocks.INITIAL);
@@ -51,26 +45,30 @@ describe('ChatDAO', () => {
     it('should be created', () => {
         expect(chatDAO).toBeTruthy();
     });
-    describe('any chat', () => {
+    fdescribe('on any chat', () => {
         let myUserId: string;
+        let myMessageId: string;
         let otherUserId: string;
+        let otherMessageId: string;
         beforeEach(async() => {
-            // Given a chat (here the lobby, but this could be any chat)
-            await createChat('lobby');
+            // Given a user
+            const otherUser: FireAuth.User = await createConnectedGoogleUser(true, 'other-user');
+            // and a chat (here the lobby, but this could be any chat)
+            await chatDAO.set('lobby', {});
             // with a message from another user
-            const otherUser: FireAuth.User = await createConnectedGoogleUser(false);
             otherUserId = otherUser.uid;
             const message: Message = {
                 content: 'hullo there',
                 senderId: otherUserId,
-                sender: 'foo', // TODO: upost posting, we should ensure that the username is correct
+                sender: 'other-user',
                 postedTime: serverTimestamp(),
             };
+            otherMessageId = await chatDAO.addMessage('lobby', message);
             await signOut();
             // and a message from the current user, who is able to add messages
-            const user: FireAuth.User = await createConnectedGoogleUser(false);
+            const user: FireAuth.User = await createConnectedGoogleUser(true, 'user');
             myUserId = user.uid;
-            await chatDAO.addMessage('lobby', { ...message, senderId: myUserId });
+            myMessageId = await chatDAO.addMessage('lobby', { ...message, senderId: myUserId, sender: 'user' });
         });
         it('should forbid disconnected users to read a chat', async() => {
             // Given a disconnected user
@@ -92,45 +90,62 @@ describe('ChatDAO', () => {
             // Then it fails
             await expectAsync(result).toBeRejected();
         });
-/*
-        it('should forbid users to delete one of its messages', async() => {
+        it('should forbid a user to post a message with the wrong username', async() => {
+            // When posting a message with a different username
+            const message: Message = {
+                content: 'hello',
+                senderId: myUserId,
+                sender: 'not-my-username!',
+                postedTime: serverTimestamp(),
+            };
+            const result: Promise<string> = chatDAO.addMessage('lobby', message);
+            // Then it fails
+            await expectAsync(result).toBeRejected();
+        });
+        it('should allow users to delete one of its messages', async() => {
             // When deleting one of the current user's message
-            const result: Promise<void> = chatDAO.deleteMessage('lobby', myMessageId);
+            const result: Promise<void> = chatDAO.subCollectionDAO('lobby', 'messages').delete(myMessageId);
             // Then it succeeds and the message is removed
             await expectAsync(result).toBeResolvedTo();
-            const allMessages: Message[] = await chatDAO.getLastMessages('lobby', 5);
-            expect(allMessages.length).toBe(1);
+            const allMessages: MessageDocument[] = await chatDAO.getLastMessages('lobby', 5);
+            expect(allMessages.length).toBe(1); // Only 1 of the original message remains
         });
         it('should forbid a user to delete a message of another user', async() => {
             // When deleting the message of another user
-            const result: Promise<void> = chatDAO.deleteMessage('lobby', otherMessageId);
+            const result: Promise<void> = chatDAO.subCollectionDAO('lobby', 'messages').delete(otherMessageId);
             // Then it fails
             await expectAsync(result).toBeResolvedTo();
         });
         it('should allow a user to change one of its messages', async() => {
             // When updating one of the current user's message
-            const result: Promise<void> = chatDAO.updateMessage('lobby', myMessageId, 'hullo');
+            const result: Promise<void> = chatDAO.subCollectionDAO('lobby', 'messages').update(myMessageId, { content: 'hullo' });
             // Then it succeeds and the message is updated
             await expectAsync(result).toBeResolvedTo();
-            const message: Message = chatDAO.getMessage(myMessageId);
-            expect(message.content).toBe('hullo');
+            const message: MGPOptional<Message> = await chatDAO.subCollectionDAO<Message>('lobby', 'messages').read(myMessageId);
+            expect(message.get().content).toBe('hullo');
+        });
+        it('should forbid a user to change the sender of a message', async() => {
+            // When updating one of the current user's message and changing its sender
+            const result: Promise<void> = chatDAO.subCollectionDAO('lobby', 'messages').update(myMessageId, { sender: 'bli' });
+            // Then it fails
+            await expectAsync(result).toBeRejected();
         });
         it('should forbid a user to change a message of another user', async() => {
             // When updating the message of another user
-            const result: Promise<void> = chatDAO.updateMessage('lobby', otherMessageId, 'hullo');
+            const result: Promise<void> = chatDAO.subCollectionDAO('lobby', 'messages').update(otherMessageId, { content: 'hullo' });
             // Then it fails
             await expectAsync(result).toBeRejected();
-        }); */
+        });
     });
-    describe('lobby chat', () => {
+    fdescribe('on the lobby chat', () => {
         it('should allow a verified user to create the lobby chat', async() => {
             // Given a verified user
-            await createConnectedGoogleUser(false);
+            await createConnectedGoogleUser(true);
             // When creating the 'lobby' chat
             const chatCreation: Promise<void> = chatDAO.set('lobby', {});
             // Then it succeeds
             await expectAsync(chatCreation).toBeResolvedTo();
-
+            await signOut();
         });
         it('should forbid a disconnected user to create the lobby chat', async() => {
             // Given a disconnected user
@@ -141,12 +156,12 @@ describe('ChatDAO', () => {
         });
         it('should allow a verified user to post a message on the lobby chat', async() => {
             // Given a verified user
-            const user: FireAuth.User = await createConnectedGoogleUser(false);
+            const user: FireAuth.User = await createConnectedGoogleUser(true, 'myself');
             const userId: string = user.uid;
             // When posting in the lobby chat
             const message: Message = {
                 content: 'hello',
-                sender: 'TODO',
+                sender: 'myself',
                 senderId: userId,
                 postedTime: serverTimestamp(),
             };
@@ -155,13 +170,14 @@ describe('ChatDAO', () => {
             await expectAsync(result).toBeResolved();
             const allMessages: MessageDocument[] = await chatDAO.getLastMessages('lobby', 5);
             expect(allMessages.length).toBe(1);
+            await signOut();
         });
         it('should forbid a disconnected user to post a message on the lobby chat', async() => {
             // Given a disconnected user
             // When posting in the lobby chat
             const message: Message = {
                 content: 'hello',
-                sender: 'TODO',
+                sender: 'someone',
                 senderId: 'some-id',
                 postedTime: serverTimestamp(),
             };
@@ -170,10 +186,10 @@ describe('ChatDAO', () => {
             await expectAsync(result).toBeRejected();
         });
     });
-    describe('part chat', () => {
+    describe('on a part chat', () => {
         it('should allow a part owner to create the corresponding chat', async() => {
             // Given a verified user who is a part owner
-            const user: FireAuth.User = await createConnectedGoogleUser(false);
+            const user: FireAuth.User = await createConnectedGoogleUser(true);
             const userId: string = user.uid;
             const partId: string = await createPartAndJoiner(userId);
             // When creating the corresponding chat
@@ -183,7 +199,7 @@ describe('ChatDAO', () => {
         });
         it('should forbid a non-part owner to create the corresponding chat', async() => {
             // Given a verified user who is not a part owner
-            await createConnectedGoogleUser(false);
+            await createConnectedGoogleUser(true);
             // When creating a part chat
             const result: Promise<void> = chatDAO.set('some-part-id', {});
             // Then it should fail
@@ -191,7 +207,7 @@ describe('ChatDAO', () => {
         });
         it('should allow a part owner to send messages on the corresponding chat', async() => {
             // Given a verified user who is a part owner, and where the corresponding chat exists
-            const user: FireAuth.User = await createConnectedGoogleUser(false);
+            const user: FireAuth.User = await createConnectedGoogleUser(true);
             const userId: string = user.uid;
             const partId: string = await createPartAndJoiner(userId);
             await chatDAO.set(partId, {});
@@ -208,12 +224,12 @@ describe('ChatDAO', () => {
         });
         it('should allow a candidate to send messages on the corresponding chat', async() => {
             // Given a verified user who is a candidate, and where the corresponding chat exists
-            const user: FireAuth.User = await createConnectedGoogleUser(false);
+            const user: FireAuth.User = await createConnectedGoogleUser(true);
             const userId: string = user.uid;
             const partId: string = await createPartAndJoiner(userId);
             await chatDAO.set(partId, {});
             await signOut();
-            const candidate: FireAuth.User = await createConnectedGoogleUser(false);
+            const candidate: FireAuth.User = await createConnectedGoogleUser(true);
             await addCandidate(partId, candidate.uid);
             // When sending a message
             const message: Message = {
@@ -228,12 +244,12 @@ describe('ChatDAO', () => {
         });
         it('should allow first player to send messages on the corresponding chat', async() => {
             // Given a verified user who is a candidate, and where the corresponding chat exists
-            const user: FireAuth.User = await createConnectedGoogleUser(false);
+            const user: FireAuth.User = await createConnectedGoogleUser(true);
             const userId: string = user.uid;
             const partId: string = await createPartAndJoiner(userId);
             await chatDAO.set(partId, {});
             await signOut();
-            const player: FireAuth.User = await createConnectedGoogleUser(false);
+            const player: FireAuth.User = await createConnectedGoogleUser(true);
             await setPlayerZero(partId, player.uid);
             // When sending a message
             const message: Message = {
@@ -248,12 +264,12 @@ describe('ChatDAO', () => {
         });
         it('should allow second player to send messages on the corresponding chat', async() => {
             // Given a verified user who is a candidate, and where the corresponding chat exists
-            const user: FireAuth.User = await createConnectedGoogleUser(false);
+            const user: FireAuth.User = await createConnectedGoogleUser(true);
             const userId: string = user.uid;
             const partId: string = await createPartAndJoiner(userId);
             await chatDAO.set(partId, {});
             await signOut();
-            const player: FireAuth.User = await createConnectedGoogleUser(false);
+            const player: FireAuth.User = await createConnectedGoogleUser(true);
             await setPlayerOne(partId, player.uid);
             // When sending a message
             const message: Message = {
@@ -268,12 +284,12 @@ describe('ChatDAO', () => {
         });
         it('should forbid a user not in a part to send messages on the corresponding chat', async() => {
             // Given a verified user who is a part owner, and where the corresponding chat exists
-            const user: FireAuth.User = await createConnectedGoogleUser(false);
+            const user: FireAuth.User = await createConnectedGoogleUser(true);
             const userId: string = user.uid;
             const partId: string = await createPartAndJoiner(userId);
             await chatDAO.set(partId, {});
             await signOut();
-            const otherUser: FireAuth.User = await createConnectedGoogleUser(false);
+            const otherUser: FireAuth.User = await createConnectedGoogleUser(true);
             // When sending a message
             const message: Message = {
                 content: 'hullo there',
