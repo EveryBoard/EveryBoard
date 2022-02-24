@@ -39,7 +39,7 @@ export class JoinerMocks {
     public static readonly WITH_CHOSEN_OPPONENT: Joiner = {
         candidates: [UserMocks.FIRST_CANDIDATE_MINIMAL_USER],
         creator: UserMocks.CREATOR_MINIMAL_USER,
-        chosenPlayer: UserMocks.FIRST_CANDIDATE_MINIMAL_USER.name,
+        chosenPlayer: UserMocks.FIRST_CANDIDATE_MINIMAL_USER,
         firstPlayer: FirstPlayer.RANDOM.value,
         partType: PartType.STANDARD.value,
         partStatus: PartStatus.PART_CREATED.value,
@@ -49,7 +49,7 @@ export class JoinerMocks {
     public static readonly WITH_PROPOSED_CONFIG: Joiner = {
         candidates: [UserMocks.FIRST_CANDIDATE_MINIMAL_USER],
         creator: UserMocks.CREATOR_MINIMAL_USER,
-        chosenPlayer: UserMocks.FIRST_CANDIDATE_MINIMAL_USER.name,
+        chosenPlayer: UserMocks.FIRST_CANDIDATE_MINIMAL_USER,
         firstPlayer: FirstPlayer.RANDOM.value,
         partType: PartType.STANDARD.value,
         partStatus: PartStatus.CONFIG_PROPOSED.value,
@@ -59,7 +59,7 @@ export class JoinerMocks {
     public static readonly WITH_ACCEPTED_CONFIG: Joiner = {
         candidates: [UserMocks.FIRST_CANDIDATE_MINIMAL_USER],
         creator: UserMocks.CREATOR_MINIMAL_USER,
-        chosenPlayer: UserMocks.FIRST_CANDIDATE_MINIMAL_USER.name,
+        chosenPlayer: UserMocks.FIRST_CANDIDATE_MINIMAL_USER,
         firstPlayer: FirstPlayer.RANDOM.value,
         partType: PartType.STANDARD.value,
         partStatus: PartStatus.PART_STARTED.value,

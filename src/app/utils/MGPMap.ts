@@ -101,6 +101,7 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
                 return oldValue;
             }
         }
+        console.log('No Value to delete for key "'+ key.toString() +'"!')
         throw new Error('No Value to delete for key "'+ key.toString() +'"!');
     }
     public getCopy(): this {

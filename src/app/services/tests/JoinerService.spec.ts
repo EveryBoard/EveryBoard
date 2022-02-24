@@ -107,7 +107,8 @@ describe('JoinerService', () => {
             // When cancelling on an invalid joiner
             // Then it should throw
             const expectedError: string = 'cannot cancel joining when not observing a joiner';
-            await expectAsync(service.cancelJoining('whoever')).toBeRejectedWithError(expectedError);
+            const unknown: MinimalUser = { id: 'unknown-doc-id', name: 'who is that' };
+            await expectAsync(service.cancelJoining(unknown)).toBeRejectedWithError(expectedError);
         }));
         it('should delegate update to DAO', fakeAsync(async() => {
             // Given a joiner that we are observing and that we joined
@@ -119,7 +120,7 @@ describe('JoinerService', () => {
             spyOn(dao, 'update');
 
             // When cancelling our join
-            await service.cancelJoining(user.name);
+            await service.cancelJoining(user);
 
             // Then we are removed from the list
             expect(dao.update).toHaveBeenCalledWith('joinerId', {
@@ -134,7 +135,7 @@ describe('JoinerService', () => {
             service.subscribeToChanges('joinerId', (doc: MGPOptional<Joiner>): void => {});
 
             // When the chosen player leaves
-            await service.cancelJoining('firstCandidate');
+            await service.cancelJoining(UserMocks.FIRST_CANDIDATE_MINIMAL_USER);
 
             // Then the joiner is back to the initial one
             const currentJoiner: MGPOptional<Joiner> = await dao.read('joinerId');
@@ -149,7 +150,8 @@ describe('JoinerService', () => {
             // When cancelling the join of a non-candidate
             // Then it should throw an error
             const error: string = 'someone that was not candidate nor chosenPlayer just left the chat: who is that';
-            await expectAsync(service.cancelJoining('who is that')).toBeRejectedWithError(error);
+            const unknown: MinimalUser = { id: 'unknown-doc-id', name: 'who is that' };
+            await expectAsync(service.cancelJoining(unknown)).toBeRejectedWithError(error);
         }));
     });
     describe('updateCandidates', () => {
@@ -216,7 +218,7 @@ describe('JoinerService', () => {
 
             // When reviewing the config (because the chosen player left)
             const candidates: MinimalUser[] = [{ id: 'candidate-doc-id', name: 'candidate1' }];
-            await service.reviewConfigRemoveChosenPlayerAndUpdateCandidates(candidates);
+            await service.reviewConfigAndRemoveChosenPlayerAndUpdateCandidates(candidates);
 
             // Then the part is updated accordingly
             expect(dao.update).toHaveBeenCalledWith('joinerId', {

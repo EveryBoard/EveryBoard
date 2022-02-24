@@ -12,6 +12,7 @@ import { FirebaseError } from '@angular/fire/app';
 import * as FireAuth from '@angular/fire/auth';
 import { ConnectivityDAO } from '../dao/ConnectivityDAO';
 import { ErrorLoggerService } from './ErrorLoggerService';
+import { MinimalUser } from '../domain/Joiner';
 
 // This class is an indirection to Firebase's auth methods, to support spyOn on them in the test code.
 export class Auth {
@@ -63,6 +64,12 @@ export class AuthUser {
     }
     public isConnected(): boolean {
         return this.email.isPresent();
+    }
+    public toMinimalUser(): MinimalUser {
+        return {
+            id: this.userId,
+            name: this.username.get(),
+        };
     }
 }
 

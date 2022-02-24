@@ -28,7 +28,7 @@ export class ChatService implements OnDestroy {
         display(ChatService.VERBOSE, 'ChatService.constructor');
     }
     public startObserving(chatId: string, callback: (chat: MGPOptional<Chat>) => void): void {
-        display(ChatService.VERBOSE || true, 'ChatService.startObserving ' + chatId);
+        display(ChatService.VERBOSE, 'ChatService.startObserving ' + chatId);
 
         if (this.followedChatId.isAbsent()) {
             display(ChatService.VERBOSE, '[start watching chat ' + chatId);

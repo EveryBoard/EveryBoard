@@ -2,6 +2,7 @@
 import { TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
+import { serverTimestamp } from 'firebase/firestore';
 
 import { PartCreationComponent } from './part-creation.component';
 import { JoinerService } from 'src/app/services/JoinerService';
@@ -13,7 +14,7 @@ import { ChatDAO } from 'src/app/dao/ChatDAO';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { Part } from 'src/app/domain/Part';
 import { expectValidRouting, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { FirstPlayer, Joiner, PartStatus, PartType } from 'src/app/domain/Joiner';
+import { FirstPlayer, Joiner, MinimalUser, PartStatus, PartType } from 'src/app/domain/Joiner';
 import { GameService } from 'src/app/services/GameService';
 import { ChatService } from 'src/app/services/ChatService';
 import { Utils } from 'src/app/utils/utils';
@@ -24,7 +25,6 @@ import { LobbyComponent } from '../../normal-component/lobby/lobby.component';
 import { UserService } from 'src/app/services/UserService';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { User } from 'src/app/domain/User';
-import { serverTimestamp } from 'firebase/firestore';
 
 describe('PartCreationComponent', () => {
 
@@ -130,6 +130,8 @@ describe('PartCreationComponent', () => {
 
                 // When the component is loaded
                 awaitComponentInitialisation();
+                // and the toast displayed
+                tick(3000);
 
                 // Then observe is not called
                 expect(joinerService.subscribeToChanges).not.toHaveBeenCalled();
@@ -189,20 +191,27 @@ describe('PartCreationComponent', () => {
         describe('Candidate stop sending token', () => {
             it('should go back to start when chosenPlayer stop sending token', fakeAsync(() => {
                 // Given a page that has loaded, a candidate joined and has been chosen as opponent
+                console.log('let us await compo')
                 awaitComponentInitialisation();
+                console.log('let us mock candidate arrival')
                 mockCandidateArrival();
+                console.log('let us choose him as opponent')
                 chooseOpponent();
                 expectElementToExist('#selected_' + UserMocks.OPPONENT.username);
 
                 // When the candidate stop sending token
                 spyOn(userDAO, 'updatePresenceToken').and.callThrough();
+                console.log('let us await two token to see he is absent')
                 tick(PartCreationComponent.TOKEN_INTERVAL * 2);
+                console.log('let us flush')
                 flush();
 
                 // Then it is still selected
                 expectElementNotToExist('#selected_' + UserMocks.OPPONENT.username);
                 expect(component.currentJoiner).toEqual(JoinerMocks.INITIAL);
+                console.log('let us stop sending toko')
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
+                console.log('let us end test')
             }));
             it('should remove candidates from the list when they stop sending token', fakeAsync(() => {
                 // Given a component that is loaded and there is a non-chosen candidate
@@ -297,13 +306,18 @@ describe('PartCreationComponent', () => {
             it('should deselect candidate, remove it, and call logError when a candidate is removed from db', fakeAsync(() => {
                 spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
                 // Given a part with a candidate that has been chosen
+                console.log(1)
                 awaitComponentInitialisation();
+                console.log(2)
                 mockCandidateArrival();
+                console.log(3)
                 chooseOpponent();
                 expectElementToExist('#selected_' + UserMocks.OPPONENT.username);
 
                 // When the candidate is deleted
+                console.log('>>>> let us delete user')
                 void userDAO.delete(UserMocks.OPPONENT_AUTH_USER.userId);
+                console.log('>>>> let us tick')
                 tick();
 
                 // Then handleError has been called as this is an unusual situation
@@ -313,8 +327,11 @@ describe('PartCreationComponent', () => {
                 expectElementNotToExist('#selected_' + UserMocks.OPPONENT.username);
                 // and the candidate has been removed from the lobby
                 expect(component.currentJoiner).toEqual(JoinerMocks.INITIAL);
+                console.log(6)
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
+                console.log(7)
                 tick(3000); // Even with the mock it waits 3000 though
+                console.log('fin')
             }));
         });
         describe('Config proposal', () => {
@@ -337,7 +354,7 @@ describe('PartCreationComponent', () => {
                     partType: PartType.CUSTOM.value,
                     maximalMoveDuration: 100,
                     totalPartDuration: 1000,
-                    chosenPlayer: UserMocks.OPPONENT_AUTH_USER.username.get(),
+                    chosenPlayer: UserMocks.OPPONENT_MINIMAL_USER,
                     firstPlayer: FirstPlayer.RANDOM.value,
                 });
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
@@ -360,7 +377,7 @@ describe('PartCreationComponent', () => {
                     partType: PartType.BLITZ.value,
                     maximalMoveDuration: 30,
                     totalPartDuration: 900,
-                    chosenPlayer: UserMocks.OPPONENT_AUTH_USER.username.get(),
+                    chosenPlayer: UserMocks.OPPONENT_MINIMAL_USER,
                     firstPlayer: FirstPlayer.RANDOM.value,
                 });
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
@@ -610,12 +627,12 @@ describe('PartCreationComponent', () => {
 
                 // When leaving the page (testing here by calling ngOnDestroy)
                 spyOn(joinerService, 'unsubscribe').and.callFake(() => {});
-                spyOn(joinerService, 'cancelJoining').and.callFake(async(name: string) => {});
+                spyOn(joinerService, 'cancelJoining').and.callFake(async(user: MinimalUser) => {});
                 void component.ngOnDestroy();
                 tick();
 
                 // Then user's name taken out of the candidate list
-                expect(joinerService.cancelJoining).toHaveBeenCalledOnceWith(UserMocks.OPPONENT_MINIMAL_USER.name);
+                expect(joinerService.cancelJoining).toHaveBeenCalledOnceWith(UserMocks.OPPONENT_MINIMAL_USER);
             }));
             it('should remove observedPart when leaving the room', fakeAsync(() => {
                 // Given a partCreation where user is but candidate
@@ -625,7 +642,7 @@ describe('PartCreationComponent', () => {
                 // When leaving the page (testing here by calling ngOnDestroy)
                 spyOn(userService, 'removeObservedPart').and.callThrough();
                 spyOn(joinerService, 'unsubscribe').and.callFake(() => {});
-                spyOn(joinerService, 'cancelJoining').and.callFake(async(name: string) => {});
+                spyOn(joinerService, 'cancelJoining').and.callFake(async(user: MinimalUser) => {});
                 void component.ngOnDestroy();
                 tick();
 
@@ -696,7 +713,6 @@ describe('PartCreationComponent', () => {
                 expect(userDAO.updatePresenceToken).toHaveBeenCalledTimes(2);
                 // To avoid finishing test with periodic timer in queue
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
-                component.unsubscribeFrom(UserMocks.CREATOR_AUTH_USER.userId);
             }));
             it('should make config acceptation possible for joiner when config is proposed', fakeAsync(() => {
                 // Given a part in creation where the candidate is chosen
@@ -714,7 +730,7 @@ describe('PartCreationComponent', () => {
 
                 // Then the candidate can accept the config
                 expectElementToExist('#acceptConfig');
-                component.unsubscribeFrom(UserMocks.CREATOR_AUTH_USER.userId);
+                component.stopObservingUser(UserMocks.CREATOR_AUTH_USER.userId);
                 // To avoid finishing test with periodic timer in queue
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
@@ -744,7 +760,7 @@ describe('PartCreationComponent', () => {
                 const currentPart: Part = (await partDAO.read('joinerId')).get();
                 const expectedPart: Part = { ...PartMocks.STARTING, beginning: currentPart.beginning };
                 expect(currentPart).toEqual(expectedPart);
-                component.unsubscribeFrom(UserMocks.CREATOR_AUTH_USER.userId);
+                component.stopObservingUser(UserMocks.CREATOR_AUTH_USER.userId);
                 // To avoid finishing test with periodic timer in queue
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));

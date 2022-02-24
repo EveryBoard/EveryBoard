@@ -10,7 +10,7 @@ export type MinimalUser = {
 export interface Joiner extends JSONObject {
     readonly creator: MinimalUser;
     readonly candidates: Array<MinimalUser>;
-    readonly chosenPlayer: string | null;
+    readonly chosenPlayer: MinimalUser | null;
     readonly partStatus: IPartStatus;
 
     readonly firstPlayer: IFirstPlayer;

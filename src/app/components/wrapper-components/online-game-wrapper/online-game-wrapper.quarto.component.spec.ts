@@ -100,9 +100,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         TestBed.inject(UserService).setObservedUserId(user.userId);
         await prepareMockDBContent(JoinerMocks.INITIAL);
         AuthenticationServiceMock.setUser(user);
-        if (user === UserMocks.CREATOR_AUTH_USER) {
+        if (user.userId === UserMocks.CREATOR_AUTH_USER.userId) {
             observerRole = Player.ZERO;
-        } else if (user === UserMocks.OPPONENT_AUTH_USER) {
+        } else if (user.userId === UserMocks.OPPONENT_AUTH_USER.userId) {
             observerRole = Player.ONE;
         } else {
             observerRole = Player.NONE;
@@ -114,22 +114,22 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         componentTestUtils.bindGameComponent();
 
         const partCreationId: DebugElement = componentTestUtils.findElement('#partCreation');
-        expect(partCreationId)
-            .withContext('partCreation id should be present after ngOnInit')
-            .toBeTruthy();
-        expect(wrapper.partCreation)
-            .withContext('partCreation field should also be present')
-            .toBeTruthy();
-        await joinerDAO.update('joinerId', { candidates: [UserMocks.OPPONENT_MINIMAL_USER] });
+        let context: string = 'partCreation id should be present after ngOnInit';
+        expect(partCreationId).withContext(context).toBeTruthy();
+        context = 'partCreation field should also be present';
+        expect(wrapper.partCreation).withContext(context).toBeTruthy();
+        await joinerDAO.update('joinerId', JoinerMocks.WITH_FIRST_CANDIDATE);
         componentTestUtils.detectChanges();
-        await joinerDAO.update('joinerId', {
-            partStatus: PartStatus.PART_CREATED.value,
-            candidates: [UserMocks.OPPONENT_MINIMAL_USER],
-            chosenPlayer: 'firstCandidate',
-        });
+        await joinerDAO.update('joinerId', JoinerMocks.WITH_CHOSEN_OPPONENT);
+        console.log('>>> the update show we selected that opponent; let us detectChange')
         // TODO: replace by real actor action (chooseCandidate)
         componentTestUtils.detectChanges();
-        await wrapper.partCreation.proposeConfig();
+        console.log('>>> let us proposeConfig')
+        if (observerRole === Player.ZERO) { // Creator
+            await wrapper.partCreation.proposeConfig();
+        } else {
+            await joinerDAO.update('joinerId', JoinerMocks.WITH_PROPOSED_CONFIG);
+        }
         componentTestUtils.detectChanges();
         if (shorterGlobalChrono != null) {
             await joinerDAO.update('joinerId', {
@@ -322,6 +322,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     }));
     it('Prepared Game for joiner should allow simple move', fakeAsync(async() => {
         await prepareStartedGameFor(UserMocks.OPPONENT_AUTH_USER);
+        console.log('BITLAKOEK')
         tick(1);
 
         // Receive first move

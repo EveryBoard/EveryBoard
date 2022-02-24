@@ -15,7 +15,7 @@ import { Chat } from 'src/app/domain/Chat';
 })
 export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
 
-    public static VERBOSE: boolean = true;
+    public static VERBOSE: boolean = false;
 
     @Input() public chatId!: string;
     @Input() public turn?: number;
@@ -43,7 +43,7 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
         display(ChatComponent.VERBOSE, 'ChatComponent constructor');
     }
     public ngOnInit(): void {
-        display(ChatComponent.VERBOSE || true, `ChatComponent.ngOnInit for chat ${this.chatId}`);
+        display(ChatComponent.VERBOSE, `ChatComponent.ngOnInit for chat ${this.chatId}`);
 
         assert(this.chatId != null && this.chatId !== '', 'No chat to join mentionned');
         this.authSubscription = this.authenticationService.getUserObs()
@@ -73,7 +73,7 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
         return isConnected === false;
     }
     public loadChatContent(): void {
-        display(ChatComponent.VERBOSE || true, `User '${this.username.getOrElse('empty')}' logged, loading chat content`);
+        display(ChatComponent.VERBOSE, `User '${this.username.getOrElse('empty')}' logged, loading chat content`);
 
         this.chatService.startObserving(this.chatId, (chat: MGPOptional<Chat>) => {
             assert(chat.isPresent(), 'ChatComponent observed a chat being deleted, this should not happen');

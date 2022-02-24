@@ -213,7 +213,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         spyOn(router, 'navigate');
         await TestBed.inject(ChatDAO).set('joinerId', { messages: [], status: `I don't have a clue` });
         testUtils.detectChanges();
-        tick();
+        tick(3000); // Since a criticalToast will pop
 
         expectValidRouting(router, ['/notFound'], NotFoundComponent);
     }));

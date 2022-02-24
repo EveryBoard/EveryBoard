@@ -23,6 +23,7 @@ export class MGPOptional<T> {
         if (this.isPresent()) {
             return this.value as T;
         } else {
+            console.log('THROW:::Value is absent:::WORHT')
             throw new Error('Value is absent');
         }
     }

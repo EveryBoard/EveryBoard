@@ -9,7 +9,7 @@ import { Firestore } from '@angular/fire/firestore';
 })
 export class JoinerDAO extends FirebaseFirestoreDAO<Joiner> {
 
-    public static VERBOSE: boolean = true;
+    public static VERBOSE: boolean = false;
 
     constructor(firestore: Firestore) {
         super('joiners', firestore);
