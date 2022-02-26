@@ -2,7 +2,6 @@ import { display, FirebaseJSONObject, Utils } from 'src/app/utils/utils';
 import { FirebaseCollectionObserver } from './FirebaseCollectionObserver';
 import { MGPOptional } from '../utils/MGPOptional';
 import * as Firestore from '@angular/fire/firestore';
-import { MGPMap } from '../utils/MGPMap';
 
 export interface FirebaseDocument<T> {
     id: string
@@ -45,7 +44,7 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
 
     private readonly collection: Firestore.CollectionReference<T>;
 
-    private readonly subDAOs: MGPMap<string, IFirebaseFirestoreDAO<FirebaseJSONObject>> = new MGPMap();
+    private readonly subDAOs: Record<string, IFirebaseFirestoreDAO<FirebaseJSONObject>> = {};
 
     constructor(public readonly collectionName: string,
                 protected readonly firestore: Firestore.Firestore) {
@@ -112,7 +111,13 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
                           order?: string)
     : () => void
     {
-        return Firestore.onSnapshot(this.constructQuery(conditions, order), (snapshot: Firestore.QuerySnapshot<T>) => {
+        const query: Firestore.Query<T> = this.constructQuery(conditions, order);
+        const options: Firestore.SnapshotListenOptions = { includeMetadataChanges: true };
+        return Firestore.onSnapshot(query, options, (snapshot: Firestore.QuerySnapshot<T>) => {
+            if (snapshot.metadata.hasPendingWrites) {
+                // This is a local update which is not yet complete
+                return;
+            }
             const createdDocs: FirebaseDocument<T>[] = [];
             const modifiedDocs: FirebaseDocument<T>[] = [];
             const deletedDocs: FirebaseDocument<T>[] = [];
@@ -165,9 +170,8 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
         return query;
     }
     public subCollectionDAO<T extends FirebaseJSONObject>(id: string, name: string): IFirebaseFirestoreDAO<T> {
-        const subDAO: MGPOptional<IFirebaseFirestoreDAO<FirebaseJSONObject>> = this.subDAOs.get(name);
-        if (subDAO.isPresent()) {
-            return subDAO.get() as IFirebaseFirestoreDAO<T>;
+        if (name in this.subDAOs) {
+            return this.subDAOs[name] as IFirebaseFirestoreDAO<T>;
         } else {
             const superName: string = this.collectionName;
             const subDAO: FirebaseFirestoreDAO<T> = new class extends FirebaseFirestoreDAO<T> {
@@ -175,7 +179,7 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
                     super(`${superName}/${id}/${name}`, firestore);
                 }
             }(this.firestore);
-            this.subDAOs.set(name, subDAO);
+            this.subDAOs[name] = subDAO;
             return subDAO;
         }
     }

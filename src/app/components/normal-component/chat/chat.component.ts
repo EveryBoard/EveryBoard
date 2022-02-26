@@ -46,12 +46,13 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
         this.scrollToBottomIfNeeded();
     }
     public loadChatContent(): void {
+        const updateMessages: (messages: MessageDocument[]) => void = (messages: MessageDocument[]) => {
+            this.updateMessages(messages.map((doc: MessageDocument) => {
+                return doc.data;
+            }));
+        };
         const callback: FirebaseCollectionObserver<Message> =
-            new FirebaseCollectionObserver<Message>(
-                (messages: MessageDocument[]) => {
-                    // We only care about new messages, not modified or updated messages
-                    this.updateMessages(messages.map((doc: MessageDocument) => doc.data));
-                });
+            new FirebaseCollectionObserver(updateMessages, updateMessages);
         this.chatService.startObserving(this.chatId, callback);
     }
     public updateMessages(newMessages: Message[]): void {
