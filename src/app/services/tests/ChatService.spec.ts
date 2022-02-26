@@ -54,7 +54,7 @@ describe('ChatService', () => {
             expect(service.isObserving()).toBe(false);
             await service.createNewChat('id');
             // given a chat that is observed
-            service.startObserving('id', new FirebaseCollectionObserver<Message>(callback, () => { }, () => { }));
+            service.startObserving('id', new FirebaseCollectionObserver<Message>(callback));
             expect(service.isObserving()).toBe(true);
 
             // when the chat is updated
@@ -68,9 +68,9 @@ describe('ChatService', () => {
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             // Given a chat that is observed
             await service.createNewChat('id');
-            service.startObserving('id', new FirebaseCollectionObserver<Message>(() => { }, () => { }, () => { }));
+            service.startObserving('id', new FirebaseCollectionObserver<Message>());
             // When trying to observe it again
-            service.startObserving('id', new FirebaseCollectionObserver<Message>(() => { }, () => { }, () => { }));
+            service.startObserving('id', new FirebaseCollectionObserver<Message>());
             // Then it logged an error
             const errorMessage: string = 'Already observing same chat';
             const errorData: JSONValue = { chatId: 'id' };
@@ -80,9 +80,9 @@ describe('ChatService', () => {
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             // Given a chat that is observed
             await service.createNewChat('id');
-            service.startObserving('id', new FirebaseCollectionObserver<Message>(() => { }, () => { }, () => { }));
+            service.startObserving('id', new FirebaseCollectionObserver<Message>());
             // When trying to observe another chat, then an error is thrown
-            service.startObserving('id2', new FirebaseCollectionObserver<Message>(() => { }, () => { }, () => { }));
+            service.startObserving('id2', new FirebaseCollectionObserver<Message>());
             // Then it logged an error
             const errorMessage: string = 'Already observing another chat';
             const errorData: JSONValue = { chatId: 'id2', followedChatId: 'id' };
@@ -102,7 +102,7 @@ describe('ChatService', () => {
             await service.createNewChat('id');
 
             // given a chat that is not observed anymore
-            service.startObserving('id', new FirebaseCollectionObserver<Message>(callback, () => { }, () => { }));
+            service.startObserving('id', new FirebaseCollectionObserver<Message>(callback));
             service.stopObserving();
             expect(service.isObserving()).toBe(false);
 
@@ -119,7 +119,7 @@ describe('ChatService', () => {
             spyOn(service, 'stopObserving');
             // given a chat that we're observing
             await service.createNewChat('id');
-            service.startObserving('id', new FirebaseCollectionObserver<Message>(() => { }, () => { }, () => { }));
+            service.startObserving('id', new FirebaseCollectionObserver<Message>());
 
             // when the service is destroyed
             service.ngOnDestroy();
@@ -161,7 +161,7 @@ describe('ChatService', () => {
         it('should not send message if the user is not allowed to send a message in the chat', fakeAsync(async() => {
             // given a chat that is observed
             await service.createNewChat('id');
-            service.startObserving('id', new FirebaseCollectionObserver<Message>(() => { }, () => { }, () => { }));
+            service.startObserving('id', new FirebaseCollectionObserver<Message>());
             // when sending a message without a username
             const result: Promise<MGPValidation> = service.sendMessage('fooId', '', 'foo', 2);
             // then the message is rejected
@@ -170,7 +170,7 @@ describe('ChatService', () => {
         it('should not send message if it is empty', fakeAsync(async() => {
             // given a chat that is observed
             await service.createNewChat('id');
-            service.startObserving('id', new FirebaseCollectionObserver<Message>(() => { }, () => { }, () => { }));
+            service.startObserving('id', new FirebaseCollectionObserver<Message>());
             // when sending an empty message
             const result: Promise<MGPValidation> = service.sendMessage('senderId', 'sender', '', 2);
             // then the message is rejected
@@ -181,7 +181,7 @@ describe('ChatService', () => {
             spyOn(chatDAO, 'addMessage');
             // given an empty chat that is observed
             await service.createNewChat('id');
-            service.startObserving('id', new FirebaseCollectionObserver<Message>(() => { }, () => { }, () => { }));
+            service.startObserving('id', new FirebaseCollectionObserver<Message>());
 
             // when a message is sent on that chat
             await service.sendMessage('senderId', 'sender', 'foo', 2);

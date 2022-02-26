@@ -49,13 +49,8 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
         const callback: FirebaseCollectionObserver<Message> =
             new FirebaseCollectionObserver<Message>(
                 (messages: MessageDocument[]) => {
+                    // We only care about new messages, not modified or updated messages
                     this.updateMessages(messages.map((doc: MessageDocument) => doc.data));
-                },
-                () => {
-                    // We don't care about modified messages
-                },
-                () => {
-                    // We don't care about deleted messages
                 });
         this.chatService.startObserving(this.chatId, callback);
     }
@@ -122,9 +117,7 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
                                            content, this.turn);
     }
     public ngOnDestroy(): void {
-        if (this.chatService.isObserving()) {
-            this.chatService.stopObserving();
-        }
+        this.chatService.stopObserving();
     }
     public switchChatVisibility(): void {
         if (this.visible === true) {

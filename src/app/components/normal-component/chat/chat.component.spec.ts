@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { fakeAsync, TestBed } from '@angular/core/testing';
 import { ChatComponent } from './chat.component';
 import { ChatService } from 'src/app/services/ChatService';
 import { ChatDAO } from 'src/app/dao/ChatDAO';

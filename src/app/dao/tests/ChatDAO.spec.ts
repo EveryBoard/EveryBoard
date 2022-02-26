@@ -44,8 +44,7 @@ describe('ChatDAO', () => {
             const messagesDAO: IFirebaseFirestoreDAO<Message> = chatDAO.subCollectionDAO('chatId', 'messages');
             spyOn(messagesDAO, 'observingWhere');
             // When calling subscribeToMessages
-            const callback: FirebaseCollectionObserver<Message> =
-                new FirebaseCollectionObserver<Message>(() => { }, () => { }, () => { });
+            const callback: FirebaseCollectionObserver<Message> = new FirebaseCollectionObserver<Message>();
             chatDAO.subscribeToMessages('chatId', callback);
             // Then it should call observingWhere and sort by postedTime
             expect(messagesDAO.observingWhere).toHaveBeenCalledOnceWith([], callback, 'postedTime');
