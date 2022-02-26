@@ -12,8 +12,10 @@ import { PartDAO } from '../PartDAO';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 import { JoinerDAO } from '../JoinerDAO';
+import { IFirebaseFirestoreDAO } from '../FirebaseFirestoreDAO';
+import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 
-fdescribe('ChatDAO', () => {
+describe('ChatDAO', () => {
 
     let chatDAO: ChatDAO;
     let partDAO: PartDAO;
@@ -27,15 +29,6 @@ fdescribe('ChatDAO', () => {
         await joinerDAO.set(id, { ...JoinerMocks.INITIAL, creator: creatorId });
         return id;
     }
-    function addCandidate(joinerId: string, candidateId: string): Promise<void> {
-        return joinerDAO.update(joinerId, { candidates: [candidateId] });
-    }
-    function setPlayerZero(partId: string, playerId: string): Promise<void> {
-        return partDAO.update(partId, { playerZero: playerId });
-    }
-    function setPlayerOne(partId: string, playerId: string): Promise<void> {
-        return partDAO.update(partId, { playerOne: playerId });
-    }
     beforeEach(async() => {
         await setupEmulators();
         chatDAO = TestBed.inject(ChatDAO);
@@ -45,7 +38,20 @@ fdescribe('ChatDAO', () => {
     it('should be created', () => {
         expect(chatDAO).toBeTruthy();
     });
-    fdescribe('on any chat', () => {
+    describe('subscribeToMessages', () => {
+        it('should rely on observingWhere of messages DAO and sort by postedTime', () => {
+            // Given a chat DAO
+            const messagesDAO: IFirebaseFirestoreDAO<Message> = chatDAO.subCollectionDAO('chatId', 'messages');
+            spyOn(messagesDAO, 'observingWhere');
+            // When calling subscribeToMessages
+            const callback: FirebaseCollectionObserver<Message> =
+                new FirebaseCollectionObserver<Message>(() => { }, () => { }, () => { });
+            chatDAO.subscribeToMessages('chatId', callback);
+            // Then it should call observingWhere and sort by postedTime
+            expect(messagesDAO.observingWhere).toHaveBeenCalledOnceWith([], callback, 'postedTime');
+        });
+    });
+    describe('on any chat', () => {
         let myUserId: string;
         let myMessageId: string;
         let otherUserId: string;
@@ -137,7 +143,7 @@ fdescribe('ChatDAO', () => {
             await expectAsync(result).toBeRejected();
         });
     });
-    fdescribe('on the lobby chat', () => {
+    describe('on the lobby chat', () => {
         it('should allow a verified user to create the lobby chat', async() => {
             // Given a verified user
             await createConnectedGoogleUser(true);
@@ -149,6 +155,7 @@ fdescribe('ChatDAO', () => {
         });
         it('should forbid a disconnected user to create the lobby chat', async() => {
             // Given a disconnected user
+            await signOut();
             // When creating the 'lobby' chat
             const chatCreation: Promise<void> = chatDAO.set('lobby', {});
             // Then it fails
@@ -197,109 +204,22 @@ fdescribe('ChatDAO', () => {
             // Then it should succeed
             await expectAsync(result).toBeResolvedTo();
         });
-        it('should forbid a non-part owner to create the corresponding chat', async() => {
-            // Given a verified user who is not a part owner
+        it('should forbid creating a chat if there is no corresponding part', async() => {
+            // Given a verified user and no corresponding part
             await createConnectedGoogleUser(true);
             // When creating a part chat
-            const result: Promise<void> = chatDAO.set('some-part-id', {});
+            const result: Promise<void> = chatDAO.set('unexisting-part-id', {});
             // Then it should fail
             await expectAsync(result).toBeRejected();
         });
-        it('should allow a part owner to send messages on the corresponding chat', async() => {
-            // Given a verified user who is a part owner, and where the corresponding chat exists
-            const user: FireAuth.User = await createConnectedGoogleUser(true);
-            const userId: string = user.uid;
-            const partId: string = await createPartAndJoiner(userId);
-            await chatDAO.set(partId, {});
-            // When sending a message
-            const message: Message = {
-                content: 'hullo there',
-                sender: 'TODO',
-                senderId: userId,
-                postedTime: serverTimestamp(),
-            };
-            const result: Promise<string> = chatDAO.addMessage(partId, message);
-            // Then it should succeed
-            await expectAsync(result).toBeResolved();
-        });
-        it('should allow a candidate to send messages on the corresponding chat', async() => {
-            // Given a verified user who is a candidate, and where the corresponding chat exists
-            const user: FireAuth.User = await createConnectedGoogleUser(true);
-            const userId: string = user.uid;
-            const partId: string = await createPartAndJoiner(userId);
-            await chatDAO.set(partId, {});
-            await signOut();
-            const candidate: FireAuth.User = await createConnectedGoogleUser(true);
-            await addCandidate(partId, candidate.uid);
-            // When sending a message
-            const message: Message = {
-                content: 'hullo there',
-                sender: 'TODO',
-                senderId: candidate.uid,
-                postedTime: serverTimestamp(),
-            };
-            const result: Promise<string> = chatDAO.addMessage(partId, message);
-            // Then it should succeed
-            await expectAsync(result).toBeResolved();
-        });
-        it('should allow first player to send messages on the corresponding chat', async() => {
-            // Given a verified user who is a candidate, and where the corresponding chat exists
-            const user: FireAuth.User = await createConnectedGoogleUser(true);
-            const userId: string = user.uid;
-            const partId: string = await createPartAndJoiner(userId);
-            await chatDAO.set(partId, {});
-            await signOut();
-            const player: FireAuth.User = await createConnectedGoogleUser(true);
-            await setPlayerZero(partId, player.uid);
-            // When sending a message
-            const message: Message = {
-                content: 'hullo there',
-                sender: 'TODO',
-                senderId: player.uid,
-                postedTime: serverTimestamp(),
-            };
-            const result: Promise<string> = chatDAO.addMessage(partId, message);
-            // Then it should succeed
-            await expectAsync(result).toBeResolved();
-        });
-        it('should allow second player to send messages on the corresponding chat', async() => {
-            // Given a verified user who is a candidate, and where the corresponding chat exists
-            const user: FireAuth.User = await createConnectedGoogleUser(true);
-            const userId: string = user.uid;
-            const partId: string = await createPartAndJoiner(userId);
-            await chatDAO.set(partId, {});
-            await signOut();
-            const player: FireAuth.User = await createConnectedGoogleUser(true);
-            await setPlayerOne(partId, player.uid);
-            // When sending a message
-            const message: Message = {
-                content: 'hullo there',
-                sender: 'TODO',
-                senderId: player.uid,
-                postedTime: serverTimestamp(),
-            };
-            const result: Promise<string> = chatDAO.addMessage(partId, message);
-            // Then it should succeed
-            await expectAsync(result).toBeResolved();
-        });
-        it('should forbid a user not in a part to send messages on the corresponding chat', async() => {
-            // Given a verified user who is a part owner, and where the corresponding chat exists
-            const user: FireAuth.User = await createConnectedGoogleUser(true);
-            const userId: string = user.uid;
-            const partId: string = await createPartAndJoiner(userId);
-            await chatDAO.set(partId, {});
-            await signOut();
-            const otherUser: FireAuth.User = await createConnectedGoogleUser(true);
-            // When sending a message
-            const message: Message = {
-                content: 'hullo there',
-                sender: 'TODO',
-                senderId: otherUser.uid,
-                postedTime: serverTimestamp(),
-            };
-            const result: Promise<string> = chatDAO.addMessage(partId, message);
-            // Then it should succeed
-            await expectAsync(result).toBeResolved();
+        it('should forbid a non-part owner to create the corresponding chat', async() => {
+            // Given a verified user who is not a part owner, and a part
+            await createConnectedGoogleUser(true);
+            const partId: string = await createPartAndJoiner('not-me');
+            // When creating a part chat
+            const result: Promise<void> = chatDAO.set(partId, {});
+            // Then it should fail
+            await expectAsync(result).toBeRejected();
         });
     });
 });

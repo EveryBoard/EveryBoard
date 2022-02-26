@@ -2,6 +2,7 @@ import { display, FirebaseJSONObject, Utils } from 'src/app/utils/utils';
 import { FirebaseCollectionObserver } from './FirebaseCollectionObserver';
 import { MGPOptional } from '../utils/MGPOptional';
 import * as Firestore from '@angular/fire/firestore';
+import { MGPMap } from '../utils/MGPMap';
 
 export interface FirebaseDocument<T> {
     id: string
@@ -43,6 +44,8 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
     public static VERBOSE: boolean = false;
 
     private readonly collection: Firestore.CollectionReference<T>;
+
+    private readonly subDAOs: MGPMap<string, IFirebaseFirestoreDAO<FirebaseJSONObject>> = new MGPMap();
 
     constructor(public readonly collectionName: string,
                 protected readonly firestore: Firestore.Firestore) {
@@ -162,12 +165,18 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
         return query;
     }
     public subCollectionDAO<T extends FirebaseJSONObject>(id: string, name: string): IFirebaseFirestoreDAO<T> {
-        const superName: string = this.collectionName;
-        // TODO: cache the DAOs to avoid recreating one at every query
-        return new class extends FirebaseFirestoreDAO<T> {
-            constructor(firestore: Firestore.Firestore) {
-                super(`${superName}/${id}/${name}`, firestore);
-            }
-        }(this.firestore);
+        const subDAO: MGPOptional<IFirebaseFirestoreDAO<FirebaseJSONObject>> = this.subDAOs.get(name);
+        if (subDAO.isPresent()) {
+            return subDAO.get() as IFirebaseFirestoreDAO<T>;
+        } else {
+            const superName: string = this.collectionName;
+            const subDAO: FirebaseFirestoreDAO<T> = new class extends FirebaseFirestoreDAO<T> {
+                constructor(firestore: Firestore.Firestore) {
+                    super(`${superName}/${id}/${name}`, firestore);
+                }
+            }(this.firestore);
+            this.subDAOs.set(name, subDAO);
+            return subDAO;
+        }
     }
 }

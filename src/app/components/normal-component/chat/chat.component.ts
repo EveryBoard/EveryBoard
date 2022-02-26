@@ -77,7 +77,6 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
             this.showUnreadMessagesButton = false;
         }
 
-        console.log('unread messages: ' + unreadMessages)
         if (unreadMessages === 0) {
             this.unreadMessagesText = $localize`no new message`;
             this.showUnreadMessagesButton = false;
@@ -116,16 +115,11 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
         });
     }
     public async sendMessage(): Promise<void> {
-        console.log('sending message')
         const content: string = this.userMessage;
         this.userMessage = ''; // clears it first to seem more responsive
-        console.log('calling sendMessage')
-        console.log('uid' + this.authenticationService.uid);
-        console.log('username' + this.authenticationService.user.get().username.get());
         await this.chatService.sendMessage(this.authenticationService.uid.get(),
                                            this.authenticationService.user.get().username.get(),
                                            content, this.turn);
-        console.log('done')
     }
     public ngOnDestroy(): void {
         if (this.chatService.isObserving()) {
@@ -133,12 +127,9 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
         }
     }
     public switchChatVisibility(): void {
-        console.log('switching visibility')
         if (this.visible === true) {
-            console.log('was visible')
             this.visible = false;
         } else {
-            console.log('was not visible')
             this.visible = true;
             this.updateUnreadMessagesText(0);
             this.scrollToBottom();

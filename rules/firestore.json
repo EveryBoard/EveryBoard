@@ -3,7 +3,7 @@ service cloud.firestore {
     match /databases/{database}/documents {
         match /{document=**} {
             // by default, nothing can be read or written unless explicitly authorized
-            allow read, write: if false; // TODO: should be if false
+            allow read, write: if false;
         }
         match /foo/{document=**} {
             // only used for testing purposes, do not push to production
@@ -16,10 +16,18 @@ service cloud.firestore {
             allow read: if true;
         }
         match /chats/lobby {
+            // Only a verified user can create the lobby chat if it is missing
             allow create: if userVerified();
-            allow read: if userVerified();
         }
-        match /chats/lobby/messages/{id} {
+        match /chats/{chatId} {
+            // Only the creator of a part can create the corresponding chat
+            allow create: if userVerified() && partExistsAndOwnedByCurrentUser(chatId);
+        }
+        function partExistsAndOwnedByCurrentUser(partId) {
+            let joiner = get(/databases/$(database)/documents/joiners/$(partId)).data;
+            return joiner != null && joiner.creator == request.auth.uid;
+        }
+        match /chats/{chatId}/messages/{messageId} {
             allow create: if userVerified() && isValidMessage(request.resource.data);
             allow delete: if userVerified() && isMessageAuthor(resource.data);
             allow update: if userVerified() && isMessageAuthor(resource.data) && isValidMessage(request.resource.data);
@@ -40,12 +48,6 @@ service cloud.firestore {
         function usernameOf(uid) {
             return get(/databases/$(database)/documents/joueurs/$(uid)).data.username
         }
-        function canCreateChat(id) {
-            return userVerified() && id == 'lobby';
-        }
-        function canReadChat(id) {
-            return false; // userVerified();
-        }
         // joueurs will be renamed to users
         match /joueurs/{userId} {
             // Anybody can create a user
@@ -63,19 +65,16 @@ service cloud.firestore {
             // Anybody can read the fields of a user
             allow read: if true;
         }
-        function isAllowed() {
-            return userVerified() ||
-                   userIsGoogle();
+        match /parties/{id} {
+            allow write, read: if userVerified();
+        }
+        match /joiners/{id} {
+            allow write, read: if userVerified();
         }
         function userVerified() {
             return isAuthentified() &&
                    request.auth.uid != null &&
                    request.auth.token.email_verified == true;
-        }
-        function userIsGoogle() {
-            return request != null &&
-                   request.auth != null &&
-                   request.auth.token.email.matches('.*google[.]com$') == true;
         }
         function isAuthentified() {
             return request != null &&
