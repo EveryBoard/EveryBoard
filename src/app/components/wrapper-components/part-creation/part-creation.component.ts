@@ -261,15 +261,18 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.allDocDeleted = true;
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.cancelGameCreation');
 
-        await this.gameService.deletePart(this.partId);
-        display(PartCreationComponent.VERBOSE, 'PartCreationComponent.cancelGameCreation: game deleted');
-
-        await this.joinerService.deleteJoiner();
-        display(PartCreationComponent.VERBOSE, 'PartCreationComponent.cancelGameCreation: game and joiner deleted');
-
+        console.log('deleting chat')
         await this.chatService.deleteChat(this.partId);
-        display(PartCreationComponent.VERBOSE,
-                'PartCreationComponent.cancelGameCreation: game and joiner and chat deleted');
+        display(PartCreationComponent.VERBOSE, 'PartCreationComponent.cancelGameCreation: chat deleted');
+
+        console.log('deleting joiner')
+        await this.joinerService.deleteJoiner();
+        display(PartCreationComponent.VERBOSE, 'PartCreationComponent.cancelGameCreation: chat and joiner deleted');
+
+        console.log('deleting part')
+        await this.gameService.deletePart(this.partId);
+        display(PartCreationComponent.VERBOSE, 'PartCreationComponent.cancelGameCreation: chat, joiner, and part deleted');
+
         return;
     }
     private onCurrentJoinerUpdate(joiner: MGPOptional<Joiner>) {
@@ -426,7 +429,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 display(PartCreationComponent.VERBOSE,
                         'PartCreationComponent.ngOnDestroy: there is no part here');
                 return;
-            } else if (this.userName === this.currentJoiner.creator) {
+            } else if (this.userName === this.currentJoiner.creator && this.allDocDeleted === false) {
                 display(PartCreationComponent.VERBOSE,
                         'PartCreationComponent.ngOnDestroy: you(creator) about to cancel creation.');
                 await this.cancelGameCreation();
