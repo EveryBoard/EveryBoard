@@ -5,7 +5,6 @@ import { UserDAO } from '../dao/UserDAO';
 import { User, UserDocument } from '../domain/User';
 import { ActiveUsersService } from './ActiveUsersService';
 import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
-import { assert } from '../utils/assert';
 import { MGPOptional } from '../utils/MGPOptional';
 
 @Injectable({
@@ -20,8 +19,6 @@ export class UserService {
      *         3. Your opponent when you are playing
      *     B. subscribe to yourself in the header for multitab purpose
      */
-    private currentUserId: MGPOptional<string> = MGPOptional.empty();
-
     constructor(private readonly activeUsersService: ActiveUsersService,
                 private readonly userDAO: UserDAO) {
     }
@@ -34,31 +31,10 @@ export class UserService {
         this.activeUsersService.stopObserving();
     }
     public observeUserByUsername(username: string, callback: FirebaseCollectionObserver<User>): () => void {
-        // TODOTODO: make this unused
         // the callback will be called on the foundUser
         return this.userDAO.observeUserByUsername(username, callback);
     }
     public observeUser(userId: string, callback: (user: MGPOptional<User>) => void): Unsubscribe {
         return this.userDAO.subscribeToChanges(userId, callback);
-    }
-    public setObservedUserId(authUserId: string) {
-        // TODO FOR REVIEW: on a changé un truc, il se plaint pas du non typage de la fonction !
-        this.currentUserId = MGPOptional.of(authUserId);
-    }
-    public removeObservedUserId() {
-        this.currentUserId = MGPOptional.empty();
-    }
-    public updateObservedPart(observedPart: string): Promise<void> {
-        // TODOTOD: TEST IN ITSELF, NOT JUST TESTING ITS CALLED
-        assert(this.currentUserId.isPresent(), 'Should be subscribe to yourself when connected');
-        return this.userDAO.update(this.currentUserId.get(), { observedPart });
-    }
-    public removeObservedPart(): Promise<void> { // TODOTOD: TEST IN ITSELF, NOT JUST TESTING ITS CALLED
-        assert(this.currentUserId.isPresent(), 'Should be subscribe to yourself when connected');
-        return this.userDAO.update(this.currentUserId.get(), { observedPart: null });
-    }
-    public sendPresenceToken(): Promise<void> {
-        assert(this.currentUserId.isPresent(), 'Should be subscribe to yourself when connected');
-        return this.userDAO.updatePresenceToken(this.currentUserId.get());
     }
 }

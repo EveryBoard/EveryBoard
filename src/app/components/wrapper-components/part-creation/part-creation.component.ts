@@ -14,7 +14,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { AuthUser } from 'src/app/services/AuthenticationService';
+import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 
@@ -64,7 +64,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     public partType: typeof PartType = PartType;
 
     @Input() partId: string;
-    @Input() authUser: AuthUser; // TODOTODO: this.authService.user.get()
 
     // notify that the game has started, a thing evaluated with the joiner doc game status
     @Output('gameStartNotification') gameStartNotification: EventEmitter<Joiner> = new EventEmitter<Joiner>();
@@ -97,6 +96,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     private ownTokenInterval: MGPOptional<number> = MGPOptional.empty();
 
     public constructor(public readonly router: Router,
+                       public readonly authService: AuthenticationService,
                        public readonly gameService: GameService,
                        public readonly joinerService: JoinerService,
                        public readonly chatService: ChatService,
@@ -107,24 +107,19 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent constructed');
     }
     public async ngOnInit(): Promise<void> {
-        display(PartCreationComponent.VERBOSE, 'PartCreationComponent.ngOnInit for ' + this.authUser.username.get());
+        display(PartCreationComponent.VERBOSE, 'PartCreationComponent.ngOnInit for ' + this.authService.user.get().username.get());
 
         this.checkInputs();
         this.createForms();
-        const authMinimalUser: MinimalUser = { id: this.authUser.userId, name: this.authUser.username.get() };
+        const authMinimalUser: MinimalUser = this.authService.user.get().toMinimalUser();
         const joinResult: MGPValidation = await this.joinerService.joinGame(this.partId, authMinimalUser);
         if (joinResult.isFailure()) {
             const reason: string = joinResult.getReason();
-            if (reason === JoinerService.USER_ALREADY_IN_GAME()) {
-                this.messageDisplayer.criticalMessage('QUOI LA COUQE, VOUS ETIEZ DEJA LA MONSIEUR');
-            } else {
-                // We will be redirected by the GameWrapper
-                this.messageDisplayer.criticalMessage('failed joining because ' + reason); // TODOTODO i18n la baise
-                return;
-            }
+            this.messageDisplayer.criticalMessage('failed joining because ' + reason);
+            return;
         }
         await this.updateUserDocWithObservedPart();
-        await this.startSendingPresenceTokensIfNotDone();
+        await this.startSendingPresenceTokens();
         this.gameExists = true;
         this.subscribeToJoinerDoc();
         this.subscribeToFormElements();
@@ -133,7 +128,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         return;
     }
     private checkInputs() {
-        assert(this.authUser.username.get() !== '', 'PartCreationComponent should not be created with an empty userName');
+        assert(this.authService.user.get().username.get() !== '', 'PartCreationComponent should not be created with an empty userName');
         assert(this.partId !== '', 'PartCreationComponent should not be created with an empty partId');
     }
     private createForms() {
@@ -147,7 +142,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     }
     private updateUserDocWithObservedPart(): Promise<void> {
         display(PartCreationComponent.VERBOSE, `updateUserDocWithObservedPart of '` + this.partId + `'`);
-        return this.userService.updateObservedPart(this.partId);
+        return this.authService.updateObservedPart(this.partId);
     }
     private subscribeToJoinerDoc(): void {
         const callback: (joiner: MGPOptional<Joiner>) => void = async(joiner: MGPOptional<Joiner>) => {
@@ -161,12 +156,10 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     private subscribeToFormElements(): void {
         this.getForm('chosenOpponent').valueChanges
             .pipe(takeUntil(this.ngUnsubscribe)).subscribe((opponent: string) => {
-                console.log('742 sub to form el called with ', opponent)
                 if (this.viewInfo.chosenOpponent !== undefined) {
                     this.viewInfo.candidateClasses[this.viewInfo.chosenOpponent] = [];
                 }
                 this.viewInfo.candidateClasses[opponent] = ['is-selected'];
-                console.log('742 from', JSON.stringify(this.viewInfo.chosenOpponent), ' to ', opponent)
                 this.viewInfo.chosenOpponent = opponent;
                 const partStatus: IPartStatus = Utils.getNonNullable(this.currentJoiner).partStatus;
                 this.viewInfo.canProposeConfig = partStatus !== PartStatus.CONFIG_PROPOSED.value && opponent !== '';
@@ -198,8 +191,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
         this.viewInfo.canReviewConfig = joiner.partStatus === PartStatus.CONFIG_PROPOSED.value;
         this.viewInfo.canEditConfig = joiner.partStatus !== PartStatus.CONFIG_PROPOSED.value;
-        this.viewInfo.userIsCreator = this.authUser.userId === joiner.creator.id;
-        this.viewInfo.userIsChosenOpponent = this.authUser.userId === joiner.chosenPlayer?.id;
+        this.viewInfo.userIsCreator = this.authService.user.get().userId === joiner.creator.id;
+        this.viewInfo.userIsChosenOpponent = this.authService.user.get().userId === joiner.chosenPlayer?.id;
         this.viewInfo.userIsObserver =
                 this.viewInfo.userIsChosenOpponent === false && this.viewInfo.userIsCreator === false;
         this.viewInfo.creatorIsModifyingConfig = joiner.partStatus !== PartStatus.CONFIG_PROPOSED.value;
@@ -207,13 +200,13 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
         this.viewInfo.creator = joiner.creator.name;
         this.viewInfo.candidates = joiner.candidates.map((minimalUser: MinimalUser) => minimalUser.name);
-        if (this.authUser.userId === joiner.creator.id) {
+        // this.authService.user.get() TODOTODO simplification with subScription on init
+        if (this.authService.user.get().userId === joiner.creator.id) {
             this.setDataForCreator(joiner);
         } else {
             this.viewInfo.maximalMoveDuration = joiner.maximalMoveDuration;
             this.viewInfo.totalPartDuration = joiner.totalPartDuration;
             this.viewInfo.partType = joiner.partType;
-            console.log('viewInfo.chosenOpponent was ', this.viewInfo.chosenOpponent, 'is now', (joiner.chosenPlayer == null ? undefined : joiner.chosenPlayer.name))
             this.viewInfo.chosenOpponent = joiner.chosenPlayer == null ? undefined : joiner.chosenPlayer.name;
             this.viewInfo.firstPlayer = joiner.firstPlayer;
         }
@@ -233,14 +226,16 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.viewInfo.maximalMoveDuration = this.viewInfo.maximalMoveDuration || joiner.maximalMoveDuration;
         this.viewInfo.totalPartDuration = this.viewInfo.totalPartDuration || joiner.totalPartDuration;
         let opponent: string | undefined = this.viewInfo.chosenOpponent;
-        if (opponent) {
-            if (joiner.candidates.some((minimalUser: MinimalUser) => minimalUser.name === opponent) === false) {
+        if (opponent == null || opponent === '') {
+            opponent = joiner.chosenPlayer?.name || '';
+        } else {
+            const chosenOppoentIsInCandidateList: boolean = joiner.candidates.some((minimalUser: MinimalUser) => {
+                return minimalUser.name === opponent;
+            });
+            if (chosenOppoentIsInCandidateList === false) {
                 opponent = ''; // chosenOppoent left
             }
-        } else {
-            opponent = joiner.chosenPlayer?.name || '';
         }
-        console.log('742123 set data for creator setted chosenOpponent as ', opponent)
         this.getForm('chosenOpponent').setValue(opponent);
     }
     public selectFirstPlayer(firstPlayer: IFirstPlayer): void {
@@ -262,7 +257,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         return this.joinerService.setChosenPlayer(opponent);
     }
     private getUserFromName(username: string): MinimalUser {
-        console.log('742 searching for ', username, ' obviously wont do')
         const candidates: MinimalUser[] = Utils.getNonNullable(this.currentJoiner?.candidates);
         const user: MinimalUser | undefined = candidates.find((c: MinimalUser) => c.name === username);
         return Utils.getNonNullable(user);
@@ -276,7 +270,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         const maxMoveDur: number = this.getForm('maximalMoveDuration').value;
         const firstPlayer: string = this.getForm('firstPlayer').value;
         const totalPartDuration: number = this.getForm('totalPartDuration').value;
-        console.log('742 propose config for ', chosenPlayerName)
         const chosenPlayer: MinimalUser = this.getUserFromName(chosenPlayerName);
         return this.joinerService.proposeConfig(chosenPlayer,
                                                 PartType.of(partType),
@@ -286,7 +279,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     }
     public async cancelGameCreation(): Promise<void> {
         this.allDocDeleted = true;
-        await this.userService.removeObservedPart();
+        await this.authService.removeObservedPart();
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.cancelGameCreation');
 
         await this.gameService.deletePart(this.partId);
@@ -338,13 +331,13 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     private observeNeededPlayers(): void {
         const joiner: Joiner = Utils.getNonNullable(this.currentJoiner);
         display(PartCreationComponent.VERBOSE, { PartCreationComponent_updateJoiner: { joiner } });
-        if (this.authUser.userId === joiner.creator.id) {
+        if (this.authService.user.get().userId === joiner.creator.id) {
             this.observeCandidates();
         } else {
             this.observeCreator();
         }
     }
-    private observeCreator(): void { // TODOTODO make that conditionnal
+    private observeCreator(): void {
         const joiner: Joiner = Utils.getNonNullable(this.currentJoiner);
         this.observeUserIfNotDone(joiner.creator.id);
     }
@@ -352,11 +345,9 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         const joiner: Joiner = Utils.getNonNullable(this.currentJoiner);
         const partStatusStarted: boolean = joiner.partStatus === PartStatus.PART_STARTED.value ||
                                            joiner.partStatus === PartStatus.PART_FINISHED.value;
-        if (this.allDocDeleted === false &&
-            partStatusStarted === false)
-        {
-            await this.cancelGameCreation();
-        }
+        assert(partStatusStarted === false, 'Should not try to cancelGameCreation when part started!');
+        assert(this.allDocDeleted === false, 'Should not delete doc twice');
+        await this.cancelGameCreation();
     }
     /**
      * Set the user doc subscription, which will set timeout for user (then resetting it while present)
@@ -392,18 +383,16 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.usersTimeouts.set(userId, newTimeout);
     }
     private async onUserDisparition(userId: string): Promise<void> {
-        console.log('onUserDisparition called > do NOT stop obs yet');
         if (userId === this.currentJoiner?.creator.id) {
             return this.destroyDocIfPartDidNotStart();
         } else if (userId === this.currentJoiner?.chosenPlayer?.id) {
-            return this.removeCandidateFromLobby(userId);
-        }
-        const candidates: MinimalUser[] = Utils.getNonNullable(this.currentJoiner?.candidates);
-        const userIsCandidate: boolean = candidates.some((u: MinimalUser) => u.id ===userId);
-        if (userIsCandidate) {
+            // TODOTODO check that chosenPlayer is emptied also
             return this.removeCandidateFromLobby(userId);
         } else {
-            throw new Error('ta bite est mauve violeur de schtroumf')
+            const candidates: MinimalUser[] = Utils.getNonNullable(this.currentJoiner?.candidates);
+            const userIsCandidate: boolean = candidates.some((u: MinimalUser) => u.id === userId);
+            assert(userIsCandidate, 'should not be observing a user that is not creator/oppoent/candidate');
+            return this.removeCandidateFromLobby(userId);
         }
     }
     private observeCandidates(): void {
@@ -419,14 +408,12 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             }
         }
     }
-    public async startSendingPresenceTokensIfNotDone(): Promise<void> {
-        if (this.ownTokenInterval.isAbsent()) {
-            await this.userService.sendPresenceToken();
-            this.ownTokenInterval = MGPOptional.of(window.setInterval(() => {
-                // eslint-disable-next-line @typescript-eslint/no-floating-promises
-                this.userService.sendPresenceToken();
-            }, PartCreationComponent.TOKEN_INTERVAL));
-        }
+    public async startSendingPresenceTokens(): Promise<void> {
+        await this.authService.sendPresenceToken();
+        this.ownTokenInterval = MGPOptional.of(window.setInterval(() => {
+            // eslint-disable-next-line @typescript-eslint/no-floating-promises
+            this.authService.sendPresenceToken();
+        }, PartCreationComponent.TOKEN_INTERVAL));
     }
     public stopSendingPresenceTokensAndObservingUsersIfNeeded(): void {
         if (this.ownTokenInterval.isPresent()) {
@@ -480,21 +467,22 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             this.joinerService.unsubscribe();
         }
         if (this.gameStarted === true) {
+            // Avoid canceling game creation if part started but user leave
             return;
         }
         if (this.currentJoiner === null) {
             display(PartCreationComponent.VERBOSE,
                     'PartCreationComponent.ngOnDestroy: there is no part here');
             return;
-        } else if (this.authUser.userId === this.currentJoiner.creator.id) {
+        } else if (this.authService.user.get().userId === this.currentJoiner.creator.id) {
             display(PartCreationComponent.VERBOSE,
                     'PartCreationComponent.ngOnDestroy: you(creator) about to cancel creation.');
             await this.cancelGameCreation();
         } else if (this.allDocDeleted === false) {
             display(PartCreationComponent.VERBOSE,
                     'PartCreationComponent.ngOnDestroy: you(joiner) about to cancel game joining');
-            await this.userService.removeObservedPart();
-            await this.joinerService.cancelJoining(this.authUser.toMinimalUser());
+            await this.authService.removeObservedPart();
+            await this.joinerService.cancelJoining(this.authService.user.get().toMinimalUser());
         }
         return;
     }

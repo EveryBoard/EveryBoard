@@ -10,6 +10,7 @@ import { Time } from '../domain/Time';
     providedIn: 'root',
 })
 export class ActiveUsersService {
+
     public static VERBOSE: boolean = false;
 
     private readonly activeUsersBS: BehaviorSubject<UserDocument[]> = new BehaviorSubject<UserDocument[]>([]);

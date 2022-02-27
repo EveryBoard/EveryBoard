@@ -76,7 +76,7 @@ export class AuthUser {
 @Injectable({
     providedIn: 'root',
 })
-export class AuthenticationService implements OnDestroy {
+export class AuthenticationService implements OnDestroy { // TODOTODO rename
 
     public static VERBOSE: boolean = false;
 
@@ -123,26 +123,26 @@ export class AuthenticationService implements OnDestroy {
                     assert(this.uid.isAbsent(), 'AuthenticationService received a double update for an user, this is unexpected');
                     this.uid = MGPOptional.of(user.uid);
                     await this.connectivityDAO.launchAutomaticPresenceUpdate(user.uid);
-                    this.userUnsubscribe = MGPOptional.of(
-                        this.userDAO.subscribeToChanges(user.uid, (doc: MGPOptional<User>) => {
-                            if (doc.isPresent()) {
-                                const username: string | undefined = doc.get().username;
-                                display(AuthenticationService.VERBOSE, `User ${username} is connected, and the verified status is ${this.emailVerified(user)}`);
-                                const userHasFinalizedVerification: boolean =
-                                  this.emailVerified(user) === true && username != null;
-                                if (userHasFinalizedVerification === true && doc.get().verified === false) {
-                                    // The user has finalized verification but isn't yet marked as so in the DB.
-                                    // So we mark it, and we'll get notified when the user is marked.
-                                    return this.userDAO.markVerified(user.uid);
-                                }
-                                const authUser: AuthUser = new AuthUser(user.uid,
-                                                                        MGPOptional.ofNullable(user.email),
-                                                                        MGPOptional.ofNullable(username),
-                                                                        userHasFinalizedVerification);
-                                this.user = MGPOptional.of(authUser);
-                                this.userRS.next(authUser);
+                    const unsub: Unsubscribe = this.userDAO.subscribeToChanges(user.uid, (doc: MGPOptional<User>) => {
+                        if (doc.isPresent()) {
+                            const username: string | undefined = doc.get().username;
+                            display(AuthenticationService.VERBOSE, `User ${username} is connected, and the verified status is ${this.emailVerified(user)}`);
+                            const userHasFinalizedVerification: boolean =
+                              this.emailVerified(user) === true && username != null;
+                            if (userHasFinalizedVerification === true && doc.get().verified === false) {
+                                // The user has finalized verification but isn't yet marked as so in the DB.
+                                // So we mark it, and we'll get notified when the user is marked.
+                                return this.userDAO.markVerified(user.uid);
                             }
-                        }));
+                            const authUser: AuthUser = new AuthUser(user.uid,
+                                                                    MGPOptional.ofNullable(user.email),
+                                                                    MGPOptional.ofNullable(username),
+                                                                    userHasFinalizedVerification);
+                            this.user = MGPOptional.of(authUser);
+                            this.userRS.next(authUser);
+                        }
+                    });
+                    this.userUnsubscribe = MGPOptional.of(unsub);
                 }
             });
     }
@@ -316,6 +316,19 @@ export class AuthenticationService implements OnDestroy {
         const currentUser: FireAuth.User = Utils.getNonNullable(this.auth.currentUser);
         await currentUser.getIdToken(true);
         await currentUser.reload();
+    }
+    public updateObservedPart(observedPart: string): Promise<void> {
+        // TODOTOD: TEST IN ITSELF, NOT JUST TESTING ITS CALLED
+        assert(this.uid.isPresent(), 'Should not call updateObservedPart when not connected');
+        return this.userDAO.update(this.uid.get(), { observedPart });
+    }
+    public removeObservedPart(): Promise<void> { // TODOTOD: TEST IN ITSELF, NOT JUST TESTING ITS CALLED
+        assert(this.uid.isPresent(), 'Should not call removeObservedPart when not connected');
+        return this.userDAO.update(this.uid.get(), { observedPart: null });
+    }
+    public sendPresenceToken(): Promise<void> {
+        assert(this.uid.isPresent(), 'Should not call sendPresenceToken when not connected');
+        return this.userDAO.updatePresenceToken(this.uid.get());
     }
     public ngOnDestroy(): void {
         if (this.userUnsubscribe.isPresent()) {

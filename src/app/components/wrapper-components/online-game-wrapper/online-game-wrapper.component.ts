@@ -150,11 +150,10 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 await this.setCurrentPartIdOrRedirect();
             }
         });
-        this.userSub = this.authenticationService.getUserObs()
-            .subscribe((user: AuthUser) => {
-                // player should be authenticated and have a username to be here
-                this.authUser = user;
-            });
+        this.userSub = this.authenticationService.getUserObs().subscribe((user: AuthUser) => {
+            // player should be authenticated and have a username to be here
+            this.authUser = user;
+        });
         await this.setCurrentPartIdOrRedirect();
     }
     public async startGame(iJoiner: Joiner): Promise<void> {
@@ -215,8 +214,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 this.msToSubstract = this.getLastUpdateTime(oldPart, part, updateType);
                 return this.doNewMoves(part);
             case UpdateType.PRE_START_DOC:
-                const oldPartHadNoBeginningTime: boolean = oldPart == null ||
-                                                           oldPart.data.beginning == null;
+                const oldPartHadNoBeginningTime: boolean = oldPart == null || oldPart.data.beginning == null;
                 const newPartHasBeginningTime: boolean = this.currentPart == null ||
                                                          this.currentPart.data.beginning != null;
                 // Assert from ~September 2021, could be removed if it is never encountered
@@ -827,12 +825,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
     }
     public ngOnDestroy(): void {
-        if (this.routerEventsSub != null && this.routerEventsSub.unsubscribe != null) {
-            this.routerEventsSub.unsubscribe();
-        }
-        if (this.userSub != null && this.userSub.unsubscribe != null) {
-            this.userSub.unsubscribe();
-        }
+        this.routerEventsSub.unsubscribe();
+        this.userSub.unsubscribe();
         if (this.gameStarted === true) {
             if (this.opponentSubscription.isPresent()) {
                 this.opponentSubscription.get()();

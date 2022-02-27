@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { fakeAsync, TestBed } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { LobbyComponent } from './lobby.component';
 import { AuthUser } from 'src/app/services/AuthenticationService';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
@@ -10,6 +10,9 @@ import { ActivePartsService } from 'src/app/services/ActivePartsService';
 import { BehaviorSubject } from 'rxjs';
 import { PartDocument } from 'src/app/domain/Part';
 import { OnlineGameWrapperComponent } from '../../wrapper-components/online-game-wrapper/online-game-wrapper.component';
+import { UserDAO } from 'src/app/dao/UserDAO';
+import { UserMocks } from 'src/app/domain/UserMocks.spec';
+import { User } from 'src/app/domain/User';
 
 describe('LobbyComponent', () => {
 
@@ -36,7 +39,6 @@ describe('LobbyComponent', () => {
         // Then online-game-selection component is on the page
         testUtils.expectElementToExist('#online-game-selection');
     }));
-
     it('Should redirect to /play when clicking a game', fakeAsync(async() => {
         // Given a server with one active part
         const activePart: PartDocument = new PartDocument('some-part-id', PartMocks.INITIAL);
@@ -66,5 +68,23 @@ describe('LobbyComponent', () => {
         expect(component['activePartsSub'].unsubscribe).toHaveBeenCalledOnceWith();
         // and ActivePartsService should have been told to stop observing
         expect(activePartsService.stopObserving).toHaveBeenCalledOnceWith();
+    }));
+    it('should display firebase time HH:mm:ss', fakeAsync(() => {
+        // Given a lobby in which we observe tab chat, and where one user is here
+        const seconds: number = 1234;
+        const userWithLastChange: User = {
+            ...UserMocks.CREATOR,
+            last_changed: { seconds, nanoseconds: 57 },
+        };
+        void TestBed.inject(UserDAO).set(UserMocks.CREATOR_AUTH_USER.userId, userWithLastChange);
+        tick();
+        void testUtils.clickElement('#tab-chat');
+        tick();
+
+        // When rendering it
+        testUtils.detectChanges();
+
+        // Then the date should be written in format HH:mm:ss
+        testUtils.expectElementToExist('#' + UserMocks.CREATOR_MINIMAL_USER.name);
     }));
 });

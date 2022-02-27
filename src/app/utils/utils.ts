@@ -50,7 +50,6 @@ export class Utils {
     }
     public static getNonNullable<T>(value : T | null | undefined): T {
         if (value == null) {
-            console.log('THROW:::Expected value not to be null or undefined, but it was.:::WORHT')
             throw new Error(`Expected value not to be null or undefined, but it was.`);
         } else {
             return value;

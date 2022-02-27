@@ -14,14 +14,7 @@ export class UserMocks {
         state: 'online',
         verified: true,
     };
-    public static readonly CREATOR_MINIMAL_USER: MinimalUser = {
-        id: UserMocks.CREATOR_AUTH_USER.userId,
-        name: UserMocks.CREATOR_AUTH_USER.username.get(),
-    };
-    public static readonly FIRST_CANDIDATE_MINIMAL_USER: MinimalUser = {
-        id: 'firstCandidate-user-doc-id', // TODOTODO TODOTOPOOP
-        name: 'firstCandidate',
-    };
+    public static readonly CREATOR_MINIMAL_USER: MinimalUser = UserMocks.CREATOR_AUTH_USER.toMinimalUser();
 
     public static readonly OPPONENT_AUTH_USER: AuthUser = new AuthUser('firstCandidate-user-doc-id',
                                                                        MGPOptional.of('opp@nante'),
@@ -32,8 +25,5 @@ export class UserMocks {
         state: 'online',
         verified: true,
     };
-    public static readonly OPPONENT_MINIMAL_USER: MinimalUser = {
-        id: UserMocks.OPPONENT_AUTH_USER.userId,
-        name: UserMocks.OPPONENT_AUTH_USER.username.get(),
-    };
+    public static readonly OPPONENT_MINIMAL_USER: MinimalUser = UserMocks.OPPONENT_AUTH_USER.toMinimalUser();
 }

@@ -135,7 +135,7 @@ describe('JoinerService', () => {
             service.subscribeToChanges('joinerId', (doc: MGPOptional<Joiner>): void => {});
 
             // When the chosen player leaves
-            await service.cancelJoining(UserMocks.FIRST_CANDIDATE_MINIMAL_USER);
+            await service.cancelJoining(UserMocks.OPPONENT_MINIMAL_USER);
 
             // Then the joiner is back to the initial one
             const currentJoiner: MGPOptional<Joiner> = await dao.read('joinerId');

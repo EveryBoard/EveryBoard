@@ -89,7 +89,6 @@ export class JoinerService {
                 chosenPlayer = null;
                 partStatus = PartStatus.PART_CREATED.value;
             } else if (indexLeaver === -1) {
-                console.log('ERROR::: someone that was not candidate nor chosenPlayer just left the chat: ' + user.name);
                 throw new Error('someone that was not candidate nor chosenPlayer just left the chat: ' + user.name);
             }
             const update: Partial<Joiner> = {

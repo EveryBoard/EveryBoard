@@ -85,7 +85,6 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
             window.setTimeout(async() => {
                 await this.doAIMove(playingMinimax.get());
             }, this.botTimeOut);
-            // TODOTODO: check what this change, was "voided" before merge
         }
     }
     private getPlayingAI(): MGPOptional<AbstractMinimax> {

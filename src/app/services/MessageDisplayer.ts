@@ -16,7 +16,6 @@ export class MessageDisplayer {
         this.message(msg, 'is-danger');
     }
     private message(msg: string, cssClass: ToastType): void {
-        console.log(">>> " + msg + " <<<")
         toast({
             message: msg,
             duration: 3000,

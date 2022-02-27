@@ -4,8 +4,6 @@ import { AuthenticationService, AuthUser } from 'src/app/services/Authentication
 import { Subscription } from 'rxjs';
 import { faCog, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { UserService } from 'src/app/services/UserService';
-import { User } from 'src/app/domain/User';
-import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 @Component({
     selector: 'app-header',
@@ -14,9 +12,6 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 export class HeaderComponent implements OnInit, OnDestroy {
 
     public username: string = 'connecting...';
-    private userId: string;
-
-    private subscriptionToLoggedUser: MGPOptional<() => void> = MGPOptional.empty();
 
     public faCog: IconDefinition = faCog;
 
@@ -29,30 +24,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
                 public userService: UserService) {
     }
     public ngOnInit(): void {
-        this.userSub = this.authenticationService.getUserObs()
-            .subscribe((user: AuthUser) => {
-                if (user.username.isPresent()) {
-                    this.username = user.username.get();
-                    this.userId = user.userId;
-                    this.userService.setObservedUserId(user.userId);
-                    this.subscribeToLoggedUserDoc();
-                } else if (user.email.isPresent()) {
-                    this.username = user.email.get();
-                } else {
-                    this.username = '';
-                    if (this.subscriptionToLoggedUser.isPresent()) {
-                        this.userService.removeObservedUserId();
-                        const unsubscribe: () => void = this.subscriptionToLoggedUser.get();
-                        unsubscribe();
-                        this.subscriptionToLoggedUser = MGPOptional.empty();
-                    }
-                }
-            });
-    }
-    public subscribeToLoggedUserDoc(): void {
-        const subscription: () => void = this.userService.observeUser(this.userId, (user: MGPOptional<User>) => {
-        });
-        this.subscriptionToLoggedUser = MGPOptional.of(subscription);
+        this.userSub = this.authenticationService.getUserObs().subscribe((user: AuthUser) => {
+            if (user.username.isPresent()) {
+                this.username = user.username.get();
+            } else {
+                this.username = user.email.getOrElse('');
+            }});
     }
     public async logout(): Promise<void> {
         await this.authenticationService.disconnect();

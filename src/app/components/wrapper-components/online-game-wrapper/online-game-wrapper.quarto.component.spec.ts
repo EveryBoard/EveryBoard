@@ -33,7 +33,6 @@ import { GameService } from 'src/app/services/GameService';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { NextGameLoadingComponent } from '../../normal-component/next-game-loading/next-game-loading.component';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { UserService } from 'src/app/services/UserService';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 
@@ -97,7 +96,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         return Promise.resolve();
     }
     async function prepareStartedGameFor(user: AuthUser, shorterGlobalChrono?: boolean): Promise<void> {
-        TestBed.inject(UserService).setObservedUserId(user.userId);
         await prepareMockDBContent(JoinerMocks.INITIAL);
         AuthenticationServiceMock.setUser(user);
         if (user.userId === UserMocks.CREATOR_AUTH_USER.userId) {
@@ -121,10 +119,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await joinerDAO.update('joinerId', JoinerMocks.WITH_FIRST_CANDIDATE);
         componentTestUtils.detectChanges();
         await joinerDAO.update('joinerId', JoinerMocks.WITH_CHOSEN_OPPONENT);
-        console.log('>>> the update show we selected that opponent; let us detectChange')
         // TODO: replace by real actor action (chooseCandidate)
         componentTestUtils.detectChanges();
-        console.log('>>> let us proposeConfig')
         if (observerRole === Player.ZERO) { // Creator
             await wrapper.partCreation.proposeConfig();
         } else {
@@ -322,7 +318,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     }));
     it('Prepared Game for joiner should allow simple move', fakeAsync(async() => {
         await prepareStartedGameFor(UserMocks.OPPONENT_AUTH_USER);
-        console.log('BITLAKOEK')
         tick(1);
 
         // Receive first move
