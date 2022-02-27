@@ -83,7 +83,7 @@ describe('ChatComponent', () => {
             expect(switchButton.nativeElement.innerText).toEqual('Hide chat'.toUpperCase());
             expect(chat).withContext('Chat should be visible after calling show').toBeTruthy();
         }));
-        it('should show how many messages where sent since you hide the chat', fakeAsync(async() => {
+        it('should show how many messages where sent since you hid the chat', fakeAsync(async() => {
             // Given a hidden chat with no message
             AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
             testUtils.detectChanges();

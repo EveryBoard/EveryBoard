@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
-import { display, FirebaseJSONObject, Utils } from 'src/app/utils/utils';
+import { display, FirebaseJSONObject, FirebaseJSONValue, Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
@@ -57,22 +57,47 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
             // TODO: check that observing unexisting doc throws
         }
     }
-    public async create(elementWithFieldValue: T): Promise<string> {
+    public async create(element: T): Promise<string> {
         const elemName: string = this.collectionName + this.getStaticDB().size();
-        const elementWithTime: T = Utils.getNonNullable(this.getServerTimestampedObject(elementWithFieldValue));
-        await this.set(elemName, elementWithTime);
+        await this.set(elemName, element);
         return elemName;
     }
-    public getServerTimestampedObject<N extends FirebaseJSONObject>(elementWithFieldValue: N): N {
-        const elementWithTime: FirebaseJSONObject = {};
+    private replaceFieldValueWith<N extends FirebaseJSONObject>(
+        elementWithFieldValue: N,
+        replacement: FirebaseJSONValue)
+    : N
+    {
+        const elementWithReplacement: FirebaseJSONObject = {};
         for (const key of Object.keys(elementWithFieldValue)) {
             if (elementWithFieldValue[key] instanceof FieldValue) {
-                elementWithTime[key] = FirebaseFirestoreDAOMock.mockServerTime();
+                elementWithReplacement[key] = replacement;
             } else {
-                elementWithTime[key] = elementWithFieldValue[key];
+                elementWithReplacement[key] = elementWithFieldValue[key];
             }
         }
-        return elementWithTime as N;
+        return elementWithReplacement as N;
+    }
+    private updateFieldValueWith<N extends FirebaseJSONObject>(
+        element: N,
+        replacement: FirebaseJSONValue)
+    : UpdateData<N>
+    {
+        const update: FirebaseJSONObject = {};
+        for (const key of Object.keys(element)) {
+            if (element[key] instanceof FieldValue) {
+                update[key] = replacement;
+            }
+        }
+        return update as UpdateData<N>;
+    }
+
+    private hasFieldValue(element: FirebaseJSONObject): boolean {
+        for (const key of Object.keys(element)) {
+            if (element[key] instanceof FieldValue) {
+                return true;
+            }
+        }
+        return false;
     }
     public async read(id: string): Promise<MGPOptional<T>> {
         display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE, this.collectionName + '.read(' + id + ')');
@@ -84,13 +109,21 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
             return MGPOptional.empty();
         }
     }
-    public async set(id: string, doc: T): Promise<void> {
+    public async set(id: string, data: T): Promise<void> {
         display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE,
-                this.collectionName + '.set(' + id + ', ' + JSON.stringify(doc) + ')');
+                this.collectionName + '.set(' + id + ', ' + JSON.stringify(data) + ')');
 
-        const mappedDoc: T = Utils.getNonNullable(this.getServerTimestampedObject(doc));
+        const localData: T = this.replaceFieldValueWith(data, null);
+        await this.internalSet(id, localData);
+        if (this.hasFieldValue(data)) {
+            const serverData: UpdateData<T> =
+                this.updateFieldValueWith(data, FirebaseFirestoreDAOMock.mockServerTime());
+            await this.internalUpdate(id, serverData);
+        }
+    }
+    public async internalSet(id: string, data: T): Promise<void> {
         const optionalOS: MGPOptional<DocumentSubject<T>> = this.getStaticDB().get(id);
-        const tid: FirebaseDocument<T> = { id, data: mappedDoc };
+        const tid: FirebaseDocument<T> = { id, data: data };
         if (optionalOS.isPresent()) {
             optionalOS.get().subject.next(MGPOptional.of(tid));
         } else {
@@ -110,12 +143,20 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
         display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE,
                 this.collectionName + '.update(' + id + ', ' + JSON.stringify(update) + ')');
 
+        const localUpdate: UpdateData<T> = this.replaceFieldValueWith(update, null);
+        await this.internalUpdate(id, localUpdate);
+        if (this.hasFieldValue(update)) {
+            const serverUpdate: UpdateData<T> =
+                this.replaceFieldValueWith(update, FirebaseFirestoreDAOMock.mockServerTime());
+            await this.internalUpdate(id, serverUpdate);
+        }
+    }
+    private async internalUpdate(id: string, update: UpdateData<T>): Promise<void> {
         const optionalOS: MGPOptional<DocumentSubject<T>> = this.getStaticDB().get(id);
         if (optionalOS.isPresent()) {
             const observableSubject: DocumentSubject<T> = optionalOS.get();
             const oldDoc: T = observableSubject.subject.getValue().get().data;
-            const mappedUpdate: UpdateData<T> = Utils.getNonNullable(this.getServerTimestampedObject(update));
-            const newDoc: T = { ...oldDoc, ...mappedUpdate };
+            const newDoc: T = { ...oldDoc, ...update };
             observableSubject.subject.next(MGPOptional.of({ id, data: newDoc }));
             for (const callback of this.callbacks) {
                 if (this.conditionsHold(callback[0], observableSubject.subject.value.get().data)) {

@@ -47,8 +47,12 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     }
     public loadChatContent(): void {
         const updateMessages: (messages: MessageDocument[]) => void = (messages: MessageDocument[]) => {
-            this.updateMessages(messages.map((doc: MessageDocument) => {
-                return doc.data;
+            this.updateMessages(messages.flatMap((doc: MessageDocument) => {
+                if (doc.data.postedTime == null) {
+                    // This is a local update that does not contain the time yet, ignore it
+                    return [];
+                }
+                return [doc.data];
             }));
         };
         const callback: FirebaseCollectionObserver<Message> =

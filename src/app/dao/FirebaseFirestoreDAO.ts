@@ -112,12 +112,7 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
     : () => void
     {
         const query: Firestore.Query<T> = this.constructQuery(conditions, order);
-        const options: Firestore.SnapshotListenOptions = { includeMetadataChanges: true };
-        return Firestore.onSnapshot(query, options, (snapshot: Firestore.QuerySnapshot<T>) => {
-            if (snapshot.metadata.hasPendingWrites) {
-                // This is a local update which is not yet complete
-                return;
-            }
+        return Firestore.onSnapshot(query, (snapshot: Firestore.QuerySnapshot<T>) => {
             const createdDocs: FirebaseDocument<T>[] = [];
             const modifiedDocs: FirebaseDocument<T>[] = [];
             const deletedDocs: FirebaseDocument<T>[] = [];
