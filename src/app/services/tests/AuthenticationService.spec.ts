@@ -103,12 +103,12 @@ async function setupAuthTestModule(): Promise<unknown> {
  * When using it, don't forget to sign out the user when the test is done, using:
  * await firebase.auth().signOut();
  */
-export async function createConnectedGoogleUser(createInDB: boolean, username?: string): Promise<FireAuth.User> {
+export async function createConnectedGoogleUser(createInDB: boolean, email: string = 'foo@bar.com', username?: string): Promise<FireAuth.User> {
     TestBed.inject(AuthenticationService);
     // Sign out current user in case there is one
     await FireAuth.signOut(TestBed.inject(FireAuth.Auth));
     // Create a new google user
-    const token: string = '{"sub": "abc123", "email": "foo@example.com", "email_verified": true}';
+    const token: string = '{"sub": "' + email + '", "email": "' + email + '", "email_verified": true}';
     const credential: FireAuth.UserCredential =
         await FireAuth.signInWithCredential(TestBed.inject(FireAuth.Auth),
                                             FireAuth.GoogleAuthProvider.credential(token));

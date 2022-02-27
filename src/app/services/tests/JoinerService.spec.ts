@@ -49,7 +49,7 @@ describe('JoinerService', () => {
         // Given a JoinerService
         spyOn(dao, 'set');
         // When creating the initial joiner
-        await service.createInitialJoiner('creator', 'id');
+        await service.createInitialJoiner('creatorId', 'creator', 'id');
         // Then it should delegate to the DAO and create the initial joiner
         expect(dao.set).toHaveBeenCalledWith('id', JoinerMocks.INITIAL);
     }));

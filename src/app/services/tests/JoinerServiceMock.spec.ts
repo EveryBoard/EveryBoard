@@ -29,6 +29,7 @@ export class JoinerServiceMock {
             resolve({
                 candidates: ['uniqueCandidate'],
                 creator: 'creator',
+                creatorId: 'creatorId',
                 chosenPlayer: 'uniqueCandidate',
                 firstPlayer: FirstPlayer.CREATOR.value,
                 partType: PartType.STANDARD.value,
