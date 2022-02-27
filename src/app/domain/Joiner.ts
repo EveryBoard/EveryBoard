@@ -4,6 +4,7 @@ import { assert } from 'src/app/utils/assert';
 
 export interface Joiner extends JSONObject {
     readonly creator: string;
+    readonly creatorId: string;
     readonly candidates: Array<string>;
     readonly chosenPlayer: string | null;
     readonly partStatus: IPartStatus;

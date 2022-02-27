@@ -16,16 +16,14 @@ service cloud.firestore {
             allow read: if true;
         }
         match /chats/lobby {
-            // Only a verified user can create the lobby chat if it is missing
             allow create: if userVerified();
         }
         match /chats/{chatId} {
-            // Only the creator of a part can create the corresponding chat
-            allow create: if userVerified() && partExistsAndOwnedByCurrentUser(chatId);
+            allow create, delete: if userVerified() && partExistsAndOwnedByCurrentUser(chatId);
         }
         function partExistsAndOwnedByCurrentUser(partId) {
             let joiner = get(/databases/$(database)/documents/joiners/$(partId)).data;
-            return joiner != null && joiner.creator == request.auth.uid;
+            return joiner != null && joiner.creatorId == request.auth.uid;
         }
         match /chats/{chatId}/messages/{messageId} {
             allow create: if userVerified() && isValidMessage(request.resource.data);

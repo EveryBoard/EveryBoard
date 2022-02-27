@@ -72,11 +72,11 @@ export class GameService {
 
         return this.chatService.createNewChat(chatId);
     }
-    public async createPartJoinerAndChat(creatorName: string, typeGame: string): Promise<string> {
-        display(GameService.VERBOSE, 'GameService.createGame(' + creatorName + ', ' + typeGame + ')');
+    public async createPartJoinerAndChat(uid: string, creatorName: string, typeGame: string): Promise<string> {
+        display(GameService.VERBOSE, `GameService.createGame(${uid}, ${creatorName}, ${typeGame})`);
 
         const gameId: string = await this.createUnstartedPart(creatorName, typeGame);
-        await this.joinerService.createInitialJoiner(creatorName, gameId);
+        await this.joinerService.createInitialJoiner(uid, creatorName, gameId);
         await this.createChat(gameId);
         return gameId;
     }

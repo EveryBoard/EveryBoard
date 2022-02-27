@@ -76,6 +76,8 @@ export class VerifyAccountComponent implements OnInit, OnDestroy {
     public async finalizeEmailVerification(): Promise<void> {
         this.triedToFinalize = true;
         await this.authService.reloadUser();
+        // Reload app to apply changes
+        window.open(window.location.href, '_self');
     }
     public ngOnDestroy(): void {
         if (this.userSub != null && this.userSub.unsubscribe != null) {

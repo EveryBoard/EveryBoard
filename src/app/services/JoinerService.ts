@@ -30,7 +30,7 @@ export class JoinerService {
         this.joinerUnsubscribe.get()();
         this.joinerUnsubscribe = MGPOptional.empty();
     }
-    public async createInitialJoiner(creatorName: string, joinerId: string): Promise<void> {
+    public async createInitialJoiner(uid: string, creatorName: string, joinerId: string): Promise<void> {
         display(JoinerService.VERBOSE, 'JoinerService.createInitialJoiner(' + creatorName + ', ' + joinerId + ')');
 
         const newJoiner: Joiner = {
@@ -42,6 +42,7 @@ export class JoinerService {
             maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
             totalPartDuration: PartType.NORMAL_PART_DURATION,
             creator: creatorName,
+            creatorId: uid,
         };
         return this.set(joinerId, newJoiner);
     }
