@@ -261,15 +261,12 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.allDocDeleted = true;
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.cancelGameCreation');
 
-        console.log('deleting chat')
         await this.chatService.deleteChat(this.partId);
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.cancelGameCreation: chat deleted');
 
-        console.log('deleting joiner')
         await this.joinerService.deleteJoiner();
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.cancelGameCreation: chat and joiner deleted');
 
-        console.log('deleting part')
         await this.gameService.deletePart(this.partId);
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.cancelGameCreation: chat, joiner, and part deleted');
 
@@ -350,7 +347,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             for (const user of foundUsers) {
                 if (user.data.state === 'offline') {
                     await this.removeUserFromLobby(Utils.getNonNullable(user.data.username));
-                    await ErrorLoggerService.logError('PartCreationComponent', 'user is already offline', { username: user.data.username, userId: user.id });
+                    ErrorLoggerService.logError('PartCreationComponent', 'user is already offline', { username: user.data.username, userId: user.id });
                 }
             }
         };
@@ -365,7 +362,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             // This should not happen in practice, but if it does we can safely remove the user from the lobby
             for (const user of deletedUsers) {
                 await this.removeUserFromLobby(Utils.getNonNullable(user.data.username));
-                await ErrorLoggerService.logError('PartCreationComponent', 'user was deleted', { username: user.data.username, userId: user.id });
+                ErrorLoggerService.logError('PartCreationComponent', 'user was deleted', { username: user.data.username, userId: user.id });
             }
         };
         const callback: FirebaseCollectionObserver<User> =
