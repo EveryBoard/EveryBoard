@@ -435,9 +435,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         const index: number = joiner.candidates.findIndex((minimalUser: MinimalUser) => minimalUser.id === userId);
         // The user must be in the lobby, otherwise we would have unsubscribed from its updates
         assert(index !== -1, 'PartCreationComponent: attempting to remove a user not in the lobby');
-        const beforeUser: MinimalUser[] = joiner.candidates.slice(0, index);
-        const afterUser: MinimalUser[] = joiner.candidates.slice(index + 1);
-        // const candidates: MinimalUser[] = beforeUser.concat(afterUser);
         const candidates: MinimalUser[] = joiner.candidates.filter((m: MinimalUser) => m.id !== userId);
         // The chosen player has been removed, the user will have to review the config
         this.messageDisplayer.infoMessage($localize`${userId} left the game, please pick another opponent.`);
