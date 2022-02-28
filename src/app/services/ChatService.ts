@@ -9,6 +9,7 @@ import { Unsubscribe } from '@angular/fire/firestore';
 import { ErrorLoggerService } from './ErrorLoggerService';
 import { serverTimestamp } from 'firebase/firestore';
 import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
+import { MinimalUser } from '../domain/Joiner';
 
 export class ChatMessages {
     public static readonly CANNOT_SEND_MESSAGE: Localized = () => $localize`You're not allowed to send a message here.`;
@@ -63,13 +64,13 @@ export class ChatService implements OnDestroy {
     public async createNewChat(id: string): Promise<void> {
         return this.chatDAO.set(id, {});
     }
-    public async sendMessage(userId: string, userName: string, content: string, currentTurn?: number)
+    public async sendMessage(sender: MinimalUser, content: string, currentTurn?: number)
     : Promise<MGPValidation> {
         if (this.followedChatId.isAbsent()) {
             return MGPValidation.failure('Cannot send message if not observing chat');
         }
         const chatId: string = this.followedChatId.get();
-        if (this.userCanSendMessage(userName, chatId) === false) {
+        if (this.userCanSendMessage(sender.name, chatId) === false) {
             return MGPValidation.failure(ChatMessages.CANNOT_SEND_MESSAGE());
         }
         if (this.isForbiddenMessage(content)) {
@@ -77,8 +78,7 @@ export class ChatService implements OnDestroy {
         }
         const newMessage: Message = {
             content,
-            senderId: userId,
-            sender: userName,
+            sender,
             postedTime: serverTimestamp(),
             currentTurn,
         };

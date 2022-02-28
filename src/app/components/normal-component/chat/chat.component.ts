@@ -6,6 +6,7 @@ import { display } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { faReply, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { FirebaseCollectionObserver } from 'src/app/dao/FirebaseCollectionObserver';
+import { MinimalUser } from 'src/app/domain/Joiner';
 
 @Component({
     selector: 'app-chat',
@@ -55,8 +56,12 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
                 return [doc.data];
             }));
         };
-        const callback: FirebaseCollectionObserver<Message> =
-            new FirebaseCollectionObserver(updateMessages, updateMessages);
+        const callback: FirebaseCollectionObserver<Message> = new FirebaseCollectionObserver(
+            updateMessages,
+            updateMessages,
+            () => {
+                // We don't care about deleted messages
+            });
         this.chatService.startObserving(this.chatId, callback);
     }
     public updateMessages(newMessages: Message[]): void {
@@ -117,9 +122,11 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     public async sendMessage(): Promise<void> {
         const content: string = this.userMessage;
         this.userMessage = ''; // clears it first to seem more responsive
-        await this.chatService.sendMessage(this.authenticationService.uid.get(),
-                                           this.authenticationService.user.get().username.get(),
-                                           content, this.turn);
+        const sender: MinimalUser = {
+            id: this.authenticationService.uid.get(),
+            name: this.authenticationService.user.get().username.get(),
+        };
+        await this.chatService.sendMessage(sender, content, this.turn);
     }
     public ngOnDestroy(): void {
         this.chatService.stopObserving();

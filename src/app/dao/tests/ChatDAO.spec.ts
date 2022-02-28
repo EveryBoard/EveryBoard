@@ -14,6 +14,7 @@ import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 import { JoinerDAO } from '../JoinerDAO';
 import { IFirebaseFirestoreDAO } from '../FirebaseFirestoreDAO';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
+import { MinimalUser } from 'src/app/domain/Joiner';
 
 describe('ChatDAO', () => {
 
@@ -26,7 +27,8 @@ describe('ChatDAO', () => {
     }
     async function createPartAndJoiner(creatorId: string): Promise<string> {
         const id: string = await partDAO.create(PartMocks.INITIAL);
-        await joinerDAO.set(id, { ...JoinerMocks.INITIAL, creatorId });
+        const creator: MinimalUser = { id: creatorId, name: 'creator' };
+        await joinerDAO.set(id, { ...JoinerMocks.INITIAL, creator });
         return id;
     }
     beforeEach(async() => {
@@ -44,36 +46,42 @@ describe('ChatDAO', () => {
             const messagesDAO: IFirebaseFirestoreDAO<Message> = chatDAO.subCollectionDAO('chatId', 'messages');
             spyOn(messagesDAO, 'observingWhere');
             // When calling subscribeToMessages
-            const callback: FirebaseCollectionObserver<Message> = new FirebaseCollectionObserver<Message>();
+            const callback: FirebaseCollectionObserver<Message> =
+                new FirebaseCollectionObserver<Message>(() => {}, () => {}, () => {});
             chatDAO.subscribeToMessages('chatId', callback);
             // Then it should call observingWhere and sort by postedTime
             expect(messagesDAO.observingWhere).toHaveBeenCalledOnceWith([], callback, 'postedTime');
         });
     });
     describe('on any chat', () => {
-        let myUserId: string;
+        let myUser: MinimalUser;
         let myMessageId: string;
-        let otherUserId: string;
+        let otherUser: MinimalUser;
         let otherMessageId: string;
         beforeEach(async() => {
             // Given a user
-            const otherUser: FireAuth.User = await createConnectedGoogleUser(true, 'foo@bar.com', 'other-user');
+            const other: FireAuth.User = await createConnectedGoogleUser(true, 'foo@bar.com', 'other-user');
             // and a chat (here the lobby, but this could be any chat)
             await chatDAO.set('lobby', {});
             // with a message from another user
-            otherUserId = otherUser.uid;
+            otherUser = {
+                name: 'other-user',
+                id: other.uid,
+            };
             const message: Message = {
                 content: 'hullo there',
-                senderId: otherUserId,
-                sender: 'other-user',
+                sender: otherUser,
                 postedTime: serverTimestamp(),
             };
             otherMessageId = await chatDAO.addMessage('lobby', message);
             await signOut();
             // and a message from the current user, who is able to add messages
             const user: FireAuth.User = await createConnectedGoogleUser(true, 'foo@bar.com', 'user');
-            myUserId = user.uid;
-            myMessageId = await chatDAO.addMessage('lobby', { ...message, senderId: myUserId, sender: 'user' });
+            myUser = {
+                name: 'user',
+                id: user.uid,
+            };
+            myMessageId = await chatDAO.addMessage('lobby', { ...message, sender: myUser });
         });
         it('should forbid disconnected users to read a chat', async() => {
             // Given a disconnected user
@@ -87,8 +95,7 @@ describe('ChatDAO', () => {
             // When posting a message as another user
             const message: Message = {
                 content: 'hello',
-                senderId: 'some-other-user-id',
-                sender: 'someone',
+                sender: otherUser,
                 postedTime: serverTimestamp(),
             };
             const result: Promise<string> = chatDAO.addMessage('lobby', message);
@@ -99,8 +106,7 @@ describe('ChatDAO', () => {
             // When posting a message with a different username
             const message: Message = {
                 content: 'hello',
-                senderId: myUserId,
-                sender: 'not-my-username!',
+                sender: { id: myUser.id, name: 'not-my-username!' },
                 postedTime: serverTimestamp(),
             };
             const result: Promise<string> = chatDAO.addMessage('lobby', message);
@@ -163,12 +169,14 @@ describe('ChatDAO', () => {
         it('should allow a verified user to post a message on the lobby chat', async() => {
             // Given a verified user
             const user: FireAuth.User = await createConnectedGoogleUser(true, 'foo@bar.com', 'myself');
-            const userId: string = user.uid;
+            const myUser: MinimalUser = {
+                name: 'myself',
+                id: user.uid,
+            };
             // When posting in the lobby chat
             const message: Message = {
                 content: 'hello',
-                sender: 'myself',
-                senderId: userId,
+                sender: myUser,
                 postedTime: serverTimestamp(),
             };
             const result: Promise<string> = chatDAO.addMessage('lobby', message);
@@ -181,10 +189,13 @@ describe('ChatDAO', () => {
         it('should forbid a disconnected user to post a message on the lobby chat', async() => {
             // Given a disconnected user
             // When posting in the lobby chat
+            const someUser: MinimalUser = {
+                name: 'someone',
+                id: 'some-id',
+            };
             const message: Message = {
                 content: 'hello',
-                sender: 'someone',
-                senderId: 'some-id',
+                sender: someUser,
                 postedTime: serverTimestamp(),
             };
             const result: Promise<string> = chatDAO.addMessage('lobby', message);

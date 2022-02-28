@@ -7,6 +7,7 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Localized } from 'src/app/utils/LocaleUtils';
 import { Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
+import { MinimalUser } from 'src/app/domain/Joiner';
 
 export class OnlineGameCreationMessages {
     public static readonly ALREADY_INGAME: Localized = () => $localize`You are already in a game. Finish it or cancel it first.`;
@@ -37,7 +38,8 @@ export class OnlineGameCreationComponent implements OnInit {
         assert(user.isConnected(), 'User must be connected and have a username to reach this page');
         const username: string = user.username.get();
         if (await this.canCreateOnlineGame(username)) {
-            const gameId: string = await this.gameService.createPartJoinerAndChat(uid, username, game);
+            const creator: MinimalUser = { id: uid, name: username };
+            const gameId: string = await this.gameService.createPartJoinerAndChat(creator, game);
             // create Part and Joiner
             await this.router.navigate(['/play', game, gameId]);
             return true;

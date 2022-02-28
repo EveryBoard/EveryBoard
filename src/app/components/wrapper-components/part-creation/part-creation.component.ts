@@ -182,16 +182,16 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
         this.viewInfo.canReviewConfig = joiner.partStatus === PartStatus.CONFIG_PROPOSED.value;
         this.viewInfo.canEditConfig = joiner.partStatus !== PartStatus.CONFIG_PROPOSED.value;
-        this.viewInfo.userIsCreator = this.userName === joiner.creator;
+        this.viewInfo.userIsCreator = this.userName === joiner.creator.name;
         this.viewInfo.userIsChosenOpponent = this.userName === joiner.chosenPlayer;
         this.viewInfo.userIsObserver =
                 this.viewInfo.userIsChosenOpponent === false && this.viewInfo.userIsCreator === false;
         this.viewInfo.creatorIsModifyingConfig = joiner.partStatus !== PartStatus.CONFIG_PROPOSED.value;
         this.viewInfo.showCustomTime = this.getForm('partType').value === 'CUSTOM';
 
-        this.viewInfo.creator = joiner.creator;
+        this.viewInfo.creator = joiner.creator.name;
         this.viewInfo.candidates = joiner.candidates;
-        if (this.userName === joiner.creator) {
+        if (this.userName === joiner.creator.name) {
             this.setDataForCreator(joiner);
         } else {
             this.viewInfo.maximalMoveDuration = joiner.maximalMoveDuration;
@@ -310,7 +310,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     private observeNeededPlayers(): void {
         const joiner: Joiner = Utils.getNonNullable(this.currentJoiner);
         display(PartCreationComponent.VERBOSE, { PartCreationComponent_updateJoiner: { joiner } });
-        if (this.userName === joiner.creator) {
+        if (this.userName === joiner.creator.name) {
             this.observeCandidates();
         } else {
             this.observeCreator();
@@ -326,12 +326,12 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             await this.destroyDocIfCreatorOffline(modifiedUsers);
         };
         const observer: FirebaseCollectionObserver<User> = new FirebaseCollectionObserver(callback, callback, callback);
-        this.creatorSubscription = this.userService.observeUserByUsername(joiner.creator, observer);
+        this.creatorSubscription = this.userService.observeUserByUsername(joiner.creator.name, observer);
     }
     private async destroyDocIfCreatorOffline(modifiedUsers: UserDocument[]): Promise<void> {
         const joiner: Joiner = Utils.getNonNullable(this.currentJoiner);
         for (const user of modifiedUsers) {
-            assert(user.data.username === joiner.creator, 'found non creator while observing creator!');
+            assert(user.data.username === joiner.creator.name, 'found non creator while observing creator!');
             if (user.data.state === 'offline' &&
                 this.allDocDeleted === false &&
                 joiner.partStatus !== PartStatus.PART_STARTED.value)
@@ -426,7 +426,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 display(PartCreationComponent.VERBOSE,
                         'PartCreationComponent.ngOnDestroy: there is no part here');
                 return;
-            } else if (this.userName === this.currentJoiner.creator && this.allDocDeleted === false) {
+            } else if (this.userName === this.currentJoiner.creator.name && this.allDocDeleted === false) {
                 display(PartCreationComponent.VERBOSE,
                         'PartCreationComponent.ngOnDestroy: you(creator) about to cancel creation.');
                 await this.cancelGameCreation();

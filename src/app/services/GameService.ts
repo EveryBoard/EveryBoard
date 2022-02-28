@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { PartDAO } from '../dao/PartDAO';
 import { MGPResult, Part, PartDocument } from '../domain/Part';
-import { FirstPlayer, Joiner, PartStatus } from '../domain/Joiner';
+import { FirstPlayer, Joiner, MinimalUser, PartStatus } from '../domain/Joiner';
 import { JoinerService } from './JoinerService';
 import { ChatService } from './ChatService';
 import { Request } from '../domain/Request';
@@ -72,11 +72,11 @@ export class GameService {
 
         return this.chatService.createNewChat(chatId);
     }
-    public async createPartJoinerAndChat(uid: string, creatorName: string, typeGame: string): Promise<string> {
-        display(GameService.VERBOSE, `GameService.createGame(${uid}, ${creatorName}, ${typeGame})`);
+    public async createPartJoinerAndChat(creator: MinimalUser, typeGame: string): Promise<string> {
+        display(GameService.VERBOSE, `GameService.createGame(${creator.id}, ${typeGame})`);
 
-        const gameId: string = await this.createUnstartedPart(creatorName, typeGame);
-        await this.joinerService.createInitialJoiner(uid, creatorName, gameId);
+        const gameId: string = await this.createUnstartedPart(creator.name, typeGame);
+        await this.joinerService.createInitialJoiner(creator, gameId);
         await this.createChat(gameId);
         return gameId;
     }
@@ -98,11 +98,11 @@ export class GameService {
         let playerZero: string;
         let playerOne: string;
         if (whoStarts === FirstPlayer.CREATOR) {
-            playerZero = joiner.creator;
+            playerZero = joiner.creator.name;
             playerOne = Utils.getNonNullable(joiner.chosenPlayer);
         } else {
             playerZero = Utils.getNonNullable(joiner.chosenPlayer);
-            playerOne = joiner.creator;
+            playerOne = joiner.creator.name;
         }
         return {
             playerZero,
@@ -183,7 +183,7 @@ export class GameService {
 
         const iJoiner: Joiner = await this.joinerService.readJoinerById(partDocument.id);
         let firstPlayer: FirstPlayer;
-        if (part.playerZero === iJoiner.creator) {
+        if (part.playerZero === iJoiner.creator.name) {
             firstPlayer = FirstPlayer.CHOSEN_PLAYER; // so he won't start this one
         } else {
             firstPlayer = FirstPlayer.CREATOR;

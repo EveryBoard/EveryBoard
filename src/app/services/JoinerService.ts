@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FirstPlayer, Joiner, PartStatus, PartType } from '../domain/Joiner';
+import { FirstPlayer, Joiner, MinimalUser, PartStatus, PartType } from '../domain/Joiner';
 import { JoinerDAO } from '../dao/JoinerDAO';
 import { display } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
@@ -30,8 +30,8 @@ export class JoinerService {
         this.joinerUnsubscribe.get()();
         this.joinerUnsubscribe = MGPOptional.empty();
     }
-    public async createInitialJoiner(uid: string, creatorName: string, joinerId: string): Promise<void> {
-        display(JoinerService.VERBOSE, 'JoinerService.createInitialJoiner(' + creatorName + ', ' + joinerId + ')');
+    public async createInitialJoiner(creator: MinimalUser, joinerId: string): Promise<void> {
+        display(JoinerService.VERBOSE, 'JoinerService.createInitialJoiner(' + creator.id + ', ' + joinerId + ')');
 
         const newJoiner: Joiner = {
             candidates: [],
@@ -41,8 +41,7 @@ export class JoinerService {
             partStatus: PartStatus.PART_CREATED.value,
             maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
             totalPartDuration: PartType.NORMAL_PART_DURATION,
-            creator: creatorName,
-            creatorId: uid,
+            creator,
         };
         return this.set(joinerId, newJoiner);
     }
@@ -56,7 +55,7 @@ export class JoinerService {
         const joinerList: string[] = ArrayUtils.copyImmutableArray(joiner.get().candidates);
         if (joinerList.includes(userName)) {
             return MGPValidation.failure('User already in the game');
-        } else if (userName === joiner.get().creator) {
+        } else if (userName === joiner.get().creator.name) {
             return MGPValidation.SUCCESS;
         } else {
             joinerList[joinerList.length] = userName;

@@ -23,7 +23,7 @@ service cloud.firestore {
         }
         function partExistsAndOwnedByCurrentUser(partId) {
             let joiner = get(/databases/$(database)/documents/joiners/$(partId)).data;
-            return joiner != null && joiner.creatorId == request.auth.uid;
+            return joiner != null && joiner.creator.id == request.auth.uid;
         }
         match /chats/{chatId}/messages/{messageId} {
             allow create: if userVerified() && isValidMessage(request.resource.data);
@@ -33,15 +33,16 @@ service cloud.firestore {
         }
         function isValidMessage(message) {
             return hasField(message, 'content') &&
-                   hasField(message, 'senderId') && isMessageAuthor(message) &&
-                   hasField(message, 'sender') && usernameOf(message.senderId) == message.sender &&
+                   hasField(message, 'sender') &&
+                   isMessageAuthor(message) &&
+                   usernameOf(message.sender.id) == message.sender.name &&
                    hasField(message, 'postedTime');
         }
         function hasField(data, field) {
             return data[field] != null;
         }
         function isMessageAuthor(message) {
-            return request.auth.uid == message.senderId
+            return request.auth.uid == message.sender.id
         }
         function usernameOf(uid) {
             return get(/databases/$(database)/documents/joueurs/$(uid)).data.username

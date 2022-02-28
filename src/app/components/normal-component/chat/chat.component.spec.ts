@@ -8,6 +8,7 @@ import { AuthenticationServiceMock } from 'src/app/services/tests/Authentication
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { Message } from 'src/app/domain/Message';
 import { serverTimestamp } from 'firebase/firestore';
+import { MinimalUser } from 'src/app/domain/Joiner';
 
 describe('ChatComponent', () => {
 
@@ -19,7 +20,12 @@ describe('ChatComponent', () => {
 
     let chatDAO: ChatDAO;
 
-    const MSG: Message = { senderId: 'foo', sender: 'foo', content: 'hello', currentTurn: 0, postedTime: serverTimestamp() };
+    const MSG: Message = {
+        sender: { name: 'foo', id: 'fooId' },
+        content: 'hello',
+        currentTurn: 0,
+        postedTime: serverTimestamp(),
+    };
     async function addMessages(chatId: string, n: number): Promise<void> {
         for (let i: number = 0; i < n; i++) {
             await chatDAO.addMessage(chatId, MSG);
@@ -33,7 +39,7 @@ describe('ChatComponent', () => {
         component.turn = 2;
         chatService = TestBed.inject(ChatService);
         chatDAO = TestBed.inject(ChatDAO);
-        await chatDAO.set('fauxChat', { messages: [] });
+        await chatDAO.set('fauxChat', {});
         spyOn(chatService, 'stopObserving');
     }));
     it('should create', fakeAsync(async() => {
@@ -167,7 +173,11 @@ describe('ChatComponent', () => {
             testUtils.detectChanges();
             await testUtils.clickElement('#switchChatVisibilityButton');
             testUtils.detectChanges();
-            await chatDAO.addMessage('fauxChat', { senderId: 'rogerId', sender: 'roger', content: 'Saluuuut', currentTurn: 0, postedTime: serverTimestamp() });
+            const sender: MinimalUser = {
+                name: 'roger',
+                id: 'rogerId',
+            };
+            await chatDAO.addMessage('fauxChat', { sender, content: 'Saluuuut', currentTurn: 0, postedTime: serverTimestamp() });
             testUtils.detectChanges();
             let switchButton: DebugElement = testUtils.findElement('#switchChatVisibilityButton');
             expect(switchButton.nativeElement.innerText).toEqual('Show chat (1 new message)'.toUpperCase());
@@ -200,7 +210,11 @@ describe('ChatComponent', () => {
 
             // then the message is sent
             const username: string = AuthenticationServiceMock.CONNECTED.username.get();
-            expect(chatService.sendMessage).toHaveBeenCalledWith('userId', username, 'hello', 2);
+            const sender: MinimalUser = {
+                name: username,
+                id: 'userId',
+            };
+            expect(chatService.sendMessage).toHaveBeenCalledWith(sender, 'hello', 2);
             //  and the form is cleared
             expect(messageInput.nativeElement.value).toBe('');
         }));
@@ -220,6 +234,18 @@ describe('ChatComponent', () => {
             // then we scroll to the bottom
             const chatDiv: DebugElement = testUtils.findElement('#chatDiv');
             expect(component.scrollTo).toHaveBeenCalledWith(chatDiv.nativeElement.scrollHeight);
+        }));
+        it('should not do anything when a message is deleted', fakeAsync(async() => {
+            // Given a chat with some messages
+            AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
+            const messageId: string = await chatDAO.addMessage('fauxChat', MSG);
+            testUtils.detectChanges();
+
+            // when a message is deleted
+            await chatDAO.subCollectionDAO('fauxChat', 'messages').delete(messageId);
+            testUtils.detectChanges();
+
+            // Then no error must have been encountered
         }));
         afterEach(fakeAsync(async() => {
             component.ngOnDestroy();
