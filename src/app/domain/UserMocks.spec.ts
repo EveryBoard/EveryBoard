@@ -1,4 +1,4 @@
-import { AuthUser } from '../services/AuthenticationService';
+import { AuthUser } from '../services/ConnectedUserService';
 import { MGPOptional } from '../utils/MGPOptional';
 import { MinimalUser } from './Joiner';
 import { User } from './User';
@@ -16,7 +16,7 @@ export class UserMocks {
     };
     public static readonly CREATOR_MINIMAL_USER: MinimalUser = UserMocks.CREATOR_AUTH_USER.toMinimalUser();
 
-    public static readonly OPPONENT_AUTH_USER: AuthUser = new AuthUser('firstCandidate-user-doc-id',
+    public static readonly OPPONENT_AUTH_USER: AuthUser = new AuthUser('firstCandidateUserDocId',
                                                                        MGPOptional.of('opp@nante'),
                                                                        MGPOptional.of('firstCandidate'),
                                                                        true);

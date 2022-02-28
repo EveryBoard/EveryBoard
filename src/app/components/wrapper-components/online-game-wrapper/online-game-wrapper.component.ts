@@ -1,7 +1,7 @@
 import { Component, ComponentFactoryResolver, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, Event } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
+import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
 import { GameService } from 'src/app/services/GameService';
 import { UserService } from 'src/app/services/UserService';
 import { Move } from '../../../jscaip/Move';
@@ -98,10 +98,10 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 actRoute: ActivatedRoute,
                 private readonly router: Router,
                 private readonly userService: UserService,
-                authenticationService: AuthenticationService,
+                connectedUserService: ConnectedUserService,
                 private readonly gameService: GameService)
     {
-        super(componentFactoryResolver, actRoute, authenticationService);
+        super(componentFactoryResolver, actRoute, connectedUserService);
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent constructed');
     }
     private extractPartIdFromURL(): string {
@@ -150,7 +150,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 await this.setCurrentPartIdOrRedirect();
             }
         });
-        this.userSub = this.authenticationService.getUserObs().subscribe((user: AuthUser) => {
+        this.userSub = this.connectedUserService.getUserObs().subscribe((user: AuthUser) => {
             // player should be authenticated and have a username to be here
             this.authUser = user;
         });

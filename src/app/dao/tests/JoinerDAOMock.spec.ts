@@ -80,7 +80,7 @@ describe('JoinerDAOMock', () => {
         expect(callCount).toEqual(1);
         expect(lastJoiner.get()).toEqual(JoinerMocks.INITIAL);
 
-        await joinerDAOMock.update('joinerId', { candidates: [{ id: 'firstCandidate-user-doc-id', name: 'firstCandidate' }] });
+        await joinerDAOMock.update('joinerId', { candidates: [{ id: 'firstCandidateUserDocId', name: 'firstCandidate' }] });
 
         expect(callCount).toEqual(2);
         expect(lastJoiner.get()).toEqual(JoinerMocks.WITH_FIRST_CANDIDATE);

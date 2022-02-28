@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, ElementRef, ViewChild, OnInit, AfterViewChecked } from '@angular/core';
 import { ChatService } from '../../../services/ChatService';
 import { Message } from '../../../domain/Message';
-import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
+import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
 import { display } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -39,14 +39,14 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     @ViewChild('chatDiv') chatDiv: ElementRef<HTMLElement>;
 
     constructor(private readonly chatService: ChatService,
-                private readonly authenticationService: AuthenticationService) {
+                private readonly connectedUserService: ConnectedUserService) {
         display(ChatComponent.VERBOSE, 'ChatComponent constructor');
     }
     public ngOnInit(): void {
         display(ChatComponent.VERBOSE, `ChatComponent.ngOnInit for chat ${this.chatId}`);
 
         assert(this.chatId != null && this.chatId !== '', 'No chat to join mentionned');
-        this.authSubscription = this.authenticationService.getUserObs()
+        this.authSubscription = this.connectedUserService.getUserObs()
             .subscribe((user: AuthUser) => {
                 if (this.userJustConnected(user)) {
                     display(ChatComponent.VERBOSE, JSON.stringify(user) + ' just connected');

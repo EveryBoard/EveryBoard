@@ -22,8 +22,8 @@ import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { LobbyComponent } from '../../normal-component/lobby/lobby.component';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
-import { AuthenticationService } from 'src/app/services/AuthenticationService';
+import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
+import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
 
 describe('PartCreationComponent', () => {
 
@@ -37,7 +37,7 @@ describe('PartCreationComponent', () => {
     let joinerService: JoinerService;
     let gameService: GameService;
     let chatService: ChatService;
-    let authenticationService: AuthenticationService;
+    let connectedUserService: ConnectedUserService;
 
     let destroyed: boolean;
 
@@ -91,7 +91,7 @@ describe('PartCreationComponent', () => {
         joinerService = TestBed.inject(JoinerService);
         gameService = TestBed.inject(GameService);
         chatService = TestBed.inject(ChatService);
-        authenticationService = TestBed.inject(AuthenticationService);
+        connectedUserService = TestBed.inject(ConnectedUserService);
         component = testUtils.getComponent();
         component.partId = 'joinerId';
         await chatDAO.set('joinerId', { messages: [], status: 'dummy status' });
@@ -103,7 +103,7 @@ describe('PartCreationComponent', () => {
         beforeEach(fakeAsync(async() => {
             // Given a component that is loaded by the creator
             // meaning that before clicking it, user was subscribed to himself
-            AuthenticationServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
+            ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
             await joinerDAO.set('joinerId', JoinerMocks.INITIAL);
         }));
         describe('Creator arrival on component', () => {
@@ -196,7 +196,7 @@ describe('PartCreationComponent', () => {
 
                 // When the candidate stop sending token
                 spyOn(userDAO, 'updatePresenceToken').and.callThrough();
-                tick(PartCreationComponent.TOKEN_INTERVAL * 2);
+                tick(PartCreationComponent.TOKEN_TIMEOUT);
                 flush();
 
                 // Then it is still selected
@@ -212,7 +212,7 @@ describe('PartCreationComponent', () => {
 
                 // When the candidate stop sending token
                 spyOn(userDAO, 'updatePresenceToken').and.callThrough();
-                tick(PartCreationComponent.TOKEN_INTERVAL * 2);
+                tick(PartCreationComponent.TOKEN_TIMEOUT);
                 flush();
 
                 // Then the candidate should have disappeared and the joiner have been updated
@@ -307,7 +307,7 @@ describe('PartCreationComponent', () => {
                 tick();
 
                 // Then handleError has been called as this is an unusual situation
-                const error: string = 'found no user while observing firstCandidate-user-doc-id !';
+                const error: string = 'found no user while observing firstCandidateUserDocId !';
                 expect(ErrorLoggerService.logError).toHaveBeenCalledOnceWith('PartCreationComponent', error);
                 // and the candidate has been deselected
                 expectElementNotToExist('#selected_' + UserMocks.OPPONENT.username);
@@ -516,7 +516,7 @@ describe('PartCreationComponent', () => {
                 awaitComponentInitialisation();
 
                 // When user cancel game creation
-                const authService: AuthenticationService = TestBed.inject(AuthenticationService);
+                const authService: ConnectedUserService = TestBed.inject(ConnectedUserService);
                 spyOn(authService, 'removeObservedPart').and.callThrough();
                 clickElement('#cancel');
 
@@ -534,7 +534,7 @@ describe('PartCreationComponent', () => {
     describe('Candidate', () => {
         beforeEach(fakeAsync(async() => {
             // Given a component where user is a candidate
-            AuthenticationServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
+            ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
             await joinerDAO.set('joinerId', JoinerMocks.INITIAL);
         }));
         describe('Arrival', () => {
@@ -553,14 +553,14 @@ describe('PartCreationComponent', () => {
             }));
             it('should add observedPart to user doc', fakeAsync(() => {
                 // Given a partCreation
-                spyOn(authenticationService, 'updateObservedPart').and.callFake(async() => {});
+                spyOn(connectedUserService, 'updateObservedPart').and.callFake(async() => {});
 
                 // When candidate arrives
                 awaitComponentInitialisation();
 
                 // Then observedPart in user doc should be set
                 // TODOTODO test also updateObservedPart itself
-                expect(authenticationService.updateObservedPart).toHaveBeenCalledOnceWith('joinerId');
+                expect(connectedUserService.updateObservedPart).toHaveBeenCalledOnceWith('joinerId');
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
             it('should start sending presence token', fakeAsync(() => {
@@ -615,7 +615,7 @@ describe('PartCreationComponent', () => {
                 expect(component.currentJoiner).toEqual(JoinerMocks.WITH_FIRST_CANDIDATE);
 
                 // When leaving the page (testing here by calling ngOnDestroy)
-                const authService: AuthenticationService = TestBed.inject(AuthenticationService);
+                const authService: ConnectedUserService = TestBed.inject(ConnectedUserService);
                 spyOn(authService, 'removeObservedPart').and.callThrough();
                 spyOn(joinerService, 'unsubscribe').and.callFake(() => {});
                 spyOn(joinerService, 'cancelJoining').and.callFake(async(user: MinimalUser) => {});
@@ -681,12 +681,12 @@ describe('PartCreationComponent', () => {
                 receiveJoinerUpdate(JoinerMocks.WITH_CHOSEN_OPPONENT);
 
                 // When 2 * 5 sec pass
-                spyOn(authenticationService, 'sendPresenceToken').and.callFake(async() => {});
-                tick(PartCreationComponent.TOKEN_INTERVAL * 2);
+                spyOn(connectedUserService, 'sendPresenceToken').and.callFake(async() => {});
+                tick(PartCreationComponent.TOKEN_TIMEOUT);
                 flush();
 
                 // Then a presence token should be emitted
-                expect(authenticationService.sendPresenceToken).toHaveBeenCalledTimes(2);
+                expect(connectedUserService.sendPresenceToken).toHaveBeenCalledTimes(2);
                 // To avoid finishing test with periodic timer in queue
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));

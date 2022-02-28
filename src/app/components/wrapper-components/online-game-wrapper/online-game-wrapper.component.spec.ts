@@ -11,7 +11,7 @@ import { PartDAO } from 'src/app/dao/PartDAO';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { ChatDAO } from 'src/app/dao/ChatDAO';
 import { ComponentTestUtils, expectValidRouting } from 'src/app/utils/tests/TestUtils.spec';
-import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
+import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { P4Component } from 'src/app/games/p4/p4.component';
 import { Part } from 'src/app/domain/Part';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
@@ -48,7 +48,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
     describe('for creator', () => {
         beforeEach(async() => {
             testUtils = await ComponentTestUtils.basic('P4');
-            AuthenticationServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
+            ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
 
             // Normally, the header does that
             testUtils.prepareFixture(OnlineGameWrapperComponent);
@@ -189,7 +189,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
     describe('for chosenPlayer', () => {
         beforeEach(async() => {
             testUtils = await ComponentTestUtils.basic('P4');
-            AuthenticationServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
+            ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
 
             // Normally, the header does that
             testUtils.prepareFixture(OnlineGameWrapperComponent);
@@ -215,7 +215,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
     });
     it('should redirect to index page if part does not exist', fakeAsync(async() => {
         testUtils = await ComponentTestUtils.basic('P4');
-        AuthenticationServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
+        ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
 
         testUtils.prepareFixture(OnlineGameWrapperComponent);
         wrapper = testUtils.wrapper as OnlineGameWrapperComponent;

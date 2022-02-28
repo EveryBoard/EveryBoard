@@ -123,11 +123,11 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
             }
             return Promise.resolve();
         } else {
-            throw new Error(`Cannot update element '` + id + `' absent from '` + this.collectionName + `'`);
+            throw new Error(`Cannot update element '${id}' absent from '${this.collectionName}'`);
         }
     }
     public async delete(id: string): Promise<void> {
-        display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE, this.collectionName + `.delete('` + id + `')`);
+        display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE, this.collectionName + `.delete('${id}')`);
 
         const optionalOS: MGPOptional<DocumentSubject<T>> = this.getStaticDB().get(id);
         if (optionalOS.isPresent()) {

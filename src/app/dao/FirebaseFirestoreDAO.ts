@@ -72,7 +72,7 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
     public delete(id: string): Promise<void> {
         return deleteDoc(doc(this.collection, id));
     }
-    public set(id: string, element: T): Promise<void> { // TODOTODO FOR REVIEW: should we assert this id does not exist already?
+    public set(id: string, element: T): Promise<void> {
         display(FirebaseFirestoreDAO.VERBOSE, { called: this.collectionName + '.set', id, element });
         return setDoc(doc(this.collection, id), element);
     }

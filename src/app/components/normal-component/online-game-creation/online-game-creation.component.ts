@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { MinimalUser } from 'src/app/domain/Joiner';
-import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
+import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
 import { GameService } from 'src/app/services/GameService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Localized } from 'src/app/utils/LocaleUtils';
@@ -21,7 +21,7 @@ export class OnlineGameCreationComponent implements OnInit {
 
     public constructor(private readonly route: ActivatedRoute,
                        private readonly router: Router,
-                       private readonly authenticationService: AuthenticationService,
+                       private readonly connectedUserService: ConnectedUserService,
                        private readonly messageDisplayer: MessageDisplayer,
                        private readonly partDAO: PartDAO,
                        private readonly gameService: GameService) {
@@ -33,7 +33,7 @@ export class OnlineGameCreationComponent implements OnInit {
         return Utils.getNonNullable(this.route.snapshot.paramMap.get('compo'));
     }
     private async createGameAndRedirectOrShowError(game: string): Promise<boolean> {
-        const authUser: AuthUser = this.authenticationService.user.get();
+        const authUser: AuthUser = this.connectedUserService.user.get();
         assert(authUser.isConnected(), 'User must be connected and have a username to reach this page');
         const user: MinimalUser = { id: authUser.userId, name: authUser.username.get() };
         if (await this.canCreateOnlineGame(user.name)) {

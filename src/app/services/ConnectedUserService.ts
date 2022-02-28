@@ -76,7 +76,7 @@ export class AuthUser {
 @Injectable({
     providedIn: 'root',
 })
-export class AuthenticationService implements OnDestroy { // TODOTODO rename
+export class ConnectedUserService implements OnDestroy { // TODOTODO rename
 
     public static VERBOSE: boolean = false;
 
@@ -105,14 +105,14 @@ export class AuthenticationService implements OnDestroy { // TODOTODO rename
                 private readonly auth: FireAuth.Auth,
                 private readonly connectivityDAO: ConnectivityDAO)
     {
-        display(AuthenticationService.VERBOSE, 'AuthenticationService constructor');
+        display(ConnectedUserService.VERBOSE, 'AuthenticationService constructor');
 
         this.userRS = new ReplaySubject<AuthUser>(1);
         this.userObs = this.userRS.asObservable();
         this.unsubscribeFromAuth =
             FireAuth.onAuthStateChanged(this.auth, async(user: FireAuth.User | null) => {
                 if (user == null) { // user logged out
-                    display(AuthenticationService.VERBOSE, 'User is not connected');
+                    display(ConnectedUserService.VERBOSE, 'User is not connected');
                     if (this.userUnsubscribe.isPresent()) {
                         this.userUnsubscribe.get()();
                     }
@@ -126,7 +126,7 @@ export class AuthenticationService implements OnDestroy { // TODOTODO rename
                     const unsub: Unsubscribe = this.userDAO.subscribeToChanges(user.uid, (doc: MGPOptional<User>) => {
                         if (doc.isPresent()) {
                             const username: string | undefined = doc.get().username;
-                            display(AuthenticationService.VERBOSE, `User ${username} is connected, and the verified status is ${this.emailVerified(user)}`);
+                            display(ConnectedUserService.VERBOSE, `User ${username} is connected, and the verified status is ${this.emailVerified(user)}`);
                             const userHasFinalizedVerification: boolean =
                               this.emailVerified(user) === true && username != null;
                             if (userHasFinalizedVerification === true && doc.get().verified === false) {
@@ -163,7 +163,7 @@ export class AuthenticationService implements OnDestroy { // TODOTODO rename
      * Returns the firebase user upon success, or a failure otherwise.
      */
     public async doRegister(username: string, email: string, password: string): Promise<MGPFallible<FireAuth.User>> {
-        display(AuthenticationService.VERBOSE, 'AuthenticationService.doRegister(' + email + ')');
+        display(ConnectedUserService.VERBOSE, 'AuthenticationService.doRegister(' + email + ')');
         if (await this.userDAO.usernameIsAvailable(username)) {
             return this.registerAfterUsernameCheck(username, email, password);
         } else {
@@ -207,7 +207,7 @@ export class AuthenticationService implements OnDestroy { // TODOTODO rename
         }
     }
     public async sendEmailVerification(): Promise<MGPValidation> {
-        display(AuthenticationService.VERBOSE, 'AuthenticationService.sendEmailVerification()');
+        display(ConnectedUserService.VERBOSE, 'AuthenticationService.sendEmailVerification()');
         const user: MGPOptional<FireAuth.User> = MGPOptional.ofNullable(this.auth.currentUser);
         if (user.isPresent()) {
             if (this.emailVerified(user.get())) {
@@ -230,7 +230,7 @@ export class AuthenticationService implements OnDestroy { // TODOTODO rename
      * either success, or failure with a specific error.
      */
     public async doEmailLogin(email: string, password: string): Promise<MGPValidation> {
-        display(AuthenticationService.VERBOSE, 'AuthenticationService.doEmailLogin(' + email + ')');
+        display(ConnectedUserService.VERBOSE, 'AuthenticationService.doEmailLogin(' + email + ')');
         try {
             // Login through firebase. If the login is incorrect or fails for some reason, an error is thrown.
             await Auth.signInWithEmailAndPassword(this.auth, email, password);

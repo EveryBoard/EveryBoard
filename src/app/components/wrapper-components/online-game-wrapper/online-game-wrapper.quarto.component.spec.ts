@@ -20,10 +20,10 @@ import { MGPResult, Part, PartDocument } from 'src/app/domain/Part';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player } from 'src/app/jscaip/Player';
 import { User } from 'src/app/domain/User';
-import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
+import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { QuartoComponent } from 'src/app/games/quarto/quarto.component';
 import { ComponentTestUtils, expectValidRouting } from 'src/app/utils/tests/TestUtils.spec';
-import { AuthUser } from 'src/app/services/AuthenticationService';
+import { AuthUser } from 'src/app/services/ConnectedUserService';
 import { Time } from 'src/app/domain/Time';
 import { getMillisecondsDifference } from 'src/app/utils/TimeUtils';
 import { GameWrapperMessages } from '../GameWrapper';
@@ -97,7 +97,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     }
     async function prepareStartedGameFor(user: AuthUser, shorterGlobalChrono?: boolean): Promise<void> {
         await prepareMockDBContent(JoinerMocks.INITIAL);
-        AuthenticationServiceMock.setUser(user);
+        ConnectedUserServiceMock.setUser(user);
         if (user.userId === UserMocks.CREATOR_AUTH_USER.userId) {
             observerRole = Player.ZERO;
         } else if (user.userId === UserMocks.OPPONENT_AUTH_USER.userId) {

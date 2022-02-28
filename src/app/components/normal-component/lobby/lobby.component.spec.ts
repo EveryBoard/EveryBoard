@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { LobbyComponent } from './lobby.component';
-import { AuthUser } from 'src/app/services/AuthenticationService';
-import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
+import { AuthUser } from 'src/app/services/ConnectedUserService';
+import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { expectValidRouting, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { Router } from '@angular/router';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
@@ -21,7 +21,7 @@ describe('LobbyComponent', () => {
 
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(LobbyComponent);
-        AuthenticationServiceMock.setUser(AuthUser.NOT_CONNECTED);
+        ConnectedUserServiceMock.setUser(AuthUser.NOT_CONNECTED);
         component = testUtils.getComponent();
     }));
     it('should create', fakeAsync(async() => {

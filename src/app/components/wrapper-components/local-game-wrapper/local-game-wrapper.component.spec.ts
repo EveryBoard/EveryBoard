@@ -3,7 +3,7 @@ import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { P4State } from 'src/app/games/p4/P4State';
 import { Player } from 'src/app/jscaip/Player';
 import { P4Move } from 'src/app/games/p4/P4Move';
-import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
+import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { P4Component } from 'src/app/games/p4/p4.component';
 import { LocalGameWrapperComponent } from './local-game-wrapper.component';
@@ -27,7 +27,7 @@ describe('LocalGameWrapperComponent', () => {
 
     beforeEach(fakeAsync(async() => {
         componentTestUtils = await ComponentTestUtils.forGame<P4Component>('P4', LocalGameWrapperComponent);
-        AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
+        ConnectedUserServiceMock.setUser(ConnectedUserServiceMock.CONNECTED);
         TestBed.inject(ErrorLoggerService);
     }));
     it('should create', () => {

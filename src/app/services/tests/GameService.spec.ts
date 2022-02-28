@@ -14,8 +14,8 @@ import { Joiner, MinimalUser, PartType } from 'src/app/domain/Joiner';
 import { JoinerDAO } from 'src/app/dao/JoinerDAO';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
-import { AuthenticationService } from '../AuthenticationService';
-import { AuthenticationServiceMock } from './AuthenticationService.spec';
+import { ConnectedUserService } from '../ConnectedUserService';
+import { ConnectedUserServiceMock } from './ConnectedUserService.spec';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Utils } from 'src/app/utils/utils';
@@ -45,7 +45,7 @@ describe('GameService', () => {
                 BrowserAnimationsModule,
             ],
             providers: [
-                { provide: AuthenticationService, useClass: AuthenticationServiceMock },
+                { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
                 { provide: PartDAO, useClass: PartDAOMock },
                 { provide: JoinerDAO, useClass: JoinerDAOMock },
                 { provide: ChatDAO, useClass: ChatDAOMock },

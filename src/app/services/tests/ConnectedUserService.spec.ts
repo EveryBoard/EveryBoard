@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Auth, AuthenticationService, AuthUser } from '../AuthenticationService';
+import { Auth, ConnectedUserService, AuthUser } from '../ConnectedUserService';
 import { Observable, ReplaySubject, Subscription } from 'rxjs';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { Injectable } from '@angular/core';
@@ -20,7 +20,7 @@ import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { serverTimestamp } from 'firebase/firestore';
 
 @Injectable()
-export class AuthenticationServiceMock {
+export class ConnectedUserServiceMock {
 
     public static CONNECTED_UNVERIFIED: AuthUser = new AuthUser('jeanjaja123',
                                                                 MGPOptional.of('jean@jaja.europe'),
@@ -35,8 +35,8 @@ export class AuthenticationServiceMock {
     public uid: MGPOptional<string> = MGPOptional.empty();
 
     public static setUser(user: AuthUser, notifyObservers: boolean = true): void {
-        const authService: AuthenticationServiceMock =
-            TestBed.inject(AuthenticationService) as unknown as AuthenticationServiceMock;
+        const authService: ConnectedUserServiceMock =
+            TestBed.inject(ConnectedUserService) as unknown as ConnectedUserServiceMock;
         authService.setUser(user, notifyObservers);
     }
     public user: MGPOptional<AuthUser> = MGPOptional.empty();
@@ -119,7 +119,7 @@ async function setupAuthTestModule(): Promise<unknown> {
  * await firebase.auth().signOut();
  */
 export async function createConnectedGoogleUser(createInDB: boolean): Promise<FireAuth.User> {
-    TestBed.inject(AuthenticationService);
+    TestBed.inject(ConnectedUserService);
     // Sign out current user in case there is one
     await FireAuth.signOut(TestBed.inject(FireAuth.Auth));
     // Create a new google user
@@ -141,7 +141,7 @@ async function createGoogleUser(createInDB: boolean): Promise<FireAuth.User> {
 
 describe('AuthenticationService', () => {
     let auth: FireAuth.Auth;
-    let service: AuthenticationService;
+    let service: ConnectedUserService;
 
     const username: string = 'jeanjaja';
     const email: string = 'jean@jaja.europe';
@@ -151,7 +151,7 @@ describe('AuthenticationService', () => {
 
     beforeEach(async() => {
         await setupAuthTestModule();
-        service = TestBed.inject(AuthenticationService);
+        service = TestBed.inject(ConnectedUserService);
         auth = TestBed.inject(FireAuth.Auth);
     });
 

@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed } from '@angular/core/testing';
-import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
+import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
 import { expectValidRouting, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { VerifyAccountComponent } from './verify-account.component';
-import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
+import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Router } from '@angular/router';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -12,11 +12,11 @@ import { LobbyComponent } from '../lobby/lobby.component';
 describe('VerifyAccountComponent', () => {
     let testUtils: SimpleComponentTestUtils<VerifyAccountComponent>;
 
-    let authService: AuthenticationService;
+    let authService: ConnectedUserService;
 
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(VerifyAccountComponent);
-        authService = TestBed.inject(AuthenticationService);
+        authService = TestBed.inject(ConnectedUserService);
     }));
     it('should create', () => {
         expect(testUtils.getComponent()).toBeTruthy();
@@ -24,7 +24,7 @@ describe('VerifyAccountComponent', () => {
     describe('google user', () => {
         beforeEach(() => {
             // given a user that registered through google
-            AuthenticationServiceMock.setUser(new AuthUser('kd5457d', MGPOptional.of('jeanjaja@gmail.com'), MGPOptional.empty(), true));
+            ConnectedUserServiceMock.setUser(new AuthUser('kd5457d', MGPOptional.of('jeanjaja@gmail.com'), MGPOptional.empty(), true));
             testUtils.detectChanges();
         });
         it('should ask the username if the user has none', fakeAsync(async() => {
@@ -70,7 +70,7 @@ describe('VerifyAccountComponent', () => {
                                                 MGPOptional.of('jean@jaja.europe'),
                                                 MGPOptional.of('jeanjaja'),
                                                 false);
-            AuthenticationServiceMock.setUser(user);
+            ConnectedUserServiceMock.setUser(user);
             testUtils.detectChanges();
         });
         it('should resend email verification if asked by the user and show that it succeeded', fakeAsync(async() => {
@@ -111,7 +111,7 @@ describe('VerifyAccountComponent', () => {
             spyOn(router, 'navigate').and.resolveTo(true);
 
             // ... and given a user that verified its email
-            AuthenticationServiceMock.setUser(new AuthUser('5d8t6d', MGPOptional.of('jean@jaja.europe'), MGPOptional.of('jeanjaja'), true), false);
+            ConnectedUserServiceMock.setUser(new AuthUser('5d8t6d', MGPOptional.of('jean@jaja.europe'), MGPOptional.of('jeanjaja'), true), false);
 
             // when the user clicks on "finalize" without having verified its account
             await testUtils.clickElement('#finalizeVerification');
