@@ -48,12 +48,14 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
         assert(this.chatId != null && this.chatId !== '', 'No chat to join mentionned');
         this.authSubscription = this.connectedUserService.getUserObs()
             .subscribe((user: AuthUser) => {
-                if (this.userJustConnected(user)) {
-                    display(ChatComponent.VERBOSE, JSON.stringify(user) + ' just connected');
+                if (this.userIsConnected(user)) {
+                    if (this.userWasDisconnected(user)) {
+                        display(ChatComponent.VERBOSE, JSON.stringify(user) + ' just connected');
+                        this.loadChatContent();
+                    }
                     this.username = user.username;
                     this.connected = true;
-                    this.loadChatContent();
-                } else if (this.userDisconnected(user)) {
+                } else {
                     display(ChatComponent.VERBOSE, 'No User Logged');
                     this.username = MGPOptional.empty();
                     this.connected = false;
@@ -63,14 +65,11 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     public ngAfterViewChecked(): void {
         this.scrollToBottomIfNeeded();
     }
-    private userJustConnected(user: AuthUser): boolean {
-        const wasNotConnected: boolean = this.connected === false;
-        const isConnected: boolean = user.username.isPresent() && user.username.get() !== '';
-        return wasNotConnected && isConnected;
+    private userWasDisconnected(user: AuthUser): boolean {
+        return this.connected === false;
     }
-    private userDisconnected(user: AuthUser): boolean {
-        const isConnected: boolean = user.username.isPresent() && user.username.get() !== '';
-        return isConnected === false;
+    private userIsConnected(user: AuthUser): boolean {
+        return user.username.isPresent() && user.username.get() !== '';
     }
     public loadChatContent(): void {
         display(ChatComponent.VERBOSE, `User '${this.username.getOrElse('empty')}' logged, loading chat content`);

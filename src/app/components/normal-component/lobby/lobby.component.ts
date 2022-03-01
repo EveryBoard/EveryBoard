@@ -58,6 +58,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
         this.currentTab = tab;
     }
     public firebaseTimeAsTimestamp(firebaseTime: FirebaseTime): number {
+        // TODO: à supprimer après chat-security
         return (firebaseTime as Time).seconds * 1000;
     }
 }

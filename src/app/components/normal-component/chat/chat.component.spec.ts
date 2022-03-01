@@ -254,7 +254,7 @@ describe('ChatComponent', () => {
             const chatDiv: DebugElement = testUtils.findElement('#chatDiv');
             expect(component.scrollTo).toHaveBeenCalledWith(chatDiv.nativeElement.scrollHeight);
         }));
-        it('should not loadChatContent each time user is updated twice', fakeAsync(() => {
+        it('should not loadChatContent when user is online, then updated but still online', fakeAsync(() => {
             // Given a chat component, hence subscribed to the current user
             const userDAO: UserDAO = TestBed.inject(UserDAO);
             void userDAO.set(UserMocks.CREATOR_MINIMAL_USER.id, UserMocks.CREATOR);
@@ -262,7 +262,7 @@ describe('ChatComponent', () => {
             ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER, true);
             testUtils.detectChanges();
 
-            // When the user update to change its last_changed time
+            // When the user's last_changed time is updated
             spyOn(component, 'loadChatContent').and.callThrough();
             ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER, true);
             tick();

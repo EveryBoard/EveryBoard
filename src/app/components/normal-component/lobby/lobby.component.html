@@ -63,10 +63,8 @@
             <ul id="activeUsersList">
                 <ng-container *ngFor="let user of activeUsers">
                     <li id="{{ user.data.username }}"
-                        *ngIf="user.data.last_changed">
-                        {{ user.data.username }}:
-                        {{ firebaseTimeAsTimestamp(user.data.last_changed) | date:'HH:mm:ss':'+0100'}}
-                    </li>
+                        *ngIf="user.data.last_changed"
+                    >{{ user.data.username }}: {{ firebaseTimeAsTimestamp(user.data.last_changed) | date:'HH:mm:ss':'+0100'}}</li>
                 </ng-container>
             </ul>
         </div>

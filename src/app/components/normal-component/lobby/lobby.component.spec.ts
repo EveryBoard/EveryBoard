@@ -13,6 +13,7 @@ import { OnlineGameWrapperComponent } from '../../wrapper-components/online-game
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { User } from 'src/app/domain/User';
+import { DebugElement } from '@angular/core';
 
 describe('LobbyComponent', () => {
 
@@ -71,10 +72,13 @@ describe('LobbyComponent', () => {
     }));
     it('should display firebase time HH:mm:ss', fakeAsync(() => {
         // Given a lobby in which we observe tab chat, and where one user is here
-        const seconds: number = 1234;
+        const HH: number = 11 * 3600;
+        const mm: number = 34 * 60;
+        const ss: number = 56;
+        const timeStampInSecond: number = HH + mm + ss;
         const userWithLastChange: User = {
             ...UserMocks.CREATOR,
-            last_changed: { seconds, nanoseconds: 57 },
+            last_changed: { seconds: timeStampInSecond, nanoseconds: 0 },
         };
         void TestBed.inject(UserDAO).set(UserMocks.CREATOR_AUTH_USER.userId, userWithLastChange);
         tick();
@@ -85,6 +89,8 @@ describe('LobbyComponent', () => {
         testUtils.detectChanges();
 
         // Then the date should be written in format HH:mm:ss
-        testUtils.expectElementToExist('#' + UserMocks.CREATOR_MINIMAL_USER.name);
+        const element: DebugElement = testUtils.findElement('#' + UserMocks.CREATOR_MINIMAL_USER.name);
+        const time: string = element.nativeElement.innerText;
+        expect(time).toBe(UserMocks.CREATOR_MINIMAL_USER.name + ': 12:34:56');
     }));
 });

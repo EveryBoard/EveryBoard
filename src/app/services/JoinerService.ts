@@ -20,6 +20,7 @@ export class JoinerService {
     private joinerUnsubscribe: MGPOptional<Unsubscribe> = MGPOptional.empty();
 
     public static readonly USER_ALREADY_IN_GAME: () => string = () => $localize`User already in the game`;
+    public static readonly GAME_DOES_NOT_EXIST: () => string = () => $localize`Game does not exist`;
 
     constructor(private readonly joinerDAO: JoinerDAO) {
         display(JoinerService.VERBOSE, 'JoinerService.constructor');
@@ -53,7 +54,7 @@ export class JoinerService {
 
         const joiner: MGPOptional<Joiner> = await this.joinerDAO.read(partId);
         if (joiner.isAbsent()) {
-            return MGPValidation.failure('Game does not exist');
+            return MGPValidation.failure(JoinerService.GAME_DOES_NOT_EXIST());
         }
         const joinerList: MinimalUser[] = ArrayUtils.copyImmutableArray(joiner.get().candidates);
         if (joinerList.some((minimalUser: MinimalUser) => minimalUser.id === user.id)) {

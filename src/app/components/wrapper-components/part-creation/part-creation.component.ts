@@ -63,6 +63,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
     public static TOKEN_TIMEOUT: number = PartCreationComponent.TOKEN_INTERVAL * 2;
 
+    public static readonly FAILED_BECAUSE: () => string = () => $localize`failed joining because :`;
+
     public partType: typeof PartType = PartType;
 
     @Input() partId: string;
@@ -119,7 +121,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         const joinResult: MGPValidation = await this.joinerService.joinGame(this.partId, authMinimalUser);
         if (joinResult.isFailure()) {
             const reason: string = joinResult.getReason();
-            this.messageDisplayer.criticalMessage('failed joining because ' + reason);
+            this.messageDisplayer.criticalMessage(PartCreationComponent.FAILED_BECAUSE() + reason);
             return;
         }
         await this.updateUserDocWithObservedPart();

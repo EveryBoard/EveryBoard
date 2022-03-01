@@ -35,7 +35,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
 
     constructor(componentFactoryResolver: ComponentFactoryResolver,
                 actRoute: ActivatedRoute,
-                connectedUserService: ConnectedUserService,
+                protected readonly connectedUserService: ConnectedUserService,
                 public cdr: ChangeDetectorRef,
                 private readonly messageDisplayer: MessageDisplayer)
     {
