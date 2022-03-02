@@ -165,16 +165,16 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
         return query;
     }
     public subCollectionDAO<T extends FirebaseJSONObject>(id: string, name: string): IFirebaseFirestoreDAO<T> {
-        if (name in this.subDAOs) {
-            return this.subDAOs[name] as IFirebaseFirestoreDAO<T>;
+        const fullPath: string = `${this.collectionName}/${id}/${name}`;
+        if (fullPath in this.subDAOs) {
+            return this.subDAOs[fullPath] as IFirebaseFirestoreDAO<T>;
         } else {
-            const superName: string = this.collectionName;
             const subDAO: FirebaseFirestoreDAO<T> = new class extends FirebaseFirestoreDAO<T> {
                 constructor(firestore: Firestore.Firestore) {
-                    super(`${superName}/${id}/${name}`, firestore);
+                    super(fullPath, firestore);
                 }
             }(this.firestore);
-            this.subDAOs[name] = subDAO;
+            this.subDAOs[fullPath] = subDAO;
             return subDAO;
         }
     }
