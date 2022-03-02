@@ -48,6 +48,21 @@ describe('ChatComponent', () => {
         expect(component).toBeTruthy();
     }));
     describe('connected chat', () => {
+        it('should display message content and sender name', fakeAsync(async() => {
+            // Given a user that is connected
+            AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
+            testUtils.detectChanges();
+
+            // When displaying a chat that contains a message
+            await addMessages('fauxChat', 1);
+            testUtils.detectChanges();
+
+            // Then we should see the sender name and the message content
+            const sender: DebugElement = testUtils.findElement('#sender');
+            expect(sender.nativeElement.innerText).toEqual(MSG.sender.name + ' :');
+            const message: DebugElement = testUtils.findElement('#message');
+            expect(message.nativeElement.innerText).toEqual(MSG.content);
+        }));
         it('should propose to hide chat when chat is visible, and work', fakeAsync(async() => {
             // Given a user that is connected
             AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
