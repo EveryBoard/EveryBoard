@@ -17,9 +17,10 @@ class NoPlayer implements ComparableObject {
 
 export class Player implements ComparableObject {
 
-    public static numberEncoder: NumberEncoder<PlayerOrNone> = NumberEncoder.ofN(1, (player: PlayerOrNone) => {
+    public static numberEncoder: NumberEncoder<PlayerOrNone> = NumberEncoder.ofN(2, (player: PlayerOrNone) => {
         return player.value;
     }, (encoded: number) => {
+        if (encoded === 2) return Player.NONE;
         return Player.of(encoded);
     });
     public static readonly ZERO: Player = new Player(0);

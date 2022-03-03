@@ -56,13 +56,13 @@ export class EncapsuleCase {
         assert(encapsuleCase % 1 === 0, 'EncapsuleCase must be encoded as integer: ' + encapsuleCase);
         assert(encapsuleCase >= 0, 'To small representation for EncapsuleCase: ' + encapsuleCase);
         assert(encapsuleCase <= 26, 'To big representation for EncapsuleCase: ' + encapsuleCase);
-        const small: Player = Player.of(encapsuleCase%3);
+        const small: PlayerOrNone = Player.numberEncoder.decodeNumber(encapsuleCase%3);
         encapsuleCase -= small.value;
         encapsuleCase/=3;
-        const medium: Player = Player.of(encapsuleCase%3);
+        const medium: PlayerOrNone = Player.numberEncoder.decodeNumber(encapsuleCase%3);
         encapsuleCase -= medium.value;
         encapsuleCase/=3;
-        const big: Player = Player.of(encapsuleCase);
+        const big: PlayerOrNone = Player.numberEncoder.decodeNumber(encapsuleCase);
         return new EncapsuleCase(small, medium, big);
     }
     constructor(public readonly small: PlayerOrNone,

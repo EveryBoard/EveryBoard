@@ -1,12 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import { P4Node, P4Rules } from '../P4Rules';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { P4State } from '../P4State';
 import { P4Move } from '../P4Move';
 import { P4Minimax } from '../P4Minimax';
 import { P4Failure } from '../P4Failure';
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { Minimax } from 'src/app/jscaip/Minimax';
+import { Table } from 'src/app/utils/ArrayUtils';
 
 describe('P4Rules', () => {
 
@@ -14,7 +15,7 @@ describe('P4Rules', () => {
     let minimaxes: Minimax<P4Move, P4State>[];
     const O: Player = Player.ZERO;
     const X: Player = Player.ONE;
-    const _: Player = Player.NONE;
+    const _: PlayerOrNone = Player.NONE;
 
     beforeEach(() => {
         rules = new P4Rules(P4State);
@@ -33,7 +34,7 @@ describe('P4Rules', () => {
         const move: P4Move = P4Move.of(3);
 
         // Then the move should be a success
-        const expectedBoard: Player[][] = [
+        const expectedBoard: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
@@ -46,7 +47,7 @@ describe('P4Rules', () => {
     });
     it('First player should win vertically', () => {
         // Given a board with 3 aligned pieces
-        const board: Player[][] = [
+        const board: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
@@ -60,7 +61,7 @@ describe('P4Rules', () => {
         const move: P4Move = P4Move.of(3);
 
         // Then the move should be legal and player zero winner
-        const expectedBoard: Player[][] = [
+        const expectedBoard: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, O, _, _, _],
@@ -75,7 +76,7 @@ describe('P4Rules', () => {
     });
     it('Second player should win vertically', () => {
         // Given a board with 3 aligned pieces
-        const board: Player[][] = [
+        const board: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
@@ -89,7 +90,7 @@ describe('P4Rules', () => {
         const move: P4Move = P4Move.of(3);
 
         // Then the move should be legal and player zero winner
-        const expectedBoard: Player[][] = [
+        const expectedBoard: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, X, _, _, _],
@@ -104,7 +105,7 @@ describe('P4Rules', () => {
     });
     it('Should be a draw', () => {
         // Given a penultian board without victory
-        const board: Player[][] = [
+        const board: Table<PlayerOrNone> = [
             [O, O, O, _, O, O, O],
             [X, X, X, O, X, X, X],
             [O, O, O, X, O, O, O],
@@ -118,7 +119,7 @@ describe('P4Rules', () => {
         const move: P4Move = P4Move.of(3);
 
         // Then the game should be a hard draw
-        const expectedBoard: Player[][] = [
+        const expectedBoard: Table<PlayerOrNone> = [
             [O, O, O, X, O, O, O],
             [X, X, X, O, X, X, X],
             [O, O, O, X, O, O, O],
@@ -133,7 +134,7 @@ describe('P4Rules', () => {
     });
     it('should forbid placing a piece on a full column', () => {
         // Given a board with a full column
-        const board: Player[][] = [
+        const board: Table<PlayerOrNone> = [
             [X, _, _, _, _, _, _],
             [O, _, _, _, _, _, _],
             [X, _, _, _, _, _, _],
@@ -150,7 +151,7 @@ describe('P4Rules', () => {
         RulesUtils.expectMoveFailure(rules, state, move, P4Failure.COLUMN_IS_FULL());
     });
     it('should know where the lowest space is', () => {
-        const board: Player[][] = [
+        const board: Table<PlayerOrNone> = [
             [_, _, _, X, _, _, _],
             [_, _, O, O, _, _, _],
             [_, _, X, X, _, _, _],

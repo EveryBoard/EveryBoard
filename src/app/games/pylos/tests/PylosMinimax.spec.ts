@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { PylosCoord } from '../PylosCoord';
 import { PylosMove } from '../PylosMove';
 import { PylosState } from '../PylosState';
@@ -12,7 +12,7 @@ describe('PylosMinimax:', () => {
     let rules: PylosRules;
     let minimax: PylosMinimax;
 
-    const _: Player = Player.NONE;
+    const _: PlayerOrNone = Player.NONE;
     const X: Player = Player.ONE;
     const O: Player = Player.ZERO;
 
@@ -26,7 +26,7 @@ describe('PylosMinimax:', () => {
     });
 
     it('Should provide 7 drops without capture, 6 drops with one capture, 15 drops with two capture, 3 climbing', () => {
-        const board: Player[][][] = [
+        const board: PlayerOrNone[][][] = [
             [
                 [X, O, O, _],
                 [X, O, _, X],
@@ -50,7 +50,7 @@ describe('PylosMinimax:', () => {
     });
 
     it('should calculate board value according to number of pawn of each player', () => {
-        const board: Player[][][] = [
+        const board: PlayerOrNone[][][] = [
             [
                 [O, X, O, X],
                 [O, X, O, X],

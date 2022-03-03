@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
@@ -12,7 +12,7 @@ describe('PentagoComponent', () => {
 
     let componentTestUtils: ComponentTestUtils<PentagoComponent>;
 
-    const _: Player = Player.NONE;
+    const _: PlayerOrNone = Player.NONE;
     const X: Player = Player.ONE;
     const O: Player = Player.ZERO;
 
@@ -40,7 +40,7 @@ describe('PentagoComponent', () => {
         // TODO: test that block itself is of moved style
     }));
     it('Should not display arrows on neutral blocks and display dropped piece meanwhile', fakeAsync(async() => {
-        const board: Table<Player> = [
+        const board: Table<PlayerOrNone> = [
             [_, _, X, _, _, _],
             [_, O, _, _, _, _],
             [X, _, X, _, _, _],
@@ -54,7 +54,7 @@ describe('PentagoComponent', () => {
         componentTestUtils.expectElementNotToExist('#rotate_0_clockwise');
     }));
     it('Should show highlighted winning line', fakeAsync(async() => {
-        const board: Table<Player> = [
+        const board: Table<PlayerOrNone> = [
             [_, _, _, _, _, _],
             [X, _, _, _, _, _],
             [X, _, _, _, _, _],
@@ -87,7 +87,7 @@ describe('PentagoComponent', () => {
         expect(component.getSquareClasses(2, 5)).toEqual(['player0', 'last-move']);
     }));
     it('Should highlight last move (with rotation, but not of last drop)', fakeAsync(async() => {
-        const board: Table<Player> = [
+        const board: Table<PlayerOrNone> = [
             [_, _, _, _, _, _],
             [_, _, _, O, _, _],
             [_, _, _, _, _, _],
@@ -106,7 +106,7 @@ describe('PentagoComponent', () => {
     }));
     it('should not accept click on pieces', fakeAsync(async() => {
         // Given an initial state with a piece on it
-        const board: Table<Player> = [
+        const board: Table<PlayerOrNone> = [
             [O, _, _, _, _, _],
             [_, _, _, _, _, _],
             [_, _, _, _, _, _],

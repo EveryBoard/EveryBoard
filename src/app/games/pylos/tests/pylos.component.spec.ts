@@ -3,7 +3,7 @@ import { PylosComponent } from '../pylos.component';
 import { PylosMove } from 'src/app/games/pylos/PylosMove';
 import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
 import { PylosState } from 'src/app/games/pylos/PylosState';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -13,7 +13,7 @@ describe('PylosComponent', () => {
 
     let componentTestUtils: ComponentTestUtils<PylosComponent>;
 
-    const _: Player = Player.NONE;
+    const _: PlayerOrNone = Player.NONE;
     const O: Player = Player.ZERO;
     const X: Player = Player.ONE;
 
@@ -29,7 +29,7 @@ describe('PylosComponent', () => {
         await componentTestUtils.expectMoveSuccess('#drop_0_0_0', move);
     }));
     it('should forbid clicking on opponent piece', fakeAsync(async() => {
-        const initialBoard: Player[][][] = [
+        const initialBoard: PlayerOrNone[][][] = [
             [
                 [X, _, _, _],
                 [_, _, _, _],
@@ -52,7 +52,7 @@ describe('PylosComponent', () => {
         await componentTestUtils.expectClickFailure('#piece_0_0_0', RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
     }));
     it('should allow climbing', fakeAsync(async() => {
-        const initialBoard: Player[][][] = [
+        const initialBoard: PlayerOrNone[][][] = [
             [
                 [O, X, _, _],
                 [X, O, _, _],
@@ -77,7 +77,7 @@ describe('PylosComponent', () => {
         await componentTestUtils.expectMoveSuccess('#drop_0_0_1', move);
     }));
     it('should allow capturing unique piece by double clicking on it', fakeAsync(async() => {
-        const initialBoard: Player[][][] = [
+        const initialBoard: PlayerOrNone[][][] = [
             [
                 [O, O, _, _],
                 [O, _, _, _],
@@ -106,7 +106,7 @@ describe('PylosComponent', () => {
         await componentTestUtils.expectMoveSuccess('#piece_1_1_0', move); // confirm capture
     }));
     it('should allow captured two pieces, and show capture during move and after', fakeAsync(async() => {
-        const initialBoard: Player[][][] = [
+        const initialBoard: PlayerOrNone[][][] = [
             [
                 [O, O, _, _],
                 [O, _, _, _],
@@ -139,7 +139,7 @@ describe('PylosComponent', () => {
         expect(pylosGameComponent.getSquareClasses(0, 1, 0)).toEqual(['captured']);
     }));
     it('should forbid piece to land lower than they started', fakeAsync(async() => {
-        const initialBoard: Player[][][] = [
+        const initialBoard: PlayerOrNone[][][] = [
             [
                 [O, X, _, _],
                 [X, O, _, _],
@@ -163,7 +163,7 @@ describe('PylosComponent', () => {
         await componentTestUtils.expectClickFailure('#drop_2_2_0', PylosFailure.MUST_MOVE_UPWARD());
     }));
     it('should show disappeared square when it has been captured', fakeAsync(async() => {
-        const initialBoard: Player[][][] = [
+        const initialBoard: PlayerOrNone[][][] = [
             [
                 [O, X, _, _],
                 [X, O, O, _],

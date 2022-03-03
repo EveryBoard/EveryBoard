@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { QuixoState } from '../QuixoState';
 import { QuixoNode, QuixoRules } from '../QuixoRules';
 import { QuixoMinimax } from '../QuixoMinimax';
@@ -12,7 +12,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('QuixoMove:', () => {
 
-    const _: Player = Player.NONE;
+    const _: PlayerOrNone = Player.NONE;
     const X: Player = Player.ONE;
 
     it('Should forbid move creation for invalid x or y coord', () => {
@@ -34,7 +34,7 @@ describe('QuixoMove:', () => {
             .toThrowError(`Invalid direction: pawn on the bottom side can't be moved down.`);
     });
     it('QuixoMove.encoder should be correct', () => {
-        const board: Table<Player> = [
+        const board: Table<PlayerOrNone> = [
             [_, X, _, _, _],
             [_, _, _, _, X],
             [_, _, _, _, _],

@@ -445,10 +445,6 @@ describe('KamisadoRules:', () => {
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
         });
     });
-    it('should not have allowed directions for other players than 0 and 1', () => {
-        expect(() => KamisadoRules.playerDirections(Player.NONE)).toThrowError();
-        expect(() => KamisadoRules.directionAllowedForPlayer(Direction.UP, Player.NONE)).toThrowError();
-    });
     it('should not allow creating invalid color', () => {
         expect(() => KamisadoColor.of(15)).toThrowError();
         expect(KamisadoColor.of(0)).toBe(KamisadoColor.ANY);

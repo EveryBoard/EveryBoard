@@ -36,7 +36,6 @@ describe('EncapsulePiece', () => {
         it('should identify that a piece belong to its owner only', () => {
             expect(EncapsulePiece.SMALL_BLACK.belongsTo(Player.ZERO)).toBeTrue();
             expect(EncapsulePiece.SMALL_BLACK.belongsTo(Player.ONE)).toBeFalse();
-            expect(EncapsulePiece.SMALL_BLACK.belongsTo(Player.NONE)).toBeFalse();
         });
     });
 });

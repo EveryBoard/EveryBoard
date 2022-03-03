@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { LinesOfActionComponent } from '../lines-of-action.component';
 import { LinesOfActionMove } from '../LinesOfActionMove';
@@ -15,7 +15,7 @@ describe('LinesOfActionComponent', () => {
     let componentTestUtils: ComponentTestUtils<LinesOfActionComponent>;
     const X: Player = Player.ZERO;
     const O: Player = Player.ONE;
-    const _: Player = Player.NONE;
+    const _: PlayerOrNone = Player.NONE;
 
     beforeEach(fakeAsync(async() => {
         componentTestUtils = await ComponentTestUtils.forGame<LinesOfActionComponent>('LinesOfAction');
@@ -34,7 +34,7 @@ describe('LinesOfActionComponent', () => {
         await componentTestUtils.expectClickFailure('#click_4_5', LinesOfActionFailure.INVALID_DIRECTION());
     }));
     it('should forbid selecting a piece that has no valid targets', fakeAsync(async() => {
-        const board: Table<Player> = [
+        const board: Table<PlayerOrNone> = [
             [O, X, X, X, X, X, X, _],
             [X, X, _, _, _, _, _, O],
             [O, _, _, _, _, _, _, _],
@@ -73,7 +73,7 @@ describe('LinesOfActionComponent', () => {
         expect(component.getSquareClasses(2, 0)).toEqual(['moved']);
     }));
     it('should show captures', fakeAsync(async() => {
-        const board: Table<Player> = [
+        const board: Table<PlayerOrNone> = [
             [O, X, X, X, X, X, X, X],
             [_, _, _, _, _, _, _, O],
             [_, _, O, _, _, _, _, _],

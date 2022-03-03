@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { Table } from 'src/app/utils/ArrayUtils';
 import { Direction } from 'src/app/jscaip/Direction';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasState } from '../EpaminondasState';
 import { EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
@@ -13,7 +13,7 @@ describe('EpaminondasMinimax:', () => {
 
     let rules: EpaminondasRules;
     let minimax: EpaminondasMinimax;
-    const _: Player = Player.NONE;
+    const _: PlayerOrNone = Player.NONE;
     const X: Player = Player.ONE;
     const O: Player = Player.ZERO;
 
@@ -25,7 +25,7 @@ describe('EpaminondasMinimax:', () => {
         expect(minimax.getListMoves(rules.node).length).toBe(114);
     });
     it('Should consider possible capture the best move', () => {
-        const board: Table<Player> = [
+        const board: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
