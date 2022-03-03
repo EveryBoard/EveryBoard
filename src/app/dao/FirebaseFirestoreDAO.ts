@@ -37,7 +37,7 @@ export abstract class FirebaseFirestoreDAO<T extends FirebaseJSONObject> impleme
 
     public static VERBOSE: boolean = false;
 
-    private collection: CollectionReference<T>;
+    private readonly collection: CollectionReference<T>;
 
     constructor(public readonly collectionName: string,
                 private readonly firestore: Firestore) {

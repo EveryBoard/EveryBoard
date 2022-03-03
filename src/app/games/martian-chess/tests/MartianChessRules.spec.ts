@@ -1,5 +1,49 @@
+/* eslint-disable max-lines-per-function */
+import { Coord } from 'src/app/jscaip/Coord';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { Table } from 'src/app/utils/ArrayUtils';
+import { MartianChessMove } from '../MartianChessMove';
+import { MartianChessRules } from '../MartianChessRules';
+import { MartianChessPiece, MartianChessState } from '../MartianChessState';
+
 describe('MartianChessRules', () => {
-    it('Should be illegal to choose a piece in the opponent territory');
+
+    const _: MartianChessPiece = MartianChessPiece.EMPTY;
+    const A: MartianChessPiece = MartianChessPiece.PAWN;
+    const B: MartianChessPiece = MartianChessPiece.DRONE;
+    const C: MartianChessPiece = MartianChessPiece.QUEEN;
+
+    let rules: MartianChessRules;
+
+    let minimaxes: Minimax<MartianChessMove, MartianChessState>[];
+
+    beforeEach(() => {
+        rules = new MartianChessRules(MartianChessState);
+        minimaxes = [
+        ];
+    });
+    it('Should be illegal to choose a piece in the opponent territory', () => {
+        // Given any board
+        const board: Table<MartianChessPiece> = [
+            [_, A, B, C],
+            [_, A, B, C],
+            [_, _, _, _],
+            [_, _, _, _],
+            [_, _, _, _],
+            [_, _, _, _],
+            [_, _, _, _],
+            [_, A, B, C],
+        ];
+        const state: MartianChessState = new MartianChessState(board, 0);
+
+        // When moving a piece on another one
+        const move: MartianChessMove = MartianChessMove.from(new Coord(1, 1), new Coord(2, 2));
+
+        // Then the move should be illegal
+        const reason: string = MartianChessRulesFailure.MUST_CHOOSE_PIECE_FROM_YOUR_TERRITORY();
+        RulesUtils.expectMoveFailure(rules, state, move, reason);
+    });
     it('should be illegal to choose an empty square');
     it('should be illegal to move a piece non linearly');
     it('should be illegal to move a piece on another piece on your territory');
