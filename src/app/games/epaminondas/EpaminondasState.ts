@@ -1,14 +1,14 @@
 import { Table } from 'src/app/utils/ArrayUtils';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 
-export class EpaminondasState extends GameStateWithTable<Player> {
+export class EpaminondasState extends GameStateWithTable<PlayerOrNone> {
 
     public static getInitialState(): EpaminondasState {
-        const _: Player = Player.NONE;
+        const _: PlayerOrNone = Player.NONE;
         const X: Player = Player.ONE;
         const O: Player = Player.ZERO;
-        const board: Table<Player> = [
+        const board: Table<PlayerOrNone> = [
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],

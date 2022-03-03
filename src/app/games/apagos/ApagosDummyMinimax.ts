@@ -1,6 +1,6 @@
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { ApagosMove } from './ApagosMove';
 import { ApagosNode, ApagosRules } from './ApagosRules';
@@ -20,7 +20,11 @@ export class ApagosDummyMinimax extends Minimax<ApagosMove, ApagosState> {
         if (gameStatus.isEndGame) {
             return NodeUnheritance.fromWinner(gameStatus.winner);
         }
-        const levelThreeDominant: Player = node.gameState.board[3].getDominatingPlayer();
-        return new NodeUnheritance(levelThreeDominant.getScoreModifier());
+        const levelThreeDominant: PlayerOrNone = node.gameState.board[3].getDominatingPlayer();
+        if (Player.isPlayer(levelThreeDominant)) {
+            return new NodeUnheritance(levelThreeDominant.getScoreModifier());
+        } else {
+            return new NodeUnheritance(0);
+        }
     }
 }

@@ -1,10 +1,11 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Direction';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { PentagoFailure } from './PentagoFailure';
 import { PentagoMove } from './PentagoMove';
 import { PentagoState } from './PentagoState';
@@ -13,14 +14,13 @@ export class PentagoNode extends MGPNode<PentagoRules, PentagoMove, PentagoState
 
 export class PentagoRules extends Rules<PentagoMove, PentagoState> {
 
-    private static singleton: PentagoRules;
+    private static singleton: MGPOptional<PentagoRules> = MGPOptional.empty();
 
     public static get(): PentagoRules {
-        if (PentagoRules.singleton == null) {
-            PentagoRules.singleton = new PentagoRules(PentagoState);
+        if (PentagoRules.singleton.isAbsent()) {
+            PentagoRules.singleton = MGPOptional.of(new PentagoRules(PentagoState));
         }
-        MGPNode.ruler = this.singleton;
-        return this.singleton;
+        return PentagoRules.singleton.get();
     }
     public static VICTORY_SOURCE: [Coord, Vector, boolean][] = [
         // [ firstCoordToTest, directionToTest, shouldLookTheCaseBeforeAsWellAsCaseAfter]
@@ -50,7 +50,7 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState> {
         return state.applyLegalMove(move);
     }
     public isLegal(move: PentagoMove, state: PentagoState): MGPFallible<void> {
-        if (state.getPieceAt(move.coord) !== Player.NONE) {
+        if (Player.isPlayer(state.getPieceAt(move.coord))) {
             return MGPFallible.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
         const postDropState: PentagoState = state.applyLegalDrop(move);
@@ -71,9 +71,9 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState> {
     public getVictoryCoords(state: PentagoState): Coord[] {
         let victoryCoords: Coord[] = [];
         for (const maybeVictory of PentagoRules.VICTORY_SOURCE) {
-            const firstValue: Player = state.getPieceAt(maybeVictory[0]);
+            const firstValue: PlayerOrNone = state.getPieceAt(maybeVictory[0]);
             const subVictory: Coord[] = [maybeVictory[0]];
-            if (firstValue !== Player.NONE) {
+            if (Player.isPlayer(firstValue)) {
                 let testedCoord: Coord = maybeVictory[0].getNext(maybeVictory[1]);
                 let fourAligned: boolean = true;
                 for (let i: number = 0; i < 3 && fourAligned; i++) {

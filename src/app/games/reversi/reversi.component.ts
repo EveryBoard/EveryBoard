@@ -6,7 +6,7 @@ import { ReversiState } from './ReversiState';
 import { ReversiMove } from 'src/app/games/reversi/ReversiMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Direction } from 'src/app/jscaip/Direction';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
@@ -22,10 +22,10 @@ import { assert } from 'src/app/utils/assert';
 export class ReversiComponent extends RectangularGameComponent<ReversiRules,
                                                                ReversiMove,
                                                                ReversiState,
-                                                               Player,
+                                                               PlayerOrNone,
                                                                ReversiLegalityInformation>
 {
-    public NONE: Player = Player.NONE;
+    public NONE: PlayerOrNone = Player.NONE;
     public lastMove: Coord = new Coord(-2, -2);
 
     private captureds: Coord[] = [];

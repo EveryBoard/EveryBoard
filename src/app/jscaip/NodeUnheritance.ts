@@ -1,12 +1,12 @@
-import { Player } from './Player';
+import { Player, PlayerOrNone } from './Player';
 
 export class NodeUnheritance {
 
-    public static fromWinner(player: Player): NodeUnheritance {
-        if (player === Player.NONE) {
-            return new NodeUnheritance(0);
-        } else {
+    public static fromWinner(player: PlayerOrNone): NodeUnheritance {
+        if (Player.isPlayer(player)) {
             return new NodeUnheritance(player.getVictoryValue());
+        } else {
+            return new NodeUnheritance(0);
         }
     }
     public toString(): string {

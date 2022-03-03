@@ -1,4 +1,4 @@
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { Utils } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -56,7 +56,7 @@ export class SiamPiece {
     public isPiece(): boolean {
         return !this.isEmptyOrMountain();
     }
-    public getOwner(): Player {
+    public getOwner(): PlayerOrNone {
         if (1 <= this.value && this.value <= 4) return Player.ZERO;
         if (5 <= this.value && this.value <= 8) return Player.ONE;
         return Player.NONE;

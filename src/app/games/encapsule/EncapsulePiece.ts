@@ -1,4 +1,4 @@
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ComparableObject } from 'src/app/utils/Comparable';
 import { Utils } from 'src/app/utils/utils';
 
@@ -31,7 +31,7 @@ export class EncapsulePiece implements ComparableObject {
             default: throw new Error('Invalid value ' + value + ' for EncapsulePiece');
         }
     }
-    public static ofSizeAndPlayer(size: Size, player: Player): EncapsulePiece {
+    public static ofSizeAndPlayer(size: Size, player: PlayerOrNone): EncapsulePiece {
         if (player === Player.ZERO && size === Size.BIG) return EncapsulePiece.BIG_BLACK;
         if (player === Player.ZERO && size === Size.MEDIUM) return EncapsulePiece.MEDIUM_BLACK;
         if (player === Player.ZERO && size === Size.SMALL) return EncapsulePiece.SMALL_BLACK;
@@ -43,7 +43,7 @@ export class EncapsulePiece implements ComparableObject {
 
     private constructor(public readonly value: number) {
     }
-    public getPlayer(): Player {
+    public getPlayer(): PlayerOrNone {
         switch (this) {
             case EncapsulePiece.SMALL_BLACK:
             case EncapsulePiece.MEDIUM_BLACK:

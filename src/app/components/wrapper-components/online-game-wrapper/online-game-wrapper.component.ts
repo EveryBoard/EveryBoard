@@ -14,7 +14,7 @@ import { GameWrapper } from '../GameWrapper';
 import { FirebaseCollectionObserver } from 'src/app/dao/FirebaseCollectionObserver';
 import { Joiner } from 'src/app/domain/Joiner';
 import { ChatComponent } from '../../normal-component/chat/chat.component';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { display, JSONValue, JSONValueWithoutArray, Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
@@ -124,7 +124,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     private isPlayer(player: Player): boolean {
         return this.observerRole === player.value;
     }
-    private isOpponent(player: Player): boolean {
+    private isOpponent(player: PlayerOrNone): boolean {
         return this.observerRole !== player.value;
     }
     private async redirectIfPartIsInvalid(): Promise<void> {
@@ -457,14 +457,14 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
     }
     public isOpponentWaitingForTakeBackResponse(): boolean {
-        const takeBackRequester: Player = this.getTakeBackRequester();
-        if (takeBackRequester === Player.NONE) {
-            return false;
-        } else {
+        const takeBackRequester: PlayerOrNone = this.getTakeBackRequester();
+        if (Player.isPlayer(takeBackRequester)) {
             return this.isOpponent(takeBackRequester);
+        } else {
+            return false;
         }
     }
-    private getTakeBackRequester(): Player {
+    private getTakeBackRequester(): PlayerOrNone {
         if (this.currentPart == null) {
             return Player.NONE;
         }
@@ -495,11 +495,11 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
     }
     public isOpponentWaitingForDrawResponse(): boolean {
-        const drawRequester: Player = this.getDrawRequester();
+        const drawRequester: PlayerOrNone = this.getDrawRequester();
         if (drawRequester === Player.NONE) return false;
         return this.isOpponent(drawRequester);
     }
-    private getDrawRequester(): Player {
+    private getDrawRequester(): PlayerOrNone {
         if (this.currentPart == null) {
             return Player.NONE;
         }

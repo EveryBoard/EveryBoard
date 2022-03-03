@@ -3,7 +3,7 @@ import { RectangularGameComponent }
     from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Direction';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { PentagoMinimax } from './PentagoMinimax';
@@ -24,7 +24,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 export class PentagoComponent extends RectangularGameComponent<PentagoRules,
                                                                PentagoMove,
                                                                PentagoState,
-                                                               Player>
+                                                               PlayerOrNone>
 {
     public readonly BLOCK_WIDTH: number;
     public readonly BLOCK_SEPARATION: number;
@@ -128,7 +128,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        if (this.board[y][x] !== Player.NONE) {
+        if (Player.isPlayer(this.board[y][x])) {
             return this.cancelMove(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
         const drop: PentagoMove = PentagoMove.rotationless(x, y);

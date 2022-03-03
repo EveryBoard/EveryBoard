@@ -6,7 +6,7 @@ import { EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } fro
 import { EpaminondasMinimax } from 'src/app/games/epaminondas/EpaminondasMinimax';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { PositionalEpaminondasMinimax } from './PositionalEpaminondasMinimax';
 import { AttackEpaminondasMinimax } from './AttackEpaminondasMinimax';
@@ -25,10 +25,10 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRules,
                                                                    EpaminondasMove,
                                                                    EpaminondasState,
-                                                                   Player,
+                                                                   PlayerOrNone,
                                                                    EpaminondasLegalityInformation>
 {
-    public NONE: Player = Player.NONE;
+    public NONE: PlayerOrNone = Player.NONE;
 
     public firstPiece: MGPOptional<Coord> = MGPOptional.empty();
 

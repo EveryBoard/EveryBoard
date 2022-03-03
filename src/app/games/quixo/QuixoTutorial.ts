@@ -1,10 +1,10 @@
 import { QuixoState } from 'src/app/games/quixo/QuixoState';
 import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
-const _: Player = Player.NONE;
+const _: PlayerOrNone = Player.NONE;
 const O: Player = Player.ZERO;
 const X: Player = Player.ONE;
 

@@ -261,6 +261,7 @@ export class ApagosComponent extends GameComponent<ApagosRules,
             return this.cancelMove(clickValidity.getReason());
         }
         if (this.selectedPiece.isPresent() && this.selectedPiece.get().square === x) {
+            // TODO FOR REVIEW: what about this TODO?
             // TODO FOR REVIEW: for "reset move without toasting error" what should we do in tests ?
             this.cancelMoveAttempt();
             return MGPValidation.SUCCESS;

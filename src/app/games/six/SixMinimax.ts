@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPMap, ReversibleMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPSet } from 'src/app/utils/MGPSet';
@@ -258,7 +258,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         const testedCoords: Coord[] = [lastDrop];
         let testCoord: Coord = lastDrop.getNext(initialDirection, 1);
         while (testedCoords.length < 6) {
-            const testedPiece: Player = state.getPieceAt(testCoord);
+            const testedPiece: PlayerOrNone = state.getPieceAt(testCoord);
             if (testedPiece !== LAST_PLAYER) {
                 return {
                     status: SCORE.PRE_VICTORY,
@@ -286,7 +286,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         const victory: Coord[] = [lastDrop];
         let twoDirectionCovered: boolean = false;
         while (victory.length < 6) {
-            const testedPiece: Player = state.getPieceAt(testCoord);
+            const testedPiece: PlayerOrNone = state.getPieceAt(testCoord);
             if (testedPiece === LAST_PLAYER) {
                 victory.push(testCoord);
             } else {
@@ -321,7 +321,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         let testCoord: Coord = lastDrop.getNext(edgeDirection, 1);
         while (testedCoords.length < 6) {
             // Testing the corner
-            const testedPiece: Player = state.getPieceAt(testCoord);
+            const testedPiece: PlayerOrNone = state.getPieceAt(testCoord);
             if (testedPiece !== LAST_PLAYER) {
                 return {
                     status: SCORE.PRE_VICTORY,
@@ -354,7 +354,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         let testCoord: Coord = lastDrop.getNext(edgeDirection, 1);
         while (testedCoords.length < 6) {
             // Testing the corner
-            const testedPiece: Player = state.getPieceAt(testCoord);
+            const testedPiece: PlayerOrNone = state.getPieceAt(testCoord);
             if (testedPiece !== LAST_PLAYER) {
                 return {
                     status: SCORE.PRE_VICTORY,
@@ -408,7 +408,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         let subSum: number = 0;
         let lastEmpty: MGPOptional<Coord> = MGPOptional.empty();
         while (testedCoords.length < 6) {
-            const testedPiece: Player = state.getPieceAt(testCoord);
+            const testedPiece: PlayerOrNone = state.getPieceAt(testCoord);
             if (testedPiece === LAST_OPPONENT) {
                 return boardInfo; // nothing to add here
             }
@@ -552,7 +552,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         let lastEmpty: MGPOptional<Coord> = MGPOptional.empty();
         while (testedCoords.length < 6) {
             // Testing the corner
-            const testedPiece: Player = state.getPieceAt(testCoord);
+            const testedPiece: PlayerOrNone = state.getPieceAt(testCoord);
             if (testedPiece === LAST_OPPONENT) {
                 return boardInfo;
             }
@@ -586,7 +586,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         let lastEmpty: MGPOptional<Coord> = MGPOptional.empty();
         while (testedCoords.length < 6) {
             // Testing the corner
-            const testedPiece: Player = state.getPieceAt(testCoord);
+            const testedPiece: PlayerOrNone = state.getPieceAt(testCoord);
             if (testedPiece === LAST_OPPONENT) {
                 return boardInfo;
             }

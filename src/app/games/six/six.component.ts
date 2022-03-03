@@ -7,7 +7,7 @@ import { SixMinimax } from 'src/app/games/six/SixMinimax';
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ReversibleMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -167,7 +167,7 @@ export class SixComponent
         return legalLandings;
     }
     public getPieceClass(coord: Coord): string {
-        const player: Player = this.rules.node.gameState.getPieceAt(coord);
+        const player: PlayerOrNone = this.rules.node.gameState.getPieceAt(coord);
         return this.getPlayerClass(player);
     }
     public async onPieceClick(piece: Coord): Promise<MGPValidation> {

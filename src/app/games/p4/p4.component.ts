@@ -5,7 +5,7 @@ import { P4Minimax } from './P4Minimax';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { P4Move } from 'src/app/games/p4/P4Move';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { P4Tutorial } from './P4Tutorial';
@@ -16,11 +16,11 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
     templateUrl: './p4.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4State, Player> {
+export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4State, PlayerOrNone> {
 
     public static VERBOSE: boolean = false;
 
-    public EMPTY_CASE: Player = Player.NONE;
+    public EMPTY_CASE: PlayerOrNone = Player.NONE;
     public last: MGPOptional<Coord>;
     public victoryCoords: Coord[] = [];
 
@@ -64,7 +64,7 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
         this.last = MGPOptional.empty();
     }
     public getSquareFillClass(x: number, y: number): string[] {
-        const content: Player = this.board[y][x];
+        const content: PlayerOrNone = this.board[y][x];
         return [this.getPlayerClass(content)];
     }
 }

@@ -1,10 +1,10 @@
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { PentagoMove } from './PentagoMove';
 import { PentagoState } from './PentagoState';
 
-const _: Player = Player.NONE;
+const _: PlayerOrNone = Player.NONE;
 const X: Player = Player.ONE;
 const O: Player = Player.ZERO;
 

@@ -1,8 +1,10 @@
 import { MGPNode } from 'src/app/jscaip/MGPNode';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
+import { assert } from 'src/app/utils/assert';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPMap } from 'src/app/utils/MGPMap';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ApagosCoord } from './ApagosCoord';
 import { ApagosFailure } from './ApagosFailure';
 import { ApagosMove } from './ApagosMove';
@@ -13,14 +15,13 @@ export class ApagosNode extends MGPNode<ApagosRules, ApagosMove, ApagosState> {}
 
 export class ApagosRules extends Rules<ApagosMove, ApagosState> {
 
-    private static singleton: ApagosRules;
+    private static singleton: MGPOptional<ApagosRules> = MGPOptional.empty();
 
     public static get(): ApagosRules {
-        if (ApagosRules.singleton == null) {
-            ApagosRules.singleton = new ApagosRules(ApagosState);
+        if (ApagosRules.singleton.isAbsent()) {
+            ApagosRules.singleton = MGPOptional.of(new ApagosRules(ApagosState));
         }
-        MGPNode.ruler = this.singleton;
-        return this.singleton;
+        return this.singleton.get();
     }
     public applyLegalMove(move: ApagosMove, state: ApagosState, _info: void): ApagosState {
         if (move.isDrop()) {
@@ -85,7 +86,8 @@ export class ApagosRules extends Rules<ApagosMove, ApagosState> {
                 return GameStatus.ONGOING;
             }
         }
-        const winner: Player = state.getPieceAt(ApagosCoord.THREE).getDominatingPlayer();
-        return GameStatus.getVictory(winner);
+        const winner: PlayerOrNone = state.getPieceAt(ApagosCoord.THREE).getDominatingPlayer();
+        assert(Player.isPlayer(winner), 'winner can only be a player if the game is finished');
+        return GameStatus.getVictory(winner as Player);
     }
 }

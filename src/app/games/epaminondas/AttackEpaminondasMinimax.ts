@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { EpaminondasMinimax } from './EpaminondasMinimax';
 import { EpaminondasState } from './EpaminondasState';
@@ -18,8 +18,8 @@ export class AttackEpaminondasMinimax extends EpaminondasMinimax {
         let score: number = 0;
         for (let y: number = 0; y < 12; y++) {
             for (let x: number = 0; x < 14; x++) {
-                const owner: Player = state.getPieceAt(new Coord(x, y));
-                if (owner !== Player.NONE) {
+                const owner: PlayerOrNone = state.getPieceAt(new Coord(x, y));
+                if (Player.isPlayer(owner)) {
                     score += owner.getScoreModifier();
                 }
             }
@@ -42,16 +42,16 @@ export class AttackEpaminondasMinimax extends EpaminondasMinimax {
         let score: number = 0;
         for (let y: number = 0; y < 12; y++) {
             for (let x: number = 0; x < 14; x++) {
-                const owner: Player = state.getPieceAt(new Coord(x, y));
-                if (owner !== Player.NONE) {
+                const owner: PlayerOrNone = state.getPieceAt(new Coord(x, y));
+                if (Player.isPlayer(owner)) {
                     for (let dx: number = -1; dx <= 1; dx++) {
                         for (let dy: number = -1; dy <= 1; dy++) {
                             const coord: Coord = new Coord(x+dx, y+dy);
                             if (coord.isInRange(14, 12)) {
-                                const neighbour: Player = state.getPieceAt(coord);
-                                if (neighbour === owner) {
+                                const neighbor: PlayerOrNone = state.getPieceAt(coord);
+                                if (neighbor === owner) {
                                     score += 1 * owner.getScoreModifier();
-                                } else if (neighbour === Player.NONE) {
+                                } else if (neighbor === Player.NONE) {
                                     score += 1 * owner.getScoreModifier();
                                 }
                             }
@@ -79,8 +79,8 @@ export class AttackEpaminondasMinimax extends EpaminondasMinimax {
         let score: number = 0;
         for (let y: number = 0; y < 12; y++) {
             for (let x: number = 0; x < 14; x++) {
-                const owner: Player = state.getPieceAt(new Coord(x, y));
-                if (owner !== Player.NONE) {
+                const owner: PlayerOrNone = state.getPieceAt(new Coord(x, y));
+                if (Player.isPlayer(owner)) {
                     score += owner.getScoreModifier()*(Math.sqrt((x - 6.5)*(x - 6.5)));
                 }
             }
@@ -94,8 +94,8 @@ export class AttackEpaminondasMinimax extends EpaminondasMinimax {
         for (let y: number = 0; y < 12; y++) {
             for (let x: number = 0; x < 14; x++) {
                 const firstCoord: Coord = new Coord(x, y);
-                const owner: Player = state.getPieceAt(firstCoord);
-                if (owner !== Player.NONE) {
+                const owner: PlayerOrNone = state.getPieceAt(firstCoord);
+                if (Player.isPlayer(owner)) {
                     for (const direction of Direction.DIRECTIONS) {
                         let movedPieces: number = 1;
                         let nextCoord: Coord = firstCoord.getNext(direction, 1);

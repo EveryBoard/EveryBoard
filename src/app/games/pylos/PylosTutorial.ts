@@ -1,11 +1,11 @@
 import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
 import { PylosMove } from 'src/app/games/pylos/PylosMove';
 import { PylosState } from 'src/app/games/pylos/PylosState';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
-const _: Player = Player.NONE;
+const _: PlayerOrNone = Player.NONE;
 const O: Player = Player.ZERO;
 const X: Player = Player.ONE;
 

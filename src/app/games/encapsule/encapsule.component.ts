@@ -6,7 +6,7 @@ import { EncapsuleState, EncapsuleCase } from 'src/app/games/encapsule/Encapsule
 import { EncapsuleMove } from 'src/app/games/encapsule/EncapsuleMove';
 import { EncapsulePiece, Size } from 'src/app/games/encapsule/EncapsulePiece';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
@@ -135,7 +135,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         return [this.getPieceStrokeClass(piece)];
     }
     public getPieceStrokeClass(piece: EncapsulePiece): string {
-        const player: Player = piece.getPlayer();
+        const player: PlayerOrNone = piece.getPlayer();
         return 'player' + player.value + '-stroke';
     }
     public getPieceRadius(piece: EncapsulePiece): number {

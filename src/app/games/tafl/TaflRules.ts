@@ -2,7 +2,7 @@ import { Orthogonal, Direction } from '../../jscaip/Direction';
 import { GameStatus, Rules } from '../../jscaip/Rules';
 import { Coord } from '../../jscaip/Coord';
 import { TaflMove } from './TaflMove';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { TaflPawn } from './TaflPawn';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { display } from 'src/app/utils/utils';
@@ -362,7 +362,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
             for (let x: number = 0; x < this.config.WIDTH; x++) {
                 // for each square
                 const pawn: Coord = new Coord(x, y);
-                const owner: Player = state.getAbsoluteOwner(pawn);
+                const owner: PlayerOrNone = state.getAbsoluteOwner(pawn);
                 if (owner === player) {
                     listPawn.push(pawn);
                 }

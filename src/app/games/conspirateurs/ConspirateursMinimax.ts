@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
@@ -94,8 +94,8 @@ export class ConspirateursMinimax extends Minimax<ConspirateursMove, Conspirateu
         for (let y: number = 0; y < ConspirateursState.HEIGHT; y++) {
             for (let x: number = 0; x < ConspirateursState.WIDTH; x++) {
                 const coord: Coord = new Coord(x, y);
-                const player: Player = state.getPieceAt(coord);
-                if (player !== Player.NONE) {
+                const player: PlayerOrNone = state.getPieceAt(coord);
+                if (Player.isPlayer(player)) {
                     if (state.isShelter(coord)) {
                         score += player.getScoreModifier() * 20;
                         piecesInShelters.replace(player, piecesInShelters.get(player).get() + 1);

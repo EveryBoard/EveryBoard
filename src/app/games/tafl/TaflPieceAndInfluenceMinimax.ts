@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
@@ -74,7 +74,7 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
                 const coord: Coord = new Coord(x, y);
                 const piece: TaflPawn = state.getPieceAt(coord);
                 if (piece !== EMPTY) {
-                    const owner: Player = state.getAbsoluteOwner(coord);
+                    const owner: PlayerOrNone = state.getAbsoluteOwner(coord);
                     if (owner === Player.ZERO) {
                         zeroPieces.push(coord);
                     } else {
@@ -103,33 +103,38 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
         return threatMap;
     }
     public getThreats(coord: Coord, state: TaflState): SandwichThreat[] {
-        const threatenerPlayer: Player = state.getAbsoluteOwner(coord).getOpponent();
-        const threats: SandwichThreat[] = [];
-        for (const dir of Orthogonal.ORTHOGONALS) {
-            const directThreat: Coord = coord.getPrevious(dir, 1);
-            if (this.isAThreat(directThreat, state, threatenerPlayer)) {
-                const movingThreats: Coord[] = [];
-                for (const captureDirection of Orthogonal.ORTHOGONALS) {
-                    if (captureDirection === dir.getOpposite()) {
-                        continue;
+        const owner: PlayerOrNone = state.getAbsoluteOwner(coord);
+        if (Player.isPlayer(owner)) {
+            const threatenerPlayer: Player = owner.getOpponent();
+            const threats: SandwichThreat[] = [];
+            for (const dir of Orthogonal.ORTHOGONALS) {
+                const directThreat: Coord = coord.getPrevious(dir, 1);
+                if (this.isAThreat(directThreat, state, threatenerPlayer)) {
+                    const movingThreats: Coord[] = [];
+                    for (const captureDirection of Orthogonal.ORTHOGONALS) {
+                        if (captureDirection === dir.getOpposite()) {
+                            continue;
+                        }
+                        let futureCapturer: Coord = coord.getNext(dir, 1);
+                        while (futureCapturer.isInRange(this.width, this.width) &&
+                            state.getPieceAt(futureCapturer) === TaflPawn.UNOCCUPIED)
+                        {
+                            futureCapturer = futureCapturer.getNext(captureDirection);
+                        }
+                        if (futureCapturer.isInRange(this.width, this.width) &&
+                            state.getAbsoluteOwner(futureCapturer) === threatenerPlayer &&
+                            coord.getNext(dir, 1).equals(futureCapturer) === false)
+                        {
+                            movingThreats.push(futureCapturer);
+                        }
                     }
-                    let futureCapturer: Coord = coord.getNext(dir, 1);
-                    while (futureCapturer.isInRange(this.width, this.width) &&
-                           state.getPieceAt(futureCapturer) === TaflPawn.UNOCCUPIED)
-                    {
-                        futureCapturer = futureCapturer.getNext(captureDirection);
-                    }
-                    if (futureCapturer.isInRange(this.width, this.width) &&
-                        state.getAbsoluteOwner(futureCapturer) === threatenerPlayer &&
-                        coord.getNext(dir, 1).equals(futureCapturer) === false)
-                    {
-                        movingThreats.push(futureCapturer);
-                    }
+                    threats.push(new SandwichThreat(directThreat, new CoordSet(movingThreats)));
                 }
-                threats.push(new SandwichThreat(directThreat, new CoordSet(movingThreats)));
             }
+            return threats;
+        } else {
+            throw new Error('TODO');
         }
-        return threats;
     }
     public isAThreat(coord: Coord, state: TaflState, opponent: Player): boolean {
         if (coord.isNotInRange(this.width, this.width)) {

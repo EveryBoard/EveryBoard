@@ -2,7 +2,7 @@ import { Move } from '../../../jscaip/Move';
 import { Rules } from '../../../jscaip/Rules';
 import { Component } from '@angular/core';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
@@ -84,7 +84,7 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
 
     public abstract updateBoard(): void;
 
-    public getPlayerClass(player: Player): string {
+    public getPlayerClass(player: PlayerOrNone): string {
         switch (player) {
             case Player.ZERO: return 'player0';
             case Player.ONE: return 'player1';

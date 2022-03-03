@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { EpaminondasMinimax } from './EpaminondasMinimax';
@@ -55,8 +55,8 @@ export class PositionalEpaminondasMinimax extends Minimax<EpaminondasMove,
         for (let y: number = 0; y < 12; y++) {
             for (let x: number = 0; x < 14; x++) {
                 const coord: Coord = new Coord(x, y);
-                const player: Player = state.getPieceAt(coord);
-                if (player !== Player.NONE) {
+                const player: PlayerOrNone = state.getPieceAt(coord);
+                if (Player.isPlayer(player)) {
                     let avancement: number; // entre 0 et 11
                     let dirs: Direction[];
                     if (player === Player.ZERO) {

@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Direction';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ArrayUtils, NumberTable } from 'src/app/utils/ArrayUtils';
 import { ReversibleMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
@@ -88,7 +88,7 @@ export class SixState extends GameState implements ComparableObject {
         this.pieces = scale.pieces;
         this.width = scale.width;
         this.height = scale.height;
-        this.offset = offset || scale.offset;
+        this.offset = offset ?? scale.offset;
         this.pieces.makeImmutable();
     }
     public getCalculatedScale(): { width: number,
@@ -156,7 +156,7 @@ export class SixState extends GameState implements ComparableObject {
     public isOnBoard(coord: Coord): boolean {
         return this.pieces.containsKey(coord);
     }
-    public getPieceAt(coord: Coord): Player {
+    public getPieceAt(coord: Coord): PlayerOrNone {
         if (this.isOnBoard(coord)) {
             return this.pieces.get(coord).get();
         } else {
@@ -189,9 +189,13 @@ export class SixState extends GameState implements ComparableObject {
     }
     public switchPiece(coord: Coord): SixState {
         const newPieces: ReversibleMap<Coord, Player> = this.pieces.getCopy();
-        const oldValue: Player = this.getPieceAt(coord);
-        newPieces.replace(coord, oldValue.getOpponent());
-        return new SixState(newPieces, this.turn, this.offset);
+        const oldPiece: PlayerOrNone = this.getPieceAt(coord);
+        if (Player.isPlayer(oldPiece)) {
+            newPieces.replace(coord, oldPiece.getOpponent());
+            return new SixState(newPieces, this.turn, this.offset);
+        } else {
+            throw new Error('TODO');
+        }
     }
     public equals(o: SixState): boolean {
         return this.turn === o.turn && this.pieces.equals(o.pieces);

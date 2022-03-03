@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
@@ -15,7 +15,7 @@ export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasStat
     public static getListMoves(node: EpaminondasNode): EpaminondasMove[] {
         const PLAYER: Player = node.gameState.getCurrentPlayer();
         const OPPONENT: Player = node.gameState.getCurrentOpponent();
-        const EMPTY: Player = Player.NONE;
+        const EMPTY: PlayerOrNone = Player.NONE;
 
         let moves: EpaminondasMove[] = [];
         const state: EpaminondasState = node.gameState;
@@ -90,8 +90,8 @@ export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasStat
             const wasPresent: number[] = [0, 0];
             for (let x: number = 0; x < 14; x++) {
                 const coord: Coord = new Coord(x, y);
-                const player: Player = state.getPieceAt(coord);
-                if (player !== Player.NONE) {
+                const player: PlayerOrNone = state.getPieceAt(coord);
+                if (Player.isPlayer(player)) {
                     const mod: number = player.getScoreModifier();
                     total += SCORE_BY_PIECE * mod;
                     wasPresent[player.value] = mod;

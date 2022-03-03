@@ -1,4 +1,4 @@
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 
 export class TaflPawn {
 
@@ -10,13 +10,13 @@ export class TaflPawn {
 
     public static readonly DEFENDERS: TaflPawn = new TaflPawn(Player.ONE, false);
 
-    private constructor(private readonly owner: Player,
+    private constructor(private readonly owner: PlayerOrNone,
                         private readonly king: boolean) {
     }
     public isKing(): boolean {
         return this.king;
     }
-    public getOwner(): Player {
+    public getOwner(): PlayerOrNone {
         return this.owner;
     }
 }

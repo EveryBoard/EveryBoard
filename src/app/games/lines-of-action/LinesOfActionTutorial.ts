@@ -1,12 +1,12 @@
 import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionState } from './LinesOfActionState';
 
+const _: PlayerOrNone = Player.NONE;
 const X: Player = Player.ZERO;
 const O: Player = Player.ONE;
-const _: Player = Player.NONE;
 
 export class LinesOfActionTutorial {
 

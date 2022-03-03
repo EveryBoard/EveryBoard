@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
@@ -25,7 +25,7 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         super(ConspirateursState);
     }
     public applyLegalMove(move: ConspirateursMove, state: ConspirateursState, _info: void): ConspirateursState {
-        const updatedBoard: Player[][] = state.getCopiedBoard();
+        const updatedBoard: PlayerOrNone[][] = state.getCopiedBoard();
         if (move.isDrop()) {
             updatedBoard[move.coord.y][move.coord.x] = state.getCurrentPlayer();
         } else if (move.isSimple()) {
@@ -52,7 +52,7 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         if (state.turn >= 40) {
             return MGPFallible.failure(ConspirateursFailure.CANNOT_DROP_AFTER_TURN_40());
         }
-        if (state.getPieceAt(move.coord) !== Player.NONE) {
+        if (Player.isPlayer(state.getPieceAt(move.coord))) {
             return MGPFallible.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
         if (state.isCentralZone(move.coord) === false) {
@@ -68,7 +68,7 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         if (state.getPieceAt(move.coord) !== state.getCurrentPlayer()) {
             return MGPFallible.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
-        if (state.getPieceAt(move.end) !== Player.NONE) {
+        if (Player.isPlayer(state.getPieceAt(move.end))) {
             return MGPFallible.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
         return MGPFallible.success(undefined);
@@ -86,7 +86,7 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
             }
         }
         for (const landing of move.getLandingCoords()) {
-            if (state.getPieceAt(landing) !== Player.NONE) {
+            if (Player.isPlayer(state.getPieceAt(landing))) {
                 return MGPFallible.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
             }
         }
@@ -130,8 +130,8 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         const state: ConspirateursState = node.gameState;
         const protectedPawns: [number, number] = [0, 0];
         for (const shelter of ConspirateursState.ALL_SHELTERS) {
-            const content: Player = state.getPieceAt(shelter);
-            if (content !== Player.NONE) {
+            const content: PlayerOrNone = state.getPieceAt(shelter);
+            if (Player.isPlayer(content)) {
                 protectedPawns[content.value] += 1;
                 if (protectedPawns[content.value] === 20) {
                     return GameStatus.getVictory(content);

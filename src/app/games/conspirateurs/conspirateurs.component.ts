@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { GameComponent } from 'src/app/components/game-components/game-component/GameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Direction';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
@@ -89,13 +89,13 @@ export class ConspirateursComponent
             this.viewInfo.boardInfo.push([]);
             for (let x: number = 0; x < ConspirateursState.WIDTH; x++) {
                 const coord: Coord = new Coord(x, y);
-                const piece: Player = state.getPieceAt(coord);
+                const piece: PlayerOrNone = state.getPieceAt(coord);
                 const squareInfo: SquareInfo = {
                     coord,
                     squareClasses: [],
                     shelterClasses: [],
                     pieceClasses: [this.getPlayerClass(piece)],
-                    hasPiece: piece !== Player.NONE,
+                    hasPiece: Player.isPlayer(piece),
                     isShelter: false,
                     isOccupiedShelter: false,
                 };

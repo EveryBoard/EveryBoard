@@ -1,6 +1,6 @@
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
 import { EncapsulePiece, Size } from 'src/app/games/encapsule/EncapsulePiece';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Utils } from 'src/app/utils/utils';
@@ -65,18 +65,18 @@ export class EncapsuleCase {
         const big: Player = Player.of(encapsuleCase);
         return new EncapsuleCase(small, medium, big);
     }
-    constructor(public readonly small: Player,
-                public readonly medium: Player,
-                public readonly big: Player) {
+    constructor(public readonly small: PlayerOrNone,
+                public readonly medium: PlayerOrNone,
+                public readonly big: PlayerOrNone) {
     }
     public isEmpty(): boolean {
         return this.small === Player.NONE && this.medium === Player.NONE && this.big === Player.NONE;
     }
     public toList(): EncapsulePiece[] {
         const l: EncapsulePiece[] = [];
-        if (this.small !== Player.NONE) l.push(EncapsulePiece.ofSizeAndPlayer(Size.SMALL, this.small));
-        if (this.medium !== Player.NONE) l.push(EncapsulePiece.ofSizeAndPlayer(Size.MEDIUM, this.medium));
-        if (this.big !== Player.NONE) l.push(EncapsulePiece.ofSizeAndPlayer(Size.BIG, this.big));
+        if (Player.isPlayer(this.small)) l.push(EncapsulePiece.ofSizeAndPlayer(Size.SMALL, this.small));
+        if (Player.isPlayer(this.medium)) l.push(EncapsulePiece.ofSizeAndPlayer(Size.MEDIUM, this.medium));
+        if (Player.isPlayer(this.big)) l.push(EncapsulePiece.ofSizeAndPlayer(Size.BIG, this.big));
         return l;
     }
     public toOrderedPieceNames(): string[] {
@@ -127,7 +127,7 @@ export class EncapsuleCase {
     }
     public put(piece: EncapsulePiece): EncapsuleCase {
         if (piece === EncapsulePiece.NONE) throw new Error('Cannot put NONE on space');
-        const piecePlayer: Player = piece.getPlayer();
+        const piecePlayer: PlayerOrNone = piece.getPlayer();
         const size: Size = piece.getSize();
         switch (size) {
             case Size.BIG:

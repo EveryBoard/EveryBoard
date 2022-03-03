@@ -1,5 +1,5 @@
 import { NumberEncoder } from 'src/app/jscaip/Encoder';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ComparableObject } from 'src/app/utils/Comparable';
 import { Utils } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
@@ -7,9 +7,9 @@ import { assert } from 'src/app/utils/assert';
 export class YinshPiece implements ComparableObject {
 
     public static encoder: NumberEncoder<YinshPiece> =
-        NumberEncoder.tuple<YinshPiece, [Player, boolean]>(
+        NumberEncoder.tuple<YinshPiece, [PlayerOrNone, boolean]>(
             [Player.numberEncoder, NumberEncoder.booleanEncoder],
-            (piece: YinshPiece): [Player, boolean] => [piece.player, piece.isRing],
+            (piece: YinshPiece): [PlayerOrNone, boolean] => [piece.player, piece.isRing],
             (fields: [Player, boolean]): YinshPiece => {
                 return YinshPiece.of(fields[0], fields[1]);
             },
@@ -38,15 +38,18 @@ export class YinshPiece implements ComparableObject {
         }
     }
 
-    private constructor(public readonly player: Player, public readonly isRing: boolean) {
+    private constructor(public readonly player: PlayerOrNone, public readonly isRing: boolean) {
     }
     public equals(piece: YinshPiece): boolean {
         return this === piece;
     }
     public flip(): YinshPiece {
         assert(this.isRing === false, 'cannot flip a ring (it should never happen)');
-        assert(this.player !== Player.NONE, 'cannot flip a non-piece (it should never happen)');
-        return YinshPiece.of(this.player.getOpponent(), this.isRing);
+        if (Player.isPlayer(this.player)) {
+            return YinshPiece.of(this.player.getOpponent(), this.isRing);
+        } else {
+            throw new Error('TODO');
+        }
     }
     public toString(): string {
         switch (this) {

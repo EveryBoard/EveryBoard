@@ -1,4 +1,4 @@
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { NumberEncoder } from 'src/app/jscaip/Encoder';
 
 export class DvonnPieceStack {
@@ -7,7 +7,7 @@ export class DvonnPieceStack {
 
     public static encoder: NumberEncoder<DvonnPieceStack> = NumberEncoder.tuple(
         [NumberEncoder.booleanEncoder, Player.numberEncoder, DvonnPieceStack.sizeEncoder],
-        (stack: DvonnPieceStack): [boolean, Player, number] => [stack.source, stack.owner, stack.size],
+        (stack: DvonnPieceStack): [boolean, PlayerOrNone, number] => [stack.source, stack.owner, stack.size],
         (fields: [boolean, Player, number]): DvonnPieceStack => {
             return new DvonnPieceStack(fields[1], fields[2], fields[0]);
         });
@@ -22,14 +22,14 @@ export class DvonnPieceStack {
         return new DvonnPieceStack(stack1.owner, stack1.size + stack2.size, stack1.source || stack2.source);
     }
 
-    constructor(public readonly owner: Player,
+    constructor(public readonly owner: PlayerOrNone,
                 public readonly size: number,
                 public readonly source: boolean) {
     }
     public getValue(): number {
         return DvonnPieceStack.encoder.encodeNumber(this);
     }
-    public getOwner(): Player {
+    public getOwner(): PlayerOrNone {
         return this.owner;
     }
     public belongsTo(player: Player): boolean {

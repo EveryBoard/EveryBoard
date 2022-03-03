@@ -4,7 +4,7 @@ import { ReversiState } from './ReversiState';
 import { Coord } from '../../jscaip/Coord';
 import { Direction } from '../../jscaip/Direction';
 import { ReversiMove } from './ReversiMove';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { display } from 'src/app/utils/utils';
 import { assert } from 'src/app/utils/assert';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -46,7 +46,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
     public applyLegalMove(move: ReversiMove, state: ReversiState, switched: ReversiLegalityInformation): ReversiState {
         const turn: number = state.turn;
         const player: Player = state.getCurrentPlayer();
-        const board: Player[][] = state.getCopiedBoard();
+        const board: PlayerOrNone[][] = state.getCopiedBoard();
         if (move.equals(ReversiMove.PASS)) { // if the player pass
             const sameBoardDifferentTurn: ReversiState =
                 new ReversiState(board, turn + 1);
@@ -59,15 +59,15 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
         const resultingState: ReversiState = new ReversiState(board, turn + 1);
         return resultingState;
     }
-    public static getAllSwitcheds(move: ReversiMove, player: Player, board: Player[][]): Coord[] {
+    public static getAllSwitcheds(move: ReversiMove, player: Player, board: PlayerOrNone[][]): Coord[] {
         // try the move, do it if legal, and return the switched pieces
         const switcheds: Coord[] = [];
-        const OPPONENT: Player = player.getOpponent();
+        const opponent: Player = player.getOpponent();
 
         for (const direction of Direction.DIRECTIONS) {
             const firstCase: Coord = move.coord.getNext(direction);
             if (firstCase.isInRange(ReversiState.BOARD_WIDTH, ReversiState.BOARD_HEIGHT)) {
-                if (board[firstCase.y][firstCase.x] === OPPONENT) {
+                if (board[firstCase.y][firstCase.x] === opponent) {
                     // let's test this direction
                     const switchedInDir: Coord[] = ReversiRules.getSandwicheds(player, direction, firstCase, board);
                     for (const switched of switchedInDir) {
@@ -78,7 +78,12 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
         }
         return switcheds;
     }
-    public static getSandwicheds(capturer: Player, direction: Direction, start: Coord, board: Player[][]): Coord[] {
+    public static getSandwicheds(capturer: Player,
+                                 direction: Direction,
+                                 start: Coord,
+                                 board: PlayerOrNone[][])
+    : Coord[]
+    {
         /* expected that 'start' is in range, and is captured
          * if we don't reach another capturer, returns []
          * else : return all the coord between start and the first 'capturer' found (exluded)
@@ -87,7 +92,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
         const sandwichedsCoord: Coord[] = [start]; // here we know it in range and captured
         let testedCoord: Coord = start.getNext(direction);
         while (testedCoord.isInRange(ReversiState.BOARD_WIDTH, ReversiState.BOARD_HEIGHT)) {
-            const testedCoordContent: Player = board[testedCoord.y][testedCoord.x];
+            const testedCoordContent: PlayerOrNone = board[testedCoord.y][testedCoord.x];
             if (testedCoordContent === capturer) {
                 // we found a sandwicher, in range, in this direction
                 return sandwichedsCoord;
@@ -115,7 +120,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
                 currentPlayerChoices[0].move.equals(ReversiMove.PASS);
     }
     public static nextPlayerCantOnlyPass(reversiState: ReversiState): boolean {
-        const nextBoard: Player[][] = reversiState.getCopiedBoard();
+        const nextBoard: PlayerOrNone[][] = reversiState.getCopiedBoard();
         const nextTurn: number = reversiState.turn + 1;
         const nextState: ReversiState = new ReversiState(nextBoard, nextTurn);
         return this.playerCanOnlyPass(nextState);
@@ -123,7 +128,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
     public static getListMoves(state: ReversiState): ReversiMoveWithSwitched[] {
         const moves: ReversiMoveWithSwitched[] = [];
 
-        let nextBoard: Player[][];
+        let nextBoard: PlayerOrNone[][];
 
         const player: Player = state.getCurrentPlayer();
         const opponent: Player = state.getCurrentOpponent();
@@ -160,7 +165,6 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
         return moves;
     }
     public isLegal(move: ReversiMove, state: ReversiState): MGPFallible<ReversiLegalityInformation> {
-        const board: Player[][] = state.getCopiedBoard();
         if (move.equals(ReversiMove.PASS)) { // if the player passes
             // let's check that pass is a legal move right now
             // if there was no choice but to pass, then passing is legal!
@@ -171,10 +175,11 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
                 return MGPFallible.failure(RulesFailure.MUST_PASS());
             }
         }
-        if (board[move.coord.y][move.coord.x] !== Player.NONE) {
+        if (Player.isPlayer(state.getPieceAt(move.coord))) {
             display(ReversiRules.VERBOSE, 'ReversiRules.isLegal: you cannot play on a busy space');
             return MGPFallible.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
         }
+        const board: PlayerOrNone[][] = state.getCopiedBoard();
         const switched: Coord[] = ReversiRules.getAllSwitcheds(move, state.getCurrentPlayer(), board);
         display(ReversiRules.VERBOSE, 'ReversiRules.isLegal: '+ switched.length + ' element(s) switched');
         if (switched.length === 0) {

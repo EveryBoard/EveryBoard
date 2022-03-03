@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
@@ -26,8 +26,8 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         for (let y: number = 0; y < LinesOfActionState.SIZE; y++) {
             for (let x: number = 0; x < LinesOfActionState.SIZE; x++) {
                 const coord: Coord = new Coord(x, y);
-                const piece: Player = state.getPieceAt(coord);
-                if (piece !== Player.NONE) {
+                const piece: PlayerOrNone = state.getPieceAt(coord);
+                if (Player.isPlayer(piece)) {
                     for (const target of LinesOfActionRules.possibleTargets(state, coord)) {
                         const move: LinesOfActionMove = LinesOfActionMove.of(coord, target).get();
                         moves.push(move);
@@ -44,8 +44,8 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         for (let y: number = 0; y < LinesOfActionState.SIZE; y++) {
             for (let x: number = 0; x < LinesOfActionState.SIZE; x++) {
                 if (groups[y][x] === -1) {
-                    const content: Player = state.getPieceAt(new Coord(x, y));
-                    if (content !== Player.NONE) {
+                    const content: PlayerOrNone = state.getPieceAt(new Coord(x, y));
+                    if (Player.isPlayer(content)) {
                         highestGroup += 1;
                         LinesOfActionRules.markGroupStartingAt(state, groups, new Coord(x, y), highestGroup);
                         numGroups[content.value] += 1;
@@ -57,11 +57,11 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
     }
     private static markGroupStartingAt(state: LinesOfActionState, groups: number[][], pos: Coord, id: number): void {
         const stack: Coord[] = [pos];
-        const player: Player = state.getPieceAt(pos);
+        const player: PlayerOrNone = state.getPieceAt(pos);
         while (stack.length > 0) {
             const coord: Coord = Utils.getNonNullable(stack.pop());
             if (groups[coord.y][coord.x] === -1) {
-                const content: Player = state.getPieceAt(coord);
+                const content: PlayerOrNone = state.getPieceAt(coord);
                 if (content === player) {
                     groups[coord.y][coord.x] = id;
                     for (const dir of Direction.DIRECTIONS) {
@@ -81,7 +81,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
                           _status: void)
     : LinesOfActionState
     {
-        const board: Player[][] = state.getCopiedBoard();
+        const board: PlayerOrNone[][] = state.getCopiedBoard();
         board[move.coord.y][move.coord.x] = Player.NONE;
         board[move.end.y][move.end.x] = state.getCurrentPlayer();
 
@@ -109,7 +109,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
     private static numberOfPiecesOnLine(state: LinesOfActionState, pos: Coord, dir: Direction): number {
         let count: number = 0;
         for (const coord of LinesOfActionRules.getLineCoords(pos, dir)) {
-            if (state.getPieceAt(coord) !== Player.NONE) {
+            if (Player.isPlayer(state.getPieceAt(coord))) {
                 count += 1;
             }
         }
@@ -145,7 +145,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
                 ];
         }
     }
-    public static getVictory(state: LinesOfActionState): MGPOptional<Player> {
+    public static getVictory(state: LinesOfActionState): MGPOptional<PlayerOrNone> {
         // Returns a player in case of victory (NONE if it is a draw), otherwise an empty optional
         const [groupsZero, groupsOne]: [number, number] = LinesOfActionRules.getNumberOfGroups(state);
         if (groupsZero === 1 && groupsOne === 1) {

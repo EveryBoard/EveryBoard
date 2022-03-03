@@ -72,7 +72,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.rules.node);
         if (gameStatus.isEndGame === true) {
             this.endGame = true;
-            if (gameStatus.winner !== Player.NONE) {
+            if (Player.isPlayer(gameStatus.winner)) {
                 this.winner = MGPOptional.of($localize`Player ${gameStatus.winner.value + 1}`);
             }
         }

@@ -1,17 +1,17 @@
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { QuixoMove } from './QuixoMove';
 
-export class QuixoState extends GameStateWithTable<Player> {
+export class QuixoState extends GameStateWithTable<PlayerOrNone> {
 
     public static getInitialState(): QuixoState {
-        const initialBoard: Player[][] = ArrayUtils.createTable(5, 5, Player.NONE);
+        const initialBoard: PlayerOrNone[][] = ArrayUtils.createTable(5, 5, Player.NONE);
         return new QuixoState(initialBoard, 0);
     }
     public applyLegalMove(move: QuixoMove): QuixoState {
-        const newBoard: Player[][] = this.getCopiedBoard();
+        const newBoard: PlayerOrNone[][] = this.getCopiedBoard();
         const newTurn : number = this.turn + 1;
         let currentCoordToFill: Coord = move.coord;
         let nextCoordToSlide: Coord = move.coord.getNext(move.direction);

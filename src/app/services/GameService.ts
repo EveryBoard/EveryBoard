@@ -216,7 +216,6 @@ export class GameService {
     public async acceptTakeBack(id: string, part: PartDocument, observerRole: Player, msToSubstract: [number, number])
     : Promise<void>
     {
-        assert(observerRole !== Player.NONE, 'Illegal for observer to make request');
         const requester: Player = Request.getPlayer(Utils.getNonNullable(part.data.request));
         assert(requester !== observerRole, 'Illegal to accept your own request');
 
@@ -238,8 +237,6 @@ export class GameService {
         return await this.partDAO.updateAndBumpIndex(id, observerRole, lastIndex, update);
     }
     public refuseTakeBack(id: string, lastIndex: number, observerRole: Player): Promise<void> {
-        assert(observerRole !== Player.NONE, 'Illegal for observer to make request');
-
         const request: Request = Request.takeBackRefused(observerRole);
         return this.partDAO.updateAndBumpIndex(id, observerRole, lastIndex, { request });
     }
@@ -249,8 +246,6 @@ export class GameService {
                                observerRole: Player)
     : Promise<void>
     {
-        assert(observerRole !== Player.NONE, 'Illegal for observer to make request');
-
         let update: Partial<Part> = {
             request: Request.addGlobalTime(observerRole.getOpponent()),
         };
