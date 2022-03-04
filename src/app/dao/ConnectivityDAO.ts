@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Database, DatabaseReference, onDisconnect, ref, set } from '@angular/fire/database';
-import { serverTimestamp } from 'firebase/firestore';
+import { serverTimestamp } from 'firebase/database';
 
 interface ConnectivityStatus {
     state: string,
