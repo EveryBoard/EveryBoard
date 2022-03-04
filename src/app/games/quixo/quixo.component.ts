@@ -9,7 +9,7 @@ import { QuixoMinimax } from 'src/app/games/quixo/QuixoMinimax';
 import { GameComponentUtils } from 'src/app/components/game-components/GameComponentUtils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { QuixoTutorial } from './QuixoTutorial';
 import { MGPOptional } from 'src/app/utils/MGPOptional';

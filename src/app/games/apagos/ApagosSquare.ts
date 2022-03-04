@@ -1,7 +1,6 @@
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
 import { MGPMap } from 'src/app/utils/MGPMap';
-import { assert } from 'src/app/utils/assert';
 
 export class ApagosSquare {
 
