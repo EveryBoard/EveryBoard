@@ -116,4 +116,20 @@ describe('SixState', () => {
             expect(groups.equals(expectedGroups)).toBeTrue();
         });
     });
+    describe('switchPiece', () => {
+        it('should throw when trying to switch a piece that does not exist', () => {
+            // Given a state with some pieces
+            const representation: NumberTable = [
+                [_, _, X, _, _],
+                [_, _, X, _, _],
+                [_, _, _, X, X],
+                [_, O, _, _, _],
+                [O, _, _, _, _],
+            ];
+            const state: SixState = SixState.fromRepresentation(representation, 40);
+            // When trying to switch an empty coord
+            // Then it should throw
+            expect(() => state.switchPiece(new Coord(0, 0))).toThrowError('Cannot switch piece if there is no piece!');
+        });
+    });
 });

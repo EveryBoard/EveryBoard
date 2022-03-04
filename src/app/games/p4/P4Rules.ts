@@ -109,43 +109,38 @@ export class P4Rules extends Rules<P4Move, P4State> {
         let score: number = 0; // final result, count the theoretical victorys possibility
 
         const opponent: Player = P4Rules.getOpponent(board, coord);
-        const ally: PlayerOrNone = board[coord.y][coord.x];
+        const ally: Player = opponent.getOpponent();
 
-        if (Player.isPlayer(ally)) {
+        const distByDirs: MGPMap<Direction, number> = new MGPMap();
+        const alliesByDirs: MGPMap<Direction, number> = new MGPMap();
 
-            const distByDirs: MGPMap<Direction, number> = new MGPMap();
-            const alliesByDirs: MGPMap<Direction, number> = new MGPMap();
-
-            for (const dir of Direction.DIRECTIONS) {
-                const tmpData: [number, number] =
-                    P4Rules.getNumberOfFreeSpacesAndAllies(board, coord, dir, opponent, ally);
-                distByDirs.set(dir, tmpData[0]);
-                alliesByDirs.set(dir, tmpData[1]);
-            }
-
-            for (const dir of [Direction.UP, Direction.UP_RIGHT, Direction.RIGHT, Direction.DOWN_RIGHT]) {
-                // for each pair of opposite directions
-                const lineAllies: number = alliesByDirs.get(dir).get() + alliesByDirs.get(dir.getOpposite()).get();
-                if (lineAllies > 2) {
-                    display(P4Rules.VERBOSE, { text:
-                      'there is some kind of victory here (' + coord.x + ', ' + coord.y + ')' + '\n' +
-                      'line allies : ' + lineAllies + '\n',
-                    board,
-                    });
-                    return ally.getVictoryValue();
-                }
-
-                const lineDist: number = distByDirs.get(dir).get() + distByDirs.get(dir.getOpposite()).get();
-                if (lineDist === 3) {
-                    score += 2;
-                } else if (lineDist > 3) {
-                    score += lineDist - 2;
-                }
-            }
-            return score * ally.getScoreModifier();
-        } else {
-            throw new Error('TODO: getSquareScore should not be called on an empty space');
+        for (const dir of Direction.DIRECTIONS) {
+            const tmpData: [number, number] =
+                P4Rules.getNumberOfFreeSpacesAndAllies(board, coord, dir, opponent, ally);
+            distByDirs.set(dir, tmpData[0]);
+            alliesByDirs.set(dir, tmpData[1]);
         }
+
+        for (const dir of [Direction.UP, Direction.UP_RIGHT, Direction.RIGHT, Direction.DOWN_RIGHT]) {
+            // for each pair of opposite directions
+            const lineAllies: number = alliesByDirs.get(dir).get() + alliesByDirs.get(dir.getOpposite()).get();
+            if (lineAllies > 2) {
+                display(P4Rules.VERBOSE, { text:
+                  'there is some kind of victory here (' + coord.x + ', ' + coord.y + ')' + '\n' +
+                  'line allies : ' + lineAllies + '\n',
+                board,
+                });
+                return ally.getVictoryValue();
+            }
+
+            const lineDist: number = distByDirs.get(dir).get() + distByDirs.get(dir.getOpposite()).get();
+            if (lineDist === 3) {
+                score += 2;
+            } else if (lineDist > 3) {
+                score += lineDist - 2;
+            }
+        }
+        return score * ally.getScoreModifier();
     }
     public static getListMoves(node: P4Node): P4Move[] {
         display(P4Rules.VERBOSE, { context: 'P4Rules.getListMoves', node });

@@ -12,6 +12,7 @@ import { TaflRules } from './TaflRules';
 import { TaflState } from './TaflState';
 import { TaflMove } from './TaflMove';
 import { CoordSet } from 'src/app/utils/OptimizedSet';
+import { assert } from 'src/app/utils/assert';
 
 export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
 
@@ -102,39 +103,36 @@ export class TaflPieceAndInfluenceMinimax extends TaflMinimax {
         }
         return threatMap;
     }
-    public getThreats(coord: Coord, state: TaflState): SandwichThreat[] {
+    private getThreats(coord: Coord, state: TaflState): SandwichThreat[] {
         const owner: PlayerOrNone = state.getAbsoluteOwner(coord);
-        if (Player.isPlayer(owner)) {
-            const threatenerPlayer: Player = owner.getOpponent();
-            const threats: SandwichThreat[] = [];
-            for (const dir of Orthogonal.ORTHOGONALS) {
-                const directThreat: Coord = coord.getPrevious(dir, 1);
-                if (this.isAThreat(directThreat, state, threatenerPlayer)) {
-                    const movingThreats: Coord[] = [];
-                    for (const captureDirection of Orthogonal.ORTHOGONALS) {
-                        if (captureDirection === dir.getOpposite()) {
-                            continue;
-                        }
-                        let futureCapturer: Coord = coord.getNext(dir, 1);
-                        while (futureCapturer.isInRange(this.width, this.width) &&
-                            state.getPieceAt(futureCapturer) === TaflPawn.UNOCCUPIED)
-                        {
-                            futureCapturer = futureCapturer.getNext(captureDirection);
-                        }
-                        if (futureCapturer.isInRange(this.width, this.width) &&
-                            state.getAbsoluteOwner(futureCapturer) === threatenerPlayer &&
-                            coord.getNext(dir, 1).equals(futureCapturer) === false)
-                        {
-                            movingThreats.push(futureCapturer);
-                        }
+        assert(Player.isPlayer(owner), 'TaflPieceAndInfluenceMinimax.getThreats should be called with an occupied coordinate');
+        const threatenerPlayer: Player = (owner as Player).getOpponent();
+        const threats: SandwichThreat[] = [];
+        for (const dir of Orthogonal.ORTHOGONALS) {
+            const directThreat: Coord = coord.getPrevious(dir, 1);
+            if (this.isAThreat(directThreat, state, threatenerPlayer)) {
+                const movingThreats: Coord[] = [];
+                for (const captureDirection of Orthogonal.ORTHOGONALS) {
+                    if (captureDirection === dir.getOpposite()) {
+                        continue;
                     }
-                    threats.push(new SandwichThreat(directThreat, new CoordSet(movingThreats)));
+                    let futureCapturer: Coord = coord.getNext(dir, 1);
+                    while (futureCapturer.isInRange(this.width, this.width) &&
+                        state.getPieceAt(futureCapturer) === TaflPawn.UNOCCUPIED)
+                    {
+                        futureCapturer = futureCapturer.getNext(captureDirection);
+                    }
+                    if (futureCapturer.isInRange(this.width, this.width) &&
+                        state.getAbsoluteOwner(futureCapturer) === threatenerPlayer &&
+                        coord.getNext(dir, 1).equals(futureCapturer) === false)
+                    {
+                        movingThreats.push(futureCapturer);
+                    }
                 }
+                threats.push(new SandwichThreat(directThreat, new CoordSet(movingThreats)));
             }
-            return threats;
-        } else {
-            throw new Error('TODO');
         }
+        return threats;
     }
     public isAThreat(coord: Coord, state: TaflState, opponent: Player): boolean {
         if (coord.isNotInRange(this.width, this.width)) {

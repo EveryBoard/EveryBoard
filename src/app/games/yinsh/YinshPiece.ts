@@ -45,11 +45,9 @@ export class YinshPiece implements ComparableObject {
     }
     public flip(): YinshPiece {
         assert(this.isRing === false, 'cannot flip a ring (it should never happen)');
-        if (Player.isPlayer(this.player)) {
-            return YinshPiece.of(this.player.getOpponent(), this.isRing);
-        } else {
-            throw new Error('TODO');
-        }
+        assert(Player.isPlayer(this.player), 'cannot flip a non-player piece');
+        const player: Player = this.player as Player;
+        return YinshPiece.of(player.getOpponent(), this.isRing);
     }
     public toString(): string {
         switch (this) {

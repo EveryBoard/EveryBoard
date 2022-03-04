@@ -44,10 +44,8 @@ export class SiamPiece {
     public belongTo(player: Player): boolean {
         if (player === Player.ZERO) {
             return (1 <= this.value && this.value <= 4);
-        } else if (player === Player.ONE) {
-            return (5 <= this.value && this.value <= 8);
         } else {
-            return false;
+            return (5 <= this.value && this.value <= 8);
         }
     }
     public isEmptyOrMountain(): boolean {
@@ -79,7 +77,6 @@ export class SiamPiece {
         }
     }
     public static of(orientation: Orthogonal, player: Player): SiamPiece {
-        if (player === Player.NONE) throw new Error('Player None does not have any pieces.');
         if (player === Player.ZERO) {
             if (orientation === Orthogonal.UP) return SiamPiece.WHITE_UP;
             if (orientation === Orthogonal.RIGHT) return SiamPiece.WHITE_RIGHT;

@@ -1,4 +1,5 @@
 import { ComparableObject } from '../utils/Comparable';
+import { Utils } from '../utils/utils';
 import { Player } from './Player';
 
 export class FourStatePiece implements ComparableObject {
@@ -28,8 +29,9 @@ export class FourStatePiece implements ComparableObject {
     public static ofPlayer(player: Player): FourStatePiece {
         switch (player) {
             case Player.ZERO: return FourStatePiece.ZERO;
-            case Player.ONE: return FourStatePiece.ONE;
-            default: throw new Error('FourStatePiece.ofPlayer can only be called with Player.ZERO and Player.ONE.');
+            default:
+                Utils.expectToBe(player, Player.ONE);
+                return FourStatePiece.ONE;
         }
     }
     private constructor(public readonly value: number) {

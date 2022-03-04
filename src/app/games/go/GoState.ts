@@ -52,8 +52,7 @@ export class GoPiece implements ComparableObject {
     }
     public static ofPlayer(player: Player): GoPiece {
         if (player === Player.ZERO) return GoPiece.BLACK;
-        else if (player === Player.ONE) return GoPiece.WHITE;
-        else throw new Error('GoPiece.ofPlayer should only be called with Player.ZERO and Player.ONE.');
+        else return GoPiece.WHITE;
     }
     public isOccupied(): boolean {
         return [GoPiece.BLACK, GoPiece.WHITE, GoPiece.DEAD_BLACK, GoPiece.DEAD_WHITE].includes(this);
