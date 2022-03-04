@@ -13,6 +13,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { TutorialFailure } from './TutorialFailure';
 import { GameState } from 'src/app/jscaip/GameState';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 
 @Component({
     selector: 'app-tutorial-game-wrapper',
@@ -36,11 +37,12 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
 
     constructor(componentFactoryResolver: ComponentFactoryResolver,
                 actRoute: ActivatedRoute,
-                public router: Router,
+                router: Router,
                 authenticationService: AuthenticationService,
+                messageDisplayer: MessageDisplayer,
                 public cdr: ChangeDetectorRef)
     {
-        super(componentFactoryResolver, actRoute, authenticationService);
+        super(componentFactoryResolver, actRoute, authenticationService, router, messageDisplayer);
         display(TutorialGameWrapperComponent.VERBOSE, 'TutorialGameWrapperComponent.constructor');
     }
     public getNumberOfSteps(): number {
@@ -53,10 +55,12 @@ export class TutorialGameWrapperComponent extends GameWrapper implements AfterVi
             return '';
         }
     }
-    public ngAfterViewInit(): void {
+    public async ngAfterViewInit(): Promise<void> {
         display(TutorialGameWrapperComponent.VERBOSE, 'TutorialGameWrapperComponent.ngAfterViewInit');
-        this.afterGameIncluderViewInit();
-        this.start();
+        const createdSuccessfully: boolean = await this.afterGameIncluderViewInit();
+        if (createdSuccessfully) {
+            this.start();
+        }
     }
     public start(): void {
         const tutorial: TutorialStep[] = this.gameComponent.tutorial;

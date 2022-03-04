@@ -1,6 +1,6 @@
 import { Component, ComponentFactoryResolver, AfterViewInit,
     ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
@@ -36,10 +36,11 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
     constructor(componentFactoryResolver: ComponentFactoryResolver,
                 actRoute: ActivatedRoute,
                 authenticationService: AuthenticationService,
-                public cdr: ChangeDetectorRef,
-                private readonly messageDisplayer: MessageDisplayer)
+                router: Router,
+                messageDisplayer: MessageDisplayer,
+                public cdr: ChangeDetectorRef)
     {
-        super(componentFactoryResolver, actRoute, authenticationService);
+        super(componentFactoryResolver, actRoute, authenticationService, router, messageDisplayer);
         this.players = [MGPOptional.of(this.playerSelection[0]), MGPOptional.of(this.playerSelection[1])];
         display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapper.constructor');
     }
@@ -50,10 +51,12 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         return MGPNodeStats.minimaxTime;
     }
     public ngAfterViewInit(): void {
-        setTimeout(() => {
-            this.afterGameIncluderViewInit();
-            this.restartGame();
-            this.cdr.detectChanges();
+        setTimeout(async() => {
+            const createdSuccessfully: boolean = await this.afterGameIncluderViewInit();
+            if (createdSuccessfully) {
+                this.restartGame();
+                this.cdr.detectChanges();
+            }
         }, 1);
     }
     public updatePlayer(player: 0|1): void {

@@ -26,6 +26,7 @@ import { getMillisecondsDifference } from 'src/app/utils/TimeUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameState } from 'src/app/jscaip/GameState';
 import { MGPFallible } from 'src/app/utils/MGPFallible';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 
 export class UpdateType {
 
@@ -96,12 +97,13 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 
     constructor(componentFactoryResolver: ComponentFactoryResolver,
                 actRoute: ActivatedRoute,
-                private readonly router: Router,
-                private readonly userService: UserService,
                 authenticationService: AuthenticationService,
+                router: Router,
+                messageDisplayer: MessageDisplayer,
+                private readonly userService: UserService,
                 private readonly gameService: GameService)
     {
-        super(componentFactoryResolver, actRoute, authenticationService);
+        super(componentFactoryResolver, actRoute, authenticationService, router, messageDisplayer);
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent constructed');
     }
     private extractPartIdFromURL(): string {
@@ -164,10 +166,13 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         this.joiner = iJoiner;
 
         this.gameStarted = true;
-        setTimeout(() => {
+        setTimeout(async() => {
             // the small waiting is there to make sur that the chronos are charged by view
-            this.afterGameIncluderViewInit();
-            this.startPart();
+            // eslint-disable-next-line @typescript-eslint/no-floating-promises
+            const createdSuccessfully: boolean = await this.afterGameIncluderViewInit();
+            if (createdSuccessfully) {
+                this.startPart();
+            }
         }, 1);
     }
     protected startPart(): void {
