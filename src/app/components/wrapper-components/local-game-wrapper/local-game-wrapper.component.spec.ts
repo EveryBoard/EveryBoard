@@ -276,5 +276,19 @@ describe('LocalGameWrapperComponent', () => {
             // then it should not try to play
             expect(localGameWrapper.doAIMove).not.toHaveBeenCalled();
         }));
+        it('should reject human move if it tries to play (without click) when it is not its turn', fakeAsync(async() => {
+            // Given a game against an AI
+            const wrapper: LocalGameWrapperComponent = componentTestUtils.wrapper as LocalGameWrapperComponent;
+            wrapper.players[0] = MGPOptional.of('P4Minimax');
+            wrapper.aiDepths[0] = '1';
+
+            // When receiveValidMove is called
+            const state: P4State = componentTestUtils.getComponent().rules.node.gameState;
+            const result: MGPValidation = await wrapper.receiveValidMove(P4Move.ZERO, state);
+
+            // Then it should display a message
+            expect(result.isFailure()).toBeTrue();
+            expect(result.getReason()).toBe(GameWrapperMessages.NOT_YOUR_TURN());
+        }));
     });
 });
