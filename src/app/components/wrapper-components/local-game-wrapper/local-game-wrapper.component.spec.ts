@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { P4State } from 'src/app/games/p4/P4State';
 import { Player } from 'src/app/jscaip/Player';
 import { P4Move } from 'src/app/games/p4/P4Move';
@@ -35,7 +35,7 @@ describe('LocalGameWrapperComponent for non-existing game', () => {
 
         // When loading the wrapper
         testUtils.detectChanges();
-        tick(5000);
+        tick(3000);
 
         // Then it goes back to / and displays a message
         expect(router.navigate).toHaveBeenCalledWith(['/']);

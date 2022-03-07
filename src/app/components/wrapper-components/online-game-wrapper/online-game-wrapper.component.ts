@@ -165,12 +165,12 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         assert(this.gameStarted === false, 'Should not start already started game');
         this.joiner = iJoiner;
 
-        this.gameStarted = true;
         setTimeout(async() => {
             // the small waiting is there to make sur that the chronos are charged by view
             // eslint-disable-next-line @typescript-eslint/no-floating-promises
             const createdSuccessfully: boolean = await this.afterGameIncluderViewInit();
             if (createdSuccessfully) {
+                this.gameStarted = true;
                 this.startPart();
             }
         }, 1);

@@ -15,6 +15,39 @@ import { AuthenticationServiceMock } from 'src/app/services/tests/Authentication
 import { P4Component } from 'src/app/games/p4/p4.component';
 import { Part } from 'src/app/domain/Part';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
+import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+import { GameWrapperMessages } from '../GameWrapper';
+
+async function prepareComponent(initialJoiner: Joiner, initialPart: Part): Promise<void> {
+    await TestBed.inject(JoinerDAO).set('joinerId', initialJoiner);
+    await TestBed.inject(PartDAO).set('joinerId', initialPart);
+    await TestBed.inject(ChatDAO).set('joinerId', { messages: [], status: `I don't have a clue` });
+}
+
+describe('OnlineGameWrapper for non-existing game', () => {
+    it('should redirect to /', fakeAsync(async() => {
+        // Given a game wrapper for a game that does not exist
+        const testUtils: ComponentTestUtils<AbstractGameComponent> = await ComponentTestUtils.basic('invalid-game');
+        AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
+        testUtils.prepareFixture(OnlineGameWrapperComponent);
+        const router: Router = TestBed.inject(Router);
+        spyOn(router, 'navigate').and.resolveTo();
+        const messageDisplayer: MessageDisplayer = TestBed.inject(MessageDisplayer);
+        spyOn(messageDisplayer, 'criticalMessage').and.returnValue();
+
+        await prepareComponent(JoinerMocks.WITH_ACCEPTED_CONFIG, { ...PartMocks.INITIAL, typeGame: 'invalid-game' });
+        testUtils.detectChanges();
+
+        // When loading the component
+        tick(1);
+
+        // Then it goes back to / and displays a message
+        expect(router.navigate).toHaveBeenCalledWith(['/']);
+        expect(messageDisplayer.criticalMessage).toHaveBeenCalledWith(GameWrapperMessages.NO_MATCHING_GAME());
+    }));
+});
+
 
 describe('OnlineGameWrapperComponent Lifecycle', () => {
 
@@ -32,12 +65,6 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
     let componentTestUtils: ComponentTestUtils<P4Component>;
     let wrapper: OnlineGameWrapperComponent;
 
-    async function prepareComponent(initialJoiner: Joiner, initialPart: Part): Promise<void> {
-        await TestBed.inject(JoinerDAO).set('joinerId', initialJoiner);
-        await TestBed.inject(PartDAO).set('joinerId', initialPart);
-        await TestBed.inject(ChatDAO).set('joinerId', { messages: [], status: `I don't have a clue` });
-        return Promise.resolve();
-    }
     beforeEach(async() => {
         componentTestUtils = await ComponentTestUtils.basic('P4');
         AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);

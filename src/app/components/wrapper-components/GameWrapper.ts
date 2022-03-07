@@ -66,7 +66,6 @@ export abstract class GameWrapper {
     }
     private async createGameComponent(): Promise<boolean> {
         display(GameWrapper.VERBOSE, 'GameWrapper.createGameComponent');
-        assert(this.gameIncluder != null, 'GameIncluder should be present');
 
         const compoString: string = Utils.getNonNullable(this.actRoute.snapshot.paramMap.get('compo'));
         const component: MGPOptional<Type<AbstractGameComponent>> = this.getMatchingComponent(compoString);
@@ -75,6 +74,7 @@ export abstract class GameWrapper {
             await this.router.navigate(['/']);
             return false;
         }
+        assert(this.gameIncluder != null, 'GameIncluder should be present');
         const componentFactory: ComponentFactory<AbstractGameComponent> =
             this.componentFactoryResolver.resolveComponentFactory(component.get());
         const componentRef: ComponentRef<AbstractGameComponent> =
