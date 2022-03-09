@@ -122,10 +122,7 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     public async sendMessage(): Promise<void> {
         const content: string = this.userMessage;
         this.userMessage = ''; // clears it first to seem more responsive
-        const sender: MinimalUser = {
-            id: this.authenticationService.uid.get(),
-            name: this.authenticationService.user.get().username.get(),
-        };
+        const sender: MinimalUser = this.authenticationService.user.get().toMinimalUser();
         await this.chatService.sendMessage(sender, content, this.turn);
     }
     public ngOnDestroy(): void {

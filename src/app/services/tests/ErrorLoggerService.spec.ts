@@ -39,7 +39,7 @@ describe('ErrorLoggerService', () => {
         ErrorLoggerService['singleton'] = MGPOptional.empty();
         // When logging an error
         // Then it throws instead
-        expect(() => ErrorLoggerService.logError('component', 'error')).toThrowError('component: error (extra data: undefined)');
+        expect(() => ErrorLoggerService.logError('component', 'error')).toThrowError('component: error');
     });
     it('should add new error to the DB', fakeAsync(async() => {
         // Given an error in a component which has not already been encountered

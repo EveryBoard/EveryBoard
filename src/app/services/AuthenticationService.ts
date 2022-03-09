@@ -12,6 +12,7 @@ import { FirebaseError } from '@angular/fire/app';
 import * as FireAuth from '@angular/fire/auth';
 import { ConnectivityDAO } from '../dao/ConnectivityDAO';
 import { ErrorLoggerService } from './ErrorLoggerService';
+import { MinimalUser } from '../domain/Joiner';
 
 // This class is an indirection to Firebase's auth methods, to support spyOn on them in the test code.
 export class Auth {
@@ -47,21 +48,29 @@ export class AuthUser {
     /**
      * Represents the fact the user is not connected
      */
-    public static NOT_CONNECTED: AuthUser = new AuthUser(MGPOptional.empty(), MGPOptional.empty(), false);
+    public static NOT_CONNECTED: AuthUser = new AuthUser('', MGPOptional.empty(), MGPOptional.empty(), false);
 
     /**
      * Constructs an AuthUser.
      * Requires:
+     * - the id of the user
      * - the email of the user, which may be null to represent that no user is connected
      * - the username of the user, which may be null if the user hasn't chosen a username yet
      * - a boolean indicating whether the user is verified
      */
-    constructor(public email: MGPOptional<string>,
+    constructor(public userId: string,
+                public email: MGPOptional<string>,
                 public username: MGPOptional<string>,
                 public verified: boolean) {
     }
     public isConnected(): boolean {
         return this.email.isPresent();
+    }
+    public toMinimalUser(): MinimalUser {
+        return {
+            id: this.userId,
+            name: this.username.get(),
+        };
     }
 }
 
@@ -126,7 +135,8 @@ export class AuthenticationService implements OnDestroy {
                                     // So we mark it, and we'll get notified when the user is marked.
                                     return this.userDAO.markVerified(user.uid);
                                 }
-                                const authUser: AuthUser = new AuthUser(MGPOptional.ofNullable(user.email),
+                                const authUser: AuthUser = new AuthUser(user.uid,
+                                                                        MGPOptional.ofNullable(user.email),
                                                                         MGPOptional.ofNullable(username),
                                                                         userHasFinalizedVerification);
                                 this.user = MGPOptional.of(authUser);

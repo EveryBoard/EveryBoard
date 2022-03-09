@@ -58,9 +58,9 @@ describe('ChatComponent', () => {
             testUtils.detectChanges();
 
             // Then we should see the sender name and the message content
-            const sender: DebugElement = testUtils.findElement('#sender');
+            const sender: DebugElement = testUtils.findElement('.chat-sender');
             expect(sender.nativeElement.innerText).toEqual(MSG.sender.name + ' :');
-            const message: DebugElement = testUtils.findElement('#message');
+            const message: DebugElement = testUtils.findElement('.chat-message');
             expect(message.nativeElement.innerText).toEqual(MSG.content);
         }));
         it('should propose to hide chat when chat is visible, and work', fakeAsync(async() => {
@@ -224,12 +224,7 @@ describe('ChatComponent', () => {
             await testUtils.whenStable();
 
             // then the message is sent
-            const username: string = AuthenticationServiceMock.CONNECTED.username.get();
-            const sender: MinimalUser = {
-                name: username,
-                id: 'userId',
-            };
-            expect(chatService.sendMessage).toHaveBeenCalledWith(sender, 'hello', 2);
+            expect(chatService.sendMessage).toHaveBeenCalledWith(AuthenticationServiceMock.CONNECTED.toMinimalUser(), 'hello', 2);
             //  and the form is cleared
             expect(messageInput.nativeElement.value).toBe('');
         }));

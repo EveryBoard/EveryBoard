@@ -43,7 +43,7 @@ describe('VerifiedAccountGuard', () => {
         await expectAsync(guard.canActivate()).toBeResolvedTo(router.parseUrl('/verify-account'));
     }));
     it('should move users without username to verify-account page and refuse them', fakeAsync(async() => {
-        AuthenticationServiceMock.setUser(new AuthUser(MGPOptional.of('jeanjaja@gmail.com'), MGPOptional.empty(), false));
+        AuthenticationServiceMock.setUser(new AuthUser('jeanjaja', MGPOptional.of('jeanjaja@gmail.com'), MGPOptional.empty(), false));
         await expectAsync(guard.canActivate()).toBeResolvedTo(router.parseUrl('/verify-account'));
     }));
     it('should accept verified user', fakeAsync(async() => {

@@ -38,11 +38,11 @@ export class ChatService implements OnDestroy {
             this.followedChatId = MGPOptional.of(chatId);
             this.followedChatUnsubscribe = this.chatDAO.subscribeToMessages(chatId, callback);
         } else if (this.followedChatId.equalsValue(chatId)) {
-            ErrorLoggerService.logError('ChatService', 'Already observing same chat', { chatId });
+            ErrorLoggerService.logErrorAndFail('ChatService', 'Already observing same chat', { chatId });
         } else {
-            ErrorLoggerService.logError('ChatService',
-                                        'Already observing another chat',
-                                        { chatId, followedChatId: this.followedChatId.get() });
+            ErrorLoggerService.logErrorAndFail('ChatService',
+                                               'Already observing another chat',
+                                               { chatId, followedChatId: this.followedChatId.get() });
         }
     }
     public stopObserving(): void {

@@ -20,7 +20,8 @@ export class ChatDAO extends FirebaseFirestoreDAO<Chat> {
         return this.subCollectionDAO(chatId, 'messages').create(message);
     }
     public async getLastMessages(chatId: string, limit: number): Promise<MessageDocument[]> {
-        return this.subCollectionDAO<Message>(chatId, 'messages').findWhere([], 'postedTime', limit);
+        const ordering: string = 'postedTime';
+        return this.subCollectionDAO<Message>(chatId, 'messages').findWhere([], ordering, limit);
     }
     public subscribeToMessages(chatId: string, callback: FirebaseCollectionObserver<Message>): Firestore.Unsubscribe {
         return this.subCollectionDAO<Message>(chatId, 'messages').observingWhere([], callback, 'postedTime');

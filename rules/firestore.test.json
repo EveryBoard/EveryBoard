@@ -1,6 +1,13 @@
 rules_version = "2";
 service cloud.firestore {
     match /databases/{database}/documents {
+        // The rules used for testing are the production rules, with the addition that we have a /foo/ collection to test our DAO mock.
+        match /foo/{document=**} {
+            // only used for testing purposes, do not push to production
+            allow read, write: if true;
+        }
+        // From here, the rest of the file matches with firestore.rules
+        // Unfortunately, firebase does not support imports so we have to copy it manually
         match /{document=**} {
             // by default, nothing can be read or written unless explicitly authorized
             allow read, write: if false;

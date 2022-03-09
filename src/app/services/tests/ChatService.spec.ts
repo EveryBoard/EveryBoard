@@ -68,11 +68,14 @@ describe('ChatService', () => {
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             // Given a chat that is observed
             await service.createNewChat('id');
-            service.startObserving('id', new FirebaseCollectionObserver<Message>(() => {}, () => {}, () => {}));
+            const callback: FirebaseCollectionObserver<Message> =
+                new FirebaseCollectionObserver<Message>(() => {}, () => {}, () => {});
+            service.startObserving('id', callback);
             // When trying to observe it again
-            service.startObserving('id', new FirebaseCollectionObserver<Message>(() => {}, () => {}, () => {}));
-            // Then it logged an error
+            // Then an error is thrown
             const errorMessage: string = 'Already observing same chat';
+            expect(() => service.startObserving('id', callback)).toThrowError('ChatService: ' + errorMessage);
+            // And it logged the error
             const errorData: JSONValue = { chatId: 'id' };
             expect(ErrorLoggerService.logError).toHaveBeenCalledWith('ChatService', errorMessage, errorData);
         }));
@@ -80,11 +83,14 @@ describe('ChatService', () => {
             spyOn(ErrorLoggerService, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             // Given a chat that is observed
             await service.createNewChat('id');
-            service.startObserving('id', new FirebaseCollectionObserver<Message>(() => {}, () => {}, () => {}));
-            // When trying to observe another chat, then an error is thrown
-            service.startObserving('id2', new FirebaseCollectionObserver<Message>(() => {}, () => {}, () => {}));
-            // Then it logged an error
+            const callback: FirebaseCollectionObserver<Message> =
+                new FirebaseCollectionObserver<Message>(() => {}, () => {}, () => {});
+            service.startObserving('id', callback);
+            // When trying to observe another chat
+            // Then an error is thrown
             const errorMessage: string = 'Already observing another chat';
+            expect(() => service.startObserving('id2', callback)).toThrowError('ChatService: ' + errorMessage);
+            // And it logged the error
             const errorData: JSONValue = { chatId: 'id2', followedChatId: 'id' };
             expect(ErrorLoggerService.logError).toHaveBeenCalledWith('ChatService', errorMessage, errorData);
         }));
@@ -101,7 +107,7 @@ describe('ChatService', () => {
             expect(service.isObserving()).toBe(false);
             await service.createNewChat('id');
 
-            // given a chat that is not observed anymore
+            // given a chat that was observed but for which stopObserving has been called
             service.startObserving('id', new FirebaseCollectionObserver<Message>(callback, () => {}, () => {}));
             service.stopObserving();
             expect(service.isObserving()).toBe(false);

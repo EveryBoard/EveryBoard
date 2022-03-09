@@ -62,9 +62,8 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
         await this.set(elemName, element);
         return elemName;
     }
-    private replaceFieldValueWith<N extends FirebaseJSONObject>(
-        elementWithFieldValue: N,
-        replacement: FirebaseJSONValue)
+    private replaceFieldValueWith<N extends FirebaseJSONObject>(elementWithFieldValue: N,
+                                                                replacement: FirebaseJSONValue)
     : N
     {
         const elementWithReplacement: FirebaseJSONObject = {};
@@ -77,9 +76,8 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
         }
         return elementWithReplacement as N;
     }
-    private updateFieldValueWith<N extends FirebaseJSONObject>(
-        element: N,
-        replacement: FirebaseJSONValue)
+    private updateFieldValueWith<N extends FirebaseJSONObject>(element: N,
+                                                               replacement: FirebaseJSONValue)
     : UpdateData<N>
     {
         const update: FirebaseJSONObject = {};
@@ -123,7 +121,7 @@ export abstract class FirebaseFirestoreDAOMock<T extends FirebaseJSONObject> imp
     }
     public async internalSet(id: string, data: T): Promise<void> {
         const optionalOS: MGPOptional<DocumentSubject<T>> = this.getStaticDB().get(id);
-        const tid: FirebaseDocument<T> = { id, data: data };
+        const tid: FirebaseDocument<T> = { id, data };
         if (optionalOS.isPresent()) {
             optionalOS.get().subject.next(MGPOptional.of(tid));
         } else {

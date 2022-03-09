@@ -20,6 +20,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { LobbyComponent } from '../../normal-component/lobby/lobby.component';
+import { UserMocks } from 'src/app/domain/UserMocks.spec';
 
 describe('PartCreationComponent:', () => {
 
@@ -49,16 +50,8 @@ describe('PartCreationComponent:', () => {
         await component.selectOpponent('firstCandidate');
         testUtils.detectChanges();
     }
-    const CREATOR: User = {
-        username: 'creator',
-        state: 'online',
-        verified: true,
-    };
-    const OPPONENT: User = {
-        username: 'firstCandidate',
-        state: 'online',
-        verified: true,
-    };
+    const CREATOR: User = UserMocks.CREATOR;
+    const OPPONENT: User = UserMocks.OPPONENT;
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(PartCreationComponent);
         destroyed = false;
