@@ -23,7 +23,7 @@ export class ConspirateursMinimax extends Minimax<ConspirateursMove, Conspirateu
         const end: Coord = ConspirateursState.CENTRAL_ZONE_BOTTOM_RIGHT;
         for (let y: number = start.y; y <= end.y; y++) {
             for (let x: number = start.x; x <= end.x; x++) {
-                if (state.getPieceAtXY(x, y) === Player.NONE) {
+                if (state.getPieceAtXY(x, y) === PlayerOrNone.NONE) {
                     moves.push(ConspirateursMoveDrop.of(new Coord(x, y)).get());
                 }
             }
@@ -105,7 +105,7 @@ export class ConspirateursMinimax extends Minimax<ConspirateursMove, Conspirateu
                     } else {
                         let minEmptyShelterDistance: number = 100;
                         for (const shelter of ConspirateursState.ALL_SHELTERS) {
-                            if (state.getPieceAt(shelter) === Player.NONE) {
+                            if (state.getPieceAt(shelter) === PlayerOrNone.NONE) {
                                 const distance: number = coord.getOrthogonalDistance(shelter);
                                 minEmptyShelterDistance = Math.min(minEmptyShelterDistance, distance);
                             }

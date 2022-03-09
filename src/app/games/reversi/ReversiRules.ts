@@ -97,7 +97,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
                 // we found a sandwicher, in range, in this direction
                 return sandwichedsCoord;
             }
-            if (testedCoordContent === Player.NONE) {
+            if (testedCoordContent === PlayerOrNone.NONE) {
                 // we found the emptyness before a capturer, so there won't be a next space
                 return [];
             } // we found a switched/captured
@@ -135,7 +135,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiState, ReversiLegali
 
         for (let y: number = 0; y < 8; y++) {
             for (let x: number = 0; x < 8; x++) {
-                if (state.getPieceAtXY(x, y) === Player.NONE) {
+                if (state.getPieceAtXY(x, y) === PlayerOrNone.NONE) {
                     // For each empty cases
                     nextBoard = state.getCopiedBoard();
                     const opponentNeighboors: Coord[] = ReversiState.getNeighbooringPawnLike(nextBoard, opponent, x, y);

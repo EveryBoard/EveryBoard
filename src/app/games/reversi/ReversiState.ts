@@ -12,7 +12,7 @@ export class ReversiState extends GameStateWithTable<PlayerOrNone> {
     public static getInitialState(): ReversiState {
         const board: PlayerOrNone[][] = ArrayUtils.createTable(ReversiState.BOARD_WIDTH,
                                                                ReversiState.BOARD_HEIGHT,
-                                                               Player.NONE);
+                                                               PlayerOrNone.NONE);
         board[3][3] = Player.ZERO;
         board[4][4] = Player.ZERO;
         board[3][4] = Player.ONE;

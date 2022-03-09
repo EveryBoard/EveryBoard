@@ -11,7 +11,7 @@ export class ApagosSquare {
         const containing: MGPMap<PlayerOrNone, number> = new MGPMap();
         containing.set(Player.ZERO, nbZero);
         containing.set(Player.ONE, nbOne);
-        containing.set(Player.NONE, nbTotal);
+        containing.set(PlayerOrNone.NONE, nbTotal);
         containing.makeImmutable();
         const validSquare: ApagosSquare = new ApagosSquare(containing);
         return MGPFallible.success(validSquare);
@@ -21,7 +21,7 @@ export class ApagosSquare {
     public isFull(): boolean {
         const nbZero: number = this.count(Player.ZERO);
         const nbOne: number = this.count(Player.ONE);
-        const nbTotal: number = this.count(Player.NONE);
+        const nbTotal: number = this.count(PlayerOrNone.NONE);
         return (nbZero + nbOne) >= nbTotal;
     }
     public count(player: PlayerOrNone): number {
@@ -30,7 +30,7 @@ export class ApagosSquare {
     public addPiece(piece: Player): ApagosSquare {
         let nbZero: number = this.count(Player.ZERO);
         let nbOne: number = this.count(Player.ONE);
-        const nbTotal: number = this.count(Player.NONE);
+        const nbTotal: number = this.count(PlayerOrNone.NONE);
         if (piece === Player.ZERO) {
             nbZero++;
         } else {
@@ -41,7 +41,7 @@ export class ApagosSquare {
     public substractPiece(piece: Player): ApagosSquare {
         let nbZero: number = this.count(Player.ZERO);
         let nbOne: number = this.count(Player.ONE);
-        const nbTotal: number = this.count(Player.NONE);
+        const nbTotal: number = this.count(PlayerOrNone.NONE);
         if (piece === Player.ZERO) {
             nbZero--;
         } else {
@@ -54,7 +54,7 @@ export class ApagosSquare {
         const nbOne: number = this.count(Player.ONE);
         if (nbZero > nbOne) return Player.ZERO;
         else if (nbOne > nbZero) return Player.ONE;
-        return Player.NONE;
+        return PlayerOrNone.NONE;
     }
     public equals(other: ApagosSquare): boolean {
         return this.containing.equals(other.containing);

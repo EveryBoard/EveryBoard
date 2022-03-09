@@ -415,7 +415,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
             const dirIndex: number = (index + testedCoords.length) % 6;
             testedCoords.push(testCoord);
             const dir: HexaDirection = HexaDirection.factory.all[dirIndex];
-            if (testedPiece === Player.NONE) {
+            if (testedPiece === PlayerOrNone.NONE) {
                 subSum += 0.16; // roughly 1/6
                 lastEmpty = MGPOptional.of(testCoord);
             } else {
@@ -528,7 +528,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
                 encountered.push(-7);
                 // just enough to make sum negative when opponent encountered
                 return MGPOptional.empty();
-            case Player.NONE:
+            case PlayerOrNone.NONE:
                 encountered.push(0.16);
                 return MGPOptional.of(testedCoord);
             default:
@@ -556,7 +556,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
             if (testedPiece === LAST_OPPONENT) {
                 return boardInfo;
             }
-            if (testedPiece === Player.NONE) {
+            if (testedPiece === PlayerOrNone.NONE) {
                 subSum += 0.16; // rougly 1/6
                 lastEmpty = MGPOptional.of(testCoord);
             } else {
@@ -590,7 +590,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
             if (testedPiece === LAST_OPPONENT) {
                 return boardInfo;
             }
-            if (testedPiece === Player.NONE) {
+            if (testedPiece === PlayerOrNone.NONE) {
                 subSum += 0.16; // rougly 1/6
                 lastEmpty = MGPOptional.of(testCoord);
             } else {

@@ -13,15 +13,15 @@ export class GoPiece implements ComparableObject {
 
     public static WHITE: GoPiece = new GoPiece(Player.ONE, 'alive');
 
-    public static EMPTY: GoPiece = new GoPiece(Player.NONE, 'empty');
+    public static EMPTY: GoPiece = new GoPiece(PlayerOrNone.NONE, 'empty');
 
     public static DEAD_BLACK: GoPiece = new GoPiece(Player.ZERO, 'dead');
 
     public static DEAD_WHITE: GoPiece = new GoPiece(Player.ONE, 'dead');
 
-    public static BLACK_TERRITORY: GoPiece = new GoPiece(Player.NONE, 'territory');
+    public static BLACK_TERRITORY: GoPiece = new GoPiece(PlayerOrNone.NONE, 'territory');
 
-    public static WHITE_TERRITORY: GoPiece = new GoPiece(Player.NONE, 'territory');
+    public static WHITE_TERRITORY: GoPiece = new GoPiece(PlayerOrNone.NONE, 'territory');
 
     private constructor(readonly player: PlayerOrNone, readonly type: PieceType) {}
 

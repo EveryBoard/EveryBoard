@@ -15,7 +15,7 @@ export class EncapsuleState extends GameStateWithTable<EncapsuleCase> {
         this.remainingPieces = remainingPieces;
     }
     public static getInitialState(): EncapsuleState {
-        const emptyCase: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.NONE);
+        const emptyCase: EncapsuleCase = new EncapsuleCase(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
         const emptyNumber: number = emptyCase.encode();
         const startingNumberBoard: number[][] = ArrayUtils.createTable(3, 3, emptyNumber);
         const startingBoard: EncapsuleCase[][] = ArrayUtils.mapBiArray(startingNumberBoard,
@@ -50,7 +50,8 @@ export class EncapsuleState extends GameStateWithTable<EncapsuleCase> {
 
 export class EncapsuleCase {
 
-    public static readonly EMPTY: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.NONE);
+    public static readonly EMPTY: EncapsuleCase =
+        new EncapsuleCase(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
 
     public static decode(encapsuleCase: number): EncapsuleCase {
         assert(encapsuleCase % 1 === 0, 'EncapsuleCase must be encoded as integer: ' + encapsuleCase);
@@ -70,7 +71,7 @@ export class EncapsuleCase {
                 public readonly big: PlayerOrNone) {
     }
     public isEmpty(): boolean {
-        return this.small === Player.NONE && this.medium === Player.NONE && this.big === Player.NONE;
+        return this.small === PlayerOrNone.NONE && this.medium === PlayerOrNone.NONE && this.big === PlayerOrNone.NONE;
     }
     public toList(): EncapsulePiece[] {
         const l: EncapsulePiece[] = [];
@@ -114,14 +115,14 @@ export class EncapsuleCase {
         const size: Size = removedPiece.getSize();
         switch (size) {
             case Size.BIG:
-                removedCase = new EncapsuleCase(this.small, this.medium, Player.NONE);
+                removedCase = new EncapsuleCase(this.small, this.medium, PlayerOrNone.NONE);
                 break;
             case Size.MEDIUM:
-                removedCase = new EncapsuleCase(this.small, Player.NONE, Player.NONE);
+                removedCase = new EncapsuleCase(this.small, PlayerOrNone.NONE, PlayerOrNone.NONE);
                 break;
             default:
                 Utils.expectToBe(size, Size.SMALL);
-                removedCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.NONE);
+                removedCase = new EncapsuleCase(PlayerOrNone.NONE, PlayerOrNone.NONE, PlayerOrNone.NONE);
         }
         return { removedCase, removedPiece };
     }
@@ -133,12 +134,12 @@ export class EncapsuleCase {
             case Size.BIG:
                 return new EncapsuleCase(this.small, this.medium, piecePlayer);
             case Size.MEDIUM:
-                assert(this.big === Player.NONE, 'Cannot put a piece on top of a bigger one');
+                assert(this.big === PlayerOrNone.NONE, 'Cannot put a piece on top of a bigger one');
                 return new EncapsuleCase(this.small, piecePlayer, this.big);
             default:
                 Utils.expectToBe(size, Size.SMALL);
-                assert(this.big === Player.NONE, 'Cannot put a piece on top of a bigger one');
-                assert(this.medium === Player.NONE, 'Cannot put a piece on top of a bigger one');
+                assert(this.big === PlayerOrNone.NONE, 'Cannot put a piece on top of a bigger one');
+                assert(this.medium === PlayerOrNone.NONE, 'Cannot put a piece on top of a bigger one');
                 return new EncapsuleCase(piecePlayer, this.medium, this.big);
         }
     }

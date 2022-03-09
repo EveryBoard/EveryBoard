@@ -25,7 +25,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
                                                                      PlayerOrNone>
 {
     public INDICATOR_SIZE: number = 20;
-    public EMPTY: PlayerOrNone = Player.NONE;
+    public EMPTY: PlayerOrNone = PlayerOrNone.NONE;
     public targets: Coord[] = [];
     public state: LinesOfActionState;
     private selected: MGPOptional<Coord> = MGPOptional.empty();

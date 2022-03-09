@@ -11,7 +11,7 @@ import { ConspirateursState } from '../ConspirateursState';
 import { ConspirateursMinimax } from '../ConspirateursMinimax';
 
 describe('ConspirateursRules', () => {
-    const _: PlayerOrNone = Player.NONE;
+    const _: PlayerOrNone = PlayerOrNone.NONE;
     const A: Player = Player.ZERO;
     const B: Player = Player.ONE;
 

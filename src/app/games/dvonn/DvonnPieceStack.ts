@@ -12,11 +12,11 @@ export class DvonnPieceStack {
             return new DvonnPieceStack(fields[1], fields[2], fields[0]);
         });
     public static MAX_SIZE: number = 49; // The maximal possible size for a stack
-    public static EMPTY: DvonnPieceStack = new DvonnPieceStack(Player.NONE, 0, false);
-    public static NONE: DvonnPieceStack = new DvonnPieceStack(Player.NONE, -1, false);
+    public static EMPTY: DvonnPieceStack = new DvonnPieceStack(PlayerOrNone.NONE, 0, false);
+    public static NONE: DvonnPieceStack = new DvonnPieceStack(PlayerOrNone.NONE, -1, false);
     public static PLAYER_ZERO: DvonnPieceStack = new DvonnPieceStack(Player.ZERO, 1, false);
     public static PLAYER_ONE: DvonnPieceStack = new DvonnPieceStack(Player.ONE, 1, false);
-    public static SOURCE: DvonnPieceStack = new DvonnPieceStack(Player.NONE, 1, true);
+    public static SOURCE: DvonnPieceStack = new DvonnPieceStack(PlayerOrNone.NONE, 1, true);
 
     public static append(stack1: DvonnPieceStack, stack2: DvonnPieceStack): DvonnPieceStack {
         return new DvonnPieceStack(stack1.owner, stack1.size + stack2.size, stack1.source || stack2.source);

@@ -11,7 +11,7 @@ describe('ReversiComponent', () => {
 
     let componentTestUtils: ComponentTestUtils<ReversiComponent>;
 
-    const _: PlayerOrNone = Player.NONE;
+    const _: PlayerOrNone = PlayerOrNone.NONE;
     const X: Player = Player.ONE;
     const O: Player = Player.ZERO;
 

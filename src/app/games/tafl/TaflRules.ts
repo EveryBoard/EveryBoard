@@ -381,7 +381,7 @@ export abstract class TaflRules<M extends TaflMove, S extends TaflState> extends
             while (foundDestination.isInRange(this.config.WIDTH, this.config.WIDTH) &&
                    obstacleFound === false)
             {
-                const destinationEmpty: boolean = state.getAbsoluteOwner(foundDestination) === Player.NONE;
+                const destinationEmpty: boolean = state.getAbsoluteOwner(foundDestination) === PlayerOrNone.NONE;
                 if (destinationEmpty) {
                     if (this.isExternalThrone(foundDestination)) {
                         if (state.getPieceAt(start).isKing()) {

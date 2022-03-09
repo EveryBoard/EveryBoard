@@ -20,7 +20,7 @@ export abstract class TaflState extends GameStateWithTable<TaflPawn> {
     public getRelativeOwner(player: Player, coord: Coord): RelativePlayer {
         const owner: PlayerOrNone = this.getAbsoluteOwner(coord);
         let relativeOwner: RelativePlayer;
-        if (owner === Player.NONE) {
+        if (owner === PlayerOrNone.NONE) {
             relativeOwner = RelativePlayer.NONE;
         } else if (player === owner) {
             relativeOwner = RelativePlayer.PLAYER;

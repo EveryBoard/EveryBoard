@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Direction';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { ReversibleMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
@@ -11,7 +11,7 @@ import { SixState } from '../SixState';
 
 describe('SixState', () => {
 
-    const _: number = Player.NONE.value;
+    const _: number = PlayerOrNone.NONE.value;
     const O: number = Player.ZERO.value;
     const X: number = Player.ONE.value;
 

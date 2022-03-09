@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { GameComponent } from 'src/app/components/game-components/game-component/GameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -36,6 +36,7 @@ export class ApagosComponent extends GameComponent<ApagosRules,
                                                    ApagosState>
 {
     public Player: typeof Player = Player;
+    public NONE: PlayerOrNone = PlayerOrNone.NONE;
 
     public board: readonly ApagosSquare[];
 
@@ -131,7 +132,7 @@ export class ApagosComponent extends GameComponent<ApagosRules,
         if (player === Player.ZERO) {
             return nbPiecePlayer - 1;
         } else {
-            const totalPieces: number = square.count(Player.NONE);
+            const totalPieces: number = square.count(PlayerOrNone.NONE);
             return totalPieces - nbPiecePlayer;
         }
     }
@@ -171,10 +172,10 @@ export class ApagosComponent extends GameComponent<ApagosRules,
     public getCircleCenter(x: number, i: number, square: ApagosSquare): Coord {
         const bx: number = (x * this.SPACE_SIZE) + (0.5 * this.SPACE_SIZE);
         const by: number = ((5 - x) * this.SPACE_SIZE * 0.25) + (0.5 * this.SPACE_SIZE);
-        if (square.count(Player.NONE) === 1) {
+        if (square.count(PlayerOrNone.NONE) === 1) {
             return new Coord(bx, by);
         }
-        const nbCircle: number = square.count(Player.NONE);
+        const nbCircle: number = square.count(PlayerOrNone.NONE);
         const angle: number = (i * 2 * Math.PI / nbCircle) - (Math.PI / 2);
         const radius: number = this.SPACE_SIZE * 0.30;
         const deltaX: number = radius * Math.cos(angle);
@@ -239,7 +240,7 @@ export class ApagosComponent extends GameComponent<ApagosRules,
                 else one++;
             }
         }
-        const neutral: number = square.count(Player.NONE) - (one + zero);
+        const neutral: number = square.count(PlayerOrNone.NONE) - (one + zero);
         const pieceColor: string = this.getPieceColor(i, zero, neutral);
         if (pieceColor !== '') {
             classes.push(pieceColor);

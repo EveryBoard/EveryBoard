@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { GameStateWithTable } from 'src/app/jscaip/GameStateWithTable';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPSet } from 'src/app/utils/MGPSet';
 
@@ -27,7 +27,7 @@ export class ConspirateursState extends GameStateWithTable<PlayerOrNone> {
     public static getInitialState(): ConspirateursState {
         const board: PlayerOrNone[][] = ArrayUtils.createTable(ConspirateursState.WIDTH,
                                                                ConspirateursState.HEIGHT,
-                                                               Player.NONE);
+                                                               PlayerOrNone.NONE);
         return new ConspirateursState(board, 0);
     }
     public isShelter(coord: Coord): boolean {

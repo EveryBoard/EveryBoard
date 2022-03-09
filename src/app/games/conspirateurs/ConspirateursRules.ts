@@ -29,12 +29,12 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         if (move.isDrop()) {
             updatedBoard[move.coord.y][move.coord.x] = state.getCurrentPlayer();
         } else if (move.isSimple()) {
-            updatedBoard[move.coord.y][move.coord.x] = Player.NONE;
+            updatedBoard[move.coord.y][move.coord.x] = PlayerOrNone.NONE;
             updatedBoard[move.end.y][move.end.x] = state.getCurrentPlayer();
         } else {
             const start: Coord = move.getStartingCoord();
             const end: Coord = move.getEndingCoord();
-            updatedBoard[start.y][start.x] = Player.NONE;
+            updatedBoard[start.y][start.x] = PlayerOrNone.NONE;
             updatedBoard[end.y][end.x] = state.getCurrentPlayer();
         }
         return new ConspirateursState(updatedBoard, state.turn+1);
@@ -81,7 +81,7 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
             return MGPFallible.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE());
         }
         for (const jumpedOver of move.getJumpedOverCoords()) {
-            if (state.getPieceAt(jumpedOver) === Player.NONE) {
+            if (state.getPieceAt(jumpedOver) === PlayerOrNone.NONE) {
                 return MGPFallible.failure(ConspirateursFailure.MUST_JUMP_OVER_PIECES());
             }
         }

@@ -5,7 +5,7 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
-const _: PlayerOrNone = Player.NONE;
+const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: Player = Player.ZERO;
 const X: Player = Player.ONE;
 

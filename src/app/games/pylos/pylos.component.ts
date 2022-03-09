@@ -63,7 +63,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     }
     public isDrawable(x: number, y: number, z: number): boolean {
         const coord: PylosCoord = new PylosCoord(x, y, z);
-        if (this.state.getPieceAt(coord) === Player.NONE) {
+        if (this.state.getPieceAt(coord) === PlayerOrNone.NONE) {
             return this.state.isLandable(coord);
         } else {
             return true;

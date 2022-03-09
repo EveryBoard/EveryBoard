@@ -23,7 +23,7 @@ describe('LocalGameWrapperComponent', () => {
     let componentTestUtils: ComponentTestUtils<P4Component>;
     const O: Player = Player.ZERO;
     const X: Player = Player.ONE;
-    const _: PlayerOrNone = Player.NONE;
+    const _: PlayerOrNone = PlayerOrNone.NONE;
 
     beforeEach(fakeAsync(async() => {
         componentTestUtils = await ComponentTestUtils.forGame<P4Component>('P4', LocalGameWrapperComponent);

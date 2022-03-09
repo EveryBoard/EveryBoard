@@ -4,7 +4,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { PentagoMove } from './PentagoMove';
 import { PentagoState } from './PentagoState';
 
-const _: PlayerOrNone = Player.NONE;
+const _: PlayerOrNone = PlayerOrNone.NONE;
 const X: Player = Player.ONE;
 const O: Player = Player.ZERO;
 

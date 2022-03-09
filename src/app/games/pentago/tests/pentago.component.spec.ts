@@ -12,7 +12,7 @@ describe('PentagoComponent', () => {
 
     let componentTestUtils: ComponentTestUtils<PentagoComponent>;
 
-    const _: PlayerOrNone = Player.NONE;
+    const _: PlayerOrNone = PlayerOrNone.NONE;
     const X: Player = Player.ONE;
     const O: Player = Player.ZERO;
 

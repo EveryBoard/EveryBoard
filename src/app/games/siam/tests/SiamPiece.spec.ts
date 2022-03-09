@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Player } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { SiamPiece, SiamPieceValue } from '../SiamPiece';
 
 describe('SiamPiece:', () => {
@@ -43,7 +43,7 @@ describe('SiamPiece:', () => {
         expect(SiamPiece.WHITE_RIGHT.belongTo(Player.ONE)).toBeFalse();
     });
     it('should give the owner of each piece with getOwner', () => {
-        expect(SiamPiece.MOUNTAIN.getOwner()).toBe(Player.NONE);
+        expect(SiamPiece.MOUNTAIN.getOwner()).toBe(PlayerOrNone.NONE);
         expect(SiamPiece.BLACK_DOWN.getOwner()).toBe(Player.ONE);
         expect(SiamPiece.WHITE_RIGHT.getOwner()).toBe(Player.ZERO);
     });

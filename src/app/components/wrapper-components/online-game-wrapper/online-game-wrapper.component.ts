@@ -450,7 +450,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                    this.currentPart.data.request.data['player'] === this.getPlayer().getOpponent().value)
         {
             return false;
-        } else if (this.getTakeBackRequester() === Player.NONE) {
+        } else if (this.getTakeBackRequester() === PlayerOrNone.NONE) {
             return true;
         } else {
             return false;
@@ -466,13 +466,13 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     }
     private getTakeBackRequester(): PlayerOrNone {
         if (this.currentPart == null) {
-            return Player.NONE;
+            return PlayerOrNone.NONE;
         }
         const request: Request | null | undefined = this.currentPart.data.request;
         if (request && request.code === 'TakeBackAsked') {
             return Request.getPlayer(request);
         } else {
-            return Player.NONE;
+            return PlayerOrNone.NONE;
         }
     }
     public canProposeDraw(): boolean {
@@ -488,7 +488,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             return false;
         } else if (this.isOpponentWaitingForDrawResponse()) {
             return false;
-        } else if (this.getDrawRequester() === Player.NONE) {
+        } else if (this.getDrawRequester() === PlayerOrNone.NONE) {
             return true;
         } else {
             return false;
@@ -496,18 +496,18 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     }
     public isOpponentWaitingForDrawResponse(): boolean {
         const drawRequester: PlayerOrNone = this.getDrawRequester();
-        if (drawRequester === Player.NONE) return false;
+        if (drawRequester === PlayerOrNone.NONE) return false;
         return this.isOpponent(drawRequester);
     }
     private getDrawRequester(): PlayerOrNone {
         if (this.currentPart == null) {
-            return Player.NONE;
+            return PlayerOrNone.NONE;
         }
         const request: Request | null | undefined = this.currentPart.data.request;
         if (request && request.code === 'DrawProposed') {
             return Request.getPlayer(request);
         } else {
-            return Player.NONE;
+            return PlayerOrNone.NONE;
         }
     }
     protected async onRequest(request: Request, oldPart: PartDocument): Promise<void> {
@@ -580,7 +580,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             this.observerRole = Player.ONE.value;
             opponentName = this.players[0];
         } else {
-            this.observerRole = Player.NONE.value;
+            this.observerRole = PlayerOrNone.NONE.value;
         }
         if (opponentName.isPresent()) {
             const onDocumentCreated: (foundUser: UserDocument[]) => void = (foundUser: UserDocument[]) => {

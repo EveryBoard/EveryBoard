@@ -57,7 +57,7 @@ export class SiamPiece {
     public getOwner(): PlayerOrNone {
         if (1 <= this.value && this.value <= 4) return Player.ZERO;
         if (5 <= this.value && this.value <= 8) return Player.ONE;
-        return Player.NONE;
+        return PlayerOrNone.NONE;
     }
     public getOptionalDirection(): MGPOptional<Orthogonal> {
         switch (this.value) {

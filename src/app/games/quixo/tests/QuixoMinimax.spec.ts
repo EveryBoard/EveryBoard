@@ -11,7 +11,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 describe('QuixoMinimax:', () => {
 
     let minimax: QuixoMinimax;
-    const _: PlayerOrNone = Player.NONE;
+    const _: PlayerOrNone = PlayerOrNone.NONE;
     const X: Player = Player.ONE;
     const O: Player = Player.ZERO;
 

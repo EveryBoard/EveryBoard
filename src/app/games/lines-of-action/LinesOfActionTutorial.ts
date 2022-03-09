@@ -4,7 +4,7 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionState } from './LinesOfActionState';
 
-const _: PlayerOrNone = Player.NONE;
+const _: PlayerOrNone = PlayerOrNone.NONE;
 const X: Player = Player.ZERO;
 const O: Player = Player.ONE;
 

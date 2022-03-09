@@ -70,7 +70,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
                             stack.push(next);
                         }
                     }
-                } else if (content === Player.NONE) {
+                } else if (content === PlayerOrNone.NONE) {
                     groups[coord.y][coord.x] = 0;
                 }
             }
@@ -82,7 +82,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
     : LinesOfActionState
     {
         const board: PlayerOrNone[][] = state.getCopiedBoard();
-        board[move.coord.y][move.coord.x] = Player.NONE;
+        board[move.coord.y][move.coord.x] = PlayerOrNone.NONE;
         board[move.end.y][move.end.x] = state.getCurrentPlayer();
 
         return new LinesOfActionState(board, state.turn + 1);
@@ -149,7 +149,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         // Returns a player in case of victory (NONE if it is a draw), otherwise an empty optional
         const [groupsZero, groupsOne]: [number, number] = LinesOfActionRules.getNumberOfGroups(state);
         if (groupsZero === 1 && groupsOne === 1) {
-            return MGPOptional.of(Player.NONE);
+            return MGPOptional.of(PlayerOrNone.NONE);
         } else if (groupsZero === 1) {
             return MGPOptional.of(Player.ZERO);
         } else if (groupsOne === 1) {

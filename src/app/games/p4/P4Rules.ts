@@ -57,7 +57,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
     }
     public static getLowestUnoccupiedCase(board: Table<PlayerOrNone>, x: number): number {
         let y: number = 0;
-        while (y < 6 && board[y][x] === Player.NONE) {
+        while (y < 6 && board[y][x] === PlayerOrNone.NONE) {
             y++;
         }
         return y - 1;
@@ -99,7 +99,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
     }
     private static getOpponent(board: Table<PlayerOrNone>, coord: Coord): Player {
         const c: PlayerOrNone = board[coord.y][coord.x];
-        assert(Player.isPlayer(c), 'getOpponent should not be called with Player.NONE');
+        assert(Player.isPlayer(c), 'getOpponent should not be called with PlayerOrNone.NONE');
         return (c === Player.ONE) ? Player.ZERO : Player.ONE;
     }
     public static getSquareScore(board: Table<PlayerOrNone>, coord: Coord): number {
@@ -150,7 +150,7 @@ export class P4Rules extends Rules<P4Move, P4State> {
         const moves: P4Move[] = [];
 
         for (let x: number = 0; x < 7; x++) {
-            if (originalState.getPieceAtXY(x, 0) === Player.NONE) {
+            if (originalState.getPieceAtXY(x, 0) === PlayerOrNone.NONE) {
                 const move: P4Move = P4Move.of(x);
                 moves.push(move);
             }

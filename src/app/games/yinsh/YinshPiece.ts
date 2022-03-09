@@ -14,9 +14,9 @@ export class YinshPiece implements ComparableObject {
                 return YinshPiece.of(fields[0], fields[1]);
             },
         );
-    public static NONE: YinshPiece = new YinshPiece(Player.NONE, false);
+    public static NONE: YinshPiece = new YinshPiece(PlayerOrNone.NONE, false);
 
-    public static EMPTY: YinshPiece = new YinshPiece(Player.NONE, false);
+    public static EMPTY: YinshPiece = new YinshPiece(PlayerOrNone.NONE, false);
 
     public static MARKER_ZERO: YinshPiece = new YinshPiece(Player.ZERO, false);
     public static MARKER_ONE: YinshPiece = new YinshPiece(Player.ONE, false);
@@ -27,7 +27,7 @@ export class YinshPiece implements ComparableObject {
     public static RINGS: [YinshPiece, YinshPiece] = [YinshPiece.RING_ZERO, YinshPiece.RING_ONE];
 
     public static of(player: Player, isRing: boolean): YinshPiece {
-        if (player === Player.NONE) {
+        if (player === PlayerOrNone.NONE) {
             return YinshPiece.EMPTY;
         } else {
             if (isRing) {

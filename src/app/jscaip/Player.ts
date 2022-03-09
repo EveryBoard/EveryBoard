@@ -2,13 +2,13 @@ import { Utils } from 'src/app/utils/utils';
 import { ComparableObject } from 'src/app/utils/Comparable';
 import { NumberEncoder } from './Encoder';
 
-class NoPlayer implements ComparableObject {
-    public static NO_PLAYER: NoPlayer = new NoPlayer();
+class PlayerNone implements ComparableObject {
+    public static NONE: PlayerNone = new PlayerNone();
     public value: number = 2;
     private constructor() {
     }
     public toString(): string {
-        return 'NoPlayer';
+        return 'PlayerNone';
     }
     public equals(other: PlayerOrNone): boolean {
         return this === other;
@@ -20,12 +20,11 @@ export class Player implements ComparableObject {
     public static numberEncoder: NumberEncoder<PlayerOrNone> = NumberEncoder.ofN(2, (player: PlayerOrNone) => {
         return player.value;
     }, (encoded: number) => {
-        if (encoded === 2) return Player.NONE;
+        if (encoded === 2) return PlayerOrNone.NONE;
         return Player.of(encoded);
     });
     public static readonly ZERO: Player = new Player(0);
     public static readonly ONE: Player = new Player(1);
-    public static readonly NONE: PlayerOrNone = NoPlayer.NO_PLAYER;
 
     public static of(value: number): Player {
         switch (value) {
@@ -41,7 +40,7 @@ export class Player implements ComparableObject {
     public static isPlayer(player: PlayerOrNone): player is Player {
         return player instanceof Player;
     }
-    private constructor(public readonly value: number) {}
+    protected constructor(public readonly value: number) {}
 
     public toString(): string {
         return 'Player ' + this.value;
@@ -80,4 +79,11 @@ export class Player implements ComparableObject {
     }
 }
 
-export type PlayerOrNone = Player | NoPlayer
+export type PlayerOrNone = Player | PlayerNone
+
+// eslint-disable-next-line no-redeclare, @typescript-eslint/no-redeclare
+export namespace PlayerOrNone {
+    export const ZERO: Player = Player.ZERO;
+    export const ONE: Player = Player.ONE;
+    export const NONE: PlayerNone = PlayerNone.NONE;
+}

@@ -54,7 +54,7 @@ export class EncapsulePiece implements ComparableObject {
             case EncapsulePiece.BIG_WHITE:
                 return Player.ONE;
             default:
-                return Player.NONE;
+                return PlayerOrNone.NONE;
         }
     }
     public getSize(): Size {

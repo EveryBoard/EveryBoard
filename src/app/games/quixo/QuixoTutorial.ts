@@ -4,7 +4,7 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
-const _: PlayerOrNone = Player.NONE;
+const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: Player = Player.ZERO;
 const X: Player = Player.ONE;
 

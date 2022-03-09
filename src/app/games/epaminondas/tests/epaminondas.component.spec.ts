@@ -15,7 +15,7 @@ describe('EpaminondasComponent', () => {
 
     let componentTestUtils: ComponentTestUtils<EpaminondasComponent>;
 
-    const _: PlayerOrNone = Player.NONE;
+    const _: PlayerOrNone = PlayerOrNone.NONE;
     const X: Player = Player.ONE;
     const O: Player = Player.ZERO;
 

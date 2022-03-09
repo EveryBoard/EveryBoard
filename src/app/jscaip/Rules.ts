@@ -15,9 +15,9 @@ export class GameStatus {
 
     public static readonly ONE_WON: GameStatus = new GameStatus(true, Player.ONE);
 
-    public static readonly DRAW: GameStatus = new GameStatus(true, Player.NONE);
+    public static readonly DRAW: GameStatus = new GameStatus(true, PlayerOrNone.NONE);
 
-    public static readonly ONGOING: GameStatus = new GameStatus(false, Player.NONE);
+    public static readonly ONGOING: GameStatus = new GameStatus(false, PlayerOrNone.NONE);
 
     public static getVictory(nonNonePlayer: Player): GameStatus {
         if (nonNonePlayer === Player.ZERO) {

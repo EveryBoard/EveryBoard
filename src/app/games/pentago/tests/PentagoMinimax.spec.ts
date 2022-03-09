@@ -11,7 +11,7 @@ describe('PentagoMinimax', () => {
 
     let rules: PentagoRules;
     let minimax: PentagoMinimax;
-    const _: PlayerOrNone = Player.NONE;
+    const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: Player = Player.ZERO;
     const X: Player = Player.ONE;
 

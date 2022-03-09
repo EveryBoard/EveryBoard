@@ -15,7 +15,7 @@ export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasStat
     public static getListMoves(node: EpaminondasNode): EpaminondasMove[] {
         const PLAYER: Player = node.gameState.getCurrentPlayer();
         const OPPONENT: Player = node.gameState.getCurrentOpponent();
-        const EMPTY: PlayerOrNone = Player.NONE;
+        const EMPTY: PlayerOrNone = PlayerOrNone.NONE;
 
         let moves: EpaminondasMove[] = [];
         const state: EpaminondasState = node.gameState;

@@ -5,7 +5,7 @@ import { P4Minimax } from './P4Minimax';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { P4Move } from 'src/app/games/p4/P4Move';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { P4Tutorial } from './P4Tutorial';
@@ -20,7 +20,7 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
 
     public static VERBOSE: boolean = false;
 
-    public EMPTY_CASE: PlayerOrNone = Player.NONE;
+    public EMPTY_CASE: PlayerOrNone = PlayerOrNone.NONE;
     public last: MGPOptional<Coord>;
     public victoryCoords: Coord[] = [];
 

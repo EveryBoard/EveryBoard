@@ -3,7 +3,7 @@ import { ReversiState } from 'src/app/games/reversi/ReversiState';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 
-const _: PlayerOrNone = Player.NONE;
+const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = Player.ZERO;
 const X: PlayerOrNone = Player.ONE;
 

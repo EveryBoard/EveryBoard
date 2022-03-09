@@ -7,7 +7,7 @@ import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('ConspirateursMinimax', () => {
-    const _: PlayerOrNone = Player.NONE;
+    const _: PlayerOrNone = PlayerOrNone.NONE;
     const A: Player = Player.ZERO;
     const B: Player = Player.ONE;
 

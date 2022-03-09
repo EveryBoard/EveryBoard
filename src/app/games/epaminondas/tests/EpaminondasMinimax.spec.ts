@@ -13,7 +13,7 @@ describe('EpaminondasMinimax:', () => {
 
     let rules: EpaminondasRules;
     let minimax: EpaminondasMinimax;
-    const _: PlayerOrNone = Player.NONE;
+    const _: PlayerOrNone = PlayerOrNone.NONE;
     const X: Player = Player.ONE;
     const O: Player = Player.ZERO;
 

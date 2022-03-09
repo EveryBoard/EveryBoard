@@ -47,7 +47,7 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
                 return MGPValidation.failure(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_PIECES_OUTSIDE_BOARD());
             }
             const caseContent: PlayerOrNone = state.getPieceAt(coord);
-            if (caseContent === Player.NONE) {
+            if (caseContent === PlayerOrNone.NONE) {
                 return MGPValidation.failure(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_EMPTY_CASE());
             }
             if (caseContent === opponent) {
@@ -66,7 +66,7 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
         let landingCoord: Coord = move.coord.getNext(move.direction, move.movedPieces);
         let landingIndex: number = 0;
         while (landingIndex + 1 < move.stepSize) {
-            newBoard[emptied.y][emptied.x] = Player.NONE;
+            newBoard[emptied.y][emptied.x] = PlayerOrNone.NONE;
             newBoard[landingCoord.y][landingCoord.x] = CURRENT_PLAYER;
             if (landingCoord.isNotInRange(14, 12)) {
                 return MGPFallible.failure(EpaminondasFailure.PHALANX_IS_LEAVING_BOARD());
@@ -84,7 +84,7 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
         if (state.getPieceAt(landingCoord) === CURRENT_PLAYER) {
             return MGPFallible.failure(RulesFailure.CANNOT_SELF_CAPTURE());
         }
-        newBoard[emptied.y][emptied.x] = Player.NONE;
+        newBoard[emptied.y][emptied.x] = PlayerOrNone.NONE;
         newBoard[landingCoord.y][landingCoord.x] = CURRENT_PLAYER;
         return MGPFallible.success(newBoard);
     }
@@ -101,7 +101,7 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasState, E
         ) {
             // Capture
             if (captured > 0) {
-                board[capturedSoldier.y][capturedSoldier.x] = Player.NONE;
+                board[capturedSoldier.y][capturedSoldier.x] = PlayerOrNone.NONE;
             }
             captured++;
             if (captured >= move.movedPieces) {

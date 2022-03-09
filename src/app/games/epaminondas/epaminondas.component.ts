@@ -28,7 +28,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
                                                                    PlayerOrNone,
                                                                    EpaminondasLegalityInformation>
 {
-    public NONE: PlayerOrNone = Player.NONE;
+    public NONE: PlayerOrNone = PlayerOrNone.NONE;
 
     public firstPiece: MGPOptional<Coord> = MGPOptional.empty();
 
@@ -108,7 +108,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
             case OPPONENT:
                 return this.cancelMove(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());
             default:
-                Utils.expectToBe(this.board[y][x], Player.NONE);
+                Utils.expectToBe(this.board[y][x], PlayerOrNone.NONE);
                 return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }
     }
@@ -179,7 +179,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         for (const direction of Direction.DIRECTIONS) {
             const coord: Coord = this.firstPiece.get().getNext(direction, 1);
             if (coord.isInRange(14, 12) &&
-                this.board[coord.y][coord.x] === Player.NONE) {
+                this.board[coord.y][coord.x] === PlayerOrNone.NONE) {
                 neighboors.push(coord);
             }
         }
@@ -237,7 +237,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         const distance: number = clicked.getDistance(firstPiece);
         const direction: Direction = firstPiece.getDirectionToward(clicked).get();
         switch (this.board[y][x]) {
-            case Player.NONE:
+            case PlayerOrNone.NONE:
                 if (distance === 1) {
                     return this.tryMove(new EpaminondasMove(firstPiece.x, firstPiece.y, 1, 1, direction));
                 } else {

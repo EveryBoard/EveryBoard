@@ -44,7 +44,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsuleState, Encapsu
     public static isVictoriousLine(cases: EncapsuleCase[]): MGPOptional<Player> {
         const pieces: EncapsulePiece[] = cases.map((c: EncapsuleCase) => c.getBiggest());
         const owner: PlayerOrNone[] = pieces.map((piece: EncapsulePiece) => piece.getPlayer());
-        if (owner[0] === Player.NONE) {
+        if (owner[0] === PlayerOrNone.NONE) {
             return MGPOptional.empty();
         } else {
             if ((owner[0] === owner[1]) && (owner[1] === owner[2])) {

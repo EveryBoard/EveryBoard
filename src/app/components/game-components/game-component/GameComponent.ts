@@ -89,7 +89,7 @@ export abstract class GameComponent<R extends Rules<M, S, L>,
             case Player.ZERO: return 'player0';
             case Player.ONE: return 'player1';
             default:
-                Utils.expectToBe(player, Player.NONE);
+                Utils.expectToBe(player, PlayerOrNone.NONE);
                 return '';
         }
     }

@@ -63,7 +63,7 @@ export class SixRules extends Rules<SixMove,
         for (const piece of state.pieces.listKeys()) {
             for (const dir of HexaDirection.factory.all) {
                 const neighboor: Coord = piece.getNext(dir, 1);
-                if (state.getPieceAt(neighboor) === Player.NONE) {
+                if (state.getPieceAt(neighboor) === PlayerOrNone.NONE) {
                     neighboors.add(neighboor);
                 }
             }
@@ -81,7 +81,7 @@ export class SixRules extends Rules<SixMove,
             return MGPFallible.failure(SixFailure.CAN_NO_LONGER_DROP());
         }
         switch (state.getPieceAt(move.start.get())) {
-            case Player.NONE:
+            case PlayerOrNone.NONE:
                 return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
             case state.getCurrentOpponent():
                 return MGPFallible.failure(RulesFailure.CANNOT_CHOOSE_OPPONENT_PIECE());

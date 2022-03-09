@@ -251,7 +251,7 @@ export class SiamRules extends Rules<SiamMove, SiamState, SiamLegalityInformatio
         if (nbMountain === 2) {
             return SiamRules.getPusher(state, move.get());
         } else {
-            return Player.NONE;
+            return PlayerOrNone.NONE;
         }
     }
     public static getPusher(state: SiamState, finishingMove: SiamMove): PlayerOrNone {

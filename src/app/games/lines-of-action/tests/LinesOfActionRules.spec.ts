@@ -17,7 +17,7 @@ describe('LinesOfActionRules', () => {
     let minimax: LinesOfActionMinimax;
     const X: Player = Player.ZERO;
     const O: Player = Player.ONE;
-    const _: PlayerOrNone = Player.NONE;
+    const _: PlayerOrNone = PlayerOrNone.NONE;
 
     beforeEach(() => {
         rules = new LinesOfActionRules(LinesOfActionState);
@@ -295,7 +295,7 @@ describe('LinesOfActionRules', () => {
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState);
         const node: LinesOfActionNode = new LinesOfActionNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
         RulesUtils.expectToBeOngoing(rules, node, [minimax]);
-        expect(LinesOfActionRules.getVictory(expectedState)).toEqual(MGPOptional.of(Player.NONE));
+        expect(LinesOfActionRules.getVictory(expectedState)).toEqual(MGPOptional.of(PlayerOrNone.NONE));
     });
     it('should list all possible targets', () => {
         const state: LinesOfActionState = LinesOfActionState.getInitialState();

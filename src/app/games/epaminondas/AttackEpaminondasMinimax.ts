@@ -51,7 +51,7 @@ export class AttackEpaminondasMinimax extends EpaminondasMinimax {
                                 const neighbor: PlayerOrNone = state.getPieceAt(coord);
                                 if (neighbor === owner) {
                                     score += 1 * owner.getScoreModifier();
-                                } else if (neighbor === Player.NONE) {
+                                } else if (neighbor === PlayerOrNone.NONE) {
                                     score += 1 * owner.getScoreModifier();
                                 }
                             }
@@ -107,7 +107,7 @@ export class AttackEpaminondasMinimax extends EpaminondasMinimax {
                         let stepSize: number = 1;
                         while (nextCoord.isInRange(14, 12) &&
                                stepSize <= movedPieces &&
-                               state.getPieceAt(nextCoord) === Player.NONE)
+                               state.getPieceAt(nextCoord) === PlayerOrNone.NONE)
                         {
                             stepSize++;
                             nextCoord = nextCoord.getNext(direction, 1);

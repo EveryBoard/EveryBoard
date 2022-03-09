@@ -5,7 +5,7 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 export class EpaminondasState extends GameStateWithTable<PlayerOrNone> {
 
     public static getInitialState(): EpaminondasState {
-        const _: PlayerOrNone = Player.NONE;
+        const _: PlayerOrNone = PlayerOrNone.NONE;
         const X: Player = Player.ONE;
         const O: Player = Player.ZERO;
         const board: Table<PlayerOrNone> = [

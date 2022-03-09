@@ -18,7 +18,7 @@ describe('EpaminondasRules:', () => {
 
     let rules: EpaminondasRules;
     let minimaxes: Minimax<EpaminondasMove, EpaminondasState, EpaminondasLegalityInformation>[];
-    const _: PlayerOrNone = Player.NONE;
+    const _: PlayerOrNone = PlayerOrNone.NONE;
     const X: Player = Player.ONE;
     const O: Player = Player.ZERO;
 

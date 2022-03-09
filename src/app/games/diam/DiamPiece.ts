@@ -8,7 +8,7 @@ export class DiamPiece {
         (fields: [Player, boolean]): DiamPiece => DiamPiece.of(fields[0], fields[1]),
     );
 
-    public static EMPTY: DiamPiece = new DiamPiece(Player.NONE, false);
+    public static EMPTY: DiamPiece = new DiamPiece(PlayerOrNone.NONE, false);
     public static ZERO_FIRST: DiamPiece = new DiamPiece(Player.ZERO, false);
     public static ZERO_SECOND: DiamPiece = new DiamPiece(Player.ZERO, true);
     public static ONE_FIRST: DiamPiece = new DiamPiece(Player.ONE, false);

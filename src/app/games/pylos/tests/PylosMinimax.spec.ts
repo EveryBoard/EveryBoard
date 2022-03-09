@@ -12,7 +12,7 @@ describe('PylosMinimax:', () => {
     let rules: PylosRules;
     let minimax: PylosMinimax;
 
-    const _: PlayerOrNone = Player.NONE;
+    const _: PlayerOrNone = PlayerOrNone.NONE;
     const X: Player = Player.ONE;
     const O: Player = Player.ZERO;
 

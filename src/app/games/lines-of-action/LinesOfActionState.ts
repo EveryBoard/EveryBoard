@@ -7,7 +7,7 @@ export class LinesOfActionState extends GameStateWithTable<PlayerOrNone> {
     public static SIZE: number = 8; // board size
 
     public static getInitialState(): LinesOfActionState {
-        const _: PlayerOrNone = Player.NONE;
+        const _: PlayerOrNone = PlayerOrNone.NONE;
         const X: Player = Player.ZERO;
         const O: Player = Player.ONE;
         const board: PlayerOrNone[][] = [

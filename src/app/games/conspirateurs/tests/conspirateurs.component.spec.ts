@@ -10,7 +10,7 @@ import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, Conspi
 import { ConspirateursState } from '../ConspirateursState';
 
 describe('ConspirateursComponent', () => {
-    const _: PlayerOrNone = Player.NONE;
+    const _: PlayerOrNone = PlayerOrNone.NONE;
     const A: Player = Player.ZERO;
     const B: Player = Player.ONE;
 

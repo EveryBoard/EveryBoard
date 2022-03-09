@@ -12,7 +12,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('QuixoMove:', () => {
 
-    const _: PlayerOrNone = Player.NONE;
+    const _: PlayerOrNone = PlayerOrNone.NONE;
     const X: Player = Player.ONE;
 
     it('Should forbid move creation for invalid x or y coord', () => {

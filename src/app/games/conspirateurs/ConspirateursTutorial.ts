@@ -5,7 +5,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
 import { ConspirateursState } from './ConspirateursState';
 
-const _: PlayerOrNone = Player.NONE;
+const _: PlayerOrNone = PlayerOrNone.NONE;
 const A: Player = Player.ZERO;
 const B: Player = Player.ONE;
 

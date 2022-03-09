@@ -2,7 +2,7 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 
 export class TaflPawn {
 
-    public static readonly UNOCCUPIED: TaflPawn = new TaflPawn(Player.NONE, false);
+    public static readonly UNOCCUPIED: TaflPawn = new TaflPawn(PlayerOrNone.NONE, false);
 
     public static readonly PLAYER_ONE_KING: TaflPawn = new TaflPawn(Player.ONE, true);
 

@@ -5,7 +5,7 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 
 const O: Player = Player.ZERO;
 const X: Player = Player.ONE;
-const _: PlayerOrNone = Player.NONE;
+const _: PlayerOrNone = PlayerOrNone.NONE;
 
 export class P4Tutorial {
 

@@ -7,10 +7,10 @@ import { GameState } from 'src/app/jscaip/GameState';
 export class PylosState extends GameState {
 
     public static getInitialState(): PylosState {
-        const board0: PlayerOrNone[][] = ArrayUtils.createTable(4, 4, Player.NONE);
-        const board1: PlayerOrNone[][] = ArrayUtils.createTable(3, 3, Player.NONE);
-        const board2: PlayerOrNone[][] = ArrayUtils.createTable(2, 2, Player.NONE);
-        const board3: PlayerOrNone[][] = [[Player.NONE]];
+        const board0: PlayerOrNone[][] = ArrayUtils.createTable(4, 4, PlayerOrNone.NONE);
+        const board1: PlayerOrNone[][] = ArrayUtils.createTable(3, 3, PlayerOrNone.NONE);
+        const board2: PlayerOrNone[][] = ArrayUtils.createTable(2, 2, PlayerOrNone.NONE);
+        const board3: PlayerOrNone[][] = [[PlayerOrNone.NONE]];
         const turn: number = 0;
         return new PylosState([board0, board1, board2, board3], turn);
     }
@@ -26,13 +26,13 @@ export class PylosState extends GameState {
         const updateValues: { coord: PylosCoord, value: PlayerOrNone }[] = [];
         updateValues.push({ coord: move.landingCoord, value: this.getCurrentPlayer() });
         if (move.startingCoord.isPresent()) {
-            updateValues.push({ coord: move.startingCoord.get(), value: Player.NONE });
+            updateValues.push({ coord: move.startingCoord.get(), value: PlayerOrNone.NONE });
         }
         if (move.firstCapture.isPresent()) {
-            updateValues.push({ coord: move.firstCapture.get(), value: Player.NONE });
+            updateValues.push({ coord: move.firstCapture.get(), value: PlayerOrNone.NONE });
         }
         if (move.secondCapture.isPresent()) {
-            updateValues.push({ coord: move.secondCapture.get(), value: Player.NONE });
+            updateValues.push({ coord: move.secondCapture.get(), value: PlayerOrNone.NONE });
         }
         return this.setBoardAts(updateValues, this.turn + 1);
     }
@@ -56,7 +56,7 @@ export class PylosState extends GameState {
         if (coord.z === 0) return true;
         const lowerPieces: PylosCoord[] = coord.getLowerPieces();
         for (const lowerPiece of lowerPieces) {
-            if (this.getPieceAt(lowerPiece) === Player.NONE) {
+            if (this.getPieceAt(lowerPiece) === PlayerOrNone.NONE) {
                 return false;
             }
         }
@@ -72,7 +72,7 @@ export class PylosState extends GameState {
     }
     public getPiecesRepartition(): { [owner: number]: number } {
         const ownershipMap: { [owner: number]: number } = {};
-        ownershipMap[Player.NONE.value] = 0;
+        ownershipMap[PlayerOrNone.NONE.value] = 0;
         ownershipMap[Player.ZERO.value] = 0;
         ownershipMap[Player.ONE.value] = 0;
         for (let z: number = 0; z < 3; z++) {

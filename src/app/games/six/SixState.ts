@@ -30,7 +30,7 @@ export class SixState extends GameState implements ComparableObject {
         const pieces: ReversibleMap<Coord, Player> = new ReversibleMap<Coord, Player>();
         for (let y: number = 0; y < board.length; y++) {
             for (let x: number = 0; x < board[0].length; x++) {
-                if (board[y][x] !== Player.NONE.value) {
+                if (board[y][x] !== PlayerOrNone.NONE.value) {
                     pieces.set(new Coord(x, y), Player.of(board[y][x]));
                 }
             }
@@ -125,7 +125,7 @@ export class SixState extends GameState implements ComparableObject {
         };
     }
     public toRepresentation(): NumberTable {
-        const board: number[][] = ArrayUtils.createTable(this.width, this.height, Player.NONE.value);
+        const board: number[][] = ArrayUtils.createTable(this.width, this.height, PlayerOrNone.NONE.value);
         for (const piece of this.pieces.listKeys()) {
             const pieceValue: number = this.getPieceAt(piece).value;
             board[piece.y][piece.x] = pieceValue;
@@ -160,7 +160,7 @@ export class SixState extends GameState implements ComparableObject {
         if (this.isOnBoard(coord)) {
             return this.pieces.get(coord).get();
         } else {
-            return Player.NONE;
+            return PlayerOrNone.NONE;
         }
     }
     public applyLegalDrop(coord: Coord): SixState {

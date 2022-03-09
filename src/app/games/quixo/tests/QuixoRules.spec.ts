@@ -16,7 +16,7 @@ describe('QuixoRules:', () => {
 
     let rules: QuixoRules;
     let minimaxes: Minimax<QuixoMove, QuixoState>[];
-    const _: PlayerOrNone = Player.NONE;
+    const _: PlayerOrNone = PlayerOrNone.NONE;
     const X: Player = Player.ONE;
     const O: Player = Player.ZERO;
 

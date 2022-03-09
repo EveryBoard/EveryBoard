@@ -1,6 +1,6 @@
 import { ComparableObject } from '../utils/Comparable';
 import { Utils } from '../utils/utils';
-import { Player } from './Player';
+import { Player, PlayerOrNone } from './Player';
 
 export class FourStatePiece implements ComparableObject {
 
@@ -8,7 +8,7 @@ export class FourStatePiece implements ComparableObject {
 
     public static ONE: FourStatePiece = new FourStatePiece(Player.ONE.value);
 
-    public static EMPTY: FourStatePiece = new FourStatePiece(Player.NONE.value);
+    public static EMPTY: FourStatePiece = new FourStatePiece(PlayerOrNone.NONE.value);
 
     public static NONE: FourStatePiece = new FourStatePiece(3);
 
